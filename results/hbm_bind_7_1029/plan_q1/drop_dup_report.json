@@ -1,0 +1,287 @@
+{
+ "schema": "opentallas.hbm.drop_dup_copies.v1",
+ "source_plan_sha256": "0b7b966cbaf2561f11c447e5924b043d4e3ba2a5a4e41fcb5f908706b9681c7e",
+ "families": [
+  "u_hb_coll_Q_reduce",
+  "u_hb_coll_Q_ring_ag",
+  "u_hb_coll_Q_body_n2",
+  "u_hb_coll_Q_body_core",
+  "u_hb_coll_Q_vm",
+  "u_hb_coll_Q_edge"
+ ],
+ "keep": "q1",
+ "hubs": {
+  "q_hub_ne": {
+   "u_hb_coll_Q_reduce": {
+    "kept": "u_hb_coll_Q_reduce__q1",
+    "dropped": "u_hb_coll_Q_reduce__q0",
+    "cost_um": {
+     "0": 301750.862,
+     "1": 283910.178
+    },
+    "stations_moved": 60,
+    "duplicates_removed": 0,
+    "regs_old": 344,
+    "regs_new": 882,
+    "latency_up": 60,
+    "latency_up_hist": {
+     "6": 4,
+     "7": 5,
+     "8": 3,
+     "9": 31,
+     "10": 11,
+     "11": 6
+    },
+    "failed": 0,
+    "length_old_um": 283910.178,
+    "length_new_um": 324177.34,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_ring_ag": {
+    "kept": "u_hb_coll_Q_ring_ag__q1",
+    "dropped": "u_hb_coll_Q_ring_ag__q0",
+    "cost_um": {
+     "0": 174549.203,
+     "1": 214040.554
+    },
+    "stations_moved": 67,
+    "duplicates_removed": 0,
+    "regs_old": 1191,
+    "regs_new": 1194,
+    "latency_up": 3,
+    "latency_up_hist": {
+     "1": 3
+    },
+    "failed": 0,
+    "length_old_um": 214040.554,
+    "length_new_um": 348770.672,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_body_n2": {
+    "kept": "u_hb_coll_Q_body_n2__q1",
+    "dropped": "u_hb_coll_Q_body_n2__q0",
+    "cost_um": {
+     "0": 447598.92,
+     "1": 411232.777
+    },
+    "stations_moved": 103,
+    "duplicates_removed": 0,
+    "regs_old": 912,
+    "regs_new": 1409,
+    "latency_up": 79,
+    "latency_up_hist": {
+     "1": 3,
+     "2": 2,
+     "3": 1,
+     "5": 2,
+     "6": 4,
+     "7": 37,
+     "8": 3,
+     "9": 2,
+     "10": 10,
+     "11": 6,
+     "12": 4,
+     "13": 4,
+     "15": 1
+    },
+    "failed": 0,
+    "length_old_um": 411232.777,
+    "length_new_um": 486697.727,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_body_core": {
+    "skipped": "no __q0/__q1 pair"
+   },
+   "u_hb_coll_Q_vm": {
+    "kept": "u_hb_coll_Q_vm__q1",
+    "dropped": "u_hb_coll_Q_vm__q0",
+    "cost_um": {
+     "0": 23686.054,
+     "1": 13159.307
+    },
+    "stations_moved": 9,
+    "duplicates_removed": 0,
+    "regs_old": 81,
+    "regs_new": 77,
+    "latency_up": 0,
+    "latency_up_hist": {},
+    "failed": 0,
+    "length_old_um": 13159.307,
+    "length_new_um": 16433.739,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_edge": {
+    "skipped": "no __q0/__q1 pair"
+   }
+  },
+  "q_hub_nw": {
+   "u_hb_coll_Q_reduce": {
+    "kept": "u_hb_coll_Q_reduce__q1",
+    "dropped": "u_hb_coll_Q_reduce__q0",
+    "cost_um": {
+     "0": 377507.012,
+     "1": 301413.886
+    },
+    "stations_moved": 73,
+    "duplicates_removed": 0,
+    "regs_old": 417,
+    "regs_new": 923,
+    "latency_up": 71,
+    "latency_up_hist": {
+     "1": 2,
+     "6": 5,
+     "7": 54,
+     "8": 2,
+     "9": 3,
+     "10": 2,
+     "11": 3
+    },
+    "failed": 0,
+    "length_old_um": 301413.886,
+    "length_new_um": 341706.622,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_ring_ag": {
+    "kept": "u_hb_coll_Q_ring_ag__q1",
+    "dropped": "u_hb_coll_Q_ring_ag__q0",
+    "cost_um": {
+     "0": 153885.529,
+     "1": 213531.946
+    },
+    "stations_moved": 67,
+    "duplicates_removed": 0,
+    "regs_old": 1194,
+    "regs_new": 1197,
+    "latency_up": 3,
+    "latency_up_hist": {
+     "1": 3
+    },
+    "failed": 0,
+    "length_old_um": 213531.946,
+    "length_new_um": 349417.52,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_body_n2": {
+    "skipped": "no __q0/__q1 pair"
+   },
+   "u_hb_coll_Q_body_core": {
+    "kept": "u_hb_coll_Q_body_core__q1",
+    "dropped": "u_hb_coll_Q_body_core__q0",
+    "cost_um": {
+     "0": 519402.133,
+     "1": 426061.076
+    },
+    "stations_moved": 110,
+    "duplicates_removed": 0,
+    "regs_old": 891,
+    "regs_new": 1458,
+    "latency_up": 76,
+    "latency_up_hist": {
+     "3": 2,
+     "4": 3,
+     "5": 1,
+     "6": 2,
+     "7": 7,
+     "8": 31,
+     "9": 5,
+     "10": 1,
+     "11": 8,
+     "12": 9,
+     "13": 4,
+     "14": 3
+    },
+    "failed": 0,
+    "length_old_um": 426061.076,
+    "length_new_um": 483678.336,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_vm": {
+    "kept": "u_hb_coll_Q_vm__q1",
+    "dropped": "u_hb_coll_Q_vm__q0",
+    "cost_um": {
+     "0": 33124.337,
+     "1": 5706.029
+    },
+    "stations_moved": 4,
+    "duplicates_removed": 0,
+    "regs_old": 50,
+    "regs_new": 41,
+    "latency_up": 0,
+    "latency_up_hist": {},
+    "failed": 0,
+    "length_old_um": 5706.029,
+    "length_new_um": 7784.651,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_edge": {
+    "kept": "u_hb_coll_Q_edge__q1",
+    "dropped": "u_hb_coll_Q_edge__q0",
+    "cost_um": {
+     "0": 54045.627,
+     "1": 98146.322
+    },
+    "stations_moved": 30,
+    "duplicates_removed": 0,
+    "regs_old": 230,
+    "regs_new": 368,
+    "latency_up": 19,
+    "latency_up_hist": {
+     "6": 1,
+     "8": 6,
+     "9": 11,
+     "10": 1
+    },
+    "failed": 0,
+    "length_old_um": 98146.322,
+    "length_new_um": 102225.854,
+    "taps_removed": 1
+   }
+  }
+ },
+ "plan_sha256": "55711200eed036f84a66c26c2c51cd497d11fa33e676a9d33f72357f68631240",
+ "hbm_bind_7": {
+  "q_hub_ne": {
+   "dropped": [
+    "u_hb_coll_Q_reduce__q0",
+    "u_hb_coll_Q_ring_ag__q0",
+    "u_hb_coll_Q_body_n2__q0",
+    "u_hb_coll_Q_vm__q0"
+   ],
+   "stations_removed": [
+    {
+     "conn": "r9tree:ot_hfd_coll_q2n2_body_core:0->1",
+     "launch": "u_hb_coll_Q_body_n2__q0.r9_tree_out",
+     "capture": "u_hb_coll_Q_body_n2__q1.r9_tree_in",
+     "bits": 824,
+     "regs": 11
+    }
+   ],
+   "taps_removed": [
+    "u_hb_coll_Q_ring_ag__q0.clk",
+    "u_hb_coll_Q_reduce__q0.clk"
+   ]
+  },
+  "q_hub_nw": {
+   "dropped": [
+    "u_hb_coll_Q_reduce__q0",
+    "u_hb_coll_Q_ring_ag__q0",
+    "u_hb_coll_Q_body_core__q0",
+    "u_hb_coll_Q_vm__q0",
+    "u_hb_coll_Q_edge__q0"
+   ],
+   "stations_removed": [
+    {
+     "conn": "r9tree:ot_hfd_coll_q3_body_core:0->1",
+     "launch": "u_hb_coll_Q_body_core__q0.r9_tree_out",
+     "capture": "u_hb_coll_Q_body_core__q1.r9_tree_in",
+     "bits": 824,
+     "regs": 12
+    }
+   ],
+   "taps_removed": [
+    "u_hb_coll_Q_ring_ag__q0.clk",
+    "u_hb_coll_Q_reduce__q0.clk"
+   ]
+  }
+ }
+}

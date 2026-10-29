@@ -1,0 +1,70 @@
+{
+ "schema": "hbm.bind7.splice_coll.v1",
+ "instances": {
+  "hb_coll_NE": {
+   "base_type": "ot_hfd_coll_q2_hard_v8g_s",
+   "donor_type": "$paramod$b2168e60d27bb4586a7f471517c95eff9e7193b6\\ot_hfd_coll_q2_hard_v8g_s",
+   "ports": 93,
+   "bits": 13772,
+   "parameters": {
+    "AR_ITER": 1,
+    "NLINK": 2,
+    "ROWS": 256,
+    "TP": 192,
+    "VM_RT": 3
+   }
+  },
+  "hb_coll_NW": {
+   "base_type": "ot_hfd_coll_q3_hard_v8x",
+   "donor_type": "$paramod$22630fd81ec46e1dd51edd6450996c8090a7a9cc\\ot_hfd_coll_q3_hard_v8x",
+   "ports": 115,
+   "bits": 17921,
+   "parameters": {
+    "AR_ITER": 1,
+    "NLINK": 3,
+    "ROWS": 256,
+    "TP": 192,
+    "VM_RT": 3
+   }
+  }
+ },
+ "new_types": [
+  "$paramod$22630fd81ec46e1dd51edd6450996c8090a7a9cc\\ot_hfd_coll_q3_hard_v8x",
+  "$paramod$b2168e60d27bb4586a7f471517c95eff9e7193b6\\ot_hfd_coll_q2_hard_v8g_s"
+ ],
+ "copied_modules": [
+  "$paramod$22630fd81ec46e1dd51edd6450996c8090a7a9cc\\ot_hfd_coll_q3_hard_v8x",
+  "$paramod$a493bee5dbbb27797e81424bb193ee3c40ad5405\\ot_hfd_coll_q_hard_v8g_body_s",
+  "$paramod$b2168e60d27bb4586a7f471517c95eff9e7193b6\\ot_hfd_coll_q2_hard_v8g_s",
+  "$paramod$c61697113ef926dc62af27bbded191401cf64fcb\\ot_hfd_coll_q_hard_v8g_body",
+  "ot_hgi_coll_argmax_m_tp192",
+  "ot_hgi_coll_ctl_v5r_q2",
+  "ot_hgi_coll_ctl_v5r_q3",
+  "ot_hgi_coll_fj_q2",
+  "ot_hgi_coll_fj_q3",
+  "ot_hgi_coll_issuer_m256",
+  "ot_hgi_coll_link_e",
+  "ot_hgi_coll_qslots_capture_pin_v2",
+  "ot_hgi_coll_qso_q2_b1",
+  "ot_hgi_coll_qso_q2_b32",
+  "ot_hgi_coll_qso_q3_b1",
+  "ot_hgi_coll_qso_q3_b32",
+  "ot_hgi_coll_reduce_static",
+  "ot_hgi_coll_reduce_static_pr",
+  "ot_hgi_coll_ring_ag",
+  "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+  "ot_hgi_coll_upipe_sliced_v7",
+  "ot_hgi_coll_vmasm_sliced_v7"
+ ],
+ "top_cells_changed": [
+  "hb_coll_NE",
+  "hb_coll_NW"
+ ],
+ "other_top_cells_identical": 467,
+ "other_modules_identical": 298,
+ "base": "../die-hbm-19/bind/d4/out/asbuilt.json",
+ "base_sha256": "0bc457cafaadfc971c3e9e05842aeb05c93179470617f39184ececaf6f4c055d",
+ "donor": "../codex-hbm-bind-1355/probe_body/asbuilt.json",
+ "donor_sha256": "cd6d008a2b9e0ca1d7d9c0c78de85a631998aed2ec5b9c2693944e71996e404d",
+ "out_sha256": "ce2560d35809481e138b82e47c131baec1f425c748fc8704a082af1619589b8d"
+}

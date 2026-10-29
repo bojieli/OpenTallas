@@ -1,0 +1,6356 @@
+{
+ "modules": 160,
+ "full_files": 21,
+ "lib_files": 112,
+ "ambiguous": {},
+ "undefined": [],
+ "substituted": [],
+ "aliased": {
+  "ot_hbm_su_static_pgslice_lg": "ot_hbm_su_static_pgslice_lg_s",
+  "ot_hgi_sfu_core_split3": "ot_hgi_sfu_core_split3_sp2",
+  "ot_hbm_hc_root_static": "ot_hbm_hc_root_static_s",
+  "ot_hfd_coll_q2_hard_v8g": "ot_hfd_coll_q2_hard_v8g_s",
+  "ot_hbm_idx_score_quarter_static": "ot_hbm_idx_score_quarter_static_h",
+  "ot_hgi_coll_tkm_m_tp192": "ot_hgi_coll_tkm_m_tp192_p"
+ },
+ "release_full": {
+  "ot_hbm_su_static_pgslice_lg": {
+   "module": "ot_hbm_su_static_pgslice_lg_s",
+   "modules": {
+    "ot_hbm_su_multirate_bridge": "rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+    "ot_hbm_su_red_pretree_dly": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+    "ot_hbm_su_red_pretree_node": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+    "ot_hbm_su_red_pretree_s": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+    "ot_hbm_su_static_ins": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+    "ot_hbm_su_static_lane": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+    "ot_hbm_su_static_lane_pinreg": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+    "ot_hbm_su_static_pg_lg_tap": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+    "ot_hbm_su_static_pgslice_lg_s": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+    "ot_hbm_su_static_pgslice_s": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+    "ot_hbm_su_static_pinned_bank": "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+    "ot_hbm_su_static_replicated_bank": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+    "ot_hbm_su_static_side_s": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+    "ot_hbm_su_static_side_softplus": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side.sv",
+    "ot_hbm_su_static_side_softplus_s": "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+    "ot_hbm_su_static_vm_bank_leaf": "rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+    "ot_hbm_vm_lg_keep_reg": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+    "ot_hbm_vm_lg_pair_tap": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+    "ot_hbm_vm_lg_static_bank": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
+    "ot_hdc_delay": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+    "ot_hdc_fp32_add_fast": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_fp32_add_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hdc_fp32_add_lat3": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hdc_fp32_add_lat4i": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hdc_fp32_mul_fast": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_fp32_mul_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_fp32_mul_lat4": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_fp32_mul_lat5i": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_fsqrt": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+    "ot_hdc_inc_k": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+    "ot_hdc_kadd": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_kge": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_kinc": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_ksa": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_ksadd_k__u1": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "ot_hdc_lzc32": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_mul24_rows": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_mul24_rows_k": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_mul24_sum": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_mul_kcp48": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_qadd_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_qmul_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_v41x_exp": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_v41x_fdiv": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_v41x_ins": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_v41x_rsqrt": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_vline": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+    "ot_hdc_w11_cut": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_sram_1r1w_128x256_m1_r2c2": "physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+   }
+  },
+  "ot_hgi_sfu_core_split3": {
+   "module": "ot_hgi_sfu_core_split3_sp2",
+   "modules": {
+    "ot_dsrom_fdiv_f12": "rtl/hdc/v41x/ot_dsrom_su_f12.sv",
+    "ot_hdc_delay": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+    "ot_hdc_delay_ring": "rtl/hdc/ot_hdc_delay_ring.sv",
+    "ot_hdc_fdiv": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+    "ot_hdc_fp32_add_fast": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_fp32_add_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hdc_fp32_add_lat3": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hdc_fp32_add_lat4i": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hdc_fp32_mul_fast": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_fp32_mul_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_fp32_mul_lat4": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_fp32_mul_lat5i": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_inc_k": "rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+    "ot_hdc_kadd": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_kge": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_kinc": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_ksa": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_ksadd_k__u1": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "ot_hdc_lzc32": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_mul24_rows": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_mul24_rows_k": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_mul24_sum": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "ot_hdc_mul_kcp48": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "ot_hdc_qadd_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_qmul_lat": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "ot_hdc_v41x_exp": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_v41x_fdiv": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_v41x_ins": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+    "ot_hdc_v41x_vec_lane_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv",
+    "ot_hdc_vline": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+    "ot_hdc_w11_cut": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "ot_hgi_sfu_arithmetic_grid_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv",
+    "ot_hgi_sfu_bcast_e0": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv",
+    "ot_hgi_sfu_core_split2_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split2_sp2.sv",
+    "ot_hgi_sfu_core_split3_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split3_sp2.sv",
+    "ot_hgi_sfu_lane_map": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv",
+    "ot_hgi_sfu_lane_map_e123": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv",
+    "ot_hgi_sfu_static_engine_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_engine_sp2.sv",
+    "ot_hgi_sfu_static_operand_store": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+    "ot_hgi_sfu_static_operand_store_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_operand_store_sp2.sv",
+    "ot_hgi_sfu_static_quarter_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_quarter_sp2.sv",
+    "ot_hgi_sfu_vm_static_bridge": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv",
+    "ot_hgi_su_lbank": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+    "ot_hgi_su_lgroup2": "rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+    "ot_rst_relay": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+    "ot_sram_1r1w_1024x256_m2_r2c2": "physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+    "ot_sram_1r1w_128x256_m1_r2c2": "physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "ot_sram_1r1w_256x256_m2_r2c2": "physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "ot_su12_lane_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv",
+    "ot_su12_sfu_sp2": "rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv"
+   }
+  }
+ },
+ "hard_params": {
+  "files": [],
+  "masters": {}
+ },
+ "selected_parameter_overrides": [
+  {
+   "master": "ot_hnx_idxn_keybuf_sliced_np4",
+   "instance": "keybuf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_sliced_np4.sv",
+   "requested": [
+    "NP",
+    "RS"
+   ],
+   "declared": [
+    "NP",
+    "RS"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_score_quarter_static_h",
+   "instance": "scorer",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "requested": [
+    "TP",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "RANK_W",
+    "TP"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_chunk_rt_h",
+   "instance": "core",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "requested": [
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "MUT",
+    "QLATE"
+   ]
+  },
+  {
+   "master": "ot_rst_delivered3",
+   "instance": "u_rr",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rst",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_score_leaf_h",
+   "instance": "leaf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "requested": [
+    "AUXW",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "AUXW",
+    "DELIVERED_RESET"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "keep_pipe",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_tail_native",
+   "instance": "u_t",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET"
+   ]
+  },
+  {
+   "master": "ot_rst_delivered3",
+   "instance": "u_rr",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rr",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_bd",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_pf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_bf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_tf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_td",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_sd",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_pf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_rst_delivered3",
+   "instance": "u_rr",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rr",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_vl",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D",
+    "RESET"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_qlate",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hidx_score_hcol",
+   "instance": "u_hc",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+   "requested": [
+    "HALF",
+    "DELIVERED_RESET",
+    "MUT"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "HALF",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_core_split2_sp2",
+   "instance": "u_core",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split3_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split2_sp2.sv",
+   "requested": [
+    "LWB",
+    "LG_PATH",
+    "TAP_RR",
+    "TAP_WR"
+   ],
+   "declared": [
+    "LG_PATH",
+    "LWB",
+    "TAP_RR",
+    "TAP_WR"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rst",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split2_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_vm_static_bridge",
+   "instance": "u_vm",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split2_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LWB",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "LWB",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_static_engine_sp2",
+   "instance": "u_engine",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split2_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_engine_sp2.sv",
+   "requested": [
+    "LWB"
+   ],
+   "declared": [
+    "LWB"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_static_operand_store_sp2",
+   "instance": "u_memory",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_engine_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_operand_store_sp2.sv",
+   "requested": [
+    "LWB"
+   ],
+   "declared": [
+    "LWB",
+    "MUT_XBAR"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_arithmetic_grid_sp2",
+   "instance": "u_grid",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_quarter_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv",
+   "requested": [
+    "BTREE"
+   ],
+   "declared": [
+    "BTREE"
+   ]
+  },
+  {
+   "master": "ot_su12_sfu_sp2",
+   "instance": "u_sfu",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "GSH",
+    "KIMM",
+    "DENR",
+    "DRING"
+   ],
+   "declared": [
+    "DENR",
+    "DRING",
+    "GSH",
+    "KIMM"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_static_operand_store",
+   "instance": "u_store",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_operand_store_sp2.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+   "requested": [
+    "LWB",
+    "MUT_XBAR"
+   ],
+   "declared": [
+    "LWB",
+    "MUT_XBAR"
+   ]
+  },
+  {
+   "master": "ot_hgi_su_lgroup2",
+   "instance": "u_group",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "M",
+    "LWB",
+    "AW",
+    "NLW",
+    "MACRO",
+    "MUT_XBAR",
+    "NS"
+   ],
+   "declared": [
+    "AW",
+    "LAT",
+    "LWB",
+    "M",
+    "MACRO",
+    "MUT_XBAR",
+    "N",
+    "NLW",
+    "NS"
+   ]
+  },
+  {
+   "master": "ot_hgi_su_lgroup2",
+   "instance": "u_output",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "M",
+    "LWB",
+    "AW",
+    "NLW",
+    "MACRO",
+    "MUT_XBAR",
+    "NS"
+   ],
+   "declared": [
+    "AW",
+    "LAT",
+    "LWB",
+    "M",
+    "MACRO",
+    "MUT_XBAR",
+    "N",
+    "NLW",
+    "NS"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_s",
+   "instance": "u_slice",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "requested": [
+    "SMUT",
+    "QID",
+    "G",
+    "FULL_SIDE",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "PIN_REG",
+    "WCOPY",
+    "COLLPORT",
+    "B39_NOOP",
+    "RF_LOCAL",
+    "PG_RSYNC",
+    "PRETREE"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PG_RSYNC",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pg_lg_tap",
+   "instance": "u_tap",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "RSYNC_MUT"
+   ],
+   "declared": [
+    "LOCAL_SPLIT",
+    "READ_RETURN",
+    "RSYNC_MUT",
+    "SPLIT_MUT",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_vm_lg_pair_tap",
+   "instance": "u_tap",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "LOCAL_SPLIT",
+    "MUT",
+    "READ_RETURN",
+    "SPLIT_MUT",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_lane_pinreg",
+   "instance": "u_lane",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LN",
+    "KIND",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "FETCH_EXTRA_EDGES"
+   ],
+   "declared": [
+    "ALAT",
+    "AW",
+    "CW",
+    "FETCH_EXTRA_EDGES",
+    "KIND",
+    "KVT_SH",
+    "LEAF",
+    "LN",
+    "MLAT",
+    "PIN_RST"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_lane",
+   "instance": "u_lane",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LN",
+    "KIND",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "FETCH_EXTRA_EDGES"
+   ],
+   "declared": [
+    "ALAT",
+    "AW",
+    "CW",
+    "FETCH_EXTRA_EDGES",
+    "KIND",
+    "KVT_SH",
+    "LEAF",
+    "LN",
+    "MLAT"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_side_s",
+   "instance": "u_side",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "requested": [
+    "SMUT"
+   ],
+   "declared": [
+    "MUT",
+    "SMUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_multirate_bridge",
+   "instance": "u_bridge",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT_SLOT",
+    "READ_RETURN",
+    "RQ_BITS",
+    "RR_BITS",
+    "WQ_BITS",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_vm_bank_leaf",
+   "instance": "u_leaf",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "B",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "B",
+    "MUT",
+    "QID",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pinned_bank",
+   "instance": "u_bank",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READERS",
+    "RB",
+    "WCOPY"
+   ],
+   "declared": [
+    "MUT_COHERENCE",
+    "MUT_RESET",
+    "MUT_RETURN",
+    "PIN_RST",
+    "RB",
+    "RD_ROOT",
+    "READERS",
+    "WCOPY",
+    "WS_ROOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_red_pretree_s",
+   "instance": "u_pt",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LAT"
+   ],
+   "declared": [
+    "LAT",
+    "MUT",
+    "OPR"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_rsqrt",
+   "instance": "u_rsq",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LM",
+    "LA"
+   ],
+   "declared": [
+    "LA",
+    "LM"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_side_softplus_s",
+   "instance": "u_sp",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "requested": [
+    "LM",
+    "LA",
+    "FREG"
+   ],
+   "declared": [
+    "FREG",
+    "LA",
+    "LM"
+   ]
+  },
+  {
+   "master": "ot_hdc_kge",
+   "instance": "u_egc",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "K"
+   ],
+   "declared": [
+    "K",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_vline",
+   "instance": "u_ve",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "D"
+   ],
+   "declared": [
+    "D"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_exp",
+   "instance": "u_exp",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LM",
+    "LA"
+   ],
+   "declared": [
+    "LA",
+    "LM"
+   ]
+  },
+  {
+   "master": "ot_hdc_qadd_lat",
+   "instance": "u_den",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "KEEP",
+    "LAT"
+   ],
+   "declared": [
+    "KEEP",
+    "LAT"
+   ]
+  },
+  {
+   "master": "ot_hdc_vline",
+   "instance": "u_vd",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "D"
+   ],
+   "declared": [
+    "D"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_q_static",
+   "instance": "u_q",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "RD_CAPTURE",
+    "GATHER_PHASE",
+    "DONE_LAT",
+    "XW_BEATS"
+   ],
+   "declared": [
+    "DONE_LAT",
+    "GATHER_PHASE",
+    "MUT",
+    "RD_CAPTURE",
+    "XW_BEATS"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_qcen_static",
+   "instance": "u_cen",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+   "requested": [
+    "K",
+    "DRLY",
+    "TLA",
+    "CHX",
+    "MUT",
+    "W"
+   ],
+   "declared": [
+    "CHX",
+    "DRLY",
+    "IWW",
+    "JW",
+    "K",
+    "MUT",
+    "NVW",
+    "TLA",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rst",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hdc_fp32_add_lat",
+   "instance": "u_a",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LAT",
+    "DRST"
+   ],
+   "declared": [
+    "CUTS",
+    "DRST",
+    "LAT"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_core",
+   "instance": "u_c",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "MUT",
+    "CPI",
+    "CPO",
+    "W",
+    "TERM"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "TERM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rst",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bank_static",
+   "instance": "u_b",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+   "requested": [
+    "W",
+    "AW",
+    "LM",
+    "LA",
+    "MUT",
+    "RST_RELAY"
+   ],
+   "declared": [
+    "AW",
+    "LA",
+    "LM",
+    "MUT",
+    "NVW",
+    "RST_RELAY",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_core",
+   "instance": "u_c",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "MUT",
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "TERM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rst",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_core",
+   "instance": "u_c",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "MUT",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "TERM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_core",
+   "instance": "u_c",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "MUT",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "TERM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_rst_relay",
+   "instance": "u_rst",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "REGIONS"
+   ],
+   "declared": [
+    "REGIONS",
+    "SYNC_STAGES",
+    "TREE_STAGES"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_hcp_stage",
+   "instance": "u_st",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "requested": [
+    "W",
+    "AW",
+    "ML",
+    "NVW",
+    "LM",
+    "LA",
+    "SOR",
+    "LRST",
+    "ADRST",
+    "LG"
+   ],
+   "declared": [
+    "ADRST",
+    "AW",
+    "LA",
+    "LG",
+    "LM",
+    "LRST",
+    "ML",
+    "NVW",
+    "SOR",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_addtree",
+   "instance": "u_tree",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "requested": [
+    "N"
+   ],
+   "declared": [
+    "N"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_vline",
+   "instance": "u_tvv",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "requested": [
+    "D"
+   ],
+   "declared": [
+    "D"
+   ]
+  },
+  {
+   "master": "ot_hdc_delay",
+   "instance": "u_otag",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W",
+    "D"
+   ],
+   "declared": [
+    "D",
+    "RESET",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_addtree",
+   "instance": "u_l",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "requested": [
+    "N"
+   ],
+   "declared": [
+    "N"
+   ]
+  },
+  {
+   "master": "ot_hdc_v41x_addtree",
+   "instance": "u_r",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "requested": [
+    "N"
+   ],
+   "declared": [
+    "N"
+   ]
+  },
+  {
+   "master": "ot_hdc_fp32_mul_lat",
+   "instance": "u_mul",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LAT",
+    "DRST"
+   ],
+   "declared": [
+    "CUTS",
+    "DRST",
+    "KCP",
+    "LAT"
+   ]
+  },
+  {
+   "master": "ot_hdc_fp32_add_lat",
+   "instance": "u_add",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LAT",
+    "DRST"
+   ],
+   "declared": [
+    "CUTS",
+    "DRST",
+    "LAT"
+   ]
+  },
+  {
+   "master": "ot_hdc_fp32_mul_lat",
+   "instance": "u_mul",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LAT",
+    "DRST"
+   ],
+   "declared": [
+    "CUTS",
+    "DRST",
+    "KCP",
+    "LAT"
+   ]
+  },
+  {
+   "master": "ot_hdc_fp32_add_lat",
+   "instance": "u_add",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LAT",
+    "DRST"
+   ],
+   "declared": [
+    "CUTS",
+    "DRST",
+    "LAT"
+   ]
+  },
+  {
+   "master": "ot_smh_qs_reg",
+   "instance": "u_qs_c_land",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "W",
+    "RM"
+   ],
+   "declared": [
+    "RM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_sm_attn_front_static",
+   "instance": "u_front",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "KVMUT",
+    "INT8W"
+   ],
+   "declared": [
+    "INT8W",
+    "KVMUT"
+   ]
+  },
+  {
+   "master": "ot_smh_qs_reg",
+   "instance": "u_qs_c_r1l",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "W",
+    "RM"
+   ],
+   "declared": [
+    "RM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_smh_qs_reg",
+   "instance": "u_qs_c_r1r",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "W",
+    "RM"
+   ],
+   "declared": [
+    "RM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_smh_qs_reg",
+   "instance": "u_qs_c_pin",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "W",
+    "RM"
+   ],
+   "declared": [
+    "RM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_smh_qs_reg",
+   "instance": "u_qs_b_out",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "W",
+    "RM"
+   ],
+   "declared": [
+    "RM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_smh_qs_reg",
+   "instance": "u_qs_b_becmd",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "W",
+    "RM"
+   ],
+   "declared": [
+    "RM",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_sm_attn_tile",
+   "instance": "u_t",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "SUB",
+    "RPT",
+    "LBS",
+    "LSB",
+    "NC",
+    "IL",
+    "TAGW",
+    "XD",
+    "NBEAT",
+    "TCK",
+    "A1B",
+    "A2B"
+   ],
+   "declared": [
+    "A1B",
+    "A2B",
+    "IL",
+    "LBS",
+    "LSB",
+    "NBEAT",
+    "NC",
+    "NMG",
+    "PT4",
+    "RPT",
+    "SUB",
+    "TAGW",
+    "TCK",
+    "XD"
+   ]
+  },
+  {
+   "master": "ot_hbm_sm_attn_be",
+   "instance": "u_be",
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "CONTROL_DELAY",
+    "SUB",
+    "RPT",
+    "IL",
+    "RMAX",
+    "LEV",
+    "TAGW",
+    "NH"
+   ],
+   "declared": [
+    "CONTROL_DELAY",
+    "IL",
+    "LEV",
+    "NH",
+    "RMAX",
+    "RPT",
+    "STK",
+    "SUB",
+    "TAGW"
+   ]
+  },
+  {
+   "master": "ot_hgi_coll_inj_idx_join_rg",
+   "instance": "cij_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "INJLAT"
+   ],
+   "declared": [
+    "INJLAT",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_coll_inj_idx_join_rg",
+   "instance": "cij_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "INJLAT"
+   ],
+   "declared": [
+    "INJLAT",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_static_cfg_collar_idx256r",
+   "instance": "col_idx",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAGE_W",
+    "NS",
+    "NPR",
+    "NREC",
+    "NGO",
+    "NB",
+    "NF",
+    "XSER",
+    "FAN32"
+   ],
+   "declared": [
+    "AW",
+    "FAN32",
+    "MUT",
+    "NB",
+    "NF",
+    "NGO",
+    "NPR",
+    "NREC",
+    "NS",
+    "PAGE_W",
+    "TAIL",
+    "XSER"
+   ]
+  },
+  {
+   "master": "ot_hbm_static_cfg_collar",
+   "instance": "col_sfu_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAGE_W",
+    "NS",
+    "NPR",
+    "NREC",
+    "NGO",
+    "NB",
+    "NF",
+    "XSER"
+   ],
+   "declared": [
+    "AW",
+    "MUT",
+    "NB",
+    "NF",
+    "NGO",
+    "NPR",
+    "NREC",
+    "NS",
+    "PAGE_W",
+    "SPARSE_SU",
+    "SU_DICT_CAP",
+    "TAIL",
+    "XSER"
+   ]
+  },
+  {
+   "master": "ot_hbm_static_cfg_collar",
+   "instance": "col_sfu_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAGE_W",
+    "NS",
+    "NPR",
+    "NREC",
+    "NGO",
+    "NB",
+    "NF",
+    "XSER"
+   ],
+   "declared": [
+    "AW",
+    "MUT",
+    "NB",
+    "NF",
+    "NGO",
+    "NPR",
+    "NREC",
+    "NS",
+    "PAGE_W",
+    "SPARSE_SU",
+    "SU_DICT_CAP",
+    "TAIL",
+    "XSER"
+   ]
+  },
+  {
+   "master": "ot_hbm_static_cfg_collar",
+   "instance": "col_su",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAGE_W",
+    "NS",
+    "NPR",
+    "NREC",
+    "NGO",
+    "NB",
+    "NF",
+    "XSER",
+    "SPARSE_SU",
+    "SU_DICT_CAP"
+   ],
+   "declared": [
+    "AW",
+    "MUT",
+    "NB",
+    "NF",
+    "NGO",
+    "NPR",
+    "NREC",
+    "NS",
+    "PAGE_W",
+    "SPARSE_SU",
+    "SU_DICT_CAP",
+    "TAIL",
+    "XSER"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_static_run_target",
+   "instance": "cp_svg_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "AWA",
+    "AWB",
+    "RBW",
+    "RCW",
+    "NA",
+    "NF",
+    "TGT_PIN",
+    "RSYNC"
+   ],
+   "declared": [
+    "AWA",
+    "AWB",
+    "MUT",
+    "NA",
+    "NF",
+    "RBW",
+    "RCW",
+    "RSYNC",
+    "TARGET",
+    "TGT_PIN"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p00",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p01",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p02",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p03",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p04",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p05",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p06",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p07",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p08",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p09",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p10",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p11",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p12",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p13",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p14",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p15",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p16",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p17",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p18",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p19",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p20",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p21",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p22",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p23",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p24",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p25",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p26",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p27",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p28",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p29",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p30",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "instance": "ctl_NW_p31",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "OREG",
+    "KREG",
+    "KRREG",
+    "RREG",
+    "WPAY",
+    "QREG"
+   ],
+   "declared": [
+    "KREG",
+    "KRREG",
+    "OREG",
+    "QREG",
+    "RMUT",
+    "RREG",
+    "WPAY"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NE0_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NE1_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NE2_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NE3_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NW0_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NW1_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NW2_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_dl_s",
+   "instance": "cxdl_NW3_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "G"
+   ],
+   "declared": [
+    "G",
+    "MUT",
+    "QID",
+    "R"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_ij_q",
+   "instance": "cxij_NE_q",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "SD",
+    "SAFE_GATHER"
+   ],
+   "declared": [
+    "MUT",
+    "R",
+    "SAFE_GATHER",
+    "SD"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_ij_s",
+   "instance": "cxij_NE_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "B39_NOOP",
+    "INJ_RET",
+    "RQ",
+    "RQC",
+    "SD",
+    "OBR"
+   ],
+   "declared": [
+    "B39_NOOP",
+    "INJ_RET",
+    "MUT",
+    "OBR",
+    "QID",
+    "R",
+    "RQ",
+    "RQC",
+    "SD"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_ij_q",
+   "instance": "cxij_NW_q",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "SD",
+    "SAFE_GATHER"
+   ],
+   "declared": [
+    "MUT",
+    "R",
+    "SAFE_GATHER",
+    "SD"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_cxport_ij_s",
+   "instance": "cxij_NW_s",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QID",
+    "B39_NOOP",
+    "INJ_RET",
+    "RQ",
+    "RQC",
+    "SD",
+    "OBR"
+   ],
+   "declared": [
+    "B39_NOOP",
+    "INJ_RET",
+    "MUT",
+    "OBR",
+    "QID",
+    "R",
+    "RQ",
+    "RQC",
+    "SD"
+   ]
+  },
+  {
+   "master": "hfd_ep_static_vc2",
+   "instance": "ep_N0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "IDLE_K",
+    "HQ"
+   ],
+   "declared": [
+    "HMIN",
+    "HQ",
+    "IDLE_K",
+    "MUT"
+   ]
+  },
+  {
+   "master": "hfd_hgi_vm_calendar_f20_role",
+   "instance": "epcal_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "RMUT",
+    "W"
+   ]
+  },
+  {
+   "master": "hfd_hgi_vm_calendar_f20_role",
+   "instance": "epcal_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "RMUT",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fcx_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fcx_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NE0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NE1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NE2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NE3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fl_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fr_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_fault_leaf",
+   "instance": "fr_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_argmax_static_sw_vm_r2",
+   "instance": "hb_argmax",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "TP",
+    "VMX",
+    "ACK"
+   ],
+   "declared": [
+    "ACK",
+    "ELAT",
+    "MUT",
+    "RANK_W",
+    "SWMUT",
+    "TP",
+    "VMX"
+   ]
+  },
+  {
+   "master": "ot_hfd_coll_q2_hard_v8g_s",
+   "instance": "hb_coll_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NLINK",
+    "TP",
+    "AR_ITER",
+    "ROWS",
+    "VM_RT"
+   ],
+   "declared": [
+    "AR_ITER",
+    "NLINK",
+    "ROWS",
+    "TP",
+    "VM_RT"
+   ]
+  },
+  {
+   "master": "ot_hfd_coll_q3_hard_v8x",
+   "instance": "hb_coll_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NLINK",
+    "TP",
+    "AR_ITER",
+    "ROWS",
+    "VM_RT"
+   ],
+   "declared": [
+    "AR_ITER",
+    "NLINK",
+    "ROWS",
+    "TP",
+    "VM_RT"
+   ]
+  },
+  {
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "instance": "hb_dbk_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "RR_RT"
+   ],
+   "declared": [
+    "CP_MUT",
+    "MUT",
+    "RR_RT",
+    "RST_MUT",
+    "STACK_BYTES"
+   ]
+  },
+  {
+   "master": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "instance": "hb_dbk_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "RR_RT"
+   ],
+   "declared": [
+    "CP_MUT",
+    "MUT",
+    "RR_RT",
+    "RST_MUT",
+    "STACK_BYTES"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_rootctl_static_am",
+   "instance": "hb_idx__ctl",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT",
+    "CR_RT",
+    "SEL_LAT",
+    "RSTL",
+    "FAN32"
+   ],
+   "declared": [
+    "AMMUT",
+    "CR_RT",
+    "FAN32",
+    "RSTL",
+    "SEL_LAT",
+    "VM_RT"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "instance": "hb_idx__nwsh",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANK_RT"
+   ],
+   "declared": [
+    "BANK_RT",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "instance": "hb_idx__op_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT_EXTRA"
+   ],
+   "declared": [
+    "VM_RT_EXTRA"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "instance": "hb_idx__op_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT_EXTRA"
+   ],
+   "declared": [
+    "VM_RT_EXTRA"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "instance": "hb_idx__op_SE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT_EXTRA"
+   ],
+   "declared": [
+    "VM_RT_EXTRA"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_query_static_n12",
+   "instance": "hb_idx__op_SW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT_EXTRA"
+   ],
+   "declared": [
+    "VM_RT_EXTRA"
+   ]
+  },
+  {
+   "master": "ot_hnx_idxn_quarter_with_keybuf_sliced",
+   "instance": "hb_idx__s_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+   "requested": [
+    "TP",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "RANK_W",
+    "TP"
+   ]
+  },
+  {
+   "master": "ot_hnx_idxn_quarter_with_keybuf_sliced",
+   "instance": "hb_idx__s_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+   "requested": [
+    "TP",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "RANK_W",
+    "TP"
+   ]
+  },
+  {
+   "master": "ot_hnx_idxn_quarter_with_keybuf_sliced",
+   "instance": "hb_idx__s_SE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+   "requested": [
+    "TP",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "RANK_W",
+    "TP"
+   ]
+  },
+  {
+   "master": "ot_hnx_idxn_quarter_with_keybuf_sliced",
+   "instance": "hb_idx__s_SW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+   "requested": [
+    "TP",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "RANK_W",
+    "TP"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_xq_node_static",
+   "instance": "hb_idx__xq_N",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "WI"
+   ],
+   "declared": [
+    "WI"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_xq_node_static",
+   "instance": "hb_idx__xq_S",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "WI"
+   ],
+   "declared": [
+    "WI"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_xq_node_static",
+   "instance": "hb_idx__xqr",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "WI"
+   ],
+   "declared": [
+    "WI"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_nw_program_leaf",
+   "instance": "hb_quant_NW__program_leaf",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "COMPACT",
+    "PIN_BOUNDARY"
+   ],
+   "declared": [
+    "COMPACT",
+    "PIN_BOUNDARY"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_lg_bf16_r2",
+   "instance": "hb_quant_NW__quant_NW0_lg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANKS"
+   ],
+   "declared": [
+    "BANKS",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_lg_bf16_r2",
+   "instance": "hb_quant_NW__quant_NW1_lg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANKS"
+   ],
+   "declared": [
+    "BANKS",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_lg_bf16_r2",
+   "instance": "hb_quant_NW__quant_NW2_lg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANKS"
+   ],
+   "declared": [
+    "BANKS",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_lg_bf16_r2",
+   "instance": "hb_quant_NW__quant_NW3_lg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANKS"
+   ],
+   "declared": [
+    "BANKS",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_ctl_r4",
+   "instance": "hb_quant_NW__quant_NW_xp_ctl",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "DL",
+    "MUT"
+   ],
+   "declared": [
+    "DL",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_rslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_0__rslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_wslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_0__wslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_rslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_1__rslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_wslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_1__wslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_rslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_2__rslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_wslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_2__wslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_rslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_3__rslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hgi_qdq_transport_wslice",
+   "instance": "hb_quant_NW__quant_NW_xp_slice_3__wslice",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NW"
+   ],
+   "declared": [
+    "MUT",
+    "NW"
+   ]
+  },
+  {
+   "master": "ot_hbm_router_ids_static_2src",
+   "instance": "hb_router_ids",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "XRT",
+    "GO_DELAY",
+    "CQ_DELAY"
+   ],
+   "declared": [
+    "CQ_DELAY",
+    "GO_DELAY",
+    "MUT",
+    "XRT"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_qhub_static",
+   "instance": "hc_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "requested": [
+    "DRLY",
+    "CHX",
+    "RD_CAPTURE",
+    "GATHER_PHASE",
+    "DONE_LAT",
+    "W"
+   ],
+   "declared": [
+    "CHX",
+    "DONE_LAT",
+    "DRLY",
+    "GATHER_PHASE",
+    "IWW",
+    "JW",
+    "K",
+    "MUT",
+    "NVW",
+    "RD_CAPTURE",
+    "TLA",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NE0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NE1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NE2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NE3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_qhub_static",
+   "instance": "hc_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+   "requested": [
+    "DRLY",
+    "CHX",
+    "RD_CAPTURE",
+    "GATHER_PHASE",
+    "DONE_LAT",
+    "W"
+   ],
+   "declared": [
+    "CHX",
+    "DONE_LAT",
+    "DRLY",
+    "GATHER_PHASE",
+    "IWW",
+    "JW",
+    "K",
+    "MUT",
+    "NVW",
+    "RD_CAPTURE",
+    "TLA",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf_term",
+   "instance": "hc_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_root_static_s",
+   "instance": "hc_eng",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "QDRLY",
+    "QCHX",
+    "NQ"
+   ],
+   "declared": [
+    "K",
+    "MUT",
+    "NF",
+    "NQ",
+    "NVQ",
+    "QB",
+    "QCHX",
+    "QDRLY",
+    "QWW",
+    "SMUT",
+    "TLA",
+    "XRD",
+    "XRU"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq0_static",
+   "instance": "hcb_NE0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "DRLY",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPO",
+    "DRLY",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NE1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "instance": "hcb_NE2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NE3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NE4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NE5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "instance": "hcb_NE6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_term_static",
+   "instance": "hcb_NE7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq0_static",
+   "instance": "hcb_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "DRLY",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPO",
+    "DRLY",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "instance": "hcb_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_static",
+   "instance": "hcb_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_ft_static",
+   "instance": "hcb_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_hc_bankq_term_static",
+   "instance": "hcb_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv",
+   "requested": [
+    "CPI",
+    "CPO",
+    "W"
+   ],
+   "declared": [
+    "CPI",
+    "CPO",
+    "JW",
+    "MUT",
+    "NVW",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hgi_coll_gq_issue",
+   "instance": "hcollgi_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT"
+   ],
+   "declared": [
+    "MUT",
+    "VM_RT"
+   ]
+  },
+  {
+   "master": "ot_hgi_coll_gq_issue",
+   "instance": "hcollgi_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "VM_RT"
+   ],
+   "declared": [
+    "MUT",
+    "VM_RT"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "instance": "hcollrs_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANK_RT"
+   ],
+   "declared": [
+    "BANK_RT",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_idx_vm_share2_static_r",
+   "instance": "hcollrs_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "BANK_RT"
+   ],
+   "declared": [
+    "BANK_RT",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_host_cfg_leaf2",
+   "instance": "hleaf_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NT",
+    "NF"
+   ],
+   "declared": [
+    "MUT",
+    "NF",
+    "NT"
+   ]
+  },
+  {
+   "master": "ot_hbm_host_cfg_leaf2",
+   "instance": "hleaf_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NT",
+    "NF"
+   ],
+   "declared": [
+    "MUT",
+    "NF",
+    "NT"
+   ]
+  },
+  {
+   "master": "ot_hbm_host_static_ingress_obs",
+   "instance": "host_cp_ingress",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "TARGET_MASK"
+   ],
+   "declared": [
+    "MUT",
+    "TARGET_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_status_join_fa",
+   "instance": "host_status",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NT",
+    "NF",
+    "NH",
+    "TGTS",
+    "NA",
+    "FCLR",
+    "RRELAY",
+    "GUARD"
+   ],
+   "declared": [
+    "FCLR",
+    "FMUT",
+    "GUARD",
+    "MUT",
+    "NA",
+    "NF",
+    "NH",
+    "NT",
+    "RRELAY",
+    "TGTS"
+   ]
+  },
+  {
+   "master": "ot_hbm_obs_leaf",
+   "instance": "obs_C",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "LID",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "LID",
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_obs_leaf",
+   "instance": "obs_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "LID",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "LID",
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_obs_leaf",
+   "instance": "obs_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "N",
+    "LID",
+    "SYNC_MASK"
+   ],
+   "declared": [
+    "LID",
+    "MUT",
+    "N",
+    "SYNC_MASK"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "instance": "pgp_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "SB"
+   ],
+   "declared": [
+    "DICT_CAP",
+    "MUT",
+    "MUT_COL",
+    "NC",
+    "SB"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_programme_pslice_c5",
+   "instance": "pgp_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "SB"
+   ],
+   "declared": [
+    "DICT_CAP",
+    "MUT",
+    "MUT_COL",
+    "NC",
+    "SB"
+   ]
+  },
+  {
+   "master": "ot_hbm_pc_refresh_cfg",
+   "instance": "refcfg_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "MUT",
+    "NPC",
+    "REL_HOLD",
+    "RMAX",
+    "RMIN"
+   ]
+  },
+  {
+   "master": "ot_hbm_pc_refresh_cfg",
+   "instance": "refcfg_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "MUT",
+    "NPC",
+    "REL_HOLD",
+    "RMAX",
+    "RMIN"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_stack_fault",
+   "instance": "sfault_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "OWN_W",
+    "NPC",
+    "NG",
+    "ND"
+   ],
+   "declared": [
+    "MUT",
+    "ND",
+    "NG",
+    "NPC",
+    "OWN_W"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_stack_fault",
+   "instance": "sfault_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "OWN_W",
+    "NPC",
+    "NG",
+    "ND"
+   ],
+   "declared": [
+    "MUT",
+    "ND",
+    "NG",
+    "NPC",
+    "OWN_W"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NE0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NE1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NE2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NE3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_lg_pair_tap_leaf",
+   "instance": "sfu_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ],
+   "declared": [
+    "MUT",
+    "READ_RETURN",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3_sp2",
+   "instance": "sfucore_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split3_sp2.sv",
+   "requested": [
+    "LWB",
+    "LG_PATH",
+    "TAP_RR",
+    "TAP_WR"
+   ],
+   "declared": [
+    "LG_PATH",
+    "LWB",
+    "TAP_RR",
+    "TAP_WR"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_core_split3_sp2",
+   "instance": "sfucore_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split3_sp2.sv",
+   "requested": [
+    "LWB",
+    "LG_PATH",
+    "TAP_RR",
+    "TAP_WR"
+   ],
+   "declared": [
+    "LG_PATH",
+    "LWB",
+    "TAP_RR",
+    "TAP_WR"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "instance": "sfup_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAGE_AW"
+   ],
+   "declared": [
+    "AW",
+    "PAGE_AW"
+   ]
+  },
+  {
+   "master": "ot_hgi_sfu_programme_store_r10",
+   "instance": "sfup_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAGE_AW"
+   ],
+   "declared": [
+    "AW",
+    "PAGE_AW"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_accel_smh_attn",
+   "instance": "sm_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
+   "requested": [
+    "ENABLE_INT8",
+    "INT8W"
+   ],
+   "declared": [
+    "BE_DELAY",
+    "ENABLE_INT8",
+    "HOPD",
+    "INT8W",
+    "KVMUT",
+    "QSMUT",
+    "QSPLIT"
+   ]
+  },
+  {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "instance": "smw_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "DEPTH"
+   ],
+   "declared": [
+    "DEPTH",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_sm_vm_wr_q_t_lanes4",
+   "instance": "smw_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "DEPTH"
+   ],
+   "declared": [
+    "DEPTH",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_stree_leaf",
+   "instance": "stl_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NLEG"
+   ],
+   "declared": [
+    "MUT",
+    "NLEG"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_stree_leaf",
+   "instance": "stl_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "NLEG"
+   ],
+   "declared": [
+    "MUT",
+    "NLEG"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_stree_root2",
+   "instance": "str_C",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT"
+   ],
+   "declared": [
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NE0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NE1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NE2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NE3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_pgslice_lg_s",
+   "instance": "su_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+   "requested": [
+    "QID",
+    "G",
+    "READ_RETURN",
+    "WRITE_RETURN",
+    "FETCH_EXTRA_EDGES",
+    "MLAT",
+    "ALAT",
+    "LEAF",
+    "MUT",
+    "MULTIRATE",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "RSYNC"
+   ],
+   "declared": [
+    "ALAT",
+    "B39_NOOP",
+    "COLLPORT",
+    "FETCH_EXTRA_EDGES",
+    "FULL_SIDE",
+    "G",
+    "LEAF",
+    "MLAT",
+    "MULTIRATE",
+    "MUT",
+    "PIN_REG",
+    "PRETREE",
+    "QID",
+    "READ_RETURN",
+    "RF_LOCAL",
+    "RSYNC",
+    "RSYNC_MUT",
+    "SMUT",
+    "WCOPY",
+    "WRITE_RETURN"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_programme_root_h5",
+   "instance": "su_prog",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PARTS"
+   ],
+   "declared": [
+    "MUT",
+    "PARTS"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_qcore_r13_w2",
+   "instance": "sucore_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "ROW_EN",
+    "WDEC"
+   ],
+   "declared": [
+    "COLLPORT",
+    "MUT",
+    "MUTW",
+    "PRETREE",
+    "RF_LOCAL",
+    "ROW_EN",
+    "WDEC"
+   ]
+  },
+  {
+   "master": "ot_hbm_su_static_qcore_r13_w2",
+   "instance": "sucore_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "COLLPORT",
+    "RF_LOCAL",
+    "PRETREE",
+    "ROW_EN",
+    "WDEC"
+   ],
+   "declared": [
+    "COLLPORT",
+    "MUT",
+    "MUTW",
+    "PRETREE",
+    "RF_LOCAL",
+    "ROW_EN",
+    "WDEC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_group_rel_id_rc",
+   "instance": "svg_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LBANKS",
+    "NID",
+    "IDW",
+    "PAW",
+    "PREL",
+    "DD",
+    "ID_COHORT",
+    "XSLOT",
+    "OPEN_IL",
+    "RQD"
+   ],
+   "declared": [
+    "ATT_MARK",
+    "CTXW",
+    "DAW",
+    "DD",
+    "IDW",
+    "ID_COHORT",
+    "IMUT",
+    "LB",
+    "LBANKS",
+    "NID",
+    "OPEN_IL",
+    "PAW",
+    "PREL",
+    "RQD",
+    "RQMUT",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hnx_fused_tnode",
+   "instance": "u_mu_fused_n4_ne",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LA",
+    "UW",
+    "DW",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "DW",
+    "LA",
+    "UW"
+   ]
+  },
+  {
+   "master": "ot_hnx_fused_tnode",
+   "instance": "u_mu_fused_n4_nw",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "LA",
+    "UW",
+    "DW",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "DW",
+    "LA",
+    "UW"
+   ]
+  },
+  {
+   "master": "ot_hnx_fused_host_program",
+   "instance": "u_mu_fused_programme",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "TARGET",
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET",
+    "TARGET"
+   ]
+  },
+  {
+   "master": "ot_hnx_fused_hub_n4ext",
+   "instance": "u_mu_fused_root",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "DELIVERED_RESET"
+   ],
+   "declared": [
+    "DELIVERED_RESET"
+   ]
+  },
+  {
+   "master": "ot_vms_status4_static",
+   "instance": "vm_status4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NQ"
+   ],
+   "declared": [
+    "NQ"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NE7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vmdel_lane_n",
+   "instance": "vmdel_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NPC"
+   ],
+   "declared": [
+    "NPC"
+   ]
+  },
+  {
+   "master": "hfd_hgi_vm_calendar_f20_role",
+   "instance": "vmfc_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "RMUT",
+    "W"
+   ]
+  },
+  {
+   "master": "hfd_hgi_vm_calendar_f20_role",
+   "instance": "vmfc_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "W"
+   ],
+   "declared": [
+    "RMUT",
+    "W"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_vm_kshare_splitstrap",
+   "instance": "vmks_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "MUT",
+    "KRL1"
+   ],
+   "declared": [
+    "KRL1",
+    "MUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_wbw_copy",
+   "instance": "wbc_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NS",
+    "MUT"
+   ],
+   "declared": [
+    "MUT",
+    "NS"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_wbw_copy",
+   "instance": "wbc_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "NS",
+    "MUT"
+   ],
+   "declared": [
+    "MUT",
+    "NS"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_wb_kport_q",
+   "instance": "wbk_NE",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "WOPEN",
+    "MUT"
+   ],
+   "declared": [
+    "MUT",
+    "STACK_SECTORS",
+    "WOPEN"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_wb_kport_q",
+   "instance": "wbk_NW",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "WOPEN",
+    "MUT"
+   ],
+   "declared": [
+    "MUT",
+    "STACK_SECTORS",
+    "WOPEN"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW0",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW1",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW2",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW3",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW4",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW5",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW6",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_svc_sm_xcal_rel_t",
+   "instance": "xc_NW7",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PAW",
+    "PREL",
+    "DD",
+    "XSLOT"
+   ],
+   "declared": [
+    "DAW",
+    "DD",
+    "MUT",
+    "PAW",
+    "PREL",
+    "XSLOT"
+   ]
+  },
+  {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "instance": "xl_NE_aqhi",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "FP4",
+    "MUT"
+   ],
+   "declared": [
+    "FP4",
+    "MUT",
+    "RSMUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "instance": "xl_NE_aqlo",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "FP4",
+    "MUT"
+   ],
+   "declared": [
+    "FP4",
+    "MUT",
+    "RSMUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "instance": "xl_NE_ctl",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "RD_LAT",
+    "NR",
+    "LEAD"
+   ],
+   "declared": [
+    "LEAD",
+    "MUT",
+    "NR",
+    "PMAX",
+    "RD_LAT"
+   ]
+  },
+  {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "instance": "xl_NW_aqhi",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "FP4",
+    "MUT"
+   ],
+   "declared": [
+    "FP4",
+    "MUT",
+    "RSMUT"
+   ]
+  },
+  {
+   "master": "ot_hbm_xp_aq_tree13_fmt",
+   "instance": "xl_NW_aqlo",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "FP4",
+    "MUT"
+   ],
+   "declared": [
+    "FP4",
+    "MUT",
+    "RSMUT"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_ctlx",
+   "instance": "xl_NW_ctl",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "RD_LAT",
+    "NR",
+    "LEAD"
+   ],
+   "declared": [
+    "LEAD",
+    "MUT",
+    "NR",
+    "PMAX",
+    "RD_LAT"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "instance": "xq_NE_p0_bd",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "instance": "xq_NE_p0_eg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "instance": "xq_NE_p1_bd",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "instance": "xq_NE_p1_eg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "instance": "xq_NW_p0_bd",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "instance": "xq_NW_p0_eg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_cl2_bdring",
+   "instance": "xq_NW_p1_bd",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  },
+  {
+   "master": "ot_hgi_sm_xload_xq_pegress",
+   "instance": "xq_NW_p1_eg",
+   "source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv",
+   "selected_source": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt_lib_stubs.sv",
+   "requested": [
+    "PMAX",
+    "NR"
+   ],
+   "declared": [
+    "NR",
+    "PMAX"
+   ]
+  }
+ ],
+ "json": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt.json",
+ "script": "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/asbuilt.ys",
+ "top": "hbm_current_native_top",
+ "tops": [
+  "/srv/opentallas-scratch2/claude/hbm-bind-5-1029/e2/out/aliased_top_native.sv"
+ ],
+ "full": [
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_quarter_with_keybuf_sliced.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_sliced_np4.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_quarter_static_h.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_chunk_rt_h.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split3_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_core_split2_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_engine_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_quarter_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_arithmetic_grid_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_hgi_sfu_static_operand_store_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_operand_store.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_lg_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_side_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qhub_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_qcen_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_term_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bankq_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_bank_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv"
+ ],
+ "lib": [
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/lib/ot_rst_delivered3.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hbm_idx_owned_native.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_score_fault_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/hidx_meta_w25_d123_r0.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_host_program.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_bfqg.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r10.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_tap_leaf.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_vm_static_bridge.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/sfu_sp2/ot_su12_sfu_sp2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_bcast_tree.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_sfu_lane_map.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_bf16_r2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/rtl/ot_hgi_coll_tkm_m_tp192_p.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join_rg.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v8g.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_hard_v8g_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hbm_xp_aq_tree13_fmt.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_stack_fault.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/rtl/b2_native/ot_hbm_sm_req_check.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore_hw.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13_w2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_pair_tap.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/ot_hbm_su_static_vm_ports.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/programme/multirate_bridge.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pg_lg_tap.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_root_h5.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_pgcol.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_status_join_fa.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar_idx256r.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_lanes4.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/loader/service_native/ot_hbm_router_ids_static_2src.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_kqs_fault_or4.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_xq_node_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_vm_query_static_n12.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_rootctl_static_am.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_qctl_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress_obs.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_ep_20261018/ot_hbm_host_cp_rxs.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_root_static_s.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/loader/service_native/ot_hbm_b2_ep_root_relay.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm_r2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/static/ot_smh_static_int8.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/static/ot_smh_int8_tile.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_tile.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_front_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/results/die_hbm_1027/hbm10/bindfull/phy_slices/ot_hbm3e_phy_rc_e8p5_pc22_31_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/results/die_hbm_1027/hbm10/bindfull/phy_slices/ot_hbm3e_phy_rc_e8p5_pc10_21_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/results/die_hbm_1027/hbm10/bindfull/phy_slices/ot_hbm3e_phy_rc_e8p5_pc0_9_bb.v",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static_glue.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_glue_tiles.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/rtl/b2_native/hfd_ep_static_vc2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/control/hfd_ckgen_nolink.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/hbfd_qdq_split_glue.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots_capture_pin_v2.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_issuer_m256v8.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_issuer_v7.sv",
+  "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static_pr.sv"
+ ]
+}
