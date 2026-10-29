@@ -374,8 +374,7 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
         P = gated_htree(str(geo), sp if lvl == "leaf" else sp[:-1], fam.get("smax", 70.0),
                         [list(k) for k in fam.get("keepout_um", [])], int(fam.get("icg_copy_max", 400)),
                         float(fam.get("leaf_target", 48)), at_leaf=(lvl == "leaf"),
-                        merge_fragment_fraction=float(fam.get("icg_merge_fragment_fraction", 0)),
-                        padding_quantile=float(fam.get("icg_padding_quantile", 1)))
+                        merge_fragment_fraction=float(fam.get("icg_merge_fragment_fraction", 0)))
         rea = None       # nearest-leaf reassignment would mix gate domains under one leaf: not used in form C
     else:
         P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
@@ -441,9 +440,9 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
                                   rtl_gates=len(P["gate_master"]), gate_parts=len(rows), copies_added=len(rows) - len(nb),
                                   ungated_parts=sum(1 for v in P["copy_gate"].values() if v is None),
                                   gated_sinks=sum(len(g["members"]) for g in rows), parts_per_gate_max=max(nb.values()) if nb else 0,
-                                  copy_max=int(fam.get("icg_copy_max", 400)), leaf_target=fam.get("leaf_target", 48),
-                                  merged_fragments=P.get("merged_fragments", []),
-                                  padding_quantile=fam.get("icg_padding_quantile", 1))
+                                  copy_max=int(fam.get("icg_copy_max", 400)), leaf_target=fam.get("leaf_target", 48))
+        if fam.get("icg_merge_fragment_fraction", 0):
+            rec["icg_summary"]["merged_fragments"] = P["merged_fragments"]
     return rec
 
 
@@ -790,7 +789,7 @@ def merge_gate_fragments(groups, depth, gate_of, threshold):
 
 
 def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target, at_leaf=False,
-                merge_fragment_fraction=0, padding_quantile=1):
+                merge_fragment_fraction=0):
     """form C planned tree (COORD 20:00 ruling): the family H partition of ALL clock sinks (gated + ungated) for the
     upper levels (upper = family splits without the leaf level, ~50 um tiles at the last upper level), then
       GATE level: each tile's sinks grouped by their RTL gate (ungated = 'ROOT'); a group larger than copy_max sinks is
@@ -818,8 +817,8 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target, at_leaf=False,
             for i, g in enumerate(parts):
                 groups[key + (i,)] = g
     nu = len(upper); copy_gate = {}
-    if not 0 <= merge_fragment_fraction <= 1 or not 0 < padding_quantile <= 1:
-        raise ValueError("ICG fragment fraction must be [0,1] and padding quantile (0,1]")
+    if not 0 <= merge_fragment_fraction <= 1:
+        raise ValueError("ICG fragment fraction must be [0,1]")
     fragments = merge_gate_fragments(groups, nu, gate_of, leaf_target * merge_fragment_fraction)
     key_of = lambda s: "%s/%s" % (s[2], s[3])
     for key in sorted(g for g in groups if len(g) == nu):
@@ -869,9 +868,7 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target, at_leaf=False,
     T, K = [], []
     for lv in range(depth):
         L = [mz.md(site[g[:-1]], site[g]) for g in groups if len(g) == lv + 1]
-        lengths = sorted(L)
-        target = lengths[max(0, math.ceil(padding_quantile * len(lengths)) - 1)] if lv == depth - 1 else max(L)
-        T.append(target); K.append(max(1, math.ceil(max(L) / smax)))
+        T.append(max(L)); K.append(max(1, math.ceil(max(L) / smax)))
     nodes = [("root", None, ent, H.BIG, "entry")]; wires = []; branch_of = {(): "root"}
     for lv in range(depth):
         for g in sorted(x for x in groups if len(x) == lv + 1):
@@ -886,9 +883,7 @@ def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target, at_leaf=False,
                 nodes.append((name(g) + "_br", name(g) + "_g", off, H.BIG, "branch"))
             else:
                 nodes.append((name(g) + "_br", branch_of[par], off, H.BIG, "branch"))
-            # Outliers keep their actual shortest path; the quantile cap never asks for a route shorter than geometry.
-            target = max(T[lv], mz.md(off, cc)) if padding_quantile < 1 else T[lv]
-            pts = H.exact_points(mz, off, cc, target, K[lv]); prev = name(g) + "_br"; chain = [off] + pts + [cc]
+            pts = H.exact_points(mz, off, cc, T[lv], K[lv]); prev = name(g) + "_br"; chain = [off] + pts + [cc]
             for r_, c in enumerate(pts):
                 n = name(g) + "_r%d" % r_; nodes.append((n, prev, c, H.REP, "rep")); prev = n
             wires.append(dict(level=lv + 1, edge=name(g), segs=[mz.md(chain[q], chain[q + 1]) for q in range(len(chain) - 1)],

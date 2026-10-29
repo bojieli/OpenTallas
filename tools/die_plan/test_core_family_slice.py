@@ -410,11 +410,11 @@ def test_gate_fragments_preserve_domains_and_sibling_locality():
     assert groups[(1, 0)] == other_parent
 
 
-def test_gated_quantile_and_fragment_optins_preserve_members(tmp_path):
+def test_gated_fragment_optin_preserves_members(tmp_path):
     geo = _gated_geo(tmp_path)
     baseline = F.gated_htree(str(geo), [2, 2], 70., [], 400, 4, at_leaf=True)
     revised = F.gated_htree(str(geo), [2, 2], 70., [], 400, 4, at_leaf=True,
-                            merge_fragment_fraction=.25, padding_quantile=.95)
+                            merge_fragment_fraction=.25)
     members = lambda p: sorted(s for ss in p["leafsinks"].values() for s in ss)
     assert members(revised) == members(baseline)
     for ss in revised["leafsinks"].values():
