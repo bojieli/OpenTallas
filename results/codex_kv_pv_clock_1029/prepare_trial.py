@@ -25,7 +25,7 @@ for view in ("R0","fMX"):
  if "3_place.odb"not in kept or"3_place.sdc"not in kept:raise RuntimeError("no pre-CTS checkpoint")
  rtl_before={str(p.relative_to(kd)):sha(p)for p in(kd/"rtl").rglob("*")if p.is_file()}
  pin_before=sha(kd/"pins.json");config_before=sha(kd/"config.mk")
- slp=W/"results/codex_kv_pv_clock_1029"/("pv_tree_lane_atomic_"+view+".json")
+ slp=W/"results/codex_kv_pv_clock_1029"/("pv_tree_structural_balanced_"+view+".json")
  sl=json.load(open(slp));old=json.load(open(kd/"core_infra_plan.json"))
  plan=CI.compile_slice(sl,kd)
  assert old["core_tree"]["nodes"]==plan["core_tree"]["nodes"],"node geometry/stages changed"
