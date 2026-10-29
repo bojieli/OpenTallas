@@ -153,3 +153,13 @@ query only intersecting blocker rectangles, rather than testing thousands of
 irrelevant banks. Blocked proposals still return infinite cost, and final
 full-row and paired-hop gates are unchanged. New coupons use a clean source
 worktree pinned to their commit; live earlier jobs remain untouched.
+
+An opt-in `--street-fallback` / diagnostic `--street-only` constructor is now
+available for projection-chain failures. It uses existing hub_repack raster
+paths separately for actual bit endpoint pairs, preserving/padding one equal
+stage count for the bundle, then allocates distinct legal FF cells. A 40um
+legalization allowance is reserved at each end of the 403um physical hop.
+Every actual paired hop is rechecked. This can construct street detours that
+independent nearest-point projection never represents. It stays disabled by
+default and is held on physical PHY supply domains. No arithmetic or existing
+RTL module is changed; each extra cycle still requires compiler/model pricing.

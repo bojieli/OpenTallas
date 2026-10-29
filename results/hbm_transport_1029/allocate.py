@@ -4,7 +4,7 @@ No physical route/STA. Every new site is a complete 1.404x.27um legal footprint.
 """
 import argparse,collections,copy,hashlib,json,math,sys
 from pathlib import Path
-ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('out');ap.add_argument('--tools',required=True);ap.add_argument('--keep-going',action='store_true',help='retain completed parts and diagnose independent failures');ap.add_argument('--parts',help='comma-separated independent instance subset');ap.add_argument('--max-extra-stations',type=int,default=8);a=ap.parse_args();sys.path.insert(0,a.tools);sys.path.insert(0,str(Path(a.tools).parents[1]))
+ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('out');ap.add_argument('--tools',required=True);ap.add_argument('--street-fallback',action='store_true');ap.add_argument('--street-only',action='store_true');ap.add_argument('--keep-going',action='store_true',help='retain completed parts and diagnose independent failures');ap.add_argument('--parts',help='comma-separated independent instance subset');ap.add_argument('--max-extra-stations',type=int,default=8);a=ap.parse_args();sys.path.insert(0,a.tools);sys.path.insert(0,str(Path(a.tools).parents[1]))
 import schema as S
 import ft_corridor as F
 import hub_repack as HR
@@ -15,6 +15,9 @@ import occupied_rows
 occupied_rows.install(F)
 import local_project
 local_project.install(F)
+if a.street_fallback or a.street_only:
+ import street_bits
+ street_bits.install(F,direct=a.street_only)
 from tools.die_trial.legal_sites import RowAllocator
 src=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((src/'die_plan.json').read_text());report=json.loads((src/'report.json').read_text());report['status']='ALLOCATING';report['allocation_failures']=[];report['clock_ff_load']={};model=S.Plan(P);parts=model.parts;selected=set(a.parts.split(',')) if a.parts else set(report['changed_types']);report['completed_parts']=[];report['wrapper_transport_ff']={};report['part_failures']=[];report['geometry_sha256']={pn:geometry_identity.identity(P,pn) for pn in selected}
 # All PHY supply domains are physical keepouts, including digital-core side strips.
@@ -71,6 +74,7 @@ try:
    if 'tap_um' in t.get('clock',{}):
     x,y=t['clock']['tap_um'];fixed.append([x-4.32,y-4.32,x+4.32,y+4.32])
    placement_extra[tn]=list(fixed)
+   F._street_phy_hold=bool(extra.get(tn))
    class ReservedRows(RowAllocator):
     def __init__(self,*args,**kwargs):
      super().__init__(*args,**kwargs)
