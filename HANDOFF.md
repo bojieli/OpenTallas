@@ -1697,3 +1697,22 @@ CODEX: 2026-10-29 03:24 PDT HEAD SerDes quarter counter READY7db8a43e8: mode2 E2
 CODEX: 2026-10-29 03:26 PDT PC collar source e2509627a (+1input/boot,1831FF) qualified actualchain4096/0diff+2mutants; synth-only epyc2unit1618796 live. Independent GEOM followups8ae2d2bb0 allow scoped BTABDRT/HEADFIRMCTS/NLnativeCTS, keep failed predecessors.
 
 CODEX: 2026-10-29 03:27 PDT LPcompactactualDPL/macrocutFAILdiagnosed; currentstrictparentSYNTHexposesrealforwarded-clockportcommabug. Sharedfix62c2ae900/36PASS+Icarus2controlsREADYROOT, fullparentcensusnext/noP&R.
+
+CODEX: 2026-10-29 03:28 PDT sharedFEEDgeometry01reachPASS0/389.988 butbalance10.69open; fe1sourcefix/directgeometry03liveunit1603554. KVfullproviders603bad872 actual10159cells/4464FF/5695comb+2controlsCAUGHT, all1139FFrowsnarrow, resetstarBLOCKERownedKV; allcellplacerQCmacroPG. NoPNRclaim.
+
+CODEX: 2026-10-29 03:25 PDT KV PVJ loadlocal sourceREADY fcb672d49:6391fulljoinchecks/118valid0diff,mut6373caught,32distinctkeptFF/max16loads,0cycles; nativeonehotcouponlive. PHY18NOTSIGNED139.07TT/−8.12FF100EP/DRV0→exactFLOW798convergenceownGRTcloneLIVE/noDRT. CorrectedPVclockR0failurediagnosed166badinputcaptures,fullnamedclockplanninglive.
+CODEX: 2026-10-29 03:30 PDT TOK-DS eventgapactualROMPASS1365rows/9809edges+badbasecontrol,7f0575679READY; full4compileLIVE. Nativebuf fix current80entry+80returnPASS,9guards. HEADnativeleaf→16xfin→VN/VQ actualPASS+partialmutantcaught,051f78READY; actualpartial117vsmodel115/arrival-dependentfinish retained,noG5.
+
+CODEX: 2026-10-29 03:29 PDT Qwen P1actualTXDP3FAIL diagnosedactualHEAD18/WIT14;existingINNERWIT+4→shared18PASS. Sourcecandidate8a47e55be READYroot+QC(+15P1/+4control,+20nativeROPEpreviouslypriced),37testsPASS; currentcontextingress4missingoldHOSTbound alsoexplicit;noadoption/G5.
+
+CODEX: 2026-10-29 03:37 PDT KVnative6boundedreset1528stages10530FF/1687rowhopsmax358.262PASS; native26composeLIVE, fullproviderclock/physicalboundarypending. AHUBactualdatareach391.61PASS; PC+HHP+1collarproofownedGEOM, PHYactual100inputholdfailsstructuraldelaycandidateownedPVPHY.
+
+CODEX: 2026-10-29 03:38 PDT HBM native156cutactualSP2 source f545d4789 READY; nativecanonicalFPcandidate7b90a4160 PASS99919/0diff+2controls,0cycleminimal4/4/0; HNXpadactual4838HB4/TT57.34FF-29.09/geometry0fail enabledreviewedGRT LIVE0overflow, noDRT. FullcanonLEC65677EQ/rootdriverguardfixed/GPLLIVE.
+
+CODEX: 2026-10-29 03:38 PDT HBMactualVMgrownsource4b2165eb2READY:4SRAM/bank128total/2^19regularwords,exactbanklockstep+allhighrows+SECDED+2aliasmutantsPASS,0addedcycles7read4write;atomicplanadoptionownedHBM. RolelocalpublicationstillHOLD.
+
+CODEX: 2026-10-29 03:47 PDT Southkeysource792b3ae9b READYdistributedstaticchain1,503,432bitPASS/4controls;4wordactualSVGloop107readsPASS/2controls; explicitallocationcompiler3tests8controlsPASS. Legacybook96rankcannotqualify192, actualmapstillopen; fullnativeonegroupservicecomponentliveafterannotatedsourcepickfix, noP&R/adoption.
+
+CODEX: 2026-10-29 03:49 PDT HEADactualSTARTTTFFGRT0/74050nets butDRVFAIL diagnosedINVx1longbranchloads; structuraldriverplanlive, CLKmin0APIseeddiagnosed/rootfilterproof. Nonuniform80XBrealreceive81920bitPASS/controlsCAUGHT53165f377+93e8receipts; noG5/absoluteSTARTclaim.
+
+CODEX: 2026-10-29 03:52 PDT HEAD STARTclockmin API diagnosed/READY941cadbae: OpenSTA injectsunclockedCLKzero seed afterdckdeleted; rawpinmin picksartificial0. RootfilteredVertexPathIterator(min/max,rf) matchesexplicitrootfindpaths8/8, preserveslate; declaredpropagatedrealclockinsteadshiftsfallmax416.5ps. ParentinitialprobeSIGSEGV=graphunbuiltbeforedirectpinproperty. Read-onlycachedDB8GBprobesexit0/neverrerouted; read_guidescannotrestoreGRTparas, so APImechanicsonly, finalroutedRCreadoutownedHEADparent. Testedhelper/results/head_clockmin_api_1029; no backendedited. Quarteractual189241cells/21584.2um2,943typedface/bind0PASS, strictLECunit1679639epyc2live; halfunit3101206intel2live.
