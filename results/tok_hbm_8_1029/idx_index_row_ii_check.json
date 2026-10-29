@@ -1,0 +1,30 @@
+{
+ "schema": "tok_hbm_8.idx_index_row_ii_check.v1",
+ "model_ii_over_c1": 0.2307,
+ "model_basis": "tools/hgi_sim/ds_mtp_verify.py row_ii IDX.INDEX c1*152/658.9",
+ "hardware_basis": "results/tok_hbm_7_1029/row_pitch_price.json (IDXN class pitch, RTL-minimum 328 checked)",
+ "assumption": "record c1 scales with the single-row frame F (frames repeat per key chunk), so compare pitch/F with the model ratio",
+ "cases": {
+  "vp1_rt173": {
+   "frame": 1568,
+   "ratio_fix": 0.2092,
+   "ratio_clear_at_launch": 0.2443,
+   "n6_record_model": 3376.6,
+   "n6_record_fix": 3208,
+   "n6_record_clear_at_launch": 3483,
+   "pass_delta_vs_model_fix": -1348.7,
+   "pass_delta_vs_model_clear_at_launch": 851.3
+  },
+  "vp2_rt173": {
+   "frame": 1697,
+   "ratio_fix": 0.2039,
+   "ratio_clear_at_launch": 0.3017,
+   "n6_record_model": 3654.4,
+   "n6_record_fix": 3427,
+   "n6_record_clear_at_launch": 4257,
+   "pass_delta_vs_model_fix": -1819.1,
+   "pass_delta_vs_model_clear_at_launch": 4820.9
+  }
+ },
+ "verdict": "with ROW_CLEAR_DELAY the IDXN extra-row II (0.204-0.209 x F) is BELOW the model 0.2307 x c1: model conservative, no tok/s drop. Without it vp2 is 0.302 x F: +4,816 edges a verify pass vs model (<0.4 % of a >=1.4M-cycle step, UNCHECKED denominator). No >5 % item, no owner ASK."
+}
