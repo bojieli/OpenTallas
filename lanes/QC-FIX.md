@@ -25,3 +25,4 @@ Explicit Claude reset: codex/qc-fix-0825@3ee1f7f9d pushed, no further engineerin
 
 ## CODEX PARKED 2026-10-29 14:04 PDT
 Explicit14:02reset: PROGfreeze correction4513968c1 alreadycomplete and READY; physicalSIGNEDMIF1 remainsvalid, actualnativebindMIF0 mismatch confirmed inelab/asbuilt.json so nativeintegrationopen. BTABA294553 holdrepair/B331227DRTremainliveuntouched. Owncollection82c410012 pushed. Fullpacket handoff/codex_qc_20261029_1402.md; noafterresetengineering.
+- 2026-10-29 15:24 PDT [DIE-QC-37 -> QC KITS sub-lane] COORD ruled QC-020 option (a) GLOBAL MIF1 (claude/die-qc-37-mif-1029@ab3a6420f71 -> ROOT-MERGE): MIF is one switch for the whole SU memory parent. (1) Current BTAB A/B kits (MIF0) are collected FOR THE RECORD ONLY (B 14:20 NOT SIGNED [CHECKED signoff.json]: TT +292.42, FF hold +6.5, DRC 9, slew TT 5/FF 2; A still in DRT at 14:5x). (2) The NEXT BTAB variant is built with MIF 1. (3) VMR f4k must be re-signed at MIF1. CRH rp1 f62 already MIF1.
