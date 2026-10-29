@@ -267,5 +267,41 @@ class TwoMode(unittest.TestCase):
             self.assertNotIn("timing_modes", json.loads((kd / "freeze.json").read_text()))
 
 
+class MacroPinFlops(unittest.TestCase):
+    """QC-FIX-1 10-29: opt-in recipe key macro_pin_flops wires the shared macro-pin flop anchors after face_flops.tcl
+    (released before DPL); absent = face_flops hooks unchanged; a macro-free recipe refuses the key."""
+    def test_hooks_written_and_sourced_in_order(self):
+        with tempfile.TemporaryDirectory() as t:
+            gpl, dpl = G.macro_pin_flop_hooks(t)
+            self.assertEqual((gpl, dpl), ("/work/pre_gpl_mpf.tcl", "/work/pre_dpl_mpf.tcl"))
+            for n in G.MPF_FILES:
+                self.assertEqual((Path(t) / "cf" / n).read_bytes(),
+                                 (HERE.parents[4] / "physical/common_flow" / n).read_bytes())
+            g = [l for l in (Path(t) / "pre_gpl_mpf.tcl").read_text().splitlines() if l.startswith("source")]
+            self.assertEqual(g, ["source /work/face_flops.tcl", "source /work/cf/macro_pin_flops.tcl"])
+            d = [l for l in (Path(t) / "pre_dpl_mpf.tcl").read_text().splitlines() if l.startswith("source")]
+            self.assertEqual(d, ["source /work/face_flops_release.tcl", "source /work/cf/macro_pin_flops_release.tcl"])
+
+    def test_default_unchanged_and_macro_free_refused(self):
+        with tempfile.TemporaryDirectory() as t:
+            r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t],
+                               capture_output=True, text=True)
+            self.assertEqual(r.returncode, 0, r.stderr[-2000:])
+            kd = Path(json.loads(r.stdout.strip().splitlines()[-1])["kit"])
+            cfg = (kd / "config.mk").read_text()
+            self.assertIn("export PRE_GLOBAL_PLACE_TCL = /work/face_flops.tcl", cfg)
+            self.assertIn("export PRE_DETAIL_PLACE_TCL = /work/face_flops_release.tcl", cfg)
+            self.assertFalse((kd / "cf").exists())
+        rec = json.loads((HERE / "recipes.json").read_text())
+        with tempfile.TemporaryDirectory() as t:
+            rp = Path(t) / "recipes.json"
+            rec[MODULE] = dict(rec[MODULE], macro_pin_flops=True)
+            rp.write_text(json.dumps(rec))
+            r = subprocess.run([sys.executable, str(HERE / "gen_core_kit_qc.py"), "--module", MODULE, "--out", t,
+                                "--recipes", str(rp)], capture_output=True, text=True)
+            self.assertNotEqual(r.returncode, 0)
+            self.assertIn("macro_pin_flops needs recipe macro_sites", r.stderr)
+
+
 if __name__ == "__main__":
     unittest.main()

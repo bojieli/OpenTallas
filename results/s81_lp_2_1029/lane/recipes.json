@@ -1,0 +1,60 @@
+{
+ "dsfd_coll_lane_w_safe8_ntf__A": {
+  "ref_tile": "results/s81_lp_2_1029/lane/A",
+  "plan": "results/s81_lp_2_1029/lane/A/kit_plan.json",
+  "plan_module": "dsfd_coll_lane_w_safe8_ntf",
+  "io_hold": "sender_min",
+  "suffix": "lp2a",
+  "rtl_patches": [
+   {
+    "file": "rtl/common/ot_link_credit_rx_b64.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_credit,",
+      "output reg l_credit,"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/common/ot_link_credit_tx_rc.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_valid,",
+      "output reg l_valid,"
+     ]
+    ]
+   }
+  ]
+ },
+ "dsfd_coll_lane_w_safe8_ntf__B": {
+  "ref_tile": "results/s81_lp_2_1029/lane/B",
+  "plan": "results/s81_lp_2_1029/lane/B/kit_plan.json",
+  "plan_module": "dsfd_coll_lane_w_safe8_ntf",
+  "io_hold": "sender_min",
+  "suffix": "lp2b",
+  "rtl_patches": [
+   {
+    "file": "rtl/common/ot_link_credit_rx_b64.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_credit,",
+      "output reg l_credit,"
+     ]
+    ]
+   },
+   {
+    "file": "rtl/common/ot_link_credit_tx_rc.sv",
+    "why": "S81-LP-2: drop (* keep *) on the 1-bit link output reg; Yosys otherwise leaves an unloaded BUFx2 to the kept alias on the port net (RAW face_guard shared FAIL). Zero logic change; the reg drives the port.",
+    "edits": [
+     [
+      "(* keep *) output reg l_valid,",
+      "output reg l_valid,"
+     ]
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,314 @@
+# HBM 12.18 kit census, DIE-HBM-14 2026-10-29: current plan c25c_d14 (81 types/80 core designs) + B2n-only rows (autopilot OWNERS plan)
+die	item	kind	state	b2n_relation	owner	live_owner	live_job	last_activity	evidence	in_current_plan	b2n_item
+hbm	q_b000	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2799m	PROTO geom FAIL (B2n.json)	yes x1	q_b000
+hbm	q_b000__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2799m	PROTO geom FAIL (B2n.json)	yes x1	q_b000
+hbm	q_b001	type	PLAN-STRUCTURAL	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	1225m	PROTO geom FAIL (B2n.json)	yes x1	q_b001
+hbm	q_b001__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	PATH-HBM	yes(DIE-HBM-14)	none	1225m	PROTO geom FAIL (B2n.json)	yes x1	q_b001
+hbm	q_b002	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2167m	PROTO geom FAIL (B2n.json)	yes x1	q_b002
+hbm	q_b002__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2167m	PROTO geom FAIL (B2n.json)	yes x1	q_b002
+hbm	q_b003	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	4652m	PROTO geom FAIL (B2n.json)	yes x1	q_b003
+hbm	q_b003__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	4652m	PROTO geom FAIL (B2n.json)	yes x1	q_b003
+hbm	q_b010	type	PLAN-STRUCTURAL	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	1225m	PROTO geom FAIL (B2n.json)	yes x1	q_b010
+hbm	q_b010__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	PATH-HBM	yes(DIE-HBM-14)	none	1225m	PROTO geom FAIL (B2n.json)	yes x1	q_b010
+hbm	q_b011	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2167m	PROTO geom FAIL (B2n.json)	yes x1	q_b011
+hbm	q_b011__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2167m	PROTO geom FAIL (B2n.json)	yes x1	q_b011
+hbm	q_b012	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	4652m	PROTO geom FAIL (B2n.json)	yes x1	q_b012
+hbm	q_b012__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	4652m	PROTO geom FAIL (B2n.json)	yes x1	q_b012
+hbm	q_b013	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	3776m	PROTO geom FAIL (B2n.json)	yes x1	q_b013
+hbm	q_b013__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	3776m	PROTO geom FAIL (B2n.json)	yes x1	q_b013
+hbm	q_b100	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2083m	PROTO geom FAIL (B2n.json)	yes x1	q_b100
+hbm	q_b100__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2083m	PROTO geom FAIL (B2n.json)	yes x1	q_b100
+hbm	q_b101	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	3737m	PROTO geom FAIL (B2n.json)	yes x1	q_b101
+hbm	q_b102	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	3737m	PROTO geom FAIL (B2n.json)	yes x1	q_b102
+hbm	q_b102__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	3737m	PROTO geom FAIL (B2n.json)	yes x1	q_b102
+hbm	q_b103	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	1956m	PROTO geom FAIL (B2n.json)	yes x1	q_b103
+hbm	q_b103__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	1956m	PROTO geom FAIL (B2n.json)	yes x1	q_b103
+hbm	q_b110	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_b110
+hbm	q_b110__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_b110
+hbm	q_b111	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	3799m		yes x1	q_b111
+hbm	q_b111__physical_v1	type	NEEDS-KIT	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	3799m		yes x1	q_b111
+hbm	q_b112	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	4652m	PROTO geom FAIL (B2n.json)	yes x1	q_b112
+hbm	q_b112__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	4652m	PROTO geom FAIL (B2n.json)	yes x1	q_b112
+hbm	q_b113	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	1956m	PROTO geom FAIL (B2n.json)	yes x1	q_b113
+hbm	q_b113__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	1956m	PROTO geom FAIL (B2n.json)	yes x1	q_b113
+hbm	NW_io	type	NEEDS-KIT	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	821m		yes x1	NW_io
+hbm	q_mca	type	NEEDS-KIT	EXACT	HBM-PLAN	no	none	2977m		yes x2	q_mca
+hbm	q_mcb	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x2	q_mcb
+hbm	q_sm0	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	1985m		yes x2	q_sm0
+hbm	q_sm1	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	never		yes x2	q_sm1
+hbm	q_sm2	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	1985m		yes x2	q_sm2
+hbm	q_sm3	type	NEEDS-KIT	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	115m		yes x2	q_sm3
+hbm	q_spb0	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	5849m		yes x1	q_spb0
+hbm	q_spb0__physical_v1	type	NEEDS-KIT	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	5849m		yes x1	q_spb0
+hbm	q_spb1	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	5849m		yes x2	q_spb1
+hbm	q_spb2	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	3074m	PROTO geom FAIL (B2n.json)	yes x1	q_spb2
+hbm	q_spb2__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	3074m	PROTO geom FAIL (B2n.json)	yes x1	q_spb2
+hbm	q_spt0	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	3074m	PROTO geom FAIL (B2n.json)	yes x1	q_spt0
+hbm	q_spt0__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	3074m	PROTO geom FAIL (B2n.json)	yes x1	q_spt0
+hbm	q_spt1	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	6104m	PROTO geom FAIL (B2n.json)	yes x2	q_spt1
+hbm	q_spt2	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	6104m	PROTO geom FAIL (B2n.json)	yes x2	q_spt2
+hbm	q_spu0	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	5686m	PROTO geom FAIL (B2n.json)	yes x1	q_spu0
+hbm	q_spu0__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	5686m	PROTO geom FAIL (B2n.json)	yes x1	q_spu0
+hbm	q_spu1	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	1985m	PROTO geom FAIL (B2n.json)	yes x1	q_spu1
+hbm	q_spu1__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	1985m	PROTO geom FAIL (B2n.json)	yes x1	q_spu1
+hbm	q_su00	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	2083m		yes x1	q_su00
+hbm	q_su00__physical_v1	type	NEEDS-KIT	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2083m		yes x1	q_su00
+hbm	q_su01	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	4634m	PROTO geom FAIL (B2n.json)	yes x1	q_su01
+hbm	q_su01__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	4634m	PROTO geom FAIL (B2n.json)	yes x1	q_su01
+hbm	q_su10	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su10
+hbm	q_su10__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su10
+hbm	q_su11	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su11
+hbm	q_su11__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su11
+hbm	q_su20	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	5849m		yes x1	q_su20
+hbm	q_su20__physical_v1	type	NEEDS-KIT	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	5849m		yes x1	q_su20
+hbm	q_su21	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su21
+hbm	q_su21__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su21
+hbm	q_su30	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su30
+hbm	q_su30__physical_v1	type	PLAN-STRUCTURAL	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	2977m	PROTO geom FAIL (B2n.json)	yes x1	q_su30
+hbm	q_su31	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	1985m		yes x1	q_su31
+hbm	q_su31__physical_v1	type	NEEDS-KIT	PHYSICAL_V1-VARIANT	HBM-PLAN	no	none	1985m		yes x1	q_su31
+hbm	root	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	4911m	PROTO geom FAIL (B2n.json)	yes x1	root
+hbm	vsN0	type	FIX	TYPE-CHANGED	CODEX	no	none	185m	2026-10-25 11:35 PDT GEOM-REVIEW-2: REPLY [PATH-HBM-ROOTPACK] R3 STUDY RESULT 11:25 (HBM root partition, claude/path-hbm	yes x1	vsN0
+hbm	vsN1	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	2977m		yes x1	vsN1
+hbm	vsN2	type	NEEDS-KIT	TYPE-CHANGED	HBM-PLAN	no	none	5849m		yes x1	vsN2
+hbm	vsN4	type	FIX	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	1091m	2026-10-25 11:35 PDT GEOM-REVIEW-2: REPLY [PATH-HBM-ROOTPACK] R3 STUDY RESULT 11:25 (HBM root partition, claude/path-hbm	yes x1	vsN4
+hbm	vsN5	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	6104m	PROTO geom FAIL (B2n.json)	yes x1	vsN5
+hbm	vsN6	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	2062m	PROTO geom FAIL (B2n.json)	yes x1	vsN6
+hbm	NE_io	type	NEEDS-KIT	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	821m		yes x1	NE_io
+hbm	q_hub_nw	type	FIX	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	414m	2026-10-25 11:36 PDT GEOM-REVIEW-2: REPLY [HBM-KITS/B2 07:17] ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2 (row 49406bd	yes x1	q_hub
+hbm	q_b101_nw	type	PLAN-STRUCTURAL	TYPE-CHANGED	HBM-PLAN	no	none	3737m	PROTO geom FAIL (B2n.json)	yes x1	q_b101
+hbm	q_hub_ne	type	FIX	TYPE-CHANGED	PATH-HBM	yes(DIE-HBM-14)	none	414m	2026-10-25 11:36 PDT GEOM-REVIEW-2: REPLY [HBM-KITS/B2 07:17] ot_hfd_coll_q2_hard_v8g__ring_ag_79b4607b3be2 (row 49406bd	yes x1	q_hub
+hbm	PHY_NW	type	NEEDS-KIT	NEW-DESIGN	HBM-PLAN	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	PHY_NC	type	NEEDS-KIT	NEW-DESIGN	HBM-PLAN	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	PHY_NE	type	NEEDS-KIT	NEW-DESIGN	HBM-PLAN	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	hfd_ep_static	core	FIX	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	2026-10-27 03:14 PDT GEOM-REVIEW-18: ACK [HBM-EP-CAL-1 hfd_ep_static built I3 tree] (GEOM NOTE 03:11, claude/hbm-ep-cal-	yes x6	hfd_ep_static_936f8dc7fe73
+hbm	hfd_hgi_vm_calendar_f20	core	REVIEW	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	361m	structural.tsv 93615702e5e1 STRUCTURAL/post-cts-hold	yes x4	hfd_hgi_vm_calendar_f20
+hbm	hfd_hgi_vms_glue_nw_t	core	GEOM-REQ	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	590m	autopilot 3c69e3f5a81a WAIT-GEOM HBM-CORES-KITS-2 C24 3ab76af4 KIT_PREFLIGHT --contract PASS 0 (gen _um outline fix: DIE	yes x4	hfd_hgi_vms_glue_nw_t
+hbm	hnx_fused_lane	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x32	-
+hbm	hnx_rp3lp3h_n	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES-KITS-10(PARKED 06:06)	no	none	430m		yes x128	hnx_rp3lp3h_n
+hbm	hnx_rp3lp3h_s	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES-KITS-10(PARKED 06:06)	no	none	688m		yes x128	hnx_rp3lp3h_s
+hbm	hnx_vms_bank_q0_faces__vec6293	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x16	-
+hbm	hnx_vms_bank_q0_faces__vecd4ae	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x16	-
+hbm	ot_hbm_argmax_static_sw_vm_r2	core	FIX	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	3127m	review.tsv 4c65077137aa NEAR-MISS intel1:/srv/opentallas-scratch2/claude/autopilot/review/4c65077137aa	yes x1	ot_hbm_argmax_static_sw_vm_r2
+hbm	ot_hbm_hc_bank128_pair_core_7d149b37532c	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x108	-
+hbm	ot_hbm_hc_bank128_pair_core_9bf80cdae38d	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x4	-
+hbm	ot_hbm_hc_bank128_pair_first_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x16	-
+hbm	ot_hbm_hc_root_static__hcp_sys1	core	KIT-PLACED	SAME-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	2026-10-27 01:25 PDT GEOM-REVIEW-17: ACK [HBM-CORE-LAT-R3 ot_hbm_hc_root_static__hcp_sys1] UPDATE 01:23. The geometry ve	yes x1	ot_hbm_hc_root_static__hcp_sys1
+hbm	ot_hbm_hc_root_static__tailx_rest__v4f4566	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	ot_hbm_hc_root_static__tailx_rest__v6bc7f2	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	ot_hbm_hc_root_static__tailx_sk_steady	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hbm_hc_root_static__tailx_sk_step0	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hbm_hc_subtree32_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x8	-
+hbm	ot_hbm_host_cp_rxs	core	NEEDS-KIT	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	688m		yes x1	ot_hbm_host_cp_rxs
+hbm	ot_hbm_idx_qctl_static	core	GEOM-REQ	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	497m	autopilot 86f36b30a266 WAIT-GEOM GEOM-REVIEW [HBM-KITS/B2] 10-25 11:18	yes x4	ot_hbm_idx_qctl_static
+hbm	ot_hbm_idx_query_static	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	autopilot 08338026c8f6 WAIT-GEOM GEOM-REVIEW [AUTO-GEOM 08338026c8f6] 10-27 15:47	yes x4	ot_hbm_idx_query_static
+hbm	ot_hbm_idx_rootctl_static_am	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	4895m	autopilot 57925f664904 WAIT-GEOM GEOM-REVIEW [HBM-KITS/B2] 10-25 11:18	yes x1	ot_hbm_idx_rootctl_static_am
+hbm	ot_hbm_idx_score_hcol_h0	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x128	-
+hbm	ot_hbm_idx_score_hcol_h1	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x128	-
+hbm	ot_hbm_idx_selector_static_sel	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	70m	autopilot 96011423313c WAIT-GEOM HBM-CORES-KITS-4 _k11: mk_c20 --avoid-macros (12.8b leaf islands moved off halo-grown S	yes x1	ot_hbm_idx_selector_static_sel
+hbm	ot_hbm_idx_tail_native_f56d1f72f3f3	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x4	-
+hbm	ot_hbm_idx_tail_native_9496b22d4b49	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x4	-
+hbm	ot_hbm_idx_topk_link_static	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	ot-run pid 2448379 topk-1028/kits_v4/ot_hbm_idx_topk_link_static_4b8bc21191aa-_tree1028v4	0m		yes x1	ot_hbm_idx_topk_link_static
+hbm	ot_hbm_idx_vm_query_static_n12	core	KIT-PLACED	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	2026-10-27 07:52 PDT GEOM-REVIEW-25: VERDICT [HBM-CORES-R8 wave2b ot_hbm_idx_vm_query_static_n12_2a86020c3999-_k2, R7 re	yes x4	ot_hbm_idx_vm_query_static_n12
+hbm	ot_hbm_sm_vm_wr_q_t_lanes4	core	REVIEW	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	340m	structural.tsv c667edbed652 STRUCTURAL/hold-structural	yes x4	ot_hbm_sm_vm_wr_q_t_lanes4
+hbm	ot_hbm_static_cfg_collar_idx256r	core	SIGNED-UNVERSIONED	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	UNVERSIONED local:/srv/opentallas-scratch/claude/wt/codex-head-clock-ready/results/physical/hbm_cores_r8/collar_idx256r_a5_signed/signoff.json	yes x1	ot_hbm_static_cfg_collar_idx256r
+hbm	ot_hbm_su_programme_pslice_c5	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	688m		yes x4	ot_hbm_su_programme_pslice_c5
+hbm	ot_hbm_su_static_cxport_ij_q	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	566m	autopilot 30c598db1e6d WAIT-GEOM HBM-CORES-KITS-1 C24 3ab76af4 KIT_PREFLIGHT --contract PASS 0; probe rtl_lint PASS, yos	yes x4	ot_hbm_su_static_cxport_ij_q
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp0	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m		yes x4	ot_hbm_su_static_pgslice_lg__lane_exp0
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x60	-
+hbm	ot_hbm_su_static_pgslice_lg__lanes8_11	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	never		yes x4	ot_hbm_su_static_pgslice_lg__lanes8_11_1516af9871b4
+hbm	ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x28	-
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x16	-
+hbm	ot_hbm_su_static_pgslice_lg__pretree	core	FIX	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	2605m	2026-10-27 07:29 PDT GEOM-REVIEW-25: VERDICT [HBM-CORES-R8 pretree ot_hbm_su_static_pgslice_lg__pretree_8805b7bd4ecb-_k2	yes x8	ot_hbm_su_static_pgslice_lg__pretree_44645377c174
+hbm	ot_hbm_su_static_pgslice_lg__side_rest	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	DIE-HBM	yes(DIE-HBM-14)	none	1026m	autopilot a5f7ec4199d8 WAIT-GEOM HBM-CORES-REBAL-2 06:50: CLOCK_ENTRY_PORT fix: scalar clk_side oneclk pins (3 alias bit	yes x4	ot_hbm_su_static_pgslice_lg__side_rest
+hbm	ot_hbm_su_static_pgslice_lg__side_softplus	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	DIE-HBM	yes(DIE-HBM-14)	none	1026m	autopilot 9382e51231ee WAIT-GEOM HBM-CORES-REBAL-2 06:50: CLOCK_ENTRY_PORT fix: scalar clk_side oneclk pins (3 alias bit	yes x4	ot_hbm_su_static_pgslice_lg__side_softplus
+hbm	ot_hbm_su_static_qcore_r13	core	GEOM-REQ	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	210m	autopilot 3bf08fc6bb53 WAIT-GEOM HBM-CORES-KITS-4 _k11: mk_c20 --avoid-macros (12.8b leaf islands moved off halo-grown S	yes x4	ot_hbm_su_static_qcore_r13
+hbm	ot_hbm_su_static_sfustore_hw	core	FIX	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	REPLY [HBM-KITS/B2 07:17] sfustore_hw ot_hbm_su_static_sfustore_hw_f4c4041231a5: FAIL-F6 (07:31). Pin regs at macro pins	yes x4	ot_hbm_su_static_sfustore_hw
+hbm	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	370m		yes x32	ot_hbm_svc_pc_ctrl_leaf_cfg_h9b_22cce13e347f
+hbm	ot_hbm_svc_sm_group_rel_id	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	ot-run pid 1894229 hbm-cores-kits-4/k11/kits/ot_hbm_svc_sm_group_rel_id_e5b288da23af-_k11	0m	autopilot 50786c563d8c WAIT-GEOM HBM-CORES-KITS-4 _k11: mk_c20 --avoid-macros (12.8b leaf islands moved off halo-grown S	yes x8	ot_hbm_svc_sm_group_rel_id_97add0219b22
+hbm	ot_hbm_svc_sm_xcal_rel_t	core	KIT-PLACED	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	2026-10-27 02:56 PDT GEOM-REVIEW-18: REPLY [HBM-CORE-LAT-R5 ot_hbm_svc_sm_xcal_rel_t NO-PAD TREE] VERDICT PASS-COND (the	yes x8	ot_hbm_svc_sm_xcal_rel_t_e3533f638d2f
+hbm	ot_hbm_svc_vm_kshare_splitstrap__v700685	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x6	-
+hbm	ot_hbm_svc_vm_kshare_splitstrap__v8e478a	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hbm_svc_vmdel_lane_n	core	NEEDS-KIT	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	2598m		yes x32	ot_hbm_svc_vmdel_lane_n_2a05a10afa45
+hbm	ot_hbm_svc_wb_kport_q	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	470m	autopilot a43ab856da8b WAIT-GEOM HBM-CORES-KITS-4 _k11: mk_c20 --avoid-macros (12.8b leaf islands moved off halo-grown S	yes x4	ot_hbm_svc_wb_kport_q
+hbm	ot_hbm_xp_aq_tree13_fmt	core	FIX	SAME-OUTLINE-NEW-PINS	HBM-CORES-REBAL	no	none	1394m	structural.tsv a036cb2f6232 STRUCTURAL/preflight	yes x4	ot_hbm_xp_aq_tree13_fmt_55d250ae9185
+hbm	ot_hfd_coll_q2_hard_v8g__reduce	core	REVIEW	SAME-OUTLINE-NEW-PINS	DIE-HBM	yes(DIE-HBM-14)	none	1041m	structural.tsv 182bf31807fc STRUCTURAL/routed-not-signed localhost:/srv/opentallas-scratch2/claude/autopilot/review/182bf31807fc	yes x4	ot_hfd_coll_q2_hard_v8g__reduce
+hbm	ot_hfd_coll_q2_hard_v8g__ring_ag	core	FIX	SAME-OUTLINE-NEW-PINS	HBM-CORES-KITS-10(PARKED 06:06, successor pending)	no	none	195m	structural.tsv 09ed9477a097 STRUCTURAL/routed-not-signed localhost:/srv/opentallas-scratch2/claude/autopilot/review/09ed9477a097	yes x4	ot_hfd_coll_q2_hard_v8g__ring_ag
+hbm	ot_hfd_coll_q2n2_body_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hfd_coll_q2n2_vm_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hfd_coll_q3_body_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hfd_coll_q3_edge_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hfd_coll_q3_vm_core	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x2	-
+hbm	ot_hgi_coll_gq_issue	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	294m		yes x4	ot_hgi_coll_gq_issue
+hbm	ot_hgi_coll_gq_land	core	FIX	SAME-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	structural.tsv a2529b31abb7 CRASH/no-signoff	yes x4	ot_hgi_coll_gq_land
+hbm	ot_hgi_coll_inj_idx_join_rg	core	GEOM-REQ	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m	autopilot 6e035d97c92e WAIT-GEOM GEOM-REVIEW [HBM-KITS/B2] 10-25 11:18	yes x4	ot_hgi_coll_inj_idx_join_rg
+hbm	ot_hgi_coll_tkm_m_tp192__root	core	KIT-PLACED	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	4411m	2026-10-25 15:24 PDT GEOM-REVIEW: REPLY [PATH-HBM-TKMCLKBUF] type ot_hgi_coll_tkm_m_tp192__root (root.clock.branch_buffe	yes x1	ot_hgi_coll_tkm_m_tp192__root
+hbm	ot_hgi_coll_tkm_tp192_tile_core__idpin__strap	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x31	-
+hbm	ot_hgi_coll_tkm_tp192_tile_core__terminal_idpin__strap	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	ot_hgi_dma_back_static_vp4_banks_cp	core	NEEDS-KIT	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	688m		yes x4	ot_hgi_dma_back_static_vp4_banks_cp
+hbm	ot_hgi_qw_dec	core	REVIEW	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	410m	structural.tsv b0592d3eb25d STRUCTURAL/post-cts-hold	yes x4	ot_hgi_qw_dec
+hbm	ot_hgi_sfu_core_split3__ctl	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	never		yes x2	ot_hgi_sfu_core_split3__ctl
+hbm	ot_hgi_sfu_core_split3__opstore_a	core	NEEDS-KIT	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	never		yes x2	ot_hgi_sfu_core_split3__opstore_a
+hbm	ot_hgi_sfu_core_split3__opstore_b	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	none	never		yes x2	ot_hgi_sfu_core_split3__opstore_b
+hbm	ot_hgi_sfu_programme_store_r10	core	NEEDS-KIT	NEW-OUTLINE-NEW-PINS	HBM-CORES-REBAL	no	none	543m		yes x4	ot_hgi_sfu_programme_store_r10
+hbm	ot_hgi_sfu_split3_lane_core__idpin	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x32	-
+hbm	ot_hgi_sm_xload_cl2_bdring	core	FIX	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	440m	2026-10-28 21:38 PDT GEOM-REVIEW-46: VERDICT [AUTO-GEOM 74cb762faeb6] hbm/ot_hgi_sm_xload_cl2_bdring (HBM-CORES-KITS-1 C	yes x4	ot_hgi_sm_xload_cl2_bdring_2f4ce4cfb609
+hbm	ot_hgi_sm_xload_cl2_bfqg	core	NEEDS-KIT	SAME-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m		yes x16	ot_hgi_sm_xload_cl2_bfqg_1d82ff40b7b2
+hbm	ot_hgi_sm_xload_cl2_ctlx	core	GEOM-REQ	NEW-OUTLINE-NEW-PINS	HBM-CORES	no	none	180m	autopilot 277bbb6dad3f WAIT-GEOM GEOM-REVIEW [AUTO-GEOM 277bbb6dad3f] 10-29 02:47	yes x4	ot_hgi_sm_xload_cl2_ctlx
+hbm	ot_hgi_sm_xload_xq_pegress	core	NEEDS-KIT	NEW-OUTLINE-NEW-PINS	CORE-VIEWS	no	none	1026m		yes x4	ot_hgi_sm_xload_xq_pegress_9839b19b37d6
+hbm	ot_hnx_fused_host_program	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	ot_hnx_fused_hub_n4ext	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x1	-
+hbm	ot_hnx_fused_tnode	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x30	-
+hbm	ot_hnx_idxn_keybuf_slice	core	NEEDS-KIT	NEW-DESIGN	HBM-CORES	no	none	-	no OWNERS row (design absent from autopilot plan B2n)	yes x16	-
+hbm	ot_pdie_serdes	core	GEOM-REQ	SAME-OUTLINE-NEW-PINS	HBM-CORES	no	ot-run pid 1894097 tch2/claude/hbm-cores-kits-4/k11/kits/ot_pdie_serdes_d62659dbe46a-_k11	0m	autopilot 0142b9b3eb17 WAIT-GEOM HBM-CORES-KITS-4 _k11: mk_c20 --avoid-macros (12.8b leaf islands moved off halo-grown S	yes x5	ot_pdie_serdes
+hbm	PHY_N	type	FIX	B2n-ONLY	PATH-HBM	yes(DIE-HBM-14)	none	384m	2026-10-26 13:06 PDT GEOM-REVIEW-4: REPLY [GEOM REQ PATH-HBM-B1E] (REQ 13:04 in lanes/PATH-HBM.md; plan_b1e sha 43fb3b14	no	PHY_N
+hbm	hfd_vms_bank_native_q0_faces_1dc19a048d64	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_1dc19a048d64
+hbm	hfd_vms_bank_native_q0_faces_60b03fdc5b14	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_60b03fdc5b14
+hbm	hfd_vms_bank_native_q0_faces_08b030c8c5fa	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_08b030c8c5fa
+hbm	hfd_vms_bank_native_q0_faces_48eaaf6eb467	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_48eaaf6eb467
+hbm	hfd_vms_bank_native_q0_faces_cdf7edf6aef9	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_cdf7edf6aef9
+hbm	hfd_vms_bank_native_q0_faces_f98a45862fe1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_f98a45862fe1
+hbm	hfd_vms_bank_native_q0_faces_9119a4edb587	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_9119a4edb587
+hbm	hfd_vms_bank_native_q0_faces_70f7f3b9c4b9	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	hfd_vms_bank_native_q0_faces_70f7f3b9c4b9
+hbm	ot_hbm_hc_bankq0_static__lanes0_2	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq0_static__lanes0_2
+hbm	ot_hbm_hc_bankq0_static__lanes3_5	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq0_static__lanes3_5
+hbm	ot_hbm_hc_bankq0_static__lanes6_7_bank	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq0_static__lanes6_7_bank
+hbm	ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	6148m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_ft_static__lanes0_2_d7bcdf811862
+hbm	ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	6148m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_ft_static__lanes0_2_43d2a3be8b5a
+hbm	ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_ft_static__lanes3_5_20947a7cbdde
+hbm	ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	6148m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_ft_static__lanes3_5_1d3df82b9ed3
+hbm	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_56966ec8a129	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_56966ec8a129
+hbm	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_ft_static__lanes6_7_bank_26496f98b6d5
+hbm	ot_hbm_hc_bankq_static__lanes0_2_96294e05efa9	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes0_2_96294e05efa9
+hbm	ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes0_2_e6588042a5d1
+hbm	ot_hbm_hc_bankq_static__lanes0_2_73698994063d	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes0_2_73698994063d
+hbm	ot_hbm_hc_bankq_static__lanes3_5_2217a22f183c	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes3_5_2217a22f183c
+hbm	ot_hbm_hc_bankq_static__lanes3_5_2d54ff50920c	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes3_5_2d54ff50920c
+hbm	ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3	core	RETIRED	B2n-ONLY	CORE-VIEWS	no	none	1026m	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes3_5_60b283a425e3
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_345a3ba2271a	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes6_7_bank_345a3ba2271a
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_4766a3ee91ef	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes6_7_bank_4766a3ee91ef
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_4be7d9f11ffa	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes6_7_bank_4be7d9f11ffa
+hbm	ot_hbm_hc_bankq_static__lanes6_7_bank_9ac6b0c89af5	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_static__lanes6_7_bank_9ac6b0c89af5
+hbm	ot_hbm_hc_bankq_term_static__lanes6_7_bank	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_bankq*): old bankq/bankq_ft/bankq_term cores absent from planS2/planU2/planU3; replaced by hc_bank128_pair (HBM-CORE-LAT-R4)	no	ot_hbm_hc_bankq_term_static__lanes6_7_bank
+hbm	ot_hbm_hc_qhub_static	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hbm_hc_qhub_static): absent from planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hbm_hc_qhub_static
+hbm	ot_hbm_hc_root_static__tail0_rest	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_hc_root_static__tail0_rest
+hbm	ot_hbm_hc_root_static__tail0_sk_steady	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_hc_root_static__tail0_sk_steady
+hbm	ot_hbm_hc_root_static__tail0_sk_step0	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_hc_root_static__tail0_sk_step0
+hbm	ot_hbm_hc_root_static__tail1_rest	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_hc_root_static__tail1_rest
+hbm	ot_hbm_hc_root_static__tail1_sk_steady	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_hc_root_static__tail1_sk_steady
+hbm	ot_hbm_hc_root_static__tail1_sk_step0	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_hc_root_static__tail1_sk_step0
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k0h0	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c0_k0h0
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k0h1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c0_k0h1
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k1h0	core	GEOM-REQ	B2n-ONLY	CORE-VIEWS	no	none	1026m	autopilot de56e559c582 WAIT-GEOM HBM-KITS/B1 07:08	no	ot_hbm_idx_score_quarter_static__r0c0_k1h0
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k2h1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c0_k2h1
+hbm	ot_hbm_idx_score_quarter_static__r0c0_k3h1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c0_k3h1
+hbm	ot_hbm_idx_score_quarter_static__r0c1_k2h0	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c1_k2h0
+hbm	ot_hbm_idx_score_quarter_static__r0c1_k2h1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c1_k2h1
+hbm	ot_hbm_idx_score_quarter_static__r0c1_k3h0	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c1_k3h0
+hbm	ot_hbm_idx_score_quarter_static__r0c3_k3h1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r0c3_k3h1
+hbm	ot_hbm_idx_score_quarter_static__r1c0_k0h0	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r1c0_k0h0
+hbm	ot_hbm_idx_score_quarter_static__r1c1_k0h0	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r1c1_k0h0
+hbm	ot_hbm_idx_score_quarter_static__r1c1_k3h1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__r1c1_k3h1
+hbm	ot_hbm_idx_score_quarter_static__tail0	core	GEOM-REQ	B2n-ONLY	CORE-VIEWS	no	none	1026m	autopilot 3d41e712ec5d WAIT-GEOM HBM-KITS/B1 07:08	no	ot_hbm_idx_score_quarter_static__tail0
+hbm	ot_hbm_idx_score_quarter_static__tail1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_idx_score_quarter_static__tail1
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp1_d5715440ccac	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp1_d5715440ccac
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp1_cc6a70ac5f18	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp1_cc6a70ac5f18
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp10_2912e200f83d	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp10_2912e200f83d
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp10_8d2f62efc35d	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp10_8d2f62efc35d
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp11_628405c4b899	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp11_628405c4b899
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp11_1510b1b6a90f	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp11_1510b1b6a90f
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp12_75dc9e6a2efa	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp12_75dc9e6a2efa
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp12_9bb0c4d58883	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp12_9bb0c4d58883
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp13_2918e8eb5d6c	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp13_2918e8eb5d6c
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp13_fea6b23e56b4	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp13_fea6b23e56b4
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp14_4a8fa8d47007	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp14_4a8fa8d47007
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp14_dbc0410883c5	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp14_dbc0410883c5
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp2_d3ba1a7783b3	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp2_d3ba1a7783b3
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp2_4240b9ef0b3f	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp2_4240b9ef0b3f
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp3_6549fac62117	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp3_6549fac62117
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp3_565417693226	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp3_565417693226
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp4_be1a70a46266	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp4_be1a70a46266
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp4_b74f1b0dd8d3	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp4_b74f1b0dd8d3
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp5_bde86fff1bda	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp5_bde86fff1bda
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp5_4f3a945c1229	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp5_4f3a945c1229
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp6_9f91e5c14a67	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp6_9f91e5c14a67
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp6_82d218e839cd	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp6_82d218e839cd
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp7_6245e6cd25b3	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp7_6245e6cd25b3
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp7_3fa591887d18	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp7_3fa591887d18
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp8	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp8
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp9_1b3202c4b870	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp9_1b3202c4b870
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp9_de7a529fa6e7	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp9_de7a529fa6e7
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp_l_99db70deab19	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp_l_99db70deab19
+hbm	ot_hbm_su_static_pgslice_lg__lane_exp_l_2e4754467283	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_su_static_pgslice_lg__lane_exp_l_2e4754467283
+hbm	ot_hbm_su_static_pgslice_lg__lanes0_3	core	FIX	B2n-ONLY	HBM-CORES	no	none	4235m	2026-10-26 07:19 PDT GEOM-REVIEW-16: REPLY [HBM-CORE-LAT PGS03-ISL] ot_hbm_su_static_pgslice_lg__lanes0_3 (4 inst, 760.3	no	ot_hbm_su_static_pgslice_lg__lanes0_3
+hbm	ot_hbm_su_static_pgslice_lg__lanes12_15_aee690bf3444	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes12_15_aee690bf3444
+hbm	ot_hbm_su_static_pgslice_lg__lanes12_15_eb590bc5e9de	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes12_15_eb590bc5e9de
+hbm	ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes16_19_0d1ec45f866e
+hbm	ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes16_19_6930bb464143
+hbm	ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes20_23_f62fbff895b8
+hbm	ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes20_23_f5958ea07f29
+hbm	ot_hbm_su_static_pgslice_lg__lanes24_27_53fde75129b8	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes24_27_53fde75129b8
+hbm	ot_hbm_su_static_pgslice_lg__lanes24_27_ac922fae577a	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes24_27_ac922fae577a
+hbm	ot_hbm_su_static_pgslice_lg__lanes28_31_4ce1cba54fb1	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes28_31_4ce1cba54fb1
+hbm	ot_hbm_su_static_pgslice_lg__lanes28_31_97095470da01	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes28_31_97095470da01
+hbm	ot_hbm_su_static_pgslice_lg__lanes4_7_7c5136131e9e	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes4_7_7c5136131e9e
+hbm	ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes4_7_3b8d20184137
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain0_3	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes_plain0_3
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain12_15_a15494473cec	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes_plain12_15_a15494473cec
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain12_15_871944876423	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes_plain12_15_871944876423
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain4_7_80ba81b7a4cd	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes_plain4_7_80ba81b7a4cd
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain4_7_9e7c6dac470e	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes_plain4_7_9e7c6dac470e
+hbm	ot_hbm_su_static_pgslice_lg__lanes_plain8_11	core	NEEDS-KIT	B2n-ONLY	HBM-CORES	no	none	never		no	ot_hbm_su_static_pgslice_lg__lanes_plain8_11
+hbm	ot_hbm_svc_vm_kshare_splitstrap_cd020cecd26b	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_svc_vm_kshare_splitstrap_cd020cecd26b
+hbm	ot_hbm_svc_vm_kshare_splitstrap_fcb962e88e4d	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_svc_vm_kshare_splitstrap_fcb962e88e4d
+hbm	ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_svc_vm_kshare_splitstrap_6bbd87383348
+hbm	ot_hbm_svc_vm_kshare_splitstrap_5b4268cf4000	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hbm_svc_vm_kshare_splitstrap_5b4268cf4000
+hbm	ot_hfd_coll_q2_hard_v8g__body	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hfd_coll_q2_hard_v8g__body): absent from planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hfd_coll_q2_hard_v8g__body
+hbm	ot_hgi_coll_tkm_m_tp192__tile0	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	4890m	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile0
+hbm	ot_hgi_coll_tkm_m_tp192__tile1	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile1
+hbm	ot_hgi_coll_tkm_m_tp192__tile10	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile10
+hbm	ot_hgi_coll_tkm_m_tp192__tile11	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile11
+hbm	ot_hgi_coll_tkm_m_tp192__tile12	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile12
+hbm	ot_hgi_coll_tkm_m_tp192__tile13	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile13
+hbm	ot_hgi_coll_tkm_m_tp192__tile14	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile14
+hbm	ot_hgi_coll_tkm_m_tp192__tile15	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile15
+hbm	ot_hgi_coll_tkm_m_tp192__tile16	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile16
+hbm	ot_hgi_coll_tkm_m_tp192__tile17	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile17
+hbm	ot_hgi_coll_tkm_m_tp192__tile18	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile18
+hbm	ot_hgi_coll_tkm_m_tp192__tile19	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile19
+hbm	ot_hgi_coll_tkm_m_tp192__tile2	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile2
+hbm	ot_hgi_coll_tkm_m_tp192__tile20	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile20
+hbm	ot_hgi_coll_tkm_m_tp192__tile21	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile21
+hbm	ot_hgi_coll_tkm_m_tp192__tile22	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile22
+hbm	ot_hgi_coll_tkm_m_tp192__tile23	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile23
+hbm	ot_hgi_coll_tkm_m_tp192__tile24	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile24
+hbm	ot_hgi_coll_tkm_m_tp192__tile25	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile25
+hbm	ot_hgi_coll_tkm_m_tp192__tile26	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile26
+hbm	ot_hgi_coll_tkm_m_tp192__tile27	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile27
+hbm	ot_hgi_coll_tkm_m_tp192__tile28	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile28
+hbm	ot_hgi_coll_tkm_m_tp192__tile29	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile29
+hbm	ot_hgi_coll_tkm_m_tp192__tile3	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile3
+hbm	ot_hgi_coll_tkm_m_tp192__tile30	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile30
+hbm	ot_hgi_coll_tkm_m_tp192__tile31	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile31
+hbm	ot_hgi_coll_tkm_m_tp192__tile4	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile4
+hbm	ot_hgi_coll_tkm_m_tp192__tile5	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile5
+hbm	ot_hgi_coll_tkm_m_tp192__tile6	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile6
+hbm	ot_hgi_coll_tkm_m_tp192__tile7	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile7
+hbm	ot_hgi_coll_tkm_m_tp192__tile8	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile8
+hbm	ot_hgi_coll_tkm_m_tp192__tile9	core	RETIRED	B2n-ONLY	HBM-CORES	no	none	never	RETIRED (ot_hgi_coll_tkm_m_tp192__tile*): TKM tiles not hard cores in planS2/planU2/planU3 (HBM-CORE-LAT-R4)	no	ot_hgi_coll_tkm_m_tp192__tile9
+hbm	ot_hgi_sfu_core_split3__lane0	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane0
+hbm	ot_hgi_sfu_core_split3__lane1	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane1
+hbm	ot_hgi_sfu_core_split3__lane10	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane10
+hbm	ot_hgi_sfu_core_split3__lane11	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane11
+hbm	ot_hgi_sfu_core_split3__lane12	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane12
+hbm	ot_hgi_sfu_core_split3__lane13	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane13
+hbm	ot_hgi_sfu_core_split3__lane14	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane14
+hbm	ot_hgi_sfu_core_split3__lane15	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane15
+hbm	ot_hgi_sfu_core_split3__lane2	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane2
+hbm	ot_hgi_sfu_core_split3__lane3	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane3
+hbm	ot_hgi_sfu_core_split3__lane4	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane4
+hbm	ot_hgi_sfu_core_split3__lane5	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane5
+hbm	ot_hgi_sfu_core_split3__lane6	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane6
+hbm	ot_hgi_sfu_core_split3__lane7	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane7
+hbm	ot_hgi_sfu_core_split3__lane8	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane8
+hbm	ot_hgi_sfu_core_split3__lane9	core	NEEDS-KIT	B2n-ONLY	CORE-VIEWS	no	none	1026m		no	ot_hgi_sfu_core_split3__lane9

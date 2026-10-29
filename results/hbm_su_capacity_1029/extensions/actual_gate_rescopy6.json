@@ -1,0 +1,128 @@
+[
+  {
+    "source": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/hgi_gate_minimal4_4_0/native_prog.mem",
+    "edges": 614,
+    "caps": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "PASS"
+  },
+  {
+    "source": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/hgi_gate_alternate5_4_1/native_prog.mem",
+    "edges": 788,
+    "caps": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "PASS"
+  },
+  {
+    "source": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/rescopy6/native_prog.mem",
+    "edges": 2052,
+    "caps": [
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "FAIL",
+    "reason": "column 1: 16 dictionary banks required, largest available leaf 13; split the programme or qualify a larger leaf (image edges=2052)"
+  },
+  {
+    "source": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/rescopy6_alt/native_prog.mem",
+    "edges": 2054,
+    "caps": [
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "lowering": "FAIL",
+    "reason": "column 1: 16 dictionary banks required, largest available leaf 13; split the programme or qualify a larger leaf (image edges=2054)"
+  }
+]

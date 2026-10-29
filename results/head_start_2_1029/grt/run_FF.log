@@ -1,0 +1,190 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_ctl.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_host_ep.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_lep0N.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_mesh_ep.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_serdes.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_spn_strip.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_spn_end_strip.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_spn_eshim.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_spn_wshim.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_k5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_m.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_n3_transit.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_n3_turn.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_n4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_str.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_st_turn.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_tile_p.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_turn_a.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/ot_s81hd_turn_b.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407.lib.gz line 10584, timing group from output port.
+[WARNING STA-1140] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 34, library asap7sc7p5t_SIMPLE_RVT_FF_nldm_250407 already exists.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2011] LEF master ot_s81hd_ctl has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_host_ep has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_lep0N has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_serdes has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_mesh_ep has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_turn has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_str has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_n3_transit has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_n3_turn has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_n4 has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_m has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_spn_strip has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_spn_eshim has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_spn_wshim has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_spn_end_strip has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_st_k5 has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_tile_p has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_turn_a has no liberty cell.
+[WARNING ORD-2011] LEF master ot_s81hd_turn_b has no liberty cell.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 65024 rows of 324480 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 17521.920 17556.480 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 17521.920 17556.480 ) um
+[INFO IFP-0102] Core area:                    307623238.042 um^2
+[INFO IFP-0103] Total instances area:         277083339.748 um^2
+[INFO IFP-0104] Effective utilization:                0.901
+[INFO IFP-0105] Number of instances:                  30927
+OT_T floorplan 5
+OT_T placed 5
+[WARNING ODB-1003] (M1) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M2) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M3) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.018
+[WARNING ODB-1003] (M4) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M5) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.024
+[WARNING ODB-1003] (M6) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (M7) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.032
+[WARNING ODB-1003] (Pad) layer's width from (ot_clock2w2s) NDR is not defined. Using the default value 0.04
+[INFO GRT-0020] Min routing layer: M4
+[INFO GRT-0021] Max routing layer: M9
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.7200  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M8      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0088] Layer M9      Track-Pitch = 0.0800  line-2-Via Pitch: 0.0800
+[INFO GRT-0003] Macros: 351
+[INFO GRT-0004] Blockages: 12301
+[INFO GRT-0019] Found 12207 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 352
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   339872974      84605652          75.11%
+M5         Vertical     335206022      83431556          75.11%
+M6         Horizontal   348946425      86983498          75.07%
+M7         Vertical     417290595      103547197          75.19%
+M8         Horizontal   276719289      166029304          40.00%
+M9         Vertical     89186832      52854704          40.74%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/50
+[INFO GRT-0102] Start extra iteration 2/50
+[INFO GRT-0102] Start extra iteration 3/50
+[INFO GRT-0102] Start extra iteration 4/50
+[INFO GRT-0102] Start extra iteration 5/50
+[INFO GRT-0102] Start extra iteration 6/50
+[INFO GRT-0102] Start extra iteration 7/50
+[INFO GRT-0102] Start extra iteration 8/50
+[INFO GRT-0102] Start extra iteration 9/50
+[INFO GRT-0197] Via related to pin nodes: 239997
+[INFO GRT-0198] Via related Steiner nodes: 64
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 362869
+[INFO GRT-0112] Final usage 3D: 5820558
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4            84605652       1207836            1.43%             0 /  0 /  0
+M5            83431556       1063231            1.27%             0 /  0 /  0
+M6            86983498       1176566            1.35%             0 /  0 /  0
+M7           103547197       1037578            1.00%             0 /  0 /  0
+M8           166029304        131687            0.08%             0 /  0 /  0
+M9            52854704        115053            0.22%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        577451911       4731951            0.82%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 50593755 um
+[INFO GRT-0014] Routed nets: 79096
+[INFO GRT-0303] Global routing runtime = 00:00:47
+[INFO RCX-0134] Can't execute write_spef command. There's no extraction data.
+max slew
+
+Pin                                    Limit    Slew   Slack
+------------------------------------------------------------
+start_cell_1683/B                     320.00  320.63   -0.63 (VIOLATED)
+start_cell_5227/B                     320.00  320.63   -0.63 (VIOLATED)
+start_cell_6151/B                     320.00  320.63   -0.63 (VIOLATED)
+start_cell_745/B                      320.00  320.63   -0.63 (VIOLATED)
+start_cell_1682/B                     320.00  320.59   -0.59 (VIOLATED)
+start_cell_5226/B                     320.00  320.59   -0.59 (VIOLATED)
+start_cell_6150/B                     320.00  320.59   -0.59 (VIOLATED)
+start_cell_744/B                      320.00  320.59   -0.59 (VIOLATED)
+start_cell_1681/B                     320.00  320.55   -0.55 (VIOLATED)
+start_cell_5225/B                     320.00  320.55   -0.55 (VIOLATED)
+start_cell_6149/B                     320.00  320.55   -0.55 (VIOLATED)
+start_cell_743/B                      320.00  320.55   -0.55 (VIOLATED)
+start_cell_3484/B                     320.00  320.06   -0.06 (VIOLATED)
+start_cell_6118/B                     320.00  320.06   -0.06 (VIOLATED)
+start_cell_3483/B                     320.00  320.02   -0.02 (VIOLATED)
+start_cell_6117/B                     320.00  320.02   -0.02 (VIOLATED)
+
+OT_UNSET_IN 
+OT_UNSET_OUT 
+OT_STA regs 5299
+worst slack max -67.47
+worst slack min -210.51
+tns max -3541.27
+OT_DONE

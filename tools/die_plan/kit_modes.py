@@ -23,10 +23,16 @@ Legal hold-repairing sessions:
 Everything else FAILS CLOSED (exit 2).  Bindings must agree: config.mk OT_VCLK_TT == constraint.sdc vclk latency ==
 sdc_lint insertion_ps; OT_VCLK_FF == sdc_lint insertion_ff_ps (== vclk_ff.sdc, == the sign-off --ff-bound-ps).
 
-  kit_modes.py stage KIT                         two-corner kit -> per-mode block (generators, mk_eco m, mk_fd4)
+  kit_modes.py stage KIT [--no-measured-hold]   two-corner kit -> per-mode block (generators, mk_eco m, mk_fd4)
   kit_modes.py check KIT --step cts|grt|eco [--session 'tc bc'|bc|tc] [--vclk-corner ff|tt|''] [--hold-repair]
   kit_modes.py check KIT --step signoff [--ff-bound-ps X]
-Prints 'KIT_MODES ok ...' or 'KIT_MODES FAIL <reason>'."""
+Prints 'KIT_MODES ok ...' or 'KIT_MODES FAIL <reason>'.
+
+FLOW-HOLD-1 (OWNER 12.19, COORD 10-29 05:52): a NEWLY staged kit repairs FF hold on MEASURED clock arrivals by default
+(the FLOW-SHARED-4 measured-FF reference, vclk_measured_hold.tcl, config.mk OT_MM_MEASURED_HOLD = 1) when its FF reference
+is 'rebind'; other references ('bound-ff' hard-core latency contract, 'sdc') keep the bound reference and the record
+says why.  `stage --measured-hold` still fails closed on a non-rebind kit; `--no-measured-hold` / stage(measured_hold=
+False) is the explicit opt-out.  An already staged kit is never changed (signed views stay valid)."""
 import argparse
 import json
 import re
@@ -128,11 +134,50 @@ def mm_state(kd, b):
     return True
 
 
-def stage(kd, write=True):
-    """append the per-mode block to a two-corner kit (idempotent: an already staged kit is re-checked only)."""
+MEASURED_HOLD_DEFAULT = True     # FLOW-HOLD-1 (OWNER 12.19): measured clock arrivals for hold repair on new kits
+MEASURED_FLAG = "override export OT_MM_MEASURED_HOLD = 1"
+
+
+def stage_measured_hold(kd, required=False):
+    """stage the measured-FF hold reference (vclk_measured_hold.tcl + vclk_ref.py + OT_MM_MEASURED_HOLD) in a two-mode
+    kit -> {measured_hold, measured_hold_ref[, measured_hold_reason]}.  Only 'rebind' kits: else Fail when required,
+    otherwise the kit keeps its bound reference (recorded)."""
+    kd = Path(kd)
+    import importlib.util
+    sp = importlib.util.spec_from_file_location("vclk_ref", HERE / "vclk_ref.py")   # generators load this file by path
+    vclk_ref = importlib.util.module_from_spec(sp)
+    sp.loader.exec_module(vclk_ref)
+    try:
+        ref = vclk_ref.ff_reference(kd)
+    except (vclk_ref.RefError, ValueError, OSError) as e:
+        raise Fail(f"measured hold: FF reference undecidable ({e})")
+    if ref["ref"] != "rebind":
+        if required:
+            raise Fail(f"measured hold requires rebind reference, got {ref['ref']}")
+        return dict(measured_hold=False, measured_hold_ref=ref["ref"],
+                    measured_hold_reason=f"FF reference {ref['ref']!r}: measured hold applies to 'rebind' kits only")
+    for name in ("vclk_measured_hold.tcl", "vclk_ref.py"):
+        shutil.copyfile(HERE / name, kd / name)
+    cfg = kd / "config.mk"
+    if MEASURED_FLAG not in cfg.read_text():
+        with cfg.open("a") as f:
+            f.write(MEASURED_FLAG + "\n")
+    # An already-staged kit may carry an earlier MM helper.
+    for name in MM_FILES:
+        shutil.copyfile(REPO / "tools" / name, kd / name)
+    return dict(measured_hold=True, measured_hold_ref="rebind")
+
+
+def stage(kd, write=True, measured_hold=None):
+    """append the per-mode block to a two-corner kit (idempotent: an already staged kit is re-checked only).
+    measured_hold None = MEASURED_HOLD_DEFAULT (FLOW-HOLD-1): a newly staged 'rebind' kit also gets the measured-FF hold
+    reference; True = required (Fail on a non-rebind kit); False = opt-out."""
     kd = Path(kd)
     b = binding(kd)
     if mm_state(kd, b):
+        if measured_hold:
+            return dict(staged=False, already=True, **{k: b[k] for k in ("tt", "ff", "vclk")},
+                        **stage_measured_hold(kd, required=True))
         return dict(staged=False, already=True, **{k: b[k] for k in ("tt", "ff", "vclk")})
     if MARK in (kd / "config.mk").read_text():
         raise Fail("config.mk carries a broken per-mode block")
@@ -160,7 +205,13 @@ def stage(kd, write=True):
                     "override export OT_MM_SETUP_CORNER = tc\n"
                     "override export OT_MM_FF_SDC = /work/vclk_ff.sdc\n")
         mm_state(kd, binding(kd))
-    return dict(staged=write, already=False, tt=b["tt"], ff=b["ff"], vclk=b["vclk"])
+    r = dict(staged=write, already=False, tt=b["tt"], ff=b["ff"], vclk=b["vclk"])
+    mh = MEASURED_HOLD_DEFAULT if measured_hold is None else measured_hold
+    if write and mh:
+        r.update(stage_measured_hold(kd, required=measured_hold is True))
+    elif write:
+        r.update(measured_hold=False, measured_hold_reason="opt-out (--no-measured-hold)")
+    return r
 
 
 def copy_kit_tools(kd):
@@ -254,27 +305,15 @@ def main(argv=None):
     ap.add_argument("--vclk-corner", default="")
     ap.add_argument("--hold-repair", action="store_true", default=None)
     ap.add_argument("--ff-bound-ps", type=float, default=None)
-    ap.add_argument("--measured-hold", action="store_true", help="stage opt-in measured FF reference in coupled TT/FF repair")
+    ap.add_argument("--measured-hold", action="store_true", default=None,
+                    help="REQUIRE the measured FF reference in coupled TT/FF repair (fail closed on a non-rebind kit); "
+                         "default since FLOW-HOLD-1: applied to every newly staged rebind kit")
+    ap.add_argument("--no-measured-hold", dest="measured_hold", action="store_false",
+                    help="opt out of the measured FF hold reference (bound reference)")
     a = ap.parse_args(argv)
     try:
         if a.cmd == "stage":
-            r = stage(a.kit)
-            if a.measured_hold:
-                import vclk_ref
-                ref = vclk_ref.ff_reference(a.kit)
-                if ref["ref"] != "rebind":
-                    raise Fail(f"measured hold requires rebind reference, got {ref['ref']}")
-                for name in ("vclk_measured_hold.tcl", "vclk_ref.py"):
-                    shutil.copyfile(HERE / name, a.kit / name)
-                cfg = a.kit / "config.mk"
-                flag = "override export OT_MM_MEASURED_HOLD = 1"
-                if flag not in cfg.read_text():
-                    with cfg.open("a") as f:
-                        f.write(flag + "\n")
-                # An already-staged kit may carry an earlier MM helper.
-                for name in MM_FILES:
-                    shutil.copyfile(REPO / "tools" / name, a.kit / name)
-                r["measured_hold"] = True
+            r = stage(a.kit, measured_hold=a.measured_hold)
         else:
             if not a.step:
                 raise Fail("check needs --step")
