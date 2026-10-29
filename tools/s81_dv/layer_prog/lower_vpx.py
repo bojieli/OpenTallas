@@ -258,7 +258,8 @@ def lower(die, op, ctx):
             # one xr send packer on s_0N: segment k starts after segment k-1's beats (n / 8 beats a segment)
             specs = [(STAGE_LEG[0], STAGE_LEG[1], STAGE_LEG[2], list(range(n)), lf, None, 0,
                       sum(m // 8 for _, _, m in STAGE_SEGS[:k]) * beat_period()) for k, (lf, _, n) in enumerate(STAGE_SEGS)]
-        _emit(die, sl, specs, t0, rows, templates, events, insts)
+        reservation_delays = []
+        _emit(die, sl, specs, t0, rows, templates, events, insts, set(ctx.get("ctl_used", ())), reservation_delays)
         st = 'PARTIAL' if own else 'GAP'
         gap = GAP_PLACE if own else dict(GAP_PLACE, missing='same endpoint ABI as attn.a_allgather (bench_vpx); the '
                                          'production rows of this op are not placed')
@@ -277,7 +278,8 @@ def lower(die, op, ctx):
             gap = dict(gap, port=f'{STAGE_LEG[0]} pair A -> next stage {STAGE_LEG[2]} pair B (S81-LINK5 stage NEXT; '
                                  'TX window ab 0)')
         return dict(status=st, unit='end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive', insts=insts,
-                    gap=gap, rows=rows, templates=templates, events=events, bench=BENCH)
+                    gap=gap, rows=rows, templates=templates, events=events, bench=BENCH,
+                    reservation_delays=reservation_delays)
     if name.endswith('allreduce'):
         if name == 'attn.out_allreduce' and 'owner_fold_binding' in ctx:
             from layer_prog.owner_fold import program
@@ -322,7 +324,7 @@ def lower(die, op, ctx):
 
 
 # ------------------------------------------------------------------------------------- TOK-DS-8 generic leg emission
-def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None):
+def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None, reservation_delays=None):
     """CTL rows / templates / events of leg specs (src, dir, peer, leaf rows, leaf, dst leaf, dst row offset, t_rel);
     the a_allgather emission of 10-18 generalised (identical output for its 3 leaf-0 legs).  Returns the last outward
     beat edge (relative to t0, CTL latency included) so a following phase can start after it."""
@@ -340,6 +342,9 @@ def _emit(die, sl, specs, t0, rows, templates, events, insts, used=None):
         sh = 0
         while any((eng, t0 + c['cycle'] - first + sh) in used for c in leg['ctl']):
             sh += 1
+        if sh and reservation_delays is not None:
+            reservation_delays.append(dict(inst=src, engine=eng, requested_first_issue=t0 + trel,
+                                           extra_edges=sh))
         first -= sh
         used |= {(eng, t0 + c['cycle'] - first) for c in leg['ctl']}
         for c in leg['ctl']:
@@ -394,21 +399,23 @@ def lower_ar(die, ctx, t0):
     rank = int(ctx.get('rank', 0))
     sl = die.slices()
     rows, templates, events, insts = [], [], [], []
-    used = set()
+    used = set(ctx.get("ctl_used", ()))
+    reservation_delays = []
     rs, ag = [], []
     for src, d, peer in LEGS:
         p = (rank + LEG_PEER_RANK[src]) % 4
         lf, r0 = ar_quarter(p)
         dl, dr = rs_slot(rank, p)
         rs.append((src, d, peer, list(range(r0, r0 + 320)), lf, dl, dr - r0, 0))
-    last = _emit(die, sl, rs, t0, rows, templates, events, insts, used)
+    last = _emit(die, sl, rs, t0, rows, templates, events, insts, used, reservation_delays)
     lf, r0 = ar_quarter(rank)
     # last carries the CTL path age, which can hold half-edge link ages (ctl_path edges, e.g. 11.5): the AG legs
     # start on the next whole issue edge (ceil = the conservative later edge), never a fractional calendar row
     ag = [(src, d, peer, list(range(r0, r0 + 320)), lf, None, 0, math.ceil(last) + FOLD_GAP) for src, d, peer in LEGS]
-    _emit(die, sl, ag, t0, rows, templates, events, insts, used)
+    _emit(die, sl, ag, t0, rows, templates, events, insts, used, reservation_delays)
     return dict(status='PARTIAL', unit='RS (3 TP legs, quarter -> owner scratch) + owner fold + AG (3 TP legs) on the '
                 'end-slice endpoint ABI', insts=insts, rows=rows, templates=templates, events=events, bench=BENCH,
+                reservation_delays=reservation_delays,
                 gap=dict(GAP_FOLD, missing='RS + AG transport is lowered on the benched endpoint ABI (bench_vpx op '
                          'out_allreduce_rs / _ag); the owner fold between them is not bound to these rows (FOLD_GAP '
                          f'{FOLD_GAP} = RS landing tail {RS_LAND_TAIL} CHECKED + fold law {owner_fold_span(320)} UNCHECKED) and the partial rows\' producer capture is not placed'))

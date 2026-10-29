@@ -47,6 +47,33 @@ class T(unittest.TestCase):
         self.assertEqual([r['issue']+1000 for r in first['rows']],[r['issue'] for r in second['rows']])
         self.assertEqual([r['cycle']+1000 for r in first['events']],[r['cycle'] for r in second['events']])
 
+    def test_cross_operation_engine_reservation(self):
+        """Two operations share one physical issuer; preserve each leg's payloads and relative event dates."""
+        class Die:
+            def slices(self):
+                return {n: {'sid': k} for k, n in enumerate(
+                    ('u_s_0S', 'u_s_7S', 'u_s_7N', 'u_s_0N'))}
+        with patch('dv_layer_compile.ctl_path', return_value={'edges': 11.5}):
+            first = LV.lower(Die(), {'op': 'attn.out_allreduce'}, {'t_issue': 100})
+            occupied = {(r['eng'], r['issue']) for r in first['rows']}
+            # Force the second operation's first command onto a real earlier command.
+            edge = min(r['issue'] for r in first['rows'] if r['eng'] == 0)
+            legacy = LV.lower(Die(), {'op': 'substage_hop0'}, {'t_issue': edge})
+            fixed = LV.lower(Die(), {'op': 'substage_hop0'},
+                             {'t_issue': edge, 'ctl_used': occupied})
+        self.assertTrue(occupied & {(r['eng'], r['issue']) for r in legacy['rows']})  # lost-booking mutant
+        self.assertFalse(occupied & {(r['eng'], r['issue']) for r in fixed['rows']})
+        self.assertEqual(legacy['templates'], fixed['templates'])
+        self.assertTrue(fixed['reservation_delays'])
+        # Each segment moves intact: commands, CTL inputs, and outward RD events all follow the same delay.
+        for lf in (1, 2):
+            a = [e for e in legacy['events'] if e['kind'] == 'RD' and e['tag'].startswith(f'leaf {lf} ')]
+            b = [e for e in fixed['events'] if e['kind'] == 'RD' and e['tag'].startswith(f'leaf {lf} ')]
+            shifts = {y['cycle'] - x['cycle'] for x, y in zip(a, b)}
+            self.assertEqual(len(shifts), 1)
+            self.assertGreaterEqual(next(iter(shifts)), 0)
+        self.assertTrue(all(type(r['issue']) is int for r in first['rows'] + fixed['rows']))
+
     def test_placements_fit_and_disjoint(self):
         """on one die (rank d): every rank's gathered a / router rows, the 4 partial quarters and d's 3 RS slots are
         disjoint leaf rows inside 5 leaves x 1024 rows"""
