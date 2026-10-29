@@ -1720,3 +1720,5 @@ CODEX: 2026-10-29 03:52 PDT HEAD STARTclockmin API diagnosed/READY941cadbae: Ope
 CODEX: 2026-10-29 03:52 PDT genericproviderallcell833aREADY;QC29167fullplacementDIAGPASS,R2R12852max400.05/0over405,111typeislands0corehit;oldOBS15981+3580boundaryHOLDexplicit. Freshfixedwave48259allcellsplacementLIVE, noPNR.
 
 CODEX: 2026-10-29 03:47 PDT FLOW explicit-control709 actualHBMSPB8taps1026load139.32umPASS; generic7d9/strictFT36 BTAB1317p908.12/12.03+4typedinfraPASS; RTLpool051+aa closescoverage-resetselection. BF G2FAILnativeTAPcensuschanged139rects; structuralrepackpending/noCTS.
+
+CODEX: 2026-10-29 03:53 PDT FEED03geometry+vieweede3040aPASS-COND0over405/w389.988/modelresidual6.289; noS81route. KVnative6f4d88aa43 actual22671cells/10530FF+12141comb/perstagecensus+3controls; DIAGclockODB2580919readyQCplacer, real↔virtualoriginCKframependingowner.
