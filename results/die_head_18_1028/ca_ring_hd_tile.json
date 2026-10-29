@@ -1,0 +1,6 @@
+{"schema": "ca_ring_latency/1",
+ "source": "DIE-HEAD-18 routed hd_tile DH17 (intel1 die-head-17/kits/hd_tile 5_1_grt.odb + meas17g/grt.spef, setRC_rcx; legacy fclk_out_o form: clk->h15_rs->wire17444/3/2->output655->port). fclk_in/reader = min early / max late over u_cland_i u_ring writer (s_d,s_tag,s_lap,s_w,tc: 2298) / reader (dsel,oh,rp,glo,ghi,r_*: 628) CK pins (nc-head1-1028 TT.ck/FF.ck); fwd_out = fclk_out_o driver output (die-head-18/fwd fwd_TT/FF.log); fwd_wire = abutted tile pins 4.3 um M7, bound [0,1]",
+ "types": {"hd_tile": {
+   "TT": {"fwd_out_ps": [192.6, 196.7], "fclk_in_ps": [189.4, 212.7], "reader_ps": [501.4, 539.8]},
+   "FF": {"fwd_out_ps": [157.6, 161.2], "fclk_in_ps": [155.9, 176.9], "reader_ps": [401.5, 435.6]}}},
+ "fwd_wire_ps": {"TT": [0.0, 1.0], "FF": [0.0, 1.0]}}
