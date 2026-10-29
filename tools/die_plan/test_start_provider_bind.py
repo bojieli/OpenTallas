@@ -68,3 +68,12 @@ def test_sequential_lockstep_and_swapped_provider_mutant(tmp_path):
            if 'ot_die_start_stages u_start_provider' in l else l for l in lines]
     mutant=run('\n'.join(lines),'mutant')
     assert mutant.returncode!=0 and 'START_WIRING_DIFF' in mutant.stdout
+
+
+def test_bounded_reset_provider_joins_only_real_local_exports():
+    top='module die(input rst_n,input pst_r0,output rraw_a,output rs_a,output y); assign y=pst_r0; assign rraw_a=rst_n; assign rs_a=rst_n; endmodule\n'
+    provider='module ot_die_start_stages(input rraw_a,input rs_a,input t_st_root__clk,output pst_r0); assign pst_r0=rs_a&rraw_a; endmodule\n'
+    doc=copy.deepcopy(DOC);doc['reset_wave']='bounded_synchronous_parent_relays';doc['reset_inputs']=[dict(net='rraw_a')];doc['die_inputs']=[dict(net='rs_a')]
+    joined,_=P.integrate(top,'die',provider,doc,'rst_n')
+    assert '.rraw_a(rraw_a)' in joined and '.rst_raw_n(' not in joined
+    with pytest.raises(P.ProviderError):P.integrate(top.replace('output rraw_a,',''),'die',provider,doc,'rst_n')

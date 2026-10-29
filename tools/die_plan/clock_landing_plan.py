@@ -425,7 +425,7 @@ def _ca_start_pins(raw,table):
         xy=_bus_xy(t,ref[0]) if ref else [v/2 for v in t["outline_um"]]
         for pin,d in sorted(pins.items()):
             if pin in names:raise ValueError(f"type {tn}: start pin {pin} already declared")
-            t.setdefault("buses",[]).append(_scalar(t,pin,d,xy,"ctl",shift=2.16*(6 if d=="in" else 7)))
+            t.setdefault("buses",[]).append(_scalar(t,pin,d,xy,"ctl",shift=2.16*(11 if pin==CL.RAW_RESET_PIN_OUT else 6 if d=="in" else 7)))
     for e in doc["plan_ports"]:
         raw["ports"].append(dict(id="cland_tstart__"+CL.ident(e["port"]),src=dict(part=e["src_part"],bus=CL.START_PIN_OUT),
             dst=dict(part=e["dst_part"],bus=CL.START_PIN_IN),width=1,kind="ctl",epoch=False))
