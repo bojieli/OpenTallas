@@ -309,8 +309,11 @@ def _merge(leaves, target, radius, blocked=lambda x, y: False):
         leaves = [q for k, q in enumerate(leaves) if k not in (i, j)] + [m]
 
 
-def explicit_taps(P, tn):
-    """Fixed planned local clock endpoints, with full actual sink-budget checks.
+def explicit_tap_sites(P, tn):
+    """Fixed explicit endpoints for acyclic reset/START placement, geometry checked.
+
+    This first phase never enumerates sinks or invokes the wavefront solver.
+    Budget consumers must use explicit_taps, which adds all control-pin sinks.
 
     Materializing a density-derived table breaks control-relay/tap coordinate
     feedback. No endpoint is moved, added, dropped or silently re-legalized.
@@ -342,6 +345,18 @@ def explicit_taps(P, tn):
         if not legal:
             raise ValueError("{}: explicit tap {} violates outline/halo/tap spacing".format(tn,p["name"]))
         out.append((p["name"],x,y));taken.append((x,y))
+    return out
+
+
+def explicit_taps(P, tn):
+    """Validate every actual data/control sink against the frozen explicit endpoints.
+
+    Reset/START placement reads geometry-only explicit_tap_sites while solving
+    control locations. Once those are known, full budget validation remains
+    mandatory here; no zero-load/placeholder budget result is cached.
+    """
+    out = explicit_tap_sites(P, tn)
+    ck = P.types[tn].get("clock", {})
     sinks=sink_sites(P,tn)
     cap=int(ck.get("tap_max_sinks",1500));radius=float(ck.get("tap_radius_um",200.))
     if cap<=0 or radius<=0:
