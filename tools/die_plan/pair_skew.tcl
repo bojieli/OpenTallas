@@ -12,7 +12,7 @@
 #
 # Related pairs are EXHAUSTIVE (not the worst-slack path per endpoint): for every register data pin (async pins
 # excluded) every register in its timing fan-in (get_fanin -startpoints_only, same clock) is a launch register.
-# Pass 1 (all pairs, no path search): raw damage from the CK pin rise arrivals without CPPR credit -- an upper bound,
+# Pass 1 (all pairs, no path search): raw damage from the CK pin ACTIVE-EDGE arrivals without CPPR credit -- an upper bound,
 # since CPPR >= 0 only reduces damage.  Pass 2 (per check, descending raw damage): the pair's own timing path
 # (find_timing_paths -from launch -to capture data pin) gives the exact credited skew; the search stops as soon as the
 # next pair's raw bound is <= the credited worst (the worst is then EXACT), or after OT_PS_CREDIT_MAX searches (the
@@ -20,12 +20,22 @@
 #
 # Exact values from a path end (OpenSTA PathEnd::clk_skew = Lsrc - Ctgt - crpr, crpr >= 0 for BOTH checks; verified
 # against report_checks on kr_dsdv_svc_sx_hrow_c 2026-10-24 and CP1 r9; uncertainty zeroed first):
-#   setup: s = -clk_skew - launch_insertion      crpr_s = data_required - tgt_arrival + margin   (mod period, edge removed)
-#   hold : h = -clk_skew - launch_insertion - 2 crpr_h   crpr_h = tgt_arrival + margin - data_required   (mod period, edge removed)
+#   setup: s = -clk_skew - launch_insertion      crpr_s = data_required - tgt_arrival + margin   (mod period)
+#   hold : h = -clk_skew - launch_insertion - 2 crpr_h   crpr_h = tgt_arrival + margin - data_required   (mod period)
+# data_required and the target clock path arrival BOTH carry the capture edge time, so the difference is CPPR plus a
+# whole number of periods: no edge term is subtracted (subtracting target_clk_edge time was a no-op on the rising edge
+# at 0 but put T/2 into the CPPR of a falling-edge capture -- H0 TT P->N hold read crpr -414.95, verify 416.5 ps).
 # OpenSTA removes launch source insertion in clk_skew but retains capture insertion; restore it using
 # the signed source-port clock arrival measured before path searches. This matters for early hard-core taps.
 # Each credited pair is cross-checked against the CK pin arrivals (Cmin + crpr - Lmax etc.); max |difference| is
 # reported as verify_ps (a large value means an edge/arrival mismatch -- treat the measurement as suspect).
+#
+# ACTIVE EDGE (FLOW-CLOCK-R4 10-29, DIE-S81-28 H0 verify 14.75/7.79 ps): each register CK arrival is read on the
+# transition the register actually samples on (ot_ps_edge: the Liberty Clk-to-Q arc edge, same rule as clock_family.tcl
+# ot_cf_active), i.e. the FALL arrival for a negedge (DFF_N) register, and a fall-edge launch restores the clock source's
+# fall insertion.  Rise-only reads compared a fall-edge launch path with rise CK arrivals (tree rise/fall delay
+# difference = false verify mismatch).  A cell without one unique Clk-to-Q edge keeps the rise read (previous behaviour);
+# rising-edge registers are unchanged.
 #
 # OpenSTA pitfall (sta_die.tcl): an arrival query while PathEnd objects are live re-runs the search and frees them.
 # All CK arrivals are read BEFORE any path search; path-end values are copied into Tcl values at once.
@@ -85,10 +95,35 @@ proc ot_ps_off {inst} {
   return 0.0
 }
 
-proc ot_ps_ckarr {pin clk which} {
-  # propagated CLOCK arrival (ps, latency from the launching clock edge) of a register clock pin, min or max, from the
-  # pin's "(clock prop)" path tags of that clock only.  get_property arrival_*_rise is NOT used by default: it is the
-  # max/min over every tag on the pin, so a data arrival riding the clock net (10-24 routed smoke, qkd_ctrl_kc: an
+proc ot_ps_edge {pin} {
+  # active CK transition (rise|fall) of a register clock pin from its Liberty Clk-to-Q arc (report_edges, as
+  # clock_family.tcl ot_cf_active), cached per {ref_name lib_pin}; rise when there is no unique Clk-to-Q edge.
+  if {[catch {
+    set key [list [get_property [get_cells -of_objects $pin] ref_name] [get_property $pin lib_pin_name]]
+  }]} { return rise }
+  if {![info exists ::ot_ps_edge_cache]} { set ::ot_ps_edge_cache {} }
+  if {[dict exists $::ot_ps_edge_cache $key]} { return [dict get $::ot_ps_edge_cache $key] }
+  set edges {}
+  if {![catch {
+    sta::redirect_string_begin
+    set failed [catch {report_edges -from $pin}]
+    set report [sta::redirect_string_end]
+  }] && !$failed} {
+    set on 0
+    foreach line [split $report \n] {
+      if {[regexp {^\S} $line]} { set on [regexp {Clk to Q} $line]; continue }
+      if {$on && [regexp {^\s+([\^v])\s+->} $line -> e] && $e ni $edges} { lappend edges $e }
+    }
+  }
+  set rf [expr {$edges eq "v" ? "fall" : "rise"}]
+  dict set ::ot_ps_edge_cache $key $rf
+  return $rf
+}
+
+proc ot_ps_ckarr {pin clk which {rf rise}} {
+  # propagated CLOCK arrival (ps, latency from the launching clock edge) of a register clock pin, min or max, on CK
+  # transition rf (rise|fall), from the pin's "(clock prop)" path tags of that clock only.  get_property
+  # arrival_*_rise is NOT used by default: it is the max/min over every tag on the pin, so a data arrival riding the clock net (10-24 routed smoke, qkd_ctrl_kc: an
   # input delay on the hclk port gave CK arrival_max_rise 391 ps vs a 48 ps clock arrival) corrupts it.  NO T/2 fold.
   # -> value, or "" if the pin has no unique clock arrival; falls back to arrival_*_rise when the tag API is missing
   # (::ot_ps_method records which; the per-pair path cross-check then guards the fallback).
@@ -100,7 +135,7 @@ proc ot_ps_ckarr {pin clk which} {
       foreach t [$clk waveform] { lappend wf [expr {$t * 1e12}] }
       foreach v [$pin vertices] {
         if {$v eq "NULL"} continue
-        set it [$v path_iterator rise $which]
+        set it [$v path_iterator $rf $which]
         while {[$it has_next]} {
           set pa [$it next]; set tag [$pa tag]; set e [lindex $tag 4]
           if {[lindex $tag 3] ne $cn || $e ni {^ v} || [string first "(clock prop)" $tag] < 0} continue
@@ -118,33 +153,36 @@ proc ot_ps_ckarr {pin clk which} {
     set ::ot_ps_method "property"
     puts "OT_PS_WARN clock-tag arrival API unavailable ($err); falling back to arrival_${which}_rise"
   }
-  if {[catch {set a [get_property $pin arrival_${which}_rise]}] || $a eq "" || [string match *INF* $a]} { return "" }
+  if {[catch {set a [get_property $pin arrival_${which}_$rf]}] || $a eq "" || [string match *INF* $a]} { return "" }
   return $a
 }
 
 proc ot_ps_regs {} {
-  # inst -> {ckpin clock late early} for every register clock pin with exactly one clock and a unique clock arrival
+  # inst -> {ckpin clock late early rf} for every register clock pin with exactly one clock and a unique clock arrival
+  # on its active CK transition rf; ::ot_ps_insertion: clock -> rise source {late early}, "clock fall" -> fall source
   set R {}; set ::ot_ps_noarr 0
   set ::ot_ps_insertion {}
   foreach p [all_registers -clock_pins] {
     set cl [get_property $p clocks]
     if {[llength $cl] != 1} continue
-    set a [ot_ps_ckarr $p [lindex $cl 0] max]; set b [ot_ps_ckarr $p [lindex $cl 0] min]
+    set rf [ot_ps_edge $p]
+    set a [ot_ps_ckarr $p [lindex $cl 0] max $rf]; set b [ot_ps_ckarr $p [lindex $cl 0] min $rf]
     if {$a eq "" || $b eq ""} { incr ::ot_ps_noarr; continue }
     set cn [get_full_name [lindex $cl 0]]
-    if {![dict exists $::ot_ps_insertion $cn]} {
+    set ik [expr {$rf eq "rise" ? $cn : "$cn fall"}]
+    if {![dict exists $::ot_ps_insertion $ik]} {
       set roots {}
       foreach src [get_property [lindex $cl 0] sources] {
-        set late [ot_ps_ckarr $src [lindex $cl 0] max]
-        set early [ot_ps_ckarr $src [lindex $cl 0] min]
+        set late [ot_ps_ckarr $src [lindex $cl 0] max $rf]
+        set early [ot_ps_ckarr $src [lindex $cl 0] min $rf]
         if {$late eq "" || $early eq ""} continue
         lappend roots [list $late $early]
       }
       set roots [lsort -unique $roots]
-      if {[llength $roots] != 1} { error "clock $cn has no unique source insertion arrival" }
-      dict set ::ot_ps_insertion $cn [lindex $roots 0]
+      if {[llength $roots] != 1} { error "clock $cn has no unique $rf source insertion arrival" }
+      dict set ::ot_ps_insertion $ik [lindex $roots 0]
     }
-    dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] $cn $a $b]
+    dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] $cn $a $b $rf]
   }
   set ::ot_ps_toff {}
   if {[info exists ::ot_ps_tpin]} {
@@ -210,20 +248,21 @@ proc ot_ps_path {l dn dly} {
   if {$tp eq "NULL" || $tp eq ""} { return {} }
   set per [expr {[get_property [$pe target_clk] period] * 1e-12}]
   set sk [$pe clk_skew]; set req [$pe data_required_time]; set tarr [$tp arrival]; set mg [$pe margin]
-  set et [[$pe target_clk_edge] time]
   # PathEndCheck::sourceClkDelay subtracts source insertion from the launch
   # path; targetClkDelay keeps capture insertion. Restore the launch insertion
   # so both sides use full physical CK arrivals (including signed early taps).
-  set lc [lindex [dict get $::ot_ps_R $l] 1]
-  set ins_ps [lindex [dict get $::ot_ps_insertion $lc] [expr {$dly eq "max" ? 0 : 1}]]
+  # (a fall-edge launch removes the source's FALL insertion: ot_ps_regs keys it "clock fall")
+  lassign [dict get $::ot_ps_R $l] - lc - - lrf
+  set ik [expr {$lrf eq "fall" ? "$lc fall" : $lc}]
+  set ins_ps [lindex [dict get $::ot_ps_insertion $ik] [expr {$dly eq "max" ? 0 : 1}]]
   set sk [expr {$sk + $ins_ps * 1e-12}]
   unset pes pe tp
   if {$role eq "setup"} {
-    set x [expr {$req - $tarr + $mg - $et}]
+    set x [expr {$req - $tarr + $mg}]
     set crpr [expr {$x - $per * round($x / $per)}]
     set sk [expr {-$sk}]
   } elseif {$role eq "hold"} {
-    set x [expr {$req - $tarr - $mg - $et}]
+    set x [expr {$req - $tarr - $mg}]
     set crpr [expr {-($x - $per * round($x / $per))}]
     set sk [expr {-$sk - 2.0 * $crpr}]
   } else { return {} }
