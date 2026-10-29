@@ -1,0 +1,10 @@
+KIT_PREFLIGHT FAIL issues 8
+  - clock_pin_geometry: io.tcl: clock clk_bank[0] on M4, not M5
+  - clock_pin_geometry: io.tcl: clock clk_bank[0] pin_size 0.192x0.024 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock clk_insert[0] on M4, not M5
+  - clock_pin_geometry: io.tcl: clock clk_insert[0] pin_size 0.192x0.024 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock clk_bank_macro[0] on M4, not M5
+  - clock_pin_geometry: io.tcl: clock clk_bank_macro[0] pin_size 0.192x0.024 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock clk_lane[0] on M4, not M5
+  - clock_pin_geometry: io.tcl: clock clk_lane[0] pin_size 0.192x0.024 < 0.048x0.48 (GEOM-21)
+preflight rc=1

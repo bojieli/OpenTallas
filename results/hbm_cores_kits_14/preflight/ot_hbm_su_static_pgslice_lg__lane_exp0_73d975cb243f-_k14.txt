@@ -1,0 +1,12 @@
+KIT_PREFLIGHT FAIL issues 10
+  - clock_pin_geometry: io.tcl: clock clk_insert[0] pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock clk_bank_macro[0] pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock clk_lane[0] pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - macro_channels: macro column 0 x[69.12,163.944]: E vertical channel 8.856 um < 10.8
+  - macro_channels: macro column 0: 2 stacked macros with no interior horizontal channel >= 10.8 um (largest gap 9.048)
+  - macro_channels: macro column 1 x[172.8,267.624]: W vertical channel 8.856 um < 10.8
+  - macro_channels: macro column 1 x[172.8,267.624]: E vertical channel 8.856 um < 10.8
+  - macro_channels: macro column 1: 2 stacked macros with no interior horizontal channel >= 10.8 um (largest gap 9.048)
+  - macro_channels: macro column 2 x[276.48,371.304]: W vertical channel 8.856 um < 10.8
+  - macro_channels: macro column 2: 2 stacked macros with no interior horizontal channel >= 10.8 um (largest gap 9.048)
+preflight rc=1
