@@ -1,0 +1,14 @@
+{
+ "scope": "Compositional exact RTL wiring replacement; unchanged leaves are shared arbitrary outputs, every actual leaf input is a proof obligation; not a new leaf arithmetic or physical qualification",
+ "source_memory_alignment": 0,
+ "actual_modules": 16,
+ "canonical_masters": 2,
+ "positive": "PASS universal SAT",
+ "mutant": "CAUGHT real SAT counterexample: delivered output bit swap",
+ "leaf_input_obligation_bits_per_case": 2031,
+ "clock_reset_checked": true,
+ "added_registers": 0,
+ "added_cycles": 0,
+ "remote_logs": "intel2:/srv/opentallas-scratch2/claude/codex-qc-su-0322/wiring_current0",
+ "source_profile_adopted": false
+}

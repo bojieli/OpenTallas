@@ -1,0 +1,42 @@
+Import proof-constraint: \ok = 1'1
+Final proof equation: \ok = 1'1
+Import show expression: \sym_lrly_c_wrom
+Import show expression: \sym_lrly_c_vc
+Import show expression: \sym_lrly_c_vb
+Import show expression: \sym_lrly_c_va
+Import show expression: \sym_lrly_c_rrow
+Import show expression: \sym_lrly_c_redsq
+Import show expression: \sym_lrly_c_red
+Import show expression: \sym_lrly_c_md
+Import show expression: \sym_lrly_c_mc
+Import show expression: \sym_lrly_c_mb
+Import show expression: \sym_lrly_c_ma
+Import show expression: \sym_lrly_c_live
+Import show expression: \sym_lrly_c_isfu
+Import show expression: \sym_lrly_c_imm2
+Import show expression: \sym_lrly_c_imm1
+Import show expression: \sym_lrly_c_ilast
+Import show expression: \sym_lrly_c_i
+Import show expression: \sym_lrly_c_fin_th
+Import show expression: \sym_lrly_c_emit0
+Import show expression: \sym_lrly_c_dst
+Import show expression: \sym_lrly_c_dsi
+Import show expression: \sym_lrly_c_curd
+Import show expression: \sym_lrly_c_curc
+Import show expression: \sym_lrly_c_curb
+Import show expression: \sym_lrly_c_cura
+Import show expression: \sym_lrly_c_csrc
+Import show expression: \sym_lrly_c_csi
+Import show expression: \sym_lrly_c_crom
+Import show expression: \sym_lrly_c_cls
+Import show expression: \sym_lrly_c_bsrc
+Import show expression: \sym_lrly_c_bsi
+Import show expression: \sym_lrly_c_asrc
+Import show expression: \sym_lrly_c_asi
+Import show expression: \sym_lrly_c_ad
+Import show expression: \sym_lrly_c_accept
+SAT proof finished - model found: FAIL!
+\ok                                0         0                                                                                                                                                                                                                                                                                                                          
+\sym_lrly_c_crom                  --        --                                                                                                                                                                                                                                                                                                                          
+\sym_lrly_c_wrom                  --        --                                                                                                                                                                                                                                                                                                                          
+ERROR: Called with -verify and proof did fail!
