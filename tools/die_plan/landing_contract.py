@@ -113,9 +113,18 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
     def bad(m):errors.append("start tree: "+m)
     if not isinstance(st,dict) or st.get("form")!=START_FORM:
         bad(f"form {st.get('form') if isinstance(st,dict) else st!r} (want {START_FORM})");return dict(uses=0,open=0),set()
-    if set(st)-{"form","pins","source","uses","open"}:bad(f"unknown keys {sorted(set(st)-{'form','pins','source','uses','open'})}")
+    if set(st)-{"form","pins","source","uses","open","provider"}:bad(f"unknown keys {sorted(set(st)-{'form','pins','source','uses','open','provider'})}")
     if st.get("pins",dict(input=START_PIN_IN,output=START_PIN_OUT))!=dict(input=START_PIN_IN,output=START_PIN_OUT):
         bad(f"pins {st.get('pins')} (want input {START_PIN_IN}, output {START_PIN_OUT})")
+    provider_summary=None
+    if "provider" in st:
+        import start_provider_plan as SP
+        try:
+            proof=SP.check(P,st["provider"])
+            provider_summary={k:v for k,v in proof.items() if k!="errors"}
+            for message in proof["errors"]:bad(message)
+        except (KeyError,ValueError,TypeError,StopIteration) as ex:
+            bad(f"invalid physical provider contract: {ex}")
     want={START_PIN_IN:"in",START_PIN_OUT:"out"}
     edge_used={k for k,v in uses.items() if v}
     seen=set();declared=set();net_parts={};n_ok=0
@@ -170,7 +179,8 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
             got_o={(o.get("part"),o.get("pin")) for o in st.get("open") or []}
             exp_o={(o["part"],o["pin"]) for o in exp["open"]}
             for x in sorted(got_o^exp_o)[:20]:bad(f"open {x[0]}.{x[1]}: declaration != sidecar start tree")
-    return dict(uses=n_ok,open=len(opened),stage_nets=len(net_parts)),opened
+    return dict(uses=n_ok,open=len(opened),stage_nets=len(net_parts),
+                **({"physical_provider":provider_summary} if provider_summary is not None else {})),opened
 
 
 def io_tcl(P,tn):
