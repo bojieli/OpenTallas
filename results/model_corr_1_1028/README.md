@@ -88,3 +88,30 @@ The posedge-flop gate (rise edge) on BUF trees is within 2 % for late and early.
 - intel1:/srv/opentallas-scratch2/claude/model-corr-1-1028: `ref/<case>/` (decks, dat, OpenSTA), `raw_chain.json`, `lib/` (MD5SUMS), `osdi/`,
   `hd_tile/` (pinned routed inputs + path_{TT,FF}.txt), `ref/routed_hd_tile_h16_t33/` (deck that does not converge), `dbg/`.
 - intel2:/srv/opentallas-scratch2/claude/model-corr-1-1028: golden build (`g_cal2.json`, `cal2/` = CAL-2 tools copy), and the reports.
+
+## 5. MODEL-REFIT-BUF (opt-in `--clock-cal spice_buf_edge`, COORD 10-28)
+COORD asked for a refit of finding 2: falling-edge early above spice is hold-optimistic, and HEAD samples 12 stages on the falling edge.
+The new mode `spice_buf_edge` scales BUFx24 arrivals per root edge and per analysis with `SPICE_CLOCK_CAL_BUF_EDGE` in die_sta_related.py.
+Inverter dies get exactly spice_edge. none, spice and spice_edge are byte-identical (their golden ratios are unchanged). The default gate stays `spice` until NUMBER-CHECK confirms.
+
+The fit is a bound, not a slope, over all 36 BUF golden rows per corner and edge (NDR450 50-stage, 1x450 20-stage, 1-2 mm legs).
+- Late factor = MAX of spice / STA-late, so model late is >= spice.
+- Early factor = MIN of spice / STA-early, so model early is <= spice.
+
+| corner | rise late | rise early | fall late | fall early |
+|---|---|---|---|---|
+| TT | 1.0485 (= SPICE_CLOCK_CAL; max row 1.0472) | 1.0524 | 1.0226 | 1.0224 |
+| FF | 1.0552 (= SPICE_CLOCK_CAL; max row 1.0551) | 1.0593 | 1.0256 | 1.0297 |
+
+Golden BUF rows, model / spice (CHECKED, fast suite):
+
+| mode | rise late | rise early | fall late | fall early | BUF duty error |
+|---|---|---|---|---|---|
+| spice | 1.0001-1.0124 | 0.9826-0.9963 | 1.0253-1.0430 | **1.0091-1.0256** | +3.4..+144.6 ps |
+| spice_buf_edge | 1.0001-1.0124 | 0.9865-1.0000 | 1.0000-1.0172 | 0.9840-1.0000 | -2.0..+26.9 ps (<= 1.1 % of the arrival) |
+
+Under spice_buf_edge no BUF row is outside 2 %, and every BUF row keeps model late >= spice >= model early.
+The remaining duty error is +18.5 ps at 50 NDR stages FF and +26.9 ps on 1x450 at 20 stages FF. It comes from the bounding rise-late factor
+(rise is over-read by up to 1.2 %), and it is on the pessimistic side.
+The 37 rows still outside 2 % are the same 37 inverter rows as under spice_edge, which had 79 rows (42 BUF) (report_refit_buf_edge.txt).
+Tests: tools/die_plan/test_clk_buf_edge.py (6) + test_model_corr.py golden incl. the new mode.

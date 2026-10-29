@@ -340,7 +340,18 @@ SPICE_CLOCK_CAL_INV = {"TT": 0.9324, "FF": 0.9380}
 # Gate value = the SMALLER NDR slope per corner (keeps more early/late gap, the hold-safe side).  BUFx24 keeps one
 # factor (its pin-cap range is 1.76-2.35 fF on a 24x driver: 1.2 % gap) -> spice_edge == spice for buf.
 SPICE_CLOCK_CAL_INV_EARLY = {"TT": 1.0241, "FF": 1.0487}
-CLOCK_CALS = ("none", "spice", "spice_edge")
+# MODEL-REFIT-BUF (opt-in --clock-cal spice_buf_edge; COORD 10-28 after MODEL-CORR-1): BUFx24 factors per root edge
+# (rise / fall) and per analysis (late = STA max, early = STA min), from the MODEL-CORR-1 golden raw rows
+# (tools/die_plan/model_corr_golden.json: ngspice r3 xAct3D BUFx24 vs OpenSTA NLDM, NDR450 50-stage chain, 1x450
+# 20-stage chain, 1-2 mm NDR legs; taps 3-50 stages).  The one-factor spice mode (SPICE_CLOCK_CAL, a rise fit) puts the
+# falling edge 2.5-4.3 % LATE of spice (late AND early: early above spice is hold-optimistic) and the BUF duty (fall -
+# rise) 12-145 ps over spice.  Bounding fit, not a slope: late factor = MAX spice / STA-late over all rows of that
+# edge (model late >= spice), early factor = MIN spice / STA-early (model early <= spice), so every bench row keeps
+# late >= spice >= early.  Rise late keeps SPICE_CLOCK_CAL (it already bounds: max 1.0472 TT / 1.0551 FF).
+# Inverter dies: identical to spice_edge.  Default stays spice until NUMBER-CHECK confirms.
+SPICE_CLOCK_CAL_BUF_EDGE = {"TT": dict(rise_late=1.0485, rise_early=1.0524, fall_late=1.0226, fall_early=1.0224),
+                            "FF": dict(rise_late=1.0552, rise_early=1.0593, fall_late=1.0256, fall_early=1.0297)}
+CLOCK_CALS = ("none", "spice", "spice_edge", "spice_buf_edge")
 CLOCK_CELL_MASTERS = {"buf": ("BUFx24_ASAP7_75t_R",), "inv": ("CKINVDCx16_ASAP7_75t_R",)}
 CLOCK_CELL_AOCV_CLASS = {"buf": "A", "inv": "Ainv"}
 CLOCK_CELLS = ("auto", "buf", "inv", "inv2")
@@ -352,17 +363,64 @@ def spice_cal_factor(corner, clock_cell="buf"):
     return t.get(corner, t["TT"])
 
 
+def buf_edge_factors(corner):
+    """MODEL-REFIT-BUF per-edge BUFx24 factors (SS uses TT, as spice_cal_factor)."""
+    return dict(SPICE_CLOCK_CAL_BUF_EDGE.get(corner, SPICE_CLOCK_CAL_BUF_EDGE["TT"]))
+
+
+def _scale_clock_buf_edge(meta, taps, fe4):
+    """--clock-cal spice_buf_edge on a BUFx24 tree: rise keys (late_ps / early_ps / abs_* / node_late / node_early)
+    x rise_late / rise_early, fall keys (fall_* / abs_fall_* / node_fall_*) x fall_late / fall_early.  Early is capped
+    at late per key (as _scale_clock_edge); the CPPR node range is re-derived from the scaled rise node arrivals, else
+    scaled by the smaller rise factor (less CPPR credit = the pessimistic side)."""
+    fr, fre, ff, ffe = fe4["rise_late"], fe4["rise_early"], fe4["fall_late"], fe4["fall_early"]
+    pairs = ((("late_ps", "early_ps"), fr, fre), (("abs_late_ps", "abs_early_ps"), fr, fre),
+             (("fall_late_ps", "fall_early_ps"), ff, ffe), (("abs_fall_late_ps", "abs_fall_early_ps"), ff, ffe))
+    t = {}
+    for k, v in taps.items():
+        w = dict(v)
+        for (lk, ek), fl, fe in pairs:
+            if lk in v:
+                w[lk] = float(v[lk]) * fl
+            if ek in v:
+                w[ek] = float(v[ek]) * fe
+                if lk in v:
+                    w[ek] = min(w[ek], w[lk])
+        t[k] = w
+    m = dict(meta, clock_cal_factor=fr, clock_cal_factor_early=fre, clock_cal_factor_fall=ff,
+             clock_cal_factor_fall_early=ffe)
+    for (lk, ek), fl, fe in ((("node_late_ps", "node_early_ps"), fr, fre),
+                             (("node_fall_late_ps", "node_fall_early_ps"), ff, ffe)):
+        L, E = meta.get(lk), meta.get(ek)
+        if isinstance(L, dict):
+            m[lk] = {k: (None if v is None else float(v) * fl) for k, v in L.items()}
+        if isinstance(E, dict):
+            m[ek] = {k: (None if v is None else
+                         (min(float(v) * fe, m[lk][k]) if isinstance(L, dict) and L.get(k) is not None
+                          else float(v) * fe)) for k, v in E.items()}
+    nl, ne = m.get("node_late_ps") or {}, m.get("node_early_ps") or {}
+    rng = {}
+    for k, v in (meta.get("cppr_node_range_ps") or {}).items():
+        rng[k] = (round(max(0.0, nl[k] - ne[k]), 4) if nl.get(k) is not None and ne.get(k) is not None
+                  else float(v) * min(fr, fre))
+    m["cppr_node_range_ps"] = rng
+    return m, t
+
+
 def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal):
     """the ONE clock calibration step of planner and gate: none / spice (one factor, 12.15b) / spice_edge (inverter:
-    late x SPICE_CLOCK_CAL_INV, early x SPICE_CLOCK_CAL_INV_EARLY; buf: == spice)."""
+    late x SPICE_CLOCK_CAL_INV, early x SPICE_CLOCK_CAL_INV_EARLY; buf: == spice) / spice_buf_edge (buf: per-edge
+    SPICE_CLOCK_CAL_BUF_EDGE, MODEL-REFIT-BUF; inverter: == spice_edge)."""
     if clock_cal not in CLOCK_CALS:
         raise SystemExit(f"--clock-cal {clock_cal!r}: one of {CLOCK_CALS}")
     if clock_cal == "none":
         return meta, taps
     f = spice_cal_factor(corner, clock_cell)
     fe = None
-    if clock_cal == "spice_edge" and clock_cell == "inv":
+    if clock_cal in ("spice_edge", "spice_buf_edge") and clock_cell == "inv":
         fe = SPICE_CLOCK_CAL_INV_EARLY.get(corner, SPICE_CLOCK_CAL_INV_EARLY["TT"])
+    if clock_cal == "spice_buf_edge" and clock_cell != "inv":
+        return _scale_clock_buf_edge(meta, taps, buf_edge_factors(corner))
     return scale_clock(meta, taps, f) if fe is None else scale_clock(meta, taps, f, fe)
 
 
@@ -2052,7 +2110,9 @@ def main(argv=None):
     ap.add_argument("--clock-cal", choices=CLOCK_CALS, default="none",
                     help="METHODOLOGY 12.15 b: spice = scale clock arrivals x1.0485 TT / x1.0552 FF (SPICE_CLOCK_CAL; SS "
                          "uses the TT factor) before every class and the --count-align rows; spice_edge (CLK-INV-CAL-2 "
-                         "opt-in) = inverter early arrivals on their own spice/STA-min factor (no pin-cap-range spread)")
+                         "opt-in) = inverter early arrivals on their own spice/STA-min factor (no pin-cap-range spread); "
+                         "spice_buf_edge (MODEL-REFIT-BUF opt-in) = spice_edge + BUFx24 per-edge rise/fall late/early "
+                         "factors (SPICE_CLOCK_CAL_BUF_EDGE)")
     ap.add_argument("--clock-cell", choices=CLOCK_CELLS, default="auto",
                     help="CLK-INV-CAL-1: die clock cell of the ONE shared model (spice factor + AOCV die class). auto "
                          "(default) = tap_arrivals meta clock_cell, else the majority master of the proof's clock netlist "
@@ -2193,7 +2253,11 @@ def main(argv=None):
                                                        else None,
                                                        **({"spice_factor_early": SPICE_CLOCK_CAL_INV_EARLY.get(
                                                            c, SPICE_CLOCK_CAL_INV_EARLY["TT"])}
-                                                          if a.clock_cal == "spice_edge" and ccell == "inv" else {}))
+                                                          if a.clock_cal in ("spice_edge", "spice_buf_edge")
+                                                          and ccell == "inv" else {}))
+        elif a.clock_cal == "spice_buf_edge":   # MODEL-REFIT-BUF record (only in the opt-in mode)
+            res.setdefault("clock_cell", {})[c] = dict(cell=ccell, basis=cbasis, aocv_class=CLOCK_CELL_AOCV_CLASS[ccell],
+                                                       spice_factor_edge=buf_edge_factors(c))
         meta, taps = apply_clock_cal(meta, taps, c, ccell, a.clock_cal)
         rng = meta["cppr_node_range_ps"]
         slew = max(r["slew_ps"] for r in taps.values())

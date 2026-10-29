@@ -1,0 +1,52 @@
+spice_buf_edge inv2_ndr200_d50|TT|t6|rise                       early 0.9668 (model 181.9 spice 188.2 ps)
+spice_buf_edge inv2_ndr200_d50|TT|t6|fall                       early 0.9623 (model 180.1 spice 187.1 ps)
+spice_buf_edge inv2_ndr200_d50|TT|t20|rise                      early 0.9757 (model 634.6 spice 650.4 ps)
+spice_buf_edge inv2_ndr200_d50|TT|t20|fall                      early 0.9744 (model 632.8 spice 649.4 ps)
+spice_buf_edge inv2_ndr200_d50|TT|t50|rise                      early 0.9779 (model 1604.7 spice 1641.0 ps)
+spice_buf_edge inv2_ndr200_d50|TT|t50|fall                      early 0.9774 (model 1602.8 spice 1640.0 ps)
+spice_buf_edge inv2_ndr200_d50|FF|t6|rise                       early 0.9791 (model 158.3 spice 161.7 ps)
+spice_buf_edge inv2_ndr200_d50|FF|t6|fall                       early 0.9749 (model 156.2 spice 160.3 ps)
+spice_buf_edge inv_1x250_d20|TT|t5|rise                         early 0.9602 (model 271.3 spice 282.5 ps)
+spice_buf_edge inv_1x250_d20|TT|t5|fall                         early 0.9617 (model 272.8 spice 283.7 ps)
+spice_buf_edge inv_1x250_d20|TT|t20|rise                        early 0.9722 (model 1153.3 spice 1186.2 ps)
+spice_buf_edge inv_1x250_d20|TT|t20|fall                        early 0.9707 (model 1149.2 spice 1183.9 ps)
+spice_buf_edge inv_1x250_d20|FF|t5|rise                         late  0.9760 (model 253.3 spice 259.5 ps)
+spice_buf_edge inv_1x250_d20|FF|t5|rise                         early 0.9636 (model 250.0 spice 259.5 ps)
+spice_buf_edge inv_1x250_d20|FF|t5|fall                         late  0.9767 (model 254.5 spice 260.6 ps)
+spice_buf_edge inv_1x250_d20|FF|t5|fall                         early 0.9642 (model 251.2 spice 260.6 ps)
+spice_buf_edge inv_1x250_d20|FF|t20|rise                        early 0.9719 (model 1049.2 spice 1079.6 ps)
+spice_buf_edge inv_1x250_d20|FF|t20|fall                        early 0.9706 (model 1044.5 spice 1076.1 ps)
+spice_buf_edge inv_legs_1_2mm|TT|t4|rise                        early 0.9716 (model 151.3 spice 155.7 ps)
+spice_buf_edge inv_legs_1_2mm|TT|t4|fall                        late  0.9786 (model 150.9 spice 154.2 ps)
+spice_buf_edge inv_legs_1_2mm|TT|t4|fall                        early 0.9647 (model 148.8 spice 154.2 ps)
+spice_buf_edge inv_legs_1_2mm|FF|t4|fall                        late  0.9748 (model 131.0 spice 134.3 ps)
+spice_buf_edge inv_legs_1_2mm|FF|t4|fall                        early 0.9738 (model 130.8 spice 134.3 ps)
+spice_buf_edge inv_ndr150_d50|TT|t5|rise                        early 0.9502 (model 110.8 spice 116.6 ps)
+spice_buf_edge inv_ndr150_d50|TT|t5|fall                        early 0.9557 (model 112.3 spice 117.5 ps)
+spice_buf_edge inv_ndr150_d50|TT|t20|rise                       early 0.9669 (model 475.1 spice 491.4 ps)
+spice_buf_edge inv_ndr150_d50|TT|t20|fall                       early 0.9662 (model 474.2 spice 490.7 ps)
+spice_buf_edge inv_ndr150_d50|TT|t50|rise                       early 0.9693 (model 1201.3 spice 1239.3 ps)
+spice_buf_edge inv_ndr150_d50|TT|t50|fall                       early 0.9690 (model 1200.3 spice 1238.7 ps)
+spice_buf_edge inv_ndr150_d50|FF|t5|rise                        early 0.9661 (model 95.4 spice 98.7 ps)
+spice_buf_edge inv_ndr150_d50|FF|t5|fall                        early 0.9690 (model 96.2 spice 99.3 ps)
+spice_buf_edge inv_ndr150_d50|FF|t20|rise                       early 0.9769 (model 403.3 spice 412.9 ps)
+spice_buf_edge inv_ndr150_d50|FF|t20|fall                       early 0.9760 (model 402.0 spice 411.9 ps)
+spice_buf_edge inv_ndr150_d50|FF|t50|rise                       early 0.9783 (model 1017.1 spice 1039.7 ps)
+spice_buf_edge inv_ndr150_d50|FF|t50|fall                       early 0.9780 (model 1015.8 spice 1038.7 ps)
+spice_buf_edge inv_ndr250_d50|TT|t5|rise                        early 0.9733 (model 191.2 spice 196.4 ps)
+spice_buf_edge inv_ndr250_d50|TT|t5|fall                        early 0.9757 (model 193.0 spice 197.8 ps)
+{
+ "spice_buf_edge": {
+  "early": {
+   "inv2_ndr200_d50": 8,
+   "inv_1x250_d20": 8,
+   "inv_legs_1_2mm": 3,
+   "inv_ndr150_d50": 12,
+   "inv_ndr250_d50": 2
+  },
+  "late": {
+   "inv_1x250_d20": 2,
+   "inv_legs_1_2mm": 2
+  }
+ }
+}
