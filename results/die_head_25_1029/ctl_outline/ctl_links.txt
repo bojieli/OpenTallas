@@ -1,0 +1,22 @@
+ctl origin [8760.96, 14999.04] [1442.88, 1226.88]
+sp_x0__0 data 565 src ctl.x_o (8855.725999999999, 14999.04) <-> sp0 hd_spn x_i (8855.726, 14999.04) L1=0
+sp_b0__0 data 565 dst ctl.b_i (9005.25, 14999.04) <-> sp0 hd_spn b_o (9005.25, 14999.04) L1=0
+host_tx__0 data 277 src ctl.h_tx_o (9195.891, 14999.04) <-> sp0 hd_spn hd_i None 
+host_rx__6 data 276 dst ctl.h_rx_i (9118.633, 14999.04) <-> sp0 hd_spn hu_o None 
+m0S_tx__0 data 64 src ctl.a_tx_o (9270.946999999998, 14999.04) <-> sp0 hd_spn ad_i None 
+m0S_rx__9 data 64 dst ctl.a_rx_i (9246.672999999999, 14999.04) <-> sp0 hd_spn au_o None 
+m7S_tx__0 data 64 src ctl.b7_tx_o (9319.455, 14999.04) <-> sp0 hd_spn bd_i None 
+m7S_rx__8 data 64 dst ctl.b7_rx_i (9295.196999999998, 14999.04) <-> sp0 hd_spn bu_o None 
+m7N_tx__0 data 64 src ctl.n_tx_o (10203.84, 15392.04) <-> nst7 hd_st_m tx_i None 
+m7N_rx__1 data 64 dst ctl.n_rx_i (10203.84, 15452.04) <-> nst7 hd_st_m rx_o None 
+kd__0 data 1104 src ctl.lepk_o0 (8760.96, 15387.4294) <-> lep0N hd_lep0N lepk_i0 (8760.96, 15387.4294) L1=0
+ku__0 data 1104 dst ctl.lepk_i0 (8760.96, 15131.8338) <-> lep0N hd_lep0N lepk_o0 (8760.96, 15131.8338) L1=0
+lepf__0 data 1 src ctl.lepf_o0 (8760.96, 15778.6756) <-> lep0N hd_lep0N lepf_i0 (8760.96, 15778.6756) L1=0
+unit_lep__0 data 45 src ctl.unit_o0 (8760.96, 15808.723600000001) <-> lep0N hd_lep0N unit_i0 (8760.96, 15808.723600000001) L1=0
+ctrl_lep__0 data 32 dst ctl.ctrl_i0 (8760.96, 15838.7716) <-> lep0N hd_lep0N ctrl_o0 (8760.96, 15838.7716) L1=0
+coll_WN3_u__0 data 514 dst ctl.w3u_i None <-> lk_WN3 hd_serdes coll_o0 ('orient', 'MY') 
+coll_WN3_u__1 data 514 src ctl.w3u_o None <-> lep0N hd_lep0N coll_i3 (8760.96, 15701.4534) 
+coll_WN3_d__0 data 512 dst ctl.w3d_i None <-> lep0N hd_lep0N coll_o3 (8760.96, 15577.2312) 
+coll_WN3_d__1 data 512 src ctl.w3d_o None <-> lk_WN3 hd_serdes coll_i0 ('orient', 'MY') 
+head_lep_fault_return__0 ctl 1 dst ctl.lep_fault_i (8760.96, 16083.528) <-> lep0N hd_lep0N fault_o0 (8760.96, 16083.528) L1=0
+head_lep_landing__0 ctl 11 dst ctl.lw_i (8760.96, 16113.720000000001) <-> lep0N hd_lep0N lw_o (8760.96, 16113.720000000001) L1=0
