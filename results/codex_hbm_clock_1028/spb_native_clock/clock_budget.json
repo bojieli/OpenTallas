@@ -1,0 +1,137 @@
+{
+ "status": "ESTIMATE ONLY; parent composes newclock interfaces with nativeSPB; no P&R",
+ "placement_source": "e64c6bba8",
+ "source_plan_sha256": "bb9b7abddd68542ac3e937e2af1a11937bb2439a0c44937f4bef29d719c0dd5f",
+ "type": "q_spb0",
+ "old_grid_taps": 20,
+ "old_bank_ff_over200": 830,
+ "old_bank_worst_um": 232.90199999999993,
+ "new_taps": 8,
+ "new_max_load": 1026,
+ "new_max_radius_um": 139.3,
+ "new_native_sinks": 4104,
+ "tap_rows": [
+  {
+   "port": "clk",
+   "xy": [
+    784.647,
+    639.225
+   ],
+   "sinks": 512,
+   "radius_um": 22.5
+  },
+  {
+   "port": "clk_t1",
+   "xy": [
+    20.007,
+    639.495
+   ],
+   "sinks": 514,
+   "radius_um": 22.5
+  },
+  {
+   "port": "clk_t2",
+   "xy": [
+    784.647,
+    1012.905
+   ],
+   "sinks": 512,
+   "radius_um": 22.5
+  },
+  {
+   "port": "clk_t3",
+   "xy": [
+    20.007,
+    1013.175
+   ],
+   "sinks": 514,
+   "radius_um": 22.5
+  },
+  {
+   "port": "clk_t4",
+   "xy": [
+    144.639,
+    1136.295
+   ],
+   "sinks": 1026,
+   "radius_um": 42.6
+  },
+  {
+   "port": "clk_t5",
+   "xy": [
+    465.831,
+    1206.495
+   ],
+   "sinks": 1026,
+   "radius_um": 139.3
+  },
+  {
+   "port": "clk_t6",
+   "xy": [
+    872.16,
+    1483.92
+   ],
+   "sinks": 1,
+   "radius_um": 10.8
+  },
+  {
+   "port": "clk_t7",
+   "xy": [
+    1728.0,
+    1486.08
+   ],
+   "sinks": 15,
+   "radius_um": 29.9
+  }
+ ],
+ "banks": [
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 0,
+   "sinks": 514,
+   "worst_nearest_tap_um": 22.464000000000045
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 1,
+   "sinks": 514,
+   "worst_nearest_tap_um": 22.46399999999993
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 2,
+   "sinks": 514,
+   "worst_nearest_tap_um": 33.58799999999988
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 3,
+   "sinks": 514,
+   "worst_nearest_tap_um": 42.66000000000008
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 0,
+   "sinks": 512,
+   "worst_nearest_tap_um": 42.551999999999964
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 1,
+   "sinks": 512,
+   "worst_nearest_tap_um": 139.3199999999997
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 2,
+   "sinks": 512,
+   "worst_nearest_tap_um": 22.463999999999942
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 3,
+   "sinks": 512,
+   "worst_nearest_tap_um": 22.463999999999828
+  }
+ ]
+}

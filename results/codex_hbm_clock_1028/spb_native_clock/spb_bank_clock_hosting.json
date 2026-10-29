@@ -1,0 +1,66 @@
+{
+ "verdict": "FAIL",
+ "basis": "academic native-bank hosting within existing reserved PHYpowerdomain, no new gate",
+ "placement_commit": "e53d8bd86",
+ "placement": "results/hbm_spb_native_1029/placement.json",
+ "source_plan": "intel2:/srv/opentallas-scratch2/claude/codex-hbm-pins-1028/street4/die_plan.json",
+ "PG_domain_local_um": [
+  40.04,
+  0,
+  767.368,
+  1113.64
+ ],
+ "rows": [
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 0,
+   "flops": 514,
+   "PG_domain_body_hits": 514
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 1,
+   "flops": 514,
+   "PG_domain_body_hits": 514
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 2,
+   "flops": 514,
+   "PG_domain_body_hits": 514
+  },
+  {
+   "instance": "u_hbm_spb0_rx",
+   "stage": 3,
+   "flops": 514,
+   "PG_domain_body_hits": 0
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 0,
+   "flops": 512,
+   "PG_domain_body_hits": 0
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 1,
+   "flops": 512,
+   "PG_domain_body_hits": 512
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 2,
+   "flops": 512,
+   "PG_domain_body_hits": 0
+  },
+  {
+   "instance": "u_hbm_spb0_tx",
+   "stage": 3,
+   "flops": 512,
+   "PG_domain_body_hits": 0
+  }
+ ],
+ "total_hit_per_partition": 2054,
+ "total_FF_per_partition": 4104,
+ "next": "Pin/plan owner re-sites4banks against actualPGenvelope and reruns existing405um datahop checks before clockbranches/GEN. Never shrink PG envelope to fit."
+}
