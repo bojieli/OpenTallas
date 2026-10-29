@@ -5333,3 +5333,8 @@ All lanes inventoried in lanes/CODEX.md; die owners QC/KV/S81/HEAD/HBM active, H
 
 OWNER?
 None newly identified.
+
+### 2026-10-28 23:50 PDT closure decisions / current risks
+RM291–315 published main6b03fc6b22; exact-source KV flow tag flow-20261029-a-kv targets3e7fccd2164499 using existing NO-REGRESSION/SIGNED canary. No rerun. HBM host valid lane must obey405um reach: legal ~20-edge boot chain replaces unsafe4-edge/6.9mm proposal, payload alignment/compiler price owned HBM+TOK. HEAD hardening uses existing natural KP4 module boundaries preserving exact512/544 interface and cycles; do not instantiate six digital clones. HBM seed boundaries use exact specialized masters/proof, no arbitrary live-input tie exemption. Guessed split3 canonical map activation HELD pending proof; support-only successor requested.
+OWNER?
+No new owner decision is required at this point. Main closure risks remain S81 broad hold failure, HBM incomplete binding+producer calendar, QC reset deadlock, HEAD structural placement/kit rebuilds, KV live token qualification and budgeted partition hold. Work continues on all lanes.
