@@ -21,5 +21,15 @@
   "codex_result": "intel1:/srv/opentallas-scratch2/claude/codex-tok-s81-1028/bind_s13rfunc_reset: partitions 398, types 204, crossings 873, bits 606281, errors 0, unbound 0, tied 0, undriven 0, multiply_bound 0",
   "narrow_extract": "only these 3 data files were missing on main; the shared tools (bind.py, clock_landings.py, tests) and the 393 RTL/macro files the manifest selects are already on main (identical or newer)"
  },
- "main_die_plan_json": "unchanged (171-type plan 3ad0879042a7); switching die_plan.json to this plan is a separate ROOT-MERGE ruling (flow canary + die_ci + core-kit tests read it)"
+ "main_die_plan_json": "unchanged (171-type plan 3ad0879042a7); switching die_plan.json to this plan is a separate ROOT-MERGE ruling (flow canary + die_ci + core-kit tests read it)",
+ "deltas": [
+  {
+   "id": "S81-028 delta_clkpin_m5_1029",
+   "script": "physical/die_plan/s81/delta_clkpin_m5_1029.py --plans-only --plan physical/die_plan/s81/plan_s13r2.json",
+   "change": "74 dsfd_su_t_rxsf hard_cores rows: lef -> physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf.lef (GEOM-21 M5 0.048x0.48 ck); fix-only, die clock tree unchanged",
+   "file_sha256": "0fb681e84884aa84535c52b884ebb60064bfe4188af8502d990de99a02ca280c",
+   "canonical_sha256": "bd7393902245094226a1f1ad1d60b0bd8ceb4168ee519620f188f9237d81c327"
+  }
+ ],
+ "note_sha": "original/canonical_sha256 above = the frozen e4a0d4d8 content; the file on this branch carries deltas[] on top"
 }
