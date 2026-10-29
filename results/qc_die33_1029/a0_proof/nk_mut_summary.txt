@@ -1,0 +1,34 @@
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc64 t_out 0 bits ([513:512] off00 on00) n_y 46 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc65 t_out 0 bits ([513:512] off00 on00) n_y 54 bits ([513:512] off00 on00)
+A0ICG_COUNTS tile=nk MUT=0 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=63 gated_cycles=6122 (51%) engine_busy=4570 wakeups=11
+A0ICG_STRICT tile=nk MUT=0 strict_mismatch_cycles=6956 (t_out 6743 n_y 5838) first=64
+A0ICG_PASS tile=nk MUT=0 checks=12000 gated=6122 qualified_errors=0 strict=6956
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc10 t_out 0 bits ([513:512] off00 on00) n_y 170 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc11 t_out 0 bits ([513:512] off00 on00) n_y 172 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc762 t_out [513:512] off00 on01 data 145 bits | n_y [513:512] off00 on00 data 93 bits
+A0ICG_QMISMATCH cyc763 t_out [513:512] off00 on01 data 137 bits | n_y [513:512] off00 on00 data 93 bits
+A0ICG_QMISMATCH cyc764 t_out [513:512] off00 on01 data 117 bits | n_y [513:512] off00 on00 data 101 bits
+A0ICG_QMISMATCH cyc765 t_out [513:512] off00 on01 data 137 bits | n_y [513:512] off00 on00 data 85 bits
+A0ICG_QMISMATCH cyc766 t_out [513:512] off00 on01 data 105 bits | n_y [513:512] off00 on00 data 91 bits
+A0ICG_COUNTS tile=nk MUT=3 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=63 gated_cycles=7354 (61%) engine_busy=4570 wakeups=59
+A0ICG_STRICT tile=nk MUT=3 strict_mismatch_cycles=7790 (t_out 7567 n_y 7144) first=10
+A0ICG_FAIL tile=nk MUT=3 qualified_errors=5342 (t_out 4487 n_y 856) first_cycle=762 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc65 t_out 0 bits ([513:512] off00 on00) n_y 56 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc66 t_out 0 bits ([513:512] off00 on00) n_y 49 bits ([513:512] off00 on00)
+A0ICG_QMISMATCH cyc250 t_out [513:512] off01 on00 data 174 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc251 t_out [513:512] off01 on00 data 155 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc252 t_out [513:512] off01 on00 data 167 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc253 t_out [513:512] off01 on00 data 171 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_QMISMATCH cyc254 t_out [513:512] off01 on00 data 169 bits | n_y [513:512] off00 on00 data 0 bits
+A0ICG_COUNTS tile=nk MUT=7 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=63 gated_cycles=9245 (77%) engine_busy=4570 wakeups=13
+A0ICG_STRICT tile=nk MUT=7 strict_mismatch_cycles=11816 (t_out 11678 n_y 8764) first=65
+A0ICG_FAIL tile=nk MUT=7 qualified_errors=4165 (t_out 4164 n_y 2) first_cycle=250 checks=12000
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_MISMATCH cyc64 t_out 0 bits ([513:512] off00 on00) n_y 46 bits ([513:512] off00 on00)
+A0ICG_MISMATCH cyc65 t_out 0 bits ([513:512] off00 on00) n_y 54 bits ([513:512] off00 on00)
+A0ICG_COUNTS tile=nk MUT=8 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=63 gated_cycles=6122 (51%) engine_busy=4570 wakeups=11
+A0ICG_STRICT tile=nk MUT=8 strict_mismatch_cycles=6956 (t_out 6743 n_y 5838) first=64
+A0ICG_PASS tile=nk MUT=8 checks=12000 gated=6122 qualified_errors=0 strict=6956

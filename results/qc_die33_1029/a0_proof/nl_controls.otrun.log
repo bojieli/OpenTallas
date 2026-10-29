@@ -1,0 +1,21 @@
+ot-run: localhost      admits   636 GB (avail 772, reserve 0, fresh 30.8, peak 40.1, headroom 0, waiters 0/0 GB) load 102/112 running 42 disk 1348 GB 
+ot-run: -> localhost
+ot-heavy: request 16G is charged 9G (class 'run_native.sh' measured peak 1.0G, n=3+0 proved); the cap stays 16G
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-4047962-1793290611 after 1 s
+0	PASS
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_COUNTS tile=nl MUT=0 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_PASS tile=nl MUT=0 checks=12000 gated=6703 qualified_errors=0 strict=6865
+7	CAUGHT
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_COUNTS tile=nl MUT=7 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=10046 (83%) engine_busy=4570 wakeups=11
+A0ICG_FAIL tile=nl MUT=7 qualified_errors=4164 (t_out 4164 n_y 0) first_cycle=250 checks=12000
+8	SURVIVED
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_COUNTS tile=nl MUT=8 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=6703 (55%) engine_busy=4570 wakeups=10
+A0ICG_PASS tile=nl MUT=8 checks=12000 gated=6703 qualified_errors=0 strict=6865
+3	SURVIVED
+A0ICG_SHAPE REGROOT=3 ICG=2
+A0ICG_COUNTS tile=nl MUT=3 checks=12000 cmds=11 t_valid=4147 t_nonzero=4147 n_valid=0 gated_cycles=7404 (61%) engine_busy=4570 wakeups=10
+A0ICG_PASS tile=nl MUT=3 checks=12000 gated=7404 qualified_errors=0 strict=7535
+ot-run: RAN on localhost (unit oth-ubuntu-4047962-1793290611): exit 0
