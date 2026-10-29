@@ -1,0 +1,15 @@
+{
+ "schema": "opentallas.s81_lp_census.v1",
+ "lane": "S81-LP-2",
+ "date": "2026-10-29",
+ "method": "same closure + recipe as S81-LP-1 flat_lanebb: Codex census_complete (intel1 codex-s81-lp-parent-1029, 93 files, graph e4ad09a663, manifest asbuilt_b178_coll_s13pfunc.json, 15 defines) with only the top swapped for the type's bound top (codex-tok-s81-1028/bind_s13rfunc_reset/out/rtl, same 62c2ae900 tap-comment fix) and, for the cut, 083_ot_s81ph_coll_lane_safe4.sv replaced by exact-port blackbox stubs of dsfd_coll_lane_{w,e}_safe8_ntf; yosys synth -flatten, dfflibmap, abc -D 833 (RVT TT); std = cells *_ASAP7_75t_R. Method re-check: the same counting gives 322,070 on S81-LP-1 flat_lanebb (= its CHECKED number).",
+ "runs": "intel1:/srv/opentallas-scratch2/claude/s81-lp-2-1029/<type>/{out_flatfull,out_dsfd_coll_lane_<w|e>_safe8_ntf}",
+ "cap": 400000, "adopt_rule": "COORD 06:01: same cut only where the parent lands <= ~360k with growth (+10 %)",
+ "types": [
+  {"type": "dsdv_slice_lepw_mus_LP__t2", "inst": "s_0S_LP", "lanes": "4x dsfd_coll_lane_w_safe8_ntf", "flat_std": 556766, "cut_parent_std": 322070, "cut_x1.10": 354277, "verdict": "CUT (COORD-adopted 06:01)", "source": "S81-LP-1 CHECKED"},
+  {"type": "dsdv_slice_lepw_mu_LP__t2", "inst": "s_0N_LP", "lanes": "4x dsfd_coll_lane_w_safe8_ntf", "flat_std": 519266, "flat_sram": 265, "cut_parent_std": 284420, "cut_parent_ff": 88211, "cut_parent_sram": 45, "cut_x1.10": 312862, "verdict": "CUT (same w lane master)"},
+  {"type": "dsdv_slice_lepe_mu_LP__t2", "inst": "s_7N_LP", "lanes": "4x dsfd_coll_lane_e_safe8_ntf", "flat_std": 510216, "flat_sram": 265, "cut_parent_std": 275202, "cut_parent_ff": 85109, "cut_parent_sram": 45, "cut_x1.10": 302722, "verdict": "CUT (e lane master: wrapper body identical to w = ot_s81ph_coll_lane_safe4 CH_BOARD 700 TF_CLEANUP 1 REACH 2 CORE_CRED 12; same kit layout, link face N in the MY parent)"},
+  {"type": "dsdv_slice_lepe_nh_mus_LP__t1", "inst": "s_7S_LP", "lanes": "2x dsfd_coll_lane_e_safe8_ntf", "flat_std": 299350, "flat_sram": 135, "flat_x1.10": 329285, "cut_parent_std": 181806, "verdict": "NO CUT NEEDED: flat parent already <= 360k with +10 % growth (keep soft lanes, fewer hard types)"}
+ ],
+ "status": "counts CHECKED (own mapped_stat.json); growth factor UNCHECKED"
+}
