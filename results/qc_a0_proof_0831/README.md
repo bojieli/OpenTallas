@@ -47,3 +47,9 @@ Build note: `--hosts intel2` is invalid inside the current intel2 admission hub
 (self is `localhost`); those first calls were NOT RUN with DNS exit255.
 The corrected native builds were admitted on intel2 as units2507986/2506142.
 They progress with unchanged 64GB admission and source snapshots.
+
+Hop vehicle follow-up: activity is held through operation drain, matching
+the tile contract rather than relying on a one-cycle enable pulse. The
+32-wake result is unchanged: K2 correct32, extra-hop K3 caught32. Fresh
+unit2669808 and hop_bound_drain.otrun.log retain this final source result;
+the initial shorter-activity receipt remains historical.

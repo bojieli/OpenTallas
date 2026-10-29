@@ -24,11 +24,15 @@ module tb_hop_bound;
     repeat(8) @(negedge ck);
     for(integer i=1;i<=32;i=i+1) begin
       data=32'h3f800000+i; valid=1; en=1;
-      @(negedge ck); valid=0; en=0;
+      // As in the tile, the activity stays asserted until the operation has
+      // drained. Only the initial wake edge is under test, not early shutoff.
+      @(negedge ck); valid=0;
       repeat(2) @(negedge ck);
       checks=checks+1;
       if(good_q !== data) errors=errors+1;
       if(bad_q !== data) caught=caught+1;
+      repeat(3) @(negedge ck);
+      en=0;
       repeat(8) @(negedge ck);
     end
     if(errors || caught != checks) $fatal(1,"HOP_BOUND_FAIL checks=%0d errors=%0d caught=%0d",checks,errors,caught);

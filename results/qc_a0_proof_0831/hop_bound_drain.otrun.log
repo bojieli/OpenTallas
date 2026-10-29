@@ -1,0 +1,6 @@
+ot-run: localhost      admits   652 GB (avail 856, reserve 0, fresh 83.7, peak 55.8, headroom 0, waiters 0/0 GB) load 78/112 running 42 disk 1360 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2669808-1793289018 after 1 s
+HOP_BOUND_PASS s=3 K=2 checks=32 errors=0 K3_mutant_caught=32
+tb_hop_bound_drain.sv:40: $finish called at 464000 (1ps)
+ot-run: RAN on localhost (unit oth-ubuntu-2669808-1793289018): exit 0
