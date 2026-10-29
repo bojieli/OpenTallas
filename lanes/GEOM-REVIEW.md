@@ -4482,3 +4482,16 @@ Conditions carried:
 (1) Optional --write-face PLAN-DELTA (rd_out on the W/S faces) to remove the E cluster and its ~140-um ROM-crossing wires.
 (2) Slot shrink at the next QC PLAN-DELTA.
 2026-10-28 21:20 PDT COORD spot-check (viewed 2 renders): (1) AUTO-GEOM f6f8b3444406 QC romleaf a0k7s - CONCUR PASS-COND with GEOM-46: ROM macro dominates (auto fill FAIL is the macro-area artefact), logic L-shaped W/S of the macro, centre-west clk; watch the small E cluster (farthest sink 167.9 um) at CTS. (2) AUTO-GEOM 53fcde6a6c40 QC rawleaf a0k7s - CONCUR PASS with GEOM-51: fill 46%, uniform cover, centre clk, farthest sink 117.4 um.
+2026-10-28 21:38 PDT GEOM-REVIEW-46: VERDICT [AUTO-GEOM 74cb762faeb6] hbm/ot_hgi_sm_xload_cl2_bdring (HBM-CORES-KITS-1 C24 kit, place-only) FAIL for route as-is: GRT 5 overflow after the full 50 extra iterations (M3 4, M5 1; usage M3 85.2 %, M5 70.2 %). I viewed 2 renders: the AUTO PNG intel2 auto_geom/74cb762faeb6/auto_geom.png and my own cell-class render tmp/g46/74cb762faeb6/cls.png. Own geom_rules run on its geom.tsv (CHECKED, same numbers).
+What the renders show:
+- Outline 86.4x302.4 (aspect 3.5 FAIL), std area 10727 um2, fill .41 even, empty .11.
+- 77317 cells: L 44820 / S 13885 / B 18612; INVx1 10560, BUFx3 3311, BUFx2 2687, BUFx6f 1120.
+- Pins: W 2048 bq_d (7.0/um over 294 um, WARN 7.3 at y 9-19); E 639 (qq_hi 256, qq_lo 256, lane_en_i 64, ...); N 29; area 5.
+- The bq_d output register column (u_bout_bq_d, 4546 cells) is a dense band at x 5-10 along the whole W face. col_v FAIL 1.207 at (10,132.5) is right beside it.
+- The u_fcore logic (11198 named cells plus buffers) is spread over the full 300 um height. r2r 365.6 (0 >405 but close; worst u_fcore.u_core.zhi_q -> g_rp[1].g_rs[4].w[190], one broadcast register across the strip). clock_reach 184.0 from the centre entry (43.2,151.2).
+- pin_unreg 4 = mp_isl0 ck/rst island feed-throughs (12.2a1 exempt, INFO). pin_reg p90/max 8.2/9.7 is good.
+Root cause: the plan slot shape. A narrow 86-um strip with 2048 outputs on one long face forces all fcore->bq_d traffic into vertical (M3/M5) tracks next to the W face, and stretches fcore broadcasts over 300 um.
+Fix (UNCHECKED estimates):
+(a) Structural, at the DIE-HBM-10 PLAN-DELTA: a near-square slot, ~165x165 for fill ~.40. Split bq_d over 2 faces (W+S, about 1024 each at <=6/um) and put qq_* on the opposite faces. This removes the aspect FAIL and the one-face column, and cuts the r2r span to ~250.
+(b) If the slot must stay: a kit-only retry with lower GPL density or cell padding on the u_bout_bq_d column. With only 5 overflows this may close, but the aspect FAIL and the 365-um r2r stay.
+I recommend (a). Re-REQ when GRT is 0 at 50 iterations and col_v <=1.0.
