@@ -1,0 +1,411 @@
+{
+ "total": 35624,
+ "groups": {
+  "su_NE0.u_slice": {
+   "cells": 3673,
+   "seq": 215,
+   "qbits": 58933,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 449,
+    "$logic_or": 399,
+    "$logic_not": 310,
+    "$not": 143,
+    "$eq": 133,
+    "$dff": 113
+   }
+  },
+  "su_NW0.u_slice": {
+   "cells": 3673,
+   "seq": 215,
+   "qbits": 58933,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 449,
+    "$logic_or": 399,
+    "$logic_not": 310,
+    "$not": 143,
+    "$eq": 133,
+    "$dff": 113
+   }
+  },
+  "su_NE2.u_slice": {
+   "cells": 3650,
+   "seq": 203,
+   "qbits": 58801,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 456,
+    "$logic_or": 399,
+    "$logic_not": 305,
+    "$eq": 138,
+    "$not": 131,
+    "$dff": 113
+   }
+  },
+  "su_NW2.u_slice": {
+   "cells": 3650,
+   "seq": 203,
+   "qbits": 58801,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 456,
+    "$logic_or": 399,
+    "$logic_not": 305,
+    "$eq": 138,
+    "$not": 131,
+    "$dff": 113
+   }
+  },
+  "su_NE1.u_slice": {
+   "cells": 3634,
+   "seq": 195,
+   "qbits": 58713,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 456,
+    "$logic_or": 399,
+    "$logic_not": 305,
+    "$eq": 138,
+    "$not": 123,
+    "$dff": 113
+   }
+  },
+  "su_NE3.u_slice": {
+   "cells": 3634,
+   "seq": 195,
+   "qbits": 58713,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 456,
+    "$logic_or": 399,
+    "$logic_not": 305,
+    "$eq": 138,
+    "$not": 123,
+    "$dff": 113
+   }
+  },
+  "su_NW1.u_slice": {
+   "cells": 3634,
+   "seq": 195,
+   "qbits": 58713,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 456,
+    "$logic_or": 399,
+    "$logic_not": 305,
+    "$eq": 138,
+    "$not": 123,
+    "$dff": 113
+   }
+  },
+  "su_NW3.u_slice": {
+   "cells": 3634,
+   "seq": 195,
+   "qbits": 58713,
+   "mods": {
+    "$logic_and": 886,
+    "$mux": 771,
+    "$ne": 456,
+    "$logic_or": 399,
+    "$logic_not": 305,
+    "$eq": 138,
+    "$not": 123,
+    "$dff": 113
+   }
+  },
+  "sfucore_NE.u_core": {
+   "cells": 1631,
+   "seq": 43,
+   "qbits": 16062,
+   "mods": {
+    "$logic_and": 576,
+    "$mux": 357,
+    "$logic_not": 273,
+    "$reduce_or": 83,
+    "$logic_or": 72,
+    "$ne": 70,
+    "$reduce_bool": 66,
+    "$dff": 26
+   }
+  },
+  "sfucore_NW.u_core": {
+   "cells": 1631,
+   "seq": 43,
+   "qbits": 16062,
+   "mods": {
+    "$logic_and": 576,
+    "$mux": 357,
+    "$logic_not": 273,
+    "$reduce_or": 83,
+    "$logic_or": 72,
+    "$ne": 70,
+    "$reduce_bool": 66,
+    "$dff": 26
+   }
+  },
+  "hb_idx__s_NE.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_NW.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_SE.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_SW.scorer": {
+   "cells": 785,
+   "seq": 389,
+   "qbits": 83510,
+   "mods": {
+    "$dff": 349,
+    "$add": 104,
+    "$mux": 59,
+    "$not": 37,
+    "$adff": 37,
+    "$logic_not": 35,
+    "$logic_and": 26,
+    "$eq": 24
+   }
+  },
+  "hb_idx__s_NE.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_NW.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_SE.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_SW.keybuf": {
+   "cells": 5,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$add": 4,
+    "$reduce_or": 1
+   }
+  },
+  "hb_idx__s_NE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "hb_idx__s_NW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "hb_idx__s_SE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "hb_idx__s_SW.$or$ot_hnx_idxn_quarter_with_keybuf_sliced": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "$or": 1
+   }
+  },
+  "su_NE0": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NE0.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NE1": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NE1.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NE2": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NE2.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NE3": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NE3.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NW0": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NW0.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NW1": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NW1.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NW2": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NW2.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  },
+  "su_NW3": {
+   "cells": 1,
+   "seq": 1,
+   "qbits": 1,
+   "mods": {
+    "$dff": 1
+   }
+  },
+  "su_NW3.g_tap_r8b": {
+   "cells": 1,
+   "seq": 0,
+   "qbits": 0,
+   "mods": {
+    "ot_hbm_vm_lg_pair_tap": 1
+   }
+  }
+ }
+}

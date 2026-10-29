@@ -1,0 +1,4 @@
+n_errors 308 unmapped 5572 tied_by_port 0
+201 UNMAPPED | UNMAPPED hb_idx__s_NE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$24977 ($or)
+106 UNPLANNED | UNPLANNED NE_b000 -> NE_b010: 33 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+1 EMIT | EMIT wavefront core reset q_b000/u_hcb_Q0.ot_hbm_hc_bank128_pair0.rst_n: expected one bound leaf, found 0 (partition NE_b000 root ; e.g. )
