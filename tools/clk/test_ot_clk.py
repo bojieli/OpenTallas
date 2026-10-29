@@ -256,3 +256,37 @@ def test_reference_prefers_generated_copy(tmp_path):
     assert O.reference_file(tmp_path, "tree.json").name == "tree.json"
     (tmp_path / "tree_GENERATED.json").write_text("{}")
     assert O.reference_file(tmp_path, "tree.json").name == "tree_GENERATED.json"
+
+
+# ---------------------------------------------------------------------------- P2: QC clock of record (CLK-TOOL-3)
+def test_qc_trial25_argv_matches_kit25_flags():
+    """DIE-QC-25 kit25.sh t25: trial14 flags + ev_qc25 + trial24 refit cal + --rep-on-leg + --rep-off-leg-max 50"""
+    c = cfg("qc_trial25")
+    f = flags(O.kit_argv(c, "OUT", "CAL", None))
+    t14 = flags(O.kit_argv(cfg("qc"), "OUT", "CAL", None))
+    assert f["--rep-on-leg"] is True and f["--rep-off-leg-max"] == "50"
+    assert "--rep-on-leg" not in t14 and "--rep-off-leg-max" not in t14
+    assert {k: v for k, v in f.items() if not k.startswith("--rep-o")} == t14
+    ok, e, why = O.stage_check(c, reg())
+    assert ok, why
+    src = json.loads((HERE.parent.parent / "results/die_qc25_1028/inv2_stage_cal_trial24.json").read_text()) \
+        if (HERE.parent.parent / "results/die_qc25_1028/inv2_stage_cal_trial24.json").is_file() else None
+    d = O.stage_cal_file(e)
+    assert d["leg"] == [13.934059, 0.09766, 0.000161, 10.457359]
+    assert d["leg_FF"] == [11.782508, 0.086044, 0.00015, 7.743809]
+    if src is not None:
+        for k in ("leg", "tap", "leg_FF", "tap_FF"):
+            assert d[k] == src[k]
+
+
+def test_kit_runs_the_named_die_trial_and_records_it(tmp_path, monkeypatch):
+    seen = []
+    monkeypatch.setattr(O.subprocess, "call", lambda cmd, **k: seen.append(cmd) or 0)
+    dt = tmp_path / "die_plan" / "die_trial.py"
+    dt.parent.mkdir()
+    dt.write_text("# stand-in\n")
+    assert O.main(["kit", str(HERE / "configs" / "qc_trial25.yaml"), "--out", str(tmp_path / "o"),
+                   "--die-trial", str(dt)]) == 0
+    assert seen[0][1] == str(dt.resolve())
+    rec = json.loads((tmp_path / "o" / "ot_clk_argv.json").read_text())["die_trial"]
+    assert rec["path"] == str(dt.resolve()) and len(rec["sha256"]) == 16
