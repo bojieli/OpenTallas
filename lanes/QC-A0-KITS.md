@@ -223,3 +223,4 @@ CODEX QC proof PARKED09:03 on explicitClaude RESET. Branch595348c20 source/helpe
 
 ## CODEX PARKED 2026-10-29 09:04 PDT — explicit Claude reset
 Branch codex/qc-a0-0830@cdedd9af61b pushed; detailedpacket results/codex_qc_a0_0830/PARKED_0903.md + CODEX-LOGhandoff. LIVE NLONEplaceintel2unit2306050 kitcodex-qc-a0-0830/kits/qfd_tile_nl_a0c_a0nl14icg2r1 (~GPL4270); untouched. NKV1L/ICG2 actualGEOMFAIL532r2r/max657.45,7collapse,rst261.76,mainK0ENA548.532um; noCTS/GRT. ROOTauthorizedONErepairedNKplaceafterfullgraph+visualPASS-COND, notlaunched. Nativeclockscopefix68204 only2RTLfiles restores34/36gates+10ROMs; actualsourceproofownedqc_proof. NoOWNERnew.
+- 2026-10-29 10:08 PDT DIE-QC-33 RESULT: strict bind PASS (23ef9f36b1); BTAB F3b/F3r NOT SIGNED, F3b chosen, macro-edge M4 short class; PROG cand-2 r2r 404.51/0 GEOM REQ; A0 proofs NL 0P/7C/8S/3S, NK 0P/7C/8S/3C; NK graph-home probe 0>405; ICG_RRST relay RTL READY. PARKED -> DIE-QC-34 (see queue).
