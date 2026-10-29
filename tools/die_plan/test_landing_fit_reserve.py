@@ -51,3 +51,16 @@ def test_fit_reserve_skips_obstacle_inside_reserve():
 def test_fit_reserve_is_opt_in():
     assert 'if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "1"}' in TCL
     assert "if {$x<$u && $x+$fw>$l}" in TCL and "set fw $w" in TCL
+
+
+def test_gen_phys_emits_fit_reserve_only_on_plan_opt_in():
+    """DIE-KV-34: gen phys exports OT_CLAND_FIT_RESERVE=1 only when the plan sets budgets.cland_fit_reserve."""
+    import ast
+    import sys
+    src = (HERE / "gen_phys.py").read_text()
+    line = '*(["export OT_CLAND_FIT_RESERVE = 1"] if P.budgets.get("cland_fit_reserve") else []),'
+    assert src.count(line) == 1
+    ast.parse(src)
+    sys.path.insert(0, str(HERE))
+    import schema
+    assert not schema.DEFAULT_BUDGETS.get("cland_fit_reserve")      # default: key absent -> kit config unchanged
