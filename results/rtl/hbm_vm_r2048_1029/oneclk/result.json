@@ -1,0 +1,371 @@
+{
+ "status": "PASS_ONECLK_SOURCE_CANDIDATE",
+ "approval": "HBMdie coordinator /root/hbm candidateONECLK approval 2026-10-29; physicalatomicadoption stillownedplan",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/hfd_vms_bank_native_q0_faces_r2048_oneclk.sv": "92545a54bbd83858337469f8741c6c43613c63a60c5f6524038a8e297f75b330",
+  "tools/hbm_static/vm_r2048/tb_oneclk.sv": "29204293e9b694e581c452dc66133bcac665de9f5966c193258a91274b9bb806",
+  "tools/hbm_static/vm_r2048/caller_packet.py": "0b757e5abe1167b2e48069a86bac6fbdb7083665dfe0ee1966e022c3e3a27b37"
+ },
+ "native_ports": {
+  "rq0": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr0": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq1": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr1": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq2": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr2": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq3": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr3": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq4": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr4": {
+   "direction": "output",
+   "width": 257
+  },
+  "wq0": {
+   "direction": "input",
+   "width": 282
+  },
+  "wq_done0": {
+   "direction": "output",
+   "width": 1
+  },
+  "wq1": {
+   "direction": "input",
+   "width": 282
+  },
+  "wq_done1": {
+   "direction": "output",
+   "width": 1
+  },
+  "bid": {
+   "direction": "input",
+   "width": 3
+  },
+  "sid": {
+   "direction": "input",
+   "width": 2
+  },
+  "clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_n": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_s": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_e": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_w": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_macro0": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_macro1": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_macro2": {
+   "direction": "input",
+   "width": 1
+  },
+  "clk_macro3": {
+   "direction": "input",
+   "width": 1
+  },
+  "rst_n": {
+   "direction": "input",
+   "width": 1
+  },
+  "rslot_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "rslot": {
+   "direction": "input",
+   "width": 3
+  },
+  "wslot_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "wslot": {
+   "direction": "input",
+   "width": 3
+  },
+  "dq": {
+   "direction": "input",
+   "width": 282
+  },
+  "dq_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "kq": {
+   "direction": "input",
+   "width": 282
+  },
+  "kq_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "xq": {
+   "direction": "input",
+   "width": 277
+  },
+  "xq_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "xq2": {
+   "direction": "input",
+   "width": 277
+  },
+  "xq2_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "eg": {
+   "direction": "output",
+   "width": 277
+  },
+  "pq": {
+   "direction": "input",
+   "width": 286
+  },
+  "pr": {
+   "direction": "output",
+   "width": 266
+  },
+  "status": {
+   "direction": "output",
+   "width": 18
+  }
+ },
+ "oneclk_ports": {
+  "rq0": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr0": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq1": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr1": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq2": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr2": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq3": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr3": {
+   "direction": "output",
+   "width": 257
+  },
+  "rq4": {
+   "direction": "input",
+   "width": 18
+  },
+  "rr4": {
+   "direction": "output",
+   "width": 257
+  },
+  "wq0": {
+   "direction": "input",
+   "width": 282
+  },
+  "wq_done0": {
+   "direction": "output",
+   "width": 1
+  },
+  "wq1": {
+   "direction": "input",
+   "width": 282
+  },
+  "wq_done1": {
+   "direction": "output",
+   "width": 1
+  },
+  "bid": {
+   "direction": "input",
+   "width": 3
+  },
+  "sid": {
+   "direction": "input",
+   "width": 2
+  },
+  "clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "rst_n": {
+   "direction": "input",
+   "width": 1
+  },
+  "rslot_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "rslot": {
+   "direction": "input",
+   "width": 3
+  },
+  "wslot_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "wslot": {
+   "direction": "input",
+   "width": 3
+  },
+  "dq": {
+   "direction": "input",
+   "width": 282
+  },
+  "dq_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "kq": {
+   "direction": "input",
+   "width": 282
+  },
+  "kq_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "xq": {
+   "direction": "input",
+   "width": 277
+  },
+  "xq_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "xq2": {
+   "direction": "input",
+   "width": 277
+  },
+  "xq2_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "eg": {
+   "direction": "output",
+   "width": 277
+  },
+  "pq": {
+   "direction": "input",
+   "width": 286
+  },
+  "pr": {
+   "direction": "output",
+   "width": 266
+  },
+  "status": {
+   "direction": "output",
+   "width": 18
+  }
+ },
+ "native_pin_bits": 3933,
+ "oneclk_pin_bits": 3925,
+ "removed_clock_inputs": [
+  "clk_e",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2",
+  "clk_macro3",
+  "clk_n",
+  "clk_s",
+  "clk_w"
+ ],
+ "physical_macro_paths": [
+  "u_ot_pr_core.bank.u_a",
+  "u_ot_pr_core.bank.u_b",
+  "u_ot_pr_core.bank.u_c",
+  "u_ot_pr_core.bank.u_h"
+ ],
+ "SRAMs": 4,
+ "existing_reset_and_ECC": true,
+ "added_pipeline_cycles": 0,
+ "measured": {
+  "cycles": 2701,
+  "legacy_lockstep": 404,
+  "checks": 2689,
+  "writes": 1282,
+  "reads": 1283,
+  "read_edges": 7,
+  "write_edges": 4
+ },
+ "actual_high_macro_clock_drop": "CAUGHT",
+ "WIDTH_SELRANGE": "PASS",
+ "actual32caller_clock_aliases": "all identical, checked before oneclk candidateemit; differingclocknegative refused",
+ "unselected_source_candidate": {
+  "path": "/srv/opentallas-scratch/claude/codex-hbm-vm-r2048-oneclk-source-1029/top_r2048.sv",
+  "sha256": "e310abd80a6c9505fa6efb04ceea9952f6b87b2345948886773c4e825daa80ea",
+  "callers": 32,
+  "fieldadapters": 32,
+  "original_top_modified": false,
+  "actual_source_adopted": false
+ },
+ "runtime": {
+  "host": "intel1",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/oneclk_r2",
+  "unit": "oth-ubuntu-2846854-1793272553",
+  "exit_code": 0
+ },
+ "holds": [
+  "physicalmacroarray/pin6/centralclockgap/PG/clock/realviewSTA/PnR not run",
+  "actual18bitproducergraft and17bitperrolecfgpublication remain required for upperregularaddresses",
+  "legacy-onlycandidatecannotclaim2^19reachableprogramme"
+ ],
+ "full_token": false,
+ "SIGNED": false
+}

@@ -1,0 +1,34 @@
+{
+ "status": "PASS_SOURCE_FIELD_ADAPTER",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_legacy_r2048_fields.sv": "8351eccfe008f5f1e450cadc7317e1e961263823581d19e223a0d7f4ba9873f8",
+  "tools/hbm_static/vm_r2048/tb_fields.sv": "77d4924e297f0e768f373fd9e291a1b71d8d17b5039a82d5bb114a5c58ec720f",
+  "tools/hbm_static/vm_r2048/caller_packet.py": "7f20beedd950eb110c7e089eacd7b4c6e1051bdc892d0dca3cf063d6ef441d52"
+ },
+ "exhaustive_sectors": 65536,
+ "read_groups": 5,
+ "write_groups": 2,
+ "carriers": 7,
+ "actual_zeroextension_mutant": "CAUGHT",
+ "actual_reverse_alias_mutant": "CAUGHT",
+ "WIDTH_SELRANGE": "PASS",
+ "added_cycles": 0,
+ "reverse_guard": "suppress unrepresentable valid and OR fault into existing statusbit17; CE/UE preserved",
+ "actual_callers": 32,
+ "caller_missing_and_shape_controls": "CAUGHT",
+ "top_transform_default_off": true,
+ "top_applied": false,
+ "full_token": false,
+ "source_capacity_holds": [
+  "legacy-only lifts preserve original2^18regular-word reachability; cannot supply the upper2^19native half",
+  "actual native source/input widths require genuine18bit producers plus source frontier/bind",
+  "physicalfourthmacroclocktap/PG/lot and crossing gate remain planowner work",
+  "sourceeventnarrowingfault goes to actual existing32 status receivers, not a new open diagnostic"
+ ],
+ "runtime": {
+  "host": "intel1",
+  "root": "/srv/opentallas-scratch2/claude/codex-hbm-vm-capacity-1029/fields_r1",
+  "unit": "oth-ubuntu-2716902-1793271794",
+  "exit_code": 0
+ }
+}

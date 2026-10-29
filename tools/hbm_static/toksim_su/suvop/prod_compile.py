@@ -47,7 +47,7 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[3]
 sys.path.insert(0, str(ROOT / 'tools/hbm_static')); sys.path.insert(0, str(ROOT / 'tools'))
-from su_arith_compile import pack, physical_word  # noqa: E402
+from su_arith_compile import pack, physical_word as _physical_word  # noqa: E402
 import su_pretree_lower as SPL  # noqa: E402  (closed HH-6 pre-tree: tree_cmd_word, block_subtree, PT_RED)
 from hdc_golden import add, mul, to_bf16, exp, neg, z, rsqrt  # noqa: E402
 F = np.float32
@@ -59,6 +59,11 @@ FPIN = 2                                                  # fill: bank pins samp
 HOLD = 16                                                 # HBM-SUFIX: record fields held on non-emit lines past the last lane write
 RLAT, DEP, NCH, LRF, RFL = 9, 10, 10, 1, 32              # reducer; RF_LOCAL 1; L_TREE 32 (stree)
 QW = 1742 + 240 + 312 + 54 + 74
+NQ, QIDS = 4, (0, 1, 2, 3)
+PIN_REG = 0
+
+def physical_word(q, row, bank=0):
+    return _physical_word(QIDS[q], row, bank)
 def u32(x): return int(np.float32(x).view(np.uint32))
 def f32(u): return np.uint32(u).view(np.float32)
 
@@ -121,6 +126,11 @@ RECS = {
  'qw8_round_q': ('qwen', 512, 1, dict(A='vm'), dict(co_rnd=1), None, True),
  'qw8_row_scale_qkv': ('qwen', 768, 1, dict(A='vm', B='vm'), dict(cp_m1=1, cm_m1=1), None, True),
 }
+# Exact actual HGI opcode class, separately named from the historical plain-AB
+# timing fixture ds_engram_gate. Six position rows of four independent gates.
+RECS['ds_hgi_engram_gate_n6'] = ('ds_ar', 4, 6, dict(A='vm', B='vm'),
+    dict(cp_m1=1, cm_m1=1, cm_m2=2, cp_imm1=0x3c64f92e,
+         cm_imm1=0x3c64f92e, ci_sfu=7, cs_sfu=7), None, True)
 ROW_OF = dict(A=0, B=1, C=2, D=3, O=4)
 
 
@@ -141,6 +151,10 @@ def golden(mods, a, b, c, d):
     elif m == 5:
         with np.errstate(all='ignore'): x = z(np.asarray(x, F) / imm1)
     elif m == 6: x = np.maximum(x, b).astype(F)
+    m2 = mods.get('cm_m2', 0)
+    if m2 == 1: x = mul(x, c)
+    elif m2 == 2: x = mul(x, f32(mods.get('cm_imm1', mods.get('cp_imm1', 0))))
+    elif m2 != 0: raise ValueError('reserved M2 opcode')
     ad = mods.get('ca_ad', 0)
     if ad == 2: x = add(x, c)
     elif ad == 3: x = add(x, neg(b))
@@ -149,12 +163,22 @@ def golden(mods, a, b, c, d):
     sf = mods.get('ci_sfu', 0)
     if sf == 1: x = exp(x)
     elif sf == 2: x = rsqrt(x)
+    elif sf == 3:
+        import hdc_golden_v41 as G41
+        x = G41.sqrt(x)
+    elif sf == 7:
+        import hdc_golden_v41 as G41
+        magnitude = np.maximum(np.abs(x), f32(0x358637bd)).astype(F)
+        root = G41.sqrt(magnitude)
+        signed = np.where(x < F(0), neg(root), root).astype(F)
+        x = G41.sigmoid(signed)
     elif sf == 6:
         import hdc_golden_v41 as G41
         x = G41.sqrt(G41.softplus(x))
     elif sf in (4, 5):
         den = add(exp(neg(x)), F(1.0))
         with np.errstate(all='ignore'): x = z(np.asarray(x if sf == 5 else np.full_like(x, F(1.0)), F) / np.asarray(den, F))
+    elif sf != 0: raise ValueError('unsupported SFU opcode')
     e1 = mods.get('cs_e1', 0)
     if e1 == 1: x = mul(x, c)
     elif e1 == 2: x = add(x, c)
@@ -177,11 +201,11 @@ def fmax_u(a, b):
 class Prog:
     def __init__(s, n):
         s.n = n
-        s.ctl = [[0] * 4 for _ in range(n)]; s.vmr = [[0] * 4 for _ in range(n)]; s.vmw = [[0] * 4 for _ in range(n)]
-        s.rf = [[0] * 4 for _ in range(n)]; s.red = [[0] * 4 for _ in range(n)]
-        s.expw, s.exps = [], []; s.lw = np.zeros((n, 4), dtype=np.int64)
+        s.ctl = [[0] * NQ for _ in range(n)]; s.vmr = [[0] * NQ for _ in range(n)]; s.vmw = [[0] * NQ for _ in range(n)]
+        s.rf = [[0] * NQ for _ in range(n)]; s.red = [[0] * NQ for _ in range(n)]
+        s.expw, s.exps = [], []; s.lw = np.zeros((n, NQ), dtype=np.int64)
         s.bankw = set()                                    # (edge, q, bank) write-port use (fill pins / lane write)
-        s.tree = [[0] * 4 for _ in range(n)]               # PRETREE: per edge, per quarter 4 x 12-b slice tree commands
+        s.tree = [[0] * NQ for _ in range(n)]               # PRETREE: per edge, per quarter 4 x 12-b slice tree commands
 
     def put(s, arr, e, q, sh, w, val):
         assert 0 <= val < 1 << w and 0 <= e < s.n
@@ -196,21 +220,21 @@ class Prog:
         with open(out / 'prog.mem', 'w') as f:
             for e in range(s.n):
                 v = 0
-                for q in range(4):
+                for q in range(NQ):
                     qv = ((((s.ctl[e][q] << 240 | s.vmr[e][q]) << 312 | s.vmw[e][q]) << 54 | s.rf[e][q]) << 74) | s.red[e][q]
                     v |= qv << (q * QW)
-                f.write(f'{v:0{4 * QW // 4}x}\n')
+                f.write(f'{v:0{NQ * QW // 4}x}\n')
         s.expw.sort(key=lambda x: (x[0], x[1], x[2]))
         with open(out / 'expw.mem', 'w') as f:
             for e, q, p, sec, mask, words in s.expw:
                 data = 0
                 for k, w in enumerate(words): data |= (int(w) & 0xffffffff) << (32 * k)
-                f.write(f'{e:08x}{q:01x}{p:01x}{sec:04x}{mask:02x}{data:064x}\n')
+                f.write(f'{e:08x}{QIDS[q]:01x}{p:01x}{sec:04x}{mask:02x}{data:064x}\n')
         s.exps.sort()
         with open(out / 'exps.mem', 'w') as f:
-            for e, q, tag, val in s.exps: f.write(f'{e:08x}{q:08x}{tag:08x}{val:08x}\n')
+            for e, q, tag, val in s.exps: f.write(f'{e:08x}{QIDS[q]:08x}{tag:08x}{val:08x}\n')
         with open(out / 'explw.mem', 'w') as f:
-            for e in range(s.n): f.write(''.join(f'{int(s.lw[e][q]):02x}' for q in (3, 2, 1, 0)) + '\n')
+            for e in range(s.n): f.write(''.join(f'{int(s.lw[e][q]):02x}' for q in reversed(range(NQ))) + '\n')
 
 
 def model_reduce(kind, vals_u):
@@ -234,7 +258,7 @@ def reduce_pretree(P, a, red, emits, live, EI, N, ROWS, QPR, NGRP, NBQ, PERM, LA
     for (e, g, j) in emits:
         E = e + LAT
         s_, t_ = divmod(g, NBQ); k = PERM[t_]
-        for q in range(4):
+        for q in range(NQ):
             cnt = int(live[g, q])
             if cnt == 0: continue
             ids = [EI(g, q, b) for b in range(cnt)]
@@ -243,7 +267,7 @@ def reduce_pretree(P, a, red, emits, live, EI, N, ROWS, QPR, NGRP, NBQ, PERM, LA
             assert P.tree[E][q] == 0, ('tree slot busy', E, q)
             P.tree[E][q] = SPL.tree_cmd_word(mx, cnt)
             blk[(row, q, k)] = (E + PTR, SPL.block_subtree(red, words, cnt))
-    addr_next = {q: 0 for q in range(4)}
+    addr_next = {q: 0 for q in range(NQ)}
     def new_addr(q):
         x = addr_next[q]; addr_next[q] += 1; assert x < 1000, 'reducer addresses'; return x
     roots = {}
@@ -348,7 +372,7 @@ def reduce_pretree(P, a, red, emits, live, EI, N, ROWS, QPR, NGRP, NBQ, PERM, LA
             w = 8 * sec_i + k
             if w in ws: mask |= 1 << k; words.append(ws[w])
             else: words.append(0)
-        sec = (0 << 13) | (498 << 4)
+        sec = (QIDS[0] << 13) | (498 << 4)
         P.put(P.vmw, e + 1, 0, 0, 39, (1 << 38) | (1 << 37) | (sec << 8) | mask)
         P.expw.append((e + 1 + 4, 0, 0, sec, mask, words))
         last_lg = max(last_lg, e + 1 + 4)
@@ -369,6 +393,9 @@ def main():
     ap.add_argument('--rfd-slack', type=int, default=1)  # HBM-SUFIX: class-5 RF drain strictly after RF commit (su_top_compile Z > g_ready)
     ap.add_argument('--pretree', action='store_true')    # HBM-PRETREE2: reductions through the bound pre-tree (build PRETREE=1)
     ap.add_argument('--qpr', type=int, default=0)        # quarters per reduction row: 1/2/4; 0 = try all, keep the fastest
+    ap.add_argument('--quarters', type=int, choices=[2, 4], default=4, help='2 = actual NW/NE QID2/3; 4 = unchanged legacy compiler')
+    ap.add_argument('--pin-reg', type=int, choices=[0, 1], help='explicit actual lane pin-register profile for the 2-quarter candidate')
+    ap.add_argument('--full-side', action='store_true', help='explicit candidate FULL/SIDE on NW0; no source manifest adoption')
     ap.add_argument('--alat', type=int, default=3)       # explicit physical candidate, default unchanged
     ap.add_argument('--mlat', type=int, default=4)       # HBM-CORES-REBAL-9: lane build (die su / pg_lane* MLAT)
     ap.add_argument('--wcopy', type=int, default=0)      # HBM-CORES-REBAL-9: pinned-bank WCOPY (bank write commit +1)
@@ -377,10 +404,10 @@ def main():
     SLB.check(a.mlat, a.alat, LEAF, a.wcopy)
     MLAT, ALAT, WCOPY = a.mlat, a.alat, SLB.commit_extra(a.wcopy)
     LIN = SLB.lin(MLAT, ALAT, LEAF)
-    if a.pretree and RECS[a.rec][5] and a.qpr == 0:
+    if (a.pretree or a.quarters == 2) and RECS[a.rec][5] and a.qpr == 0:
         import copy, io, contextlib
         best = None
-        for qpr in (1, 2, 4):
+        for qpr in (q for q in (1, 2, 4) if q <= a.quarters):
             b = copy.copy(a); b.qpr = qpr
             try:
                 with contextlib.redirect_stdout(io.StringIO()):
@@ -396,21 +423,32 @@ def main():
 
 
 def compile_rec(a):
+    global NQ, QIDS, PIN_REG, LIN
+    NQ = getattr(a, 'quarters', 4)
+    if NQ not in (2, 4): raise ValueError('only actual 2-quarter or legacy 4-quarter geometry')
+    QIDS = (2, 3) if NQ == 2 else (0, 1, 2, 3)
+    PIN_REG = getattr(a, 'pin_reg', None)
+    if NQ == 2 and PIN_REG != 1:
+        raise ValueError('actual NW/NE source requires explicit --pin-reg 1')
+    PIN_REG = PIN_REG or 0
+    LIN = SLB.lin(MLAT, ALAT, LEAF) + 4 * PIN_REG
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     design, N, ROWS, roles, mods, red, writes_o = RECS[a.rec]
     RR, WR = a.rr, a.wr
     sfu = bool(mods.get('ci_sfu')) or mods.get('cp_m1') in (4, 5)
     side = mods.get('ci_sfu', 0) in SIDE_FN
+    if NQ == 2 and side and not getattr(a, 'full_side', False):
+        raise ValueError('SIDE operation requires explicit NW0 FULL_SIDE candidate; actual current source has none')
     L = 1 if side else (32 if sfu else 128); LV = 0 if side else (5 if sfu else 7)
     NT = N * ROWS
-    PT = bool(a.pretree and red)
+    PT = bool((a.pretree or NQ == 2) and red)
     if PT:
         assert not side, 'pre-tree reductions need lane issues'
-        QPR = a.qpr or 4
+        QPR = a.qpr or NQ
         NCp = 1 << max(0, (-(-N // 8) - 1).bit_length())          # csum's padded chunk count
         SW = N if QPR == 1 else NCp * 8 // QPR                      # words per quarter run (aligned csum subtree)
-        assert QPR in (1, 2, 4) and (QPR == 1 or (SW >= 8 and SW * QPR >= N)), ('qpr', QPR, N)
-        NGRP = 4 // QPR                                            # rows in flight (one per quarter group)
+        assert QPR in (1, 2, 4) and QPR <= NQ and (QPR == 1 or (SW >= 8 and SW * QPR >= N)), ('qpr', QPR, N)
+        NGRP = NQ // QPR                                            # rows in flight (one per quarter group)
         NBQ = -(-min(SW, N) // L)                                  # blocks (issues) per row slot
         SLOTS = -(-ROWS // NGRP)
         # emission order inside a row slot: groups of <= DEP pairs, evens then odds
@@ -425,9 +463,9 @@ def compile_rec(a):
         assert sorted(PERM) == list(range(NBQ))
     # HBM-SUFIX: a per-row RF broadcast scalar is ONE word per issue, so rows that do not fill whole issues get their
     # own issues (PR); otherwise elements are packed contiguously across issues.
-    PR = (not side) and roles.get('B') == 'rf' and ROWS > 1 and N % (4 * L) != 0
-    GR = -(-N // (4 * L)) if PR else 0
-    G = NT if side else (ROWS * GR if PR else -(-NT // (4 * L)))
+    PR = (not side) and roles.get('B') == 'rf' and ROWS > 1 and N % (NQ * L) != 0
+    GR = -(-N // (NQ * L)) if PR else 0
+    G = NT if side else (ROWS * GR if PR else -(-NT // (NQ * L)))
     if PT:
         PR = False; G = SLOTS * NBQ
     LAT = LIN + sfu_depth(mods)
@@ -448,8 +486,8 @@ def compile_rec(a):
             k, b = divmod(o, L); return s_ * NBQ + PERM.index(k), grp * QPR + j, b
         if side: return e, 0, 0                          # every element on global lane 0 (quarter 0, lane 0)
         if PR:
-            row, i = divmod(e, N); k, r = divmod(i, 4 * L); return row * GR + k, r // L, r % L
-        g, r = divmod(e, 4 * L); return g, r // L, r % L
+            row, i = divmod(e, N); k, r = divmod(i, NQ * L); return row * GR + k, r // L, r % L
+        g, r = divmod(e, NQ * L); return g, r // L, r % L
     def EI(g, q, b):                                     # element index of (issue, quarter, lane) or None
         if PT:
             s_, t_ = divmod(g, NBQ); grp, j = divmod(q, QPR); row = s_ * NGRP + grp
@@ -457,30 +495,34 @@ def compile_rec(a):
             return row * N + i if (row < ROWS and b < L and o < SW and i < N) else None
         if side: return g if (q == 0 and b == 0 and g < NT) else None
         if PR:
-            row, k = divmod(g, GR); i = k * 4 * L + q * L + b; return row * N + i if i < N else None
-        i = g * 4 * L + q * L + b; return i if i < NT else None
+            row, k = divmod(g, GR); i = k * NQ * L + q * L + b; return row * N + i if i < N else None
+        i = g * NQ * L + q * L + b; return i if i < NT else None
     vm_roles = [r for r in 'ABCD' if roles.get(r) == 'vm']
     rows_per = G                                          # store rows per operand (one row per issue)
     base = {}
     nxt = 0
     for r in vm_roles + (['O'] if writes_o else []):
         base[r] = nxt; nxt += rows_per
-    assert nxt <= 500, ('store rows', nxt)
+    if NQ == 2:
+        reserved = ({498} if red else set()) | ({499} if roles.get('B') == 'rf' else set())
+        assert nxt <= 512 and not any(r < nxt for r in reserved), ('store rows', nxt, 'reserved', sorted(reserved))
+    else:
+        assert nxt <= 500, ('store rows', nxt)
     # per-issue live lanes per quarter
-    live = np.zeros((G, 4), dtype=np.int64)
+    live = np.zeros((G, NQ), dtype=np.int64)
     for g in range(G):
-        for q in range(4):
+        for q in range(NQ):
             live[g, q] = sum(1 for b in range(L) if EI(g, q, b) is not None)
     # element values
     def elem(role, e):
-        g, q, b = place(e); return seed[base[role] + g, q * 128 + b]
+        g, q, b = place(e); return seed[base[role] + g, QIDS[q] * 128 + b]
     E = np.arange(NT)
     val = {r: np.array([elem(r, e) for e in E], dtype=F) for r in vm_roles}
     # broadcast scalar per row: RF words 200 + row (setup); values from seed row 499
     rf_words = {}
     if 'B' in roles and roles['B'] == 'rf':
-        bsc = [seed[499, k] if mods.get('cp_m1') != 4 else F(abs(seed[499, k]) + F(0.5)) for k in range(ROWS)]
-        seed[499, :ROWS] = np.array(bsc, dtype=F)
+        bsc = [seed[499, QIDS[0] * 128 + k] if mods.get('cp_m1') != 4 else F(abs(seed[499, QIDS[0] * 128 + k]) + F(0.5)) for k in range(ROWS)]
+        seed[499, QIDS[0] * 128:QIDS[0] * 128 + ROWS] = np.array(bsc, dtype=F)
         val['B'] = np.array([bsc[e // N] for e in E], dtype=F)
         for k in range(ROWS): rf_words[k] = 200 + k
     if mods.get('cp_m1') == 4 and roles.get('B') == 'vm':
@@ -499,7 +541,7 @@ def compile_rec(a):
         ngrp = -(-ROWS // 8)
         for j in range(ngrp):
             p, hi = j % 8, j // 8
-            P.put(P.vmr, t + hi, 0, p * 30, 30, (1 << 29) | (((0 << 13) | (499 << 4) | (hi << 3) | p) << 13) | ((p + 8 * hi) << 9) | 499)
+            P.put(P.vmr, t + hi, 0, p * 30, 30, (1 << 29) | (((QIDS[0] << 13) | (499 << 4) | (hi << 3) | p) << 13) | ((p + 8 * hi) << 9) | 499)
         commit = t + 1 + RR + 3
         ldc = sum((1 << k) << (24 * (s * 10 + k)) for s in range(5) for k in range(7))
         ld_e = commit - 8 + 8
@@ -516,7 +558,7 @@ def compile_rec(a):
             ex = w + DEP + ROWS  # after all loads (one red cmd slot per edge)
             ex = max(ex, last_exp + 1); last_exp = ex
             P.put(P.red, ex, 0, 0, 74, (1 << 73) | (4 << 70) | ((300 + k) << 60) | ((0x100 | rf_words[k]) << 8))
-            P.exps.append((ex + RLAT + 3, 0, 0x100 | rf_words[k], u32(seed[499, k])))
+            P.exps.append((ex + RLAT + 3, 0, 0x100 | rf_words[k], u32(seed[499, QIDS[0] * 128 + k])))
         hold_to = em0 + ROWS + LIN + HOLD                # HBM-SUFIX: stage fields are read from the live line
         for e in range(ld_e + 1, hold_to):
             if P.ctl[e][0] == 0: P.ctl[e][0] = pack(f)
@@ -533,7 +575,7 @@ def compile_rec(a):
             row = base[r] + g
             for hi in (0, 1):
                 any_ = False
-                for q in range(4):
+                for q in range(NQ):
                     nl = live[g, q]
                     for p in range(8):
                         j = p + 8 * hi
@@ -543,14 +585,14 @@ def compile_rec(a):
                 e = vmr_next
                 while True:
                     ok = all((e + RR + FPIN, q, (p + 8 * hi) * 8 + k) not in P.bankw
-                             for q in range(4) for p in range(8) if (p + 8 * hi) * 8 < live[g, q] for k in range(8))
+                             for q in range(NQ) for p in range(8) if (p + 8 * hi) * 8 < live[g, q] for k in range(8))
                     if ok: break
                     e += 1
-                for q in range(4):
+                for q in range(NQ):
                     for p in range(8):
                         j = p + 8 * hi
                         if j * 8 < live[g, q]:
-                            sec = (q << 13) | (row << 4) | (hi << 3) | p
+                            sec = (QIDS[q] << 13) | (row << 4) | (hi << 3) | p
                             P.put(P.vmr, e, q, p * 30, 30, (1 << 29) | (sec << 13) | (j << 9) | row)
                             for k in range(8): P.bankw.add((e + RR + FPIN, q, j * 8 + k))
                 vmr_next = e + 1
@@ -565,7 +607,7 @@ def compile_rec(a):
     first_em = max(fill_ready.get(0, D0) + a.fill_slack, D0 + 8)
     ld_e = first_em - 8
     def _row(g):
-        for q in range(4):
+        for q in range(NQ):
             for b in range(L):
                 x = EI(g, q, b)
                 if x is not None: return x // N
@@ -600,7 +642,7 @@ def compile_rec(a):
     SII = (a.side_ii if a.side_ii > 0 else SLB.side_ii(mods.get('ci_sfu', 0), MLAT, ALAT)) if side else 1
     prev_row = 0
     for g in range(G):
-        rk = tuple(rowq(g, q) for q in range(4)) if PT else row_of_issue[g]
+        rk = tuple(rowq(g, q) for q in range(NQ)) if PT else row_of_issue[g]
         if roles.get('B') == 'rf' and g > 0 and rk != prev_row:
             te += 8                                      # RF broadcast word changes: window gap
         prev_row = rk
@@ -613,19 +655,19 @@ def compile_rec(a):
             if red and j >= max(live[g]):
                 break
             if writes_o:                                 # HBM-SUFIX: every rep writes (co_dst is a stage field)
-                while any((te + LAT, q, b) in P.bankw for q in range(4) for b in range(live[g, q])): te += 1
+                while any((te + LAT, q, b) in P.bankw for q in range(NQ) for b in range(live[g, q])): te += 1
             emits.append((te, g, j)); te += SII
     last_em = emits[-1][0]
-    for q in range(4):
+    for q in range(NQ):
         P.ctl[ld_e][q] = pack(dict(fields(q, 0, 0, 1 if writes_o else 0), ld=1))
     # HBM-SUFIX: the lane takes each stage's op fields from the LIVE control line (ot_hbm_su_static_lane header:
     # 'a lane takes each stage's fields from it'), so the record's fields are held until its last element left OUT.
     for e in range(ld_e + 1, last_em + LAT + HOLD):
-        for q in range(4): P.ctl[e][q] = pack(fields(q, 0, 0, 1 if writes_o else 0))
+        for q in range(NQ): P.ctl[e][q] = pack(fields(q, 0, 0, 1 if writes_o else 0))
     out_w = {}                                           # issue -> lane write edge
     for (e, g, j) in emits:
         dst = 1 if writes_o else 0
-        for q in range(4):
+        for q in range(NQ):
             if live[g, q] == 0: P.ctl[e][q] = pack(fields(q, g, 0, dst)); continue
             P.ctl[e][q] = pack(fields(q, g, 1, dst))
             if dst:
@@ -636,7 +678,7 @@ def compile_rec(a):
         if dst: out_w[g] = e + LAT
     # RF class-1 broadcast windows (per row)
     if roles.get('B') == 'rf':
-        for q in range(4):
+        for q in range(NQ):
             for row in sorted(set(rowq(g, q) for g in range(G))):
                 es = [e for (e, g, j) in emits if rowq(g, q) == row]
                 for e in range(min(es) - 1 - LRF, max(es) + 6 - LRF):
@@ -648,9 +690,9 @@ def compile_rec(a):
         for g in range(G):
             row = base['O'] + g
             for hi in (0, 1):
-                if not any((p + 8 * hi) * 8 < live[g, q] for q in range(4) for p in range(8)): continue
+                if not any((p + 8 * hi) * 8 < live[g, q] for q in range(NQ) for p in range(8)): continue
                 e = max(dnext, out_w[g] + a.drain_slack + WCOPY)   # read after the lane write commits
-                for q in range(4):
+                for q in range(NQ):
                     for p in range(8):
                         j = p + 8 * hi
                         nl = live[g, q]
@@ -662,7 +704,7 @@ def compile_rec(a):
                             if b < nl:
                                 mask |= 1 << k; words.append(int(gold[EI(g, q, b)]))
                             else: words.append(0)
-                        sec = (q << 13) | (row << 4) | (hi << 3) | p
+                        sec = (QIDS[q] << 13) | (row << 4) | (hi << 3) | p
                         P.put(P.vmw, e, q, p * 39, 39, (1 << 38) | (0 << 37) | (j << 33) | (row << 24) | (sec << 8) | mask)
                         P.expw.append((e + 4, q, p, sec, mask, words))
                 last_lg = max(last_lg, e + 4); dnext = e + 1
@@ -676,16 +718,16 @@ def compile_rec(a):
         op_ext, op_tree = (1, 2) if red == 'sum' else (3, 5)
         vals_u = gold
         # operand stream per quarter: (edge, lane, value, row)
-        streams = {q: [] for q in range(4)}
+        streams = {q: [] for q in range(NQ)}
         for (e, g, j) in emits:
-            for q in range(4):
+            for q in range(NQ):
                 if j < live[g, q]:
                     eidx = EI(g, q, j)
                     streams[q].append((e + LAT, j, int(vals_u[eidx]), eidx // N))
         roots = {}                                      # (row, q) -> (addr, ready, value)
-        addr_next = {q: 0 for q in range(4)}
-        last_cmd = {q: 0 for q in range(4)}
-        for q in range(4):
+        addr_next = {q: 0 for q in range(NQ)}
+        last_cmd = {q: 0 for q in range(NQ)}
+        for q in range(NQ):
             byrow = {}
             for it in streams[q]: byrow.setdefault(it[3], []).append(it)
             pend = []
@@ -761,7 +803,7 @@ def compile_rec(a):
                 if w in ws: mask |= 1 << k; words.append(ws[w])
                 else: words.append(0)
             vrow = 498
-            sec = (0 << 13) | (vrow << 4) | (0 << 3) | 0
+            sec = (QIDS[0] << 13) | (vrow << 4) | (0 << 3) | 0
             P.put(P.vmw, e + 1, 0, 0, 39, (1 << 38) | (1 << 37) | (0 << 33) | (0 << 24) | (sec << 8) | mask)
             P.expw.append((e + 1 + 4, 0, 0, sec, mask, words))
             last_lg = max(last_lg, e + 1 + 4)
@@ -773,26 +815,45 @@ def compile_rec(a):
     P.ctl = P.ctl[:ne]; P.vmr = P.vmr[:ne]; P.vmw = P.vmw[:ne]; P.rf = P.rf[:ne]; P.red = P.red[:ne]; P.lw = P.lw[:ne]
     P.tree = P.tree[:ne]
     P.write(out, seed)
-    if PT:
+    if PT or NQ == 2:
         with open(out / 'tree.mem', 'w') as f:
             for e in range(ne):
-                f.write(''.join(f'{P.tree[e][q]:012x}' for q in (3, 2, 1, 0)) + '\n')
+                f.write(''.join(f'{P.tree[e][q]:012x}' for q in reversed(range(NQ))) + '\n')
+    if NQ == 2:
+        # Current pgp_NW/NE SB2470 has the 48b pretree field even on a
+        # non-reduction record. Keep both real producer columns, including
+        # zero commands on an idle quarter; never drop an old quarter's work.
+        with open(out / 'native_prog.mem', 'w') as f:
+            for e in range(ne):
+                word = 0
+                for q in range(NQ):
+                    qword = ((((P.ctl[e][q] << 240 | P.vmr[e][q]) << 312 | P.vmw[e][q]) << 54 | P.rf[e][q]) << 74) | P.red[e][q]
+                    word |= (qword | (P.tree[e][q] << QW)) << (q * (QW + 48))
+                f.write(f'{word:0{NQ * (QW + 48) // 4}x}\n')
     ser = retire - D0
     man = dict(schema='toksim.hbm.su_vop_record.v1', record=a.rec, design=design, N=N, rows=ROWS, roles=roles,
                mods={k: v for k, v in mods.items()}, red=red, sfu_lanes=sfu, lanes_per_quarter=L, issues=G,
                emissions=len(emits), issue_to_write=LAT, RR=RR, WR=WR, fill_slack=a.fill_slack, drain_slack=a.drain_slack,
                dispatch_edge=D0, first_emit=first_em, last_emit=last_em, last_lg_write=last_lg, retire_edge=retire,
-               cycles_serial=ser, cycles_stream_833ps=round(ser * 4 / 3, 2), edges=ne,
+               cycles_serial=ser, cycles_stream_833ps=(ne if NQ == 2 else round(ser * 4 / 3, 2)), edges=ne,
                expected_vm_writes=len(P.expw), expected_scalars=len(P.exps), reduction=rinfo,
                golden=('hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT); reduction = the '
                        'MODEL order (hdc_golden_v41.csum chunk8 / ordered canonical max), asserted on the lowered tree') if PT else
                       'hdc_golden add/mul/to_bf16/exp + NumPy float32 division (independent of the DUT), calendar order',
                pretree=dict(on=True, qpr=QPR, quarter_run_words=SW, blocks_per_row=NBQ, pt_red=SPL.PT_RED) if PT else None)
+    if NQ == 2:
+        man.update(quarters=2, actual_qids=list(QIDS), core_clock_ps=833, pin_reg=PIN_REG,
+                   dispatch_service_edges=ser, programme_execution_edges=ne, producer_setup_edges=D0,
+                   full_side_candidate=['su_NW0'] if getattr(a, 'full_side', False) else [],
+                   native_programme_bits=NQ * (QW + 48),
+                   source_profile='explicit candidate, not current-source/physical adoption',
+                   interquarter_transport='RFL32 inherited analytical budget; must bind actual NW/NE RF/reducer paths before native qualification',
+                   whole_programme_qualified=False)
     if (MLAT, ALAT, WCOPY) != (4, 3, 0):
         man['lane_build'] = dict(mlat=MLAT, alat=ALAT, leaf=LEAF, wcopy=WCOPY, lin=LIN, source='tools/hbm_static/su_lane_build.py')
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(json.dumps({k: man[k] for k in ('record', 'issues', 'emissions', 'cycles_serial', 'cycles_stream_833ps', 'edges', 'expected_vm_writes', 'expected_scalars')}))
-    return ser
+    return ne if NQ == 2 else ser
 
 
 if __name__ == '__main__':

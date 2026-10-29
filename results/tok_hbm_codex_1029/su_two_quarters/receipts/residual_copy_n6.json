@@ -1,0 +1,634 @@
+{
+  "rescopy6": {
+    "schema": "native_su_two_quarter_contiguous_rows.v1",
+    "rows": 6,
+    "kind": "res_copy_n6",
+    "actual_qids": [
+      2,
+      3
+    ],
+    "native_bits": 4940,
+    "clock_ps": 833,
+    "edges": 2052,
+    "phases": [
+      {
+        "first_position": 0,
+        "position_rows": 3,
+        "offset": 0,
+        "edges": 1026,
+        "source_vm_rows": [
+          0,
+          239
+        ],
+        "scalar_vm_row": null,
+        "sum_vm_row": null,
+        "released_golden": null,
+        "finals": null
+      },
+      {
+        "first_position": 3,
+        "position_rows": 3,
+        "offset": 1026,
+        "edges": 1026,
+        "source_vm_rows": [
+          240,
+          479
+        ],
+        "scalar_vm_row": null,
+        "sum_vm_row": null,
+        "released_golden": null,
+        "finals": null
+      }
+    ],
+    "programme_reloads_between_rows": null,
+    "combined_producer_supported": false,
+    "combined_dictionary_banks": [
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "candidate_physical_dictionary_banks": [
+      13,
+      13,
+      13,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "finite_phases": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/rescopy6/relocated_phase0",
+        "edges": 1026,
+        "dictionary_banks": [
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/rescopy6/relocated_phase1",
+        "edges": 1026,
+        "dictionary_banks": [
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      }
+    ],
+    "added_reload_edges": null,
+    "extra_barrier_edges": 0,
+    "exact_copy_output_words": 122880,
+    "source_memory_word_checks": 122880,
+    "source_memory_mismatches": 0,
+    "mutant": "none",
+    "source_mapping_verdict": "PASS",
+    "inplace_write_before_last_read": [],
+    "installable": false,
+    "remaining": [
+      "actual role-local VM publication before START",
+      "actual native arithmetic execution and interquarter transport binding",
+      "candidate producer SRAM capacity and source/profile selection"
+    ],
+    "inplace_write_before_last_read_count": 0
+  },
+  "rescopy6_alt": {
+    "schema": "native_su_two_quarter_contiguous_rows.v1",
+    "rows": 6,
+    "kind": "res_copy_n6",
+    "actual_qids": [
+      2,
+      3
+    ],
+    "native_bits": 4940,
+    "clock_ps": 833,
+    "edges": 2054,
+    "phases": [
+      {
+        "first_position": 0,
+        "position_rows": 3,
+        "offset": 0,
+        "edges": 1027,
+        "source_vm_rows": [
+          0,
+          239
+        ],
+        "scalar_vm_row": null,
+        "sum_vm_row": null,
+        "released_golden": null,
+        "finals": null
+      },
+      {
+        "first_position": 3,
+        "position_rows": 3,
+        "offset": 1027,
+        "edges": 1027,
+        "source_vm_rows": [
+          240,
+          479
+        ],
+        "scalar_vm_row": null,
+        "sum_vm_row": null,
+        "released_golden": null,
+        "finals": null
+      }
+    ],
+    "programme_reloads_between_rows": null,
+    "combined_producer_supported": false,
+    "combined_dictionary_banks": [
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        8,
+        16,
+        8,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "candidate_physical_dictionary_banks": [
+      13,
+      13,
+      13,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "finite_phases": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/rescopy6_alt/relocated_phase0",
+        "edges": 1027,
+        "dictionary_banks": [
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/rescopy6_alt/relocated_phase1",
+        "edges": 1027,
+        "dictionary_banks": [
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            4,
+            8,
+            4,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      }
+    ],
+    "added_reload_edges": null,
+    "extra_barrier_edges": 0,
+    "exact_copy_output_words": 122880,
+    "source_memory_word_checks": 122880,
+    "source_memory_mismatches": 0,
+    "mutant": "none",
+    "source_mapping_verdict": "PASS",
+    "inplace_write_before_last_read": [],
+    "installable": false,
+    "remaining": [
+      "actual role-local VM publication before START",
+      "actual native arithmetic execution and interquarter transport binding",
+      "candidate producer SRAM capacity and source/profile selection"
+    ],
+    "inplace_write_before_last_read_count": 0
+  },
+  "rescopy6_alias": {
+    "schema": "native_su_two_quarter_contiguous_rows.v1",
+    "rows": 6,
+    "kind": "res_copy_n6",
+    "actual_qids": [
+      2,
+      3
+    ],
+    "native_bits": 4940,
+    "clock_ps": 833,
+    "edges": 2052,
+    "phases": [
+      {
+        "first_position": 0,
+        "position_rows": 3,
+        "offset": 0,
+        "edges": 1026,
+        "source_vm_rows": [
+          0,
+          239
+        ],
+        "scalar_vm_row": null,
+        "sum_vm_row": null,
+        "released_golden": null,
+        "finals": null
+      },
+      {
+        "first_position": 3,
+        "position_rows": 3,
+        "offset": 1026,
+        "edges": 1026,
+        "source_vm_rows": [
+          240,
+          479
+        ],
+        "scalar_vm_row": null,
+        "sum_vm_row": null,
+        "released_golden": null,
+        "finals": null
+      }
+    ],
+    "programme_reloads_between_rows": 0,
+    "extra_barrier_edges": 0,
+    "exact_copy_output_words": 122880,
+    "source_memory_word_checks": 122880,
+    "source_memory_mismatches": 61374,
+    "mutant": "source_alias",
+    "source_mapping_verdict": "CAUGHT",
+    "inplace_write_before_last_read": [
+      {
+        "sector": 16384,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16385,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16386,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16387,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16388,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16389,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16390,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      },
+      {
+        "sector": 16391,
+        "last_read_return": 1055,
+        "first_write_capture": 517
+      }
+    ],
+    "installable": false,
+    "remaining": [
+      "actual role-local VM publication before START",
+      "actual native arithmetic execution and interquarter transport binding",
+      "candidate producer SRAM capacity and source/profile selection"
+    ],
+    "inplace_write_before_last_read_count": 7680
+  },
+  "compose3": {
+    "schema": "native_su_two_quarter_contiguous_rows.v1",
+    "rows": 3,
+    "kind": "exp_sum",
+    "actual_qids": [
+      2,
+      3
+    ],
+    "native_bits": 4940,
+    "clock_ps": 833,
+    "edges": 2187,
+    "phases": [
+      {
+        "first_position": 0,
+        "position_rows": 1,
+        "offset": 0,
+        "edges": 729,
+        "source_vm_rows": [
+          0,
+          127
+        ],
+        "scalar_vm_row": 499,
+        "sum_vm_row": 496,
+        "released_golden": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+        "finals": {
+          "0": "4597e030"
+        }
+      },
+      {
+        "first_position": 1,
+        "position_rows": 1,
+        "offset": 729,
+        "edges": 729,
+        "source_vm_rows": [
+          128,
+          255
+        ],
+        "scalar_vm_row": 498,
+        "sum_vm_row": 495,
+        "released_golden": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+        "finals": {
+          "0": "45cbf8c4"
+        }
+      },
+      {
+        "first_position": 2,
+        "position_rows": 1,
+        "offset": 1458,
+        "edges": 729,
+        "source_vm_rows": [
+          256,
+          383
+        ],
+        "scalar_vm_row": 497,
+        "sum_vm_row": 494,
+        "released_golden": "PASS (hdc_golden_v41.csum chunk8 / ordered canonical max == lowered tree, every row)",
+        "finals": {
+          "0": "45f83121"
+        }
+      }
+    ],
+    "programme_reloads_between_rows": 0,
+    "combined_producer_supported": true,
+    "combined_dictionary_banks": [
+      [
+        5,
+        7,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        5,
+        7,
+        4,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "candidate_physical_dictionary_banks": [
+      13,
+      13,
+      13,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "finite_phases": [
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/compose3/relocated_phase0",
+        "edges": 729,
+        "dictionary_banks": [
+          [
+            3,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            3,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/compose3/relocated_phase1",
+        "edges": 729,
+        "dictionary_banks": [
+          [
+            3,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            3,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      },
+      {
+        "path": "/srv/opentallas-scratch/claude/codex-hbm-token-0330/compose3/relocated_phase2",
+        "edges": 729,
+        "dictionary_banks": [
+          [
+            3,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ],
+          [
+            3,
+            3,
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        ],
+        "producer_capacity_supported": true
+      }
+    ],
+    "added_reload_edges": 0,
+    "extra_barrier_edges": 0,
+    "exact_copy_output_words": 0,
+    "source_memory_word_checks": 24600,
+    "source_memory_mismatches": 0,
+    "mutant": "none",
+    "source_mapping_verdict": "PASS",
+    "inplace_write_before_last_read": [],
+    "installable": false,
+    "remaining": [
+      "actual role-local VM publication before START",
+      "actual native arithmetic execution and interquarter transport binding",
+      "candidate producer SRAM capacity and source/profile selection"
+    ],
+    "inplace_write_before_last_read_count": 0
+  }
+}

@@ -372,3 +372,46 @@ endmodule\n'''
             q=subprocess.run(['vvp',str(tmp_path/'sim')],capture_output=True,text=True)
             if mutant=='nominal':assert q.returncode==0,q.stdout+q.stderr
             else:assert q.returncode!=0 and 'mismatch' in q.stdout
+
+
+def test_actual_clock_driver_path_and_root_input_have_no_extra_inv_credit(tmp_path, monkeypatch):
+    v, t = _tree('INVx1_ASAP7_75t_R')
+    b = _bind()
+    b['regions']['st:h'] = dict(parent=None, virtual=True, pad=0, edge_fall=False)
+    # Keep a single virtual root; make the old root its child.
+    b['regions'][f'st:{P_ROOT}']['parent'] = 'st:h'
+    b['start_ports']['root_to_child'] = dict(src='st:h', dst=f'st:{P_ROOT}')
+    doc, *_ = E.emit(b, _meta(), v, t)
+    stages = {s['region']: s for s in doc['stages']}
+    assert stages['st:h']['clock_source_path'] == '__source__'
+    assert stages['st:h']['clock_source_stages'] == 0
+    assert stages[f'st:{P_ROOT}']['clock_source_path'] == P_ROOT  # two inversions: Y
+    assert stages[f'st:{P_L}']['clock_source_path'] == P_ROOT  # three inversions: A, driven by b1
+    assert stages[f'st:{P_L}']['node_cell'] == 'b2'  # physical identity stays at b2
+    pr = tmp_path/'p'; pr.mkdir()
+    (pr/'tap_arrivals_TT.json').write_text(json.dumps(_meta()))
+    arr = tmp_path/'arr'
+    arr.write_text(''.join(f"T {s['clock_port']} 60 50\n" for s in doc['stages']))
+    meta, taps = DSR.load_taps(E.proof_with_stages(pr, doc, {'TT': arr}, tmp_path/'out'), 'TT')
+    root, a, y = (taps['__st__'+x] for x in ('h', P_L, P_ROOT))
+    monkeypatch.setattr(DSR, 'CPPR_LCA', True)
+    assert a['tree_path'] == P_ROOT and a['stages_from_root'] == 2
+    assert DSR.pair_node(a, y) == P_ROOT
+    assert DSR.pair_node(root, a) == '__source__'
+    assert meta['node_stages']['__source__'] == 0
+    assert meta['cppr_node_range_ps']['__source__'] == 0
+    # Mutant source path would improperly credit b2 and an extra clock stage.
+    assert a['tree_path'] != P_L and a['stages_from_root'] != 3
+    legacy = json.loads(json.dumps(doc))
+    for s in legacy['stages']:
+        s.pop('clock_source_path')
+    with pytest.raises(E.StageError, match='re-emit'):
+        E.proof_with_stages(pr, legacy, {'TT': arr}, tmp_path/'legacy')
+
+
+def test_node_cell_region_alias_is_not_a_second_clock_path():
+    v, t = _tree('INVx1_ASAP7_75t_R')
+    meta = _meta()
+    meta['node_cell']['hub_C'] = 'b0'
+    doc, *_ = E.emit(_bind(), meta, v, t)
+    assert next(s for s in doc['stages'] if s['node_cell'] == 'b2')['clock_source_path'] == P_ROOT

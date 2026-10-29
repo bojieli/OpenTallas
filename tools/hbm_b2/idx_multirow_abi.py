@@ -19,14 +19,18 @@ class Multirow:
     row_pitch: int
     weight_row_stride: int
     query_row_stride: int
+    weight_format: str = "packed_bf16"
 
     def encode(self):
         if not 1 <= self.n_rows <= 8:
             raise ValueError("IDXQ K8/link slots require 1..8 rows")
         if self.n_rows > 1 and self.row_pitch == 0:
             raise ValueError("multirow pitch must be positive")
-        if self.n_rows > 1 and (self.weight_row_stride % 8 or self.query_row_stride % 4):
-            raise ValueError("native row strides require weight8/query4 sector alignment")
+        if self.weight_format not in ("packed_bf16", "fp32_bf16"):
+            raise ValueError("unknown native weight representation")
+        alignment = 4 if self.weight_format == "fp32_bf16" else 8
+        if self.n_rows > 1 and (self.weight_row_stride % alignment or self.query_row_stride % 4):
+            raise ValueError(f"native row strides require weight{alignment}/query4 sector alignment")
         value = 0
         for name, base, width in FIELDS:
             field = getattr(self, name)
