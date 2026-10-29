@@ -61,17 +61,20 @@ def network(P):
         for part,pin in endpoints:
             bindings[part][pin] = name
     provisional = []
+    boundary_inputs,boundary_outputs = [],[]
     for use in net.get('start_tree', {}).get('uses', []):
         part,pin,name = use['part'],use['pin'],use['net']
         if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_$]*',name):
             raise ValueError('invalid explicit START boundary net: '+name)
-        if (part,pin) not in pins or pins[part,pin]['dir'] != 'in':
-            raise ValueError('invalid START boundary load: '+str((part,pin)))
+        if (part,pin) not in pins or pins[part,pin]['dir'] not in ('in','out'):
+            raise ValueError('invalid START boundary endpoint: '+str((part,pin)))
         if pin in bindings[part] or name in wires:
             raise ValueError('START boundary conflicts with existing physical net: '+name)
         bindings[part][pin] = name
         provisional.append(name)
+        (boundary_inputs if pins[part,pin]['dir']=='in' else boundary_outputs).append(name)
     if len(set(provisional)) != len(provisional):
         raise ValueError('duplicate START provisional boundary net')
     return dict(wires=wires, bindings=dict(bindings), provisional=provisional,
+                boundary_inputs=boundary_inputs,boundary_outputs=boundary_outputs,
                 edges=len(edges), boundary_provider='actual infra import required')

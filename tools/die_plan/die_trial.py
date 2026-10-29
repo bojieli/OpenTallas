@@ -2729,7 +2729,9 @@ def route_netlist(P, type_bits, channel_nets=True, landing_infra=False):
         landing = landing_route.network(P)
     provisional = landing['provisional'] if landing else []
     v = [f"module {sv(P.name)}_route ({', '.join(['rst_n']+provisional)});", "  input rst_n;"]
-    v += [f'  input {name};' for name in provisional]
+    if landing:
+        v += [f'  input {name};' for name in landing['boundary_inputs']]
+        v += [f'  output {name};' for name in landing['boundary_outputs']]
     if landing:
         v += [f'  wire {name};' for name in landing['wires']]
     insts, nft = [], 0
@@ -3680,7 +3682,8 @@ def write_kit(plan_path, out, views=None, leaf_um=600.0, rep_um=450.0, coarse=0.
     rv, nft = route_netlist(P, type_bits, landing_infra=landing_infra)
     if landing_infra:
         meta['landing_infra'] = dict(edges=landing['edges'], wires=len(landing['wires']),
-            provisional_start_inputs=len(landing['provisional']),
+            provisional_start_inputs=len(landing['boundary_inputs']),
+            provisional_start_outputs=len(landing['boundary_outputs']),
             qualification='actual START provider and physical infra import required')
         (out/'grt'/'landing_provisional_nets.txt').write_text(''.join(name+'\n' for name in landing['provisional']))
     (out / "grt" / "route.v").write_text(rv)
