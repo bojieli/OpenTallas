@@ -88,7 +88,10 @@
    "cycles": 31,
    "transport_port_cycles": 30,
    "load_capture_cycles": 31,
-   "source": "rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv + host30_map.json; real RTL30pipe308comparisonsPASS"
+   "source": "rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv + host30_map.json; real RTL30pipe308comparisonsPASS",
+   "clock_extra_required": true,
+   "clock_extra_cycles": null,
+   "source_capture_cycles": 31
   },
   "provider_to_root": {
    "src": "u_mu_fused_program.job*/wsc/pk5/pb5 (N face)",
