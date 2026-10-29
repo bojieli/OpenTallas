@@ -1,0 +1,19 @@
+{
+ "schema": "opentallas.s81_core_families.r13",
+ "families": [
+  {
+   "name": "lnland_natural_macrofree",
+   "members": [
+    "ot_s81_mu72_lnland_nst_1ck"
+   ],
+   "leaf_target": 48,
+   "smax": 70.0,
+   "leaf_limit": 35.0,
+   "wire": "std",
+   "reassign": true,
+   "reassign_cap": 1.5,
+   "macro_keepout": false
+  }
+ ],
+ "basis": "Canonical CLOCK owner starting template; actual native placed sink census + explicit112.32 outline and both-corner slew/20ps window required before build. No BF INFO calibration or padding."
+}
