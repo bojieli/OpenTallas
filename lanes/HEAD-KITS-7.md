@@ -1,0 +1,21 @@
+# HEAD-KITS-7 (successor HEAD-KITS-6 + Codex codex_head_20261029_0504 SerDes/GB, LEP, tile kit children)
+
+- 2026-10-29 05:22 PDT START HEAD-KITS-7 adopted live: (1) intel2 oth-ubuntu-3101206 SerDes half-counter strict LEC (codex-head-popcount-1029/kits2); (2) epyc2 oth-ubuntu-1679639 SerDes quarter strict LEC (kits_quarter1); (3) intel2 oth-ubuntu-3193799 LEP canonical hinted LEC (codex-lep-canonical-hints). Collected terminal: epyc2 original mapped SerDes LEC (kits4) NOT EQUIVALENT 7 differs po:apply[1..7] (8 identical apply copies merged by synth, no keep) + 5 undecided nrc[1..5]; GB synth-only 811739 terminal; tile gen5 synth terminal FAIL_PREFLOOR face_guard_odb land_slot 2 (netlist face_guard 1159/1159 PASS).
+- 2026-10-29 05:22 PDT CLAIM HEAD-KITS-7 owns HEAD kit types (21-type hk4 split, 351 parts): hd_ctl hd_host hd_lep0N hd_mesh hd_serdes ot_s81hd_lep_pair ot_s81_kp4_dchn_head hd_tile hd_spn hd_spn_end hd_st_k5 hd_st_m hd_st_n3 hd_st_n3_transit hd_st_n3_turn hd_st_n4 hd_st_str hd_st_turn hd_turn_a hd_turn_b hd_spn_wshim_tx hd_spn_wshim_rx hd_spn_eshim_tx hd_spn_eshim_rx. Signed reuse: ot_s81hd_elemA_cv ot_s81hd_elemB_cv. Die parent/START/CA/clock = DIE-HEAD-24.
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_ctl
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_host
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_lep0N
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_mesh
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_serdes
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 ot_s81hd_lep_pair
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_tile
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_spn
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_spn_end
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_st_k5
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_st_m
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_st_n3
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_st_n4
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_st_str
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_st_turn
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_turn_a
+- 2026-10-29 05:22 PDT OWNER HEAD-KITS-7 hd_turn_b
