@@ -581,7 +581,7 @@ def clock_contexts(proof, plan_path, corners, clock_cal="spice", clock_ocv="tabl
 
 
 def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew=(0.0, 0.0), skew_clean=False,
-                      retime_max=8, clean_by="phase", retime_up=False, prev=None):
+                      retime_max=8, clean_by="phase", retime_up=False, prev=None, max_hop_um=None):
     """START TREE = CLOCK TREE (START-TREE-1).  ctx = clock_contexts() ({corner: meta/taps/ocv/rng}, first = nominal).
     Nodes: every data region at its clock root (longest common tree_path prefix of its taps) and every branch node of
     the clock subtree spanning those roots (virtual 'st:<path>', a retime flop on that tree node).  Each node's start
@@ -699,9 +699,12 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
         nl = c0["meta"]["node_late_ps"]
         d = 0.5 * (float(B["late_ps"]) + float(B["early_ps"])) - 0.5 * (float(A["late_ps"]) + float(A["early_ps"]))
         d = min(max(d, lo), hi)
-        return dict(d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
+        result = dict(d_ps=d, p_dn_ps=d - lo, p_up_ps=hi - d, fork_node=node,
                     fall_lo=flo if fall_ok else None, fall_hi=fhi if fall_ok else None,
                     unshared_a_ps=float(A["late_ps"]) - float(nl[node]), unshared_b_ps=float(B["late_ps"]) - float(nl[node]))
+        if max_hop_um is not None:
+            result["wire_manhattan_um"] = sum(abs(float(x)-float(y)) for x,y in zip(A["xy_um"], B["xy_um"]))
+        return result
 
     smax = max(abs(float(start_skew[0])), abs(float(start_skew[1])))
     prev_mid = {e["dst"] for e in (prev or {}).get("start_edges", []) if e.get("retime")}
@@ -718,7 +721,7 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
             # port's arrivals must always leave one edge clean; without a measured fall arrival there is one edge
             # only, so no port is width-clean (fail closed)
             ok = ok and width_robust(q, T, ap, float(start_skew[1]) - float(start_skew[0]))
-        return ok
+        return ok and (max_hop_um is None or r["wire_manhattan_um"] <= max_hop_um)
 
     def part(k):
         return c0["taps"][k].get("part")
@@ -827,6 +830,10 @@ def clock_start_edges(rows, ctx, T=833.0, ap=833.0 / 8, sync_ap=26.5, start_skew
                 root=root, root_path=path_of[root], leg_ps={c: list(v) for c, v in leg.items()},
                 regions=len(regions), branch_nodes=sum(1 for p in allp if not at.get(p)), branch_nodes_contracted=contracted,
                 retime_nodes=sum(1 for e in edges if e["retime"]))
+    if max_hop_um is not None:
+        info["max_hop_um"] = max_hop_um
+        info["worst_hop_um"] = max(e["wire_manhattan_um"] for e in edges)
+        info["over_hop"] = sum(e["wire_manhattan_um"] > max_hop_um for e in edges)
     if prev is not None:
         info["prev_kept"] = kept
         info["prev_nodes"] = len(prev_mid) + len(prev_nodes)
@@ -1032,6 +1039,7 @@ def add_start_tree_args(ap):
                          "tree of --sta-proof, one dedicated start port per clock-tree edge (fork tap -> child sync tap, "
                          "retime flops on tree nodes where a port would be unclean), each port checked as a crossing "
                          "with the --sta-clock-ocv model; needs --sta-proof/--sta-plan and --sta-clock-ocv table")
+    ap.add_argument("--start-max-hop-um", type=float, help="opt-in physical START span: retain/insert clock-node stages until each start hop is within this Manhattan distance; actual placed cells still require reach checks")
     ap.add_argument("--start-retime-max", type=int, default=8, help="max retime flops per clock-tree start edge")
     ap.add_argument("--start-retime-up", action="store_true",
                     help="--start-tree clock (opt-in): allow retime flops on ANCESTOR nodes of the launch tap (climb the "
@@ -1048,6 +1056,8 @@ def add_start_tree_args(ap):
 
 
 def check_start_tree_args(a, err):
+    if getattr(a, "start_max_hop_um", None) is not None and (a.start_tree != "clock" or a.start_max_hop_um <= 0):
+        err("--start-max-hop-um needs --start-tree clock and a positive reach")
     if a.start_tree != "clock":
         if getattr(a, "start_prev", None):
             err("--start-prev needs --start-tree clock")
@@ -1073,7 +1083,7 @@ def start_tree_from_args(a, rows, err):
                          a.sta_droop_regions, a.sta_core_latency_ff, getattr(a, "sta_clock_cell", "auto"))
     root, edges, info = clock_start_edges(rows, ctx, a.period, a.aperture, a.sync_aperture, a.start_skew,
                                           a.start_skew_clean, a.start_retime_max, a.start_clean,
-                                          getattr(a, "start_retime_up", False), start_prev_doc(a))
+                                          getattr(a, "start_retime_up", False), start_prev_doc(a), getattr(a, "start_max_hop_um", None))
     return edges, root, info
 
 
