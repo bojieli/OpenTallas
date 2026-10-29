@@ -155,7 +155,10 @@ def load_island_sites(paths):
         elif d.get("schema") == "ot_clock_sites/1":
             for s in d.get("sites", []):
                 if s.get("kind", "partition") == "partition":
-                    out.append((tuple(s["xy_um"]), f"{tag}:{s.get('name')}"))
+                    # QC-IMPORT-1 opt-in: a site may carry its actual body size cell_um (provider all-cell
+                    # islands); absent -> the planned clock body ISLAND_CELL_UM (unchanged)
+                    out.append((tuple(s["xy_um"]), f"{tag}:{s.get('name')}") +
+                               ((tuple(s["cell_um"]),) if s.get("cell_um") else ()))
         elif isinstance(d.get("meta"), dict) and "derived_trunk_sites" in d["meta"]:
             for s in d["meta"]["derived_trunk_sites"]:
                 out.append((tuple(s["xy_um"]), f"{tag}:trunk:{s.get('cell')}"))
@@ -171,11 +174,13 @@ def _snap_out(v, g, up):
 
 def island_windows(P, sites, cell=ISLAND_CELL_UM, snap=ISLAND_SNAP_UM, margin=ISLAND_MARGIN_UM, grid=ISLAND_GRID_UM):
     """{type: [type-frame rect]} (union over instances, deduplicated) + per-site record list"""
-    hx = cell[0] / 2 + snap + margin
-    hy = cell[1] + snap + margin          # the cell row may lie above or below the site's row line
     rects = {n: P.rect(n) for n in P.parts}
     by_type, recs = defaultdict(set), []
-    for (x, y), src in sites:
+    for site in sites:
+        (x, y), src = site[0], site[1]
+        c = site[2] if len(site) > 2 else cell      # per-site body size (opt-in), else the planned clock body
+        hx = c[0] / 2 + snap + margin
+        hy = c[1] + snap + margin          # the cell row may lie above or below the site's row line
         w = (x - hx, y - hy, x + hx, y + hy)
         hit = []
         for n, r in rects.items():
