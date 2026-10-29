@@ -1,5 +1,5 @@
 {
- "verdict": "ESTIMATE ONLY; same-order first/last bits, actual full-plan bind/reach required",
+ "verdict": "ESTIMATE ONLY; per-end-order first/last bits, actual full-plan bind/reach required",
  "changed_endpoints": 35,
  "estimated_extra_station_cycles": 5,
  "rows": [
@@ -12,15 +12,19 @@
    "slot": "ft7",
    "end": "out",
    "new_world_window_um": [
-    9079.981,
-    9203.340999999999
+    9080.135999999999,
+    9203.496
    ],
    "new_type_window_um": [
-    319.02100000000064,
-    442.3809999999994
+    319.1759999999995,
+    442.53600000000006
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1440.433,
+   "new_max_bit_manhattan_um": 1550.376,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -34,15 +38,19 @@
    "slot": "ft1",
    "end": "in",
    "new_world_window_um": [
-    9241.585,
-    9364.224999999999
+    9241.511999999999,
+    9364.392
    ],
    "new_type_window_um": [
-    480.625,
-    603.2649999999994
+    480.5519999999997,
+    603.4320000000007
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1374.373,
+   "new_max_bit_manhattan_um": 1374.54,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -56,15 +64,19 @@
    "slot": "ft0",
    "end": "in",
    "new_world_window_um": [
-    8933.039999999999,
-    9055.679999999998
+    8933.063999999998,
+    9055.944
    ],
    "new_type_window_um": [
-    172.07999999999993,
-    294.71999999999935
+    172.10399999999936,
+    294.9840000000004
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1286.736,
+   "new_max_bit_manhattan_um": 1286.712,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -78,15 +90,19 @@
    "slot": "ft6",
    "end": "out",
    "new_world_window_um": [
-    8771.436,
-    8894.795999999998
+    8771.687999999998,
+    8895.047999999999
    ],
    "new_type_window_um": [
-    10.476000000000568,
-    133.83599999999933
+    10.727999999999156,
+    134.08799999999974
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1243.632,
+   "new_max_bit_manhattan_um": 1354.824,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -106,6 +122,11 @@
    "new_type_window_um": [
     804.7219999999998,
     821.7819999999992
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1311.694,
@@ -129,6 +150,11 @@
     784.0419999999995,
     793.8060000000005
    ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
+   ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1383.85,
    "old_stations": 4,
@@ -151,6 +177,11 @@
     793.8060000000005,
     804.7219999999998
    ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
+   ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1375.374,
    "old_stations": 4,
@@ -166,15 +197,19 @@
    "slot": "ft4",
    "end": "in",
    "new_world_window_um": [
-    9762.814999999999,
-    9885.454999999998
+    9762.936,
+    9885.815999999999
    ],
    "new_type_window_um": [
-    1001.8549999999996,
-    1124.494999999999
+    1001.9760000000006,
+    1124.8559999999998
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1334.963,
+   "new_max_bit_manhattan_um": 1335.324,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -188,15 +223,19 @@
    "slot": "ft10",
    "end": "out",
    "new_world_window_um": [
-    9601.211,
-    9724.571
+    9601.56,
+    9724.919999999998
    ],
    "new_type_window_um": [
-    840.2510000000002,
-    963.6110000000008
+    840.6000000000004,
+    963.9599999999991
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1417.727,
+   "new_max_bit_manhattan_um": 1527.096,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -210,15 +249,19 @@
    "slot": "ft5",
    "end": "in",
    "new_world_window_um": [
-    10071.359999999999,
-    10194.0
+    10070.952,
+    10193.831999999999
    ],
    "new_type_window_um": [
-    1310.3999999999996,
-    1433.0400000000009
+    1309.9920000000002,
+    1432.8719999999994
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1531.38,
+   "new_max_bit_manhattan_um": 1531.212,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -232,15 +275,19 @@
    "slot": "ft11",
    "end": "out",
    "new_world_window_um": [
-    9909.756,
-    10033.115999999998
+    9909.576,
+    10032.936
    ],
    "new_type_window_um": [
-    1148.7960000000003,
-    1272.155999999999
+    1148.616,
+    1271.9760000000006
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1614.528,
+   "new_max_bit_manhattan_um": 1614.348,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -260,6 +307,11 @@
    "new_type_window_um": [
     621.098,
     729.1659999999993
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1391.018,
@@ -283,6 +335,11 @@
     729.1659999999993,
     784.0419999999995
    ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
+   ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1386.19,
    "old_stations": 4,
@@ -298,15 +355,19 @@
    "slot": "ft7",
    "end": "in",
    "new_world_window_um": [
-    8933.039999999999,
-    9055.679999999998
+    8933.063999999998,
+    9055.944
    ],
    "new_type_window_um": [
-    172.07999999999993,
-    294.71999999999935
+    172.10399999999936,
+    294.9840000000004
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1512.72,
+   "new_max_bit_manhattan_um": 1512.696,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -320,15 +381,19 @@
    "slot": "ft4",
    "end": "out",
    "new_world_window_um": [
-    9593.232,
-    9716.591999999999
+    9593.351999999999,
+    9716.712
    ],
    "new_type_window_um": [
-    832.2720000000008,
-    955.6319999999996
+    832.3919999999998,
+    955.7520000000004
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1841.94,
+   "new_max_bit_manhattan_um": 1842.06,
    "old_stations": 4,
    "estimated_stations": 5,
    "estimated_added_cycles": 1
@@ -342,15 +407,19 @@
    "slot": "ft2",
    "end": "out",
    "new_world_window_um": [
-    8771.436,
-    8894.795999999998
+    8771.687999999998,
+    8895.047999999999
    ],
    "new_type_window_um": [
-    10.476000000000568,
-    133.83599999999933
+    10.727999999999156,
+    134.08799999999974
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1243.632,
+   "new_max_bit_manhattan_um": 1243.884,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -364,15 +433,19 @@
    "slot": "ft9",
    "end": "in",
    "new_world_window_um": [
-    9754.836,
-    9877.475999999999
+    9754.728,
+    9877.607999999998
    ],
    "new_type_window_um": [
-    993.8760000000002,
-    1116.5159999999996
+    993.768,
+    1116.6479999999992
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1551.432,
+   "new_max_bit_manhattan_um": 1551.564,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -386,15 +459,19 @@
    "slot": "ft5",
    "end": "out",
    "new_world_window_um": [
-    9909.756,
-    10033.115999999998
+    9909.576,
+    10032.936
    ],
    "new_type_window_um": [
-    1148.7960000000003,
-    1272.155999999999
+    1148.616,
+    1271.9760000000006
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 2042.304,
+   "new_max_bit_manhattan_um": 2042.124,
    "old_stations": 4,
    "estimated_stations": 6,
    "estimated_added_cycles": 2
@@ -408,15 +485,19 @@
    "slot": "ft10",
    "end": "in",
    "new_world_window_um": [
-    10071.359999999999,
-    10194.0
+    10070.952,
+    10193.831999999999
    ],
    "new_type_window_um": [
-    1310.3999999999996,
-    1433.0400000000009
+    1309.9920000000002,
+    1432.8719999999994
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1755.828,
+   "new_max_bit_manhattan_um": 1755.66,
    "old_stations": 4,
    "estimated_stations": 5,
    "estimated_added_cycles": 1
@@ -430,15 +511,19 @@
    "slot": "ft3",
    "end": "out",
    "new_world_window_um": [
-    9087.96,
-    9211.32
+    9088.344,
+    9211.704
    ],
    "new_type_window_um": [
-    327.0,
-    450.3600000000006
+    327.384,
+    450.7440000000006
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1448.412,
+   "new_max_bit_manhattan_um": 1448.796,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -452,15 +537,19 @@
    "slot": "ft8",
    "end": "in",
    "new_world_window_um": [
-    9249.563999999998,
-    9372.204
+    9249.72,
+    9372.599999999999
    ],
    "new_type_window_um": [
-    488.60399999999936,
-    611.2440000000006
+    488.7600000000002,
+    611.6399999999994
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1308.708,
+   "new_max_bit_manhattan_um": 1308.552,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -480,6 +569,11 @@
    "new_type_window_um": [
     749.7459999999992,
     809.8140000000003
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1507.598,
@@ -503,6 +597,11 @@
     633.0660000000007,
     689.6779999999999
    ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
+   ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1501.782,
    "old_stations": 4,
@@ -525,6 +624,11 @@
     689.6779999999999,
     749.7459999999992
    ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
+   ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1506.418,
    "old_stations": 4,
@@ -540,15 +644,19 @@
    "slot": "ft8",
    "end": "in",
    "new_world_window_um": [
-    22895.04,
-    23017.68
+    22894.776,
+    23017.656000000003
    ],
    "new_type_window_um": [
-    172.08000000000084,
-    294.72000000000025
+    172.10399999999845,
+    294.98399999999947
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1286.736,
+   "new_max_bit_manhattan_um": 1286.712,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -562,15 +670,19 @@
    "slot": "ft2",
    "end": "out",
    "new_world_window_um": [
-    23055.924000000003,
-    23179.284000000003
+    23055.672000000002,
+    23179.032000000003
    ],
    "new_type_window_um": [
-    10.475999999997839,
-    133.83599999999842
+    10.727999999998246,
+    134.08799999999883
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1243.632,
+   "new_max_bit_manhattan_um": 1354.824,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -584,15 +696,19 @@
    "slot": "ft3",
    "end": "out",
    "new_world_window_um": [
-    22739.077,
-    22862.437
+    22739.016000000003,
+    22862.376000000004
    ],
    "new_type_window_um": [
-    327.3229999999994,
-    450.683
+    327.3839999999973,
+    450.74399999999787
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1448.735,
+   "new_max_bit_manhattan_um": 1558.584,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -606,15 +722,19 @@
    "slot": "ft9",
    "end": "in",
    "new_world_window_um": [
-    22578.193000000003,
-    22700.833000000002
+    22578.120000000003,
+    22701.000000000004
    ],
    "new_type_window_um": [
-    488.92699999999877,
-    611.5669999999982
+    488.7599999999975,
+    611.6399999999985
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1382.675,
+   "new_max_bit_manhattan_um": 1382.748,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -628,15 +748,19 @@
    "slot": "ft11",
    "end": "in",
    "new_world_window_um": [
-    22073.567000000003,
-    22196.207000000002
+    22073.112,
+    22195.992000000002
    ],
    "new_type_window_um": [
-    993.552999999999,
-    1116.1929999999984
+    993.7679999999991,
+    1116.6480000000001
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1365.245,
+   "new_max_bit_manhattan_um": 1365.7,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -650,15 +774,19 @@
    "slot": "ft5",
    "end": "out",
    "new_world_window_um": [
-    22234.451,
-    22357.811
+    22234.008,
+    22357.368000000002
    ],
    "new_type_window_um": [
-    831.9489999999996,
-    955.3090000000002
+    832.3919999999989,
+    955.7519999999995
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1552.273,
+   "new_max_bit_manhattan_um": 1552.716,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -672,15 +800,19 @@
    "slot": "ft12",
    "end": "in",
    "new_world_window_um": [
-    21756.72,
-    21879.36
+    21756.888000000003,
+    21879.768000000004
    ],
    "new_type_window_um": [
-    1310.4000000000005,
-    1433.04
+    1309.9919999999975,
+    1432.8719999999985
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1569.396,
+   "new_max_bit_manhattan_um": 1569.228,
    "old_stations": 4,
    "estimated_stations": 4,
    "estimated_added_cycles": 0
@@ -694,15 +826,19 @@
    "slot": "ft6",
    "end": "out",
    "new_world_window_um": [
-    21917.604000000003,
-    22040.964000000004
+    21917.784000000003,
+    22041.144
    ],
    "new_type_window_um": [
-    1148.7959999999975,
-    1272.1559999999981
+    1148.616000000001,
+    1271.9759999999978
+   ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
-   "new_max_bit_manhattan_um": 1756.032,
+   "new_max_bit_manhattan_um": 1867.56,
    "old_stations": 4,
    "estimated_stations": 5,
    "estimated_added_cycles": 1
@@ -722,6 +858,11 @@
    "new_type_window_um": [
     693.6179999999977,
     749.4619999999986
+   ],
+   "new_end_order": "lsb_high",
+   "new_end_layers": [
+    "M7",
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1277.454,
@@ -745,6 +886,11 @@
     749.4619999999986,
     809.3300000000008
    ],
+   "new_end_order": "lsb_low",
+   "new_end_layers": [
+    "M7",
+    "M5"
+   ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1282.858,
    "old_stations": 4,
@@ -766,6 +912,11 @@
    "new_type_window_um": [
     633.5499999999984,
     693.6179999999977
+   ],
+   "new_end_order": "lsb_high",
+   "new_end_layers": [
+    "M7",
+    "M5"
    ],
    "old_max_bit_manhattan_um": 1226.88,
    "new_max_bit_manhattan_um": 1403.47,

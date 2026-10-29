@@ -7,10 +7,24 @@ The same 55 SRAMs sit on the six-column lattice, with continuous vertical
 channels and a wider middle channel holding the existing centre clock entry.
 The 4.32-um macro halos are disjoint. The top macro ends at y432.888; the
 candidate outline is y444.96, leaving 12.072 um for the N pin band. The source
-shape used 40.152 um. All data pin x coordinates and all macro sites stay fixed.
+shape used 40.152 um. All macro sites and payload-pin x coordinates stay fixed.
 The candidate pin table and LEF explicitly put the clock at the existing
 planned island (147.948,236.52), fixing the old plan-LEF/physical-entry mismatch
 in the candidate contract before any parent composition.
+
+Source-aware correction: the emitted lane RX is
+`{coll[512],coll[513],coll[511:0],local_lnland_rxv}`. Its local `rx[0]` control
+pin now uses the vacated N clock-face slot, beside the lnland partner; the two
+S flag pins `rx[513]`/`rx[514]` exchange one 0.24-um pitch so that every incoming
+coll data bit is in order. Parent coll windows use ascending M5 pins, including
+the extra parent-only epoch pin. This replaces the inherited assumption that
+the old mixed high/low orders and two-layer windows aligned automatically.
+
+Parent macro origins are snapped to 0.432 um and carry explicit track phase
+offsets (x0.012; y0.012 R0 / y0.036 MX). All 25,716 placed child pins are on
+the die M4/M5 tracks across the twelve R0/MX/MY-composed copies. The first
+unsnapped parent proposal would have put the 0.012-offset child LEF pins off
+the die's 0.024-offset tracks; that source error is corrected before build.
 
 The parent preview has four children along its link face and one uninterrupted
 street for the other link-face windows. This removes the large sideways
