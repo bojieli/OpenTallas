@@ -1,0 +1,282 @@
+{
+ "schema": "opentallas.hbm.outline_delta.v1",
+ "variant": 2,
+ "fixes": [
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "variant": 2,
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sucore_Q__q0",
+     "status": "PREP",
+     "old_origin": [
+      1244.16,
+      838.08
+     ],
+     "new_origin": [
+      1244.16,
+      838.08
+     ],
+     "old_size": [
+      224.6400000000001,
+      207.36
+     ],
+     "new_size": [
+      224.64,
+      276.48
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sucore_Q__q1",
+     "status": "PREP",
+     "old_origin": [
+      4017.6,
+      1365.12
+     ],
+     "new_origin": [
+      4017.6,
+      1365.12
+     ],
+     "old_size": [
+      224.64,
+      207.36
+     ],
+     "new_size": [
+      224.64,
+      276.48
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sucore_Q__q0",
+     "status": "PREP",
+     "old_origin": [
+      1244.16,
+      838.08
+     ],
+     "new_origin": [
+      1244.16,
+      838.08
+     ],
+     "old_size": [
+      224.6400000000001,
+      207.36
+     ],
+     "new_size": [
+      224.64,
+      276.48
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sucore_Q__q1",
+     "status": "PREP",
+     "old_origin": [
+      4017.6,
+      1028.16
+     ],
+     "new_origin": [
+      4017.6,
+      976.32
+     ],
+     "old_size": [
+      224.64,
+      207.36
+     ],
+     "new_size": [
+      224.64,
+      276.48
+     ]
+    }
+   ],
+   "added_cycles": 0
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "variant": 2,
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_cxij_Q_q__q0",
+     "status": "PREP",
+     "old_origin": [
+      43.2,
+      2583.36
+     ],
+     "new_origin": [
+      43.2,
+      2583.36
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ],
+     "new_size": [
+      380.16,
+      362.88
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_cxij_Q_q__q1",
+     "status": "PREP",
+     "old_origin": [
+      3991.68,
+      3006.72
+     ],
+     "new_origin": [
+      3922.56,
+      2090.88
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ],
+     "new_size": [
+      380.16,
+      362.88
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_cxij_Q_q__q0",
+     "status": "PREP",
+     "old_origin": [
+      43.2,
+      2583.36
+     ],
+     "new_origin": [
+      43.2,
+      2583.36
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ],
+     "new_size": [
+      380.16,
+      362.88
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_cxij_Q_q__q1",
+     "status": "PREP",
+     "old_origin": [
+      3991.68,
+      2592.0
+     ],
+     "new_origin": [
+      4648.32,
+      2090.88
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ],
+     "new_size": [
+      380.16,
+      362.88
+     ]
+    }
+   ],
+   "added_cycles": 0
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "variant": 2,
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sfus_Q__q0",
+     "status": "PREP",
+     "old_origin": [
+      2514.24,
+      34.56
+     ],
+     "new_origin": [
+      2514.24,
+      34.56
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ],
+     "new_size": [
+      475.2,
+      267.84
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sfus_Q__q1",
+     "status": "PREP",
+     "old_origin": [
+      5270.4,
+      25.92
+     ],
+     "new_origin": [
+      4872.96,
+      751.68
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ],
+     "new_size": [
+      475.2,
+      267.84
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sfus_Q__q0",
+     "status": "PREP",
+     "old_origin": [
+      3395.52,
+      34.56
+     ],
+     "new_origin": [
+      3939.84,
+      293.76
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ],
+     "new_size": [
+      475.2,
+      267.84
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sfus_Q__q1",
+     "status": "PREP",
+     "old_origin": [
+      5270.4,
+      665.28
+     ],
+     "new_origin": [
+      4026.24,
+      665.28
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ],
+     "new_size": [
+      475.2,
+      267.84
+     ]
+    }
+   ],
+   "added_cycles": 0
+  }
+ ],
+ "die_rebuild_required": true,
+ "station_resite_required": true,
+ "release_claim": false
+}
