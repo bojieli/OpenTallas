@@ -34,7 +34,7 @@ import re
 dirs=dict(re.findall(r'PIN (\S+)\s+DIRECTION (INPUT|OUTPUT)',lef))
 ls=['VERSION 5.8 ;','BUSBITCHARS "[]" ;','DIVIDERCHAR "/" ;','MACRO dsdv_mu_land',' CLASS BLOCK ;',' ORIGIN 0 0 ;',f' SIZE {W} BY {H} ;',' SYMMETRY X Y ;']
 for p in pins:
- n,L,x,y=p['name'],p['layer'],p['x'],p['y']; dx,dy=(.024,.042) if n=='clk' else ((.024,.042) if L=='M5' else (.042,.016))
+ n,L,x,y=p['name'],p['layer'],p['x'],p['y']; dx,dy=(.024,.24) if n=='clk' else ((.024,.042) if L=='M5' else (.042,.016))
  ls += [f' PIN {n}',f'  DIRECTION {dirs[n]} ;','  USE CLOCK ;' if n=='clk' else '  USE SIGNAL ;','  PORT',f'   LAYER {L} ;',f'   RECT {x-dx:.4f} {y-dy:.4f} {x+dx:.4f} {y+dy:.4f} ;','  END',f' END {n}']
 ls+=['END dsdv_mu_land','END LIBRARY'];(B/'dsdv_mu_land.lef').write_text('\n'.join(ls)+'\n')
 base=json.load(open(R/'physical/ref_tile/dsdv_mu_land/spec.json'))
