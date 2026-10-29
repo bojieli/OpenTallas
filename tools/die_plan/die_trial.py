@@ -2672,6 +2672,12 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
                                   for i, n in nodes.items()},
                 taps=[dict(port=tp, part=part, tap=port, xy=[x, y], node=i) for tp, x, y, part, port, i in tap_ports],
                 node_buf=node_buf, parent_of=parent_of, sites={inst: [round(x, 3), round(y, 3)] for inst, x, y in place})
+    if DME_ACTUAL_MAX_UM is not None:
+        from clock_reach import freeze_sites
+        meta["physical_dme"] = freeze_sites(tree,DME_ACTUAL_MAX_UM)
+        meta["physical_dme"]["packing_cost_delta_max_ps"] = max(
+            (abs(n["physical_leg"].get("packing_delay_delta_ps",0.)) for n in nodes.values()
+             if n.get("physical_leg")), default=0.)
     if cell_paths or any(int(v) > 0 for v in (tap_pad or {}).values()):
         # DIE-S81-15 --cell-paths (opt-in): the same physical paths without pads, so every leg repeater is a tree-path
         # node in trial_tap_arrivals (start-tree retime candidates at the EXISTING repeaters; netlist unchanged).

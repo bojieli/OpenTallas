@@ -74,3 +74,13 @@ def test_prebuild_body_homes_have_native_r0_grid_and_no_overlaps():
         assert abs(y/.54-round(y/.54)) < 1e-6
     for i,(_,x,y) in enumerate(p):
         for _,a,b in p[i+1:]:assert abs(a-x)>=1.62-1e-6 or abs(b-y)>=.27-1e-6
+
+
+def test_changed_frozen_home_fails_even_when_reach_still_passes():
+    from clock_reach import freeze_sites,actual_reach
+    t=dict(meta={},sites={'a':[0.,0.],'b':[100.,0.]},parent_of={'b':'a'},taps=[])
+    t['meta']['physical_dme']=freeze_sites(t,405.)
+    assert actual_reach(t,405.)['frozen_home_match']
+    t['sites']['b']=[101.,0.]
+    result=actual_reach(t,405.)
+    assert result['over_count']==0 and result['verdict']=='FAIL' and not result['frozen_home_match']

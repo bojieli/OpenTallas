@@ -5,7 +5,7 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'tools'/'die_plan'))
 import schema as S
 import die_trial as D
-from clock_reach import actual_reach
+from clock_reach import actual_reach,freeze_sites
 
 plan,calfile,mode,out=sys.argv[1:];out=Path(out);out.mkdir(parents=True,exist_ok=True)
 P=S.Plan(S.load(plan),Path(plan))
@@ -32,6 +32,7 @@ v,place,ports,nb,par=D.tree_netlist(nodes,taps,rep_um=250.,site=site,clock_cell=
 (out/'ctree.v').write_text(v);xy={i:[x,y] for i,x,y in place}
 tree=dict(meta=dict(clock_cell='inv2'),nodes={i:{k:v for k,v in n.items() if k!='taps'} for i,n in nodes.items()},
           sites=xy,parent_of=par,node_buf=nb,taps=[dict(port=p,part=part,tap=tp,xy=[x,y],node=i) for p,x,y,part,tp,i in ports])
+if mode!='baseline':tree['meta']['physical_dme']=freeze_sites(tree,405.)
 (out/'tree.json').write_text(json.dumps(tree))
 reach=actual_reach(tree,405.);(out/'actual_reach.json').write_text(json.dumps(reach,indent=1))
 # Derive path delays from the exact emitted clock graph. Root delay is common.
