@@ -221,3 +221,15 @@ def test_strap_keepout_opt_in_bands_both_sides_default_unchanged(tmp_path):
     assert cut(d) == cut(base)
     with pytest.raises(MF.MeshConfigError):
         built(tmp_path / "n", dict(mesh_cfg(), strap_keepout_um=-1))
+
+
+def test_qc_mesh_p2_is_p1_plus_strap_keepout(tmp_path):
+    """DIE-QC-34: the QC die mesh config carries the A3 keep-out 0.32; otherwise identical mesh keys to qc_mesh_p1"""
+    p2 = O.load_config(HERE / "configs" / "qc_mesh_p2.yaml")["region"]["mesh"]
+    p1 = mesh_cfg()
+    assert p2["strap_keepout_um"] == 0.32
+    assert {k: v for k, v in p2.items() if k not in ("strap_keepout_um", "run")} == {k: v for k, v in p1.items() if k != "run"}
+    assert {k: v for k, v in p2["run"].items() if k != "name_prefix"} == {k: v for k, v in p1["run"].items() if k != "name_prefix"}
+    (tmp_path / "a").mkdir()
+    d = (built(tmp_path / "a", p2), (tmp_path / "a" / "o" / "pilot.def").read_text())[1]
+    assert "- LAYER M9 RECT" in d[d.index("BLOCKAGES"):d.index("END BLOCKAGES")]
