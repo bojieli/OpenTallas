@@ -18,6 +18,20 @@ Pipeline (diagnostic, docker --memory on a fleet host, run dirs mounted read-onl
 """
 import argparse, json, math, re, sys
 
+
+def library_prefix(session, receipt):
+    """Keep the selected signoff library setup, including exact-library loaders.
+
+    New signoff sessions load libraries through a procedure; selecting only
+    top-level read_liberty lines silently produces an empty timing library.
+    Stop before reading the implementation so the RC probe can select its DB.
+    """
+    lines = session.splitlines(keepends=True)
+    for i, line in enumerate(lines):
+        if re.match(r'^read_db\s', line):
+            return ''.join(lines[:i]).replace('/out/libraries.json', receipt)
+    raise ValueError('signoff session lacks an implementation read_db boundary')
+
 STOCK_LAYER = {  # ORFS platforms/asap7/setRC.tcl: R kOhm/um, C fF/um
     "M1": (7.04175e-02, 1e-10), "M2": (2.97127e-02, 1.74942e-01), "M3": (3.12870e-02, 1.55554e-01),
     "M4": (1.80365e-02, 1.78475e-01), "M5": (1.89935e-02, 1.64264e-01), "M6": (1.18796e-02, 1.87426e-01),
@@ -232,8 +246,13 @@ def main(argv=None):
     n = sp.add_parser("nets"); n.add_argument("--wire", required=True); n.add_argument("--n", type=int, default=200)
     n.add_argument("--out", required=True)
     c = sp.add_parser("cmp"); c.add_argument("--ref", required=True); c.add_argument("--est", required=True)
+    l = sp.add_parser('libs'); l.add_argument('--session', required=True); l.add_argument('--out', required=True)
+    l.add_argument('--receipt', required=True)
     a = ap.parse_args(argv)
-    if a.cmd == "emit":
+    if a.cmd == 'libs':
+        with open(a.session) as source, open(a.out, 'w') as dest:
+            dest.write(library_prefix(source.read(), a.receipt))
+    elif a.cmd == "emit":
         params = json.loads(open(a.scales).read()) if not a.scales.lstrip().startswith("{") else json.loads(a.scales)
         open(a.out, "w").write(emit_tcl(params, a.header))
     elif a.cmd == "fit":
