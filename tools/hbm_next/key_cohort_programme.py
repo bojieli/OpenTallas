@@ -30,7 +30,8 @@ def compile_allocation(a):
         raise ValueError('unsupported explicit key allocation schema')
     if a.get('physical_stack')!=2 or a.get('slots')!=4:
         raise ValueError('current native source requires physicalstack2 and two local4slot pipes')
-    packet_delay=a['packet_from_go_edges'];relay=a['relay_cycles'];query=a['query_start_at']
+    packet_delay=a['packet_from_go_edges'];relay=a['relay_cycles'];query=a['query_start_at'];phase=a.get('pipe_phase',0)
+    if type(phase) is not int or not 0<=phase<4:raise ValueError('explicit pipe phase0..3 required')
     programme_base=a['programme_base'];descriptor_base=a['descriptor_base']
     if not isinstance(programme_base,int) or programme_base<0 or not isinstance(descriptor_base,int) or not 0<=descriptor_base<=250:
         raise ValueError('explicit available programme/descriptor base required')
@@ -64,7 +65,7 @@ def compile_allocation(a):
                 if ident in used:raise ValueError('physical key allocations alias across blocks/cohorts')
                 used.add(ident)
                 if ready>=go or ready<0:raise ValueError('cache not resident strictly before fixed GO')
-                if (go+packet_delay+source_relay)%4!=lane%4:raise ValueError('source packet edge misses its static local lane slot')
+                if (go+packet_delay+source_relay-phase)%4!=lane%4:raise ValueError('source packet edge misses its static local lane slot')
                 # A group cannot run two programmes or issue both cohorts at once.
                 prev=groups.setdefault(key,[])
                 if prev and go<prev[-1]['go_at']+prev[-1]['programme_runtime_edges']+a['go_done_tail_edges']:
@@ -95,7 +96,7 @@ def compile_allocation(a):
             node_events.add(identity)
     last=max(t['arrival_edge'] for t in timeline)
     if query<=last+1:raise ValueError('query begins before all distinct role SRAM writes commit')
-    return dict(schema='opentallas.hbm_idx.key_cohort_programme.v1',verdict='SOURCE_CANDIDATE',installable=False,programme_words=[f'{w:064x}' for w in pwords],programme_word_count=len(pwords),programme_base=programme_base,descriptor_base=descriptor_base,source_groups=groups,ingest_timeline=sorted(timeline,key=lambda x:(x['edge'],x['physical_lane'])),last_arrival_edge=last,query_start_at=query,unused_prefill_slack=query-last-1,HBM_deadlines='caller supplied, not measured by compiler',claim=dict(native=False,physical=False,token=False))
+    return dict(schema='opentallas.hbm_idx.key_cohort_programme.v1',verdict='SOURCE_CANDIDATE',installable=False,programme_words=[f'{w:064x}' for w in pwords],programme_word_count=len(pwords),programme_base=programme_base,descriptor_base=descriptor_base,pipe_phase=phase,source_groups=groups,ingest_timeline=sorted(timeline,key=lambda x:(x['edge'],x['physical_lane'])),last_arrival_edge=last,query_start_at=query,unused_prefill_slack=query-last-1,HBM_deadlines='caller supplied, not measured by compiler',claim=dict(native=False,physical=False,token=False))
 
 
 def main():

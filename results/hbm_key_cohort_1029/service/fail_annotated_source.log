@@ -1,0 +1,14 @@
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-keys-0251/service_vehicle/src/14_ot_reset_sync.sv:8:2: syntax error, unexpected INTEGER NUMBER, expecting '['
+    8 |  001892     input  wire clk,
+      |  ^~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-keys-0251/service_vehicle/src/14_ot_reset_sync.sv:9:1: syntax error, unexpected '%'
+    9 | %000007     input  wire async_rst_n,
+      | ^
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-keys-0251/service_vehicle/src/14_ot_reset_sync.sv:10:1: syntax error, unexpected '%'
+   10 | %000007     output wire sync_rst_n
+      | ^
+%Error: /srv/opentallas-scratch2/claude/codex-hbm-keys-0251/service_vehicle/src/14_ot_reset_sync.sv:14:2: syntax error, unexpected INTEGER NUMBER
+   14 |  001892     always @(posedge clk or negedge async_rst_n) begin
+      |  ^~~~~~
+%Error: Exiting due to 4 error(s)

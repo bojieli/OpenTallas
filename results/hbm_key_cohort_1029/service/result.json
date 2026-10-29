@@ -1,0 +1,63 @@
+{
+  "verdict": "NATIVE_SERVICE_COMPONENT_PASS",
+  "job": "intel1 oth-ubuntu-2593007-1793271115",
+  "scope": "smallest one current native4PCgroup, synthetic explicit two-cohort data; no fullstack/currentproductionallocation",
+  "source": {
+    "svg": "ot_hbm_svc_sm_group_rel_id_rc:LBANKS4,NID6,IDW9,PAW11,PREL1,DD256,ID_COHORT1,XSLOT1,OPEN_IL1,RQD39,id_stack2,id_sm0",
+    "share": "ot_hbm_svc_vm_kshare_splitstrap KRL1=1",
+    "controller": "4xot_hbm_svc_pc_ctrl_leaf_cfg_h9b OREG1,KREG1,KRREG1,RREG1,WPAY1,QREG1",
+    "memory": "actual SRAMs +offdiephysicalcommandDRAMfixture",
+    "transport": "ownpacket seed+3registeredstaticmergepasses",
+    "destination": "2distinctactual5SRAMlinebuffers,171rows each"
+  },
+  "period_ps": 833,
+  "exact_packets": 342,
+  "payload_bits_verified_packet_and_SRAM_replay": 744192,
+  "distinct_cohorts": 2,
+  "sm_arithmetic_issue": 0,
+  "packet_preedge_sample_from_GO": 7,
+  "refresh_reload": [
+    118,
+    121,
+    126,
+    129
+  ],
+  "GO_edges": [
+    520,
+    800,
+    1080,
+    1360,
+    1640,
+    1920
+  ],
+  "derived_last_packet_edge": 2095,
+  "derived_last_SRAM_write_edge": 2099,
+  "conservative_component_prefill_reservation_edges": 2100,
+  "mutants_caught": [
+    "earlyGO100 before actualHBMcache ready:SVGfaultage150",
+    "cohort1physicalrow100instead101:payloadmismatchatpacket171"
+  ],
+  "failures_diagnosed": [
+    {
+      "run": "service_vehicle",
+      "cause": "generic moduleindex selected coverageannotated reset copy; canonicalrtl/lib explicit pin fixes sourceclosure"
+    },
+    {
+      "run": "service_vehicle2",
+      "cause": "allreload118 violatesoddPCrow-slot refreshparity; canonicalPHASE0formula118/121/126/129 fixes cf1010"
+    },
+    {
+      "run": "service_vehicle3",
+      "cause": "benchassumedGO+8 sampling; actualGO+7 packet firstrawpayloadcorrect at527; fixedbenchstaticinjection only"
+    }
+  ],
+  "qualification": {
+    "current_native_pergroup_mechanism": true,
+    "other7groups_same_hardened_type_but_fullstack_notrun": true,
+    "production_memory_allocation": false,
+    "physical_path_and_CA": false,
+    "whole_token": false,
+    "G5": false,
+    "SIGNED": false
+  }
+}

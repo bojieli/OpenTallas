@@ -1,0 +1,13 @@
+SERVICE_GO age=520 rc=520
+KEY_SERVICE_FIRST cohort=0 age=527 tag=0
+SERVICE_GO age=800 rc=800
+SERVICE_GO age=1080 rc=1080
+SERVICE_GO age=1360 rc=1360
+KEY_SERVICE_FIRST cohort=1 age=1367 tag=0
+SERVICE_GO age=1640 rc=1640
+SERVICE_GO age=1920 rc=1920
+KEY_SERVICE_CHAIN_PASS packets=342 cohorts=2 rows=171 current_pc=h9b KRL1=1 SVG=rel_id_rc SRAM=ACTUAL
+- tb_key_service.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.183 s; speed 12.724 us/s
+- Verilator: cpu 0.183 s on 1 threads; allocated 8 MB

@@ -1,0 +1,4 @@
+SERVICE_FAULT age=150 sf=1 mf=0 cf=0000 nf=0000 bf=00
+[172015000] %Fatal: tb_key_service.sv:45: Assertion failed in tb_key_service: KEY_SERVICE_FAULT
+%Error: tb_key_service.sv:45: Verilog $stop
+Aborting...

@@ -1,0 +1,173 @@
+{
+  "needed": [
+    "ot_hbm_svc_sm_group_rel_id_rc",
+    "ot_hbm_svc_vm_kshare_splitstrap",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+    "ot_hnx_idxn_key_serial_seed",
+    "ot_hnx_idxn_key_serial_merge",
+    "ot_hnx_idxn_keybuf_slice",
+    "tb_svg_rel_dram_sparse"
+  ],
+  "missing": [],
+  "files": [
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv",
+      "file": "src/0_tb_svg_rel_dram_sparse.sv",
+      "sha256": "8d374db52a8788c2056fc8c4069775b4ce8041227fb8cc4ce2515e8b75721213"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv",
+      "file": "src/1_ot_hnx_idxn_keybuf_slice.sv",
+      "sha256": "3da6e52595cb1fb1b9de012ff47985ed98d04cdf5c374fac9b235c9afc1807b9"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "file": "src/2_ot_sram_1r1w_256x256_m2_r2c2.v",
+      "sha256": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c"
+    },
+    {
+      "source": "/srv/opentallas-scratch/claude/wt/codex-hbm-keys-0251/rtl/hbm_next/idxn/ot_hnx_idxn_key_serial_chain.sv",
+      "file": "src/3_ot_hnx_idxn_key_serial_chain.sv",
+      "sha256": "f13bf9501ac46fd69f140f1211056b1c0812f921867589446acaffcba2746d74"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+      "file": "src/4_ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+      "sha256": "fb3cc9676c535510fa689ae1a69333a3bcbeec2558146fcd62f2bcdabe701ffc"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "file": "src/5_ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/lib/ot_rst_relay.sv",
+      "file": "src/6_ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+      "file": "src/7_ot_hbm_svc_ring_h9b.sv",
+      "sha256": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+      "file": "src/8_ot_hbm_svc_pin_skid2_h9.sv",
+      "sha256": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+      "file": "src/9_ot_hbm_r14_stream_pc_strap_h9.sv",
+      "sha256": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+      "file": "src/10_ot_hbm_svc_vm_kshare_splitstrap.sv",
+      "sha256": "acb135a98c2ba055dfe801fe0bb5b4b940b3a175f5faacb93505b5e546865758"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+      "file": "src/11_ot_hbm_svc_ring_h9b_ff.sv",
+      "sha256": "1c7ba5548eff11256723104b6a6efb361c80114264997930eb20bbcf281be4ce"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+      "file": "src/12_ot_hbm_svc_pc_ctrl_leaf.sv",
+      "sha256": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+      "file": "src/13_ot_hbm_svc_async_fifo.sv",
+      "sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/lib/ot_reset_sync.sv",
+      "file": "src/14_ot_reset_sync.sv",
+      "sha256": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/physical/die_plan/hbm/bind/rtl/b2_native/ot_hbm_sm_req_check.sv",
+      "file": "src/15_ot_hbm_sm_req_check.sv",
+      "sha256": "10d1d45169025da77a3c1c0e84ca9ac7198a099a56c8c3bef848cd1b2cd8dbf2"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+      "file": "src/16_ot_hbm_svc_sm_group_rel_id.sv",
+      "sha256": "50cefe2590104ec786d78053a0837ab1fb1091678272a20b022382e30cf53e07"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+      "file": "src/17_ot_hbm_svc_sm_issuer_rel.sv",
+      "sha256": "d92bd3902801aa5c1c14da066bbb4cdc734c86260b3a79c050271aef4a8c73b9"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+      "file": "src/18_ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+      "sha256": "29865367eaaeaed60a559a245a4fb9caa6069395618c58ed7d6f8b2b9f3724db"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+      "file": "src/19_ot_smh_static_feed.sv",
+      "sha256": "fb0ed7163cf1a0adadaea5dd0820523f01d1dbed48dd8aeaf3e6640ccd2b7d84"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+      "file": "src/20_ot_smh_calendar_static_x.sv",
+      "sha256": "53e9b0be9dcdd7a405a7b53a8d359df3413a305a6c24eb03118b162e577b8d40"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "file": "src/21_ot_sram_1r1w_1024x256_m2_r2c2.v",
+      "sha256": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+      "file": "src/22_ot_hbm_svc_static_sm_packed136.sv",
+      "sha256": "f06fc1118b435ef275bf52bcd152c33fa8dab4bf56bf8659afab372c8dd20fc5"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_id.sv",
+      "file": "src/23_ot_hbm_svc_sm4pc_cdc_rel_id.sv",
+      "sha256": "f11a3701413de90d536e8456f6435b93e9ddda8a443037e380f45f3335ed9fe3"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv",
+      "file": "src/24_ot_hbm_svc_sm8_landing_bank.sv",
+      "sha256": "0e5758877b638f01372ec223eeb4410f9123f45fd3de54f56f8bce1c0ca9057c"
+    },
+    {
+      "source": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+      "file": "src/25_ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+      "sha256": "af431efd6145da137f530535966c3d01080bbb985ef10488d573decb7d7fcce9"
+    }
+  ],
+  "picks": {
+    "tb_svg_rel_dram_sparse": "/home/ubuntu/OpenTallas/rtl/test/hbm_accel/svg_rel/tb_svg_rel_dram_sparse.sv",
+    "ot_hnx_idxn_keybuf_slice": "/home/ubuntu/OpenTallas/rtl/hbm_next/idxn/ot_hnx_idxn_keybuf_slice.sv",
+    "ot_hnx_idxn_key_serial_merge": "/srv/opentallas-scratch/claude/wt/codex-hbm-keys-0251/rtl/hbm_next/idxn/ot_hnx_idxn_key_serial_chain.sv",
+    "ot_hnx_idxn_key_serial_seed": "/srv/opentallas-scratch/claude/wt/codex-hbm-keys-0251/rtl/hbm_next/idxn/ot_hnx_idxn_key_serial_chain.sv",
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+    "ot_rst_relay": "/home/ubuntu/OpenTallas/rtl/lib/ot_rst_relay.sv",
+    "ot_hbm_svc_ring_h9b": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+    "ot_hbm_svc_pin_skid2_h9": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+    "ot_hbm_r14_stream_pc_strap_h9": "/home/ubuntu/OpenTallas/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+    "ot_hbm_svc_vm_kshare_splitstrap": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+    "ot_hbm_svc_ring_h9b_ff": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+    "ot_hbm_svc_pin_skid2": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+    "ot_hbm_svc_fault_cdc": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "ot_reset_sync": "/home/ubuntu/OpenTallas/rtl/build/coverage_probe/merged_annotated/ot_reset_sync.sv",
+    "ot_hbm_svc_async_fifo": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+    "ot_hbm_svc_sm_group_rel_id_rc": "/home/ubuntu/OpenTallas/physical/die_plan/hbm/bind/rtl/b2_native/ot_hbm_sm_req_check.sv",
+    "ot_hbm_svc_sm_group_rel_id": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group_rel_id.sv",
+    "ot_hbm_svc_sm_issuer_rel": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer_rel.sv",
+    "ot_hbm_svc_sm_feed_programmed_rel_id": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed_rel_id.sv",
+    "ot_smh_static_feed": "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/static/ot_smh_static_feed.sv",
+    "ot_smh_calendar_static_x": "/home/ubuntu/OpenTallas/rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv",
+    "ot_hbm_svc_static_sm_packed136": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv",
+    "ot_hbm_svc_sm4pc_cdc_rel_id": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc_rel_id.sv",
+    "ot_hbm_svc_sm8_landing_bank": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv",
+    "ot_hbm_svc_prefetch_overlap_owner_rel_id": "/home/ubuntu/OpenTallas/rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner_rel_id.sv",
+    "ot_hbm_sm_req_check": "/home/ubuntu/OpenTallas/physical/die_plan/hbm/bind/rtl/b2_native/ot_hbm_sm_req_check.sv"
+  },
+  "diagnosis": "firstgenericclosure picked annotated coverage copy under rtl/build; canonical rtl/lib explicitly selected, no production RTL change"
+}
