@@ -44,7 +44,7 @@ def select_profile(extras):
     raise ValueError('no existing-width common static delay profile is bookable')
 
 
-def compile_booking(entry,returns,network,control,base_edge,eps_bits,choose=False):
+def compile_booking(entry,returns,network,control,base_edge,eps_bits,choose=False,interleave=False):
     hashes=[(d.get('source_asbuilt_sha256'),d.get('die_sha256'))for d in(entry,returns,network,control)]
     if len(set(hashes))!=1:raise ValueError('all inputs must use one exact source/bound graph')
     if type(base_edge)is not int or base_edge<0 or type(eps_bits)is not int or not 0<=eps_bits<1<<32:
@@ -74,10 +74,14 @@ def compile_booking(entry,returns,network,control,base_edge,eps_bits,choose=Fals
         mask=sum(1<<sid[s]for s in slices)
         rows.append(dict(engine='V'+tier,issue_vo_edge=base_edge,slice_mask=mask,target=0,leaf_mask=31,body=1|(480<<4),kind='GAIN'))
         next_issue=base_edge+20
+        occupied={base_edge}
         for sl in slices:
             issue=offsets(extras[sl],new)
             if issue is None:raise ValueError(f'{sl}: onebodycommand/cycle cannot realize profile {new}; equal issue offsets')
-            start=next_issue
+            start=base_edge+20 if interleave else next_issue
+            booked=issue+[max(issue)+1]
+            while any(start+off in occupied for off in booked):start+=1
+            occupied.update(start+off for off in booked)
             ctl=control['paths'][sl]
             if ctl['status']!='PASS':raise ValueError('current controller source timing missing')
             for k,off in enumerate(issue):
@@ -107,6 +111,7 @@ def compile_booking(entry,returns,network,control,base_edge,eps_bits,choose=Fals
         rows=rows,groups=groups,commands=len(rows),unsupported_multiissue=False,
         old_consecutive_programme_last_vo_edge=old_last,new_last_vo_edge=max(r['issue_vo_edge']for r in rows),
         added_control_span_edges=max(r['issue_vo_edge']for r in rows)-old_last,
+        interleaved_groups=interleave,
         local_normr_to_partial_edges=None,actual_producer_outputs_qualified=False,absolute_START_qualified=False,full_token=False)
 
 
@@ -114,9 +119,9 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__)
     for name in('entry','returns','network','control','out'):p.add_argument('--'+name,type=Path,required=True)
     p.add_argument('--base-edge',type=int,required=True);p.add_argument('--eps-bits',type=lambda s:int(s,0),required=True)
-    p.add_argument('--candidate-profile',action='store_true');a=p.parse_args()
+    p.add_argument('--candidate-profile',action='store_true');p.add_argument('--interleave-groups',action='store_true');a=p.parse_args()
     if a.out.exists():raise ValueError('preserve previous booking')
     result=compile_booking(*[json.loads(getattr(a,k).read_text())for k in('entry','returns','network','control')],
-        a.base_edge,a.eps_bits,a.candidate_profile)
+        a.base_edge,a.eps_bits,a.candidate_profile,a.interleave_groups)
     a.out.write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps({k:result[k]for k in('pdsk_current','pdsk_candidate','commands','added_control_span_edges','adoption')}))

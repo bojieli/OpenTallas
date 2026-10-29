@@ -1,0 +1,23 @@
+{
+ "verdict": "FAIL_GLOBAL_NORM_COMPOSITION",
+ "unit": "oth-ubuntu-3042620-1793273543",
+ "legacy": "actual XR collector fault0200 reproduced",
+ "candidate": {
+  "native_partial": "49199516",
+  "partial_observed_edge": 1324,
+  "flagged_HEAD_publication_edge": 1944,
+  "checked_payload_bits": 1024,
+  "leaf_faults": 0,
+  "leaf_data_errors": 0,
+  "rstd_received": 8,
+  "rstd_required": 16,
+  "rstd_first": 1799,
+  "rstd_last": 1854,
+  "rstd_data_errors": 0,
+  "aggregate_fault": "0001"
+ },
+ "unrun_controls": "shifted_partial and corrupt_partial held because positive candidate failed",
+ "diagnosis_pending": "differentiate actual exchange collision/GO/readiness/return transport; no production adoption",
+ "physical_START_qualified": false,
+ "full_token": false
+}
