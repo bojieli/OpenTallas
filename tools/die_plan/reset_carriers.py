@@ -7,6 +7,8 @@ def register(B):
     if not isinstance(names,list) or not all(isinstance(x,str) for x in names) or len(names)!=len(set(names)):
         raise ValueError('reset_carrier_parts must be unique exact partition names')
     if not names:return []
+    if not set(names) <= {'NW_mca','NE_mca'}:
+        raise ValueError('reset carriers are restricted to exact NW_mca/NE_mca partitions')
     if B.plan.get('reset',{}).get('release')!='wavefront':
         raise ValueError('reset carriers require existing wavefront reset implementation')
     try:

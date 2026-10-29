@@ -8,6 +8,7 @@ from tools.die_plan import schema, reset_tree as RT, reset_carriers
 
 def binder():
     raw=json.loads((Path(schema.__file__).parent/'examples/tiny_plan.json').read_text())
+    raw=json.loads(json.dumps(raw).replace('\"pa\"','\"NW_mca\"'))
     raw['reset']['release']='wavefront';raw['ports']=[];raw['lanes']=[]
     for t in raw['partition_types'].values():
         t.update(hard=False,buses=[],ft_slots=[],hard_cores=[],internal_stations=[],contents=[{'inst':'u_transit','module':'transit','cells':0}])
@@ -24,7 +25,7 @@ def test_real_registered_reset_carrier_and_default_off():
     assert reset_carriers.register(SimpleNamespace(ab={}))==[]
 
 
-@pytest.mark.parametrize('change', ['no_wave','macro','bus','ft','cell','station','duplicate','mapped','empty_contents','pad','invalid_list','plan_cell','intra_dly','link'])
+@pytest.mark.parametrize('change', ['no_wave','macro','bus','ft','cell','station','duplicate','mapped','empty_contents','pad','invalid_list','plan_cell','intra_dly','link','other_name'])
 def test_not_a_general_empty_partition_escape(change):
     b,p,tn=binder();t=b.types[tn]
     if change=='no_wave':b.plan['reset']['release']='sync'
@@ -38,6 +39,7 @@ def test_not_a_general_empty_partition_escape(change):
     if change=='empty_contents':t['contents']=[]
     if change=='pad':t['pads']=[{'name':'data'}]
     if change=='invalid_list':b.ab['reset_carrier_parts']=False
+    if change=='other_name':b.ab['reset_carrier_parts']=['pm1']
     if change=='plan_cell':b.pc=SimpleNamespace(T={tn:{'cells':{'u_x':{}}}},ptype=lambda p:tn)
     if change=='intra_dly':b.intra_dly={p:{(0,'q',1)}}
     if change=='link':b.links=[{'src':p,'dst':'elsewhere','ft':[]}]
