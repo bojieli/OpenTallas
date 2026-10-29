@@ -1,0 +1,539 @@
+{
+ "mode": "body",
+ "taps": 51,
+ "dme_nodes": 1481,
+ "elapsed_s": 109.79856014251709,
+ "reach": {
+  "schema": "ot_clk_actual_reach/1",
+  "max_um": 405.0,
+  "verdict": "PASS",
+  "cell_edges": 244,
+  "tap_edges": 51,
+  "worst_um": 391.5,
+  "over_count": 0,
+  "over": [],
+  "missing_sites": []
+ },
+ "window_ps": {
+  "TT": 67.93318968178914,
+  "FF": 25.233967675806866
+ },
+ "stats": {
+  "merges": 50,
+  "imbalanced": 1,
+  "worst_imbalance_um": 7.9,
+  "extra_wire_um": 721.4,
+  "topology": {
+   "greedy": 1
+  },
+  "snakes": 9,
+  "snake_wire_um": 2526.6,
+  "snake_buffers": 25,
+  "early_taps": [
+   {
+    "part": "bk_sel",
+    "port": "clk_c0",
+    "early_model_ps": 363.3,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c1",
+    "early_model_ps": 363.3,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c2",
+    "early_model_ps": 363.3,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c3",
+    "early_model_ps": 363.3,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c4",
+    "early_model_ps": 520.9,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c5",
+    "early_model_ps": 108.45,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c6",
+    "early_model_ps": 72.85,
+    "mode": "merge"
+   }
+  ],
+  "spread_um": 10.0
+ },
+ "rows": [
+  {
+   "port": "t_bk_sel__clk_c6",
+   "part": "bk_sel",
+   "tap": "clk_c6",
+   "delay_ps": {
+    "TT": 1064.4954457556173,
+    "FF": 937.7037366840572
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c5",
+   "part": "bk_sel",
+   "tap": "clk_c5",
+   "delay_ps": {
+    "TT": 1066.9383176604335,
+    "FF": 938.5023945623454
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t9",
+   "part": "bk_sel",
+   "tap": "clk_t9",
+   "delay_ps": {
+    "TT": 1058.028869166899,
+    "FF": 937.842171280979
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t20",
+   "part": "bk_sel",
+   "tap": "clk_t20",
+   "delay_ps": {
+    "TT": 1058.0288691668984,
+    "FF": 937.8421712809786
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t7",
+   "part": "bk_sel",
+   "tap": "clk_t7",
+   "delay_ps": {
+    "TT": 1058.0886470234825,
+    "FF": 939.7411919733706
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t8",
+   "part": "bk_sel",
+   "tap": "clk_t8",
+   "delay_ps": {
+    "TT": 1057.7480816319628,
+    "FF": 939.5289548444108
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t43",
+   "part": "bk_sel",
+   "tap": "clk_t43",
+   "delay_ps": {
+    "TT": 1057.4817334595539,
+    "FF": 939.3360604373459
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t10",
+   "part": "bk_sel",
+   "tap": "clk_t10",
+   "delay_ps": {
+    "TT": 1056.461733479554,
+    "FF": 936.497882097346
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t21",
+   "part": "bk_sel",
+   "tap": "clk_t21",
+   "delay_ps": {
+    "TT": 1057.0217941227545,
+    "FF": 932.6412501389466
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t32",
+   "part": "bk_sel",
+   "tap": "clk_t32",
+   "delay_ps": {
+    "TT": 1057.0217941227545,
+    "FF": 932.6412501389466
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t31",
+   "part": "bk_sel",
+   "tap": "clk_t31",
+   "delay_ps": {
+    "TT": 1056.3986336816042,
+    "FF": 936.0378487657322
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t42",
+   "part": "bk_sel",
+   "tap": "clk_t42",
+   "delay_ps": {
+    "TT": 1056.3986336816033,
+    "FF": 936.0378487657313
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t41",
+   "part": "bk_sel",
+   "tap": "clk_t41",
+   "delay_ps": {
+    "TT": 1056.5724033247068,
+    "FF": 936.061662309123
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t19",
+   "part": "bk_sel",
+   "tap": "clk_t19",
+   "delay_ps": {
+    "TT": 1057.1324639679076,
+    "FF": 932.2050303507235
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t30",
+   "part": "bk_sel",
+   "tap": "clk_t30",
+   "delay_ps": {
+    "TT": 1057.1324639679076,
+    "FF": 932.2050303507235
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c4",
+   "part": "bk_sel",
+   "tap": "clk_c4",
+   "delay_ps": {
+    "TT": 1116.8625141230814,
+    "FF": 939.4077833094098
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t18",
+   "part": "bk_sel",
+   "tap": "clk_t18",
+   "delay_ps": {
+    "TT": 1057.9133587915778,
+    "FF": 934.0640295610178
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t29",
+   "part": "bk_sel",
+   "tap": "clk_t29",
+   "delay_ps": {
+    "TT": 1057.9133587915785,
+    "FF": 934.0640295610185
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t28",
+   "part": "bk_sel",
+   "tap": "clk_t28",
+   "delay_ps": {
+    "TT": 1058.254229919562,
+    "FF": 934.3186747369303
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t17",
+   "part": "bk_sel",
+   "tap": "clk_t17",
+   "delay_ps": {
+    "TT": 1058.254229919563,
+    "FF": 934.3186747369308
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t39",
+   "part": "bk_sel",
+   "tap": "clk_t39",
+   "delay_ps": {
+    "TT": 1058.2644454628428,
+    "FF": 938.4939163915708
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t40",
+   "part": "bk_sel",
+   "tap": "clk_t40",
+   "delay_ps": {
+    "TT": 1058.2534895618178,
+    "FF": 938.483917790138
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c3",
+   "part": "bk_sel",
+   "tap": "clk_c3",
+   "delay_ps": {
+    "TT": 1096.7891434945227,
+    "FF": 941.2343154184907
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c1",
+   "part": "bk_sel",
+   "tap": "clk_c1",
+   "delay_ps": {
+    "TT": 1088.9799928102839,
+    "FF": 932.3477027385718
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t38",
+   "part": "bk_sel",
+   "tap": "clk_t38",
+   "delay_ps": {
+    "TT": 1049.1942269820913,
+    "FF": 924.0272591369952
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t16",
+   "part": "bk_sel",
+   "tap": "clk_t16",
+   "delay_ps": {
+    "TT": 1048.9293244412922,
+    "FF": 919.8497025865961
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t27",
+   "part": "bk_sel",
+   "tap": "clk_t27",
+   "delay_ps": {
+    "TT": 1048.9293244412925,
+    "FF": 919.8497025865962
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t36",
+   "part": "bk_sel",
+   "tap": "clk_t36",
+   "delay_ps": {
+    "TT": 1050.1456499421072,
+    "FF": 920.177904293083
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t14",
+   "part": "bk_sel",
+   "tap": "clk_t14",
+   "delay_ps": {
+    "TT": 1049.880747401308,
+    "FF": 916.0003477426839
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t25",
+   "part": "bk_sel",
+   "tap": "clk_t25",
+   "delay_ps": {
+    "TT": 1049.880747401308,
+    "FF": 916.0003477426841
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t37",
+   "part": "bk_sel",
+   "tap": "clk_t37",
+   "delay_ps": {
+    "TT": 1050.156605843132,
+    "FF": 920.1879028945157
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t15",
+   "part": "bk_sel",
+   "tap": "clk_t15",
+   "delay_ps": {
+    "TT": 1049.8917033023329,
+    "FF": 916.0103463441166
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t26",
+   "part": "bk_sel",
+   "tap": "clk_t26",
+   "delay_ps": {
+    "TT": 1049.8917033023329,
+    "FF": 916.0103463441167
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c2",
+   "part": "bk_sel",
+   "tap": "clk_c2",
+   "delay_ps": {
+    "TT": 1088.572841125884,
+    "FF": 927.7174216685718
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t5",
+   "part": "bk_sel",
+   "tap": "clk_t5",
+   "delay_ps": {
+    "TT": 1051.0122552678276,
+    "FF": 933.2850490134836
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t6",
+   "part": "bk_sel",
+   "tap": "clk_t6",
+   "delay_ps": {
+    "TT": 1051.0114144582283,
+    "FF": 933.2842100230844
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t2",
+   "part": "bk_sel",
+   "tap": "clk_t2",
+   "delay_ps": {
+    "TT": 1050.901992563932,
+    "FF": 935.709017087196
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t3",
+   "part": "bk_sel",
+   "tap": "clk_t3",
+   "delay_ps": {
+    "TT": 1049.9469832645475,
+    "FF": 930.1046141848035
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t4",
+   "part": "bk_sel",
+   "tap": "clk_t4",
+   "delay_ps": {
+    "TT": 1049.9579391662921,
+    "FF": 930.1146127855161
+   }
+  },
+  {
+   "port": "t_bk_sel__clk",
+   "part": "bk_sel",
+   "tap": "clk",
+   "delay_ps": {
+    "TT": 1050.4709132076282,
+    "FF": 932.4889151723642
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t1",
+   "part": "bk_sel",
+   "tap": "clk_t1",
+   "delay_ps": {
+    "TT": 1050.4714176931484,
+    "FF": 932.4894185668444
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t11",
+   "part": "bk_sel",
+   "tap": "clk_t11",
+   "delay_ps": {
+    "TT": 1050.9300585917645,
+    "FF": 932.1511459832523
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t22",
+   "part": "bk_sel",
+   "tap": "clk_t22",
+   "delay_ps": {
+    "TT": 1050.5740737541648,
+    "FF": 926.8737012544525
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t33",
+   "part": "bk_sel",
+   "tap": "clk_t33",
+   "delay_ps": {
+    "TT": 1050.574073754164,
+    "FF": 926.8737012544517
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c0",
+   "part": "bk_sel",
+   "tap": "clk_c0",
+   "delay_ps": {
+    "TT": 1089.548709853069,
+    "FF": 929.7156958291647
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t34",
+   "part": "bk_sel",
+   "tap": "clk_t34",
+   "delay_ps": {
+    "TT": 1050.6629212260273,
+    "FF": 932.9910079848433
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t12",
+   "part": "bk_sel",
+   "tap": "clk_t12",
+   "delay_ps": {
+    "TT": 1050.3980186852284,
+    "FF": 928.8134514344441
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t23",
+   "part": "bk_sel",
+   "tap": "clk_t23",
+   "delay_ps": {
+    "TT": 1050.3980186852286,
+    "FF": 928.8134514344442
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t35",
+   "part": "bk_sel",
+   "tap": "clk_t35",
+   "delay_ps": {
+    "TT": 1050.662248577068,
+    "FF": 932.9903367938041
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t13",
+   "part": "bk_sel",
+   "tap": "clk_t13",
+   "delay_ps": {
+    "TT": 1050.397346036269,
+    "FF": 928.812780243405
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t24",
+   "part": "bk_sel",
+   "tap": "clk_t24",
+   "delay_ps": {
+    "TT": 1050.3973460362693,
+    "FF": 928.8127802434051
+   }
+  }
+ ]
+}
