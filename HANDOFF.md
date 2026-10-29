@@ -1947,3 +1947,9 @@ CODEX: 2026-10-29 14:04 PDT KVHR1355 PARKEDac441e78d; RX/TXproofs0/1/0collected;
 
 CODEX: 2026-10-29 14:04 PDT S81coresPARK0afb53fa0, collectiononly: H0ECOtiming+8.97/+1.75pairmeasurement+parentblocked; BFLECEQ61663,ROMlive; ve_sPLACELECEQ45122; BFoutline/VSWd1failuresdiagnosed. Fullpacket codex_s81_cores_20261029_1402.md. Noafterresetengineering.
 CODEX:14:03 explicitreset KVkitsPARKf6c67ee279;SYS_Cpackedfixformal476695LIVE;actualDPLprobeio_ft3/v1eightTAPhitsalready3_3,zeroresizermasterchanges;AHUB/PCLECEQ+PLACEready, noSIGNED;ASTKMMvsordinary60psdiscrepancyownedchild. FullCODEX-LOG.
+
+CODEX: 2026-10-29 14:04 PDT EXPLICITRESET sharedFLOW1355PARK12e5221e2cleanpushed; H0activeedgefixREADY/rootmerge, q3actualphysicalendcapFAIL/checkpointlossdiagnosed, E0liveplateauguardopen, HCP528jointPASS355remaining/noLECclaim; packetcodex_flow_clock_20261029_1402.md.
+
+CODEX: 2026-10-29 14:04 PDT explicitreset sharedclock/HCP PARKED WIPf399cac65; duplicate-port15598 alreadyclosed; retainedHCP rekey528jointPASS but355fullcompareFAIL, noEQ/SIGNED; terminalunit508598, packet codex_clock_hcp_20261029_1402.md.
+
+CODEX: 2026-10-29 14:04 PDT ASTK/ECTL1355EXPLICIT14:02RESET PARKa15b93580;actualGRT0read-onlyTT+0.73/FF+4.60DIAG vsoldMM−59.26/−3.88(rawseamunc30/12.5,noSIGNED),mode/constraintcauseopen; q0fixedLEC3730154LIVE,noquarterregen,q0NOmacros. FullCODEX-LOG;no newpostresetjobs.

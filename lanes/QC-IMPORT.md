@@ -14,3 +14,6 @@ Actual reset receive reach FIXED (own readback, UNCHECKED-independent): source i
 
 ## PARKED CODEX 2026-10-29 09:05 PDT — explicit Claude reset
 Clean/pushed codex/qc-import-0824@2448fa38357; all own jobs terminal. Complete reset receive physical fix actual32514arcsmax403.698/0over405/0undriven; full185698contactPGgeometrycandidate0unresolved (873344vias/2947537rectangles, oneM3jog). Peer actual22365FFlowerCLKaccess jointwithPG0failed. No actualPG/IR/fullclockroute/GRT/freeze claim. Unqualified mixed PGimporter actualcoupon failed beforemutation on OpenROAD Python ABI/shapely.lib mismatch; no post-reset fix or relaunch. Full exactpaths/results/jobs/next in CODEX-LOG Handoff 2026-10-29 09:05 PDT.
+
+## PARKED 2026-10-29 14:03 PDT — explicit Claude reset14:02
+Own sparse codex/qc-import-1355@a8f3868ef84 pushed. Collected BB1 FAIL88801/89180,379unresolved; own residual solver LIVEunit395843/client395010 keepsacceptedrecords/retriesresiduals only. Corrected malformedPGA/Brunner prepared+bash-nPASS butNOTRUN. Potential base-stack(net,x)-only shift alias noted8331shifted/8080keys, unqualified/unfixed. Native strictbind23ef9 PROG explicitlyMIF0; newMIF1physicalview notnative-bindingqualified. Existing E2diagnosticunit383438+peerchains untouched. Fullpacket handoff/codex_qc_import_20261029_1402.md. No newphysical/GRT/freeze claim.
