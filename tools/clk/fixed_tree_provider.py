@@ -70,6 +70,7 @@ def patch_once(source, old, new):
 
 
 def adapted_source(source):
+    source=patch_once(source,"REPO = Path(__file__).resolve().parents[2]","REPO = Path(_provider_repo)")
     source=patch_once(source,"    ports['root'] = dict(layer='M9',xy=M['meta']['root_um'])", """    ports['root'] = dict(layer='M9',xy=M['meta']['root_um'])
     native_plan, native_stubs = _provider_native_access(endpoints,_native_landing_doc,_native_stub_doc)
     _provider_stub_xy.update({tuple(r['entry_xy_um']):tuple(endpoints[k]['xy']) for k,r in native_stubs.items()})
@@ -121,6 +122,7 @@ def main(argv=None):
     ap=argparse.ArgumentParser(description=__doc__,add_help=False)
     for name in ('base-adapter','provider-clock-loads','provider-bindings','provider-via-facts'):
         ap.add_argument('--'+name,type=Path,required=True)
+    ap.add_argument('--repo',type=Path,default=Path(__file__).resolve().parents[2])
     ap.add_argument('--native-clock-landings',type=Path)
     ap.add_argument('--phy-clock-stubs',type=Path)
     a,base_args=ap.parse_known_args(argv)
@@ -128,7 +130,7 @@ def main(argv=None):
     m1=[r[1:] for r in facts['tech_vias_dbu']['VIA12'] if r[0]=='M1']
     if len(m1)!=1:raise ValueError('ambiguous actual VIA12 M1 enclosure')
     x0,y0,x1,y1=m1[0]
-    ns=dict(__file__=str(a.base_adapter),__name__='provider_fixed_tree',_provider_loads=P,
+    ns=dict(__file__=str(a.base_adapter),__name__='provider_fixed_tree',_provider_loads=P,_provider_repo=str(a.repo),
         _provider_inventory=json.loads(a.provider_clock_loads.read_text()),
         _provider_bindings=json.loads(a.provider_bindings.read_text()),
         _provider_via12=(max(abs(x0),abs(x1)),max(abs(y0),abs(y1))),
