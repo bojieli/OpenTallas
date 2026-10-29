@@ -49,3 +49,19 @@ inside the modeled escape + edge-depth contract; all other probe files = V1 (= C
 
 Files: drop_dup_copies.py, mk_bindplan.py, mk_manifest.py, run_bind.sh, drop_dup_report_{q,s12}.json,
 bind_summary_d{0,1,2,3}.json, g0*_summary.json, map_d3_delta.json.
+
+## 6. Lanes on d16k_q2 (task 3): lane_add.py (main) with the 158 d0 UNPLANNED rows -> d16k_q2L sha256 0b7b966cbaf2
+built 60 pairs / 95,311 b (adj 50, same 4, reverse 4, path 2; cycle_mismatch 0, macro_hits 0), far 90 / 56,289 b
+(not laned, 12.13: re-home), failed 13 (no free window / no macro-free chain: su30<->su31, hub<->su00/su20, hub->root,
+on both dies halves; lane_add_q2L_failed.txt) - same as DIE-HBM-18 d16k_L. G0 PASS; G0C 10 = inherited set, 0 new
+(CHECKED). Near-duplicate type groups 62 -> 30 (lanes added on one mirror only: WARN, 81 types unchanged).
+Bind d4: 104 = 103 UNPLANNED (84,076 b, from 158 / 179,387) + EMIT HBM-035 (CHECKED bind_summary_d4.json).
+
+## 7. LEC NEQ triage (COORD 13:33)
+- gq_issue _k13 5c09aa / c8c240 (1,024 differ): both kits carry physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv
+  sha 3dae1fc99a13 = f437090e0~1 (main/f437090e0 = a3abf08c1cb2), kit files 07:32 < fix 40235e1f116 -> the stale
+  recipe pin class, same as xp_aq (CHECKED). Fix = regenerate both from main (KITS-19).
+- serdes _k11 (3,412 differ / 754 undecided, first u_fcore.u_dec.u_syn.g_bm[0].u_bm.d): NOT the pin class - all 13
+  kp4 submodules byte-identical to the r18h5 bundle copies on main (CHECKED sha256); only the kit top
+  ot_pdie_serdes.sv (face-shell wrapper) differs from the source. Next: LEC owner checks the sequential mapping of
+  the BM state (gold-only u_rm.wp / u_bm.th / u_enc.h0 regs) on a fresh-synth probe as done for xp_aq.

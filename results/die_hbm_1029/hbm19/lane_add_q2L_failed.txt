@@ -1,0 +1,13 @@
+FAILED {"src": "NW_su30", "dst": "NW_su31", "bits": 3356, "why": "no free window NW_su30|NW_b100", "chains": [["NW_su30", "NW_b100", "NW_b110", "NW_su31"]]}
+FAILED {"src": "NW_hub", "dst": "NW_su00", "bits": 2846, "why": "no free window NW_b010|NW_su00", "chains": [["NW_hub", "NW_su01", "NW_su00"], ["NW_hub", "NW_b000", "NW_b010", "NW_b001", "NW_su00"], ["NW_hub", "NW_b000", "NW_b010", "NW_su00"]]}
+FAILED {"src": "NW_hub", "dst": "NW_su20", "bits": 2846, "why": "no macro-free station chain with 6 stations (hop<= 364)", "chains": [["NW_hub", "NW_su21", "NW_su20"], ["NW_hub", "NW_b000", "NW_b010", "NW_su20"]]}
+FAILED {"src": "NW_hub", "dst": "root", "bits": 2065, "why": "no free window NW_hub|root", "chains": [["NW_hub", "root"]]}
+FAILED {"src": "NW_su31", "dst": "NW_su30", "bits": 1399, "why": "no macro-free station chain with 6 stations (hop<= 364)", "chains": [["NW_su31", "NW_b110", "NW_b100", "NW_su30"]]}
+FAILED {"src": "NW_su00", "dst": "NW_hub", "bits": 1207, "why": "no macro-free station chain with 15 stations (hop<= 364)", "chains": [["NW_su00", "NW_su01", "NW_hub"], ["NW_su00", "NW_b001", "NW_b010", "NW_b000", "NW_hub"]]}
+FAILED {"src": "NW_su20", "dst": "NW_hub", "bits": 1207, "why": "no free window NW_su21|NW_hub", "chains": [["NW_su20", "NW_su21", "NW_hub"]]}
+FAILED {"src": "NE_su30", "dst": "NE_su31", "bits": 3356, "why": "no free window NE_su30|NE_b100", "chains": [["NE_su30", "NE_b100", "NE_b110", "NE_su31"]]}
+FAILED {"src": "NE_hub", "dst": "NE_su00", "bits": 2846, "why": "no free window NE_b010|NE_su00", "chains": [["NE_hub", "NE_su01", "NE_su00"], ["NE_hub", "NE_b000", "NE_b010", "NE_b001", "NE_su00"], ["NE_hub", "NE_b000", "NE_b010", "NE_su00"]]}
+FAILED {"src": "NE_hub", "dst": "NE_su20", "bits": 2846, "why": "no macro-free station chain with 6 stations (hop<= 364)", "chains": [["NE_hub", "NE_su21", "NE_su20"], ["NE_hub", "NE_b000", "NE_b010", "NE_su20"]]}
+FAILED {"src": "NE_su31", "dst": "NE_su30", "bits": 1399, "why": "no macro-free station chain with 6 stations (hop<= 364)", "chains": [["NE_su31", "NE_b110", "NE_b100", "NE_su30"]]}
+FAILED {"src": "NE_su00", "dst": "NE_hub", "bits": 1207, "why": "no macro-free station chain with 15 stations (hop<= 364)", "chains": [["NE_su00", "NE_su01", "NE_hub"], ["NE_su00", "NE_b001", "NE_b010", "NE_b000", "NE_hub"]]}
+FAILED {"src": "NE_su20", "dst": "NE_hub", "bits": 1207, "why": "no free window NE_su21|NE_hub", "chains": [["NE_su20", "NE_su21", "NE_hub"]]}
