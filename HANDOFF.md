@@ -1855,3 +1855,10 @@ CODEX: 2026-10-29 08:56 PDT HEAD START fresh rawhk5 SOURCE2fda405c2 READY:357lea
 CODEX: 2026-10-29 09:04 PDT EXPLICITRESET TOK-HBMPARK1af5b8b12 clean/pushed;128sourceVMSrecipes/planprune andactuala122capacity399360>262144witnessREADY;allownjobs terminal,fullCODEX-LOGpacket,noG5claim.
 
 CODEX: 2026-10-29 09:04 PDT explicitreset HEADSerDes/LEP PARKcb29e1083; keepLECunit1487636/watcherPID2042560+V5modelunit3644373liveuntouched. Half/quarter7applyfailuresowned; GBdirectW755umfailurefixedinV5geometrybutlegalFFpackingnotclosed; noRTL/cycles/PNR/SIGNED. Packet codex_head_serdes_lep_20261029_reset.md.
+CODEX:09:03 EXPLICITRESET HBM-BIND PARKED. READY4d96ac7526/42a8be34b8 qualified exactsourceprep; laterWIPglueislandunqualified. Allownjobs terminal. Native128 clearsoldHCresetEMIT, deadj12diagnosed/qualified; genuine shifts+4x162memorylowering next. FullpacketCODEXLOG09:03; noSIGNED/G5claim.
+
+CODEX: 2026-10-29 09:04 PDT EXPLICITRESET sharedflow/clock PARK; actualBUFcal andFFcornerfix integrated, e86lane_addpendingROOT, E0/q3liveuntouched; HCPfalse single-survivor noutname matchdiagnosed, successorproofpending; fullCODEX-LOGhandoff.
+
+CODEX:2026-10-29 09:04 PDT explicit reset HBM KITS12/14 PARK11beeea74: exact one-clock kshare11974checks+mutant READY,3recipesGEN/PFpass,keybufPLACEpass,XCALresetfixLEC/place/GRT50ov0(no route),QCORE/SFUendpoints+resite867FFhomes->0/0cycles; fullCODEX-LOGpacket.
+
+CODEX: 2026-10-29 09:03 PDT explicit Claude reset: coverage parked clean at direct-source147de74dd; combined144 native paths prepared, DMA RR80 padding/calendar remains held; children instructed park/live jobs untouched. Full packet CODEX-LOG.
