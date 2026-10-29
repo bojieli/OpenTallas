@@ -1,0 +1,10 @@
+ot-run: localhost      admits   727 GB (avail 856, reserve 0, fresh 23.7, peak 39.9, headroom 0, waiters 0/0 GB) load 67/112 running 30 disk 1275 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3205516-1793260172 after 1 s
+ot_hbm_su_pg_lanes4_core DEFAULT_GRAPH_IDENTICAL
+ot_hbm_su_pg_lanes4_core.a4.json ENABLED_ALAT4_ALL_LANES 1
+ot_hbm_su_pg_lane_exp_core DEFAULT_GRAPH_IDENTICAL
+ot_hbm_su_pg_lane_exp_core.a4.json ENABLED_ALAT4_ALL_LANES 1
+ot_hbm_su_pg_lane_full_core DEFAULT_GRAPH_IDENTICAL
+ot_hbm_su_pg_lane_full_core.a4.json ENABLED_ALAT4_ALL_LANES 1
+ot-run: RAN on localhost (unit oth-ubuntu-3205516-1793260172): exit 0

@@ -1,0 +1,650 @@
+{
+ "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+ "outline_um": [
+  760.32,
+  725.76
+ ],
+ "profile": {
+  "MLAT": 5,
+  "ALAT": 4,
+  "WCOPY": 1
+ },
+ "inventory": {
+  "macros": 24,
+  "master": "ot_sram_1r1w_128x256_m1_r2c2",
+  "readers": 6,
+  "banks": 4
+ },
+ "spacing_failures": [],
+ "read_return": [
+  {
+   "bank": 0,
+   "reader": 0,
+   "span_um": 726.924,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 363.462
+  },
+  {
+   "bank": 0,
+   "reader": 1,
+   "span_um": 711.66,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 355.83
+  },
+  {
+   "bank": 0,
+   "reader": 2,
+   "span_um": 700.332,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 350.166
+  },
+  {
+   "bank": 0,
+   "reader": 3,
+   "span_um": 672.492,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 336.246
+  },
+  {
+   "bank": 0,
+   "reader": 5,
+   "span_um": 691.212,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 345.606
+  },
+  {
+   "bank": 1,
+   "reader": 0,
+   "span_um": 777.852,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 388.926
+  },
+  {
+   "bank": 1,
+   "reader": 1,
+   "span_um": 666.636,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 333.318
+  },
+  {
+   "bank": 1,
+   "reader": 2,
+   "span_um": 798.588,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 399.294
+  },
+  {
+   "bank": 1,
+   "reader": 3,
+   "span_um": 783.324,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 391.662
+  },
+  {
+   "bank": 1,
+   "reader": 5,
+   "span_um": 470.604,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 235.302
+  },
+  {
+   "bank": 2,
+   "reader": 0,
+   "span_um": 447.3,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 223.65
+  },
+  {
+   "bank": 2,
+   "reader": 1,
+   "span_um": 260.196,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 130.098
+  },
+  {
+   "bank": 2,
+   "reader": 2,
+   "span_um": 378.324,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 189.162
+  },
+  {
+   "bank": 2,
+   "reader": 3,
+   "span_um": 343.812,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 171.906
+  },
+  {
+   "bank": 2,
+   "reader": 5,
+   "span_um": 397.116,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 198.558
+  },
+  {
+   "bank": 3,
+   "reader": 0,
+   "span_um": 521.412,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 260.706
+  },
+  {
+   "bank": 3,
+   "reader": 1,
+   "span_um": 438.708,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 219.354
+  },
+  {
+   "bank": 3,
+   "reader": 2,
+   "span_um": 776.436,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 388.218
+  },
+  {
+   "bank": 3,
+   "reader": 3,
+   "span_um": 686.004,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 343.002
+  },
+  {
+   "bank": 3,
+   "reader": 5,
+   "span_um": 807.612,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 403.806
+  }
+ ],
+ "max_read_hop_lower_bound_um": 403.806,
+ "write_relays": [
+  {
+   "name": "wdbank0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.wd_pin["
+   ],
+   "point_um": [
+    209.32,
+    149.32
+   ],
+   "box_um": [
+    199.32,
+    139.32,
+    219.32,
+    159.32
+   ],
+   "hop_pins_um": 267.3,
+   "hop_sinks_um": 386.9,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.wa_pin["
+   ],
+   "point_um": [
+    229.32,
+    169.32
+   ],
+   "box_um": [
+    223.32,
+    163.32,
+    235.32,
+    175.32
+   ],
+   "hop_pins_um": 269.4,
+   "hop_sinks_um": 386.9,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.w_pin$"
+   ],
+   "point_um": [
+    224.32,
+    159.32
+   ],
+   "box_um": [
+    220.32,
+    155.32,
+    228.32,
+    163.32
+   ],
+   "hop_pins_um": 374.2,
+   "hop_sinks_um": 391.3,
+   "pins": 1,
+   "sink_macros": 6
+  },
+  {
+   "name": "wdbank1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.wd_pin["
+   ],
+   "point_um": [
+    349.32,
+    264.32
+   ],
+   "box_um": [
+    339.32,
+    254.32,
+    359.32,
+    274.32
+   ],
+   "hop_pins_um": 287.9,
+   "hop_sinks_um": 251.8,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.wa_pin["
+   ],
+   "point_um": [
+    289.32,
+    179.32
+   ],
+   "box_um": [
+    283.32,
+    173.32,
+    295.32,
+    185.32
+   ],
+   "hop_pins_um": 326.5,
+   "hop_sinks_um": 326.3,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.w_pin$"
+   ],
+   "point_um": [
+    144.32,
+    259.32
+   ],
+   "box_um": [
+    140.32,
+    255.32,
+    148.32,
+    263.32
+   ],
+   "hop_pins_um": 392.8,
+   "hop_sinks_um": 391.3,
+   "pins": 1,
+   "sink_macros": 6
+  },
+  {
+   "name": "wdbank2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.wd_pin["
+   ],
+   "point_um": [
+    314.32,
+    264.32
+   ],
+   "box_um": [
+    304.32,
+    254.32,
+    324.32,
+    274.32
+   ],
+   "hop_pins_um": 368.6,
+   "hop_sinks_um": 372.8,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.wa_pin["
+   ],
+   "point_um": [
+    149.32,
+    284.32
+   ],
+   "box_um": [
+    143.32,
+    278.32,
+    155.32,
+    290.32
+   ],
+   "hop_pins_um": 301.2,
+   "hop_sinks_um": 310.0,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.w_pin$"
+   ],
+   "point_um": [
+    14.32,
+    364.32
+   ],
+   "box_um": [
+    10.32,
+    360.32,
+    18.32,
+    368.32
+   ],
+   "hop_pins_um": 366.3,
+   "hop_sinks_um": 365.0,
+   "pins": 1,
+   "sink_macros": 6
+  },
+  {
+   "name": "wdbank3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.wd_pin["
+   ],
+   "point_um": [
+    389.32,
+    239.32
+   ],
+   "box_um": [
+    379.32,
+    229.32,
+    399.32,
+    249.32
+   ],
+   "hop_pins_um": 314.2,
+   "hop_sinks_um": 364.5,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.wa_pin["
+   ],
+   "point_um": [
+    279.32,
+    284.32
+   ],
+   "box_um": [
+    273.32,
+    278.32,
+    285.32,
+    290.32
+   ],
+   "hop_pins_um": 395.9,
+   "hop_sinks_um": 399.5,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.w_pin$"
+   ],
+   "point_um": [
+    384.32,
+    204.32
+   ],
+   "box_um": [
+    380.32,
+    200.32,
+    388.32,
+    208.32
+   ],
+   "hop_pins_um": 389.9,
+   "hop_sinks_um": 394.5,
+   "pins": 1,
+   "sink_macros": 6
+  }
+ ],
+ "max_write_centre_hop_um": 399.5,
+ "drivers": [
+  {
+   "island": 0,
+   "original_centre_um": [
+    380.16,
+    362.88
+   ],
+   "driver_rect_um": [
+    379.08,
+    361.8,
+    381.24,
+    363.96
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 1,
+   "original_centre_um": [
+    95.04,
+    90.72
+   ],
+   "driver_rect_um": [
+    93.96,
+    89.64,
+    96.12,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 2,
+   "original_centre_um": [
+    95.04,
+    272.16
+   ],
+   "driver_rect_um": [
+    93.96,
+    271.08,
+    96.12,
+    273.24
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 3,
+   "original_centre_um": [
+    95.04,
+    453.6
+   ],
+   "driver_rect_um": [
+    93.96,
+    452.52,
+    96.12,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 4,
+   "original_centre_um": [
+    95.04,
+    635.04
+   ],
+   "driver_rect_um": [
+    93.96,
+    633.96,
+    96.12,
+    636.12
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 5,
+   "original_centre_um": [
+    285.12,
+    90.72
+   ],
+   "driver_rect_um": [
+    284.04,
+    89.64,
+    286.2,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 6,
+   "original_centre_um": [
+    285.12,
+    272.16
+   ],
+   "driver_rect_um": [
+    284.04,
+    271.08,
+    286.2,
+    273.24
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 7,
+   "original_centre_um": [
+    285.12,
+    453.6
+   ],
+   "driver_rect_um": [
+    284.04,
+    452.52,
+    286.2,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 8,
+   "original_centre_um": [
+    285.12,
+    635.04
+   ],
+   "driver_rect_um": [
+    284.04,
+    633.96,
+    286.2,
+    636.12
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 9,
+   "original_centre_um": [
+    475.2,
+    90.72
+   ],
+   "driver_rect_um": [
+    474.12,
+    89.64,
+    476.28,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 10,
+   "original_centre_um": [
+    475.2,
+    272.16
+   ],
+   "driver_rect_um": [
+    478.44,
+    271.08,
+    480.6,
+    273.24
+   ],
+   "detour_um": 4.32
+  },
+  {
+   "island": 11,
+   "original_centre_um": [
+    475.2,
+    453.6
+   ],
+   "driver_rect_um": [
+    474.12,
+    452.52,
+    476.28,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 12,
+   "original_centre_um": [
+    475.2,
+    635.04
+   ],
+   "driver_rect_um": [
+    474.12,
+    633.96,
+    476.28,
+    636.12
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 13,
+   "original_centre_um": [
+    665.28,
+    90.72
+   ],
+   "driver_rect_um": [
+    664.2,
+    89.64,
+    666.36,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 14,
+   "original_centre_um": [
+    665.28,
+    272.16
+   ],
+   "driver_rect_um": [
+    664.2,
+    271.08,
+    666.36,
+    273.24
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 15,
+   "original_centre_um": [
+    665.28,
+    453.6
+   ],
+   "driver_rect_um": [
+    664.2,
+    452.52,
+    666.36,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 16,
+   "original_centre_um": [
+    665.28,
+    635.04
+   ],
+   "driver_rect_um": [
+    664.2,
+    633.96,
+    666.36,
+    636.12
+   ],
+   "detour_um": 0.0
+  }
+ ],
+ "max_driver_detour_um": 4.32,
+ "clock_contract_candidate": "scalar clk_bank at current planned centre380.16,362.88, replacing76aliases; nonclockpins unchanged; die owner adoption pending",
+ "ft_pin_dx_um": 1.08,
+ "verdict": "PASS-ESTIMATE",
+ "limits": "Read value is lower bound from existing macro->read_dataFF->faceFF two hops, not actualplaced reach. Write guides use actual sourcepins, macrocentres and legal disjoint guide boxes; fullr2r census required afterplace. Clock parentisland metadata adoption pending."
+}
