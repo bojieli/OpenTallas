@@ -1,0 +1,811 @@
+{
+ "schema": "opentallas.hbm.keybuf_entry.v1",
+ "base_sha256": "1fde1fe671dedada9ae42cc363317e2fef008896bc4bd3f2b18301c4b1ecc996",
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s0__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): 12.8a outline centre on the 4.32 lattice",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s1__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s2__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s3__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s0__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s1__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s2__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_keybuf_0_s3__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s0__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s1__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s2__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s3__q0",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q0.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q0.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s0__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s0__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s1__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s1__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s2__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s2__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_keybuf_0_s3__q1",
+   "old_entry": {
+    "xy_um": [
+     120.936,
+     146.88
+    ],
+    "island_um": [
+     116.64,
+     142.56,
+     125.28,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q1.clk",
+    "source": "HBM-MU-QUAD-6/CLK plan clock entry (12.8a): sibling instance entry of the same module",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   },
+   "new_entry": {
+    "xy_um": [
+     207.384,
+     146.88
+    ],
+    "island_um": [
+     203.04,
+     142.56,
+     211.68,
+     151.2
+    ],
+    "port": "clk",
+    "merged_clock_ports": [],
+    "tap": "u_mu_keybuf_0_s3__q1.clk",
+    "source": "CODEX keybuf five-SRAM static column: E-channel entry, no latency/cycle change; die rebuild required",
+    "stack": [
+     "M9",
+     "M5"
+    ],
+    "latency_target_tt_ps": 250.0,
+    "latency_target_ff_ps": 202.5,
+    "module": "ot_hnx_idxn_keybuf_slice"
+   }
+  }
+ ],
+ "body_moves": 0,
+ "added_cycles": 0,
+ "die_rebuild_required": true,
+ "old_verdict": "FAIL root overlaps SRAM column",
+ "new_verdict": "PREP requires fresh kit geometry and die clock/rebuild"
+}

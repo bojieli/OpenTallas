@@ -1,0 +1,951 @@
+{
+ "schema": "opentallas.hbm.outline_variant_estimates.v1",
+ "basis": "Existing source/shape, parent-body non-overlap only. Unrouted estimates; no timing or cut-budget claim.",
+ "rows": [
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "variant": 1,
+   "size_um": [
+    293.76,
+    207.36
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sucore_Q__q0",
+     "fits": [
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1175.04,
+       838.08
+      ],
+      [
+       1175.04,
+       838.08
+      ]
+     ],
+     "old_origin": [
+      1244.16,
+      838.08
+     ],
+     "old_size": [
+      224.6400000000001,
+      207.36
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sucore_Q__q1",
+     "fits": [
+      [
+       4017.6,
+       1365.12
+      ],
+      [
+       4017.6,
+       1365.12
+      ],
+      [
+       3948.48,
+       1365.12
+      ],
+      [
+       3948.48,
+       1365.12
+      ]
+     ],
+     "old_origin": [
+      4017.6,
+      1365.12
+     ],
+     "old_size": [
+      224.64,
+      207.36
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sucore_Q__q0",
+     "fits": [
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1175.04,
+       838.08
+      ],
+      [
+       1175.04,
+       838.08
+      ]
+     ],
+     "old_origin": [
+      1244.16,
+      838.08
+     ],
+     "old_size": [
+      224.6400000000001,
+      207.36
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sucore_Q__q1",
+     "fits": [
+      [
+       4017.6,
+       1028.16
+      ],
+      [
+       4017.6,
+       1028.16
+      ],
+      [
+       3948.48,
+       1028.16
+      ],
+      [
+       3948.48,
+       1028.16
+      ]
+     ],
+     "old_origin": [
+      4017.6,
+      1028.16
+     ],
+     "old_size": [
+      224.64,
+      207.36
+     ]
+    }
+   ],
+   "added_cycles": 0,
+   "needs_new_clock_slice": true,
+   "all_instances_fit": true,
+   "status": "PARENT_SLOT_FEASIBLE"
+  },
+  {
+   "module": "ot_hbm_su_static_qcore_r13",
+   "variant": 2,
+   "size_um": [
+    224.64,
+    276.48
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sucore_Q__q0",
+     "fits": [
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1244.16,
+       768.96
+      ],
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1244.16,
+       768.96
+      ]
+     ],
+     "old_origin": [
+      1244.16,
+      838.08
+     ],
+     "old_size": [
+      224.6400000000001,
+      207.36
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sucore_Q__q1",
+     "fits": [
+      [
+       4017.6,
+       1365.12
+      ],
+      [
+       4017.6,
+       1365.12
+      ]
+     ],
+     "old_origin": [
+      4017.6,
+      1365.12
+     ],
+     "old_size": [
+      224.64,
+      207.36
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sucore_Q__q0",
+     "fits": [
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1244.16,
+       768.96
+      ],
+      [
+       1244.16,
+       838.08
+      ],
+      [
+       1244.16,
+       768.96
+      ]
+     ],
+     "old_origin": [
+      1244.16,
+      838.08
+     ],
+     "old_size": [
+      224.6400000000001,
+      207.36
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sucore_Q__q1",
+     "fits": [
+      [
+       4017.6,
+       959.04
+      ],
+      [
+       4017.6,
+       959.04
+      ]
+     ],
+     "old_origin": [
+      4017.6,
+      1028.16
+     ],
+     "old_size": [
+      224.64,
+      207.36
+     ]
+    }
+   ],
+   "added_cycles": 0,
+   "needs_new_clock_slice": true,
+   "all_instances_fit": true,
+   "status": "PARENT_SLOT_FEASIBLE"
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "variant": 1,
+   "size_um": [
+    362.88,
+    388.8
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_cxij_Q_q__q0",
+     "fits": [
+      [
+       43.2,
+       2583.36
+      ],
+      [
+       43.2,
+       2643.84
+      ]
+     ],
+     "old_origin": [
+      43.2,
+      2583.36
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_cxij_Q_q__q1",
+     "fits": [],
+     "old_origin": [
+      3991.68,
+      3006.72
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_cxij_Q_q__q0",
+     "fits": [
+      [
+       43.2,
+       2583.36
+      ],
+      [
+       43.2,
+       2643.84
+      ]
+     ],
+     "old_origin": [
+      43.2,
+      2583.36
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_cxij_Q_q__q1",
+     "fits": [],
+     "old_origin": [
+      3991.68,
+      2592.0
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    }
+   ],
+   "added_cycles": 0,
+   "needs_new_clock_slice": true,
+   "all_instances_fit": false,
+   "status": "PARENT_RELOT_REQUIRED"
+  },
+  {
+   "module": "ot_hbm_su_static_cxport_ij_q",
+   "variant": 2,
+   "size_um": [
+    380.16,
+    362.88
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_cxij_Q_q__q0",
+     "fits": [
+      [
+       43.2,
+       2583.36
+      ],
+      [
+       43.2,
+       2669.76
+      ]
+     ],
+     "old_origin": [
+      43.2,
+      2583.36
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_cxij_Q_q__q1",
+     "fits": [],
+     "old_origin": [
+      3991.68,
+      3006.72
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_cxij_Q_q__q0",
+     "fits": [
+      [
+       43.2,
+       2583.36
+      ],
+      [
+       43.2,
+       2669.76
+      ]
+     ],
+     "old_origin": [
+      43.2,
+      2583.36
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_cxij_Q_q__q1",
+     "fits": [],
+     "old_origin": [
+      3991.68,
+      2592.0
+     ],
+     "old_size": [
+      250.56,
+      449.28
+     ]
+    }
+   ],
+   "added_cycles": 0,
+   "needs_new_clock_slice": true,
+   "all_instances_fit": false,
+   "status": "PARENT_RELOT_REQUIRED"
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "variant": 1,
+   "size_um": [
+    345.6,
+    354.24
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sfus_Q__q0",
+     "fits": [
+      [
+       2514.24,
+       34.56
+      ],
+      [
+       2514.24,
+       8.64
+      ],
+      [
+       2505.6,
+       34.56
+      ],
+      [
+       2505.6,
+       8.64
+      ]
+     ],
+     "old_origin": [
+      2514.24,
+      34.56
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sfus_Q__q1",
+     "fits": [
+      [
+       5270.4,
+       25.92
+      ],
+      [
+       5270.4,
+       0.0
+      ],
+      [
+       5261.76,
+       25.92
+      ],
+      [
+       5261.76,
+       0.0
+      ]
+     ],
+     "old_origin": [
+      5270.4,
+      25.92
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sfus_Q__q0",
+     "fits": [
+      [
+       3395.52,
+       34.56
+      ],
+      [
+       3395.52,
+       8.64
+      ],
+      [
+       3386.88,
+       34.56
+      ],
+      [
+       3386.88,
+       8.64
+      ]
+     ],
+     "old_origin": [
+      3395.52,
+      34.56
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sfus_Q__q1",
+     "fits": [
+      [
+       5270.4,
+       665.28
+      ],
+      [
+       5270.4,
+       639.36
+      ],
+      [
+       5261.76,
+       665.28
+      ],
+      [
+       5261.76,
+       639.36
+      ]
+     ],
+     "old_origin": [
+      5270.4,
+      665.28
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    }
+   ],
+   "added_cycles": 0,
+   "needs_new_clock_slice": true,
+   "all_instances_fit": true,
+   "status": "PARENT_SLOT_FEASIBLE",
+   "macro_grid": {
+    "columns": 3,
+    "rows": 6,
+    "raw_gap_um": 10.8,
+    "macros": [
+     {
+      "name": "u_fcore.g_bank[0].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       15.12,
+       109.944,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[10].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       15.12,
+       215.568,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[11].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       15.12,
+       321.192,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[12].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       66.984,
+       109.944,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[13].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       66.984,
+       215.568,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[14].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       66.984,
+       321.192,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[15].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       118.848,
+       109.944,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[1].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       118.848,
+       215.568,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[2].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       118.848,
+       321.192,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[3].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       170.712,
+       109.944,
+       211.776
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[4].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       170.712,
+       215.568,
+       211.776
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[5].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       170.712,
+       321.192,
+       211.776
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[6].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       222.576,
+       109.944,
+       263.64
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[7].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       222.576,
+       215.568,
+       263.64
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[8].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       222.576,
+       321.192,
+       263.64
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[9].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       274.44,
+       109.944,
+       315.504
+      ]
+     }
+    ],
+    "fits": true,
+    "macro_fill": 0.5349921652421651
+   }
+  },
+  {
+   "module": "ot_hbm_su_static_sfustore_hw",
+   "variant": 2,
+   "size_um": [
+    449.28,
+    259.2
+   ],
+   "instances": [
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sfus_Q__q0",
+     "fits": [
+      [
+       2514.24,
+       34.56
+      ],
+      [
+       2514.24,
+       103.68
+      ]
+     ],
+     "old_origin": [
+      2514.24,
+      34.56
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    },
+    {
+     "type": "q_hub_nw",
+     "inst": "u_sfus_Q__q1",
+     "fits": [],
+     "old_origin": [
+      5270.4,
+      25.92
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sfus_Q__q0",
+     "fits": [],
+     "old_origin": [
+      3395.52,
+      34.56
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    },
+    {
+     "type": "q_hub_ne",
+     "inst": "u_sfus_Q__q1",
+     "fits": [],
+     "old_origin": [
+      5270.4,
+      665.28
+     ],
+     "old_size": [
+      336.96,
+      328.32
+     ]
+    }
+   ],
+   "added_cycles": 0,
+   "needs_new_clock_slice": true,
+   "all_instances_fit": false,
+   "status": "PARENT_RELOT_REQUIRED",
+   "macro_grid": {
+    "columns": 4,
+    "rows": 4,
+    "raw_gap_um": 10.8,
+    "macros": [
+     {
+      "name": "u_fcore.g_bank[0].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       15.12,
+       109.944,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[10].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       15.12,
+       215.568,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[11].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       15.12,
+       321.192,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[12].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       331.992,
+       15.12,
+       426.816,
+       56.184
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[13].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       66.984,
+       109.944,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[14].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       66.984,
+       215.568,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[15].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       66.984,
+       321.192,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[1].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       331.992,
+       66.984,
+       426.816,
+       108.048
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[2].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       118.848,
+       109.944,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[3].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       118.848,
+       215.568,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[4].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       118.848,
+       321.192,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[5].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       331.992,
+       118.848,
+       426.816,
+       159.912
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[6].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       15.12,
+       170.712,
+       109.944,
+       211.776
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[7].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       120.744,
+       170.712,
+       215.568,
+       211.776
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[8].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       226.368,
+       170.712,
+       321.192,
+       211.776
+      ]
+     },
+     {
+      "name": "u_fcore.g_bank[9].u_bank.u_data.g_read[0].u_m",
+      "rect_um": [
+       331.992,
+       170.712,
+       426.816,
+       211.776
+      ]
+     }
+    ],
+    "fits": true,
+    "macro_fill": 0.5642919389978214
+   }
+  }
+ ],
+ "programme_split_estimate": {
+  "macro_count": 100,
+  "macro_area_um2": 389385.2736000003,
+  "current_outline_um": [
+   939.6,
+   760.32
+  ],
+  "macro_only_area_at_60percent": 648975.4560000006,
+  "proposal": "Five physical column slices plus control; price/register all column-to-control cuts before RTL split. Existing single parent is not routed."
+ }
+}
