@@ -17,7 +17,7 @@ def main():
   if q['type'] in ('hd_spn','hd_spn_end'):
    p['die'].setdefault('channels',[]).extend(spine_channels(q['name'],q['origin_um'][0]-X0,q['origin_um'][1]))
  (inp/'plan.json').write_text(json.dumps(p,indent=1));shutil.copytree(d/'core_pins',inp/'core_pins')
- mapping=json.load(open(d/'spine_regions.json'))['part_region'];G=L.region_geom(p,mapping);adj=L.part_adjacency(p);cross=L.crossings(p,mapping,G,adj);E=L.region_graph(p,mapping,adj,cross)
+ mapping=json.load(open(d/'spine_regions.json'))['part_region'];D=L.load_plan(p);G=L.region_geom(D,mapping);adj=L.part_adjacency(D);cross=L.crossings(D,mapping,G,adj);E=L.region_graph(D,mapping,adj,cross)
  # Only existing physical neighbour graph edges or declared data crossings;
  # disconnected regions are explicitly recorded by the generic proposer.
  f=L.feed_tree(G,E,cross,1.0,'fish');feed={'root':f['root'],'parent':f['parent'],'tap':{f'{x}->{y}':v for (x,y),v in f['tap'].items()},'joined':f['joined'],'source':'generic maximum-traffic physical neighbour/data graph'}
@@ -26,7 +26,7 @@ def main():
 
 327 logical regions, 351 physical parts. Feed root {f['root']}; 326 neighbour-forwarded edges. Explicit disconnected-component joins: {len(f['joined'])}, {f['joined']}.
 
-The previous traveling local rib produced a measured 949.7 ps within-region spread. Local H-tree bisection to 100 um makes the final unmatched leg at most 100 um Manhattan; at the measured representative 430 ps/mm clock-wire slope this is approximately 43 ps before cell/load/site variation. All retained bisection paths have equal geometric depth; no timing trim or pads are introduced. Actual legal sites and GRT determine the final spread. Singleton regions retain their one local path. Shims stay in their six original spine regions; independent N3 transit/turn have separate fresh feeds. All CA origins/K and START endpoints require fresh measured proof.
+The previous traveling local rib produced a measured 949.7 ps within-region spread. Local H-tree bisection to 100 um makes the final unmatched leg at most 100 um Manhattan; at the assumed illustrative 430 ps/mm clock-wire slope this is approximately 43 ps before cell/load/site variation. All retained bisection paths have equal geometric depth; no timing trim or pads are introduced. Actual legal sites and GRT determine the final spread. Singleton regions retain their one local path. Shims stay in their six original spine regions; independent N3 transit/turn have separate fresh feeds. All CA origins/K and START endpoints require fresh measured proof.
 
 First trial uses inv2, NDR, 200 um repeaters, actual edge reach at most 405 um; two-corner TT/FF GRT after personal image review. No SS gate or release claim.
 ''')
