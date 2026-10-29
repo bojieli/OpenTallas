@@ -20,7 +20,7 @@ def convert(ocv,table,mapping):
                 continue
             pr=ports[r['port']]
             assert (r['src'],r['dst'])==(pr['src'],pr['dst']),('stale endpoints',r['port'])
-            nr=dict(r,physical_src=r['src'],physical_dst=r['dst'],src=mapping[r['src']],dst=mapping[r['dst']])
+            nr=dict(r,src_part=r['src'],dst_part=r['dst'],physical_src=r['src'],physical_dst=r['dst'],src=mapping[r['src']],dst=mapping[r['dst']])
             assert nr['src']!=nr['dst']
             rows.append(nr)
         assert {r['port'] for r in rows}==set(ports),('missing fresh crossing rows',key)

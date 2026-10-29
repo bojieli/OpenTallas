@@ -21,6 +21,9 @@ def main():
  step('physical_ocv',[H/'landed_phase_ocv.py',plan,run,'--tools',T,'--clock-cell','inv2','--core-lat','TT=450,FF=380','--port-taps','--out',out/'physical_ocv.json'])
  step('region_ocv',[H/'head_strip_ocv_regions.py',out/'physical_ocv.json','--table',D/'region_plan/regions_map.json','--regions',D/'spine_regions.json','--out',out/'region_ocv.json'])
  step('plan',[T/'count_align_plan.py',out/'region_ocv.json','--corner','TT_droop-regions_corelat450,FF_droop-regions_corelat380','--sta-proof',out/'proof','--sta-plan',plan,'--sta-clock-cal','spice_edge','--sta-cppr-lca','--sta-clock-ocv','table','--sta-clock-droop','shared','--sta-droop-regions',out/'proof/droop_regions.json','--sta-core-latency-ff','380','--sta-ca-ring',D/'clock_profile/ca_ring_hd_tile_dh20.json','--sta-clock-cell','inv2','--start-tree','clock','--start-clean','width','--mc-chips','2000','--out',out/'plan.json'])
+ result=json.load(open(out/'plan.json'))['summary'];iv=result['sta_interval']
+ assert not any(iv.get(k,0) for k in ('missing','unbound','rows_without_measured_fall')),('incomplete physical STA hull',iv)
+ assert result['fail']==0 and result['below_100ps']==0,('CA design margin failure',result)
  step('bind',[T/'count_align_bind.py',out/'plan.json','--parts','table','--table',D/'region_plan/regions_map.json','--table-out',out/'regions_ca.json','--out',out/'bind.json','--strap-form','--plan-die',plan,'--straps-out',out/'straps.json'])
  step('emit_start',[T/'start_stage_emit.py','emit',out/'bind.json',out/'proof','--ctree',run/'clk','--plan',plan,'--out',out/'start_stages'])
  (out/'scope.json').write_text(json.dumps({'source':'fresh current clock GRT; no old K/origins','core_budget_ps':{'TT':450,'FF':380},'hd_tile_ring_clock':'actual ca_ring_hd_tile_dh20 per-type profile','stage_clock_scope':'initial estimates; emitted START flops require next measured GRT before freeze','release':'NOT_CLAIMED'},indent=1))
