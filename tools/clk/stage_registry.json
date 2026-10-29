@@ -172,6 +172,48 @@
     -5e-06
    ],
    "coeff_sha": "a7f12421ad1be3f1"
+  },
+  {
+   "id": "inv2_2w2s_s81_bk_coupon_late",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "S81 bk_sel 51-tap native coupon, actual 2W2S GRT (codex/dme-actual-1029)"
+   },
+   "basis": "LOCAL 51-tap S81 bk_sel coupon late stage/tap fit (codex/dme-actual-1029@51c38ef00); tap fit short stubs 0.036..4.898 um only, NO global/long-tap qualification. Used by S81 FEED-fix geometry03 (codex/clock-takeover-1029 fe1d0cde0); a per-stack routed-leg refit must replace it before any gate number.",
+   "source": {
+    "file": "results/clk_tool_5_1029/bk_stage_cal_2w2s_late.json",
+    "sha256": "18fdec8012e96d70e083302335c8c5b3397a7fe4447477ace1e3ad753dae6062"
+   },
+   "leg": [
+    15.578378252380068,
+    0.10963822853532626,
+    0.0001435455458881213,
+    11.003079599289222
+   ],
+   "tap": [
+    0.028407301153837154,
+    0.0
+   ],
+   "leg_FF": [
+    13.34264972728355,
+    0.09563808217959914,
+    0.0001309540696910333,
+    7.705123568656874
+   ],
+   "tap_FF": [
+    0.02839839954669633,
+    0.0
+   ],
+   "coeff_sha": "b65efad7332cf05c"
   }
  ]
 }

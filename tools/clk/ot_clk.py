@@ -269,6 +269,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None):
             a += ["--region-dme-early-merge-only", ",".join(mo)]
         if stage_cal_path:
             a += ["--region-dme-stage-cal", str(stage_cal_path)]
+        if reg.get("actual_max") is not None:   # coherent physical DME legs: one snapped legal chain prices + emits each leg
+            a += ["--region-dme-actual-max", _fmt(reg["actual_max"])]
         w = workers if workers is not None else reg.get("workers")
         if w and int(w) > 1:
             a += ["--region-dme-workers", str(int(w))]

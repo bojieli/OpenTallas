@@ -1,0 +1,46 @@
+# ot-clk config: S81 global clock with the shared FEED reach repair + feed-delay balance (CLK-TOOL-4 / Codex
+# codex/clock-takeover-1029 fe1d0cde0, on main as f805eae15 + efe6eed63 + 43e5e481c): the exact recipe of Codex
+# geometry03 (epyc2 codex-clock-takeover-1029/src03/geometry_feed03.py, a direct die_trial.clock_kit driver),
+# moved onto the one die clock path (OWNER 12.17).  Stage model = registry inv2_2w2s_s81_bk_coupon_late (LOCAL 51-tap
+# coupon fit, not globally qualified).  Inputs = hard links of src03 inputs in CLK-TOOL-5's own run dir.
+schema: ot_clk_config/1
+die: s81
+event:
+  name: feed03
+  host: epyc2
+  source: Codex geometry03 unit oth-ubuntu-1603554 10-29 03:53, source fe1d0cde0, reach PASS 389.988 um / 0 over 405
+  reference_clock_dir: /srv/opentallas-scratch2/claude/codex-clock-takeover-1029/src03/geometry_feed03/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/clk-tool-5/s81_feed03/in/plan_s13r2.json
+  region_map: /srv/opentallas-scratch2/claude/clk-tool-5/s81_feed03/in/map398.json
+  feed: /srv/opentallas-scratch2/claude/clk-tool-5/s81_feed03/in/feed_sb6.json
+stack:
+  cell: inv2
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_reach_max: 400
+  rep_actual_max: 405
+  opts:
+    dme_feed_centroid: 1
+region:
+  form: dme
+  workers: 24
+  dme_mode: delay
+  actual_max: 405
+  only:
+    all_from_map: true
+  early:
+    tt: 0.9324
+    mode: merge
+stage_model:
+  entry: inv2_2w2s_s81_bk_coupon_late
+  corners: [TT, FF]
+  edge: rise
+residual:
+  snake: all
+  cell_paths: true

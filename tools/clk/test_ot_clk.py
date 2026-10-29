@@ -349,3 +349,22 @@ def test_replay_compare_only_does_not_run_die_trial(tmp_path, monkeypatch):
     monkeypatch.setattr(O.subprocess, "call", lambda *a, **k: pytest.fail("die_trial must not run"))
     assert O.main(["replay", str(HERE / "configs" / "qc_trial25.yaml"), "--out", str(tmp_path / "o"),
                    "--compare-only"]) == 2          # no kit/clock dir -> refused, nothing run
+
+
+def test_region_actual_max_maps_to_die_trial_flag_and_default_off():
+    c = cfg("s81_go16")
+    c["region"]["only"] = None
+    assert "--region-dme-actual-max" not in O.kit_argv(c, "OUT")
+    c["region"]["actual_max"] = 405.0
+    assert flags(O.kit_argv(c, "OUT"))["--region-dme-actual-max"] == "405"
+
+
+def test_s81_feed03_config_carries_the_geometry03_recipe():
+    c = cfg("s81_feed03")
+    ok, _, _ = O.stage_check(c, reg())
+    assert ok
+    c["region"]["only"] = None                       # region map lives on the fleet host
+    f = flags(O.kit_argv(c, "OUT"))
+    assert f["--rep-reach-max"] == "400" and f["--rep-actual-max"] == "405" and f["--region-dme-actual-max"] == "405"
+    assert f["--region-dme-early"] == "0.9324" and "--region-dme-early-ff" not in f
+    assert f["--region-dme-early-mode"] == "merge" and f["--clock-cell"] == "inv2" and f["--region-dme-snake"] == "all"

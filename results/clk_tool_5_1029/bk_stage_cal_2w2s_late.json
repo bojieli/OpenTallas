@@ -1,0 +1,40 @@
+{
+  "scope": "local51tap actual2W2S late stage/tap fit, no global qualification",
+  "fit_source": "bk_coupon_fit.json",
+  "leg": [
+    15.578378252380068,
+    0.10963822853532626,
+    0.0001435455458881213,
+    11.003079599289222
+  ],
+  "tap": [
+    0.028407301153837154,
+    0.0
+  ],
+  "TT_tap_fit": {
+    "scope": "NNLS local short-stub only, no long-tap extrapolation claim",
+    "rms_ps": 0.11020352975253374,
+    "max_abs_ps": 0.7416609792039126,
+    "samples": 51,
+    "min_length_um": 0.03599999999642023,
+    "max_length_um": 4.898000000001048
+  },
+  "leg_FF": [
+    13.34264972728355,
+    0.09563808217959914,
+    0.0001309540696910333,
+    7.705123568656874
+  ],
+  "tap_FF": [
+    0.02839839954669633,
+    0.0
+  ],
+  "FF_tap_fit": {
+    "scope": "NNLS local short-stub only, no long-tap extrapolation claim",
+    "rms_ps": 0.11017043620252923,
+    "max_abs_ps": 0.7414382654913599,
+    "samples": 51,
+    "min_length_um": 0.03599999999642023,
+    "max_length_um": 4.898000000001048
+  }
+}
