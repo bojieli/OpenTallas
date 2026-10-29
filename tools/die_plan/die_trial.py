@@ -963,7 +963,7 @@ def reach_balance(nodes, site, rep_um, even):
                 cost = cur.get(i, 0.) + add.get(i, 0.)
                 if i in cur:
                     pa, q = (p["x"], p["y"]), (nd["x"], nd["y"])
-                    r = snake_leg(site, pa, q, cost + owe, rep_um)
+                    r = snake_leg(site, pa, q, cost + owe, rep_um, plain_ps=cost)
                     if r is not None and (even and (len(r[0]) + 1) % 2 or
                             max(chain_spans([pa]+list(r[0])+[q])) > REP_REACH_MAX_UM + 1e-6):
                         r = None
@@ -1824,7 +1824,7 @@ def _snake_pts(pa, q, u, h, rep_um, shape="dogleg"):
     return pts
 
 
-def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08):
+def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08, plain_ps=None):
     """DIE-QC-9 opt-in (--region-dme-snake, COORD 10-28 ruling: standard zero-skew DME wire elongation, plan-computed,
     part of the tree): the buffer chain pa -> q whose chain_ps is closest to target_ps (> leg_ps of the plain leg).
     Shapes (_snake_pts) dogleg / hairpin x the 4 axis directions; h by bisection on the ideal chain, then a local
@@ -1832,7 +1832,7 @@ def snake_leg(site, pa, q, target_ps, rep_um, h_max=3000.0, step=1.08):
     reported delay is that of the placed buffers).  Kept only if it beats the plain leg.  Ties: least snap distance,
     then least wire.  -> (repeater points [excluding pa and q], chain ps, added wire um over the plain leg) or None"""
     L0 = _man(pa, q)
-    plain = placed_leg_ps(site, pa, q, rep_um)
+    plain = placed_leg_ps(site, pa, q, rep_um) if plain_ps is None else plain_ps
     best = None
     for shape in ("dogleg", "hairpin"):
         for u in ((1, 0), (-1, 0), (0, 1), (0, -1)):
