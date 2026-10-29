@@ -562,3 +562,19 @@ def test_shared_tap_clear_equals_the_street_body_fast_tap_clear():
         assert got == ref, (t, x, y, taken, strict)
         n += ref is not None and ref != (x, y)
     assert n > 50          # most cases actually move the tap
+
+
+# ------------------------------------------------------------------------------- CLK-TOOL-8: per-stage edge balance
+def test_edge_balance_key_maps_to_die_trial_flag_default_off():
+    c = cfg("hbm")
+    assert "--clock-edge-alt" not in O.kit_argv(c, "OUT")
+    c["stack"]["edge_balance"] = "none"
+    assert "--clock-edge-alt" not in O.kit_argv(c, "OUT")
+    c["stack"].update(cell="inv2", edge_balance="dme_alt")
+    assert flags(O.kit_argv(c, "OUT"))["--clock-edge-alt"] is True
+    c["stack"]["cell"] = "inv"
+    with pytest.raises(O.ConfigError):
+        O.kit_argv(c, "OUT")
+    c["stack"].update(cell="inv2", edge_balance="tree")
+    with pytest.raises(O.ConfigError):
+        O.kit_argv(c, "OUT")
