@@ -1,0 +1,1100 @@
+{
+ "odb": "/r/native_bound/native_source.odb",
+ "insts": 15456,
+ "block_insts": 160,
+ "std_cells": 15296,
+ "counts": {
+  "clock_cells": 15296,
+  "clock_hit_any_obs": 14634,
+  "clock_hit_M1_obs": 14634
+ },
+ "obs_hits_by_layer": {
+  "clock:M3": 14634,
+  "clock:M1": 14634,
+  "clock:M2": 14634
+ },
+ "hard_core_hits": {},
+ "hard_rects": 1628,
+ "bad_transform": 0,
+ "block_place_sha": "6f86acff31cd2330a66b1073077ab26f80191311dfb7ab8fb9ab0b3077177a91",
+ "clock_place_sha": "9ef93d9f6a570b30faf673ae870915220d51071128e4286cd4bbbd73bd3c0362",
+ "provider_place_sha": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+ "block_obstructions": {
+  "M8": 20496,
+  "M9": 7441,
+  "M7": 3908
+ },
+ "nets": 185838,
+ "masters": {
+  "kv3_hg_part": {
+   "signal_pin_shapes": 7432,
+   "signal_pin_sha": "098c61fb8cbc25d93cda88f8657ba5fbcc1a9f076899b85bb611d1b6f8fb0389",
+   "pg_pin_shapes": {
+    "VDD": 169,
+    "VSS": 169
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 883
+  },
+  "kv3_hg_v1_part": {
+   "signal_pin_shapes": 9829,
+   "signal_pin_sha": "c37f4dda16e02acc6de5f6f543b1f20d3196df20fd698adbc56ff31efb2b0881",
+   "pg_pin_shapes": {
+    "VDD": 170,
+    "VSS": 170
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 907
+  },
+  "kv3_hg_v1p2": {
+   "signal_pin_shapes": 9839,
+   "signal_pin_sha": "dd7fb8e7ab81cd1bdb5352788a54ee7ee62772243ce98a37db9c79eaadf7155d",
+   "pg_pin_shapes": {
+    "VDD": 169,
+    "VSS": 169
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 850
+  },
+  "kv3_hg_v1p3": {
+   "signal_pin_shapes": 9849,
+   "signal_pin_sha": "53c1ae9368428d90083bf285ad4af30e4c22d8ae42483c939741b54fb13e5545",
+   "pg_pin_shapes": {
+    "VDD": 172,
+    "VSS": 173
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 1078
+  },
+  "kv3_hg_v1p4": {
+   "signal_pin_shapes": 9859,
+   "signal_pin_sha": "3f40a2c7b7bb1655768944eabd8cb03a948c5be13f0d182ff2914947cd938504",
+   "pg_pin_shapes": {
+    "VDD": 169,
+    "VSS": 170
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 841
+  },
+  "kv3_hg_v1p5": {
+   "signal_pin_shapes": 9871,
+   "signal_pin_sha": "f8b524a9be23b7100ddb89a2d6b99d1556913b75b0356efaaaf94b48eb12cb84",
+   "pg_pin_shapes": {
+    "VDD": 169,
+    "VSS": 169
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 922
+  },
+  "kv3_hg_v1p6": {
+   "signal_pin_shapes": 9881,
+   "signal_pin_sha": "fa7b261c4a5dcbba6344913b2cd6416b28185020edfdc65c822812dff947e0f2",
+   "pg_pin_shapes": {
+    "VDD": 170,
+    "VSS": 170
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 868
+  },
+  "kv3_hg_v3_part": {
+   "signal_pin_shapes": 8745,
+   "signal_pin_sha": "29fa0b82768a07e9c78483e50e6de5571bd9be5062d6b5319a73b07b56933fd4",
+   "pg_pin_shapes": {
+    "VDD": 169,
+    "VSS": 171
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 889
+  },
+  "kv3_hgi_v3_part": {
+   "signal_pin_shapes": 9014,
+   "signal_pin_sha": "6fb99d3a54c23aa2598229e585cd7f51d47a3117804b44ef6efdaa16b2f897f5",
+   "pg_pin_shapes": {
+    "VDD": 158,
+    "VSS": 158
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 329
+  },
+  "kv3_hgi_v4_part": {
+   "signal_pin_shapes": 8914,
+   "signal_pin_sha": "e27ce47e560602c88e1b314ecbb50d33eaa392c9568d4ef50e3e757cdece90ac",
+   "pg_pin_shapes": {
+    "VDD": 160,
+    "VSS": 160
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 389
+  },
+  "kv3_hgi_v5_part": {
+   "signal_pin_shapes": 9431,
+   "signal_pin_sha": "2dfc16e4238b312f9ae9442709afb0f71b63e441041ffe2b38d6c32e2e82323c",
+   "pg_pin_shapes": {
+    "VDD": 158,
+    "VSS": 158
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 311
+  },
+  "kv3_hgi_part": {
+   "signal_pin_shapes": 3938,
+   "signal_pin_sha": "87458debb8d62ce9a12641ac1d884b3c7894de8049faebe8f2b2851c95eb1be5",
+   "pg_pin_shapes": {
+    "VDD": 167,
+    "VSS": 167
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 512
+  },
+  "kv3_hgi_v1__cl42bc8b12": {
+   "signal_pin_shapes": 3840,
+   "signal_pin_sha": "add572d11aaf4448cc16344fda8ac31fd59c70e0373ac2f2cdec50e8e1afa1be",
+   "pg_pin_shapes": {
+    "VDD": 160,
+    "VSS": 160
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 359
+  },
+  "kv3_hgi_v2__cl2862d491": {
+   "signal_pin_shapes": 4357,
+   "signal_pin_sha": "57258a442528330d1f95ddecea72dabe50b0a8c6cf8a62d43b67b99757d13c8c",
+   "pg_pin_shapes": {
+    "VDD": 158,
+    "VSS": 158
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 311
+  },
+  "kv3_hgi_v6_part": {
+   "signal_pin_shapes": 10929,
+   "signal_pin_sha": "9429daff3c7c07c550d2222b2d0aefc10b8816842b954851780ab08a0c97d57c",
+   "pg_pin_shapes": {
+    "VDD": 157,
+    "VSS": 157
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 329
+  },
+  "kv3_hgi_v7_part": {
+   "signal_pin_shapes": 10829,
+   "signal_pin_sha": "5809543801a281c187a3314de831adae7d933cd25652f07f2ec3bf13429671ed",
+   "pg_pin_shapes": {
+    "VDD": 159,
+    "VSS": 159
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 371
+  },
+  "kv3_hgi_v8_part": {
+   "signal_pin_shapes": 12392,
+   "signal_pin_sha": "1b87b113b8ab58eccc1bc5d1e7d0c35bed5f640fc1bd80c4c63800f48db362eb",
+   "pg_pin_shapes": {
+    "VDD": 158,
+    "VSS": 158
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 314
+  },
+  "kv3_hgi_v1__cl141fc26e": {
+   "signal_pin_shapes": 3841,
+   "signal_pin_sha": "66d6e58c94cb21e17efa5839617e0fe2d174eb118833acc992d2cb37f141bd14",
+   "pg_pin_shapes": {
+    "VDD": 159,
+    "VSS": 159
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 371
+  },
+  "kv3_hgi_v2__cle0015330": {
+   "signal_pin_shapes": 4358,
+   "signal_pin_sha": "5ac192ee010d8a7a21729d22fad4992b8e77fe91704a890d2cb364be7f685ff5",
+   "pg_pin_shapes": {
+    "VDD": 157,
+    "VSS": 157
+   },
+   "size": [
+    1278720,
+    1520640
+   ],
+   "obs": 302
+  },
+  "kv3_hroot_part": {
+   "signal_pin_shapes": 4344,
+   "signal_pin_sha": "83d1159310f65ff6da3022ed9971f995335f80d9c97a1fdd1259fe5fbba4c271",
+   "pg_pin_shapes": {
+    "VDD": 230,
+    "VSS": 231
+   },
+   "size": [
+    1900800,
+    838080
+   ],
+   "obs": 477
+  },
+  "kv3_hub_C_part": {
+   "signal_pin_shapes": 17146,
+   "signal_pin_sha": "fbca371d0fbd6c523e118c9286023d8eafaa247b7ff1250a8f2b8689621f24cd",
+   "pg_pin_shapes": {
+    "VDD": 264,
+    "VSS": 264
+   },
+   "size": [
+    2160000,
+    1676160
+   ],
+   "obs": 583
+  },
+  "kv3_hub_Ei_part": {
+   "signal_pin_shapes": 14693,
+   "signal_pin_sha": "6daa7c3a667f6deff138e9cbd272c6bf9fef33ef323715ba64cbd5207bd8bae3",
+   "pg_pin_shapes": {
+    "VDD": 159,
+    "VSS": 159
+   },
+   "size": [
+    1278720,
+    1676160
+   ],
+   "obs": 228
+  },
+  "kv3_hub_Eo_part": {
+   "signal_pin_shapes": 11943,
+   "signal_pin_sha": "e210c025e4fbf68c34e1bf6720e6318a1b370c39dbb9ba7f9c56b549e0cb6310",
+   "pg_pin_shapes": {
+    "VDD": 163,
+    "VSS": 162
+   },
+   "size": [
+    1278720,
+    1676160
+   ],
+   "obs": 310
+  },
+  "kv3_hub_Wi_part": {
+   "signal_pin_shapes": 15567,
+   "signal_pin_sha": "48a4f1fbb8308ee7916bd0afae7f7fa5cd2ac0d096fcc187bc4c7e212bb3bdb4",
+   "pg_pin_shapes": {
+    "VDD": 156,
+    "VSS": 156
+   },
+   "size": [
+    1278720,
+    1676160
+   ],
+   "obs": 366
+  },
+  "kv3_hub_Wo_part": {
+   "signal_pin_shapes": 11943,
+   "signal_pin_sha": "31aae63b1866cc3118e7013f9e6b3c84f5fcb55472131218ea5d8797db6a8bf9",
+   "pg_pin_shapes": {
+    "VDD": 166,
+    "VSS": 166
+   },
+   "size": [
+    1278720,
+    1676160
+   ],
+   "obs": 376
+  },
+  "kv3_io_cor_v1_part": {
+   "signal_pin_shapes": 6139,
+   "signal_pin_sha": "dbc1dea3dc0872d96f0f66348c53702b2f9537bc76ab8906ada8f4c3d49951a7",
+   "pg_pin_shapes": {
+    "VDD": 154,
+    "VSS": 155
+   },
+   "size": [
+    1278720,
+    1036800
+   ],
+   "obs": 117
+  },
+  "kv3_io_ft_v1_part": {
+   "signal_pin_shapes": 2113,
+   "signal_pin_sha": "2073f312b5fd9b89de5d98d936fce554f3cc9b6389bab721f446b86d83e6ead5",
+   "pg_pin_shapes": {
+    "VDD": 155,
+    "VSS": 154
+   },
+   "size": [
+    1278720,
+    1036800
+   ],
+   "obs": 135
+  },
+  "kv3_io_ft_part": {
+   "signal_pin_shapes": 2117,
+   "signal_pin_sha": "17e8c7adc2fe944e7357610521efe8edf1d6be137f15c83b84bdde96a9bd50b4",
+   "pg_pin_shapes": {
+    "VDD": 155,
+    "VSS": 156
+   },
+   "size": [
+    1278720,
+    1036800
+   ],
+   "obs": 144
+  },
+  "kv3_io_cor_part": {
+   "signal_pin_shapes": 7002,
+   "signal_pin_sha": "fb1a2ce2dce51edeec2ffb2d91dfa5e1b2bb9903b7321ad3dce1b40c2c09f4e0",
+   "pg_pin_shapes": {
+    "VDD": 151,
+    "VSS": 151
+   },
+   "size": [
+    1278720,
+    1036800
+   ],
+   "obs": 69
+  },
+  "kv3_pc__cl5a95b461": {
+   "signal_pin_shapes": 6845,
+   "signal_pin_sha": "c93e5a35f785604ec3d22a97c936305ac4779e28db9968155a6c30d18b2e5b33",
+   "pg_pin_shapes": {
+    "VDD": 129,
+    "VSS": 130
+   },
+   "size": [
+    1036800,
+    1520640
+   ],
+   "obs": 554
+  },
+  "kv3_pc_v1__cl23f6a148": {
+   "signal_pin_shapes": 8982,
+   "signal_pin_sha": "89b5a46e1d94c76167fad2ce42e943ecc7f93ee39c075369e749605cad87b71f",
+   "pg_pin_shapes": {
+    "VDD": 139,
+    "VSS": 140
+   },
+   "size": [
+    1036800,
+    1520640
+   ],
+   "obs": 950
+  },
+  "kv3_pc_v1__cl7f648944": {
+   "signal_pin_shapes": 8982,
+   "signal_pin_sha": "a5071c20b5cb0304b45cbc04629a59ae6e9545d78e87006bb47604c0788eae1b",
+   "pg_pin_shapes": {
+    "VDD": 145,
+    "VSS": 145
+   },
+   "size": [
+    1036800,
+    1520640
+   ],
+   "obs": 1430
+  },
+  "kv3_pc_v1__cl4ea58a5c": {
+   "signal_pin_shapes": 8980,
+   "signal_pin_sha": "7ab32a8063d0e9bf4acc76071ee9633376bebdf4eb4e44d8d062c2088a8a9a9f",
+   "pg_pin_shapes": {
+    "VDD": 135,
+    "VSS": 135
+   },
+   "size": [
+    1036800,
+    1520640
+   ],
+   "obs": 926
+  },
+  "kv3_pc_v3_part": {
+   "signal_pin_shapes": 8945,
+   "signal_pin_sha": "2d94b3700f04f0abb7a02f6635862ff51e8320290a3b289882cf59bbf9006d60",
+   "pg_pin_shapes": {
+    "VDD": 135,
+    "VSS": 136
+   },
+   "size": [
+    1036800,
+    1520640
+   ],
+   "obs": 824
+  },
+  "kv3_pc__cl254f2e73": {
+   "signal_pin_shapes": 6844,
+   "signal_pin_sha": "83758969d9d5ddea30ec53c38fc9f84231a4b009309e1fe5e1e315e2ab68d7aa",
+   "pg_pin_shapes": {
+    "VDD": 132,
+    "VSS": 132
+   },
+   "size": [
+    1036800,
+    1520640
+   ],
+   "obs": 434
+  },
+  "kv3_phy_part": {
+   "signal_pin_shapes": 2516,
+   "signal_pin_sha": "ce88d380ded8ac72c2c15ab0135154467332c38f92f56ccc448fdeb563354365",
+   "pg_pin_shapes": {
+    "VDD": 102,
+    "VSS": 103
+   },
+   "size": [
+    864000,
+    1520640
+   ],
+   "obs": 285
+  },
+  "kv3_phy_v1_part": {
+   "signal_pin_shapes": 2518,
+   "signal_pin_sha": "57de9fae567417464d5c421365576733866df7c88b03f095bbdf65a366e2a9bb",
+   "pg_pin_shapes": {
+    "VDD": 106,
+    "VSS": 105
+   },
+   "size": [
+    864000,
+    1520640
+   ],
+   "obs": 381
+  },
+  "kv3_pv_v8_part": {
+   "signal_pin_shapes": 7176,
+   "signal_pin_sha": "59e258e739dccf5bd20b856d461fe917ffdb2b15e47c687536d1a3411d070e6a",
+   "pg_pin_shapes": {
+    "VDD": 263,
+    "VSS": 263
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 643
+  },
+  "kv3_pv_v1n": {
+   "signal_pin_shapes": 11988,
+   "signal_pin_sha": "d4a566850ac452708c581e9c70c443243a7cd62b44fbcdb9c1b048f2ef786c93",
+   "pg_pin_shapes": {
+    "VDD": 265,
+    "VSS": 264
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 721
+  },
+  "kv3_pv_v2n": {
+   "signal_pin_shapes": 14695,
+   "signal_pin_sha": "372491d2f61850dc820babbdf9b5c6e2e80f7e0d6a6a13ee2959536f01dfe70e",
+   "pg_pin_shapes": {
+    "VDD": 269,
+    "VSS": 269
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 802
+  },
+  "kv3_pv_v3n": {
+   "signal_pin_shapes": 15855,
+   "signal_pin_sha": "c4793826a7003f048701227c912b2acc1a235b8a539601f2dc17693e02bb98be",
+   "pg_pin_shapes": {
+    "VDD": 267,
+    "VSS": 266
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 781
+  },
+  "kv3_pv_v4n": {
+   "signal_pin_shapes": 16511,
+   "signal_pin_sha": "4c09de402a2c3ccf5b9cbc05e27835a309e5ceef2bcddd0066780421d1d09616",
+   "pg_pin_shapes": {
+    "VDD": 266,
+    "VSS": 266
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 751
+  },
+  "kv3_pv_v5n": {
+   "signal_pin_shapes": 15623,
+   "signal_pin_sha": "6c1ba125982ffb0242317bda227e5200286681caec2c6d3f41ecbcc47bde05b2",
+   "pg_pin_shapes": {
+    "VDD": 268,
+    "VSS": 267
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 781
+  },
+  "kv3_pv_v6n": {
+   "signal_pin_shapes": 14231,
+   "signal_pin_sha": "b7a72c3f125c5d57ac6c1f07da4c4808661dc28e5f4bc3ea8c17e7a978ddab01",
+   "pg_pin_shapes": {
+    "VDD": 264,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 553
+  },
+  "kv3_pv_v12_part": {
+   "signal_pin_shapes": 12340,
+   "signal_pin_sha": "1de00429d312a12750b8cd3758e8365a910adb515745eec955a78408d79f136b",
+   "pg_pin_shapes": {
+    "VDD": 264,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 535
+  },
+  "kv3_pv_part": {
+   "signal_pin_shapes": 7176,
+   "signal_pin_sha": "576f742412f4dffd338587102833cbdbac8051322432a931e2662cba4cbd17e2",
+   "pg_pin_shapes": {
+    "VDD": 266,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 556
+  },
+  "kv3_pv_v1_part": {
+   "signal_pin_shapes": 11988,
+   "signal_pin_sha": "d4a566850ac452708c581e9c70c443243a7cd62b44fbcdb9c1b048f2ef786c93",
+   "pg_pin_shapes": {
+    "VDD": 265,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 553
+  },
+  "kv3_pv_v2_part": {
+   "signal_pin_shapes": 14695,
+   "signal_pin_sha": "372491d2f61850dc820babbdf9b5c6e2e80f7e0d6a6a13ee2959536f01dfe70e",
+   "pg_pin_shapes": {
+    "VDD": 265,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 640
+  },
+  "kv3_pv_v3_part": {
+   "signal_pin_shapes": 15855,
+   "signal_pin_sha": "c4793826a7003f048701227c912b2acc1a235b8a539601f2dc17693e02bb98be",
+   "pg_pin_shapes": {
+    "VDD": 264,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 565
+  },
+  "kv3_pv_v4_part": {
+   "signal_pin_shapes": 16511,
+   "signal_pin_sha": "4c09de402a2c3ccf5b9cbc05e27835a309e5ceef2bcddd0066780421d1d09616",
+   "pg_pin_shapes": {
+    "VDD": 268,
+    "VSS": 268
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 694
+  },
+  "kv3_pv_v5_part": {
+   "signal_pin_shapes": 15623,
+   "signal_pin_sha": "6c1ba125982ffb0242317bda227e5200286681caec2c6d3f41ecbcc47bde05b2",
+   "pg_pin_shapes": {
+    "VDD": 268,
+    "VSS": 267
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 811
+  },
+  "kv3_pv_v6_part": {
+   "signal_pin_shapes": 14229,
+   "signal_pin_sha": "cb8210eefde208605a16d991ced0b766268b56edb6b2b6bbac81d102a8141440",
+   "pg_pin_shapes": {
+    "VDD": 264,
+    "VSS": 264
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 469
+  },
+  "kv3_pv_v7_part": {
+   "signal_pin_shapes": 11290,
+   "signal_pin_sha": "b59ff79402f9fa5cd44ec1a509a8fdd07b9aa985254ce173c9c853a45aefc7f0",
+   "pg_pin_shapes": {
+    "VDD": 265,
+    "VSS": 265
+   },
+   "size": [
+    2160000,
+    1520640
+   ],
+   "obs": 472
+  },
+  "kv3_sys_SD_v1_part": {
+   "signal_pin_shapes": 1060,
+   "signal_pin_sha": "308f97071b22109199bd0b84fe8a863710b030104d38fa41c0585d10d818b268",
+   "pg_pin_shapes": {
+    "VDD": 228,
+    "VSS": 227
+   },
+   "size": [
+    1900800,
+    1036800
+   ],
+   "obs": 129
+  },
+  "kv3_sys_SD_part": {
+   "signal_pin_shapes": 1062,
+   "signal_pin_sha": "e334285fc8dd0e87f7286c1c270845183d6a31efbe9757a0c194749332c374f7",
+   "pg_pin_shapes": {
+    "VDD": 225,
+    "VSS": 226
+   },
+   "size": [
+    1900800,
+    1036800
+   ],
+   "obs": 117
+  },
+  "kv3_sys_c_part": {
+   "signal_pin_shapes": 4999,
+   "signal_pin_sha": "dde6d038878f1fe167d415b54abb4efe140e153c46356cf9ff69bad4733cb8c7",
+   "pg_pin_shapes": {
+    "VDD": 257,
+    "VSS": 255
+   },
+   "size": [
+    2160000,
+    1036800
+   ],
+   "obs": 294
+  }
+ },
+ "samples": [
+  {
+   "cell": "ck_b0",
+   "layer": "M1",
+   "owner": "hub_C",
+   "cell_bbox": [
+    5480028,
+    13003740,
+    5481648,
+    13004010
+   ],
+   "obs": [
+    4756482,
+    13003180,
+    5482188,
+    13004530
+   ]
+  },
+  {
+   "cell": "ck_b0",
+   "layer": "M2",
+   "owner": "hub_C",
+   "cell_bbox": [
+    5480028,
+    13003740,
+    5481648,
+    13004010
+   ],
+   "obs": [
+    4756482,
+    13003180,
+    5482188,
+    13004530
+   ]
+  },
+  {
+   "cell": "ck_b0",
+   "layer": "M3",
+   "owner": "hub_C",
+   "cell_bbox": [
+    5480028,
+    13003740,
+    5481648,
+    13004010
+   ],
+   "obs": [
+    4756482,
+    13003180,
+    5482188,
+    13004530
+   ]
+  },
+  {
+   "cell": "ck_b10",
+   "layer": "M1",
+   "owner": "hub_C",
+   "cell_bbox": [
+    5538186,
+    12165660,
+    5539806,
+    12165930
+   ],
+   "obs": [
+    4458240,
+    12165100,
+    6618240,
+    12167800
+   ]
+  },
+  {
+   "cell": "ck_b10",
+   "layer": "M2",
+   "owner": "hub_C",
+   "cell_bbox": [
+    5538186,
+    12165660,
+    5539806,
+    12165930
+   ],
+   "obs": [
+    4458240,
+    12165100,
+    6618240,
+    12167800
+   ]
+  },
+  {
+   "cell": "ck_b10",
+   "layer": "M3",
+   "owner": "hub_C",
+   "cell_bbox": [
+    5538186,
+    12165660,
+    5539806,
+    12165930
+   ],
+   "obs": [
+    4458240,
+    12165100,
+    6618240,
+    12167800
+   ]
+  },
+  {
+   "cell": "ck_b100",
+   "layer": "M1",
+   "owner": "hgi_WN_5",
+   "cell_bbox": [
+    3818880,
+    17643960,
+    3820500,
+    17644230
+   ],
+   "obs": [
+    3742794,
+    17643730,
+    3819042,
+    17644270
+   ]
+  },
+  {
+   "cell": "ck_b100",
+   "layer": "M2",
+   "owner": "hgi_WN_5",
+   "cell_bbox": [
+    3818880,
+    17643960,
+    3820500,
+    17644230
+   ],
+   "obs": [
+    3742794,
+    17643730,
+    3819042,
+    17644270
+   ]
+  },
+  {
+   "cell": "ck_b100",
+   "layer": "M3",
+   "owner": "hgi_WN_5",
+   "cell_bbox": [
+    3818880,
+    17643960,
+    3820500,
+    17644230
+   ],
+   "obs": [
+    3742794,
+    17643730,
+    3819042,
+    17644270
+   ]
+  },
+  {
+   "cell": "ck_b1000",
+   "layer": "M1",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8216640,
+    1938600,
+    8218260,
+    1938870
+   ],
+   "obs": [
+    7896960,
+    1921590,
+    9175680,
+    2022570
+   ]
+  },
+  {
+   "cell": "ck_b1000",
+   "layer": "M2",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8216640,
+    1938600,
+    8218260,
+    1938870
+   ],
+   "obs": [
+    7896960,
+    1921590,
+    9175680,
+    2022570
+   ]
+  },
+  {
+   "cell": "ck_b1000",
+   "layer": "M3",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8216640,
+    1938600,
+    8218260,
+    1938870
+   ],
+   "obs": [
+    7896960,
+    1921590,
+    9175680,
+    2022570
+   ]
+  },
+  {
+   "cell": "ck_b1001",
+   "layer": "M1",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8215344,
+    1711260,
+    8216964,
+    1711530
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1001",
+   "layer": "M2",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8215344,
+    1711260,
+    8216964,
+    1711530
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1001",
+   "layer": "M3",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8215344,
+    1711260,
+    8216964,
+    1711530
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1002",
+   "layer": "M1",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8056800,
+    1756620,
+    8058420,
+    1756890
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1002",
+   "layer": "M2",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8056800,
+    1756620,
+    8058420,
+    1756890
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1002",
+   "layer": "M3",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8056800,
+    1756620,
+    8058420,
+    1756890
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1003",
+   "layer": "M1",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8056800,
+    1806300,
+    8058420,
+    1806570
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  },
+  {
+   "cell": "ck_b1003",
+   "layer": "M2",
+   "owner": "hg_ES_1",
+   "cell_bbox": [
+    8056800,
+    1806300,
+    8058420,
+    1806570
+   ],
+   "obs": [
+    7896960,
+    1520640,
+    9175680,
+    1816830
+   ]
+  }
+ ]
+}

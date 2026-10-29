@@ -1,0 +1,149 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1p2.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1p3.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1p4.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1p5.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v1p6.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hg_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v1__cl141fc26e.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v1__cl42bc8b12.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v2__cl2862d491.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v2__cle0015330.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v4_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v5_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v6_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v7_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hgi_v8_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hroot_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_C_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Ei_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Eo_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Wi_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_hub_Wo_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_cor_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_cor_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_ft_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_io_ft_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc__cl254f2e73.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc__cl5a95b461.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v1__cl23f6a148.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v1__cl4ea58a5c.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v1__cl7f648944.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pc_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_phy_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_phy_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v12_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v1n.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v2_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v2n.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v3_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v3n.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v4_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v4n.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v5_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v5n.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v6_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v6n.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v7_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_pv_v8_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_sys_SD_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_sys_SD_v1_part.lef, created 1 library cells
+[INFO ODB-0227] LEF file: /work/abstracts/kv3_sys_c_part.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING ORD-2011] LEF master kv3_hg_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1p2 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1p3 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1p4 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1p5 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v1p6 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hg_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v4_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v5_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v1__cl42bc8b12 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v2__cl2862d491 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v6_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v7_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v8_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v1__cl141fc26e has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hgi_v2__cle0015330 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hroot_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_C_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Ei_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Eo_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Wi_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_hub_Wo_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_cor_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_ft_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_ft_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_io_cor_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc__cl5a95b461 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v1__cl23f6a148 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v1__cl7f648944 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v1__cl4ea58a5c has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pc__cl254f2e73 has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_phy_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_phy_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v8_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v1n has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v2n has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v3n has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v4n has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v5n has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v6n has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v12_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v2_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v3_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v4_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v5_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v6_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_pv_v7_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_sys_SD_v1_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_sys_SD_part has no liberty cell.
+[WARNING ORD-2011] LEF master kv3_sys_c_part has no liberty cell.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+[INFO IFP-0001] Added 100160 rows of 205120 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 11076.480 27043.200 ) um
+[INFO IFP-0101] Core BBox: (  0.000  0.000 ) ( 11076.480 27043.200 ) um
+[INFO IFP-0102] Core area:                    299543463.936 um^2
+[INFO IFP-0103] Total instances area:         299550154.406 um^2
+[INFO IFP-0104] Effective utilization:                1.000
+[INFO IFP-0105] Number of instances:                  15456
+OT_T floorplan 11
+OT_T placed 11
+OT_T clockplaced 12

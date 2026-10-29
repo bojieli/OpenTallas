@@ -1,0 +1,14 @@
+{
+  "schema": "ot_provider_import_preflight/1",
+  "verdict": "READY_FOR_REVIEW",
+  "source_odb_sha256": "fa02813378940f63f3838b692763d3fcb8603c56029aae0f178194c8bea9f68f",
+  "inventory_sha256": "5cd3e3fdf11c88f716ebb55dc66a6fbbc660390a47edf6d41f42d0579432326c",
+  "mapped_sha256": "421cd7b49c274f0532524caa879710d5d13bd937b8a7e1c975753b65eb579f91",
+  "placements_sha256": "b5bfd1e2f5320dff809e0b6c34ad26877de4943044926e750930a0514848ebcc",
+  "bindings_sha256": "3c1dbfe84dbd84b0b82e45bec5652ecb3927e063938c38b53cd9827157bcccc2",
+  "fresh_constraints_sha256": "b7c6b6e7896be150eac9f2a9e0ab821b52728468742e6fc03ec805d540d5786e",
+  "allcells": 22671,
+  "issues": {},
+  "samples": [],
+  "scope": "Only explicit fresh OBS, all mapped cells and native boundaries; no timing/phase qualification"
+}
