@@ -164,7 +164,7 @@ def main(argv=None):
     a3.add_argument("--stock-rc", action="store_true",
                     help="platform setRC.tcl for placement/CTS/GRT estimates (default since FLOW 10-25: the "
                          "RCX-calibrated tools/die_plan/setRC_rcx_asap7.tcl)")
-    a3.add_argument("--hold-ff-margin", type=float, default=5.0, metavar="PS",
+    a3.add_argument("--hold-ff-margin", type=float, default=10.0, metavar="PS",   # FLOW-HOLD-1 (OWNER 12.19): 5 -> 10
                     help="repair hold at the FF sign-off corner only (CTS-stage combined repair skipped; post-GRT "
                          "repair with CORNERS=bc and this hold margin); TT setup is judged by signoff.py")
     a3.add_argument("--slew-margin", type=float, default=None, metavar="PCT",
