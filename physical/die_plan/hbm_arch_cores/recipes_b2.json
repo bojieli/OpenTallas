@@ -94,6 +94,8 @@
   "source": "d4g as-built die_r18h5.v instance xl_NW_aqhi (module ot_hbm_xp_aq_tree13_fmt); files = closure of ot_hbm_xp_aq_tree13_fmt at d34578d6f",
   "source_commit": "d34578d6f",
   "read_at_commit": true,
+  "files_at": {"physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv": "f437090e018c13d87f7854d83b40be0578f80b2a"},
+  "files_at_note": "DIE-HBM-18 2026-10-29: tree13 read at f437090e0 (format pipeline reset; the d34578d6f pin gave kit LEC NEQ 1056 on s8/s10_fp4 X power-up); fresh-synth kit LEC EQUIVALENT 16081/16081",
   "asbuilt_inst": "xl_NW_aqhi"
  },
  "ot_hgi_qw_dec": {
