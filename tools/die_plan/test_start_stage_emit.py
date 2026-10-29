@@ -323,7 +323,7 @@ endmodule\n'''
     for mutant in (False,True):
         # A wrong parent contract feeds START in place of delivered reset. It
         # releases the local reset late and changes the first valid start edge.
-        candidate=wave.replace('st_b2_rrf <= rraw_hub_C','st_b2_rrf <= rs_hub_C') if mutant else wave
+        candidate=wave.replace('.d(rraw_hub_C)', '.d(rs_hub_C)') if mutant else wave
         (tmp_path/'dut.sv').write_text(candidate)
         p=subprocess.run([iv,'-g2012','-s','tb','-o',str(tmp_path/'sim'),str(common),str(tmp_path/'ref.sv'),str(tmp_path/'dut.sv'),str(tmp_path/'tb.sv')],capture_output=True,text=True)
         assert p.returncode==0,p.stderr
