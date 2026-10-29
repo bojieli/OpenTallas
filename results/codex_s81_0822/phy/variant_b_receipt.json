@@ -1,0 +1,38 @@
+{
+ "log": [
+  "lk_ES0 orient MY->R180",
+  "lk_ES1 orient MY->R180",
+  "t23 ft0.out W window [344.448,452.316] -> [774.564, 882.432] lsb_high",
+  "t23 ft1.out W window [119.04,228.444] -> [998.436, 1107.84] lsb_high",
+  "t23 ft2.in W window [6.144,117.852] -> [1109.028, 1220.736] lsb_high",
+  "t23 ft3.in W window [231.552,343.26] -> [883.62, 995.328] lsb_high",
+  "lk_ES0 typed macro [23403.4, 103.68, 26011.88, 1028.16] edge 103.68 domain [23339.76, 342.44, 26075.52, 1330.56]->[23339.76, 103.68, 26075.52, 1091.8]",
+  "lk_ES1 typed macro [26289.16, 103.68, 28897.64, 1028.16] edge 103.68 domain [26225.52, 342.44, 28961.28, 1330.56]->[26225.52, 103.68, 28961.28, 1091.8]",
+  "landing dsdv_slice_c1x_C__t5 translation 0,25.92 order None",
+  "landing ot_s81sl_leaf__t72 translation -25.92,0 order None",
+  "landing ot_s81sl_leaf__t8 translation -25.92,0 order None",
+  "landing svc_hi_dsdv_svc_pvso_entry__t1 translation 0,25.92 order None",
+  "landing svc_hi_dsdv_svc_pvso_entry__t2 translation 0,25.92 order None",
+  "landing svc_hi_dsdv_svc_rs__t1 translation 0,25.92 order None",
+  "landing svc_hi_dsdv_svc_rs__t2 translation 0,25.92 order None",
+  "landing svc_hi_dsdv_svc_rs__t3 translation 25.92,34.56 order largest_first",
+  "landing svc_hi_dsdv_svc_rs__t4 translation 25.92,0 order None",
+  "landing svc_hi_dsdv_svc_rs__t5 translation 34.56,0 order largest_first",
+  "landing svc_hi_dsdv_svc_rs__t6 translation -25.92,25.92 order None",
+  "landing svc_lo_dsdv_svc_rs__t7 translation -25.92,0 order None",
+  "port coll__s_7S_LP__lk_ES0__8 ('E', [448.128, 555.996], 'lsb_low') -> ('E', [878.244, 986.112], 'lsb_high')",
+  "port coll__lk_ES0__s_7S_LP__0 ('W', [335.232, 446.94], 'lsb_low') -> ('W', [987.3, 1099.008], 'lsb_high')",
+  "port coll__lk_ES1__s_7S_LP__0 ('W', [109.824, 221.532], 'lsb_low') -> ('W', [1212.708, 1324.416], 'lsb_high')",
+  "port coll__lk_ES1__s_7S_LP__1 ('W', [109.824, 221.532], 'lsb_low') -> ('W', [1212.708, 1324.416], 'lsb_high')",
+  "port coll__s_7S_LP__lk_ES1__8 ('E', [222.72, 332.124], 'lsb_low') -> ('E', [1102.116, 1211.52], 'lsb_high')",
+  "port coll__s_7S_LP__lk_ES1__9 ('E', [222.72, 332.124], 'lsb_low') -> ('E', [1102.116, 1211.52], 'lsb_high')"
+ ],
+ "lane_natural_cycle_delta": {},
+ "placement_failures": [],
+ "max_die_hop_um": 378.0480000000034,
+ "boot_ready": 500,
+ "shoreline_um": {
+  "lk_ES0": 103.68,
+  "lk_ES1": 103.68
+ }
+}

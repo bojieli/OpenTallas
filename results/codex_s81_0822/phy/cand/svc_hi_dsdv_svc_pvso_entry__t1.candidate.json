@@ -1,0 +1,161 @@
+{
+ "type": "svc_hi_dsdv_svc_pvso_entry__t1",
+ "translation_um": [
+  0,
+  25.92
+ ],
+ "bands": {
+  "attn_i0": {
+   "rect_um": [
+    1303.524,
+    32.4,
+    1425.6,
+    54.0
+   ],
+   "width": 562,
+   "ring_width": 576,
+   "live_data_storage_flops": 2815,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 174.138,
+   "area_reserve_um2": 2636.064,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "attn_i1": {
+   "rect_um": [
+    1414.8,
+    725.142,
+    1425.6,
+    1409.862
+   ],
+   "width": 1607,
+   "ring_width": 1664,
+   "live_data_storage_flops": 8040,
+   "padded_data_storage_flops": 8320,
+   "clock_roles": {
+    "forwarded_write_flops": 6656,
+    "local_read_flops": 1664
+   },
+   "max_pin_to_band_hop_um": 370.44,
+   "area_reserve_um2": 7394.976,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "attn_i3": {
+   "rect_um": [
+    359.755,
+    17.28,
+    659.873,
+    43.2
+   ],
+   "width": 1607,
+   "ring_width": 1664,
+   "live_data_storage_flops": 8040,
+   "padded_data_storage_flops": 8320,
+   "clock_roles": {
+    "forwarded_write_flops": 6656,
+    "local_read_flops": 1664
+   },
+   "max_pin_to_band_hop_um": 193.259,
+   "area_reserve_um2": 7394.976,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "attnh_i0": {
+   "rect_um": [
+    662.009,
+    17.28,
+    927.576,
+    54.0
+   ],
+   "width": 2133,
+   "ring_width": 2176,
+   "live_data_storage_flops": 10670,
+   "padded_data_storage_flops": 10880,
+   "clock_roles": {
+    "forwarded_write_flops": 8704,
+    "local_read_flops": 2176
+   },
+   "max_pin_to_band_hop_um": 186.784,
+   "area_reserve_um2": 9634.464,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "hbm_i0": {
+   "rect_um": [
+    1205.745,
+    17.28,
+    1301.364,
+    45.36
+   ],
+   "width": 512,
+   "ring_width": 576,
+   "live_data_storage_flops": 2565,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 214.344,
+   "area_reserve_um2": 2636.064,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "rsv_i0": {
+   "rect_um": [
+    1382.4,
+    17.28,
+    1425.6,
+    26.618
+   ],
+   "width": 50,
+   "ring_width": 64,
+   "live_data_storage_flops": 255,
+   "padded_data_storage_flops": 320,
+   "clock_roles": {
+    "forwarded_write_flops": 256,
+    "local_read_flops": 64
+   },
+   "max_pin_to_band_hop_um": 73.561,
+   "area_reserve_um2": 396.576,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "vid_i0": {
+   "rect_um": [
+    1401.724,
+    1230.49,
+    1412.64,
+    1267.21
+   ],
+   "width": 1,
+   "ring_width": 64,
+   "live_data_storage_flops": 10,
+   "padded_data_storage_flops": 320,
+   "clock_roles": {
+    "forwarded_write_flops": 256,
+    "local_read_flops": 64
+   },
+   "max_pin_to_band_hop_um": 59.516,
+   "area_reserve_um2": 396.576,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "monitor_0": {
+   "rect_um": [
+    160.92,
+    17.28,
+    208.44,
+    25.92
+   ],
+   "width": 2,
+   "ring_width": 64,
+   "live_data_storage_flops": 10,
+   "padded_data_storage_flops": 320,
+   "clock_roles": {
+    "forwarded_write_flops": 256,
+    "local_read_flops": 64
+   },
+   "max_pin_to_band_hop_um": 49.68,
+   "area_reserve_um2": 396.576,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  }
+ }
+}

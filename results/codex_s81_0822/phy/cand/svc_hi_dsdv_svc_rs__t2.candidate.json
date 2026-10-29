@@ -1,0 +1,104 @@
+{
+ "type": "svc_hi_dsdv_svc_rs__t2",
+ "translation_um": [
+  0,
+  25.92
+ ],
+ "bands": {
+  "attn_i1": {
+   "rect_um": [
+    359.755,
+    17.28,
+    659.873,
+    43.2
+   ],
+   "width": 1607,
+   "ring_width": 1664,
+   "live_data_storage_flops": 8040,
+   "padded_data_storage_flops": 8320,
+   "clock_roles": {
+    "forwarded_write_flops": 6656,
+    "local_read_flops": 1664
+   },
+   "max_pin_to_band_hop_um": 193.259,
+   "area_reserve_um2": 7394.976,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "attnh_i0": {
+   "rect_um": [
+    662.009,
+    17.28,
+    927.576,
+    54.0
+   ],
+   "width": 2133,
+   "ring_width": 2176,
+   "live_data_storage_flops": 10670,
+   "padded_data_storage_flops": 10880,
+   "clock_roles": {
+    "forwarded_write_flops": 8704,
+    "local_read_flops": 2176
+   },
+   "max_pin_to_band_hop_um": 186.784,
+   "area_reserve_um2": 9634.464,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "hbm_i0": {
+   "rect_um": [
+    1326.919,
+    17.28,
+    1422.538,
+    45.36
+   ],
+   "width": 512,
+   "ring_width": 576,
+   "live_data_storage_flops": 2565,
+   "padded_data_storage_flops": 2880,
+   "clock_roles": {
+    "forwarded_write_flops": 2304,
+    "local_read_flops": 576
+   },
+   "max_pin_to_band_hop_um": 93.17,
+   "area_reserve_um2": 2636.064,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "rsv_i0": {
+   "rect_um": [
+    1416.262,
+    45.36,
+    1425.6,
+    88.56
+   ],
+   "width": 50,
+   "ring_width": 64,
+   "live_data_storage_flops": 255,
+   "padded_data_storage_flops": 320,
+   "clock_roles": {
+    "forwarded_write_flops": 256,
+    "local_read_flops": 64
+   },
+   "max_pin_to_band_hop_um": 101.641,
+   "area_reserve_um2": 396.576,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "monitor_0": {
+   "rect_um": [
+    160.92,
+    17.28,
+    208.44,
+    25.92
+   ],
+   "width": 2,
+   "ring_width": 64,
+   "live_data_storage_flops": 10,
+   "padded_data_storage_flops": 320,
+   "clock_roles": {
+    "forwarded_write_flops": 256,
+    "local_read_flops": 64
+   },
+   "max_pin_to_band_hop_um": 49.68,
+   "area_reserve_um2": 396.576,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  }
+ }
+}

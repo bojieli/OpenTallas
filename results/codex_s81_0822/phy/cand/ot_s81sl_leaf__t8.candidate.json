@@ -1,0 +1,218 @@
+{
+ "type": "ot_s81sl_leaf__t8",
+ "translation_um": [
+  -25.92,
+  0
+ ],
+ "bands": {
+  "ft0_i": {
+   "rect_um": [
+    1414.8,
+    17.28,
+    1425.6,
+    494.64
+   ],
+   "width": 1104,
+   "ring_width": 1152,
+   "live_data_storage_flops": 5525,
+   "padded_data_storage_flops": 5760,
+   "clock_roles": {
+    "forwarded_write_flops": 4608,
+    "local_read_flops": 1152
+   },
+   "max_pin_to_band_hop_um": 396.594,
+   "area_reserve_um2": 5155.488,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft1_i": {
+   "rect_um": [
+    1384.56,
+    447.525,
+    1412.64,
+    631.125
+   ],
+   "width": 1104,
+   "ring_width": 1152,
+   "live_data_storage_flops": 5525,
+   "padded_data_storage_flops": 5760,
+   "clock_roles": {
+    "forwarded_write_flops": 4608,
+    "local_read_flops": 1152
+   },
+   "max_pin_to_band_hop_um": 322.167,
+   "area_reserve_um2": 5155.488,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft2_i": {
+   "rect_um": [
+    488.448,
+    1168.56,
+    505.508,
+    1209.6
+   ],
+   "width": 70,
+   "ring_width": 128,
+   "live_data_storage_flops": 355,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 66.85,
+   "area_reserve_um2": 676.512,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft3_i": {
+   "rect_um": [
+    506.88,
+    1168.56,
+    523.556,
+    1209.6
+   ],
+   "width": 70,
+   "ring_width": 128,
+   "live_data_storage_flops": 355,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 66.658,
+   "area_reserve_um2": 676.512,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft4_i": {
+   "rect_um": [
+    525.12,
+    1162.08,
+    539.876,
+    1209.6
+   ],
+   "width": 70,
+   "ring_width": 128,
+   "live_data_storage_flops": 355,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 72.178,
+   "area_reserve_um2": 676.512,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft5_i": {
+   "rect_um": [
+    543.36,
+    1168.56,
+    560.42,
+    1209.6
+   ],
+   "width": 70,
+   "ring_width": 128,
+   "live_data_storage_flops": 355,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 66.85,
+   "area_reserve_um2": 676.512,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft6_i": {
+   "rect_um": [
+    561.6,
+    1162.08,
+    578.66,
+    1203.12
+   ],
+   "width": 70,
+   "ring_width": 128,
+   "live_data_storage_flops": 355,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 73.33,
+   "area_reserve_um2": 676.512,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft7_i": {
+   "rect_um": [
+    579.84,
+    1162.08,
+    596.9,
+    1203.12
+   ],
+   "width": 70,
+   "ring_width": 128,
+   "live_data_storage_flops": 355,
+   "padded_data_storage_flops": 640,
+   "clock_roles": {
+    "forwarded_write_flops": 512,
+    "local_read_flops": 128
+   },
+   "max_pin_to_band_hop_um": 73.33,
+   "area_reserve_um2": 676.512,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft8_i": {
+   "rect_um": [
+    598.272,
+    1179.36,
+    743.388,
+    1203.12
+   ],
+   "width": 668,
+   "ring_width": 704,
+   "live_data_storage_flops": 3345,
+   "padded_data_storage_flops": 3520,
+   "clock_roles": {
+    "forwarded_write_flops": 2816,
+    "local_read_flops": 704
+   },
+   "max_pin_to_band_hop_um": 120.078,
+   "area_reserve_um2": 3195.936,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "ft9_i": {
+   "rect_um": [
+    875.712,
+    1185.84,
+    1020.828,
+    1209.6
+   ],
+   "width": 668,
+   "ring_width": 704,
+   "live_data_storage_flops": 3345,
+   "padded_data_storage_flops": 3520,
+   "clock_roles": {
+    "forwarded_write_flops": 2816,
+    "local_read_flops": 704
+   },
+   "max_pin_to_band_hop_um": 113.598,
+   "area_reserve_um2": 3195.936,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  },
+  "monitor_0": {
+   "rect_um": [
+    180.36,
+    1162.08,
+    189.0,
+    1209.6
+   ],
+   "width": 2,
+   "ring_width": 64,
+   "live_data_storage_flops": 10,
+   "padded_data_storage_flops": 320,
+   "clock_roles": {
+    "forwarded_write_flops": 256,
+    "local_read_flops": 64
+   },
+   "max_pin_to_band_hop_um": 69.12,
+   "area_reserve_um2": 396.576,
+   "placement": "PROPOSED legal macro-free band; mapped anchoring pending"
+  }
+ }
+}
