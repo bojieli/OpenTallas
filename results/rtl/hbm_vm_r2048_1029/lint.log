@@ -1,0 +1,20 @@
+%Warning-TIMESCALEMOD: rtl/hbm_accel/generic/vm/static/faces_q0_r2048/hfd_vms_bank_native_q0_faces_r2048.sv:5:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    5 | module hfd_vms_bank_native_q0_faces_r2048 #(parameter integer MUT=0) (rq0, rr0, rq1, rr1, rq2, rr2, rq3, rr3, rq4, rr4, wq0, wq_done0, wq1, wq_done1, bid, sid, clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2, clk_macro3, rst_n, rslot_v, rslot, wslot_v, wslot, dq, dq_done, kq, kq_done, xq, xq_done, xq2, xq2_done, eg, pq, pr, status);
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_body_r2048.sv:32:8: ... Location of module with timescale
+   32 | module ot_vms_bank_q0_faces_body_r2048 #(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_core_r2048.sv:44:30: Signal has multiple driving blocks with different clocking: 'hfd_vms_bank_native_q0_faces_r2048.u_ot_pr_core.wq_done'
+                      rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_body_r2048.sv:394:20: ... Location of first driving block
+  394 |         else begin wq_done[1] <= s2w_v && s2w_p == 1;
+      |                    ^~~~~~~
+                      rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ot_vms_bank_q0_faces_body_r2048.sv:390:20: ... Location of other driving block
+  390 |         else begin wq_done[0] <= s2w_v && s2w_p == 0;
+      |                    ^~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.214 MB sources in 6 modules, into 0.483 MB in 6 C++ files needing 0.000 MB
+- Verilator: Walltime 0.162 s (elab=0.024, cvt=0.112, bld=0.000); cpu 0.162 s on 1 threads; allocated 44.609 MB

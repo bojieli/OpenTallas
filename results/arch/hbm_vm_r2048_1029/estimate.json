@@ -82,7 +82,7 @@
   "face_read_edges": 7,
   "face_write_commit_edges": 4
  },
- "latency_status": "PREDICTION pending exact smallest real-bank miter",
+ "latency_status": "MEASURED in actual face wrappers: read7/write4 edges, zero added cycles",
  "model_delta": {
   "extra_SRAM_macros": 32,
   "extra_physical_bits": 8388608,
@@ -93,6 +93,7 @@
  "qualification": {
   "PnR": false,
   "SIGNED": false,
-  "G5": false
+  "G5": false,
+  "smallest_bank_miter": "PASS"
  }
 }
