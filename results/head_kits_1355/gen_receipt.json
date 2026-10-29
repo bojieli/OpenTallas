@@ -1,0 +1,55 @@
+{
+ "types": {
+  "hd_ctl": {
+   "count_sites": {
+    "pins": 32,
+    "layer": "M5",
+    "macro_halo_um": 4.32,
+    "pin_extent_margin_um": 1.08,
+    "pitch_um": 4.32,
+    "anchor_um": [
+     293.76,
+     259.2
+    ],
+    "max_anchor_hop_um": 17.279999999999973
+   },
+   "registered_raw_aliases": 5,
+   "cycles_added": 0
+  },
+  "hd_host": {
+   "count_sites": {
+    "pins": 14,
+    "layer": "M5",
+    "macro_halo_um": 4.32,
+    "pin_extent_margin_um": 1.08,
+    "pitch_um": 4.32,
+    "anchor_um": [
+     648.0,
+     285.12
+    ],
+    "max_anchor_hop_um": 12.95999999999998
+   },
+   "registered_raw_aliases": 4,
+   "cycles_added": 0
+  },
+  "hd_mesh": {
+   "count_sites": {
+    "pins": 14,
+    "layer": "M5",
+    "macro_halo_um": 4.32,
+    "pin_extent_margin_um": 1.08,
+    "pitch_um": 4.32,
+    "anchor_um": [
+     302.4,
+     613.44
+    ],
+    "max_anchor_hop_um": 12.959999999999923
+   },
+   "registered_raw_aliases": 6,
+   "cycles_added": 0
+  }
+ },
+ "source_plan": "/srv/opentallas-scratch2/claude/codex-head-start-0828/hk5_source/source/source_plan.json",
+ "sidecar": "/srv/opentallas-scratch2/claude/codex-head-start-0828/hk5_source/source/source_sidecar.json",
+ "route_qualified": false
+}
