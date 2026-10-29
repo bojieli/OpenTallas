@@ -244,6 +244,7 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "orfs_hold_mm.tcl": ("macro_cts_cluster.tcl",),
     "die_sta_related.py": ("clock_components.py", "data_droop.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py"),
@@ -278,8 +279,8 @@ def copy_signoff_bundle(destination, source=HERE, extra=()):
         # the canonical sign-off family are copied from the requested tool source.
         if name not in paths and (name in requested or not (destination / name).is_file()):
             path = source / name
-            if name == "clock_family.tcl" and not path.is_file():
-                path = source.parents[1] / "physical/common_flow/clock_family.tcl"
+            if name in ("clock_family.tcl", "macro_cts_cluster.tcl") and not path.is_file():
+                path = source.parents[1] / "physical/common_flow" / name
             paths[name] = path
         pending.extend(KIT_TOOL_DEPENDENCIES.get(name, ()))
     missing = [name for name, path in paths.items() if not path.is_file()]

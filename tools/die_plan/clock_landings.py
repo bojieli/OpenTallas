@@ -272,6 +272,7 @@ class Landings:
         self.rows = []
         self.region = {}
         self.emitted_types = set()
+        self.forwarded_clock_only_inputs = {}
         self.emitted_top = False
         self.reset_placements = {}
         for pn, p in self.parts.items():
@@ -676,7 +677,23 @@ class Landings:
         def _exp(name):
             s_ = exp_src.get(name, "clk")
             if s_ != "clk" and not re.search(r"\binput\s+(?:wire\s+)?" + re.escape(s_) + r"\b", head):
-                raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                contract = self.types[key].get("clock", {}).get("landing_contract", {})
+                if contract.get("forwarded_clock_only_inputs") is not True:
+                    raise LandingError(f"{tn}: {name} contract source_clock_port {s_} is not an input port of the type")
+                # The logical leaf may have one clock while its physical
+                # wrapper has several planned tap inputs. Expose ONLY a tap
+                # already in that physical interface, used by an actual clock
+                # export. Do not remap any data or leaf clock.
+                import schema
+                if not hasattr(self, "_physical_clock_plan"):
+                    self._physical_clock_plan = schema.Plan(self.plan)
+                planned = {n for n, _x, _y in schema.tap_grid(self._physical_clock_plan, key)}
+                if s_ not in planned:
+                    raise LandingError(f"{tn}: forwarded clock source {s_} is not a planned physical tap input")
+                needed = self.forwarded_clock_only_inputs.setdefault(tn, [])
+                if s_ not in needed:
+                    needed.append(s_)
+                    extra.append(f"    input wire {s_}  // planned physical tap: forwarded-clock export only")
             return s_
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
@@ -1154,6 +1171,12 @@ class Landings:
             if count < 1:
                 raise LandingError(f"clock landing: default clock connection not found on {pn}")
             conn = [f"        .fclk_out_{b}({fwd[(pn,b)]})" for b in sorted(self.outs[pn])]
+            # Functional binding uses the region source, as existing grid/core
+            # tap connections do. The physical kit keeps the distinct planned
+            # input pins and the export's source_clock_port contract.
+            for tap in self.forwarded_clock_only_inputs.get(p["type"], []):
+                if not re.search(r"\." + re.escape(tap) + r"\s*\(", body):
+                    conn.append(f"        .{tap}(clk_region_{ident(self.region[pn])})")
             conn += [f"        .cland_fstart_out_{b}({fst[(pn,b)]})" for b in sorted(self.outs[pn]) if self.ca]
             if ts:
                 tpins = ts["type_pins"].get(p["type"], {})
@@ -1281,6 +1304,7 @@ class Landings:
                     types=self.by_type, reset_placements=self.reset_placements,
                     collector=self.collector,
                     observer_source=getattr(self,"observer_source",None),
+                    forwarded_clock_only_inputs=self.forwarded_clock_only_inputs,
                     emitted_modules=getattr(self,"emitted_modules",None),
                     remaining_gates=["placed clock/status pins", "landing ring window STA",
                                      "trained region calendar offsets", "token pass"])

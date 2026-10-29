@@ -223,6 +223,8 @@ def main():
     ap.add_argument("--band", choices=("gate", "info"), default="gate",
                     help="core latency band policy in core_infra (default gate = unchanged); info = 12.3a design target, "
                          "only window <= 20 + slew <= 80 gate (COORD RULING S81-CORE-LAT-R9)")
+    ap.add_argument("--window-policy", choices=("gate", "info"), default="gate",
+                    help="12.3a opt-in: report planned tap window as a design target; requires --band info; routed sign-off unchanged")
     ap.add_argument("--out", required=True)
     a = ap.parse_args()
     op = gzip.open if a.plan.endswith(".gz") else open
@@ -239,6 +241,8 @@ def main():
         sl.pop("clock_ndr", None)       # standard-width trunk (S81-CORE-LAT-R9 track b)
     if a.band == "info":
         sl["core_tree"]["model_qualification"]["band_policy"] = "info"   # 12.3a v5.0 (S81-CORE-LAT-R10)
+    if a.window_policy == "info":
+        sl["core_tree"]["model_qualification"]["window_policy"] = "info"
     # compile through core_infra: the same refusals the kit hook applies (fail before any build)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import core_infra as CI
