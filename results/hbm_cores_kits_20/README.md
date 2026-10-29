@@ -103,3 +103,15 @@ Fix: `physical/die_plan/hbm_arch_cores/f4_chain_leaf.tcl` gets OT_F4_PAIR=1 (opt
 byte-identical in behaviour). It walks every chain from head to tail and puts each capture on its own launch flop's current leaf,
 with the same 20 um and leaf-growth bounds. Test `test_f4_pair.py`. A kit opts in with `--orfs-var OT_F4_PAIR=1` (plus
 `--orfs-var OT_F4_LEAF_ADD=24` for pr24). The remaining 560-1278 r2r endpoints go to the GRT measured-arrival hold repair.
+
+## bdring DRV-basis build test: results (15:3x, signoff/signoff.json, CHECKED)
+
+| kit | setup TT | hold FF | slew viol TT/FF | fanout viol | TT pin-flop insertion | pair skew TT | DRC | failing checks |
+|---|---|---|---|---|---|---|---|---|
+| _k18 baseline | -22.43 (10) | +3.40 | 7,496 / 6,501 | 73 | 297.08 | -53.94 | 0 | setup_tt, drv, clock |
+| k20va fo64 + margin 20 | **+6.30** | +10.71 | 3,455 / 2,757 | 0 | 298.39 | -42.22 | 0 | drv, clock |
+| k20vb fo64 + margin 30 | **+11.07** | +6.04 | **1,538 / 1,230** | 0 | 295.01 | -41.89 | 0 | drv, clock |
+
+The KV DRV basis fixes setup and fanout and cuts the slew violations by 54-79 %. The residual slew is the GRT-vs-RCX C gap. It needs the
+shared post-route SPEF repair, and a larger blanket margin is not the answer. "clock" is the pre-existing TT pin-flop insertion of
+about 297 against 250 +- 40; the DRV basis did not cause it, and it is a separate issue for the plan/clock owner.
