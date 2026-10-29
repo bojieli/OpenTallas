@@ -1,0 +1,3 @@
+# QC-FIX lane (QC block blockers: BTAB turntree F1/F2, NL fresh-gate LEC generator)
+
+- 2026-10-29 05:42 PDT START [QC-FIX-1] fresh agent. (1) BTAB turntree d2837604267e: root cause from DIE-QC-28 (results/qc_btab_hold_1029); plan tree was built (core_family_slice.py) from the turngap kit 3_place sink geometry, turntree GPL re-placed btcap to x~111 -> F1 (re-plan leaves from turntree own placement) + F2 (btcap anchors at SRAM rd_out + plan there), both M5 + --measured-hold + FF margin 15 + g_btb[3] pin-column keep-off, GEOM before route. (2) NL fresh-gate LEC 57 stale hints: sub-agent on generator fix (Codex manual reanchor codex/qc-lec-0251@2d2fac779 PASS 31742/31742 is the reference). Branch claude/qc-fix-1-1029.
