@@ -1,0 +1,168 @@
+{
+ "schema": "ot_clk_actual_reach/1",
+ "max_um": 405.0,
+ "verdict": "FAIL",
+ "cell_edges": 3744,
+ "tap_edges": 735,
+ "worst_um": 745.04,
+ "over_count": 26,
+ "over": [
+  {
+   "kind": "cell",
+   "child": "r1053_2",
+   "parent": "r1053_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r1055_3",
+   "parent": "r1055_2",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r1057_2",
+   "parent": "r1057_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r1059_2",
+   "parent": "r1059_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r110_2",
+   "parent": "r110_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r112_3",
+   "parent": "r112_2",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r114_2",
+   "parent": "r114_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r116_2",
+   "parent": "r116_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r43_2",
+   "parent": "r43_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r45_3",
+   "parent": "r45_2",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r47_2",
+   "parent": "r47_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r49_2",
+   "parent": "r49_1",
+   "length_um": 745.04
+  },
+  {
+   "kind": "cell",
+   "child": "r994_2",
+   "parent": "r994_1",
+   "length_um": 659.438
+  },
+  {
+   "kind": "cell",
+   "child": "r993_2",
+   "parent": "r993_1",
+   "length_um": 659.297
+  },
+  {
+   "kind": "cell",
+   "child": "r1000_2",
+   "parent": "r1000_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r1069_2",
+   "parent": "r1069_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r1071_2",
+   "parent": "r1071_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r1073_2",
+   "parent": "r1073_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r126_2",
+   "parent": "r126_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r128_2",
+   "parent": "r128_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r130_2",
+   "parent": "r130_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r59_2",
+   "parent": "r59_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r61_2",
+   "parent": "r61_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r63_2",
+   "parent": "r63_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r996_2",
+   "parent": "r996_1",
+   "length_um": 658.64
+  },
+  {
+   "kind": "cell",
+   "child": "r998_2",
+   "parent": "r998_1",
+   "length_um": 658.64
+  }
+ ],
+ "missing_sites": []
+}
