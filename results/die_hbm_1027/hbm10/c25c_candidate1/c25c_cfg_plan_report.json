@@ -1,0 +1,19 @@
+{
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hleaf_Q__q0",
+   "module": "ot_hnx_calendar_cfg_leaf",
+   "ports": 642,
+   "config_edges": 2
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hleaf_Q__q0",
+   "module": "ot_hnx_calendar_cfg_leaf",
+   "ports": 642,
+   "config_edges": 2
+  }
+ ],
+ "status": "Source2edgecopyAproven, physicalsource/region/reset paths pending bound graph; no statusfabrication"
+}

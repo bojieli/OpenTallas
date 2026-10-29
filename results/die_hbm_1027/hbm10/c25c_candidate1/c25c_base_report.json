@@ -1,0 +1,36 @@
+{
+ "event": "C25c base",
+ "source_sha256": "4180334c6a358024df62a0ab56bcaa28d70337807d37509db612bfbad4292d92",
+ "changes": [
+  {
+   "type": "q_hub_nw",
+   "instance": "u_mu_fused_n4",
+   "change": "add missing contents for existing hard core",
+   "data_cycle_delta": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_mu_fused_n4",
+   "change": "add missing contents for existing hard core",
+   "data_cycle_delta": 0
+  },
+  {
+   "type": "root",
+   "inst": "u_mu_fused_program",
+   "origin": [
+    [
+     734.4,
+     5356.8
+    ],
+    [
+     734.4,
+     5339.52
+    ]
+   ],
+   "reason": "retain all actual FT stations, move unsigned provider by2lattice rows",
+   "data_cycle_delta": 0
+  }
+ ],
+ "provider_ft_intersections": 0,
+ "plan_sha256": "c45eb368016e5b5f7b1be7b6f35a25f9de08c01709816a89bc4867001ec735ee"
+}

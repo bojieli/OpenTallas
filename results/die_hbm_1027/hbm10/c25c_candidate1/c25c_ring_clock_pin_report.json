@@ -1,0 +1,34 @@
+{
+ "event": "C25c ring actual clock-pin adoption",
+ "actual_routed_clk": {
+  "layer": "M5",
+  "x": 116.664,
+  "y": 116.64
+ },
+ "data_pins_unchanged": 2227,
+ "source_sha256": "805f376e157b50047d5b6ea7a015481055e663843f1c76968673e6327f0be13d",
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_ring_ag__q0",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk__c25c_centerclk.json"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_hb_coll_Q_ring_ag__q1",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk__c25c_centerclk.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_ring_ag__q0",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk__c25c_centerclk.json"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_hb_coll_Q_ring_ag__q1",
+   "pins_file": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk__c25c_centerclk.json"
+  }
+ ],
+ "cycles_added": 0,
+ "status": "plan metadata reconciles to existing physical route; signoff still required"
+}
