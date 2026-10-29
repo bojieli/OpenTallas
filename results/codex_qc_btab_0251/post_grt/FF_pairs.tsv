@@ -1,0 +1,38 @@
+H	corner	FF
+H	regs	3446
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	5690
+H	pairs	5357
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	5357
+H	max_worst	41.08
+H	max_bounded	0
+H	max_signed	-41.08
+H	max_launch	btcap[635]$_DFF_P_
+H	max_capture	bs_q[123]$_DFF_P_
+H	max_crpr	0.28
+H	max_p99_raw	26.38
+H	max_searched	6
+H	max_nopath	0
+H	max_verify	0.000
+P	max	btcap[635]$_DFF_P_	bs_q[123]$_DFF_P_	-41.08	0.28	41.36
+P	max	btcap[627]$_DFF_P_	bs_q[115]$_DFF_P_	-41.02	0.28	41.29
+P	max	btcap[629]$_DFF_P_	bs_q[117]$_DFF_P_	-40.98	0.28	41.26
+P	max	btcap[621]$_DFF_P_	bs_q[109]$_DFF_P_	-40.95	0.28	41.22
+P	max	btcap[630]$_DFF_P_	bs_q[118]$_DFF_P_	-40.92	0.28	41.20
+P	max	btcap[634]$_DFF_P_	bs_q[122]$_DFF_P_	-40.84	0.28	41.12
+H	min_n	5357
+H	min_worst	36.3
+H	min_bounded	0
+H	min_signed	36.3
+H	min_launch	g_btb[0].u_m
+H	min_capture	btcap[94]$_DFF_P_
+H	min_crpr	0.28
+H	min_p99_raw	22.65
+H	min_searched	2
+H	min_nopath	0
+H	min_verify	0.000
+P	min	g_btb[0].u_m	btcap[94]$_DFF_P_	36.30	0.28	36.58
+P	min	g_btb[0].u_m	btcap[72]$_DFF_P_	36.07	0.28	36.35

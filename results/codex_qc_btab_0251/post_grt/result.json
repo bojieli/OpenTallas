@@ -1,0 +1,69 @@
+{
+ "scope": "G2 prototype, actual propagated GRT timing; not DRT/SIGNED",
+ "source": "f28e60fc9464",
+ "ap": "7335febad21d",
+ "setup_tt_ps": 267.72506434014076,
+ "hold_ff_ps": 11.12303305017548,
+ "setup_endpoints_bad": 0,
+ "hold_endpoints_bad": 0,
+ "related_pairs": 5357,
+ "pair_skew_tt_ps": 46.61,
+ "pair_skew_ff_ps": 41.08,
+ "skew_verify_ps": 0,
+ "slew_violations": 0,
+ "capacitance_violations": 0,
+ "clock_fanout_info": {
+  "maximum": 31,
+  "generic_sdc_limit": 24,
+  "violations": 107,
+  "signoff_limit": 64,
+  "policy": "WARN only"
+ },
+ "pg_open": 0,
+ "pg_terminals": 34234,
+ "whole_graph_reach": {
+  "r2r_max": 387.85,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 2386,
+  "comb_loop_cells": 0,
+  "r2r_worst": "pbs_addr\\[1\\]$_DFF_P_ -> g_btb\\[2\\].u_m"
+ },
+ "clock_footprint": {
+  "planned_cells": 319,
+  "actual_macros": 4,
+  "missing": [],
+  "moved_or_master_changed": [],
+  "body_overlap": [],
+  "halo_overlap": [],
+  "hard_blockage_overlap": [],
+  "verdict": "PASS"
+ },
+ "face_capture": {
+  "registered": 1317,
+  "buffer_chain_max": 6,
+  "p90_um": 8.12,
+  "max_um": 12.03,
+  "remaining_unregistered": [
+   "ft_ck_i",
+   "ft_ck_o",
+   "ft_rst_i",
+   "ft_rst_o"
+  ],
+  "depth4_fail_preserved": true
+ },
+ "added_cycles": 0,
+ "TT_clock_insertion_ps": {
+  "count": 3446,
+  "mean": 221.79205813929192,
+  "minimum": 209.704819,
+  "maximum": 254.104324,
+  "span_info": 44.399505000000005
+ },
+ "FF_clock_insertion_ps": {
+  "count": 3446,
+  "mean": 174.67396262100988,
+  "minimum": 165.316406,
+  "maximum": 203.571915,
+  "span_info": 38.25550899999999
+ }
+}

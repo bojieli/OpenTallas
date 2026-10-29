@@ -1,0 +1,3622 @@
+{
+ "pins_registered": 1317,
+ "pins_to_macro": 0,
+ "pins_exempt": 1,
+ "pins_unregistered": 4,
+ "unregistered_sample": [
+  "ft_ck_i",
+  "ft_ck_o",
+  "ft_rst_i",
+  "ft_rst_o"
+ ],
+ "pin_reg_p50": 7.0,
+ "pin_reg_p90": 8.12,
+ "pin_reg_max": 12.03,
+ "pin_reg_worst": [
+  "12.0 tw_data[518]",
+  "10.7 tw_data[166]",
+  "10.4 tw_data[575]",
+  "10.3 tw_data[98]",
+  "9.9 tw_data[21]"
+ ],
+ "scope": "Actual directional pureBUF/INV to existing first flop; finite graph node bound, no shared rule edited; default depth4 FAIL retained",
+ "output_buffer_depth_max": 6,
+ "output_buffer_depth_hist": {
+  "6": 251,
+  "5": 6
+ },
+ "rows": [
+  {
+   "pin": "bs_q[0]",
+   "flop": "bs_q\\[0\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.279,
+   "buffer_chain": [
+    "hold3365",
+    "output2223",
+    "hold3364",
+    "_6252_",
+    "hold3363",
+    "hold4918"
+   ]
+  },
+  {
+   "pin": "bs_q[100]",
+   "flop": "bs_q\\[100\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.057,
+   "buffer_chain": [
+    "hold2975",
+    "output2224",
+    "hold2974",
+    "_6352_",
+    "hold2973",
+    "hold4775"
+   ]
+  },
+  {
+   "pin": "bs_q[101]",
+   "flop": "bs_q\\[101\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.267,
+   "buffer_chain": [
+    "hold3053",
+    "output2225",
+    "hold3052",
+    "_6353_",
+    "hold3051",
+    "hold4798"
+   ]
+  },
+  {
+   "pin": "bs_q[102]",
+   "flop": "bs_q\\[102\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.747,
+   "buffer_chain": [
+    "hold3032",
+    "output2226",
+    "hold3031",
+    "_6354_",
+    "hold3030",
+    "hold4791"
+   ]
+  },
+  {
+   "pin": "bs_q[103]",
+   "flop": "bs_q\\[103\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.363,
+   "buffer_chain": [
+    "hold2999",
+    "output2227",
+    "hold2998",
+    "_6355_",
+    "hold2997",
+    "hold4787"
+   ]
+  },
+  {
+   "pin": "bs_q[104]",
+   "flop": "bs_q\\[104\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.383,
+   "buffer_chain": [
+    "hold3098",
+    "output2228",
+    "hold3097",
+    "_6356_",
+    "hold3096",
+    "hold4805"
+   ]
+  },
+  {
+   "pin": "bs_q[105]",
+   "flop": "bs_q\\[105\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.811,
+   "buffer_chain": [
+    "hold2996",
+    "output2229",
+    "hold2995",
+    "_6357_",
+    "hold2994",
+    "hold4786"
+   ]
+  },
+  {
+   "pin": "bs_q[106]",
+   "flop": "bs_q\\[106\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.129,
+   "buffer_chain": [
+    "hold2957",
+    "output2230",
+    "hold2956",
+    "_6358_",
+    "hold2955",
+    "hold4776"
+   ]
+  },
+  {
+   "pin": "bs_q[107]",
+   "flop": "bs_q\\[107\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.203,
+   "buffer_chain": [
+    "hold3071",
+    "output2231",
+    "hold3070",
+    "_6359_",
+    "hold3069",
+    "hold4792"
+   ]
+  },
+  {
+   "pin": "bs_q[108]",
+   "flop": "bs_q\\[108\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.415,
+   "buffer_chain": [
+    "hold3005",
+    "output2232",
+    "hold3004",
+    "_6360_",
+    "hold3003",
+    "hold4793"
+   ]
+  },
+  {
+   "pin": "bs_q[109]",
+   "flop": "bs_q\\[109\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.083,
+   "buffer_chain": [
+    "hold3029",
+    "output2233",
+    "hold3028",
+    "_6361_",
+    "hold3027",
+    "hold4782"
+   ]
+  },
+  {
+   "pin": "bs_q[10]",
+   "flop": "bs_q\\[10\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.841,
+   "buffer_chain": [
+    "hold3215",
+    "output2234",
+    "hold3214",
+    "_6262_",
+    "hold3213",
+    "hold4873"
+   ]
+  },
+  {
+   "pin": "bs_q[110]",
+   "flop": "bs_q\\[110\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.159,
+   "buffer_chain": [
+    "hold3023",
+    "output2235",
+    "hold3022",
+    "_6362_",
+    "hold3021",
+    "hold4784"
+   ]
+  },
+  {
+   "pin": "bs_q[111]",
+   "flop": "bs_q\\[111\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.937,
+   "buffer_chain": [
+    "hold2972",
+    "output2236",
+    "hold2971",
+    "_6363_",
+    "hold2970",
+    "hold4781"
+   ]
+  },
+  {
+   "pin": "bs_q[112]",
+   "flop": "bs_q\\[112\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.471,
+   "buffer_chain": [
+    "hold2987",
+    "output2237",
+    "hold2986",
+    "_6364_",
+    "hold2985",
+    "hold4771"
+   ]
+  },
+  {
+   "pin": "bs_q[113]",
+   "flop": "bs_q\\[113\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.357,
+   "buffer_chain": [
+    "hold2942",
+    "output2238",
+    "hold2941",
+    "_6365_",
+    "hold2940",
+    "hold4772"
+   ]
+  },
+  {
+   "pin": "bs_q[114]",
+   "flop": "bs_q\\[114\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.513,
+   "buffer_chain": [
+    "hold3083",
+    "output2239",
+    "hold3082",
+    "_6366_",
+    "hold3081",
+    "hold4802"
+   ]
+  },
+  {
+   "pin": "bs_q[115]",
+   "flop": "bs_q\\[115\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.345,
+   "buffer_chain": [
+    "hold2954",
+    "output2240",
+    "hold2953",
+    "_6367_",
+    "hold2952",
+    "hold4779"
+   ]
+  },
+  {
+   "pin": "bs_q[116]",
+   "flop": "bs_q\\[116\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.689,
+   "buffer_chain": [
+    "hold3110",
+    "output2241",
+    "hold3109",
+    "_6368_",
+    "hold3108",
+    "hold4811"
+   ]
+  },
+  {
+   "pin": "bs_q[117]",
+   "flop": "bs_q\\[117\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.273,
+   "buffer_chain": [
+    "hold2963",
+    "output2242",
+    "hold2962",
+    "_6369_",
+    "hold2961",
+    "hold4783"
+   ]
+  },
+  {
+   "pin": "bs_q[118]",
+   "flop": "bs_q\\[118\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.057,
+   "buffer_chain": [
+    "hold3041",
+    "output2243",
+    "hold3040",
+    "_6370_",
+    "hold3039",
+    "hold4794"
+   ]
+  },
+  {
+   "pin": "bs_q[119]",
+   "flop": "bs_q\\[119\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.267,
+   "buffer_chain": [
+    "hold2984",
+    "output2244",
+    "hold2983",
+    "_6371_",
+    "hold2982",
+    "hold4785"
+   ]
+  },
+  {
+   "pin": "bs_q[11]",
+   "flop": "bs_q\\[11\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.753,
+   "buffer_chain": [
+    "hold3254",
+    "output2245",
+    "hold3253",
+    "_6263_",
+    "hold3252",
+    "hold4878"
+   ]
+  },
+  {
+   "pin": "bs_q[120]",
+   "flop": "bs_q\\[120\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.423,
+   "buffer_chain": [
+    "hold2978",
+    "output2246",
+    "hold2977",
+    "_6372_",
+    "hold2976",
+    "hold4790"
+   ]
+  },
+  {
+   "pin": "bs_q[121]",
+   "flop": "bs_q\\[121\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.929,
+   "buffer_chain": [
+    "hold3167",
+    "output2247",
+    "hold3166",
+    "_6373_",
+    "hold3165",
+    "hold4826"
+   ]
+  },
+  {
+   "pin": "bs_q[122]",
+   "flop": "bs_q\\[122\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.763,
+   "buffer_chain": [
+    "hold3047",
+    "output2248",
+    "hold3046",
+    "_6374_",
+    "hold3045",
+    "hold4797"
+   ]
+  },
+  {
+   "pin": "bs_q[123]",
+   "flop": "bs_q\\[123\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.189,
+   "buffer_chain": [
+    "hold3020",
+    "output2249",
+    "hold3019",
+    "_6375_",
+    "hold3018",
+    "hold4803"
+   ]
+  },
+  {
+   "pin": "bs_q[124]",
+   "flop": "bs_q\\[124\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.453,
+   "buffer_chain": [
+    "hold3035",
+    "output2250",
+    "hold3034",
+    "_6376_",
+    "hold3033",
+    "hold4801"
+   ]
+  },
+  {
+   "pin": "bs_q[125]",
+   "flop": "bs_q\\[125\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.447,
+   "buffer_chain": [
+    "hold3011",
+    "output2251",
+    "hold3010",
+    "_6377_",
+    "hold3009",
+    "hold4795"
+   ]
+  },
+  {
+   "pin": "bs_q[126]",
+   "flop": "bs_q\\[126\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.197,
+   "buffer_chain": [
+    "hold3017",
+    "output2252",
+    "hold3016",
+    "_6378_",
+    "hold3015",
+    "hold4780"
+   ]
+  },
+  {
+   "pin": "bs_q[127]",
+   "flop": "bs_q\\[127\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.273,
+   "buffer_chain": [
+    "hold2921",
+    "output2253",
+    "hold2920",
+    "_6379_",
+    "hold2919",
+    "hold4767"
+   ]
+  },
+  {
+   "pin": "bs_q[128]",
+   "flop": "bs_q\\[128\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.617,
+   "buffer_chain": [
+    "hold3044",
+    "output2254",
+    "hold3043",
+    "_6380_",
+    "hold3042",
+    "hold4774"
+   ]
+  },
+  {
+   "pin": "bs_q[129]",
+   "flop": "bs_q\\[129\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.667,
+   "buffer_chain": [
+    "hold2909",
+    "output2255",
+    "hold2908",
+    "_6381_",
+    "hold2907",
+    "hold4754"
+   ]
+  },
+  {
+   "pin": "bs_q[12]",
+   "flop": "bs_q\\[12\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.071,
+   "buffer_chain": [
+    "hold3317",
+    "output2256",
+    "hold3316",
+    "_6264_",
+    "hold3315",
+    "hold4887"
+   ]
+  },
+  {
+   "pin": "bs_q[130]",
+   "flop": "bs_q\\[130\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.715,
+   "buffer_chain": [
+    "hold2939",
+    "output2257",
+    "hold2938",
+    "_6382_",
+    "hold2937",
+    "hold4763"
+   ]
+  },
+  {
+   "pin": "bs_q[131]",
+   "flop": "bs_q\\[131\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.871,
+   "buffer_chain": [
+    "hold2936",
+    "output2258",
+    "hold2935",
+    "_6383_",
+    "hold2934",
+    "hold4766"
+   ]
+  },
+  {
+   "pin": "bs_q[132]",
+   "flop": "bs_q\\[132\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.459,
+   "buffer_chain": [
+    "hold2924",
+    "output2259",
+    "hold2923",
+    "_6384_",
+    "hold2922",
+    "hold4765"
+   ]
+  },
+  {
+   "pin": "bs_q[133]",
+   "flop": "bs_q\\[133\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.777,
+   "buffer_chain": [
+    "hold2993",
+    "output2260",
+    "hold2992",
+    "_6385_",
+    "hold2991",
+    "hold4769"
+   ]
+  },
+  {
+   "pin": "bs_q[134]",
+   "flop": "bs_q\\[134\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.771,
+   "buffer_chain": [
+    "hold2930",
+    "output2261",
+    "hold2929",
+    "_6386_",
+    "hold2928",
+    "hold4762"
+   ]
+  },
+  {
+   "pin": "bs_q[135]",
+   "flop": "bs_q\\[135\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.143,
+   "buffer_chain": [
+    "hold2969",
+    "output2262",
+    "hold2968",
+    "_6387_",
+    "hold2967",
+    "hold4759"
+   ]
+  },
+  {
+   "pin": "bs_q[136]",
+   "flop": "bs_q\\[136\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.327,
+   "buffer_chain": [
+    "hold2912",
+    "output2263",
+    "hold2911",
+    "_6388_",
+    "hold2910",
+    "hold4753"
+   ]
+  },
+  {
+   "pin": "bs_q[137]",
+   "flop": "bs_q\\[137\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.185,
+   "buffer_chain": [
+    "hold2981",
+    "output2264",
+    "hold2980",
+    "_6389_",
+    "hold2979",
+    "hold4770"
+   ]
+  },
+  {
+   "pin": "bs_q[138]",
+   "flop": "bs_q\\[138\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.589,
+   "buffer_chain": [
+    "hold2927",
+    "output2265",
+    "hold2926",
+    "_6390_",
+    "hold2925",
+    "hold4758"
+   ]
+  },
+  {
+   "pin": "bs_q[139]",
+   "flop": "bs_q\\[139\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.255,
+   "buffer_chain": [
+    "hold2900",
+    "output2266",
+    "hold2899",
+    "_6391_",
+    "hold2898",
+    "hold4750"
+   ]
+  },
+  {
+   "pin": "bs_q[13]",
+   "flop": "bs_q\\[13\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.201,
+   "buffer_chain": [
+    "hold3350",
+    "output2267",
+    "hold3349",
+    "_6265_",
+    "hold3348",
+    "hold4893"
+   ]
+  },
+  {
+   "pin": "bs_q[140]",
+   "flop": "bs_q\\[140\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.329,
+   "buffer_chain": [
+    "hold2960",
+    "output2268",
+    "hold2959",
+    "_6392_",
+    "hold2958",
+    "hold4756"
+   ]
+  },
+  {
+   "pin": "bs_q[141]",
+   "flop": "bs_q\\[141\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.513,
+   "buffer_chain": [
+    "hold2906",
+    "output2269",
+    "hold2905",
+    "_6393_",
+    "hold2904",
+    "hold4751"
+   ]
+  },
+  {
+   "pin": "bs_q[142]",
+   "flop": "bs_q\\[142\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.831,
+   "buffer_chain": [
+    "hold3014",
+    "output2270",
+    "hold3013",
+    "_6394_",
+    "hold3012",
+    "hold4777"
+   ]
+  },
+  {
+   "pin": "bs_q[143]",
+   "flop": "bs_q\\[143\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.367,
+   "buffer_chain": [
+    "hold2948",
+    "output2271",
+    "hold2947",
+    "_6395_",
+    "hold2946",
+    "hold4760"
+   ]
+  },
+  {
+   "pin": "bs_q[144]",
+   "flop": "bs_q\\[144\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.495,
+   "buffer_chain": [
+    "hold2903",
+    "output2272",
+    "hold2902",
+    "_6396_",
+    "hold2901",
+    "hold4752"
+   ]
+  },
+  {
+   "pin": "bs_q[145]",
+   "flop": "bs_q\\[145\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.407,
+   "buffer_chain": [
+    "hold3008",
+    "output2273",
+    "hold3007",
+    "_6397_",
+    "hold3006",
+    "hold4778"
+   ]
+  },
+  {
+   "pin": "bs_q[146]",
+   "flop": "bs_q\\[146\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.835,
+   "buffer_chain": [
+    "hold2897",
+    "output2274",
+    "hold2896",
+    "_6398_",
+    "hold2895",
+    "hold4749"
+   ]
+  },
+  {
+   "pin": "bs_q[147]",
+   "flop": "bs_q\\[147\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.639,
+   "buffer_chain": [
+    "hold2945",
+    "output2275",
+    "hold2944",
+    "_6399_",
+    "hold2943",
+    "hold4757"
+   ]
+  },
+  {
+   "pin": "bs_q[148]",
+   "flop": "bs_q\\[148\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.039,
+   "buffer_chain": [
+    "hold2918",
+    "output2276",
+    "hold2917",
+    "_6400_",
+    "hold2916",
+    "hold4755"
+   ]
+  },
+  {
+   "pin": "bs_q[149]",
+   "flop": "bs_q\\[149\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.167,
+   "buffer_chain": [
+    "hold3038",
+    "output2277",
+    "hold3037",
+    "_6401_",
+    "hold3036",
+    "hold4788"
+   ]
+  },
+  {
+   "pin": "bs_q[14]",
+   "flop": "bs_q\\[14\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.221,
+   "buffer_chain": [
+    "hold3305",
+    "output2278",
+    "hold3304",
+    "_6266_",
+    "hold3303",
+    "hold4867"
+   ]
+  },
+  {
+   "pin": "bs_q[150]",
+   "flop": "bs_q\\[150\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.757,
+   "buffer_chain": [
+    "hold2966",
+    "output2279",
+    "hold2965",
+    "_6402_",
+    "hold2964",
+    "hold4768"
+   ]
+  },
+  {
+   "pin": "bs_q[151]",
+   "flop": "bs_q\\[151\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.237,
+   "buffer_chain": [
+    "hold2933",
+    "output2280",
+    "hold2932",
+    "_6403_",
+    "hold2931",
+    "hold4761"
+   ]
+  },
+  {
+   "pin": "bs_q[152]",
+   "flop": "bs_q\\[152\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.581,
+   "buffer_chain": [
+    "hold2894",
+    "output2281",
+    "hold2893",
+    "_6404_",
+    "hold2892",
+    "hold4747"
+   ]
+  },
+  {
+   "pin": "bs_q[153]",
+   "flop": "bs_q\\[153\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.171,
+   "buffer_chain": [
+    "hold2915",
+    "output2282",
+    "hold2914",
+    "_6405_",
+    "hold2913",
+    "hold4764"
+   ]
+  },
+  {
+   "pin": "bs_q[154]",
+   "flop": "bs_q\\[154\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.543,
+   "buffer_chain": [
+    "hold2843",
+    "output2283",
+    "hold2842",
+    "_6406_",
+    "hold2841",
+    "hold4732"
+   ]
+  },
+  {
+   "pin": "bs_q[155]",
+   "flop": "bs_q\\[155\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.285,
+   "buffer_chain": [
+    "hold2951",
+    "output2284",
+    "hold2950",
+    "_6407_",
+    "hold2949",
+    "hold4773"
+   ]
+  },
+  {
+   "pin": "bs_q[156]",
+   "flop": "bs_q\\[156\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.585,
+   "buffer_chain": [
+    "hold2861",
+    "output2285",
+    "hold2860",
+    "_6408_",
+    "hold2859",
+    "hold4736"
+   ]
+  },
+  {
+   "pin": "bs_q[157]",
+   "flop": "bs_q\\[157\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.201,
+   "buffer_chain": [
+    "hold2876",
+    "output2286",
+    "hold2875",
+    "_6409_",
+    "hold2874",
+    "hold4743"
+   ]
+  },
+  {
+   "pin": "bs_q[158]",
+   "flop": "bs_q\\[158\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.249,
+   "buffer_chain": [
+    "hold2840",
+    "output2287",
+    "hold2839",
+    "_6410_",
+    "hold2838",
+    "hold4731"
+   ]
+  },
+  {
+   "pin": "bs_q[159]",
+   "flop": "bs_q\\[159\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.269,
+   "buffer_chain": [
+    "hold2882",
+    "output2288",
+    "hold2881",
+    "_6411_",
+    "hold2880",
+    "hold4735"
+   ]
+  },
+  {
+   "pin": "bs_q[15]",
+   "flop": "bs_q\\[15\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.405,
+   "buffer_chain": [
+    "hold3284",
+    "output2289",
+    "hold3283",
+    "_6267_",
+    "hold3282",
+    "hold4877"
+   ]
+  },
+  {
+   "pin": "bs_q[160]",
+   "flop": "bs_q\\[160\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.615,
+   "buffer_chain": [
+    "hold2831",
+    "output2290",
+    "hold2830",
+    "_6412_",
+    "hold2829",
+    "hold4725"
+   ]
+  },
+  {
+   "pin": "bs_q[161]",
+   "flop": "bs_q\\[161\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.797,
+   "buffer_chain": [
+    "hold2885",
+    "output2291",
+    "hold2884",
+    "_6413_",
+    "hold2883",
+    "hold4739"
+   ]
+  },
+  {
+   "pin": "bs_q[162]",
+   "flop": "bs_q\\[162\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.171,
+   "buffer_chain": [
+    "hold2828",
+    "output2292",
+    "hold2827",
+    "_6414_",
+    "hold2826",
+    "hold4722"
+   ]
+  },
+  {
+   "pin": "bs_q[163]",
+   "flop": "bs_q\\[163\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.543,
+   "buffer_chain": [
+    "hold2825",
+    "output2293",
+    "hold2824",
+    "_6415_",
+    "hold2823",
+    "hold4728"
+   ]
+  },
+  {
+   "pin": "bs_q[164]",
+   "flop": "bs_q\\[164\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.293,
+   "buffer_chain": [
+    "hold2852",
+    "output2294",
+    "hold2851",
+    "_6416_",
+    "hold2850",
+    "hold4729"
+   ]
+  },
+  {
+   "pin": "bs_q[165]",
+   "flop": "bs_q\\[165\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.369,
+   "buffer_chain": [
+    "hold2816",
+    "output2295",
+    "hold2815",
+    "_6417_",
+    "hold2814",
+    "hold4720"
+   ]
+  },
+  {
+   "pin": "bs_q[166]",
+   "flop": "bs_q\\[166\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.119,
+   "buffer_chain": [
+    "hold2864",
+    "output2296",
+    "hold2863",
+    "_6418_",
+    "hold2862",
+    "hold4727"
+   ]
+  },
+  {
+   "pin": "bs_q[167]",
+   "flop": "bs_q\\[167\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.303,
+   "buffer_chain": [
+    "hold2819",
+    "output2297",
+    "hold2818",
+    "_6419_",
+    "hold2817",
+    "hold4719"
+   ]
+  },
+  {
+   "pin": "bs_q[168]",
+   "flop": "bs_q\\[168\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.999,
+   "buffer_chain": [
+    "hold2873",
+    "output2298",
+    "hold2872",
+    "_6420_",
+    "hold2871",
+    "hold4738"
+   ]
+  },
+  {
+   "pin": "bs_q[169]",
+   "flop": "bs_q\\[169\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.697,
+   "buffer_chain": [
+    "hold2822",
+    "output2299",
+    "hold2821",
+    "_6421_",
+    "hold2820",
+    "hold4721"
+   ]
+  },
+  {
+   "pin": "bs_q[16]",
+   "flop": "bs_q\\[16\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.237,
+   "buffer_chain": [
+    "hold3218",
+    "output2300",
+    "hold3217",
+    "_6268_",
+    "hold3216",
+    "hold4872"
+   ]
+  },
+  {
+   "pin": "bs_q[170]",
+   "flop": "bs_q\\[170\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.015,
+   "buffer_chain": [
+    "hold2807",
+    "output2301",
+    "hold2806",
+    "_6422_",
+    "hold2805",
+    "hold4718"
+   ]
+  },
+  {
+   "pin": "bs_q[171]",
+   "flop": "bs_q\\[171\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.305,
+   "buffer_chain": [
+    "hold2891",
+    "output2302",
+    "hold2890",
+    "_6423_",
+    "hold2889",
+    "hold4746"
+   ]
+  },
+  {
+   "pin": "bs_q[172]",
+   "flop": "bs_q\\[172\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.273,
+   "buffer_chain": [
+    "hold2810",
+    "output2303",
+    "hold2809",
+    "_6424_",
+    "hold2808",
+    "hold4723"
+   ]
+  },
+  {
+   "pin": "bs_q[173]",
+   "flop": "bs_q\\[173\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.969,
+   "buffer_chain": [
+    "hold2879",
+    "output2304",
+    "hold2878",
+    "_6425_",
+    "hold2877",
+    "hold4745"
+   ]
+  },
+  {
+   "pin": "bs_q[174]",
+   "flop": "bs_q\\[174\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.129,
+   "buffer_chain": [
+    "hold2837",
+    "output2305",
+    "hold2836",
+    "_6426_",
+    "hold2835",
+    "hold4724"
+   ]
+  },
+  {
+   "pin": "bs_q[175]",
+   "flop": "bs_q\\[175\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.931,
+   "buffer_chain": [
+    "hold2867",
+    "output2306",
+    "hold2866",
+    "_6427_",
+    "hold2865",
+    "hold4744"
+   ]
+  },
+  {
+   "pin": "bs_q[176]",
+   "flop": "bs_q\\[176\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.547,
+   "buffer_chain": [
+    "hold2813",
+    "output2307",
+    "hold2812",
+    "_6428_",
+    "hold2811",
+    "hold4726"
+   ]
+  },
+  {
+   "pin": "bs_q[177]",
+   "flop": "bs_q\\[177\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.513,
+   "buffer_chain": [
+    "hold2846",
+    "output2308",
+    "hold2845",
+    "_6429_",
+    "hold2844",
+    "hold4730"
+   ]
+  },
+  {
+   "pin": "bs_q[178]",
+   "flop": "bs_q\\[178\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.129,
+   "buffer_chain": [
+    "hold2858",
+    "output2309",
+    "hold2857",
+    "_6430_",
+    "hold2856",
+    "hold4737"
+   ]
+  },
+  {
+   "pin": "bs_q[179]",
+   "flop": "bs_q\\[179\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.555,
+   "buffer_chain": [
+    "hold2855",
+    "output2310",
+    "hold2854",
+    "_6431_",
+    "hold2853",
+    "hold4734"
+   ]
+  },
+  {
+   "pin": "bs_q[17]",
+   "flop": "bs_q\\[17\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.041,
+   "buffer_chain": [
+    "hold3278",
+    "output2311",
+    "hold3277",
+    "_6269_",
+    "hold3276",
+    "hold4875"
+   ]
+  },
+  {
+   "pin": "bs_q[180]",
+   "flop": "bs_q\\[180\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.819,
+   "buffer_chain": [
+    "hold2888",
+    "output2312",
+    "hold2887",
+    "_6432_",
+    "hold2886",
+    "hold4748"
+   ]
+  },
+  {
+   "pin": "bs_q[181]",
+   "flop": "bs_q\\[181\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.327,
+   "buffer_chain": [
+    "hold2849",
+    "output2313",
+    "hold2848",
+    "_6433_",
+    "hold2847",
+    "hold4742"
+   ]
+  },
+  {
+   "pin": "bs_q[182]",
+   "flop": "bs_q\\[182\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.239,
+   "buffer_chain": [
+    "hold3173",
+    "output2314",
+    "hold3172",
+    "_6434_",
+    "hold3171",
+    "hold4837"
+   ]
+  },
+  {
+   "pin": "bs_q[183]",
+   "flop": "bs_q\\[183\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.561,
+   "buffer_chain": [
+    "hold2870",
+    "output2315",
+    "hold2869",
+    "_6435_",
+    "hold2868",
+    "hold4741"
+   ]
+  },
+  {
+   "pin": "bs_q[184]",
+   "flop": "bs_q\\[184\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.093,
+   "buffer_chain": [
+    "hold2834",
+    "output2316",
+    "hold2833",
+    "_6436_",
+    "hold2832",
+    "hold4740"
+   ]
+  },
+  {
+   "pin": "bs_q[185]",
+   "flop": "bs_q\\[185\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.329,
+   "buffer_chain": [
+    "hold3209",
+    "output2317",
+    "hold3208",
+    "_6437_",
+    "hold3207",
+    "hold4835"
+   ]
+  },
+  {
+   "pin": "bs_q[186]",
+   "flop": "bs_q\\[186\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.189,
+   "buffer_chain": [
+    "hold3080",
+    "output2318",
+    "hold3079",
+    "_6438_",
+    "hold3078",
+    "hold4820"
+   ]
+  },
+  {
+   "pin": "bs_q[187]",
+   "flop": "bs_q\\[187\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.371,
+   "buffer_chain": [
+    "hold3179",
+    "output2319",
+    "hold3178",
+    "_6439_",
+    "hold3177",
+    "hold4830"
+   ]
+  },
+  {
+   "pin": "bs_q[188]",
+   "flop": "bs_q\\[188\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.177,
+   "buffer_chain": [
+    "hold3155",
+    "output2320",
+    "hold3154",
+    "_6440_",
+    "hold3153",
+    "hold4833"
+   ]
+  },
+  {
+   "pin": "bs_q[189]",
+   "flop": "bs_q\\[189\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.955,
+   "buffer_chain": [
+    "hold3074",
+    "output2321",
+    "hold3073",
+    "_6441_",
+    "hold3072",
+    "hold4812"
+   ]
+  },
+  {
+   "pin": "bs_q[18]",
+   "flop": "bs_q\\[18\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.009,
+   "buffer_chain": [
+    "hold3125",
+    "output2322",
+    "hold3124",
+    "_6270_",
+    "hold3123",
+    "hold4843"
+   ]
+  },
+  {
+   "pin": "bs_q[190]",
+   "flop": "bs_q\\[190\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.029,
+   "buffer_chain": [
+    "hold3119",
+    "output2323",
+    "hold3118",
+    "_6442_",
+    "hold3117",
+    "hold4823"
+   ]
+  },
+  {
+   "pin": "bs_q[191]",
+   "flop": "bs_q\\[191\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.105,
+   "buffer_chain": [
+    "hold3065",
+    "output2324",
+    "hold3064",
+    "_6443_",
+    "hold3063",
+    "hold4806"
+   ]
+  },
+  {
+   "pin": "bs_q[192]",
+   "flop": "bs_q\\[192\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.071,
+   "buffer_chain": [
+    "hold3107",
+    "output2325",
+    "hold3106",
+    "_6444_",
+    "hold3105",
+    "hold4819"
+   ]
+  },
+  {
+   "pin": "bs_q[193]",
+   "flop": "bs_q\\[193\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.135,
+   "buffer_chain": [
+    "hold3059",
+    "output2326",
+    "hold3058",
+    "_6445_",
+    "hold3057",
+    "hold4809"
+   ]
+  },
+  {
+   "pin": "bs_q[194]",
+   "flop": "bs_q\\[194\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.653,
+   "buffer_chain": [
+    "hold3131",
+    "output2327",
+    "hold3130",
+    "_6446_",
+    "hold3129",
+    "hold4817"
+   ]
+  },
+  {
+   "pin": "bs_q[195]",
+   "flop": "bs_q\\[195\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.243,
+   "buffer_chain": [
+    "hold3095",
+    "output2328",
+    "hold3094",
+    "_6447_",
+    "hold3093",
+    "hold4814"
+   ]
+  },
+  {
+   "pin": "bs_q[196]",
+   "flop": "bs_q\\[196\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.129,
+   "buffer_chain": [
+    "hold3026",
+    "output2329",
+    "hold3025",
+    "_6448_",
+    "hold3024",
+    "hold4796"
+   ]
+  },
+  {
+   "pin": "bs_q[197]",
+   "flop": "bs_q\\[197\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.203,
+   "buffer_chain": [
+    "hold3113",
+    "output2330",
+    "hold3112",
+    "_6449_",
+    "hold3111",
+    "hold4813"
+   ]
+  },
+  {
+   "pin": "bs_q[198]",
+   "flop": "bs_q\\[198\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.037,
+   "buffer_chain": [
+    "hold3092",
+    "output2331",
+    "hold3091",
+    "_6450_",
+    "hold3090",
+    "hold4816"
+   ]
+  },
+  {
+   "pin": "bs_q[199]",
+   "flop": "bs_q\\[199\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.921,
+   "buffer_chain": [
+    "hold3062",
+    "output2332",
+    "hold3061",
+    "_6451_",
+    "hold3060",
+    "hold4807"
+   ]
+  },
+  {
+   "pin": "bs_q[19]",
+   "flop": "bs_q\\[19\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.651,
+   "buffer_chain": [
+    "hold3188",
+    "output2333",
+    "hold3187",
+    "_6271_",
+    "hold3186",
+    "hold4857"
+   ]
+  },
+  {
+   "pin": "bs_q[1]",
+   "flop": "bs_q\\[1\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.657,
+   "buffer_chain": [
+    "hold3407",
+    "output2334",
+    "hold3406",
+    "_6253_",
+    "hold3405",
+    "hold4930"
+   ]
+  },
+  {
+   "pin": "bs_q[200]",
+   "flop": "bs_q\\[200\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.583,
+   "buffer_chain": [
+    "hold2990",
+    "output2335",
+    "hold2989",
+    "_6452_",
+    "hold2988",
+    "hold4789"
+   ]
+  },
+  {
+   "pin": "bs_q[201]",
+   "flop": "bs_q\\[201\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.827,
+   "buffer_chain": [
+    "hold3206",
+    "output2336",
+    "hold3205",
+    "_6453_",
+    "hold3204",
+    "hold4828"
+   ]
+  },
+  {
+   "pin": "bs_q[202]",
+   "flop": "bs_q\\[202\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.973,
+   "buffer_chain": [
+    "hold3056",
+    "output2337",
+    "hold3055",
+    "_6454_",
+    "hold3054",
+    "hold4804"
+   ]
+  },
+  {
+   "pin": "bs_q[203]",
+   "flop": "bs_q\\[203\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.763,
+   "buffer_chain": [
+    "hold3002",
+    "output2338",
+    "hold3001",
+    "_6455_",
+    "hold3000",
+    "hold4800"
+   ]
+  },
+  {
+   "pin": "bs_q[204]",
+   "flop": "bs_q\\[204\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.755,
+   "buffer_chain": [
+    "hold3164",
+    "output2339",
+    "hold3163",
+    "_6456_",
+    "hold3162",
+    "hold4832"
+   ]
+  },
+  {
+   "pin": "bs_q[205]",
+   "flop": "bs_q\\[205\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.913,
+   "buffer_chain": [
+    "hold3086",
+    "output2340",
+    "hold3085",
+    "_6457_",
+    "hold3084",
+    "hold4821"
+   ]
+  },
+  {
+   "pin": "bs_q[206]",
+   "flop": "bs_q\\[206\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.581,
+   "buffer_chain": [
+    "hold3212",
+    "output2341",
+    "hold3211",
+    "_6458_",
+    "hold3210",
+    "hold4831"
+   ]
+  },
+  {
+   "pin": "bs_q[207]",
+   "flop": "bs_q\\[207\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.219,
+   "buffer_chain": [
+    "hold3050",
+    "output2342",
+    "hold3049",
+    "_6459_",
+    "hold3048",
+    "hold4808"
+   ]
+  },
+  {
+   "pin": "bs_q[208]",
+   "flop": "bs_q\\[208\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.327,
+   "buffer_chain": [
+    "hold3089",
+    "output2343",
+    "hold3088",
+    "_6460_",
+    "hold3087",
+    "hold4818"
+   ]
+  },
+  {
+   "pin": "bs_q[209]",
+   "flop": "bs_q\\[209\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.483,
+   "buffer_chain": [
+    "hold3521",
+    "output2344",
+    "hold3520",
+    "_6461_",
+    "hold3519",
+    "hold4957"
+   ]
+  },
+  {
+   "pin": "bs_q[20]",
+   "flop": "bs_q\\[20\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.339,
+   "buffer_chain": [
+    "hold3161",
+    "output2345",
+    "hold3160",
+    "_6272_",
+    "hold3159",
+    "hold4856"
+   ]
+  },
+  {
+   "pin": "bs_q[210]",
+   "flop": "bs_q\\[210\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.369,
+   "buffer_chain": [
+    "hold3467",
+    "output2346",
+    "hold3466",
+    "_6462_",
+    "hold3465",
+    "hold4944"
+   ]
+  },
+  {
+   "pin": "bs_q[211]",
+   "flop": "bs_q\\[211\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.957,
+   "buffer_chain": [
+    "hold3524",
+    "output2347",
+    "hold3523",
+    "_6463_",
+    "hold3522",
+    "hold4962"
+   ]
+  },
+  {
+   "pin": "bs_q[212]",
+   "flop": "bs_q\\[212\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.303,
+   "buffer_chain": [
+    "hold3449",
+    "output2348",
+    "hold3448",
+    "_6464_",
+    "hold3447",
+    "hold4937"
+   ]
+  },
+  {
+   "pin": "bs_q[213]",
+   "flop": "bs_q\\[213\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.647,
+   "buffer_chain": [
+    "hold3563",
+    "output2349",
+    "hold3562",
+    "_6465_",
+    "hold3561",
+    "hold4975"
+   ]
+  },
+  {
+   "pin": "bs_q[214]",
+   "flop": "bs_q\\[214\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.751,
+   "buffer_chain": [
+    "hold3464",
+    "output2350",
+    "hold3463",
+    "_6466_",
+    "hold3462",
+    "hold4950"
+   ]
+  },
+  {
+   "pin": "bs_q[215]",
+   "flop": "bs_q\\[215\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.123,
+   "buffer_chain": [
+    "hold3068",
+    "output2351",
+    "hold3067",
+    "_6467_",
+    "hold3066",
+    "hold4815"
+   ]
+  },
+  {
+   "pin": "bs_q[216]",
+   "flop": "bs_q\\[216\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.981,
+   "buffer_chain": [
+    "hold3551",
+    "output2352",
+    "hold3550",
+    "_6468_",
+    "hold3549",
+    "hold4971"
+   ]
+  },
+  {
+   "pin": "bs_q[217]",
+   "flop": "bs_q\\[217\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.165,
+   "buffer_chain": [
+    "hold3446",
+    "output2353",
+    "hold3445",
+    "_6469_",
+    "hold3444",
+    "hold4943"
+   ]
+  },
+  {
+   "pin": "bs_q[218]",
+   "flop": "bs_q\\[218\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.239,
+   "buffer_chain": [
+    "hold3116",
+    "output2354",
+    "hold3115",
+    "_6470_",
+    "hold3114",
+    "hold4829"
+   ]
+  },
+  {
+   "pin": "bs_q[219]",
+   "flop": "bs_q\\[219\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.315,
+   "buffer_chain": [
+    "hold3101",
+    "output2355",
+    "hold3100",
+    "_6471_",
+    "hold3099",
+    "hold4822"
+   ]
+  },
+  {
+   "pin": "bs_q[21]",
+   "flop": "bs_q\\[21\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.855,
+   "buffer_chain": [
+    "hold3227",
+    "output2356",
+    "hold3226",
+    "_6273_",
+    "hold3225",
+    "hold4861"
+   ]
+  },
+  {
+   "pin": "bs_q[220]",
+   "flop": "bs_q\\[220\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.119,
+   "buffer_chain": [
+    "hold3542",
+    "output2357",
+    "hold3541",
+    "_6472_",
+    "hold3540",
+    "hold4966"
+   ]
+  },
+  {
+   "pin": "bs_q[221]",
+   "flop": "bs_q\\[221\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.655,
+   "buffer_chain": [
+    "hold3104",
+    "output2358",
+    "hold3103",
+    "_6473_",
+    "hold3102",
+    "hold4824"
+   ]
+  },
+  {
+   "pin": "bs_q[222]",
+   "flop": "bs_q\\[222\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.757,
+   "buffer_chain": [
+    "hold3431",
+    "output2359",
+    "hold3430",
+    "_6474_",
+    "hold3429",
+    "hold4949"
+   ]
+  },
+  {
+   "pin": "bs_q[223]",
+   "flop": "bs_q\\[223\\]$_DFF_P_",
+   "buffers": 5,
+   "distance_um": 7.479,
+   "buffer_chain": [
+    "hold3569",
+    "output2360",
+    "hold3568",
+    "_6475_",
+    "hold3567"
+   ]
+  },
+  {
+   "pin": "bs_q[224]",
+   "flop": "bs_q\\[224\\]$_DFF_P_",
+   "buffers": 5,
+   "distance_um": 5.853,
+   "buffer_chain": [
+    "hold3557",
+    "output2361",
+    "hold3556",
+    "_6476_",
+    "hold3555"
+   ]
+  },
+  {
+   "pin": "bs_q[225]",
+   "flop": "bs_q\\[225\\]$_DFF_P_",
+   "buffers": 5,
+   "distance_um": 7.251,
+   "buffer_chain": [
+    "hold3572",
+    "output2362",
+    "hold3571",
+    "_6477_",
+    "hold3570"
+   ]
+  },
+  {
+   "pin": "bs_q[226]",
+   "flop": "bs_q\\[226\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.381,
+   "buffer_chain": [
+    "hold3536",
+    "output2363",
+    "hold3535",
+    "_6478_",
+    "hold3534",
+    "hold4961"
+   ]
+  },
+  {
+   "pin": "bs_q[227]",
+   "flop": "bs_q\\[227\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.267,
+   "buffer_chain": [
+    "hold3494",
+    "output2364",
+    "hold3493",
+    "_6479_",
+    "hold3492",
+    "hold4963"
+   ]
+  },
+  {
+   "pin": "bs_q[228]",
+   "flop": "bs_q\\[228\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.315,
+   "buffer_chain": [
+    "hold3515",
+    "output2365",
+    "hold3514",
+    "_6480_",
+    "hold3513",
+    "hold4955"
+   ]
+  },
+  {
+   "pin": "bs_q[229]",
+   "flop": "bs_q\\[229\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.471,
+   "buffer_chain": [
+    "hold3482",
+    "output2366",
+    "hold3481",
+    "_6481_",
+    "hold3480",
+    "hold4945"
+   ]
+  },
+  {
+   "pin": "bs_q[22]",
+   "flop": "bs_q\\[22\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.417,
+   "buffer_chain": [
+    "hold3269",
+    "output2367",
+    "hold3268",
+    "_6274_",
+    "hold3267",
+    "hold4868"
+   ]
+  },
+  {
+   "pin": "bs_q[230]",
+   "flop": "bs_q\\[230\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.221,
+   "buffer_chain": [
+    "hold3554",
+    "output2368",
+    "hold3553",
+    "_6482_",
+    "hold3552",
+    "hold4964"
+   ]
+  },
+  {
+   "pin": "bs_q[231]",
+   "flop": "bs_q\\[231\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.417,
+   "buffer_chain": [
+    "hold3476",
+    "output2369",
+    "hold3475",
+    "_6483_",
+    "hold3474",
+    "hold4953"
+   ]
+  },
+  {
+   "pin": "bs_q[232]",
+   "flop": "bs_q\\[232\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.477,
+   "buffer_chain": [
+    "hold3539",
+    "output2370",
+    "hold3538",
+    "_6484_",
+    "hold3537",
+    "hold4968"
+   ]
+  },
+  {
+   "pin": "bs_q[233]",
+   "flop": "bs_q\\[233\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.015,
+   "buffer_chain": [
+    "hold3404",
+    "output2371",
+    "hold3403",
+    "_6485_",
+    "hold3402",
+    "hold4938"
+   ]
+  },
+  {
+   "pin": "bs_q[234]",
+   "flop": "bs_q\\[234\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.333,
+   "buffer_chain": [
+    "hold3440",
+    "output2372",
+    "hold3439",
+    "_6486_",
+    "hold3438",
+    "hold4942"
+   ]
+  },
+  {
+   "pin": "bs_q[235]",
+   "flop": "bs_q\\[235\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.111,
+   "buffer_chain": [
+    "hold3434",
+    "output2373",
+    "hold3433",
+    "_6487_",
+    "hold3432",
+    "hold4940"
+   ]
+  },
+  {
+   "pin": "bs_q[236]",
+   "flop": "bs_q\\[236\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.105,
+   "buffer_chain": [
+    "hold3455",
+    "output2374",
+    "hold3454",
+    "_6488_",
+    "hold3453",
+    "hold4932"
+   ]
+  },
+  {
+   "pin": "bs_q[237]",
+   "flop": "bs_q\\[237\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.909,
+   "buffer_chain": [
+    "hold3470",
+    "output2375",
+    "hold3469",
+    "_6489_",
+    "hold3468",
+    "hold4941"
+   ]
+  },
+  {
+   "pin": "bs_q[238]",
+   "flop": "bs_q\\[238\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.093,
+   "buffer_chain": [
+    "hold3416",
+    "output2376",
+    "hold3415",
+    "_6490_",
+    "hold3414",
+    "hold4936"
+   ]
+  },
+  {
+   "pin": "bs_q[239]",
+   "flop": "bs_q\\[239\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.113,
+   "buffer_chain": [
+    "hold3461",
+    "output2377",
+    "hold3460",
+    "_6491_",
+    "hold3459",
+    "hold4934"
+   ]
+  },
+  {
+   "pin": "bs_q[23]",
+   "flop": "bs_q\\[23\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.303,
+   "buffer_chain": [
+    "hold3221",
+    "output2378",
+    "hold3220",
+    "_6275_",
+    "hold3219",
+    "hold4865"
+   ]
+  },
+  {
+   "pin": "bs_q[240]",
+   "flop": "bs_q\\[240\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.471,
+   "buffer_chain": [
+    "hold3362",
+    "output2379",
+    "hold3361",
+    "_6492_",
+    "hold3360",
+    "hold4926"
+   ]
+  },
+  {
+   "pin": "bs_q[241]",
+   "flop": "bs_q\\[241\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.639,
+   "buffer_chain": [
+    "hold3326",
+    "output2380",
+    "hold3325",
+    "_6493_",
+    "hold3324",
+    "hold4915"
+   ]
+  },
+  {
+   "pin": "bs_q[242]",
+   "flop": "bs_q\\[242\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.203,
+   "buffer_chain": [
+    "hold3518",
+    "output2381",
+    "hold3517",
+    "_6494_",
+    "hold3516",
+    "hold4947"
+   ]
+  },
+  {
+   "pin": "bs_q[243]",
+   "flop": "bs_q\\[243\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.901,
+   "buffer_chain": [
+    "hold3356",
+    "output2382",
+    "hold3355",
+    "_6495_",
+    "hold3354",
+    "hold4927"
+   ]
+  },
+  {
+   "pin": "bs_q[244]",
+   "flop": "bs_q\\[244\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.921,
+   "buffer_chain": [
+    "hold3509",
+    "output2383",
+    "hold3508",
+    "_6496_",
+    "hold3507",
+    "hold4948"
+   ]
+  },
+  {
+   "pin": "bs_q[245]",
+   "flop": "bs_q\\[245\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.555,
+   "buffer_chain": [
+    "hold3437",
+    "output2384",
+    "hold3436",
+    "_6497_",
+    "hold3435",
+    "hold4935"
+   ]
+  },
+  {
+   "pin": "bs_q[246]",
+   "flop": "bs_q\\[246\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.801,
+   "buffer_chain": [
+    "hold3503",
+    "output2385",
+    "hold3502",
+    "_6498_",
+    "hold3501",
+    "hold4951"
+   ]
+  },
+  {
+   "pin": "bs_q[247]",
+   "flop": "bs_q\\[247\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.513,
+   "buffer_chain": [
+    "hold3545",
+    "output2386",
+    "hold3544",
+    "_6499_",
+    "hold3543",
+    "hold4970"
+   ]
+  },
+  {
+   "pin": "bs_q[248]",
+   "flop": "bs_q\\[248\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.357,
+   "buffer_chain": [
+    "hold3458",
+    "output2387",
+    "hold3457",
+    "_6500_",
+    "hold3456",
+    "hold4946"
+   ]
+  },
+  {
+   "pin": "bs_q[249]",
+   "flop": "bs_q\\[249\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.107,
+   "buffer_chain": [
+    "hold3533",
+    "output2388",
+    "hold3532",
+    "_6501_",
+    "hold3531",
+    "hold4960"
+   ]
+  },
+  {
+   "pin": "bs_q[24]",
+   "flop": "bs_q\\[24\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.053,
+   "buffer_chain": [
+    "hold3380",
+    "output2389",
+    "hold3379",
+    "_6276_",
+    "hold3378",
+    "hold4907"
+   ]
+  },
+  {
+   "pin": "bs_q[250]",
+   "flop": "bs_q\\[250\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.291,
+   "buffer_chain": [
+    "hold3425",
+    "output2390",
+    "hold3424",
+    "_6502_",
+    "hold3423",
+    "hold4952"
+   ]
+  },
+  {
+   "pin": "bs_q[251]",
+   "flop": "bs_q\\[251\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.041,
+   "buffer_chain": [
+    "hold3530",
+    "output2391",
+    "hold3529",
+    "_6503_",
+    "hold3528",
+    "hold4965"
+   ]
+  },
+  {
+   "pin": "bs_q[252]",
+   "flop": "bs_q\\[252\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.793,
+   "buffer_chain": [
+    "hold3491",
+    "output2392",
+    "hold3490",
+    "_6504_",
+    "hold3489",
+    "hold4956"
+   ]
+  },
+  {
+   "pin": "bs_q[253]",
+   "flop": "bs_q\\[253\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.867,
+   "buffer_chain": [
+    "hold3506",
+    "output2393",
+    "hold3505",
+    "_6505_",
+    "hold3504",
+    "hold4958"
+   ]
+  },
+  {
+   "pin": "bs_q[254]",
+   "flop": "bs_q\\[254\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.807,
+   "buffer_chain": [
+    "hold3500",
+    "output2394",
+    "hold3499",
+    "_6619_",
+    "hold3498",
+    "hold4959"
+   ]
+  },
+  {
+   "pin": "bs_q[255]",
+   "flop": "bs_q\\[255\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.747,
+   "buffer_chain": [
+    "hold3527",
+    "output2395",
+    "hold3526",
+    "_3704_",
+    "hold3525",
+    "hold4954"
+   ]
+  },
+  {
+   "pin": "bs_q[25]",
+   "flop": "bs_q\\[25\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.129,
+   "buffer_chain": [
+    "hold3197",
+    "output2396",
+    "hold3196",
+    "_6277_",
+    "hold3195",
+    "hold4870"
+   ]
+  },
+  {
+   "pin": "bs_q[26]",
+   "flop": "bs_q\\[26\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.581,
+   "buffer_chain": [
+    "hold3428",
+    "output2397",
+    "hold3427",
+    "_6278_",
+    "hold3426",
+    "hold4906"
+   ]
+  },
+  {
+   "pin": "bs_q[27]",
+   "flop": "bs_q\\[27\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.327,
+   "buffer_chain": [
+    "hold3224",
+    "output2398",
+    "hold3223",
+    "_6279_",
+    "hold3222",
+    "hold4876"
+   ]
+  },
+  {
+   "pin": "bs_q[28]",
+   "flop": "bs_q\\[28\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.245,
+   "buffer_chain": [
+    "hold3386",
+    "output2399",
+    "hold3385",
+    "_6280_",
+    "hold3384",
+    "hold4909"
+   ]
+  },
+  {
+   "pin": "bs_q[29]",
+   "flop": "bs_q\\[29\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.267,
+   "buffer_chain": [
+    "hold3314",
+    "output2400",
+    "hold3313",
+    "_6281_",
+    "hold3312",
+    "hold4888"
+   ]
+  },
+  {
+   "pin": "bs_q[2]",
+   "flop": "bs_q\\[2\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.131,
+   "buffer_chain": [
+    "hold3377",
+    "output2401",
+    "hold3376",
+    "_6254_",
+    "hold3375",
+    "hold4898"
+   ]
+  },
+  {
+   "pin": "bs_q[30]",
+   "flop": "bs_q\\[30\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.207,
+   "buffer_chain": [
+    "hold3293",
+    "output2402",
+    "hold3292",
+    "_6282_",
+    "hold3291",
+    "hold4882"
+   ]
+  },
+  {
+   "pin": "bs_q[31]",
+   "flop": "bs_q\\[31\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.687,
+   "buffer_chain": [
+    "hold3353",
+    "output2403",
+    "hold3352",
+    "_6283_",
+    "hold3351",
+    "hold4894"
+   ]
+  },
+  {
+   "pin": "bs_q[32]",
+   "flop": "bs_q\\[32\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.357,
+   "buffer_chain": [
+    "hold3287",
+    "output2404",
+    "hold3286",
+    "_6284_",
+    "hold3285",
+    "hold4889"
+   ]
+  },
+  {
+   "pin": "bs_q[33]",
+   "flop": "bs_q\\[33\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.649,
+   "buffer_chain": [
+    "hold3413",
+    "output2405",
+    "hold3412",
+    "_6285_",
+    "hold3411",
+    "hold4908"
+   ]
+  },
+  {
+   "pin": "bs_q[34]",
+   "flop": "bs_q\\[34\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.345,
+   "buffer_chain": [
+    "hold3263",
+    "output2406",
+    "hold3262",
+    "_6286_",
+    "hold3261",
+    "hold4884"
+   ]
+  },
+  {
+   "pin": "bs_q[35]",
+   "flop": "bs_q\\[35\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.339,
+   "buffer_chain": [
+    "hold3323",
+    "output2407",
+    "hold3322",
+    "_6287_",
+    "hold3321",
+    "hold4897"
+   ]
+  },
+  {
+   "pin": "bs_q[36]",
+   "flop": "bs_q\\[36\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.225,
+   "buffer_chain": [
+    "hold3548",
+    "output2408",
+    "hold3547",
+    "_6288_",
+    "hold3546",
+    "hold4976"
+   ]
+  },
+  {
+   "pin": "bs_q[37]",
+   "flop": "bs_q\\[37\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.111,
+   "buffer_chain": [
+    "hold3485",
+    "output2409",
+    "hold3484",
+    "_6289_",
+    "hold3483",
+    "hold4973"
+   ]
+  },
+  {
+   "pin": "bs_q[38]",
+   "flop": "bs_q\\[38\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.023,
+   "buffer_chain": [
+    "hold3257",
+    "output2410",
+    "hold3256",
+    "_6290_",
+    "hold3255",
+    "hold4859"
+   ]
+  },
+  {
+   "pin": "bs_q[39]",
+   "flop": "bs_q\\[39\\]$_DFF_P_",
+   "buffers": 5,
+   "distance_um": 6.423,
+   "buffer_chain": [
+    "hold3560",
+    "output2411",
+    "hold3559",
+    "_6291_",
+    "hold3558"
+   ]
+  },
+  {
+   "pin": "bs_q[3]",
+   "flop": "bs_q\\[3\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.805,
+   "buffer_chain": [
+    "hold3335",
+    "output2412",
+    "hold3334",
+    "_6255_",
+    "hold3333",
+    "hold4919"
+   ]
+  },
+  {
+   "pin": "bs_q[40]",
+   "flop": "bs_q\\[40\\]$_DFF_P_",
+   "buffers": 5,
+   "distance_um": 7.335,
+   "buffer_chain": [
+    "hold3566",
+    "output2413",
+    "hold3565",
+    "_6292_",
+    "hold3564"
+   ]
+  },
+  {
+   "pin": "bs_q[41]",
+   "flop": "bs_q\\[41\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.357,
+   "buffer_chain": [
+    "hold3176",
+    "output2414",
+    "hold3175",
+    "_6293_",
+    "hold3174",
+    "hold4854"
+   ]
+  },
+  {
+   "pin": "bs_q[42]",
+   "flop": "bs_q\\[42\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.027,
+   "buffer_chain": [
+    "hold3134",
+    "output2415",
+    "hold3133",
+    "_6294_",
+    "hold3132",
+    "hold4846"
+   ]
+  },
+  {
+   "pin": "bs_q[43]",
+   "flop": "bs_q\\[43\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.939,
+   "buffer_chain": [
+    "hold3245",
+    "output2416",
+    "hold3244",
+    "_6295_",
+    "hold3243",
+    "hold4862"
+   ]
+  },
+  {
+   "pin": "bs_q[44]",
+   "flop": "bs_q\\[44\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.285,
+   "buffer_chain": [
+    "hold3143",
+    "output2417",
+    "hold3142",
+    "_6296_",
+    "hold3141",
+    "hold4850"
+   ]
+  },
+  {
+   "pin": "bs_q[45]",
+   "flop": "bs_q\\[45\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.981,
+   "buffer_chain": [
+    "hold3194",
+    "output2418",
+    "hold3193",
+    "_6297_",
+    "hold3192",
+    "hold4844"
+   ]
+  },
+  {
+   "pin": "bs_q[46]",
+   "flop": "bs_q\\[46\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.111,
+   "buffer_chain": [
+    "hold3140",
+    "output2419",
+    "hold3139",
+    "_6298_",
+    "hold3138",
+    "hold4845"
+   ]
+  },
+  {
+   "pin": "bs_q[47]",
+   "flop": "bs_q\\[47\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.185,
+   "buffer_chain": [
+    "hold3272",
+    "output2420",
+    "hold3271",
+    "_6299_",
+    "hold3270",
+    "hold4869"
+   ]
+  },
+  {
+   "pin": "bs_q[48]",
+   "flop": "bs_q\\[48\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.423,
+   "buffer_chain": [
+    "hold3203",
+    "output2421",
+    "hold3202",
+    "_6300_",
+    "hold3201",
+    "hold4855"
+   ]
+  },
+  {
+   "pin": "bs_q[49]",
+   "flop": "bs_q\\[49\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.147,
+   "buffer_chain": [
+    "hold3149",
+    "output2422",
+    "hold3148",
+    "_6301_",
+    "hold3147",
+    "hold4839"
+   ]
+  },
+  {
+   "pin": "bs_q[4]",
+   "flop": "bs_q\\[4\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.309,
+   "buffer_chain": [
+    "hold3398",
+    "output2423",
+    "hold3397",
+    "_6256_",
+    "hold3396",
+    "hold4923"
+   ]
+  },
+  {
+   "pin": "bs_q[50]",
+   "flop": "bs_q\\[50\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.059,
+   "buffer_chain": [
+    "hold3233",
+    "output2424",
+    "hold3232",
+    "_6302_",
+    "hold3231",
+    "hold4851"
+   ]
+  },
+  {
+   "pin": "bs_q[51]",
+   "flop": "bs_q\\[51\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.513,
+   "buffer_chain": [
+    "hold3128",
+    "output2425",
+    "hold3127",
+    "_6303_",
+    "hold3126",
+    "hold4836"
+   ]
+  },
+  {
+   "pin": "bs_q[52]",
+   "flop": "bs_q\\[52\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.155,
+   "buffer_chain": [
+    "hold3185",
+    "output2426",
+    "hold3184",
+    "_6304_",
+    "hold3183",
+    "hold4838"
+   ]
+  },
+  {
+   "pin": "bs_q[53]",
+   "flop": "bs_q\\[53\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.177,
+   "buffer_chain": [
+    "hold3182",
+    "output2427",
+    "hold3181",
+    "_6305_",
+    "hold3180",
+    "hold4842"
+   ]
+  },
+  {
+   "pin": "bs_q[54]",
+   "flop": "bs_q\\[54\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.225,
+   "buffer_chain": [
+    "hold3122",
+    "output2428",
+    "hold3121",
+    "_6306_",
+    "hold3120",
+    "hold4834"
+   ]
+  },
+  {
+   "pin": "bs_q[55]",
+   "flop": "bs_q\\[55\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.677,
+   "buffer_chain": [
+    "hold3275",
+    "output2429",
+    "hold3274",
+    "_6307_",
+    "hold3273",
+    "hold4874"
+   ]
+  },
+  {
+   "pin": "bs_q[56]",
+   "flop": "bs_q\\[56\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.835,
+   "buffer_chain": [
+    "hold3077",
+    "output2430",
+    "hold3076",
+    "_6308_",
+    "hold3075",
+    "hold4827"
+   ]
+  },
+  {
+   "pin": "bs_q[57]",
+   "flop": "bs_q\\[57\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.071,
+   "buffer_chain": [
+    "hold3200",
+    "output2431",
+    "hold3199",
+    "_6309_",
+    "hold3198",
+    "hold4841"
+   ]
+  },
+  {
+   "pin": "bs_q[58]",
+   "flop": "bs_q\\[58\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.255,
+   "buffer_chain": [
+    "hold3152",
+    "output2432",
+    "hold3151",
+    "_6310_",
+    "hold3150",
+    "hold4840"
+   ]
+  },
+  {
+   "pin": "bs_q[59]",
+   "flop": "bs_q\\[59\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.167,
+   "buffer_chain": [
+    "hold3248",
+    "output2433",
+    "hold3247",
+    "_6311_",
+    "hold3246",
+    "hold4863"
+   ]
+  },
+  {
+   "pin": "bs_q[5]",
+   "flop": "bs_q\\[5\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.167,
+   "buffer_chain": [
+    "hold3389",
+    "output2434",
+    "hold3388",
+    "_6257_",
+    "hold3387",
+    "hold4910"
+   ]
+  },
+  {
+   "pin": "bs_q[60]",
+   "flop": "bs_q\\[60\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.405,
+   "buffer_chain": [
+    "hold3191",
+    "output2435",
+    "hold3190",
+    "_6312_",
+    "hold3189",
+    "hold4847"
+   ]
+  },
+  {
+   "pin": "bs_q[61]",
+   "flop": "bs_q\\[61\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.237,
+   "buffer_chain": [
+    "hold3158",
+    "output2436",
+    "hold3157",
+    "_6313_",
+    "hold3156",
+    "hold4849"
+   ]
+  },
+  {
+   "pin": "bs_q[62]",
+   "flop": "bs_q\\[62\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.311,
+   "buffer_chain": [
+    "hold3296",
+    "output2437",
+    "hold3295",
+    "_6314_",
+    "hold3294",
+    "hold4866"
+   ]
+  },
+  {
+   "pin": "bs_q[63]",
+   "flop": "bs_q\\[63\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.333,
+   "buffer_chain": [
+    "hold3170",
+    "output2438",
+    "hold3169",
+    "_6315_",
+    "hold3168",
+    "hold4848"
+   ]
+  },
+  {
+   "pin": "bs_q[64]",
+   "flop": "bs_q\\[64\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.353,
+   "buffer_chain": [
+    "hold3290",
+    "output2439",
+    "hold3289",
+    "_6316_",
+    "hold3288",
+    "hold4871"
+   ]
+  },
+  {
+   "pin": "bs_q[65]",
+   "flop": "bs_q\\[65\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.609,
+   "buffer_chain": [
+    "hold3137",
+    "output2440",
+    "hold3136",
+    "_6317_",
+    "hold3135",
+    "hold4852"
+   ]
+  },
+  {
+   "pin": "bs_q[66]",
+   "flop": "bs_q\\[66\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.315,
+   "buffer_chain": [
+    "hold3230",
+    "output2441",
+    "hold3229",
+    "_6318_",
+    "hold3228",
+    "hold4864"
+   ]
+  },
+  {
+   "pin": "bs_q[67]",
+   "flop": "bs_q\\[67\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.471,
+   "buffer_chain": [
+    "hold3239",
+    "output2442",
+    "hold3238",
+    "_6319_",
+    "hold3237",
+    "hold4858"
+   ]
+  },
+  {
+   "pin": "bs_q[68]",
+   "flop": "bs_q\\[68\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.897,
+   "buffer_chain": [
+    "hold3236",
+    "output2443",
+    "hold3235",
+    "_6320_",
+    "hold3234",
+    "hold4860"
+   ]
+  },
+  {
+   "pin": "bs_q[69]",
+   "flop": "bs_q\\[69\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.053,
+   "buffer_chain": [
+    "hold3422",
+    "output2444",
+    "hold3421",
+    "_6321_",
+    "hold3420",
+    "hold4921"
+   ]
+  },
+  {
+   "pin": "bs_q[6]",
+   "flop": "bs_q\\[6\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.093,
+   "buffer_chain": [
+    "hold3302",
+    "output2445",
+    "hold3301",
+    "_6258_",
+    "hold3300",
+    "hold4879"
+   ]
+  },
+  {
+   "pin": "bs_q[70]",
+   "flop": "bs_q\\[70\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.291,
+   "buffer_chain": [
+    "hold3146",
+    "output2446",
+    "hold3145",
+    "_6322_",
+    "hold3144",
+    "hold4853"
+   ]
+  },
+  {
+   "pin": "bs_q[71]",
+   "flop": "bs_q\\[71\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.851,
+   "buffer_chain": [
+    "hold3512",
+    "output2447",
+    "hold3511",
+    "_6323_",
+    "hold3510",
+    "hold4931"
+   ]
+  },
+  {
+   "pin": "bs_q[72]",
+   "flop": "bs_q\\[72\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.009,
+   "buffer_chain": [
+    "hold3338",
+    "output2448",
+    "hold3337",
+    "_6324_",
+    "hold3336",
+    "hold4900"
+   ]
+  },
+  {
+   "pin": "bs_q[73]",
+   "flop": "bs_q\\[73\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.299,
+   "buffer_chain": [
+    "hold3473",
+    "output2449",
+    "hold3472",
+    "_6325_",
+    "hold3471",
+    "hold4933"
+   ]
+  },
+  {
+   "pin": "bs_q[74]",
+   "flop": "bs_q\\[74\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.429,
+   "buffer_chain": [
+    "hold3401",
+    "output2450",
+    "hold3400",
+    "_6326_",
+    "hold3399",
+    "hold4916"
+   ]
+  },
+  {
+   "pin": "bs_q[75]",
+   "flop": "bs_q\\[75\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.261,
+   "buffer_chain": [
+    "hold3368",
+    "output2451",
+    "hold3367",
+    "_6327_",
+    "hold3366",
+    "hold4904"
+   ]
+  },
+  {
+   "pin": "bs_q[76]",
+   "flop": "bs_q\\[76\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.011,
+   "buffer_chain": [
+    "hold3479",
+    "output2452",
+    "hold3478",
+    "_6328_",
+    "hold3477",
+    "hold4928"
+   ]
+  },
+  {
+   "pin": "bs_q[77]",
+   "flop": "bs_q\\[77\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.303,
+   "buffer_chain": [
+    "hold3347",
+    "output2453",
+    "hold3346",
+    "_6329_",
+    "hold3345",
+    "hold4896"
+   ]
+  },
+  {
+   "pin": "bs_q[78]",
+   "flop": "bs_q\\[78\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.297,
+   "buffer_chain": [
+    "hold3374",
+    "output2454",
+    "hold3373",
+    "_6330_",
+    "hold3372",
+    "hold4901"
+   ]
+  },
+  {
+   "pin": "bs_q[79]",
+   "flop": "bs_q\\[79\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.183,
+   "buffer_chain": [
+    "hold3329",
+    "output2455",
+    "hold3328",
+    "_6331_",
+    "hold3327",
+    "hold4892"
+   ]
+  },
+  {
+   "pin": "bs_q[7]",
+   "flop": "bs_q\\[7\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.261,
+   "buffer_chain": [
+    "hold3410",
+    "output2456",
+    "hold3409",
+    "_6259_",
+    "hold3408",
+    "hold4924"
+   ]
+  },
+  {
+   "pin": "bs_q[80]",
+   "flop": "bs_q\\[80\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.609,
+   "buffer_chain": [
+    "hold3311",
+    "output2457",
+    "hold3310",
+    "_6332_",
+    "hold3309",
+    "hold4891"
+   ]
+  },
+  {
+   "pin": "bs_q[81]",
+   "flop": "bs_q\\[81\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.495,
+   "buffer_chain": [
+    "hold3383",
+    "output2458",
+    "hold3382",
+    "_6333_",
+    "hold3381",
+    "hold4913"
+   ]
+  },
+  {
+   "pin": "bs_q[82]",
+   "flop": "bs_q\\[82\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.273,
+   "buffer_chain": [
+    "hold3266",
+    "output2459",
+    "hold3265",
+    "_6334_",
+    "hold3264",
+    "hold4890"
+   ]
+  },
+  {
+   "pin": "bs_q[83]",
+   "flop": "bs_q\\[83\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.915,
+   "buffer_chain": [
+    "hold3320",
+    "output2460",
+    "hold3319",
+    "_6335_",
+    "hold3318",
+    "hold4881"
+   ]
+  },
+  {
+   "pin": "bs_q[84]",
+   "flop": "bs_q\\[84\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.183,
+   "buffer_chain": [
+    "hold3308",
+    "output2461",
+    "hold3307",
+    "_6336_",
+    "hold3306",
+    "hold4899"
+   ]
+  },
+  {
+   "pin": "bs_q[85]",
+   "flop": "bs_q\\[85\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.335,
+   "buffer_chain": [
+    "hold3443",
+    "output2462",
+    "hold3442",
+    "_6337_",
+    "hold3441",
+    "hold4917"
+   ]
+  },
+  {
+   "pin": "bs_q[86]",
+   "flop": "bs_q\\[86\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.735,
+   "buffer_chain": [
+    "hold3260",
+    "output2463",
+    "hold3259",
+    "_6338_",
+    "hold3258",
+    "hold4883"
+   ]
+  },
+  {
+   "pin": "bs_q[87]",
+   "flop": "bs_q\\[87\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 5.811,
+   "buffer_chain": [
+    "hold3242",
+    "output2464",
+    "hold3241",
+    "_6339_",
+    "hold3240",
+    "hold4885"
+   ]
+  },
+  {
+   "pin": "bs_q[88]",
+   "flop": "bs_q\\[88\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.857,
+   "buffer_chain": [
+    "hold3488",
+    "output2465",
+    "hold3487",
+    "_6340_",
+    "hold3486",
+    "hold4929"
+   ]
+  },
+  {
+   "pin": "bs_q[89]",
+   "flop": "bs_q\\[89\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.609,
+   "buffer_chain": [
+    "hold3359",
+    "output2466",
+    "hold3358",
+    "_6341_",
+    "hold3357",
+    "hold4911"
+   ]
+  },
+  {
+   "pin": "bs_q[8]",
+   "flop": "bs_q\\[8\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.231,
+   "buffer_chain": [
+    "hold3281",
+    "output2467",
+    "hold3280",
+    "_6260_",
+    "hold3279",
+    "hold4886"
+   ]
+  },
+  {
+   "pin": "bs_q[90]",
+   "flop": "bs_q\\[90\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.927,
+   "buffer_chain": [
+    "hold3395",
+    "output2468",
+    "hold3394",
+    "_6342_",
+    "hold3393",
+    "hold4902"
+   ]
+  },
+  {
+   "pin": "bs_q[91]",
+   "flop": "bs_q\\[91\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.003,
+   "buffer_chain": [
+    "hold3251",
+    "output2469",
+    "hold3250",
+    "_6343_",
+    "hold3249",
+    "hold4895"
+   ]
+  },
+  {
+   "pin": "bs_q[92]",
+   "flop": "bs_q\\[92\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.185,
+   "buffer_chain": [
+    "hold3452",
+    "output2470",
+    "hold3451",
+    "_6344_",
+    "hold3450",
+    "hold4925"
+   ]
+  },
+  {
+   "pin": "bs_q[93]",
+   "flop": "bs_q\\[93\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.207,
+   "buffer_chain": [
+    "hold3344",
+    "output2471",
+    "hold3343",
+    "_6345_",
+    "hold3342",
+    "hold4903"
+   ]
+  },
+  {
+   "pin": "bs_q[94]",
+   "flop": "bs_q\\[94\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.255,
+   "buffer_chain": [
+    "hold3332",
+    "output2472",
+    "hold3331",
+    "_6346_",
+    "hold3330",
+    "hold4905"
+   ]
+  },
+  {
+   "pin": "bs_q[95]",
+   "flop": "bs_q\\[95\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 7.545,
+   "buffer_chain": [
+    "hold3497",
+    "output2473",
+    "hold3496",
+    "_6347_",
+    "hold3495",
+    "hold4939"
+   ]
+  },
+  {
+   "pin": "bs_q[96]",
+   "flop": "bs_q\\[96\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.675,
+   "buffer_chain": [
+    "hold3419",
+    "output2474",
+    "hold3418",
+    "_6348_",
+    "hold3417",
+    "hold4922"
+   ]
+  },
+  {
+   "pin": "bs_q[97]",
+   "flop": "bs_q\\[97\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.561,
+   "buffer_chain": [
+    "hold3371",
+    "output2475",
+    "hold3370",
+    "_6349_",
+    "hold3369",
+    "hold4914"
+   ]
+  },
+  {
+   "pin": "bs_q[98]",
+   "flop": "bs_q\\[98\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.015,
+   "buffer_chain": [
+    "hold3341",
+    "output2476",
+    "hold3340",
+    "_6350_",
+    "hold3339",
+    "hold4912"
+   ]
+  },
+  {
+   "pin": "bs_q[99]",
+   "flop": "bs_q\\[99\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.279,
+   "buffer_chain": [
+    "hold3392",
+    "output2477",
+    "hold3391",
+    "_6351_",
+    "hold3390",
+    "hold4920"
+   ]
+  },
+  {
+   "pin": "bs_q[9]",
+   "flop": "bs_q\\[9\\]$_DFF_P_",
+   "buffers": 6,
+   "distance_um": 6.171,
+   "buffer_chain": [
+    "hold3299",
+    "output2478",
+    "hold3298",
+    "_6261_",
+    "hold3297",
+    "hold4880"
+   ]
+  },
+  {
+   "pin": "fault",
+   "flop": "ot_prs_00000_ff",
+   "buffers": 5,
+   "distance_um": 7.827,
+   "buffer_chain": [
+    "hold3579",
+    "output2479",
+    "hold3578",
+    "ot_prs_00000_b0",
+    "hold3577"
+   ]
+  }
+ ]
+}

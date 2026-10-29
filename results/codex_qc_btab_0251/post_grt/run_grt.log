@@ -1,0 +1,672 @@
+RTL_LINT PASS errors 0
+SDC_LINT PASS /work errors 0 liberty 16
+make: Nothing to be done for 'synth'.
+SELRANGE PASS top=qfd_dv_s8x_btab files=4 unwaived=0 waived=0
+FACE_GUARD PASS top qfd_dv_s8x_btab bits 1316 ok 1316 fails {} missing 0 extra 0
+FACE_GUARD self_loops 0 other 0 self_loop_only False
+LEC EQUIVALENT: qfd_dv_s8x_btab cp=6070 proved=6070 differs=0 undecided=0 6070 compare points proved; 5526 key points matched by name, 60 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs) (10.4 s)
+KIT_MODES ok step cts tt 250.0 ff 202.5 mm True session ['tc', 'bc'] vclk_corner  hold_repair True
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/hold_budget.tcl
+OT_FCAP: dont_touch lifted for CTS on 0 flops
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+OT_CORE_INFRA_CTS leaf-complete plan tree: 3446 register clock pins on planned dont_touch nets; TritonCTS not run
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 41878.43 um^2
+[INFO DPL-0007] Movable instances area: 1391.59 um^2
+[INFO DPL-0008] Fixed instances area within core: 15761.76 um^2
+[INFO DPL-0009] Utilization: 41.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 14246 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+[INFO DPL-0500] Runtime: 0.31s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          312707.2 u
+legalized HPWL         312707.2 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 17153 um^2 41% utilization.
+source /work/cts_post.tcl
+OT_FCAP: dont_touch left lifted on 0 flops (hold repair)
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_TAP_RC mean(min-max,sinks): ck=169(146-179,3446)
+OT_TAP_RC sink insertion 146..179 ps (partition skew 33; limit 290)
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 327.03 / FF hold ws -27.01 ps
+repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.47s
+OT_HM_GUARD: margin 15 kept: 1076 endpoints in margin, ~1377 buffers, +0.3 util pts (within limits)
+OT_HOLD_GUARD start: hold ws -27.01 tns -5969.2 viol 381 (margin 15, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 1076 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -27.014 | -5969.174 | bs_q[170]
+       10 |       0 |      27 |            0 |    +0.0% | -26.396 | -5729.301 | bs_q[184]
+       20 |       0 |      57 |            0 |    +0.0% | -25.914 | -5468.101 | bs_q[166]
+       30 |       0 |      87 |            0 |    +0.0% | -25.142 | -5211.728 | bs_q[152]
+       40 |       0 |     117 |            0 |    +0.0% | -24.485 | -4963.353 | bs_q[132]
+       50 |       0 |     147 |            0 |    +0.1% | -24.114 | -4719.794 | bs_q[115]
+       60 |       0 |     177 |            0 |    +0.1% | -23.932 | -4479.005 | bs_q[119]
+       70 |       0 |     207 |            0 |    +0.1% | -23.703 | -4240.834 | bs_q[142]
+       80 |       0 |     237 |            0 |    +0.1% | -23.369 | -4005.517 | bs_q[128]
+       90 |       0 |     267 |            0 |    +0.1% | -23.042 | -3773.274 | bs_q[189]
+      100 |       0 |     297 |            0 |    +0.1% | -22.612 | -3544.541 | bs_q[221]
+      110 |       0 |     327 |            0 |    +0.1% | -22.166 | -3320.625 | bs_q[42]
+      120 |       0 |     357 |            0 |    +0.2% | -21.930 | -3100.144 | bs_q[204]
+      130 |       0 |     387 |            0 |    +0.2% | -21.695 | -2882.187 | bs_q[45]
+      140 |       0 |     417 |            0 |    +0.2% | -21.551 | -2665.876 | bs_q[27]
+      150 |       0 |     447 |            0 |    +0.2% | -21.167 | -2452.230 | bs_q[11]
+      160 |       0 |     477 |            0 |    +0.2% | -21.014 | -2241.177 | bs_q[15]
+      170 |       0 |     507 |            0 |    +0.2% | -20.885 | -2031.666 | bs_q[29]
+      180 |       0 |     537 |            0 |    +0.2% | -20.617 | -1823.956 | bs_q[93]
+      190 |       0 |     567 |            0 |    +0.2% | -20.327 | -1618.723 | bs_q[78]
+      200 |       0 |     597 |            0 |    +0.3% | -20.022 | -1416.846 | bs_q[233]
+      210 |       0 |     627 |            0 |    +0.3% | -19.825 | -1217.535 | bs_q[235]
+      220 |       0 |     657 |            0 |    +0.3% | -19.593 | -1020.334 | bs_q[214]
+      230 |       0 |     687 |            0 |    +0.3% | -19.292 | -825.779 | bs_q[227]
+      240 |       0 |     717 |            0 |    +0.3% | -19.012 | -633.468 | bs_q[211]
+      250 |       0 |     747 |            0 |    +0.3% | -18.600 | -445.058 | bs_q[230]
+      260 |       0 |     775 |            0 |    +0.3% | -11.909 | -281.678 | u_twpd/q[401]$_DFF_P_/D
+      270 |       0 |     795 |            0 |    +0.3% |  -5.054 | -199.415 | u_twpd/q[495]$_DFF_P_/D
+      280 |       0 |     814 |            0 |    +0.3% |  -3.394 | -160.330 | u_twpd/q[512]$_DFF_P_/D
+      290 |       0 |     834 |            0 |    +0.4% |  -2.810 | -128.289 | u_twpd/q[154]$_DFF_P_/D
+      300 |       0 |     854 |            0 |    +0.4% |  -2.469 | -101.758 | u_twpd/q[164]$_DFF_P_/D
+      310 |       0 |     874 |            0 |    +0.4% |  -1.961 | -78.769 | u_twpd/q[153]$_DFF_P_/D
+      320 |       0 |     894 |            0 |    +0.4% |  -1.700 | -60.737 | u_twpd/q[182]$_DFF_P_/D
+      330 |       0 |     914 |            0 |    +0.4% |  -1.441 | -44.726 | u_twpd/q[173]$_DFF_P_/D
+      340 |       0 |     934 |            0 |    +0.4% |  -1.287 | -31.138 | g_btb[2].u_m/wd_in[40]
+      350 |       0 |     954 |            0 |    +0.4% |  -1.029 | -19.561 | g_btb[2].u_m/wd_in[39]
+      360 |       0 |     974 |            0 |    +0.4% |  -0.793 | -10.152 | g_btb[2].u_m/wd_in[52]
+      370 |       0 |     994 |            0 |    +0.4% |  -0.457 |  -3.660 | u_twpd/q[145]$_DFF_P_/D
+      380 |       0 |    1014 |            0 |    +0.4% |  -0.150 |  -0.227 | g_btb[3].u_m/wd_in[84]
+      390 |       0 |    1034 |            0 |    +0.4% |   0.105 |   0.000 | g_btb[3].u_m/wd_in[125]
+      400 |       0 |    1054 |            0 |    +0.4% |   0.424 |   0.000 | g_btb[3].u_m/wd_in[108]
+      410 |       0 |    1074 |            0 |    +0.5% |   0.580 |   0.000 | u_twpd/q[45]$_DFF_P_/D
+      420 |       0 |    1094 |            0 |    +0.5% |   0.945 |   0.000 | u_twpd/q[509]$_DFF_P_/D
+      430 |       0 |    1114 |            0 |    +0.5% |   1.326 |   0.000 | u_twpd/q[39]$_DFF_P_/D
+      440 |       0 |    1134 |            0 |    +0.5% |   1.537 |   0.000 | u_twpd/q[201]$_DFF_P_/D
+      450 |       0 |    1154 |            0 |    +0.5% |   2.052 |   0.000 | u_twpd/q[395]$_DFF_P_/D
+      460 |       0 |    1174 |            0 |    +0.5% |   2.271 |   0.000 | u_twpd/q[450]$_DFF_P_/D
+      470 |       0 |    1194 |            0 |    +0.5% |   2.681 |   0.000 | u_twpd/q[452]$_DFF_P_/D
+      480 |       0 |    1214 |            0 |    +0.5% |   2.918 |   0.000 | u_twpd/q[403]$_DFF_P_/D
+      490 |       0 |    1234 |            0 |    +0.5% |   3.187 |   0.000 | g_btb[3].u_m/wd_in[93]
+      500 |       0 |    1254 |            0 |    +0.5% |   3.480 |   0.000 | g_btb[2].u_m/wd_in[102]
+      510 |       0 |    1271 |            0 |    +0.5% |   3.744 |   0.000 | u_twpd/q[461]$_DFF_P_/D
+      520 |       0 |    1287 |            0 |    +0.5% |   4.028 |   0.000 | ptw_data[404]$_DFF_P_/D
+      530 |       0 |    1301 |            0 |    +0.6% |   4.123 |   0.000 | g_btb[0].u_m/wd_in[202]
+      540 |       0 |    1316 |            0 |    +0.6% |   4.204 |   0.000 | u_twpd/q[202]$_DFF_P_/D
+      550 |       0 |    1331 |            0 |    +0.6% |   4.350 |   0.000 | g_btb[3].u_m/wd_in[127]
+      560 |       0 |    1345 |            0 |    +0.6% |   4.551 |   0.000 | u_twpd/q[21]$_DFF_P_/D
+      570 |       0 |    1358 |            0 |    +0.6% |   4.805 |   0.000 | g_btb[2].u_m/wd_in[112]
+      580 |       0 |    1371 |            0 |    +0.6% |   4.883 |   0.000 | u_twpd/q[13]$_DFF_P_/D
+      590 |       0 |    1385 |            0 |    +0.6% |   5.054 |   0.000 | u_twpd/q[28]$_DFF_P_/D
+      600 |       0 |    1396 |            0 |    +0.6% |   5.192 |   0.000 | u_twpd/q[245]$_DFF_P_/D
+      610 |       0 |    1407 |            0 |    +0.6% |   5.259 |   0.000 | ptw_data[422]$_DFF_P_/D
+      620 |       0 |    1417 |            0 |    +0.6% |   5.327 |   0.000 | u_twpd/q[699]$_DFF_P_/D
+      630 |       0 |    1427 |            0 |    +0.6% |   5.404 |   0.000 | ptw_data[414]$_DFF_P_/D
+      640 |       0 |    1438 |            0 |    +0.6% |   5.473 |   0.000 | u_twpd/q[19]$_DFF_P_/D
+      650 |       0 |    1448 |            0 |    +0.6% |   5.665 |   0.000 | u_twpd/q[511]$_DFF_P_/D
+      660 |       0 |    1459 |            0 |    +0.6% |   5.775 |   0.000 | u_twpd/q[159]$_DFF_P_/D
+      670 |       0 |    1470 |            0 |    +0.6% |   5.928 |   0.000 | u_twpd/q[439]$_DFF_P_/D
+      680 |       0 |    1483 |            0 |    +0.6% |   6.075 |   0.000 | u_twpd/q[180]$_DFF_P_/D
+      690 |       0 |    1495 |            0 |    +0.6% |   6.198 |   0.000 | u_twpd/q[168]$_DFF_P_/D
+      700 |       0 |    1508 |            0 |    +0.6% |   6.394 |   0.000 | u_twpd/q[161]$_DFF_P_/D
+      710 |       0 |    1518 |            0 |    +0.6% |   6.633 |   0.000 | u_twpd/q[409]$_DFF_P_/D
+      720 |       0 |    1529 |            0 |    +0.6% |   6.742 |   0.000 | ptw_data[442]$_DFF_P_/D
+      730 |       0 |    1541 |            0 |    +0.7% |   6.842 |   0.000 | ptw_data[460]$_DFF_P_/D
+      740 |       0 |    1552 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      750 |       0 |    1563 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      760 |       0 |    1575 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      770 |       0 |    1587 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      780 |       0 |    1600 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      790 |       0 |    1611 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      800 |       0 |    1627 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      810 |       0 |    1640 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      820 |       0 |    1654 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      830 |       0 |    1664 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      840 |       0 |    1675 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      850 |       0 |    1686 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      860 |       0 |    1697 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      870 |       0 |    1707 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      880 |       0 |    1717 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      890 |       0 |    1727 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      900 |       0 |    1737 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      910 |       0 |    1747 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      920 |       0 |    1757 |            0 |    +0.7% |   6.877 |   0.000 | bs_q[170]
+      930 |       0 |    1767 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+      940 |       0 |    1777 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+      950 |       0 |    1786 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+      960 |       0 |    1796 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+      970 |       0 |    1806 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+      980 |       0 |    1816 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+      990 |       0 |    1826 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1000 |       0 |    1836 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1010 |       0 |    1846 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1020 |       0 |    1856 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1030 |       0 |    1866 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1040 |       0 |    1876 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1050 |       0 |    1886 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1060 |       0 |    1896 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+     1070 |       0 |    1906 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+    final |       0 |    1913 |            0 |    +0.8% |   6.877 |   0.000 | bs_q[170]
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 1913 hold buffers.
+[INFO RSZ-0506] Runtime: 9.96s
+Took 10 seconds: repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws 6.88 (+33.89) tns 0.0 (+100.0%) viol 0, 10 s
+repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 259 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   6.877 |   0.000 | bs_q[170]
+       10 |       0 |       9 |            0 |    +0.0% |   7.354 |   0.000 | bs_q[166]
+       20 |       0 |      19 |            0 |    +0.0% |   7.661 |   0.000 | bs_q[178]
+       30 |       0 |      29 |            0 |    +0.0% |   8.024 |   0.000 | bs_q[152]
+       40 |       0 |      39 |            0 |    +0.0% |   9.067 |   0.000 | bs_q[147]
+       50 |       0 |      49 |            0 |    +0.0% |   9.305 |   0.000 | bs_q[127]
+       60 |       0 |      59 |            0 |    +0.0% |   9.645 |   0.000 | bs_q[142]
+       70 |       0 |      69 |            0 |    +0.0% |   9.878 |   0.000 | bs_q[103]
+       80 |       0 |      79 |            0 |    +0.0% |  10.140 |   0.000 | bs_q[122]
+       90 |       0 |      89 |            0 |    +0.0% |  10.595 |   0.000 | bs_q[199]
+      100 |       0 |      99 |            0 |    +0.0% |  10.811 |   0.000 | bs_q[194]
+      110 |       0 |     109 |            0 |    +0.0% |  11.183 |   0.000 | bs_q[56]
+      120 |       0 |     119 |            0 |    +0.1% |  11.488 |   0.000 | bs_q[182]
+      130 |       0 |     129 |            0 |    +0.1% |  11.847 |   0.000 | bs_q[60]
+      140 |       0 |     139 |            0 |    +0.1% |  12.000 |   0.000 | bs_q[19]
+      150 |       0 |     149 |            0 |    +0.1% |  12.272 |   0.000 | bs_q[14]
+      160 |       0 |     159 |            0 |    +0.1% |  12.450 |   0.000 | bs_q[15]
+      170 |       0 |     169 |            0 |    +0.1% |  12.736 |   0.000 | bs_q[12]
+      180 |       0 |     179 |            0 |    +0.1% |  12.925 |   0.000 | bs_q[35]
+      190 |       0 |     189 |            0 |    +0.1% |  13.160 |   0.000 | bs_q[24]
+      200 |       0 |     199 |            0 |    +0.1% |  13.363 |   0.000 | bs_q[85]
+      210 |       0 |     209 |            0 |    +0.1% |  13.579 |   0.000 | bs_q[243]
+      220 |       0 |     219 |            0 |    +0.1% |  13.858 |   0.000 | bs_q[212]
+      230 |       0 |     229 |            0 |    +0.1% |  14.079 |   0.000 | bs_q[242]
+      240 |       0 |     239 |            0 |    +0.1% |  14.258 |   0.000 | bs_q[209]
+      250 |       0 |     249 |            0 |    +0.1% |  14.561 |   0.000 | u_twpd/q[166]$_DFF_P_/D
+    final |       0 |     259 |            0 |    +0.1% |  15.001 |   0.000 | g_btb[2].u_m/wd_in[70]
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 259 hold buffers.
+[INFO RSZ-0506] Runtime: 1.63s
+OT_HOLD_GUARD chunk 2: hold ws 15.00 (+8.12) tns 0.0 (+0.0%) viol 0, 11 s
+OT_HOLD_MM after repair: SS setup ws 327.03 / FF hold ws 15.00 ps
+[INFO DPL-0006] Core area: 41878.43 um^2
+[INFO DPL-0007] Movable instances area: 1549.93 um^2
+[INFO DPL-0008] Fixed instances area within core: 15761.76 um^2
+[INFO DPL-0009] Utilization: 41.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 16418 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       2187 |       585 |      1569
+        1 |       1471 |       317 |      1067
+        2 |        665 |       147 |       503
+        3 |        120 |        28 |        92
+        4 |         12 |         2 |        10
+        5 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 5.
+[INFO DPL-0500] Runtime: 0.78s
+Placement Analysis
+---------------------------------
+total displacement       1639.4 u
+average displacement        0.1 u
+max displacement            4.8 u
+original HPWL          312927.6 u
+legalized HPWL         314022.5 u
+delta HPWL                    0 %
+
+Took 19 seconds: source /work/cts_post.tcl
+write_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_1_cts.odb
+write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_cts.sdc
+Elapsed time: 0:35.45[h:]min:sec. CPU time: user 44.49 sys 3.86 (136%). Peak memory: 564348KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           35            551 63e86739c3b856f961d2
+cp /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_1_cts.odb /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_cts.odb
+KIT_MODES ok step grt tt 250.0 ff 202.5 mm True session ['tc', 'bc'] vclk_corner  hold_repair True
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_cts.odb
+read_sdc -mode ss /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_cts.sdc
+read_sdc -mode ff /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_cts.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/4_cts.sdc
+source /work/setRC_rcx.tcl
+source /work/grt_pre_core.tcl
+SRAM_PINCOL_KEEPOFF 80 routing obstructions (M2-M5) at macro pin-face corners, 0 skipped for PDN overlap
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       16
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_dv_s8x_btab
+Die area:                 ( 0 0 ) ( 293760 155520 )
+Number of track patterns: 26
+Number of DEF vias:       0
+Number of components:     16422
+Number of terminals:      1324
+Number of snets:          2
+Number of nets:           14588
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 86.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 269779.
+[INFO DRT-0033] V1 shape region query size = 2232138.
+[INFO DRT-0033] M2 shape region query size = 31224.
+[INFO DRT-0033] V2 shape region query size = 54918.
+[INFO DRT-0033] M3 shape region query size = 54938.
+[INFO DRT-0033] V3 shape region query size = 36612.
+[INFO DRT-0033] M4 shape region query size = 49941.
+[INFO DRT-0033] V4 shape region query size = 55268.
+[INFO DRT-0033] M5 shape region query size = 28971.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1235 pins.
+[INFO DRT-0081]   Complete 85 unique inst patterns.
+[INFO DRT-0084]   Complete 8324 groups.
+#scanned instances     = 16422
+#unique  instances     = 86
+#stdCellGenAp          = 2066
+#stdCellValidPlanarAp  = 10
+#stdCellValidViaAp     = 1911
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 27947
+#instTermValidViaApCnt = 0
+#macroGenAp            = 819
+#macroValidPlanarAp    = 819
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:06:29, elapsed time = 00:00:50, memory = 520.66 (MB), peak = 592.50 (MB)
+Took 51 seconds: pin_access
+global_route -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_turntree/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M5
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0003] Macros: 4
+[INFO GRT-0004] Blockages: 10424
+[INFO GRT-0019] Found 318 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 32
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal    1260399        899590          28.63%
+M3         Vertical      1401251       1042070          25.63%
+M4         Horizontal    1079015        805845          25.32%
+M5         Vertical      1026622        760934          25.88%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
+[INFO GRT-0102] Start extra iteration 4/30
+[INFO GRT-0102] Start extra iteration 5/30
+[INFO GRT-0102] Start extra iteration 6/30
+[INFO GRT-0102] Start extra iteration 7/30
+[INFO GRT-0102] Start extra iteration 8/30
+[INFO GRT-0102] Start extra iteration 9/30
+[INFO GRT-0102] Start extra iteration 10/30
+[INFO GRT-0102] Start extra iteration 11/30
+[INFO GRT-0102] Start extra iteration 12/30
+[INFO GRT-0102] Start extra iteration 13/30
+[INFO GRT-0197] Via related to pin nodes: 60602
+[INFO GRT-0198] Via related Steiner nodes: 511
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 96961
+[INFO GRT-0112] Final usage 3D: 937960
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              899590        224950           25.01%             0 /  0 /  0
+M3             1042070        192896           18.51%             0 /  0 /  0
+M4              805845        176153           21.86%             0 /  0 /  0
+M5              760934         53078            6.98%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          3508439        647077           18.44%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 391977 um
+[INFO GRT-0014] Routed nets: 14588
+[INFO GRT-0303] Global routing runtime = 00:03:18
+Took 198 seconds: global_route -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_turntree/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose -cap_margin 20 -slew_margin 20
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     14588
+     1000 |     +0.0% |       0 |       0 |             0 |     13588
+     2000 |     +0.0% |       0 |       0 |             0 |     12588
+     3000 |     +0.0% |       0 |       1 |             1 |     11588
+     4000 |     +0.1% |      18 |      89 |            76 |     10588
+     5000 |     +0.1% |      18 |      91 |            78 |      9588
+     6000 |     +0.2% |      19 |     141 |           116 |      8588
+     7000 |     +0.2% |      19 |     150 |           125 |      7588
+     8000 |     +0.4% |      52 |     301 |           231 |      6588
+     9000 |     +0.4% |      52 |     301 |           231 |      5588
+    10000 |     +0.5% |      52 |     330 |           260 |      4588
+    11000 |     +0.5% |      53 |     331 |           261 |      3588
+    12000 |     +0.5% |      53 |     331 |           261 |      2588
+    13000 |     +0.5% |      53 |     331 |           261 |      1588
+    14000 |     +0.5% |      53 |     331 |           261 |       588
+    final |     +0.5% |      53 |     331 |           261 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 261 slew violations.
+[INFO RSZ-0036] Found 16 capacitance violations.
+[INFO RSZ-0039] Resized 53 instances.
+[INFO RSZ-0038] Inserted 331 buffers in 261 nets.
+[INFO RSZ-0504] Runtime: 50.81s
+Took 51 seconds: repair_design -verbose -cap_margin 20 -slew_margin 20
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 41878.43 um^2
+[INFO DPL-0007] Movable instances area: 1628.99 um^2
+[INFO DPL-0008] Fixed instances area within core: 15761.76 um^2
+[INFO DPL-0009] Utilization: 41.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 16749 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         34 |         8 |        26
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.41s
+Placement Analysis
+---------------------------------
+total displacement        401.8 u
+average displacement        0.0 u
+max displacement            5.7 u
+original HPWL          328783.2 u
+legalized HPWL         329042.6 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_turntree/base/congestion_post_repair_design.rpt
+Took 17 seconds: global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_turntree/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 292.59 / FF hold ws 12.10 ps
+repair_timing -setup_margin 0 -hold_margin 5 -repair_tns 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.42s
+OT_RC_CAL hold: -global_routing layers M6 M7 R 0.014 C 0.105 (RCX-calibrated upper-layer RC; platform setRC restored after)
+OT_HOLD_MM after repair: SS setup ws 292.59 / FF hold ws 12.10 ps
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 292.59 / FF hold ws 12.10 ps
+OT_HOLD_GUARD start: hold ws 12.10 tns 0.0 viol 0 (margin 5, chunk 1000 it)
+OT_RC_CAL restored selected RC baseline /work/setRC_rcx.tcl
+OT_HOLD_MM after repair: SS setup ws 292.59 / FF hold ws 12.10 ps
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 292.59 / FF hold ws 12.10 ps
+OT_HOLD_MM after repair: SS setup ws 292.59 / FF hold ws 12.10 ps
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 41878.43 um^2
+[INFO DPL-0007] Movable instances area: 1628.99 um^2
+[INFO DPL-0008] Fixed instances area within core: 15761.76 um^2
+[INFO DPL-0009] Utilization: 41.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 16749 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+[INFO DPL-0500] Runtime: 0.29s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL          329042.6 u
+legalized HPWL         329042.6 u
+delta HPWL                    0 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/run/reports/asap7/kq_qfd_dv_s8x_btab_turntree/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 1.86s
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 17391 um^2 42% utilization.
+[INFO FLW-0007] clock clk period 833.000000
+[WARNING FLW-0010] more than one clock found. Skipping sdc update.
+[INFO FLW-0011] Path endpoint path count 4791
+source /work/grt_post_core.tcl
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     14919
+[INFO DPL-0006] Core area: 41878.43 um^2
+[INFO DPL-0007] Movable instances area: 1660.02 um^2
+[INFO DPL-0008] Fixed instances area within core: 15761.76 um^2
+[INFO DPL-0009] Utilization: 41.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 16907 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         20 |        10 |        10
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.42s
+    final |     +0.5% |     103 |     364 |           329 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 431 slew violations.
+[INFO RSZ-0039] Resized 103 instances.
+[INFO RSZ-0038] Inserted 364 buffers in 329 nets.
+[INFO RSZ-0504] Runtime: 175.23s
+[INFO RSZ-0033] No hold violations found.
+[INFO RSZ-0506] Runtime: 0.68s
+[INFO DPL-0006] Core area: 41878.43 um^2
+[INFO DPL-0007] Movable instances area: 1714.97 um^2
+[INFO DPL-0008] Fixed instances area within core: 15761.76 um^2
+[INFO DPL-0009] Utilization: 41.7%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 17113 cells
+[INFO DPL-0393]   height 153 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        155 |        26 |       129
+        1 |         42 |        10 |        32
+        2 |         14 |         5 |         9
+        3 |         41 |         3 |        38
+        4 |         34 |         2 |        32
+        5 |         20 |         2 |        18
+        6 |         42 |         2 |        40
+        7 |         24 |         2 |        22
+        8 |         13 |         3 |        10
+        9 |         38 |         5 |        33
+       10 |         38 |         2 |        36
+       15 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 15.
+[INFO DPL-0500] Runtime: 0.90s
+Placement Analysis
+---------------------------------
+total displacement        390.7 u
+average displacement        0.0 u
+max displacement            7.7 u
+original HPWL          339333.6 u
+legalized HPWL         339524.7 u
+delta HPWL                    0 %
+
+OT_PG_CONNECT grt_post rules=2 protected_rebound=0
+OT_PG_BOUND grt_post pg_terms=34234 open=0
+Took 185 seconds: source /work/grt_post_core.tcl
+write_db /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/5_1_grt.odb
+write_sdc -no_timestamp /work/run/results/asap7/kq_qfd_dv_s8x_btab_turntree/base/5_1_grt.sdc
+Elapsed time: 9:14.03[h:]min:sec. CPU time: user 974.00 sys 10.00 (177%). Peak memory: 1081644KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb          554           1056 fe1899044335ae1269e2
+5_1_grt                   .sdc                             ed135268245f2072c251
+make: Nothing to be done for 'grt'.
