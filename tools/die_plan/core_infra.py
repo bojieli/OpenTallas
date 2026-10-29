@@ -56,6 +56,52 @@ class InfraError(ValueError):
     pass
 
 
+LATE_DPL_MAX_UM = 20.0  # install_stage pre_cts: max incremental-DPL displacement of a planned tree cell (opt-in only)
+
+
+def _span(value, where):
+    """{"TT": {"min", "max"}, "FF": {"min", "max"}} of finite positive ps, min <= max."""
+    if not isinstance(value, dict) or set(value) != {"TT", "FF"}:
+        raise InfraError(f"{where}: TT and FF min/max required")
+    for corner, span in value.items():
+        if not isinstance(span, dict) or set(span) != {"min", "max"}:
+            raise InfraError(f"{where}: {corner} needs min/max")
+        v = [span["min"], span["max"]]
+        if any(not isinstance(x, (int, float)) or isinstance(x, bool) or not math.isfinite(x) or x <= 0 for x in v) \
+                or v[0] > v[1]:
+            raise InfraError(f"{where}: invalid {corner} span")
+    return value
+
+
+def _early_tap(tree, leaf, n, basis):
+    """METHODOLOGY 12.3 v5.0 early tap (DIE-QC-36 A0, opt-in leaf.early_tap_ps): a macro leaf whose clock pin has its
+    own internal insertion (the macro's signed/real Liberty view, TT/FF min..max, receipt early_tap_view) counts that
+    insertion as k planned stages, k = round(mid / stage_ps) with the plan's per-stage model
+    core_tree.early_tap_stage_ps {TT, FF, source}; k must agree at TT and FF. The leaf then sits k stages SHALLOWER
+    than the register leaves (depth + k joins the equal total-stage check). Plan data only, never a measurement."""
+    if basis != "total":
+        raise InfraError(f"{n}: early_tap_ps needs core_tree.stage_basis total")
+    if leaf.get("load_class") != "macro":
+        raise InfraError(f"{n}: early_tap_ps is a macro-leaf field (load_class macro)")
+    ins = _span(leaf["early_tap_ps"], f"{n} early_tap_ps")
+    view = leaf.get("early_tap_view")
+    if not isinstance(view, str) or not view.strip():
+        raise InfraError(f"{n}: early_tap_ps needs the signed/real view receipt early_tap_view")
+    sp = tree.get("early_tap_stage_ps")
+    if not isinstance(sp, dict) or not isinstance(sp.get("source"), str) or not sp["source"].strip() or any(
+            not isinstance(sp.get(c), (int, float)) or isinstance(sp.get(c), bool) or not math.isfinite(sp[c])
+            or sp[c] <= 0 for c in ("TT", "FF")):
+        raise InfraError(f"{n}: early_tap_ps needs core_tree.early_tap_stage_ps {{TT, FF, source}} (plan stage model)")
+    ks, res = {}, {}
+    for c in ("TT", "FF"):
+        mid = (ins[c]["min"] + ins[c]["max"]) / 2
+        ks[c] = int(math.floor(mid / sp[c] + 0.5))
+        res[c] = round(mid - ks[c] * sp[c], 3)
+    if ks["TT"] != ks["FF"] or ks["FF"] < 1:
+        raise InfraError(f"{n}: early tap stage count must be >= 1 and agree at TT/FF, got {ks}")
+    return ks["FF"], res
+
+
 def word(value):
     value = str(value)
     # OpenDB/Yosys instance identities commonly contain literal \[ and \].
@@ -306,6 +352,7 @@ def compile_slice(sl, kd=None):
             if not isinstance(k, int) or isinstance(k, bool) or k < 1:
                 raise InfraError(f"{n}: stage_basis total needs an integer cts_stages >= 1 on every CTS-open leaf")
             return k, k
+        early = []
         for leaf in leaves:
             n = leaf["node"]
             if leaf.get("load_class") == "gated_domain":
@@ -315,6 +362,8 @@ def compile_slice(sl, kd=None):
                     raise InfraError(f"gated_domain leaf {n}: must name a planned clock gate exactly once")
                 if leaf.get("sinks"):
                     raise InfraError(f"gated_domain leaf {n}: gated sinks stay on the gate output; do not list them")
+                if "early_tap_ps" in leaf:
+                    raise InfraError(f"gated_domain leaf {n}: early_tap_ps belongs on a planned macro leaf")
                 gd = next(g for g in gates if g["inst"] == n)
                 if "clone_of" in gd and leaf.get("domain_sinks") != len(gd["members"]):
                     raise InfraError(f"gated_domain leaf {n}: a gate copy's domain is exactly its {len(gd['members'])} members")
@@ -325,8 +374,15 @@ def compile_slice(sl, kd=None):
             if n not in nn:
                 raise InfraError(f"unknown leaf driver {n}")
             if leaf.get("cts_open"):
+                if "early_tap_ps" in leaf:
+                    raise InfraError(f"{n}: an early-tap macro leaf is a planned leaf, not CTS-open")
                 cts_levels[n], extra = _open_stages(leaf, n)
                 levels.add(depth[n] + extra)
+            elif "early_tap_ps" in leaf:
+                k = _early_tap(tree, leaf, n, basis)
+                early.append(dict(node=n, sinks=list(leaf.get("sinks", [])), stages=k[0], view=leaf["early_tap_view"],
+                                  insertion_ps=leaf["early_tap_ps"], residual_ps=k[1]))
+                levels.add(depth[n] + k[0])
             else:
                 levels.add(depth[n])
             sinks = leaf.get("sinks", [])
@@ -394,6 +450,25 @@ def compile_slice(sl, kd=None):
             raise InfraError(f"CTS-open leaves have unequal planned local stage counts: "
                              f"{dict(sorted(cts_levels.items()))}")
         tree["cts_open"] = sorted(cts_levels)
+        if early:
+            tree["early_taps"] = early
+        if "early_tap_stage_ps" in tree and not early:
+            raise InfraError("core_tree.early_tap_stage_ps without any early_tap_ps macro leaf")
+        stage = tree.get("install_stage", "pre_gpl")
+        if stage not in ("pre_gpl", "pre_cts"):
+            raise InfraError(f"core_tree.install_stage must be pre_gpl or pre_cts, got {stage!r}")
+        if stage == "pre_cts":
+            # DIE-QC-36 A0 opt-in: the tree is built on an existing placement at PRE_CTS (no re-place); gate copies
+            # (LEC netlist written pre-GPL) and the post-placement rebind (already a CTS-hook step) stay pre_gpl-only
+            if copied or any("clone_of" in g for g in gates):
+                raise InfraError("install_stage pre_cts does not support gate copies (clone_of)")
+            if tree.get("post_place_rebind") is not None:
+                raise InfraError("install_stage pre_cts does not support post_place_rebind")
+            if sl.get("cell_placements"):
+                raise InfraError("install_stage pre_cts places tree cells by incremental DPL; frozen cell_placements refused")
+            dmax = tree.get("late_dpl_max_um", LATE_DPL_MAX_UM)
+            if not isinstance(dmax, (int, float)) or isinstance(dmax, bool) or not math.isfinite(dmax) or dmax <= 0:
+                raise InfraError("core_tree.late_dpl_max_um must be a positive number")
         if tree.get("equal_load", True):
             for group, cc in counts.items():
                 if max(cc) - min(cc) > 1:
@@ -553,6 +628,57 @@ def trunk_pg_clearance(sl, plan):
                 blocked_edges=len(bad), examples=bad[:10])
 
 
+def _tree_lines(t, late=False):
+    """core_tree Tcl lines (shared by the pre-GPL master_core_infra.tcl and the opt-in PRE_CTS hook)."""
+    lines = []
+    lines.append(f"ot_ci_tree_begin {word(t['clock_port'])}")
+    below = t.get("under_gate", {})
+    for c in t["nodes"]:
+        if c["name"] in below:
+            continue
+        lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
+    for g in t.get("gates", []):
+        if "clone_of" in g:
+            continue
+        x, y = g["xy_um"]
+        r = " ".join(f"{v:g}" for v in g["rect_um"])
+        lines.append(f"{'ot_ci_late_gate' if late else 'ot_ci_tree_gate'} {word(g['inst'])} {g['master']} {word(g['parent'])} {word(g['clk_pin'])} "
+                     f"{word(g['out_pin'])} {x:g} {y:g} {{{r}}}")
+    # copies after every original: each copy reads its original's enable nets and takes members from its domain
+    for g in t.get("gates", []):
+        if "clone_of" not in g:
+            continue
+        x, y = g["xy_um"]
+        r = " ".join(f"{v:g}" for v in g["rect_um"])
+        pins = " ".join(word(q) for q in g["enable_pins"])
+        mem = " ".join(word(q) for q in g["members"])
+        lines.append(f"ot_ci_tree_gate_copy {word(g['inst'])} {g['master']} {word(g['clone_of'])} {word(g['parent'])} "
+                     f"{word(g['clk_pin'])} {word(g['out_pin'])} {x:g} {y:g} {{{r}}} {{{pins}}} {{{mem}}}")
+    # form C (CORES-EARLY-5): after every copy took its members, each planned-domain gate's gated sinks become
+    # expected tree sinks (reconnected to planned leaves below it, all must be assigned); then its planned nodes
+    for g in t.get("gates", []):
+        if g.get("domain", "open") == "planned":
+            lines.append(f"ot_ci_tree_gate_planned {word(g['inst'])}")
+    for c in t["nodes"]:
+        if c["name"] in below:
+            lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
+    for leaf in t["leaves"]:
+        if leaf.get("load_class") == "gated_domain":
+            lines.append(f"ot_ci_tree_domain {word(leaf['node'])} {leaf['domain_sinks']}")
+            continue
+        for s in leaf["sinks"]:
+            lines.append(f"ot_ci_tree_sink {word(leaf['node'])} {word(s)}")
+        if leaf.get("cts_open"):
+            lines.append(f"ot_ci_tree_open {word(leaf['node'])}")
+    for hard in t.get("preserved_hard_clocks", []):
+        lines.append(f"ot_ci_tree_preserve_hard {word(t['clock_port'])} {word(hard['pin'])} {word(hard['master'])}")
+    lines.append("ot_ci_tree_finish")
+    if any("clone_of" in g for g in t.get("gates", [])):
+        # the copies exist only after this hook: the kit LEC must run on this netlist (lec.py --netlist)
+        lines.append("ot_ci_lec_netlist /work/core_infra_post.v")
+    return lines
+
+
 def emit_tcl(sl, kd=None):
     plan = compile_slice(sl, kd)
     tree = plan.get("core_tree")
@@ -585,6 +711,8 @@ def emit_tcl(sl, kd=None):
                 inb = low <= result["leaf_min"] and result["leaf_max"] <= high
                 band_info.append(f"# core latency band INFO {corner}: model leaf {result['leaf_min']:g}..{result['leaf_max']:g} "
                                  f"window {result['leaf_window']:g} (target {low:g}..{high:g}: {'IN' if inb else 'OUT'}; not a gate, 12.3a)")
+    late = bool(tree) and tree.get("install_stage", "pre_gpl") == "pre_cts"
+    late_cells = {c["name"] for c in tree["nodes"]} if late else set()
     lines = ["# Shared core infrastructure: plan-defined identities only; no measured adjustments.",
              "source /work/native_pg_binding.tcl", "source /work/core_infra_impl.tcl", "ot_ci_begin"]
     if band_info:
@@ -596,6 +724,8 @@ def emit_tcl(sl, kd=None):
         x, y = p["xy_um"]
         lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}")
     for c in plan["cells"]:
+        if c["name"] in late_cells:
+            continue
         x, y = c["xy_um"]
         r = " ".join(f"{v:g}" for v in c["rect_um"])
         lines.append(f"ot_ci_cell {word(c['name'])} {c['master']} {x:g} {y:g} {{{r}}}")
@@ -604,53 +734,8 @@ def emit_tcl(sl, kd=None):
             lines.append(f"ot_ci_origin_assert {word(c['name'])} {ox:g} {oy:g} {word(c['orient'])}")
     for a in plan["arcs"]:
         lines.append(f"ot_ci_arc {word(a['cell'])} {word(a['source'])} {word(a['sink'])}")
-    if plan["core_tree"]:
-        t = plan["core_tree"]
-        lines.append(f"ot_ci_tree_begin {word(t['clock_port'])}")
-        below = t.get("under_gate", {})
-        for c in t["nodes"]:
-            if c["name"] in below:
-                continue
-            lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
-        for g in t.get("gates", []):
-            if "clone_of" in g:
-                continue
-            x, y = g["xy_um"]
-            r = " ".join(f"{v:g}" for v in g["rect_um"])
-            lines.append(f"ot_ci_tree_gate {word(g['inst'])} {g['master']} {word(g['parent'])} {word(g['clk_pin'])} "
-                         f"{word(g['out_pin'])} {x:g} {y:g} {{{r}}}")
-        # copies after every original: each copy reads its original's enable nets and takes members from its domain
-        for g in t.get("gates", []):
-            if "clone_of" not in g:
-                continue
-            x, y = g["xy_um"]
-            r = " ".join(f"{v:g}" for v in g["rect_um"])
-            pins = " ".join(word(q) for q in g["enable_pins"])
-            mem = " ".join(word(q) for q in g["members"])
-            lines.append(f"ot_ci_tree_gate_copy {word(g['inst'])} {g['master']} {word(g['clone_of'])} {word(g['parent'])} "
-                         f"{word(g['clk_pin'])} {word(g['out_pin'])} {x:g} {y:g} {{{r}}} {{{pins}}} {{{mem}}}")
-        # form C (CORES-EARLY-5): after every copy took its members, each planned-domain gate's gated sinks become
-        # expected tree sinks (reconnected to planned leaves below it, all must be assigned); then its planned nodes
-        for g in t.get("gates", []):
-            if g.get("domain", "open") == "planned":
-                lines.append(f"ot_ci_tree_gate_planned {word(g['inst'])}")
-        for c in t["nodes"]:
-            if c["name"] in below:
-                lines.append(f"ot_ci_tree_node {word(c['name'])} {word(c['parent'])}")
-        for leaf in t["leaves"]:
-            if leaf.get("load_class") == "gated_domain":
-                lines.append(f"ot_ci_tree_domain {word(leaf['node'])} {leaf['domain_sinks']}")
-                continue
-            for s in leaf["sinks"]:
-                lines.append(f"ot_ci_tree_sink {word(leaf['node'])} {word(s)}")
-            if leaf.get("cts_open"):
-                lines.append(f"ot_ci_tree_open {word(leaf['node'])}")
-        for hard in t.get("preserved_hard_clocks", []):
-            lines.append(f"ot_ci_tree_preserve_hard {word(t['clock_port'])} {word(hard['pin'])} {word(hard['master'])}")
-        lines.append("ot_ci_tree_finish")
-        if any("clone_of" in g for g in t.get("gates", [])):
-            # the copies exist only after this hook: the kit LEC must run on this netlist (lec.py --netlist)
-            lines.append("ot_ci_lec_netlist /work/core_infra_post.v")
+    if plan["core_tree"] and not late:
+        lines += _tree_lines(plan["core_tree"])
     for b in plan["bays"]:
         x, y = b["xy_um"]
         r = " ".join(f"{v:g}" for v in b["rect_um"])
@@ -663,14 +748,48 @@ def emit_tcl(sl, kd=None):
             raise InfraError(f"entry {p['name']}: die signal on-ramp must be M7")
         x, y = p["xy_um"]
         lines.append(f"ot_ci_entry {word(p['pin'])} {x:g} {y:g}")
+    if plan.get("clock_ndr") and not late:
+        lines.append(_ndr_line(plan))
+    lines += ["ot_ci_finish", ""]
+    return "\n".join(lines)
+
+
+def _ndr_line(plan):
+    ndr = plan["clock_ndr"]
+    if not plan["core_tree"] or ndr.get("layers") != ["M4", "M5"]:
+        raise InfraError("core clock NDR requires a planned tree on M4/M5")
+    wm, sm = ndr["width_multiplier"], ndr["spacing_multiplier"]
+    if not all(isinstance(v, (int, float)) and 1 <= v <= 8 for v in (wm, sm)):
+        raise InfraError("core clock width/spacing multiplier must lie in [1, 8]")
+    return f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}"
+
+
+LATE_HOOK, LATE_IMPL = "master_core_infra_late.tcl", "core_infra_late.tcl"
+
+
+def emit_late_tcl(plan):
+    """Opt-in core_tree.install_stage = "pre_cts" (DIE-QC-36 A0): the plan tree is built on the EXISTING placement at
+    the PRE_CTS hook (before core_infra_cts.tcl), not by the pre-GPL master_core_infra.tcl. Planned tree cells are
+    created at their plan xy and legalized by an incremental DPL that moves ONLY them (every other instance held
+    FIRM, restored after); clock gates keep their placed xy (the plan xy is reported, never applied)."""
+    t = plan.get("core_tree") or {}
+    if t.get("install_stage", "pre_gpl") != "pre_cts":
+        raise InfraError("emit_late_tcl needs core_tree.install_stage pre_cts")
+    names = {c["name"] for c in t["nodes"]}
+    lines = ["# Shared core infrastructure, PRE_CTS install (core_tree.install_stage pre_cts): plan tree on the placed",
+             "# design; incremental DPL of the planned tree cells only; clock gates keep their placed xy.",
+             "source /work/native_pg_binding.tcl", "source /work/core_infra_impl.tcl", f"source /work/{LATE_IMPL}",
+             "ot_ci_begin"]
+    for c in plan["cells"]:
+        if c["name"] not in names:
+            continue
+        x, y = c["xy_um"]
+        r = " ".join(f"{v:g}" for v in c["rect_um"])
+        lines.append(f"ot_ci_late_cell {word(c['name'])} {c['master']} {x:g} {y:g} {{{r}}}")
+    lines += _tree_lines(t, late=True)
+    lines.append(f"ot_ci_late_legalize {t.get('late_dpl_max_um', LATE_DPL_MAX_UM):g}")
     if plan.get("clock_ndr"):
-        ndr = plan["clock_ndr"]
-        if not plan["core_tree"] or ndr.get("layers") != ["M4", "M5"]:
-            raise InfraError("core clock NDR requires a planned tree on M4/M5")
-        wm, sm = ndr["width_multiplier"], ndr["spacing_multiplier"]
-        if not all(isinstance(v, (int, float)) and 1 <= v <= 8 for v in (wm, sm)):
-            raise InfraError("core clock width/spacing multiplier must lie in [1, 8]")
-        lines.append(f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}")
+        lines.append(_ndr_line(plan))
     lines += ["ot_ci_finish", ""]
     return "\n".join(lines)
 
@@ -818,10 +937,18 @@ def kit_cts_hook(kd, cfg):
     that builds / re-taps / re-leafs the clock itself (PLAN_TREE_CLOCK_EDITORS)."""
     kd = Path(kd)
     pj = kd / "core_infra_plan.json"
-    if not pj.is_file() or not json.loads(pj.read_text()).get("core_tree"):
+    tree = json.loads(pj.read_text()).get("core_tree") if pj.is_file() else None
+    if not tree:
         return False
     if not (kd / CTS_HOOK).is_file():
         raise SystemExit(f"{kd.name}: plan tree without {CTS_HOOK} (core_infra.install too old)")
+    pre_lines = CTS_PRE_LINES
+    if tree.get("install_stage", "pre_gpl") == "pre_cts":
+        # opt-in PRE_CTS install: the plan tree is built on the placed design right before the CTS-open-only TritonCTS
+        if not (kd / LATE_HOOK).is_file() or not (kd / LATE_IMPL).is_file():
+            raise SystemExit(f"{kd.name}: install_stage pre_cts without {LATE_HOOK}/{LATE_IMPL}")
+        pre_lines = (f"# DIE-QC-36 A0: install_stage pre_cts -> plan tree built on the placed design (incremental DPL)\n"
+                     f"source /work/{LATE_HOOK}\n") + CTS_PRE_LINES
     pre, post = _kit_stage_file(kd, cfg, "PRE_CTS_TCL"), _kit_stage_file(kd, cfg, "POST_CTS_TCL")
     used = set()
     for f in (pre, post):
@@ -832,14 +959,14 @@ def kit_cts_hook(kd, cfg):
         raise SystemExit(f"{kd.name}: plan core tree refuses kit clock editors at CTS {bad} (the plan owns the tree; "
                          "drop the tap / F4 / regional-tap option for a plan-tree kit)")
     if pre is None:
-        (kd / CTS_PRE_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n{CTS_PRE_LINES}")
+        (kd / CTS_PRE_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n{pre_lines}")
         cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
     elif _shared(kd, cfg, pre, "PRE_CTS_TCL"):
         (kd / CTS_PRE_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n"
-                                        f"source /work/{pre}\n{CTS_PRE_LINES}")
+                                        f"source /work/{pre}\n{pre_lines}")
         cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
     else:
-        (kd / pre).write_text((kd / pre).read_text() + CTS_PRE_LINES)
+        (kd / pre).write_text((kd / pre).read_text() + pre_lines)
     if post is not None:
         if _shared(kd, cfg, post, "POST_CTS_TCL"):
             (kd / CTS_POST_CHAIN).write_text(f"# GENERATED by tools/die_plan/core_infra.py kit_cts_hook\n"
@@ -869,6 +996,9 @@ def install(kd, sl):
     if plan.get("core_tree"):
         # every core-kit generator chains it at PRE_CTS via kit_cts_hook (master_slice.plan_tree_cts); unused otherwise
         (kd / CTS_HOOK).write_text(emit_cts_tcl(plan))
+        if plan["core_tree"].get("install_stage", "pre_gpl") == "pre_cts":
+            (kd / LATE_HOOK).write_text(emit_late_tcl(plan))
+            shutil.copyfile(HERE / LATE_IMPL, kd / LATE_IMPL)
         if plan["core_tree"].get("post_place_rebind"):
             shutil.copyfile(HERE / REBIND_PY, kd / REBIND_PY)
     shutil.copyfile(HERE / "core_infra.tcl", kd / "core_infra_impl.tcl")

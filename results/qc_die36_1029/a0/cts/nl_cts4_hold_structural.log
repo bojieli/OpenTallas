@@ -1,0 +1,1127 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_qwen_tile_lsl_rawfault_m3_tt.lib
+read_liberty /work/macros/ot_qwen_tile_romleaf_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_qwen_tile_lsl_rawfault_m3_ff.lib
+[WARNING STA-1140] /work/macros/ot_qwen_tile_lsl_rawfault_m3_ff.lib line 1, library ot_qwen_tile_lsl_rawfault_m3 already exists.
+read_liberty /work/macros/ot_qwen_tile_romleaf_ff.lib
+[WARNING STA-1140] /work/macros/ot_qwen_tile_romleaf_ff.lib line 1, library ot_qwen_tile_romleaf already exists.
+read_db /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/fc_dt_lift_cts.tcl
+OT_FCAP: dont_touch lifted for CTS on 240 flops
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl0/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl1/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl2/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl3/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl4/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl5/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl6/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl7/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp0/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp1/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp2/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp3/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp4/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp5/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp6/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp7/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp8/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp9/u_icg sinks=1
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_ck/u_icg domain_sinks=2849 plan=2849
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_de/u_icg domain_sinks=1027 plan=1027
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_dw/u_icg domain_sinks=1027 plan=1027
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_fa2/u_icg domain_sinks=514 plan=514
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rn/u_icg domain_sinks=514 plan=514
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rnw/u_icg domain_sinks=514 plan=514
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rs/u_icg domain_sinks=515 plan=515
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rsw/u_icg domain_sinks=515 plan=515
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx0/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx1/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx2/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx3/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx4/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx5/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx6/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx7/u_icg domain_sinks=781 plan=781
+[INFO DPL-0006] Core area: 516276.63 um^2
+[INFO DPL-0007] Movable instances area: 18.11 um^2
+[INFO DPL-0008] Fixed instances area within core: 327270.86 um^2
+[INFO DPL-0009] Utilization: 63.4%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 75738 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 17 for 3 consecutive iterations.
+Using old diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 1/1 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 4.71s
+Placement Analysis
+---------------------------------
+total displacement         72.8 u
+average displacement        0.0 u
+max displacement           26.4 u
+original HPWL         1808631.3 u
+legalized HPWL        1808686.2 u
+delta HPWL                    0 %
+
+OT_CORE_INFRA_LATE_DPL cells=61 held=40559 max_disp_um=26.140 (bound 60)
+OT_CORE_INFRA cells=61 ports=0 bay_cells=34 added_data_cycles=0 added_reset_cycles=0
+Took 8 seconds: source /work/fc_dt_lift_cts.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 1.0
+OT_CORE_INFRA_CTS TritonCTS on 16 CTS-open nets only; 14348 register clock pins checked
+OT_CORE_INFRA_LATE_CTS plan-owned balancing: clock_tree_synthesis -sink_clustering_enable -delay_buffer_derate 1.0 -clk_nets {ck_de ck_dw ck_fa2 ck_g ck_rn ck_rnw ck_rs ck_rsw ck_tx0 ck_tx1 ck_tx2 ck_tx3 ck_tx4 ck_tx5 ck_tx6 ck_tx7} -no_insertion_delay
+OT_MACRO_CTS 18 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck_de ck_dw ck_fa2 ck_g ck_rn ck_rnw ck_rs ck_rsw ck_tx0 ck_tx1 ck_tx2 ck_tx3 ck_tx4 ck_tx5 ck_tx6 ck_tx7.
+[INFO CTS-0095] Net "ck_de" found.
+[INFO CTS-0010]  Clock net "ck_de" has 1027 sinks.
+[INFO CTS-0095] Net "ck_dw" found.
+[INFO CTS-0010]  Clock net "ck_dw" has 1027 sinks.
+[INFO CTS-0095] Net "ck_fa2" found.
+[INFO CTS-0010]  Clock net "ck_fa2" has 514 sinks.
+[INFO CTS-0095] Net "ck_g" found.
+[INFO CTS-0010]  Clock net "ck_g" has 2827 sinks.
+[INFO CTS-0095] Net "ck_rn" found.
+[INFO CTS-0010]  Clock net "ck_rn" has 514 sinks.
+[INFO CTS-0095] Net "ck_rnw" found.
+[INFO CTS-0010]  Clock net "ck_rnw" has 514 sinks.
+[INFO CTS-0095] Net "ck_rs" found.
+[INFO CTS-0010]  Clock net "ck_rs" has 515 sinks.
+[INFO CTS-0095] Net "ck_rsw" found.
+[INFO CTS-0010]  Clock net "ck_rsw" has 515 sinks.
+[INFO CTS-0095] Net "ck_tx0" found.
+[INFO CTS-0010]  Clock net "ck_tx0" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx1" found.
+[INFO CTS-0010]  Clock net "ck_tx1" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx2" found.
+[INFO CTS-0010]  Clock net "ck_tx2" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx3" found.
+[INFO CTS-0010]  Clock net "ck_tx3" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx4" found.
+[INFO CTS-0010]  Clock net "ck_tx4" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx5" found.
+[INFO CTS-0010]  Clock net "ck_tx5" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx6" found.
+[INFO CTS-0010]  Clock net "ck_tx6" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx7" found.
+[INFO CTS-0010]  Clock net "ck_tx7" has 781 sinks.
+[INFO CTS-0008] TritonCTS found 16 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_de.
+[INFO CTS-0028]  Total number of sinks: 1027.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 25 and max clustering diameter of 109.
+[INFO CTS-0019]  Total number of sinks after clustering: 70.
+[INFO CTS-0024]  Normalized sink region: [(112.995, 335.433), (273.391, 609.056)].
+[INFO CTS-0025]     Width:  160.3957.
+[INFO CTS-0026]     Height: 273.6222.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 35
+    Sub-region size: 160.3957 X 136.8111
+[INFO CTS-0034]     Segment length (rounded): 68.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 80.1978 X 136.8111
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 80.1978 X 68.4056
+[INFO CTS-0034]     Segment length (rounded): 34.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 5
+    Sub-region size: 40.0989 X 68.4056
+[INFO CTS-0034]     Segment length (rounded): 20.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 70.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_dw.
+[INFO CTS-0028]  Total number of sinks: 1027.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 27 and max clustering diameter of 149.
+[INFO CTS-0019]  Total number of sinks after clustering: 72.
+[INFO CTS-0024]  Normalized sink region: [(110.37, 351.58), (284.196, 603.182)].
+[INFO CTS-0025]     Width:  173.8257.
+[INFO CTS-0026]     Height: 251.6024.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 36
+    Sub-region size: 173.8257 X 125.8012
+[INFO CTS-0034]     Segment length (rounded): 62.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 86.9129 X 125.8012
+[INFO CTS-0034]     Segment length (rounded): 44.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 86.9129 X 62.9006
+[INFO CTS-0034]     Segment length (rounded): 32.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 5
+    Sub-region size: 43.4564 X 62.9006
+[INFO CTS-0034]     Segment length (rounded): 22.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 72.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa2.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 44 and max clustering diameter of 3.
+[INFO CTS-0019]  Total number of sinks after clustering: 13.
+[INFO CTS-0024]  Normalized sink region: [(4.10548, 673.022), (6.32541, 731.818)].
+[INFO CTS-0025]     Width:  2.2199.
+[INFO CTS-0026]     Height: 58.7962.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 7
+    Sub-region size: 2.2199 X 29.3981
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 13.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_g.
+[INFO CTS-0028]  Total number of sinks: 2827.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 28 and max clustering diameter of 144.
+[INFO CTS-0019]  Total number of sinks after clustering: 164.
+[INFO CTS-0024]  Normalized sink region: [(7.26341, 394.5), (334.352, 844.5)].
+[INFO CTS-0025]     Width:  327.0890.
+[INFO CTS-0026]     Height: 450.0000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 82
+    Sub-region size: 327.0890 X 225.0000
+[INFO CTS-0034]     Segment length (rounded): 112.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 41
+    Sub-region size: 163.5445 X 225.0000
+[INFO CTS-0034]     Segment length (rounded): 82.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 163.5445 X 112.5000
+[INFO CTS-0034]     Segment length (rounded): 56.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 81.7722 X 112.5000
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 81.7722 X 56.2500
+[INFO CTS-0034]     Segment length (rounded): 28.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 40.8861 X 56.2500
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 7
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 40.8861 X 28.1250
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 164.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rn.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 37 and max clustering diameter of 28.
+[INFO CTS-0019]  Total number of sinks after clustering: 21.
+[INFO CTS-0024]  Normalized sink region: [(186.973, 280.115), (209.535, 439.24)].
+[INFO CTS-0025]     Width:  22.5618.
+[INFO CTS-0026]     Height: 159.1250.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 11
+    Sub-region size: 22.5618 X 79.5625
+[INFO CTS-0034]     Segment length (rounded): 40.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 21.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rnw.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 27 and max clustering diameter of 69.
+[INFO CTS-0019]  Total number of sinks after clustering: 25.
+[INFO CTS-0024]  Normalized sink region: [(138.772, 300.256), (159.296, 490.823)].
+[INFO CTS-0025]     Width:  20.5245.
+[INFO CTS-0026]     Height: 190.5670.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 20.5245 X 95.2835
+[INFO CTS-0034]     Segment length (rounded): 48.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 25.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rs.
+[INFO CTS-0028]  Total number of sinks: 515.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 32 and max clustering diameter of 54.
+[INFO CTS-0019]  Total number of sinks after clustering: 27.
+[INFO CTS-0024]  Normalized sink region: [(186.716, 128.471), (214.22, 391.9)].
+[INFO CTS-0025]     Width:  27.5045.
+[INFO CTS-0026]     Height: 263.4286.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 27.5045 X 131.7143
+[INFO CTS-0034]     Segment length (rounded): 66.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 7
+    Sub-region size: 13.7523 X 131.7143
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 27.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rsw.
+[INFO CTS-0028]  Total number of sinks: 515.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 26 and max clustering diameter of 116.
+[INFO CTS-0019]  Total number of sinks after clustering: 32.
+[INFO CTS-0024]  Normalized sink region: [(141.146, 121.881), (177.576, 391.722)].
+[INFO CTS-0025]     Width:  36.4303.
+[INFO CTS-0026]     Height: 269.8413.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 16
+    Sub-region size: 36.4303 X 134.9206
+[INFO CTS-0034]     Segment length (rounded): 68.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 8
+    Sub-region size: 18.2151 X 134.9206
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 32.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx0.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 40.
+[INFO CTS-0019]  Total number of sinks after clustering: 36.
+[INFO CTS-0024]  Normalized sink region: [(198.339, 395.957), (290.556, 693.408)].
+[INFO CTS-0025]     Width:  92.2179.
+[INFO CTS-0026]     Height: 297.4505.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 18
+    Sub-region size: 92.2179 X 148.7253
+[INFO CTS-0034]     Segment length (rounded): 74.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 9
+    Sub-region size: 46.1089 X 148.7253
+[INFO CTS-0034]     Segment length (rounded): 24.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 46.1089 X 74.3626
+[INFO CTS-0034]     Segment length (rounded): 38.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 36.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx1.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 74.
+[INFO CTS-0019]  Total number of sinks after clustering: 41.
+[INFO CTS-0024]  Normalized sink region: [(191.605, 477.95), (292.549, 703.855)].
+[INFO CTS-0025]     Width:  100.9442.
+[INFO CTS-0026]     Height: 225.9046.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 100.9442 X 112.9523
+[INFO CTS-0034]     Segment length (rounded): 56.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 50.4721 X 112.9523
+[INFO CTS-0034]     Segment length (rounded): 26.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 50.4721 X 56.4761
+[INFO CTS-0034]     Segment length (rounded): 28.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 41.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx2.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 30 and max clustering diameter of 48.
+[INFO CTS-0019]  Total number of sinks after clustering: 43.
+[INFO CTS-0024]  Normalized sink region: [(193.282, 570.18), (290.76, 785.908)].
+[INFO CTS-0025]     Width:  97.4778.
+[INFO CTS-0026]     Height: 215.7280.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 22
+    Sub-region size: 97.4778 X 107.8640
+[INFO CTS-0034]     Segment length (rounded): 54.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 48.7389 X 107.8640
+[INFO CTS-0034]     Segment length (rounded): 24.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 48.7389 X 53.9320
+[INFO CTS-0034]     Segment length (rounded): 26.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 43.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx3.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 30 and max clustering diameter of 51.
+[INFO CTS-0019]  Total number of sinks after clustering: 43.
+[INFO CTS-0024]  Normalized sink region: [(100.132, 397.25), (182.628, 609.21)].
+[INFO CTS-0025]     Width:  82.4960.
+[INFO CTS-0026]     Height: 211.9598.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 22
+    Sub-region size: 82.4960 X 105.9799
+[INFO CTS-0034]     Segment length (rounded): 52.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 41.2480 X 105.9799
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 41.2480 X 52.9900
+[INFO CTS-0034]     Segment length (rounded): 26.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 43.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx4.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 30 and max clustering diameter of 60.
+[INFO CTS-0019]  Total number of sinks after clustering: 41.
+[INFO CTS-0024]  Normalized sink region: [(97.6592, 502.064), (153.375, 728.944)].
+[INFO CTS-0025]     Width:  55.7162.
+[INFO CTS-0026]     Height: 226.8809.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 55.7162 X 113.4404
+[INFO CTS-0034]     Segment length (rounded): 56.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 27.8581 X 113.4404
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 41.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx5.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 53.
+[INFO CTS-0019]  Total number of sinks after clustering: 46.
+[INFO CTS-0024]  Normalized sink region: [(76.6119, 529.9), (195.002, 847.967)].
+[INFO CTS-0025]     Width:  118.3898.
+[INFO CTS-0026]     Height: 318.0666.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 23
+    Sub-region size: 118.3898 X 159.0333
+[INFO CTS-0034]     Segment length (rounded): 80.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 12
+    Sub-region size: 59.1949 X 159.0333
+[INFO CTS-0034]     Segment length (rounded): 30.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 59.1949 X 79.5166
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 29.5975 X 79.5166
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 46.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx6.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 55.
+[INFO CTS-0019]  Total number of sinks after clustering: 42.
+[INFO CTS-0024]  Normalized sink region: [(91.0019, 499.117), (150.501, 728.344)].
+[INFO CTS-0025]     Width:  59.4989.
+[INFO CTS-0026]     Height: 229.2278.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 59.4989 X 114.6139
+[INFO CTS-0034]     Segment length (rounded): 58.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 29.7494 X 114.6139
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 42.
+[INFO CTS-0201] 18 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx7.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 45.
+[INFO CTS-0019]  Total number of sinks after clustering: 43.
+[INFO CTS-0024]  Normalized sink region: [(77.4134, 550.377), (194.854, 845.529)].
+[INFO CTS-0025]     Width:  117.4407.
+[INFO CTS-0026]     Height: 295.1516.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 22
+    Sub-region size: 117.4407 X 147.5758
+[INFO CTS-0034]     Segment length (rounded): 74.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 58.7203 X 147.5758
+[INFO CTS-0034]     Segment length (rounded): 30.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 58.7203 X 73.7879
+[INFO CTS-0034]     Segment length (rounded): 36.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 43.
+[INFO CTS-0018]     Created 103 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 103 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:1, 3:7, 4:4, 5:4, 6:4, 7:2, 8:4, 9:2, 10:3, 11:7, 12:5, 13:2, 14:6, 15:4, 16:5, 17:2, 18:2, 19:5, 20:4, 21:5, 22:4, 23:2, 24:1, 25:1..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0018]     Created 105 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 105 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:1, 3:5, 4:5, 5:4, 6:5, 7:3, 8:2, 9:5, 10:7, 11:3, 12:5, 13:4, 14:4, 15:6, 16:6, 17:4, 18:1, 19:4, 20:3, 21:3, 22:2, 23:3, 24:2, 27:1..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0018]     Created 16 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 16 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:1, 7:1, 36:1, 37:2, 38:2, 39:2, 40:1, 41:2, 42:2, 44:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 419 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 14.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 14.
+[INFO CTS-0015]     Created 419 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:69, 2:30, 3:10, 4:4, 5:3, 6:3, 7:4, 8:6, 9:4, 10:7, 11:1, 12:3, 13:7, 14:5, 15:7, 16:8, 17:4, 18:13, 19:16, 20:9, 21:16, 22:17, 23:8, 24:5, 25:8, 26:3, 27:2, 28:1..
+[INFO CTS-0017]     Max level of the clock tree: 7.
+[INFO CTS-0018]     Created 24 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 24 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 9:1, 11:1, 12:1, 13:2, 14:2, 18:1, 19:1, 24:1, 26:3, 28:1, 29:3, 30:1, 31:2, 32:1, 34:1, 37:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 28 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 28 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:1, 9:1, 11:1, 14:2, 16:2, 18:1, 19:1, 20:1, 21:1, 22:6, 23:2, 24:4, 25:1, 26:2, 27:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 36 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 36 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:1, 4:1, 6:1, 8:1, 9:2, 10:2, 11:2, 12:1, 13:1, 14:1, 15:1, 17:1, 19:1, 21:2, 22:3, 23:4, 24:1, 27:1, 29:2, 30:1, 32:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 41 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 41 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:1, 4:1, 6:1, 7:2, 8:1, 9:3, 10:3, 13:2, 15:2, 17:4, 18:3, 19:2, 20:3, 21:4, 22:2, 25:1, 26:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 53 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 6.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 6.
+[INFO CTS-0015]     Created 53 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:1, 4:5, 5:2, 6:3, 7:1, 13:2, 16:3, 17:1, 20:3, 21:1, 22:2, 23:2, 24:3, 26:2, 27:5, 28:2, 29:1, 30:2, 31:3..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 56 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 56 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:2, 4:4, 6:3, 7:1, 8:1, 9:1, 10:3, 11:1, 12:2, 13:1, 14:4, 15:2, 16:1, 17:1, 18:1, 19:2, 20:1, 21:1, 22:2, 25:1, 26:3, 27:2, 28:3, 29:3, 30:1, 31:2..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 58 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 58 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:3, 5:4, 6:2, 8:1, 9:3, 10:1, 11:5, 12:2, 14:2, 15:4, 17:2, 19:3, 20:2, 21:1, 22:2, 23:2, 24:2, 25:1, 26:1, 27:2, 28:2, 29:3, 30:1..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 58 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 58 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:4, 5:2, 6:1, 7:2, 8:3, 9:1, 10:1, 11:3, 12:1, 13:2, 14:2, 15:3, 16:3, 17:1, 18:4, 19:1, 20:2, 22:1, 23:2, 24:1, 25:2, 26:1, 27:2, 28:3, 29:1, 30:2..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 48 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 48 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 8:1, 9:1, 10:2, 11:3, 12:2, 13:2, 14:3, 16:2, 17:2, 18:4, 19:3, 20:4, 21:1, 22:1, 23:3, 24:2, 25:1, 26:2, 27:1, 28:2, 30:2..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 79 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 79 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:1, 2:8, 3:3, 4:3, 5:4, 6:3, 7:3, 8:1, 9:1, 11:1, 12:4, 13:2, 14:1, 15:2, 16:1, 17:1, 18:3, 19:1, 20:3, 22:2, 23:1, 24:3, 25:2, 26:1, 27:1, 28:2, 29:1, 30:2, 31:1..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0018]     Created 51 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 51 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:2, 8:2, 9:4, 10:1, 11:1, 12:5, 13:3, 14:2, 15:1, 16:1, 17:2, 18:1, 19:1, 20:1, 22:2, 23:3, 24:3, 25:4, 26:1, 27:1, 29:1, 30:2, 31:2..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 60 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 6.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 6.
+[INFO CTS-0015]     Created 60 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:3, 5:2, 6:4, 7:1, 8:1, 9:3, 10:2, 11:2, 13:1, 14:3, 15:5, 16:2, 19:1, 20:1, 21:1, 22:1, 23:5, 24:4, 25:4, 26:2, 28:2, 31:1..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0098] Clock net "ck_de"
+[INFO CTS-0099]  Sinks 1084
+[INFO CTS-0100]  Leaf buffers 70
+[INFO CTS-0101]  Average sink wire length 227.18 um
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0207]  Dummy loads inserted 57
+[INFO CTS-0098] Clock net "ck_dw"
+[INFO CTS-0099]  Sinks 1088
+[INFO CTS-0100]  Leaf buffers 72
+[INFO CTS-0101]  Average sink wire length 257.40 um
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0207]  Dummy loads inserted 61
+[INFO CTS-0098] Clock net "ck_fa2"
+[INFO CTS-0099]  Sinks 526
+[INFO CTS-0100]  Leaf buffers 13
+[INFO CTS-0101]  Average sink wire length 44.40 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 12
+[INFO CTS-0098] Clock net "ck_g"
+[INFO CTS-0099]  Sinks 2904
+[INFO CTS-0100]  Leaf buffers 164
+[INFO CTS-0101]  Average sink wire length 527.70 um
+[INFO CTS-0102]  Path depth 11 - 14
+[INFO CTS-0207]  Dummy loads inserted 77
+[INFO CTS-0098] Clock net "ck_rn"
+[INFO CTS-0099]  Sinks 534
+[INFO CTS-0100]  Leaf buffers 21
+[INFO CTS-0101]  Average sink wire length 115.33 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 20
+[INFO CTS-0098] Clock net "ck_rnw"
+[INFO CTS-0099]  Sinks 538
+[INFO CTS-0100]  Leaf buffers 25
+[INFO CTS-0101]  Average sink wire length 114.85 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 24
+[INFO CTS-0098] Clock net "ck_rs"
+[INFO CTS-0099]  Sinks 540
+[INFO CTS-0100]  Leaf buffers 27
+[INFO CTS-0101]  Average sink wire length 188.53 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 25
+[INFO CTS-0098] Clock net "ck_rsw"
+[INFO CTS-0099]  Sinks 544
+[INFO CTS-0100]  Leaf buffers 32
+[INFO CTS-0101]  Average sink wire length 176.87 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 29
+[INFO CTS-0098] Clock net "ck_tx0"
+[INFO CTS-0099]  Sinks 810
+[INFO CTS-0100]  Leaf buffers 36
+[INFO CTS-0101]  Average sink wire length 237.89 um
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0207]  Dummy loads inserted 29
+[INFO CTS-0098] Clock net "ck_tx1"
+[INFO CTS-0099]  Sinks 818
+[INFO CTS-0100]  Leaf buffers 41
+[INFO CTS-0101]  Average sink wire length 225.48 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 37
+[INFO CTS-0098] Clock net "ck_tx2"
+[INFO CTS-0099]  Sinks 818
+[INFO CTS-0100]  Leaf buffers 43
+[INFO CTS-0101]  Average sink wire length 232.99 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 37
+[INFO CTS-0098] Clock net "ck_tx3"
+[INFO CTS-0099]  Sinks 819
+[INFO CTS-0100]  Leaf buffers 43
+[INFO CTS-0101]  Average sink wire length 143.84 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 38
+[INFO CTS-0098] Clock net "ck_tx4"
+[INFO CTS-0099]  Sinks 820
+[INFO CTS-0100]  Leaf buffers 41
+[INFO CTS-0101]  Average sink wire length 180.22 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 39
+[INFO CTS-0098] Clock net "ck_tx5"
+[INFO CTS-0099]  Sinks 815
+[INFO CTS-0100]  Leaf buffers 46
+[INFO CTS-0101]  Average sink wire length 306.04 um
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0207]  Dummy loads inserted 34
+[INFO CTS-0098] Clock net "ck_tx6"
+[INFO CTS-0099]  Sinks 819
+[INFO CTS-0100]  Leaf buffers 42
+[INFO CTS-0101]  Average sink wire length 168.65 um
+[INFO CTS-0102]  Path depth 5 - 5
+[INFO CTS-0207]  Dummy loads inserted 38
+[INFO CTS-0098] Clock net "ck_tx7"
+[INFO CTS-0099]  Sinks 818
+[INFO CTS-0100]  Leaf buffers 43
+[INFO CTS-0101]  Average sink wire length 250.04 um
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0207]  Dummy loads inserted 37
+[INFO CTS-0500] Runtime: 6.17s
+OT_CORE_INFRA_LATE_CTS_GATE_CLONE clone_1_g_icg.g_hop.u_hop_ck/u_icg on mp_a0_t7_out (TritonCTS ICG clone; same planned depth; kit LEC covers it)
+OT_CORE_INFRA_LATE_CTS planned parent nets=1 tritoncts_icg_clones=1
+Took 7 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 1.0
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 516276.63 um^2
+[INFO DPL-0007] Movable instances area: 7003.71 um^2
+[INFO DPL-0008] Fixed instances area within core: 320953.01 um^2
+[INFO DPL-0009] Utilization: 63.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 77568 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 5 for 3 consecutive iterations.
+Using old diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 5 for 3 consecutive iterations. Using diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 1
+[INFO DPL-0500] Runtime: 88.20s
+Placement Analysis
+---------------------------------
+total displacement      17372.2 u
+average displacement        0.2 u
+max displacement           67.5 u
+original HPWL         1864330.2 u
+legalized HPWL        1879727.4 u
+delta HPWL                    1 %
+
+Took 89 seconds: detailed_placement
+estimate_parasitics -placement
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws -699.01 / FF hold ws -654.46 ps
+repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 1114 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1114 out of 1114 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -699.015 |   -83759.0 |  -162884.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      10* |       0 |       6 |        3 |      0 |     0 |    +0.0% | -666.021 |   -83103.6 |  -162788.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      20* |       1 |      11 |        8 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      30* |       6 |      11 |       13 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      40* |      11 |      11 |       18 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      50* |      16 |      11 |       23 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      60* |      21 |      11 |       28 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      70* |      26 |      11 |       33 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      70* |       1 |      11 |        8 |      0 |     0 |    +0.0% | -626.902 |   -82243.8 |  -161324.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      80* |       2 |      19 |        8 |      0 |     0 |    +0.0% | -626.907 |   -82243.5 |  -146999.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      90* |       2 |      23 |       13 |      0 |     2 |    +0.0% | -628.957 |   -82245.0 |  -148346.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+      94* |       1 |      18 |        8 |      0 |     0 |    +0.0% | -626.902 |   -82242.3 |  -147125.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     100* |       1 |      22 |        8 |      0 |     1 |    +0.0% | -626.902 |   -81971.6 |  -146219.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     108* |       1 |      24 |       14 |      0 |     2 |    +0.0% | -626.902 |   -81679.1 |  -147513.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     110* |       1 |      25 |       14 |      0 |     2 |    +0.0% | -626.902 |   -81641.1 |  -145326.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     120* |       1 |      31 |       19 |      0 |     2 |    +0.0% | -626.901 |   -81578.3 |  -143372.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     126* |       1 |      31 |       19 |      0 |     2 |    +0.0% | -626.901 |   -81578.3 |  -143372.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     130* |       1 |      33 |       21 |      0 |     2 |    +0.0% | -626.901 |   -81533.7 |  -143138.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     140* |       1 |      39 |       25 |      0 |     2 |    +0.0% | -626.901 |   -81511.8 |  -142631.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     145* |       1 |      37 |       23 |      0 |     2 |    +0.0% | -626.901 |   -81511.8 |  -142621.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     150* |       1 |      39 |       24 |      0 |     3 |    +0.0% | -626.901 |   -81440.7 |  -139768.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     160* |       1 |      44 |       27 |      0 |     5 |    +0.0% | -626.901 |   -81124.2 |  -137489.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     170* |       1 |      50 |       30 |      0 |     6 |    +0.0% | -626.901 |   -81011.2 |  -136609.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     174* |       1 |      52 |       30 |      0 |     6 |    +0.0% | -626.901 |   -81010.6 |  -136588.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     180* |       1 |      56 |       31 |      0 |     6 |    +0.0% | -626.901 |   -80914.1 |  -136483.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     185* |       1 |      56 |       31 |      0 |     7 |    +0.0% | -626.901 |   -80914.1 |  -136458.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     190* |       1 |      56 |       35 |      0 |     8 |    +0.0% | -626.901 |   -80877.8 |  -136289.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     200* |       1 |      63 |       38 |      0 |     8 |    +0.0% | -626.901 |   -79887.7 |  -136002.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     210* |       1 |      65 |       46 |      0 |     9 |    +0.0% | -626.901 |   -79572.6 |  -135838.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     219* |       1 |      66 |       52 |      0 |    12 |    +0.0% | -626.901 |   -79439.2 |  -134944.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     220* |       1 |      66 |       52 |      0 |    12 |    +0.0% | -626.901 |   -79439.2 |  -134944.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     230* |       1 |      73 |       54 |      0 |    13 |    +0.0% | -628.957 |   -79442.5 |  -135558.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     230* |       1 |      67 |       52 |      0 |    12 |    +0.0% | -626.901 |   -79439.2 |  -134949.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     240* |       2 |      73 |       55 |      0 |    12 |    +0.0% | -626.901 |   -79316.8 |  -134533.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     250* |       7 |      73 |       59 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134594.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     260* |      12 |      73 |       64 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134594.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     270* |      17 |      73 |       69 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134594.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     280* |      22 |      73 |       74 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134594.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     290* |      27 |      73 |       79 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134594.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     291* |       2 |      73 |       55 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134532.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     300* |       2 |      79 |       56 |      0 |    14 |    +0.0% | -626.906 |   -79333.2 |  -134635.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     302* |       2 |      74 |       55 |      0 |    13 |    +0.0% | -626.901 |   -79316.8 |  -134537.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     310* |       2 |      78 |       56 |      0 |    15 |    +0.0% | -626.901 |   -79285.2 |  -134467.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     313* |       2 |      79 |       56 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134443.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     314* |       2 |      79 |       56 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134443.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     320* |       3 |      81 |       58 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134434.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     330* |       8 |      81 |       64 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134487.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     340* |      13 |      81 |       69 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134487.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     350* |      18 |      81 |       74 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134487.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     360* |      23 |      81 |       79 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134487.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     370* |      28 |      81 |       84 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134487.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     371* |       3 |      81 |       60 |      0 |    16 |    +0.0% | -626.901 |   -79285.2 |  -134431.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     379* |       3 |      84 |       61 |      0 |    18 |    +0.0% | -626.901 |   -79237.8 |  -134323.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     380* |       3 |      84 |       61 |      0 |    18 |    +0.0% | -626.901 |   -79237.8 |  -134323.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     389* |       3 |      87 |       62 |      0 |    19 |    +0.0% | -626.901 |   -79128.9 |  -134228.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     390* |       3 |      87 |       62 |      0 |    19 |    +0.0% | -626.901 |   -79128.9 |  -134228.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     399* |       3 |      88 |       64 |      0 |    19 |    +0.0% | -626.901 |   -79128.9 |  -134256.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     400* |       3 |      88 |       64 |      0 |    19 |    +0.0% | -626.901 |   -79128.9 |  -134256.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     410* |       5 |      90 |       69 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134161.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     420* |      10 |      90 |       74 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134161.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     430* |      15 |      90 |       79 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134161.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     440* |      20 |      90 |       84 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134161.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     450* |      25 |      90 |       89 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134161.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     458* |       4 |      90 |       68 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134161.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     460* |       4 |      90 |       69 |      0 |    20 |    +0.0% | -626.901 |   -79105.3 |  -134131.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     467* |       4 |      94 |       69 |      0 |    21 |    +0.0% | -623.123 |   -79120.4 |  -134191.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     470* |       4 |      94 |       70 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134128.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     480* |       8 |      96 |       75 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134178.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     490* |      13 |      96 |       80 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134178.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     500* |      18 |      96 |       85 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134178.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     510* |      23 |      96 |       90 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134178.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     520* |      28 |      96 |       95 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134178.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     524* |       5 |      96 |       72 |      0 |    22 |    +0.0% | -623.123 |   -79114.6 |  -134178.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     530* |       5 |      99 |       74 |      0 |    23 |    +0.0% | -623.123 |   -79114.6 |  -131653.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     540* |       5 |     106 |       76 |      2 |    23 |    +0.0% | -623.123 |   -79114.6 |  -129129.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     550* |       5 |     115 |       77 |      2 |    23 |    +0.0% | -623.123 |   -79068.8 |  -126541.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     560* |       5 |     122 |       80 |      3 |    23 |    +0.0% | -623.123 |   -79068.8 |  -126642.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     568* |       5 |     118 |       77 |      3 |    23 |    +0.0% | -623.123 |   -79068.8 |  -125546.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     570* |       5 |     119 |       77 |      3 |    23 |    +0.0% | -623.123 |   -78909.0 |  -125420.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     575* |       5 |     121 |       78 |      3 |    23 |    +0.0% | -623.123 |   -78902.6 |  -125463.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     580* |       6 |     122 |       79 |      3 |    24 |    +0.0% | -623.123 |   -78827.0 |  -125423.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     587* |       6 |     124 |       81 |      3 |    24 |    +0.0% | -623.123 |   -78817.5 |  -125397.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     590* |       6 |     124 |       82 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125337.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     600* |      10 |     126 |       87 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125449.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     610* |      15 |     126 |       92 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125449.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     620* |      20 |     126 |       97 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125449.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     630* |      25 |     126 |      102 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125449.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     640* |      30 |     126 |      107 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125449.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     645* |       7 |     126 |       85 |      3 |    25 |    +0.0% | -623.123 |   -78817.5 |  -125395.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     650* |       8 |     127 |       86 |      3 |    26 |    +0.0% | -623.123 |   -78812.8 |  -125428.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     660* |      12 |     128 |       92 |      3 |    26 |    +0.0% | -623.123 |   -78778.9 |  -125410.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     670* |      17 |     128 |       97 |      3 |    26 |    +0.0% | -623.123 |   -78778.9 |  -125410.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     680* |      22 |     128 |      102 |      3 |    26 |    +0.0% | -623.123 |   -78778.9 |  -125410.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     690* |      27 |     128 |      107 |      3 |    26 |    +0.0% | -623.123 |   -78778.9 |  -125410.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     700* |      32 |     128 |      112 |      3 |    26 |    +0.0% | -623.123 |   -78778.9 |  -125410.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     702* |       8 |     128 |       88 |      3 |    26 |    +0.0% | -623.123 |   -78778.9 |  -125410.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     710* |       8 |     133 |       91 |      3 |    26 |    +0.0% | -623.123 |   -78702.2 |  -123029.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     714* |       8 |     133 |       91 |      3 |    28 |    +0.0% | -623.123 |   -78702.4 |  -122985.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     720* |       8 |     137 |       93 |      3 |    28 |    +0.0% | -623.123 |   -78702.4 |  -122981.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     726* |       8 |     138 |       93 |      3 |    29 |    +0.0% | -623.123 |   -78702.4 |  -122972.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     730* |       8 |     141 |       93 |      3 |    29 |    +0.0% | -623.123 |   -78683.8 |  -122923.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     737* |       8 |     143 |       95 |      3 |    32 |    +0.0% | -623.123 |   -78684.6 |  -123037.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     740* |       8 |     145 |       95 |      3 |    32 |    +0.0% | -622.597 |   -78668.6 |  -122863.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     748* |       8 |     147 |       95 |      3 |    32 |    +0.0% | -622.597 |   -78663.8 |  -122872.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     750* |       8 |     147 |       95 |      3 |    33 |    +0.0% | -622.597 |   -78664.2 |  -122869.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     760* |      11 |     149 |      101 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122871.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     770* |      16 |     149 |      106 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122871.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     780* |      21 |     149 |      111 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122871.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     790* |      26 |     149 |      116 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122871.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     800* |      31 |     149 |      121 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122871.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     806* |       9 |     149 |       99 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122871.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     810* |       9 |     150 |      102 |      3 |    33 |    +0.0% | -622.597 |   -78660.6 |  -122866.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     812* |       9 |     150 |      103 |      3 |    33 |    +0.0% | -622.597 |   -78658.8 |  -122967.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     820* |       9 |     155 |      106 |      3 |    33 |    +0.0% | -622.597 |   -78658.8 |  -122663.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     828* |       9 |     155 |      106 |      3 |    33 |    +0.0% | -622.597 |   -78658.8 |  -122663.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     830* |       9 |     155 |      106 |      3 |    34 |    +0.0% | -622.597 |   -78658.8 |  -122646.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     835* |       9 |     158 |      110 |      3 |    34 |    +0.0% | -622.597 |   -78624.3 |  -122475.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     840* |       9 |     161 |      110 |      3 |    35 |    +0.0% | -622.597 |   -78624.3 |  -122482.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     844* |       9 |     162 |      112 |      3 |    35 |    +0.0% | -622.597 |   -78624.3 |  -122509.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     850* |      10 |     164 |      113 |      3 |    36 |    +0.0% | -622.597 |   -78562.0 |  -122505.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     860* |      15 |     164 |      119 |      3 |    36 |    +0.0% | -622.597 |   -78524.9 |  -122561.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     870* |      20 |     164 |      124 |      3 |    36 |    +0.0% | -622.597 |   -78524.9 |  -122561.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     880* |      25 |     164 |      129 |      3 |    36 |    +0.0% | -622.597 |   -78524.9 |  -122561.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     890* |      30 |     164 |      134 |      3 |    36 |    +0.0% | -622.597 |   -78524.9 |  -122561.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     900* |      35 |     164 |      139 |      3 |    36 |    +0.0% | -622.597 |   -78524.9 |  -122561.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     901* |      10 |     164 |      115 |      3 |    36 |    +0.0% | -622.597 |   -78495.6 |  -122502.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     908* |      10 |     166 |      117 |      3 |    38 |    +0.0% | -622.597 |   -78407.0 |  -122487.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     910* |      10 |     167 |      117 |      3 |    38 |    +0.0% | -622.597 |   -78407.0 |  -122489.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     917* |      10 |     170 |      119 |      3 |    39 |    +0.0% | -622.597 |   -78407.0 |  -122542.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     920* |      10 |     172 |      119 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121355.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     930* |      10 |     177 |      124 |      3 |    40 |    +0.0% | -622.594 |   -78363.6 |  -121867.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     940* |      10 |     183 |      130 |      3 |    40 |    +0.0% | -622.594 |   -78363.6 |  -123448.9 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     942* |      10 |     173 |      121 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121274.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     950* |      11 |     178 |      122 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121285.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     960* |      15 |     179 |      129 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121091.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     970* |      20 |     179 |      134 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121091.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     980* |      25 |     179 |      139 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121091.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+     990* |      30 |     179 |      144 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121091.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1000* |      35 |     179 |      149 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121091.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1004* |      12 |     179 |      126 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121091.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1010* |      12 |     182 |      128 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -122398.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1020* |      12 |     188 |      135 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -123030.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1027* |      12 |     185 |      129 |      3 |    39 |    +0.0% | -622.594 |   -78363.6 |  -121626.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1030* |      12 |     185 |      132 |      3 |    40 |    +0.0% | -622.594 |   -78321.2 |  -121562.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1031* |      12 |     185 |      132 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -121554.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1040* |      13 |     189 |      136 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123095.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1050* |      18 |     190 |      141 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123118.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1060* |      23 |     190 |      146 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123118.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1070* |      28 |     190 |      151 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123118.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1080* |      33 |     190 |      156 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123118.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1090* |      38 |     190 |      161 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123118.8 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1093* |      14 |     190 |      138 |      3 |    41 |    +0.0% | -622.594 |   -78321.2 |  -123082.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1100* |      14 |     194 |      139 |      3 |    42 |    +0.0% | -622.594 |   -78254.7 |  -123111.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1100* |      14 |     194 |      139 |      3 |    42 |    +0.0% | -622.594 |   -78254.7 |  -123111.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1110* |      14 |     197 |      143 |      3 |    44 |    +0.0% | -622.594 |   -78155.6 |  -122829.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1115* |      14 |     197 |      142 |      3 |    44 |    +0.0% | -622.594 |   -78155.6 |  -122733.1 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1120* |      14 |     201 |      142 |      3 |    44 |    +0.0% | -622.594 |   -78074.2 |  -122707.4 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1130* |      14 |     204 |      148 |      3 |    45 |    +0.0% | -622.594 |   -77887.1 |  -122612.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1139* |      14 |     208 |      148 |      3 |    47 |    +0.0% | -622.594 |   -77881.7 |  -122256.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1140* |      14 |     208 |      148 |      3 |    47 |    +0.0% | -622.594 |   -77881.7 |  -122256.5 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1149* |      14 |     209 |      149 |      3 |    48 |    +0.0% | -622.594 |   -77875.5 |  -122264.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1150* |      14 |     209 |      149 |      3 |    48 |    +0.0% | -622.594 |   -77875.5 |  -122264.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1160* |      14 |     213 |      154 |      3 |    50 |    +0.0% | -624.544 |   -77814.1 |  -122581.7 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1165* |      14 |     209 |      149 |      3 |    48 |    +0.0% | -622.594 |   -77875.5 |  -122264.3 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1170* |      14 |     211 |      152 |      3 |    48 |    +0.0% | -622.594 |   -77875.5 |  -122065.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1179* |      14 |     213 |      153 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121833.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1180* |      14 |     213 |      153 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121833.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1189* |      14 |     213 |      153 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121833.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1190* |      14 |     213 |      153 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121833.0 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1200* |      15 |     218 |      161 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -123147.6 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1200* |      15 |     217 |      157 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121672.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1200* |      15 |     217 |      157 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121672.2 |   1114 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1200+ |      15 |     217 |      157 |      4 |    48 |    +0.0% | -622.594 |   -77875.5 |  -121672.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1204+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1205+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1206+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1207+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1208+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1209+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1210+ |      15 |     219 |      157 |      4 |    49 |    +0.0% | -616.340 |   -77787.0 |  -121603.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1211+ |      15 |     219 |      157 |      4 |    50 |    +0.0% | -616.340 |   -77787.0 |  -121599.0 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1212+ |      15 |     219 |      157 |      4 |    50 |    +0.0% | -616.340 |   -77787.0 |  -121599.0 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1213+ |      15 |     219 |      157 |      4 |    50 |    +0.0% | -616.340 |   -77787.0 |  -121599.0 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1216+ |      15 |     221 |      157 |      4 |    50 |    +0.0% | -616.340 |   -77469.6 |  -121405.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1217+ |      15 |     221 |      157 |      4 |    50 |    +0.0% | -616.340 |   -77469.6 |  -121405.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1218+ |      15 |     221 |      157 |      4 |    50 |    +0.0% | -616.340 |   -77469.6 |  -121405.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1220+ |      15 |     221 |      157 |      4 |    51 |    +0.0% | -616.340 |   -77461.1 |  -121400.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1220+ |      15 |     221 |      157 |      4 |    51 |    +0.0% | -616.340 |   -77461.1 |  -121400.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1224+ |      15 |     223 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77459.3 |  -121347.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1225+ |      15 |     223 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77459.3 |  -121347.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1227+ |      15 |     224 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77458.7 |  -121345.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1228+ |      15 |     224 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77458.7 |  -121345.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1230+ |      15 |     225 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77458.7 |  -120980.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1230+ |      15 |     225 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77458.7 |  -120980.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1231+ |      15 |     225 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77458.7 |  -120980.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1232+ |      15 |     225 |      157 |      4 |    52 |    +0.0% | -616.340 |   -77458.7 |  -120980.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1236+ |      15 |     226 |      157 |      4 |    54 |    +0.0% | -616.340 |   -77453.5 |  -120946.5 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1237+ |      15 |     226 |      157 |      4 |    54 |    +0.0% | -616.340 |   -77453.5 |  -120946.5 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1240+ |      15 |     227 |      157 |      4 |    55 |    +0.0% | -616.340 |   -77450.6 |  -120844.1 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1240+ |      15 |     227 |      157 |      4 |    55 |    +0.0% | -616.340 |   -77450.6 |  -120844.1 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1242+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1243+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1244+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1245+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1246+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1247+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1248+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1249+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1250+ |      15 |     227 |      157 |      4 |    56 |    +0.0% | -616.340 |   -77450.6 |  -120840.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1251+ |      15 |     227 |      157 |      4 |    57 |    +0.0% | -616.340 |   -77451.1 |  -120837.3 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1252+ |      15 |     227 |      157 |      4 |    57 |    +0.0% | -616.340 |   -77451.1 |  -120837.3 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1254+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1255+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1256+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1257+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1258+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1259+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1260+ |      15 |     227 |      157 |      4 |    58 |    +0.0% | -616.340 |   -77451.5 |  -120823.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1263+ |      15 |     228 |      157 |      4 |    60 |    +0.0% | -616.340 |   -77451.5 |  -120814.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1264+ |      15 |     228 |      157 |      4 |    60 |    +0.0% | -616.340 |   -77451.5 |  -120814.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1265+ |      15 |     228 |      157 |      4 |    60 |    +0.0% | -616.340 |   -77451.5 |  -120814.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1267+ |      15 |     229 |      157 |      4 |    60 |    +0.0% | -616.340 |   -77451.5 |  -120807.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1268+ |      15 |     229 |      157 |      4 |    60 |    +0.0% | -616.340 |   -77451.5 |  -120807.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1270+ |      15 |     229 |      157 |      4 |    61 |    +0.0% | -616.340 |   -77450.5 |  -120807.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1270+ |      15 |     229 |      157 |      4 |    61 |    +0.0% | -616.340 |   -77450.5 |  -120807.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1271+ |      15 |     229 |      157 |      4 |    61 |    +0.0% | -616.340 |   -77450.5 |  -120807.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1276+ |      15 |     232 |      157 |      4 |    62 |    +0.0% | -616.340 |   -77446.4 |  -120537.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1277+ |      15 |     232 |      157 |      4 |    62 |    +0.0% | -616.340 |   -77446.4 |  -120537.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1279+ |      15 |     233 |      157 |      4 |    62 |    +0.0% | -616.340 |   -77446.1 |  -120532.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1280+ |      15 |     233 |      157 |      4 |    62 |    +0.0% | -616.340 |   -77446.1 |  -120532.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1282+ |      15 |     235 |      157 |      4 |    62 |    +0.0% | -616.340 |   -77446.1 |  -120485.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1284+ |      15 |     235 |      157 |      4 |    63 |    +0.0% | -616.340 |   -77440.7 |  -120481.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1287+ |      15 |     237 |      157 |      4 |    63 |    +0.0% | -616.340 |   -77440.7 |  -120435.5 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1290+ |      15 |     239 |      157 |      4 |    63 |    +0.0% | -616.340 |   -77406.0 |  -118084.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1292+ |      15 |     240 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77393.6 |  -117308.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1294+ |      15 |     241 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77392.4 |  -117301.0 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1296+ |      15 |     242 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77392.4 |  -117292.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1300+ |      15 |     245 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77385.5 |  -117236.3 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1301+ |      15 |     245 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77385.5 |  -117236.3 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1305+ |      15 |     248 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77385.5 |  -117197.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1307+ |      15 |     249 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77385.5 |  -117190.5 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1309+ |      15 |     250 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77362.3 |  -117172.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1310+ |      15 |     250 |      157 |      4 |    64 |    +0.0% | -616.340 |   -77362.3 |  -117172.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1313+ |      15 |     252 |      157 |      4 |    65 |    +0.0% | -616.340 |   -77363.9 |  -117005.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1318+ |      15 |     255 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77346.7 |  -115901.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1319+ |      15 |     255 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77346.7 |  -115901.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1320+ |      15 |     255 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77346.7 |  -115901.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1321+ |      15 |     256 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115897.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1322+ |      15 |     256 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115897.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1324+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1325+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1326+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1327+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1328+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1329+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1330+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1330+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1331+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1332+ |      15 |     257 |      157 |      4 |    66 |    +0.0% | -616.340 |   -77342.3 |  -115889.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1334+ |      15 |     257 |      157 |      4 |    67 |    +0.0% | -616.340 |   -77342.1 |  -115884.9 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1339+ |      15 |     260 |      157 |      4 |    68 |    +0.0% | -616.340 |   -77344.5 |  -115664.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1340+ |      15 |     260 |      157 |      4 |    68 |    +0.0% | -616.340 |   -77344.5 |  -115664.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1341+ |      15 |     260 |      157 |      4 |    69 |    +0.0% | -616.340 |   -77344.5 |  -115662.3 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1342+ |      15 |     260 |      157 |      4 |    69 |    +0.0% | -616.340 |   -77344.5 |  -115662.3 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1347+ |      15 |     263 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77341.7 |  -115549.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1348+ |      15 |     263 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77341.7 |  -115549.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1350+ |      15 |     264 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77342.7 |  -115439.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1351+ |      15 |     265 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77342.7 |  -115428.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1352+ |      15 |     265 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77342.7 |  -115428.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1355+ |      15 |     267 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77343.6 |  -115270.1 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1357+ |      15 |     268 |      157 |      4 |    70 |    +0.0% | -616.340 |   -77343.6 |  -115269.5 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1359+ |      15 |     268 |      157 |      4 |    71 |    +0.0% | -616.340 |   -77343.6 |  -115266.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1360+ |      15 |     268 |      157 |      4 |    71 |    +0.0% | -616.340 |   -77343.6 |  -115266.7 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1364+ |      15 |     269 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77340.0 |  -115247.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1365+ |      15 |     269 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77340.0 |  -115247.6 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1368+ |      15 |     271 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115145.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1369+ |      15 |     271 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115145.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1370+ |      15 |     271 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115145.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1370+ |      15 |     271 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115145.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1371+ |      15 |     271 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115145.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1372+ |      15 |     271 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115145.2 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1374+ |      15 |     272 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115124.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1375+ |      15 |     272 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115124.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1378+ |      15 |     274 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115084.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1379+ |      15 |     274 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115084.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1380+ |      15 |     274 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115084.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1380+ |      15 |     274 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -115084.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1382+ |      15 |     275 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -114818.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1383+ |      15 |     275 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -114818.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1384+ |      15 |     275 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -114818.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1385+ |      15 |     275 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77341.0 |  -114818.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1390+ |      15 |     279 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77265.9 |  -114743.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1392+ |      15 |     281 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77256.9 |  -114734.4 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1394+ |      15 |     282 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77244.0 |  -114622.1 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    1400+ |      15 |     287 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77163.8 |  -114541.8 |    942 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+    final |      15 |     287 |      157 |      4 |    74 |    +0.0% | -616.340 |   -77163.8 |  -114541.8 |    909 | u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/q\[88\]$_DFF_P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 15 buffers.
+[INFO RSZ-0040] Inserted 157 buffers.
+[INFO RSZ-0051] Resized 287 instances: 279 up, 8 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 74 instances.
+[INFO RSZ-0049] Cloned 4 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 106.59s
+Took 107 seconds: repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -verbose -setup
+OT_HOLD_STRUCTURAL stage=cts: FF hold ws -654.46 ps, 5718 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+OT_HOLD_MM after repair: SS setup ws -616.34 / FF hold ws -654.46 ps
+Error: cts.tcl, 83 OT_HOLD_STRUCTURAL stage=cts: FF hold ws -654.46 ps, 5718 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+Elapsed time: 3:55.42[h:]min:sec. CPU time: user 298.10 sys 9.13 (130%). Peak memory: 2611328KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/4_1_cts.odb] Error 2

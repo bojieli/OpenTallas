@@ -1,0 +1,1454 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /work/macros/ot_qwen_tile_lsl_rawfault_m3_tt.lib
+read_liberty /work/macros/ot_qwen_tile_node_tt.lib
+read_liberty /work/macros/ot_qwen_tile_romleaf_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /work/macros/ot_qwen_tile_lsl_rawfault_m3_ff.lib
+[WARNING STA-1140] /work/macros/ot_qwen_tile_lsl_rawfault_m3_ff.lib line 1, library ot_qwen_tile_lsl_rawfault_m3 already exists.
+read_liberty /work/macros/ot_qwen_tile_node_ff.lib
+[WARNING STA-1140] /work/macros/ot_qwen_tile_node_ff.lib line 1, library ot_qwen_tile_node already exists.
+read_liberty /work/macros/ot_qwen_tile_romleaf_ff.lib
+[WARNING STA-1140] /work/macros/ot_qwen_tile_romleaf_ff.lib line 1, library ot_qwen_tile_romleaf already exists.
+read_db /work/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2rr1/base/3_place.odb
+read_sdc -mode ss /work/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2rr1/base/3_place.sdc
+read_sdc -mode ff /work/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2rr1/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2rr1/base/3_place.sdc
+source /work/setRC_rcx.tcl
+source /work/fc_dt_lift_cts.tcl
+OT_FCAP: dont_touch lifted for CTS on 240 flops
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl0/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl1/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl2/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl3/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl4/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl5/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl6/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_lsl7/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_node/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp0/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp1/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp2/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp3/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp4/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp5/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp6/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp7/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp8/u_icg sinks=1
+OT_CORE_INFRA_GATE_PLANNED g_icg.g_hop.u_hop_rp9/u_icg sinks=1
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_ck/u_icg domain_sinks=2336 plan=2336
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_de/u_icg domain_sinks=1027 plan=1027
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_dw/u_icg domain_sinks=1027 plan=1027
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_fa2/u_icg domain_sinks=515 plan=515
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_fa3/u_icg domain_sinks=516 plan=516
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rn/u_icg domain_sinks=514 plan=514
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rnw/u_icg domain_sinks=514 plan=514
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rs/u_icg domain_sinks=515 plan=515
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_rsw/u_icg domain_sinks=515 plan=515
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx0/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx1/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx2/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx3/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx4/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx5/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx6/u_icg domain_sinks=781 plan=781
+OT_CORE_INFRA_GATE g_icg.g_hop.u_hop_tx7/u_icg domain_sinks=781 plan=781
+[INFO DPL-0006] Core area: 516276.63 um^2
+[INFO DPL-0007] Movable instances area: 30.01 um^2
+[INFO DPL-0008] Fixed instances area within core: 348465.09 um^2
+[INFO DPL-0009] Utilization: 67.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 82079 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 129 for 3 consecutive iterations.
+Using old diamond search for 5 remaining illegal cells.
+diamond recovery: recovered 5/5 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 4.82s
+Placement Analysis
+---------------------------------
+total displacement        219.5 u
+average displacement        0.0 u
+max displacement           35.3 u
+original HPWL         2329566.0 u
+legalized HPWL        2329545.9 u
+delta HPWL                    0 %
+
+OT_CORE_INFRA_LATE_DPL cells=120 held=45253 max_disp_um=35.287 (bound 60)
+OT_CORE_INFRA cells=120 ports=0 bay_cells=36 added_data_cycles=0 added_reset_cycles=0
+Took 9 seconds: source /work/fc_dt_lift_cts.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+OT_CORE_INFRA_CTS TritonCTS on 17 CTS-open nets only; 15379 register clock pins checked
+OT_CORE_INFRA_LATE_CTS plan-owned balancing: clock_tree_synthesis -sink_clustering_enable -delay_buffer_derate 0.5 -clk_nets {ck_de ck_dw ck_fa2 ck_fa3 ck_g ck_rn ck_rnw ck_rs ck_rsw ck_tx0 ck_tx1 ck_tx2 ck_tx3 ck_tx4 ck_tx5 ck_tx6 ck_tx7} -no_insertion_delay
+OT_MACRO_CTS 19 clocked macros: -macro_clustering_size 2 -macro_clustering_max_diameter 40
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0001] Running TritonCTS with user-specified clock roots: ck_de ck_dw ck_fa2 ck_fa3 ck_g ck_rn ck_rnw ck_rs ck_rsw ck_tx0 ck_tx1 ck_tx2 ck_tx3 ck_tx4 ck_tx5 ck_tx6 ck_tx7.
+[INFO CTS-0095] Net "ck_de" found.
+[INFO CTS-0010]  Clock net "ck_de" has 1027 sinks.
+[INFO CTS-0095] Net "ck_dw" found.
+[INFO CTS-0010]  Clock net "ck_dw" has 1027 sinks.
+[INFO CTS-0095] Net "ck_fa2" found.
+[WARNING CTS-0041] Net "ck_fa2" has 1 sinks. Skipping...
+[INFO CTS-0095] Net "ck_fa3" found.
+[INFO CTS-0010]  Clock net "ck_fa3" has 2 sinks.
+[INFO CTS-0095] Net "ck_g" found.
+[INFO CTS-0010]  Clock net "ck_g" has 2314 sinks.
+[INFO CTS-0095] Net "ck_rn" found.
+[INFO CTS-0010]  Clock net "ck_rn" has 514 sinks.
+[INFO CTS-0095] Net "ck_rnw" found.
+[INFO CTS-0010]  Clock net "ck_rnw" has 514 sinks.
+[INFO CTS-0095] Net "ck_rs" found.
+[INFO CTS-0010]  Clock net "ck_rs" has 515 sinks.
+[INFO CTS-0095] Net "ck_rsw" found.
+[INFO CTS-0010]  Clock net "ck_rsw" has 515 sinks.
+[INFO CTS-0095] Net "ck_tx0" found.
+[INFO CTS-0010]  Clock net "ck_tx0" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx1" found.
+[INFO CTS-0010]  Clock net "ck_tx1" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx2" found.
+[INFO CTS-0010]  Clock net "ck_tx2" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx3" found.
+[INFO CTS-0010]  Clock net "ck_tx3" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx4" found.
+[INFO CTS-0010]  Clock net "ck_tx4" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx5" found.
+[INFO CTS-0010]  Clock net "ck_tx5" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx6" found.
+[INFO CTS-0010]  Clock net "ck_tx6" has 781 sinks.
+[INFO CTS-0095] Net "ck_tx7" found.
+[INFO CTS-0010]  Clock net "ck_tx7" has 781 sinks.
+[INFO CTS-0008] TritonCTS found 16 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_de.
+[INFO CTS-0028]  Total number of sinks: 1027.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 27 and max clustering diameter of 112.
+[INFO CTS-0019]  Total number of sinks after clustering: 72.
+[INFO CTS-0024]  Normalized sink region: [(121.529, 357.3), (269.22, 609.211)].
+[INFO CTS-0025]     Width:  147.6912.
+[INFO CTS-0026]     Height: 251.9111.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 36
+    Sub-region size: 147.6912 X 125.9556
+[INFO CTS-0034]     Segment length (rounded): 62.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 18
+    Sub-region size: 73.8456 X 125.9556
+[INFO CTS-0034]     Segment length (rounded): 36.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 73.8456 X 62.9778
+[INFO CTS-0034]     Segment length (rounded): 32.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 72.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_dw.
+[INFO CTS-0028]  Total number of sinks: 1027.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 24 and max clustering diameter of 148.
+[INFO CTS-0019]  Total number of sinks after clustering: 67.
+[INFO CTS-0024]  Normalized sink region: [(110.986, 352.9), (268.262, 604.515)].
+[INFO CTS-0025]     Width:  157.2766.
+[INFO CTS-0026]     Height: 251.6154.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 34
+    Sub-region size: 157.2766 X 125.8077
+[INFO CTS-0034]     Segment length (rounded): 62.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 17
+    Sub-region size: 78.6383 X 125.8077
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 9
+    Sub-region size: 78.6383 X 62.9038
+[INFO CTS-0034]     Segment length (rounded): 32.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 5
+    Sub-region size: 39.3191 X 62.9038
+[INFO CTS-0034]     Segment length (rounded): 20.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 67.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_fa3.
+[INFO CTS-0028]  Total number of sinks: 2.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(9709, 757215), (10594, 757485)].
+[INFO CTS-0024]  Normalized sink region: [(7.19185, 560.9), (7.84741, 561.1)].
+[INFO CTS-0025]     Width:  0.6556.
+[INFO CTS-0026]     Height: 0.2000.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 1
+    Sub-region size: 0.3278 X 0.2000
+[INFO CTS-0034]     Segment length (rounded): 1.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_g.
+[INFO CTS-0028]  Total number of sinks: 2314.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 32 and max clustering diameter of 98.
+[INFO CTS-0019]  Total number of sinks after clustering: 109.
+[INFO CTS-0024]  Normalized sink region: [(157.695, 393.3), (334.661, 726.209)].
+[INFO CTS-0025]     Width:  176.9666.
+[INFO CTS-0026]     Height: 332.9093.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 55
+    Sub-region size: 176.9666 X 166.4547
+[INFO CTS-0034]     Segment length (rounded): 84.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 28
+    Sub-region size: 88.4833 X 166.4547
+[INFO CTS-0034]     Segment length (rounded): 44.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 88.4833 X 83.2273
+[INFO CTS-0034]     Segment length (rounded): 42.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 7
+    Sub-region size: 44.2417 X 83.2273
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 4
+    Sub-region size: 44.2417 X 41.6137
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 2
+    Sub-region size: 22.1208 X 41.6137
+[INFO CTS-0034]     Segment length (rounded): 12.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 109.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rn.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 33 and max clustering diameter of 38.
+[INFO CTS-0019]  Total number of sinks after clustering: 20.
+[INFO CTS-0024]  Normalized sink region: [(188.568, 279.28), (208.897, 450.3)].
+[INFO CTS-0025]     Width:  20.3286.
+[INFO CTS-0026]     Height: 171.0200.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 10
+    Sub-region size: 20.3286 X 85.5100
+[INFO CTS-0034]     Segment length (rounded): 42.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 20.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rnw.
+[INFO CTS-0028]  Total number of sinks: 514.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 29 and max clustering diameter of 59.
+[INFO CTS-0019]  Total number of sinks after clustering: 25.
+[INFO CTS-0024]  Normalized sink region: [(137.349, 299.664), (164.947, 454.66)].
+[INFO CTS-0025]     Width:  27.5985.
+[INFO CTS-0026]     Height: 154.9964.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 13
+    Sub-region size: 27.5985 X 77.4982
+[INFO CTS-0034]     Segment length (rounded): 38.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 25.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rs.
+[INFO CTS-0028]  Total number of sinks: 515.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 33 and max clustering diameter of 34.
+[INFO CTS-0019]  Total number of sinks after clustering: 24.
+[INFO CTS-0024]  Normalized sink region: [(185.442, 131.74), (206.597, 361.669)].
+[INFO CTS-0025]     Width:  21.1556.
+[INFO CTS-0026]     Height: 229.9292.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 12
+    Sub-region size: 21.1556 X 114.9646
+[INFO CTS-0034]     Segment length (rounded): 58.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 24.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_rsw.
+[INFO CTS-0028]  Total number of sinks: 515.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 26 and max clustering diameter of 59.
+[INFO CTS-0019]  Total number of sinks after clustering: 28.
+[INFO CTS-0024]  Normalized sink region: [(135.7, 124.367), (179.953, 392.057)].
+[INFO CTS-0025]     Width:  44.2525.
+[INFO CTS-0026]     Height: 267.6899.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 14
+    Sub-region size: 44.2525 X 133.8449
+[INFO CTS-0034]     Segment length (rounded): 66.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 7
+    Sub-region size: 22.1262 X 133.8449
+[INFO CTS-0034]     Segment length (rounded): 12.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 28.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx0.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 91.
+[INFO CTS-0019]  Total number of sinks after clustering: 38.
+[INFO CTS-0024]  Normalized sink region: [(197.68, 395.671), (333.264, 678.991)].
+[INFO CTS-0025]     Width:  135.5838.
+[INFO CTS-0026]     Height: 283.3194.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 19
+    Sub-region size: 135.5838 X 141.6597
+[INFO CTS-0034]     Segment length (rounded): 70.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 10
+    Sub-region size: 67.7919 X 141.6597
+[INFO CTS-0034]     Segment length (rounded): 34.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 5
+    Sub-region size: 67.7919 X 70.8299
+[INFO CTS-0034]     Segment length (rounded): 36.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 33.8959 X 70.8299
+[INFO CTS-0034]     Segment length (rounded): 16.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 38.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx1.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 36.
+[INFO CTS-0019]  Total number of sinks after clustering: 41.
+[INFO CTS-0024]  Normalized sink region: [(192.885, 488.567), (332.099, 727.033)].
+[INFO CTS-0025]     Width:  139.2142.
+[INFO CTS-0026]     Height: 238.4666.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 139.2142 X 119.2333
+[INFO CTS-0034]     Segment length (rounded): 60.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 69.6071 X 119.2333
+[INFO CTS-0034]     Segment length (rounded): 34.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 69.6071 X 59.6166
+[INFO CTS-0034]     Segment length (rounded): 30.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 41.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx2.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 31 and max clustering diameter of 57.
+[INFO CTS-0019]  Total number of sinks after clustering: 45.
+[INFO CTS-0024]  Normalized sink region: [(196.132, 565.75), (332.21, 801.5)].
+[INFO CTS-0025]     Width:  136.0785.
+[INFO CTS-0026]     Height: 235.7500.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 23
+    Sub-region size: 136.0785 X 117.8750
+[INFO CTS-0034]     Segment length (rounded): 58.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 12
+    Sub-region size: 68.0393 X 117.8750
+[INFO CTS-0034]     Segment length (rounded): 34.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 68.0393 X 58.9375
+[INFO CTS-0034]     Segment length (rounded): 30.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 34.0196 X 58.9375
+[INFO CTS-0034]     Segment length (rounded): 18.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 34.0196 X 29.4688
+[INFO CTS-0034]     Segment length (rounded): 14.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 45.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx3.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 33 and max clustering diameter of 58.
+[INFO CTS-0019]  Total number of sinks after clustering: 42.
+[INFO CTS-0024]  Normalized sink region: [(99.5403, 397.325), (182.138, 611.8)].
+[INFO CTS-0025]     Width:  82.5981.
+[INFO CTS-0026]     Height: 214.4750.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 82.5981 X 107.2375
+[INFO CTS-0034]     Segment length (rounded): 54.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 41.2990 X 107.2375
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 41.2990 X 53.6188
+[INFO CTS-0034]     Segment length (rounded): 26.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 42.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx4.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 28 and max clustering diameter of 45.
+[INFO CTS-0019]  Total number of sinks after clustering: 42.
+[INFO CTS-0024]  Normalized sink region: [(101.964, 502.625), (169.976, 728.814)].
+[INFO CTS-0025]     Width:  68.0124.
+[INFO CTS-0026]     Height: 226.1893.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 68.0124 X 113.0947
+[INFO CTS-0034]     Segment length (rounded): 56.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 34.0062 X 113.0947
+[INFO CTS-0034]     Segment length (rounded): 18.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 42.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx5.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 28 and max clustering diameter of 68.
+[INFO CTS-0019]  Total number of sinks after clustering: 49.
+[INFO CTS-0024]  Normalized sink region: [(78.0595, 503.6), (238.076, 851.42)].
+[INFO CTS-0025]     Width:  160.0168.
+[INFO CTS-0026]     Height: 347.8200.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 25
+    Sub-region size: 160.0168 X 173.9100
+[INFO CTS-0034]     Segment length (rounded): 86.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 80.0084 X 173.9100
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 7
+    Sub-region size: 80.0084 X 86.9550
+[INFO CTS-0034]     Segment length (rounded): 44.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 4
+    Sub-region size: 40.0042 X 86.9550
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 40.0042 X 43.4775
+[INFO CTS-0034]     Segment length (rounded): 22.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 1
+    Sub-region size: 20.0021 X 43.4775
+[INFO CTS-0034]     Segment length (rounded): 10.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 49.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx6.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 34 and max clustering diameter of 74.
+[INFO CTS-0019]  Total number of sinks after clustering: 43.
+[INFO CTS-0024]  Normalized sink region: [(88.1318, 492.5), (167.551, 729.818)].
+[INFO CTS-0025]     Width:  79.4190.
+[INFO CTS-0026]     Height: 237.3176.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 22
+    Sub-region size: 79.4190 X 118.6588
+[INFO CTS-0034]     Segment length (rounded): 60.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 39.7095 X 118.6588
+[INFO CTS-0034]     Segment length (rounded): 20.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 43.
+[INFO CTS-0201] 19 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net ck_tx7.
+[INFO CTS-0028]  Total number of sinks: 781.
+[INFO CTS-0090]  Sinks will be clustered based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0206] Best clustering solution was found from max clustering size of 29 and max clustering diameter of 79.
+[INFO CTS-0019]  Total number of sinks after clustering: 46.
+[INFO CTS-0024]  Normalized sink region: [(75.5919, 513.337), (238.423, 847.023)].
+[INFO CTS-0025]     Width:  162.8307.
+[INFO CTS-0026]     Height: 333.6857.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 23
+    Sub-region size: 162.8307 X 166.8428
+[INFO CTS-0034]     Segment length (rounded): 84.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 12
+    Sub-region size: 81.4154 X 166.8428
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 81.4154 X 83.4214
+[INFO CTS-0034]     Segment length (rounded): 42.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 40.7077 X 83.4214
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 2
+    Sub-region size: 40.7077 X 41.7107
+[INFO CTS-0034]     Segment length (rounded): 20.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (168.983 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 46.
+[INFO CTS-0018]     Created 89 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 6.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 6.
+[INFO CTS-0015]     Created 89 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 4:2, 5:1, 6:2, 7:8, 8:4, 9:5, 10:4, 11:4, 12:7, 13:5, 14:3, 15:4, 16:2, 17:3, 18:9, 19:6, 20:2, 21:2, 22:2, 23:2, 24:2, 27:1..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 100 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 100 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:1, 3:8, 4:8, 5:2, 6:4, 7:4, 8:2, 10:3, 11:3, 13:3, 14:3, 15:4, 16:4, 17:4, 18:3, 19:7, 20:4, 21:6, 22:3, 23:5, 24:2..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0018]     Created 3 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 3 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:2..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 241 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 10.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 10.
+[INFO CTS-0015]     Created 241 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:29, 2:25, 3:9, 4:3, 5:1, 6:2, 7:1, 8:2, 9:1, 10:4, 11:2, 12:2, 14:4, 15:2, 16:1, 17:1, 18:7, 19:3, 20:2, 21:5, 22:2, 23:12, 24:5, 25:8, 26:8, 27:8, 28:14, 29:6, 30:1, 31:1, 32:1..
+[INFO CTS-0017]     Max level of the clock tree: 6.
+[INFO CTS-0018]     Created 23 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 23 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 8:1, 10:1, 12:1, 16:3, 22:2, 24:1, 25:2, 29:2, 30:4, 31:1, 32:3, 33:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 28 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 3.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 3.
+[INFO CTS-0015]     Created 28 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:1, 8:1, 10:1, 12:1, 15:1, 16:1, 18:1, 20:5, 21:2, 22:3, 23:5, 24:1, 25:1, 27:2, 29:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 29 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 29 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 10:2, 11:1, 13:3, 14:3, 17:1, 20:1, 21:1, 23:2, 24:5, 25:2, 29:1, 30:2, 31:1, 33:1..
+[INFO CTS-0017]     Max level of the clock tree: 1.
+[INFO CTS-0018]     Created 37 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 37 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 5:2, 7:3, 8:2, 9:1, 10:1, 13:1, 14:1, 15:1, 16:1, 18:1, 19:3, 20:2, 21:3, 22:2, 23:1, 24:3, 25:2, 26:2..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 71 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 7.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 7.
+[INFO CTS-0015]     Created 71 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:2, 2:8, 3:7, 4:2, 5:1, 6:1, 7:1, 9:1, 11:1, 16:2, 17:1, 19:1, 20:3, 21:1, 22:1, 23:4, 25:3, 26:2, 27:2, 28:5, 29:2, 30:1, 31:2..
+[INFO CTS-0017]     Max level of the clock tree: 4.
+[INFO CTS-0018]     Created 58 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 6.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 6.
+[INFO CTS-0015]     Created 58 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 2:1, 3:1, 4:5, 5:2, 6:2, 7:1, 8:1, 9:1, 10:2, 12:2, 13:3, 15:2, 16:1, 17:3, 21:1, 22:5, 24:2, 25:1, 26:1, 27:3, 28:4, 29:3, 30:1, 31:1..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 110 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 8.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 8.
+[INFO CTS-0015]     Created 110 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:20, 2:11, 3:1, 4:3, 5:1, 7:1, 9:4, 10:2, 11:2, 12:2, 13:1, 15:1, 16:5, 17:1, 18:5, 19:1, 20:2, 22:2, 24:1, 25:1, 26:2, 28:3, 30:3, 31:2..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0018]     Created 57 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 57 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:2, 4:3, 5:1, 6:3, 7:2, 8:3, 9:2, 10:2, 11:3, 14:2, 16:3, 17:1, 18:3, 19:2, 20:1, 22:1, 24:2, 25:3, 26:2, 28:1, 29:2, 30:4, 32:1, 33:1..
+[INFO CTS-0017]     Max level of the clock tree: 3.
+[INFO CTS-0018]     Created 49 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 4.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 4.
+[INFO CTS-0015]     Created 49 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 3:1, 7:1, 8:3, 9:2, 10:2, 11:2, 13:2, 14:2, 15:1, 16:2, 17:2, 18:2, 19:1, 20:5, 21:2, 23:6, 24:1, 25:4, 26:2, 27:1, 28:2..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 165 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 10.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 10.
+[INFO CTS-0015]     Created 165 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:45, 2:3, 4:2, 5:3, 8:1, 10:2, 11:3, 12:3, 13:1, 14:5, 15:4, 16:3, 17:1, 18:2, 19:2, 20:2, 21:2, 22:2, 23:1, 24:2, 25:4, 26:2, 28:1..
+[INFO CTS-0017]     Max level of the clock tree: 6.
+[INFO CTS-0018]     Created 52 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 52 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:2, 8:2, 9:1, 10:2, 11:2, 12:2, 13:3, 14:4, 15:2, 16:3, 17:5, 19:5, 22:3, 23:1, 26:4, 27:1, 28:2, 29:2, 34:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0018]     Created 115 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 9.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 9.
+[INFO CTS-0015]     Created 115 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:18, 2:16, 5:1, 6:1, 7:1, 8:1, 9:2, 10:1, 11:1, 13:3, 14:2, 15:4, 16:3, 17:2, 18:3, 19:1, 20:2, 21:3, 22:1, 23:2, 24:2, 25:3, 26:2, 27:1, 28:1, 29:1..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0098] Clock net "ck_de"
+[INFO CTS-0099]  Sinks 1093
+[INFO CTS-0100]  Leaf buffers 72
+[INFO CTS-0101]  Average sink wire length 231.09 um
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0207]  Dummy loads inserted 66
+[INFO CTS-0098] Clock net "ck_dw"
+[INFO CTS-0099]  Sinks 1080
+[INFO CTS-0100]  Leaf buffers 67
+[INFO CTS-0101]  Average sink wire length 249.88 um
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0207]  Dummy loads inserted 53
+[INFO CTS-0098] Clock net "ck_fa3"
+[INFO CTS-0099]  Sinks 2
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 4.08 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 0
+[INFO CTS-0098] Clock net "ck_g"
+[INFO CTS-0099]  Sinks 2379
+[INFO CTS-0100]  Leaf buffers 109
+[INFO CTS-0101]  Average sink wire length 349.65 um
+[INFO CTS-0102]  Path depth 8 - 10
+[INFO CTS-0207]  Dummy loads inserted 65
+[INFO CTS-0098] Clock net "ck_rn"
+[INFO CTS-0099]  Sinks 533
+[INFO CTS-0100]  Leaf buffers 20
+[INFO CTS-0101]  Average sink wire length 129.02 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 19
+[INFO CTS-0098] Clock net "ck_rnw"
+[INFO CTS-0099]  Sinks 538
+[INFO CTS-0100]  Leaf buffers 25
+[INFO CTS-0101]  Average sink wire length 136.35 um
+[INFO CTS-0102]  Path depth 2 - 3
+[INFO CTS-0207]  Dummy loads inserted 24
+[INFO CTS-0098] Clock net "ck_rs"
+[INFO CTS-0099]  Sinks 537
+[INFO CTS-0100]  Leaf buffers 24
+[INFO CTS-0101]  Average sink wire length 147.82 um
+[INFO CTS-0102]  Path depth 4 - 4
+[INFO CTS-0207]  Dummy loads inserted 22
+[INFO CTS-0098] Clock net "ck_rsw"
+[INFO CTS-0099]  Sinks 539
+[INFO CTS-0100]  Leaf buffers 28
+[INFO CTS-0101]  Average sink wire length 154.10 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 24
+[INFO CTS-0098] Clock net "ck_tx0"
+[INFO CTS-0099]  Sinks 806
+[INFO CTS-0100]  Leaf buffers 38
+[INFO CTS-0101]  Average sink wire length 321.52 um
+[INFO CTS-0102]  Path depth 6 - 7
+[INFO CTS-0207]  Dummy loads inserted 25
+[INFO CTS-0098] Clock net "ck_tx1"
+[INFO CTS-0099]  Sinks 815
+[INFO CTS-0100]  Leaf buffers 41
+[INFO CTS-0101]  Average sink wire length 269.33 um
+[INFO CTS-0102]  Path depth 5 - 6
+[INFO CTS-0207]  Dummy loads inserted 34
+[INFO CTS-0098] Clock net "ck_tx2"
+[INFO CTS-0099]  Sinks 800
+[INFO CTS-0100]  Leaf buffers 45
+[INFO CTS-0101]  Average sink wire length 301.86 um
+[INFO CTS-0102]  Path depth 7 - 8
+[INFO CTS-0207]  Dummy loads inserted 19
+[INFO CTS-0098] Clock net "ck_tx3"
+[INFO CTS-0099]  Sinks 818
+[INFO CTS-0100]  Leaf buffers 42
+[INFO CTS-0101]  Average sink wire length 147.22 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 37
+[INFO CTS-0098] Clock net "ck_tx4"
+[INFO CTS-0099]  Sinks 816
+[INFO CTS-0100]  Leaf buffers 42
+[INFO CTS-0101]  Average sink wire length 228.12 um
+[INFO CTS-0102]  Path depth 3 - 4
+[INFO CTS-0207]  Dummy loads inserted 35
+[INFO CTS-0098] Clock net "ck_tx5"
+[INFO CTS-0099]  Sinks 792
+[INFO CTS-0100]  Leaf buffers 49
+[INFO CTS-0101]  Average sink wire length 330.57 um
+[INFO CTS-0102]  Path depth 8 - 10
+[INFO CTS-0207]  Dummy loads inserted 11
+[INFO CTS-0098] Clock net "ck_tx6"
+[INFO CTS-0099]  Sinks 819
+[INFO CTS-0100]  Leaf buffers 43
+[INFO CTS-0101]  Average sink wire length 249.43 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 38
+[INFO CTS-0098] Clock net "ck_tx7"
+[INFO CTS-0099]  Sinks 801
+[INFO CTS-0100]  Leaf buffers 46
+[INFO CTS-0101]  Average sink wire length 319.97 um
+[INFO CTS-0102]  Path depth 8 - 9
+[INFO CTS-0207]  Dummy loads inserted 20
+[INFO CTS-0500] Runtime: 6.63s
+OT_CORE_INFRA_LATE_CTS_GATE_CLONE clone_1_g_icg.g_hop.u_hop_ck/u_icg on mp_a0_t7_out (TritonCTS ICG clone; same planned depth; kit LEC covers it)
+OT_CORE_INFRA_LATE_CTS_GATE_CLONE clone_1_g_icg.g_hop.u_hop_fa3/u_icg on mp_a0_t7_out (TritonCTS ICG clone; same planned depth; kit LEC covers it)
+OT_CORE_INFRA_LATE_CTS_GATE_CLONE clone_1_g_icg.g_hop.u_hop_fa2/u_icg on mp_a0_t7_out (TritonCTS ICG clone; same planned depth; kit LEC covers it)
+OT_CORE_INFRA_LATE_CTS planned parent nets=1 tritoncts_icg_clones=3
+Took 7 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.5
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 516276.63 um^2
+[INFO DPL-0007] Movable instances area: 7607.03 um^2
+[INFO DPL-0008] Fixed instances area within core: 341539.85 um^2
+[INFO DPL-0009] Utilization: 67.6%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (4 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 83801 cells
+[INFO DPL-0393]   height 408 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0393]   height 1600 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+Negotiation phase 1 converged at iteration 81.
+[INFO DPL-0500] Runtime: 37.79s
+Placement Analysis
+---------------------------------
+total displacement      15872.1 u
+average displacement        0.2 u
+max displacement           74.0 u
+original HPWL         2378910.4 u
+legalized HPWL        2392445.6 u
+delta HPWL                    1 %
+
+Took 37 seconds: detailed_placement
+estimate_parasitics -placement
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws -1351.35 / FF hold ws -1105.87 ps
+repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 2130 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 2130 out of 2130 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -1351.352 |  -524864.7 |  -686191.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      10* |       0 |       7 |        0 |      1 |     1 |    +0.0% | -1329.195 |  -524344.3 |  -685795.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      20* |       0 |       7 |        9 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -685681.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      30* |       0 |       7 |       19 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -686232.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      40* |       0 |       7 |       29 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -686783.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      50* |       0 |       7 |       39 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -687353.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      60* |       0 |       7 |       49 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -687953.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      64* |       0 |       7 |        3 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -685548.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      70* |       0 |       7 |        8 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -685626.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      80* |       0 |       7 |       18 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -686177.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+      90* |       0 |       7 |       28 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -686728.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     100* |       0 |       7 |       38 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -687293.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     110* |       0 |       7 |       48 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -687893.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     115* |       0 |       7 |        3 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -685548.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     120* |       0 |       7 |        7 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -685571.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     130* |       0 |       7 |       17 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -686121.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     140* |       0 |       7 |       27 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -686672.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     150* |       0 |       7 |       37 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -687233.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     160* |       0 |       7 |       47 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -687833.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     166* |       0 |       7 |        3 |      1 |     2 |    +0.0% | -1320.986 |  -524214.7 |  -685548.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     170* |       0 |      10 |        3 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -685220.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     180* |       0 |      10 |       13 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -685575.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     190* |       0 |      10 |       23 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -686126.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     200* |       0 |      10 |       33 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -686679.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     210* |       0 |      10 |       43 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -687267.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     218* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     220* |       0 |       8 |        4 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     230* |       0 |       8 |       14 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685931.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     240* |       0 |       8 |       24 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -686482.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     250* |       0 |       8 |       34 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -687036.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     260* |       0 |       8 |       44 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -687628.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     269* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     270* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     280* |       0 |       8 |       13 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685876.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     290* |       0 |       8 |       23 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -686427.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     300* |       0 |       8 |       33 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -686980.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     310* |       0 |       8 |       43 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -687568.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     320* |       0 |       8 |       53 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -688168.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     320* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     330* |       0 |      10 |       10 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -685410.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     340* |       0 |      10 |       20 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -685961.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     350* |       0 |      10 |       30 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -686512.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     360* |       0 |      10 |       40 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -687087.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     370* |       0 |      10 |       50 |      1 |     2 |    +0.0% | -1321.290 |  -524220.2 |  -687687.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     371* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     372* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     373* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     374* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     375* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     376* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     377* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     378* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     379* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     380* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     380* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     381* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     382* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     383* |       0 |       8 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524213.0 |  -685523.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     385* |       0 |       9 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524209.2 |  -685519.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     389* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     390* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     390* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     391* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     392* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     393* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     394* |       0 |      12 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524191.9 |  -685502.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     397* |       0 |      14 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524185.4 |  -685495.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     400* |       0 |      16 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524178.5 |  -685489.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     400* |       0 |      16 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524178.5 |  -685489.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     403* |       0 |      18 |        3 |      1 |     2 |    +0.0% | -1320.893 |  -524173.6 |  -685484.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     410* |       0 |      23 |        4 |      1 |     2 |    +0.0% | -1320.893 |  -524152.9 |  -686013.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     420* |       1 |      30 |        6 |      2 |     2 |    +0.0% | -1320.893 |  -524134.0 |  -685676.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     427* |       1 |      35 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524129.6 |  -689589.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     429* |       1 |      36 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524126.8 |  -689586.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     430* |       1 |      36 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524126.8 |  -689586.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     432* |       1 |      38 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524122.0 |  -689582.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     436* |       1 |      41 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524112.6 |  -689572.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     440* |       1 |      44 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524103.7 |  -689563.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     440* |       1 |      44 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524103.7 |  -689563.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     442* |       1 |      45 |        9 |      2 |     2 |    +0.0% | -1320.893 |  -524101.7 |  -689562.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     450* |       2 |      50 |       10 |      2 |     2 |    +0.0% | -1320.893 |  -524061.5 |  -688668.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     457* |       2 |      53 |       13 |      2 |     2 |    +0.0% | -1320.893 |  -524061.5 |  -688952.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     459* |       2 |      54 |       13 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688951.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     460* |       2 |      54 |       13 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688951.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     461* |       2 |      54 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688945.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     462* |       2 |      54 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688945.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     463* |       2 |      54 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688945.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     464* |       2 |      54 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688945.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     467* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     468* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     469* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     470* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     470* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     471* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     472* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     473* |       2 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     480* |       5 |      56 |       17 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     490* |      10 |      56 |       22 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     500* |      15 |      56 |       27 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     510* |      20 |      56 |       32 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     520* |      25 |      56 |       37 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688899.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     525* |       3 |      56 |       14 |      2 |     2 |    +0.0% | -1320.893 |  -524059.7 |  -688855.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     530* |       3 |      59 |       14 |      2 |     3 |    +0.0% | -1320.893 |  -524057.2 |  -688204.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     540* |       5 |      66 |       15 |      2 |     3 |    +0.0% | -1320.893 |  -524052.5 |  -685115.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     550* |       5 |      72 |       18 |      3 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -684736.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     560* |       5 |      78 |       21 |      5 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -681206.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     570* |       5 |      83 |       25 |      6 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -679591.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     570* |       5 |      79 |       23 |      5 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -678367.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     580* |       6 |      87 |       23 |      5 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -676579.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     590* |       6 |      92 |       28 |      6 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -677673.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     599* |       6 |      96 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -677404.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     600* |       6 |      96 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -677404.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     605* |       6 |     101 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524055.1 |  -677304.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     607* |       6 |     102 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524053.3 |  -677303.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     609* |       6 |     103 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524051.5 |  -677301.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     610* |       6 |     103 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524051.5 |  -677301.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     611* |       6 |     104 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524049.7 |  -677299.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     613* |       6 |     105 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524047.7 |  -677297.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     615* |       6 |     106 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524045.9 |  -677295.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     617* |       6 |     107 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524043.1 |  -677292.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     619* |       6 |     108 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524041.1 |  -677290.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     620* |       6 |     108 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524041.1 |  -677290.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     621* |       6 |     109 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524039.2 |  -677288.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     623* |       6 |     110 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524037.4 |  -677287.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     625* |       6 |     111 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524035.6 |  -677285.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     627* |       6 |     112 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524033.6 |  -677283.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     629* |       6 |     113 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524031.8 |  -677281.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     630* |       6 |     113 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524031.8 |  -677281.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     631* |       6 |     114 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524029.9 |  -677279.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     633* |       6 |     115 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524028.1 |  -677277.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     635* |       6 |     116 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524026.1 |  -677275.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     637* |       6 |     117 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524024.2 |  -677273.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     639* |       6 |     118 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524022.2 |  -677272.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     640* |       6 |     118 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524022.2 |  -677272.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     641* |       6 |     119 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524020.4 |  -677270.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     643* |       6 |     120 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524018.6 |  -677268.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     645* |       6 |     121 |       33 |      8 |     3 |    +0.0% | -1320.893 |  -524016.7 |  -677266.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     650* |       6 |     121 |       37 |     10 |     3 |    +0.0% | -1320.893 |  -524016.7 |  -677390.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     655* |       6 |     123 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524016.7 |  -677388.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     657* |       6 |     124 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524014.9 |  -677386.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     659* |       6 |     125 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524012.9 |  -677384.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     660* |       6 |     125 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524012.9 |  -677384.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     661* |       6 |     126 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524011.1 |  -677382.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     663* |       6 |     127 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524009.2 |  -677380.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     665* |       6 |     128 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524007.4 |  -677379.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     667* |       6 |     129 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524005.4 |  -677377.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     670* |       6 |     130 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -524005.4 |  -677396.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     671* |       6 |     130 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524005.4 |  -677378.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     673* |       6 |     131 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524003.6 |  -677376.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     675* |       6 |     132 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524001.7 |  -677374.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     679* |       6 |     133 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524001.7 |  -677376.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     680* |       6 |     133 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -524001.7 |  -677376.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     681* |       6 |     134 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523999.8 |  -677374.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     683* |       6 |     135 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523997.8 |  -677372.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     685* |       6 |     136 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523996.0 |  -677370.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     687* |       6 |     137 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523994.2 |  -677368.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     689* |       6 |     138 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523992.2 |  -677366.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     690* |       6 |     138 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523992.2 |  -677366.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     691* |       6 |     139 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523990.3 |  -677365.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     693* |       6 |     140 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523988.5 |  -677363.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     695* |       6 |     141 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523986.6 |  -677361.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     697* |       6 |     142 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523984.8 |  -677359.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     699* |       6 |     143 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523982.9 |  -677357.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     700* |       6 |     143 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523982.9 |  -677357.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     701* |       6 |     144 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523981.0 |  -677355.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     703* |       6 |     145 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523979.2 |  -677353.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     705* |       6 |     146 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523977.2 |  -677352.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     707* |       6 |     147 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523975.4 |  -677350.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     709* |       6 |     148 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523973.6 |  -677348.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     710* |       6 |     148 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523973.6 |  -677348.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     711* |       6 |     149 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523971.7 |  -677346.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     713* |       6 |     150 |       37 |     11 |     3 |    +0.0% | -1320.893 |  -523969.7 |  -677344.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     717* |       6 |     152 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523969.7 |  -677350.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     719* |       6 |     153 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523967.8 |  -677348.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     720* |       6 |     153 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523967.8 |  -677348.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     721* |       6 |     154 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523966.0 |  -677346.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     723* |       6 |     155 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523964.2 |  -677344.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     725* |       6 |     156 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523962.3 |  -677342.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     727* |       6 |     157 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523960.4 |  -677340.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     729* |       6 |     158 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523958.6 |  -677338.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     730* |       6 |     158 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523958.6 |  -677338.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     731* |       6 |     159 |       38 |     11 |     3 |    +0.0% | -1320.893 |  -523958.6 |  -677342.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     736* |       6 |     162 |       39 |     11 |     3 |    +0.0% | -1320.893 |  -523958.6 |  -677467.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     738* |       6 |     163 |       39 |     11 |     3 |    +0.0% | -1320.893 |  -523956.7 |  -677465.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     740* |       6 |     164 |       39 |     11 |     3 |    +0.0% | -1320.893 |  -523954.7 |  -677463.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     740* |       6 |     164 |       39 |     11 |     3 |    +0.0% | -1320.893 |  -523954.7 |  -677463.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     742* |       6 |     165 |       39 |     11 |     3 |    +0.0% | -1320.893 |  -523952.9 |  -677461.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     750* |       6 |     171 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523952.9 |  -677402.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     752* |       6 |     173 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523952.9 |  -677392.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     758* |       6 |     178 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523952.9 |  -677421.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     760* |       6 |     179 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523951.0 |  -677419.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     760* |       6 |     179 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523951.0 |  -677419.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     762* |       6 |     180 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523949.2 |  -677418.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     763* |       6 |     180 |       39 |     12 |     3 |    +0.0% | -1320.893 |  -523949.2 |  -677418.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     765* |       6 |     180 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523949.2 |  -677454.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     767* |       6 |     181 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523949.2 |  -677456.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     769* |       6 |     182 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523947.2 |  -677454.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     770* |       6 |     182 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523947.2 |  -677454.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     771* |       6 |     183 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523947.2 |  -677456.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     773* |       6 |     184 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523945.4 |  -677454.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     775* |       6 |     185 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523943.6 |  -677452.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     780* |       6 |     189 |       40 |     12 |     3 |    +0.0% | -1320.893 |  -523943.6 |  -676808.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     790* |       6 |     196 |       43 |     12 |     4 |    +0.0% | -1320.893 |  -523943.9 |  -673331.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     800* |       6 |     201 |       48 |     13 |     4 |    +0.0% | -1320.893 |  -523944.0 |  -673771.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     810* |       6 |     207 |       52 |     13 |     5 |    +0.0% | -1320.893 |  -523943.9 |  -678725.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     820* |       6 |     213 |       56 |     13 |     5 |    +0.0% | -1320.893 |  -523944.0 |  -683760.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     823* |       6 |     197 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523944.0 |  -672421.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     824* |       6 |     197 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523944.0 |  -672421.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     826* |       6 |     198 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523942.2 |  -672419.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     830* |       8 |     198 |       45 |     12 |     4 |    +0.0% | -1320.893 |  -523942.4 |  -672259.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     840* |      13 |     198 |       50 |     12 |     4 |    +0.0% | -1320.893 |  -523942.4 |  -672259.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     850* |      18 |     198 |       55 |     12 |     4 |    +0.0% | -1320.893 |  -523942.4 |  -672259.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     860* |      23 |     198 |       60 |     12 |     4 |    +0.0% | -1320.893 |  -523942.4 |  -672259.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     870* |      28 |     198 |       65 |     12 |     4 |    +0.0% | -1320.893 |  -523942.4 |  -672259.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     878* |       7 |     198 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523942.4 |  -672259.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     880* |       7 |     199 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523940.6 |  -672257.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     880* |       7 |     199 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523940.6 |  -672257.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     882* |       7 |     200 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523938.8 |  -672255.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     884* |       7 |     201 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523937.0 |  -672253.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     885* |       7 |     201 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523937.0 |  -672253.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     886* |       7 |     201 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523937.0 |  -672253.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     888* |       7 |     202 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523935.2 |  -672251.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     890* |       7 |     203 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523933.2 |  -672249.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     890* |       7 |     203 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523933.2 |  -672249.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     892* |       7 |     204 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523931.3 |  -672248.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     894* |       7 |     205 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523931.3 |  -672247.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     896* |       7 |     206 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523929.4 |  -672245.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     900* |       7 |     209 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523929.4 |  -672159.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     900* |       7 |     209 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523929.4 |  -672159.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     902* |       7 |     210 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523927.4 |  -672157.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     904* |       7 |     211 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523925.5 |  -672155.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     906* |       7 |     212 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523923.7 |  -672153.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     908* |       7 |     213 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523921.8 |  -672151.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     910* |       7 |     214 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523919.9 |  -672149.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     910* |       7 |     214 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523919.9 |  -672149.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     912* |       7 |     215 |       44 |     12 |     4 |    +0.0% | -1320.893 |  -523918.0 |  -672147.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     919* |       7 |     216 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523918.0 |  -672154.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     920* |       7 |     216 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523918.0 |  -672154.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     924* |       7 |     216 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523918.0 |  -672154.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     926* |       7 |     217 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523916.2 |  -672152.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     928* |       7 |     218 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523914.4 |  -672150.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     930* |       7 |     219 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523912.3 |  -672148.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     930* |       7 |     219 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523912.3 |  -672148.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     932* |       7 |     220 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523910.5 |  -672146.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     934* |       7 |     221 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523910.5 |  -672146.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     938* |       7 |     224 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523910.5 |  -672138.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     940* |       7 |     225 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523908.6 |  -672136.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     940* |       7 |     225 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523908.6 |  -672136.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     942* |       7 |     226 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523906.8 |  -672135.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     944* |       7 |     227 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523904.9 |  -672133.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     949* |       7 |     227 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523904.9 |  -672133.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     950* |       7 |     227 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523904.9 |  -672133.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     951* |       7 |     228 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523903.1 |  -672131.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     953* |       7 |     229 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523901.2 |  -672129.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     958* |       7 |     229 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523901.2 |  -672129.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     960* |       7 |     230 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523899.1 |  -672127.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     960* |       7 |     230 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523899.1 |  -672127.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     962* |       7 |     231 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523897.2 |  -672125.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     964* |       7 |     232 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523895.3 |  -672123.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     966* |       7 |     233 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523893.3 |  -672121.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     968* |       7 |     234 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523891.5 |  -672119.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     970* |       7 |     235 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523889.6 |  -672117.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     970* |       7 |     235 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523889.6 |  -672117.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     972* |       7 |     236 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523887.7 |  -672115.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     974* |       7 |     237 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523885.8 |  -672114.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     976* |       7 |     238 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523883.8 |  -672112.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     978* |       7 |     239 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523881.8 |  -672110.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     980* |       7 |     240 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523880.0 |  -672108.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     980* |       7 |     240 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523880.0 |  -672108.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     982* |       7 |     241 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523878.0 |  -672106.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     984* |       7 |     242 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523876.2 |  -672104.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     986* |       7 |     243 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523874.2 |  -672102.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     990* |       7 |     245 |       45 |     13 |     4 |    +0.0% | -1320.893 |  -523874.2 |  -672176.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     991* |       7 |     243 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523874.2 |  -672102.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     993* |       7 |     244 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523872.2 |  -672100.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     995* |       7 |     245 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523870.2 |  -672098.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+     997* |       7 |     246 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523868.4 |  -672096.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1000* |       7 |     248 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523868.4 |  -671933.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1010* |       7 |     254 |       49 |     14 |     4 |    +0.0% | -1320.893 |  -523868.4 |  -676409.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1020* |       7 |     259 |       52 |     14 |     6 |    +0.0% | -1320.893 |  -523868.3 |  -681353.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1027* |       7 |     248 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523868.4 |  -671933.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1029* |       7 |     249 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523866.6 |  -671931.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1030* |       7 |     249 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523866.6 |  -671931.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1031* |       7 |     250 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523864.8 |  -671929.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1033* |       7 |     251 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523863.0 |  -671927.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1035* |       7 |     252 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523861.1 |  -671925.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1037* |       7 |     253 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523859.1 |  -671923.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1039* |       7 |     254 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523857.3 |  -671922.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1040* |       7 |     254 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523857.3 |  -671922.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1041* |       7 |     255 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523855.5 |  -671920.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1043* |       7 |     256 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523853.5 |  -671918.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1045* |       7 |     257 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523851.7 |  -671916.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1047* |       7 |     258 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523849.9 |  -671914.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1049* |       7 |     259 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523848.0 |  -671912.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1050* |       7 |     259 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523848.0 |  -671912.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1051* |       7 |     260 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523846.2 |  -671910.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1053* |       7 |     261 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523844.3 |  -671908.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1055* |       7 |     262 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523842.4 |  -671907.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1057* |       7 |     263 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523840.6 |  -671905.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1059* |       7 |     264 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523838.7 |  -671903.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1060* |       7 |     264 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523838.7 |  -671903.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1061* |       7 |     265 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523836.8 |  -671901.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1063* |       7 |     266 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523834.9 |  -671899.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1065* |       7 |     267 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523833.1 |  -671897.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1067* |       7 |     268 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523831.2 |  -671895.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1069* |       7 |     269 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523829.3 |  -671894.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1070* |       7 |     269 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523829.3 |  -671894.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1071* |       7 |     270 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523829.3 |  -671892.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1073* |       7 |     271 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523827.4 |  -671890.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1075* |       7 |     272 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523825.5 |  -671889.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1077* |       7 |     273 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523823.5 |  -671887.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1079* |       7 |     274 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523821.6 |  -671885.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1080* |       7 |     274 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523821.6 |  -671885.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1081* |       7 |     275 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523819.8 |  -671883.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1083* |       7 |     276 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523817.8 |  -671881.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1085* |       7 |     277 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523816.0 |  -671879.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1087* |       7 |     278 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523814.2 |  -671877.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1089* |       7 |     279 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523812.3 |  -671875.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1090* |       7 |     279 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523812.3 |  -671875.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1091* |       7 |     280 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523810.3 |  -671873.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1093* |       7 |     281 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523808.5 |  -671872.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1095* |       7 |     282 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523806.7 |  -671870.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1097* |       7 |     283 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523804.9 |  -671868.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1099* |       7 |     284 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523803.0 |  -671866.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1100* |       7 |     284 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523803.0 |  -671866.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1100* |       7 |     284 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523803.0 |  -671866.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1102* |       7 |     285 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523801.0 |  -671864.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1104* |       7 |     286 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523799.1 |  -671862.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1106* |       7 |     287 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523797.2 |  -671860.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1108* |       7 |     288 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523795.2 |  -671858.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1110* |       7 |     289 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523793.4 |  -671856.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1110* |       7 |     289 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523793.4 |  -671856.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1112* |       7 |     290 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523791.5 |  -671855.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1114* |       7 |     291 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523789.5 |  -671853.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1116* |       7 |     292 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523787.7 |  -671851.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1118* |       7 |     293 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523785.8 |  -671849.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1120* |       7 |     294 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523784.0 |  -671847.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1120* |       7 |     294 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523784.0 |  -671847.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1122* |       7 |     295 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523782.0 |  -671845.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1124* |       7 |     296 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523780.1 |  -671843.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1126* |       7 |     297 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523778.2 |  -671841.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1128* |       7 |     298 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523776.2 |  -671839.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1130* |       7 |     299 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523774.4 |  -671837.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1130* |       7 |     299 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523774.4 |  -671837.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1132* |       7 |     300 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523772.4 |  -671835.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1134* |       7 |     301 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523770.4 |  -671833.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1136* |       7 |     302 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523768.6 |  -671832.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1138* |       7 |     303 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523766.7 |  -671830.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1140* |       7 |     303 |       45 |     13 |     4 |    +0.0% | -1320.893 |  -523766.3 |  -671980.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1145* |       7 |     303 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523766.7 |  -671830.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1150* |       7 |     306 |       45 |     13 |     4 |    +0.0% | -1320.893 |  -523766.3 |  -671902.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1152* |       7 |     303 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523766.7 |  -671830.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1154* |       7 |     304 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523764.8 |  -671828.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1156* |       7 |     305 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523762.9 |  -671826.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1158* |       7 |     306 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523761.0 |  -671824.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1160* |       7 |     307 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523759.3 |  -671822.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1160* |       7 |     307 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523759.3 |  -671822.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1162* |       7 |     308 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523757.4 |  -671820.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1164* |       7 |     309 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523755.6 |  -671819.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1166* |       7 |     310 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523753.8 |  -671817.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1168* |       7 |     311 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523752.0 |  -671815.4 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1170* |       7 |     312 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523750.2 |  -671813.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1170* |       7 |     312 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523750.2 |  -671813.6 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1172* |       7 |     313 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523748.3 |  -671811.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1174* |       7 |     314 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523746.4 |  -671809.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1176* |       7 |     315 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523744.5 |  -671807.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1178* |       7 |     316 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523742.6 |  -671806.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1180* |       7 |     317 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523740.8 |  -671804.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1180* |       7 |     317 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523740.8 |  -671804.2 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1182* |       7 |     318 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523738.9 |  -671802.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1184* |       7 |     319 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523736.9 |  -671800.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1186* |       7 |     320 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523735.1 |  -671798.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1188* |       7 |     321 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523733.2 |  -671796.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1190* |       7 |     322 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523731.2 |  -671794.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1190* |       7 |     322 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523731.2 |  -671794.7 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1192* |       7 |     323 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523729.4 |  -671792.8 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1194* |       7 |     324 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523727.6 |  -671791.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1196* |       7 |     325 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523725.8 |  -671789.1 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1198* |       7 |     326 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523723.9 |  -671787.3 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1200* |       7 |     327 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523722.0 |  -671785.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1200* |       7 |     327 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523722.0 |  -671785.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1200* |       7 |     327 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523722.0 |  -671785.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1200+ |       7 |     327 |       44 |     13 |     4 |    +0.0% | -1320.893 |  -523722.0 |  -671785.5 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1203+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1204+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1205+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1206+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1207+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1208+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1209+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1210+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1210+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1211+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1212+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1213+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1214+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1215+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1216+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1217+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1218+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1219+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1220+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1220+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1221+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1222+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1223+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1224+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1225+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1226+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1227+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1228+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1229+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1230+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1230+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1231+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1232+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1233+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1234+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1235+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1236+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1237+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1238+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1239+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1240+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1240+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1241+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1242+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1243+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1244+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1245+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1246+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1247+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1248+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1249+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1250+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1250+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1251+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1252+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1253+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1254+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1255+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1256+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1257+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1258+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1259+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1260+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1260+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1261+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1262+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1263+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1264+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1265+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1266+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1267+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1268+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1269+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1270+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1270+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1271+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1272+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1273+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1274+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1275+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1276+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1277+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1278+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1279+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1280+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1280+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1281+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1282+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1283+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1284+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1285+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1286+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1287+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1288+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1289+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1290+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1290+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1291+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1292+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1293+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1294+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1295+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1296+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1297+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1298+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1299+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1300+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1301+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1302+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1303+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1304+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1305+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1306+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1307+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1308+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1309+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1310+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1310+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1311+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1312+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1313+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1314+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1315+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1316+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1317+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1318+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1319+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1320+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1320+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1321+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1322+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1323+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1324+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1325+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1326+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1327+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1328+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1329+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1330+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1330+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1331+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1332+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1333+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1334+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1335+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1336+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1337+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1338+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1339+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1340+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1340+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1341+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1342+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1343+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1344+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1345+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1346+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1347+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1348+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1349+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1350+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1350+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1351+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1352+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1353+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1354+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1355+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1356+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1357+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1358+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1359+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1360+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1360+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1361+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1362+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1363+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1364+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1365+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1366+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1367+ |       7 |     328 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523716.0 |  -671740.9 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1369+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1370+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1370+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1371+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1372+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1373+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1374+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1375+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1376+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1377+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1378+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1379+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1380+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1380+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1381+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1382+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1383+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1384+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1385+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1386+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1387+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1388+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1389+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1390+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1390+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1391+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1392+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1393+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1394+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1395+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1396+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1397+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1398+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1399+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    1400+ |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+    final |       7 |     329 |       44 |     13 |     5 |    +0.0% | -1319.108 |  -523714.1 |  -671739.0 |   2130 | clone_1_g_icg.g_hop.u_hop_fa3/u_icg/ENA
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 7 buffers.
+[INFO RSZ-0040] Inserted 44 buffers.
+[INFO RSZ-0051] Resized 329 instances: 329 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 5 instances.
+[INFO RSZ-0049] Cloned 13 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 132.66s
+Took 132 seconds: repair_timing -setup_margin 0 -hold_margin 15 -repair_tns 100 -verbose -setup
+OT_HOLD_STRUCTURAL stage=cts: FF hold ws -1105.87 ps, 7766 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+OT_HOLD_MM after repair: SS setup ws -1319.11 / FF hold ws -1105.87 ps
+Error: cts.tcl, 83 OT_HOLD_STRUCTURAL stage=cts: FF hold ws -1105.87 ps, 7766 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+Elapsed time: 3:37.77[h:]min:sec. CPU time: user 250.17 sys 7.51 (118%). Peak memory: 2605688KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kq_qfd_tile_nk_a0c_a0nk14icg2rr1/base/4_1_cts.odb] Error 2
