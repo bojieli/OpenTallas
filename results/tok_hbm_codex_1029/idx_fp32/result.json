@@ -1,0 +1,51 @@
+{
+  "source_commit": "9cd41c28b",
+  "unit": "oth-ubuntu-2151890-1793268570",
+  "host": "intel1",
+  "clock_ps": 833,
+  "added_cycles": 0,
+  "added_vm_requests_per_row": 2,
+  "no_current_manifest_selection": true,
+  "results": [
+    {
+      "rt": 171,
+      "weight_fp32": false,
+      "original_reader_lockstep": "PASS_768blocks",
+      "numeric": "PASS_192heads",
+      "requests": 3084,
+      "edges": 4077
+    },
+    {
+      "rt": 171,
+      "weight_fp32": true,
+      "original_reader_lockstep": "PASS_768blocks",
+      "numeric": "PASS_192heads",
+      "requests": 3096,
+      "edges": 4077,
+      "controls": {
+        "BAD_WEIGHT": "CAUGHT",
+        "WRONG_STRIDE": "CAUGHT"
+      }
+    },
+    {
+      "rt": 173,
+      "weight_fp32": false,
+      "original_reader_lockstep": "PASS_768blocks",
+      "numeric": "PASS_192heads",
+      "requests": 3084,
+      "edges": 4081
+    },
+    {
+      "rt": 173,
+      "weight_fp32": true,
+      "original_reader_lockstep": "PASS_768blocks",
+      "numeric": "PASS_192heads",
+      "requests": 3096,
+      "edges": 4081,
+      "controls": {
+        "BAD_WEIGHT": "CAUGHT",
+        "WRONG_STRIDE": "CAUGHT"
+      }
+    }
+  ]
+}
