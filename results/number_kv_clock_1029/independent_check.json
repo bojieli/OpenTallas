@@ -1,0 +1,89 @@
+{
+ "scope": "actual measured netlist recurrence plus CA integer/sample arithmetic; not independent characterization or full OCV re-solve",
+ "clocks": {
+  "TT": {
+   "taps": 1920,
+   "nodes": 15424,
+   "physical_cells": 15296,
+   "masters": {
+    "CKINVDCx16_ASAP7_75t_R": 15207,
+    "BUFx24_ASAP7_75t_R": 89
+   },
+   "local_input_phases": {
+    "0": 7184,
+    "1": 8112
+   },
+   "raw_max_error_ps": 0.0,
+   "telescoping_max_error_ps": 9.094947017729282e-13,
+   "weighted_both_edge_max_error_ps": 6.366462912410498e-12,
+   "negative_increments": [],
+   "duty_percent": [
+    48.14585471475398,
+    51.80711102255739
+   ]
+  },
+  "FF": {
+   "taps": 1920,
+   "nodes": 15424,
+   "physical_cells": 15296,
+   "masters": {
+    "CKINVDCx16_ASAP7_75t_R": 15207,
+    "BUFx24_ASAP7_75t_R": 89
+   },
+   "local_input_phases": {
+    "0": 7184,
+    "1": 8112
+   },
+   "raw_max_error_ps": 0.0,
+   "telescoping_max_error_ps": 9.094947017729282e-13,
+   "weighted_both_edge_max_error_ps": 6.366462912410498e-12,
+   "negative_increments": [],
+   "duty_percent": [
+    47.95262807563015,
+    51.09160363697501
+   ]
+  }
+ },
+ "errors": [],
+ "counter": {
+  "regions_reached": 140,
+  "crossings": 3595,
+  "start_ports": 139,
+  "counter_errors": [],
+  "start_step_errors": [],
+  "sched_lat_total": 9327,
+  "max_origin": 29,
+  "bind_period_ps": 833.0,
+  "gate_period_ps": 833.333
+ },
+ "TT": {
+  "data_rows": 3595,
+  "min_margin_lo_ps": 104.73349999999999,
+  "min_margin_hi_ps": 515.8654999999999,
+  "margin_rounding_max_ps": 0.06650000000013279,
+  "start_rows": 139,
+  "start_min_sampling_distance_ps": 76.23350000000005,
+  "start_rounding_max_ps": 0.13349999999999795,
+  "start_fail": [],
+  "gate_missing": 0,
+  "gate_unbound": 0
+ },
+ "FF": {
+  "data_rows": 3595,
+  "min_margin_lo_ps": 109.33350000000002,
+  "min_margin_hi_ps": 516.2655,
+  "margin_rounding_max_ps": 0.06650000000013279,
+  "start_rows": 139,
+  "start_min_sampling_distance_ps": 58.033500000000004,
+  "start_rounding_max_ps": 0.1005000000001246,
+  "start_fail": [],
+  "gate_missing": 0,
+  "gate_unbound": 0
+ },
+ "limitations": [
+  "Published calibrated factors are inputs; no independent transistor characterization.",
+  "Margins/sample arithmetic checks reported OCV intervals, not an independent OCV/droop full-pair solve.",
+  "Bind T833 versus die STA T833.333 retained and exposed; both current gate phase arithmetic reproduced.",
+  "Conservative glue FF real-view -50.98 remains FAIL; no die freeze or signoff claim."
+ ]
+}

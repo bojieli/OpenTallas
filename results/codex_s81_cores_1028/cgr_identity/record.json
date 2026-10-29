@@ -1,0 +1,89 @@
+{
+  "schema": "opentallas.s81.cgr_parameter_identity.v1",
+  "source_commit": "df649a6c857892e6beac38d20f2ed5815a20ad8c",
+  "tool": "tools/dsrom_qelem_cl/qxpq_cgr_lec.py",
+  "source_files_sha256": {
+    "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv": "227314c3c92dc277fa17035b76275156cbbd93474be37eb8010eeaf45434c453",
+    "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10_gb.sv": "b2988f08b50d33e59a245e5855794ac2ba7e8c4a64e5944d531aaba6094b3450"
+  },
+  "gold": {
+    "top": "ot_v41_rom_elem_q_qxpq_w10_gb",
+    "params": {
+      "MTP": 1,
+      "EARLY": 1,
+      "NB": 2,
+      "FAST": 1,
+      "PP": 1,
+      "QTIMING_FIX": 1,
+      "QPIPE": 1,
+      "QP_XS": 1,
+      "QP_CAP": 0,
+      "QP_P1": 1,
+      "QP_CSAM": 10,
+      "QZ": 1,
+      "QZ_NS": 8,
+      "QZ_NE": 4,
+      "QY": 1,
+      "QX": 10,
+      "PQ": 1,
+      "QW": 0,
+      "QM": 5,
+      "QS": 5,
+      "RSTP": 1
+    },
+    "CGR": 0,
+    "GO_BOUNDARY": 1,
+    "FRONT_PAR": 0,
+    "INSTANCE": ""
+  },
+  "gate": {
+    "top": "ot_v41_rom_elem_q_qxpq_w10_gb",
+    "params": {
+      "MTP": 1,
+      "EARLY": 1,
+      "NB": 2,
+      "FAST": 1,
+      "PP": 1,
+      "QTIMING_FIX": 1,
+      "QPIPE": 1,
+      "QP_XS": 1,
+      "QP_CAP": 0,
+      "QP_P1": 1,
+      "QP_CSAM": 10,
+      "QZ": 1,
+      "QZ_NS": 8,
+      "QZ_NE": 4,
+      "QY": 1,
+      "QX": 10,
+      "PQ": 1,
+      "QW": 0,
+      "QM": 5,
+      "QS": 5,
+      "RSTP": 1
+    },
+    "CGR": 8,
+    "GO_BOUNDARY": 1,
+    "FRONT_PAR": 0,
+    "INSTANCE": ""
+  },
+  "positive": {
+    "verdict": "EQUIVALENT",
+    "proved": 57044,
+    "unproven": 0,
+    "state_bits": 60125,
+    "primary_and_rom_ports": 43
+  },
+  "control": {
+    "verdict": "UNPROVEN",
+    "proved": 57575,
+    "unproven": 1,
+    "mutation": {
+      "file": "rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv",
+      "old": "u_cg_r3 (.clk(clk), .en(zr[3]), .gclk(gclk_r[3]))",
+      "new": "u_cg_r3 (.clk(clk), .en(zr[3] ^ zr[2]), .gclk(gclk_r[3]))"
+    }
+  },
+  "added_cycles": 0,
+  "scope": "CGR0 and8 edge/reset/data equivalence for exact production parameter tuple; not a physical view or token-pass result. Actual INSTANCE strings select ROM-mask namespaces; this proof compares common unconstrained ROM inputs/outputs and does not certify contents. TOK-DS owns actual mask alias replay.",
+  "invalid_control": "Earlier constant-enable mutant dropped unused r3 state and crashed tool KeyError; preserved in scratch cgr_mutant; not counted as a caught functional control."
+}
