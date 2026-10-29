@@ -1,0 +1,206 @@
+{
+ "before": {
+  "J": 32.26,
+  "TT_rise": {
+   "mean": 173.13,
+   "min": 159.37,
+   "max": 191.63,
+   "window": 32.26
+  },
+  "FF_early": {
+   "mean": 132.02,
+   "min": 121.38,
+   "max": 146.66,
+   "window": 25.28
+  },
+  "max_slew": 76.36
+ },
+ "after": {
+  "J": 12.18,
+  "TT_rise": {
+   "mean": 172.08,
+   "min": 165.61,
+   "max": 177.79,
+   "window": 12.18
+  },
+  "FF_early": {
+   "mean": 130.62,
+   "min": 124.44,
+   "max": 135.65,
+   "window": 11.21
+  },
+  "max_slew": 75.19
+ },
+ "slew_limit": 76.36,
+ "passes": [
+  {
+   "pass_": 0,
+   "J": 21.91,
+   "changed": 8
+  },
+  {
+   "pass_": 1,
+   "J": 17.98,
+   "changed": 7
+  },
+  {
+   "pass_": 2,
+   "J": 14.27,
+   "changed": 4
+  },
+  {
+   "pass_": 3,
+   "J": 12.18,
+   "changed": 4
+  }
+ ],
+ "sizes": [
+  "BUFx8_ASAP7_75t_R",
+  "BUFx10_ASAP7_75t_R",
+  "BUFx12f_ASAP7_75t_R",
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx24_ASAP7_75t_R"
+ ],
+ "changes": {
+  "Q0_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q0": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q1_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q2_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q3_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q3": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q4_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q4": [
+   "BUFx24_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q5_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx10_ASAP7_75t_R"
+  ],
+  "Q6_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q7_r0": [
+   "BUFx16f_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q0B0": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q2B0": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q3B0": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx24_ASAP7_75t_R"
+  ],
+  "Q4B0": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q4B1": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ],
+  "Q5B0": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q5B1": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx8_ASAP7_75t_R"
+  ],
+  "Q7B0": [
+   "BUFx10_ASAP7_75t_R",
+   "BUFx12f_ASAP7_75t_R"
+  ]
+ },
+ "cells": {
+  "Q0_r0": "BUFx12f_ASAP7_75t_R",
+  "Q0": "BUFx12f_ASAP7_75t_R",
+  "Q1_r0": "BUFx24_ASAP7_75t_R",
+  "Q1": "BUFx24_ASAP7_75t_R",
+  "Q2_r0": "BUFx24_ASAP7_75t_R",
+  "Q2": "BUFx24_ASAP7_75t_R",
+  "Q3_r0": "BUFx8_ASAP7_75t_R",
+  "Q3": "BUFx8_ASAP7_75t_R",
+  "Q4_r0": "BUFx10_ASAP7_75t_R",
+  "Q4": "BUFx8_ASAP7_75t_R",
+  "Q5_r0": "BUFx10_ASAP7_75t_R",
+  "Q5": "BUFx24_ASAP7_75t_R",
+  "Q6_r0": "BUFx8_ASAP7_75t_R",
+  "Q6": "BUFx24_ASAP7_75t_R",
+  "Q7_r0": "BUFx12f_ASAP7_75t_R",
+  "Q7": "BUFx24_ASAP7_75t_R",
+  "Q0B0": "BUFx8_ASAP7_75t_R",
+  "Q0B1": "BUFx10_ASAP7_75t_R",
+  "Q1B0": "BUFx10_ASAP7_75t_R",
+  "Q1B1": "BUFx10_ASAP7_75t_R",
+  "Q2B0": "BUFx12f_ASAP7_75t_R",
+  "Q2B1": "BUFx10_ASAP7_75t_R",
+  "Q3B0": "BUFx24_ASAP7_75t_R",
+  "Q3B1": "BUFx10_ASAP7_75t_R",
+  "Q4B0": "BUFx12f_ASAP7_75t_R",
+  "Q4B1": "BUFx12f_ASAP7_75t_R",
+  "Q5B0": "BUFx8_ASAP7_75t_R",
+  "Q5B1": "BUFx8_ASAP7_75t_R",
+  "Q6B0": "BUFx10_ASAP7_75t_R",
+  "Q6B1": "BUFx10_ASAP7_75t_R",
+  "Q7B0": "BUFx12f_ASAP7_75t_R",
+  "Q7B1": "BUFx10_ASAP7_75t_R"
+ },
+ "layers": "m56",
+ "objective": "window_only",
+ "fit": "/srv/opentallas-scratch2/claude/die-qc-37-vmr/f4d_tools/results/model_refit3_1026/uf_phys3_v1.json",
+ "provenance": {
+  "argv": [
+   "/usr/bin/python3",
+   "f4d_size.py",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/f4d_tools",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_k8.tcl",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_mif1_placed.geo",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/invbuf/lib",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_k8_s56.tcl",
+   "--layers",
+   "m56",
+   "--passes",
+   "4",
+   "--window-only",
+   "--seg-plan",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_k8.json"
+  ],
+  "sha256": {
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_k8.tcl": "d4f543170409e2822ae2e302966e1f20139a199cd3e2c443454901b9dad93411",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_mif1_placed.geo": "9389936781efe2afa0adff28484971d32e4c8b09463afe9e03a9a916d9148116",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/f4d_tools/results/qc_su_f4d/pred/f4d_size.py": "a8d7f0bfd29ff2e0df29876038a4609d77bc1296f4b9ea1a6737786335563550",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/f4d_tools/results/qc_su_prog_l1_1026/su_branch_size.py": "112ac246210502de812254c6ca2b16930aa053c193ec8bcb4528d1270f588da8",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/f4d_tools/results/qc_su_prog_l1_1026/phys_gate.py": "8b0cd6026724baa0c446eb3b5816b6ef71c8549d593530cd98205cbb0d294e14",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/plan_mif1/vmr_k8_s56.tcl": "27c240e3de23eacfacc6c9dc38d98b6b8e090212bb6b4214a582f8f6b0d997d0",
+   "/srv/opentallas-scratch2/claude/die-qc-37-vmr/f4d_tools/results/model_refit3_1026/uf_phys3_v1.json": "cef9c3672fc8aa6b5410afc461747846132eaa17424589c624272ba77e21a990"
+  }
+ }
+}
