@@ -107,6 +107,46 @@ def prepare(plan,graph,full_width=False):
     return out,report
 
 
+
+def pipeline_recipes(report, graph):
+    """Input for direct_stations.materialize; nominal logical clocks only, no date adoption."""
+    widths={}
+    for e in graph['edges']:
+        key=(e['src_path'],e['src_port'])
+        widths[key]=max(widths.get(key,0),max((b[0]for b in e['bit_pairs']),default=-1)+1)
+    chains=[]
+    for x in report['connections']:
+        if x['status']!='PREPARED_GEOMETRY_UNQUALIFIED':continue
+        if x['serial_k']!=1 or x['planned_wires']!=x['width']:
+            raise ValueError('direct pipeline recipes require the full-width source candidate')
+        if len(x['bit_runs'])!=1:raise ValueError('native VMS edge is not one contiguous source/sink run')
+        lo,dlo,width=x['bit_runs'][0]
+        sp,dp=x['source_path'],x['destination_path']
+        src_hub=sp.startswith('hb_vms_')
+        port=x['destination_port']if src_hub else x['source_port']
+        mask=(1<<width)-1 if port=='status' else 1<<(width-1)
+        # Bank outputs originate on their explicit face clocks. The source VMS
+        # wrapper's clock inputs are tied to the same logical pll_stream here;
+        # actual propagated clock arrivals remain outside this preparation ABI.
+        source_clock=({'eg':'clk_e','pr':'clk_s','status':'clk_n',
+                       'xq_done':'clk_w','xq2_done':'clk_e'}[port]if not src_hub
+                      else ('clk'if sp=='hb_vms_NW'else 'clk_hub'))
+        sink_clock='clk'if dp!='hb_vms_NE'else 'clk_hub'
+        chains.append(dict(name=sp+'_'+x['source_port']+'_to_'+dp+'_'+x['destination_port'],
+                           source_instance=sp,source_port=x['source_port'],source_lsb=lo,
+                           source_width=width,source_connected_width=widths[(sp,x['source_port'])],
+                           sink_instance=dp,sink_port=x['destination_port'],sink_lsb=dlo,
+                           width=width,stages=x['station_count'],transport='fullwidth_k1',
+                           control_mask=mask,reset_kind='caller_sync_active_low',
+                           source_reset_port='rst_n',source_clock_port=source_clock,sink_clock_port=sink_clock))
+    return dict(schema='opentallas.hbm.direct_stations.contract.v1',
+                status='COMPONENT_PREPARATION_ONLY',runtime_adopt=False,chains=chains,
+                missing_south_geometry=report['totals'].get('MISSING_SOUTH_ROLE_GEOMETRY',0),
+                notes=['existing caller reset expressions retained; delivery is not qualified',
+                       'nominal logical clock equality only; no propagated arrival contract',
+                       'unequal link stages require coherent compiler/response-calendar composition before adoption'])
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--plan',required=True)
@@ -114,12 +154,16 @@ def main():
     ap.add_argument('--out-plan',required=True)
     ap.add_argument('--report',required=True)
     ap.add_argument('--full-width',action='store_true')
+    ap.add_argument('--chains-out',help='optional direct_stations component-only pipeline contract')
     a=ap.parse_args()
     pb,gb=Path(a.plan).read_bytes(),Path(a.graph).read_bytes()
     p,r=prepare(json.loads(pb),json.loads(gb),a.full_width)
     r['inputs_sha256']=dict(plan=hashlib.sha256(pb).hexdigest(),graph=hashlib.sha256(gb).hexdigest())
     Path(a.out_plan).write_text(json.dumps(p,indent=1)+'\n')
     Path(a.report).write_text(json.dumps(r,indent=1)+'\n')
+    if a.chains_out:
+        recipes=pipeline_recipes(r,json.loads(gb))
+        Path(a.chains_out).write_text(json.dumps(recipes,indent=1)+'\n')
     print(json.dumps(dict(totals=r['totals'],removed=len(r['removed']))))
 
 

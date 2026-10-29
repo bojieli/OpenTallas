@@ -103,3 +103,24 @@ D18 fixes canonical reach and no longer publishes partial failed pairs. Exact co
 retains d17 failed evidence: 60 new lanes / 95,311 bits; 55 strict missing pairs have complete new capacity,
 103 remain incomplete, 84,076 bits still uncovered. All 60 lane cycle values match canonical Plan.lane_latency.
 Both exact packages remain preparation only pending the binder's bit map and clock/reset dates.
+
+## Intrinsic RR1 and materializer input
+
+The same actual bank fixture now performs one real port-1 SRAM read of the last mirror-written word.
+Unit intel2 oth-ubuntu-2548544-1793288677 PASS: bank samples request at edge62; rr1 valid/data24
+is presented after NBA at edge68; a downstream consumer samples it at edge69. All 24 egress checks
+also remain correct and status=0. Source code in ot_hgi_dma_back_static_vp4_banks.sv:93-100 defines
+RR_RT as request LAUNCH edge to reply LAUNCH edge. The actual controller registers rq_v at edge61,
+so the measured bank request edge62 corresponds to rr launch68 minus rq launch61 = 7 edges.
+Consumer capture is 8 edges after the producer launch. Its expected-mask pipeline and response pin
+capture both align at edge69; these two conventions must not be interchanged. Coverage owns composing
+all 16 exact DMA source slices to the current RR_RT80 budget, including common return dates.
+
+`native_vms_station_map.py --chains-out FILE` exports a component-only direct_stations contract:
+128 North-role links, 176,798 state bits of which 3,074 are explicit control bits. The source offset and
+width mean a selected slice, e.g. NE bank7 pq is source bk_pq[2279:1995] (285 bits) in a 2,280-bit port.
+Bank output clocks use their actual face entries; the VMS wrapper's selected nominal clock and bank
+clock resolve to the same source bit. Existing reset expressions are retained and remain unqualified
+for die delivery. Valid bits/status receive reset; data bits do not. The recipe does not adopt runtime
+source, manufacture South geometry, or solve unequal pipeline/calendar dates. Coverage owns materializing
+these source-preparation recipes with its existing guarded direct_stations primitive.
