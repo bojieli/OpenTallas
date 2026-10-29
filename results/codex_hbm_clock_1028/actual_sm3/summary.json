@@ -1,0 +1,342 @@
+{
+ "mode": "physical",
+ "taps": 34,
+ "dme_nodes": 382,
+ "elapsed_s": 45.871744871139526,
+ "reach": {
+  "schema": "ot_clk_actual_reach/1",
+  "max_um": 405.0,
+  "verdict": "PASS",
+  "cell_edges": 546,
+  "tap_edges": 34,
+  "worst_um": 403.38,
+  "over_count": 0,
+  "over": [],
+  "missing_sites": []
+ },
+ "window_ps": {
+  "TT": 5.958289243583749,
+  "FF": 14.985622009295184
+ },
+ "stats": {
+  "merges": 33,
+  "imbalanced": 6,
+  "worst_imbalance_um": 4.4,
+  "extra_wire_um": 13927.7,
+  "topology": {
+   "median": 1
+  },
+  "snakes": 5,
+  "snake_wire_um": 4707.7,
+  "snake_buffers": 49,
+  "spread_um": 5.5
+ },
+ "rows": [
+  {
+   "port": "t_NW_sm3__clk_c5",
+   "part": "NW_sm3",
+   "tap": "clk_c5",
+   "delay_ps": {
+    "TT": 2569.320452150314,
+    "FF": 2241.4678684063715
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk",
+   "part": "NW_sm3",
+   "tap": "clk",
+   "delay_ps": {
+    "TT": 2569.141778648223,
+    "FF": 2237.770852434573
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c4",
+   "part": "NW_sm3",
+   "tap": "clk_c4",
+   "delay_ps": {
+    "TT": 2568.714121489514,
+    "FF": 2241.957566731972
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c1",
+   "part": "NW_sm3",
+   "tap": "clk_c1",
+   "delay_ps": {
+    "TT": 2573.394852327002,
+    "FF": 2238.337006028156
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c0",
+   "part": "NW_sm3",
+   "tap": "clk_c0",
+   "delay_ps": {
+    "TT": 2573.394852327002,
+    "FF": 2238.337006028156
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c9",
+   "part": "NW_sm3",
+   "tap": "clk_c9",
+   "delay_ps": {
+    "TT": 2573.918603002234,
+    "FF": 2239.5649907619318
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c13",
+   "part": "NW_sm3",
+   "tap": "clk_c13",
+   "delay_ps": {
+    "TT": 2573.2528312695936,
+    "FF": 2239.2687676124115
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c12",
+   "part": "NW_sm3",
+   "tap": "clk_c12",
+   "delay_ps": {
+    "TT": 2573.858015237594,
+    "FF": 2241.074713676412
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c8",
+   "part": "NW_sm3",
+   "tap": "clk_c8",
+   "delay_ps": {
+    "TT": 2573.9100407045703,
+    "FF": 2242.0997209567804
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c2",
+   "part": "NW_sm3",
+   "tap": "clk_c2",
+   "delay_ps": {
+    "TT": 2569.8802037008577,
+    "FF": 2249.460844876364
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c6",
+   "part": "NW_sm3",
+   "tap": "clk_c6",
+   "delay_ps": {
+    "TT": 2570.741075368538,
+    "FF": 2250.484985308604
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c3",
+   "part": "NW_sm3",
+   "tap": "clk_c3",
+   "delay_ps": {
+    "TT": 2572.2065821582337,
+    "FF": 2251.2987787239317
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c7",
+   "part": "NW_sm3",
+   "tap": "clk_c7",
+   "delay_ps": {
+    "TT": 2573.1531797352736,
+    "FF": 2252.4249034276518
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c10",
+   "part": "NW_sm3",
+   "tap": "clk_c10",
+   "delay_ps": {
+    "TT": 2569.0227378010823,
+    "FF": 2248.732047819596
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c14",
+   "part": "NW_sm3",
+   "tap": "clk_c14",
+   "delay_ps": {
+    "TT": 2569.883609468762,
+    "FF": 2249.7561882518357
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c11",
+   "part": "NW_sm3",
+   "tap": "clk_c11",
+   "delay_ps": {
+    "TT": 2573.8642931385866,
+    "FF": 2252.7564744438682
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c15",
+   "part": "NW_sm3",
+   "tap": "clk_c15",
+   "delay_ps": {
+    "TT": 2573.2069101547463,
+    "FF": 2252.470231012748
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c21",
+   "part": "NW_sm3",
+   "tap": "clk_c21",
+   "delay_ps": {
+    "TT": 2570.4566065930667,
+    "FF": 2242.0819746575085
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_t1",
+   "part": "NW_sm3",
+   "tap": "clk_t1",
+   "delay_ps": {
+    "TT": 2570.463016723695,
+    "FF": 2238.5493651276693
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c20",
+   "part": "NW_sm3",
+   "tap": "clk_c20",
+   "delay_ps": {
+    "TT": 2570.4229718522665,
+    "FF": 2243.0670527831085
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c17",
+   "part": "NW_sm3",
+   "tap": "clk_c17",
+   "delay_ps": {
+    "TT": 2573.8862730353544,
+    "FF": 2238.1531129800924
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c16",
+   "part": "NW_sm3",
+   "tap": "clk_c16",
+   "delay_ps": {
+    "TT": 2573.8862730353544,
+    "FF": 2238.1531129800924
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c24",
+   "part": "NW_sm3",
+   "tap": "clk_c24",
+   "delay_ps": {
+    "TT": 2574.027810286634,
+    "FF": 2246.922811788132
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c28",
+   "part": "NW_sm3",
+   "tap": "clk_c28",
+   "delay_ps": {
+    "TT": 2574.1136323457904,
+    "FF": 2247.0204675838804
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c25",
+   "part": "NW_sm3",
+   "tap": "clk_c25",
+   "delay_ps": {
+    "TT": 2573.4682507595785,
+    "FF": 2246.8768984473245
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c29",
+   "part": "NW_sm3",
+   "tap": "clk_c29",
+   "delay_ps": {
+    "TT": 2572.810867775738,
+    "FF": 2246.590655016204
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c18",
+   "part": "NW_sm3",
+   "tap": "clk_c18",
+   "delay_ps": {
+    "TT": 2569.3734283935623,
+    "FF": 2247.036917546236
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c22",
+   "part": "NW_sm3",
+   "tap": "clk_c22",
+   "delay_ps": {
+    "TT": 2570.2343000612427,
+    "FF": 2248.0610579784766
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c19",
+   "part": "NW_sm3",
+   "tap": "clk_c19",
+   "delay_ps": {
+    "TT": 2574.0135980275463,
+    "FF": 2250.883741581148
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c23",
+   "part": "NW_sm3",
+   "tap": "clk_c23",
+   "delay_ps": {
+    "TT": 2573.356215043707,
+    "FF": 2250.597498150029
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c26",
+   "part": "NW_sm3",
+   "tap": "clk_c26",
+   "delay_ps": {
+    "TT": 2571.399434698682,
+    "FF": 2248.7964084043956
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c30",
+   "part": "NW_sm3",
+   "tap": "clk_c30",
+   "delay_ps": {
+    "TT": 2572.260306366362,
+    "FF": 2249.820548836636
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c27",
+   "part": "NW_sm3",
+   "tap": "clk_c27",
+   "delay_ps": {
+    "TT": 2573.7258131560575,
+    "FF": 2250.6343422519635
+   }
+  },
+  {
+   "port": "t_NW_sm3__clk_c31",
+   "part": "NW_sm3",
+   "tap": "clk_c31",
+   "delay_ps": {
+    "TT": 2574.672410733098,
+    "FF": 2251.760466955684
+   }
+  }
+ ]
+}

@@ -1,0 +1,20 @@
+{
+ "scope": "HBM NW_sm3 clock construction coupon only",
+ "image": "results/codex_hbm_clock_1028/actual_sm3/geometry.png",
+ "viewed": true,
+ "verdict": "PASS-COND",
+ "findings": [
+  "Clock buffers occupy the actual open vertical streets and the middle horizontal channel; related hard-core entries stay near their macros.",
+  "548 native1.62x.27 bodies are on.054/.54 R0 homes, with zero body overlaps, macro/PGhalo hits or row errors.",
+  "All546 cell edges and34 tap edges meet405um; maximum403.38um. Everycell edge has at least one legal one-bend orthogonal path in the existing channels.",
+  "The exact exported physical graph model has TT5.9583/FF14.9856ps window; these are calibrated planning estimates, not routed STA.",
+  "No local placement-density or pin-access blocker is visible. Actual PGconnectivity, NDR/corridor route, duty and TT/FFSTA have not run."
+ ],
+ "conditions": [
+  "Parent current-plan PG/CA gates and composedC25c/nativeSPB clock inventory remain required before any die P&R.",
+  "Use retained frozen sites; reject later overlays or body movement unless re-priced before build.",
+  "This is neither a diefreeze nor a hard-core signoff."
+ ],
+ "shared_source": "c0e4ae487 (native-body physicalDME), freeze metadataf3df3cee7/9db7a0a74 added without geometry change",
+ "owned_geometry": "fast_detour.py measured; fast_detour_v2.py additionally fixes temporarySiteMap cache lifetime"
+}

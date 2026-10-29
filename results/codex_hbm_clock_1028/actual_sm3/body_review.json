@@ -1,0 +1,23 @@
+{
+ "scope": "clock coupon only, noPNR/STA",
+ "cells": 548,
+ "row_errors": [],
+ "body_overlaps": [],
+ "macro_PG_halo_hits": [],
+ "reach": {
+  "schema": "ot_clk_actual_reach/1",
+  "max_um": 405.0,
+  "verdict": "PASS",
+  "cell_edges": 546,
+  "tap_edges": 34,
+  "worst_um": 403.38,
+  "over_count": 0,
+  "over": [],
+  "missing_sites": [],
+  "frozen_home_match": true
+ },
+ "model_window_ps": {
+  "TT": 5.958289243583749,
+  "FF": 14.985622009295184
+ }
+}
