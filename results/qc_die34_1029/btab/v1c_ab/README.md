@@ -54,3 +54,23 @@ Launched 13:41 PDT. Files: a/, b/, planned_rep.tcl (shared by both), planned_rep
   B_STRIP 2 M5 obstructions + M3 0.30 applied; 116 BUFx6f inserted) [CHECKED KIT/failed_try1/run_route.log].
   try2 (unit oth-ubuntu-331227-1793306720, 13:46 PDT, client ~/dqc36k/btab_b_try2.otrun.log): repeaters moved
   to pre_b.tcl (pre-GRT, after the rip, + global_connect + DPL), eco_b.tcl = V1d ECO unchanged.
+
+## Status 2026-10-29 14:15 PDT (both LIVE on intel1; CHECKED from KIT/run_route.log + DRC rpt unless marked)
+- (B) try2 oth-ubuntu-331227-1793306720: GRT 0 overflow all layers; pre-GRT 116 BUFx6f planned repeaters + DPL; ECO_B
+  (V1c routed RC, FF frame) pre setup +418.9 / hold +2.05. DRT iter ~40: **9 markers, 3 nets (_1152_, ot_prep_n30,
+  ot_prep_n6)**, all M4 Short y 31.9/41.9/51.1 from V4 at x 252.37-252.42 east to 254.592 across the macro M4 OBS + VSS
+  = the SAME dive class shifted 0.6 um WEST of the new M5 obstruction (between the macro PG M5 stripe 252.564-252.876 and
+  the strip). Estimate was wrong: blocking M5 only in the strip does not remove the entry; DRT drops V4 anywhere over the
+  body when the corridor has no legal path (it violates the macro OBS rather than leaving a net open). 2 of 3 nets are
+  planned-repeater nets (buffer placed next to the macro S face). Expected final NOT SIGNED (DRC > 0) [final UNCHECKED].
+- (A) oth-ubuntu-294553-1793306489: GPL band 15 blockages (carved) -> removed before DPL; plan CTS tap RC 169-199 ps
+  (3446 sinks), CTS hold MM repair -> FF +15.00; GRT measured vclk 182.74 (bound 202.5 +- 40, in band); GRT 0 overflow;
+  planned repeaters 117 inserted (1 MISS wire4700/A, 2 SKIP). DRT iter ~10: 163 markers (V1c at the same iteration
+  138 -> final 6) - trajectory not yet distinguishable [final UNCHECKED].
+- Collect: KIT/image.txt (end rc), KIT/run_route.log DRT-0199 final, KIT/run/reports/asap7/*/base/5_route_drc.rpt
+  (marker nets/x), KIT/signoff/signoff.json (TT/FF/insertion/pair/slew/DRC); on DRC 0 run routed LEC as DIE-QC-35
+  (main lec.py as KIT/lec.py, OT_LEC_SUPERSET_VEC=1, --netlist 6_final.v -> KIT/lec_routed).
+- Structural reading for the next step: the dive happens wherever M5 over the body can drop to M4; the only complete
+  block is M5 over the WHOLE E part of the body between the PG stripes (or a macro LEF with M4 OBS honoured as hard by
+  DRT pin-access), i.e. (B2) M5 obstruction over x [PG-stripe E edge 252.876 - 1 pitch ... 254.592] is not enough
+  either; the demand side (A: corridor capacity / tw-data starts) is the real lever.
