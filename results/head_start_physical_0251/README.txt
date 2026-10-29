@@ -1,0 +1,9 @@
+Actual START mapping and physical integration successor, codex/head-kits-0251.
+
+head_start_route_overlay.py imports actual mapped standard cells with exact placement inventory into the reviewed raw clock/signal route prototype. Stage clock tap outputs become internal nets driving real cells; no 3fF dummy stage-port load substitutes for a physical START flop. It requires a local wavefront reset boundary manifest, complete actual cell coverage and exact flop count. No route is launched by this writer. Small overlay smoke PASS; omitted physical FF control CAUGHT.
+
+head_start_pack.py packs all mapped stage cells using actual RVT LEF sizes, the plan SiteMap and actual clock-cell occupancy. Map per-stage modules before flattening to retain stage ownership. Ready for the new351-leaf/local-reset provider; no new provider route yet.
+
+Old CA4 mapping inventory only (not adoptable: global reset and30 part-stars remain): mapped9253 cells,4617 FF vs4617 planned,3476 positive/1141 negative edge FFs,4636 combinational cells,0unmapped,check-assertPASS. Thus flop-only stage row estimates omit real synchronous-reset/root logic and cannot be used as the full placement. Source under intel1:/srv/opentallas-scratch2/claude/head-start-mapped-0251/v3,ot-rununit2135540exit0. This diagnostic used image Yosys0.67; final provider mapping uses fleet native0.68.
+
+Initial failed mapping selected an INVBUF-first concatenated library for dfflibmap, yielding unsupported FFs. Fixed by selecting canonical SEQ for FFs and single merged library for ABC. A second mapping had scope metadata and missing library declarations causing apparent undriven wires; fixed by deleting scopeinfo metadata and reading liberty cell models before check-assert. Weak-cell DONT_USE patterns excluded in final diagnostic. Failure logs retained in v1/v2; no physical run used them.

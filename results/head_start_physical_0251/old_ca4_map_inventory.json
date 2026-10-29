@@ -1,0 +1,23 @@
+{
+ "scope": "CA4 mapping inventory only; old global reset and 30 part-stars remain held, no route",
+ "mapped_cells": 9253,
+ "mapped_flops": 4617,
+ "planned_flops": 4617,
+ "cell_types": {
+  "INVx1_ASAP7_75t_R": 1146,
+  "NOR2x1_ASAP7_75t_R": 3466,
+  "AND2x2_ASAP7_75t_R": 3,
+  "OR2x2_ASAP7_75t_R": 1,
+  "OR3x1_ASAP7_75t_R": 2,
+  "OR4x1_ASAP7_75t_R": 2,
+  "OR5x1_ASAP7_75t_R": 1,
+  "OAI21x1_ASAP7_75t_R": 1,
+  "AND3x1_ASAP7_75t_R": 6,
+  "NAND2x1_ASAP7_75t_R": 6,
+  "AOI21x1_ASAP7_75t_R": 1,
+  "OA21x2_ASAP7_75t_R": 1,
+  "DFFHQNx1_ASAP7_75t_R": 3476,
+  "DFFLQNx1_ASAP7_75t_R": 1141
+ },
+ "unmapped_types": []
+}

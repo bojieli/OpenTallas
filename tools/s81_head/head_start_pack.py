@@ -8,6 +8,7 @@ clock cells, rather than the emitter's flop-only row-area estimate.
 import argparse
 from collections import defaultdict
 import json
+import gzip
 import math
 from pathlib import Path
 import re
@@ -41,7 +42,7 @@ def pack(plan, stages, mapped, top, ctree_v, ctree_tcl, sizes):
     by_id = {s['id']: s for s in stages['stages']}
     groups = defaultdict(dict)
     for n, c in mapped['modules'][top]['cells'].items():
-        owner = re.match(r'u_st_([^./]+)[./]', n)
+        owner = re.search(r'(?:^|\\)u_st_([^./]+)[./]', n)
         if not owner or owner[1] not in by_id:
             raise ValueError(f'cell lacks preserved actual START stage owner: {n}')
         if c['type'] not in sizes or sizes[c['type']][1] > E.ROW_UM+1e-6:
@@ -57,12 +58,22 @@ def pack(plan, stages, mapped, top, ctree_v, ctree_tcl, sizes):
         width = sum(sizes[c['type']][0] for c in group.values())
         # The existing stage placer reserves a whole legal row segment in units
         # of FF width; it never substitutes this bound for actual cell count.
-        rect = E.place_stage(s['node_xy_um'], math.ceil(width/E.FLOP_W_UM), occupied, site, W, H)
-        x, y = rect[:2]
-        # Check the complete strip, including thin interior obstructions.
-        if not all(site.legal((min(rect[2], rect[0]+j*.054), yy))
-                   for j in range(math.ceil((rect[2]-rect[0])/.054)+1) for yy in (y, y+E.ROW_UM)):
-            raise ValueError(f'stage row crosses a plan exclusion: {owner}')
+        rejected=E.Rows()
+        class CandidateRows:
+            def free(self,x0,x1,y):
+                return occupied.free(x0,x1,y) and rejected.free(x0,x1,y)
+        # Reject a whole candidate when even a narrow interior site is blocked;
+        # test the remaining finite row candidates without reserving rejected
+        # space against the smaller later stages.
+        for attempt in range(4*E.MAX_ROW_TRIES):
+            rect=E.place_stage(s['node_xy_um'],math.ceil(width/E.FLOP_W_UM),CandidateRows(),site,W,H)
+            x,y=rect[:2]
+            if all(site.legal((min(rect[2],rect[0]+j*.054),yy))
+                   for j in range(math.ceil((rect[2]-rect[0])/.054)+1) for yy in (y,y+E.ROW_UM)):
+                break
+            rejected.add(rect[0],rect[2],y)
+        else:
+            raise ValueError(f'no complete legal actual START cell row for {owner}')
         occupied.add(rect[0], rect[2], y)
         ff = 0
         for n, c in sorted(group.items(), key=lambda q: (not q[1]['type'].startswith(('DFF','SDFF')), q[0])):
@@ -83,7 +94,8 @@ def main():
     for name in ('plan','stages','mapped','top','ctree','lef','out'):
         p.add_argument('--'+name,required=True)
     a=p.parse_args()
-    raw=S.load(a.plan)
+    source=Path(a.plan)
+    raw=json.loads(gzip.open(source,"rt").read()) if source.suffix==".gz" else S.load(source)
     r=pack(S.Plan(raw,Path(a.plan)),json.loads(Path(a.stages).read_text()),json.loads(Path(a.mapped).read_text()),
            a.top,(Path(a.ctree)/'ctree.v').read_text(),(Path(a.ctree)/'ctree.tcl').read_text(),lef_sizes(Path(a.lef).read_text()))
     out=Path(a.out)
