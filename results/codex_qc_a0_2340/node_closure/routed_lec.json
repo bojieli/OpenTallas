@@ -1,0 +1,274 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-29T08:50:17+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_qwen_tile_node",
+ "netlist": "/work/run/results/asap7/kq_ot_qwen_tile_node_a0k10t/base/6_final.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 1540,
+  "outputs": 1027
+ },
+ "t_aig_s": 25.6,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 0,
+  "n_reloaded": 0,
+  "n_dropped": 0,
+  "reloaded": [],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case"
+ },
+ "t_corr_s": 210.3,
+ "keypoints": {
+  "gold": {
+   "inputs": 3173,
+   "flops": 13220,
+   "outputs": 0,
+   "ands": 114646
+  },
+  "gate": {
+   "inputs": 3269,
+   "flops": 25231,
+   "outputs": 0,
+   "ands": 77373
+  },
+  "matched": 13642,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 691,
+   "first": [
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[0]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.sum[0]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[10]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[10]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[11]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[11]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[12]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[12]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[13]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[13]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[14]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[14]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[15]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[15]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[16]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[16]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[17]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[17]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[18]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[18]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[19]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[19]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[1]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[1]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[20]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[20]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[21]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[21]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[22]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[22]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[23]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[23]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[24]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[24]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[25]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[25]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[26]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[26]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[28]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[0]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[29]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[1]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[2]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[2]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[30]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[2]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[31]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[3]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[32]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[4]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[33]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[5]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[34]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[6]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[35]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_exp[7]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[3]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[3]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[4]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[4]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[5]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[5]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[6]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[6]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[7]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[7]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[8]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[8]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_hc.q[9]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_dif[9]",
+    "both:ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.x_dba[0]=ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.x_dab[0]",
+    "both:ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.u_hc.q[0]=ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.sum[0]",
+    "both:ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.u_hc.q[10]=ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.t_dif[10]",
+    "both:ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.u_hc.q[11]=ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.t_dif[11]",
+    "both:ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.u_hc.q[12]=ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.t_dif[12]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 1633,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 1729,
+  "gold_only_compare": {
+   "n": 91,
+   "first": [
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.s1_v",
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.s2_v",
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.t_v",
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.u_v",
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.valid_out",
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.w_v",
+    "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.x_v",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.s1_v",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.s2_v",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.t_v",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.u_v",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.valid_out",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.w_v",
+    "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.x_v",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.s1_v",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.s2_v",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.t_v",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.u_v",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.valid_out",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.w_v",
+    "ff:u_dut.g_add[12].u_add.g_l.u.g_nc.u.x_v",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.s1_v",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.s2_v",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.t_v",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.u_v",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.valid_out",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.w_v",
+    "ff:u_dut.g_add[13].u_add.g_l.u.g_nc.u.x_v",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.s1_v",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.s2_v",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.t_v",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.u_v",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.valid_out",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.w_v",
+    "ff:u_dut.g_add[14].u_add.g_l.u.g_nc.u.x_v",
+    "ff:u_dut.g_add[15].u_add.g_l.u.g_nc.u.s1_v",
+    "ff:u_dut.g_add[15].u_add.g_l.u.g_nc.u.s2_v",
+    "ff:u_dut.g_add[15].u_add.g_l.u.g_nc.u.t_v",
+    "ff:u_dut.g_add[15].u_add.g_l.u.g_nc.u.u_v",
+    "ff:u_dut.g_add[15].u_add.g_l.u.g_nc.u.valid_out"
+   ]
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 4.6,
+ "x_dont_care_points": {
+  "n": 544,
+  "first": [
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.err[0]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.err[1]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[0]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[10]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[11]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[12]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[13]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[14]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[15]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[16]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[17]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[18]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[19]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[1]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[20]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[21]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[22]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[23]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[24]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[25]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[26]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[27]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[28]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[29]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[2]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[30]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[31]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[3]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[4]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[5]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[6]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[7]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[8]",
+   "ff:u_dut.g_add[0].u_add.g_l.u.g_nc.u.y[9]",
+   "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.err[0]",
+   "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.err[1]",
+   "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.y[0]",
+   "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.y[10]",
+   "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.y[11]",
+   "ff:u_dut.g_add[10].u_add.g_l.u.g_nc.u.y[12]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 1090,
+  "in_netlist": 1090,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 14420,
+  "proved": 14420,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "14420 compare points proved; 13642 key points matched by name, 691 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 544 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "superset_vec": {
+  "enabled": true,
+  "n_extra": 0,
+  "all_shown": true,
+  "extra_bits": [],
+  "basis": "free bits: free inputs of the proved miter (unobservable); const/eq/cube bits: bound by inductively proved correspondence hypotheses; shown only when the verdict is EQUIVALENT"
+ },
+ "t_total_s": 244.7,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "error: ModuleNotFoundError"
+ }
+}
