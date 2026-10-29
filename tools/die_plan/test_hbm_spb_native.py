@@ -64,3 +64,16 @@ def test_wrong_production_contract_fails_closed(tmp_path,mutation):
         g=json.loads((tmp_path/'graph.json').read_text());g['edges'][0]['bit_pairs'][0]=[0,1];(tmp_path/'graph.json').write_text(json.dumps(g))
     if mutation=='path':b.ab['hbm_spb0_native']['graph']='../escape.json'
     with pytest.raises(ValueError):H.materialize(b,'q_spb0',f)
+
+
+def test_exact_physical_variant_has_same_stations_without_omitting_ne(tmp_path):
+    b,f=vehicle(tmp_path)
+    b.parts['NE_spb0']['type']='q_spb0__physical_v1'
+    # Missing the actual NE physical type must fail, never silently skip it.
+    with pytest.raises(ValueError):H.materialize(b,'q_spb0',f)
+    b.ab['hbm_spb0_native']['types']=['q_spb0','q_spb0__physical_v1']
+    assert H.materialize(b,'q_spb0',f)
+    variant=f.parent/'ne.sv'
+    # A fresh copy of the unmaterialized fixture represents the other type.
+    variant.write_text('module ne(input clk,rst_n);\n ot_pdie_serdes u_lk_S0(.clk(clk),.rst(rst_n),.rx(rx),.tx(tx),.st(st));\n hfd_ep_static u_ep_S0(.clk(clk),.rst_n(rst_n),.sd_rx(rx),.sd_tx(tx),.sd_st(st));\nendmodule\n')
+    assert H.materialize(b,'q_spb0__physical_v1',variant)
