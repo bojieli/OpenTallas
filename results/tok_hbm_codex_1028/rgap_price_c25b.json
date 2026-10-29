@@ -1,0 +1,587 @@
+{
+  "status": "PRICE_ONLY_CURRENT_C25B_DRYRUN_NOT_EXECUTABLE",
+  "source_image_sha256": "f0b932311ee09139ebd1d56601f4d92b4b4e10ec6da12f31fa8be4433fa972e9",
+  "plan_sha256": "4180334c6a358024df62a0ab56bcaa28d70337807d37509db612bfbad4292d92",
+  "records": 161,
+  "station_round_trip": 98,
+  "r_return": 267,
+  "minimum_pre_rgap": 24,
+  "records_changed": 81,
+  "added_fused_cycles": 9720,
+  "host_transport": {
+    "previous_declared": 4,
+    "safe_proposed": 20,
+    "added_boot_cycles": 16,
+    "reason": "6929um needs registered405um reach; die owner chooses20edges"
+  },
+  "changes": [
+    {
+      "image_offset": 80,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 6016,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 21824,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 27760,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 34512,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 42656,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 49072,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 55136,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 61776,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 67840,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 74480,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 80544,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 87184,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 93248,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 99888,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 105952,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 112704,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 120848,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 127264,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 133328,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 139968,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 146032,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 152672,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 158736,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 165376,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 171440,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 178080,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 184144,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 200704,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 208208,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 214624,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 220688,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 227328,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 233392,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 240032,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 246096,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 252736,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 258800,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 265440,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 271504,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 278256,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 286432,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 292848,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 298912,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 305552,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 311616,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 318256,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 324320,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 331072,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 338544,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 344960,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 351024,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 357664,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 363728,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 370368,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 376432,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 383184,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 390656,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 397072,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 403136,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 409776,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 415840,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 422480,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 428544,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 435296,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 442768,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 449184,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 455248,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 461888,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 467952,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 474592,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 480656,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 487408,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 494880,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 501296,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 507360,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 514000,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 520064,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 526704,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 532768,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    },
+    {
+      "image_offset": 539408,
+      "rows": 6,
+      "old": 0,
+      "new": 24,
+      "added_service_cycles": 120
+    }
+  ],
+  "scope": "FUSED back-to-back spacing only; no layer operand dates, no whole-token rate claim; missing exact C25c committed plan and strict0"
+}
