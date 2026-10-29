@@ -1,0 +1,11 @@
+ot-run: epyc2          admits   776 GB (avail 892, reserve 0, fresh 30.9, peak 20.9, headroom 0, waiters 0/0 GB) load 17/128 running 10 disk 276 GB 
+ot-run: -> epyc2
+ot-heavy: request 32G is charged 11G (class 'synth.sh' measured peak 2.6G, n=1+0 proved); the cap stays 32G
+ot-heavy: admitted on dear-crayfish as oth-ubuntu-2944247-1793275012 after 0 s
+KIT_PREFLIGHT PASS issues 0
+DONT_USE_CHECK PASS 1_2_yosys.v: no DONT_USE cell (*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*)
+SELRANGE PASS top=ot_s81hd_tile_p files=16 unwaived=0 waived=0
+PORT_BIND PASS {"bad_straps": [], "extra": 0, "extra_examples": [], "missing": 0, "missing_examples": [], "netlist_bits": 1190, "plan_bits": 1190, "straps": ["strap_ca_efall", "strap_ca_k_i", "strap_ca_pad", "strap_row0", "strap_ten"], "top": "ot_s81hd_tile_p", "verdict": "PASS"}
+FACE_GUARD FAIL top ot_s81hd_tile_p bits 1159 ok 1157 fails {'land_slot': 1, 'shared': 1}
+FAIL_PREFLOOR face_guard
+ot-run: RAN on epyc2 (unit oth-ubuntu-2944247-1793275012): exit 1

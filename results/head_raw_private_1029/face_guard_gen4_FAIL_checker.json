@@ -1,0 +1,62 @@
+{
+ "top": "ot_s81hd_tile_p",
+ "checked": 1159,
+ "ok": 1157,
+ "fails": {
+  "land_slot": [
+   "cland_fstart_in_i: ring start reaches non-writer flops ['u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[0]$_DFFE_PP_', 'u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[1]$_DFFE_PP_', 'u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[2]$_DFFE_PP_'] outside one origin instance"
+  ],
+  "shared": [
+   "cland_tstart_in: 2 loads on u_cland_origin/p_start"
+  ]
+ },
+ "flops": {
+  "rst_o_0": "u_rrl_7/q$_DFF_P_",
+  "rst_o_1": "u_rrl_48/q$_DFF_P_",
+  "rst_o_2": "u_rrl_52/q$_DFF_P_",
+  "rst_o_3": "u_rrl_56/q$_DFF_P_",
+  "start_o_0": "u_srl_7/q$_DFF_P_",
+  "start_o_1": "u_srl_48/q$_DFF_P_",
+  "start_o_2": "u_srl_52/q$_DFF_P_",
+  "start_o_3": "u_srl_56/q$_DFF_P_",
+  "i[565]": "u_cland_i/u_ring.s_d[2][565]$_DFFE_PP_",
+  "i[564]": "u_cland_i/u_ring.s_d[2][564]$_DFFE_PP_",
+  "i[563]": "u_cland_i/u_ring.s_d[2][563]$_DFFE_PP_",
+  "i[562]": "u_cland_i/u_ring.s_d[2][562]$_DFFE_PP_",
+  "i[561]": "u_cland_i/u_ring.s_d[2][561]$_DFFE_PP_",
+  "i[560]": "u_cland_i/u_ring.s_d[2][560]$_DFFE_PP_",
+  "i[559]": "u_cland_i/u_ring.s_d[2][559]$_DFFE_PP_",
+  "i[558]": "u_cland_i/u_ring.s_d[2][558]$_DFFE_PP_",
+  "i[557]": "u_cland_i/u_ring.s_d[2][557]$_DFFE_PP_",
+  "i[556]": "u_cland_i/u_ring.s_d[2][556]$_DFFE_PP_",
+  "i[555]": "u_cland_i/u_ring.s_d[2][555]$_DFFE_PP_",
+  "i[554]": "u_cland_i/u_ring.s_d[2][554]$_DFFE_PP_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_k_i",
+  "strap_ca_pad",
+  "strap_row0",
+  "strap_ten"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_o": "clk"
+ },
+ "land_mux_depth": {
+  "2": 2271,
+  "1": 1
+ },
+ "land_slot_bits": 568,
+ "land_mux_bits": 568,
+ "pairs_declared": [],
+ "planned_bits": 1132,
+ "missing_ports": 0,
+ "fail_counts": {
+  "land_slot": 1,
+  "shared": 1
+ },
+ "verdict": "FAIL",
+ "netlist": "/work/run/results/asap7/dp_hd_tile/base/1_2_yosys.v"
+}
