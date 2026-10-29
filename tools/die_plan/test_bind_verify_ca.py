@@ -1,6 +1,6 @@
 from types import SimpleNamespace as N
 from bind import Graph, Rules
-from bind_verify import landing_transport_rules
+from bind_verify import landing_transport_rules, VERIFY_RULES
 
 
 def graph(module, k=2, wrong_source=False):
@@ -25,3 +25,13 @@ def test_both_ca_forms_trace_the_actual_input_and_count():
 def test_nonconstant_ca_count_is_rejected():
     g,err=graph('ot_dp_clk_landing_cas');g.F.cells[1].ports['strap_k'][0]=99
     g.source(20);assert any('RULE_STAGES_PORT' in e for e in err)
+
+
+def test_r8_count_bank_keeps_actual_identity_and_declared_count():
+    leaf=N(path='source',module='leaf',kind='leaf',ports={'q':[10]},dirs={'q':'output'},params={})
+    bank=N(path='bank',module='ot_dp_dly_cnt',kind='leaf',ports={'d':[10],'q':[20],'clk':[1],'strap_cnt':['1','1','0','0']},dirs={},params={})
+    flat=N(cells=[leaf,bank],const_drivers={},top_ports={})
+    errs=[];g=Graph(flat,Rules(VERIFY_RULES),errs)
+    assert g.source(20)==('pin',0,'q',0,3) and not errs
+    bank.ports['strap_cnt'][0]=99;errs=[];g=Graph(flat,Rules(VERIFY_RULES),errs);g.source(20)
+    assert any('RULE_STAGES_PORT' in e for e in errs)
