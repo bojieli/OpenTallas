@@ -8,7 +8,7 @@ module qkd_host_rx_pad5 #(parameter integer MUT=0)(
  input wire clk,rst_n,input wire in_v,input wire[1023:0]in_d,output reg in_cr,
  output reg out_v,output reg[545:0]out_d,input wire out_cr,output reg fault
 );
- reg vq,crq;reg[1023:0]dq;
+ reg vq,crq;(* keep = 1 *) reg[1023:0]dq;
  reg[527:0]q[0:4];reg[2:0]wp,rp,count,credits;
  wire pop=!fault&&count!=0&&credits!=0;
  // Capture the padding predicate in parallel with the data, rather than put
