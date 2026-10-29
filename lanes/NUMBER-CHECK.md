@@ -217,3 +217,22 @@ Own run dir intel1:/srv/opentallas-scratch2/claude/numkv-1 (run.sh bind|sta, nk_
 Whole die_sta_related.json identical to sta_cb_edge except the bind path string (recursive compare, 1 diff).
 NOTE (INFO, not a gate change): start-skew rows carry limit_ps (plan start_skew_limit, min 78.4) and 11 TT rows have clk->Q hi 91.4 > limit; the gate correctly re-times start ports on the STA interval shifted by clk->Q (dist >= 26.5), where the worst is 105.8, so the limit field is plan-side info only.
 VERDICT (CHECKED, own run + own arithmetic): every DIE-KV-22 headline number REPRODUCED within 0.07 ps; same pass/fail on all counts. Tree c + bind b meets the COORD 22:45 record condition.
+
+## NUMBER-CHECK-CELL-1 2026-10-28 23:38 PDT: MODEL-REFIT-2 --clock-cal spice_cell vs own ngspice on 2 routed BUFx24+BUFx6f+BUFx4 paths (CHECKED, own runs)
+Target: claude/model-refit2-1028@386f0a49d9 (die_sta_related.py sha256 5613531b..., apply_clock_cal(..., "spice_cell") called directly on my STA arrivals with per-tap clock_masters = traced path masters).
+Paths (NOT in the golden, which has only h16_t33): HEAD hd_tile 5_1_grt.odb (sha256 ef1e07b7...), clk port ->
+- P1 u_eB/ft_mstrap_i: wire17428 BUFx24 -> h15_u_eB_r0 BUFx24 -> wire17439 BUFx6f -> r1 BUFx24 -> d0..d3 4x BUFx4 -> drv BUFx24 -> macro pin (9 stages);
+- P2 u_eA0/ft_mstrap_i: h15_u_eA0_d0..d5 6x BUFx4 -> drv BUFx24 -> wire17452 BUFx6f -> wire17451 BUFx24 -> macro pin (9 stages).
+Method (independent of model_corr.py): own GRT SPEF (estimate_parasitics -global_routing + FLOW setRC_rcx.tcl, -spef_file), own OpenSTA trace (read_spef, propagated, no derate; arrival_max/min rise/fall at every cell input), own deck generator: path cells + 21 side-load cells as xAct3D transistor subckts (side outputs 5 fF), macro pins = liberty cap, every path net full SPEF RC, ideal 1 ps source at the clk port (STA port slew 0), VDD ramp + uic, abstol=1e-9 vntol=1e-5, TT 0.70 V/25 C, FF 0.77 V/0 C, both source edges. Cells lib = MODEL-REFIT-2 transform (md5 fb2de1d8); I re-checked BUFx4/BUFx6f/BUFx24 against the asap7sc7p5t_28 xAct3D source: device count, nfin and R sums identical. 72 rows = every cell input with >=1 upstream master x 2 paths x TT/FF x rise/fall.
+| check | result |
+|---|---|
+| FAIL rule (model early > spice +2 % or model late < spice -2 %) | 0 / 72 PASS |
+| model late < spice at all | 0 / 72 |
+| model early > spice at all | 1 / 72: P2 h15_u_eA0_d5/A TT rise, 5 BUFx4 only, 1.0004 (+0.03 ps) |
+| endpoint late model/spice (setup pessimism) | TT 1.029-1.038 (+7.3..+11.3 ps), FF 1.023-1.058 (+4.8..+13.0 ps) |
+| endpoint early model/spice (hold pessimism) | TT 0.971-0.980 (5.1-8.8 ps early), FF 0.968-0.972 (5.6-7.6 ps) |
+| BUFx4-only segments (P2 d1..d5, drv) early | TT 0.980-1.000, FF 0.977-0.998: the BUFx4 early factor is tight (0-0.5 ps margin), not loose |
+| same rows under spice_buf_edge early (for contrast) | endpoints up to 1.033 FF rise, BUFx4 rows up to 1.060 FF = hold-optimistic, FAILs the 2 % rule; spice_cell fixes it |
+| raw STA (none) late / early vs spice, endpoints | late 0.982-1.011, early 0.961-0.981 |
+VERDICT (CHECKED): spice_cell PASSES on two independent routed BUFx24/BUFx6f/BUFx4 paths, TT and FF, both edges: never setup-optimistic, hold-optimistic only by 0.03 ps on one BUFx4-only intermediate pin; safe-side cost at the macro pins ~2-6 % late (5-13 ps) and ~2-3 % early (5-9 ps). Limits: GRT basis (no RCX), side-cell outputs lumped 5 fF, ideal port source; KV PHY tap-pad (CKINV tree + BUFx24 pad) form not tested (its inverter+BUFx24 late bound over the whole arrival stays UNCHECKED, as MODEL-REFIT-2 states).
+Data: intel1:/srv/opentallas-scratch2/claude/nc-cell-1 (in/ inputs, out/own_grt.spef + trace_{TT,FF}.txt, d_{0,1}_{TT,FF}/deck.sp + arr.dat, extract.tcl, gen.py, compare.py, compare.out, rows.json, SHA256SUMS).
