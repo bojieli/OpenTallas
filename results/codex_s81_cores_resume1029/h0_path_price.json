@@ -1,0 +1,61 @@
+{
+ "scope": "Pre-build model on actual named sinks; observed data delay and old CPPR held unchanged, no closure claim",
+ "clock_plan": "dsdv_eng_rr_h0_r13_h0_load48_uf3d1",
+ "rows": [
+  {
+   "source": "u_hash.u_x_3_0/q[47]$_DFF_P_",
+   "capture": "u_hash.s1_3_5[24]$_DFF_P_",
+   "old_slack_ps": -33.64,
+   "old_clock_damage_ps": 52.01999999999998,
+   "old_observed_logic_ps": 753.36,
+   "predicted_clock_damage_ps": 13.086103212676079,
+   "predicted_slack_data_unchanged_ps": 5.283896787323812,
+   "predicted_launch_ps": 233.93873310319316,
+   "predicted_capture_ps": 220.85262989051708
+  },
+  {
+   "source": "u_hash.pa_2[22]$_DFF_P_",
+   "capture": "u_hash.roll_s_0_3[55]$_DFF_P_",
+   "old_slack_ps": -27.26,
+   "old_clock_damage_ps": 8.93999999999994,
+   "old_observed_logic_ps": 787.23,
+   "predicted_clock_damage_ps": -1.841997680774881,
+   "predicted_slack_data_unchanged_ps": -16.47800231922517,
+   "predicted_launch_ps": 235.84243128144416,
+   "predicted_capture_ps": 237.68442896221904
+  },
+  {
+   "source": "u_hash.pp1_2[8]$_DFF_P_",
+   "capture": "u_hash.pa_2[57]$_DFF_P_",
+   "old_slack_ps": -26.24,
+   "old_clock_damage_ps": 18.789999999999935,
+   "old_observed_logic_ps": 778.9499999999999,
+   "predicted_clock_damage_ps": -7.009055184405582,
+   "predicted_slack_data_unchanged_ps": -0.4409448155943494,
+   "predicted_launch_ps": 228.9105178154854,
+   "predicted_capture_ps": 235.919572999891
+  },
+  {
+   "source": "u_hash.pa_2[22]$_DFF_P_",
+   "capture": "u_hash.roll_s_0_3[54]$_DFF_P_",
+   "old_slack_ps": -22.9,
+   "old_clock_damage_ps": 12.959999999999923,
+   "old_observed_logic_ps": 780.4,
+   "predicted_clock_damage_ps": 1.5679658724332057,
+   "predicted_slack_data_unchanged_ps": -11.497965872433156,
+   "predicted_launch_ps": 235.84243128144416,
+   "predicted_capture_ps": 234.27446540901096
+  },
+  {
+   "source": "u_hash.pa_2[22]$_DFF_P_",
+   "capture": "u_hash.roll_s_0_3[62]$_DFF_P_",
+   "old_slack_ps": -22.77,
+   "old_clock_damage_ps": 6.57000000000005,
+   "old_observed_logic_ps": 787.52,
+   "predicted_clock_damage_ps": -2.351891522008003,
+   "predicted_slack_data_unchanged_ps": -13.848108477991929,
+   "predicted_launch_ps": 235.84243128144416,
+   "predicted_capture_ps": 238.19432280345217
+  }
+ ]
+}

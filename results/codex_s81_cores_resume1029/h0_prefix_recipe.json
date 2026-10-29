@@ -1,0 +1,15 @@
+{
+ "dsdv_eng_rr_h0": {
+  "ref_tile": "physical/die_plan/s81/cores/legacy/specs/dsdv_eng_rr_h0",
+  "util": 0.65,
+  "half_cycle_inputs": [
+   "in_w"
+  ],
+  "suffix": "r1t",
+  "_why": "S81-CORES-R1 10-27: eng H0 on the canonical legacy generator (the 10-23 eng/gen_core_kit.py has no lint/face/LEC/modern-flow gates; its 10-25 FLOW rebuild 651a84ceaabc crashed in cts_post Tcl, la_d unset). Same RTL/defines/util as cores_eng.json h0; in_w = half-cycle hop from E negedge win_n.",
+  "defines": [
+   "OT_S81ENG_HASH_PREFIX_ADD"
+  ],
+  "_closure_basis": "ActualH0GRTTT-33.64/FF+5.01; prefix integer carry logic0cycles +48target512leaf source-aware tree. Planned window30.42/27.23 TARGET-INFO under12.3a; actual clock/pair/timing gates unchanged. PLACE first."
+ }
+}
