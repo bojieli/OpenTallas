@@ -1,0 +1,38 @@
+{
+ "blocked": {
+  "parent_output_rise_ps": 39.958363,
+  "child_output_fall_ps": 82.182411,
+  "leg_increment_ps": 42.224048,
+  "child_input_slew_ps": 109.890717,
+  "guide_layers": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 2,
+   "M5": 2,
+   "M6": 2,
+   "M7": 2,
+   "M8": 4,
+   "M9": 1
+  }
+ },
+ "gap": {
+  "parent_output_rise_ps": 38.690758,
+  "child_output_fall_ps": 74.334373,
+  "leg_increment_ps": 35.643615,
+  "child_input_slew_ps": 93.140739,
+  "guide_layers": {
+   "M1": 2,
+   "M2": 2,
+   "M3": 2,
+   "M4": 2,
+   "M5": 2,
+   "M6": 2,
+   "M7": 2,
+   "M8": 2,
+   "M9": 1
+  }
+ },
+ "scope": "Same174.96um native pair, source input181.78ps,3fFload, samePG+NDR; physicalXtranslated5.346um",
+ "conclusion": "BOTH isolated pairs routeM8/M9; phase shift saves6.58ps but does not reproduce fullregion M7/98.97ps. Earlier solePGcausality claim is withdrawn; M7 correlation remains."
+}

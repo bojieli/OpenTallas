@@ -1,0 +1,19 @@
+{
+ "scope": "HBM NW_sm3 clock geometry prototype only; no PNR/STA/full-die adoption",
+ "verdict": "PASS-COND one clock GRT TT/FF coupon pending independent review",
+ "picture": "results/codex_hbm_clock_1028/channel_sm3_1029/geometry.png",
+ "findings": [
+  "Cross-street merges constructed on horizontal channel rows; vertical legs stay within streets",
+  "No old repeated U-detours crossing rows inside tile bodies",
+  "Native rows/body/PG clean, actual max edge319.766um",
+  "3 construction snakes2227um,3.75percent of wire; unchanged taps/source/functional cycles"
+ ],
+ "wire_um": 59386.44599999989,
+ "old_rejected_wire_um": 83900,
+ "native_cells": 392,
+ "model_only_window_ps": {
+  "TT": 9.808810668992464,
+  "FF": 13.494370534736618
+ },
+ "added_functional_cycles": 0
+}
