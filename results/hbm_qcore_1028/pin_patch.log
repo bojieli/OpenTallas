@@ -1,0 +1,17 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+NEWPIN mp_isl0_ck_i 150.12 114.47999999999999
+NEWPIN mp_isl0_ck_o 152.28 114.47999999999999
+NEWPIN mp_isl0_rst_i 150.12 110.16
+NEWPIN mp_isl0_rst_o 152.28 110.16
+NEWPIN mp_isl1_ck_i 55.08 88.56
+NEWPIN mp_isl1_ck_o 57.24 88.56
+NEWPIN mp_isl1_rst_i 55.08 84.24000000000001
+NEWPIN mp_isl1_rst_o 57.24 84.24000000000001
+NEWPIN mp_isl2_ck_i 167.4 105.84
+NEWPIN mp_isl2_ck_o 169.56 105.84
+NEWPIN mp_isl2_rst_i 167.4 101.52000000000001
+NEWPIN mp_isl2_rst_o 169.56 101.52000000000001
+PG_PIN_PATCH_PASS cells_and_clock_unchanged 12_pins_on_tracks
