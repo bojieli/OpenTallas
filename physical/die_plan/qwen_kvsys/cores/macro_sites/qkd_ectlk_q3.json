@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.kv.macro_sites.v1",
+ "core": "qkd_ectlk_q3__216x172.8",
+ "note": "DIE-KV-31 10-29 (COORD 10:48 ruling q3 DRC): FLOW-CLOCK-R2 measured ALL q3 post-route hold-ECO DRT violations (V1 3855/3856, V1b 2300/2300) in the W SRAM-pin channel between the core W edge (x 4.32) and the SRAM W edges (x 15.552): 11.232 um, util 0.54 (source route DRC 0) -> 0.66 after the ECO. Width for util <= 0.54 with the ECO cells: 11.232 x 0.66 / 0.54 = 13.73 um; chosen 16.416 um = macros +5.184 um E (12 x 0.432 M3/M4/M5/site pitch, y unchanged). Same orientations/roles as the inherited q3 kit (x 15.552, MX bottom / R0 top). E edge 115.56 (+halo 119.88) < core 211.68; 0 core_infra_plan clock cells in the moved macro bodies (CHECKED, 410 cells; halo overlaps 70 -> 71, same class as today).",
+ "sites": {"ot_sram_1r1w_128x256_m1_r2c2": [[20.736, 13.26, "MX"], [20.736, 127.404, "R0"]]}
+}
