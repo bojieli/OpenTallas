@@ -93,7 +93,7 @@ hfd_vms_bank_native_q0_faces_r2048_oneclk #(.MUT(MUT),.MUT_CLOCK(DROP_CLOCK)) ne
   // Both exact addresses that exposed a122's bit15 collision (bank0/SID0).
   write_row(0,336+1024,0,dataword(1360,3,3),8'hff);flush();read_row(0,1360,0);flush();
   // Existing SECDED remains active for the newly grown regular storage.
-  fault_ok=1;newer.inner.u_ot_pr_core.bank.u_h.arr[0][0]=~newer.inner.u_ot_pr_core.bank.u_h.arr[0][0];
+  fault_ok=1;newer.u_ot_pr_core.bank.u_h.arr[0][0]=~newer.u_ot_pr_core.bank.u_h.arr[0][0];
   read_row(0,1024,0);flush();if(status[16]!==0 || status[15:0]!==16'd1)$fatal(1,"grown high data SECDED correction missing status%h",status);
   // High mirror rows are outside the retained mirror capacity: fault and suppress write.
   write_row(0,1024,1,256'hdeadbeef,8'hff);flush();if(status[17]!==1)$fatal(1,"high mirror did not reject");
