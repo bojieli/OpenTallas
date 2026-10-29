@@ -42,6 +42,21 @@ def tree_path(stations, top='u_mu_fused_n4'):
 def _int(x): return isinstance(x, int) and not isinstance(x, bool)
 
 
+def clock_qualified_cycles(leg):
+    """Opt-in physical clock term: unknown CA cycles keep the leg incomplete."""
+    if not isinstance(leg, dict) or not _int(leg.get('cycles')):
+        return None
+    cycles = leg['cycles']
+    if leg.get('clock_extra_required'):
+        extra = leg.get('clock_extra_cycles')
+        if extra is None:
+            return None
+        if not _int(extra) or extra < 0:
+            raise SystemExit('FAIL_CLOSED clock_extra_cycles must be a known nonnegative integer')
+        cycles += extra
+    return cycles
+
+
 def side_legs(side, side_name, plan_sha):
     if side.get('plan_sha256') != plan_sha:
         raise SystemExit(f"FAIL_CLOSED side {side_name} plan_sha256 {side.get('plan_sha256')} != plan {plan_sha}")
@@ -50,8 +65,10 @@ def side_legs(side, side_name, plan_sha):
         if _int(v.get('release_cycle')):
             out[k] = dict(cycles=v['release_cycle'], source=f"{tag} reset_legs.{k}.release_cycle; {v.get('release_basis', '')}")
     for k, v in side.get('provider_legs', {}).items():
-        if isinstance(v, dict) and _int(v.get('cycles')):
-            out[k] = dict(cycles=v['cycles'], source=f"{tag} provider_legs.{k} {v.get('form', '')} {v.get('status', '')}".strip())
+        cycles = clock_qualified_cycles(v)
+        if cycles is not None:
+            clock = f" clock_extra={v['clock_extra_cycles']}" if v.get('clock_extra_required') else ''
+            out[k] = dict(cycles=cycles, source=f"{tag} provider_legs.{k} {v.get('form', '')} {v.get('status', '')}{clock}".strip())
     return out
 
 
@@ -76,7 +93,8 @@ def build(plan, plan_commit, rtl, side_extra=None):
     extra.update(plan.get('reset', {}).get('delivery', {})); extra.update(plan.get('latency', {}).get('fused_legs', {}))
     for k in OTHER:
         v = extra.get(k)
-        if isinstance(v, dict) and isinstance(v.get('cycles'), int) and v.get('source'): legs[k] = v
+        cycles = clock_qualified_cycles(v)
+        if cycles is not None and v.get('source'): legs[k] = dict(v, cycles=cycles)
         else: missing.append(f"{k}: not in plan{' or side' if side_extra is not None else ''} (needs plan reset.delivery / latency.fused_legs)")
     return legs, missing
 

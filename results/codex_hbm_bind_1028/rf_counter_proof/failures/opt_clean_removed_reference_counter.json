@@ -1,0 +1,27 @@
+{
+  "checks": [
+    {
+      "mode": "exact",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "mode": "valid-bit mutant",
+      "returncode": 1,
+      "accepted": true
+    },
+    {
+      "mode": "old driver check",
+      "returncode": 0,
+      "accepted": false
+    },
+    {
+      "mode": "new driver check",
+      "returncode": 0,
+      "accepted": true
+    }
+  ],
+  "pass_all": false,
+  "added_cycles": 0,
+  "note": "Counter separation changes only private procedural iteration variables; RF data/valid sampled edges are unchanged."
+}
