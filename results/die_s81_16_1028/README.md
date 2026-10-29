@@ -126,3 +126,27 @@ DIAGNOSTIC run with --no-core-view-match-pins. Data: intel2:/srv/opentallas-scra
 - Main declared numbers are identical to the pre-CLK-INV-CAL-1 run: S81 already used --clock-cell inv2.
 - Diagnostic real-view pairs (58408): TT setup +86.16 (0 neg); FF hold -204.05 (25242 neg; worst svc_12 dsdv_svc_sx_hrow
   -> budget, damage 224); both-real worst -96.6 (273 neg). This is the same tree-skew tail as section 8.
+
+## 10. Early-tap re-estimate (CORES-EARLY-3 insertions) and sink-centroid entry (COORD dfd33a253)
+Re-estimate, CHECKED arithmetic on UNCHECKED plan-model insertions (plan_event_s11.py on plan_s10 5f014a8d3554, then est_s11.py;
+the 285/285 rerun reproduces plan_s11a 82b068249b56 byte for byte). Outputs are in intel2 die-s81-16/re391/.
+
+| tap insertion TT (rom / bf_col) | early instance taps | sink hist <50 / 50-100 / 100+ | rom early TT | bf_col early TT |
+|---|---|---|---|---|
+| go15 = plan_s11: 285 / 285 | 1696 | 1491 / 167 / 38 | 35.0 | 35.0 |
+| centre-entry slices: 390.9 / 282.5 | 1696 | 627 / 1031 / 38 | 140.9 | 32.5 |
+| sink-centroid slices: 365.2 / 194.7 | 1240 | 171 / 1031 / 38 | 115.2 | not early |
+
+The histogram moves: go15 under-advances the 864 rom taps by 80-106 ps TT. go15's rom-pair hold/setup are diagnostic, not gate.
+
+Sink-centroid entry: branch claude/die-s81-16-entry-1028@dd944eb33c, on CORES-EARLY-3 0729bf9579.
+- core_family_slice gets an opt-in family `entry` (per member). The default stays the centre, so default runs are byte-identical.
+- families_r13 dv_misc sets bf_col and rom _gb to sink_centroid. Tests: 14 PASS.
+
+Slices ran on the same census (intel1 die-s81-16-entry/w). Renders viewed.
+- bf_col: entry (225.1, 99.4) -> (425.1, 99.2). L1 legs drop from 168-220 um to 20-39 um and TT drops from 282.5 to 194.7 (FF 145.1). The window stays at
+  57.7/47.8 FAIL. It is set by the about 50 W outlier sinks on L4 legs up to 285 um, not by the entry. The converter still fails
+  (unequal-count tree model target FAIL).
+- rom _gb: entry (255.4, 110.7) -> (194.9, 123.0). TT 390.9 w22.6 -> 365.2 w19.8, FF 293.0 w22.7 -> 273.6 w17.3, so both windows are now <=20.
+  The converter fails the same way as the centre run, mp_ck_T00_br with no free legal site within 20 um of (71.28, 152.82). That is a site issue
+  on the probe floorplan, not caused by the entry.
