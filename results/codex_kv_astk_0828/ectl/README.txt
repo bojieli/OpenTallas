@@ -1,0 +1,4 @@
+Q1/Q2 current ECTL233.28x172.8 synthesis preparation, 2026-10-29.
+Owned host intel1:/srv/opentallas-scratch2/claude/codex-kv-astk-0828/{q1,q2}/kit.
+Input: existing approved parent widened wide_final kits from codex-kv-1028/ectl/wide_final; source files ot_qkd_ectl_parts.sv + qkd_static_k_issuer.sv exactly equal5eb1fb56e6 parent (SHA1ac0e1ee /3a134bf1). Applied only5eb1fb56e6 changes from those exact files. No interface/outline/macros/pin/cycle change. Source fix still awaits q0 full formal; no adoption here.
+Synthesis-only48GB8threads ot-run units1483392/1484533 EXIT0. Q1 CORE_PREFLIGHT PASS1968/1968 ports, Q2 PASS1957/1957 ports plus islandFT. Fresh Q1/Q2 LEC starts on current matching synthesized netlists. No P&R launched; no SIGNED claim.
