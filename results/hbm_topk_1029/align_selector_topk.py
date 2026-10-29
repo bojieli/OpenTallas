@@ -2,12 +2,19 @@
 """SRC OUT: align actual selector.selected_line OUT -> TOPK.selected_line IN.
 Die-owner requested zero-cycle plan delta: abutting W-local pins (TOPK MY)
 plus the existing one relay in the physical gap, with exact payload+epoch sites.
-Other pin tables, clocks, core positions/outlines, RTL, and relay count stay fixed.
+Other pins, clocks, core positions/outlines and RTL stay fixed. Default preserves
+the abstract relay; --direct removes it after same-regional-clock verification.
 """
-import argparse,copy,json,math,shutil,statistics
+import argparse,copy,json,math,shutil,statistics,hashlib
 from pathlib import Path
-ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('src',type=Path);ap.add_argument('out',type=Path);a=ap.parse_args();src=a.src.resolve();out=a.out.resolve()
+ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('src',type=Path);ap.add_argument('out',type=Path);ap.add_argument('--direct',action='store_true',help='remove obsolete abstract relay; actual source is direct and pin-registered');ap.add_argument('--clock-receipt',type=Path,help='JSON same_regional_clock=true, region, source, capture; produced by die clock owner');a=ap.parse_args();src=a.src.resolve();out=a.out.resolve()
 assert src.is_dir() and not out.exists() and src not in out.parents
+if a.direct:
+ assert a.clock_receipt, '--direct requires die clock owner receipt'
+ receipt=json.loads(a.clock_receipt.read_text())
+ assert receipt.get('same_regional_clock') is True and receipt.get('region'), 'same regional clock is not verified'
+ assert receipt.get('source')=='root.u_hb_idx__selector.selected_line' and receipt.get('capture')=='root.u_hb_idx__link.selected_line', 'clock receipt must name actual producer/capture'
+else:receipt=None
 p=json.loads((src/'die_plan.json').read_text());before=copy.deepcopy(p);changes={};rows=[]
 def xy(c,pin):
  x,y=pin['x'],pin['y'];w,h=c['outline_um'];o=c.get('orient','R0')
@@ -43,6 +50,13 @@ for tn,t in p['partition_types'].items():
   k=c['inst'];oldby={q['name']:q for q in originals[k]};assert all(q==oldby[q['name']] for q in new[k] if not q['name'].startswith('selected_line['))
   vals=[q['y']+c['origin_um'][1] for q in new[k] if q['x']<1 and q['layer']=='M4'];assert peak(vals)<=120,f'W face >6pins/um: {peak(vals)}'
   changes[c['pins_file']]=new[k]
+ if a.direct:
+  stations=[q for q in t.get('internal_stations',[]) if q.get('conn')=='u_hb_idx__link.selected_line|u_hb_idx__selector'];assert len(stations)==1
+  oldst=copy.deepcopy(stations[0]);assert len(oldst['regs_um'])==1 and oldst['bits']==2368
+  hops=[sum(abs(x-y) for x,y in zip(xy(sc,sels[sc['inst']][b]),xy(tc,sels[tc['inst']][b]))) for b in range(2368)];assert max(hops)<=405
+  t['internal_stations'].remove(stations[0])
+  rows.append({'type':tn,'actual_source':'u_hb_idx__selector.selected_line OUT','actual_capture':'u_hb_idx__link.selected_line IN','mode':'direct actual source; remove obsolete abstract relay','payload_bits':2368,'bank_cells':0,'abstract_relay_count_before':1,'abstract_relay_count_after':0,'actual_rtl_cycles_changed':0,'max_actual_endpoint_hop_um':round(max(hops),3),'pin_peaks_per_20um':{k:peak([q['y'] for q in new[k] if q['x']<1 and q['layer']=='M4']) for k in new},'clock_receipt':receipt,'old_station':oldst,'pricing':'remove one cycle ONLY where the model charged this abstract relay; do not claim actual RTL speedup'})
+  continue
  left=tc['origin_um'][0]+tc['outline_um'][0];right=sc['origin_um'][0];assert right-left>2*1.404
  centre=round((left+right)/2/.054)*.054;bank=[]
  for b,y in enumerate(ys):bank.append([round(centre-1.404+(b%2)*1.404,3),round(round((y-.135)/.27)*.27,3)])
@@ -68,4 +82,4 @@ assert rows
 shutil.copytree(src,out)
 for path,qs in changes.items():(out/path).write_text(json.dumps(qs,indent=1)+'\n')
 (out/'die_plan.json').write_text(json.dumps(p,indent=1)+'\n')
-report={'schema':'opentallas.selector_topk_abut.v1','changed_pin_tables':sorted(changes),'preserved':'all other pins including clocks, core placements, outlines, latency and relay count','rows':rows,'gate':'PLAN CANDIDATE ONLY; actual bind + geometry/kit review and GRT/STA still required'};(out/'selector_topk_abut_report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
+report={'schema':'opentallas.selector_topk_abut.v1','changed_pin_tables':sorted(changes),'preserved':('all other pins/clocks, core placements/outlines and actual RTL latency; only obsolete abstract relay removed' if a.direct else 'all other pins including clocks, core placements, outlines, latency and relay count'),'rows':rows,'gate':'PLAN CANDIDATE ONLY; actual bind + geometry/kit review and GRT/STA still required'};(out/'selector_topk_abut_report.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report,indent=2))
