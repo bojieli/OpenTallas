@@ -137,9 +137,9 @@
       "rq4": "hb_idx__op_NE__native_rq[126+:18]"
     }
   },
-  "sw_transport_master": null,
+  "sw_transport_master": "ot_hbm_idx_rootctl_index18_r2048",
   "single_row_calendar_only": true,
-  "missing_sw_transport": true,
+  "missing_sw_transport": false,
   "vm_data_publication_qualified": false,
   "actual_capture_dates_qualified": false,
   "SIGNED": false,
@@ -149,5 +149,10 @@
     "actual operand publication/image authority required",
     "multirow calendar unsupported and faults before launch",
     "physical source adoption owned by atomic plan"
+  ],
+  "sw_transport_branch": "codex/hbm-rootctl-native-0435",
+  "sw_transport_commits": [
+    "b5ff57756",
+    "2a68a3ec2"
   ]
 }

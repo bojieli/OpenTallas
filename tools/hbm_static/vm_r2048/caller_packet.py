@@ -44,10 +44,14 @@ def emit(source, abi, clocks=None, native=None, oneclk=False):
             if re.sub(r'\s+','',conns[p])!=re.sub(r'\s+','',d['source_expression']):raise ValueError('actual symbolic connection changed '+name+'.'+p)
         for p,(old,new) in {**INPUTS,**OUTPUTS}.items():
             if ports[p]['width']!=old or ports[p]['direction']!=('input' if p in INPUTS else 'output'):raise ValueError('actual field shape changed '+name+'.'+p)
+        overrides=native.get(name,{})
+        if set(overrides)-set(INPUTS):raise ValueError('unsupported native client override '+name)
         prefix='vmgrow__'+name
         wires={p:prefix+'__'+p for p in {**INPUTS,**OUTPUTS}}
         lines=[f'wire [{new-1}:0] {wires[p]};' for p,(_,new) in {**INPUTS,**OUTPUTS}.items()]
-        old=lambda p:conns[p]
+        # The legacy adapter output of an overridden input is unused; idle its input
+        # so retired producer nets cannot become dangling selected-source consumers.
+        old=lambda p:(str(INPUTS[p][0])+"'d0") if p in overrides else conns[p]
         new=lambda p:wires[p]
         adapter=[f'.legacy_rq({{{",".join(old(f"rq{i}") for i in reversed(range(5)))}}})', f'.native_rq({{{",".join(new(f"rq{i}") for i in reversed(range(5)))}}})',
                  f'.legacy_wq({{{old("wq1")},{old("wq0")}}})',f'.native_wq({{{new("wq1")},{new("wq0")}}})']
