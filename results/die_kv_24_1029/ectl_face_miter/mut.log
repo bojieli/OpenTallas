@@ -1,0 +1,10 @@
+MISMATCH edge=3 so=0 t=0 f=1 req=0
+MISMATCH edge=4 so=0 t=0 f=1 req=0
+MISMATCH edge=5 so=0 t=0 f=1 req=0
+MISMATCH edge=6 so=0 t=0 f=1 req=0
+MISMATCH edge=7 so=0 t=0 f=1 req=0
+ECTLK MITER FAIL mismatches=5789 edges=11980 kreq=2672 sc_valid=2672 lmax_changes=251 fault_edges=6291 so_fault_edges=11869
+- tb.sv:59: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.062 s; speed 194.801 us/s
+- Verilator: cpu 0.062 s on 1 threads; allocated 7 MB

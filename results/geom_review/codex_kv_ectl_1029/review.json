@@ -1,0 +1,13 @@
+{
+  "image": "/srv/opentallas-scratch/claude/wt/codex-kv-1028/results/geom_review/codex_kv_ectl_1029/planned_quarters.png",
+  "verdict": "PASS-COND q0/q3 trial placement; q1/q2 proposal only",
+  "findings": [
+    "Data pins are on S/W/E; no N-face signals cross the north SRAM row. q3 902 south,517 west,569 east, each edge below6pins/um.",
+    "Two SRAM bodies94.824x41.064 at(15.552,13.26)MX/(15.552,127.404)R0; halo4.32 leaves south8.94um, west11.232um from COREedge.",
+    "South pin captures have17 legal rows before the SRAM halo; 216um/1.404um*17 >2500 capture sites vs902 pins, before other cells.",
+    "Clock entry108,86.4 lies in broad central channel; q0clockFTcell top8.91 stays below halo edge8.94.",
+    "q3 current synth26.0% total fill: two SRAM7787.71um2+stdcell1922.58um2; fixedpin footprint remains needed.",
+    "q1/q2 four-SRAM canonical outline216 fails channel fit. Proposal233.28+exacttwo-column sites is held for base-plan delta and collector recompose.",
+    "Actual placed pin-register distances, connected r2r reach, CTS and PDN continuity will decide continuation; use actual timing and geometry before route."
+  ]
+}
