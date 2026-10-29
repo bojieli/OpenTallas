@@ -31,5 +31,25 @@ class T(unittest.TestCase):
         p = plan(); del p['latency']['lanes']['N4D_NE']
         legs, miss = B.build(p, '', {}); self.assertNotIn('down_NE', legs); self.assertTrue(any('down_NE' in m for m in miss))
 
+class TSide(unittest.TestCase):
+    def side(self, sha='x' * 64):
+        rl = {f'reset_{r}': dict(release_cycle=50, release_basis='wavefront') for r in ('SW', 'SE', 'NW', 'NE')}
+        rl['reset_root'] = dict(release_cycle=17)
+        return dict(plan_sha256=sha, reset_legs=rl, provider_legs=dict(host_to_provider=dict(length_um=6929.3),
+                    provider_to_root=dict(cycles=0), root_to_provider=dict(cycles=0)))
+    def test_side_fills_legs_host_stays_missing(self):
+        legs, miss = B.build(plan(), '', {}, B.side_legs(self.side(), 's.json', 'x' * 64))
+        self.assertEqual((legs['reset_SW']['cycles'], legs['reset_root']['cycles'], legs['provider_to_root']['cycles']), (50, 17, 0))
+        self.assertEqual([m.split(':')[0] for m in miss], ['host_to_provider'])
+    def test_side_plan_mismatch_fails_closed(self):
+        with self.assertRaises(SystemExit): B.side_legs(self.side('y' * 64), 's.json', 'x' * 64)
+    def test_plan_table_wins(self):
+        ex = {k: dict(cycles=4, source='plan') for k in B.OTHER}
+        legs, miss = B.build(plan(ex), '', {}, B.side_legs(self.side(), 's.json', 'x' * 64))
+        self.assertEqual((legs['reset_SW']['cycles'], miss), (4, []))
+    def test_bool_not_int(self):
+        s = self.side(); s['reset_legs']['reset_SW']['release_cycle'] = True
+        self.assertNotIn('reset_SW', B.side_legs(s, 's.json', 'x' * 64))
+
 if __name__ == '__main__':
     unittest.main()

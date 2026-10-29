@@ -925,5 +925,14 @@ def _finish(raw,P,bytype,pports,side):
         data_cycles_per_crossing="count_aligned" if ca else 3,physical_qualified=False,
         **({"count_aligned_cycles":{p:int(c["sched_lat"]) for p,c in ca["ports"].items()},
             "count_aligned_bind":{k:ca[k] for k in ("schema","root","pad","root_settle_cycles")}} if ca else {}))
+    if ca and ca.get("start_pins"):
+        # DIE-HEAD-21 (COORD 10-28 22:37): declare the external START-tree pins (die start stages) in the plan;
+        # landing_contract.check proves the declaration (and, given the sidecar, that it equals this start tree)
+        import landing_contract as LC
+        raw["clock"]["landing_network"]["start_tree"]=LC.start_declaration(ca["start_pins"],
+            {p["name"]:p["type"] for p in raw["partitions"]},
+            {tn:{q["name"]:q["dir"] for q in t.get("clock",{}).get("landing_contract",{}).get("pins",[])}
+             for tn,t in raw["partition_types"].items()},
+            {(e[s]["part"],e[s]["bus"]) for e in infra_edges for s in ("src","dst")})
     for t in raw["partition_types"].values():t.pop("_cland_geom",None)
     return raw,side

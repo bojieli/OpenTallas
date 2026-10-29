@@ -1,0 +1,19 @@
+START Wed Oct 28 22:57:50 PDT 2026 code 48847d906b dirty 0
+054f73bc1b8d2ddf8e50c7d3a8f87e82  /srv/opentallas-scratch2/claude/die-head-17/clk17_max_2/ca/plan.json
+fa544b31fda45d891b47dbbc68f9e72e  /srv/opentallas-scratch2/claude/die-head-17/clk17_max_2/ca/bind.json
+7aaf42f8b02df544af57da96af705ef6  /srv/opentallas-scratch2/claude/wt/tok-head-land-2/physical/die_plan/s81_head/die_plan_root_sp5_lat545.3.json
+26f78eecc65cbd7bce0d1bf80b157864  /srv/opentallas-scratch2/claude/die-head-3/part/regions_part.json
+1f732e1182591a56d1e66aee320c461d  /srv/opentallas-scratch2/claude/land-head-bind-1/observer_ctl.json
+  "types_with_root_strap": 0
+ }
+}
+compose OK types 16 -> 16 lc_err 362 boot 336
+{
+ "verdict": "PASS",
+ "severity": null,
+ "checked_bits": 3214,
+ "errors": [],
+ "reason": null
+}
+next: R=/srv/opentallas-scratch2/claude/tok-head-land-2: setup_land.sh; ot-run build.sh TT; run.sh TT pos_TT (expect DIE_SPINE PASS, GO->result 8780)
+END Wed Oct 28 23:07:08 PDT 2026
