@@ -1946,3 +1946,4 @@ CODEX: 2026-10-29 14:04 PDT reset14:02 HBMKITS12/14/18 PARKED acda2a6062e; lanes
 CODEX: 2026-10-29 14:04 PDT KVHR1355 PARKEDac441e78d; RX/TXproofs0/1/0collected; CDC_CHactualG1FAIL(no route), resetnativeDNTorderingfix788BUF/5levels/0cycles topologyPASS/noSTA; KV018source-drop/tie stillOPEN. FullCODEX-LOG.
 
 CODEX: 2026-10-29 14:04 PDT S81coresPARK0afb53fa0, collectiononly: H0ECOtiming+8.97/+1.75pairmeasurement+parentblocked; BFLECEQ61663,ROMlive; ve_sPLACELECEQ45122; BFoutline/VSWd1failuresdiagnosed. Fullpacket codex_s81_cores_20261029_1402.md. Noafterresetengineering.
+CODEX:14:03 explicitreset KVkitsPARKf6c67ee279;SYS_Cpackedfixformal476695LIVE;actualDPLprobeio_ft3/v1eightTAPhitsalready3_3,zeroresizermasterchanges;AHUB/PCLECEQ+PLACEready, noSIGNED;ASTKMMvsordinary60psdiscrepancyownedchild. FullCODEX-LOG.
