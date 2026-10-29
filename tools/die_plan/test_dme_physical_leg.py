@@ -38,8 +38,8 @@ def test_actual_gap_detour_is_priced_before_export():
     xy={i:(x,y) for i,x,y in placed};p=['b1']
     while p[-1] in parents:p.append(parents[p[-1]])
     chain=tuple(xy[i] for i in reversed(p))
-    assert chain == pl['chain']
-    assert D.chain_ps(chain) == pl['delay_ps']
+    assert chain == n[1]['physical_leg']['chain']
+    assert D.chain_ps(chain) == n[1]['physical_leg']['delay_ps']
 
 
 def test_export_rejects_changed_endpoint():
@@ -62,4 +62,15 @@ def test_physical_mode_prices_leaf_wire_even_without_snakes(monkeypatch):
     assert dn[root]['S'] == pytest.approx(D.tap_wire_ps(distance))
     monkeypatch.setattr(D,'DME_ACTUAL_MAX_UM',None)
     old,root,_=D.dme_region_tree(site,[tap],delay_rep_um=250.,snake=False)
-    assert old[root]['S'] == pytest.approx(distance)
+    assert old[root]['S'] == pytest.approx(D._man((old[root]['x'],old[root]['y']),tap[2:]))
+
+
+def test_prebuild_body_homes_have_native_r0_grid_and_no_overlaps():
+    class OpenSite:
+        def legal(self,q):return 0 <= q[0] <= 100 and 0 <= q[1] <= 100
+    p=D.physical_pack(OpenSite(),[('a',50.,50.),('b',50.,50.),('c',50.,50.)])
+    for name,x,y in p:
+        assert abs(x/.054-round(x/.054)) < 1e-6
+        assert abs(y/.54-round(y/.54)) < 1e-6
+    for i,(_,x,y) in enumerate(p):
+        for _,a,b in p[i+1:]:assert abs(a-x)>=1.62-1e-6 or abs(b-y)>=.27-1e-6
