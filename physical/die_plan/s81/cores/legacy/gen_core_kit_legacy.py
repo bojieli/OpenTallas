@@ -1292,7 +1292,17 @@ def main():
                                         + "".join(f"pair {i_} {o_}\n" for i_, o_ in pairs))
     # typed boundary roles (signoff.py boundary_controls): the clock / reset buses only, never a data pin
     roles = {**{b: "clk" for b in rootb}, **{r: "reset" for r in rsb}}
-    (kd / "core.json").write_text(json.dumps(dict(module=mod, plan_type=ptype, boundary_role=roles), indent=1) + "\n")
+    # These kits harden natural cores. Their measured insertion is published to the
+    # parent; the 250-ps partition-tap target is not an intrinsic core target.
+    # Omitting this established contract makes signoff rebind the FF IO clock to
+    # the core mean although hold repair used the declared FF reference.
+    clock_contract = dict(
+        kind="hard_core_latency", ruling="COORD 10-24",
+        target_applies_at="parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+        measured_in="KIT/signoff/signoff.json core_latency; views <module>.core.json")
+    (kd / "core.json").write_text(json.dumps(dict(
+        module=mod, plan_type=ptype, boundary_role=roles,
+        clock_contract=clock_contract), indent=1) + "\n")
     (kd / "boundary_guard_context.json").write_text(json.dumps(dict(
         schema="opentallas.core_boundary_guard_context.v1", source_core_json="core.json", clock_ports=list(rootb),
         unused_clock_ports=[], reset_ports=rsb, data_pin_exemptions=[]), indent=1) + "\n")
