@@ -92,7 +92,7 @@ Render: `png/hd_lep0N.png` (VIEWED).
 - The G0C report has no schema, hard_cores or reset error.
 - `gen.py phys --clock-landing --trial` for all 15 types, then `kit_preflight`: 14/15 PASS. hd_lep0N FAILs as in HK2
   (module_closure: `ot_s81hd_lep_pair` has no view or `_bb`; it needs the PAIR child kit). head_land_slots was
-  regenerated for all 15 kits.
+  regenerated for all 15 kits (lepwe 10-28: step removed from gen_kits_hk3.sh, it dropped the ring_start entries; kits keep gen phys land_slots/2).
 - Renders `png/<type>.png`: all 15 VIEWED. Bands sit at their faces, with no visible overlap with macros, islands or
   die-clock sites. The hd_turn_b band ends at x82.56, and the die-clock sites start at x84.72.
 - Placement-only diagnostic (ot-run on intel2, `run_diag.sh KIT place`): see the PLACEMENT section below.

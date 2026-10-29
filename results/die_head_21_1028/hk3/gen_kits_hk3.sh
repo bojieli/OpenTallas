@@ -19,4 +19,6 @@ T=$(python3 -c "import json;print(','.join(json.load(open('$O/report.json'))['ty
 python3 "$W/tools/die_plan/gen.py" phys "$O/plan_hk3.json" --out "$O/kits" --rtl-root "$W" --types $T \
   --clock-landing "$O/landed_sidecar.json" --trial
 for k in "$O"/kits/hd_*; do echo "$(basename $k): $(python3 "$W/tools/die_plan/kit_preflight.py" "$k" | tail -2 | tr "\n" " ")"; done
-python3 "$W/tools/s81_head/head_land_slots.py" "$O"/kits/hd_*
+# land_slots.json: the one written by gen phys (Landings.land_slots, land_slots/2 incl. the cland_fstart_in_* ring_start
+# entries). DIE-HEAD-21 lepwe (COORD HEAD-KITS-3 23:13): head_land_slots.py is NOT run any more - it rewrote the
+# file and dropped the start-port entries.
