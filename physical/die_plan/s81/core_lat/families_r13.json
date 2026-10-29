@@ -44,14 +44,19 @@
     "ot_s81sl_xrt3",
     "ot_s81sl_vs",
     "ot_s81sl_eg",
-    "ot_s81sl_capc5r"
+    "ot_s81sl_capc5r",
+    "ot_s81sl_ve_s",
+    "ot_s81sl_ve_m",
+    "ot_s81sl_vn_a",
+    "ot_s81sl_vn_b"
    ],
    "leaf_target": 48,
    "smax": 70.0,
    "leaf_limit": 35.0,
    "wire": "std",
    "reassign": true,
-   "reassign_cap": 1.5
+   "reassign_cap": 1.5,
+   "members_why": "DIE-S81-27 10-29 (GEOM-60 [AUTO-GEOM e1242106bbc8], METHODOLOGY 12.8a/b): ve_s/ve_m/vn_a/vn_b ce12c kits are now gen_core_kit_legacy kits (core_infra_cts.tcl hook present) with an EDGE clock pin (ve_s farthest sink 325.7 um); they take the s81sl family slice = centre M5 entry + equal-count in-core islands, as the d25 H0 kit"
   },
   {
    "name": "dsfd_bank",
@@ -102,10 +107,6 @@
    "dsdv_eng_rr_e",
    "dsdv_eng_rr_h0",
    "ot_s81sl_vsw",
-   "ot_s81sl_vn_a",
-   "ot_s81sl_vn_b",
-   "ot_s81sl_ve_m",
-   "ot_s81sl_ve_s",
    "dsfd_su_t_rxsf",
    "dsdv_idx_tx_n32",
    "ot_s81c_attn_hcore",
