@@ -51,6 +51,30 @@ def test_legacy_derived_fall_rejected(tmp_path):
         C.annotate(p,n,a)
 
 
+def test_actual_ctree_output_aliases(tmp_path):
+    p,n,a=vehicle(tmp_path)
+    n.write_text(n.read_text().replace(".Y(t)", ".Y(pn0)").replace("endmodule", "assign t = pn0;\nendmodule"))
+    out=C.annotate(p,n,a)
+    assert sum(v["late_ps"] for v in out["taps"][0]["clock_components"])==125
+    n.write_text(n.read_text().replace("assign t = pn0;", "assign t = x;\nassign x = t;"))
+    with pytest.raises(ValueError,match="assign loop"):
+        C.annotate(p,n,a)
+
+
+def test_export_actual_physical_tree_with_alias(tmp_path):
+    import trial_tap_arrivals as E
+    _,n,a=vehicle(tmp_path)
+    n.write_text(n.read_text().replace(".Y(t)", ".Y(pn0)").replace("endmodule", "assign t = pn0;\nendmodule"))
+    tree=dict(meta=dict(clock_cell="inv"),nodes={"0":dict(parent=None,kids=[1],x=0,y=0),
+              "1":dict(parent=0,kids=[],region_root="A",x=10,y=0)},
+              node_buf={"0":"i0","1":"p0"},parent_of={"p0":"i0"},sites={"i0":[0,0],"p0":[10,0]},
+              taps=[dict(port="t",part="A",node=1,driver="p0",xy=[12,0])])
+    tf=tmp_path/"tree.json";tf.write_text(json.dumps(tree))
+    out,miss=E.export(tf,a,"TT",components=True)
+    assert miss==0 and set(out["node_clock_components"])=={"h","h0","A"}
+    assert out["taps"][0]["clock_components"]
+
+
 def test_stale_proof_and_missing_node_fail(tmp_path):
     p,n,a=vehicle(tmp_path); p["taps"][0]["late_ps"]+=1
     with pytest.raises(ValueError,match="stale tap"):

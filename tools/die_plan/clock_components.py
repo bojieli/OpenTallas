@@ -6,6 +6,7 @@ Components telescope to the measured arrival, including every upstream stage.
 """
 import copy
 import math
+import re
 from pathlib import Path
 
 KEYS = ("late_ps", "early_ps", "fall_late_ps", "fall_early_ps")
@@ -20,7 +21,19 @@ def annotate(arrivals, netlist, raw):
         raise ValueError("clock components: OT_EDGES v1 measured both-edge readout required")
     T, N, F, M = read_arr(raw)
     cells, drivers = {}, {}
-    for m in D._INST_RE.finditer(Path(netlist).read_text()):
+    text = Path(netlist).read_text()
+    aliases = dict(re.findall(r"\bassign\s+(\\?[^\s;=]+)\s*=\s*(\\?[^\s;]+)\s*;", text))
+
+    def driver(net):
+        seen = set()
+        while net in aliases:
+            if net in seen:
+                raise ValueError("clock components: assign loop " + net)
+            seen.add(net)
+            net = aliases[net]
+        return drivers.get(net)
+
+    for m in D._INST_RE.finditer(text):
         pins = dict(D._PIN_RE.findall(m.group(3)))
         if "A" in pins and "Y" in pins:
             cells[m.group(2)] = (m.group(1), pins["A"], pins["Y"])
@@ -50,7 +63,7 @@ def annotate(arrivals, netlist, raw):
             raise ValueError("clock components: clock loop " + cell)
         active.add(cell)
         master, pin, _ = cells[cell]
-        parent = drivers.get(pin)
+        parent = driver(pin)
         base = arrival(parent) if parent else (0.,) * 4
         parts = dict(cell_parts(parent)) if parent else {}
         increment(parts, master, tuple(x-y for x, y in zip(arrival(cell), base)))
@@ -64,7 +77,7 @@ def annotate(arrivals, netlist, raw):
     out = copy.deepcopy(arrivals)
     for tap in out["taps"]:
         port = tap["port"]
-        cell = drivers.get(port)
+        cell = driver(port)
         if cell is None or port not in T or port not in F:
             raise ValueError(f"clock components: missing driven both-edge tap {port}")
         v = T[port][:2] + F[port]
