@@ -1,4 +1,5 @@
-"""Open a right-hand street for q_sm2 final column, preserving every hardened core.
+"""REJECTED CANDIDATE: exact demand check failed; do not adopt.
+Open a right-hand street for q_sm2 final column, preserving every hardened core.
 Estimate: 34.56um new right street; old 103.68um left street reduces to69.12um.
 No core/pin/RTL or cycle change; clock taps follow shifted cores exactly.
 usage: c25c_sm_street.py SRC OUT

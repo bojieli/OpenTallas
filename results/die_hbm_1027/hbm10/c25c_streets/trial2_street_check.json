@@ -1,0 +1,248 @@
+{
+ "summary": {
+  "enforce": true,
+  "cfg": {
+   "reach_um": 400.0,
+   "raster_um": 8.64,
+   "clock_um": 4.32,
+   "hold_um": 4.32,
+   "ft_um": 8.64,
+   "fill": 0.6,
+   "leg_max_um": 480.0,
+   "ft_pitch_um": 0.048,
+   "ft_layers": 2.0,
+   "required_width_um": 34.56,
+   "width_um": 34.56
+  },
+  "clock_builds": 0,
+  "streets": {
+   "raster_um": 8.64,
+   "width_um": 34.56,
+   "required_width_um": 34.56,
+   "street_area_mm2": 220.779,
+   "free_area_mm2": 222.872,
+   "pockets": 15,
+   "pocket_area_mm2": 0.185,
+   "demand": {
+    "mode": "per_street",
+    "base_um": 17.28,
+    "ft_um_per_bit": 0.04,
+    "max_req_ew_um": 601.24,
+    "max_req_ns_um": 3842.32,
+    "flows": 296,
+    "flow_bits": 354076
+   }
+  },
+  "cores": 1192,
+  "cores_over_reach": 16,
+  "worst_cores": [
+   {
+    "name": "NW_sm2/u_sm_t01_s",
+    "rect_um": [
+     751.68,
+     0.0,
+     1382.4,
+     1036.8
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NW_sm2/u_sm_t01_n",
+    "rect_um": [
+     751.68,
+     1036.8,
+     1382.4,
+     2246.4
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NW_sm2/u_sm_t11_s",
+    "rect_um": [
+     751.68,
+     2263.68,
+     1382.4,
+     3300.48
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NW_sm2/u_sm_t11_n",
+    "rect_um": [
+     751.68,
+     3300.48,
+     1382.4,
+     4510.08
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NE_sm2/u_sm_t00_s",
+    "rect_um": [
+     27734.4,
+     0.0,
+     28365.12,
+     1036.8
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NE_sm2/u_sm_t00_n",
+    "rect_um": [
+     27734.4,
+     1036.8,
+     28365.12,
+     2246.4
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NE_sm2/u_sm_t10_s",
+    "rect_um": [
+     27734.4,
+     2263.68,
+     28365.12,
+     3300.48
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NE_sm2/u_sm_t10_n",
+    "rect_um": [
+     27734.4,
+     3300.48,
+     28365.12,
+     4510.08
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NW_sm2/u_sm_t00_s",
+    "rect_um": [
+     34.56,
+     0.0,
+     665.28,
+     1036.8
+    ],
+    "street_dist_um": 630.72
+   },
+   {
+    "name": "NW_sm2/u_sm_t00_n",
+    "rect_um": [
+     34.56,
+     1036.8,
+     665.28,
+     2246.4
+    ],
+    "street_dist_um": 630.72
+   }
+  ],
+  "clock_legs": 0,
+  "clock_legs_over_core": 0,
+  "legs_over_core": [],
+  "points_in_core": 0,
+  "points_in_core_rows": [],
+  "unplaced": 0,
+  "counts": {
+   "street_reach": 16
+  }
+ },
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t00_s: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t00_n: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t10_s: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t10_n: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t01_s: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t01_n: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t11_s: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t11_n: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t00_s: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t00_n: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t10_s: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t10_n: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t01_s: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t01_n: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t11_s: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t11_n: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  }
+ ]
+}

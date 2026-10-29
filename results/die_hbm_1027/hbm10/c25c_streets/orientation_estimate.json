@@ -1,0 +1,8799 @@
+{
+ "status": "ESTIMATE ONLY; pin-lattice, station reach, clock coordinates and macro dataflow review required before adoption",
+ "current_bad": 48,
+ "best_bad": 48,
+ "cores_changed": 8,
+ "rows": [
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q0",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "MX",
+   "current_bad": 2,
+   "best": {
+    "orient": "MX",
+    "bad_groups": 2,
+    "bad_pins": 538,
+    "mean_cos": 0.4811,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 281,
+      "mean_cos": -0.9784
+     },
+     {
+      "port": "rr0",
+      "pins": 257,
+      "mean_cos": -0.4028
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 9,
+     "bad_pins": 805,
+     "mean_cos": 0.5206,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.2672
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.4028
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1133
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.4397
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 2,
+     "bad_pins": 538,
+     "mean_cos": 0.4811,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9784
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.4028
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 18,
+     "bad_pins": 1965,
+     "mean_cos": -0.1602,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.2672
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9936
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1133
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3709
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.4397
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9983
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 11,
+     "bad_pins": 1698,
+     "mean_cos": -0.1997,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9784
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9936
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3709
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9983
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9983
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q2",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "MX",
+   "current_bad": 1,
+   "best": {
+    "orient": "MX",
+    "bad_groups": 1,
+    "bad_pins": 281,
+    "mean_cos": 0.5853,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 281,
+      "mean_cos": -0.9346
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 8,
+     "bad_pins": 548,
+     "mean_cos": 0.5525,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.7873
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1597
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.9594
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 1,
+     "bad_pins": 281,
+     "mean_cos": 0.5853,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9346
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 17,
+     "bad_pins": 1964,
+     "mean_cos": -0.2716,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.7873
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9872
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1597
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.9594
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9971
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 10,
+     "bad_pins": 1697,
+     "mean_cos": -0.2388,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9346
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9872
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9971
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9971
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q4",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "MX",
+   "current_bad": 1,
+   "best": {
+    "orient": "MX",
+    "bad_groups": 1,
+    "bad_pins": 281,
+    "mean_cos": 0.4769,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 281,
+      "mean_cos": -0.9614
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 265,
+     "mean_cos": 0.6012,
+     "failures": [
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.9973
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.166
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 1,
+     "bad_pins": 281,
+     "mean_cos": 0.4769,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9614
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 13,
+     "bad_pins": 1664,
+     "mean_cos": 0.0103,
+     "failures": [
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.9973
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.166
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9429
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 9,
+     "bad_pins": 1680,
+     "mean_cos": -0.114,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9614
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9429
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9429
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q6",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "R180",
+   "current_bad": 2,
+   "best": {
+    "orient": "R180",
+    "bad_groups": 2,
+    "bad_pins": 282,
+    "mean_cos": 0.4743,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 281,
+      "mean_cos": -0.9262
+     },
+     {
+      "port": "wq_done0",
+      "pins": 1,
+      "mean_cos": -0.5869
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 15,
+     "bad_pins": 1698,
+     "mean_cos": -0.1121,
+     "failures": [
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "rq0",
+       "pins": 17,
+       "mean_cos": -0.5869
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9362
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.3516
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.8177
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 11,
+     "bad_pins": 1714,
+     "mean_cos": -0.2241,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9262
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "rq0",
+       "pins": 17,
+       "mean_cos": -0.5869
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9362
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.8177
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.8177
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 6,
+     "bad_pins": 266,
+     "mean_cos": 0.5863,
+     "failures": [
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.3516
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.5869
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.1199
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.1199
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 2,
+     "bad_pins": 282,
+     "mean_cos": 0.4743,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9262
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.5869
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_xq_Q_p1_bd",
+   "module": "ot_hgi_sm_xload_cl2_bdring",
+   "old": "R0",
+   "current_bad": 1,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 1,
+    "bad_pins": 2048,
+    "mean_cos": 0.0185,
+    "failures": [
+     {
+      "port": "bq_d",
+      "pins": 2048,
+      "mean_cos": -0.2811
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 1,
+     "bad_pins": 2048,
+     "mean_cos": 0.0185,
+     "failures": [
+      {
+       "port": "bq_d",
+       "pins": 2048,
+       "mean_cos": -0.2811
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 1,
+     "bad_pins": 2048,
+     "mean_cos": 0.0185,
+     "failures": [
+      {
+       "port": "bq_d",
+       "pins": 2048,
+       "mean_cos": -0.2811
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 9,
+     "bad_pins": 640,
+     "mean_cos": -0.0185,
+     "failures": [
+      {
+       "port": "bsel",
+       "pins": 26,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "lane_en_i",
+       "pins": 64,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "qe_hi",
+       "pins": 10,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qe_lo",
+       "pins": 10,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "qq_hi",
+       "pins": 256,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qq_lo",
+       "pins": 256,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "r_wsel",
+       "pins": 16,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "zhi",
+       "pins": 1,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "zlo",
+       "pins": 1,
+       "mean_cos": -0.942
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 9,
+     "bad_pins": 640,
+     "mean_cos": -0.0185,
+     "failures": [
+      {
+       "port": "bsel",
+       "pins": 26,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "lane_en_i",
+       "pins": 64,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "qe_hi",
+       "pins": 10,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qe_lo",
+       "pins": 10,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "qq_hi",
+       "pins": 256,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qq_lo",
+       "pins": 256,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "r_wsel",
+       "pins": 16,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "zhi",
+       "pins": 1,
+       "mean_cos": -0.942
+      },
+      {
+       "port": "zlo",
+       "pins": 1,
+       "mean_cos": -0.942
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q6_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 282,
+    "mean_cos": 0.6282,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 282,
+      "mean_cos": -0.5329
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 559,
+     "mean_cos": 0.5159,
+     "failures": [
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8245
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 18,
+     "bad_pins": 2794,
+     "mean_cos": -0.3301,
+     "failures": [
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.2795
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.1753
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.2795
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1753
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.1433
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8245
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9235
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 282,
+     "mean_cos": 0.6282,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.5329
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 14,
+     "bad_pins": 2517,
+     "mean_cos": -0.2178,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.5329
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.2795
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.1753
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.2795
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1753
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.1433
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9235
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9235
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_vmb_Q7_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 282,
+    "mean_cos": 0.693,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 282,
+      "mean_cos": -0.9761
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 559,
+     "mean_cos": 0.6782,
+     "failures": [
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8984
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 27,
+     "bad_pins": 3361,
+     "mean_cos": -0.426,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.2937
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.6772
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.7892
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.6772
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.7892
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.4177
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8984
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9855
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 282,
+     "mean_cos": 0.693,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.9761
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 23,
+     "bad_pins": 3084,
+     "mean_cos": -0.4112,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.9761
+      },
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.2937
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.6772
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.7892
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.6772
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.7892
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.4177
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.3399
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9855
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9855
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_calendar_Q__q0",
+   "module": "hfd_hgi_vm_calendar_f20",
+   "old": "MX",
+   "current_bad": 0,
+   "best": {
+    "orient": "R180",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.4753,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 26,
+     "bad_pins": 401,
+     "mean_cos": 0.042,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_client",
+       "pins": 24,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "calendar_v",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "client_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "hub_ring_client",
+       "pins": 6,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "response_enable",
+       "pins": 5,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "response_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "tgt_configured",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_enable",
+       "pins": 8,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "hub_ring_enable",
+       "pins": 2,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "replay_enable",
+       "pins": 1,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "replay_source",
+       "pins": 1,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "ring_tx_enable",
+       "pins": 2,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "ring_tx_source",
+       "pins": 6,
+       "mean_cos": -0.9735
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.4742,
+     "failures": []
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 26,
+     "bad_pins": 401,
+     "mean_cos": 0.0431,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_client",
+       "pins": 24,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "calendar_v",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "client_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "hub_ring_client",
+       "pins": 6,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "response_enable",
+       "pins": 5,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "response_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "tgt_configured",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_enable",
+       "pins": 8,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "hub_ring_enable",
+       "pins": 2,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "replay_enable",
+       "pins": 1,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "replay_source",
+       "pins": 1,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "ring_tx_enable",
+       "pins": 2,
+       "mean_cos": -0.9735
+      },
+      {
+       "port": "ring_tx_source",
+       "pins": 6,
+       "mean_cos": -0.9735
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.4753,
+     "failures": []
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_ring_ag__q1",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "old": "MX",
+   "current_bad": 0,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.8339,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8339,
+     "failures": []
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8243,
+     "failures": []
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 12,
+     "bad_pins": 1906,
+     "mean_cos": -0.771,
+     "failures": [
+      {
+       "port": "pr_ccw_i",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "pr_ccw_o",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "pr_cw_i",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "pr_cw_o",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "rr_d",
+       "pins": 256,
+       "mean_cos": -0.9205
+      },
+      {
+       "port": "rr_tag",
+       "pins": 3,
+       "mean_cos": -0.9205
+      },
+      {
+       "port": "rr_v",
+       "pins": 1,
+       "mean_cos": -0.9205
+      },
+      {
+       "port": "ag_d",
+       "pins": 512,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "ag_src",
+       "pins": 4,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "ag_tag",
+       "pins": 6,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "ag_v",
+       "pins": 2,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "qid",
+       "pins": 2,
+       "mean_cos": -0.784
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 12,
+     "bad_pins": 1906,
+     "mean_cos": -0.7806,
+     "failures": [
+      {
+       "port": "pr_ccw_i",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "pr_ccw_o",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "pr_cw_i",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "pr_cw_o",
+       "pins": 280,
+       "mean_cos": -0.8672
+      },
+      {
+       "port": "rr_d",
+       "pins": 256,
+       "mean_cos": -0.9205
+      },
+      {
+       "port": "rr_tag",
+       "pins": 3,
+       "mean_cos": -0.9205
+      },
+      {
+       "port": "rr_v",
+       "pins": 1,
+       "mean_cos": -0.9205
+      },
+      {
+       "port": "ag_d",
+       "pins": 512,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "ag_src",
+       "pins": 4,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "ag_tag",
+       "pins": 6,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "ag_v",
+       "pins": 2,
+       "mean_cos": -0.9811
+      },
+      {
+       "port": "qid",
+       "pins": 2,
+       "mean_cos": -0.784
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_vm__q1",
+   "module": "ot_hfd_coll_q3_vm_core",
+   "old": "R0",
+   "current_bad": 2,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 2,
+    "bad_pins": 562,
+    "mean_cos": 0.3145,
+    "failures": [
+     {
+      "port": "writer_kq6",
+      "pins": 281,
+      "mean_cos": -0.9638
+     },
+     {
+      "port": "writer_kq7",
+      "pins": 281,
+      "mean_cos": -0.9638
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 2,
+     "bad_pins": 562,
+     "mean_cos": 0.3145,
+     "failures": [
+      {
+       "port": "writer_kq6",
+       "pins": 281,
+       "mean_cos": -0.9638
+      },
+      {
+       "port": "writer_kq7",
+       "pins": 281,
+       "mean_cos": -0.9638
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 9,
+     "bad_pins": 4296,
+     "mean_cos": -0.0092,
+     "failures": [
+      {
+       "port": "vmasm_rd_il",
+       "pins": 2048,
+       "mean_cos": -0.3926
+      },
+      {
+       "port": "writer_kq0",
+       "pins": 281,
+       "mean_cos": -0.4497
+      },
+      {
+       "port": "writer_kq1",
+       "pins": 281,
+       "mean_cos": -0.4497
+      },
+      {
+       "port": "writer_kq2",
+       "pins": 281,
+       "mean_cos": -0.4808
+      },
+      {
+       "port": "writer_kq3",
+       "pins": 281,
+       "mean_cos": -0.4808
+      },
+      {
+       "port": "writer_kq4",
+       "pins": 281,
+       "mean_cos": -0.288
+      },
+      {
+       "port": "writer_kq5",
+       "pins": 281,
+       "mean_cos": -0.288
+      },
+      {
+       "port": "writer_kq6",
+       "pins": 281,
+       "mean_cos": -0.9638
+      },
+      {
+       "port": "writer_kq7",
+       "pins": 281,
+       "mean_cos": -0.9638
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 16,
+     "bad_pins": 4902,
+     "mean_cos": 0.0092,
+     "failures": [
+      {
+       "port": "writer_tkw_d",
+       "pins": 568,
+       "mean_cos": -0.9969
+      },
+      {
+       "port": "writer_tkw_v",
+       "pins": 1,
+       "mean_cos": -0.9969
+      },
+      {
+       "port": "vmasm_as_il",
+       "pins": 2048,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "vmasm_sel",
+       "pins": 24,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_fault",
+       "pins": 1,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_ingress_slot",
+       "pins": 5,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_addr",
+       "pins": 160,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data0",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data1",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data2",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data3",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_v",
+       "pins": 4,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_vm",
+       "pins": 1,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_sid",
+       "pins": 2,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_slot_owner",
+       "pins": 32,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_slot_valid",
+       "pins": 8,
+       "mean_cos": -0.3182
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 23,
+     "bad_pins": 8636,
+     "mean_cos": -0.3145,
+     "failures": [
+      {
+       "port": "vmasm_rd_il",
+       "pins": 2048,
+       "mean_cos": -0.3926
+      },
+      {
+       "port": "writer_kq0",
+       "pins": 281,
+       "mean_cos": -0.4497
+      },
+      {
+       "port": "writer_kq1",
+       "pins": 281,
+       "mean_cos": -0.4497
+      },
+      {
+       "port": "writer_kq2",
+       "pins": 281,
+       "mean_cos": -0.4808
+      },
+      {
+       "port": "writer_kq3",
+       "pins": 281,
+       "mean_cos": -0.4808
+      },
+      {
+       "port": "writer_kq4",
+       "pins": 281,
+       "mean_cos": -0.288
+      },
+      {
+       "port": "writer_kq5",
+       "pins": 281,
+       "mean_cos": -0.288
+      },
+      {
+       "port": "writer_tkw_d",
+       "pins": 568,
+       "mean_cos": -0.9969
+      },
+      {
+       "port": "writer_tkw_v",
+       "pins": 1,
+       "mean_cos": -0.9969
+      },
+      {
+       "port": "vmasm_as_il",
+       "pins": 2048,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "vmasm_sel",
+       "pins": 24,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_fault",
+       "pins": 1,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_ingress_slot",
+       "pins": 5,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_addr",
+       "pins": 160,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data0",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data1",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data2",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_data3",
+       "pins": 512,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_v",
+       "pins": 4,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_rgx_vm",
+       "pins": 1,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_sid",
+       "pins": 2,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_slot_owner",
+       "pins": 32,
+       "mean_cos": -0.3182
+      },
+      {
+       "port": "writer_slot_valid",
+       "pins": 8,
+       "mean_cos": -0.3182
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgi_Q__q0",
+   "module": "ot_hgi_coll_gq_issue",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 1028,
+    "mean_cos": 0.3553,
+    "failures": [
+     {
+      "port": "vm_rr_lo",
+      "pins": 1028,
+      "mean_cos": -0.703
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 7,
+     "bad_pins": 2123,
+     "mean_cos": -0.0121,
+     "failures": [
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.7112
+      },
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.6264
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 36,
+     "bad_pins": 2359,
+     "mean_cos": -0.1074,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.9934
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.7112
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.6264
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 1028,
+     "mean_cos": 0.3553,
+     "failures": [
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.703
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 30,
+     "bad_pins": 1264,
+     "mean_cos": 0.26,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.9934
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.101
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.7795
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgi_Q__q1",
+   "module": "ot_hgi_coll_gq_issue",
+   "old": "R0",
+   "current_bad": 1,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 1,
+    "bad_pins": 1028,
+    "mean_cos": 0.4548,
+    "failures": [
+     {
+      "port": "vm_rr_lo",
+      "pins": 1028,
+      "mean_cos": -0.5038
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 1,
+     "bad_pins": 1028,
+     "mean_cos": 0.4548,
+     "failures": [
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.5038
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 30,
+     "bad_pins": 1264,
+     "mean_cos": 0.262,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.3104
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.6938
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 7,
+     "bad_pins": 2123,
+     "mean_cos": -0.0645,
+     "failures": [
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.8638
+      },
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.7202
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 36,
+     "bad_pins": 2359,
+     "mean_cos": -0.2573,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.3104
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1735
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.8638
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.7202
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgl_Q__q0",
+   "module": "ot_hgi_coll_gq_land",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 1124,
+    "mean_cos": 0.2024,
+    "failures": [
+     {
+      "port": "vm_kq_lo",
+      "pins": 1124,
+      "mean_cos": -0.6721
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 2,
+     "bad_pins": 1636,
+     "mean_cos": -0.0363,
+     "failures": [
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.6721
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.6264
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 11,
+     "bad_pins": 1104,
+     "mean_cos": 0.0862,
+     "failures": [
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1411
+      },
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.7795
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 1124,
+     "mean_cos": 0.2024,
+     "failures": [
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.6721
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 10,
+     "bad_pins": 592,
+     "mean_cos": 0.3249,
+     "failures": [
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1411
+      },
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.7795
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgl_Q__q1",
+   "module": "ot_hgi_coll_gq_land",
+   "old": "R0",
+   "current_bad": 1,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 1,
+    "bad_pins": 1124,
+    "mean_cos": 0.3413,
+    "failures": [
+     {
+      "port": "vm_kq_lo",
+      "pins": 1124,
+      "mean_cos": -0.8178
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 1,
+     "bad_pins": 1124,
+     "mean_cos": 0.3413,
+     "failures": [
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.8178
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 10,
+     "bad_pins": 592,
+     "mean_cos": 0.6163,
+     "failures": [
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.2257
+      },
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.6938
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 3,
+     "bad_pins": 2760,
+     "mean_cos": -0.4618,
+     "failures": [
+      {
+       "port": "vm_kq_hi",
+       "pins": 1124,
+       "mean_cos": -0.7891
+      },
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.8178
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.7202
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 12,
+     "bad_pins": 2228,
+     "mean_cos": -0.1867,
+     "failures": [
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.2257
+      },
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.6887
+      },
+      {
+       "port": "vm_kq_hi",
+       "pins": 1124,
+       "mean_cos": -0.7891
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.6938
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.7202
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.6938
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_dbk_Q__q0",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "old": "R0",
+   "current_bad": 0,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.857,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8546,
+     "failures": []
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 16,
+     "bad_pins": 2410,
+     "mean_cos": 0.0306,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_fault",
+       "pins": 1,
+       "mean_cos": -0.1071
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8329
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.857,
+     "failures": []
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 16,
+     "bad_pins": 2410,
+     "mean_cos": 0.033,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_fault",
+       "pins": 1,
+       "mean_cos": -0.1071
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8329
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_dbk_Q__q1",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "old": "MY",
+   "current_bad": 0,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.8488,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8488,
+     "failures": []
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 15,
+     "bad_pins": 2409,
+     "mean_cos": 0.0408,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8247
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8036,
+     "failures": []
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 15,
+     "bad_pins": 2409,
+     "mean_cos": -0.0044,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.1141
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8247
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8247
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q0",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "R0",
+   "current_bad": 5,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 5,
+    "bad_pins": 797,
+    "mean_cos": 0.5084,
+    "failures": [
+     {
+      "port": "dq_done",
+      "pins": 1,
+      "mean_cos": -0.4635
+     },
+     {
+      "port": "kq",
+      "pins": 281,
+      "mean_cos": -0.2672
+     },
+     {
+      "port": "kq_done",
+      "pins": 1,
+      "mean_cos": -0.4635
+     },
+     {
+      "port": "rr0",
+      "pins": 257,
+      "mean_cos": -0.4028
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.2718
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 797,
+     "mean_cos": 0.5084,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.2672
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.4028
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.2718
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 6,
+     "bad_pins": 546,
+     "mean_cos": 0.4949,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9782
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.4028
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.1978
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 14,
+     "bad_pins": 1957,
+     "mean_cos": -0.1985,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.2672
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.4635
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9624
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.2718
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3709
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9985
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 15,
+     "bad_pins": 1706,
+     "mean_cos": -0.212,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9782
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9624
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3709
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.1978
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9985
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9985
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q2",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "R0",
+   "current_bad": 4,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 4,
+    "bad_pins": 540,
+    "mean_cos": 0.5063,
+    "failures": [
+     {
+      "port": "dq_done",
+      "pins": 1,
+      "mean_cos": -0.2221
+     },
+     {
+      "port": "kq",
+      "pins": 281,
+      "mean_cos": -0.7873
+     },
+     {
+      "port": "kq_done",
+      "pins": 1,
+      "mean_cos": -0.2221
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.3661
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 4,
+     "bad_pins": 540,
+     "mean_cos": 0.5063,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.7873
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.3661
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 5,
+     "bad_pins": 289,
+     "mean_cos": 0.588,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9341
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.8174
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 13,
+     "bad_pins": 1956,
+     "mean_cos": -0.2459,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.7873
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2221
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9306
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.3661
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9975
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 14,
+     "bad_pins": 1705,
+     "mean_cos": -0.1641,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9341
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9306
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.8174
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9975
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9975
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q4",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "R0",
+   "current_bad": 3,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 3,
+    "bad_pins": 531,
+    "mean_cos": 0.5358,
+    "failures": [
+     {
+      "port": "rq1",
+      "pins": 17,
+      "mean_cos": -0.9324
+     },
+     {
+      "port": "rr1",
+      "pins": 257,
+      "mean_cos": -0.9324
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.992
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 3,
+     "bad_pins": 531,
+     "mean_cos": 0.5358,
+     "failures": [
+      {
+       "port": "rq1",
+       "pins": 17,
+       "mean_cos": -0.9324
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.9324
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.992
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 5,
+     "bad_pins": 289,
+     "mean_cos": 0.5342,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9614
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.1039
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 12,
+     "bad_pins": 1947,
+     "mean_cos": -0.0621,
+     "failures": [
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "rq1",
+       "pins": 17,
+       "mean_cos": -0.9324
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.1265
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.9324
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.992
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9726
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 14,
+     "bad_pins": 1705,
+     "mean_cos": -0.0637,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9614
+      },
+      {
+       "port": "eg",
+       "pins": 276,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "pq",
+       "pins": 285,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.1265
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.1039
+      },
+      {
+       "port": "xq",
+       "pins": 276,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq2",
+       "pins": 276,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9726
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9726
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q6",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "R180",
+   "current_bad": 1,
+   "best": {
+    "orient": "R180",
+    "bad_groups": 1,
+    "bad_pins": 281,
+    "mean_cos": 0.1884,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 281,
+      "mean_cos": -0.9262
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 829,
+     "mean_cos": 0.0714,
+     "failures": [
+      {
+       "port": "rq1",
+       "pins": 17,
+       "mean_cos": -0.1671
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.6571
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.1671
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.7538
+      },
+      {
+       "port": "wq0",
+       "pins": 281,
+       "mean_cos": -0.5869
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 3,
+     "bad_pins": 579,
+     "mean_cos": 0.0325,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9262
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.6571
+      },
+      {
+       "port": "wq0",
+       "pins": 281,
+       "mean_cos": -0.5869
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 3,
+     "bad_pins": 531,
+     "mean_cos": 0.2273,
+     "failures": [
+      {
+       "port": "rq1",
+       "pins": 17,
+       "mean_cos": -0.1671
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.1671
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.7538
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 1,
+     "bad_pins": 281,
+     "mean_cos": 0.1884,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.9262
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q7",
+   "module": "hnx_vms_bank_q0_faces__vecd4ae",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 1,
+    "mean_cos": 0.4022,
+    "failures": [
+     {
+      "port": "wq_done0",
+      "pins": 1,
+      "mean_cos": -0.291
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 4,
+     "bad_pins": 572,
+     "mean_cos": 0.216,
+     "failures": [
+      {
+       "port": "rq0",
+       "pins": 17,
+       "mean_cos": -0.2628
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9877
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.2834
+      },
+      {
+       "port": "wq0",
+       "pins": 281,
+       "mean_cos": -0.2933
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 19,
+     "bad_pins": 2231,
+     "mean_cos": -0.1501,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.7309
+      },
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.1403
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.1861
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.1403
+      },
+      {
+       "port": "rq0",
+       "pins": 17,
+       "mean_cos": -0.2628
+      },
+      {
+       "port": "rq1",
+       "pins": 17,
+       "mean_cos": -0.6667
+      },
+      {
+       "port": "rq2",
+       "pins": 17,
+       "mean_cos": -0.9877
+      },
+      {
+       "port": "rq3",
+       "pins": 17,
+       "mean_cos": -0.1874
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.2834
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.6667
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1563
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.1874
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.3893
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.3893
+      },
+      {
+       "port": "wq0",
+       "pins": 281,
+       "mean_cos": -0.2933
+      },
+      {
+       "port": "wq1",
+       "pins": 281,
+       "mean_cos": -0.2859
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.1403
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.3893
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.3893
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 1,
+     "mean_cos": 0.4022,
+     "failures": [
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.291
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 16,
+     "bad_pins": 1660,
+     "mean_cos": 0.0361,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 281,
+       "mean_cos": -0.7309
+      },
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.1403
+      },
+      {
+       "port": "kq",
+       "pins": 281,
+       "mean_cos": -0.1861
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.1403
+      },
+      {
+       "port": "rq1",
+       "pins": 17,
+       "mean_cos": -0.6667
+      },
+      {
+       "port": "rq3",
+       "pins": 17,
+       "mean_cos": -0.1874
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.6667
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1563
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.1874
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.3893
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.3893
+      },
+      {
+       "port": "wq1",
+       "pins": 281,
+       "mean_cos": -0.2859
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.291
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.1403
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.3893
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.3893
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_xq_Q_p1_bd",
+   "module": "ot_hgi_sm_xload_cl2_bdring",
+   "old": "R0",
+   "current_bad": 1,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 1,
+    "bad_pins": 2048,
+    "mean_cos": 0.02,
+    "failures": [
+     {
+      "port": "bq_d",
+      "pins": 2048,
+      "mean_cos": -0.2811
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 1,
+     "bad_pins": 2048,
+     "mean_cos": 0.02,
+     "failures": [
+      {
+       "port": "bq_d",
+       "pins": 2048,
+       "mean_cos": -0.2811
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 1,
+     "bad_pins": 2048,
+     "mean_cos": 0.02,
+     "failures": [
+      {
+       "port": "bq_d",
+       "pins": 2048,
+       "mean_cos": -0.2811
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 9,
+     "bad_pins": 640,
+     "mean_cos": -0.02,
+     "failures": [
+      {
+       "port": "bsel",
+       "pins": 26,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "lane_en_i",
+       "pins": 64,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "qe_hi",
+       "pins": 10,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qe_lo",
+       "pins": 10,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "qq_hi",
+       "pins": 256,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qq_lo",
+       "pins": 256,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "r_wsel",
+       "pins": 16,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "zhi",
+       "pins": 1,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "zlo",
+       "pins": 1,
+       "mean_cos": -0.9786
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 9,
+     "bad_pins": 640,
+     "mean_cos": -0.02,
+     "failures": [
+      {
+       "port": "bsel",
+       "pins": 26,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "lane_en_i",
+       "pins": 64,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "qe_hi",
+       "pins": 10,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qe_lo",
+       "pins": 10,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "qq_hi",
+       "pins": 256,
+       "mean_cos": -0.9953
+      },
+      {
+       "port": "qq_lo",
+       "pins": 256,
+       "mean_cos": -0.9734
+      },
+      {
+       "port": "r_wsel",
+       "pins": 16,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "zhi",
+       "pins": 1,
+       "mean_cos": -0.9786
+      },
+      {
+       "port": "zlo",
+       "pins": 1,
+       "mean_cos": -0.9786
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q0_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "MY",
+   "current_bad": 2,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 2,
+    "bad_pins": 275,
+    "mean_cos": 0.3622,
+    "failures": [
+     {
+      "port": "rq2",
+      "pins": 18,
+      "mean_cos": -0.1208
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.1208
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 832,
+     "mean_cos": 0.0912,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.3106
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.1208
+      },
+      {
+       "port": "rq4",
+       "pins": 18,
+       "mean_cos": -0.747
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1208
+      },
+      {
+       "port": "rr4",
+       "pins": 257,
+       "mean_cos": -0.747
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 15,
+     "bad_pins": 1681,
+     "mean_cos": -0.1419,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.3106
+      },
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2101
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.3954
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2101
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.1152
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.3353
+      },
+      {
+       "port": "rq4",
+       "pins": 18,
+       "mean_cos": -0.747
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.1152
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.3353
+      },
+      {
+       "port": "rr4",
+       "pins": 257,
+       "mean_cos": -0.747
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.5681
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.5681
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.2305
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.5681
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.5681
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 2,
+     "bad_pins": 275,
+     "mean_cos": 0.3622,
+     "failures": [
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.1208
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1208
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 12,
+     "bad_pins": 1124,
+     "mean_cos": 0.1291,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2101
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.3954
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2101
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.1152
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.3353
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.1152
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.3353
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.5681
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.5681
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.2305
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.5681
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.5681
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q2_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "R0",
+   "current_bad": 2,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 2,
+    "bad_pins": 275,
+    "mean_cos": 0.3775,
+    "failures": [
+     {
+      "port": "rq2",
+      "pins": 18,
+      "mean_cos": -0.1672
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.1672
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 2,
+     "bad_pins": 275,
+     "mean_cos": 0.3775,
+     "failures": [
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.1672
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1672
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 10,
+     "bad_pins": 1122,
+     "mean_cos": 0.066,
+     "failures": [
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.7046
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.1632
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.2881
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.1632
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.2881
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.9794
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.9794
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.2479
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.9794
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.9794
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 3,
+     "bad_pins": 557,
+     "mean_cos": 0.2474,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.4968
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.1672
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.1672
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 11,
+     "bad_pins": 1404,
+     "mean_cos": -0.0641,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.4968
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.7046
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.1632
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.2881
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.1632
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.2881
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.9794
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.9794
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.2479
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.9794
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.9794
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q4_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "MY",
+   "current_bad": 2,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 2,
+    "bad_pins": 275,
+    "mean_cos": 0.499,
+    "failures": [
+     {
+      "port": "rq2",
+      "pins": 18,
+      "mean_cos": -0.9589
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.9589
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 7,
+     "bad_pins": 1115,
+     "mean_cos": 0.167,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.4161
+      },
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.9589
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.9589
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.9424
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 21,
+     "bad_pins": 3090,
+     "mean_cos": -0.2318,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.4161
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.1082
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.984
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.984
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.1885
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.9424
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.304
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 2,
+     "bad_pins": 275,
+     "mean_cos": 0.499,
+     "failures": [
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.9589
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.9589
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 16,
+     "bad_pins": 2250,
+     "mean_cos": 0.1001,
+     "failures": [
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.1082
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.984
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.984
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.1885
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.3366
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.304
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.304
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q6_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "MY",
+   "current_bad": 3,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 3,
+    "bad_pins": 557,
+    "mean_cos": 0.6189,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 282,
+      "mean_cos": -0.5329
+     },
+     {
+      "port": "rq2",
+      "pins": 18,
+      "mean_cos": -0.4433
+     },
+     {
+      "port": "rr2",
+      "pins": 257,
+      "mean_cos": -0.4433
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 7,
+     "bad_pins": 834,
+     "mean_cos": 0.5039,
+     "failures": [
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.4433
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.4433
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8245
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 20,
+     "bad_pins": 2527,
+     "mean_cos": -0.3176,
+     "failures": [
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.3408
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.3408
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.1365
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.3959
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8245
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9981
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 3,
+     "bad_pins": 557,
+     "mean_cos": 0.6189,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.5329
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.4433
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.4433
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 16,
+     "bad_pins": 2250,
+     "mean_cos": -0.2027,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.5329
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.3408
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.3408
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.1365
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.2403
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9981
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9981
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_vmb_Q7_mu1",
+   "module": "hnx_vms_bank_q0_faces__vec6293",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 282,
+    "mean_cos": 0.6563,
+    "failures": [
+     {
+      "port": "dq",
+      "pins": 282,
+      "mean_cos": -0.9761
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 5,
+     "bad_pins": 559,
+     "mean_cos": 0.6825,
+     "failures": [
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8984
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 27,
+     "bad_pins": 3361,
+     "mean_cos": -0.4302,
+     "failures": [
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.2937
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "rq0",
+       "pins": 18,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.8189
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.6299
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rr0",
+       "pins": 257,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.8189
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.6299
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "wq0",
+       "pins": 282,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.4172
+      },
+      {
+       "port": "wq_done0",
+       "pins": 1,
+       "mean_cos": -0.2317
+      },
+      {
+       "port": "wq_done1",
+       "pins": 1,
+       "mean_cos": -0.8984
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9999
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 282,
+     "mean_cos": 0.6563,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.9761
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 23,
+     "bad_pins": 3084,
+     "mean_cos": -0.4564,
+     "failures": [
+      {
+       "port": "dq",
+       "pins": 282,
+       "mean_cos": -0.9761
+      },
+      {
+       "port": "dq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "eg",
+       "pins": 277,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "kq",
+       "pins": 282,
+       "mean_cos": -0.2937
+      },
+      {
+       "port": "kq_done",
+       "pins": 1,
+       "mean_cos": -0.2439
+      },
+      {
+       "port": "pq",
+       "pins": 286,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "pr",
+       "pins": 266,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "rq1",
+       "pins": 18,
+       "mean_cos": -0.8189
+      },
+      {
+       "port": "rq2",
+       "pins": 18,
+       "mean_cos": -0.6299
+      },
+      {
+       "port": "rq3",
+       "pins": 18,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rr1",
+       "pins": 257,
+       "mean_cos": -0.8189
+      },
+      {
+       "port": "rr2",
+       "pins": 257,
+       "mean_cos": -0.6299
+      },
+      {
+       "port": "rr3",
+       "pins": 257,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "rslot",
+       "pins": 3,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "rslot_v",
+       "pins": 1,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "status",
+       "pins": 18,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "wq1",
+       "pins": 282,
+       "mean_cos": -0.4172
+      },
+      {
+       "port": "wslot",
+       "pins": 3,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "wslot_v",
+       "pins": 1,
+       "mean_cos": -0.5131
+      },
+      {
+       "port": "xq",
+       "pins": 277,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "xq2",
+       "pins": 277,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "xq2_done",
+       "pins": 1,
+       "mean_cos": -0.9999
+      },
+      {
+       "port": "xq_done",
+       "pins": 1,
+       "mean_cos": -0.9999
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_calendar_Q__q0",
+   "module": "hfd_hgi_vm_calendar_f20",
+   "old": "MX",
+   "current_bad": 0,
+   "best": {
+    "orient": "R180",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.4752,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 26,
+     "bad_pins": 401,
+     "mean_cos": 0.042,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_client",
+       "pins": 24,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "calendar_v",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "client_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "hub_ring_client",
+       "pins": 6,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "response_enable",
+       "pins": 5,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "response_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "tgt_configured",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_enable",
+       "pins": 8,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "hub_ring_enable",
+       "pins": 2,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "replay_enable",
+       "pins": 1,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "replay_source",
+       "pins": 1,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "ring_tx_enable",
+       "pins": 2,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "ring_tx_source",
+       "pins": 6,
+       "mean_cos": -0.973
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.4741,
+     "failures": []
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 26,
+     "bad_pins": 401,
+     "mean_cos": 0.0431,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_client",
+       "pins": 24,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "calendar_v",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "client_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "hub_ring_client",
+       "pins": 6,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "response_enable",
+       "pins": 5,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "response_seq",
+       "pins": 10,
+       "mean_cos": -0.2089
+      },
+      {
+       "port": "tgt_configured",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1805
+      },
+      {
+       "port": "bank_enable",
+       "pins": 8,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "hub_ring_enable",
+       "pins": 2,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "replay_enable",
+       "pins": 1,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "replay_source",
+       "pins": 1,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "ring_tx_enable",
+       "pins": 2,
+       "mean_cos": -0.973
+      },
+      {
+       "port": "ring_tx_source",
+       "pins": 6,
+       "mean_cos": -0.973
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.4752,
+     "failures": []
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_ring_ag__q1",
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+   "old": "MX",
+   "current_bad": 0,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.8269,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8269,
+     "failures": []
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8173,
+     "failures": []
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 12,
+     "bad_pins": 1906,
+     "mean_cos": -0.7602,
+     "failures": [
+      {
+       "port": "pr_ccw_i",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "pr_ccw_o",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "pr_cw_i",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "pr_cw_o",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "rr_d",
+       "pins": 256,
+       "mean_cos": -0.9134
+      },
+      {
+       "port": "rr_tag",
+       "pins": 3,
+       "mean_cos": -0.9134
+      },
+      {
+       "port": "rr_v",
+       "pins": 1,
+       "mean_cos": -0.9134
+      },
+      {
+       "port": "ag_d",
+       "pins": 512,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "ag_src",
+       "pins": 4,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "ag_tag",
+       "pins": 6,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "ag_v",
+       "pins": 2,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "qid",
+       "pins": 2,
+       "mean_cos": -0.8093
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 12,
+     "bad_pins": 1906,
+     "mean_cos": -0.7698,
+     "failures": [
+      {
+       "port": "pr_ccw_i",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "pr_ccw_o",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "pr_cw_i",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "pr_cw_o",
+       "pins": 280,
+       "mean_cos": -0.8497
+      },
+      {
+       "port": "rr_d",
+       "pins": 256,
+       "mean_cos": -0.9134
+      },
+      {
+       "port": "rr_tag",
+       "pins": 3,
+       "mean_cos": -0.9134
+      },
+      {
+       "port": "rr_v",
+       "pins": 1,
+       "mean_cos": -0.9134
+      },
+      {
+       "port": "ag_d",
+       "pins": 512,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "ag_src",
+       "pins": 4,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "ag_tag",
+       "pins": 6,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "ag_v",
+       "pins": 2,
+       "mean_cos": -0.9759
+      },
+      {
+       "port": "qid",
+       "pins": 2,
+       "mean_cos": -0.8093
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgi_Q__q0",
+   "module": "ot_hgi_coll_gq_issue",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 1028,
+    "mean_cos": 0.3385,
+    "failures": [
+     {
+      "port": "vm_rr_lo",
+      "pins": 1028,
+      "mean_cos": -0.703
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 7,
+     "bad_pins": 2123,
+     "mean_cos": -0.009,
+     "failures": [
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.7112
+      },
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.6264
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 36,
+     "bad_pins": 2359,
+     "mean_cos": -0.1059,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.9934
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.7112
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.6264
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 1028,
+     "mean_cos": 0.3385,
+     "failures": [
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.703
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 30,
+     "bad_pins": 1264,
+     "mean_cos": 0.2416,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.9934
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.819
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.1165
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.703
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.7795
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgi_Q__q1",
+   "module": "ot_hgi_coll_gq_issue",
+   "old": "R0",
+   "current_bad": 2,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 2,
+    "bad_pins": 1540,
+    "mean_cos": 0.2599,
+    "failures": [
+     {
+      "port": "vm_rr_lo",
+      "pins": 1028,
+      "mean_cos": -0.5038
+     },
+     {
+      "port": "ld_p_d",
+      "pins": 512,
+      "mean_cos": -0.8187
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 2,
+     "bad_pins": 1540,
+     "mean_cos": 0.2599,
+     "failures": [
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.8187
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 29,
+     "bad_pins": 752,
+     "mean_cos": 0.4501,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.3104
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.5038
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 9,
+     "bad_pins": 2891,
+     "mean_cos": -0.272,
+     "failures": [
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.8638
+      },
+      {
+       "port": "vm_rr_lo",
+       "pins": 1028,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ra_lp_data",
+       "pins": 256,
+       "mean_cos": -0.1155
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 36,
+     "bad_pins": 2103,
+     "mean_cos": -0.0819,
+     "failures": [
+      {
+       "port": "active",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_addr",
+       "pins": 12,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_data",
+       "pins": 256,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_target",
+       "pins": 8,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "cfg_v",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "configured",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_base",
+       "pins": 12,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_limit",
+       "pins": 13,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_loops",
+       "pins": 16,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "desc_v",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "done",
+       "pins": 1,
+       "mean_cos": -0.3104
+      },
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "launch_v",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "rb_lp_data",
+       "pins": 256,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_lp_we",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_kind",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_slot",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_src",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_rx_tag",
+       "pins": 6,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_read_tx",
+       "pins": 1,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_state_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_forward",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_inject",
+       "pins": 2,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_tag",
+       "pins": 3,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "rb_tx_ttl",
+       "pins": 4,
+       "mean_cos": -0.5629
+      },
+      {
+       "port": "tgt_fault",
+       "pins": 1,
+       "mean_cos": -0.2005
+      },
+      {
+       "port": "vm_rq_hi",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "vm_rq_lo",
+       "pins": 68,
+       "mean_cos": -0.5038
+      },
+      {
+       "port": "vm_rr_hi",
+       "pins": 1028,
+       "mean_cos": -0.8638
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ra_lp_data",
+       "pins": 256,
+       "mean_cos": -0.1155
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgl_Q__q0",
+   "module": "ot_hgi_coll_gq_land",
+   "old": "MY",
+   "current_bad": 1,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 1,
+    "bad_pins": 1124,
+    "mean_cos": 0.1637,
+    "failures": [
+     {
+      "port": "vm_kq_lo",
+      "pins": 1124,
+      "mean_cos": -0.6721
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 2,
+     "bad_pins": 1636,
+     "mean_cos": -0.0385,
+     "failures": [
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.6721
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.6264
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 11,
+     "bad_pins": 1104,
+     "mean_cos": 0.084,
+     "failures": [
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1569
+      },
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.6264
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.7795
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 1,
+     "bad_pins": 1124,
+     "mean_cos": 0.1637,
+     "failures": [
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.6721
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 10,
+     "bad_pins": 592,
+     "mean_cos": 0.2862,
+     "failures": [
+      {
+       "port": "fault",
+       "pins": 1,
+       "mean_cos": -0.1569
+      },
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.9035
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.7795
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.7795
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgl_Q__q1",
+   "module": "ot_hgi_coll_gq_land",
+   "old": "MX",
+   "current_bad": 4,
+   "best": {
+    "orient": "MX",
+    "bad_groups": 4,
+    "bad_pins": 524,
+    "mean_cos": 0.6256,
+    "failures": [
+     {
+      "port": "pb_d",
+      "pins": 512,
+      "mean_cos": -0.4881
+     },
+     {
+      "port": "pb_src",
+      "pins": 4,
+      "mean_cos": -0.4881
+     },
+     {
+      "port": "pb_tag",
+      "pins": 6,
+      "mean_cos": -0.4881
+     },
+     {
+      "port": "pb_v",
+      "pins": 2,
+      "mean_cos": -0.4881
+     }
+    ]
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 6,
+     "bad_pins": 1191,
+     "mean_cos": 0.3627,
+     "failures": [
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.5896
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.8187
+      }
+     ]
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 4,
+     "bad_pins": 524,
+     "mean_cos": 0.6256,
+     "failures": [
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.4881
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 12,
+     "bad_pins": 3351,
+     "mean_cos": -0.5295,
+     "failures": [
+      {
+       "port": "vm_kq_hi",
+       "pins": 1124,
+       "mean_cos": -0.9156
+      },
+      {
+       "port": "vm_kq_lo",
+       "pins": 1124,
+       "mean_cos": -0.5896
+      },
+      {
+       "port": "ld_desc",
+       "pins": 53,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_ev_k",
+       "pins": 10,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_ev_v",
+       "pins": 1,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_fire",
+       "pins": 1,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "ld_p_v",
+       "pins": 2,
+       "mean_cos": -0.8187
+      },
+      {
+       "port": "pa_d",
+       "pins": 512,
+       "mean_cos": -0.5111
+      },
+      {
+       "port": "pa_src",
+       "pins": 4,
+       "mean_cos": -0.5111
+      },
+      {
+       "port": "pa_tag",
+       "pins": 6,
+       "mean_cos": -0.5111
+      },
+      {
+       "port": "pa_v",
+       "pins": 2,
+       "mean_cos": -0.5111
+      }
+     ]
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 10,
+     "bad_pins": 2684,
+     "mean_cos": -0.2667,
+     "failures": [
+      {
+       "port": "pb_d",
+       "pins": 512,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "pb_src",
+       "pins": 4,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "pb_tag",
+       "pins": 6,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "pb_v",
+       "pins": 2,
+       "mean_cos": -0.4881
+      },
+      {
+       "port": "vm_kq_hi",
+       "pins": 1124,
+       "mean_cos": -0.9156
+      },
+      {
+       "port": "ld_p_d",
+       "pins": 512,
+       "mean_cos": -0.5743
+      },
+      {
+       "port": "pa_d",
+       "pins": 512,
+       "mean_cos": -0.5111
+      },
+      {
+       "port": "pa_src",
+       "pins": 4,
+       "mean_cos": -0.5111
+      },
+      {
+       "port": "pa_tag",
+       "pins": 6,
+       "mean_cos": -0.5111
+      },
+      {
+       "port": "pa_v",
+       "pins": 2,
+       "mean_cos": -0.5111
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_dbk_Q__q0",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "old": "R0",
+   "current_bad": 0,
+   "best": {
+    "orient": "MY",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.857,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8546,
+     "failures": []
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 16,
+     "bad_pins": 2410,
+     "mean_cos": 0.0306,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_fault",
+       "pins": 1,
+       "mean_cos": -0.1356
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8329
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.857,
+     "failures": []
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 16,
+     "bad_pins": 2410,
+     "mean_cos": 0.033,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "mv_fault",
+       "pins": 1,
+       "mean_cos": -0.1356
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.3112
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8329
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8329
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_dbk_Q__q1",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "old": "MY",
+   "current_bad": 0,
+   "best": {
+    "orient": "R0",
+    "bad_groups": 0,
+    "bad_pins": 0,
+    "mean_cos": 0.849,
+    "failures": []
+   },
+   "options": [
+    {
+     "orient": "R0",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.849,
+     "failures": []
+    },
+    {
+     "orient": "MX",
+     "bad_groups": 15,
+     "bad_pins": 2409,
+     "mean_cos": 0.0405,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8256
+      }
+     ]
+    },
+    {
+     "orient": "MY",
+     "bad_groups": 0,
+     "bad_pins": 0,
+     "mean_cos": 0.8003,
+     "failures": []
+    },
+    {
+     "orient": "R180",
+     "bad_groups": 15,
+     "bad_pins": 2409,
+     "mean_cos": -0.0081,
+     "failures": [
+      {
+       "port": "busy",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "mv_done",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "mv_src",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "quiet",
+       "pins": 1,
+       "mean_cos": -0.1155
+      },
+      {
+       "port": "wa",
+       "pins": 12,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_fill_bank",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_fill_epoch",
+       "pins": 16,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_fill_start",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_ready",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_bank",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_base",
+       "pins": 32,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_epoch",
+       "pins": 16,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_sectors",
+       "pins": 12,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wb_reserve_v",
+       "pins": 1,
+       "mean_cos": -0.8256
+      },
+      {
+       "port": "wd",
+       "pins": 2312,
+       "mean_cos": -0.8256
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

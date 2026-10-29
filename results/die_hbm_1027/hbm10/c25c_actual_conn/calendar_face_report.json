@@ -1,0 +1,47 @@
+{
+ "cycles_added": 0,
+ "shared_master_changes": [
+  {
+   "module": "hfd_hgi_vms_glue_nw_t",
+   "source_pins": "cores/hfd_hgi_vms_glue_nw_t__777.6x1529.28__c19__c20f_777.6x1635.55.json",
+   "new_pins": "cores/hfd_hgi_vms_glue_nw_t__777.6x1529.28__c19__c20f_777.6x1635.55__c25c_face.json",
+   "ports": {
+    "bank_client": "S",
+    "bank_enable": "S",
+    "client_seq": "S",
+    "hub_ring_client": "S",
+    "hub_ring_enable": "S",
+    "replay_enable": "S",
+    "replay_source": "S",
+    "response_enable": "S",
+    "response_seq": "S",
+    "ring_tx_enable": "S",
+    "ring_tx_source": "S"
+   },
+   "pins_changed_face": 35,
+   "pins_total": 20160
+  }
+ ],
+ "station_endpoint_changes": [
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_vms_Q__q0",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_vms_Q__q1",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_vms_Q__q0",
+   "exact_pin_endpoints_updated": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_vms_Q__q1",
+   "exact_pin_endpoints_updated": 0
+  }
+ ]
+}

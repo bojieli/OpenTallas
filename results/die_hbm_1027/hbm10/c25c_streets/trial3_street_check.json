@@ -1,0 +1,176 @@
+{
+ "summary": {
+  "enforce": true,
+  "cfg": {
+   "reach_um": 400.0,
+   "raster_um": 8.64,
+   "clock_um": 4.32,
+   "hold_um": 4.32,
+   "ft_um": 8.64,
+   "fill": 0.6,
+   "leg_max_um": 480.0,
+   "ft_pitch_um": 0.048,
+   "ft_layers": 2.0,
+   "required_width_um": 34.56,
+   "width_um": 34.56
+  },
+  "clock_builds": 0,
+  "streets": {
+   "raster_um": 8.64,
+   "width_um": 34.56,
+   "required_width_um": 34.56,
+   "street_area_mm2": 221.631,
+   "free_area_mm2": 222.949,
+   "pockets": 15,
+   "pocket_area_mm2": 0.185,
+   "demand": {
+    "mode": "per_street",
+    "base_um": 17.28,
+    "ft_um_per_bit": 0.04,
+    "max_req_ew_um": 601.24,
+    "max_req_ns_um": 3842.32,
+    "flows": 296,
+    "flow_bits": 354076
+   }
+  },
+  "cores": 1192,
+  "cores_over_reach": 4,
+  "worst_cores": [
+   {
+    "name": "NE_sm2/u_sm_t07_s",
+    "rect_um": [
+     22593.6,
+     0.0,
+     23224.32,
+     1036.8
+    ],
+    "street_dist_um": 639.36
+   },
+   {
+    "name": "NW_sm2/u_sm_t07_s",
+    "rect_um": [
+     5175.36,
+     0.0,
+     5806.08,
+     1036.8
+    ],
+    "street_dist_um": 630.72
+   },
+   {
+    "name": "NW_sm2/u_sm_t07_n",
+    "rect_um": [
+     5175.36,
+     1036.8,
+     5806.08,
+     2246.4
+    ],
+    "street_dist_um": 630.72
+   },
+   {
+    "name": "NE_sm2/u_sm_t07_n",
+    "rect_um": [
+     22593.6,
+     1036.8,
+     23224.32,
+     2246.4
+    ],
+    "street_dist_um": 630.72
+   },
+   {
+    "name": "NW_io/u_ep_N0",
+    "rect_um": [
+     233.28,
+     7153.92,
+     475.2,
+     7551.36
+    ],
+    "street_dist_um": 397.44
+   },
+   {
+    "name": "NW_spb0/u_ep_S0",
+    "rect_um": [
+     5987.52,
+     1088.64,
+     6229.44,
+     1486.08
+    ],
+    "street_dist_um": 397.44
+   },
+   {
+    "name": "NE_io/u_ep_N2",
+    "rect_um": [
+     27950.4,
+     7153.92,
+     28192.32,
+     7551.36
+    ],
+    "street_dist_um": 397.44
+   },
+   {
+    "name": "NE_spb0/u_ep_S0",
+    "rect_um": [
+     22170.24,
+     1088.64,
+     22412.16,
+     1486.08
+    ],
+    "street_dist_um": 397.44
+   },
+   {
+    "name": "NW_hub/u_hb_vms_Q__q0",
+    "rect_um": [
+     7551.36,
+     7395.84,
+     8328.96,
+     9031.392
+    ],
+    "street_dist_um": 388.8
+   },
+   {
+    "name": "NW_hub/u_hb_vms_Q__q1",
+    "rect_um": [
+     11802.24,
+     7257.6,
+     12579.84,
+     8893.152
+    ],
+    "street_dist_um": 388.8
+   }
+  ],
+  "clock_legs": 0,
+  "clock_legs_over_core": 0,
+  "legs_over_core": [],
+  "points_in_core": 0,
+  "points_in_core_rows": [],
+  "unplaced": 0,
+  "counts": {
+   "street_reach": 4
+  }
+ },
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t07_s: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NW_sm2/u_sm_t07_n: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t07_s: farthest point 639 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "street_reach",
+   "msg": "core NE_sm2/u_sm_t07_n: farthest point 631 um from the street network > 400 um (12.10c: open a street beside it / move it onto the street grid)",
+   "g0c": true
+  }
+ ]
+}

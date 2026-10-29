@@ -1,0 +1,28 @@
+{
+ "verdict": "FAIL FOR ROUTE",
+ "physical_phy_rect_type_um": [
+  103.68,
+  0,
+  703.728,
+  1050
+ ],
+ "rows": [
+  {
+   "conn": "u_lk_S0.tx|u_ep_S0",
+   "stage": 0,
+   "xy": [
+    157.608,
+    639.36
+   ]
+  },
+  {
+   "conn": "u_ep_S0.sd_rx|u_lk_S0",
+   "stage": 1,
+   "xy": [
+    246.24,
+    920.16
+   ]
+  }
+ ],
+ "unique_sites": 2
+}

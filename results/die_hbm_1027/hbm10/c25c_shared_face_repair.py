@@ -9,6 +9,11 @@ D,O,F=map(Path,sys.argv[1:4]);P=json.load(open(D/'die_plan.json'));A=json.load(o
 assert A['source_sha256']==hashlib.sha256((D/'die_plan.json').read_bytes()).hexdigest(),'partner census belongs to a different plan'
 mods={'hfd_hgi_vms_glue_nw_t','hnx_vms_bank_q0_faces__vecd4ae'}
 choices={(q['module'],q['port']):q['best_shared_face'] for q in A['master_port_constraints'] if q['module'] in mods and q['feasible_non_away']}
+calendar_only='--calendar-only' in sys.argv[4:]
+calendar_ports={'bank_client','bank_enable','client_seq','hub_ring_client','hub_ring_enable','replay_enable','replay_source','response_enable','response_seq','ring_tx_enable','ring_tx_source'}
+if calendar_only:
+ mods={'hfd_hgi_vms_glue_nw_t'}
+ choices={k:v for k,v in choices.items() if k[0] in mods and k[1] in calendar_ports}
 report={'cycles_added':0,'shared_master_changes':[],'station_endpoint_changes':[]}
 cache={}
 for tn,t in P['partition_types'].items():

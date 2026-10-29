@@ -1,0 +1,566 @@
+{
+ "status": "PARTIAL: exact selected-RTL direct pin links; missing glue paths and absent source producers stay OPEN",
+ "graph_sha256": "f50be423f6070508129d43e97135606a10a249a8c0d3acc58d12a36bedb7356d",
+ "source_plan_sha256": "4180334c6a358024df62a0ab56bcaa28d70337807d37509db612bfbad4292d92",
+ "removed_virtual_base_entries": [
+  {
+   "type": "q_hub_ne",
+   "instance": "u_calendar_Q",
+   "ports": 30
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_cij_Q",
+   "ports": 15
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_cxij_Q_q",
+   "ports": 12
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_coll_Q_body_n2",
+   "ports": 60
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_coll_Q_reduce",
+   "ports": 1
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_coll_Q_ring_ag",
+   "ports": 8
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_coll_Q_vm",
+   "ports": 25
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_dbk_Q",
+   "ports": 22
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_idx__op_Q",
+   "ports": 5
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_idx__q_Q",
+   "ports": 9
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_idx__qctl_Q",
+   "ports": 13
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_quant_Q__u_dec",
+   "ports": 8
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hb_vms_Q",
+   "ports": 81
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollgi_Q",
+   "ports": 32
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_hcollgl_Q",
+   "ports": 8
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_pgp_Q",
+   "ports": 13
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_sfup_Q",
+   "ports": 23
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_sfus_Q",
+   "ports": 98
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_smw_Q",
+   "ports": 46
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_sucore_Q",
+   "ports": 18
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_wbk_Q",
+   "ports": 12
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_xl_Q_ctl",
+   "ports": 42
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_calendar_Q",
+   "ports": 30
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_cij_Q",
+   "ports": 15
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_cxij_Q_q",
+   "ports": 12
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_coll_Q_body_core",
+   "ports": 55
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_coll_Q_edge",
+   "ports": 20
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_coll_Q_reduce",
+   "ports": 1
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_coll_Q_ring_ag",
+   "ports": 8
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_coll_Q_vm",
+   "ports": 13
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_dbk_Q",
+   "ports": 22
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_idx__op_Q",
+   "ports": 5
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_idx__q_Q",
+   "ports": 9
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_idx__qctl_Q",
+   "ports": 13
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_quant_Q__u_dec",
+   "ports": 8
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hb_vms_Q",
+   "ports": 81
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollgi_Q",
+   "ports": 32
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_hcollgl_Q",
+   "ports": 8
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_pgp_Q",
+   "ports": 13
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_sfup_Q",
+   "ports": 23
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_sfus_Q",
+   "ports": 98
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_smw_Q",
+   "ports": 46
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_sucore_Q",
+   "ports": 18
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_wbk_Q",
+   "ports": 12
+  },
+  {
+   "type": "q_hub_nw",
+   "instance": "u_xl_Q_ctl",
+   "ports": 42
+  }
+ ],
+ "dropped_unverified_links": 3852,
+ "direct_edge_groups": 3267,
+ "missing_actual_providers": [
+  {
+   "type": "q_hub_ne",
+   "core": "u_cij_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_cxij_Q_q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_body_n2__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_body_n2__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_reduce__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_reduce__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_ring_ag__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_ring_ag__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_vm__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_coll_Q_vm__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_dbk_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_quant_Q__u_dec__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hb_quant_Q__u_dec__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgi_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_hcollgl_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s0__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s0__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s1__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s1__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s2__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s2__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s3__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s3__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s4__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s4__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s5__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s5__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s6__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s6__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s7__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_mu_keybuf_0_s7__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_pgp_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_sfup_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_sfus_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_smw_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_sucore_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_wbk_Q__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "core": "u_xl_Q_ctl__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_cij_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_cxij_Q_q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_body_core__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_body_core__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_edge__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_edge__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_reduce__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_reduce__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_ring_ag__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_ring_ag__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_vm__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_coll_Q_vm__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_dbk_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hb_quant_Q__u_dec__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgi_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_hcollgl_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s0__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s0__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s1__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s1__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s2__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s2__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s3__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s3__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s4__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s4__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s5__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s5__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s6__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s6__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s7__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_mu_keybuf_0_s7__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_pgp_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_sfup_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_sfus_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_smw_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_sucore_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_wbk_Q__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "core": "u_xl_Q_ctl__q0"
+  }
+ ],
+ "unsupported_core_ports": [
+  {
+   "type": "q_hub_ne",
+   "instance": "u_svg_Q0",
+   "port": "run_done"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_svg_Q1",
+   "port": "run_done"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_svg_Q2",
+   "port": "run_done"
+  },
+  {
+   "type": "q_hub_ne",
+   "instance": "u_svg_Q3",
+   "port": "run_done"
+  }
+ ]
+}

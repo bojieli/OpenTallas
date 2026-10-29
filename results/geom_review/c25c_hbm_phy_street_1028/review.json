@@ -1,0 +1,13 @@
+{
+ "picture": "results/die_hbm_1027/hbm10/c25c_streets/phy_street_review.png",
+ "viewed": true,
+ "street_gate": "PASS0/1192overreach cores (nativechecker,notindependent)",
+ "route_verdict": "FAIL:2signalrelaycentresinsidefullphysicalPHYenvelope",
+ "findings": [
+  "Complete103.68um PHY/halo/PG/bump move opens40.04um minimum street without alteringSM array oroutline; none of3 rejectedpartial moves is adopted.",
+  "Fullmacro footprint1050um exceeds digitalhardcoreheight600.48um; two inherited relay sites remain inside analogPHYenvelope. Recompose actualEP/LK port paths and legalbays before any P&R.",
+  "PGdomain/bump windows translated coherently; PGmustbesolvedagain before GRT.",
+  "Core-conns inherited virtual bases are not currentsource; source-selected exact q0/q1 mapping must drive further placement and pin repair."
+ ],
+ "cycles_added": 0
+}

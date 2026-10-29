@@ -1,0 +1,109 @@
+{
+ "source_sha256": "4180334c6a358024df62a0ab56bcaa28d70337807d37509db612bfbad4292d92",
+ "type": "q_spb0",
+ "core": "u_lk_S0",
+ "old_origin": [
+  0.0,
+  34.56
+ ],
+ "new_origin": [
+  103.68,
+  34.56
+ ],
+ "reserved_boundary_street_um": 40.04,
+ "phy_shift_um": 103.68,
+ "pg_margin_um": 63.64,
+ "requires": "PG solve + full G0 and core-station physical PHY access review before route",
+ "instances": [
+  "NW_spb0",
+  "NE_spb0"
+ ],
+ "station_updates": [
+  {
+   "conn": "u_lk_S0.rx|u_ep_S0",
+   "endpoint": "from_um",
+   "before": [
+    151.864,
+    635.021
+   ],
+   "after": [
+    255.544,
+    635.021
+   ]
+  },
+  {
+   "conn": "u_lk_S0.st|u_ep_S0",
+   "endpoint": "from_um",
+   "before": [
+    2.592,
+    635.021
+   ],
+   "after": [
+    106.272,
+    635.021
+   ]
+  },
+  {
+   "conn": "u_lk_S0.tx|u_ep_S0",
+   "endpoint": "from_um",
+   "before": [
+    449.462,
+    635.021
+   ],
+   "after": [
+    553.142,
+    635.021
+   ]
+  },
+  {
+   "conn": "u_lk_S0.tx|u_ep_S0",
+   "relay": 0,
+   "before": [
+    97.128,
+    639.36
+   ],
+   "after": [
+    157.608,
+    639.36
+   ]
+  },
+  {
+   "conn": "u_ep_S0.sd_rx|u_lk_S0",
+   "endpoint": "to_um",
+   "before": [
+    248.61,
+    635.04
+   ],
+   "after": [
+    352.29,
+    635.04
+   ]
+  },
+  {
+   "conn": "u_ep_S0.sd_st|u_lk_S0",
+   "endpoint": "to_um",
+   "before": [
+    186.408,
+    635.04
+   ],
+   "after": [
+    290.088,
+    635.04
+   ]
+  },
+  {
+   "conn": "u_ep_S0.sd_tx|u_lk_S0",
+   "endpoint": "to_um",
+   "before": [
+    366.444,
+    635.04
+   ],
+   "after": [
+    470.124,
+    635.04
+   ]
+  }
+ ],
+ "cycles_added": 0,
+ "side_clock_tables": "regenerate from composed plan; centre tap moved34.56um with core"
+}
