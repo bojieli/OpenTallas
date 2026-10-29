@@ -43,6 +43,9 @@ def covered(r,holes):
 def main():
     p=argparse.ArgumentParser()
     for a in ('failures','fixed-wires','cell-windows','geometry','power-access','pg','clock-base','out'):p.add_argument('--'+a,required=True)
+    p.add_argument('--reserved-metal',action='append',default=[],help='Additional immutable physical PG/access rectangles in um')
+    p.add_argument('--existing-clock-plan',help='Preserve existing qualified per-base geometry and repair only its failures; replaces provisional straight columns')
+    p.add_argument('--max-jog',type=float,default=.7,help='Maximum lateral M6 jog; exact island coverage still mandatory')
     p.add_argument('--all-bases',action='store_true',help='Plan all actual clock-cell pin bases from fixed wires, including zero-jog direct access')
     p.add_argument('--joint-clock',action='store_true',help='Choose clock access before rebuilding PG; emit explicit PG reservation')
     a=p.parse_args();out=Path(a.out);out.mkdir(parents=True,exist_ok=True)
@@ -71,7 +74,7 @@ def main():
                 unique[key]=dict(cell=key[0],pin=key[1],net=w['name'],base_xy_um=s['xy'])
         failures=list(unique.values())
         print('ALL_ACTUAL_BASES',len(failures),flush=True)
-    for w in wires:
+    for w in ([] if a.existing_clock_plan else wires):
         for s in w['stacks']:
             x,y=s.get('m6_entry_xy',s['xy']);ix.add([w['name'],'M7',x-.016,y-8.667,x+.016,y+8.667])
     del wires,base
@@ -80,14 +83,26 @@ def main():
     nd=dict(width=.08,space=.32,rf=.5,cf=1.15);router=C128.TrackRouter(nd,'VSS',DCM.DEFAULT_TRACKS,8.64)
     router.reserve(C128.pg_shapes(json.loads(Path(a.pg).read_text())))
     router.reserve(C128.pg_shapes(power));del power
+    for file in a.reserved_metal:
+        shapes=json.loads(Path(file).read_text())
+        for shape in shapes:ix.add(shape)
+        router.reserve(C128.pg_shapes(shapes))
     records=[];bad=[]
+    if a.existing_clock_plan:
+        if not a.joint_clock:raise ValueError('Repair of an all-base clock reservation requires --joint-clock')
+        records=json.loads(Path(a.existing_clock_plan).read_text())['records']
+        for r in records:
+            for shape in r['geometry']:ix.add(shape)
+            bx,y=r['backbone_xy_um'][0],r['m8_witness_y_um']
+            router.reserve(C128.pg_shapes([[r['net'],'M8',bx-.096,y-.04,bx+.096,y+.04]]))
+        print('PRESERVED_CLOCK_BASES',len(records),flush=True)
     for n,f in enumerate(failures):
         cell,pin,net=f['cell'],f['pin'],f['net'];x,y=f['base_xy_um'];parts=holes[cell.removeprefix('ck_')]
         if any(q['in_core'] for q in parts):raise ValueError('clock island intersects hardcore')
-        hs=[q['rect_die_um'] for q in parts];columns=sorted({round(phase+k*pitch,6) for k in range(math.ceil((x-.7-phase)/pitch),math.floor((x+.7-phase)/pitch)+1)},key=lambda q:abs(q-x))
+        hs=[q['rect_die_um'] for q in parts];columns=sorted({round(phase+k*pitch,6) for k in range(math.ceil((x-a.max_jog-phase)/pitch),math.floor((x+a.max_jog-phase)/pitch)+1)},key=lambda q:abs(q-x))
         ys=sorted({round(.04+k*.08,6) for k in range(math.ceil((min(h[1] for h in hs)+.027-.04)/.08),math.floor((max(h[3] for h in hs)-.027-.04)/.08)+1)},key=lambda q:abs(q-y));found=None
         for bx in columns:
-            if abs(bx-x)<.064 and not a.all_bases:continue
+            if abs(bx-x)<.064 and not (a.all_bases or a.existing_clock_plan):continue
             local=[[net,'M6',min(x,bx)-.016,y-.016,max(x,bx)+.016,y+.016],
                    [net,'M6',bx-.035,y-.016,bx+.035,y+.016],
                    [net,'M7',bx-.016,y-.036,bx+.016,y+.036]]
@@ -109,7 +124,7 @@ def main():
         else:bad.append(f)
         if n%50==0:print(f'JOG_PROGRESS {n+1}/{len(failures)} pass={len(records)} fail={len(bad)}',flush=True)
     result=dict(status='FAIL' if bad else 'PASS_GEOMETRY',physical_route=False,records=records,failures=bad,
-                clock_width_um=.08,tree_spacing_um=.32,m6_width_um=.032,max_jog_um=.7,
+                clock_width_um=.08,tree_spacing_um=.32,m6_width_um=.032,max_jog_um=a.max_jog,
                 note='No physical route; full tree replan and exact access census/render required')
     if a.joint_clock:
         reserved=[]

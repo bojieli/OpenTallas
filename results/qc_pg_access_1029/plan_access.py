@@ -112,7 +112,7 @@ for gi,(n,x0,y0,x1,y1,members) in enumerate(groups):
     for k in binrect(r):new[n,ly][k].append(r)
   paths.append(dict(net=n,members=members,rail=[x0,y0,x1,y1],stack=[x,y],m8=[x,yy,xx,yy]))
  if gi%1000==0:print(gi,'ok',len(paths),'fail',len(failed),flush=True)
-json.dump(dict(source=g['source'],paths=paths,vias_dbu=vias,failed=failed,dbu=D),open(out/'access_plan.json','w'),separators=(',',':'))
+json.dump(dict(source=g['source'],paths=paths,vias_dbu=vias,tech_vias_dbu=tech,failed=failed,dbu=D),open(out/'access_plan.json','w'),separators=(',',':'))
 json.dump([[n,ly,*[v/D for v in r]] for n,ly,*r in shapes],open(out/'reserved_access.json','w'),separators=(',',':'))
 s=dict(groups=len(groups),attempted=len(paths)+len(failed),connected_groups=len(paths),connected_contacts=sum(len(q['members']) for q in paths),failed_groups=len(failed),routing_rectangles=len(shapes),vias=len(vias),verdict='GEOMETRY_CANDIDATE' if not failed else 'INCOMPLETE_NO_MATERIALIZATION')
 s['owned_grid_obstructions']=owned_grid_obs;s['rejections']=dict(reasons);s['obstacle_examples']=examples
