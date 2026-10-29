@@ -1,0 +1,919 @@
+{
+ "source_asbuilt_sha256": "062ef0c41db92b2c3b89369cdffd96f2cb2dbdee2ec0f4c3050f4652123f3dec",
+ "die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+ "verdict": "PASS_SOURCE_NORM_NETWORK",
+ "transport": {
+  "nx_boundary": [
+   {
+    "slice": "u_s_0S",
+    "sid": 0,
+    "xg": "u_s_0S.u_sl.u_xg",
+    "port": "ri_w",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_s_0S.u_lep",
+    "drv_ports": [
+     "ri"
+    ],
+    "age_edges": 2
+   },
+   {
+    "slice": "u_s_0S",
+    "sid": 0,
+    "xg": "u_s_0S.u_sl.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_1S.u_lp.u_xg",
+    "from_slice": "u_s_1S",
+    "from_sid": 2,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_0S",
+    "sid": 0,
+    "xg": "u_s_0S.u_sl.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_0N.u_sl.u_xg",
+    "from_slice": "u_s_0N",
+    "from_sid": 1,
+    "from_port": "vo",
+    "age_edges": 31,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_0N",
+    "sid": 1,
+    "xg": "u_s_0N.u_sl.u_xg",
+    "port": "ri_w",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_s_0N.u_hbc",
+    "drv_ports": [
+     "to_local"
+    ],
+    "age_edges": 3
+   },
+   {
+    "slice": "u_s_0N",
+    "sid": 1,
+    "xg": "u_s_0N.u_sl.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_1N.u_lp.u_xg",
+    "from_slice": "u_s_1N",
+    "from_sid": 3,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_0N",
+    "sid": 1,
+    "xg": "u_s_0N.u_sl.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_0S.u_sl.u_xg",
+    "from_slice": "u_s_0S",
+    "from_sid": 0,
+    "from_port": "vo",
+    "age_edges": 36,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_1S",
+    "sid": 2,
+    "xg": "u_s_1S.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_0S.u_sl.u_xg",
+    "from_slice": "u_s_0S",
+    "from_sid": 0,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_1S",
+    "sid": 2,
+    "xg": "u_s_1S.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_2S.u_lp.u_xg",
+    "from_slice": "u_s_2S",
+    "from_sid": 4,
+    "from_port": "ro_w",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_1S",
+    "sid": 2,
+    "xg": "u_s_1S.u_lp.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_1N.u_lp.u_xg",
+    "from_slice": "u_s_1N",
+    "from_sid": 3,
+    "from_port": "vo",
+    "age_edges": 31,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_1N",
+    "sid": 3,
+    "xg": "u_s_1N.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_0N.u_sl.u_xg",
+    "from_slice": "u_s_0N",
+    "from_sid": 1,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_1N",
+    "sid": 3,
+    "xg": "u_s_1N.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_2N.u_lp.u_xg",
+    "from_slice": "u_s_2N",
+    "from_sid": 5,
+    "from_port": "ro_w",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_1N",
+    "sid": 3,
+    "xg": "u_s_1N.u_lp.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_1S.u_lp.u_xg",
+    "from_slice": "u_s_1S",
+    "from_sid": 2,
+    "from_port": "vo",
+    "age_edges": 34,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_2S",
+    "sid": 4,
+    "xg": "u_s_2S.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_1S.u_lp.u_xg",
+    "from_slice": "u_s_1S",
+    "from_sid": 2,
+    "from_port": "ro_e",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_2S",
+    "sid": 4,
+    "xg": "u_s_2S.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_3S.u_sl.u_xg",
+    "from_slice": "u_s_3S",
+    "from_sid": 6,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_2S",
+    "sid": 4,
+    "xg": "u_s_2S.u_lp.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_2N.u_lp.u_xg",
+    "from_slice": "u_s_2N",
+    "from_sid": 5,
+    "from_port": "vo",
+    "age_edges": 36,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_2N",
+    "sid": 5,
+    "xg": "u_s_2N.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_1N.u_lp.u_xg",
+    "from_slice": "u_s_1N",
+    "from_sid": 3,
+    "from_port": "ro_e",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_2N",
+    "sid": 5,
+    "xg": "u_s_2N.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_3N.u_slice.u_xg",
+    "from_slice": "u_s_3N",
+    "from_sid": 7,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_2N",
+    "sid": 5,
+    "xg": "u_s_2N.u_lp.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_2S.u_lp.u_xg",
+    "from_slice": "u_s_2S",
+    "from_sid": 4,
+    "from_port": "vo",
+    "age_edges": 36,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_3S",
+    "sid": 6,
+    "xg": "u_s_3S.u_sl.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_2S.u_lp.u_xg",
+    "from_slice": "u_s_2S",
+    "from_sid": 4,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_3S",
+    "sid": 6,
+    "xg": "u_s_3S.u_sl.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_4S.u_lp.u_xg",
+    "from_slice": "u_s_4S",
+    "from_sid": 8,
+    "from_port": "ro_w",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_3S",
+    "sid": 6,
+    "xg": "u_s_3S.u_sl.u_xg",
+    "port": "vi",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_gunit.u_l3",
+    "drv_ports": [
+     "vo_s"
+    ],
+    "age_edges": 60
+   },
+   {
+    "slice": "u_s_3N",
+    "sid": 7,
+    "xg": "u_s_3N.u_slice.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_2N.u_lp.u_xg",
+    "from_slice": "u_s_2N",
+    "from_sid": 5,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_3N",
+    "sid": 7,
+    "xg": "u_s_3N.u_slice.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_4N.u_lp.u_xg",
+    "from_slice": "u_s_4N",
+    "from_sid": 9,
+    "from_port": "ro_w",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_3N",
+    "sid": 7,
+    "xg": "u_s_3N.u_slice.u_xg",
+    "port": "vi",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_gunit.u_l5",
+    "drv_ports": [
+     "vo_n"
+    ],
+    "age_edges": 24
+   },
+   {
+    "slice": "u_s_4S",
+    "sid": 8,
+    "xg": "u_s_4S.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_3S.u_sl.u_xg",
+    "from_slice": "u_s_3S",
+    "from_sid": 6,
+    "from_port": "ro_e",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_4S",
+    "sid": 8,
+    "xg": "u_s_4S.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_5S.u_lp.u_xg",
+    "from_slice": "u_s_5S",
+    "from_sid": 10,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_4S",
+    "sid": 8,
+    "xg": "u_s_4S.u_lp.u_xg",
+    "port": "vi",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_bk_sel",
+    "drv_ports": [
+     "vo_s"
+    ],
+    "age_edges": 60
+   },
+   {
+    "slice": "u_s_4N",
+    "sid": 9,
+    "xg": "u_s_4N.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_3N.u_slice.u_xg",
+    "from_slice": "u_s_3N",
+    "from_sid": 7,
+    "from_port": "ro_e",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_4N",
+    "sid": 9,
+    "xg": "u_s_4N.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_5N.u_lp.u_xg",
+    "from_slice": "u_s_5N",
+    "from_sid": 11,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_4N",
+    "sid": 9,
+    "xg": "u_s_4N.u_lp.u_xg",
+    "port": "vi",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_seqhost.u_seqhost",
+    "drv_ports": [
+     "vo_n"
+    ],
+    "age_edges": 60
+   },
+   {
+    "slice": "u_s_5S",
+    "sid": 10,
+    "xg": "u_s_5S.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_4S.u_lp.u_xg",
+    "from_slice": "u_s_4S",
+    "from_sid": 8,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_5S",
+    "sid": 10,
+    "xg": "u_s_5S.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_6S.u_lp.u_xg",
+    "from_slice": "u_s_6S",
+    "from_sid": 12,
+    "from_port": "ro_w",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_5S",
+    "sid": 10,
+    "xg": "u_s_5S.u_lp.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_5N.u_lp.u_xg",
+    "from_slice": "u_s_5N",
+    "from_sid": 11,
+    "from_port": "vo",
+    "age_edges": 31,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_5N",
+    "sid": 11,
+    "xg": "u_s_5N.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_4N.u_lp.u_xg",
+    "from_slice": "u_s_4N",
+    "from_sid": 9,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_5N",
+    "sid": 11,
+    "xg": "u_s_5N.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_6N.u_lp.u_xg",
+    "from_slice": "u_s_6N",
+    "from_sid": 13,
+    "from_port": "ro_w",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_5N",
+    "sid": 11,
+    "xg": "u_s_5N.u_lp.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_5S.u_lp.u_xg",
+    "from_slice": "u_s_5S",
+    "from_sid": 10,
+    "from_port": "vo",
+    "age_edges": 36,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_6S",
+    "sid": 12,
+    "xg": "u_s_6S.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_5S.u_lp.u_xg",
+    "from_slice": "u_s_5S",
+    "from_sid": 10,
+    "from_port": "ro_e",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_6S",
+    "sid": 12,
+    "xg": "u_s_6S.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_7S.u_sl.u_xg",
+    "from_slice": "u_s_7S",
+    "from_sid": 14,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_6S",
+    "sid": 12,
+    "xg": "u_s_6S.u_lp.u_xg",
+    "port": "vi",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_eng.u_e",
+    "drv_ports": [
+     "vo_s"
+    ],
+    "age_edges": 54
+   },
+   {
+    "slice": "u_s_6N",
+    "sid": 13,
+    "xg": "u_s_6N.u_lp.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_5N.u_lp.u_xg",
+    "from_slice": "u_s_5N",
+    "from_sid": 11,
+    "from_port": "ro_e",
+    "age_edges": 2,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_6N",
+    "sid": 13,
+    "xg": "u_s_6N.u_lp.u_xg",
+    "port": "ri_e",
+    "status": "PASS",
+    "from_xg": "u_s_7N.u_sl.u_xg",
+    "from_slice": "u_s_7N",
+    "from_sid": 15,
+    "from_port": "ro_w",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_6N",
+    "sid": 13,
+    "xg": "u_s_6N.u_lp.u_xg",
+    "port": "vi",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_eng.u_e",
+    "drv_ports": [
+     "vo_n"
+    ],
+    "age_edges": 93
+   },
+   {
+    "slice": "u_s_7S",
+    "sid": 14,
+    "xg": "u_s_7S.u_sl.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_6S.u_lp.u_xg",
+    "from_slice": "u_s_6S",
+    "from_sid": 12,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_7S",
+    "sid": 14,
+    "xg": "u_s_7S.u_sl.u_xg",
+    "port": "ri_e",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_s_7S.u_lep",
+    "drv_ports": [
+     "ri"
+    ],
+    "age_edges": 2
+   },
+   {
+    "slice": "u_s_7S",
+    "sid": 14,
+    "xg": "u_s_7S.u_sl.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_7N.u_sl.u_xg",
+    "from_slice": "u_s_7N",
+    "from_sid": 15,
+    "from_port": "vo",
+    "age_edges": 36,
+    "bits_checked": 276,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_7N",
+    "sid": 15,
+    "xg": "u_s_7N.u_sl.u_xg",
+    "port": "ri_w",
+    "status": "PASS",
+    "from_xg": "u_s_6N.u_lp.u_xg",
+    "from_slice": "u_s_6N",
+    "from_sid": 13,
+    "from_port": "ro_e",
+    "age_edges": 5,
+    "bits_checked": 1104,
+    "through_buffer": false
+   },
+   {
+    "slice": "u_s_7N",
+    "sid": 15,
+    "xg": "u_s_7N.u_sl.u_xg",
+    "port": "ri_e",
+    "status": "EDGE_EXTERNAL",
+    "driver": "u_s_7N.u_lep",
+    "drv_ports": [
+     "ri"
+    ],
+    "age_edges": 2
+   },
+   {
+    "slice": "u_s_7N",
+    "sid": 15,
+    "xg": "u_s_7N.u_sl.u_xg",
+    "port": "vi",
+    "status": "PASS",
+    "from_xg": "u_s_7S.u_sl.u_xg",
+    "from_slice": "u_s_7S",
+    "from_sid": 14,
+    "from_port": "vo",
+    "age_edges": 36,
+    "bits_checked": 276,
+    "through_buffer": false
+   }
+  ],
+  "xfin_endpoints": [
+   {
+    "slice": "u_s_0N",
+    "xg": "u_s_0N.u_sl.u_xg",
+    "xr": "u_s_0N.u_sl.u_xr",
+    "xfin": "u_s_0N.u_sl.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_0S",
+    "xg": "u_s_0S.u_sl.u_xg",
+    "xr": "u_s_0S.u_sl.u_xr",
+    "xfin": "u_s_0S.u_sl.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_1N",
+    "xg": "u_s_1N.u_lp.u_xg",
+    "xr": "u_s_1N.u_lp.u_xr",
+    "xfin": "u_s_1N.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_1S",
+    "xg": "u_s_1S.u_lp.u_xg",
+    "xr": "u_s_1S.u_lp.u_xr",
+    "xfin": "u_s_1S.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_2N",
+    "xg": "u_s_2N.u_lp.u_xg",
+    "xr": "u_s_2N.u_lp.u_xr",
+    "xfin": "u_s_2N.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_2S",
+    "xg": "u_s_2S.u_lp.u_xg",
+    "xr": "u_s_2S.u_lp.u_xr",
+    "xfin": "u_s_2S.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_3N",
+    "xg": "u_s_3N.u_slice.u_xg",
+    "xr": "u_s_3N.u_slice.g_c1.u_xr",
+    "xfin": "u_s_3N.u_slice.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_3S",
+    "xg": "u_s_3S.u_sl.u_xg",
+    "xr": "u_s_3S.u_sl.g_c3.u_xr",
+    "xfin": "u_s_3S.u_sl.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_4N",
+    "xg": "u_s_4N.u_lp.u_xg",
+    "xr": "u_s_4N.u_lp.u_xr",
+    "xfin": "u_s_4N.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_4S",
+    "xg": "u_s_4S.u_lp.u_xg",
+    "xr": "u_s_4S.u_lp.u_xr",
+    "xfin": "u_s_4S.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_5N",
+    "xg": "u_s_5N.u_lp.u_xg",
+    "xr": "u_s_5N.u_lp.u_xr",
+    "xfin": "u_s_5N.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_5S",
+    "xg": "u_s_5S.u_lp.u_xg",
+    "xr": "u_s_5S.u_lp.u_xr",
+    "xfin": "u_s_5S.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_6N",
+    "xg": "u_s_6N.u_lp.u_xg",
+    "xr": "u_s_6N.u_lp.u_xr",
+    "xfin": "u_s_6N.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_6S",
+    "xg": "u_s_6S.u_lp.u_xg",
+    "xr": "u_s_6S.u_lp.u_xr",
+    "xfin": "u_s_6S.u_lp.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_7N",
+    "xg": "u_s_7N.u_sl.u_xg",
+    "xr": "u_s_7N.u_sl.u_xr",
+    "xfin": "u_s_7N.u_sl.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   },
+   {
+    "slice": "u_s_7S",
+    "xg": "u_s_7S.u_sl.u_xg",
+    "xr": "u_s_7S.u_sl.u_xr",
+    "xfin": "u_s_7S.u_sl.u_xf",
+    "status": "PASS",
+    "edges": {
+     "nx_wi->wi": 0,
+     "nx_ei->ei": 0,
+     "eo->nx_eo": 0,
+     "wo->nx_wo": 0,
+     "rb->x_rb": 0
+    },
+    "bits_checked": 725,
+    "local_xfin_edges": null
+   }
+  ]
+ }
+}
