@@ -8,6 +8,8 @@ from pathlib import Path
 ap = argparse.ArgumentParser(description=__doc__)
 for name in ('plan','bodies','tools','out'):
     ap.add_argument('--'+name,type=Path,required=True)
+ap.add_argument('--landing-infra',action='store_true',help='Include real scalar landing contract pin rectangles')
+ap.add_argument('--windows-only',action='store_true')
 a = ap.parse_args()
 sys.path.insert(0,str(a.tools))
 import schema as S
@@ -30,14 +32,28 @@ receipt = dict(schema='ot_island_windows/1',source=str(a.bodies),sites=len(bodie
     types=len(windows),windows=windows,blocked=blocked,outside=outside,
     assumption='planned 1.62x.27um clock bodies; .5um snap+.25um stack margin')
 (a.out/'island_windows.json').write_text(json.dumps(receipt)+'\n')
+cell_windows={}
+for record in records:
+    entries=[]
+    for part in record['parts']:
+        x0,y0,x1,y1=part['rect']
+        points=[plan.to_die(part['part'],(x0,y0)),plan.to_die(part['part'],(x1,y1))]
+        entries.append(dict(part=part['part'],type=part['type'],rect_type_um=part['rect'],
+            rect_die_um=[min(p[0] for p in points),min(p[1] for p in points),
+                         max(p[0] for p in points),max(p[1] for p in points)],in_core=part['in_core']))
+    cell_windows[record['source'].split(':',1)[1]]=entries
+(a.out/'cell_windows.json').write_text(json.dumps(dict(cells=cell_windows,
+    source='DT.island_windows exact119 planned body-site holes; all coordinates um'))+'\n')
 print('QC_ISLAND_WINDOWS',len(bodies),'sites',len(windows),'types',
       sum(map(len,windows.values())),'windows',len(blocked),'hardcorehits',len(outside),'outside')
 if blocked or outside:
     raise SystemExit(1)
+if a.windows_only:
+    raise SystemExit(0)
 # One master for each type, with identical island holes in every instance.
 mods=DT.standin_module_names(plan)
 (a.out/'abstracts').mkdir(exist_ok=True)
 for tn in sorted(plan.types):
-    text,_=DT.abstract_lef(plan,tn,islands=windows.get(tn),module_name=mods[tn])
+    text,_=DT.abstract_lef(plan,tn,islands=windows.get(tn),module_name=mods[tn],landing_infra=a.landing_infra)
     (a.out/'abstracts'/f'{mods[tn]}.lef').write_text(text)
 print('QC_ISLAND_ABSTRACTS_READY',len(plan.types),'no hard-core cutouts')

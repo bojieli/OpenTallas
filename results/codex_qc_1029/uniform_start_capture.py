@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select one existing glue capture tap per hardened type; require CA replan."""
+"""Use the actual origin RTL clk input, with a uniform adjacent physical START pin."""
 import argparse
 import collections
 import json
@@ -31,7 +31,10 @@ def main():
         by_type[plan.parts[part]['type']].add(part)
     choice, details = {}, []
     for tn, parts in sorted(by_type.items()):
-        common = set.intersection(*(set(taps[p]) for p in parts))
+        # _origin_rtl and landing rings consume .clk(clk). Selecting a different
+        # measured GLUE tap without an actual hardware clock rebind would make
+        # the phase model fictitious, even if its geometry were preferable.
+        common = set.intersection(*(set(taps[p]) for p in parts)) & {'clk'}
         root = plan.types[tn]['clock']['tap_um']
         candidates = []
         for name in common:
@@ -41,7 +44,7 @@ def main():
             dist = sum(abs(x-y) for x,y in zip(local[0],root))
             candidates.append((dist,name,local[0]))
         if not candidates:
-            raise ValueError(f'no uniform measured GLUE tap for {tn}: {parts}')
+            raise ValueError(f'no uniform measured native RTL clk for {tn}: {parts}')
         _, name, xy = min(candidates)
         choice[tn] = name
         pins = plan.types[tn]['clock']['landing_contract']['pins']

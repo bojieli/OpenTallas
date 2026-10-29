@@ -1,0 +1,1465 @@
+{
+ "types": [
+  {
+   "type": "cbf_q00__cl1b5a6458",
+   "instances": 13,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.7039999999979,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    2.656
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.4
+   ],
+   "pin_to_tap_um": 2.176000000002176
+  },
+  {
+   "type": "cbf_q00__cl870de686",
+   "instances": 10,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000154,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    2.656
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.4
+   ],
+   "pin_to_tap_um": 2.175999999998538
+  },
+  {
+   "type": "cbf_q00_s2",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000018,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    2.656
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.4
+   ],
+   "pin_to_tap_um": 2.1759999999999025
+  },
+  {
+   "type": "cbf_q01",
+   "instances": 23,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.7039999999979,
+    186.9760000000001
+   ],
+   "old_pin_xy_um": [
+    1233.376,
+    1259.936
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.976
+   ],
+   "pin_to_tap_um": 2.1760000000022046
+  },
+  {
+   "type": "cbf_q01_s2",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000018,
+    186.9760000000001
+   ],
+   "old_pin_xy_um": [
+    1233.376,
+    1259.936
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.976
+   ],
+   "pin_to_tap_um": 2.175999999999931
+  },
+  {
+   "type": "cbf_q11",
+   "instances": 24,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    68.06400000000212,
+    186.9760000000001
+   ],
+   "old_pin_xy_um": [
+    151.84,
+    2.656
+   ],
+   "pin_xy_um": [
+    70.24,
+    186.976
+   ],
+   "pin_to_tap_um": 2.175999999997984
+  },
+  {
+   "type": "cbn_q00__cl622f65d2",
+   "instances": 13,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.7039999999979,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    493.984,
+    2.656
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.4
+   ],
+   "pin_to_tap_um": 2.176000000002176
+  },
+  {
+   "type": "cbn_q00__cld7bf7197",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000018,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    493.984,
+    2.656
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.4
+   ],
+   "pin_to_tap_um": 2.1759999999999025
+  },
+  {
+   "type": "cbn_q00__cldbcda913",
+   "instances": 10,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000154,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    493.984,
+    2.656
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.4
+   ],
+   "pin_to_tap_um": 2.175999999998538
+  },
+  {
+   "type": "cbn_q01__clab6e67f2",
+   "instances": 13,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.7039999999979,
+    186.97599999999966
+   ],
+   "old_pin_xy_um": [
+    1233.376,
+    1259.936
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.976
+   ],
+   "pin_to_tap_um": 2.176000000002432
+  },
+  {
+   "type": "cbn_q01__cld9ff4c40",
+   "instances": 10,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000154,
+    186.97599999999966
+   ],
+   "old_pin_xy_um": [
+    1233.376,
+    1259.936
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.976
+   ],
+   "pin_to_tap_um": 2.175999999998794
+  },
+  {
+   "type": "cbn_q01__cldd6ea846",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    76.70400000000018,
+    186.97599999999966
+   ],
+   "old_pin_xy_um": [
+    1233.376,
+    1259.936
+   ],
+   "pin_xy_um": [
+    78.88,
+    186.976
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "cbn_q11__cl49ae4555",
+   "instances": 10,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    68.06400000000212,
+    186.97599999999966
+   ],
+   "old_pin_xy_um": [
+    151.84,
+    2.656
+   ],
+   "pin_xy_um": [
+    70.24,
+    186.976
+   ],
+   "pin_to_tap_um": 2.1759999999982114
+  },
+  {
+   "type": "cbn_q11__cl5cc92dfe",
+   "instances": 14,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    68.06400000000212,
+    186.97599999999966
+   ],
+   "old_pin_xy_um": [
+    151.84,
+    2.656
+   ],
+   "pin_xy_um": [
+    70.24,
+    186.976
+   ],
+   "pin_to_tap_um": 2.1759999999982114
+  },
+  {
+   "type": "cbx_q10__cl89936551",
+   "instances": 20,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    68.06400000000212,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    2573.216
+   ],
+   "pin_xy_um": [
+    70.24,
+    186.4
+   ],
+   "pin_to_tap_um": 2.1759999999979556
+  },
+  {
+   "type": "cbx_q10__cl94a12200",
+   "instances": 28,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    68.06400000000212,
+    186.4000000000001
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    2573.216
+   ],
+   "pin_xy_um": [
+    70.24,
+    186.4
+   ],
+   "pin_to_tap_um": 2.1759999999979556
+  },
+  {
+   "type": "coll_core",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    198.6880000000001
+   ],
+   "old_pin_xy_um": [
+    268.32,
+    1587.104
+   ],
+   "pin_xy_um": [
+    199.2,
+    198.688
+   ],
+   "pin_to_tap_um": 2.6240000000000805
+  },
+  {
+   "type": "coll_ft__cl78c7b300",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    165.59999999999945
+   ],
+   "old_pin_xy_um": [
+    74.528,
+    2.656
+   ],
+   "pin_xy_um": [
+    199.2,
+    165.6
+   ],
+   "pin_to_tap_um": 2.624000000000507
+  },
+  {
+   "type": "coll_ft__cla4a25d77",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    165.60000000000036
+   ],
+   "old_pin_xy_um": [
+    74.528,
+    2.656
+   ],
+   "pin_xy_um": [
+    199.2,
+    165.6
+   ],
+   "pin_to_tap_um": 2.6240000000003363
+  },
+  {
+   "type": "coll_ftc",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    172.76800000000003
+   ],
+   "old_pin_xy_um": [
+    784.096,
+    716.064
+   ],
+   "pin_xy_um": [
+    199.2,
+    172.768
+   ],
+   "pin_to_tap_um": 2.6239999999999952
+  },
+  {
+   "type": "coll_ftm",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    343.456,
+    734.3680000000004
+   ],
+   "old_pin_xy_um": [
+    333.152,
+    1466.144
+   ],
+   "pin_xy_um": [
+    346.08,
+    734.368
+   ],
+   "pin_to_tap_um": 2.624000000000308
+  },
+  {
+   "type": "coll_ftn",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    172.83200000000033
+   ],
+   "old_pin_xy_um": [
+    74.528,
+    688.544
+   ],
+   "pin_xy_um": [
+    199.2,
+    172.832
+   ],
+   "pin_to_tap_um": 2.624000000000308
+  },
+  {
+   "type": "coll_n",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    196.0639999999985
+   ],
+   "old_pin_xy_um": [
+    189.408,
+    2.656
+   ],
+   "pin_xy_um": [
+    199.2,
+    196.064
+   ],
+   "pin_to_tap_um": 2.624000000001473
+  },
+  {
+   "type": "coll_s",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    196.57600000000002,
+    133.92000000000007
+   ],
+   "old_pin_xy_um": [
+    784.096,
+    79.392
+   ],
+   "pin_xy_um": [
+    199.2,
+    133.92
+   ],
+   "pin_to_tap_um": 2.624000000000052
+  },
+  {
+   "type": "coll_ucie",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    193.888,
+    786.2079999999996
+   ],
+   "old_pin_xy_um": [
+    775.456,
+    1042.656
+   ],
+   "pin_xy_um": [
+    196.064,
+    786.208
+   ],
+   "pin_to_tap_um": 2.176000000000329
+  },
+  {
+   "type": "glue",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    193.888,
+    184.09599999999955
+   ],
+   "old_pin_xy_um": [
+    775.456,
+    17.504
+   ],
+   "pin_xy_um": [
+    196.064,
+    184.096
+   ],
+   "pin_to_tap_um": 2.1760000000004425
+  },
+  {
+   "type": "native59",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    193.888,
+    129.5679999999993
+   ],
+   "old_pin_xy_um": [
+    24.416,
+    515.744
+   ],
+   "pin_xy_um": [
+    196.064,
+    129.568
+   ],
+   "pin_to_tap_um": 2.1760000000006983
+  },
+  {
+   "type": "sle_ctl__cl372cea1c",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    198.048,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_ctl__cl503337ff",
+   "instances": 6,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    198.048,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_ctl__cl67434795",
+   "instances": 4,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999838,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    198.048,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.624000000001786
+  },
+  {
+   "type": "sle_ctl__cla4f6f12f",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999838,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    198.048,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.624000000001786
+  },
+  {
+   "type": "sle_fe_v1__cl1cbb7497",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    619.936,
+    18.336
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_fe_v2",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    619.936,
+    18.336
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_fw_v1__cl9d029624",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    131.104
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_fw_v2__cl6740750e",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    131.104
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_hc0__cl05696ed1",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    583.84,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_hc0__cl929603c0__cl4baa7c9c",
+   "instances": 4,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    583.84,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_hc1__cl22c1ff36",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    153.12,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_hc2__cl9c4c4509__cl3edce1b8",
+   "instances": 3,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    153.12,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_hc2__clcc5e3e61",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    153.12,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_sc_v1__cl115da35f",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_sc_v3",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_st_a_v1__cl989804f6__cl18eece69",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    619.936,
+    153.888
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_st_b_v1",
+   "instances": 3,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    181.664
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_st_b_v2__cl14c98df5",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    181.664
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_st_b_v2__clfde1249e",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    181.664
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_stm_v1__cl27746664",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_stm_v2__cl7b3062fa",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_stm_v3",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "sle_su_c",
+   "instances": 6,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    277.53600000000006
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    277.536
+   ],
+   "pin_to_tap_um": 2.623999999999853
+  },
+  {
+   "type": "sle_su_l0__cl086d85ba",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    245.152,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_su_l0__cl7a55c676",
+   "instances": 5,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    245.152,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "sle_su_l1__cl5ea486db",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    24.863999999999578
+   ],
+   "old_pin_xy_um": [
+    539.36,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    24.864
+   ],
+   "pin_to_tap_um": 2.1760000000004105
+  },
+  {
+   "type": "sle_su_l1__clc6d66f5b",
+   "instances": 5,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    24.863999999999578
+   ],
+   "old_pin_xy_um": [
+    539.36,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    24.864
+   ],
+   "pin_to_tap_um": 2.1760000000004105
+  },
+  {
+   "type": "slw_fe_v1__clfe325744__cl08d14f0d",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    619.936,
+    18.336
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_fe_v2__cle312294d",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    619.936,
+    18.336
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    131.104
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_fw_v2__cl8f84514c",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    131.104
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_hc0__cl4f54b7a3",
+   "instances": 5,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    583.84,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_hc1__cl68f9248e__cl144ee7b3",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999838,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    153.12,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.624000000001786
+  },
+  {
+   "type": "slw_hc2__cl6bcaba89",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    153.12,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "slw_hc2__cla3497502__cl16607c7a",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    153.12,
+    2.656
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "slw_sc_v1__cl63e5a7a2",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "slw_sc_v3",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999975,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.6240000000004216
+  },
+  {
+   "type": "slw_st_a_v1__clb036e152",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    619.936,
+    153.888
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_st_b_v1__cl6357f1cc",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    181.664
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_st_b_v1__cle6023ec2",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    181.664
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_st_b_v2",
+   "instances": 3,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    2.144,
+    181.664
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "slw_stm_v1__cle34a73c3",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999838,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.624000000001786
+  },
+  {
+   "type": "slw_stm_v2__cl1ca9c415",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.623999999999967
+  },
+  {
+   "type": "slw_stm_v3",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999975,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    424.864,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    167.392
+   ],
+   "pin_to_tap_um": 2.6240000000004216
+  },
+  {
+   "type": "slw_su_c__cl19bb38ef",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.37599999999838,
+    277.53600000000006
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    277.536
+   ],
+   "pin_to_tap_um": 2.624000000001672
+  },
+  {
+   "type": "slw_su_c__cl92142dac",
+   "instances": 5,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    153.3760000000002,
+    277.53600000000006
+   ],
+   "old_pin_xy_um": [
+    61.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    156.0,
+    277.536
+   ],
+   "pin_to_tap_um": 2.623999999999853
+  },
+  {
+   "type": "slw_su_l0__cl1a1c1f8f",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    149.28,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_su_l0__cl1e5219ea",
+   "instances": 2,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    149.28,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_su_l0__cl76fb247e",
+   "instances": 3,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    167.39199999999983
+   ],
+   "old_pin_xy_um": [
+    149.28,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    167.392
+   ],
+   "pin_to_tap_um": 2.1760000000001583
+  },
+  {
+   "type": "slw_su_l1__cla2a78701",
+   "instances": 5,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    24.863999999999578
+   ],
+   "old_pin_xy_um": [
+    493.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    24.864
+   ],
+   "pin_to_tap_um": 2.1760000000004105
+  },
+  {
+   "type": "slw_su_l1__clcc9d0155",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    156.0,
+    24.863999999999578
+   ],
+   "old_pin_xy_um": [
+    493.984,
+    1336.544
+   ],
+   "pin_xy_um": [
+    158.176,
+    24.864
+   ],
+   "pin_to_tap_um": 2.1760000000004105
+  },
+  {
+   "type": "tt_ctlm",
+   "instances": 1,
+   "capture_tap": "clk",
+   "capture_xy_um": [
+    193.888,
+    129.5679999999993
+   ],
+   "old_pin_xy_um": [
+    775.456,
+    128.928
+   ],
+   "pin_xy_um": [
+    196.064,
+    129.568
+   ],
+   "pin_to_tap_um": 2.1760000000006983
+  }
+ ],
+ "regions": 313,
+ "physical_internal_reach": "NOT RUN",
+ "adoption": "REQUIRES new CA plan, boot price, actual FF placement and phase gate"
+}
