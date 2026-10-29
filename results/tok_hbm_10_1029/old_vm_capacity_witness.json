@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.hbm.vm_capacity_witness.v1",
+ "scope": "fixed relocation preserving this programme record/row-array lifetimes",
+ "lower_bound_words": 399360,
+ "capacity_words": 262144,
+ "deficit_words": 137216,
+ "fits": false,
+ "statement": "No fixed address rebase can fit these distinct simultaneously live values.",
+ "dependencies": [
+  {
+   "producer": 1470,
+   "producer_operand": "R",
+   "consumer": 1472,
+   "consumer_operand": "A",
+   "words": 24
+  },
+  {
+   "producer": 1472,
+   "producer_operand": "O",
+   "consumer": 1473,
+   "consumer_operand": "B",
+   "words": 24
+  }
+ ],
+ "inputs": [
+  {
+   "name": "current_A",
+   "record_index": 1470,
+   "image_offset": 199776,
+   "operand": "A",
+   "words": 122880,
+   "ranges": [
+    [
+     301104,
+     423984
+    ]
+   ],
+   "descriptor": {
+    "space": "VM",
+    "fmt": "FP32",
+    "base": 301104,
+    "n": 5120,
+    "m": 4,
+    "stride": 5120,
+    "istride": 0,
+    "lstride": 0,
+    "dyn_sel": 0,
+    "dyn_mul": 0,
+    "n_sel": 0,
+    "l1stride": 0,
+    "ibcast": 0,
+    "indexed": 0
+   },
+   "row_count": 6,
+   "row_stride": 20480
+  },
+  {
+   "name": "current_B",
+   "record_index": 1470,
+   "image_offset": 199776,
+   "operand": "B",
+   "words": 122880,
+   "ranges": [
+    [
+     147504,
+     167984
+    ],
+    [
+     173104,
+     193584
+    ],
+    [
+     198704,
+     219184
+    ],
+    [
+     224304,
+     244784
+    ],
+    [
+     249904,
+     270384
+    ],
+    [
+     275504,
+     295984
+    ]
+   ],
+   "descriptor": {
+    "space": "VM",
+    "fmt": "FP32",
+    "base": 147504,
+    "n": 5120,
+    "m": 4,
+    "stride": 5120,
+    "istride": 0,
+    "lstride": 0,
+    "dyn_sel": 0,
+    "dyn_mul": 0,
+    "n_sel": 0,
+    "l1stride": 0,
+    "ibcast": 0,
+    "indexed": 0
+   },
+   "row_count": 6,
+   "row_stride": 25600
+  },
+  {
+   "name": "deferred_C",
+   "record_index": 1473,
+   "image_offset": 200304,
+   "operand": "C",
+   "words": 122880,
+   "ranges": [
+    [
+     0,
+     122880
+    ]
+   ],
+   "descriptor": {
+    "space": "VM",
+    "fmt": "FP32",
+    "base": 0,
+    "n": 5120,
+    "m": 4,
+    "stride": 5120,
+    "istride": 0,
+    "lstride": 0,
+    "dyn_sel": 0,
+    "dyn_mul": 0,
+    "n_sel": 0,
+    "l1stride": 0,
+    "ibcast": 0,
+    "indexed": 0
+   },
+   "row_count": 6,
+   "row_stride": 20480
+  },
+  {
+   "name": "deferred_A",
+   "record_index": 1473,
+   "image_offset": 200304,
+   "operand": "A",
+   "words": 30720,
+   "ranges": [
+    [
+     167984,
+     173104
+    ],
+    [
+     193584,
+     198704
+    ],
+    [
+     219184,
+     224304
+    ],
+    [
+     244784,
+     249904
+    ],
+    [
+     270384,
+     275504
+    ],
+    [
+     295984,
+     301104
+    ]
+   ],
+   "descriptor": {
+    "space": "VM",
+    "fmt": "FP32",
+    "base": 167984,
+    "n": 5120,
+    "m": 4,
+    "stride": 0,
+    "istride": 0,
+    "lstride": 0,
+    "dyn_sel": 0,
+    "dyn_mul": 0,
+    "n_sel": 0,
+    "l1stride": 0,
+    "ibcast": 0,
+    "indexed": 0
+   },
+   "row_count": 6,
+   "row_stride": 25600
+  }
+ ],
+ "remedies": [
+  "qualified larger regular VM with real address/interface/boot-source plan event",
+  "separately emitted finite phases/rescheduling with actual payload publication and priced transfers"
+ ],
+ "image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933"
+}

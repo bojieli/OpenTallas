@@ -124,3 +124,59 @@ clock resolve to the same source bit. Existing reset expressions are retained an
 for die delivery. Valid bits/status receive reset; data bits do not. The recipe does not adopt runtime
 source, manufacture South geometry, or solve unequal pipeline/calendar dates. Coverage owns materializing
 these source-preparation recipes with its existing guarded direct_stations primitive.
+
+## Old regular VM cannot hold the unchanged a122 programme
+
+`tools/hbm_next/vm_capacity_witness.py` reads the actual immutable a1228bb5... binary, not its allocator's
+reserved extents. The SU chain at records1470/1472/1473 (offsets199776/200128/200304) forces four distinct live
+input sets: current A122880 + current B122880 + deferred C122880 + deferred A30720 = **399360 words**.
+Current R feeds bridge A; bridge O feeds the future B, so that future operation cannot run before the current
+operation. No intervening operation writes either deferred input. These exact word sets are disjoint, including
+the strided tail and broadcast semantics. Old regular VM has262144 words: **137216 words short**, 52.34% above
+capacity. This is a concrete lower bound under the unchanged programme/row-array lifetime contract, not a claim
+that399360 is its full peak. It rules out fixed address relocation; it does not rule out a separately compiled
+streaming/rescheduled/finite-phase design with explicit transfers and cost.
+
+The earlier producer-aligned emitter.json reports C4 peak452534 at segment14 and total allocated need506112;
+those numbers describe its pre-lowering schedule and are context only. They were not substituted for the actual
+binary witness. Unsafe-alias, broken-dependency and intervening-overwrite controls all refuse the witness.
+
+Reproduce using the pinned P3 compiler tools (decoder from42d0caba4) and the retained a122 image:
+
+```
+python3 tools/hbm_next/vm_capacity_witness.py --image candidate_mtp_N6_a122.hgi1r \
+  --compiler-tools PINNED_P3_REPO/tools --out capacity.json
+```
+
+## Existing grown VM candidates and the adoption work
+
+The clean source package is already on main as **d0b824a772f720861a9c4fcb9eda9392a7d3bf44**. Historical
+source branch codex/hbm-vm-capacity-1029@bf5060667 includes the same blobs plus its publication receipt; use the
+clean main package. It remains default-off/unselected and does not qualify the current old-bank bind.
+
+- Native bank: rtl/hbm_accel/generic/vm/static/faces_q0_r2048/ (body/core/face/oneclk wrappers). Keep regular sector
+  high-row bit15 distinct from mirror bit16. Address fields are17-sector bits; banklocal row is12bits. No truncation
+  or old mirror reinterpretation. Native input widths: rq18,wq/dq/kq282,xq/xq2/eg277,pq286; rr257/pr266/status18 stay.
+- Physical cost: 32banks need four SRAMs each (128 vs96), adding32 actual1024x256 macros and one high-regular macro
+  per bank. Macro3 clock/PG/lot/outline/pins and current staged transport must be composed in the single die event.
+  Existing component proof preserves read7/write4,0 added steady cycles. It has no physical signoff.
+- `tools/hbm_static/vm_r2048/caller_packet.py` lifts the exact32 callers. A legacy adapter preserves low regular and
+  old mirror addressability; **it cannot reach upper regular storage**. Every runtime producer/consumer that touches
+  relocated high storage needs its real17-bit native packet/address path, including mutable writes; widening banks
+  plus legacy lifts alone does not execute a122.
+- INDEX native reader/collar/share candidates: rtl/hbm_next/idx/ot_hnx_idx_vm*_r2048.sv,
+  rtl/hbm_accel/generic/adapters/ot_hbm_static_cfg_collar_idx256r_r2048.sv and the corresponding static_r2048
+  share source (exact paths in d0b824's file list). `index_packet.py`/`native_idx_config.py` produce four role-local
+  fields (weight/query sector and row strides),289 configbits/+2F20frames,144-bit request bundles,2056 response bits.
+  Their current source proposal explicitly selects SINGLE_ROW_ONLY=1. Actual a122 has active N6 INDEX records, so
+  **multirow control/calendar/publication is an additional required event**; do not claim the single-row package
+  covers those records. Actual queryA SID2 / weightB SID0 still need legitimate role-local publication/replication.
+- Existing F20 boot publisher `ot_vms_f20_boot_publish_r2048.sv` + `publish_packet.py`/`publish_frames.py`: target120
+  (0x78), header0xF00,payload0xF01,19-bit regular WORD address,one header per contiguousregion and one payload per
+  eightwords, five drain edges after bank sample. It rejects collisions/active INDEX/unconfigured/early commit.
+  Proof unit3179360 exercises real four-SRAM low/high readback plus four source mutants. This boot-only publisher
+  is not a runtime computed-A replication mechanism; that remains a source/dataflow obligation.
+
+Current HBM-BIND explicitly retained hfd_vms_bank_native_q0_faces (old16-bit sectors). Choosing a complete grown
+source event or a priced finite-phase/rescheduling source is necessary; silently rebasing high bits into mirror
+storage or importing a legacy-only lift would lose the actual programme semantics.
