@@ -5,7 +5,7 @@ import tempfile
 import unittest
 
 HERE=Path(__file__).resolve().parent
-FAKE='#!/bin/bash\necho "KVSLICE_BOOT $FAKE_V frames_sent 1/1"\nif [ "$FAKE_RC" = 143 ]; then kill -TERM $$; fi\nexit "$FAKE_RC"\n'
+FAKE='#!/bin/bash\necho "KVSLICE_BOOT $FAKE_V frames_sent 1/1"\nprintf "%s\\n" "$@" > argv\nif [ "$FAKE_RC" = 143 ]; then kill -TERM $$; fi\nexit "$FAKE_RC"\n'
 class ExitStatus(unittest.TestCase):
  def _tree(self,p):
   for n in ('build/obj','image','vector','runs'):(p/n).mkdir(parents=True,exist_ok=True)
@@ -34,6 +34,13 @@ class ExitStatus(unittest.TestCase):
      self.assertEqual(r.returncode,code,r.stdout+r.stderr)
      self.assertIn(want,r.stdout)
      self.assertTrue((p/'runs'/('v'+v)/'verdict').read_text().startswith(want.split()[1]))
+ def test_native_start_is_ordered_after_setup(self):
+  with tempfile.TemporaryDirectory() as td:
+   p=Path(td); self._tree(p)
+   (p/'build/native_boot.profile').write_text('1\n')
+   r=self._run(p,'native',0,'PASS')
+   self.assertEqual(r.returncode,0,r.stdout+r.stderr)
+   self.assertIn('+START_AFTER_SETUP',(p/'runs/native/argv').read_text().splitlines())
  def test_layers_required(self):
   with tempfile.TemporaryDirectory() as td:
    p=Path(td); self._tree(p)
