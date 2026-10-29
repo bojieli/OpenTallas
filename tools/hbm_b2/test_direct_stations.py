@@ -127,7 +127,9 @@ class DirectStationTest(unittest.TestCase):
     def test_six_actual_widths_control_only_reset_and_mutants(self):
         cases = [(257, 3, 1 << 256), (276, 6, 1 << 275),
                  (266, 6, 1 << 265), (18, 6, (1 << 18)-1),
-                 (1, 6, 1), (1, 6, 1)]
+                 (1, 6, 1), (1, 6, 1),
+                 (17, 31, 1 << 16), (285, 2, 1 << 284),
+                 (285, 31, 1 << 284)]
         rng = random.Random(106290822)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

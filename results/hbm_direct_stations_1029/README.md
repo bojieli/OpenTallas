@@ -53,3 +53,29 @@ HBM bind owner's dma_native_edges.json; no padding count is invented here.
 `runtime_adopt` is rejected, and every receipt reports physical, token,
 reset-delivery and parent-budget qualification as false. Parent plan,
 placement, reset, compiler and token gates remain open.
+
+## 128 North-role VMS source paths
+
+TOK-HBM's source-defined `vms_128_pipeline_contract.json` was applied to the
+same actual native source. The result is staged at
+intel1:/srv/opentallas-scratch2/claude/codex-hbm-direct-station-0822/top_vms128_stationed.sv;
+the complete contract and per-stage receipt are beside it as
+vms128_contract.json and vms128_receipt.json.
+
+All 128 selected native source/sink bit ranges match. An independent graph
+comparison retains all 379 original instances, masters and parameters,
+changes exactly 93 sink ports, and preserves every unselected sink bit and
+other instance port. Cost: 176,798 FFs, including 3,074 reset control FFs;
+pipeline depths are 2 through 31. Representative request width 17 and
+PQ width 285 at depths 2/31 join the six original miter cases, with 27
+wrong-stage/wrong-bit/missing-reset mutants caught. Three focused tests
+complete in 3.94 seconds.
+
+The 128 candidate supersedes the five NE7 VMS paths in the six-path source;
+they must not be inserted twice. NW4 DMA rr1 is outside these 128 VMS paths
+and still belongs to its complete eight-bank DMA return bundle. The missing
+128 South-role paths have no qualifying geometry and are not fabricated.
+Parent calendar dates, physical capacity, clocks, reset delivery and die
+qualification remain open. The source adapter explicitly rejects requested
+runtime adoption and serial_k2, and checks caller-declared connected widths
+against the actual source before generating any candidate.
