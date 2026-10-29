@@ -1,9 +1,9 @@
-import copy,json,sys,shutil,re
+import copy,json,sys,shutil,re,gzip
 from pathlib import Path
 W=Path(__file__).resolve().parents[4];sys.path[:0]=[str(W/'tools/die_plan'),str(W/'tools/s81_head')]
 import schema as S,gen_rtl as G,kit_istations as I
 from head_spine_strip_delta import run
-raw=json.load(open(W/'results/die_head_21_1028/hk4/plan_n3_raw.json'));new,_,_=run(raw)
+raw=json.load(gzip.open(W/'results/die_head_21_1028/hk4/plan_n3_raw.json.gz','rt'));new,_,_=run(raw)
 out=Path(__file__).parent
 for end in [False,True]:
  tag='end' if end else 'normal';D=out/tag;D.mkdir(exist_ok=True)

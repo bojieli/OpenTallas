@@ -9,7 +9,7 @@ import argparse,copy,json,gzip
 from pathlib import Path
 from head_channel_resize_delta import shift_type, r3
 
-X0,X1=699.84,1283.04
+X0,X1=699.84,1287.36
 PAD=17.28
 
 
@@ -19,12 +19,12 @@ def run(raw):
  assert 'landing_network' not in p.get('clock',{}),'strip derived landing infrastructure before recut'
  # Two reused FT masters; mirrors choose transfer direction without new types.
  for side,width,stages in [('w',X0,2),('e',1382.4-X1,1)]:
-  types['hd_spn_'+side+'shim']={'module':'ot_s81hd_spn_'+side+'shim','outline_um':[r3(width),345.6],
+  types['hd_spn_'+side+'shim']={'module':'ot_s81hd_spn_'+side+'shim','outline_um':[r3(width),682.56],
    'hard':False,'cells':(565+1)*stages,'contents':[],
-   'clock':{'tap_um':[r3(width/2),172.8],'layer':'M7','insertion_ps':450,'insertion_ff_ps':380,'tap_mode':'density','tap_radius_um':250},
+   'clock':{'tap_um':[r3(width/2),341.28],'layer':'M9','insertion_ps':450,'insertion_ff_ps':380,'tap_mode':'density','tap_radius_um':250},
    'reset':{'sync_stages':2},'buses':[],
    'ft_slots':[{'name':'link','in_face':'W','out_face':'E','width':565,'stations':stages,
-                'in_window_um':[PAD,317.312],'out_window_um':[PAD,317.312],
+                'in_window_um':[354.24,654.272],'out_window_um':[354.24,654.272],
                 'layers':['M4','M6'],'order':'lsb_low'}],
    'note':'Existing spine horizontal station registers transferred into ribbon; no added data cycles.'}
  for tn in ('hd_spn','hd_spn_end'):
@@ -63,16 +63,20 @@ def run(raw):
   ox,oy=q['origin_um'];q['origin_um']=[r3(ox+X0),oy];root=q['name']
   for bus,side,direction in [('xw_o','w','out'),('bw_i','w','in'),('xe_o','e','out'),('be_i','e','in')]:
    name=root+'_'+bus+'_shim';x=ox if side=='w' else ox+X1
-   y=oy+(1373.76 if direction=='out' else 336.96)
+   y=oy+(1036.8 if direction=='out' else 0.0)  # extend S for measured reset reach; data windows unchanged
    orient='MY' if (side=='w' and direction=='out') or (side=='e' and direction=='in') else 'R0'
    extra.append({'name':name,'type':'hd_spn_'+side+'shim','origin_um':[r3(x),r3(y)],'orient':orient})
    regions[name]=regions[root]
    for port in p['ports']:
     end=port['src' if direction=='out' else 'dst']
-    if end['part']==root and end['bus']==bus:end.update(part=name,bus='link_o' if direction=='out' else 'link_i')
+    if end['part']==root and end['bus']==bus:
+     end.update(part=name,bus='link_o' if direction=='out' else 'link_i')
+     owners=[ln for ln in p['lanes'] if port['id'] in ln['ports']]
+     assert len(owners)==1,(port['id'],'lane ownership',len(owners))
+     ln=owners[0];at=ln['ports'].index(port['id'])+(1 if direction=='in' else 0)
+     ln['ports'].insert(at,root+'_'+bus+'_strip_link')
    extra_ports.append({'id':root+'_'+bus+'_strip_link','src':{'part':root,'bus':bus} if direction=='out' else {'part':name,'bus':'link_o'},
                        'dst':{'part':name,'bus':'link_i'} if direction=='out' else {'part':root,'bus':bus},'width':565,'kind':'data'})
-   p['lanes'].append({'id':root+'_'+bus+'_strip_link','ports':[root+'_'+bus+'_strip_link']})
    report['parts'].append({'name':name,'clock_region':root,'origin_um':[r3(x),r3(y)],'orient':orient})
  p['partitions'].extend(extra);p['ports'].extend(extra_ports)
  report['parts_added']=len(extra)
