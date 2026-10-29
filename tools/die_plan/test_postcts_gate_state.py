@@ -24,7 +24,10 @@ proc get_clocks {args} { return [lindex $args end] }
 proc set_clock_latency {args} { set ::ot_test_latency [lrange $args 1 end] }
 proc set_propagated_clock {args} {}
 proc estimate_parasitics {args} {}
-proc get_property {args} { return 833 }
+proc get_property {object property} {
+  if {$property eq "sources"} { return [expr {$object eq "vclk" ? "" : "clock_source"}] }
+  return 833
+}
 namespace eval sta { proc worst_slack_cmd {k} { return 1e-11 } }
 """
 
@@ -111,3 +114,18 @@ def test_info_cannot_accept_empty_pinregister_set(tmp_path):
 def test_unknown_band_policy_fails_closed(tmp_path):
     r, _ = _run(GATE.read_text(), tmp_path, "TT", "waive")
     assert r.returncode != 0 and "invalid model_qualification" in r.stderr
+
+
+def test_multiple_real_clocks_keep_corner_virtual_binding(tmp_path):
+    text = GATE.read_text()
+    # Retain both actual source clocks and prove FF reference is bound exactly.
+    text = text.replace('set ot_pg_C $C', 'rename all_clocks _old_all_clocks\nproc all_clocks {} {return {clk fclk_in_0 fclk_in_1 vclk}}\nset ot_pg_C $C')
+    text += '\nif {$::ot_test_latency ne "202.5 vclk"} {error "wrong FF virtual reference: $::ot_test_latency"}\n'
+    r, _ = _run(text, tmp_path, "FF")
+    assert r.returncode == 0, r.stderr
+
+
+def test_ambiguous_virtual_clocks_fail_closed(tmp_path):
+    text = GATE.read_text().replace('set ot_pg_C $C', 'rename all_clocks _old_all_clocks\nproc all_clocks {} {return {clk fclk vclk vclk}}\nset ot_pg_C $C')
+    r, _ = _run(text, tmp_path, "FF")
+    assert r.returncode != 0 and 'exactly one source-less' in r.stderr
