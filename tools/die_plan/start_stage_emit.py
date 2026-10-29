@@ -153,6 +153,19 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     for inst, (x, y) in cxy.items():
         rows.add(x, x + CLK_CELL_W_UM, y)
     ncell, nxy = meta.get("node_cell", {}), meta.get("node_xy_um", {})
+    # Resolve clock source from the actual A/Y connectivity, independently of placement identity.
+    path_by_cell = {}
+    for path, inst in ncell.items():
+        key = inst if inst in cells else f"ck_{inst}" if f"ck_{inst}" in cells else None
+        if key is None or key in path_by_cell:
+            raise StageError(f"node_cell is missing or ambiguous for {path}: {inst}")
+        path_by_cell[key] = path
+    driver = {}
+    for key, (_, _, net) in cells.items():
+        if net in driver:
+            raise StageError(f"clock net {net} has multiple drivers")
+        driver[net] = key
+    root_inputs = set(re.findall(r"\binput\s+(?:wire\s+)?([A-Za-z_][A-Za-z0-9_$]*)\s*;", ctree_v))
     ids = {}
     for x, p in st.items():
         path_id(p, path_encoding)
@@ -188,12 +201,25 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         # an inverting tree (die_trial --clock-cell inv/inv2): a node cell with inverted output -> the stage takes the
         # cell's INPUT net (true polarity, one cell earlier); the measured proof (subcommand proof) times it as built
         net = cells[key][1] if inv else cells[key][2]
+        source = driver.get(net)
+        source_root = source is None
+        if source_root:
+            if net not in root_inputs:
+                raise StageError(f"stage {x}: clock net {net} has no driver or declared root input")
+            source_path, source_stages = "__source__", 0
+        else:
+            if source not in path_by_cell:
+                raise StageError(f"stage {x}: clock driver {source} absent from node_cell")
+            source_path = path_by_cell[source]
+            source_stages = int(meta["node_stages"][source_path])
         rows.add(rect[0], rect[2], rect[1])
         tp = into.get(x)
         if r.get("parent") is not None and tp is None:
             raise StageError(f"stage {x}: has a parent but no start port into it")
         stages.append(dict(
             id=ids[x], region=x, tree_path_id=path_id(p, path_encoding), node_cell=key, node_xy_um=list(nxy.get(p, cxy[key])),
+            clock_source_path=source_path, clock_source_cell=source, clock_source_root=source_root,
+            clock_source_stages=source_stages,
             clock_net=net, clock_from="A" if inv else "Y", clock_port=f"t_st_{ids[x]}__clk", clock_pin_xy_um=[rect[0], rect[1]],
             rect_um=rect, flops=nf, pad=int(r.get("pad", 0) or 0), edge_fall=bool(r.get("edge_fall")),
             root=root, module=ROOT_MODULE if root else STAGE_MODULE, settle=settle if root else None, start_port_in=tp, parent=r.get("parent"),
@@ -344,7 +370,21 @@ def proof_with_stages(proof, stages_doc, arrs, out):
         have = {t["port"] for t in d["taps"]}
         for s in st:
             identity = s["region"][3:]
-            path = identity.split("@", 1)[0]
+            placement_path = identity.split("@", 1)[0]
+            if "clock_source_path" not in s and s.get("clock_from") == "A":
+                raise StageError("A-driven legacy stage manifest lacks actual clock source; re-emit")
+            path = s.get("clock_source_path", placement_path)
+            source_root = bool(s.get("clock_source_root"))
+            if source_root:
+                if path != "__source__" or s.get("clock_source_stages") != 0:
+                    raise StageError("invalid root-input clock source metadata")
+                for field in ("node_late_ps", "node_early_ps", "node_fall_late_ps", "node_fall_early_ps",
+                              "node_stages", "cppr_node_range_ps"):
+                    meta.setdefault(field, {})["__source__"] = 0
+                meta["cppr_node_range_ps"]["__source__@fall"] = 0
+                meta.setdefault("node_xy_um", {})["__source__"] = None
+            elif path not in meta["node_stages"]:
+                raise StageError(f"clock source path {path} absent from measured proof")
             k = f"__st__{identity}"
             if k in have:
                 raise StageError(f"proof {pf} already has {k}")
@@ -352,7 +392,8 @@ def proof_with_stages(proof, stages_doc, arrs, out):
                 raise StageError(f"{f}: no arrival for {s['clock_port']}")
             v = T[s["clock_port"]]
             d["taps"].append(dict(port=k, part=None, late_ps=float(v[0]), early_ps=float(v[1]),
-                                  **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="h", tree_path=path,
+                                  **({"slew_ps": float(v[2])} if len(v) > 2 else {}), cppr_node="__source__" if source_root else "h", tree_path=path,
+                                  clock_source_root=source_root, placement_tree_path=placement_path,
                                   stages_from_root=int(meta["node_stages"][path]), xy_um=list(s["clock_pin_xy_um"]),
                                   leaf_cell=s["node_cell"], start_stage=s["id"],
                                   **({"fall_late_ps": float(F[s["clock_port"]][0]),
