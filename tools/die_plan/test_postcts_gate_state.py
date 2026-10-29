@@ -43,12 +43,14 @@ def _mock(text, work):
     return STUBS + "\n".join(lines).replace("/work", str(work)) + "\n"
 
 
-def _run(text, tmp_path, corner):
+def _run(text, tmp_path, corner, policy=None, pinreg=PINREG):
     work = tmp_path / "work"
     work.mkdir(exist_ok=True)
     (work / "constraint.sdc").write_text("")
     (work / "rc.tcl").write_text(RC)
-    (work / "pinreg_measure.tcl").write_text(PINREG)
+    (work / "pinreg_measure.tcl").write_text(pinreg)
+    if policy is not None:
+        (work / "master_slice.json").write_text(json.dumps({"core_tree": {"model_qualification": {"band_policy": policy}}}))
     script = tmp_path / "gate.tcl"
     script.write_text(_mock(text, work))
     env = {"PATH": "/usr/bin:/bin", "OT_CORNER": corner, "OT_VCLK_TT": "250", "OT_VCLK_FF": "202.5",
@@ -89,3 +91,23 @@ def test_pre_fix_script_loses_tt_evidence(tmp_path):
         _, work = _run(old.stdout, tmp_path, corner)
     assert not (work / "postcts_gate_tt.json").exists()
     assert len(list(work.glob("postcts_gate_1.6*.json"))) == 1
+
+
+@pytest.mark.parametrize("policy,verdict,band", [(None,"FAIL","FAIL"),("gate","FAIL","FAIL"),("info","PASS","INFO")])
+def test_explicit_target_policy_preserves_measured_miss(tmp_path, policy, verdict, band):
+    r, work = _run(GATE.read_text(), tmp_path, "TT", policy, PINREG.replace("251.0", "196.56"))
+    assert r.returncode == 0, r.stderr
+    d = json.loads((work / "postcts_gate_tt.json").read_text())
+    assert d["verdict"] == verdict and d["band_verdict"] == band
+    assert d["pinreg_mean_ps"] == 196.56 and d["dev_ps"] == 53.44
+
+
+def test_info_cannot_accept_empty_pinregister_set(tmp_path):
+    r, work = _run(GATE.read_text(), tmp_path, "TT", "info", "proc ot_pinreg_set {} { return {} }\n")
+    assert r.returncode == 0, r.stderr
+    assert json.loads((work / "postcts_gate_tt.json").read_text())["verdict"] == "FAIL"
+
+
+def test_unknown_band_policy_fails_closed(tmp_path):
+    r, _ = _run(GATE.read_text(), tmp_path, "TT", "waive")
+    assert r.returncode != 0 and "invalid model_qualification" in r.stderr
