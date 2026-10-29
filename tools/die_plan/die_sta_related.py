@@ -370,6 +370,8 @@ SPICE_CLOCK_CAL_BUF_EDGE = {"TT": dict(rise_late=1.0485, rise_early=1.0524, fall
 # early = min over S (stage-wise bound: sum f_i d_i lies in [min f, max f] x sum d_i).  Masters per tap: tap key
 # 'clock_masters', else meta 'clock_masters' (the die's clock-path master census), else the die clock cell's master;
 # a master without a factor fails closed.  Default stays spice / spice_edge until NUMBER-CHECK confirms.
+# BTAB-F3 (10-29): BUFx10/12/12f/16f from measured 2/60-um chain references;
+# see results/buf_master_cal_1029. Existing factors and default modes remain unchanged.
 SPICE_CLOCK_CAL_CELL = {
     "BUFx24_ASAP7_75t_R": {
         "TT": dict(rise_late=1.0473, rise_early=1.0222, fall_late=1.0227, fall_early=1.0206),
@@ -390,6 +392,22 @@ SPICE_CLOCK_CAL_CELL = {
     "CKINVDCx16_ASAP7_75t_R": {
         "TT": dict(rise_late=0.9483, rise_early=1.0269, fall_late=0.9528, fall_early=1.0274),
         "FF": dict(rise_late=0.9611, rise_early=1.0515, fall_late=0.9623, fall_early=1.052),
+    },
+    "BUFx10_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0399, rise_early=1.0139, fall_late=1.0295, fall_early=1.0018),
+        "FF": dict(rise_late=1.0241, rise_early=1.0003, fall_late=1.019, fall_early=0.9975),
+    },
+    "BUFx12_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0425, rise_early=1.0196, fall_late=1.0328, fall_early=1.0126),
+        "FF": dict(rise_late=1.0278, rise_early=1.0074, fall_late=1.0218, fall_early=1.0074),
+    },
+    "BUFx12f_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0246, rise_early=1.0366, fall_late=1.0227, fall_early=1.0297),
+        "FF": dict(rise_late=1.0112, rise_early=1.0178, fall_late=1.0065, fall_early=1.0112),
+    },
+    "BUFx16f_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0275, rise_early=1.0088, fall_late=1.0259, fall_early=1.0024),
+        "FF": dict(rise_late=1.0112, rise_early=0.9983, fall_late=1.0094, fall_early=0.9955),
     },
 }
 CLOCK_CALS = ("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell")
