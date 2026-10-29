@@ -1425,9 +1425,18 @@ def reserved_sites_tcl(P, tn):
                            *head, "set ::rs_bank {}", *create(bank, "::rs_bank"),
                            f'puts "OT_RESERVED_SITES kind=landing_ring_bank rects={len(bank)} area_um2={sum((c-a)*(d-b) for a,b,c,d in bank):.3f}"',
                            "}"]) + "\n"
+        # DIE-HEAD-14 10-28: DPL (3_5) runs in a new OpenROAD process, so ::rs_bank from the GPL step (3_3) no longer
+        # exists there (hd_tile flow: "released 0 of 1"); the blockages persist in the odb, so they are found by their
+        # exact bank rectangles (dbu).  Fails closed unless exactly one blockage per bank rectangle is removed.
+        want = " ".join(f"[list [expr {{round({x0:g}*$rs_u)}}] [expr {{round({y0:g}*$rs_u)}}] [expr {{round({x1:g}*$rs_u)}}] "
+                        f"[expr {{round({y1:g}*$rs_u)}}]]" for x0, y0, x1, y1 in bank)
         rel = "\n".join(["# Generated (gen_phys reserved_sites_um): release the GPL-only ring-bank blockages before DPL.",
                           "set rs_n 0",
-                          "if {[info exists ::rs_bank]} { foreach rs_k $::rs_bank { odb::dbBlockage_destroy $rs_k; incr rs_n } }",
+                          "set rs_u [[ord::get_db_tech] getDbUnitsPerMicron]",
+                          f"set rs_want [list {want}]",
+                          "foreach rs_k [[ord::get_db_block] getBlockages] { set rs_bb [$rs_k getBBox]; "
+                          "if {[lsearch -exact $rs_want [list [$rs_bb xMin] [$rs_bb yMin] [$rs_bb xMax] [$rs_bb yMax]]] >= 0} "
+                          "{ odb::dbBlockage_destroy $rs_k; incr rs_n } }",
                           f"if {{$rs_n != {len(bank)}}} {{ error \"OT_RESERVED_SITES released $rs_n of {len(bank)} ring-bank blockages\" }}",
                           'puts "OT_RESERVED_SITES released ring-bank blockages $rs_n before DPL"']) + "\n"
     return pre, post, rel
