@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Snapshot 2026-10-29 05:26 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 4/9, 4/31, 0/210. 0 new sign-offs 6 h. 16 lanes restarted 05:13. Local root 92% -> INFRA-PRUNE-1.
+Snapshot 2026-10-29 06:21 PDT: signed types S81 4/171 HEAD 0/16 QC 0/68 KV 0/40 HBM 0/49; hard cores 15/52, 2/3, 5/9, 4/31, 0/210. 0 new sign-offs 7 h. KV plan FROZEN (event26a). CLOSURE-LIST 81 rows, 1 closed; S81 census missing. Local root 83%.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
