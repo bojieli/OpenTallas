@@ -25,5 +25,11 @@
   "model/compiler source and latency receipt",
   "realFFrow/master checks",
   "PG/G2/clock/TTFFsignoff"
- ]
+ ],
+ "geometry_correction": "e53d8bd86 bank placement rejected; current full-domain-safe <=60%fill placement.json",
+ "max_hop_um": {
+  "rx_st": 399.966,
+  "tx": 395.28
+ },
+ "max_bay_fill": 0.579455
 }

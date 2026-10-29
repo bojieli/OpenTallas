@@ -1,0 +1,23 @@
+{
+ "verdict": "PASS-COND plan and FF-bank design, NO P&R APPROVAL",
+ "picture": "results/hbm_spb_native_1029/banks_pg_safe.png",
+ "viewed": true,
+ "prior_geometry": "e53d8bd86 REJECTED, body-only clearance missed full PHYPGdomain and60%fill",
+ "findings": [
+  "Eight fullbay rectangles andall4104actualFFenvelopes avoid physicalPHY, entirePGdomain[40.04,0,767.368,1113.64], EPmacro andpeerbanks.",
+  "Allocation1.35x0.27um perFF at2.268umcolumnpitch; maxbayfill0.579455 <=0.60. No cell/macro growth.",
+  "RX/ST399.966um;TX395.280um worst same-bit Manhattanhop fromactualpingeometry/exactsites.",
+  "Two partition-owned datahops traversefreeM6/M7 aboveM5EPmacro; CLOCK confirmed12.1a/dallows thiswhile12.10cstillbarsclock/die-levellegs. ExplicitwrapperM7ceiling andG2tracks/pinaccess required;clockbranchesstayoutsidecores/domains.",
+  "FullPHYPGshape retained, and c25c_phy_street clockkeepout nowmatchesfullPGrect; PGneedsnewsolveaftertranslation.",
+  "Realmaster/row checks, new8-bankclocktrees,targetRSTcontract, TTsetup/FFhold andcompiler/model latencyadoption remainrequired."
+ ],
+ "max_bay_fill": 0.579455,
+ "actual_rtl_added_cycles": {
+  "rx_st": 4,
+  "tx": 4
+ },
+ "model_added_cycles": {
+  "rx_st": 2,
+  "tx": 0
+ }
+}

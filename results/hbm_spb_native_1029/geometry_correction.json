@@ -1,0 +1,16 @@
+{
+ "rejected_candidate_commit": "e53d8bd86",
+ "verdict": "FAIL PHYSICAL GEOMETRY: four banks inside full VDDPHY domain; bank fill also exceeded60%",
+ "rejected_collision_ff_per_partition": 2054,
+ "domain_type_um": [
+  40.04,
+  0,
+  767.368,
+  1113.64
+ ],
+ "replacement": "placement.json",
+ "replacement_full_domain_collision_ff": 0,
+ "replacement_max_bay_fill": 0.579455,
+ "clock_keepout_fix": "c25c_phy_street.py now uses full PGdomain [40.04,0,767.368,1113.64], no PG shrink",
+ "wire_access_ruling": "CLOCK confirms12.1a/d permits partition-owned M6/M7 dataoverM5EPOBS;12.10c stillbarsclock/die-levellegs;G2cut/access required"
+}

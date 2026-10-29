@@ -41,7 +41,7 @@ for st in t.get('internal_stations',[]):
   d=max(sum(abs(x-y) for x,y in zip(a,b)) for a,b in zip(pts,pts[1:]));assert d<=405+1e-6,(st['conn'],d)
 # Move the complete PHY/halo/PG-window tuple, not just its digital abstract.
 assert t['clock']['keepouts_um']==[[0.0,0.0,663.688,1113.64],[0.0,0.0,600.048,1050.0]]
-t['clock']['keepouts_um']=[[69.12,0.0,767.368,1113.64],[103.68,0.0,703.728,1050.0]]
+t['clock']['keepouts_um']=[[40.04,0.0,767.368,1113.64],[103.68,0.0,703.728,1050.0]]
 sm=P['partition_types']['q_sm2']['clock']['keepouts_um'];oldclip=[5771.52,0.0,5806.08,1113.64];assert oldclip in sm;sm.remove(oldclip)
 for io in P['die']['io']:
  if io['name'] in ('io_NW_spb0_u_lk_S0','io_NE_spb0_u_lk_S0'):

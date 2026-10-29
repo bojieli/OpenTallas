@@ -52,7 +52,8 @@ def run(bound,graph,contract,out):
  for who,pn in ((L,C['lk_reset_port']),(E,C['ep_reset_port'])):
   if norm(who[pn][2])!=norm(rst):raise ValueError('reset expressions differ from declared synchronous delivered reset')
  for x in (clk,rst):
-  if not re.fullmatch(r'[A-Za-z_$][\w$]*(?:\[\d+\])?',x):raise ValueError('clock/reset contract must name an existing scalar net')
+  m=re.fullmatch(r'[A-Za-z_$][\w$]*(?:\[(\d+)(?::(\d+))?\])?',x)
+  if not m or (m[2] is not None and m[1]!=m[2]):raise ValueError('clock/reset contract must name an existing scalar net or exact one-bit select')
  replacements=[(E['sd_rx'][0],E['sd_rx'][1],'hbm_spb0_rx_q[511:0]'),(E['sd_st'][0],E['sd_st'][1],'hbm_spb0_rx_q[513:512]'),(L['tx'][0],L['tx'][1],'hbm_spb0_tx_q')]
  for a,b,v in sorted(replacements,reverse=True):s=s[:a]+v+s[b:]
  if len(re.findall(r'\bendmodule\b',s))!=1:raise ValueError('expected one bound partition module')

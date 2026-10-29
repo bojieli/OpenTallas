@@ -13,20 +13,26 @@ def points(c,port):
  return [v[i] for i in range(len(v))]
 def dist(a,b):return sum(abs(x-y) for x,y in zip(a,b))
 def intersects(a,b):return a[0]<b[2]-1e-8 and b[0]<a[2]-1e-8 and a[1]<b[3]-1e-8 and b[1]<a[3]-1e-8
-boxes={'PHY':[103.68,0,703.728,1050],'EP':[181.44,1088.64,423.36,1486.08]}
-RX=[[51.84,669.6],[51.84,1043.28],[397.44,1069.2],[440.64,1320.84]]
-TX=[[155.52,1123.2],[470.88,1069.2],[786.24,1013.04],[786.24,639.36]]
+boxes={'PHY':[103.68,0,703.728,1050],'PHY_PG':[40.04,0,767.368,1113.64],'EP':[181.44,1088.64,423.36,1486.08]}
+part=next(x for x in P['partitions'] if x['name']=='NW_spb0');po=part['origin_um'];pg=next(x for x in P['die']['pg']['domains'] if x['name']=='phy_NW_spb0_u_lk_S0')['rect_um'];assert [round(x-po[i%2],6) for i,x in enumerate(pg)]==boxes['PHY_PG'],'unexpected actual PHY PG domain'
+assert ep.get('obs_max')=='M5','overhead partition data links require EP M5 route ceiling'
+assert lk.get('orient','R0')=='R0' and ep.get('orient','R0')=='R0','bank slice assumes canonical R0 master frames'
+RX=[[21.6,639.36],[21.6,1013.04],[137.16,1140.48],[449.28,1210.68]]
+TX=[[153.36,1123.2],[501.12,1123.2],[786.24,1013.04],[786.24,639.36]]
 entries=[];summ=[]
 for inst,width,control,centres,src,dst in [('u_hbm_spb0_rx',514,2,RX,points(lk,'rx')+points(lk,'st'),points(ep,'sd_rx')+points(ep,'sd_st')),('u_hbm_spb0_tx',512,0,TX,points(ep,'sd_tx'),points(lk,'tx'))]:
  assert len(src)==len(dst)==width
  banks=[];actual=[]
  for stage,(cx,cy) in enumerate(centres):
-  # Allocation envelope1.35x0.27, sitepitch0.054,rowpitch0.27,16columns; no extra epoch.
-  sites=[[round(cx-10.8+(bit%16)*1.35,6),round(cy-4.32+(bit//16)*.27,6)] for bit in range(width)]
+  # Allocation envelope1.35x0.27, sitepitch0.054,rowpitch0.27,16columns at2.268um pitch (<=60%bayfill); no extra epoch.
+  sites=[[round(cx-18.144+(bit%16)*2.268,6),round(cy-4.32+(bit//16)*.27,6)] for bit in range(width)]
   rects=[[x,y,x+1.35,y+.27] for x,y in sites]
   assert all(not intersects(r,box) for r in rects for box in boxes.values())
   assert all(abs(x/.054-round(x/.054))<1e-6 and abs(y/.27-round(y/.27))<1e-6 for x,y in sites)
-  entries.append({'instance':inst,'module':'ot_hbm_spb0_regs','width':width,'control_bits':control,'stage':stage,'flop_net':f'g_stage[{stage}].rd','cell_envelope_um':[1.35,.27],'sites_um':sites})
+  bay=[round(cx-18.144,6),round(cy-4.32,6),round(cx+18.144,6),round(cy-4.32+33*.27,6)]
+  assert all(not intersects(bay,b) for b in boxes.values())
+  fill=width*1.35*.27/(36.288*33*.27);assert fill<=.6
+  entries.append({'bay_rect_um':bay,'bay_fill':round(fill,6),'instance':inst,'module':'ot_hbm_spb0_regs','width':width,'control_bits':control,'stage':stage,'flop_net':f'g_stage[{stage}].rd','cell_envelope_um':[1.35,.27],'sites_um':sites})
   banks.append(sites);actual.append([[x+.675,y+.135] for x,y in sites])
   assert all(not intersects(r,r2) for j,r in enumerate(rects) for r2 in rects[j+1:])
  hops=[]
@@ -41,5 +47,5 @@ for e in entries:
 for i,(a,j,r) in enumerate(allboxes):
  for b,k,z in allboxes[i+1:]:
   if (a,j)!=(b,k):assert not intersects(r,z),(a,j,b,k)
-R={'schema':'opentallas.hbm.spb0_sites.v1','status':'PLAN CANDIDATE; real FF masters/rows, core clock and G2 remain required','plan_sha256':hashlib.sha256((D/'die_plan.json').read_bytes()).hexdigest(),'actual_graph_sha256':hashlib.sha256(GF.read_bytes()).hexdigest(),'physical_envelopes_um':boxes,'summary':summ,'entries':entries,'actual_new_ff_per_partition':4104,'model_extra_ff_per_partition':1028,'latency':{'actual_RTL_rx_st_added':4,'actual_RTL_tx_added':4,'model_rx_st_added':2,'model_tx_added':0}}
+R={'schema':'opentallas.hbm.spb0_sites.v1','status':'PASS-COND plan candidate: fullPHY-PG/EP clear, <=60%bayfill; partition-owned M6/M7 overhead access needsG2; realFFrows/clock/PG/STA remain','plan_sha256':hashlib.sha256((D/'die_plan.json').read_bytes()).hexdigest(),'actual_graph_sha256':hashlib.sha256(GF.read_bytes()).hexdigest(),'physical_envelopes_um':boxes,'summary':summ,'entries':entries,'wire_access_requirement':'RX bank2->bank3 and TX bank0->bank1 traverse EP footprint on partition-owned M6/M7 above coreM5OBS; no cells inside macro; plan owner must approve physical interpretation before adoption','actual_new_ff_per_partition':4104,'model_extra_ff_per_partition':1028,'latency':{'actual_RTL_rx_st_added':4,'actual_RTL_tx_added':4,'model_rx_st_added':2,'model_tx_added':0}}
 (O/'placement.json').write_text(json.dumps(R,indent=1)+'\n');print(json.dumps(summ,indent=1))

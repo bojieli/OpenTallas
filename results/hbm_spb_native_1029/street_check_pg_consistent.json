@@ -1,0 +1,149 @@
+{
+ "summary": {
+  "enforce": true,
+  "cfg": {
+   "reach_um": 400.0,
+   "raster_um": 8.64,
+   "clock_um": 4.32,
+   "hold_um": 4.32,
+   "ft_um": 8.64,
+   "fill": 0.6,
+   "leg_max_um": 480.0,
+   "ft_pitch_um": 0.048,
+   "ft_layers": 2.0,
+   "required_width_um": 34.56,
+   "width_um": 34.56
+  },
+  "clock_builds": 0,
+  "streets": {
+   "raster_um": 8.64,
+   "width_um": 34.56,
+   "required_width_um": 34.56,
+   "street_area_mm2": 221.497,
+   "free_area_mm2": 222.814,
+   "pockets": 15,
+   "pocket_area_mm2": 0.185,
+   "demand": {
+    "mode": "per_street",
+    "base_um": 17.28,
+    "ft_um_per_bit": 0.04,
+    "max_req_ew_um": 601.24,
+    "max_req_ns_um": 3842.32,
+    "flows": 296,
+    "flow_bits": 354076
+   }
+  },
+  "cores": 1192,
+  "cores_over_reach": 0,
+  "worst_cores": [
+   {
+    "name": "NW_io/u_ep_N0",
+    "rect_um": [
+     233.28,
+     7153.92,
+     475.2,
+     7551.36
+    ],
+    "street_dist_um": 397.44
+   },
+   {
+    "name": "NE_io/u_ep_N2",
+    "rect_um": [
+     27950.4,
+     7153.92,
+     28192.32,
+     7551.36
+    ],
+    "street_dist_um": 397.44
+   },
+   {
+    "name": "NW_hub/u_hb_vms_Q__q0",
+    "rect_um": [
+     7551.36,
+     7395.84,
+     8328.96,
+     9031.392
+    ],
+    "street_dist_um": 388.8
+   },
+   {
+    "name": "NW_hub/u_hb_vms_Q__q1",
+    "rect_um": [
+     11802.24,
+     7257.6,
+     12579.84,
+     8893.152
+    ],
+    "street_dist_um": 388.8
+   },
+   {
+    "name": "NE_hub/u_hb_vms_Q__q0",
+    "rect_um": [
+     20070.72,
+     7387.2,
+     20848.32,
+     9022.752
+    ],
+    "street_dist_um": 388.8
+   },
+   {
+    "name": "NE_hub/u_hb_vms_Q__q1",
+    "rect_um": [
+     15819.84,
+     7257.6,
+     16597.44,
+     8893.152
+    ],
+    "street_dist_um": 388.8
+   },
+   {
+    "name": "NW_hub/u_pgp_Q__q0",
+    "rect_um": [
+     6618.24,
+     6073.92,
+     7557.84,
+     6834.24
+    ],
+    "street_dist_um": 380.16
+   },
+   {
+    "name": "NW_hub/u_pgp_Q__q1",
+    "rect_um": [
+     10074.24,
+     7171.2,
+     11013.84,
+     7931.52
+    ],
+    "street_dist_um": 380.16
+   },
+   {
+    "name": "NW_su21/u_su_Q2_lanes4_7",
+    "rect_um": [
+     5088.96,
+     5313.6,
+     5849.28,
+     6039.36
+    ],
+    "street_dist_um": 380.16
+   },
+   {
+    "name": "NW_su21/u_su_Q2_lanes12_15",
+    "rect_um": [
+     4250.88,
+     5313.6,
+     5011.2,
+     6039.36
+    ],
+    "street_dist_um": 380.16
+   }
+  ],
+  "clock_legs": 0,
+  "clock_legs_over_core": 0,
+  "legs_over_core": [],
+  "points_in_core": 0,
+  "points_in_core_rows": [],
+  "unplaced": 0,
+  "counts": {}
+ },
+ "findings": []
+}
