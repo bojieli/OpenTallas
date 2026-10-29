@@ -1,0 +1,194 @@
+{
+ "TT": {
+  "basis": "same fitted stage polynomial applied to actual compiled cell-parent spans; unshared OCV/droop not included, planning diagnostic only",
+  "worst": [
+   {
+    "region": "T002",
+    "spread_ps": 1647.67,
+    "early": "t_NW_sm3__clk_c7",
+    "late": "t_NW_sm3__clk_c4"
+   },
+   {
+    "region": "T000",
+    "spread_ps": 1212.37,
+    "early": "t_NW_sm2__clk_c12",
+    "late": "t_NW_sm2__clk_c16"
+   },
+   {
+    "region": "T006",
+    "spread_ps": 1211.83,
+    "early": "t_NE_sm2__clk_c0",
+    "late": "t_NE_sm2__clk_c20"
+   },
+   {
+    "region": "T004",
+    "spread_ps": 1114.45,
+    "early": "t_NE_sm3__clk_c11",
+    "late": "t_NE_sm3__clk_c20"
+   },
+   {
+    "region": "T053",
+    "spread_ps": 1106.1,
+    "early": "t_NE_sm0__clk_c10",
+    "late": "t_NE_sm0__clk_t1"
+   },
+   {
+    "region": "T050",
+    "spread_ps": 1087.08,
+    "early": "t_NW_sm0__clk_c2",
+    "late": "t_NW_sm0__clk_t1"
+   },
+   {
+    "region": "T051",
+    "spread_ps": 880.67,
+    "early": "t_NW_sm1__clk_c14",
+    "late": "t_NW_sm1__clk_c7"
+   },
+   {
+    "region": "T052",
+    "spread_ps": 850.58,
+    "early": "t_NE_sm1__clk_c27",
+    "late": "t_NE_sm1__clk_c23"
+   },
+   {
+    "region": "T003",
+    "spread_ps": 839.14,
+    "early": "t_vsN0__clk_c0",
+    "late": "t_vsN0__clk_t2"
+   },
+   {
+    "region": "T028",
+    "spread_ps": 407.38,
+    "early": "t_NW_hub__clk_c63",
+    "late": "t_NW_hub__clk_c109"
+   },
+   {
+    "region": "T029",
+    "spread_ps": 373.43,
+    "early": "t_NE_hub__clk_c60",
+    "late": "t_NE_hub__clk_c133"
+   },
+   {
+    "region": "T014",
+    "spread_ps": 373.37,
+    "early": "t_NW_su31__clk_c0",
+    "late": "t_NW_b101__clk_t5"
+   },
+   {
+    "region": "T049",
+    "spread_ps": 348.54,
+    "early": "t_NE_b113__clk_c3",
+    "late": "t_NE_b113__clk_t4"
+   },
+   {
+    "region": "T039",
+    "spread_ps": 345.01,
+    "early": "t_NW_b113__clk_c3",
+    "late": "t_NW_b113__clk_t19"
+   },
+   {
+    "region": "T001",
+    "spread_ps": 343.82,
+    "early": "t_NW_spb0__clk_c0",
+    "late": "t_NW_spb0__clk_t15"
+   }
+  ],
+  "over150": 32
+ },
+ "FF": {
+  "basis": "same fitted stage polynomial applied to actual compiled cell-parent spans; unshared OCV/droop not included, planning diagnostic only",
+  "worst": [
+   {
+    "region": "T002",
+    "spread_ps": 1424.27,
+    "early": "t_NW_sm3__clk_c7",
+    "late": "t_NW_sm3__clk_c4"
+   },
+   {
+    "region": "T000",
+    "spread_ps": 1050.86,
+    "early": "t_NW_sm2__clk_c12",
+    "late": "t_NW_sm2__clk_c16"
+   },
+   {
+    "region": "T006",
+    "spread_ps": 1050.36,
+    "early": "t_NE_sm2__clk_c0",
+    "late": "t_NE_sm2__clk_c20"
+   },
+   {
+    "region": "T004",
+    "spread_ps": 962.67,
+    "early": "t_NE_sm3__clk_c8",
+    "late": "t_NE_sm3__clk_c20"
+   },
+   {
+    "region": "T053",
+    "spread_ps": 959.86,
+    "early": "t_NE_sm0__clk_c14",
+    "late": "t_NE_sm0__clk_t1"
+   },
+   {
+    "region": "T050",
+    "spread_ps": 942.99,
+    "early": "t_NW_sm0__clk_c2",
+    "late": "t_NW_sm0__clk_t1"
+   },
+   {
+    "region": "T051",
+    "spread_ps": 763.63,
+    "early": "t_NW_sm1__clk_c10",
+    "late": "t_NW_sm1__clk_c7"
+   },
+   {
+    "region": "T052",
+    "spread_ps": 733.97,
+    "early": "t_NE_sm1__clk_c27",
+    "late": "t_NE_sm1__clk_c23"
+   },
+   {
+    "region": "T003",
+    "spread_ps": 725.84,
+    "early": "t_vsN0__clk_c0",
+    "late": "t_vsN0__clk_t2"
+   },
+   {
+    "region": "T028",
+    "spread_ps": 350.8,
+    "early": "t_NW_hub__clk_c63",
+    "late": "t_NW_hub__clk_c109"
+   },
+   {
+    "region": "T029",
+    "spread_ps": 323.77,
+    "early": "t_NE_hub__clk_c60",
+    "late": "t_NE_hub__clk_c133"
+   },
+   {
+    "region": "T014",
+    "spread_ps": 321.59,
+    "early": "t_NW_su31__clk_c0",
+    "late": "t_NW_b101__clk_t5"
+   },
+   {
+    "region": "T049",
+    "spread_ps": 300.02,
+    "early": "t_NE_b113__clk_c3",
+    "late": "t_NE_b113__clk_t4"
+   },
+   {
+    "region": "T039",
+    "spread_ps": 296.2,
+    "early": "t_NW_b113__clk_c3",
+    "late": "t_NW_b113__clk_t19"
+   },
+   {
+    "region": "T001",
+    "spread_ps": 294.43,
+    "early": "t_NW_spb0__clk_c0",
+    "late": "t_NW_spb0__clk_t15"
+   }
+  ],
+  "over150": 31
+ }
+}

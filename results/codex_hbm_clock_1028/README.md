@@ -10,3 +10,9 @@ The die-specific adaptive_detour adapter derives778.14um from the blocking macro
 Separately, signed alternating stage load/length regression explains most inherited FF duty error: RMS23.18→6.48ps. This is a diagnosis, not a closure model or gate.
 
 Clock-only synthesis is live on intel2:/srv/opentallas-scratch2/claude/codex-hbm-clock-1028/build2.otrun.log, unit oth-ubuntu-1152639-1793256397. C25b legal DME delay, early-merge, inv2, rep180. No route submitted. Initial stage estimate retained; actual tap-wire fit must replace the provisional stage-wire tap coefficients before route.
+
+Actual compiled paths disprove the internal DME score: corridor internal max119.7ps, same stage polynomial on exported paths1647.67TT/1424.27FF,32/31regions above150. These are planning diagnostics, notSTA. Source root cause: delay mode prices direct Manhattan lengths, then export adds unpriced legal detours; non-snake leaves interpret tap distance inum asps despite calibration. Shared physical_leg pricing fix is owned by FLOW clock_tools on codex/dme-actual-1029@5c882841e; HBM reuses it experimentally, no duplicate tool edit/adoption.
+
+BodySiteMap adapter preserves1.62x.27 nativeCKINV footprint and currenthalos before DME; guards reject plannedsnakehops>450. Current street_body uses pins'updatedPHYtuple and remains FAIL (8longhops, nominal281.6, compiled model2563.97TT). It is retained; no route/STA.
+
+TOPKdirect-mode regional-clock receipt topk_regional_clock.json confirms selector.selected_line launchclk_ctl and link.selected_line captureclk both T010 in the explicit compiled tree. This is region identity only, unsignedparentbudget views, noSTA/signoffclaim.
