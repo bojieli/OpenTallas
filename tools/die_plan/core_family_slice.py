@@ -132,6 +132,95 @@ def split_long_leaves(P, limit_um):
     return out
 
 
+def fix_keepout_strays(P, mode, limit_um, smax):
+    """DIE-S81-30 opt-in (family "keepout_stray": "merge" | "reparent"; macro_leaves plans only).  split_long_leaves
+    gives a split-off part its own leaf at the part centroid on the ORIGINAL parent; beside macro keep-outs that leg
+    walks round the macro (VSW: 1 + 4 flops in the channel between the two SRAMs, 1.61x / 1.92x Manhattan) or runs
+    far past smax with no repeater (VSW Tqqwq: 128 um, leaf slew-in 95 ps).  Every leaf-level single-segment leg
+    > 1.10x Manhattan or > smax is resolved structurally (no sink moves, no stage added), trying in mode order:
+      merge    -- the stray sinks join the existing leaf whose driver reaches every one of them by a <= 1.10x maze path
+                  with the merged driver->sink spread <= limit_um (least spread wins); the emptied leaf is pruned.
+      reparent -- the stray leaf keeps its own leaf buffer (same stage count) but hangs on the same-level driver whose
+                  branch site reaches it by a single <= 1.10x, <= smax leg (shortest wins).
+    "merge" tries merge then reparent; "reparent" tries reparent then merge.  A leg with no legal fix is left
+    unchanged (the plan gates then fail honestly).  Returns the per-leaf record."""
+    if mode not in ("merge", "reparent"):
+        raise SystemExit("keepout_stray: mode must be merge or reparent, got %r" % mode)
+    mz = P['mz']; G = mz.G; tol = GATES["leg_detour_max"] + 1e-9
+    man = lambda a, b: (abs(a[0] - b[0]) + abs(a[1] - b[1])) * G
+    lvl = max(w['level'] for w in P['wires'])
+    node = {n[0]: n for n in P['nodes']}
+    leafset = lambda: {w['edge'] for w in P['wires'] if w['level'] == lvl and node.get(w['edge'], (0,) * 5)[4] == 'leaf'}
+
+    def ratio(w):
+        q = [s / man(c[0], c[-1]) for s, c in zip(w['segs'], w['cells']) if man(c[0], c[-1]) > 1.0]
+        return max(q) if q else 1.0
+    wire = {w['edge']: w for w in P['wires']}
+    bad = sorted(u for u in leafset() if ratio(wire[u]) > tol or (len(wire[u]['segs']) == 1 and wire[u]['segs'][0] > smax + 1e-9))
+    ismac = lambda u: any(s[4].startswith("MACRO:") for s in P['leafsinks'][u])
+
+    def merge(u, sinks):
+        best = None
+        for v in sorted(leafset() - set(bad) - {u}):
+            if ismac(v):
+                continue
+            d = node[v][2]; xy = mz.xy(d); spread = 0.0
+            for s in P['leafsinks'][v] + sinks:
+                spread = max(spread, abs(s[0] - xy[0]) + abs(s[1] - xy[1]))
+            if spread > limit_um or (best is not None and spread >= best[0]):
+                continue
+            if all(man(d, c) <= 1.0 or mz.md(d, c) <= tol * man(d, c) for c in (mz.cell(s[:2], node=False) for s in sinks)):
+                best = (spread, v)
+        if best is None:
+            return None
+        P['leafsinks'][best[1]] = P['leafsinks'][best[1]] + sinks; P['leafsinks'][u] = []
+        return dict(fixed="merge", into=best[1], spread_um=round(best[0], 2), pruned=prune_empty_leaves(P))
+
+    def reparent(u, sinks):
+        c = node[u][2]; own = node[u + '_br'][1]; best = None
+        for v in sorted(leafset() - {u}):
+            drv = node[v + '_br'][1]
+            if drv == own:
+                continue
+            hub = node[v + '_br'][2]
+            nsib = sum(1 for n in P['nodes'] if n[4] == 'branch' and n[1] == drv)
+            b = mz.cell((mz.xy(hub)[0], mz.xy(hub)[1] + nsib * 1.08))
+            L = mz.md(b, c)
+            if L <= smax and (man(b, c) <= 1.0 or L <= tol * man(b, c)) and (best is None or (L, drv) < best[:2]):
+                best = (L, drv, b)
+        if best is None:
+            return None
+        L, drv, b = best
+        P['nodes'] = [(n[0], drv, b, n[3], n[4]) if n[0] == u + '_br' else n for n in P['nodes']]
+        wire[u]['segs'] = [L]; wire[u]['cells'] = [mz.path(b, c)]
+        return dict(fixed="reparent", driver=drv, leg_um=round(L, 2), branch_xy=mz.xy(b), pruned=prune_empty_leaves(P))
+    out = []
+    for u in bad:
+        sinks = P['leafsinks'][u]
+        rec = dict(leaf=u, sinks=len(sinks), ratio=round(ratio(wire[u]), 3), leg_um=round(sum(wire[u]['segs']), 2), mode=mode)
+        if ismac(u) or len(wire[u]['segs']) != 1:
+            out.append(dict(rec, fixed=False, why="macro leaf or repeated leaf edge")); continue
+        r = None
+        for f in ((merge, reparent) if mode == "merge" else (reparent, merge)):
+            r = f(u, sinks)
+            if r is not None:
+                break
+        node = {n[0]: n for n in P['nodes']}
+        out.append(dict(rec, **r) if r is not None else dict(rec, fixed=False, why="no legal merge/reparent target"))
+    if not any(r.get("fixed") == "reparent" for r in out):
+        return out
+    order, seen, rest = [], set(), list(P['nodes'])   # parents before children (a reparented branch may point back)
+    while rest:
+        nxt = [n for n in rest if n[1] is None or n[1] in seen]
+        if not nxt:
+            raise SystemExit('keepout_stray: cycle in plan nodes')
+        for n in nxt:
+            order.append(n); seen.add(n[0])
+        rest = [n for n in rest if n[0] not in seen]
+    P['nodes'] = order
+    return out
+
+
 def reassign_nearest(P, cap):
     """structure, no wire: every sink goes to the NEAREST leaf driver (Manhattan, deterministic, capacity cap sinks per
     leaf, farthest-first), so isolated face/pin/reset registers join the closest leaf instead of stretching the
@@ -363,12 +452,15 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     M7.BUFS = list(ENV)
     if macro_mode:
         P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
-                                [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)))
+                                [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)),
+                                entry_node=bool(fam.get("entry_node_legal")))
         rea = None
     else:
         P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
         rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
+    stray = fix_keepout_strays(P, fam["keepout_stray"], fam.get("leaf_limit", 35.0), fam.get("smax", 70.0)) \
+        if macro_mode and fam.get("keepout_stray") else None
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
     cells = sorted(set(ENV + [H.REP, H.BIG]))
@@ -416,6 +508,8 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
         rec["sinks"] = sum(len(v) for v in P["leafsinks"].values())
         rec["sinkcap"] = P["sinkcap"]
         rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(q[4].startswith("MACRO:") for q in v))
+        if stray is not None:
+            rec["keepout_stray"] = stray
     return rec
 
 
@@ -806,10 +900,12 @@ def read_macro_geo(geo):
     return core, entry, sinks, macros
 
 
-def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48):
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False):
     """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads."""
     core, entry, sinks, macros = read_macro_geo(geo)
-    mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
+    # entry_node (DIE-S81-30 opt-in family "entry_node_legal"): the root driver snaps to the nearest NODE-legal site
+    # (outside the macro keep-outs) instead of the nearest wire-legal one; default unchanged
+    mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=bool(entry_node))
     name = lambda g: "T" + "".join(NAME_POOL[i] for i in g)
     groups = {(): sinks}
     for lv, k in enumerate(upper):
@@ -915,7 +1011,10 @@ def run_core(fams, core, kit, work, a):
     clk = census(kit, work)
     geo = entry_geo(work / "geo.txt", entry_mode(fam, core))
     if keepout_mode(fam, core):
-        fam = dict(fam, keepout_um=macro_keepouts(work / "sites.txt"))
+        # DIE-S81-30 opt-in "keepout_halo_um": the kit's own macro row-cut halo (VSW kit: rows stop 4.32 um from the
+        # SRAMs, so plan nodes 2.2-4.32 um from a macro were legalised 2.0-2.6 um away); default = planner halo, unchanged
+        kh = {"halo": float(fam["keepout_halo_um"])} if fam.get("keepout_halo_um") is not None else {}
+        fam = dict(fam, keepout_um=macro_keepouts(work / "sites.txt", **kh))
     cal = json.loads(Path(a.trunk_cal).read_text()).get(core) if getattr(a, "trunk_cal", None) else None
     rcal = json.loads(Path(a.replan_cal).read_text()).get(core) if getattr(a, "replan_cal", None) else None
     if rcal and cal:
@@ -929,8 +1028,10 @@ def run_core(fams, core, kit, work, a):
     else:
         rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
-    if a.fit and fam.get("macro_leaves"):
-        raise SystemExit("macro_leaves uses exact NLDM caps; calibrated d1 macro support is not enabled")
+    if a.fit and fam.get("macro_leaves") and not fam.get("macro_d1"):
+        # DIE-S81-29 (COORD DIE-S81-28-PARK (4)): opt-in per family "macro_d1": true -> the R9 d1 descent models the macro
+        # leaves as kind "macro" with the record's exact TT/FF liberty clock caps (l0r_r8_uf3.PlanFromRecord + uf_phys3 cpin)
+        raise SystemExit("macro_leaves uses exact NLDM caps; calibrated d1 macro support needs family macro_d1: true")
     if a.fit and not fam.get("lattice"):   # lattice = one master per level: no per-driver d1/uf3 descent
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
                             str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
