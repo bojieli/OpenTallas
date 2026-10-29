@@ -143,10 +143,12 @@ def ref(s):
 
 
 class Design:
-    def __init__(self, path, memory_libs=()):
+    def __init__(self, path, memory_libs=(), memory_reach=False):
         self.extra = {}
         self.memory_models = {}
-        if memory_libs:
+        # COORD 10-29: typed-memory reach is OPT-IN (default off = macros omitted from r2r exactly as before)
+        self.memory_reach = bool(memory_reach)
+        if memory_libs and self.memory_reach:
             spec=importlib.util.spec_from_file_location("geom_memory", Path(__file__).with_name("geom_memory.py"))
             module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
             self.memory_models=module.liberty_models(memory_libs)
@@ -370,6 +372,7 @@ def r2r_metrics(D):
     max(|du|, |dv|)), propagated in topological order through the combinational cells."""
     memories=set(); unknown=[]
     for cid,c in D.cells.items():
+        if not getattr(D,'memory_reach',False):break
         if c[0]!='M':continue
         model=getattr(D,'memory_models',{}).get(c[1])
         if model is None:unknown.append(c[1]+': missing actual Liberty model');continue
@@ -1229,8 +1232,8 @@ def stage_of_odb(name):
     return "placed" if b.startswith("3_place") else "cts" if b.startswith("4_cts") else "other" if b else ""
 
 
-def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=()):
-    D = Design(path, memory_libs)
+def metrics(path, strap_re=STRAP_RE_DEFAULT, odb="", max_layer="M5", grt_log=None, memory_libs=(), memory_reach=False):
+    D = Design(path, memory_libs, memory_reach)
     sr = re.compile(strap_re)
     m = area_metrics(D)
     m.update(pin_metrics(D, sr))
@@ -1264,7 +1267,8 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("dump")
     ap.add_argument("--json")
-    ap.add_argument("--memory-lib",action="append",default=[],help="Actual kit Liberty model(s); missing macro classification leaves r2r incomplete")
+    ap.add_argument("--memory-lib",action="append",default=[],help="Actual kit Liberty model(s); used only with --memory-reach")
+    ap.add_argument("--memory-reach", action="store_true", help="opt-in (COORD 10-29, default off): typed synchronous memories become r2r endpoints; missing/unproven macro models make r2r NA")
     ap.add_argument("--all-kits", action="store_true", help="owner 10-27: independent absolute checks without a template")
     ap.add_argument("--template", help="the template checkpoint's auto_geom.json (metrics of the visually passed part)")
     ap.add_argument("--outline", help="parent slot WxH (um)")
@@ -1275,7 +1279,7 @@ def main(argv=None):
     ap.add_argument("--max-layer", default="M5", help="kit MAX_ROUTING_LAYER (channel / column capacity)")
     ap.add_argument("--grt-log", default=None, help="geom_grt.tcl log (>= 50 congestion iterations)")
     a = ap.parse_args(argv)
-    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log,a.memory_lib)
+    m = metrics(a.dump, a.strap_re, a.odb, a.max_layer, a.grt_log, a.memory_lib, a.memory_reach)
     tmpl = json.load(open(a.template)) if a.template else None
     outline = [float(x) for x in a.outline.lower().split("x")] if a.outline else (m["outline"] if a.outline_self else None)
     rules, verdict = judge(m, tmpl, outline, a.all_kits)

@@ -44,7 +44,11 @@ tail -1 "$OUT/dump.log"
 mapfile -t RA < <(python3 -I -c 'import json,sys;[print(a) for a in json.load(open(sys.argv[1])).get("rules_args",[])]' "$OUT/check.json")
 GA=(); [ "$GRT" = true ] && GA=(--grt-log "$OUT/grt.log")
 # Actual kit models classify synchronous memory boundaries; never infer them from names.
-while IFS= read -r -d '' ml; do GA+=(--memory-lib "$ml"); done < <(find "$KIT/macros" -type f \( -name '*.lib' -o -name '*.lib.gz' \) -print0 2>/dev/null)
+# OPT-IN (COORD 10-29): only when OT_GEOM_MEMORY_REACH=1; default keeps the flop-only r2r rule unchanged.
+if [ "${OT_GEOM_MEMORY_REACH:-0}" = 1 ]; then
+  GA+=(--memory-reach)
+  while IFS= read -r -d '' ml; do GA+=(--memory-lib "$ml"); done < <(find "$KIT/macros" -type f \( -name '*.lib' -o -name '*.lib.gz' \) -print0 2>/dev/null)
+fi
 python3 -I "$TOOLS/geom_rules.py" "$OUT/geom.tsv" --odb "$ODB" --json "$OUT/auto_geom.json" --max-layer "$GMAX" "${GA[@]}" "${RA[@]}"
 vrc=$?
 python3 -E "$TOOLS/geom_png.py" "$OUT/geom.tsv" "$OUT/auto_geom.json" "$OUT/auto_geom.png" ${GA:+--cong "$OUT/cong.rpt"} \
