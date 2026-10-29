@@ -1,0 +1,10 @@
+DIE-S81-24 S81 source-pin event (S81-029 part a), 2026-10-29 07:48 PDT
+Fix-only delta on frozen plan_s13r2 (12.17(1)): narrow pick of Codex 1dfca9901 (codex/s81-cores-1029-resume lineage):
+  physical/die_plan/s81/inputs/core_pins/ot_s81_cfg7_seq_bfp.json clk[0] M4 face (0.042,20.124) -> M5 interior (15.132,30.24), 0.048x0.48
+  physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp/ot_s81_cfg7_seq_bfp.lef clk[0] USE CLOCK, LAYER M5 RECT 15.108 30 15.156 30.48
+CHECKED: pin file sha256 068d2be5db98... == CE-10 routed kit intel2:/srv/opentallas-scratch2/claude/ce10-cfg-route-1029/kit/plan_pins.json
+  (io.tcl place_pin clk[0] M5 15.132 30.24 0.048x0.48; master_core_infra ot_ci_clock_entry clk[0] 15.132 30.24) -> routed view (AP 1a88c7de80fc) matches the plan pin.
+Plan impact: plan_s13r2 references the core by path (hard_cores[].pins_file/lef in 26 col_h9/h10 types, origin/outline unchanged) -> plan sha unchanged;
+  the die clock (ot_clk s81_g03c2) taps partition clock entries, not core pins -> no die clock rerun needed. Col parent kits pick the M5 entry up at their next generation.
+Open (part b): io_hold parent receipt. CFG7 inputs lc,q0..q6 are intra-partition (sender = col parent logic), not plan crossings; the kit has no budget.json
+  (io_hold policy die=null, plan_sha256=null), so io_hold_qualification cannot match any receipt -> needs a col parent kit routed with the CFG7 real view + the core-in-partition receipt path (FLOW).

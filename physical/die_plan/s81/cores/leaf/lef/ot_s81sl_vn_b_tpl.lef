@@ -265,8 +265,8 @@ MACRO ot_s81sl_vn_b
     DIRECTION INPUT ;
     USE SIGNAL ;
     PORT
-      LAYER M4 ;
-        RECT 0.0000 86.3040 0.0840 86.3280 ;
+      LAYER M5 ;
+        RECT 0.0000 86.0760 0.1200 86.5560 ;
     END
   END clk
   PIN fault

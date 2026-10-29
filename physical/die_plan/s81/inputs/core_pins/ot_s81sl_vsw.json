@@ -1,14 +1,14 @@
 {
 "module": "ot_s81sl_vsw",
-"lef": "physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef (largest non-M1 rect centre, CORE-KS rule); 1 multi-port pins re-pointed to their on-track access rect (core_pins_fix rule)",
-"pinhash": "ea294eee23cb",
+"lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vsw.lef",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81sl_vsw/views/ot_s81sl_vsw/ot_s81sl_vsw.lef (largest non-M1 rect centre, CORE-KS rule); 1 multi-port pins re-pointed to their on-track access rect (core_pins_fix rule); S81-028 DIE-S81-24 2026-10-29 (delta_clkpin_m5_1029b.py): clock clk M3(56.673,0.019) -> M5(56.652,0.24) 0.048x0.480 edge rectangle on the M5 track (GEOM-21)",
+"pinhash": "eaee6892a703",
 "pins": [
 {
 "name": "clk",
-"layer": "M3",
-"x": 56.673,
-"y": 0.019
+"layer": "M5",
+"x": 56.652,
+"y": 0.24
 },
 {
 "name": "i_d[0]",
