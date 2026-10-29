@@ -262,6 +262,66 @@
     0.000484
    ],
    "coeff_sha": "7624685c7eb89597"
+  },
+  {
+   "id": "inv_ndr_head26_i150",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "inv",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "HEAD hk4 DIE-HEAD-26 tree i150 combo GRT (M8/M9 NDR) routed DME legs, 327 regions"
+   },
+   "basis": "ot_clk refit (head hk4_rx_tx_inv150) of stack inv/ndr on routed legs /srv/opentallas-scratch2/claude/die-head-26/clk/out_i150_<C>; TT 1143 legs rms 6.35 ps (old model 8.2), FF 1143 legs rms 5.7 ps (old model 8.47)",
+   "source": {
+    "file": "results/die_head_26_1029/inv_stage_cal_head26_i150.json",
+    "sha256": "bd4e95cab63965916d9bdfeca8c469d748361619d651bc51877f17cb1946bae1",
+    "tree": "/srv/opentallas-scratch2/claude/die-head-26/clk/kit_i150/kit/clock/tree.json",
+    "arrivals": "/srv/opentallas-scratch2/claude/die-head-26/clk/out_i150",
+    "rep_um": 150.0,
+    "even_legs": false,
+    "built_with": "/srv/opentallas-scratch2/claude/die-head-26/clk/inv_stage_cal_head26_i150.built_with.json",
+    "tap_from": "/srv/opentallas-scratch2/claude/die-head-26/clk/kit_i150/kit/ot_clk_stage_cal.json"
+   },
+   "leg": [
+    8.790281,
+    0.240444,
+    -0.000156,
+    9.998051
+   ],
+   "tap": [
+    0.146559,
+    0.000484
+   ],
+   "leg_FF": [
+    9.914931,
+    0.167985,
+    8.7e-05,
+    6.788846
+   ],
+   "tap_FF": [
+    0.146559,
+    0.000484
+   ],
+   "coeff_sha": "4e5534dee986e182",
+   "fit": {
+    "TT": {
+     "legs": 1143,
+     "rms_ps": 6.35,
+     "rms_built_ps": 8.2
+    },
+    "FF": {
+     "legs": 1143,
+     "rms_ps": 5.7,
+     "rms_built_ps": 8.47
+    }
+   }
   }
  ]
 }
