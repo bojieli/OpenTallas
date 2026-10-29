@@ -46,4 +46,17 @@ Recommendation: (b). DEFAULT: (b).
 Recommendation: (B). DEFAULT: (B); (A) only if more programmes exceed 262,144.
 
 ## 5. SPB G2 hotspot variants (epyc2, Codex live jobs adopted)
-See section appended at collection.
+Baseline (intel1 m67_g2): FAIL M6 overflow 195 after 50 it, pin access 0 unreachable.
+A_pin_bundles (Codex, PHY rx/tx as M7 bundles at 0.192 pitch): GRT 50 it M6 overflow 10 (max 1, 10 gcells), all on
+phy_rx nets just above the rx bundle (x 106-137, y 641-796) -> still FAIL (needs 0); pin access (DRT) was running at
+collection. CHECKED (grt.log/congestion.rpt). B_tall_banks: still in GRT iterations (~40/50 at 10:35).
+New (DIE-HBM-17, epyc2 /srv/opentallas-scratch2/claude/die-hbm-17-spb, docker dh17-spb-*): A2_rx384 / A3_rx576 = A with
+the 512 rx M7 pins spread to 0.384 / 0.576 pitch (rel x 4.0..200.2 / 4.0..298.4, still clear of tx at 497.7) to halve /
+third the M6 fan-out demand above the bundle. Same netlist, same layer adjustment 0.5 (no relaxation).
+
+## 6. Kit-variant plan views (NOT plan candidates; stations not re-sited) — mkvar.py
+c25c_d16k_vA (c23bb00550e2): qcore V2 267.84x250.56, sfustore V2 345.6x354.24 (Codex 3x6 grid), cxport V1 345.6x250.56.
+c25c_d16k_vB (29a8b9b0de07): cxport V2 241.92x233.28. Pins scaled along their face (order/layer/track residue kept,
+>=2-track spacing), origins nearest legal 8.64 lattice (shift 0..17.28 um), clock entry nearest macro-free 4.32 point.
+G0C on both = the 10 inherited errors, 0 new (CHECKED). vmdel: KITS-17 found 116.64 short by 2.23 um; 142.56x120.96
+fits all 32 instances with <=6 um shift (estimate) -> next plan event.
