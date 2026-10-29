@@ -25,6 +25,11 @@ def compose(F, rules, spec, Cell):
     if type(allow_glue) is not bool:
         raise CompositionError('allow_glue must be boolean')
     original = list(F.cells)
+    primitive_receipt=[]
+    if 'primitive_splits' in spec:
+        from bind_primitive_split import split_cells, PrimitiveSplitError
+        try: original,primitive_receipt=split_cells(original,spec['primitive_splits'],Cell)
+        except PrimitiveSplitError as exc: raise CompositionError(str(exc)) from exc
     bypath = {c.path:c for c in original}
     if len(bypath) != len(original):
         raise CompositionError('duplicate original cell paths')
@@ -153,7 +158,7 @@ def compose(F, rules, spec, Cell):
                             terminals=terminal_record,rtl_sha256=hashlib.sha256(text.encode()).hexdigest()))
         used |= ms
     F.cells=[c for c in original if c.path not in used]+replacements
-    return sources,dict(schema='opentallas.bind.compose.v1',cores=records,terminal_equality=True)
+    return sources,dict(schema='opentallas.bind.compose.v1',cores=records,terminal_equality=True,primitive_splits=primitive_receipt)
 
 
 def apply(binder, spec_path):

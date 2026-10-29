@@ -169,6 +169,15 @@ proc ot_final_ff_converge {} {
       check_placement -verbose
       global_route -end_incremental
       ot_final_ff_refresh
+      set next_ff [ot_mm_ws min BC]
+      lassign [ot_final_ff_counts] next_slew next_cap
+      if {$slew || $cap} {
+        if {$next_slew + $next_cap >= $slew + $cap} {
+          error "OT_FINAL_FF_CONVERGE: no actual DRV-count improvement after routing; structural revision required"
+        }
+      } elseif {$next_ff <= $ff || $next_slew || $next_cap} {
+        error "OT_FINAL_FF_CONVERGE: no actual FF improvement or new DRV after hold routing; structural revision required"
+      }
       incr pass
     }
   } on error {msg opts} {

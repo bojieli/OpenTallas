@@ -55,6 +55,9 @@ module ot_hbm_su_static_pgslice_s #(
  //   Checks (FAULT): inject and drain on one group in one edge; two sectors on one group with different rows.
  //   MUT (bench): 8 inject slot map off by one phase; 9 B39 no-op ignored; 10 delivery word order reversed.
  parameter integer COLLPORT=0,
+ // FULL_SIDE decouples arithmetic capability from the unchanged VM address QID.
+ // The default reproduces the original selection; explicit enablement needs a new bind/model/kit.
+ parameter integer FULL_SIDE=(QID==0),
  parameter integer B39_NOOP=(QID==0),
  // RF_LOCAL (H-SU 2026-10-16, d4c 2 mm locality rule; default 0 = unchanged): the quarter core's RF broadcast
  //   (rf_bword 128 + rf_bcmd 36 + rf_dsec 256) is registered ONCE more here, beside this bank group (clk_ctl), so the
@@ -135,7 +138,7 @@ module ot_hbm_su_static_pgslice_s #(
  end
  for(genvar n=0;n<32;n=n+1)begin:g_lane
   localparam integer L=lid(n);
-  localparam integer KIND=(QID==0&&L==0)?2:(L<32)?1:0;
+  localparam integer KIND=(FULL_SIDE!=0&&L==0)?2:(L<32)?1:0;
   wire [0:0] c_ld,c_ld_bank,c_emit,c_bank,c_cpair,c_cx_arnd,c_cx_arelu,c_cx_amin,c_cx_cclip,c_co_rnd;
   wire [1199:0] c_ld_c;
   wire [23:0] c_o_v,c_i_v,c_no,c_ni,c_krow,c_obase,c_aibase;
@@ -185,7 +188,7 @@ module ot_hbm_su_static_pgslice_s #(
    .side_v(sv),.side_x(sx),.side_y(side_y));
   end
  end
- if(QID==0&&G==0)begin:g_side_pipe
+ if(FULL_SIDE!=0&&G==0)begin:g_side_pipe
   ot_hbm_su_static_side_s #(.SMUT(SMUT)) u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
    .y(side_y),.fault(side_fault));
  end else begin:g_no_side

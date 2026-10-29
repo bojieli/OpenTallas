@@ -174,7 +174,15 @@ def test_feed_repair_composes_with_native_body_packing(monkeypatch):
     monkeypatch.setattr(D, 'REP_REACH_MAX_UM', 400.0)
     site = D.clock_site(_P())
     n = _two()
+    n[2]['physical_leg'] = D.physical_leg(site,(n[0]['x'],n[0]['y']),
+                                        (n[2]['x'],n[2]['y']),250.)
+    # The existing exported chain is the baseline. Re-solving a stock straight
+    # leg can be impossible across a hard core even though this chain is legal.
+    def wrong_baseline(*args):
+        raise ValueError('stock straight leg has no legal channel detour')
+    monkeypatch.setattr(D, 'placed_leg_ps', wrong_baseline)
     _, place, _, _, par = D.tree_netlist(n, [], rep_um=250., site=site, clock_cell='inv2')
+    assert n[2].get('reach_pad'), 'existing physical DME edge must absorb feed repair cost'
     assert n[1]['reach_fix']['span_before_um'] > 405.
     assert _spans(place, par) <= 405.
     assert n[0]['reach_balance']['fixed_legs'] == 1

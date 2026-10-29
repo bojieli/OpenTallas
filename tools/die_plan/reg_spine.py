@@ -20,6 +20,7 @@ Plan (all from the spec + placed sink coordinates, deterministic, no timing meas
 """
 import collections
 import json
+import math
 import sys
 
 
@@ -121,6 +122,104 @@ def close_projected_radius(taps, sinks, trunk, spec):
     return taps
 
 
+def legalize_tap_footprints(taps, spec):
+    """Opt-in (`tap_footprint`): move each tap driver to the nearest point where its WHOLE built footprint is legal.
+
+    reg_spine.tcl abuts `pad` x pad_cell to the LEFT of the tap driver (x - (pad - s) * pitch - 0.3) and places the
+    tap_cell driver at x, one row high.  snap_out only clears the driver point, so long pad chains next to a hard core
+    or the core edge land inside the core or outside the rows.  The footprint [x - cols*pitch - 0.3, x + tap_width] x
+    rows (plus site/row snapping slack and `margin_um`) must lie inside `core_um` and clear every `keepouts_um`
+    rectangle grown by `keepout_halo_um` (row cut-back) and every `extra_keepouts_um` rectangle (e.g. die islands).
+    A chain that fits no single row within `max_move_um` (narrow core-edge channels) is FOLDED: the same pads, same
+    order, `cols` per row on consecutive rows stacked away from the driver row; their coordinates are written as the
+    optional 6th tap field (`pad_xy`), which reg_spine.tcl uses instead of the single-row formula.  Candidates are
+    ranked by (Manhattan move, fewest rows, down before up); search on a `step_um` grid is deterministic.  No tap id,
+    pad count, cell or topology changes.  Fails closed if no legal footprint exists.
+    """
+    fp = spec["tap_footprint"]
+
+    def finite(value, name, *, positive=False, nonnegative=False):
+        value = float(value)
+        if not math.isfinite(value) or (positive and value <= 0) or (nonnegative and value < 0):
+            raise ValueError(f"reg_spine tap_footprint: invalid {name} ({value})")
+        return value
+
+    pitch = finite(spec.get("pad_pitch_um", CFG_DEFAULTS["pad_pitch_um"]), "pad_pitch_um", positive=True)
+    sw, sh = [finite(v, "site_um", positive=True) for v in spec.get("site_um", CFG_DEFAULTS["site_um"])]
+    tw = finite(fp.get("tap_width_um", 1.62), "tap_width_um", positive=True)
+    m = finite(fp.get("margin_um", 0.054), "margin_um", nonnegative=True) + sw / 2
+    step = finite(fp.get("step_um", sh), "step_um", positive=True)
+    cx0, cy0, cx1, cy1 = [finite(v, "core_um") for v in fp["core_um"]]
+    if cx1 <= cx0 or cy1 <= cy0:
+        raise ValueError("reg_spine tap_footprint: core_um must have positive width and height")
+    halo = finite(fp.get("keepout_halo_um", 0.0), "keepout_halo_um", nonnegative=True)
+    keep = []
+    for box in spec.get("keepouts_um", []):
+        a, b, c, d = [finite(v, "keepouts_um") for v in box]
+        if c <= a or d <= b:
+            raise ValueError("reg_spine tap_footprint: invalid keepouts_um rectangle")
+        keep.append((a - halo, b - halo, c + halo, d + halo))
+    for box in fp.get("extra_keepouts_um", []):
+        a, b, c, d = [finite(v, "extra_keepouts_um") for v in box]
+        if c <= a or d <= b:
+            raise ValueError("reg_spine tap_footprint: invalid extra_keepouts_um rectangle")
+        keep.append((a, b, c, d))
+    max_move = finite(fp.get("max_move_um", 30.0), "max_move_um", nonnegative=True)
+    reach = math.floor(max_move / step + 1e-12)
+    ring = sorted((abs(i) + abs(j), j, i) for i in range(-reach, reach + 1)
+                  for j in range(-reach, reach + 1) if (abs(i) + abs(j)) * step <= max_move + 1e-9)
+
+    def rect(x, y, cols, rows, sgn):
+        y0, y1 = (y - (rows - 1) * sh, y) if sgn < 0 else (y, y + (rows - 1) * sh)
+        return (x - cols * pitch - 0.3 - m, y0 - sh / 2 - m, x + tw + m, y1 + 1.5 * sh + m)
+
+    for t in taps:
+        tx, ty = finite(t["x"], "tap.x"), finite(t["y"], "tap.y")
+        pad = finite(t["pad"], "tap.pad", nonnegative=True)
+        if not pad.is_integer():
+            raise ValueError("reg_spine tap_footprint: tap.pad must be an integer")
+        n = int(pad)
+        forms = [(n, 1, -1)] + [(-(-n // r), r, s) for r in range(2, n + 1) for s in (-1, 1)
+                                if -(-n // r) < -(-n // (r - 1))]
+        best = None
+        for cols, rows, sgn in forms:
+            r0 = rect(t["x"], t["y"], cols, rows, sgn)
+            span = reach * step + 0.005  # include the final 0.01um coordinate rounding
+            near = [k for k in keep if k[0] < r0[2] + span and r0[0] - span < k[2]
+                    and k[1] < r0[3] + span and r0[1] - span < k[3]]
+            for dist, j, i in ring:
+                if best is not None and dist > best[0]:
+                    break
+                # Test the same rounded coordinates written to the physical plan.
+                x, y = round(tx + i * step, 2), round(ty + j * step, 2)
+                if abs(x - tx) + abs(y - ty) > max_move + 1e-9:
+                    continue
+                a = rect(x, y, cols, rows, sgn)
+                if a[0] < cx0 or a[1] < cy0 or a[2] > cx1 or a[3] > cy1:
+                    continue
+                if any(a[0] < k[2] and k[0] < a[2] and a[1] < k[3] and k[1] < a[3] for k in near):
+                    continue
+                if best is None or (dist, rows, sgn) < best[0:3]:
+                    best = (dist, rows, sgn, x, y, cols, sgn)
+                break
+        if best is None:
+            raise ValueError(f"reg_spine tap {t['id']}: no legal pad+driver footprint within "
+                             f"{fp.get('max_move_um', 30.0)} um")
+        _, rows, _, x, y, cols, sgn = best
+        if (round(x - t["x"], 3), round(y - t["y"], 3)) != (0.0, 0.0):
+            t["footprint_move_um"] = [round(x - t["x"], 3), round(y - t["y"], 3)]
+        t["x"], t["y"] = round(x, 2), round(y, 2)
+        if rows > 1:
+            # pad s feeds pad s+1 feeds the driver: last pad sits next to the driver on its row, like the 1-row form
+            xy = []
+            for s in range(n):
+                k = n - 1 - s                      # 0 = the pad abutting the driver
+                r, c = divmod(k, cols)
+                xy.append([round(t["x"] - (c + 1) * pitch - 0.3, 3), round(t["y"] + sgn * r * sh, 3)])
+            t["pad_xy"] = xy
+    return taps
+
+
 def plan(spec, sinks):
     sinks = sorted(sinks)
     trunk = [tuple(t) for t in spec["trunk"]]
@@ -142,6 +241,10 @@ def plan(spec, sinks):
         taps.append(dict(id=i, x=round(tx, 2), y=round(ty, 2), node=node[0], pad=pads.get(str(i), 0)))
     if "projected_radius_um" in spec:
         taps = close_projected_radius(taps, sinks, trunk, spec)
+    if "tap_footprint" in spec:
+        taps = legalize_tap_footprints(taps, spec)
+        for t in taps:
+            t["node"] = min(attach, key=lambda n: (abs(n[1] - t["x"]) + abs(n[2] - t["y"]), n[0]))[0]
     assign = {}
     for n, x, y in sinks:
         assign[n] = min(range(len(taps)), key=lambda i: (abs(taps[i]["x"] - x) + abs(taps[i]["y"] - y), i))
@@ -150,6 +253,10 @@ def plan(spec, sinks):
         t["sinks"] = cnt[t["id"]]
         t["radius_um"] = round(max((abs(x - t["x"]) + abs(y - t["y"]) for n, x, y in sinks if assign[n] == t["id"]),
                                    default=0.0), 1)
+    if "tap_footprint" in spec and "projected_radius_um" in spec:
+        worst = max(t["radius_um"] for t in taps)
+        if worst > float(spec["projected_radius_um"]):
+            raise ValueError(f"reg_spine footprint legalization broke projected radius: {worst} um")
     return trunk, taps, assign
 
 
@@ -164,18 +271,25 @@ def _tcl(v):
 
 def write(out, trunk, taps, assign, spec=None):
     spec = spec or {}
+    status = spec.get("placement_status", "PLACED")
+    if status not in ("PLACED", "FIRM"):
+        raise ValueError("reg_spine placement_status must be PLACED or FIRM")
     with open(f"{out}/reg_spine_plan.tcl", "w") as f:
         f.write("# GENERATED by reg_spine.py. cfg: tcl dict; cores: inst pin x y stages {repeaters}; "
                 "trunk: name x y parent; taps: id x y node pad\n")
         cfg = dict(CFG_DEFAULTS, **{k: spec[k] for k in CFG_DEFAULTS if k in spec})
         cfg["root_split_xy"] = spec.get("root_split_xy", [trunk[0][1], trunk[0][2]])
         cfg["cts_extra_nets"] = spec.get("cts_extra_nets", [])
+        # Default output stays unchanged; only a fully legalized prebuild plan
+        # may retain its declared homes through CTS legalization.
+        if "placement_status" in spec:
+            cfg["placement_status"] = status
         f.write("set rsp_cfg {\n" + "".join(f"  {k} {_tcl(cfg[k])}\n" for k in sorted(cfg)) + "}\n")
         f.write("set rsp_cores {\n" + "".join(
             f"  {{{c['inst']} {c['pin']} {c['xy'][0]} {c['xy'][1]} {int(c['stages'])} {_tcl(c.get('repeaters', []))}}}\n"
             for c in spec.get("core_taps", [])) + "}\n")
         f.write("set rsp_trunk {\n" + "".join(f"  {{{n} {x} {y} {p}}}\n" for n, x, y, p in trunk) + "}\n")
-        f.write("set rsp_taps {\n" + "".join(f"  {{{t['id']} {t['x']} {t['y']} {t['node']} {t['pad']}}}\n" for t in taps)
+        f.write("set rsp_taps {\n" + "".join(f"  {{{t['id']} {t['x']} {t['y']} {t['node']} {t['pad']}" + (f" {_tcl(t['pad_xy'])}" if t.get('pad_xy') else '') + "}\n" for t in taps)
                 + "}\n")
     with open(f"{out}/reg_spine_assign.txt", "w") as f:
         for n in sorted(assign):

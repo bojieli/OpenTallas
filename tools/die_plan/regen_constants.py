@@ -473,6 +473,17 @@ def qc_seam(o):
           inp, group="xdie")
     c = [st["CS_TXS"] + N59_TX + st["SC_TX"], 1, 1, st["CS_X3S"] + N59_X3 + 1 + st["SC_X3"]]
     c = [x + p for x, p in zip(c, PINREG_EXT["C"])]
+    profile = (o.B.param_regen.get('record') or {}).get('qwen_head_prepare_profile')
+    if profile is not None:
+        sys.path.insert(0, str(HERE.parents[1]/'qwen_split'))
+        import head_record_timing as HT
+        try:
+            actual = HT.emitted(o.B.dir)
+        except (OSError, ValueError, KeyError) as e:
+            raise RuleError('actual emitted P1 profile: ' + str(e))
+        if actual != profile.get('record_timing'):
+            raise RuleError('actual emitted P1 timing differs from bound coherent profile')
+        c[1] = actual['port1_txd']
     r = o.add("D2D_TXDP_C", c, "rtl", "producer_txd_c + PINREG_EXT (d2d_link_calendar.py); byte p = port p",
               dict(st), inst=r"(^|\.)d2d_rom$|u_d2d", param="TXDP", group="xdie")
     r["sv_literal"] = f"32'h{_txdp_word(c):08x}"

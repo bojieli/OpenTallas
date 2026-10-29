@@ -1,0 +1,92 @@
+{
+ "txl": 6,
+ "phy": 5,
+ "phy_compiled": 7,
+ "pinreg": true,
+ "ofs": 0,
+ "txd": {
+  "C": [
+   13,
+   18,
+   1,
+   15
+  ],
+  "K": [
+   170,
+   4,
+   3,
+   3
+  ]
+ },
+ "entries": {
+  "C_tx": 2,
+  "K_rx": 2
+ },
+ "seg1_base": {},
+ "seg2_base": {},
+ "span": 63,
+ "spans": {
+  "0": 63
+ },
+ "messages": [
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 28,
+   "tx_port": 1,
+   "rx_port": 1,
+   "kind": 12,
+   "beat": 0,
+   "arrive": 58,
+   "rx_out": 60,
+   "wr": 46
+  },
+  {
+   "seg": 0,
+   "src": "C",
+   "cyc": 31,
+   "tx_port": 1,
+   "rx_port": 1,
+   "kind": 14,
+   "beat": 0,
+   "arrive": 61,
+   "rx_out": 63,
+   "wr": 49
+  }
+ ],
+ "die_stages": {
+  "CS_TXS": 5,
+  "CS_RXV": 5,
+  "CS_RXP": 5,
+  "CS_X3S": 6,
+  "SC_TX": 4,
+  "SC_X3": 4,
+  "KS_RXV": 90,
+  "KS_RXP": 90,
+  "KS_TXS": 88,
+  "KS_TXK": 88,
+  "KS_TXB": 88,
+  "SK_TXV": 78,
+  "SK_TXP": 78
+ },
+ "txdp": {
+  "C": {
+   "ports": [
+    13,
+    18,
+    1,
+    15
+   ],
+   "word": "32'h0f01120d"
+  },
+  "K": {
+   "ports": [
+    170,
+    4,
+    3,
+    3
+   ],
+   "word": "32'h030304aa"
+  }
+ }
+}

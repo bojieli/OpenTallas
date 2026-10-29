@@ -1,0 +1,3463 @@
+[
+  {
+    "source": "u_leaf.zh_err_q\\[11\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.gz\\[2\\]$_DFF_PN0_",
+    "source_xy": [
+      45.792,
+      417.015
+    ],
+    "capture_xy": [
+      359.37,
+      109.215
+    ],
+    "distance": 621.3779999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.start$_DFF_PN0_",
+    "capture": "u_leaf.u_core.z_b\\[0\\]$_DFF_PN0_",
+    "source_xy": [
+      598.59,
+      5.805
+    ],
+    "capture_xy": [
+      206.55,
+      35.235
+    ],
+    "distance": 421.4700000000001,
+    "source_status": "PLACED",
+    "source_pins": [
+      "hs_start[0]"
+    ],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.start$_DFF_PN0_",
+    "capture": "u_leaf.u_core.start_b$_DFF_PN0_",
+    "source_xy": [
+      598.59,
+      5.805
+    ],
+    "capture_xy": [
+      211.68,
+      27.945
+    ],
+    "distance": 409.05000000000007,
+    "source_status": "PLACED",
+    "source_pins": [
+      "hs_start[0]"
+    ],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.zh_err_q\\[13\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.gz\\[3\\]$_DFF_PN0_",
+    "source_xy": [
+      329.778,
+      417.015
+    ],
+    "capture_xy": [
+      361.692,
+      18.765
+    ],
+    "distance": 430.164,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.start$_DFF_PN0_",
+    "capture": "u_leaf.u_core.z_b\\[2\\]$_DFF_PN0_",
+    "source_xy": [
+      598.59,
+      5.805
+    ],
+    "capture_xy": [
+      191.754,
+      101.655
+    ],
+    "distance": 502.6860000000001,
+    "source_status": "PLACED",
+    "source_pins": [
+      "hs_start[0]"
+    ],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.start$_DFF_PN0_",
+    "capture": "u_leaf.u_core.z_b\\[1\\]$_DFF_PN0_",
+    "source_xy": [
+      598.59,
+      5.805
+    ],
+    "capture_xy": [
+      192.024,
+      200.745
+    ],
+    "distance": 601.5060000000001,
+    "source_status": "PLACED",
+    "source_pins": [
+      "hs_start[0]"
+    ],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.first_q$_DFF_PN1_",
+    "capture": "u_leaf.u_core.k_b\\[1\\]$_DFF_P_",
+    "source_xy": [
+      410.94,
+      15.525
+    ],
+    "capture_xy": [
+      193.69799999999998,
+      205.60500000000002
+    ],
+    "distance": 407.32200000000006,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_rr.rst_n\\[0\\]$_DFF_P_",
+    "capture": "u_leaf.u_io.fr_valid$_DFF_PN0_",
+    "source_xy": [
+      356.66999999999996,
+      118.66499999999999
+    ],
+    "capture_xy": [
+      593.352,
+      327.91499999999996
+    ],
+    "distance": 445.932,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[30\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      189.378,
+      398.925
+    ],
+    "distance": 575.5590000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.first_q$_DFF_PN1_",
+    "capture": "u_leaf.u_core.k_b\\[5\\]$_DFF_P_",
+    "source_xy": [
+      410.94,
+      15.525
+    ],
+    "capture_xy": [
+      187.623,
+      205.875
+    ],
+    "distance": 413.66700000000003,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.first_q$_DFF_PN1_",
+    "capture": "u_leaf.u_core.k_b\\[9\\]$_DFF_P_",
+    "source_xy": [
+      410.94,
+      15.525
+    ],
+    "capture_xy": [
+      193.023,
+      233.95499999999998
+    ],
+    "distance": 436.347,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[110\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      598.3199999999999,
+      377.055
+    ],
+    "distance": 411.75,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[111\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      598.752,
+      379.21500000000003
+    ],
+    "distance": 414.342,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[112\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      598.5899999999999,
+      380.025
+    ],
+    "distance": 414.9899999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[113\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      599.13,
+      381.91499999999996
+    ],
+    "distance": 417.41999999999996,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[114\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      599.184,
+      381.645
+    ],
+    "distance": 417.20399999999995,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[115\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      598.9680000000001,
+      380.295
+    ],
+    "distance": 415.63800000000015,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[116\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      598.482,
+      381.375
+    ],
+    "distance": 416.23199999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.em_w$_DFF_PN0_",
+    "capture": "u_leaf.u_io.fr_rz\\[117\\]$_DFFE_PP_",
+    "source_xy": [
+      554.04,
+      9.585
+    ],
+    "capture_xy": [
+      598.428,
+      373.005
+    ],
+    "distance": 407.808,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[31\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      182.196,
+      399.195
+    ],
+    "distance": 583.0110000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[0\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      193.914,
+      393.795
+    ],
+    "distance": 565.893,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[1\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      192.618,
+      391.905
+    ],
+    "distance": 565.299,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[2\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      193.374,
+      392.445
+    ],
+    "distance": 565.0830000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[3\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      194.994,
+      391.095
+    ],
+    "distance": 562.113,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[4\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      193.59,
+      392.985
+    ],
+    "distance": 565.407,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[5\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      193.212,
+      391.095
+    ],
+    "distance": 563.8950000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[6\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      190.512,
+      391.095
+    ],
+    "distance": 566.595,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[7\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      183.22199999999998,
+      394.33500000000004
+    ],
+    "distance": 577.1250000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[8\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      193.80599999999998,
+      395.145
+    ],
+    "distance": 567.3510000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[9\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      188.136,
+      392.445
+    ],
+    "distance": 570.321,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[10\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      188.082,
+      392.985
+    ],
+    "distance": 570.9150000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[11\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      186.35399999999998,
+      396.225
+    ],
+    "distance": 575.883,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[12\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      184.086,
+      393.795
+    ],
+    "distance": 575.721,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[13\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      190.026,
+      388.125
+    ],
+    "distance": 564.1110000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[14\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      188.676,
+      395.145
+    ],
+    "distance": 572.481,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[15\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      191.59199999999998,
+      391.095
+    ],
+    "distance": 565.5150000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[16\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      189.702,
+      391.905
+    ],
+    "distance": 568.215,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[17\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      186.084,
+      389.205
+    ],
+    "distance": 569.133,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[18\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      187.38,
+      390.825
+    ],
+    "distance": 569.4570000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[19\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      187.92000000000002,
+      391.905
+    ],
+    "distance": 569.9970000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[20\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      187.488,
+      392.175
+    ],
+    "distance": 570.6990000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[21\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      190.07999999999998,
+      389.745
+    ],
+    "distance": 565.6770000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[22\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      191.7,
+      390.825
+    ],
+    "distance": 565.1370000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[23\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      187.542,
+      391.365
+    ],
+    "distance": 569.835,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[24\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      191.916,
+      389.745
+    ],
+    "distance": 563.8410000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[25\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      188.838,
+      392.71500000000003
+    ],
+    "distance": 569.8890000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[26\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      189.54000000000002,
+      386.505
+    ],
+    "distance": 562.9770000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[27\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      189.0,
+      387.855
+    ],
+    "distance": 564.8670000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[28\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      182.68200000000002,
+      400.545
+    ],
+    "distance": 583.875,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[2\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[2\\]\\[29\\]$_DFF_P_",
+    "source_xy": [
+      413.66700000000003,
+      47.655
+    ],
+    "capture_xy": [
+      186.24599999999998,
+      404.055
+    ],
+    "distance": 583.8210000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[31\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      297.53999999999996,
+      417.28499999999997
+    ],
+    "distance": 514.566,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[26\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      293.004,
+      418.365
+    ],
+    "distance": 520.182,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[27\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      296.13599999999997,
+      417.28499999999997
+    ],
+    "distance": 515.97,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[28\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      293.868,
+      417.28499999999997
+    ],
+    "distance": 518.238,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[29\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      290.466,
+      417.015
+    ],
+    "distance": 521.37,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[30\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      299.214,
+      417.015
+    ],
+    "distance": 512.6220000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[0\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      273.834,
+      417.28499999999997
+    ],
+    "distance": 538.2719999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[1\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      276.48,
+      419.985
+    ],
+    "distance": 538.326,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[2\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      282.528,
+      419.445
+    ],
+    "distance": 531.738,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[3\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      280.206,
+      417.555
+    ],
+    "distance": 532.1700000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[4\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      260.874,
+      418.905
+    ],
+    "distance": 552.852,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[5\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      282.41999999999996,
+      420.255
+    ],
+    "distance": 532.6560000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[6\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      277.83000000000004,
+      418.905
+    ],
+    "distance": 535.896,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[7\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      279.774,
+      417.825
+    ],
+    "distance": 532.8720000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[8\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      276.696,
+      417.825
+    ],
+    "distance": 535.95,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[9\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      285.714,
+      418.905
+    ],
+    "distance": 528.012,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[10\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      287.712,
+      418.635
+    ],
+    "distance": 525.744,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[11\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      284.634,
+      419.71500000000003
+    ],
+    "distance": 529.902,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[12\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      286.524,
+      419.985
+    ],
+    "distance": 528.282,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[13\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      296.082,
+      417.825
+    ],
+    "distance": 516.5640000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[14\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      291.49199999999996,
+      418.365
+    ],
+    "distance": 521.6940000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[15\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      285.12,
+      418.365
+    ],
+    "distance": 528.066,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[16\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      288.30600000000004,
+      418.095
+    ],
+    "distance": 524.61,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[17\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      288.79200000000003,
+      418.635
+    ],
+    "distance": 524.664,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[18\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      289.116,
+      417.825
+    ],
+    "distance": 523.53,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[19\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      293.868,
+      418.095
+    ],
+    "distance": 519.048,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[20\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      290.57399999999996,
+      419.445
+    ],
+    "distance": 523.692,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[21\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      291.97799999999995,
+      419.175
+    ],
+    "distance": 522.018,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[22\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      295.75800000000004,
+      418.365
+    ],
+    "distance": 517.428,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[23\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      294.084,
+      418.635
+    ],
+    "distance": 519.3720000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[24\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      295.91999999999996,
+      417.555
+    ],
+    "distance": 516.4560000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.q_rs\\[3\\]$_SDFF_PN0_",
+    "capture": "u_leaf.u_core.rt_q\\[3\\]\\[25\\]$_DFF_P_",
+    "source_xy": [
+      415.206,
+      20.384999999999998
+    ],
+    "capture_xy": [
+      296.62199999999996,
+      418.635
+    ],
+    "distance": 516.8340000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[286\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      127.602,
+      252.58499999999998
+    ],
+    "distance": 408.2399999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[282\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      130.086,
+      253.39499999999998
+    ],
+    "distance": 406.5659999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_io.start$_DFF_PN0_",
+    "capture": "u_leaf.u_core.q_rs\\[0\\]$_SDFF_PP0_",
+    "source_xy": [
+      598.59,
+      5.805
+    ],
+    "capture_xy": [
+      196.803,
+      66.82499999999999
+    ],
+    "distance": 462.8070000000001,
+    "source_status": "PLACED",
+    "source_pins": [
+      "hs_start[0]"
+    ],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[318\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      109.83600000000001,
+      258.525
+    ],
+    "distance": 431.9459999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[302\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      114.156,
+      259.605
+    ],
+    "distance": 428.70599999999996,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[366\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      112.59,
+      259.33500000000004
+    ],
+    "distance": 430.00199999999995,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[354\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      113.66999999999999,
+      258.525
+    ],
+    "distance": 428.11199999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[306\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      115.23599999999999,
+      259.605
+    ],
+    "distance": 427.626,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[290\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      115.07400000000001,
+      259.875
+    ],
+    "distance": 428.05799999999994,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[362\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      113.616,
+      258.795
+    ],
+    "distance": 428.436,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[314\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      110.75399999999999,
+      258.255
+    ],
+    "distance": 430.7579999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[298\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      114.21000000000001,
+      259.33500000000004
+    ],
+    "distance": 428.38199999999995,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[358\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      113.4,
+      259.065
+    ],
+    "distance": 428.9219999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[310\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      112.536,
+      258.795
+    ],
+    "distance": 429.51599999999996,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.hh_b\\[4\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[294\\]$_SDFF_PP0_",
+    "source_xy": [
+      296.62199999999996,
+      13.365
+    ],
+    "capture_xy": [
+      116.154,
+      259.875
+    ],
+    "distance": 426.97799999999995,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[0\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.754,
+      294.705
+    ],
+    "distance": 452.84400000000005,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[1\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.1859999999999,
+      295.515
+    ],
+    "distance": 454.0859999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[3\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.646,
+      295.245
+    ],
+    "distance": 453.27599999999995,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[4\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.7,
+      289.845
+    ],
+    "distance": 447.93000000000006,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[31\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.242,
+      311.985
+    ],
+    "distance": 468.61199999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[9\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.538,
+      268.245
+    ],
+    "distance": 426.168,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[10\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.322,
+      270.405
+    ],
+    "distance": 428.11199999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[11\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.24,
+      283.905
+    ],
+    "distance": 442.53,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[12\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.322,
+      287.145
+    ],
+    "distance": 444.852,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[13\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.078,
+      286.605
+    ],
+    "distance": 445.068,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[14\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.402,
+      287.145
+    ],
+    "distance": 445.932,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[15\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.592,
+      288.225
+    ],
+    "distance": 446.202,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[16\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.754,
+      290.115
+    ],
+    "distance": 448.254,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[17\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.8620000000001,
+      293.625
+    ],
+    "distance": 451.87200000000007,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[18\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.456,
+      297.405
+    ],
+    "distance": 456.246,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[19\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.1859999999999,
+      301.185
+    ],
+    "distance": 459.75599999999986,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[20\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.188,
+      303.615
+    ],
+    "distance": 460.188,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[21\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.6179999999999,
+      304.155
+    ],
+    "distance": 463.1579999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[22\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.51,
+      306.315
+    ],
+    "distance": 465.21000000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[23\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.808,
+      306.58500000000004
+    ],
+    "distance": 464.778,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[24\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.8879999999999,
+      305.235
+    ],
+    "distance": 464.5079999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[25\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.2139999999999,
+      307.66499999999996
+    ],
+    "distance": 465.2639999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[26\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.024,
+      309.28499999999997
+    ],
+    "distance": 467.69399999999996,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[27\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.646,
+      311.175
+    ],
+    "distance": 469.2059999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[28\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.294,
+      312.255
+    ],
+    "distance": 470.93399999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[29\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.8620000000001,
+      311.985
+    ],
+    "distance": 470.2320000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[30\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.404,
+      312.255
+    ],
+    "distance": 469.044,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[2\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.998,
+      251.235
+    ],
+    "distance": 408.61800000000005,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[3\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.078,
+      254.47500000000002
+    ],
+    "distance": 412.938,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[4\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.5640000000001,
+      254.20499999999998
+    ],
+    "distance": 413.154,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[5\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.1600000000001,
+      255.285
+    ],
+    "distance": 412.83000000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[6\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.646,
+      256.365
+    ],
+    "distance": 414.39599999999996,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[7\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.2139999999999,
+      258.795
+    ],
+    "distance": 416.394,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[2\\]\\[8\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.4300000000001,
+      259.605
+    ],
+    "distance": 417.4200000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[311\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      116.316,
+      259.605
+    ],
+    "distance": 475.76700000000005,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[359\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      115.452,
+      258.795
+    ],
+    "distance": 475.821,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[295\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.314,
+      257.985
+    ],
+    "distance": 472.149,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[263\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      140.67000000000002,
+      258.525
+    ],
+    "distance": 450.33299999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[279\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.50200000000001,
+      258.525
+    ],
+    "distance": 471.501,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[271\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      139.914,
+      257.985
+    ],
+    "distance": 450.54900000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[319\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      113.94,
+      257.985
+    ],
+    "distance": 476.523,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[367\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      114.75,
+      259.065
+    ],
+    "distance": 476.793,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[303\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      117.44999999999999,
+      258.255
+    ],
+    "distance": 473.283,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[287\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.422,
+      258.525
+    ],
+    "distance": 472.581,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[283\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.55600000000001,
+      257.71500000000003
+    ],
+    "distance": 470.63700000000006,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[363\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      116.37,
+      258.255
+    ],
+    "distance": 474.363,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[315\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      114.75,
+      258.525
+    ],
+    "distance": 476.253,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[299\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      117.34200000000001,
+      258.525
+    ],
+    "distance": 473.66099999999994,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[267\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      139.69799999999998,
+      258.255
+    ],
+    "distance": 451.035,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[259\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      141.75,
+      258.525
+    ],
+    "distance": 449.253,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[355\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      116.262,
+      258.525
+    ],
+    "distance": 474.741,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[307\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.368,
+      259.065
+    ],
+    "distance": 473.175,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[291\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.53,
+      259.605
+    ],
+    "distance": 473.553,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[275\\]$_SDFF_PP0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      139.914,
+      258.795
+    ],
+    "distance": 451.35900000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[55\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      116.04599999999999,
+      224.77499999999998
+    ],
+    "distance": 441.207,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[103\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      117.774,
+      224.77499999999998
+    ],
+    "distance": 439.479,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[7\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      140.994,
+      223.695
+    ],
+    "distance": 415.179,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[39\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.61,
+      223.155
+    ],
+    "distance": 436.023,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[23\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      122.03999999999999,
+      224.77499999999998
+    ],
+    "distance": 435.21299999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[87\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.69200000000001,
+      225.04500000000002
+    ],
+    "distance": 438.831,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[51\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      117.28800000000001,
+      225.85500000000002
+    ],
+    "distance": 441.045,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[99\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      116.91,
+      225.58499999999998
+    ],
+    "distance": 441.153,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[19\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      138.56400000000002,
+      223.965
+    ],
+    "distance": 417.879,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[83\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      114.53399999999999,
+      225.58499999999998
+    ],
+    "distance": 443.529,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[3\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      141.102,
+      224.235
+    ],
+    "distance": 415.611,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[35\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      120.096,
+      225.04500000000002
+    ],
+    "distance": 437.427,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[107\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.368,
+      223.425
+    ],
+    "distance": 437.535,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[91\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.50200000000001,
+      222.885
+    ],
+    "distance": 435.861,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[43\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.44800000000001,
+      223.425
+    ],
+    "distance": 436.45500000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[59\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      115.83000000000001,
+      225.58499999999998
+    ],
+    "distance": 442.23299999999995,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[11\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      139.644,
+      222.885
+    ],
+    "distance": 415.719,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[27\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      121.01400000000001,
+      223.695
+    ],
+    "distance": 435.159,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[111\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      118.15199999999999,
+      224.235
+    ],
+    "distance": 438.56100000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[31\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.934,
+      223.695
+    ],
+    "distance": 436.23900000000003,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[63\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      115.506,
+      225.315
+    ],
+    "distance": 442.28700000000003,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[95\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.232,
+      224.235
+    ],
+    "distance": 437.481,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[47\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      119.55600000000001,
+      223.965
+    ],
+    "distance": 436.887,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.k_b\\[14\\]$_DFF_P_",
+    "capture": "u_leaf.u_core.zh_we\\[15\\]$_SDFF_PN0_",
+    "source_xy": [
+      349.353,
+      16.875
+    ],
+    "capture_xy": [
+      139.644,
+      223.965
+    ],
+    "distance": 416.799,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[31\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.134,
+      312.795
+    ],
+    "distance": 469.3140000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[2\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.2139999999999,
+      294.975
+    ],
+    "distance": 452.57399999999996,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[5\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.512,
+      304.695
+    ],
+    "distance": 461.59199999999987,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[6\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.944,
+      303.075
+    ],
+    "distance": 460.404,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[7\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.106,
+      301.995
+    ],
+    "distance": 459.486,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[8\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.0260000000001,
+      309.28499999999997
+    ],
+    "distance": 465.696,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[9\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      594.702,
+      308.745
+    ],
+    "distance": 464.832,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[10\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      594.27,
+      311.445
+    ],
+    "distance": 467.0999999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[11\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.024,
+      310.635
+    ],
+    "distance": 469.044,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[12\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.7280000000001,
+      306.58500000000004
+    ],
+    "distance": 463.6980000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[13\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.296,
+      306.045
+    ],
+    "distance": 462.7260000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[14\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.322,
+      309.555
+    ],
+    "distance": 467.26199999999994,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[15\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.754,
+      304.425
+    ],
+    "distance": 462.5640000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[16\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.7819999999999,
+      305.235
+    ],
+    "distance": 462.40199999999993,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[17\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.592,
+      303.885
+    ],
+    "distance": 461.86199999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[18\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.402,
+      305.775
+    ],
+    "distance": 464.562,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[19\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.1859999999999,
+      308.475
+    ],
+    "distance": 467.04599999999994,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[20\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.512,
+      310.905
+    ],
+    "distance": 467.8019999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[21\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.998,
+      310.365
+    ],
+    "distance": 467.74800000000005,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[22\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.322,
+      312.525
+    ],
+    "distance": 470.23199999999997,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[23\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.2139999999999,
+      307.125
+    ],
+    "distance": 464.72399999999993,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[24\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      597.456,
+      307.395
+    ],
+    "distance": 466.236,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[25\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.404,
+      308.205
+    ],
+    "distance": 464.9939999999999,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[26\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.404,
+      311.175
+    ],
+    "distance": 467.96399999999994,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[27\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      595.7280000000001,
+      313.605
+    ],
+    "distance": 470.7180000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[28\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.268,
+      313.33500000000004
+    ],
+    "distance": 470.98800000000006,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[29\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      596.268,
+      313.065
+    ],
+    "distance": 470.7180000000001,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  },
+  {
+    "source": "u_leaf.u_core.active$_DFFE_PN0P_",
+    "capture": "u_leaf.u_core.rz\\[3\\]\\[30\\]$_DFFE_PP_",
+    "source_xy": [
+      423.63,
+      14.985
+    ],
+    "capture_xy": [
+      594.702,
+      313.065
+    ],
+    "distance": 469.15200000000004,
+    "source_status": "PLACED",
+    "source_pins": [],
+    "capture_status": "PLACED",
+    "capture_pins": []
+  }
+]
