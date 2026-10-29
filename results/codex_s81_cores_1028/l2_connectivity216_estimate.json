@@ -1,0 +1,444 @@
+{
+ "direct_bundles": {
+  "d21": {
+   "ports": [
+    [
+     "u_l1",
+     "rn_i"
+    ],
+    [
+     "u_l2",
+     "rs_o"
+    ]
+   ],
+   "bits": 276,
+   "maximum_um": 404.988,
+   "over405": 0
+  },
+  "u12": {
+   "ports": [
+    [
+     "u_l1",
+     "rn_o"
+    ],
+    [
+     "u_l2",
+     "rs_i"
+    ]
+   ],
+   "bits": 276,
+   "maximum_um": 404.988,
+   "over405": 0
+  },
+  "dl_av": {
+   "ports": [
+    [
+     "u_l1",
+     "dl_av"
+    ],
+    [
+     "u_l2",
+     "dl_av"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 314.988,
+   "over405": 0
+  },
+  "dl_a": {
+   "ports": [
+    [
+     "u_l1",
+     "dl_a"
+    ],
+    [
+     "u_l2",
+     "dl_a"
+    ]
+   ],
+   "bits": 237,
+   "maximum_um": 332.7,
+   "over405": 0
+  },
+  "dl_bv": {
+   "ports": [
+    [
+     "u_l1",
+     "dl_bv"
+    ],
+    [
+     "u_l2",
+     "dl_bv"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 236.46,
+   "over405": 0
+  },
+  "dl_b": {
+   "ports": [
+    [
+     "u_l1",
+     "dl_b"
+    ],
+    [
+     "u_l2",
+     "dl_b"
+    ]
+   ],
+   "bits": 237,
+   "maximum_um": 336.156,
+   "over405": 0
+  },
+  "c21_v": {
+   "ports": [
+    [
+     "u_l1",
+     "cw_v"
+    ],
+    [
+     "u_l2",
+     "cws_v"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 395.532,
+   "over405": 0
+  },
+  "c21_a": {
+   "ports": [
+    [
+     "u_l1",
+     "cw_a"
+    ],
+    [
+     "u_l2",
+     "cws_a"
+    ]
+   ],
+   "bits": 8,
+   "maximum_um": 404.988,
+   "over405": 0
+  },
+  "c21_d": {
+   "ports": [
+    [
+     "u_l1",
+     "cw_d"
+    ],
+    [
+     "u_l2",
+     "cws_d"
+    ]
+   ],
+   "bits": 256,
+   "maximum_um": 404.988,
+   "over405": 0
+  },
+  "s21": {
+   "ports": [
+    [
+     "u_l1",
+     "sid_i"
+    ],
+    [
+     "u_l2",
+     "sids"
+    ]
+   ],
+   "bits": 4,
+   "maximum_um": 386.604,
+   "over405": 0
+  },
+  "r_v": {
+   "ports": [
+    [
+     "u_l1",
+     "ct_v"
+    ],
+    [
+     "u_l2",
+     "rct_v"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 326.556,
+   "over405": 0
+  },
+  "r_b": {
+   "ports": [
+    [
+     "u_l1",
+     "ct_b"
+    ],
+    [
+     "u_l2",
+     "rct_b"
+    ]
+   ],
+   "bits": 170,
+   "maximum_um": 322.668,
+   "over405": 0
+  },
+  "f1": {
+   "ports": [
+    [
+     "u_l1",
+     "fault"
+    ],
+    [
+     "u_l2",
+     "rf"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 236.508,
+   "over405": 0
+  },
+  "u20": {
+   "ports": [
+    [
+     "u_l0",
+     "rs_i"
+    ],
+    [
+     "u_l2",
+     "rn_o"
+    ]
+   ],
+   "bits": 276,
+   "maximum_um": 404.976,
+   "over405": 0
+  },
+  "d02": {
+   "ports": [
+    [
+     "u_l0",
+     "rs_o"
+    ],
+    [
+     "u_l2",
+     "rn_i"
+    ]
+   ],
+   "bits": 276,
+   "maximum_um": 404.976,
+   "over405": 0
+  },
+  "hp_av": {
+   "ports": [
+    [
+     "u_l0",
+     "hp_av"
+    ],
+    [
+     "u_l2",
+     "hp_av"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 284.696,
+   "over405": 0
+  },
+  "hp_a": {
+   "ports": [
+    [
+     "u_l0",
+     "hp_a"
+    ],
+    [
+     "u_l2",
+     "hp_a"
+    ]
+   ],
+   "bits": 204,
+   "maximum_um": 273.984,
+   "over405": 0
+  },
+  "hp_bv": {
+   "ports": [
+    [
+     "u_l0",
+     "hp_bv"
+    ],
+    [
+     "u_l2",
+     "hp_bv"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 225.312,
+   "over405": 0
+  },
+  "hp_b": {
+   "ports": [
+    [
+     "u_l0",
+     "hp_b"
+    ],
+    [
+     "u_l2",
+     "hp_b"
+    ]
+   ],
+   "bits": 204,
+   "maximum_um": 279.888,
+   "over405": 0
+  },
+  "c20_v": {
+   "ports": [
+    [
+     "u_l0",
+     "cw_v"
+    ],
+    [
+     "u_l2",
+     "cwn_v"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 136.704,
+   "over405": 0
+  },
+  "c20_a": {
+   "ports": [
+    [
+     "u_l0",
+     "cw_a"
+    ],
+    [
+     "u_l2",
+     "cwn_a"
+    ]
+   ],
+   "bits": 8,
+   "maximum_um": 192.192,
+   "over405": 0
+  },
+  "c20_d": {
+   "ports": [
+    [
+     "u_l0",
+     "cw_d"
+    ],
+    [
+     "u_l2",
+     "cwn_d"
+    ]
+   ],
+   "bits": 256,
+   "maximum_um": 193.152,
+   "over405": 0
+  },
+  "s20": {
+   "ports": [
+    [
+     "u_l0",
+     "sid_i"
+    ],
+    [
+     "u_l2",
+     "sidn"
+    ]
+   ],
+   "bits": 4,
+   "maximum_um": 337.296,
+   "over405": 0
+  },
+  "h0_v": {
+   "ports": [
+    [
+     "u_l0",
+     "hct_v"
+    ],
+    [
+     "u_l2",
+     "hct_v"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 259.44,
+   "over405": 0
+  },
+  "h0_b": {
+   "ports": [
+    [
+     "u_l0",
+     "hct_b"
+    ],
+    [
+     "u_l2",
+     "hct_b"
+    ]
+   ],
+   "bits": 170,
+   "maximum_um": 283.392,
+   "over405": 0
+  },
+  "f0": {
+   "ports": [
+    [
+     "u_l0",
+     "fault"
+    ],
+    [
+     "u_l2",
+     "hf"
+    ]
+   ],
+   "bits": 1,
+   "maximum_um": 242.256,
+   "over405": 0
+  }
+ },
+ "through_bits": 552,
+ "through_x_delta_max_um": 47.568000000000005,
+ "through_x_delta_mean_um": 7.255478260869528,
+ "station_bits": 265,
+ "station_max_um": 401.24600000000015,
+ "old_clock_unchanged": {
+  "name": "clk",
+  "layer": "M5",
+  "x": 108.012,
+  "y": 21.6
+ },
+ "outline": [
+  216,
+  43.2
+ ],
+ "origin": [
+  1149.12,
+  613.44
+ ],
+ "capacity_estimate": {
+  "actual_source_area_um2": 1650.135239999725,
+  "measured_259_fill": 0.1474,
+  "projected_216_fill": 0.1781083333333333,
+  "aspect": 5,
+  "core_um": [
+   207.36,
+   34.56
+  ],
+  "site_width_um": 0.054,
+  "row_height_um": 0.27,
+  "face_slot_pitch_um": 2.16,
+  "max_measured_ff_width_um": 1.4040000000000248,
+  "face_counts": {
+   "N": 1403,
+   "S": 1734,
+   "E": 6
+  },
+  "slots_per_row": 96,
+  "N_rows": 15,
+  "S_rows": 19,
+  "N_band_um": 4.050000000000001,
+  "S_band_um": 5.130000000000001,
+  "remaining_body_height_um": 25.380000000000003,
+  "empty_projection": "Actual required; cannot extrapolate emptyarea solely by rectangle shrink. New bands .27um rows are within core capacity; source only/no gate PASS claim.",
+  "clock_entry_global_delta_um": [
+   21.6,
+   0
+  ],
+  "clock": "new center108.012,21.6; die source must bind real new center, no old tree reused"
+ }
+}
