@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.macro_placement.v1",
+ "design": "hnx_rp3lp3h_s",
+ "outline_um": [
+  630.72,
+  1036.8
+ ],
+ "macro_placement": [
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[2].g_xm[3].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    468.648
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[2].g_xm[2].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    418.944
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[2].g_xm[1].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    369.24
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[2].g_xm[0].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    319.536
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[1].g_xm[3].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    269.832
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[1].g_xm[2].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    220.128
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[1].g_xm[1].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    527.088
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[1].g_xm[0].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    576.792
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[0].g_xm[3].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    626.496
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[0].g_xm[2].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    676.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[0].g_xm[1].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    725.904
+   ],
+   "orient": "R0"
+  },
+  {
+   "k": "u_lf1.g_xs3.u_xs.u_leaf.g_ln[0].g_xm[0].u_x",
+   "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+   "origin_um": [
+    268.272,
+    775.608
+   ],
+   "orient": "R0"
+  }
+ ],
+ "note": "HBM-CORES-KITS-3 rule R-SRAM-ENTRY, C columns (mp_rule_c.py): equal 10.8+ um channels, array centred on the entry x, every column split at the entry island + halo; k below the face shell"
+}

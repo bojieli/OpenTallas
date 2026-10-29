@@ -1,0 +1,195 @@
+{
+ "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+ "kit": "ot_hbm_su_programme_pslice_c5_37ae30c3033a-_k14",
+ "outline_um": [
+  939.6,
+  760.32
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  935.28,
+  756.0
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  470.88,
+  380.16
+ ],
+ "entry_island_um": [
+  466.56,
+  375.84,
+  475.2,
+  384.48
+ ],
+ "n_macros": 100,
+ "masters": {
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "w": 94.824,
+   "h": 41.064,
+   "pins_W": 410,
+   "pins_E": 409
+  }
+ },
+ "tried": [
+  {
+   "C": 1,
+   "issues": [
+    "C=1 column 0: stack y [-2105.09,2865.41] leaves core y [4.32,756.0] (deficit 4218.82 um)"
+   ],
+   "esc_max": 2.036
+  },
+  {
+   "C": 2,
+   "issues": [
+    "C=2 column 0: stack y [-862.49,1622.81] leaves core y [4.32,756.0] (deficit 1733.62 um)",
+    "C=2 column 1: stack y [-862.49,1622.81] leaves core y [4.32,756.0] (deficit 1733.62 um)"
+   ],
+   "esc_max": 2.362
+  },
+  {
+   "C": 3,
+   "issues": [
+    "C=3 column 0: stack y [-464.86,1225.18] leaves core y [4.32,756.0] (deficit 938.35 um)",
+    "C=3 column 1: stack y [-464.86,1225.18] leaves core y [4.32,756.0] (deficit 938.35 um)",
+    "C=3 column 2: stack y [-415.15,1175.47] leaves core y [4.32,756.0] (deficit 838.94 um)"
+   ],
+   "esc_max": 2.764
+  },
+  {
+   "C": 4,
+   "issues": [
+    "C=4 column 0: stack y [-216.34,1026.36] leaves core y [4.32,756.0] (deficit 491.02 um)",
+    "C=4 column 1: stack y [-216.34,1026.36] leaves core y [4.32,756.0] (deficit 491.02 um)",
+    "C=4 column 2: stack y [-216.34,1026.36] leaves core y [4.32,756.0] (deficit 491.02 um)",
+    "C=4 column 3: stack y [-216.34,1026.36] leaves core y [4.32,756.0] (deficit 491.02 um)"
+   ],
+   "esc_max": 3.328
+  },
+  {
+   "C": 5,
+   "issues": [
+    "C=5 column 0: stack y [-116.93,877.25] leaves core y [4.32,756.0] (deficit 242.50 um)",
+    "C=5 column 1: stack y [-116.93,877.25] leaves core y [4.32,756.0] (deficit 242.50 um)",
+    "C=5 column 2: stack y [-116.93,877.25] leaves core y [4.32,756.0] (deficit 242.50 um)",
+    "C=5 column 3: stack y [-116.93,877.25] leaves core y [4.32,756.0] (deficit 242.50 um)",
+    "C=5 column 4: stack y [-116.93,877.25] leaves core y [4.32,756.0] (deficit 242.50 um)"
+   ],
+   "esc_max": 4.184
+  },
+  {
+   "C": 6,
+   "issues": [
+    "C=6 column 0: stack y [-17.52,827.54] leaves core y [4.32,756.0] (deficit 93.38 um)",
+    "C=6 column 1: stack y [-17.52,827.54] leaves core y [4.32,756.0] (deficit 93.38 um)",
+    "C=6 column 2: stack y [-17.52,827.54] leaves core y [4.32,756.0] (deficit 93.38 um)",
+    "C=6 column 3: stack y [-17.52,827.54] leaves core y [4.32,756.0] (deficit 93.38 um)",
+    "C=6 column 4: stack y [-17.52,827.54] leaves core y [4.32,756.0] (deficit 93.38 um)",
+    "C=6 column 5: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)"
+   ],
+   "esc_max": 5.635
+  },
+  {
+   "C": 7,
+   "issues": [
+    "C=7 column 0: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)",
+    "C=7 column 1: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)",
+    "C=7 column 2: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)",
+    "C=7 column 3: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)",
+    "C=7 column 4: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)",
+    "C=7 column 5: stack y [32.18,777.84] leaves core y [4.32,756.0] (deficit 21.84 um)"
+   ],
+   "esc_max": 8.639
+  },
+  {
+   "C": 8,
+   "issues": [],
+   "esc_max": 18.389
+  }
+ ],
+ "area_um2": {
+  "core": 699784,
+  "macros_with_halo": 514257,
+  "free": 185527
+ },
+ "verdict": "ESCAPE-RISK",
+ "columns": 8,
+ "channel_um": [
+  15.692,
+  20.572,
+  20.572,
+  20.572,
+  20.572,
+  20.572,
+  20.572,
+  19.067,
+  14.178
+ ],
+ "column_x_um": [
+  20.034,
+  135.432,
+  250.83,
+  366.174,
+  481.572,
+  596.97,
+  712.368,
+  826.254
+ ],
+ "escape": [
+  {
+   "channel": 0,
+   "band_um": 11.372,
+   "pins": 5330,
+   "use": 9.673
+  },
+  {
+   "channel": 1,
+   "band_um": 11.932,
+   "pins": 10647,
+   "use": 18.389
+  },
+  {
+   "channel": 2,
+   "band_um": 11.932,
+   "pins": 10647,
+   "use": 18.389
+  },
+  {
+   "channel": 3,
+   "band_um": 11.932,
+   "pins": 10647,
+   "use": 18.389
+  },
+  {
+   "channel": 4,
+   "band_um": 11.932,
+   "pins": 10647,
+   "use": 18.389
+  },
+  {
+   "channel": 5,
+   "band_um": 11.932,
+   "pins": 10647,
+   "use": 18.389
+  },
+  {
+   "channel": 6,
+   "band_um": 11.932,
+   "pins": 10647,
+   "use": 18.389
+  },
+  {
+   "channel": 7,
+   "band_um": 10.427,
+   "pins": 9007,
+   "use": 17.8
+  },
+  {
+   "channel": 8,
+   "band_um": 9.858,
+   "pins": 3681,
+   "use": 7.701
+  }
+ ],
+ "entry_to_far_corner_manhattan_um": 842.4
+}

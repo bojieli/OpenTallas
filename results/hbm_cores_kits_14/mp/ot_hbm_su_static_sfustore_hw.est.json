@@ -1,0 +1,66 @@
+{
+ "rule": "R-SRAM-ENTRY (C columns, results/hbm_cores_kits_3/mp_rule_c.py)",
+ "kit": "ot_hbm_su_static_sfustore_hw_289e635b59d2-_k14",
+ "outline_um": [
+  336.96,
+  328.32
+ ],
+ "core_um": [
+  4.32,
+  4.32,
+  332.64,
+  324.0
+ ],
+ "halo_um": 4.32,
+ "clock_entry_um": [
+  168.456,
+  151.2
+ ],
+ "entry_island_um": [
+  164.16,
+  146.88,
+  172.8,
+  155.52
+ ],
+ "n_macros": 16,
+ "masters": {
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "w": 94.824,
+   "h": 41.064,
+   "pins_W": 410,
+   "pins_E": 409
+  }
+ },
+ "tried": [
+  {
+   "C": 1,
+   "issues": [
+    "C=1 column 0: stack y [-246.48,548.88] leaves core y [4.32,324.0] (deficit 475.68 um)"
+   ],
+   "esc_max": 1.199
+  },
+  {
+   "C": 2,
+   "issues": [
+    "C=2 column 0: stack y [-47.66,350.06] leaves core y [4.32,324.0] (deficit 78.05 um)",
+    "C=2 column 1: stack y [-47.66,350.06] leaves core y [4.32,324.0] (deficit 78.05 um)"
+   ],
+   "esc_max": 2.438
+  },
+  {
+   "C": 3,
+   "issues": [
+    "C=3 column 0: stack y [2.04,300.36] leaves core y [4.32,324.0] (deficit 2.28 um)",
+    "C=3 column 1: stack y [2.04,300.36] leaves core y [4.32,324.0] (deficit 2.28 um)"
+   ],
+   "esc_max": 42.362
+  },
+  "C=4: channels -10.20 um < 10.8"
+ ],
+ "area_um2": {
+  "core": 104957,
+  "macros_with_halo": 82281,
+  "free": 22676
+ },
+ "verdict": "INFEASIBLE"
+}
