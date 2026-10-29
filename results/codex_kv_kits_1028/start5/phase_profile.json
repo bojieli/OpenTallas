@@ -1,0 +1,600 @@
+{
+ "form": "bind5_actual_clock_sdf_path_profile",
+ "source": "/srv/opentallas-scratch2/claude/die-kv-15-1028",
+ "basis": "actual unique clock-tree SDF interconnect+cell arcs; TT/FF min/max rise/fall propagated with physical inverter polarity; no guessed delays",
+ "physical_timing": "nominal functional fixture only; no added provider load or stage-pin route included",
+ "profiles": {
+  "TT": [
+   {
+    "clock_port": "t_st_b8286__clk",
+    "region": "st:h3000400",
+    "physical_pin": "ck_b8286/A",
+    "rise_early_ps": 1029.062,
+    "rise_late_ps": 1183.121,
+    "fall_early_ps": 1026.694,
+    "fall_late_ps": 1180.5310000000002,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4490__clk",
+    "region": "st:h1000000010000",
+    "physical_pin": "ck_b4490/A",
+    "rise_early_ps": 1939.6480000000004,
+    "rise_late_ps": 2221.5119999999997,
+    "fall_early_ps": 1935.6710000000007,
+    "fall_late_ps": 2216.8089999999993,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4520__clk",
+    "region": "st:h1000100010000",
+    "physical_pin": "ck_b4520/A",
+    "rise_early_ps": 1939.0930000000003,
+    "rise_late_ps": 2221.9150000000004,
+    "fall_early_ps": 1935.078,
+    "fall_late_ps": 2217.4490000000005,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5280__clk",
+    "region": "st:h2000000000010",
+    "physical_pin": "ck_b5280/Y",
+    "rise_early_ps": 2411.963,
+    "rise_late_ps": 2763.036,
+    "fall_early_ps": 2404.628,
+    "fall_late_ps": 2752.932999999999,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6230__clk",
+    "region": "st:h2000100000111",
+    "physical_pin": "ck_b6230/Y",
+    "rise_early_ps": 2449.066,
+    "rise_late_ps": 2803.0570000000007,
+    "fall_early_ps": 2441.215000000001,
+    "fall_late_ps": 2791.3129999999996,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5719__clk",
+    "region": "st:h3000000000000",
+    "physical_pin": "ck_b5719/A",
+    "rise_early_ps": 2476.4119999999994,
+    "rise_late_ps": 2836.131,
+    "fall_early_ps": 2478.478,
+    "fall_late_ps": 2840.1379999999995,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6669__clk",
+    "region": "st:h3000100000101",
+    "physical_pin": "ck_b6669/A",
+    "rise_early_ps": 2534.2860000000005,
+    "rise_late_ps": 2899.4569999999994,
+    "fall_early_ps": 2537.301,
+    "fall_late_ps": 2904.319999999999,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5660__clk",
+    "region": "st:h3000200000000000000000",
+    "physical_pin": "ck_b5660/Y",
+    "rise_early_ps": 2987.9900000000007,
+    "rise_late_ps": 3429.686,
+    "fall_early_ps": 2980.2099999999996,
+    "fall_late_ps": 3420.038,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5163__clk",
+    "region": "st:h20002000200000000000000001",
+    "physical_pin": "ck_b5163/A",
+    "rise_early_ps": 3239.269,
+    "rise_late_ps": 3713.4030000000002,
+    "fall_early_ps": 3242.507000000001,
+    "fall_late_ps": 3717.307,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6098__clk",
+    "region": "st:h20002000200010000000000011",
+    "physical_pin": "ck_b6098/A",
+    "rise_early_ps": 3262.348,
+    "rise_late_ps": 3741.851000000002,
+    "fall_early_ps": 3264.608999999999,
+    "fall_late_ps": 3744.766000000002,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5602__clk",
+    "region": "st:h30002000200000000000000000",
+    "physical_pin": "ck_b5602/Y",
+    "rise_early_ps": 3372.606999999997,
+    "rise_late_ps": 3863.82,
+    "fall_early_ps": 3364.5199999999995,
+    "fall_late_ps": 3854.0100000000007,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6537__clk",
+    "region": "st:h30002000200010000000000010",
+    "physical_pin": "ck_b6537/Y",
+    "rise_early_ps": 3399.474999999999,
+    "rise_late_ps": 3894.8749999999995,
+    "fall_early_ps": 3391.9809999999998,
+    "fall_late_ps": 3885.788999999999,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5105__clk",
+    "region": "st:h200020002000200000000000000001",
+    "physical_pin": "ck_b5105/A",
+    "rise_early_ps": 3719.7559999999994,
+    "rise_late_ps": 4263.563999999999,
+    "fall_early_ps": 3723.259999999996,
+    "fall_late_ps": 4267.141999999998,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6479__clk",
+    "region": "st:h300020002000200010000000000010",
+    "physical_pin": "ck_b6479/A",
+    "rise_early_ps": 3840.053000000001,
+    "rise_late_ps": 4400.780000000001,
+    "fall_early_ps": 3830.8969999999986,
+    "fall_late_ps": 4390.2339999999995,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5545__clk",
+    "region": "st:h3000200020002000000000000000000",
+    "physical_pin": "ck_b5545/Y",
+    "rise_early_ps": 3979.038000000002,
+    "rise_late_ps": 4556.083,
+    "fall_early_ps": 3971.3870000000006,
+    "fall_late_ps": 4546.6089999999995,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4990__clk",
+    "region": "st:h200020002000200020002000000000010",
+    "physical_pin": "ck_b4990/Y",
+    "rise_early_ps": 4822.401000000002,
+    "rise_late_ps": 5519.4569999999985,
+    "fall_early_ps": 4816.808999999998,
+    "fall_late_ps": 5509.540000000004,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5940__clk",
+    "region": "st:h200020002000200020002000100000111",
+    "physical_pin": "ck_b5940/Y",
+    "rise_early_ps": 4881.331000000001,
+    "rise_late_ps": 5584.4839999999995,
+    "fall_early_ps": 4876.477999999999,
+    "fall_late_ps": 5575.081000000001,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5454__clk",
+    "region": "st:h300020002000200020002000000000010",
+    "physical_pin": "ck_b5454/A",
+    "rise_early_ps": 4915.328999999999,
+    "rise_late_ps": 5628.537000000002,
+    "fall_early_ps": 4915.394999999998,
+    "fall_late_ps": 5629.855999999996,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6404__clk",
+    "region": "st:h300020002000200020002000100000111",
+    "physical_pin": "ck_b6404/A",
+    "rise_early_ps": 4880.893,
+    "rise_late_ps": 5585.578999999996,
+    "fall_early_ps": 4879.088999999997,
+    "fall_late_ps": 5586.434000000001,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5486__clk",
+    "region": "st:h3000200020002000200000000000000000",
+    "physical_pin": "ck_b5486/Y",
+    "rise_early_ps": 4437.340000000003,
+    "rise_late_ps": 5085.150000000001,
+    "fall_early_ps": 4427.343999999998,
+    "fall_late_ps": 5073.855999999998,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4906__clk",
+    "region": "st:h200020002000200020002000200000000000000000",
+    "physical_pin": "ck_b4906/A",
+    "rise_early_ps": 5273.314000000007,
+    "rise_late_ps": 6045.2409999999945,
+    "fall_early_ps": 5278.858000000001,
+    "fall_late_ps": 6050.916000000002,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5396__clk",
+    "region": "st:h3000200020002000200020002000000000000000010",
+    "physical_pin": "ck_b5396/Y",
+    "rise_early_ps": 5427.347,
+    "rise_late_ps": 6220.839999999995,
+    "fall_early_ps": 5418.2429999999995,
+    "fall_late_ps": 6211.539000000001,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6346__clk",
+    "region": "st:h3000200020002000200020002000100000000000111",
+    "physical_pin": "ck_b6346/Y",
+    "rise_early_ps": 5429.541000000002,
+    "rise_late_ps": 6222.383999999995,
+    "fall_early_ps": 5421.129999999998,
+    "fall_late_ps": 6214.1919999999955,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4873__clk",
+    "region": "st:h2000200020002000200020002000200000000000000001",
+    "physical_pin": "ck_b4873/A",
+    "rise_early_ps": 5658.223000000002,
+    "rise_late_ps": 6478.589999999996,
+    "fall_early_ps": 5663.425999999996,
+    "fall_late_ps": 6482.716000000003,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b8358__clk",
+    "region": "st:h2000200020002000200020002000200000001000001010",
+    "physical_pin": "ck_b8358/A",
+    "rise_early_ps": 6181.987000000004,
+    "rise_late_ps": 7074.024999999995,
+    "fall_early_ps": 6182.224999999999,
+    "fall_late_ps": 7071.382000000006,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5808__clk",
+    "region": "st:h2000200020002000200020002000200010000000000011",
+    "physical_pin": "ck_b5808/A",
+    "rise_early_ps": 5675.782999999999,
+    "rise_late_ps": 6500.7989999999945,
+    "fall_early_ps": 5680.374999999999,
+    "fall_late_ps": 6504.255999999998,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5338__clk",
+    "region": "st:h30002000200020002000200020002000000000000000010",
+    "physical_pin": "ck_b5338/Y",
+    "rise_early_ps": 5792.668000000001,
+    "rise_late_ps": 6633.590999999995,
+    "fall_early_ps": 5784.082000000001,
+    "fall_late_ps": 6625.614999999995,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6288__clk",
+    "region": "st:h30002000200020002000200020002000100000000000111",
+    "physical_pin": "ck_b6288/Y",
+    "rise_early_ps": 5810.551999999999,
+    "rise_late_ps": 6655.457999999999,
+    "fall_early_ps": 5802.269999999997,
+    "fall_late_ps": 6647.297999999997,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b8380__clk",
+    "region": "st:h200020002000200020002000200020001000100000001000",
+    "physical_pin": "ck_b8380/A",
+    "rise_early_ps": 6137.798999999999,
+    "rise_late_ps": 7027.144999999992,
+    "fall_early_ps": 6137.807999999995,
+    "fall_late_ps": 7022.686000000005,
+    "edge_fall": false
+   }
+  ],
+  "TT_sdf_vs_sta_rise_late_ps": {
+   "min": -0.008367000004000147,
+   "max": 0.013496000005034148
+  },
+  "FF": [
+   {
+    "clock_port": "t_st_b8286__clk",
+    "region": "st:h3000400",
+    "physical_pin": "ck_b8286/A",
+    "rise_early_ps": 907.4239999999999,
+    "rise_late_ps": 1054.8220000000001,
+    "fall_early_ps": 904.1349999999996,
+    "fall_late_ps": 1050.58,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4490__clk",
+    "region": "st:h1000000010000",
+    "physical_pin": "ck_b4490/A",
+    "rise_early_ps": 1706.561,
+    "rise_late_ps": 1977.7979999999995,
+    "fall_early_ps": 1696.6279999999997,
+    "fall_late_ps": 1965.8380000000006,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4520__clk",
+    "region": "st:h1000100010000",
+    "physical_pin": "ck_b4520/A",
+    "rise_early_ps": 1706.6550000000004,
+    "rise_late_ps": 1978.0389999999993,
+    "fall_early_ps": 1697.0169999999996,
+    "fall_late_ps": 1966.367,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5280__clk",
+    "region": "st:h2000000000010",
+    "physical_pin": "ck_b5280/Y",
+    "rise_early_ps": 2123.6049999999996,
+    "rise_late_ps": 2451.3429999999994,
+    "fall_early_ps": 2113.9800000000005,
+    "fall_late_ps": 2439.5849999999996,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6230__clk",
+    "region": "st:h2000100000111",
+    "physical_pin": "ck_b6230/Y",
+    "rise_early_ps": 2153.6129999999994,
+    "rise_late_ps": 2486.1180000000004,
+    "fall_early_ps": 2142.773999999999,
+    "fall_late_ps": 2472.66,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5719__clk",
+    "region": "st:h3000000000000",
+    "physical_pin": "ck_b5719/A",
+    "rise_early_ps": 2182.457,
+    "rise_late_ps": 2519.8729999999996,
+    "fall_early_ps": 2183.4239999999986,
+    "fall_late_ps": 2520.6250000000005,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6669__clk",
+    "region": "st:h3000100000101",
+    "physical_pin": "ck_b6669/A",
+    "rise_early_ps": 2231.274,
+    "rise_late_ps": 2574.9040000000005,
+    "fall_early_ps": 2232.8369999999995,
+    "fall_late_ps": 2576.4869999999996,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5660__clk",
+    "region": "st:h3000200000000000000000",
+    "physical_pin": "ck_b5660/Y",
+    "rise_early_ps": 2628.252999999999,
+    "rise_late_ps": 3041.5640000000003,
+    "fall_early_ps": 2618.067000000001,
+    "fall_late_ps": 3029.163,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5163__clk",
+    "region": "st:h20002000200000000000000001",
+    "physical_pin": "ck_b5163/A",
+    "rise_early_ps": 2844.1520000000005,
+    "rise_late_ps": 3291.4569999999985,
+    "fall_early_ps": 2844.825000000001,
+    "fall_late_ps": 3292.4320000000016,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6098__clk",
+    "region": "st:h20002000200010000000000011",
+    "physical_pin": "ck_b6098/A",
+    "rise_early_ps": 2866.0009999999997,
+    "rise_late_ps": 3314.8100000000004,
+    "fall_early_ps": 2866.1519999999996,
+    "fall_late_ps": 3314.5069999999982,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5602__clk",
+    "region": "st:h30002000200000000000000000",
+    "physical_pin": "ck_b5602/Y",
+    "rise_early_ps": 2956.9950000000013,
+    "rise_late_ps": 3419.585,
+    "fall_early_ps": 2947.6890000000008,
+    "fall_late_ps": 3407.865,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6537__clk",
+    "region": "st:h30002000200010000000000010",
+    "physical_pin": "ck_b6537/Y",
+    "rise_early_ps": 2982.646999999999,
+    "rise_late_ps": 3448.4400000000005,
+    "fall_early_ps": 2973.6519999999987,
+    "fall_late_ps": 3437.683,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5105__clk",
+    "region": "st:h200020002000200000000000000001",
+    "physical_pin": "ck_b5105/A",
+    "rise_early_ps": 3266.1120000000005,
+    "rise_late_ps": 3776.470999999999,
+    "fall_early_ps": 3265.404,
+    "fall_late_ps": 3775.821999999999,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6479__clk",
+    "region": "st:h300020002000200010000000000010",
+    "physical_pin": "ck_b6479/A",
+    "rise_early_ps": 3372.470999999999,
+    "rise_late_ps": 3899.799000000001,
+    "fall_early_ps": 3363.2150000000006,
+    "fall_late_ps": 3887.8839999999996,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5545__clk",
+    "region": "st:h3000200020002000000000000000000",
+    "physical_pin": "ck_b5545/Y",
+    "rise_early_ps": 3486.493,
+    "rise_late_ps": 4031.0350000000017,
+    "fall_early_ps": 3478.4920000000006,
+    "fall_late_ps": 4020.5909999999994,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4990__clk",
+    "region": "st:h200020002000200020002000000000010",
+    "physical_pin": "ck_b4990/Y",
+    "rise_early_ps": 4237.064999999996,
+    "rise_late_ps": 4890.502999999998,
+    "fall_early_ps": 4222.478,
+    "fall_late_ps": 4872.368000000002,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5940__clk",
+    "region": "st:h200020002000200020002000100000111",
+    "physical_pin": "ck_b5940/Y",
+    "rise_early_ps": 4287.320999999996,
+    "rise_late_ps": 4949.8089999999975,
+    "fall_early_ps": 4273.004999999999,
+    "fall_late_ps": 4931.958000000005,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5454__clk",
+    "region": "st:h300020002000200020002000000000010",
+    "physical_pin": "ck_b5454/A",
+    "rise_early_ps": 4318.728000000002,
+    "rise_late_ps": 4985.6320000000005,
+    "fall_early_ps": 4323.982,
+    "fall_late_ps": 4990.930000000001,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6404__clk",
+    "region": "st:h300020002000200020002000100000111",
+    "physical_pin": "ck_b6404/A",
+    "rise_early_ps": 4284.491999999999,
+    "rise_late_ps": 4947.808000000001,
+    "fall_early_ps": 4287.925,
+    "fall_late_ps": 4951.588000000001,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5486__clk",
+    "region": "st:h3000200020002000200000000000000000",
+    "physical_pin": "ck_b5486/Y",
+    "rise_early_ps": 3894.8829999999994,
+    "rise_late_ps": 4502.655000000001,
+    "fall_early_ps": 3886.192,
+    "fall_late_ps": 4491.868,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4906__clk",
+    "region": "st:h200020002000200020002000200000000000000000",
+    "physical_pin": "ck_b4906/A",
+    "rise_early_ps": 4635.477999999999,
+    "rise_late_ps": 5359.595999999998,
+    "fall_early_ps": 4633.827999999998,
+    "fall_late_ps": 5357.0530000000035,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5396__clk",
+    "region": "st:h3000200020002000200020002000000000000000010",
+    "physical_pin": "ck_b5396/Y",
+    "rise_early_ps": 4763.427999999999,
+    "rise_late_ps": 5506.538,
+    "fall_early_ps": 4757.774,
+    "fall_late_ps": 5500.339000000007,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6346__clk",
+    "region": "st:h3000200020002000200020002000100000000000111",
+    "physical_pin": "ck_b6346/Y",
+    "rise_early_ps": 4763.146000000003,
+    "rise_late_ps": 5506.6720000000005,
+    "fall_early_ps": 4758.322,
+    "fall_late_ps": 5501.812000000002,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b4873__clk",
+    "region": "st:h2000200020002000200020002000200000000000000001",
+    "physical_pin": "ck_b4873/A",
+    "rise_early_ps": 4965.646999999997,
+    "rise_late_ps": 5738.770000000002,
+    "fall_early_ps": 4962.359999999996,
+    "fall_late_ps": 5734.336000000007,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b8358__clk",
+    "region": "st:h2000200020002000200020002000200000001000001010",
+    "physical_pin": "ck_b8358/A",
+    "rise_early_ps": 5427.859999999998,
+    "rise_late_ps": 6280.295000000005,
+    "fall_early_ps": 5421.566000000001,
+    "fall_late_ps": 6271.437000000003,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5808__clk",
+    "region": "st:h2000200020002000200020002000200010000000000011",
+    "physical_pin": "ck_b5808/A",
+    "rise_early_ps": 4982.652999999997,
+    "rise_late_ps": 5758.612000000001,
+    "fall_early_ps": 4979.221000000001,
+    "fall_late_ps": 5753.748000000001,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b5338__clk",
+    "region": "st:h30002000200020002000200020002000000000000000010",
+    "physical_pin": "ck_b5338/Y",
+    "rise_early_ps": 5074.660000000002,
+    "rise_late_ps": 5864.120999999999,
+    "fall_early_ps": 5070.555000000001,
+    "fall_late_ps": 5859.505,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b6288__clk",
+    "region": "st:h30002000200020002000200020002000100000000000111",
+    "physical_pin": "ck_b6288/Y",
+    "rise_early_ps": 5091.616999999996,
+    "rise_late_ps": 5882.683000000002,
+    "fall_early_ps": 5087.523000000001,
+    "fall_late_ps": 5878.777,
+    "edge_fall": false
+   },
+   {
+    "clock_port": "t_st_b8380__clk",
+    "region": "st:h200020002000200020002000200020001000100000001000",
+    "physical_pin": "ck_b8380/A",
+    "rise_early_ps": 5389.0560000000005,
+    "rise_late_ps": 6229.849999999998,
+    "fall_early_ps": 5380.823,
+    "fall_late_ps": 6218.195000000002,
+    "edge_fall": false
+   }
+  ],
+  "FF_sdf_vs_sta_rise_late_ps": {
+   "min": -0.006838000000243483,
+   "max": 0.01107400000182679
+  }
+ }
+}
