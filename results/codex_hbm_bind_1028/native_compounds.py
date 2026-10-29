@@ -9,7 +9,8 @@ import collections,copy,hashlib,json,re,sys
 root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/die_plan'))
 import bind_elab as E,bind_compose as C
 abpath,planpath,out=map(Path,sys.argv[1:]);out.mkdir(parents=True,exist_ok=True)
-F=E.flatten(json.loads(abpath.read_text()),'hbm_current_native_top');plan=json.loads(planpath.read_text())
+retained=[f'sfucore_{r}.u_core.u_engine.u_memory'+s for r in ('NW','NE')for s in ('','.u_store')]
+F=E.flatten(json.loads(abpath.read_text()),'hbm_current_native_top',retain_hierarchy_ports=retained);plan=json.loads(planpath.read_text())
 slots={}
 for part in plan['partitions']:
     for h in plan['partition_types'][part['type']].get('hard_cores',[]):
@@ -26,21 +27,52 @@ for role in ('NW','NE'):
                 assert lc.ports['side_y']==['0']*32,(lane,'nonzero SIDE')
                 # Separately qualified exact zero-SIDE boundary variant.
                 lc.module=lc.ytype='ot_hnx_su_pinreg_noside';lc.ports.pop('side_y');lc.dirs.pop('side_y')
-            if kind==1:label='lane_exp_l' if n==15 else f'lane_exp{n}'
+            if kind==2:label=f'lane_full{n}'
+            elif kind==1:label='lane_exp_l' if n==15 else f'lane_exp{n}'
             else:
                 plain=n-16 if g<2 else n;start=4*(plain//4)
                 label=f'lanes_plain{start}_{start+3}' if g<2 else f'lanes{start}_{start+3}'
             buckets[label].append((n,bank,lane))
         for label,parts in buckets.items():
-            inst=f'u_su_Q{g}_{label}';partition,slot=slots[(role,inst)]
+            inst=f'u_su_Q{g}_{label}'
+            if label.startswith('lane_full') and (role,inst)not in slots:
+                raise ValueError(f'KIND2 FULLSIDE {role}/{pre}/{label} needs explicit planned full-type slot {inst}; ordinary KIND1 slot is not a legal substitute')
+            partition,slot=slots[(role,inst)]
             members=[]
             for j,(_,bank,lane) in enumerate(parts):members.extend([(bank,'bank'),(lane,'lane')])
-            groups.append(dict(path=pre+'.__cut_'+label,partition=partition,inst=inst,slot=slot,members=members,family='su_exp' if label.startswith('lane_exp') else 'su_plain4'))
+            groups.append(dict(path=pre+'.__cut_'+label,partition=partition,inst=inst,slot=slot,members=members,family='su_full'if label.startswith('lane_full')else'su_exp'if label.startswith('lane_exp')else'su_plain4'))
         path=f'{pre}.u_slice.g_pretree.u_pt';inst=f'u_su_Q{g}_pretree';partition,slot=slots[(role,inst)]
         groups.append(dict(path=pre+'.__cut_pretree',partition=partition,inst=inst,slot=slot,members=[(path,'pretree')],family='su_pretree'))
     for n in range(16):
         pre=f'sfucore_{role}.u_core.u_engine.u_arithmetic.u_grid.g_lane[{n}]';inst=f'u_sfucore_Q_lane{n}';partition,slot=slots[(role,inst)]
         groups.append(dict(path=f'sfucore_{role}.__cut_lane{n}',partition=partition,inst=inst,slot=slot,members=[(pre+'.g_mono.u_map','map'),(pre+'.u_sfu','lane')],family='sfu_lane'))
+# SFU operand storage follows the actual retained u_store boundary. All four
+# operand groups and output group remain their original primitive/leaf source.
+sfu_request_owner={};sfu_response_owner={}
+def exact_owner(table,bit,gi):
+    assert bit not in table or table[bit]==gi,(bit,'shared hierarchical boundary cannot belong to two cuts')
+    table[bit]=gi
+for role in ('NW','NE'):
+    pre=f'sfucore_{role}.u_core.u_engine.u_memory';store=pre+'.u_store'
+    iface=F.instances[store]['ports'];group_ids={}
+    for side,owners in (('a',(0,1)),('b',(2,3))):
+        inst='u_sfucore_Q_opstore_'+side;partition,slot=slots[(role,inst)]
+        prefixes=[store+f'.g_operand[{i}].'for i in owners]+([store+'.u_output.']if side=='b'else[])
+        ms=[c.path for c in F.cells if any(c.path.startswith(p)for p in prefixes)]
+        assert ms,(role,side,'no actual memory members')
+        group_ids[side]=len(groups)
+        groups.append(dict(path=pre+'.__cut_store_'+side,partition=partition,inst=inst,slot=slot,members=[(p,'store'+str(j))for j,p in enumerate(ms)],family='sfu_store_'+side))
+    re_bits=iface['rd_re']['bits'];nr=len(re_bits)
+    assert len(iface['rd_addr']['bits'])==24*nr and len(iface['rd_src']['bits'])==2*nr
+    assert len(iface['rd_q']['bits'])==32*nr
+    for pn,width in (('rd_re',1),('rd_addr',24),('rd_src',2)):
+        for i,b in enumerate(iface[pn]['bits']):
+            if isinstance(b,int):exact_owner(sfu_request_owner,b,group_ids['a'if (i//width)%4<2 else'b'])
+    for pn in ('vm_we','vm_waddr','vm_wdata'):
+        for b in iface[pn]['bits']:
+            if isinstance(b,int):exact_owner(sfu_request_owner,b,group_ids['b'])
+    for i,b in enumerate(iface['rd_q']['bits']):
+        if isinstance(b,int):exact_owner(sfu_response_owner,b,group_ids['a'if(i//32)%4<2 else'b'])
 outside=collections.defaultdict(set)
 for c in F.cells:
     for bs in c.ports.values():
@@ -59,12 +91,24 @@ for c in F.cells:
 owner={p:gi for gi,g in enumerate(groups) for p,_ in g['members']}
 primitive_splits=[];glue_groups=collections.defaultdict(list)
 for c in F.cells:
-    if c.kind!='glue' or c.ytype not in ('$dff','$adff') or not re.match(r'su_(NW|NE)[0-3]\.u_slice\.',c.path):continue
+    if c.kind!='glue' or c.ytype not in ('$dff','$adff') or not re.match(r'(su_(NW|NE)[0-3]\.u_slice\.|sfucore_(NW|NE)\.u_core\.u_engine\.u_memory\.)',c.path) or c.path in owner:continue
     buckets=collections.defaultdict(list)
     for i,b in enumerate(c.ports['Q']):
         loads=consumers[b]-{c.path} if isinstance(b,int) else set()
         gs={owner.get(p)for p in loads}
         gi=next(iter(gs))if b not in topnets and loads and len(gs)==1 and None not in gs else None
+        # Explicit request Q and response D ownership comes from original
+        # retained hierarchical terminal identity, never generated bit names.
+        qowner=sfu_request_owner.get(b);downer=sfu_response_owner.get(c.ports['D'][i])
+        explicit={v for v in (qowner,downer)if v is not None}
+        assert len(explicit)<=1,(c.path,i,'SFU request/response ownership conflict')
+        if explicit:
+            ex=next(iter(explicit))
+            # Response FF Q feeds an arithmetic cut, while its D is the exact
+            # retained store output. The declared store boundary owns that
+            # capture; its Q remains an explicit output crossing to arithmetic.
+            assert gi in (None,ex) or downer is not None,(c.path,i,'request consumer ownership conflict')
+            gi=ex
         buckets[gi].append(i)
     if set(buckets)=={None}:continue
     fragments=[]
