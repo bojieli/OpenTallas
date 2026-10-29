@@ -1,0 +1,40 @@
+{
+  "status": "FEASIBLE_TRIAL_ONLY",
+  "outline_um": [
+    224.64,
+    207.36
+  ],
+  "macro_um": [
+    94.8,
+    41.076
+  ],
+  "macro_placements": [
+    [
+      "u_fcore.u_red.ma",
+      64.8,
+      133.92
+    ],
+    [
+      "u_fcore.u_red.mb",
+      64.8,
+      34.56
+    ]
+  ],
+  "macro_halo_um": 4.32,
+  "clear_corridors_um": {
+    "west": 56.16,
+    "east": 56.400000000000006,
+    "middle": 49.64399999999999
+  },
+  "tracks_per_um": 36.46,
+  "side_escape_upper_bound": 0.4004700932841361,
+  "middle_945_net_bound": 0.5220936092957723,
+  "unchanged": [
+    "RTL",
+    "clock/reset island cells and ports",
+    "outline",
+    "external pin table",
+    "latency"
+  ],
+  "limits": "Analytic track budget only; GRT50 after placement decides actual congestion."
+}
