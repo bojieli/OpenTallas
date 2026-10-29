@@ -21,5 +21,18 @@ Kit intel2 `/srv/opentallas-scratch2/claude/die-qc-34-kits/prog/kit_ffh10e` (cop
 Collect: `KIT/run_route.log` (ECO_FFH pre/post, RSZ hold buffers, OT_CLK_FREEZE assert, DRT violations), then
 `KIT/signoff/signoff.json`. SIGNED -> then routed LEC + PG census on 6_final (not yet run).
 
-## Results
-(pending)
+## Results (unit oth-ubuntu-860171-1793299876 exit 1 = signoff verdict, route rc 0, 11:52-12:06 PDT; CHECKED run_route.log + signoff.json)
+- ECO: routed-SPEF FF hold before repair -4.115 ps (= ffh10 signoff -4.12, the frame reproduces the sign-off);
+  175 endpoints under the 10-ps margin, 196 hold buffers; post (GRT RC) +7.87; clock freeze assert OK (333 clock nets,
+  332 clock cells LOCKED/dont_touch, but **0 clock nets had detailed wire** = GRT input DB); PG 0 open / 60,128; DRT 0.
+- Routed signoff **NOT SIGNED**: TT setup +247.34, **FF hold +3.61 PASS**, slew/cap 0, DRC 0, antenna 0, timing_modes PASS,
+  but **clock FAIL: TT hold-side related pair pcap[815] -> p_q[303] 84.09** (FF 75.23; max side u_hi_wd/q[164] -> u_hi
+  79.66 TT / 71.04 FF).
+- Reading: same clock cells, different clock DETAILED routes -> the pcap[815] -> p_q[303] pair moved 78.41 (ffh10) ->
+  84.09; cand-2 had 85.55. Across three routes of the same tree this pair spans 78.4-85.6 ps, i.e. the tree leaves for
+  this pair sit ~80 ps apart by construction and only route noise decides the gate. Structural item (12.8 principle
+  first): re-balance the pcap / p_q leaf groups (and the u_hi_wd -> u_hi macro group, 76-80 ps) in the PROG CTS plan.
+- Follow-up launched at once: **ffh10r** = the same hooks from the ROUTED ffh10 5_2_route.odb (sha256 ebe156c63c00bb28..;
+  the KV mk_eco default OT_ECO_FROM=route form), so clk_freeze keeps the ffh10 clock detailed wires FIXED (pair 78.41 /
+  70.86) while the 7 hold endpoints are repaired. Unit **oth-ubuntu-1139601-1793300807**, kit intel2
+  `.../prog/kit_ffh10r`, client log `~/dqc35k/prog_ffh10r.otrun.log`. Risk: DRT-1231 on a re-DRT of a routed DB (KV 47ce).
