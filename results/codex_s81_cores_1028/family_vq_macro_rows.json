@@ -1,0 +1,28 @@
+{
+  "schema": "opentallas.s81_core_families.r13",
+  "families": [
+    {
+      "name": "vq_current",
+      "members": [
+        "ot_s81sl_vq"
+      ],
+      "leaf_target": 48,
+      "smax": 70.0,
+      "leaf_limit": 35.0,
+      "wire": "std",
+      "reassign": true,
+      "reassign_cap": 1.5,
+      "macro_keepout": false,
+      "macro_leaves": true,
+      "keepout_um": [
+        [
+          50.976,
+          2.16,
+          154.44,
+          47.544
+        ]
+      ],
+      "keepout_basis": "Actual SRAM body55.296..150.120 x2.160..43.224; floorplan row-cut halo4.32um, observed rows end50.976/begin154.44. Plan nodes obey real row availability rather than smaller2.2um body halo; no per-node tweak."
+    }
+  ]
+}
