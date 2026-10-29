@@ -1,0 +1,255 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "die": "hbm",
+ "kind": "core",
+ "type": "hfd_hgi_vm_calendar_f20",
+ "module": "hfd_hgi_vm_calendar_f20",
+ "instances": [],
+ "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+ "frozen": false,
+ "outline_um": [
+  216.0,
+  112.32
+ ],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "keepouts": [
+  {
+   "name": "clock_entry_island",
+   "rect_um": [
+    116.64,
+    95.04,
+    125.28,
+    103.68
+   ],
+   "kind": "island",
+   "use": [
+    "placement"
+   ]
+  }
+ ],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "corridors": [],
+ "gates": {},
+ "core_clock_port": "clk",
+ "islands": [
+  {
+   "name": "clock_entry",
+   "rect_um": [
+    116.64,
+    95.04,
+    125.28,
+    103.68
+   ],
+   "centre_um": [
+    120.936,
+    99.36
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     120.936,
+     99.36
+    ]
+   },
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  },
+  {
+   "name": "tree_leaf0",
+   "rect_um": [
+    108.0,
+    95.04,
+    116.64,
+    103.68
+   ],
+   "centre_um": [
+    112.32,
+    99.36
+   ],
+   "use": "clock_driver+reset",
+   "via_stack": [
+    "M9",
+    "M5"
+   ],
+   "clock_pin": null,
+   "pg_rails": "die M8/M9 stripes on the 4.32 lattice"
+  }
+ ],
+ "pushdown": {
+  "rule": "12.2a1: island drivers are core-netlist cells at these fixed coordinates, identical for every instance; die connects only via the mp_isl* ft ports",
+  "islands": [
+   {
+    "name": "isl0",
+    "role": "clock_entry",
+    "rect_um": [
+     116.64,
+     95.04,
+     125.28,
+     103.68
+    ],
+    "centre_um": [
+     120.936,
+     99.36
+    ],
+    "via_stack": [
+     "M9",
+     "M5"
+    ],
+    "ft_ports": [
+     {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       118.776,
+       101.52
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)"
+     },
+     {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       123.096,
+       101.52
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin"
+     },
+     {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       118.776,
+       97.2
+      ],
+      "connect": "die regional reset stack (M9->M5)"
+     },
+     {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       123.096,
+       97.2
+      ],
+      "connect": "die reset feed-through net; independent core reset pin"
+     }
+    ],
+    "driver": {
+     "cell": "BUFx4_ASAP7_75t_R",
+     "parallel": 1,
+     "load_ff": 3.723,
+     "rc_ps": 8.936,
+     "placement": "fixed dont_touch at centre_um",
+     "basis": "12.8 d1: plan geometry only (driven length 8.6 um, 1 sinks)"
+    },
+    "lec": "die-owned feed-through: no core logic on mp_isl* ports (12.2a1)"
+   },
+   {
+    "name": "isl1",
+    "role": "tree_leaf",
+    "rect_um": [
+     108.0,
+     95.04,
+     116.64,
+     103.68
+    ],
+    "centre_um": [
+     112.32,
+     99.36
+    ],
+    "via_stack": [
+     "M9",
+     "M5"
+    ],
+    "ft_ports": [
+     {
+      "name": "mp_isl1_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       110.16,
+       101.52
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)"
+     },
+     {
+      "name": "mp_isl1_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       114.48,
+       101.52
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin"
+     },
+     {
+      "name": "mp_isl1_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+       110.16,
+       97.2
+      ],
+      "connect": "die regional reset stack (M9->M5)"
+     },
+     {
+      "name": "mp_isl1_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+       114.48,
+       97.2
+      ],
+      "connect": "die reset feed-through net; independent core reset pin"
+     }
+    ],
+    "driver": {
+     "cell": "BUFx12f_ASAP7_75t_R",
+     "parallel": 1,
+     "load_ff": 44.496,
+     "rc_ps": 35.597,
+     "placement": "fixed dont_touch at centre_um",
+     "basis": "12.8 d1: plan geometry only (driven length 222.5 um, 0 sinks)"
+    },
+    "lec": "die-owned feed-through: no core logic on mp_isl* ports (12.2a1)"
+   }
+  ]
+ },
+ "in_core_islands": {
+  "grid": [
+   1,
+   1
+  ],
+  "leaf_reach_um": 222.48,
+  "farthest_corner_um": 216.024,
+  "core_reach_um": 200.0,
+  "leaves_moved_off_macros": [
+   {
+    "leaf": 0,
+    "from_centre_um": [
+     120.96,
+     60.48
+    ],
+    "shift_um": 43.2
+   }
+  ],
+  "source": "tools/die_plan/master_plan.restructure_islands (12.8b grid)"
+ },
+ "note": "Compact current native calendar proposal; SAME RTL and edges; two clock islands translated north4.32 to clear current macro4.32halo. clk actual M5 pin120.936,99.36; other three clock pins unchanged. Parent must reprice all taps and FT endpoint attachments."
+}

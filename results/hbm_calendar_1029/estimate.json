@@ -1,0 +1,23 @@
+{
+ "status": "PROPOSAL_NO_PNR",
+ "module": "hfd_hgi_vm_calendar_f20",
+ "outline_um": [
+  216.0,
+  112.32
+ ],
+ "aspect": 1.9230769230769231,
+ "replicas": 4,
+ "pins": 558,
+ "endpoint_records": 2232,
+ "peak_pins_per_um_10um": {
+  "N/M5": 1.9,
+  "S/M5": 5.7,
+  "W/M4": 1.4
+ },
+ "macro_halo_um": 4.32,
+ "macro_placements": "Exact current core_macros, not stale earlier placement",
+ "cycles_added": 0,
+ "source_change": false,
+ "clock_delta": "Main clk to current shifted island centre; other clk_tgt/clk_cap/clk_mem exact. Two islands north4.32. Parent clock/reset+CA/FT event recompose required.",
+ "min_free_fill_estimate": 0.1823180479311098
+}
