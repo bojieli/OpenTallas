@@ -2,7 +2,7 @@
 """Fleet wrapper for one disjoint partition group; persistent stdout/exit record."""
 import json,pathlib,subprocess,sys
 p=pathlib.Path.cwd();group=sys.argv[1];groups=json.loads((p/'street_groups.json').read_text());parts=groups[group];geometry=sys.argv[2] if len(sys.argv)>2 else 'geometry_street50';logs=p/'street_logs';logs.mkdir(exist_ok=True)
-cmd=[sys.executable,'-u','allocate.py',geometry,'street_alloc_'+group,'--parts',','.join(parts),'--keep-going','--tools','tools/die_plan']
+cmd=[sys.executable,'-u',str(pathlib.Path(__file__).parent/'allocate.py'),geometry,'street_alloc_'+group,'--parts',','.join(parts),'--keep-going','--tools','tools/die_plan']
 with (logs/(group+'.log')).open('x') as stream:
     result=subprocess.run(cmd,stdout=stream,stderr=subprocess.STDOUT)
 (logs/(group+'.exit.json')).write_text(json.dumps({'group':group,'parts':parts,'exit':result.returncode,'command':cmd},indent=1)+'\n')

@@ -131,3 +131,14 @@ NE/NW_b003 0.7967 -> 0.0021; b010 0.5319 -> 0.3791;
 b011 1.0281 FAIL -> 0.7276. These bounds omit ordinary logic and are necessary
 conditions, not physical route or sign-off claims. Six scoped repair groups are
 running on geometry_street50_aligned; prior failures are retained.
+
+Further proposal fixes are isolated in private adapters: occupied_rows.py
+compresses already-used legal-row candidate positions into row-run exclusions,
+so DP avoids earlier FT banks before final legalization. A failed occupied
+neighborhood is backtracked without increasing the fixed 40um legalization
+radius. The physical paired-hop budget remains 403um (405um less D/Q offset
+allowance); macro-free-point search can reach one full hop instead of stopping
+at the old arbitrary 240um search cap. These planning proposals still require
+successful actual-site construction; a search failure is not itself proof of
+physical impossibility. The shared wrapper's underlying NoChain cause is now
+preserved in failure reports instead of being discarded.

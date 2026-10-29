@@ -17,6 +17,10 @@ def install(module):
     # transport; reserve its <=0.6 track fraction instead of M5+M7 capacity.
     pitch = next(layer['pitch_um'] for layer in module.S.ASAP7_LAYERS if layer['name'] == 'M7')
     module.LANE_UM_PER_BIT = max(module.LANE_UM_PER_BIT, pitch / .6)
+    # Search projections up to one legal hop. Actual paired-hop and 40um row
+    # legalization gates remain unchanged; the former 240um search cap was not
+    # a physical contract and can hide reachable macro-free street chains.
+    module.MAX_PROJ = 403.0 / 6.0
     original_jogs = module.jog_lanes
     def checked_jogs(ty, pins, w, h, fixed=None):
         lanes = original_jogs(ty, pins, w, h, fixed)
