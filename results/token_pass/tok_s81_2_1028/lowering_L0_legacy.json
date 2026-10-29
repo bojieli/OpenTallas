@@ -1,0 +1,2392 @@
+{
+ "schema": "opentallas.s81_dv.lowering.v1",
+ "layer": "L0",
+ "status_counts": {
+  "PARTIAL": 41,
+  "LOWERED": 24
+ },
+ "die_gaps": [
+  {
+   "module": "results/arch/s81_dv_1016/bind9/die.v (S81 die GEN, lead S81-DIE6/7)",
+   "port": "dn_01_00, dn_03_01, dn_03_02, dn_05_03, dn_05_04, dn_05_07, dn_07_06, dn_09_08, dn_11_09, dn_11_10, dn_11_13, dn_13_12, dn_13_15, dn_15_14, pr_00_01, pr_01_03, pr_02_03, pr_03_05, pr_04_05, pr_06_07, pr_07_05, pr_08_09, pr_09_07, pr_09_11, pr_10_11, pr_12_13, pr_13_11, pr_14_15, pr_15_13, pvso_E_local_l0, pvso_E_local_l1, pvso_E_local_l2, pvso_W_local_l0, pvso_W_local_l1, pvso_W_local_l2, r_f_0L00, r_f_0L11, r_f_0R00, r_f_0R11, r_f_1L00, r_f_1L11, r_f_1R00, r_f_1R01, r_f_1R03, r_f_1R10, r_f_1R11, r_f_1R13, r_f_2L00, r_f_2L11, r_f_2R11, r_f_3L11, r_f_3R01, r_f_3R03, r_f_3R10, r_f_3R11, r_f_3R13, r_f_4L01, r_f_4L03, r_f_4L10, r_f_4L11, r_f_4L13, r_f_4R11, r_f_5L11, r_f_5R00, r_f_5R11, r_f_6L00, r_f_6L01, r_f_6L03, r_f_6L10, r_f_6L11, r_f_6L13, r_f_6R00, r_f_6R11, r_f_7L00, r_f_7L11, r_f_7R00, r_f_7R11, sg_00_01, sg_01_03, sg_02_03, sg_03_02, sg_03_05, sg_04_05, sg_04_06, sg_05_04, sg_05_07, sg_06_04, sg_06_07, sg_07_06, sg_07_09, sg_08_10, sg_09_08, sg_10_11, sg_10_12, sg_11_09, sg_11_13, sg_12_10, sg_13_11, sg_13_15, sg_14_15, sg_15_13, sg_15_14, ss_01_00, ss_02_03, ss_03_01, ss_03_02, ss_04_05, ss_04_06, ss_05_03, ss_05_04, ss_06_04, ss_06_07, ss_07_05, ss_07_06, ss_08_09, ss_09_07, ss_09_11, ss_10_08, ss_10_12, ss_11_10, ss_11_13, ss_12_10, ss_13_11, ss_13_15, ss_14_15, ss_15_13, ss_15_14, up_00_01, up_01_03, up_02_03, up_03_05, up_04_05, up_06_07, up_07_05, up_08_09, up_09_11, up_10_11, up_12_13, up_13_11, up_14_15, up_15_13",
+   "missing": "141 lanes with relay stations and a planned landing E in the p4l land plan have no ld_<link> landing tile in die.v (the last station ck_o is left open; the end-slice lep masters ot_s81sl_slice_lep* contain no ot_s81_land): they enter the receiving root domain unlanded",
+   "lanes": [
+    {
+     "link": "r_f_0L00",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_0L11",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_0R00",
+     "cls": "ret",
+     "dst": "s_0S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_0R11",
+     "cls": "ret",
+     "dst": "s_0N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_1L00",
+     "cls": "ret",
+     "dst": "s_1S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_1L11",
+     "cls": "ret",
+     "dst": "s_1N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_1R00",
+     "cls": "ret",
+     "dst": "s_1S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_1R01",
+     "cls": "ret",
+     "dst": "s_1S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_1R03",
+     "cls": "ret",
+     "dst": "s_1S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_1R10",
+     "cls": "ret",
+     "dst": "s_1N",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_1R11",
+     "cls": "ret",
+     "dst": "s_1N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_1R13",
+     "cls": "ret",
+     "dst": "s_1N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_2L00",
+     "cls": "ret",
+     "dst": "s_2S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_2L11",
+     "cls": "ret",
+     "dst": "s_2N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_2R11",
+     "cls": "ret",
+     "dst": "s_2N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_3L11",
+     "cls": "ret",
+     "dst": "s_3N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_3R01",
+     "cls": "ret",
+     "dst": "s_3S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_3R03",
+     "cls": "ret",
+     "dst": "s_3S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_3R10",
+     "cls": "ret",
+     "dst": "s_3N",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_3R11",
+     "cls": "ret",
+     "dst": "s_3N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_3R13",
+     "cls": "ret",
+     "dst": "s_3N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_4L01",
+     "cls": "ret",
+     "dst": "s_4S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_4L03",
+     "cls": "ret",
+     "dst": "s_4S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_4L10",
+     "cls": "ret",
+     "dst": "s_4N",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_4L11",
+     "cls": "ret",
+     "dst": "s_4N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_4L13",
+     "cls": "ret",
+     "dst": "s_4N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_4R11",
+     "cls": "ret",
+     "dst": "s_4N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_5L11",
+     "cls": "ret",
+     "dst": "s_5N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_5R00",
+     "cls": "ret",
+     "dst": "s_5S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_5R11",
+     "cls": "ret",
+     "dst": "s_5N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_6L00",
+     "cls": "ret",
+     "dst": "s_6S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_6L01",
+     "cls": "ret",
+     "dst": "s_6S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_6L03",
+     "cls": "ret",
+     "dst": "s_6S",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_6L10",
+     "cls": "ret",
+     "dst": "s_6N",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_6L11",
+     "cls": "ret",
+     "dst": "s_6N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_6L13",
+     "cls": "ret",
+     "dst": "s_6N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_6R00",
+     "cls": "ret",
+     "dst": "s_6S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_6R11",
+     "cls": "ret",
+     "dst": "s_6N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_7L00",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_7L11",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "r_f_7R00",
+     "cls": "ret",
+     "dst": "s_7S",
+     "E": 4,
+     "stations": null
+    },
+    {
+     "link": "r_f_7R11",
+     "cls": "ret",
+     "dst": "s_7N",
+     "E": 2,
+     "stations": null
+    },
+    {
+     "link": "dn_03_01",
+     "cls": "attn",
+     "dst": "rsv_01",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_01_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_01_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_05_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_03_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_03_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_05_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_07_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_07_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_01_00",
+     "cls": "attn",
+     "dst": "rsv_00",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_00_01",
+     "cls": "attn",
+     "dst": "rsv_01",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_00_01",
+     "cls": "attn",
+     "dst": "rsv_01",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_03_02",
+     "cls": "attn",
+     "dst": "rsv_02",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_02_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_02_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_05_04",
+     "cls": "attn",
+     "dst": "rsv_04",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_04_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_04_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_07_06",
+     "cls": "attn",
+     "dst": "rsv_06",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_06_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_06_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_11_09",
+     "cls": "attn",
+     "dst": "rsv_09",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_09_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_09_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_11_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_13_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_13_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_13_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_15_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_15_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_09_08",
+     "cls": "attn",
+     "dst": "rsv_08",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_08_09",
+     "cls": "attn",
+     "dst": "rsv_09",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_08_09",
+     "cls": "attn",
+     "dst": "rsv_09",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_11_10",
+     "cls": "attn",
+     "dst": "rsv_10",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_10_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_10_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_13_12",
+     "cls": "attn",
+     "dst": "rsv_12",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_12_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_12_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "dn_15_14",
+     "cls": "attn",
+     "dst": "rsv_14",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "up_14_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_14_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pr_09_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_00_01",
+     "cls": "attn",
+     "dst": "rsv_01",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_01_00",
+     "cls": "attn",
+     "dst": "rsv_00",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_01_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_03_01",
+     "cls": "attn",
+     "dst": "rsv_01",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_02_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_03_02",
+     "cls": "attn",
+     "dst": "rsv_02",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_03_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_05_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_03_02",
+     "cls": "attn",
+     "dst": "rsv_02",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_02_03",
+     "cls": "attn",
+     "dst": "rsv_03",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_04_06",
+     "cls": "attn",
+     "dst": "rsv_06",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_06_04",
+     "cls": "attn",
+     "dst": "rsv_04",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_04_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_05_04",
+     "cls": "attn",
+     "dst": "rsv_04",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_05_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_07_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_05_04",
+     "cls": "attn",
+     "dst": "rsv_04",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_04_05",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_06_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_07_06",
+     "cls": "attn",
+     "dst": "rsv_06",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_06_04",
+     "cls": "attn",
+     "dst": "rsv_04",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_04_06",
+     "cls": "attn",
+     "dst": "rsv_06",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_07_09",
+     "cls": "attn",
+     "dst": "rsv_09",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_09_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_07_06",
+     "cls": "attn",
+     "dst": "rsv_06",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_06_07",
+     "cls": "attn",
+     "dst": "rsv_07",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_08_10",
+     "cls": "attn",
+     "dst": "rsv_10",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_10_08",
+     "cls": "attn",
+     "dst": "rsv_08",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_09_08",
+     "cls": "attn",
+     "dst": "rsv_08",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_08_09",
+     "cls": "attn",
+     "dst": "rsv_09",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_10_12",
+     "cls": "attn",
+     "dst": "rsv_12",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_12_10",
+     "cls": "attn",
+     "dst": "rsv_10",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_10_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_11_10",
+     "cls": "attn",
+     "dst": "rsv_10",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_11_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_13_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_11_09",
+     "cls": "attn",
+     "dst": "rsv_09",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_09_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_12_10",
+     "cls": "attn",
+     "dst": "rsv_10",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_10_12",
+     "cls": "attn",
+     "dst": "rsv_12",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_13_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_15_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_13_11",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_11_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_14_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_15_14",
+     "cls": "attn",
+     "dst": "rsv_14",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_15_14",
+     "cls": "attn",
+     "dst": "rsv_14",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_14_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "sg_15_13",
+     "cls": "attn",
+     "dst": "rsv_13",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "ss_13_15",
+     "cls": "attn",
+     "dst": "rsv_15",
+     "E": 2,
+     "stations": 0
+    },
+    {
+     "link": "pvso_W_local_l0",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 17,
+     "stations": 0
+    },
+    {
+     "link": "pvso_W_local_l1",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 17,
+     "stations": 0
+    },
+    {
+     "link": "pvso_W_local_l2",
+     "cls": "attn",
+     "dst": "rsv_05",
+     "E": 17,
+     "stations": 0
+    },
+    {
+     "link": "pvso_E_local_l0",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 17,
+     "stations": 0
+    },
+    {
+     "link": "pvso_E_local_l1",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 17,
+     "stations": 0
+    },
+    {
+     "link": "pvso_E_local_l2",
+     "cls": "attn",
+     "dst": "rsv_11",
+     "E": 17,
+     "stations": 0
+    }
+   ]
+  }
+ ],
+ "ops": [
+  {
+   "id": "L0.attn.hc.fn",
+   "op": "attn.hc.fn",
+   "start": 0.0,
+   "end": 229.0,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.hc.sumsq",
+   "op": "attn.hc.sumsq",
+   "start": -0.0,
+   "end": 403.1,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.hc_pre",
+   "op": "attn.hc_pre",
+   "start": 0.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR (previous-sublayer pre row) -> vn n_pre",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dv_layer_compile / previous-sublayer pre transfer",
+    "port": "NORMR a0",
+    "missing": "entry previous-ffn HC row 1008: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.norm.rsqrt",
+   "op": "attn.norm.rsqrt",
+   "start": 3.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.norm.scale",
+   "op": "attn.norm.scale",
+   "start": 3.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.norm.sumsq",
+   "op": "attn.norm.sumsq",
+   "start": 3.0,
+   "end": 3.0,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.attn.quant",
+   "op": "attn.quant",
+   "start": 3.0,
+   "end": 475.5,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed"
+   },
+   "emitted": {
+    "slice": "u_s_0S",
+    "rows": 949,
+    "templates": 948
+   }
+  },
+  {
+   "id": "L0.attn.hc.rsqrt",
+   "op": "attn.hc.rsqrt",
+   "start": 403.1,
+   "end": 567.4,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.a_proj",
+   "op": "attn.a_proj",
+   "start": 475.5,
+   "end": 1014.0,
+   "unit": "frames (cfg7 programme, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np, return fields), cap cfg_d",
+    "missing": "the frame images, the return calendar and the xs phase / stream ROM images are lowered and benched (bench_xs PASS: real L0 wq_a rows 0-3 on die frame u_f_0L00, col_h9_l4 E 5, cycle-exact calendar, fixture BF16; the other 6 a_proj frames of the slice (col_h10_l4 E 2, col_h9_MX_l4 E 1) are legalised fault-free but not benched; ELEM_EXTRA is measured for the (2 units, 2 rows) class only); the slice xs CALENDAR images (the 75-b action words: stream requests, VM responses, cfg / launch / retire, tools/s81_slice/xs_program.py is bench stimulus for the c26l stages only), the is_d GO word and the cap write-back cfg_d for the DV placement are not emitted yet, and no bench drives ot_s81sl_xs into a frame (the frame bench drives the frame through the w17w10 spine with the same phase / stream words)"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xs"
+  },
+  {
+   "id": "L0.attn.hc.pre_post",
+   "op": "attn.hc.pre_post",
+   "start": 567.4,
+   "end": 746.7,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.hc.sinkhorn",
+   "op": "attn.hc.sinkhorn",
+   "start": 746.7,
+   "end": 1379.9,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.attn.a_allgather",
+   "op": "attn.a_allgather",
+   "start": 1014.0,
+   "end": 1448.0,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "a_proj capture rows -> end slices",
+    "missing": "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S",
+    "u_s_7S",
+    "u_s_7N"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.attn.kv_norm.sumsq",
+   "op": "attn.kv_norm.sumsq",
+   "start": 1448.0,
+   "end": 1451.0,
+   "unit": "ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "current SUKV producer/calendar binding",
+    "port": "u_s_3N leaf0",
+    "missing": "Real KV/CN/IK/CP source exists; provide kv_program.json with absolute producer rows, contexts, fused operation coverage, measured CTL/VP dates and final consumer lifetimes."
+   },
+   "family": "kv",
+   "insts": [
+    "u_s_3N.leaf0 (KV_ENABLE/KV_CNIK/KV_CP)"
+   ],
+   "bench": "results/rtl/s81_rtlgap_codex_2000/SUKV/run2"
+  },
+  {
+   "id": "L0.attn.q_norm.sumsq",
+   "op": "attn.q_norm.sumsq",
+   "start": 1448.0,
+   "end": 1451.0,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.rows_allgather",
+   "op": "attn.rows_allgather",
+   "start": 1448.0,
+   "end": 2472.0,
+   "unit": "local HBM sliding-window read (alias of attn.window_load; no selected-row exchange)",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.kv_norm.rsqrt",
+   "op": "attn.kv_norm.rsqrt",
+   "start": 1451.0,
+   "end": 1451.0,
+   "unit": "ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "current SUKV producer/calendar binding",
+    "port": "u_s_3N leaf0",
+    "missing": "Real KV/CN/IK/CP source exists; provide kv_program.json with absolute producer rows, contexts, fused operation coverage, measured CTL/VP dates and final consumer lifetimes."
+   },
+   "family": "kv",
+   "insts": [
+    "u_s_3N.leaf0 (KV_ENABLE/KV_CNIK/KV_CP)"
+   ],
+   "bench": "results/rtl/s81_rtlgap_codex_2000/SUKV/run2"
+  },
+  {
+   "id": "L0.attn.kv_norm.scale",
+   "op": "attn.kv_norm.scale",
+   "start": 1451.0,
+   "end": 1451.0,
+   "unit": "ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "current SUKV producer/calendar binding",
+    "port": "u_s_3N leaf0",
+    "missing": "Real KV/CN/IK/CP source exists; provide kv_program.json with absolute producer rows, contexts, fused operation coverage, measured CTL/VP dates and final consumer lifetimes."
+   },
+   "family": "kv",
+   "insts": [
+    "u_s_3N.leaf0 (KV_ENABLE/KV_CNIK/KV_CP)"
+   ],
+   "bench": "results/rtl/s81_rtlgap_codex_2000/SUKV/run2"
+  },
+  {
+   "id": "L0.attn.kv_rope_qdq",
+   "op": "attn.kv_rope_qdq",
+   "start": 1451.0,
+   "end": 1680.5,
+   "unit": "ot_s81sl_kv_leaf / ot_s81_su_kv (KV, GK, CN, IK, CP)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "current SUKV producer/calendar binding",
+    "port": "u_s_3N leaf0",
+    "missing": "Real KV/CN/IK/CP source exists; provide kv_program.json with absolute producer rows, contexts, fused operation coverage, measured CTL/VP dates and final consumer lifetimes."
+   },
+   "family": "kv",
+   "insts": [
+    "u_s_3N.leaf0 (KV_ENABLE/KV_CNIK/KV_CP)"
+   ],
+   "bench": "results/rtl/s81_rtlgap_codex_2000/SUKV/run2"
+  },
+  {
+   "id": "L0.attn.q_norm.rsqrt",
+   "op": "attn.q_norm.rsqrt",
+   "start": 1451.0,
+   "end": 1451.0,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.q_norm.scale",
+   "op": "attn.q_norm.scale",
+   "start": 1451.0,
+   "end": 1451.0,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.q_quant",
+   "op": "attn.q_quant",
+   "start": 1451.0,
+   "end": 1713.5,
+   "unit": "slice vn/vq over 4 adjacent slices (q_lora norm, xfin)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+    "port": "q_lora (qa) rows -> vn h copy 0",
+    "missing": "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+   }
+  },
+  {
+   "id": "L0.attn.own_row_write",
+   "op": "attn.own_row_write",
+   "start": 1680.5,
+   "end": 2330.3,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.wq_b",
+   "op": "attn.wq_b",
+   "start": 1713.5,
+   "end": 2662.4,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_wqb_die pipeline P126, static checks; fullsix RTL run = this emission, consumer retire / deadline check results/rtl/s81_wqbp_1020); open: cap cfg_d descriptors of this 8-frame / 22-phase shape (only the private fullsix 6-frame / 15-phase CAP lowering exists, codex/token-cap-contract-1020) and the image writer's rank-local row tags"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.attn.q_rope",
+   "op": "attn.q_rope",
+   "start": 2662.4,
+   "end": 2759.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.attn.window_load",
+   "op": "attn.window_load",
+   "start": 2759.0,
+   "end": 3059.9,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.scores",
+   "op": "attn.scores",
+   "start": 3059.9,
+   "end": 3163.8,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.max",
+   "op": "attn.max",
+   "start": 3163.8,
+   "end": 3317.7,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc_p"
+  },
+  {
+   "id": "L0.attn.exp",
+   "op": "attn.exp",
+   "start": 3317.7,
+   "end": 3521.0,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc_p"
+  },
+  {
+   "id": "L0.attn.den",
+   "op": "attn.den",
+   "start": 3521.0,
+   "end": 3560.0,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "entry PVSO ingress + on-die half exchange (RTLGAP-SO, ALLQ die)",
+    "port": "entry pv words (E tiles 0..7 / W tiles 8..15) -> per-half transpose -> SMJ kind 5 + 16 operand frames on q",
+    "missing": "G10 cross-die exchange is NOT needed (ALLQ: all 512 dims on this die, bench_allq). Remaining HW: (1) bind the transposer/serializer (codex/s81-pv-so-assembly-1021 dsdv_pv_so_ingress) at BOTH entries, each for its half's 8 heads; (2) the half exchange XH of the other half's 8-head 256-b record halves on existing lanes (W->E: tq_05_07 dn, fc_07_09 score gather, tr_09_11 return; E->W: tq_11_09, pr_09_07 P-path lane, tr_07_05), 320 records each way, concurrent with the drain; (3) SOT14 booking dates + deferred END. The programme (so_frames: SMJ kind 5 + 16 operand frames, 534 words; per half 6 + 8 x 33 = 270) is lowered and bench-proven on the 16 real SM shares with the RTL P.V (bench_so)."
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.pv",
+   "op": "attn.pv",
+   "start": 3521.0,
+   "end": 3664.9,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "lower_svc",
+    "port": "bench",
+    "missing": "results/rtl/s81_rtlgap_so_1021/bench_allq/check.json missing"
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_rtlgap_so_1021/bench_allq"
+  },
+  {
+   "id": "L0.attn.sink",
+   "op": "attn.sink",
+   "start": 3560.0,
+   "end": 3723.0,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "entry PVSO ingress + on-die half exchange (RTLGAP-SO, ALLQ die)",
+    "port": "entry pv words (E tiles 0..7 / W tiles 8..15) -> per-half transpose -> SMJ kind 5 + 16 operand frames on q",
+    "missing": "G10 cross-die exchange is NOT needed (ALLQ: all 512 dims on this die, bench_allq). Remaining HW: (1) bind the transposer/serializer (codex/s81-pv-so-assembly-1021 dsdv_pv_so_ingress) at BOTH entries, each for its half's 8 heads; (2) the half exchange XH of the other half's 8-head 256-b record halves on existing lanes (W->E: tq_05_07 dn, fc_07_09 score gather, tr_09_11 return; E->W: tq_11_09, pr_09_07 P-path lane, tr_07_05), 320 records each way, concurrent with the drain; (3) SOT14 booking dates + deferred END. The programme (so_frames: SMJ kind 5 + 16 operand frames, 534 words; per half 6 + 8 x 33 = 270) is lowered and bench-proven on the 16 real SM shares with the RTL P.V (bench_so)."
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_svc"
+  },
+  {
+   "id": "L0.attn.normalize",
+   "op": "attn.normalize",
+   "start": 3723.0,
+   "end": 3934.9,
+   "unit": "svc_rs x16 (u_rsv_00..15; entries u_rsv_05 W / u_rsv_11 E) + seq_host engine 4",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "entry PVSO ingress + on-die half exchange (RTLGAP-SO, ALLQ die)",
+    "port": "entry pv words (E tiles 0..7 / W tiles 8..15) -> per-half transpose -> SMJ kind 5 + 16 operand frames on q",
+    "missing": "G10 cross-die exchange is NOT needed (ALLQ: all 512 dims on this die, bench_allq). Remaining HW: (1) bind the transposer/serializer (codex/s81-pv-so-assembly-1021 dsdv_pv_so_ingress) at BOTH entries, each for its half's 8 heads; (2) the half exchange XH of the other half's 8-head 256-b record halves on existing lanes (W->E: tq_05_07 dn, fc_07_09 score gather, tr_09_11 return; E->W: tq_11_09, pr_09_07 P-path lane, tr_07_05), 320 records each way, concurrent with the drain; (3) SOT14 booking dates + deferred END. The programme (so_frames: SMJ kind 5 + 16 operand frames, 534 words; per half 6 + 8 x 33 = 270) is lowered and bench-proven on the 16 real SM shares with the RTL P.V (bench_so)."
+   },
+   "family": "svc",
+   "insts": [
+    "u_rsv_00",
+    "u_rsv_01",
+    "u_rsv_02",
+    "u_rsv_03",
+    "u_rsv_04",
+    "u_rsv_05",
+    "u_rsv_06",
+    "u_rsv_07",
+    "u_rsv_08",
+    "u_rsv_09",
+    "u_rsv_10",
+    "u_rsv_11",
+    "u_rsv_12",
+    "u_rsv_13",
+    "u_rsv_14",
+    "u_rsv_15",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_rtlgap_so_1021/bench_so"
+  },
+  {
+   "id": "L0.attn.wo_a",
+   "op": "attn.wo_a",
+   "start": 3934.9,
+   "end": 5793.0,
+   "unit": "frames: BF pairs (dsfd_bf_front_roots + 2 dsfd_bf_col, cfg7_seq_bfp static programme in the cfg spare columns) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_field_calendar BF pipeline P231, 20 phases, seg-label floor 231, static + layer checks); open: cap cfg_d descriptors of this shape; programme / emission unmeasured for shapes ['col_h10_asb_x|E2|bseg1024', 'col_h9_asb_nx|E2|bseg1024', 'col_h9_asb_x|E2|bseg1024'] (BF_LEGACY measurement run of each shape owed)"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb"
+  },
+  {
+   "id": "L0.attn.z_quant",
+   "op": "attn.z_quant",
+   "start": 5793.0,
+   "end": 5872.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.attn.wo_b",
+   "op": "attn.wo_b",
+   "start": 5872.0,
+   "end": 6329.9,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_field_calendar pipeline P127, 6 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.attn.out_allreduce",
+   "op": "attn.out_allreduce",
+   "start": 6329.9,
+   "end": 7156.9,
+   "unit": "RS (3 TP legs, quarter -> owner scratch) + owner fold + AG (3 TP legs) on the end-slice endpoint ABI",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+    "port": "owner fold ((p0+p1)+(p2+p3))",
+    "missing": "RS + AG transport is lowered on the benched endpoint ABI (bench_vpx op out_allreduce_rs / _ag); the owner fold between them is not bound to these rows (FOLD_GAP 1083 = RS landing tail 50 CHECKED + fold law 1033 UNCHECKED) and the partial rows' producer capture is not placed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S",
+    "u_s_7S",
+    "u_s_7N"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.attn.hc_post",
+   "op": "attn.hc_post",
+   "start": 7156.9,
+   "end": 7221.8,
+   "unit": "slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+    "port": "POST a1 (y rows)",
+    "missing": "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.substage_hop0",
+   "op": "substage_hop0",
+   "start": 7221.8,
+   "end": 8255.3,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "u_s_0N pair A -> next stage u_s_0N pair B (S81-LINK5 stage NEXT; TX window ab 0)",
+    "missing": "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0N"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.ffn.hc.fn",
+   "op": "ffn.hc.fn",
+   "start": 8255.3,
+   "end": 8484.3,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.hc.sumsq",
+   "op": "ffn.hc.sumsq",
+   "start": 8255.3,
+   "end": 8658.4,
+   "unit": "dsdv_gunit",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+    "port": "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+    "missing": "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+   },
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.hc_pre",
+   "op": "ffn.hc_pre",
+   "start": 8255.3,
+   "end": 8264.2,
+   "unit": "slice vp NORMR (previous-sublayer pre row) -> vn n_pre",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "dv_layer_compile / previous-sublayer pre transfer",
+    "port": "NORMR a0",
+    "missing": "attn HC row 1000: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.norm.rsqrt",
+   "op": "ffn.norm.rsqrt",
+   "start": 8264.2,
+   "end": 8264.2,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.norm.scale",
+   "op": "ffn.norm.scale",
+   "start": 8264.2,
+   "end": 8718.7,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.norm.sumsq",
+   "op": "ffn.norm.sumsq",
+   "start": 8264.2,
+   "end": 8264.2,
+   "unit": "slice vp NORMR + vn / vq / xr / xfin",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  },
+  {
+   "id": "L0.ffn.hc.rsqrt",
+   "op": "ffn.hc.rsqrt",
+   "start": 8658.4,
+   "end": 8822.7,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.quant",
+   "op": "ffn.quant",
+   "start": 8718.7,
+   "end": 8736.7,
+   "unit": "slice vp/vn/vq + xr + xfin (NORM, xfin go, rstd fan, act-quant)",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+    "port": "16-slice norm composition",
+    "missing": "hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed"
+   }
+  },
+  {
+   "id": "L0.ffn.router",
+   "op": "ffn.router",
+   "start": 8718.7,
+   "end": 9607.9,
+   "unit": "frames: BF pairs (dsfd_bf_front_roots + 2 dsfd_bf_col, cfg7_seq_bfp static programme in the cfg spare columns) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_field_calendar BF pipeline P231, 5 phases, seg-label floor 231, static + layer checks); open: cap cfg_d descriptors of this shape; programme / emission unmeasured for shapes ['col_h10_asb_x|E2|bseg1024', 'col_h9_asb_nx|E2|bseg1024', 'col_h9_asb_x|E2|bseg1024'] (BF_LEGACY measurement run of each shape owed)"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsb"
+  },
+  {
+   "id": "L0.ffn.hc.pre_post",
+   "op": "ffn.hc.pre_post",
+   "start": 8822.7,
+   "end": 9002.0,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.hc.sinkhorn",
+   "op": "ffn.hc.sinkhorn",
+   "start": 9002.0,
+   "end": 9635.2,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.shared_gu",
+   "op": "ffn.shared_gu",
+   "start": 9607.9,
+   "end": 10151.4,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_field_calendar pipeline P146, 6 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.ffn.softplus_sqrt",
+   "op": "ffn.softplus_sqrt",
+   "start": 9607.9,
+   "end": 9793.5,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.router_allgather",
+   "op": "ffn.router_allgather",
+   "start": 9793.5,
+   "end": 10215.4,
+   "unit": "end-slice send cfg + vp RDOUT -> lep -> peer end-slice RD receive",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+    "port": "a_proj capture rows -> end slices",
+    "missing": "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S",
+    "u_s_7S",
+    "u_s_7N"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.ffn.shared_swiglu",
+   "op": "ffn.shared_swiglu",
+   "start": 10151.4,
+   "end": 10365.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.bias",
+   "op": "ffn.bias",
+   "start": 10215.4,
+   "end": 10300.0,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.top6",
+   "op": "ffn.top6",
+   "start": 10300.0,
+   "end": 10308.9,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.top6_order",
+   "op": "ffn.top6_order",
+   "start": 10308.9,
+   "end": 10417.4,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.shared_quant",
+   "op": "ffn.shared_quant",
+   "start": 10365.0,
+   "end": 10426.7,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.experts_gu",
+   "op": "ffn.experts_gu",
+   "start": 10417.4,
+   "end": 11295.4,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_field_calendar pipeline P145, 36 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.ffn.weights",
+   "op": "ffn.weights",
+   "start": 10417.4,
+   "end": 10643.3,
+   "unit": "dsdv_gunit",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "gu",
+   "insts": [
+    "u_gunit",
+    "u_seqhost"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_gu"
+  },
+  {
+   "id": "L0.ffn.swiglu",
+   "op": "ffn.swiglu",
+   "start": 11295.4,
+   "end": 11299.4,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.route_w",
+   "op": "ffn.route_w",
+   "start": 11299.4,
+   "end": 11305.3,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.quant2",
+   "op": "ffn.quant2",
+   "start": 11305.3,
+   "end": 11495.3,
+   "unit": "slice vp (ops 8..13 forward) + vs + vsw + RA lane pair + vq",
+   "status": "LOWERED",
+   "gap": null,
+   "family": "vs",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vs"
+  },
+  {
+   "id": "L0.ffn.down",
+   "op": "ffn.down",
+   "start": 11495.3,
+   "end": 12558.6,
+   "unit": "frames (multi-phase cfg7 field, element ROMs) + frame return plan + slice xs phase / stream ROMs",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "ot_s81sl_xs / ot_s81sl_cap",
+    "port": "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+    "missing": "xs calendar COMPILED (xs_field_calendar pipeline P130, 35 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+   },
+   "family": "xs",
+   "insts": [
+    "u_f_0L01",
+    "u_f_0L02",
+    "u_f_0L03",
+    "u_f_0R01",
+    "u_f_0R02",
+    "u_f_0R03",
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_xsp"
+  },
+  {
+   "id": "L0.ffn.combine_allreduce",
+   "op": "ffn.combine_allreduce",
+   "start": 12558.6,
+   "end": 13385.6,
+   "unit": "output-row-owned VS13 then combined-result allgather",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "final_ffn.py / xs_calendar --final-ffn-placement",
+    "port": "output-row-owned VS13 then result allgather",
+    "missing": "actual VS13/POST words and capture/move map exist; bind VPX lifetimes, current RD paths and allgather arrivals on all four ranks before issuing the production calendar"
+   },
+   "family": "vpx",
+   "insts": [],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vpx"
+  },
+  {
+   "id": "L0.ffn.hc_post",
+   "op": "ffn.hc_post",
+   "start": 13385.6,
+   "end": 13450.5,
+   "unit": "slice vp POST (a0 = R + 1: post row, comb R+2..R+5) -> vn h store",
+   "status": "PARTIAL",
+   "gap": {
+    "module": "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+    "port": "POST a1 (y rows)",
+    "missing": "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+   },
+   "family": "vpx",
+   "insts": [
+    "u_s_0S"
+   ],
+   "bench": "results/rtl/s81_layer_tput_1018/compiler/bench_vp"
+  }
+ ],
+ "gaps": [
+  [
+   "current SUKV producer/calendar binding",
+   "u_s_3N leaf0",
+   "Real KV/CN/IK/CP source exists; provide kv_program.json with absolute producer rows, contexts, fused operation coverage, measured CTL/VP dates and final consumer lifetimes."
+  ],
+  [
+   "dv_layer_compile / previous-sublayer pre transfer",
+   "NORMR a0",
+   "attn HC row 1000: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+  ],
+  [
+   "dv_layer_compile / previous-sublayer pre transfer",
+   "NORMR a0",
+   "entry previous-ffn HC row 1008: arithmetic is benched, but the full producer/transfer/row-lifetime binding is absent; current-block hc.coef_row0 is not the pre operand"
+  ],
+  [
+   "entry PVSO ingress + on-die half exchange (RTLGAP-SO, ALLQ die)",
+   "entry pv words (E tiles 0..7 / W tiles 8..15) -> per-half transpose -> SMJ kind 5 + 16 operand frames on q",
+   "G10 cross-die exchange is NOT needed (ALLQ: all 512 dims on this die, bench_allq). Remaining HW: (1) bind the transposer/serializer (codex/s81-pv-so-assembly-1021 dsdv_pv_so_ingress) at BOTH entries, each for its half's 8 heads; (2) the half exchange XH of the other half's 8-head 256-b record halves on existing lanes (W->E: tq_05_07 dn, fc_07_09 score gather, tr_09_11 return; E->W: tq_11_09, pr_09_07 P-path lane, tr_07_05), 320 records each way, concurrent with the drain; (3) SOT14 booking dates + deferred END. The programme (so_frames: SMJ kind 5 + 16 operand frames, 534 words; per half 6 + 8 x 33 = 270) is lowered and bench-proven on the 16 real SM shares with the RTL P.V (bench_so)."
+  ],
+  [
+   "final_ffn.py / xs_calendar --final-ffn-placement",
+   "output-row-owned VS13 then result allgather",
+   "actual VS13/POST words and capture/move map exist; bind VPX lifetimes, current RD paths and allgather arrivals on all four ranks before issuing the production calendar"
+  ],
+  [
+   "lower_svc",
+   "bench",
+   "results/rtl/s81_rtlgap_so_1021/bench_allq/check.json missing"
+  ],
+  [
+   "ot_s81sl_vs (SU add) / TOKEN-PASS-S81",
+   "owner fold ((p0+p1)+(p2+p3))",
+   "RS + AG transport is lowered on the benched endpoint ABI (bench_vpx op out_allreduce_rs / _ag); the owner fold between them is not bound to these rows (FOLD_GAP 1083 = RS landing tail 50 CHECKED + fold law 1033 UNCHECKED) and the partial rows' producer capture is not placed"
+  ],
+  [
+   "ot_s81sl_xr / frames cfg7 / ot_s81sl_vn",
+   "send config (CTL target 4) kind 7 HP beats {acc, g, h, 6 subtree roots}",
+   "the slice-side chunk sums / maximal aligned subtree roots of fn . flat and of the sum of squares (frames + vn) and their kind-7 send are not lowered (frames: GAP_XS_ROM); the gunit top tree above the slice roots is lowered and bit-exact (bench_gu)"
+  ],
+  [
+   "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+   "16-slice norm composition",
+   "hc_pre reaches vn through vp op 7 NORMR from the G-unit L5 leaf row R (S81-SLICE 10-18, beat bench g_b37 PASS / g_mni FAIL) and the compiler issues it (lower_norm_smoke); the norm is still compiled on ONE slice: the xfin NX snake + XQ all-gather beats of all 16 slices (rstd, act-quant x) are not composed"
+  ],
+  [
+   "ot_s81sl_xr / ot_s81sl_rstop (xfin NX snake, XQ all-gather)",
+   "16-slice norm composition",
+   "the per-leaf NORMR / norm / act-quant programme is emitted on ONE slice (lower_norm_smoke); the xfin NX snake (partial roots -> rstd) and the XQ all-gather of all 16 slices are not composed"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_field_calendar BF pipeline P231, 20 phases, seg-label floor 231, static + layer checks); open: cap cfg_d descriptors of this shape; programme / emission unmeasured for shapes ['col_h10_asb_x|E2|bseg1024', 'col_h9_asb_nx|E2|bseg1024', 'col_h9_asb_x|E2|bseg1024'] (BF_LEGACY measurement run of each shape owed)"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_field_calendar BF pipeline P231, 5 phases, seg-label floor 231, static + layer checks); open: cap cfg_d descriptors of this shape; programme / emission unmeasured for shapes ['col_h10_asb_x|E2|bseg1024', 'col_h9_asb_nx|E2|bseg1024', 'col_h9_asb_x|E2|bseg1024'] (BF_LEGACY measurement run of each shape owed)"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_field_calendar pipeline P127, 6 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_field_calendar pipeline P130, 35 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_field_calendar pipeline P145, 36 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_field_calendar pipeline P146, 6 phases, measured floor, static + layer checks); open: cap cfg_d descriptors of this shape and the image writer's rank-local row tags"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np), cap cfg_d",
+   "xs calendar COMPILED (xs_wqb_die pipeline P126, static checks; fullsix RTL run = this emission, consumer retire / deadline check results/rtl/s81_wqbp_1020); open: cap cfg_d descriptors of this 8-frame / 22-phase shape (only the private fullsix 6-frame / 15-phase CAP lowering exists, codex/token-cap-contract-1020) and the image writer's rank-local row tags"
+  ],
+  [
+   "ot_s81sl_xs / ot_s81sl_cap",
+   "pq_calendar_action / pq_calendar_time ROMs, is_d (GO ph np, return fields), cap cfg_d",
+   "the frame images, the return calendar and the xs phase / stream ROM images are lowered and benched (bench_xs PASS: real L0 wq_a rows 0-3 on die frame u_f_0L00, col_h9_l4 E 5, cycle-exact calendar, fixture BF16; the other 6 a_proj frames of the slice (col_h10_l4 E 2, col_h9_MX_l4 E 1) are legalised fault-free but not benched; ELEM_EXTRA is measured for the (2 units, 2 rows) class only); the slice xs CALENDAR images (the 75-b action words: stream requests, VM responses, cfg / launch / retire, tools/s81_slice/xs_program.py is bench stimulus for the c26l stages only), the is_d GO word and the cap write-back cfg_d for the DV placement are not emitted yet, and no bench drives ot_s81sl_xs into a frame (the frame bench drives the frame through the w17w10 spine with the same phase / stream words)"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py + xfin over 4 slices",
+   "q_lora (qa) rows -> vn h copy 0",
+   "q_norm is a plain RMSNorm of qa (no HC mix: pre = one-hot, a static NORM imm / boot row); the qa rows are the a_proj return rows, whose frame placement is not compiled (GAP_FRAME_PLACE), and the 4-slice xfin composition is not compiled"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py / lower_xs (wo_b / down return rows)",
+   "POST a1 (y rows)",
+   "POST a0 = R + 1 matches the G-unit rows (bench_vp g_b37 PASS, old order g_mpl FAIL); its a1 = the y rows of the sublayer output (attn wo_b / ffn down + combine all-reduce result) whose leaf-store placement is not compiled (GAP_XS_ROM / GAP_FOLD), so no POST command can be issued yet"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+   "a_proj capture rows -> end slices",
+   "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+  ],
+  [
+   "tools/s81_dv/frame_return_plan.py / xs fork (lower_xs)",
+   "u_s_0N pair A -> next stage u_s_0N pair B (S81-LINK5 stage NEXT; TX window ab 0)",
+   "the endpoint send / receive ABI is lowered and benched (bench_vpx: s_0S <-> peer s_7S through the real lep + lane tiles); the production rows of the own part at the 3 end slices (the capture rows of the a_proj return + the on-die move to s_0S / s_7S / s_7N) and the consumer placement of the 3 received parts are not compiled yet"
+  ]
+ ]
+}
