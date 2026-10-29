@@ -1,0 +1,15 @@
+{
+  "image": "results/geom_review/ring_nearmiss_1029/strict_frozen_geometry.png",
+  "actual_odb": "epyc2:/srv/opentallas-scratch2/claude/codex-ring-nearmiss-1029/pad1v2_grt.odb",
+  "reviewer": "/root/geom independent plus /root/hbm/cores/ring_topk",
+  "verdict": "PASS-COND CORE-only DRT",
+  "findings": "233.28um square, no macros, aligned face bands and central clock. Actual GRT0. Functional reach370.49um/0bad. Canonical36bfc5ddf strict6arc12endpoint classification pin_unreg0/p909.09/max16.71; actual GRT stage honestly NA. Frozen1356clock cells exact masters/bboxes/graph/sinks vs original actual5_1grt,0differences. Fixed clock results supersede moved-clock diagnostic final_grt for continuation, whose records remain preserved.",
+  "TT_setup_ps": 60.39,
+  "FF_hold_ps": 1.23,
+  "period_ps": 833,
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "pending": "Final route DRC/antenna/RCX/TTFF/pair/signoff; no SIGNED claim."
+}
