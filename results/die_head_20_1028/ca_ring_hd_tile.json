@@ -1,0 +1,46 @@
+{
+ "schema": "ca_ring_latency/1",
+ "source": "DIE-HEAD-20 GRT-RC probe of the DIE-HEAD-19 fwd_buffer+tap_passthrough+reg_spine hd_tile (intel1 die-head-20/kits/hd_tile_grtp: DH19 4_cts.odb, make grt SKIP_INCREMENTAL_REPAIR, GRT0, meas17g/grt.spef, setRC_rcx). fwd_out = fclk_out_o driver (rsp_rs->cland_fwd_fclk_out_o BUFx24->3 wire bufs); fclk_in/reader = u_cland_i ring writer 2298 / reader 628 CK pins (meas20.tcl + spec20.py; spec20.py reproduces the DH18 spec exactly from the DH18 inputs). fwd_wire abutted [0,1]",
+ "types": {
+  "hd_tile": {
+   "TT": {
+    "fwd_out_ps": [
+     158.1,
+     162.5
+    ],
+    "fclk_in_ps": [
+     186.1,
+     209.5
+    ],
+    "reader_ps": [
+     522.9,
+     560.8
+    ]
+   },
+   "FF": {
+    "fwd_out_ps": [
+     123.0,
+     126.5
+    ],
+    "fclk_in_ps": [
+     152.8,
+     174.1
+    ],
+    "reader_ps": [
+     416.6,
+     450.3
+    ]
+   }
+  }
+ },
+ "fwd_wire_ps": {
+  "TT": [
+   0.0,
+   1.0
+  ],
+  "FF": [
+   0.0,
+   1.0
+  ]
+ }
+}

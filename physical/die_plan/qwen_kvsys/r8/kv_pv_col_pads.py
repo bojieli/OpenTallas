@@ -20,6 +20,8 @@ Members padded (sink-partition entry, r8 member schema; bind.py asbuilt.land_r8_
   pvw_<k>__u_s<c>_j.y_valid / .fault -> pvw_<k>__u_ctl.col_valid / col_fault      (pad = flag target - landed)
 The bank commands (bc) take the SAME pad as their column's join_go: bank and join of one column receive one command word,
 so they keep their as-built relative timing (fail closed if a bank's bc and its join_go land differently).
+DIE-KV-19 (b2): the lc bank tile (ot_qwen_tp8_pv_slice_lc_t) has copy pins bcx = bc[18] x3, bc[17] x3 from the same
+command word -> its bcx member is one more column command member and takes the same pad (absent on non-lc binds).
 The RTL parameters follow from the padded bind through the param hook kv_pv_col_regen.py (same law, fail closed).
 Not covered (reported, not padded): V words vport -> bank pv2 and ASTK response -> bank pe2 (see estimate.md)."""
 import argparse
@@ -51,7 +53,7 @@ def plan(B):
     TD, FD = int(TD), int(FD)
     sides = {}
     for side, pvw in SIDES:
-        cmd = B.members(source=rf"^{pvw}__u_ctl\.cmd$", sink=rf"^{pvw}__u_s\d+_(j|b\d+)$", port=r"^(join_go|bc)$")
+        cmd = B.members(source=rf"^{pvw}__u_ctl\.cmd$", sink=rf"^{pvw}__u_s\d+_(j|b\d+)$", port=r"^(join_go|bc|bcx)$")
         flg = B.members(source=rf"^{pvw}__u_s\d+_j\.(y_valid|fault)$", sink=rf"^{pvw}__u_ctl$", port=r"^col_(valid|fault)$")
         cols = defaultdict(lambda: dict(cmd=set(), flag=set(), members=[]))
         for m in cmd:
@@ -137,7 +139,7 @@ def pads(bind_dir, r8):
         add = target - x["landed"]
         if add:
             out.append(dict(x, pad=x["pad"] + add, landed=target, pv_col_pad=add))
-            flops["cmd" if x["sink_port"] in ("join_go", "bc") else "flag"] += add * _bits(x)
+            flops["cmd" if x["sink_port"] in ("join_go", "bc", "bcx") else "flag"] += add * _bits(x)
     cols = law["columns"].values()
     return dict(schema="opentallas.die_plan.r8_extra.v1", die="qwen_kvsys", kind="kv_pv_column_equalisation",
                 source_bind=str(bind_dir),

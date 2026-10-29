@@ -34,6 +34,7 @@ sys.path.insert(0, str(REPO / "tools/die_plan"))
 import core_infra as CI  # noqa: E402
 
 CHAIN_MASTER = "BUFx24_ASAP7_75t_R"
+CHAIN_W_UM = 1.62    # BUFx24 LEF width; core_infra ot_ci_cell xy is the cell CENTRE (x - w/2), KV-KITS-15 island-fit fix
 ROW_UM = 0.27
 SITE_UM = 0.054
 CTS_CLUSTER = CI.CTS_FANOUT      # TritonCTS register sink cluster (fMX log: 7429 sinks -> 310 clusters = ceil(7429/24))
@@ -85,7 +86,7 @@ def apply(sl):
         parent, chain = isl["parent"], []
         for k in range(S + 1):
             name = f"mp_pv_ck_mac{j}_{k}"
-            xy = [round(round((x0 + 0.54) / SITE_UM) * SITE_UM, 3), round(y0 + ROW_UM * (2 * k + 2), 3)]
+            xy = [round(round((x0 + 0.54 + CHAIN_W_UM / 2) / SITE_UM) * SITE_UM, 3), round(y0 + ROW_UM * (2 * k + 2), 3)]
             if not (xy[1] < isl["xy_um"][1] - ROW_UM and xy[1] < y1):
                 raise SystemExit(f"{name}: island rect {isl['island_rect_um']} has no free row below the island node")
             new_nodes.append(dict(name=name, master=CHAIN_MASTER, xy_um=xy, island_rect_um=list(isl["island_rect_um"]),

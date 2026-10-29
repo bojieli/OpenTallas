@@ -1,0 +1,1312 @@
+{
+ "schema": "opentallas.tok_hbm_4.rgap_price.v1",
+ "plan_sha256": "6b3a80cd5680ce48fdf3da86cf758c46d6dd0d65844d47977223bdd0e42e3b19",
+ "image_sha256": "f0b932311ee09139ebd1d56601f4d92b4b4e10ec6da12f31fa8be4433fa972e9",
+ "rt": {
+  "NW": 73,
+  "NE": 74
+ },
+ "wsc": 122,
+ "pk5": 1,
+ "records": 161,
+ "pre_rgap_min": [
+  18
+ ],
+ "post_rgap_min": [
+  0
+ ],
+ "sum_service": 169757,
+ "sum_service_rgap0": 162467,
+ "added_cycles": 7290,
+ "note": "composed_service() of four_role_calendar.py (TOK-HBM-2 measured segments) at the C25b station RT; FUSED records back-to-back (upper bound: no overlap); rgap = min value that passes the lane x-slot rule",
+ "recs": [
+  {
+   "image_offset": 80,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 5760,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 6016,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 12400,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 21824,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 27504,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 27760,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 34144,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 34512,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 42400,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 42656,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 48816,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 49072,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 54880,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 55136,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 61520,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 61776,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 67584,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 67840,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 74224,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 74480,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 80288,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 80544,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 86928,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 87184,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 92992,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 93248,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 99632,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 99888,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 105696,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 105952,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 112336,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 112704,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 120592,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 120848,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 127008,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 127264,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 133072,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 133328,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 139712,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 139968,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 145776,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 146032,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 152416,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 152672,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 158480,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 158736,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 165120,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 165376,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 171184,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 171440,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 177824,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 178080,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 183888,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 184144,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 190528,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 200704,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 207952,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 208208,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 214368,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 214624,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 220432,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 220688,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 227072,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 227328,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 233136,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 233392,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 239776,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 240032,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 245840,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 246096,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 252480,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 252736,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 258544,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 258800,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 265184,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 265440,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 271248,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 271504,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 277888,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 278256,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 286176,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 286432,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 292592,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 292848,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 298656,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 298912,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 305296,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 305552,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 311360,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 311616,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 318000,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 318256,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 324064,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 324320,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 330704,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 331072,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 338288,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 338544,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 344704,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 344960,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 350768,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 351024,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 357408,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 357664,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 363472,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 363728,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 370112,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 370368,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 376176,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 376432,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 382816,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 383184,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 390400,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 390656,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 396816,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 397072,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 402880,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 403136,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 409520,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 409776,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 415584,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 415840,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 422224,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 422480,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 428288,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 428544,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 434928,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 435296,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 442512,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 442768,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 448928,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 449184,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 454992,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 455248,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 461632,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 461888,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 467696,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 467952,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 474336,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 474592,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 480400,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 480656,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 487040,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 487408,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 494624,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 494880,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 501040,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 501296,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 507104,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 507360,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 513744,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 514000,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 519808,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 520064,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 526448,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 526704,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 532512,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 532768,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  },
+  {
+   "image_offset": 539152,
+   "op": "HC_POST",
+   "n": 6,
+   "rgap_min": 0,
+   "service": 910,
+   "service_rgap0_nofault": 910
+  },
+  {
+   "image_offset": 539408,
+   "op": "HC_PRE_NORM",
+   "n": 6,
+   "rgap_min": 18,
+   "service": 1197,
+   "service_rgap0_nofault": 1107
+  }
+ ]
+}

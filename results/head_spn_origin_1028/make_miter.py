@@ -10,16 +10,18 @@ body, _, _, _ = origin_body(('a', 'b', 'c'), root=True)
 ports = '''input clk, input raw_0, input raw_1, input raw_2, input root_raw,
  input cland_fstart_in_a, input cland_fstart_in_b, input cland_fstart_in_c,
  input [1:0] strap_ca_tsel, input [1:0] strap_ca_pad, input strap_ca_efall,
- input strap_ca_root, output cland_start'''
+ input strap_ca_root, output cland_start, output cland_start_d, output cland_start_raw'''
 new = 'module candidate(' + ports + ');\n' + body + '\nendmodule\n'
 old = '''module reference(''' + ports + ''');
  wire raw_sel = strap_ca_tsel == 0 ? raw_0 : strap_ca_tsel == 1 ? raw_1 : raw_2;
  wire ps = strap_ca_tsel == 0 ? cland_fstart_in_a : strap_ca_tsel == 1 ? cland_fstart_in_b : cland_fstart_in_c;
- wire cs, rs;
+ wire cs, rs, cs_d, rs_d;
  ot_dp_landing_origin_s #(.PADW(2)) orig (.clk(clk),.rst_raw_n(raw_sel),.p_start(ps),
-   .strap_efall(strap_ca_efall),.strap_pad(strap_ca_pad),.start(cs));
- ot_dp_landing_root #(.SETTLE(40)) root (.clk(clk),.rst_raw_n(root_raw),.start(rs));
+   .strap_efall(strap_ca_efall),.strap_pad(strap_ca_pad),.start(cs),.start_d(cs_d));
+ ot_dp_landing_root #(.SETTLE(40)) root (.clk(clk),.rst_raw_n(root_raw),.start(rs),.start_d(rs_d));
  assign cland_start = strap_ca_root ? rs : cs;
+ assign cland_start_d = strap_ca_root ? rs_d : cs_d;
+ assign cland_start_raw = strap_ca_root ? root_raw : raw_sel;
  endmodule
 '''
 tb = '''module tb;
@@ -32,10 +34,10 @@ tb = '''module tb;
  for(p=0;p<4;p=p+1) begin:P
  for(e=0;e<2;e=e+1) begin:E
  for(r=0;r<2;r=r+1) begin:R
- wire cn,rf;
- candidate dut(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),cn);
- reference ref0(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),rf);
- assign eq[16*t+4*p+2*e+r] = (cn===rf);
+ wire cn,rf,cn_d,rf_d,cn_raw,rf_raw;
+ candidate dut(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),cn,cn_d,cn_raw);
+ reference ref0(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),rf,rf_d,rf_raw);
+ assign eq[16*t+4*p+2*e+r] = (cn===rf) && (cn_d===rf_d) && (cn_raw===rf_raw);
  end end end end endgenerate
  integer i, comparisons=0;
  initial begin

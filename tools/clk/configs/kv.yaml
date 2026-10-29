@@ -1,0 +1,26 @@
+# ot-clk config: KV die clock as built by DIE-KV-15 (results/die_kv_15_1028/kit2.sh fb_inv_r150 inv 150, chain2.sh);
+# KV-19: clock event unchanged since KV-15.  Geometric link_htree (no region DME, no stage model consumed).
+schema: ot_clk_config/1
+die: kv
+event:
+  name: fb_inv_r150
+  host: intel1
+  source: results/die_kv_15_1028/kit2.sh fb_inv_r150 inv 150 (die_trial at DIE-QC-11 1465eff51c, qc11/)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-kv-15-1028/kit_fb_inv_r150/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-kv-15-1028/hm_r26q15c.json
+  region_map: /srv/opentallas-scratch2/claude/die-kv-2-1027/l128/land128_regions.json
+  feed: /srv/opentallas-scratch2/claude/die-kv-15-1028/feed_fishbone.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+region:
+  form: none
+residual:
+  tap_pad: /srv/opentallas-scratch2/claude/die-kv-5-1027/pad/pad_it2.json

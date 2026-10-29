@@ -199,9 +199,14 @@ module ot_hdc_fp32_add_n32 #(
     wire rnd_cw;
     ot_hdc_ksadd_k #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
     localparam integer WC = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
+    // DRST 0 (HBM-CORES-KITS-4 10-28, = ot_hdc_fp32_add_lat QK-CORES-10 4eeb71cf7): err bit 1 is E_OVERFLOW, made only
+    // at the output stage; through stages A..C it is the constant 0 of {E_NONE, E_NONFINITE}.  The unreset data cuts
+    // carried that 0 as an X power-up chain into err (HBM qcore_r13 kit LEC: 8 differs u_add.err[1] <- u_cc.g_rv.rd[66],
+    // CHECKED); the defined constant is fed instead.  DRST 1: unchanged.
+    wire [1:0] s2_err_c = DRST ? s2_err : {1'b0, s2_err[0]};
     wire [WC-1:0] c2_in;
     ot_hdc_w11_cut_n32 #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1), .COPY_MASK((71'b1<<69)|71'b1)) u_cc (.clk(clk), .rst_n(rst_n),
-        .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err, s2_code, s2_exp, rnd_w, rnd_cw}), .q(c2_in));
+        .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err_c, s2_code, s2_exp, rnd_w, rnd_cw}), .q(c2_in));
     // ---- C2 ----------------------------------------------------------------------------------------
     wire        u_v, u_byp, u_zero, u_sign, rnd_c;
     wire [1:0]  u_err;

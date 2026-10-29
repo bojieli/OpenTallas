@@ -23,7 +23,7 @@ def boolean(op,terms):
 class Verification:
     def __init__(self,F,G,raw,table,names,live_widths=None):
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
-        self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={}
+        self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={};self._fstart_checked=set()
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
         self.live_widths=live_widths
         self.region={pn:r['tag'] for r in table['regions']
@@ -164,7 +164,7 @@ class Verification:
                     # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
                     # sender's origin forwarded beside the bus; the origins themselves are checked below
                     self.equal_input(c,'rst_n',[self.start_net(r['dst'])])
-                    self.equal_input(c,'t_rst_n',[self.start_net(r['src'])])
+                    self.equal_input(c,'t_rst_n',[self.fstart_net(r['src'],pr['src']['bus'])])
                 else:
                     self.check_reset(c,r['dst'],self.ring_reset_node(r['dst'],bus,info),'u_cland_rst_'+bus)
                 import schema
@@ -246,6 +246,25 @@ class Verification:
                 i=min(int(self._strap['instances'][pn]['values'].get('strap_ca_tsel',0)),len(buses)-1)
                 return prefix+str(i)
         return ident(pn)+'.u_cland_origin'
+
+    def fstart_net(self,pn,bus):
+        """the start a sender forwards on cland_fstart_out_<bus> (receiver ring t_rst_n, child origin p_start).  Strap
+        form (DIE-HEAD-10), every origin but a relay rx: the pin's own face flop u_cland_fstart_<bus>
+        (ot_dp_landing_relay); checked here: region clock, d = the live origin's start_d, rst_raw_n = that origin's
+        raw reset (its 0-cycle equality with start is the RTL proof fv_start_o.sh).  Otherwise the shared start."""
+        ca=self.table.get('count_aligned') or {}
+        if not ca.get('strap_form') or (ca.get('parts') or {}).get(pn,{}).get('role')=='relay':return self.start_net(pn)
+        path=ident(pn)+'.u_cland_fstart_'+bus
+        if path not in self._fstart_checked:
+            self._fstart_checked.add(path)
+            c=self.instance(path,'ot_dp_landing_relay')
+            if c:
+                src=ident(pn)+('.u_cland_root' if self._strap_root(pn) else '.u_cland_origin')
+                self.clock(c,pn)
+                self.equal_input(c,'d',[self.output(src,'start_d')])
+                o=self.byname.get(src)
+                if o is not None:self.equal_input(c,'rst_raw_n',[self.term(b) for b in o.ports.get('rst_raw_n',[])])
+        return self.output(path,'q')
 
     def _strap_root(self,pn):
         """MESO-STRAP-1 strap form: the root copy of a type that also has child copies keeps its root counter as
@@ -336,7 +355,7 @@ class Verification:
                 c=self.instance(path,'ot_dp_landing_origin_s' if ca.get('strap_form') else 'ot_dp_landing_origin')
                 if c:
                     self.clock(c,pn);self.check_reset(c,pn,self.ring_reset_node(pn,b,info),'u_cland_rst_'+b,port='rst_raw_n')
-                    self.equal_input(c,'p_start',[self.start_net(tp['src'])])
+                    self.equal_input(c,'p_start',[self.fstart_net(tp['src'],ports[tp['port']]['src']['bus'])])
             rel=[q for q in ps if q!=pn]
             if not rel:continue
             tx=self.instance(ident(pn)+'.u_cland_rstart_tx','ot_dp_landing_relay')

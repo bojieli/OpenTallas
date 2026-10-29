@@ -1,32 +1,37 @@
 module candidate(input clk, input raw_0, input raw_1, input raw_2, input root_raw,
  input cland_fstart_in_a, input cland_fstart_in_b, input cland_fstart_in_c,
  input [1:0] strap_ca_tsel, input [1:0] strap_ca_pad, input strap_ca_efall,
- input strap_ca_root, output cland_start);
+ input strap_ca_root, output cland_start, output cland_start_d, output cland_start_raw);
     wire cland_oraw = (strap_ca_tsel == 2'd0) ? raw_0 : (strap_ca_tsel == 2'd1) ? raw_1 : raw_2;
-    wire cland_start_child, cland_start_root;
+    wire cland_start_child, cland_start_root, cland_start_child_d, cland_start_root_d;
     wire cland_raw_sel = strap_ca_root ? root_raw : cland_oraw;
-    ot_dp_landing_root #(.SETTLE(40)) u_cland_root (.clk(clk), .rst_raw_n(root_raw), .start(cland_start_root));
+    ot_dp_landing_root #(.SETTLE(40)) u_cland_root (.clk(clk), .rst_raw_n(root_raw), .start(cland_start_root), .start_d(cland_start_root_d));
     assign cland_start = strap_ca_root ? cland_start_root : cland_start_child;
-    wire cland_start_t0, cland_start_t1, cland_start_t2;
+    assign cland_start_d = strap_ca_root ? cland_start_root_d : cland_start_child_d;
+    assign cland_start_raw = cland_raw_sel;
+    wire cland_start_t0, cland_start_t1, cland_start_t2, cland_start_t0_d, cland_start_t1_d, cland_start_t2_d;
     ot_dp_landing_origin_s #(.PADW(2)) u_cland_origin_t0 (
-        .clk(clk), .rst_raw_n(raw_0), .p_start(cland_fstart_in_a), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start_t0));
+        .clk(clk), .rst_raw_n(raw_0), .p_start(cland_fstart_in_a), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start_t0), .start_d(cland_start_t0_d));
     ot_dp_landing_origin_s #(.PADW(2)) u_cland_origin_t1 (
-        .clk(clk), .rst_raw_n(raw_1), .p_start(cland_fstart_in_b), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start_t1));
+        .clk(clk), .rst_raw_n(raw_1), .p_start(cland_fstart_in_b), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start_t1), .start_d(cland_start_t1_d));
     ot_dp_landing_origin_s #(.PADW(2)) u_cland_origin_t2 (
-        .clk(clk), .rst_raw_n(raw_2), .p_start(cland_fstart_in_c), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start_t2));
+        .clk(clk), .rst_raw_n(raw_2), .p_start(cland_fstart_in_c), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start_t2), .start_d(cland_start_t2_d));
     assign cland_start_child = (strap_ca_tsel == 2'd0) ? cland_start_t0 : (strap_ca_tsel == 2'd1) ? cland_start_t1 : cland_start_t2;
+    assign cland_start_child_d = (strap_ca_tsel == 2'd0) ? cland_start_t0_d : (strap_ca_tsel == 2'd1) ? cland_start_t1_d : cland_start_t2_d;
 endmodule
 module reference(input clk, input raw_0, input raw_1, input raw_2, input root_raw,
  input cland_fstart_in_a, input cland_fstart_in_b, input cland_fstart_in_c,
  input [1:0] strap_ca_tsel, input [1:0] strap_ca_pad, input strap_ca_efall,
- input strap_ca_root, output cland_start);
+ input strap_ca_root, output cland_start, output cland_start_d, output cland_start_raw);
  wire raw_sel = strap_ca_tsel == 0 ? raw_0 : strap_ca_tsel == 1 ? raw_1 : raw_2;
  wire ps = strap_ca_tsel == 0 ? cland_fstart_in_a : strap_ca_tsel == 1 ? cland_fstart_in_b : cland_fstart_in_c;
- wire cs, rs;
+ wire cs, rs, cs_d, rs_d;
  ot_dp_landing_origin_s #(.PADW(2)) orig (.clk(clk),.rst_raw_n(raw_sel),.p_start(ps),
-   .strap_efall(strap_ca_efall),.strap_pad(strap_ca_pad),.start(cs));
- ot_dp_landing_root #(.SETTLE(40)) root (.clk(clk),.rst_raw_n(root_raw),.start(rs));
+   .strap_efall(strap_ca_efall),.strap_pad(strap_ca_pad),.start(cs),.start_d(cs_d));
+ ot_dp_landing_root #(.SETTLE(40)) root (.clk(clk),.rst_raw_n(root_raw),.start(rs),.start_d(rs_d));
  assign cland_start = strap_ca_root ? rs : cs;
+ assign cland_start_d = strap_ca_root ? rs_d : cs_d;
+ assign cland_start_raw = strap_ca_root ? root_raw : raw_sel;
  endmodule
 module tb;
  reg clk=0; always #5 clk=~clk;
@@ -38,10 +43,10 @@ module tb;
  for(p=0;p<4;p=p+1) begin:P
  for(e=0;e<2;e=e+1) begin:E
  for(r=0;r<2;r=r+1) begin:R
- wire cn,rf;
- candidate dut(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),cn);
- reference ref0(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),rf);
- assign eq[16*t+4*p+2*e+r] = (cn===rf);
+ wire cn,rf,cn_d,rf_d,cn_raw,rf_raw;
+ candidate dut(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),cn,cn_d,cn_raw);
+ reference ref0(clk,raw_0,raw_1,raw_2,root_raw,a,b,c,2'(t),2'(p),1'(e),1'(r),rf,rf_d,rf_raw);
+ assign eq[16*t+4*p+2*e+r] = (cn===rf) && (cn_d===rf_d) && (cn_raw===rf_raw);
  end end end end endgenerate
  integer i, comparisons=0;
  initial begin
