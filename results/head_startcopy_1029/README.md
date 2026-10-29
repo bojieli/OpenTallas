@@ -44,3 +44,12 @@ mtime00:28:35PDT (the copied old22:36receipt was explicitly ignored).
 Actual new mapped sequential names: exactly1added export FF,0lost old FFs.
 Unit epyc2 oth-ubuntu-3564365-1793258734 completed exit0. No CTS/route/STA
 claim. Actual physical trial uses kit source hooks, not a changed saved ODB.
+
+Higher-PAD literal-D clarification: PADW1 (the actual HEAD vehicle) is unchanged.
+For PADW>1, each retained export FF now takes the ORIGINAL stage predecessor
+(k0=s1,k1=s2,k>=2=pd[k-2]), rather than the corresponding equal copy state.
+Thus every copy has literally the same D/clock/reset equation as its original.
+Minimum real RTL lockstep rerun PASS10112/64variants (unit3406252), latecopy
+mutant caughtcycle24 (unit3406435),50focusedtestsPASS. Old c79receipts retained;
+parallel_miter.log/parallel_mutant.log record this source successor. Actual
+HEAD synthesis was not repeated because its PADW1 elaboration is unchanged.
