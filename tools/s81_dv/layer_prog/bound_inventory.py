@@ -28,7 +28,7 @@ def digest(path):
     return h.hexdigest()
 
 
-def native_control_units(rtl_dir, *, entry=False):
+def native_control_units(rtl_dir):
     """Read exact atomic source paths from the binder's emitted instances.
 
     Slice wrappers have changed hierarchy across plan revisions. Do not guess
@@ -48,19 +48,54 @@ def native_control_units(rtl_dir, *, entry=False):
             if len(matches) != 1:
                 raise ValueError(f'{sl}: emitted source needs one exact {atom}, found {matches}')
             units.append(matches[0])
-        if entry:
-            # VP is dissolved by the binder; retain its exact source parent
-            # from emitted descendants. extract() checks the parent exists.
-            vps = sorted({p.split('.u_vp.', 1)[0] + '.u_vp' for p in paths
-                          if p.startswith(sl + '.') and '.u_vp.' in p})
-            if len(vps) != 5:
-                raise ValueError(f'{sl}: emitted source needs five exact VP parents, found {vps}')
-            units.extend(vps)
     return units
 
 
-def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256):
+def native_vp_units(yjs, manifest):
+    """Find dissolved VP parents in source, including reused partition copies.
+
+    An emitted type shows only its representative's source comments. The
+    original elaboration supplies every actual parent, so repeated copies must
+    be discovered here rather than synthesizing names for missing comments.
+    """
     ab = manifest.get('asbuilt', manifest)
+    mods = yjs['modules']
+    names = {m.get('attributes', {}).get('hdlname', name): name for name, m in mods.items()}
+    rules = [(re.compile(r['inst']), r['module']) for r in ab.get('substitute_parent', [])]
+    found = []
+
+    def walk(module, path):
+        meta = mods[module]
+        if meta.get('attributes', {}).get('hdlname', module) == 'ot_s81sl_vp':
+            found.append(path)
+            return
+        for name, cell in meta.get('cells', {}).items():
+            child_path = f'{path}.{name}' if path else name
+            if not path and not re.fullmatch(r'u_s_[0-7][NS]', name):
+                continue
+            child = cell['type']
+            variant = next((v for rx, v in rules if rx.fullmatch(child_path)), None)
+            if variant:
+                if variant not in names:
+                    raise ValueError('unelaborated selected parent '+variant)
+                child = names[variant]
+            if child in mods and 'blackbox' not in mods[child].get('attributes', {}):
+                walk(child, child_path)
+
+    walk(ab['top'], '')
+    for col in range(8):
+        for tier in ('S', 'N'):
+            sl = f'u_s_{col}{tier}'
+            vps = [p for p in found if p.startswith(sl+'.')]
+            if len(vps) != 5:
+                raise ValueError(f'{sl}: actual source needs five VP parents, found {vps}')
+    return sorted(found)
+
+
+def extract(yjs, manifest, units, *, asbuilt_sha256, top_sha256, native_entry=False):
+    ab = manifest.get('asbuilt', manifest)
+    if native_entry:
+        units = units + native_vp_units(yjs, manifest)
     if not units or len(set(units)) != len(units):
         raise ValueError('request a nonempty, unique list of exact logical instance paths')
     top = ab['top']
@@ -137,11 +172,12 @@ def main(argv=None):
     if a.native_control_units or a.native_entry_units:
         if units:
             ap.error('--native-control-units cannot be combined with explicit units')
-        units = native_control_units(a.bound_top.parent, entry=a.native_entry_units)
+        units = native_control_units(a.bound_top.parent)
     ab_hash, top_hash = digest(a.asbuilt), digest(a.bound_top)
     yjs = json.loads(a.asbuilt.read_text())
     manifest = json.loads(a.manifest.read_text())
-    rec = extract(yjs, manifest, units, asbuilt_sha256=ab_hash, top_sha256=top_hash)
+    rec = extract(yjs, manifest, units, asbuilt_sha256=ab_hash, top_sha256=top_hash,
+                  native_entry=a.native_entry_units)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     partial = a.out.with_name(a.out.name + f'.partial.{os.getpid()}')
     with partial.open('x') as f:
