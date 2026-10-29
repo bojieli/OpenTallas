@@ -1924,3 +1924,9 @@ CODEX:14:03 EXPLICITRESET HBM-BIND PARK1df71feb2f. CurrentCOLLVM_RT3parentprobe4
 CODEX: 2026-10-29 14:03 PDT EXPLICITRESET HBMTOKPARKeedbe28aa READYUNMERGED;VM(B)exact3x2rowcompilerprep/1966080byte12DMAtraffic,actualproducerpublication/fullphasefitstillmissing;noownlivejobs,fullCODEX-LOGpacket.
 
 CODEX: 2026-10-29 14:03 PDT explicitreset SerDesPARK3d9dd6393; actualCTSunit332115liveTT-2.51/FF-2.35diagnostic, oldnrcbottleneckgone; LEPmodel378readybutphysicalunlaunched. Noengineeringafterreset. Packet codex_head_serdes_20261029_1402.md.
+
+CODEX:14:03 explicitreset DS PARKEDd13dd5555pushedclean READYUNMERGED:80probe omittedrealmiddleVbodies, missing15Sbeats; failclosedguardPASS, concreteGunit/BK/seqhost/Engclosure map. Noownlivejobs/new80claim; fullCODEXLOG.
+
+CODEX: 2026-10-29 14:03 PDT QC native import explicit-reset PARKa8f3868ef84; BB1FAIL379, residual-onlysolverLIVE395843 untouched, malformedPGlauncherfixedsourceNOTRUN; (net,x)baseownershipalias hypothesis open, nativePROGMIF0 vsphysicalMIF1mismatch confirmed. Packet handoff/codex_qc_import_20261029_1402.md.
+
+CODEX:14:02 EXPLICITRESET TOKENS PARKED. READYUNMERGED1f53HEADgeometry0datacycles/d13DSmissing15Sclosure/a892KVepochabortreceipt/eedHBMactualfinitephase+1.966MBtraffic. ExistingKVchain/livev2untouched,othersnoownlivejobs. Packethandoff/codex_tokens_20261029_1402.md; noafterresetengineering.
