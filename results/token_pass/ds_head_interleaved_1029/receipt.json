@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.s81.head_interleaved_receipt.v1",
+ "verdict": "PASS_COMPONENT_SOURCE_CANDIDATE",
+ "source_commit": "374f21c4d",
+ "evidence": "existing completed original observer runs; no rerun",
+ "commands": 98,
+ "templates": 98,
+ "target_landings": 112,
+ "native_producer_leaves": 1,
+ "golden_boundary_partials": 79,
+ "rstd_received": 16,
+ "rstd_data_errors": 0,
+ "native_partial_bits": "49199516",
+ "native_partial_edge": 1257,
+ "actual_flagged_XB_edge": 1798,
+ "publication_payload_bits": 1024,
+ "leaf_errors": 0,
+ "leaf_faults": 0,
+ "xfin_faults": 0,
+ "controls": {
+  "old_serial": "FAIL localSID0 NXinject/forward collision1384",
+  "shifted_partial": "CAUGHT XRpartialsetfault0001",
+  "corrupt_actual_partial": "CAUGHT16rstd mismatches and HEAD data differs"
+ },
+ "relative_control_span_extra_edges": 41,
+ "pdsk_candidate": [
+  0,
+  0,
+  0,
+  1,
+  0
+ ],
+ "adoption": false,
+ "physical_START_qualified": false,
+ "full_token": false,
+ "all80producer_math": false,
+ "native_programme_sealed": false,
+ "ack_edges": 5,
+ "ack_is_explicit_programme_data": true
+}
