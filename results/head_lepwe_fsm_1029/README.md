@@ -1,0 +1,9 @@
+# LEP full-kit equivalence diagnosis
+
+The old baseline full LEC terminated KEEP FAIL after7571.8s: t_corr7434.1s, final miter11s;48673comparepoints,48583proved,90differs,0undecided. Four kept-name failures are independent of90logic comparisons.
+
+The FSM discovery repeatedly selected invalid gold hunt state3 and a zero-hot gold state2. Actual synthesized DFFs show reset001, gatebit1 D=hunt_n[1],gatebit2 D=hunt_n[0]. Candidate mapping0→bit0,1→bit2,2→bit1 is provided as untrusted cube hints with valid gold states0,1,2. These use the existing normal induction obligations; no difference is waived. The exact diagnostic uses original preserved gold/gate AIGs and previously proved hypotheses, source hashes in receipt.json. All3state cubes and the state constraint PROVED;48664of48676totalobligations proved,12still differ,0undecided. Thus78gearbox-dependent failures are explained;12EP fault/ok/pnak/pv comparisons remain unresolved. The diagnostic is not kit signoff and does not relax KEEP. A limited two-round correspondence diagnostic is running separately to recover hypotheses dropped before the correct bridge existed.
+
+KEEP driver traces: rdy_k[3]→INV→DFF u_ep.in_ready; g_pc[0].ps[5]→INV/BUF→DFF g_pc[0].g_b[0].a0; g_pc[11].ps[3]→INV/BUF→DFF g_pc[11].g_b[280].a2; g_pc[5].ps[4]→INV→DFF g_pc[5].g_b[140].a1. Four distinct actual FFs; three a0/a1/a2 names are not independently requested in gold.keep. These require proven one-to-one assignment, not a name waiver. Golden Q-wire JSON records rdy/in_ready as identical wiring; the three ps/data-register relations need proof. No physical preservation/RTL edit made.
+
+Current lec.py applies --hints after correspond(), so adding the correct seed alone does not avoid the expensive wrong-map discovery. Any subsequent source improvement must seed/prove FSM hints before discovery and retain all exact obligations.

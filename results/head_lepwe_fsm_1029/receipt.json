@@ -1,0 +1,39 @@
+{
+  "kind": "DIAGNOSTIC_EXACT_MITER_NOT_KIT_SIGNOFF",
+  "inputs": {
+    "gold.aig": "8d686926c058e2f80dbb5c0798a70d7849f253d0ef5512d21910565f9db40a83",
+    "gold.map": "6339fede16ec5e472e085d4c283a1e2900e30fe8b22568e08d4f4afce66090bb",
+    "gate.aig": "c3e297d090bbb16b9c1ba8f9a12c6fb5226a2eff667688012449a391f6ea88b5",
+    "gate.map": "2be9e0fa4e5d9875b08134c7f003a5e3476c21446e13704c3ddf498540745f2c",
+    "hyp.json": "402e0c2cb3045514c9f0c969bb65f84b0109fb2d07bbd48810de4399e067d2ea"
+  },
+  "seed": {
+    "0": 0,
+    "1": 2,
+    "2": 1
+  },
+  "counts": {
+    "proved": 48664,
+    "differs": 12
+  },
+  "failed": {
+    "ff:u_dut.u_lane.u.u_ep.fault": "differs",
+    "ff:u_dut.u_lane.u.u_ep.g_fcopy.u_k_ok_f3.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.ok_f": "differs",
+    "ff:u_dut.u_lane.u.u_ep.pnak": "differs",
+    "ff:u_dut.u_lane.u.u_ep.pv": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_ok_f2.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_ok_o.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_ok_o2.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_ok_ready.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_okc.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_oku.q": "differs",
+    "ff:u_dut.u_lane.u.u_ep.u_k_okv.q": "differs"
+  },
+  "seed_hypotheses": {
+    "ff:u_dut.u_lane.u.u_gb.hunt#t[0]": "proved",
+    "ff:u_dut.u_lane.u.u_gb.hunt#t[1]": "proved",
+    "ff:u_dut.u_lane.u.u_gb.hunt#t[2]": "proved"
+  },
+  "constraint": "proved"
+}
