@@ -22,7 +22,7 @@ def install(D,site):
     site.nearest=nearest
     # Use the existing home allocator and physical DME body checks with the
     # new home legality predicate. No generic tools are changed on disk.
-    src=inspect.getsource(D.physical_pack).replace('site.legal(q) and not any','site.native_home_legal(q) and not any')
+    src=inspect.getsource(D.physical_pack).replace('site.legal(q) and not any','site.native_home_legal(q) and not any').replace('anchor = round_legal(site,(x,y))','anchor = site.nearest((x,y))')
     exec(src,D.__dict__)
     src=inspect.getsource(D.dme_region_tree)
     old='q = (t[2], t[3]) if site.legal((t[2], t[3])) else site.nearest((t[2], t[3]))'
