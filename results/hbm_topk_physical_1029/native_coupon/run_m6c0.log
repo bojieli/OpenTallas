@@ -1,0 +1,11 @@
+PIPE_ADDR_DATA_MITER cycle11 bank0
+PIPE_ADDR_DATA_MITER cycle12 bank0
+PIPE_ADDR_DATA_MITER cycle13 bank0
+PIPE_ADDR_DATA_MITER cycle14 bank0
+IDX_LINK_TREE frame0 MUT6 records512 flits64 errors24 fault0
+IDX_LINK_TREE frame1 MUT6 records512 flits64 errors48 fault0
+IDX_LINK_TREE frame2 MUT6 records512 flits64 errors72 fault0
+IDX_LINK_TREE frame3 MUT6 records512 flits64 errors96 fault0
+IDX_LINK_WPIPE_TOTAL WPIPE2 MUT6 records2048 miter1243 write_vectors256 errors96
+FATAL: /srv/opentallas-scratch2/claude/codex-topk-physical-1029/native_coupon/tb_native.sv:81: dense compaction exact/miter/timeline mismatch
+       Time: 12510000  Scope: tb_idx_link_wpipe

@@ -1,0 +1,11 @@
+{
+  "image": "results/hbm_topk_physical_1029/current_guides.png",
+  "plan_sha": "a4b0cb3d",
+  "reviewer": "/root/hbm/cores/ring_topk",
+  "verdict": "PASS-COND for ONE PLACE ONLY after normal source lint/LEC/contract gates. No CTS, STA, GRT, DRT or parent enable.",
+  "findings": "Current selected_line Wface2368bits aligned to selector opposite globalface,15.312um; allotherpins/clock geometry unchanged. Eightactual171.288x77.784 SRAMs in two legalcolumns/four rows,8.64um row gaps and144um central channel. Existing input guide green at25.92,207.36..69.12,243; stage0 local W guides andstage1 central guides disjoint from eachother/macros/islands; <=58.57% FFarea upperfill, all estimated adjacentstage reach<=360.72um. Clockdriverislands remain clear, existing central entry324,250.56. Actualnetlist placement/macroescape/cutcapacity/PG/pairclock not yet measured; common-domain nineport clock stage mandatory hold retained. +2 SRAMwrite visibility edges explicitlypriced, nativeinput/outputshell unchanged.",
+  "native_coupon": "2048records/1243checks/256coherentwritevectors PASS;WE/ADDR/DATA+wrongclock controls caught; actualsourcehashes/callerclockexpressions pinned. Not fullbounddie token pass.",
+  "native_profile": "CandidateR2 hb_idx__link WRITE_PIPE_STAGES2, allportexpressions unchanged; defaultproduction0 unaffected.",
+  "kit": "intel1:/srv/opentallas-scratch2/claude/codex-topk-physical-1029/gen_v5/kits/ot_hbm_idx_topk_link_static_b9b8c72b4dc6-_current_wpipe2",
+  "preflight": "PASS0, hash216fa200f6fb9369,4597pins/4587faceFF;sourcecommit6d626210e clean. CurrentmultiportCTS_HOLDpreserved."
+}

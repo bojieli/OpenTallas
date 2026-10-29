@@ -1,0 +1,33 @@
+{
+  "caller_source_sha256": "5c082f89a6785bd1c0dea6a5b996956f2918dcf0952ea88581938eab20920386",
+  "results": [
+    {
+      "tag": "m0c0",
+      "exit": 0,
+      "expectation": "PASS"
+    },
+    {
+      "tag": "m4c0",
+      "exit": 1,
+      "expectation": "CONTROL_CAUGHT"
+    },
+    {
+      "tag": "m5c0",
+      "exit": 1,
+      "expectation": "CONTROL_CAUGHT"
+    },
+    {
+      "tag": "m6c0",
+      "exit": 1,
+      "expectation": "CONTROL_CAUGHT"
+    },
+    {
+      "tag": "m0c1",
+      "exit": 1,
+      "expectation": "CONTROL_CAUGHT"
+    }
+  ],
+  "added_internal_SRAM_visibility_edges": 2,
+  "added_outer_IO_edges": 0,
+  "scope": "Current native caller clock aliases plus full-shape core mechanism. Existing native input/output shell unchanged by caller/source receipt; not a full die bound token pass or physical clock signoff."
+}
