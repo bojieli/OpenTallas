@@ -7,12 +7,26 @@ import re
 def safe(s):return re.sub(r'\W','_',s)
 
 
-def _spread(band):
+def _bus_order(t,bus):
+    """bit order of the band's bus on the type (buses[].order, or ft_slots in_order/out_order for <slot>_i/_o)."""
+    for b in t.get('buses',[]):
+        if b.get('name')==bus:return b.get('order','lsb_low')
+    for s in t.get('ft_slots',[]):
+        for suffix,key in (('_i','in_order'),('_o','out_order')):
+            if s.get('name','')+suffix==bus:return s.get(key,'lsb_low')
+    return 'lsb_low'
+
+
+def _spread(band,order='lsb_low'):
     """DIE-HEAD-12 opt-in band_spread: ring tag suffix '@<spread>' (landing_placement.tcl widens each ring cell's reserved
     footprint by it, so the ring fills the whole band); no suffix when the band has no spread (default plans)."""
     sp=band.get('spread')
     # DIE-HEAD-13 opt-in band_ring="ff": '+ff' = place only the ring flops FIRM (bit-major), ring logic to GPL
-    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+('+ff' if band.get('ring_place')=='ff' else '')
+    # DIE-HEAD-32 10-29: '+ffr' = the same, bit-major in DESCENDING bit order, for an lsb_high bus (bit 0 at the window's
+    # high end): the band fills from its low corner, so the slot fill follows the pin order (hd_tile hk5m V1: ascending
+    # fill put i[565]'s ring flops at the band top, 301.6 um from its pin at the bottom). lsb_low stays '+ff'.
+    ff='' if band.get('ring_place')!='ff' else ('+ffr' if order=='lsb_high' else '+ff')
+    return ('' if not sp or sp<=1.0 else f'@{sp:.4f}')+ff
 
 
 def tcl(P,tn):
@@ -21,10 +35,10 @@ def tcl(P,tn):
     def near(xy):
         x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
     if c.get('monitor')=='dataflow' or (root and tree is None):
-        return _dataflow_tcl(tn,c)
+        return _dataflow_tcl(tn,c,P.types[tn])
     for name,band in c.get('bands',{}).items():
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
-        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band)))
+        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band,_bus_order(P.types[tn],name))))
     for s in c.get('collector_local_sources',[]):
         x,y=s['xy_um']
         for kind in ('ready','fault'):status.append((f'landing_{kind}_'+s['name'],x,y))
@@ -62,13 +76,13 @@ def tcl(P,tn):
     return '\n'.join(out)+'\n'+Path(__file__).with_name('landing_placement.tcl').read_text()
 
 
-def _dataflow_tcl(tn,c):
+def _dataflow_tcl(tn,c,t=None):
     """monitor="dataflow" (opt-in, FALLBACK-HEAD-2): ring storage bands plus the dedicated registered status
     output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
     groups=[];status=[]
     for name,band in sorted(c.get('bands',{}).items()):
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
-        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band)))
+        groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band,_bus_order(t or {},name))))
     for pin in sorted(c.get('pins',[]),key=lambda q:q['name']):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
