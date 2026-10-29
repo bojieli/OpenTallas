@@ -75,6 +75,8 @@ def report(path, corner, clock_cell, fmt="auto", period=833., clock_cal="spice_e
         raise ValueError("unknown shared clock calibration")
     if Path(path).suffix == ".json":
         proof = json.loads(Path(path).read_text())
+        if proof.get("corner", corner) != corner:
+            raise ValueError("proof corner differs from requested corner")
         taps, basis = proof["taps"], "component-proof" if proof.get("clock_components_basis") else "proof"
         if proof.get("clock_cal_components"):
             raise ValueError("input must be raw; already calibrated components")

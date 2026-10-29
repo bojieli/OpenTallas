@@ -29,6 +29,6 @@ FF46.4072..54.5655%, zero duty or MPW failures, matching independent S81/NUMBER.
 Historical hardcoded-BUF failure retained by S81 owner. Original route was1x;
 the shared SPICE model's conditions remain separate from actual route NDR.
 
-Validation: test_clock_duty.py plus test_ot_clk.py,43focusedPASS. Controls
+Validation: test_clock_duty.py plus test_ot_clk.py,44focusedPASS. Controls
 exercise the original wrong-cell failure, both formats, mixed parity-aware
 components and a decomposition mutant. Default build/replay paths unchanged.
