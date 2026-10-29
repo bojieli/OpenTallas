@@ -41,6 +41,6 @@ for name in [bench]:
  p=ROOT/name;dest=out/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
 record[str(manifest)]=hashlib.sha256((ROOT/manifest).read_bytes()).hexdigest()
 (out/'files.f').write_text('\n'.join(relative+[bench])+'\n')
-(out/'source_record.json').write_text(json.dumps(dict(schema='opentallas.s81.seqhost_local_sources.v1',source_sha256=record,defines=ab['defines'],params=(dict(TX_SRAM=1) if top=='dsdv_bk_sel_vmtx' else dict(HOSTB_ENABLE=0,STATIC_KS6=0)),implementation_children=children,memory_implementations={str(Path(k).relative_to(ROOT)):str(Path(v).relative_to(ROOT)) for k,v in impl.items() if v in closure}),indent=1)+'\n')
+(out/'source_record.json').write_text(json.dumps(dict(schema='opentallas.s81.seqhost_local_sources.v1',source_sha256=record,source_manifest=str(manifest),defines=ab['defines'],params=(dict(TX_SRAM=1) if top=='dsdv_bk_sel_vmtx' else dict(HOSTB_ENABLE=0,STATIC_KS6=0)),implementation_children=children,memory_implementations={str(Path(k).relative_to(ROOT)):str(Path(v).relative_to(ROOT)) for k,v in impl.items() if v in closure}),indent=1)+'\n')
 (out/'defines.f').write_text('\n'.join('+define+'+d for d in ab['defines'])+'\n')
 print('closure',len(closure), 'files',sum(Path(p).stat().st_size for p in closure))

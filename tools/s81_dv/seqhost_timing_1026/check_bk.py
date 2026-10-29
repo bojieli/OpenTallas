@@ -12,6 +12,6 @@ if len(v)!=32 or len(set(v))!=1:raise ValueError('missing/nonuniform BK transit 
 pin_edges=v[0]+1
 if pin_edges+a.expect_shift!=pin_edges:raise ValueError('TIMING_RECEIPT_MUTANT_CAUGHT shifted BK edge')
 r=json.loads(a.sources.read_text());r.update(schema='opentallas.s81.bound_control_local.v1',verdict='PASS',masters={'dsdv_bk_sel_vmtx':dict(source_path='physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv',params=dict(TX_SRAM=1),straps=dict(tap_k=17,sink_k=16,ik=4,ek=5,uid=91,eg_n=0),defines=r['defines'],edges=dict(vi_n_pin_event_to_vo_s=pin_edges,vi_n_to_vo_s=pin_edges,vi_n_sampling_to_vo_s=v[0]))},observed_words=32,edge_convention='Primary edges: input pin valid after posedge -> output pin valid after posedge; sampling offsets are separate',scope='Current atomic BK wrapper CTL transit only; no selection programme/die-clock/bound transport/token claim')
-manifest='physical/die_plan/s81/bind/asbuilt_b178_coll.json'
+manifest=r.pop('source_manifest','physical/die_plan/s81/bind/asbuilt_b178_coll.json')
 r['selection_manifest']=dict(path=manifest,sha256=r['source_sha256'].pop(manifest))
 a.out.write_text(json.dumps(r,indent=1)+'\n');print('BK_LOCAL PASS pin_event_edges',pin_edges)
