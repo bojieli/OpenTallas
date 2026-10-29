@@ -145,8 +145,20 @@ class Maze:
 def balanced(points, centres, dist, iters=400):
     n = len(points); k = len(centres); tgt = [n // k + (1 if i < n % k else 0) for i in range(k)]
     Dm = [[dist(p, c) for c in centres] for p in points]; w = [0.0] * k
+    # The assignment step is the same independent float64 add + first-min choice for every point. Optional NumPy
+    # removes Python's O(n*k*iters) dispatch overhead; minimal environments keep the identical scalar path.
+    matrix = None
+    try:
+        import numpy as np
+        candidate = np.asarray(Dm, dtype=np.float64)
+        if np.isfinite(candidate).all():
+            matrix = candidate
+    except ImportError:
+        pass
     for it in range(iters):
-        a = [min(range(k), key=lambda c: Dm[i][c] + w[c]) for i in range(n)]; cnt = collections.Counter(a)
+        a = ((matrix + np.asarray(w, dtype=np.float64)).argmin(axis=1).tolist() if matrix is not None else
+             [min(range(k), key=lambda c: Dm[i][c] + w[c]) for i in range(n)])
+        cnt = collections.Counter(a)
         if all(cnt[c] == tgt[c] for c in range(k)): break
         for c in range(k): w[c] += 0.5 * (cnt[c] - tgt[c]) / max(1, n / k) * 20 / (1 + it / 50)
     cnt = collections.Counter(a)

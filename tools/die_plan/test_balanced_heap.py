@@ -31,7 +31,7 @@ def test_heap_matches_legacy_assignments_and_ties():
     for seed in range(24):
         rng = random.Random(seed)
         n = 37 + seed * 3; k = 2 + seed % 6
-        points = [(rng.randrange(12), rng.randrange(12), i) for i in range(n)]
+        points = [(rng.randrange(12) / (3 if seed % 2 else 1), rng.randrange(12) / (3 if seed % 2 else 1), i) for i in range(n)]
         centres = [(rng.randrange(12), rng.randrange(12)) for _ in range(k)]
         dist = lambda p, c: abs(p[0] - c[0]) + abs(p[1] - c[1])
         assert H.balanced(points, centres, dist, iters=1 + seed % 4) == legacy_balanced(points, centres, dist, iters=1 + seed % 4)
@@ -44,3 +44,17 @@ def test_heap_preserves_all_points_and_exact_target_loads():
     result = H.balanced(points, centres, lambda p, c: abs(p - 10*c), iters=1)
     assert sorted(p for group in result for p in group) == points
     assert [len(g) for g in result] == [13]*5 + [12]*3
+
+
+def test_optional_numpy_fallback_preserves_legacy_order(monkeypatch):
+    import builtins
+    original = builtins.__import__
+    def without_numpy(name, *args, **kwargs):
+        if name == "numpy":
+            raise ImportError("minimal environment")
+        return original(name, *args, **kwargs)
+    points = [(i / 3, i % 7) for i in range(55)]; centres = [(0, 1), (6, 3), (16, 2)]
+    distance = lambda p, c: abs(p[0] - c[0]) + abs(p[1] - c[1])
+    expected = H.balanced(points, centres, distance, iters=13)
+    monkeypatch.setattr(builtins, "__import__", without_numpy)
+    assert H.balanced(points, centres, distance, iters=13) == expected == legacy_balanced(points, centres, distance, iters=13)
