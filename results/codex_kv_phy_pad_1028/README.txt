@@ -1,31 +1,37 @@
-CURRENT SOURCE: adec2c6fc speculative-bank form. Earlier partial-predicate
-form bb4cf8b22/e24b3122f below is SUPERSEDED for physical use: its predicate
-logic before496 input face captures caused497 multi-input face paths.
-No failing physical verdict has been replaced.
+CURRENT SOURCE: 67522c5e4, registered onehot speculative-bank form.
+The old partial-predicate candidate bb4cf8b22/e24b3122f is superseded.
+The intermediate pending-valid candidate adec2c6fc was functionally exact
+but failed physical preflight: raw in_v had6 loads. Final source uses only
+the original vq input capture and registered wp_hot[k] for each bank.
+Failures remain in their original run directories; no gate was waived.
 
 Current fix keeps raw1024 capture and the original496-bit padding test.
-Queue DATA bank enables come only from registered pending input valid and
-onehot write address. Validation still controls queue pointer/count commit.
-A rejected speculative write cannot become a future valid output because
-padding/full rejection asserts sticky fault on the same edge; simultaneous
-pop sees pre-edge contents, and reset clears valid occupancy and pending
-write enables. No cycle or interface/clock change.
+Queue DATA bank enables are vq AND onehot write address. Validation governs
+queue pointer/count COMMIT. A rejected speculative write cannot become a
+future valid output: padding/full rejection asserts sticky fault on the
+same edge; simultaneous pop sees pre-edge contents; reset clears valid
+occupancy. Clock, ports, sampling and output cycles remain unchanged.
 
-Extended old/new lockstep PASS8766 edges including all496 padding-bit
-positions, rejection during pop, fault/reset and new valid post-reset words.
-MUT1 caught. Logs nominal_spec.log/mutant_spec.log. Original48word legal
-stall/credit/overflow checks also pass. An initial extended bench attempt
-hit its old100us watchdog; changing the bench watchdog to accommodate the
-known added496 directed cases fixed the harness (no RTL change).
+Smallest old/new lockstep PASS8766 edges, including all496 padding-bit
+positions, rejection during pop, fault/reset and valid post-reset words;
+MUT1 payload flip caught. Original48word legal longstall/credit/overflow
+cases also pass. Logs nominal_spec.log/mutant_spec.log cover the same
+speculative mechanism; final valid-input capture fix reran identically.
+An initial extended bench hit the old100us watchdog; the200us bench bound
+accommodates the known496 extra cases (no RTL fix for that harness issue).
 
-hr_face_ports extraction on current source: post rc0, mutant rc1,
-emitted_v rc0, 0 logic/dropped/feedthrough inputs, multi-input1 (in_v).
-Physical synthesis/preflight + fresh sink census/slices are IN PROGRESS.
-Timing estimate: remove late validation gate + fanout tree from2640 queue
-DATA write enables (~380ps predecessor path contribution); validation
-remains on small control cones. Expected to cover TT73.87ps deficit,
-physical timing NOT RUN yet. Extra state10 onehot/pending bits; no added
-queue storage or throughput cost. Added cycles0.
+Fresh normal hr_face_ports: post rc0, mutant rc1, emitted_v rc0;
+0 logic/dropped/feedthrough/multi-input paths. Actual CORE_PREFLIGHT PASS
+both1_2_yosys.v and1_synth_odb.v:1577/1577 ports,0 errors. Final kit
+hashd243d1cfeca8bf5e:4776 clock sinks (+2 versus old), same centre-entry
+sevenstage trunk, same seam25/25, outline86.4x95.04, M5 ceiling.
+Place+kitLEC IN PROGRESS, phy_pad timing/signoff NOT RUN.
+
+Estimate: late validation logic + data enable fanout (~380ps in old path)
+removed from2640 queue DATA write enables. Raw496bit validation remains
+on small control cones. Expected gain exceeds TT73.87ps deficit; actual
+routed timing still required. Extra effective state2FF (onehot5 vs binary3),
+no additional storage, no throughput/latency cost, added cycles0.
 
 HISTORICAL FIRST CANDIDATE (retained receipts follow):
 

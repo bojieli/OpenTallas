@@ -1,0 +1,29 @@
+{
+ "verdict": "PASS",
+ "top": "qkd_hr_phy_pad",
+ "checked": 1575,
+ "ok": 1575,
+ "fail_counts": {},
+ "fails": {},
+ "dead_declared": [],
+ "netlist": "/work/run/results/asap7/hc_qkd_hr_phy_pad__86_4x95_04/base/1_2_yosys.v",
+ "pins": "/work/pins.json",
+ "boundary_context": {
+  "manifest": "/work/boundary_guard_context.json",
+  "source_core_json": "/work/core.json",
+  "controls": [
+   "ck",
+   "rst_n"
+  ]
+ },
+ "one_station_ft_slots": [],
+ "port_gate": {
+  "verdict": "PASS",
+  "io_pins": 1577,
+  "netlist_ports": 1577,
+  "io_only": 0,
+  "net_only": 0,
+  "io_only_first": [],
+  "net_only_first": []
+ }
+}
