@@ -1,0 +1,551 @@
+{
+ "mode": "body",
+ "taps": 51,
+ "dme_nodes": 1536,
+ "elapsed_s": 253.59910893440247,
+ "reach": {
+  "schema": "ot_clk_actual_reach/1",
+  "max_um": 405.0,
+  "verdict": "PASS",
+  "cell_edges": 250,
+  "tap_edges": 51,
+  "worst_um": 349.92,
+  "over_count": 0,
+  "over": [],
+  "missing_sites": [],
+  "frozen_home_match": true
+ },
+ "calibration": {
+  "mode": "spice_edge",
+  "late_factor": {
+   "TT": 0.9324,
+   "FF": 0.938
+  },
+  "stage_model_file": "/srv/opentallas-scratch2/claude/codex-s81-2340/bk_dme_coupon/bk_stage_cal_2w2s_late.json",
+  "scope": "local51tap actual2W2S late stage/tap fit, no global qualification",
+  "early_target": "tt",
+  "report_units": "raw path * corner factor + physical early ps"
+ },
+ "window_ps": {
+  "TT": 5.541443393349823,
+  "FF": 39.857678092230685
+ },
+ "stats": {
+  "merges": 50,
+  "imbalanced": 4,
+  "worst_imbalance_um": 5.1,
+  "extra_wire_um": 0.0,
+  "topology": {
+   "greedy": 1
+  },
+  "snakes": 15,
+  "snake_wire_um": 4101.8,
+  "snake_buffers": 39,
+  "early_taps": [
+   {
+    "part": "bk_sel",
+    "port": "clk_c0",
+    "early_model_ps": 430.72,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c1",
+    "early_model_ps": 430.72,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c2",
+    "early_model_ps": 430.72,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c3",
+    "early_model_ps": 430.72,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c4",
+    "early_model_ps": 621.09,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c5",
+    "early_model_ps": 125.7,
+    "mode": "merge"
+   },
+   {
+    "part": "bk_sel",
+    "port": "clk_c6",
+    "early_model_ps": 84.94,
+    "mode": "merge"
+   }
+  ],
+  "spread_um": 5.4
+ },
+ "rows": [
+  {
+   "port": "t_bk_sel__clk_t38",
+   "part": "bk_sel",
+   "tap": "clk_t38",
+   "delay_ps": {
+    "TT": 877.4007934696112,
+    "FF": 753.8315389859118
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t27",
+   "part": "bk_sel",
+   "tap": "clk_t27",
+   "delay_ps": {
+    "TT": 877.5333663564592,
+    "FF": 753.9487691886451
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t16",
+   "part": "bk_sel",
+   "tap": "clk_t16",
+   "delay_ps": {
+    "TT": 877.3073799329195,
+    "FF": 756.4262019021713
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t36",
+   "part": "bk_sel",
+   "tap": "clk_t36",
+   "delay_ps": {
+    "TT": 882.1830731568941,
+    "FF": 755.2508323724497
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t25",
+   "part": "bk_sel",
+   "tap": "clk_t25",
+   "delay_ps": {
+    "TT": 882.3156460437419,
+    "FF": 755.3680625751829
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t14",
+   "part": "bk_sel",
+   "tap": "clk_t14",
+   "delay_ps": {
+    "TT": 882.0896596202024,
+    "FF": 757.8454952887091
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t37",
+   "part": "bk_sel",
+   "tap": "clk_t37",
+   "delay_ps": {
+    "TT": 882.1898562765874,
+    "FF": 755.2568216802492
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t26",
+   "part": "bk_sel",
+   "tap": "clk_t26",
+   "delay_ps": {
+    "TT": 882.3224291634352,
+    "FF": 755.3740518829825
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t15",
+   "part": "bk_sel",
+   "tap": "clk_t15",
+   "delay_ps": {
+    "TT": 882.0964427398955,
+    "FF": 757.8514845965086
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c2",
+   "part": "bk_sel",
+   "tap": "clk_c2",
+   "delay_ps": {
+    "TT": 882.0688005016286,
+    "FF": 736.382897321954
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t7",
+   "part": "bk_sel",
+   "tap": "clk_t7",
+   "delay_ps": {
+    "TT": 876.9977780777973,
+    "FF": 759.4602143698019
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t5",
+   "part": "bk_sel",
+   "tap": "clk_t5",
+   "delay_ps": {
+    "TT": 881.0220822523385,
+    "FF": 760.2083527113587
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t6",
+   "part": "bk_sel",
+   "tap": "clk_t6",
+   "delay_ps": {
+    "TT": 881.0215525129872,
+    "FF": 760.2078199573837
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t2",
+   "part": "bk_sel",
+   "tap": "clk_t2",
+   "delay_ps": {
+    "TT": 877.0342039168742,
+    "FF": 759.4927379532828
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t3",
+   "part": "bk_sel",
+   "tap": "clk_t3",
+   "delay_ps": {
+    "TT": 881.0265748296499,
+    "FF": 760.2122212156346
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t4",
+   "part": "bk_sel",
+   "tap": "clk_t4",
+   "delay_ps": {
+    "TT": 881.0333579493431,
+    "FF": 760.2182105234342
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c3",
+   "part": "bk_sel",
+   "tap": "clk_c3",
+   "delay_ps": {
+    "TT": 881.970552147709,
+    "FF": 740.6632520833946
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t35",
+   "part": "bk_sel",
+   "tap": "clk_t35",
+   "delay_ps": {
+    "TT": 881.4448919332349,
+    "FF": 757.4504298154088
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t24",
+   "part": "bk_sel",
+   "tap": "clk_t24",
+   "delay_ps": {
+    "TT": 881.5774648200826,
+    "FF": 757.5676600181421
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t13",
+   "part": "bk_sel",
+   "tap": "clk_t13",
+   "delay_ps": {
+    "TT": 881.351478396543,
+    "FF": 760.0450927316682
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t22",
+   "part": "bk_sel",
+   "tap": "clk_t22",
+   "delay_ps": {
+    "TT": 881.7059793562818,
+    "FF": 757.6203456580374
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t33",
+   "part": "bk_sel",
+   "tap": "clk_t33",
+   "delay_ps": {
+    "TT": 881.7059793562812,
+    "FF": 757.6203456580369
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t34",
+   "part": "bk_sel",
+   "tap": "clk_t34",
+   "delay_ps": {
+    "TT": 881.5321627145494,
+    "FF": 754.9034476999205
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t23",
+   "part": "bk_sel",
+   "tap": "clk_t23",
+   "delay_ps": {
+    "TT": 881.6647356013972,
+    "FF": 755.0206779026538
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t12",
+   "part": "bk_sel",
+   "tap": "clk_t12",
+   "delay_ps": {
+    "TT": 881.4387491778575,
+    "FF": 757.4981106161799
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c0",
+   "part": "bk_sel",
+   "tap": "clk_c0",
+   "delay_ps": {
+    "TT": 881.9850720560742,
+    "FF": 736.3249763577833
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t11",
+   "part": "bk_sel",
+   "tap": "clk_t11",
+   "delay_ps": {
+    "TT": 881.4308774981318,
+    "FF": 763.831383099869
+   }
+  },
+  {
+   "port": "t_bk_sel__clk",
+   "part": "bk_sel",
+   "tap": "clk",
+   "delay_ps": {
+    "TT": 881.1318503732243,
+    "FF": 761.567676963068
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t1",
+   "part": "bk_sel",
+   "tap": "clk_t1",
+   "delay_ps": {
+    "TT": 881.1321682168357,
+    "FF": 761.5679966154535
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c1",
+   "part": "bk_sel",
+   "tap": "clk_c1",
+   "delay_ps": {
+    "TT": 881.8574996674115,
+    "FF": 740.5617169122138
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c4",
+   "part": "bk_sel",
+   "tap": "clk_c4",
+   "delay_ps": {
+    "TT": 881.342609103681,
+    "FF": 723.9737050076383
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t18",
+   "part": "bk_sel",
+   "tap": "clk_t18",
+   "delay_ps": {
+    "TT": 881.484469450956,
+    "FF": 758.4789396544421
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t29",
+   "part": "bk_sel",
+   "tap": "clk_t29",
+   "delay_ps": {
+    "TT": 881.4844694509563,
+    "FF": 758.4789396544425
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t28",
+   "part": "bk_sel",
+   "tap": "clk_t28",
+   "delay_ps": {
+    "TT": 881.1294653576242,
+    "FF": 758.1497865086287
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t17",
+   "part": "bk_sel",
+   "tap": "clk_t17",
+   "delay_ps": {
+    "TT": 881.1294653576246,
+    "FF": 758.149786508629
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t39",
+   "part": "bk_sel",
+   "tap": "clk_t39",
+   "delay_ps": {
+    "TT": 881.1907844573142,
+    "FF": 760.8291798810102
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t40",
+   "part": "bk_sel",
+   "tap": "clk_t40",
+   "delay_ps": {
+    "TT": 881.1840013376208,
+    "FF": 760.8231905732105
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t8",
+   "part": "bk_sel",
+   "tap": "clk_t8",
+   "delay_ps": {
+    "TT": 881.2719444905159,
+    "FF": 761.0939560488841
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t19",
+   "part": "bk_sel",
+   "tap": "clk_t19",
+   "delay_ps": {
+    "TT": 881.4929385787161,
+    "FF": 758.5790476066242
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t30",
+   "part": "bk_sel",
+   "tap": "clk_t30",
+   "delay_ps": {
+    "TT": 881.4929385787161,
+    "FF": 758.5790476066242
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t41",
+   "part": "bk_sel",
+   "tap": "clk_t41",
+   "delay_ps": {
+    "TT": 881.3813595720878,
+    "FF": 763.0707999599184
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c6",
+   "part": "bk_sel",
+   "tap": "clk_c6",
+   "delay_ps": {
+    "TT": 882.2431327326103,
+    "FF": 759.1197678119962
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_c5",
+   "part": "bk_sel",
+   "tap": "clk_c5",
+   "delay_ps": {
+    "TT": 882.5392214711471,
+    "FF": 758.9385813605231
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t9",
+   "part": "bk_sel",
+   "tap": "clk_t9",
+   "delay_ps": {
+    "TT": 881.8729166245723,
+    "FF": 761.5833438488045
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t20",
+   "part": "bk_sel",
+   "tap": "clk_t20",
+   "delay_ps": {
+    "TT": 881.872916624572,
+    "FF": 761.5833438488042
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t31",
+   "part": "bk_sel",
+   "tap": "clk_t31",
+   "delay_ps": {
+    "TT": 878.1248478943627,
+    "FF": 758.2225441993875
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t42",
+   "part": "bk_sel",
+   "tap": "clk_t42",
+   "delay_ps": {
+    "TT": 878.1248478943621,
+    "FF": 758.222544199387
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t43",
+   "part": "bk_sel",
+   "tap": "clk_t43",
+   "delay_ps": {
+    "TT": 878.1672376886177,
+    "FF": 756.5896440621683
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t21",
+   "part": "bk_sel",
+   "tap": "clk_t21",
+   "delay_ps": {
+    "TT": 878.1178240822779,
+    "FF": 753.8443634765005
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t32",
+   "part": "bk_sel",
+   "tap": "clk_t32",
+   "delay_ps": {
+    "TT": 878.1178240822779,
+    "FF": 753.8443634765005
+   }
+  },
+  {
+   "port": "t_bk_sel__clk_t10",
+   "part": "bk_sel",
+   "tap": "clk_t10",
+   "delay_ps": {
+    "TT": 878.0923444787894,
+    "FF": 758.3916020548069
+   }
+  }
+ ]
+}
