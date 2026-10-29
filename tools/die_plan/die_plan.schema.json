@@ -1130,6 +1130,48 @@
        }
       }
      },
+     "landing_control_status_copy": {
+      "type": "boolean"
+     },
+     "reset_start_raw_exports": {
+      "type": "array",
+      "items": {
+       "type": "object",
+       "additionalProperties": false,
+       "required": [
+        "port",
+        "instance",
+        "net",
+        "xy_um"
+       ],
+       "properties": {
+        "port": {
+         "type": "string",
+         "minLength": 1
+        },
+        "instance": {
+         "type": "string",
+         "minLength": 1
+        },
+        "net": {
+         "type": "string",
+         "minLength": 1
+        },
+        "xy_um": {
+         "type": "array",
+         "items": {
+          "type": "number"
+         },
+         "minItems": 2,
+         "maxItems": 2
+        },
+        "existing_port": {
+         "type": "string",
+         "minLength": 1
+        }
+       }
+      }
+     },
      "id_straps": {
       "type": "array",
       "items": {
@@ -1407,6 +1449,14 @@
        "insertion_tol_ps": {
         "type": "number",
         "minimum": 0
+       },
+       "start_capture_um": {
+        "type": "array",
+        "items": {
+         "type": "number"
+        },
+        "minItems": 2,
+        "maxItems": 2
        },
        "tap_pin_heights_um": {
         "type": "object",
