@@ -16,12 +16,12 @@ deleted kv-g3 / kv-cores-r2 trees), so this is the regen_pv.sh form: carried kit
       unchanged; core.json port_decl / pin_class / boundary_role += bcx (class in);
   (3) SDC: bcx joins the regular input port list (IO delay / driving cell, like bc); sdc_lint.json inputs / io_floor
       += bcx; sdc_lint.lint must PASS;
-  (4) plan tree: the 12 new pin registers u_sK.cx_r[b] ($_DFF_P_, the c_r naming of the same synth) join the CTS-open
-      register leaves, 3 per leaf (core_infra requires equal leaf counts), by lane-group affinity (clock follows data);
-      core_infra re-installed with main core_infra.install. PREDICTED names: the run's synth netlist must be checked
-      against the plan sinks before place reaches PRE_GLOBAL_PLACE (core_infra fails closed otherwise);
+  (4) plan tree: clock sinks from the synth census of THIS RTL (CENSUS_DIR/<kit>_1_2_yosys.v, yosys of the first
+      launch of these kits): +12 cx_r pin registers + 42 u_add valid-chain flops (lanes 3/7/11 x 7 x 2 slices: yosys
+      merged these across all 16 lanes before; with per-group reduce_issue_g only within a group). Spread floor/ceil
+      over the 4 CTS-open register leaves (core_infra: counts within 1) by lane affinity; core_infra.install (main);
   (5) --two-mode-grt (gen_core_kit_kv.timing_modes_stage), main tool copies, signoff bundle, freeze/PROVENANCE.
-usage (intel2, CLEAN checkout of this branch): regen_pvlc.py PLAN_DIR OUTDIR
+usage (intel2, CLEAN checkout of this branch): regen_pvlc.py PLAN_DIR OUTDIR CENSUS_DIR
   PLAN_DIR = dir with plan.json (DIE-KV-19 event plan) + cores/kv3_pv_pair_pins{,_fMX}_r26c_lc.json
 """
 import hashlib
@@ -63,7 +63,7 @@ def one(text, old, new):
     return text.replace(old, new)
 
 
-def regen(plan_dir, out, tid, pins_rel):
+def regen(plan_dir, out, tid, pins_rel, census):
     base, kd = BASE / tid, out / tid
     if kd.exists():
         shutil.rmtree(kd)
@@ -171,45 +171,60 @@ def regen(plan_dir, out, tid, pins_rel):
     if lerr:
         raise SystemExit(f"{tid}: sdc_lint FAIL {lerr[:5]}")
 
-    # (4) plan tree: the 12 cx_r pin registers join CTS-open leaves (core_infra demands EQUAL register-leaf counts, so
-    # 3 per island): clock follows data -- copy u_sK.cx_r[b] serves lane group g (issue b = g-1, capture b = G-2+g,
-    # lanes 4g..4g+3 of slice K); the balanced assignment maximises the number of that group's lane sinks already on
-    # the chosen leaf (exact DP over the 4 x 3 slots).
+    # (4) plan tree: the synth census (the LC leaf's own 1_2_yosys.v) decides the sinks. New = netlist sequential
+    # cells - planned sinks (the 12 cx_r pin registers + the per-lane-group u_add valid chains yosys no longer merges
+    # across groups once valid_in = pv[l] || reduce_issue_g[g]); planned sinks missing from the netlist fail.
+    # core_infra demands register-leaf counts within 1: the new sinks are spread floor/ceil over the CTS-open register
+    # leaves, clock follows data -- each goes where its own lane (cx_r: its lane group 4g..4g+3) already has the most
+    # sinks (exact DP over leaf capacities).
     sl = json.loads((kd / "pv_tree_slice.json").read_text())
     reg = [l for l in sl["core_tree"]["leaves"] if l.get("cts_open") and not l.get("load_class")]
     cnt = {len(l["sinks"]) for l in reg}
-    if len(cnt) != 1 or (2 * NB) % len(reg):
+    if len(cnt) != 1:
         raise SystemExit(f"{tid}: register leaves {len(reg)} counts {sorted(cnt)}")
-    cap = 2 * NB // len(reg)
+    plan_inst = {s.rsplit("/", 1)[0].replace("\\[", "[").replace("\\]", "]")
+                 for l in sl["core_tree"]["leaves"] for s in l["sinks"]}
+    seq = set(re.findall(r"^\s*(?:DFF|SDF|ASYNC_DFF|DHL|DLL|ot_sram)\S*\s+\\?(\S+)\s+\(", Path(census).read_text(), re.M))
+    if plan_inst - seq:
+        raise SystemExit(f"{tid}: planned sinks not in the census netlist: {sorted(plan_inst - seq)[:5]}")
+    new_inst = sorted(seq - plan_inst)
     items = []
-    for s in (0, 1):
-        for b in range(NB):
+    for inst in new_inst:
+        m = re.match(r"u_s(\d)\.cx_r\[(\d+)\]", inst)
+        ml = re.match(r"u_s(\d)\.u_slice\.g_lane\[(\d+)\]\.", inst)
+        if m:
+            s, b = int(m.group(1)), int(m.group(2))
             g = b + 1 if b < G - 1 else b - (G - 1) + 1
-            lanes = range(16 * g // G, 16 * (g + 1) // G)
-            pre = [f"u_s{s}.u_slice.g_lane\\[{l}\\]." for l in lanes]
-            aff = [sum(1 for x in lf["sinks"] if x.startswith(tuple(pre))) for lf in reg]
-            items.append((f"u_s{s}.cx_r\\[{b}\\]$_DFF_P_/CLK", g, aff))
+            lanes, why = range(16 * g // G, 16 * (g + 1) // G), f"g{g}"
+        elif ml:
+            s, lanes, why = int(ml.group(1)), [int(ml.group(2))], f"lane{ml.group(2)}"
+        else:
+            raise SystemExit(f"{tid}: unexpected new clock sink {inst}")
+        pre = tuple(f"u_s{s}.u_slice.g_lane\\[{l}\\]." for l in lanes)
+        aff = [sum(1 for x in lf["sinks"] if x.startswith(pre)) for lf in reg]
+        items.append((inst.replace("[", "\\[").replace("]", "\\]") + "/CLK", why, aff))
+    lo, hi = len(items) // len(reg), -(-len(items) // len(reg))
     best = {tuple([0] * len(reg)): (0, [])}
-    for name, g, aff in items:
+    for name, why, aff in items:
         nxt = {}
         for st, (sc, asg) in best.items():
             for j in range(len(reg)):
-                if st[j] < cap:
+                if st[j] < hi:
                     s2 = list(st); s2[j] += 1; s2 = tuple(s2)
                     v = (sc + aff[j], asg + [j])
                     if s2 not in nxt or v[0] > nxt[s2][0]:
                         nxt[s2] = v
         best = nxt
-    score, asg = best[tuple([cap] * len(reg))]
+    fin = [(v, st) for st, v in best.items() if min(st) >= lo]
+    (score, asg), _ = max(fin, key=lambda x: x[0][0])
     added = {}
-    for (name, g, aff), j in zip(items, asg):
-        assert all(name not in l["sinks"] for l in sl["core_tree"]["leaves"])
+    for (name, why, aff), j in zip(items, asg):
         reg[j]["sinks"].append(name)
-        added.setdefault(reg[j]["node"], []).append(f"{name.split('/')[0]} g{g} aff {aff[j]}/{max(aff)}")
+        added.setdefault(reg[j]["node"], []).append(f"{name.split('/')[0]} {why} aff {aff[j]}/{max(aff)}")
     for l in reg:
         if "domain_sinks" in l:
             l["domain_sinks"] = len(l["sinks"])
-    sl["plan"] += " | KV-KITS-16 pvlc: + 12 LC pin registers u_sK.cx_r[0..5], 3 per register leaf by lane-group affinity (PREDICTED synth names)"
+    sl["plan"] += f" | KV-KITS-16 pvlc: + {len(items)} LC census sinks (12 cx_r pin regs + per-group u_add valid chains) from {Path(census).name} sha {sha(census)[:16]}, floor/ceil per register leaf by lane affinity"
     CI.install(kd, sl)
     (kd / "pv_tree_slice.json").write_text(json.dumps(sl, indent=1) + "\n")
 
@@ -226,7 +241,7 @@ def regen(plan_dir, out, tid, pins_rel):
               regen=dict(lane="KV-KITS-16 pvlc", base_kit=str(base), base_source_commit=fz.get("source_commit"),
                          base_kit_hash=fz.get("kit_hash"),
                          plan_delta="DIE-KV-19 LC leaf + bcx pins (claude/die-kv-20-1028@b555bf16af " + pins_rel + ")",
-                         clock_sinks_added=added, clock_sinks_basis="PREDICTED (c_r naming); verify vs run 1_synth",
+                         clock_sinks_added=added, clock_sinks_basis=f"census {census} sha256 {sha(census)}",
                          options=["--cts-setup-only (carried)", "--two-mode-grt"],
                          tools_refreshed=["face_guard.py", "lec.py", "rtl_lint.py", "sdc_lint.py", "straps.py",
                                           "vclk_corner.tcl", "run_kit_kv.sh", "signoff bundle", "core_infra install"]))
@@ -238,10 +253,10 @@ def regen(plan_dir, out, tid, pins_rel):
 
 
 def main():
-    plan_dir, out = Path(sys.argv[1]), Path(sys.argv[2])
+    plan_dir, out, cdir = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
     out.mkdir(parents=True, exist_ok=True)
     for tid, rel in FORMS.items():
-        regen(plan_dir, out, tid, rel)
+        regen(plan_dir, out, tid, rel, cdir / f"{tid}_1_2_yosys.v")
 
 
 if __name__ == "__main__":
