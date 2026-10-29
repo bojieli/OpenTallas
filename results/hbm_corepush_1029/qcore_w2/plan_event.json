@@ -1,0 +1,1219 @@
+{
+ "status": "UNSIGNED_CANDIDATE noGEN untilsourceclock/tap eventcoherent",
+ "source_plan_sha256": "a4b0cb3df1672afdd3774e54d687fface8080b3f40e98531673346edfc29a59b",
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_sucore_Q__q1",
+   "old_module": "ot_hbm_su_static_qcore_r13",
+   "new_module": "ot_hbm_su_static_qcore_r13_w2",
+   "origin_um": [
+    4017.6,
+    1365.12
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    0.0,
+    0.0
+   ],
+   "outline_um": [
+    224.64,
+    207.36
+   ],
+   "old_pins_file": "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon.json",
+   "old_pins_sha256": "6fb4f29f7814ac80522e60de0c4722438a3f1b47ed28fa68bb767d6749926a22",
+   "pins_before": 1473,
+   "pins_after": 1391,
+   "clock_reset_geometry_unchanged": true,
+   "native_mapping": {
+    "MUTW": 0,
+    "inner_writer_offset": 2
+   },
+   "source_cycles_added": 0
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_sucore_Q__q1",
+   "old_module": "ot_hbm_su_static_qcore_r13",
+   "new_module": "ot_hbm_su_static_qcore_r13_w2",
+   "origin_um": [
+    4017.6,
+    1028.16
+   ],
+   "orient": "MY",
+   "track_offset_um": [
+    0.0,
+    0.0
+   ],
+   "outline_um": [
+    224.64,
+    207.36
+   ],
+   "old_pins_file": "cores/ot_hbm_su_static_qcore_r13__224.64x207.36__canon.json",
+   "old_pins_sha256": "6fb4f29f7814ac80522e60de0c4722438a3f1b47ed28fa68bb767d6749926a22",
+   "pins_before": 1473,
+   "pins_after": 1391,
+   "clock_reset_geometry_unchanged": true,
+   "native_mapping": {
+    "MUTW": 0,
+    "inner_writer_offset": 2
+   },
+   "source_cycles_added": 0
+  }
+ ],
+ "live_writer_bit_mapping": [
+  {
+   "native_outer_pin": "rf_wv[0]",
+   "old_inner_physical_pin": "rf_wv[2]",
+   "pin_um": [
+    85.128,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wv[1]",
+   "old_inner_physical_pin": "rf_wv[3]",
+   "pin_um": [
+    85.704,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[0]",
+   "old_inner_physical_pin": "rf_wa[16]",
+   "pin_um": [
+    95.448,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[1]",
+   "old_inner_physical_pin": "rf_wa[17]",
+   "pin_um": [
+    95.976,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[2]",
+   "old_inner_physical_pin": "rf_wa[18]",
+   "pin_um": [
+    96.552,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[3]",
+   "old_inner_physical_pin": "rf_wa[19]",
+   "pin_um": [
+    97.128,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[4]",
+   "old_inner_physical_pin": "rf_wa[20]",
+   "pin_um": [
+    97.704,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[5]",
+   "old_inner_physical_pin": "rf_wa[21]",
+   "pin_um": [
+    98.28,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[6]",
+   "old_inner_physical_pin": "rf_wa[22]",
+   "pin_um": [
+    98.856,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[7]",
+   "old_inner_physical_pin": "rf_wa[23]",
+   "pin_um": [
+    99.432,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[8]",
+   "old_inner_physical_pin": "rf_wa[24]",
+   "pin_um": [
+    100.008,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[9]",
+   "old_inner_physical_pin": "rf_wa[25]",
+   "pin_um": [
+    100.584,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[10]",
+   "old_inner_physical_pin": "rf_wa[26]",
+   "pin_um": [
+    101.16,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[11]",
+   "old_inner_physical_pin": "rf_wa[27]",
+   "pin_um": [
+    101.736,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[12]",
+   "old_inner_physical_pin": "rf_wa[28]",
+   "pin_um": [
+    102.312,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[13]",
+   "old_inner_physical_pin": "rf_wa[29]",
+   "pin_um": [
+    102.888,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[14]",
+   "old_inner_physical_pin": "rf_wa[30]",
+   "pin_um": [
+    103.464,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wa[15]",
+   "old_inner_physical_pin": "rf_wa[31]",
+   "pin_um": [
+    104.04,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[0]",
+   "old_inner_physical_pin": "rf_wd[64]",
+   "pin_um": [
+    141.816,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[1]",
+   "old_inner_physical_pin": "rf_wd[65]",
+   "pin_um": [
+    142.392,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[2]",
+   "old_inner_physical_pin": "rf_wd[66]",
+   "pin_um": [
+    142.968,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[3]",
+   "old_inner_physical_pin": "rf_wd[67]",
+   "pin_um": [
+    143.544,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[4]",
+   "old_inner_physical_pin": "rf_wd[68]",
+   "pin_um": [
+    144.12,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[5]",
+   "old_inner_physical_pin": "rf_wd[69]",
+   "pin_um": [
+    144.696,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[6]",
+   "old_inner_physical_pin": "rf_wd[70]",
+   "pin_um": [
+    145.272,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[7]",
+   "old_inner_physical_pin": "rf_wd[71]",
+   "pin_um": [
+    145.8,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[8]",
+   "old_inner_physical_pin": "rf_wd[72]",
+   "pin_um": [
+    146.376,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[9]",
+   "old_inner_physical_pin": "rf_wd[73]",
+   "pin_um": [
+    146.952,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[10]",
+   "old_inner_physical_pin": "rf_wd[74]",
+   "pin_um": [
+    147.528,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[11]",
+   "old_inner_physical_pin": "rf_wd[75]",
+   "pin_um": [
+    148.104,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[12]",
+   "old_inner_physical_pin": "rf_wd[76]",
+   "pin_um": [
+    148.68,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[13]",
+   "old_inner_physical_pin": "rf_wd[77]",
+   "pin_um": [
+    149.256,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[14]",
+   "old_inner_physical_pin": "rf_wd[78]",
+   "pin_um": [
+    149.832,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[15]",
+   "old_inner_physical_pin": "rf_wd[79]",
+   "pin_um": [
+    150.408,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[16]",
+   "old_inner_physical_pin": "rf_wd[80]",
+   "pin_um": [
+    150.984,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[17]",
+   "old_inner_physical_pin": "rf_wd[81]",
+   "pin_um": [
+    151.56,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[18]",
+   "old_inner_physical_pin": "rf_wd[82]",
+   "pin_um": [
+    152.136,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[19]",
+   "old_inner_physical_pin": "rf_wd[83]",
+   "pin_um": [
+    152.712,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[20]",
+   "old_inner_physical_pin": "rf_wd[84]",
+   "pin_um": [
+    153.288,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[21]",
+   "old_inner_physical_pin": "rf_wd[85]",
+   "pin_um": [
+    153.816,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[22]",
+   "old_inner_physical_pin": "rf_wd[86]",
+   "pin_um": [
+    154.392,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[23]",
+   "old_inner_physical_pin": "rf_wd[87]",
+   "pin_um": [
+    154.968,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[24]",
+   "old_inner_physical_pin": "rf_wd[88]",
+   "pin_um": [
+    155.544,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[25]",
+   "old_inner_physical_pin": "rf_wd[89]",
+   "pin_um": [
+    156.12,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[26]",
+   "old_inner_physical_pin": "rf_wd[90]",
+   "pin_um": [
+    156.696,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[27]",
+   "old_inner_physical_pin": "rf_wd[91]",
+   "pin_um": [
+    157.272,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[28]",
+   "old_inner_physical_pin": "rf_wd[92]",
+   "pin_um": [
+    157.848,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[29]",
+   "old_inner_physical_pin": "rf_wd[93]",
+   "pin_um": [
+    158.424,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[30]",
+   "old_inner_physical_pin": "rf_wd[94]",
+   "pin_um": [
+    159.0,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[31]",
+   "old_inner_physical_pin": "rf_wd[95]",
+   "pin_um": [
+    159.576,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[32]",
+   "old_inner_physical_pin": "rf_wd[96]",
+   "pin_um": [
+    160.152,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[33]",
+   "old_inner_physical_pin": "rf_wd[97]",
+   "pin_um": [
+    160.728,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[34]",
+   "old_inner_physical_pin": "rf_wd[98]",
+   "pin_um": [
+    161.304,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[35]",
+   "old_inner_physical_pin": "rf_wd[99]",
+   "pin_um": [
+    161.88,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[36]",
+   "old_inner_physical_pin": "rf_wd[100]",
+   "pin_um": [
+    162.408,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[37]",
+   "old_inner_physical_pin": "rf_wd[101]",
+   "pin_um": [
+    162.984,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[38]",
+   "old_inner_physical_pin": "rf_wd[102]",
+   "pin_um": [
+    163.56,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[39]",
+   "old_inner_physical_pin": "rf_wd[103]",
+   "pin_um": [
+    164.136,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[40]",
+   "old_inner_physical_pin": "rf_wd[104]",
+   "pin_um": [
+    164.712,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[41]",
+   "old_inner_physical_pin": "rf_wd[105]",
+   "pin_um": [
+    165.288,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[42]",
+   "old_inner_physical_pin": "rf_wd[106]",
+   "pin_um": [
+    165.864,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[43]",
+   "old_inner_physical_pin": "rf_wd[107]",
+   "pin_um": [
+    166.44,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[44]",
+   "old_inner_physical_pin": "rf_wd[108]",
+   "pin_um": [
+    167.016,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[45]",
+   "old_inner_physical_pin": "rf_wd[109]",
+   "pin_um": [
+    167.592,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[46]",
+   "old_inner_physical_pin": "rf_wd[110]",
+   "pin_um": [
+    168.168,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[47]",
+   "old_inner_physical_pin": "rf_wd[111]",
+   "pin_um": [
+    168.744,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[48]",
+   "old_inner_physical_pin": "rf_wd[112]",
+   "pin_um": [
+    169.32,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[49]",
+   "old_inner_physical_pin": "rf_wd[113]",
+   "pin_um": [
+    169.896,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[50]",
+   "old_inner_physical_pin": "rf_wd[114]",
+   "pin_um": [
+    170.424,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[51]",
+   "old_inner_physical_pin": "rf_wd[115]",
+   "pin_um": [
+    171.0,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[52]",
+   "old_inner_physical_pin": "rf_wd[116]",
+   "pin_um": [
+    171.576,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[53]",
+   "old_inner_physical_pin": "rf_wd[117]",
+   "pin_um": [
+    172.152,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[54]",
+   "old_inner_physical_pin": "rf_wd[118]",
+   "pin_um": [
+    172.728,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[55]",
+   "old_inner_physical_pin": "rf_wd[119]",
+   "pin_um": [
+    173.304,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[56]",
+   "old_inner_physical_pin": "rf_wd[120]",
+   "pin_um": [
+    173.88,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[57]",
+   "old_inner_physical_pin": "rf_wd[121]",
+   "pin_um": [
+    174.456,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[58]",
+   "old_inner_physical_pin": "rf_wd[122]",
+   "pin_um": [
+    175.032,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[59]",
+   "old_inner_physical_pin": "rf_wd[123]",
+   "pin_um": [
+    175.608,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[60]",
+   "old_inner_physical_pin": "rf_wd[124]",
+   "pin_um": [
+    176.184,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[61]",
+   "old_inner_physical_pin": "rf_wd[125]",
+   "pin_um": [
+    176.76,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[62]",
+   "old_inner_physical_pin": "rf_wd[126]",
+   "pin_um": [
+    177.336,
+    0.096
+   ]
+  },
+  {
+   "native_outer_pin": "rf_wd[63]",
+   "old_inner_physical_pin": "rf_wd[127]",
+   "pin_um": [
+    177.912,
+    0.096
+   ]
+  }
+ ],
+ "removed_dead_inner_writer_pins": [
+  {
+   "name": "rf_wv[0]",
+   "layer": "M5",
+   "x": 83.976,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wv[1]",
+   "layer": "M5",
+   "x": 84.552,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[0]",
+   "layer": "M5",
+   "x": 86.28,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[1]",
+   "layer": "M5",
+   "x": 86.856,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[2]",
+   "layer": "M5",
+   "x": 87.432,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[3]",
+   "layer": "M5",
+   "x": 87.96,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[4]",
+   "layer": "M5",
+   "x": 88.536,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[5]",
+   "layer": "M5",
+   "x": 89.112,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[6]",
+   "layer": "M5",
+   "x": 89.688,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[7]",
+   "layer": "M5",
+   "x": 90.264,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[8]",
+   "layer": "M5",
+   "x": 90.84,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[9]",
+   "layer": "M5",
+   "x": 91.416,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[10]",
+   "layer": "M5",
+   "x": 91.992,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[11]",
+   "layer": "M5",
+   "x": 92.568,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[12]",
+   "layer": "M5",
+   "x": 93.144,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[13]",
+   "layer": "M5",
+   "x": 93.72,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[14]",
+   "layer": "M5",
+   "x": 94.296,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wa[15]",
+   "layer": "M5",
+   "x": 94.872,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[0]",
+   "layer": "M5",
+   "x": 104.568,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[1]",
+   "layer": "M5",
+   "x": 105.144,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[2]",
+   "layer": "M5",
+   "x": 105.72,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[3]",
+   "layer": "M5",
+   "x": 106.296,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[4]",
+   "layer": "M5",
+   "x": 106.872,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[5]",
+   "layer": "M5",
+   "x": 107.448,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[6]",
+   "layer": "M5",
+   "x": 108.024,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[7]",
+   "layer": "M5",
+   "x": 108.6,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[8]",
+   "layer": "M5",
+   "x": 109.176,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[9]",
+   "layer": "M5",
+   "x": 109.752,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[10]",
+   "layer": "M5",
+   "x": 110.328,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[11]",
+   "layer": "M5",
+   "x": 110.904,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[12]",
+   "layer": "M5",
+   "x": 111.48,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[13]",
+   "layer": "M5",
+   "x": 112.056,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[14]",
+   "layer": "M5",
+   "x": 112.584,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[15]",
+   "layer": "M5",
+   "x": 113.16,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[16]",
+   "layer": "M5",
+   "x": 113.736,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[17]",
+   "layer": "M5",
+   "x": 114.312,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[18]",
+   "layer": "M5",
+   "x": 114.888,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[19]",
+   "layer": "M5",
+   "x": 115.464,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[20]",
+   "layer": "M5",
+   "x": 116.04,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[21]",
+   "layer": "M5",
+   "x": 116.616,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[22]",
+   "layer": "M5",
+   "x": 117.192,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[23]",
+   "layer": "M5",
+   "x": 117.768,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[24]",
+   "layer": "M5",
+   "x": 118.344,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[25]",
+   "layer": "M5",
+   "x": 119.496,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[26]",
+   "layer": "M5",
+   "x": 120.072,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[27]",
+   "layer": "M5",
+   "x": 120.6,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[28]",
+   "layer": "M5",
+   "x": 121.176,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[29]",
+   "layer": "M5",
+   "x": 121.752,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[30]",
+   "layer": "M5",
+   "x": 122.328,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[31]",
+   "layer": "M5",
+   "x": 122.904,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[32]",
+   "layer": "M5",
+   "x": 123.48,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[33]",
+   "layer": "M5",
+   "x": 124.056,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[34]",
+   "layer": "M5",
+   "x": 124.632,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[35]",
+   "layer": "M5",
+   "x": 125.208,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[36]",
+   "layer": "M5",
+   "x": 125.784,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[37]",
+   "layer": "M5",
+   "x": 126.36,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[38]",
+   "layer": "M5",
+   "x": 126.936,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[39]",
+   "layer": "M5",
+   "x": 127.512,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[40]",
+   "layer": "M5",
+   "x": 128.088,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[41]",
+   "layer": "M5",
+   "x": 128.664,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[42]",
+   "layer": "M5",
+   "x": 129.192,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[43]",
+   "layer": "M5",
+   "x": 129.768,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[44]",
+   "layer": "M5",
+   "x": 130.344,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[45]",
+   "layer": "M5",
+   "x": 130.92,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[46]",
+   "layer": "M5",
+   "x": 131.496,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[47]",
+   "layer": "M5",
+   "x": 132.072,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[48]",
+   "layer": "M5",
+   "x": 132.648,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[49]",
+   "layer": "M5",
+   "x": 133.224,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[50]",
+   "layer": "M5",
+   "x": 133.8,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[51]",
+   "layer": "M5",
+   "x": 134.376,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[52]",
+   "layer": "M5",
+   "x": 134.952,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[53]",
+   "layer": "M5",
+   "x": 135.528,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[54]",
+   "layer": "M5",
+   "x": 136.104,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[55]",
+   "layer": "M5",
+   "x": 136.68,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[56]",
+   "layer": "M5",
+   "x": 137.208,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[57]",
+   "layer": "M5",
+   "x": 137.784,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[58]",
+   "layer": "M5",
+   "x": 138.36,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[59]",
+   "layer": "M5",
+   "x": 138.936,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[60]",
+   "layer": "M5",
+   "x": 139.512,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[61]",
+   "layer": "M5",
+   "x": 140.088,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[62]",
+   "layer": "M5",
+   "x": 140.664,
+   "y": 0.096
+  },
+  {
+   "name": "rf_wd[63]",
+   "layer": "M5",
+   "x": 141.24,
+   "y": 0.096
+  }
+ ],
+ "q0_status": "UNREALIZED selectedsource; untouchedbythiscandidate",
+ "clock_dependency": "CurrentCEroot151.176112.32 vsoldphysical112.86 andstalesplit73.464tap mustbe fixed atomically, nottrimmed",
+ "transport_dependency": "Use native_w2 portbits aftermodule/pin event; genericouter0\u2192oldinner0 forbidden"
+}

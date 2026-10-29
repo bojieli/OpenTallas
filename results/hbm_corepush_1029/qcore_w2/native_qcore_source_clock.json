@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.hbm.qcore_native_source_clock.v1",
+  "instances": [
+    {
+      "path": "sucore_NW",
+      "module": "ot_hbm_su_static_qcore_r13_w2",
+      "params": {
+        "MUT": "0",
+        "COLLPORT": "1",
+        "RF_LOCAL": "1",
+        "PRETREE": "1",
+        "ROW_EN": "2",
+        "WDEC": "1"
+      },
+      "clock_reset": {
+        "clk_ctl": "hb_ckgen__pll_stream[0:0]",
+        "rst_n": "hb_ckgen__por_stream[0:0]"
+      },
+      "source_plan_mapping": {
+        "sucore_NW": [
+          "NW_hub",
+          "u_sucore_Q__q1"
+        ]
+      }
+    },
+    {
+      "path": "sucore_NE",
+      "module": "ot_hbm_su_static_qcore_r13_w2",
+      "params": {
+        "MUT": "0",
+        "COLLPORT": "1",
+        "RF_LOCAL": "1",
+        "PRETREE": "1",
+        "ROW_EN": "2",
+        "WDEC": "1"
+      },
+      "clock_reset": {
+        "clk_ctl": "hb_ckgen__pll_stream[0:0]",
+        "rst_n": "hb_ckgen__por_stream[0:0]"
+      },
+      "source_plan_mapping": {
+        "sucore_NE": [
+          "NE_hub",
+          "u_sucore_Q__q1"
+        ]
+      }
+    }
+  ],
+  "absent_source_roots": [
+    "sucore_SW",
+    "sucore_SE"
+  ],
+  "q0_realized": false,
+  "note": "Onlyactual2retainedsourceqcores; q0hasNOmappednativeproducer/consumerinthisselectedsource. Exactclock/resetexpressions; no physicalphase/layout adoption."
+}

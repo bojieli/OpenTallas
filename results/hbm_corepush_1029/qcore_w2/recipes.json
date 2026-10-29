@@ -1,0 +1,62 @@
+{
+ "ot_hbm_su_static_qcore_r13_w2__native_profile": {
+  "top": "ot_hbm_su_static_qcore_r13_w2",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13_w2.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv",
+   "rtl/hdc/ot_hdc_fp32_add_n32.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv"
+  ],
+  "defines": [],
+  "params": {
+   "MUT": 0,
+   "COLLPORT": 1,
+   "RF_LOCAL": 1,
+   "PRETREE": 1,
+   "ROW_EN": 2,
+   "WDEC": 1,
+   "MUTW": 0
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "Unsigned actualnative2writercandidate; currentselectedsource sucoreNW/NE, nativeouter0/1\u2192inner2/3; currentfullsourceclosure identity/LEC+atomicclockentry/pins required beforePNR.",
+  "ambiguous_defs_resolved": {
+   "ot_hdc_ksadd_k": [
+    "rtl/hdc/ot_hdc_prefix.sv"
+   ]
+  }
+ },
+ "ot_hbm_su_static_qcore_r13_w2__cutD_profile": {
+  "top": "ot_hbm_su_static_qcore_r13_w2",
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13_w2.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore_r13.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_reduce_static_r13.sv",
+   "results/hbm_corepush_1029/qcore_cutD/ot_hdc_fp32_add_n32_cutD.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/reduction/ot_hbm_su_red_pretree_r13.sv"
+  ],
+  "defines": [],
+  "params": {
+   "MUT": 0,
+   "COLLPORT": 1,
+   "RF_LOCAL": 1,
+   "PRETREE": 1,
+   "ROW_EN": 2,
+   "WDEC": 1,
+   "MUTW": 0
+  },
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "Unsigned actualnative2writercandidate; currentselectedsource sucoreNW/NE, nativeouter0/1\u2192inner2/3; currentfullsourceclosure identity/LEC+atomicclockentry/pins required beforePNR. OptionalCUT_D LAT6zeroedges native83899checks/controlsPASS; fullcoreLEC andfreshphysicalclosure required.",
+  "ambiguous_defs_resolved": {
+   "ot_hdc_ksadd_k": [
+    "rtl/hdc/ot_hdc_prefix.sv"
+   ]
+  }
+ }
+}

@@ -1,0 +1,1300 @@
+{
+ "sinks": 12281,
+ "kinds": {
+  "FF": 12280,
+  "SRAM": 1
+ },
+ "clock_nets": {
+  "clk": 12281
+ },
+ "same_name_old_home": 12281,
+ "missing_renamed": 0,
+ "missing_instances": [],
+ "current_root_um": [
+  69.12,
+  108.0
+ ],
+ "macro_rect_um": [
+  23.868,
+  116.7,
+  118.692,
+  157.764
+ ],
+ "scope": "oldhomes planning only; newactualplacement/clocktree/PGreview beforeCTS",
+ "old_new_master_changes": [
+  "u_fcore.u_wrq.cv_q$_SDFF_PN0_",
+  "u_fcore.u_wrq.g_sm\\[1\\].rl$_DFF_P_",
+  "u_fcore.u_wrq.lb_q$_DFF_P_"
+ ],
+ "old_new_master_change_count": 3,
+ "all_old_homes_placed": true,
+ "home_groups": {
+  "face": 3666,
+  "native": 8615
+ },
+ "all_sink_pin_records": "/srv/opentallas-scratch/claude/codex-hbm-corepush-1029/wrq_homes/actual_sinks.json",
+ "leaf_bin_um": 17.28,
+ "leaf_bins": [
+  {
+   "bin": [
+    0,
+    0
+   ],
+   "rect_um": [
+    0.0,
+    0.0,
+    17.28,
+    17.28
+   ],
+   "sinks": 204,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    0,
+    1
+   ],
+   "rect_um": [
+    0.0,
+    17.28,
+    17.28,
+    34.56
+   ],
+   "sinks": 99,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    2
+   ],
+   "rect_um": [
+    0.0,
+    34.56,
+    17.28,
+    51.84
+   ],
+   "sinks": 98,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    3
+   ],
+   "rect_um": [
+    0.0,
+    51.84,
+    17.28,
+    69.12
+   ],
+   "sinks": 99,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    4
+   ],
+   "rect_um": [
+    0.0,
+    69.12,
+    17.28,
+    86.4
+   ],
+   "sinks": 99,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    5
+   ],
+   "rect_um": [
+    0.0,
+    86.4,
+    17.28,
+    103.68
+   ],
+   "sinks": 90,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    0,
+    6
+   ],
+   "rect_um": [
+    0.0,
+    103.68,
+    17.28,
+    120.96000000000001
+   ],
+   "sinks": 83,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    0,
+    7
+   ],
+   "rect_um": [
+    0.0,
+    120.96000000000001,
+    17.28,
+    138.24
+   ],
+   "sinks": 98,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    8
+   ],
+   "rect_um": [
+    0.0,
+    138.24,
+    17.28,
+    155.52
+   ],
+   "sinks": 98,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    9
+   ],
+   "rect_um": [
+    0.0,
+    155.52,
+    17.28,
+    172.8
+   ],
+   "sinks": 118,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    0,
+    10
+   ],
+   "rect_um": [
+    0.0,
+    172.8,
+    17.28,
+    190.08
+   ],
+   "sinks": 170,
+   "minimum_32load_leaf_groups": 6
+  },
+  {
+   "bin": [
+    0,
+    11
+   ],
+   "rect_um": [
+    0.0,
+    190.08,
+    17.28,
+    207.36
+   ],
+   "sinks": 153,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    0,
+    12
+   ],
+   "rect_um": [
+    0.0,
+    207.36,
+    17.28,
+    216
+   ],
+   "sinks": 71,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    1,
+    0
+   ],
+   "rect_um": [
+    17.28,
+    0.0,
+    34.56,
+    17.28
+   ],
+   "sinks": 300,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    1,
+    3
+   ],
+   "rect_um": [
+    17.28,
+    51.84,
+    34.56,
+    69.12
+   ],
+   "sinks": 1,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    1,
+    4
+   ],
+   "rect_um": [
+    17.28,
+    69.12,
+    34.56,
+    86.4
+   ],
+   "sinks": 38,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    1,
+    5
+   ],
+   "rect_um": [
+    17.28,
+    86.4,
+    34.56,
+    103.68
+   ],
+   "sinks": 119,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    1,
+    6
+   ],
+   "rect_um": [
+    17.28,
+    103.68,
+    34.56,
+    120.96000000000001
+   ],
+   "sinks": 87,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    1,
+    7
+   ],
+   "rect_um": [
+    17.28,
+    120.96000000000001,
+    34.56,
+    138.24
+   ],
+   "sinks": 17,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    1,
+    8
+   ],
+   "rect_um": [
+    17.28,
+    138.24,
+    34.56,
+    155.52
+   ],
+   "sinks": 13,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    1,
+    9
+   ],
+   "rect_um": [
+    17.28,
+    155.52,
+    34.56,
+    172.8
+   ],
+   "sinks": 157,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    1,
+    10
+   ],
+   "rect_um": [
+    17.28,
+    172.8,
+    34.56,
+    190.08
+   ],
+   "sinks": 203,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    1,
+    11
+   ],
+   "rect_um": [
+    17.28,
+    190.08,
+    34.56,
+    207.36
+   ],
+   "sinks": 219,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    1,
+    12
+   ],
+   "rect_um": [
+    17.28,
+    207.36,
+    34.56,
+    216
+   ],
+   "sinks": 138,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    2,
+    0
+   ],
+   "rect_um": [
+    34.56,
+    0.0,
+    51.84,
+    17.28
+   ],
+   "sinks": 309,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    2,
+    3
+   ],
+   "rect_um": [
+    34.56,
+    51.84,
+    51.84,
+    69.12
+   ],
+   "sinks": 4,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    2,
+    4
+   ],
+   "rect_um": [
+    34.56,
+    69.12,
+    51.84,
+    86.4
+   ],
+   "sinks": 40,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    2,
+    5
+   ],
+   "rect_um": [
+    34.56,
+    86.4,
+    51.84,
+    103.68
+   ],
+   "sinks": 70,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    2,
+    6
+   ],
+   "rect_um": [
+    34.56,
+    103.68,
+    51.84,
+    120.96000000000001
+   ],
+   "sinks": 130,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    2,
+    9
+   ],
+   "rect_um": [
+    34.56,
+    155.52,
+    51.84,
+    172.8
+   ],
+   "sinks": 109,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    2,
+    10
+   ],
+   "rect_um": [
+    34.56,
+    172.8,
+    51.84,
+    190.08
+   ],
+   "sinks": 197,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    2,
+    11
+   ],
+   "rect_um": [
+    34.56,
+    190.08,
+    51.84,
+    207.36
+   ],
+   "sinks": 240,
+   "minimum_32load_leaf_groups": 8
+  },
+  {
+   "bin": [
+    2,
+    12
+   ],
+   "rect_um": [
+    34.56,
+    207.36,
+    51.84,
+    216
+   ],
+   "sinks": 138,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    3,
+    0
+   ],
+   "rect_um": [
+    51.84,
+    0.0,
+    69.12,
+    17.28
+   ],
+   "sinks": 310,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    3,
+    1
+   ],
+   "rect_um": [
+    51.84,
+    17.28,
+    69.12,
+    34.56
+   ],
+   "sinks": 14,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    2
+   ],
+   "rect_um": [
+    51.84,
+    34.56,
+    69.12,
+    51.84
+   ],
+   "sinks": 7,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    3
+   ],
+   "rect_um": [
+    51.84,
+    51.84,
+    69.12,
+    69.12
+   ],
+   "sinks": 14,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    4
+   ],
+   "rect_um": [
+    51.84,
+    69.12,
+    69.12,
+    86.4
+   ],
+   "sinks": 2,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    5
+   ],
+   "rect_um": [
+    51.84,
+    86.4,
+    69.12,
+    103.68
+   ],
+   "sinks": 4,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    6
+   ],
+   "rect_um": [
+    51.84,
+    103.68,
+    69.12,
+    120.96000000000001
+   ],
+   "sinks": 27,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    9
+   ],
+   "rect_um": [
+    51.84,
+    155.52,
+    69.12,
+    172.8
+   ],
+   "sinks": 17,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    3,
+    10
+   ],
+   "rect_um": [
+    51.84,
+    172.8,
+    69.12,
+    190.08
+   ],
+   "sinks": 34,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    3,
+    11
+   ],
+   "rect_um": [
+    51.84,
+    190.08,
+    69.12,
+    207.36
+   ],
+   "sinks": 152,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    3,
+    12
+   ],
+   "rect_um": [
+    51.84,
+    207.36,
+    69.12,
+    216
+   ],
+   "sinks": 128,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    4,
+    0
+   ],
+   "rect_um": [
+    69.12,
+    0.0,
+    86.4,
+    17.28
+   ],
+   "sinks": 284,
+   "minimum_32load_leaf_groups": 9
+  },
+  {
+   "bin": [
+    4,
+    1
+   ],
+   "rect_um": [
+    69.12,
+    17.28,
+    86.4,
+    34.56
+   ],
+   "sinks": 202,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    4,
+    2
+   ],
+   "rect_um": [
+    69.12,
+    34.56,
+    86.4,
+    51.84
+   ],
+   "sinks": 210,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    4,
+    3
+   ],
+   "rect_um": [
+    69.12,
+    51.84,
+    86.4,
+    69.12
+   ],
+   "sinks": 164,
+   "minimum_32load_leaf_groups": 6
+  },
+  {
+   "bin": [
+    4,
+    4
+   ],
+   "rect_um": [
+    69.12,
+    69.12,
+    86.4,
+    86.4
+   ],
+   "sinks": 6,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    4,
+    5
+   ],
+   "rect_um": [
+    69.12,
+    86.4,
+    86.4,
+    103.68
+   ],
+   "sinks": 43,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    4,
+    6
+   ],
+   "rect_um": [
+    69.12,
+    103.68,
+    86.4,
+    120.96000000000001
+   ],
+   "sinks": 37,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    4,
+    7
+   ],
+   "rect_um": [
+    69.12,
+    120.96000000000001,
+    86.4,
+    138.24
+   ],
+   "sinks": 1,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    4,
+    9
+   ],
+   "rect_um": [
+    69.12,
+    155.52,
+    86.4,
+    172.8
+   ],
+   "sinks": 15,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    4,
+    11
+   ],
+   "rect_um": [
+    69.12,
+    190.08,
+    86.4,
+    207.36
+   ],
+   "sinks": 101,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    4,
+    12
+   ],
+   "rect_um": [
+    69.12,
+    207.36,
+    86.4,
+    216
+   ],
+   "sinks": 130,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    5,
+    0
+   ],
+   "rect_um": [
+    86.4,
+    0.0,
+    103.68,
+    17.28
+   ],
+   "sinks": 304,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    5,
+    1
+   ],
+   "rect_um": [
+    86.4,
+    17.28,
+    103.68,
+    34.56
+   ],
+   "sinks": 194,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    5,
+    2
+   ],
+   "rect_um": [
+    86.4,
+    34.56,
+    103.68,
+    51.84
+   ],
+   "sinks": 204,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    5,
+    3
+   ],
+   "rect_um": [
+    86.4,
+    51.84,
+    103.68,
+    69.12
+   ],
+   "sinks": 152,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    5,
+    4
+   ],
+   "rect_um": [
+    86.4,
+    69.12,
+    103.68,
+    86.4
+   ],
+   "sinks": 2,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    5,
+    5
+   ],
+   "rect_um": [
+    86.4,
+    86.4,
+    103.68,
+    103.68
+   ],
+   "sinks": 15,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    5,
+    6
+   ],
+   "rect_um": [
+    86.4,
+    103.68,
+    103.68,
+    120.96000000000001
+   ],
+   "sinks": 44,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    5,
+    9
+   ],
+   "rect_um": [
+    86.4,
+    155.52,
+    103.68,
+    172.8
+   ],
+   "sinks": 5,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    5,
+    10
+   ],
+   "rect_um": [
+    86.4,
+    172.8,
+    103.68,
+    190.08
+   ],
+   "sinks": 11,
+   "minimum_32load_leaf_groups": 1
+  },
+  {
+   "bin": [
+    5,
+    11
+   ],
+   "rect_um": [
+    86.4,
+    190.08,
+    103.68,
+    207.36
+   ],
+   "sinks": 76,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    5,
+    12
+   ],
+   "rect_um": [
+    86.4,
+    207.36,
+    103.68,
+    216
+   ],
+   "sinks": 126,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    6,
+    0
+   ],
+   "rect_um": [
+    103.68,
+    0.0,
+    120.96000000000001,
+    17.28
+   ],
+   "sinks": 182,
+   "minimum_32load_leaf_groups": 6
+  },
+  {
+   "bin": [
+    6,
+    1
+   ],
+   "rect_um": [
+    103.68,
+    17.28,
+    120.96000000000001,
+    34.56
+   ],
+   "sinks": 58,
+   "minimum_32load_leaf_groups": 2
+  },
+  {
+   "bin": [
+    6,
+    2
+   ],
+   "rect_um": [
+    103.68,
+    34.56,
+    120.96000000000001,
+    51.84
+   ],
+   "sinks": 190,
+   "minimum_32load_leaf_groups": 6
+  },
+  {
+   "bin": [
+    6,
+    3
+   ],
+   "rect_um": [
+    103.68,
+    51.84,
+    120.96000000000001,
+    69.12
+   ],
+   "sinks": 194,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    6,
+    4
+   ],
+   "rect_um": [
+    103.68,
+    69.12,
+    120.96000000000001,
+    86.4
+   ],
+   "sinks": 178,
+   "minimum_32load_leaf_groups": 6
+  },
+  {
+   "bin": [
+    6,
+    5
+   ],
+   "rect_um": [
+    103.68,
+    86.4,
+    120.96000000000001,
+    103.68
+   ],
+   "sinks": 217,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    6,
+    6
+   ],
+   "rect_um": [
+    103.68,
+    103.68,
+    120.96000000000001,
+    120.96000000000001
+   ],
+   "sinks": 119,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    6,
+    9
+   ],
+   "rect_um": [
+    103.68,
+    155.52,
+    120.96000000000001,
+    172.8
+   ],
+   "sinks": 94,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    6,
+    10
+   ],
+   "rect_um": [
+    103.68,
+    172.8,
+    120.96000000000001,
+    190.08
+   ],
+   "sinks": 93,
+   "minimum_32load_leaf_groups": 3
+  },
+  {
+   "bin": [
+    6,
+    11
+   ],
+   "rect_um": [
+    103.68,
+    190.08,
+    120.96000000000001,
+    207.36
+   ],
+   "sinks": 135,
+   "minimum_32load_leaf_groups": 5
+  },
+  {
+   "bin": [
+    6,
+    12
+   ],
+   "rect_um": [
+    103.68,
+    207.36,
+    120.96000000000001,
+    216
+   ],
+   "sinks": 124,
+   "minimum_32load_leaf_groups": 4
+  },
+  {
+   "bin": [
+    7,
+    0
+   ],
+   "rect_um": [
+    120.96000000000001,
+    0.0,
+    138.24,
+    17.28
+   ],
+   "sinks": 209,
+   "minimum_32load_leaf_groups": 7
+  },
+  {
+   "bin": [
+    7,
+    1
+   ],
+   "rect_um": [
+    120.96000000000001,
+    17.28,
+    138.24,
+    34.56
+   ],
+   "sinks": 279,
+   "minimum_32load_leaf_groups": 9
+  },
+  {
+   "bin": [
+    7,
+    2
+   ],
+   "rect_um": [
+    120.96000000000001,
+    34.56,
+    138.24,
+    51.84
+   ],
+   "sinks": 323,
+   "minimum_32load_leaf_groups": 11
+  },
+  {
+   "bin": [
+    7,
+    3
+   ],
+   "rect_um": [
+    120.96000000000001,
+    51.84,
+    138.24,
+    69.12
+   ],
+   "sinks": 313,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    7,
+    4
+   ],
+   "rect_um": [
+    120.96000000000001,
+    69.12,
+    138.24,
+    86.4
+   ],
+   "sinks": 304,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    7,
+    5
+   ],
+   "rect_um": [
+    120.96000000000001,
+    86.4,
+    138.24,
+    103.68
+   ],
+   "sinks": 307,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    7,
+    6
+   ],
+   "rect_um": [
+    120.96000000000001,
+    103.68,
+    138.24,
+    120.96000000000001
+   ],
+   "sinks": 284,
+   "minimum_32load_leaf_groups": 9
+  },
+  {
+   "bin": [
+    7,
+    7
+   ],
+   "rect_um": [
+    120.96000000000001,
+    120.96000000000001,
+    138.24,
+    138.24
+   ],
+   "sinks": 289,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    7,
+    8
+   ],
+   "rect_um": [
+    120.96000000000001,
+    138.24,
+    138.24,
+    155.52
+   ],
+   "sinks": 257,
+   "minimum_32load_leaf_groups": 9
+  },
+  {
+   "bin": [
+    7,
+    9
+   ],
+   "rect_um": [
+    120.96000000000001,
+    155.52,
+    138.24,
+    172.8
+   ],
+   "sinks": 307,
+   "minimum_32load_leaf_groups": 10
+  },
+  {
+   "bin": [
+    7,
+    10
+   ],
+   "rect_um": [
+    120.96000000000001,
+    172.8,
+    138.24,
+    190.08
+   ],
+   "sinks": 329,
+   "minimum_32load_leaf_groups": 11
+  },
+  {
+   "bin": [
+    7,
+    11
+   ],
+   "rect_um": [
+    120.96000000000001,
+    190.08,
+    138.24,
+    207.36
+   ],
+   "sinks": 348,
+   "minimum_32load_leaf_groups": 11
+  },
+  {
+   "bin": [
+    7,
+    12
+   ],
+   "rect_um": [
+    120.96000000000001,
+    207.36,
+    138.24,
+    216
+   ],
+   "sinks": 104,
+   "minimum_32load_leaf_groups": 4
+  }
+ ],
+ "model_policy": "Planning estimate only: preserve data homes and SRAM rectangle; root69.12,108, allnewactualclocknetsclk. Geographic32sink leaf counts are an unsigned lower bound, not insertedtree or timing. No clock pads/trims. Actualfreshplacement+tree+PGreview beforeCTS."
+}
