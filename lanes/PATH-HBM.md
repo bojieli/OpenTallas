@@ -1358,3 +1358,24 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
   - Assumption: the netlist hbm_current_native_top.sv is not on main; a die-hbm-7 copy (50d55436) was used.
   - Branch claude/die-hbm-10-bindfull-1028@6cddd9f4b3; results/die_hbm_1027/hbm10/bindfull/.
 - 2026-10-28 21:45 PDT [CLK-MODEL-SWEEP-1 -> DIE-HBM] trial2b link_htree geometric; fit 34.1->19.0 ps/leg (k1 0.170 ~S81); est. region worst 1422->693 TT, p50 196->128 (hubs gain, SM not model-limited); 461 legs unbalanced after slide; 38 early-tap types not deliverable by link_htree; PHY_N W/C/E no routed data. claude/clk-model-sweep-1-1028@46a74d86d9 results/clk_model_sweep_1_1028/README.md
+- RESULT DIE-HBM-10 2026-10-28 23:00 PDT (INTERIM): C25b plan built.
+  - Plan intel2:/srv/opentallas-scratch2/claude/die-hbm-10/c25b/die_plan.json (6b3a80cd); branch claude/die-hbm-10-1028@cef2eac649.
+  - G0/G0C re-running, ETA ~23:35. Render c25b_render.png viewed: no overlaps.
+  - (1) Adopted into core_macros KNOWN: pc_ctrl_leaf, qcore_r13 (KITS-2); topk_link, sm_group_rel_id, serdes (KITS-3).
+  - (2) Outlines:
+    - vp4_banks_cp 240.84 -> 275.4 (grows down; ESCAPE-RISK at C=2).
+    - host_cp_rxs 432 -> 480 (C=1 FEASIBLE; stale view dropped -> PENDING-VIEW).
+    - Both clear the slot check.
+  - (3) Family collapse, estimate: NO plan-only collapse fits the owner limits. Views 60 stay; C25b adds +2 masters. KITS-3's 29-view default needs the hop re-check on C25b. Collapse NOT applied.
+  - (4) cxport_ij_q: merging with its neighbour is rejected (clk_s vs clk_q domains). Recommend an RTL split of ij_q into 2 clk_q leaves -> PENDING for an RTL owner.
+  - (5) TOK-HBM-1:
+    - u_mu_fused_root (n4ext 216x207.36, 1126 pins) and u_mu_fused_program (207.36x129.6, 562 pins) placed in root at x 734; pins from RTL ports.
+    - Lanes N4U_NW/NE 271 b and N4D_NW/NE 173 b. Hub stations: 9 regs up (3582 um), 11 down (3950 um), hops <=360 um; root legs 734 um, 2 regs.
+    - The lane cycle count is being fixed to include the hub stations.
+  - (6) programme_store_r10: ~7.4k pins per 15.4-um channel vs 320 M5 tracks. NO plan option fits (2x outline / 2-core split / M6-M7 ceiling; q_hub_ne q1 cannot grow). The fix is in the core: fewer, wider macros -> kit/RTL owner.
+  - c25b_side.json (TOK-HBM-4):
+    - per-role reset legs SW/NW 50/51, SE/NE 50/51, root 17/18 (from C25a reset_tree offsets, UNCHECKED on C25b);
+    - provider<->root abutted (0 cycles);
+    - host->provider hleaf_NW 6929 um as a repeated lane, 15 repeaters at 450 um (side data; becomes a plan lane in C25c);
+    - host_write_interval PENDING (formula + 2.54 ns one-way wire);
+    - svg_S* nkeys=0 CANDIDATES only.
