@@ -360,17 +360,29 @@ def refresh_after_d1(rec0, rec):
     return rec
 
 
-def plan(geo, fam, libtt, libff, name, trunk_cal=None):
+def plan(geo, fam, libtt, libff, name, trunk_cal=None, seqlibs=None):
+    """seqlibs = (SEQ TT, SEQ FF) liberty: form C gate-aware plan (family icg_copies, CORES-EARLY-6); None = unchanged."""
     sinks = sum(1 for l in open(geo) if l.startswith("SINK"))
+    if seqlibs:
+        sinks += sum(1 for l in open(geo) if l.startswith("MACRO"))
     sp = splits_for(sinks, fam)
     M7.BUFS = list(ENV)
-    P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
-    rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
+    if seqlibs:
+        P = gated_htree(str(geo), sp[:-1], fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])],
+                        int(fam.get("icg_copy_max", 400)), float(fam.get("leaf_target", 48)))
+        rea = None       # nearest-leaf reassignment would mix gate domains under one leaf: not used in form C
+    else:
+        P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
+        rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
     cells = sorted(set(ENV + [H.REP, H.BIG]))
     libs = {"TT": H.lib_cells(libtt, cells), "FF": H.lib_cells(libff, cells)}
+    if seqlibs:
+        icgm = sorted({n[3] for n in P["nodes"] if n[4] == "icg"})
+        for cn, path in zip(("TT", "FF"), seqlibs):
+            libs[cn].update(icg_lib_cells(path, icgm))
     M7.apply_masters(P, {"rep": "BUFx24_ASAP7_75t_R"})
     wc = {l: fam.get("wire", "std") for l in range(1, len(sp) + 2)}
     sized = M7.size_d1(P, libs, r, c, wc)
@@ -409,6 +421,18 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
                model="R7 NLDM+Elmore chain + 12.8 d1 (core_family_slice); PLAN MODEL, UNCHECKED")
     if fam.get("keepout_um"):
         rec["macro_keepout_um"] = [list(k) for k in fam["keepout_um"]]
+    if seqlibs:
+        rows = icg_copy_table(P)
+        rec["sinks"] = sum(len(v) for v in P["leafsinks"].values())
+        rec["icg_copies"] = rows
+        rec["sinkcap"] = P["sinkcap"]
+        rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(s_[4].startswith("MACRO:") for s_ in v))
+        nb = collections.Counter(g["gate"] for g in rows)
+        rec["icg_summary"] = dict(rule="form C (COORD 20:00): ICG copy per (gate, tile part) as a planned stage, planned leaves below",
+                                  rtl_gates=len(P["gate_master"]), gate_parts=len(rows), copies_added=len(rows) - len(nb),
+                                  ungated_parts=sum(1 for v in P["copy_gate"].values() if v is None),
+                                  gated_sinks=sum(len(g["members"]) for g in rows), parts_per_gate_max=max(nb.values()) if nb else 0,
+                                  copy_max=int(fam.get("icg_copy_max", 400)), leaf_target=fam.get("leaf_target", 48))
     return rec
 
 
@@ -477,7 +501,8 @@ def replan_structure(geo, fam, libtt, libff, name, cal, jobs=8):
 
 
 # ------------------------------------------------------------------ checks
-def checks(rec, slice_, geo):
+def checks(rec, slice_, geo, gated=False):
+    """gated (form C): gated hard-macro clock pins (MACRO lines with gate=) are census sinks planned as macro leaves."""
     out = {}; fails = []
     # (1) every leg <= 1.10 x Manhattan of its own endpoints
     worst = 0.0; nover = 0; nleg = 0
@@ -491,6 +516,8 @@ def checks(rec, slice_, geo):
     sp = rec["leaf_spread_um"]; out["leaf_spread"] = dict(max=max(sp.values()), n_gt_40=sum(v > GATES["leaf_spread_um"] for v in sp.values()))
     if out["leaf_spread"]["n_gt_40"]: fails.append("leaves over 40 um spread: %d" % out["leaf_spread"]["n_gt_40"])
     cen = {"%s/%s" % (l.split()[4], l.split()[5]) for l in open(geo) if l.startswith("SINK")}
+    if gated:
+        cen |= {"%s/%s" % (l.split()[1], l.split()[7]) for l in open(geo) if l.startswith("MACRO")}
     got = collections.Counter(s for v in rec["leaf_sinks"].values() for s in v)
     out["sinks"] = dict(census=len(cen), planned=len(got), missing=len(cen - set(got)), dup=sum(1 for v in got.values() if v > 1),
                         extra=len(set(got) - cen))
@@ -515,7 +542,11 @@ def checks(rec, slice_, geo):
         if out["pg_clearance"] not in (None, "PASS"): fails.append("trunk PG clearance %s" % out["pg_clearance"])
     nmac = sum(1 for l in open(geo) if l.startswith("MACRO"))
     out["macro_clock_pins"] = nmac
-    if nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
+    if gated:
+        out["macro_leaves"] = len(rec.get("macro_leaves", []))
+        out["icg"] = rec.get("icg_summary")
+        if out["macro_leaves"] != nmac: fails.append("%d gated macro clock pins but %d macro leaves" % (nmac, out["macro_leaves"]))
+    elif nmac: fails.append("%d macro clock pins: family template has no macro (early-tap, v5.0) leaf yet" % nmac)
     out["verdict"] = "FAIL" if fails else "PASS"; out["fails"] = fails
     out["scope"] = "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
     return out
@@ -633,6 +664,218 @@ def icg_groups_summary(groups, small=25):
                 sinks_in_small=sum(v for v in n if v < small))
 
 
+# ------------------------------------------------------------------ form C stage 3: gate-aware planned tree (CORES-EARLY-6)
+NAME_CH = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"   # group index -> one name char (level = name length)
+MACRO_LIB = REPO / "physical" / "asap7_memory_macros_v2"
+GBUF = "BUFx12f_ASAP7_75t_R"     # ungated gate-level stage start master (d1 sizing then matches it to the ICG stages)
+
+
+def icg_lib_cells(path, names):
+    """ICG masters in the core_infra_htree.lib_cells form (cin, rise, fall, trise, tfall) from an ASAP7 SEQ liberty:
+    the CLK -> GCLK combinational (positive-unate, no timing_type) arc of pin GCLK, input cap = pin CLK capacitance.
+    The planner then times an ICG copy exactly like a buffer stage of its master (plan model, enable assumed on)."""
+    op = gzip.open if str(path).endswith(".gz") else open
+    t = op(path, "rt").read(); out = {}
+    for n in names:
+        i = t.find("cell (%s)" % n)
+        if i < 0:
+            raise SystemExit("icg_lib_cells: %s not in %s" % (n, path))
+        j = t.find("\n  cell (", i + 10); blk = t[i:j if j > 0 else None]
+        g = blk[blk.index("pin (GCLK)"):]; g = g[:g.find("\n    pin (") if g.find("\n    pin (") > 0 else None]
+        arcs = [a for a in g.split("timing ()")[1:] if 'related_pin : "CLK"' in a and "timing_type" not in a.split("cell_")[0]
+                and "cell_rise" in a and "cell_fall" in a]
+        if len(arcs) != 1:
+            raise SystemExit("icg_lib_cells: %s has %d CLK->GCLK combinational arcs" % (n, len(arcs)))
+        a = arcs[0]
+        def tab(kind):
+            m = re.search(kind + r" \(\w+\) \{\s*index_1 \(\"([^\"]+)\"\);\s*index_2 \(\"([^\"]+)\"\);\s*values \((.*?)\);", a, re.S)
+            return ([float(x) for x in m.group(1).split(",")], [float(x) for x in m.group(2).split(",")],
+                    [[float(x) for x in r.split(",")] for r in re.findall(r'"([^"]+)"', m.group(3))])
+        ck = blk[blk.index("pin (CLK)"):]
+        out[n] = dict(cin=float(re.search(r"\bcapacitance : ([\d.]+)", ck).group(1)), rise=tab("cell_rise"), fall=tab("cell_fall"),
+                      trise=tab("rise_transition"), tfall=tab("fall_transition"))
+    return out
+
+
+def macro_clk_cap(master, pin):
+    """{TT, FF} clock pin capacitance (fF) of a hard macro from its repo liberty (fail-closed)."""
+    out = {}
+    for c in ("TT", "FF"):
+        p = MACRO_LIB / master / ("%s_%s.lib" % (master, c.lower()))
+        if not p.is_file():
+            raise SystemExit("macro_clk_cap: no liberty %s" % p)
+        t = p.read_text(); i = t.find("pin (%s)" % pin)
+        if i < 0:
+            raise SystemExit("macro_clk_cap: %s has no pin %s" % (p, pin))
+        out[c] = float(re.search(r"\bcapacitance : ([\d.]+)", t[i:i + 2000]).group(1))
+    return out
+
+
+def read_gated_geo(geo):
+    """GATED census -> (core, entry, sinks, macros, gate_of, gate_master).  sinks = (x, y, inst, pin, master) like
+    core_infra_htree.plan; a gated hard-macro clock pin is a sink too (master 'MACRO:<lib cell>'); gate_of[inst/pin]."""
+    sinks, macros, gate_of, gm, core, entry = [], [], {}, {}, None, None
+    for l in open(geo):
+        f = l.split()
+        if not f:
+            continue
+        tag = [t[5:] for t in f if t.startswith("gate=")]
+        if f[0] == "CORE": core = tuple(map(float, f[1:5]))
+        elif f[0] == "PIN" and f[1] == "ck": entry = (float(f[2]), float(f[3]))
+        elif f[0] == "GATE": gm[f[1]] = f[2]
+        elif f[0] == "SINK":
+            sinks.append((float(f[1]), float(f[2]), f[4], f[5], f[3])); gate_of["%s/%s" % (f[4], f[5])] = tag[0] if tag else None
+        elif f[0] == "MACRO":
+            macros.append((f[1], tuple(map(float, f[3:7])), (float(f[8]), float(f[9]))))
+            sinks.append((float(f[8]), float(f[9]), f[1], f[7], "MACRO:" + f[2])); gate_of["%s/%s" % (f[1], f[7])] = tag[0] if tag else None
+    if core is None or entry is None:
+        raise SystemExit("read_gated_geo: %s lacks CORE / PIN ck" % geo)
+    bad = sorted({g for g in gate_of.values() if g} - set(gm))
+    if bad:
+        raise SystemExit("read_gated_geo: sinks of undeclared gates %s" % bad[:3])
+    return core, entry, sinks, macros, gate_of, gm
+
+
+def gated_htree(geo, upper, smax, keepout, copy_max, leaf_target):
+    """form C planned tree (COORD 20:00 ruling): the family H partition of ALL clock sinks (gated + ungated) for the
+    upper levels (upper = family splits without the leaf level, ~50 um tiles at the last upper level), then
+      GATE level: each tile's sinks grouped by their RTL gate (ungated = 'ROOT'); a group larger than copy_max sinks is
+        cut into ceil(n / copy_max) equal-count parts; every part is one planned stage whose branch cell is an ICG COPY
+        of its gate (same master; core_infra clone_of, same ENA/SE nets) or, for ungated sinks, a BUF at the same depth;
+      LEAF level: each part's flops in max(1, round(n / leaf_target)) equal-count leaves (+1 leaf per gated macro pin).
+    Every root->sink path has the same stage count by construction; every edge = its own shortest legal maze path;
+    the gate-level branch sits at the tile hub like any H-tree branch buffer and drives ONE wire to its part's hub.
+    Returns the core_infra_htree.plan dict plus copy_gate {edge: gate or None}, gate_master, sinkcap."""
+    core, entry, sinks, macros, gate_of, gm = read_gated_geo(geo)
+    mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=False)
+    name = lambda g: "T" + "".join(NAME_CH[i] for i in g)
+    groups = {(): sinks}
+    for lv, k in enumerate(upper):
+        for key in sorted(g for g in groups if len(g) == lv):
+            pts = groups[key]
+            if lv == 0 and k == 2:
+                srt = sorted(pts, key=lambda p: (p[0], p[1])); h = len(srt) // 2; parts = [srt[:h], srt[h:]]
+            else:
+                parts = H.split(pts, k, axis=(1 if lv == 1 else None))
+            for i, g in enumerate(parts):
+                groups[key + (i,)] = g
+    nu = len(upper); copy_gate = {}
+    key_of = lambda s: "%s/%s" % (s[2], s[3])
+    for key in sorted(g for g in groups if len(g) == nu):
+        by = collections.defaultdict(list)
+        for s in groups[key]:
+            by[gate_of[key_of(s)] or ""].append(s)
+        j = 0
+        for gname in sorted(by, key=lambda x: (x == "", x)):
+            pts = by[gname]; k = max(1, math.ceil(len(pts) / float(copy_max)))
+            parts = H.split(pts, k) if k > 1 else [pts]
+            for g in parts:
+                if j >= len(NAME_CH):
+                    raise SystemExit("gated_htree: more than %d gate-level parts in tile %s" % (len(NAME_CH), name(key)))
+                groups[key + (j,)] = g; copy_gate[key + (j,)] = gname or None; j += 1
+    for key in sorted(g for g in groups if len(g) == nu + 1):
+        pts = groups[key]
+        mac = [s for s in pts if s[4].startswith("MACRO:")]; fl = [s for s in pts if not s[4].startswith("MACRO:")]
+        parts = [[m] for m in mac]
+        if fl:
+            k = max(1, int(round(len(fl) / float(leaf_target))))
+            parts += H.split(fl, k) if k > 1 else [fl]
+        if len(parts) > len(NAME_CH):
+            raise SystemExit("gated_htree: %d leaves under %s (> %d names)" % (len(parts), name(key), len(NAME_CH)))
+        for i, g in enumerate(parts):
+            groups[key + (i,)] = g
+    depth = nu + 2
+    leaves = sorted(g for g in groups if len(g) == depth)
+    site = {}
+    for g in leaves:
+        pts = groups[g]; site[g] = mz.cell((sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts)))
+    kids = collections.defaultdict(list)
+    for g in groups:
+        if g:
+            kids[g[:-1]].append(g)
+    for lv in range(depth - 1, 0, -1):
+        for g in sorted(x for x in groups if len(x) == lv):
+            ch = [site[c] for c in sorted(kids[g])]
+            cx = round(sum(c[0] for c in ch) / len(ch)); cy = round(sum(c[1] for c in ch) / len(ch))
+            site[g] = H.minimax_site(mz, ch, (cx, cy))
+    site[()] = ent
+    T, K = [], []
+    for lv in range(depth):
+        L = [mz.md(site[g[:-1]], site[g]) for g in groups if len(g) == lv + 1]
+        T.append(max(L)); K.append(max(1, math.ceil(max(L) / smax)))
+    nodes = [("root", None, ent, H.BIG, "entry")]; wires = []; branch_of = {(): "root"}
+    for lv in range(depth):
+        for g in sorted(x for x in groups if len(x) == lv + 1):
+            par = g[:-1]; pc = site[par]; cc = site[g]; sib = sorted(kids[par]); i = sib.index(g)
+            off = mz.cell((mz.xy(pc)[0], mz.xy(pc)[1] + (i - (len(sib) - 1) / 2.0) * 1.08))
+            if lv == nu:
+                # gate level: the ICG copy (or, ungated, a BUF) drives ONE co-located BUF branch that drives the part's
+                # wire, so every gate stage sees the same small load (an ICGx1 cannot drive a wire + leaf branches:
+                # 53 ps / 90 ps slew at 10 fF) and gated / ungated parts keep equal stage counts
+                gt = copy_gate.get(g)
+                nodes.append((name(g) + "_g", branch_of[par], off, gm[gt] if gt else GBUF, "icg" if gt else "gbuf"))
+                nodes.append((name(g) + "_br", name(g) + "_g", off, H.BIG, "branch"))
+            else:
+                nodes.append((name(g) + "_br", branch_of[par], off, H.BIG, "branch"))
+            pts = H.exact_points(mz, off, cc, T[lv], K[lv]); prev = name(g) + "_br"; chain = [off] + pts + [cc]
+            for r_, c in enumerate(pts):
+                n = name(g) + "_r%d" % r_; nodes.append((n, prev, c, H.REP, "rep")); prev = n
+            wires.append(dict(level=lv + 1, edge=name(g), segs=[mz.md(chain[q], chain[q + 1]) for q in range(len(chain) - 1)],
+                              cells=[mz.path(chain[q], chain[q + 1]) for q in range(len(chain) - 1)]))
+            nodes.append((name(g), prev, cc, H.BIG, "leaf" if lv == depth - 1 else "node"))
+            branch_of[g] = name(g)
+    fold = {n[0]: n[1] for n in nodes if n[4] == "node"}
+    land = {}
+    for w in wires:
+        if w["edge"] in fold:
+            land[fold[w["edge"]]] = (w["segs"][-1], w["edge"])
+    final = []
+    for n in nodes:
+        if n[0] in fold:
+            continue
+        par = n[1]
+        while par in fold:
+            par = fold[par]
+        final.append((n[0], par, n[2], n[3], n[4]))
+    caps = {}
+    for s in sinks:
+        if s[4].startswith("MACRO:"):
+            c = macro_clk_cap(s[4][6:], s[3])
+            for cn in ("TT", "FF"):
+                caps.setdefault(cn, {})[key_of(s)] = c[cn]
+    return dict(mz=mz, entry=entry, ent=ent, groups=groups, leaves=leaves, site=site, T=T, K=K, nodes=final, wires=wires,
+                land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["gate", "leaf"],
+                nm=name, copy_gate={name(g): v for g, v in copy_gate.items()}, gate_master=gm, sinkcap=caps,
+                gate_of=gate_of)
+
+
+def icg_copy_table(P):
+    """gate-level parts -> core_tree.gates rows: per RTL gate, its parts in name order; the FIRST part keeps the
+    original RTL instance (moved to the plan site, domain planned), every other part is a clone_of copy whose members
+    are exactly the sinks of the leaves below it.  Ungated parts are BUF stages (no row)."""
+    par = {n[0]: n[1] for n in P["nodes"]}
+    below = collections.defaultdict(list)
+    for leaf, ss in P["leafsinks"].items():
+        u = leaf
+        while u is not None and not (u.endswith("_g") and u[:-2] in P["copy_gate"]):
+            u = par[u]
+        if u is None:
+            raise SystemExit("icg_copy_table: leaf %s has no gate-level ancestor" % leaf)
+        below[u[:-2]] += ["%s/%s" % (s[2], s[3]) for s in ss]
+    rows, seen = [], {}
+    for e in sorted(P["copy_gate"]):
+        g = P["copy_gate"][e]
+        if g is None:
+            continue
+        mem = sorted(below[e])
+        bad = [s for s in mem if P["gate_of"][s] != g]
+        if bad:
+            raise SystemExit("icg_copy_table: part %s of gate %s holds sinks of another domain %s" % (e, g, bad[:2]))
+        rows.append(dict(edge=e, node=e + "_g", gate=g, master=P["gate_master"][g], first=g not in seen, members=mem))
+        seen[g] = e
+    return rows
+
+
 def entry_mode(fam, core):
     """family 'entry': absent = 'centre' (12.8a outline centre from the census, unchanged); a mode string for every
     member, or {member: mode}.  'sink_centroid' = the core clock entry at the mean of the placed clock sinks (COORD
@@ -668,15 +911,19 @@ def run_core(fams, core, kit, work, a):
     work = Path(work) / core; work.mkdir(parents=True, exist_ok=True)
     icg = icg_copies_mode(fam, core)
     clk = census(kit, work, gated=True) if icg else census(kit, work)
+    seq = None
     if icg:
-        # form C stage 1 (CORES-EARLY-5): GATED census + (gate, tile) grouping only. The planner/converter/core_infra
-        # stages (ICG copy nodes, planned leaves under a gate, kit clone hook + post-clone LEC) are not built yet, so
-        # the run stops here FAIL-CLOSED instead of planning the gated flops as if they were on the core clock.
+        # form C (CORES-EARLY-5 stage 1 census; CORES-EARLY-6 stages 3-4 planner + converter): the GATED census is the
+        # plan input; every RTL gate becomes planned ICG stages (original + clone_of copies) with planned leaves below.
         tile = float(fam.get("icg_tile_um", 50.0))
         gs = icg_groups_summary(gate_tile_groups(work / "geo_gated.txt", tile))
         (work / "icg_groups.json").write_text(json.dumps(dict(tile_um=tile, **gs), indent=1))
-        raise SystemExit("run: icg_copies census + grouping written (%s); planner stage not implemented -> no plan" % json.dumps(gs))
-    geo = entry_geo(work / "geo.txt", entry_mode(fam, core))
+        if not (getattr(a, "seqtt", None) and getattr(a, "seqff", None)):
+            raise SystemExit("run: icg_copies needs --seqtt/--seqff (ASAP7 SEQ liberty for the ICG CLK->GCLK arcs)")
+        if getattr(a, "trunk_cal", None) or getattr(a, "replan_cal", None):
+            raise SystemExit("run: icg_copies plans take no --trunk-cal/--replan-cal (not defined for form C)")
+        seq = (a.seqtt, a.seqff)
+    geo = entry_geo(work / ("geo_gated.txt" if icg else "geo.txt"), entry_mode(fam, core))
     if keepout_mode(fam, core):
         fam = dict(fam, keepout_um=macro_keepouts(work / "sites.txt"))
     cal = json.loads(Path(a.trunk_cal).read_text()).get(core) if getattr(a, "trunk_cal", None) else None
@@ -686,11 +933,13 @@ def run_core(fams, core, kit, work, a):
     if rcal:
         rec, fam = replan_structure(geo, fam, a.libtt, a.libff, "%s_r16_%s_rp" % (core, fam["name"]), rcal)
     else:
-        rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
+        rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s%s" % (core, fam["name"], "_tk" if cal else "", "_icg" if seq else ""),
+                   trunk_cal=cal, seqlibs=seq)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
     if a.fit:
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
-                            str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
+                            str(work / "plan_d1.json"), "--steps", str(a.d1_steps)] + (["--seqtt", seq[0], "--seqff", seq[1]] if seq else []),
+                           capture_output=True, text=True)
         (work / "d1.log").write_text(r.stdout + r.stderr)
         if r.returncode != 0:
             # R20 fail-closed: S81-CORES-R1 sparse worktrees lacked results/core_lat_r9_1026 + model_refit2_1026, the d1
@@ -701,7 +950,7 @@ def run_core(fams, core, kit, work, a):
         # refresh the NLDM numbers with the d1 masters (same chain the checks read)
         rec2["d1_from"] = "uf_phys3 v1 coordinate descent (R9)"
         if rec["name"] not in _PLANS:   # re-plan ran in worker processes: rebuild the chosen plan here (deterministic)
-            plan(geo, fam, a.libtt, a.libff, rec["name"], trunk_cal=cal)
+            plan(geo, fam, a.libtt, a.libff, rec["name"], trunk_cal=cal, seqlibs=seq)
         rec = refresh_after_d1(rec, rec2)
         pj = work / "plan_d1.json"; pj.write_text(json.dumps([rec]))
     slice_dir = work / "slice"; slice_dir.mkdir(exist_ok=True)
@@ -710,7 +959,7 @@ def run_core(fams, core, kit, work, a):
            "--out", str(slice_dir / ("%s.json" % core))]
     r = subprocess.run(cmd, capture_output=True, text=True); (work / "convert.log").write_text(r.stdout + r.stderr)
     sl = json.loads((slice_dir / ("%s.json" % core)).read_text()) if r.returncode == 0 else None
-    ck = checks(rec, sl, geo)
+    ck = checks(rec, sl, geo, gated=bool(seq))
     if sl is None: ck["verdict"] = "FAIL"; ck["fails"].append("converter rc %d: %s" % (r.returncode, (r.stdout + r.stderr).strip()[-300:]))
     (work / "checks.json").write_text(json.dumps(ck, indent=1))
     render(geo, rec, sl, work / ("%s_r13.png" % core))
@@ -733,6 +982,8 @@ def main():
     ap.add_argument("--replan-cal", default=None, help="JSON {core: {built_TT, built_FF, plan_TT, plan_FF, basis, source}}: "
                     "calibrated family-menu structure re-plan for a core built out of band HIGH")
     ap.add_argument("--fit", default=None); ap.add_argument("--libdir", default=None); ap.add_argument("--d1-steps", type=int, default=60)
+    ap.add_argument("--seqtt", default=None); ap.add_argument("--seqff", default=None,
+                    help="ASAP7 SEQ RVT TT/FF liberty (ICG CLK->GCLK arcs) for family icg_copies (form C)")
     a = ap.parse_args()
     fams = json.loads(Path(a.family).read_text())
     if a.mode == "run":

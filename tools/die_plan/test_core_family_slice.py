@@ -311,3 +311,64 @@ def test_gate_tile_groups_refuses_undeclared_gate(tmp_path):
     geo.write_text("SINK 1 1 DFF x CLK gate=nope\n")
     with pytest.raises(SystemExit):
         F.gate_tile_groups(geo, 50)
+
+
+# ---------------------------------------------------------------- form C stage 3 (CORES-EARLY-6)
+def _gated_geo(tmp_path):
+    """two RTL gates (g0 W-heavy, g1 E) + ungated flops; g0 also gates one hard-macro clock pin."""
+    L = ["DIE 0 0 120 120", "CORE 0 0 120 120", "PIN ck 60 60",
+         "GATE g0 ICGx1_ASAP7_75t_R 30 60", "GATE g1 ICGx1_ASAP7_75t_R 90 60"]
+    k = 0
+    for x in range(6, 115, 9):
+        for y in range(6, 115, 9):
+            g = "" if (x + y) % 4 == 0 else (" gate=g0" if x < 70 else " gate=g1")
+            L.append("SINK %d %d DFFHQNx1_ASAP7_75t_R r%d CLK%s" % (x, y, k, g)); k += 1
+    L += ["MACRO rom ot_rom_4096x274_m8 40 40 52 50 clk 46 51 gate=g0", "ISLCOUNT 0"]
+    p = tmp_path / "geo_gated.txt"; p.write_text("\n".join(L) + "\n")
+    return p
+
+
+def test_gated_htree_gate_homogeneous_leaves_equal_stages(tmp_path):
+    geo = _gated_geo(tmp_path)
+    P = F.gated_htree(str(geo), [2, 2], 70.0, [], copy_max=12, leaf_target=4)
+    par = {n[0]: n[1] for n in P["nodes"]}; kind = {n[0]: n[4] for n in P["nodes"]}
+    depth = set()
+    for u, ss in P["leafsinks"].items():
+        assert len({P["gate_of"]["%s/%s" % (s[2], s[3])] for s in ss}) == 1      # one gate domain per leaf
+        d, v, path = 0, u, []
+        while v: path.append(v); v = par[v]; d += 1
+        depth.add(d)
+        gl = [v for v in path if kind[v] in ("icg", "gbuf")]
+        assert len(gl) == 1                                                       # exactly one gate-level stage
+        g = P["gate_of"]["%s/%s" % (ss[0][2], ss[0][3])]
+        assert (kind[gl[0]] == "icg") == (g is not None)
+    assert len(depth) == 1
+    rows = F.icg_copy_table(P)
+    assert {r["gate"] for r in rows} == {"g0", "g1"}
+    assert sum(r["first"] for r in rows) == 2 and len(rows) > 2                   # copy_max forces clone_of copies
+    mem = [s for r in rows for s in r["members"]]
+    gated = sorted(s for s, g in P["gate_of"].items() if g)
+    assert sorted(mem) == gated and len(set(mem)) == len(mem)
+    assert "rom/clk" in mem and P["sinkcap"]["TT"]["rom/clk"] > 5.0               # macro leaf, liberty pin cap
+
+
+def test_gated_htree_refuses_undeclared_gate(tmp_path):
+    p = tmp_path / "g.txt"
+    p.write_text("CORE 0 0 50 50\nPIN ck 25 25\nSINK 1 1 DFF x CLK gate=nope\n")
+    with pytest.raises(SystemExit):
+        F.gated_htree(str(p), [2], 70.0, [], 10, 4)
+
+
+def test_icg_lib_cells_reads_the_combinational_clk_gclk_arc(tmp_path):
+    tab = lambda k, v: '%s (t) { index_1 ("5, 10"); index_2 ("1, 2"); values ("%s, %s", "%s, %s"); }' % (k, v, v + 1, v + 2, v + 3)
+    lib = "\n".join([
+        "  cell (ICGx1_ASAP7_75t_R) {", "    pin (GCLK) {",
+        '      timing () { related_pin : "CLK"; timing_type : combinational_fall; %s %s }' % (tab("cell_fall", 90), tab("fall_transition", 91)),
+        '      timing () { related_pin : "CLK"; timing_sense : positive_unate; %s %s %s %s }'
+        % (tab("cell_rise", 10), tab("rise_transition", 20), tab("cell_fall", 30), tab("fall_transition", 40)),
+        "    }", "    pin (CLK) {", "      capacitance : 2.19131;", "    }", "  }", ""])
+    p = tmp_path / "seq.lib"; p.write_text(lib)
+    c = F.icg_lib_cells(p, ["ICGx1_ASAP7_75t_R"])["ICGx1_ASAP7_75t_R"]
+    assert c["cin"] == 2.19131 and c["rise"][2][0][0] == 10 and c["fall"][2][0][0] == 30 and c["tfall"][2][1][1] == 43
+    with pytest.raises(SystemExit):
+        F.icg_lib_cells(p, ["ICGx2_ASAP7_75t_R"])
