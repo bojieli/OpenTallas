@@ -63,3 +63,21 @@ Copies of bdring _k18 differ only in the DRV basis (`max_fanout.tcl` sourced at 
 
 Collect: `signoff/signoff.json` drv slew TT/FF against the _k18 baseline (7,496 / 6,501), plus setup_tt (_k18: -22.43), hold_ff and
 insertion.
+
+# qwdec_v1 post-CTS hold -28.98 ps / 2,736 r2r (input: Codex KITS12/14/18 diagnosis, related skew 41.64 ps, tree-wide)
+
+Census by endpoint class (KITS-19 `epyc2 hbm-cores-kits-19/qwhold/census.tsv`, FF, 4_cts.odb, CHECKED): every failing path is
+zero-logic flop->INV->flop (4 points). The classes are u_dec.value_pipe stage->stage (914, worst -29.0), aq/bq g_line.line shift
+lines (829 + 386), and aq g*_sig stages (about 330). F4 (`f4_chain_leaf.tcl`, which puts chain launch and capture on one leaf) logged
+`pairs 27592 moved 3411 skipped 14581 far 8474`. A read-only re-run of its chain walk on 4_cts.odb (`qwdec/f4_probe.tcl`) puts
+2,717 of the 2,736 failing endpoints on F4 chains. 1,319 of them are on chains longer than OT_F4_MAX = 16, which F4 skips outright.
+The other 1,398 are on short chains that F4 rejected as far (more than 20 um from the head leaf) or because the leaf was full.
+
+Structural variant: an opt-in `OT_F4_SEG` in f4_chain_leaf.tcl (`qwdec/f4_seg.tcl`, default 0 = unchanged). It cuts long chains
+into segments of 8 flops, each segment on the leaf of its own head, so only every 8th pair crosses leaves.
+Estimate: up to about 1,300 of the 2,736 endpoints are removed, which brings the count under the 2,000-endpoint post-CTS gate; the
+rest are left to the GRT measured-arrival hold repair (UNCHECKED).
+- `epyc2 hbm-cores-kits-20/qw/qwdec_k20qa`: OT_F4_SEG 8. Unit oth-ubuntu-1367736-1793309013.
+- `qwdec_k20qb`: OT_F4_SEG 8 plus OT_F4_MAX_UM 30. Unit oth-ubuntu-1368473-1793309014.
+
+Collect: the `OT_F4` / `OT_F4_SEG` lines in 4_1_cts.log, then hold_gate.log (post-CTS FF WNS and endpoints), then sign-off.
