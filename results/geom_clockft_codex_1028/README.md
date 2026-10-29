@@ -21,8 +21,8 @@ PASS. The original FAIL artifact is untouched; no route/STA rerun.
 Data: intel2:/srv/opentallas-scratch2/claude/codex-geom-clockft-1028.
 Original: intel2:/srv/opentallas-scratch2/claude/codex-kv-kits-1028/geom/kv3_pv_pair__380.16x190.08.
 
-Physical observation forwarded to KV kits: the dump shows ft_ck_i_1
-feeding mp_isl1_ck0 and ck1 in parallel, with ck0 output unused and ck1
-feeding ft_ck_o_1. Clock classification is correct, but the measured
-interface delay must describe that actual one-active-buffer path rather
-than assume two cascaded buffers from the original island recipe.
+The two ft_ck_i_1 buffers are intentional PARALLEL mesh drivers:
+island_ft.tcl ot_ft_short joins both Y terminals onto the output net.
+The dump format retains one net driver, so the Python graph sees one
+buffer as an unused load. Recognising that buffer-only load is necessary;
+it does not indicate an unused physical driver or a missing cascade.
