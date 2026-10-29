@@ -1,0 +1,86 @@
+{
+  "source": "native14dce2192",
+  "scope": "ANALYTIC_TOTAL_PERIMETER_LOWER_BOUND_ONLY_NO_REACH_PASS",
+  "groups": [
+    {
+      "family": "su_exp",
+      "outline_um": [
+        440.64,
+        207.36
+      ],
+      "pins": 2055,
+      "instances": 64,
+      "aggregate_pins_per_um": 1.5856481481481481,
+      "capacity_at_4p5": 5832,
+      "minimum_added_perimeter_um": 0,
+      "samples": [
+        "NW_su00/u_su_Q0_lane_exp0",
+        "NW_su01/u_su_Q0_lane_exp1"
+      ]
+    },
+    {
+      "family": "su_plain4",
+      "outline_um": [
+        440.64,
+        457.92
+      ],
+      "pins": 8220,
+      "instances": 16,
+      "aggregate_pins_per_um": 4.573985042735043,
+      "capacity_at_4p5": 8087,
+      "minimum_added_perimeter_um": 29.54666666666685,
+      "samples": [
+        "NW_su00/u_su_Q0_lanes_plain0_3",
+        "NW_su01/u_su_Q0_lanes_plain4_7"
+      ]
+    },
+    {
+      "family": "su_pretree",
+      "outline_um": [
+        164.16,
+        241.92
+      ],
+      "pins": 1138,
+      "instances": 8,
+      "aggregate_pins_per_um": 1.4012017336485423,
+      "capacity_at_4p5": 3654,
+      "minimum_added_perimeter_um": 0,
+      "samples": [
+        "NW_su00/u_su_Q0_pretree",
+        "NW_su10/u_su_Q1_pretree"
+      ]
+    },
+    {
+      "family": "su_plain4",
+      "outline_um": [
+        760.32,
+        725.76
+      ],
+      "pins": 8220,
+      "instances": 32,
+      "aggregate_pins_per_um": 2.7656653746770026,
+      "capacity_at_4p5": 13374,
+      "minimum_added_perimeter_um": 0,
+      "samples": [
+        "NW_su20/u_su_Q2_lanes0_3",
+        "NW_su21/u_su_Q2_lanes4_7"
+      ]
+    },
+    {
+      "family": "sfu_lane",
+      "outline_um": [
+        388.8,
+        345.6
+      ],
+      "pins": 1472,
+      "instances": 32,
+      "aggregate_pins_per_um": 1.0021786492374727,
+      "capacity_at_4p5": 6609,
+      "minimum_added_perimeter_um": 0,
+      "samples": [
+        "NW_b110/u_sfucore_Q_lane0",
+        "NW_b110/u_sfucore_Q_lane1"
+      ]
+    }
+  ]
+}
