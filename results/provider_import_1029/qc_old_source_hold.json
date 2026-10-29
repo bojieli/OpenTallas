@@ -1,0 +1,1204 @@
+{
+  "schema": "ot_provider_import_preflight/1",
+  "verdict": "HOLD_NO_IMPORT",
+  "source_odb_sha256": null,
+  "inventory_sha256": "f7707fe699e9a930b3b72240dd88360807d95c09ef6a0786417f596ceb7e4826",
+  "mapped_sha256": "e40c029b6ed0b65664ed9d4f2f4e4e63efea226f1154d24e6ad24b1b1c55be0b",
+  "placements_sha256": "4d154685e1cd4f2a8807c0fbc1bf7f2521a7d2625bd7b51a2ff9d9e7e65e4b5b",
+  "bindings_sha256": "78e1972ba4de2401054d4ca6b5c906564a8d8b51f01dd07e5c4ef52fcfb46e38",
+  "fresh_constraints_sha256": "16842d3a7ecc2e792b59ca5daf3f2317740e30783f240ac0a2cd640034916aff",
+  "allcells": 29167,
+  "issues": {
+    "actual_source_hash_missing": 1,
+    "boundary_source_mismatch": 1,
+    "actual_source_obstruction_or_keepout": 15981,
+    "unbound_native_boundary_port": 3580
+  },
+  "samples": [
+    {
+      "code": "actual_source_hash_missing",
+      "detail": "fresh export must pin the actual source ODB"
+    },
+    {
+      "code": "boundary_source_mismatch",
+      "detail": "bindings must reference exact fresh ODB"
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$322",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$323",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$324",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$325",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$326",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$327",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$328",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$auto$ff.cc:337:slice$329",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$559",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$560",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$561",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$562",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$563",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$564",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$565",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$566",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$567",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$568",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$569",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$570",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$571",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$572",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$573",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$574",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$575",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$576",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$577",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$578",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$579",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$580",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b0.$abc$558$auto$blifparse.cc:397:parse_blif$581",
+        "obstacle": [
+          16855688,
+          12462120,
+          17007104,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$abc$588$auto$blifparse.cc:397:parse_blif$589",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$abc$588$auto$blifparse.cc:397:parse_blif$590",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$abc$588$auto$blifparse.cc:397:parse_blif$591",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$abc$588$auto$blifparse.cc:397:parse_blif$592",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1.$abc$588$auto$blifparse.cc:397:parse_blif$593",
+        "obstacle": [
+          17473198,
+          12462120,
+          17622670,
+          12464550
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          17934696,
+          11793870,
+          18239040,
+          11795490
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          17934696,
+          11793870,
+          18239040,
+          11795490
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          17934696,
+          11793870,
+          18239040,
+          11795490
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          17934696,
+          11793870,
+          18239040,
+          11795490
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b100.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          17010290,
+          19738910,
+          17161436,
+          19741610
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b100.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          17010290,
+          19738910,
+          17161436,
+          19741610
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b100.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          17010290,
+          19738910,
+          17161436,
+          19741610
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b100.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          17010290,
+          19738910,
+          17161436,
+          19741610
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1001.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          27514336,
+          24955310,
+          27556564,
+          24957740
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1001.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          27514336,
+          24955310,
+          27556564,
+          24957740
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b1001.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          27514336,
+          24955310,
+          27556564,
+          24957740
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10015.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25581508,
+          19102250,
+          25584856,
+          19104950
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10015.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25581508,
+          19102250,
+          25584856,
+          19104950
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10015.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25581508,
+          19102250,
+          25584856,
+          19104950
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10015.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25581508,
+          19102250,
+          25584856,
+          19104950
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10015.$abc$588$auto$blifparse.cc:397:parse_blif$592",
+        "obstacle": [
+          25581508,
+          19102250,
+          25584856,
+          19104950
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10015.$abc$588$auto$blifparse.cc:397:parse_blif$593",
+        "obstacle": [
+          25581508,
+          19102250,
+          25584856,
+          19104950
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25581508,
+          18605990,
+          25583344,
+          18608690
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25581508,
+          18605990,
+          25583344,
+          18608690
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25581508,
+          18605990,
+          25583344,
+          18608690
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25581508,
+          18605990,
+          25583344,
+          18608690
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$abc$588$auto$blifparse.cc:397:parse_blif$589",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$abc$588$auto$blifparse.cc:397:parse_blif$590",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$abc$588$auto$blifparse.cc:397:parse_blif$591",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$abc$588$auto$blifparse.cc:397:parse_blif$592",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10016_rbea16d9b237180aa.$abc$588$auto$blifparse.cc:397:parse_blif$593",
+        "obstacle": [
+          25484416,
+          18485570,
+          25830124,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$abc$588$auto$blifparse.cc:397:parse_blif$589",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$abc$588$auto$blifparse.cc:397:parse_blif$590",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$abc$588$auto$blifparse.cc:397:parse_blif$591",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$abc$588$auto$blifparse.cc:397:parse_blif$592",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10017_r37803b67b7a66213.$abc$588$auto$blifparse.cc:397:parse_blif$593",
+        "obstacle": [
+          25211176,
+          18485570,
+          25344664,
+          18488000
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10043.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25581508,
+          7160670,
+          25584856,
+          7163370
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10043.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25581508,
+          7160670,
+          25584856,
+          7163370
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10043.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25581508,
+          7160670,
+          25584856,
+          7163370
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10043.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25581508,
+          7160670,
+          25584856,
+          7163370
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10043.$abc$588$auto$blifparse.cc:397:parse_blif$592",
+        "obstacle": [
+          25581508,
+          7160670,
+          25584856,
+          7163370
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10043.$abc$588$auto$blifparse.cc:397:parse_blif$593",
+        "obstacle": [
+          25581508,
+          7160670,
+          25584856,
+          7163370
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25581508,
+          7656930,
+          25583344,
+          7659630
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25581508,
+          7656930,
+          25583344,
+          7659630
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25581508,
+          7656930,
+          25583344,
+          7659630
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25581508,
+          7656930,
+          25583344,
+          7659630
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$auto$ff.cc:337:slice$312",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$auto$ff.cc:337:slice$313",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$auto$ff.cc:337:slice$314",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$auto$ff.cc:337:slice$315",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$abc$588$auto$blifparse.cc:397:parse_blif$589",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$abc$588$auto$blifparse.cc:397:parse_blif$590",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$abc$588$auto$blifparse.cc:397:parse_blif$591",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$abc$588$auto$blifparse.cc:397:parse_blif$592",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    },
+    {
+      "code": "actual_source_obstruction_or_keepout",
+      "detail": {
+        "inst": "$flatten\\u_st_b10044_re16a6002a0a52f5f.$abc$588$auto$blifparse.cc:397:parse_blif$593",
+        "obstacle": [
+          25484416,
+          7777620,
+          25830124,
+          7780050
+        ]
+      }
+    }
+  ],
+  "scope": "Only explicit fresh OBS, all mapped cells and native boundaries; no timing/phase qualification"
+}
