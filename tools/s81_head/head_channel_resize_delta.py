@@ -312,6 +312,10 @@ def estimate(t, synth, Wo, Ho):
 
 def run(plan, types=None, margin=MARGIN, max_keep=0.9, synth=None):
     plan = copy.deepcopy(plan)
+    # COORD HEAD 10-29: all sixteen one-entry type targets already are450.
+    # Align the obsolete250 header; measured views stay unchanged.
+    plan["clock"]["common_latency_ps"] = 450.0
+    plan["clock"]["insertion_ps"] = 450.0
     pt = plan["partition_types"]
     types = types or [n for n in DEFAULT_TYPES if n in pt]
     rep = dict(schema="opentallas.head_channel_resize.v1", tag=TAG, margin_um=margin, grid_um=GRID, max_keep=max_keep,

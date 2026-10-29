@@ -1,9 +1,9 @@
-import copy,json,sys
+import copy,json,sys,gzip
 from pathlib import Path
 W=Path(__file__).resolve().parents[4];sys.path[:0]=[str(W/'tools/die_plan'),str(W/'tools/s81_head')]
 import schema as S,gen_rtl as G
 from head_n3_split_delta import split
-p=json.load(open(W/'results/die_head_21_1028/hk4/plan_hk4.json'));q,r=split(p)
+p=json.load(gzip.open(W/'results/die_head_21_1028/hk4/plan_hk4.json.gz','rt'));q,r=split(p)
 out=Path(__file__).parent
 orig=copy.deepcopy(p['partition_types']['hd_st_n3']);orig['module']='n3_reference'
 q['partition_types']['original']=orig

@@ -4,7 +4,7 @@ from pathlib import Path
 W=Path(__file__).resolve().parents[3];sys.path.insert(0,str(W/'tools/die_plan'))
 import schema as S
 D=Path(__file__).parent
-old=json.load(gzip.open(D.parent/'hk3/plan_hk3.json.gz','rt'));new=json.load(open(D/'plan_spine_raw.json'))
+old=json.load(gzip.open(D.parent/'hk3/plan_hk3.json.gz','rt'));new=json.load(gzip.open(D/'plan_spine_raw.json.gz','rt'))
 A,B=S.Plan(old),S.Plan(new)
 def pins(P,end,pr):
  n=end['part'];g=P._type_geom(n,end['bus'])
