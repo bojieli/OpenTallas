@@ -37,10 +37,24 @@ No clock ECO, no trims/pads, no skew targets.
   GRT after the hold buffers), i.e. 0 congested gcells. 
 - GRT-stage repair (ORFS default, MCMM tc+bc): 2,930 hold buffers (repair_timing 716 s), then post-GRT setup +263.97 ps,
   hold +4.07 ps (MCMM worst), slew 0 (GRT RC, UNCHECKED vs routed).
-- DRT LIVE at 10:47 (iteration 0, 70 %: 2,037 violations).
+- DRT: 0 violations (6th stubborn-tiles iteration); route + fill + report + abstract rc 0, 10:27 -> 10:54 PDT.
+- **ROUTED SIGNOFF (main signoff.py, `kit/signoff/signoff.json`, CHECKED): NOT SIGNED.**
+  TT setup +232.12 | FF hold -7.09 ps / 11 endpoints, TNS -35.6 (sdc -20.94; vclk pin-flop mean 371.38) |
+  related-pair skew TT/FF 85.16/75.72 (limit 80; worst launch g_prog[1].g_r.u_hi_wd/q[164] -> capture SRAM g_prog[1].u_hi,
+  CRPR 0.42; TT hold pair 85.5 pcap[815] -> p_q[303]; p99 raw 79.33 TT) | spread info 62.11/61.56 | DRC 0, antenna 0 |
+  DRV TT slew 3, cap 0 | sdc_lint PASS, face_guard PASS | timing_modes FAIL = kit binding mismatch config.mk
+  OT_VCLK_FF 363.43 vs sdc_lint insertion_ff_ps 381.14 (pre-existing in the copied s8b kit).
+- Reading: the geometry fix holds (GRT 0, DRT 0, setup +232). Remaining FAILs: (a) FF hold -7.09/11 - the GRT-stage
+  repair here is the ORFS MCMM default at margin 5 (the lost s8b kit had an FF-frame hold step); (b) TT pair 85.2 is a
+  write-data FF -> SRAM capture pair (macro insertion class), 5.2 ps over; (c) slew 3; (d) the vclk binding mismatch.
 
-Collect: `kit/run_route.log` (DRT per-iteration violation count; final `5_2_route.json` DRC), `kit/signoff.log` +
+Collected 10:59 (above). Original collect list: `kit/run_route.log` (DRT per-iteration violation count; final `5_2_route.json` DRC), `kit/signoff.log` +
 `kit/signoff/signoff.json` (TT setup, FF hold, related-pair skew TT/FF = the routed clock check for the 354 moved
 sinks, DRV, DRC). If signoff.py errors on a missing kit helper, rerun it with the command at the end of
 `run_prog_route.sh`. Gate: routed gates decide (GEOM-58 cond. 3); then routed LEC + PG census on 6_final.
 
+
+## Next step (DEFAULT, one route)
+Same prepped 4_cts.odb, GRT stage with the kit's FF-frame hold repair (OT_VCLK_FF rebound to the measured 381.14 so
+timing_modes binds, hold margin 15 on FF only, as the FLOW FF-only form), plus the FLOW repair_design for the 3 TT slew
+nets; the 85.2-ps write-data -> SRAM pair goes to the macro early-tap balance (12.3 v5.0) owner, not a clock ECO.
