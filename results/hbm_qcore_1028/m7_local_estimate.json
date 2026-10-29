@@ -1,0 +1,48 @@
+{
+  "status": "AFFINE_GROUP_ESTIMATE_NOT_LEGAL_PLACEMENT",
+  "guide_section": 3,
+  "guide_um": [
+    116.64,
+    120.96,
+    220.32,
+    181.44
+  ],
+  "cells": 12270,
+  "cell_area_um2": 1751.72868,
+  "guide_fill": 0.2793573288690476,
+  "demand": {
+    "channel_v_max": 1.035,
+    "channel_v_at": [
+      140.0,
+      150.0,
+      137.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 0,
+    "col_v_max": 1.035,
+    "col_v_at": [
+      140.0,
+      137.5
+    ],
+    "tracks_v_per_um": 48.18,
+    "channel_h_max": 0.921,
+    "channel_h_at": [
+      90.0,
+      98.0,
+      82.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 0,
+    "tracks_h_per_um": 48.18,
+    "demand_layers": "M2-M7"
+  },
+  "reach": {
+    "r2r_max": 288.41,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 25221,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_bin_rf_rd_cmd/q\\[51\\]$_DFF_P_ -> u_fcore.g_sec\\[1\\].u_s/r5q\\[2\\]\\[1\\]$_DFF_P_"
+  },
+  "all_guided_to_any_original_core_point_bound_um": 393.12,
+  "limits": "Original macros/pins/islands. M7 permission and typed legal-placement/GRT proof still required. Affine model may compress local clusters."
+}

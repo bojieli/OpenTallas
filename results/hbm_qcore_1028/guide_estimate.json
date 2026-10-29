@@ -1,0 +1,60 @@
+{
+  "status": "AFFINE_GROUP_MODEL_NOT_LEGAL_PLACEMENT",
+  "groups": {
+    "1": {
+      "cells": 12408,
+      "area_um2": 1763.8155,
+      "guide": [
+        8.64,
+        82.08,
+        108.0,
+        125.28
+      ]
+    },
+    "2": {
+      "cells": 12256,
+      "area_um2": 1750.19778,
+      "guide": [
+        116.64,
+        82.08,
+        216.0,
+        125.28
+      ]
+    }
+  },
+  "reach": {
+    "r2r_max": 305.26,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 25221,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_fcore.g_sec\\[0\\].u_s/raw_o\\[159\\]$_DFFE_PP_ -> u_fcore.rd\\[4\\]\\[31\\]$_DFF_P_"
+  },
+  "demand": {
+    "channel_v_max": 1.058,
+    "channel_v_at": [
+      180.0,
+      190.0,
+      67.5
+    ],
+    "blocked_v": 0,
+    "detour_v": 0,
+    "col_v_max": 1.226,
+    "col_v_at": [
+      60.0,
+      87.5
+    ],
+    "tracks_v_per_um": 36.46,
+    "channel_h_max": 2.296,
+    "channel_h_at": [
+      86.0,
+      96.0,
+      82.5
+    ],
+    "blocked_h": 0,
+    "detour_h": 0,
+    "tracks_h_per_um": 36.46,
+    "demand_layers": "M2-M5"
+  },
+  "any_guided_to_any_core_point_bound_um": 332.64,
+  "limits": "All group data/control/logic included. Affine distribution models locality only; placement/GRT decides."
+}

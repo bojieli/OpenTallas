@@ -216,3 +216,30 @@ def test_explicit_die_trial_base36_path_labels():
         E.path_id('h0a')
     with pytest.raises(E.StageError):
         E.path_id('hA', 'base36')
+
+
+def test_source_specific_retime_stages_keep_distinct_physical_pins(tmp_path):
+    import copy
+    b = _bind()
+    old = f'st:{P_L}'
+    new = old + '@origin2'
+    b['regions'][new] = dict(b['regions'][old], tree_port=f'start:st:{P_ROOT}->{new}')
+    b['start_ports'][b['regions'][new]['tree_port']] = dict(src=f'st:{P_ROOT}', dst=new,
+                                                           launch_part=None, capture_part=None)
+    v, t = _tree()
+    doc, sv, _, _ = E.emit(b, _meta(), v, t)
+    a, c = [next(x for x in doc['stages'] if x['region'] == n) for n in (old, new)]
+    assert a['node_cell'] == c['node_cell'] and a['clock_net'] == c['clock_net']
+    assert a['id'] != c['id'] and a['clock_port'] != c['clock_port']
+    assert a['rect_um'] != c['rect_um']
+    src = tmp_path/'src'
+    src.mkdir()
+    (src/'tap_arrivals_TT.json').write_text(json.dumps(_meta()))
+    arr = tmp_path/'arr'
+    arr.write_text(''.join(f"T {s['clock_port']} {100+i} {90+i}\nF {s['clock_port']} {110+i} {95+i}\n"
+                           for i,s in enumerate(doc['stages'])))
+    E.proof_with_stages(src, doc, {'TT':str(arr)}, tmp_path/'out')
+    ts = {x['port']:x for x in json.loads((tmp_path/'out/tap_arrivals_TT.json').read_text())['taps']}
+    aa, cc = ts[f'__st__{P_L}'], ts[f'__st__{P_L}@origin2']
+    assert aa['tree_path'] == cc['tree_path'] == P_L
+    assert aa['late_ps'] != cc['late_ps'] and aa['xy_um'] != cc['xy_um']

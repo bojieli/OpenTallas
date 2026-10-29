@@ -1,0 +1,10 @@
+ROW 1 launch_clear 330 delayed_clear 501 prev_last_emit 384 first_qslot 350
+ROW 2 launch_clear 658 delayed_clear 829 prev_last_emit 712 first_qslot 678
+ROW 3 launch_clear 986 delayed_clear 1157 prev_last_emit 1040 first_qslot 1006
+ROW 4 launch_clear 1314 delayed_clear 1485 prev_last_emit 1368 first_qslot 1334
+ROW 5 launch_clear 1642 delayed_clear 1813 prev_last_emit 1696 first_qslot 1662
+ROWCLEAR_PASS D171 pitch328 rows6 checks3444 emits192 keys1026 clear_at_launch_drain_violations5
+- tb_idxq_row_clear.sv:50: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.024 s; speed 143.858 us/s
+- Verilator: cpu 0.024 s on 1 threads; allocated 7 MB

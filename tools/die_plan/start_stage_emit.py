@@ -26,6 +26,7 @@ then the rows above / below), clear of every die clock cell of the tree and of t
 die_trial SiteMap point when --plan is given.  No timing value is used.  Default flows are unchanged (new file).
 """
 import argparse
+import hashlib
 import json
 import re
 import shutil
@@ -76,7 +77,7 @@ def stages_of(bind):
         if r.get("virtual"):
             if not x.startswith("st:"):
                 raise StageError(f"virtual region {x!r} is not an 'st:<tree_path>' stage")
-            out[x] = x[3:]
+            out[x] = x[3:].split("@", 1)[0]
     return out
 
 
@@ -159,6 +160,8 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
         if inst is None:
             raise StageError(f"stage {x}: tree path not in the proof's node_cell")
         i = sv_name(inst[3:] if inst.startswith("ck_") else inst)    # one stage per tree node = its node cell
+        if "@" in x:
+            i += "_r" + hashlib.sha256(x.encode()).hexdigest()[:16]
         if i in ids.values():
             raise StageError(f"two stages on one node cell {inst}")
         ids[x] = i
@@ -295,8 +298,9 @@ def proof_with_stages(proof, stages_doc, arrs, out):
         meta = d
         have = {t["port"] for t in d["taps"]}
         for s in st:
-            path = s["region"][3:]
-            k = f"__st__{path}"
+            identity = s["region"][3:]
+            path = identity.split("@", 1)[0]
+            k = f"__st__{identity}"
             if k in have:
                 raise StageError(f"proof {pf} already has {k}")
             if s["clock_port"] not in T:
