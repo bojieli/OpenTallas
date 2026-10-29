@@ -250,13 +250,10 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
             parent_reset = (f"st_{by_region[s['parent']]['id']}_rraw" if s['parent'] in by_region
                             else 'rraw_' + sv_name(s['parent']))
             name, clk = s['id'], s['clock_port']
-            sv += [f"    reg st_{name}_rr0, st_{name}_rraw;"]
-            reset_in = parent_reset
-            if s['edge_fall']:
-                sv += [f"    reg st_{name}_rrf;", f"    always @(negedge {clk}) st_{name}_rrf <= {parent_reset};"]
-                reset_in = f"st_{name}_rrf"
-            sv += [f"    always @(posedge {clk}) begin st_{name}_rr0 <= {reset_in}; st_{name}_rraw <= st_{name}_rr0; end"]
             local_reset = f"st_{name}_rraw"
+            sv += [f"    wire {local_reset};",
+                   f"    ot_die_start_reset_relay #(.EDGE_FALL({int(s['edge_fall'])})) u_rst_{name} "
+                   f"(.clk({clk}), .d({parent_reset}), .q({local_reset}));"]
             s['reset_parent'] = parent_reset
             s['reset_output'] = local_reset
             s['reset_flops'] = 2 + int(s['edge_fall'])
@@ -272,6 +269,15 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     for o in outs:
         sv.append(f"    assign {o['net']} = st_{o['stage']}_start;")
     sv.append("endmodule")
+    if reset_wave:
+        sv += ["(* keep_hierarchy *) module ot_die_start_reset_relay #(parameter bit EDGE_FALL=0) (",
+               "    input wire clk, input wire d, output wire q);",
+               '    (* keep = "true" *) reg r0, r1;', "    wire x;",
+               "    if (EDGE_FALL) begin: g_fall",
+               '        (* keep = "true" *) reg rf;', "        always @(negedge clk) rf <= d;",
+               "        assign x=rf;", "    end else begin: g_rise assign x=d; end",
+               "    always @(posedge clk) begin r0<=x; r1<=r0; end",
+               "    assign q=r1;", "endmodule"]
     # die clock tree: one tap port per stage on its node cell's output net, pin at the stage's clock pin site
     mh = re.search(r"module\s+(\w+)\s*\(([^)]*)\);", ctree_v)
     if mh is None:
