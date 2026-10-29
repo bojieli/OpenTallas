@@ -57,3 +57,27 @@ partitions and source mismatches, then merges their independent physical types
 and recalculates all lane latencies. This does not replace or restart the live
 serial diagnostic; it is supplied for the parent's subsequent composed input.
 The subset/compose interface has syntax checks only until a real shard run.
+
+## Actual-site structural failure and repair
+
+The first serial allocation failed at NE_b101/L12x1 after nine other bank
+partitions completed. Adding up to eight stages did not fix it. Diagnosis: the
+shared adjacent-face helper abruptly rotates the ribbon offset at a centroid
+corner; a 471.5um ribbon therefore requires an impossible >403um bit jump.
+Private turn_corridor.py replaces that discontinuity with each actual bit's
+continuous Manhattan corner, reusing the shared Z-ribbon fraction method and
+unchanged post-allocation paired-hop checks. No shared default is modified.
+Isolated NE_b101 repair is running before any full rerun.
+
+Also corrected typed descriptor order to follow canonical global port order
+through each instance mirror. The raw pin order and actual allocated bit sites
+were already correct; finish.py normalizes descriptor metadata and rehashes
+types without moving or renumbering a physical bit. It rejects incomplete
+allocation input or incompatible shared-type contracts.
+
+The continuous-turn isolated NE_b101 trial passed actual-site construction:
+all six slots, 24,345 internal FT FFs, maximum paired hop 396.1um. L12 itself
+has seven stages and max 287.5um; its previous five stages were insufficient
+after the real window expansion. L48 and L53 also need extra stages. See the
+narrow summary and personally viewed allocated picture; these are not routed
+STA or whole-die gates. The M7-only compressed-band successor is running.

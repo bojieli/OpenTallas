@@ -8,6 +8,8 @@ ap=argparse.ArgumentParser();ap.add_argument('geometry');ap.add_argument('out');
 import schema as S
 import ft_corridor as F
 import hub_repack as HR
+import turn_corridor
+turn_corridor.install(F)
 from tools.die_trial.legal_sites import RowAllocator
 src=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((src/'die_plan.json').read_text());report=json.loads((src/'report.json').read_text());report['status']='ALLOCATING';report['allocation_failures']=[];report['clock_ff_load']={};model=S.Plan(P);parts=model.parts;selected=set(a.parts.split(',')) if a.parts else set(report['changed_types']);report['completed_parts']=[];report['wrapper_transport_ff']={}
 # All PHY supply domains are physical keepouts, including digital-core side strips.
@@ -81,6 +83,8 @@ try:
   report['completed_parts'].append(pn)
   report['wrapper_transport_ff'][pn]=dict(old=info.get('old_wrapper_transport_ff'),new=sum(b['width']+1 for b in t.get('buses',[]))+sum((s['width']+1)*s['stations'] for s in slots))
   (out/'progress.json').write_text(json.dumps({'completed_parts':report['completed_parts'],'ft':report['ft'],'internal':report['internal'],'clock_ff_load':report['clock_ff_load']},indent=1)+'\n')
+  (out/'parts').mkdir(exist_ok=True)
+  (out/'parts'/(pn+'.json')).write_text(json.dumps(dict(part=pn,type=tn,template=t,info=info),separators=(',',':'))+'\n')
   print('PART_COMPLETE',pn,len(ledger),report['clock_ff_load'][pn],flush=True)
  # New module/view identity follows the full physical interface. Existing source
  # and core-conns templates are identified explicitly for the parent's overlay.

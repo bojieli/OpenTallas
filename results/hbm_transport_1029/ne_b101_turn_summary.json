@@ -1,0 +1,333 @@
+{
+ "source_plan_sha256": "a4b0cb3df1672afdd3774e54d687fface8080b3f40e98531673346edfc29a59b",
+ "source_census_sha256": "26538b4872fe8f69a100c4c29c59ecb49800759426a496b1e6ea5d475ad2ab1e",
+ "status": "PARTIAL_FT_SITES_ALLOCATED",
+ "ft": [
+  {
+   "len_um": 1615.3,
+   "stations": 7,
+   "positions_um": [
+    248.0,
+    454.0,
+    656.0,
+    870.0,
+    1074.0,
+    1338.0
+   ],
+   "proj_mean_um": [
+    2.7,
+    5.5,
+    0.0,
+    6.6,
+    7.2,
+    0.0
+   ],
+   "max_proj_um": 40.0,
+   "hops_um": [
+    264.9,
+    241.6,
+    240.6,
+    236.8,
+    239.5,
+    287.5,
+    279.4
+   ],
+   "max_alloc_disp_um": 31.29,
+   "path": [
+    [
+     725.76,
+     266.32
+    ],
+    [
+     399.35,
+     266.32
+    ],
+    [
+     399.35,
+     1555.2
+    ]
+   ],
+   "type": "__transport_NE_b101",
+   "slot": "L12x1",
+   "width": 2828,
+   "budget_um": 403.0
+  },
+  {
+   "len_um": 1312.5,
+   "stations": 6,
+   "positions_um": [
+    240.0,
+    446.0,
+    652.0,
+    826.0,
+    1070.0
+   ],
+   "proj_mean_um": [
+    29.7,
+    29.3,
+    29.7,
+    0.0,
+    0.0
+   ],
+   "max_proj_um": 120.0,
+   "hops_um": [
+    337.1,
+    216.8,
+    237.9,
+    245.4,
+    253.3,
+    247.4
+   ],
+   "max_alloc_disp_um": 26.68,
+   "path": [
+    [
+     0.0,
+     58.82
+    ],
+    [
+     104.51,
+     58.82
+    ],
+    [
+     104.51,
+     645.6
+    ],
+    [
+     725.76,
+     645.6
+    ]
+   ],
+   "jog_um": 104.511,
+   "jog_lane_um": 29.083,
+   "type": "__transport_NE_b101",
+   "slot": "L48x11",
+   "width": 634,
+   "budget_um": 403.0
+  },
+  {
+   "len_um": 1312.7,
+   "stations": 6,
+   "positions_um": [
+    248.0,
+    454.0,
+    660.0,
+    832.0,
+    1072.0
+   ],
+   "proj_mean_um": [
+    28.7,
+    28.3,
+    28.8,
+    0.0,
+    0.0
+   ],
+   "max_proj_um": 120.0,
+   "hops_um": [
+    315.9,
+    240.6,
+    237.1,
+    266.8,
+    246.0,
+    243.0
+   ],
+   "max_alloc_disp_um": 31.89,
+   "path": [
+    [
+     725.76,
+     749.76
+    ],
+    [
+     621.75,
+     749.76
+    ],
+    [
+     621.75,
+     162.82
+    ],
+    [
+     0.0,
+     162.82
+    ]
+   ],
+   "jog_um": 621.753,
+   "jog_lane_um": 28.075,
+   "type": "__transport_NE_b101",
+   "slot": "L53x1",
+   "width": 612,
+   "budget_um": 403.0
+  },
+  {
+   "len_um": 1053.1,
+   "stations": 3,
+   "positions_um": [
+    358.0,
+    710.0
+   ],
+   "proj_mean_um": [
+    0.1,
+    13.3
+   ],
+   "max_proj_um": 40.0,
+   "hops_um": [
+    389.1,
+    396.1,
+    382.1
+   ],
+   "max_alloc_disp_um": 4.06,
+   "path": [
+    [
+     680.43,
+     1555.2
+    ],
+    [
+     680.43,
+     547.39
+    ],
+    [
+     725.76,
+     547.39
+    ]
+   ],
+   "type": "__transport_NE_b101",
+   "slot": "L74x1",
+   "width": 542,
+   "budget_um": 403.0
+  },
+  {
+   "len_um": 1362.4,
+   "stations": 4,
+   "positions_um": [
+    402.0,
+    770.0,
+    1106.0
+   ],
+   "proj_mean_um": [
+    32.5,
+    32.5,
+    0.9
+   ],
+   "max_proj_um": 40.0,
+   "hops_um": [
+    367.9,
+    368.0,
+    373.7,
+    255.3
+   ],
+   "max_alloc_disp_um": 3.25,
+   "path": [
+    [
+     0.0,
+     215.01
+    ],
+    [
+     281.99,
+     215.01
+    ],
+    [
+     281.99,
+     851.64
+    ],
+    [
+     725.76,
+     851.64
+    ]
+   ],
+   "jog_um": 281.986,
+   "jog_lane_um": 0.55,
+   "type": "__transport_NE_b101",
+   "slot": "L117x8",
+   "width": 11,
+   "budget_um": 403.0
+  },
+  {
+   "len_um": 1363.1,
+   "stations": 4,
+   "positions_um": [
+    316.0,
+    634.0,
+    1020.0
+   ],
+   "proj_mean_um": [
+    10.0,
+    0.3,
+    2.1
+   ],
+   "max_proj_um": 40.0,
+   "hops_um": [
+    326.9,
+    328.9,
+    394.2,
+    336.0
+   ],
+   "max_alloc_disp_um": 5.75,
+   "path": [
+    [
+     0.0,
+     216.3
+    ],
+    [
+     444.99,
+     216.3
+    ],
+    [
+     444.99,
+     853.66
+    ],
+    [
+     725.76,
+     853.66
+    ]
+   ],
+   "jog_um": 444.988,
+   "jog_lane_um": 0.137,
+   "type": "__transport_NE_b101",
+   "slot": "L138x8",
+   "width": 2,
+   "budget_um": 403.0
+  }
+ ],
+ "clock_ff_load": {
+  "NE_b101": 24345
+ },
+ "wrapper_transport_ff": {
+  "NE_b101": {
+   "old": null,
+   "new": 29494
+  }
+ },
+ "allocation_failures": [
+  {
+   "part": "NE_b101",
+   "attempt": 0,
+   "error": "L12x1: no chain within 403.0 um after tightening by 0 um"
+  },
+  {
+   "part": "NE_b101",
+   "attempt": 1,
+   "error": "L12x1: no chain within 403.0 um after tightening by 25 um"
+  },
+  {
+   "part": "NE_b101",
+   "attempt": 2,
+   "error": "L48x11: no chain within 403.0 um after tightening by 0 um"
+  },
+  {
+   "part": "NE_b101",
+   "attempt": 3,
+   "error": "L48x11: no chain within 403.0 um after tightening by 29 um"
+  },
+  {
+   "part": "NE_b101",
+   "attempt": 4,
+   "error": "L53x1: no chain within 403.0 um after tightening by 0 um"
+  },
+  {
+   "part": "NE_b101",
+   "attempt": 5,
+   "error": "L53x1: no chain within 403.0 um after tightening by 25 um"
+  }
+ ],
+ "internal": [],
+ "scope": "NE_b101 only; continuous-turn repair, M7-only Z-band successor pending",
+ "max_actual_pair_um": 396.1
+}

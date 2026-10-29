@@ -37,12 +37,12 @@ def shared(s,d):
  if abs(A[3]-B[1])<.6 or abs(A[1]-B[3])<.6:
   return ('N' if A[1]<B[1] else 'S'),max(A[0],B[0]),min(A[2],B[2])
  raise ValueError(f'nonabutted {s}|{d}')
-def endpoint(part,bus,width,window,df,layers,direction,slot=False):
+def endpoint(part,bus,width,window,df,layers,direction,slot=False,gorder="lsb_low"):
  t=typ(part);changed.add(part);changed_buses[part].add(bus)
  # Die/type orientations are involutions, with face coordinate reversal.
  tf=old.type_face(part,df);ori=parts[part].get('orient','R0');axis=1 if tf in 'EW' else 0;lo,hi=window;lo-=parts[part]['origin_um'][axis];hi-=parts[part]['origin_um'][axis]
  if ori in (('MX','R180') if tf in 'EW' else ('MY','R180')):lo,hi=t['outline_um'][axis]-hi,t['outline_um'][axis]-lo
- order='lsb_high' if ori in (('MX','R180') if tf in 'EW' else ('MY','R180')) else 'lsb_low'
+ order=('lsb_high' if gorder=='lsb_low' else 'lsb_low') if ori in (('MX','R180') if tf in 'EW' else ('MY','R180')) else gorder
  bn=next((b for b in t.get('buses',[]) if b['name']==bus),None)
  if bn is not None:bn.update(width=width,face=tf,window_um=[round(lo,6),round(hi,6)],layers=layers,order=order);return
  sl=next((s for s in t.get('ft_slots',[]) if bus in (s['name']+'_i',s['name']+'_o')),None)
@@ -117,7 +117,7 @@ try:
    if end>hi-.08:raise ValueError(f'edge {s}|{d} lacks legal track/window supply: requires{end-lo:.3f}um available{hi-lo:.3f}um')
    f,_,_=shared(pr['src']['part'],pr['dst']['part']);pr.update(face=f,layers=lays,window_um=[round(cursor,6),round(end,6)]);pr.pop('segments',None)
    for side in ('src','dst'):
-    ep=pr[side];endpoint(ep['part'],ep['bus'],pr['width'],pr['window_um'],f if side=='src' else S.OPP[f],lays,'out' if side=='src' else 'in')
+    ep=pr[side];endpoint(ep['part'],ep['bus'],pr['width'],pr['window_um'],f if side=='src' else S.OPP[f],lays,'out' if side=='src' else 'in',gorder=pr.get('order','lsb_low'))
    cursor=end+.08
   report['edges'].append(dict(parts=[s,d],span_um=hi-lo,used_um=cursor-lo,ports=len(ps),pins=sum(S.port_pins_count(p) for p in ps)))
  # Legacy slots often infer their opposite window from die ports. Materialize
@@ -128,7 +128,7 @@ try:
    ep=pr[side]
    if ep['part'] not in worktypes:continue
    df=pr['face'] if side=='src' else S.OPP[pr['face']]
-   endpoint(ep['part'],ep['bus'],pr['width'],pr['window_um'],df,pr['layers'],'out' if side=='src' else 'in')
+   endpoint(ep['part'],ep['bus'],pr['width'],pr['window_um'],df,pr['layers'],'out' if side=='src' else 'in',gorder=pr.get('order','lsb_low'))
  changed_buses.clear();changed_buses.update(saved_changed)
  # Full new/changed FT geometry invalidates every affected explicit-site seed.
  for part in sorted(changed):
