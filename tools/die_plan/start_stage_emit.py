@@ -156,6 +156,10 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
     # Resolve clock source from the actual A/Y connectivity, independently of placement identity.
     path_by_cell = {}
     for path, inst in ncell.items():
+        try:
+            path_id(path, path_encoding)
+        except StageError:
+            continue  # region-name aliases in proof.node_cell are not clock-tree paths
         key = inst if inst in cells else f"ck_{inst}" if f"ck_{inst}" in cells else None
         if key is None or key in path_by_cell:
             raise StageError(f"node_cell is missing or ambiguous for {path}: {inst}")
