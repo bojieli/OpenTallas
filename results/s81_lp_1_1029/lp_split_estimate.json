@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81_lp_split_estimate.v1",
+ "lane": "S81-LP-1",
+ "date": "2026-10-29",
+ "partition": "s_0S_LP type dsdv_slice_lepw_mus_LP__t2 (top s81p_dsdv_slice_lepw_mus_LP__t2), outline 1442.88 x 1226.88 um, plan pins unchanged",
+ "source": "exact Codex census closure intel1:/srv/opentallas-scratch2/claude/codex-s81-lp-parent-1029/census_complete (source graph e4ad09a663, manifest asbuilt_b178_coll_s13pfunc.json, same 93 files/defines/chparams); only the synth top command or one blackbox stub changes per probe",
+ "cap_std_cells_per_run": 400000,
+ "measured": {
+  "flat_full_LP": {"std": 556766, "srams": 265, "status": "CHECKED (Codex census_complete mapped_stat.json, same method)"},
+  "hierarchical_no_flatten": {"std": 676908, "ff": 182130, "status": "CHECKED own probe hiermap (synth no -flatten + dfflibmap + abc); per-module boundaries = what a hard child sees",
+   "children_each": {"u_u_ln0..3 dsfd_coll_lane_w_safe8_ntf CORE_CRED12": {"std": 83003, "ff": 19830, "srams": 55, "std_area_um2": 11927.2, "sram_area_um2": 62002},
+                     "u_u_lnl0..3 ot_s81_mu72_lnland_nst": {"std": 39665, "ff": 10486, "srams": 0, "std_area_um2": 4881.3},
+                     "u_u_lep ot_s81sl_lep_mu_ab_tpr": {"std": 90104, "ff": 29219, "srams": 40},
+                     "u_cland_coll_i0..3 ot_dp_clk_landing W515": {"std": 12566, "ff": 2984}}},
+  "flat_parent_with_4_coll_lanes_blackboxed": {"std": 322070, "ff": 96340, "srams": 45, "lane_masters": 4, "status": "CHECKED own probe flat_lanebb (identical census script, dsfd_coll_lane_w_safe8_ntf = exact-port blackbox stub)"}
+ },
+ "options": [
+  {"id": "A (Codex)", "hard_children": "4x u_u_lnl (lnland)", "parent_std": 398106, "headroom": 1894, "verdict": "FAIL: below clock-leaf/CTS/hold/repeater growth (Codex: >=2111 clock leaves alone)"},
+  {"id": "B (DEFAULT)", "hard_children": "4x u_u_ln0..3 coll lanes (one master dsfd_coll_lane_w_safe8_ntf CORE_CRED12)", "parent_std": 322070, "child_std": 83003, "headroom": 77930,
+   "est_parent_after_pnr_growth_5_10pct": [338174, 354277], "verdict": "PASS estimate (parent CHECKED synth count; growth UNCHECKED)"},
+  {"id": "C (fallback)", "hard_children": "4x coll lanes + 4x lnland", "parent_std_est": 163410, "verdict": "PASS, UNCHECKED arithmetic (322070 - 4x39665); adds a second new master; only if B measured parent > ~360k after place"}
+ ],
+ "why_B": ["u_u_ln* is a real module boundary already used as a hard tile family (physical/ref_tile/dscoll_lane_w_s12h, same RTL: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_safe4.sv unchanged on main since a19178766, byte-identical to the census snapshot)",
+           "single clock ck = LP clk, single reset rs: no multi-root/forwarded-clock interface (unlike the W515 cland cut)",
+           "no RTL logic change, no cycle change, partition plan pins unchanged; lane ports 2143 pins",
+           "one master x4 instances (fewest new types)"],
+ "lane_outline_estimate": {"sram_um2": 62002, "std_um2": 11927, "total_um2": 73929,
+   "old_tile": "dscoll_lane_w_s12h 725.76 x 583.2 = 423262 um2 (17% fill; 4 of them do not fit 1442.88 x 1226.88: 2 x 725.76 = 1451.52 > 1442.88); its CTS was 818 ps TT insertion (> 250 TT common core latency 12.3) -> NOT reusable, new kit needed",
+   "target": "~45% fill -> ~165000 um2 (e.g. ~432 x 388 um, aspect ~1.1), derive exactly from the parent slot (tile-outline-from-parent-slot rule); 4 lanes ~0.66 mm2 + parent rest (45 SRAM 144399 um2 + ~42.3k um2 std) ~0.37 mm2 at 50% = ~1.03 of 1.77 mm2", "status": "UNCHECKED estimate"},
+ "caveats": ["chb is chparam-tied 1 (S_u_ln*_chb) in the flat census; as a hard child chb becomes a pin (strap tie at parent) -> lane keeps both-chb logic (83003 vs flat share 58674/lane)",
+             "other LP types s_0N_LP lepw_mu, s_7S_LP lepe_nh_mus, s_7N_LP lepe_mu: plan contents say the same 'lep core + coll lanes (u_ln*) + MU land'; their counts NOT censused here (UNCHECKED)",
+             "lane boundary registration / face_guard for the new lane kit not yet run"]
+}
