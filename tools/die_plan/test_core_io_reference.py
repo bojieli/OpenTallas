@@ -66,3 +66,10 @@ def test_original_untagged_kit_stays_fixed_target(tmp_path):
     assert C.load(kd) is None and K.ff_binding(kd)[0]==[] and K.corner_modes(kd)[0]==[]
     p=kd/"config.mk";p.write_text(p.read_text().replace("250.0000","750.0000"))
     assert K.ff_binding(kd)[0]
+
+
+def test_existing_generator_text_precision_is_preserved(tmp_path):
+    kd,_=vehicle(tmp_path)
+    p=kd/"config.mk";p.write_text(p.read_text().replace("750.0000","750.0005"))
+    assert C.REFERENCE_TOL_PS==K.TOL
+    assert K.ff_binding(kd)[0]==[]

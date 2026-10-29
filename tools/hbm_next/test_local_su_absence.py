@@ -44,3 +44,21 @@ def test_no_implicit_mode_or_north_absence():
         VM.compile_schedule(layout(),dict(local_su_present=False,cycles=[{}]))
     with pytest.raises(ValueError,match='SW/SE'):
         VM.compile_schedule(layout('NW'),dict(local_su_present=False,build_mode='SU',cycles=[{}]))
+
+
+@pytest.mark.parametrize('mode', ['SU','MTP','MU'])
+def test_backing_memory_retains_real_idx_and_ring_words(mode):
+    cycles=[dict(rslot_v=255,rslot=sum(r << (3*b) for b in range(8)),
+                 wslot_v=255,wslot=sum(w << (3*b) for b in range(8))) for r in (4,5) for w in (3,4,5)]
+    base=VM.compile_schedule(layout(),dict(cycles=cycles))
+    result=VM.compile_schedule(layout(),dict(cycles=cycles,local_su_present=False,build_mode=mode,s_role_backing_only=True))
+    assert result['configuration_writes']==base['configuration_writes']
+    assert result['s_role_backing_only']['allowed_read_groups']==[4,5]
+
+
+@pytest.mark.parametrize('kind,owner', [('r',1),('r',2),('r',3),('w',1),('w',2),('w',6)])
+def test_absent_s_role_service_grant_refused(kind,owner):
+    schedule=dict(local_su_present=False,build_mode='MTP',s_role_backing_only=True,
+                  cycles=[{kind+'slot_v':1,kind+'slot':owner}])
+    with pytest.raises(ValueError,match='absent S-role service'):
+        VM.compile_schedule(layout(),schedule)

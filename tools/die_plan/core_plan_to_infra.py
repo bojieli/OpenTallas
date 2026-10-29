@@ -19,7 +19,7 @@ measurement (12.8 d / d1):
   * joint_nldm_plan load balance (leaf sink counts differ) with the plan model's TT/FF sink window as qualification
     (core_infra refuses the build outside 230-270 TT / 182.5-222.5 FF, window <= 20, slew <= 80; with --band info
     (12.3a v5.0, COORD RULING S81-CORE-LAT-R9) the band is reported as INFO and only window <= 20 + slew <= 80 gate).
-Sites file = OpenROAD dump (ROW0/ROW/FIXED/MASTER/PG lines) of the kit's 2_4_floorplan_pdn.odb.
+Sites file = OpenROAD dump (ROW0/ROW/FIXED/BLOCKAGE/MASTER/PG lines) of the kit's floorplan ODB.
 """
 import argparse, gzip, json, math, re, sys
 from pathlib import Path
@@ -33,7 +33,7 @@ class ConvertError(ValueError):
 
 
 def read_sites(path):
-    rows, fixed, masters, pg = [], [], {}, {"M4": [], "M5": []}
+    rows, fixed, blockages, masters, pg = [], [], [], {}, {"M4": [], "M5": []}
     row0 = None
     for l in Path(path).read_text().splitlines():
         f = l.split()
@@ -46,13 +46,21 @@ def read_sites(path):
             rows.append((float(f[1]), float(f[2]), f[3], int(f[4])))
         elif f[0] == "FIXED":
             fixed.append(tuple(map(float, f[3:7])))
+        elif f[0] == "BLOCKAGE":
+            if len(f) != 6:
+                raise ConvertError(f"{path}: malformed hard BLOCKAGE row")
+            rect = tuple(map(float, f[2:6]))
+            if not all(math.isfinite(v) for v in rect) or rect[0] >= rect[2] or rect[1] >= rect[3]:
+                raise ConvertError(f"{path}: invalid hard BLOCKAGE rectangle")
+            blockages.append(rect)
         elif f[0] == "MASTER":
             masters[f[1]] = (float(f[2]), float(f[3]))
         elif f[0] == "PG" and f[2] in pg:
             pg[f[2]].append(tuple(map(float, f[3:7])))
     if row0 is None or not rows or not masters:
         raise ConvertError(f"{path}: sites file needs ROW0, ROW and MASTER lines")
-    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, masters=masters, pg=pg)
+    return dict(row0=row0, rows=sorted(rows, key=lambda r: r[1]), fixed=fixed, blockages=blockages,
+                masters=masters, pg=pg)
 
 
 def pg_obstructions(sites, pad_half_um=0.04):
@@ -72,7 +80,7 @@ class SiteMap:
         self.sw = self.r0["site_w"]; self.sh = self.r0["site_h"]; self.ns = self.r0["nsites"]
         self.occ = [dict() for _ in self.rows]          # row -> {site index: owner}
         self.straps = [(r[0] - strap_clear_um, r[2] + strap_clear_um) for r in sites["pg"]["M5"]]
-        for (a, b, c, d) in sites["fixed"]:
+        for (a, b, c, d) in sites["fixed"] + sites.get("blockages", []):
             for k, row in enumerate(self.rows):
                 if row[1] < d - 1e-6 and row[1] + self.sh > b + 1e-6:
                     for s in range(self._s(a, k), self._s(c - 1e-6, k) + 1):
