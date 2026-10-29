@@ -1,0 +1,5 @@
+HEAD_DCHN PASS checked=732 mutant_caught=64 frames=64 added_cycles=0
+- /srv/opentallas-scratch2/claude/codex-head-count/exact1/tb.sv:56: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 624ns; walltime 0.102 s; speed 6.089 us/s
+- Verilator: cpu 0.102 s on 1 threads; allocated 12 MB
