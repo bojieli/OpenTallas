@@ -50,13 +50,16 @@ module tb_keybuf_np4;
    // Sample before the SRAM read edge, exactly where the scorer samples the
    // replay. This also checks simultaneous PRE(next)/REPLAY(current).
    if(raw!==gold)$fatal(1,"LOCKSTEP_DATA MUT=%0d cycle=%0d pbase=%0d replay=%0d",MUT,cycles,pbase,rv);
-   if(gold!==want)$fatal(1,"REFERENCE_DATA cycle=%0d pbase=%0d replay=%0d",cycles,pbase,rv);
+   if(gold!==want)begin
+    for(p=0;p<NP;p=p+1)$display("REFDIAG lane=%0d tag_g=%h tag_w=%h data_equal=%b",p,gold[p*1099+:11],want[p*1099+:11],gold[p*1099+11+:1088]===want[p*1099+11+:1088]);
+    $fatal(1,"REFERENCE_DATA cycle=%0d pbase=%0d replay=%0d index=%0d",cycles,pbase,rv,ri);
+   end
    checks=checks+2;
    @(posedge clk);
    // The actual macro is read-before-write for a same-address collision.
-   if(pv)read_data=memory[8'(pi)];
+   if(pv)read_data=memory[pi & 255];
    if(lv)begin
-    for(p=0;p<NP;p=p+1)memory[8'(li)][p*1088+:1088]=key_in[p*1099+11+:1088];
+    for(p=0;p<NP;p=p+1)memory[li & 255][p*1088+:1088]=key_in[p*1099+11+:1088];
     writes=writes+1;
    end
    #1;
