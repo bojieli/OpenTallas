@@ -214,10 +214,12 @@ def cmd_compose(a):
     (out / "landed_plan.json").write_text(json.dumps(raw, indent=1) + "\n")
     (out / "landed_sidecar.json").write_text(json.dumps(side, indent=1) + "\n")
     P = S.Plan(raw, str(out / "landed_plan.json"))
-    lc = LC.check(P)
+    lc = LC.check(P, sidecar=side)
     nl = CL.network_lane_cycles(raw)
     pf = side["collector"]["placement_failures"]
-    rep["compose"] = dict(status="OK", types_before=len(plan["partition_types"]), types_after=len(raw["partition_types"]),
+    # DIE-HEAD-21 (COORD 10-28 22:37): fail-closed -- any landing-contract error (after the declared START tree is
+    # proved) is a FAIL verdict and a non-zero exit, never "OK" with errors
+    rep["compose"] = dict(status="FAIL" if lc["errors"] else "OK", types_before=len(plan["partition_types"]), types_after=len(raw["partition_types"]),
                           new_ports=len(raw["ports"]) - len(plan["ports"]),
                           infra_edges=len(raw["clock"]["landing_network"]["edges"]),
                           placement_failures=len(pf), placement_failures_by_type=dict(collections.Counter(f["type"] for f in pf)),
@@ -227,9 +229,13 @@ def cmd_compose(a):
                                                 edges=lc["edges"], max_hop_um=round(lc["max_hop_um"], 3)),
                           network_lane_cycles=dict(lanes=len(nl), total=sum(nl.values())),
                           observer=obs)
+    if "start_tree" in lc:
+        rep["compose"]["landing_contract"]["start_tree"] = lc["start_tree"]
+    if lc["errors"]:
+        rep["compose"]["error"] = f"landing_contract: {len(lc['errors'])} error(s), first: {lc['errors'][0]}"
     (out / "compose_report.json").write_text(json.dumps(rep, indent=1) + "\n")
     print(json.dumps(rep, indent=1))
-    return 0
+    return 1 if lc["errors"] else 0
 
 
 def phy_rect_type_frame(plan, tn):

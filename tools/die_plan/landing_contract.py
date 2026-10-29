@@ -4,9 +4,11 @@ Like reset wavefront pins and die clock taps, these scalar endpoints are not
 functional R8 buses. Ordinary port alignment/layer rules remain unchanged.
 """
 import math
+import re
 
 
-def check(P):
+def check(P,sidecar=None):
+    """sidecar: optional compose sidecar; with it a declared START tree must equal the sidecar's (see _start_tree_check)."""
     net=P.clock.get("landing_network")
     if not net:return dict(errors=[],pins=0,edges=0,max_hop_um=0)
     errors=[];pinmap={};count=0
@@ -45,15 +47,130 @@ def check(P):
             hop=sum(abs(a-b) for a,b in zip(*points));maxhop=max(maxhop,hop)
             limit=float(edge.get("max_hop_um",405))
             if limit>405 or hop>limit+1e-6:errors.append(f"{edge.get('id')}: actual endpoint hop {hop:.3f}um exceeds405")
+    st=net.get("start_tree")
+    st_sum=None;opened=set()
+    if st is not None:
+        st_sum,opened=_start_tree_check(P,st,pinmap,uses,errors,sidecar)
+    elif sidecar is not None and ((sidecar.get("count_aligned") or {}).get("start_pins") or {}).get("ports"):
+        errors.append("start tree: sidecar count_aligned.start_pins present but the plan declares no landing_network.start_tree")
     for pn,p in P.parts.items():
         for name in pinmap[p["type"]]:
             n=uses.get((pn,name),0)
+            if (pn,name) in opened:continue          # declared open START launch output (proved in _start_tree_check)
+            if st is not None and name==START_PIN_OUT and n>=1:continue   # one launch pin, fanned out at the die top
             if n!=1:errors.append(f"{pn}.{name}: infrastructure pin used {n} times (no absent-child ties)")
     obs=net.get("root_observer",{})
     if obs.get("part") not in P.parts or not all(obs.get(k) for k in ("module","fault_port","ready_port")):
         errors.append("real local controller observer is required (no new external status ports)")
     return dict(errors=errors,pins=count,edges=len(net.get("edges",[])),max_hop_um=maxhop,
-                physical_qualified=False,observer=obs)
+                physical_qualified=False,observer=obs,**({"start_tree":st_sum} if st_sum is not None else {}))
+
+
+# ---- external START tree (DIE-HEAD-11 start_ports; COORD 10-28 22:37 TOK-HEAD-LAND-1 ASK2 -> DIE-HEAD-21) ----------
+# A count-aligned bind with start_tree="clock" gives each region origin ONE cland_tstart_in and each launch partition ONE
+# cland_tstart_out (clock_landing_plan._ca_start_pins).  Real -> real start ports are plan ports and become ordinary
+# landing_network edges.  Ends at a virtual region are die-level start stages (start_stage_emit.py ot_die_start_stages:
+# rs_<region> read / pst_<region> driven), wired by clock_landings.top_rtl from the sidecar count_aligned.start_pins -- NOT
+# network edges, so before this declaration every such pin read "used 0 times".  They are now DECLARED in the plan
+# (landing_network.start_tree, written by compose from the same start_pins) and PROVED here, in the same declare-and-prove
+# form as the fstart START inputs (face_guard land_slots "starts"):
+#   use  {part, pin, net}: pin is a START pin of that part's type contract (ctl, scalar, right dir); an input reads exactly
+#        one pst_<region> stage net, an output drives rs_<region> stage net(s); each pst_ net lands on one origin, each
+#        rs_ net has one launch partition; a pin is used once by the start tree and never also by a network edge.
+#   open {part, pin}: ONLY a cland_tstart_out of a type-shared copy that launches nothing (left unconnected at the die
+#        top; an unused output is not a tie).  A START INPUT is never open: an unread start input would be a tied
+#        absent child, so it keeps the "used 0 times" error.
+#   side: with the compose sidecar, the declaration must equal the sidecar start tree that top_rtl wires (every
+#        die_inputs / die_outputs entry declared, nothing else), and every START pin of every partition is accounted for.
+# An undeclared START pin with no edge still fails "used 0 times"; any error here is a landing-contract error (the
+# compose report and die check FAIL on any error).
+START_PIN_IN="cland_tstart_in"     # == clock_landings.START_PIN_IN == count_align_bind.START_PIN_IN
+START_PIN_OUT="cland_tstart_out"   # == clock_landings.START_PIN_OUT
+START_FORM="die_start_stages"
+_NET={START_PIN_IN:re.compile(r"^pst_\w+$"),START_PIN_OUT:re.compile(r"^rs_\w+$")}
+
+
+def start_declaration(start_pins,part_types,type_pins,edge_uses):
+    """landing_network.start_tree for a compose: start_pins = sidecar count_aligned.start_pins (clock_landings.start_pins),
+    part_types {part: type}, type_pins {type: {pin: dir}} (landing contract pins), edge_uses {(part, pin)} already used by
+    network edges.  Uses = the die-level stage ends; open = launch outputs of copies that launch nothing."""
+    uses=[]
+    for e in start_pins.get("die_inputs",[]):
+        u=dict(part=e["src_part"],pin=START_PIN_OUT,net=e["net"])
+        if u not in uses:uses.append(u)
+    for e in start_pins.get("die_outputs",[]):
+        uses.append(dict(part=e["dst_part"],pin=START_PIN_IN,net=e["net"]))
+    used={(u["part"],u["pin"]) for u in uses}|set(edge_uses)
+    opened=[dict(part=pn,pin=START_PIN_OUT) for pn,tn in sorted(part_types.items())
+            if type_pins.get(tn,{}).get(START_PIN_OUT)=="out" and (pn,START_PIN_OUT) not in used]
+    return dict(form=START_FORM,pins=dict(input=START_PIN_IN,output=START_PIN_OUT),
+                source="sidecar count_aligned.start_pins (clock_landings.top_rtl wires it)",
+                uses=sorted(uses,key=lambda u:(u["part"],u["pin"],u["net"])),open=opened)
+
+
+def _start_tree_check(P,st,pinmap,uses,errors,side):
+    """prove the declared START tree; adds its uses into `uses`; -> (summary, {(part, pin)} declared open)."""
+    def bad(m):errors.append("start tree: "+m)
+    if not isinstance(st,dict) or st.get("form")!=START_FORM:
+        bad(f"form {st.get('form') if isinstance(st,dict) else st!r} (want {START_FORM})");return dict(uses=0,open=0),set()
+    if set(st)-{"form","pins","source","uses","open"}:bad(f"unknown keys {sorted(set(st)-{'form','pins','source','uses','open'})}")
+    if st.get("pins",dict(input=START_PIN_IN,output=START_PIN_OUT))!=dict(input=START_PIN_IN,output=START_PIN_OUT):
+        bad(f"pins {st.get('pins')} (want input {START_PIN_IN}, output {START_PIN_OUT})")
+    want={START_PIN_IN:"in",START_PIN_OUT:"out"}
+    edge_used={k for k,v in uses.items() if v}
+    seen=set();declared=set();net_parts={};n_ok=0
+
+    def pin_ok(pn,pin,what):
+        if pin not in want:
+            bad(f"{what} {pn}.{pin}: only {START_PIN_IN}/{START_PIN_OUT} are START-tree pins");return False
+        if pn not in P.parts:
+            bad(f"{what} {pn}.{pin}: not a plan partition");return False
+        p=pinmap[P.parts[pn]["type"]].get(pin)
+        if not p:
+            bad(f"{what} {pn}.{pin}: type {P.parts[pn]['type']} has no such landing-contract pin");return False
+        if p.get("dir")!=want[pin] or p.get("kind")!="ctl":
+            bad(f"{what} {pn}.{pin}: dir/kind {p.get('dir')}/{p.get('kind')} (want {want[pin]}/ctl)");return False
+        if (pn,pin) in edge_used:
+            bad(f"{what} {pn}.{pin}: also used by a landing_network edge");return False
+        return True
+    for u in st.get("uses") or []:
+        pn,pin,nt=u.get("part"),u.get("pin"),u.get("net")
+        if (pn,pin,nt) in seen:bad(f"use {pn}.{pin} -> {nt}: declared twice");continue
+        seen.add((pn,pin,nt))
+        if not pin_ok(pn,pin,"use"):continue
+        if not isinstance(nt,str) or not _NET[pin].match(nt):
+            bad(f"use {pn}.{pin}: net {nt!r} is not a die start-stage {'pst_' if pin==START_PIN_IN else 'rs_'}<region> net");continue
+        if (pn,pin) in declared:
+            bad(f"use {pn}.{pin}: on more than one stage net (one start wire per pin)");continue
+        net_parts.setdefault(nt,set()).add(pn)
+        declared.add((pn,pin));uses[(pn,pin)]=uses.get((pn,pin),0)+1
+        n_ok+=1
+    for nt,ps in sorted(net_parts.items()):
+        if len(ps)!=1:bad(f"stage net {nt} on {len(ps)} partitions {sorted(ps)[:3]} (want one {'origin' if nt.startswith('pst_') else 'launch partition'})")
+    opened=set()
+    for o in st.get("open") or []:
+        pn,pin=o.get("part"),o.get("pin")
+        if pin==START_PIN_IN:
+            bad(f"open {pn}.{pin}: a START input cannot be open (unread start = tied absent child)");continue
+        if not pin_ok(pn,pin,"open"):continue
+        if (pn,pin) in declared or (pn,pin) in opened:
+            bad(f"open {pn}.{pin}: also declared used / open twice");continue
+        opened.add((pn,pin))
+    if side is not None:
+        sp=(side.get("count_aligned") or {}).get("start_pins")
+        if not sp:
+            bad("sidecar has no count_aligned.start_pins to prove the declaration against")
+        else:
+            exp=start_declaration(sp,{pn:p["type"] for pn,p in P.parts.items()},
+                                  {tn:{n:q.get("dir") for n,q in ps.items()} for tn,ps in pinmap.items()},edge_used)
+            got_u={(u.get("part"),u.get("pin"),u.get("net")) for u in st.get("uses") or []}
+            exp_u={(u["part"],u["pin"],u["net"]) for u in exp["uses"]}
+            for x in sorted(exp_u-got_u)[:20]:bad(f"sidecar start-tree end {x[0]}.{x[1]} -> {x[2]} not declared")
+            for x in sorted(got_u-exp_u)[:20]:bad(f"declared use {x[0]}.{x[1]} -> {x[2]} not in the sidecar start tree")
+            got_o={(o.get("part"),o.get("pin")) for o in st.get("open") or []}
+            exp_o={(o["part"],o["pin"]) for o in exp["open"]}
+            for x in sorted(got_o^exp_o)[:20]:bad(f"open {x[0]}.{x[1]}: declaration != sidecar start tree")
+    return dict(uses=n_ok,open=len(opened),stage_nets=len(net_parts)),opened
 
 
 def io_tcl(P,tn):
