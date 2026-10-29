@@ -2,11 +2,12 @@
  {
   "clock_arrival": {
    "n": 5490,
-   "mean": -17.67,
+   "mean": 17.67,
    "mean_abs": 17.67,
    "p95_abs": 30.59,
    "max_abs": 41.4,
-   "std": 6.6
+   "std": 6.6,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
   },
   "net_delay": null,
   "net_delay_rel_mean": null,
@@ -31,11 +32,12 @@
  {
   "clock_arrival": {
    "n": 3446,
-   "mean": -14.63,
+   "mean": 14.63,
    "mean_abs": 14.63,
    "p95_abs": 25.24,
    "max_abs": 57.14,
-   "std": 5.12
+   "std": 5.12,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
   },
   "net_delay": null,
   "net_delay_rel_mean": null,
@@ -60,11 +62,12 @@
  {
   "clock_arrival": {
    "n": 1002,
-   "mean": -1.16,
+   "mean": 1.16,
    "mean_abs": 2.09,
    "p95_abs": 7.76,
    "max_abs": 10.55,
-   "std": 2.88
+   "std": 2.88,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
   },
   "net_delay": null,
   "net_delay_rel_mean": null,
@@ -89,11 +92,12 @@
  {
   "clock_arrival": {
    "n": 1726,
-   "mean": 2.27,
+   "mean": -2.27,
    "mean_abs": 3.5,
    "p95_abs": 6.27,
    "max_abs": 7.44,
-   "std": 3.23
+   "std": 3.23,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
   },
   "net_delay": null,
   "net_delay_rel_mean": null,
@@ -118,11 +122,12 @@
  {
   "clock_arrival": {
    "n": 39375,
-   "mean": 5.6,
+   "mean": -5.6,
    "mean_abs": 5.7,
    "p95_abs": 9.76,
    "max_abs": 14.48,
-   "std": 2.64
+   "std": 2.64,
+   "sign": "routed_rcx_minus_grt_est_ps (FLOW-CLOCK-R2 10-29: mean sign flipped to match README; magnitudes unchanged, NUMBER-CHECKED by FLOW-CLOCK-R from ff_est_current/ff_rcx_rcx.tsv)"
   },
   "net_delay": null,
   "net_delay_rel_mean": null,
