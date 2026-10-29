@@ -1,11 +1,11 @@
 #!/bin/bash
 # DIE-KV-14b: RTL-vs-RTL equivalence of ot_qwen_tp8_pv_slice_lc_t (G=4) against ot_qwen_tp8_pv_slice_t at the slice
 # boundary (copy pins tied to the bits they copy), repo precedent lane8_ltcopy_1025/eq_default.ys (yosys equiv_make /
-# equiv_simple -seq 2 / equiv_induct -seq 2 / equiv_status -assert), plus the MUT_LC=1 mutant that must FAIL.
+# equiv_simple -seq 2 + -seq 12 / equiv_induct -seq 2 / equiv_status -assert), plus the MUT_LC=1 mutant that must FAIL.
 # usage: lec_slice_lc.sh REPO RTL_SUBMODULE_DIR OUTDIR MUT   (run inside openroad/orfs; yosys on PATH)
 set -u
 R=$1; S=$2; O=$3; M=$4; mkdir -p $O
-F="$R/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv $R/rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv $R/rtl/hdc/nearhbm/ot_qwen_tp8_pv_slice_lc_gen.sv $R/results/die_kv_14_1028/pv_pair/lec_wrap.sv $S/ot_qwen_nearhbm_prod.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fp32_mul_lat.sv $S/ot_hdc_prefix.sv $S/ot_dp_efault.sv $S/ot_sram_1r1w_32x128_m1_bb.v"
+F="$R/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv $R/rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv $R/rtl/hdc/nearhbm/ot_qwen_tp8_pv_slice_lc_gen.sv $R/results/die_kv_14_1028/pv_pair/lec_wrap.sv $S/ot_qwen_nearhbm_prod.sv $S/ot_hdc_fp32_add_lat.sv $S/ot_hdc_fastfp.sv $S/ot_hdc_fp32_mul_lat.sv $S/ot_hdc_prefix.sv $S/ot_dp_efault.sv $R/results/die_kv_14_1028/pv_pair/lec_sram_stub.v"
 cat > $O/eq.ys <<YS
 read_verilog -sv -DSYNTHESIS $F
 chparam -set MUT_LC $M lec_gate
@@ -26,6 +26,7 @@ design -copy-from gate -as gate gate
 equiv_make gold gate eq
 hierarchy -top eq
 equiv_simple -seq 2
+equiv_simple -seq 12   # unchanged shift registers deeper than 2 (fp/fc 11, tc 7, prod v3 4)
 equiv_induct -seq 2
 tee -o $O/equiv_status.txt equiv_status -assert
 YS
