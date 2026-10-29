@@ -1,0 +1,7 @@
+Canonical HEAD tile existing-stage physical source intake, current-main407521177.
+
+Installs the source helpers from qualified data-placement stack efcbc8b737,d80a6a442,ca129c0d2,88329711b; targets and actual final evidence252324b82/3c029455d. These helpers place existing pipeline flops along the macro corridors, retain the already-qualified same-D/clock/reset START export copy, and repack current master widths after the resizer. No RTL, pin, outline, latency, clock source or cycle changes. Source START copy is already on main30a26e92fc.
+
+Prior actual 3_place DPL0/fullgraph0 of27665 captures beyond405um, max400.95um. Source application idempotence physical3412cells0differences previously measured; source/source helper calls repeated without changing IDs. Fresh currentclock raw CTS also retains0/27665/max400.95, while clock plan remains diagnostic and halo/timing failures are separate. The independent dataG1 record is1f2412352. This source intake enables fresh kits to reproduce the data floorplan; it is not route/signoff approval.
+
+Install with python3 tools/s81_head/head_tile_relay_kit.py KIT --targets results/head_tile_source_1029/targets_copy_result.tsv --banks tools/s81_head/head_tile_banks.tcl. Fresh generation, source bind/LEC, complete placed geometry and reg_spine assignment remain necessary. Failed earlier placements remain immutable in the source branches; no failed verdict is overwritten.
