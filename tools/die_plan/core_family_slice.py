@@ -537,7 +537,7 @@ def render(geo, rec, slice_, out_png):
         ax.scatter([pos[n[0]][0] for n in ns], [pos[n[0]][1] for n in ns], s=8, marker=mk, c=c, label="%s drivers %d" % (kind, len(ns)), zorder=3)
     ix = rec["islands_xy"]
     ax.scatter([p[0] for p in ix], [p[1] for p in ix], s=160, facecolors="none", edgecolors="magenta", lw=2, label="in-core islands %d" % len(ix), zorder=4)
-    ax.plot(*rec["entry"], "k*", ms=16, label="centre entry (12.8a)", zorder=5)
+    ax.plot(*rec["entry"], "k*", ms=16, label="sink-centroid entry" if Path(geo).name == "geo_entry.txt" else "centre entry (12.8a)", zorder=5)
     cr = rec["core"]; ax.set_xlim(cr[0] - 3, cr[2] + 3); ax.set_ylim(cr[1] - 3, cr[3] + 3); ax.set_aspect("equal")
     ax.legend(loc="upper right", fontsize=7, framealpha=0.9)
     t, f = rec["TT"], rec["FF"]
@@ -546,12 +546,45 @@ def render(geo, rec, slice_, out_png):
     fig.savefig(out_png, dpi=110); plt.close(fig)
 
 
+# ------------------------------------------------------------------ entry (12.16e by intent, COORD dfd33a253)
+ENTRY_MODES = ("centre", "sink_centroid")
+
+
+def entry_mode(fam, core):
+    """family 'entry': absent = 'centre' (12.8a outline centre from the census, unchanged); a mode string for every
+    member, or {member: mode}.  'sink_centroid' = the core clock entry at the mean of the placed clock sinks (COORD
+    dfd33a253: bf_col sinks hug the E face, a centre entry gives 168-220 um L1 legs and a 58 ps window)."""
+    e = fam.get("entry", "centre")
+    m = e.get(core, "centre") if isinstance(e, dict) else e
+    if m not in ENTRY_MODES:
+        raise SystemExit("family %s: entry %r for %s: one of %s" % (fam.get("name"), m, core, ENTRY_MODES))
+    return m
+
+
+def entry_geo(geo, mode):
+    """the census geo for the chosen entry: 'centre' = geo.txt itself (byte-identical); 'sink_centroid' = geo_entry.txt,
+    geo.txt with its 'PIN ck' line moved to the sink centroid (H.plan snaps it to the nearest legal maze cell)."""
+    if mode == "centre":
+        return geo
+    L = geo.read_text().splitlines()
+    S = [l.split() for l in L if l.split()[:1] == ["SINK"]]
+    if not S:
+        raise SystemExit("entry sink_centroid: no SINK lines in %s" % geo)
+    cx = sum(float(f[1]) for f in S) / len(S); cy = sum(float(f[2]) for f in S) / len(S)
+    n = sum(1 for l in L if l.split()[:2] == ["PIN", "ck"])
+    if n != 1:
+        raise SystemExit("entry sink_centroid: %d 'PIN ck' lines in %s" % (n, geo))
+    out = geo.parent / "geo_entry.txt"
+    out.write_text("\n".join("PIN ck %.3f %.3f" % (cx, cy) if l.split()[:2] == ["PIN", "ck"] else l for l in L) + "\n")
+    return out
+
+
 # ------------------------------------------------------------------ driver
 def run_core(fams, core, kit, work, a):
     fam = next(f for f in fams["families"] if core in f["members"])
     work = Path(work) / core; work.mkdir(parents=True, exist_ok=True)
     clk = census(kit, work)
-    geo = work / "geo.txt"
+    geo = entry_geo(work / "geo.txt", entry_mode(fam, core))
     cal = json.loads(Path(a.trunk_cal).read_text()).get(core) if getattr(a, "trunk_cal", None) else None
     rcal = json.loads(Path(a.replan_cal).read_text()).get(core) if getattr(a, "replan_cal", None) else None
     if rcal and cal:
