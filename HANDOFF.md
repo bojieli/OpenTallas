@@ -1806,3 +1806,5 @@ CODEX:08:33 KV modeledfourPC/hardwrapper capability ff854a23b READY10testsPASS; 
 
 CODEX: 2026-10-29 08:28 PDT main a64cdfd10 published: QC mesh spacing, frozen S81 sidecar+clock pins, measured HEAD START/BUF8, packed-parameter bind fix, Qwen exercised-mutant check and HBM calibrated-price guard; focused checks pass. All five die teams+tokens+flow+support active; every lane inventoried.
 CODEX: 2026-10-29 08:29 PDT SUPPORT recovered dropped QC PROG s8b PG-invalid legacy cache (108buffers/216terms already failed10-26); exact refs retired without overwriting evidence; surviving archived native ODB/SPEF sent QC for PG-onlyrepair. Historical l2h3 DRT47h/6692viols diagnosed SRAM Ecorner93%markers; no job killed. SYS_C old proof collected71087/71129,42unproven; KVnotified.
+
+CODEX: 2026-10-29 08:29 PDT CLK-TOOL-8 recovered actualDME+FEEDpolarityfix7e92b4abd;HEAD735tapTT/FFduty0fail,defaulttree/netlist+15configargvunchanged; evidence38728e0bd; inheritedsuiteLIVEintel2pid1808405, no newroute.
