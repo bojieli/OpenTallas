@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 O=${1:?fresh output root}
-D=physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/faces_q0
+D=tools/hbm_static/vm_r2048/golden
 N=rtl/hbm_accel/generic/vm/static/faces_q0_r2048
 B=tools/hbm_static/vm_r2048
 mkdir -p "$O"
