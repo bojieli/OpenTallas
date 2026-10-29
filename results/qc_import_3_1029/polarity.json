@@ -1,0 +1,35 @@
+{
+ "schema": "qc_import_3_polarity/1",
+ "verdict": "PASS",
+ "counts": {
+  "bind_regions_edge_fall": 3287,
+  "edge_fall": 3016,
+  "edge_rise": 250,
+  "mapped_negedge_expected": 6032,
+  "mapped_negedge_ff": 6032,
+  "mapped_posedge_ff": 16333,
+  "node_cell_inverter": 3266,
+  "partition_clock_pins_true": 7889,
+  "stage_tree_depth_max": 208,
+  "stages": 3266,
+  "start_capture_parts": 313,
+  "start_capture_parts_no_clock_pin": 0,
+  "start_capture_parts_true": 313,
+  "start_link_errors": 0,
+  "start_links": 3265,
+  "tap_A_true": 921,
+  "tap_Y_true": 2345
+ },
+ "stage_errors": [],
+ "n_stage_errors": 0,
+ "partition_errors": [],
+ "n_partition_errors": 0,
+ "link_errors": [],
+ "inputs": {
+  "odb": "60d6fc073d973b15bc218a0ea20cf0bbe55bb9bf8048b0817986e7cd95b29e75",
+  "stages": "e4ad3d568b2aab42aca3f38726a50ae231a4e098e00ec702928e6321fd6152ad",
+  "bindings": "42a2139d0721fa78430187ab61d8023f09c927b8b13792108cf1f72f107c6131",
+  "bind": "0cd9361c08c3feb87c89dd6f311c81a0eb47b39c6bd12d88fa10805e9e46c2f4",
+  "mapped_v": "acec9113ddf1322541882f55aa41b9d81edd70b3096887d8dd7c5284305b2440"
+ }
+}

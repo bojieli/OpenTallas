@@ -1,0 +1,22 @@
+{
+ "schema": "ot_provider_import_visual_review/1",
+ "verdict": "PASS-COND",
+ "reviewer": "GEOM-57 (independent, not the author)",
+ "time": "2026-10-29 08:14 PDT",
+ "where": "coord/state lanes/GEOM-REVIEW.md GEOM-57 REPLY [QC-IMPORT-2]",
+ "reviewed": "claude/qc-import-2-1029@5c44bfa898d results/qc_import_2_1029/bind_review.png + own probe intel2 geom57-probe/qi2",
+ "source_odb_sha256": "60d6fc073d973b15bc218a0ea20cf0bbe55bb9bf8048b0817986e7cd95b29e75",
+ "bindings_sha256": "42a2139d0721fa78430187ab61d8023f09c927b8b13792108cf1f72f107c6131",
+ "preflight_sha256": "d45eca24d50cb8089f513deb219cfd2877231f77b7acf490c4f217c510544afe",
+ "conditions": [
+  "(1) 183 CKINVDCx16 legs 467.1-467.2 um + 9 at 443.4 um (trial26 clock, >450 um) must be shown routed around/over the 462-um wall with slew/arrival on routed RC at the clock check",
+  "(2) 921 A taps: launch/capture edge per START edge must be measured on the routed clock (static topology polarity PASS by QC-IMPORT-3 polarity.json, routed edges still open)",
+  "(3) post-apply full-reach census on actual pins: 0 hops >405 um",
+  "(4) preflight.py reset-key change stays results-only; shared importer copy -> ROOT-MERGE"
+ ],
+ "polarity_check": {
+  "file": "results/qc_import_3_1029/polarity.json",
+  "sha256": "3dde8a5f4c5192a26e815bb550c25ee1ded1ce57811507d33ef60e9dc8c9ad2d",
+  "verdict": "PASS"
+ }
+}
