@@ -1,0 +1,21 @@
+{
+  "source_base": "fb1fc79593ba9a9e4d968b80f2cd75dc44f1a056",
+  "dump_host": "epyc2",
+  "dump_unit": "oth-ubuntu-1185111-1793307771",
+  "dump_dir": "/srv/opentallas-scratch2/claude/codex-hbm-rcfix-1355",
+  "dump_result": "PASS read-only geometry dump",
+  "new_pnr_or_sta_jobs": 0,
+  "state": "PARKED explicit14:02reset",
+  "ring": {
+    "samepin_probe_grt_slew_violations": 0,
+    "samepin_probe_routed_slew_violations": 1473,
+    "ratio_median": 1.3863090472377901,
+    "violating_nets": 160
+  },
+  "bdring": {
+    "samepin_probe_grt_slew_violations": 0,
+    "samepin_probe_routed_slew_violations": 7370,
+    "ratio_median": 1.6316620799857042,
+    "violating_nets": 770
+  }
+}
