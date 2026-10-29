@@ -1,0 +1,25 @@
+{
+ "ot_hbm_svc_sm_group_rel_id": [
+  {
+   "view": "ot_hbm_svc_sm_group_rel_id@b73f8e5254ef",
+   "rc": 0,
+   "cls": "OK",
+   "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/ot_hbm_svc_sm_group_rel_id_b73f8e5254ef-_k2c24",
+   "entry": [
+    388.8,
+    324.0
+   ],
+   "port": null,
+   "merged": [
+    "hbm_clk",
+    "hbm_fifo_clk",
+    "hbm_pc_clk",
+    "stream_bank_clk",
+    "stream_clk"
+   ],
+   "islands": 17,
+   "log": "/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/gen_ot_hbm_svc_sm_group_rel_id_k2c24.log",
+   "msg": "{\"kit\": \"/srv/opentallas-scratch2/claude/hbm-cores-kits-1/k2/kits/ot_hbm_svc_sm_group_rel_id_b73f8e5254ef-_k2c24\", \"pins\": 7688, \"clocks\": [\"hbm_clk\", \"stream_clk\", \"hbm_fifo_clk[0]\", \"hbm_fifo_clk[1]\", \"stream_bank_clk[0]\", \"stream_bank_clk[1]\", \"hbm_pc_clk[0]\", \"hbm_pc_clk[1]\", \"hbm_pc_clk[2]\", \"hbm_pc_clk[3]\"], \"resets\": 2, \"design\": \"ot_hbm_svc_sm_group_rel_id\", \"top\": \"ot_hbm_svc_sm_group_rel"
+  }
+ ]
+}

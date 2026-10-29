@@ -1,0 +1,8 @@
+KIT_PREFLIGHT FAIL issues 7
+  - clock_pin_geometry: io.tcl: clock stream_clk pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock hbm_fifo_clk[0] pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock stream_bank_clk[0] pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - clock_pin_geometry: io.tcl: clock hbm_pc_clk[0] pin_size 0.024x0.192 < 0.048x0.48 (GEOM-21)
+  - macro_channels: 3 macro master(s) but no staged MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable
+  - clock_entry_clear: 3 macro master(s) but no staged MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable
+  - macro_pin_grid: 3 macro master(s) but no staged MACRO_PLACEMENT_TCL (None): placement not static, channels/entry not checkable
