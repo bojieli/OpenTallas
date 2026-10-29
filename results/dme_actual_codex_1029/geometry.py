@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 
 plan,treefile,out=sys.argv[1:];out=Path(out);out.mkdir(parents=True,exist_ok=True)
-P=S.Plan(S.load(plan),Path(plan));site=D.clock_site(P)
+P=S.Plan(S.load(plan),Path(plan));D.DME_ACTUAL_MAX_UM=405.;site=D.clock_site(P)
 tree=json.loads(Path(treefile).read_text());xy=tree['sites'];over=[];illegal=[];off=[]
 items=list(xy.items())
 for k,(name,(x,y)) in enumerate(items):
