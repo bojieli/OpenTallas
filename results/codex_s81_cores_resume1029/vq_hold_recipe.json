@@ -1,0 +1,14 @@
+{
+ "ot_s81sl_vq": {
+  "ref_tile": "physical/ref_tile/s81sl_vq",
+  "plan_pins_file": "inputs/core_pins/ot_s81sl_vq_tpl.json",
+  "suffix": "tpl_f6",
+  "core_margin": 2.16,
+  "macro_if_flops": true,
+  "post_grt_extra": [
+   "# Classified k3.r15 -> k5.r131 final-legalization short path, 0 RTL cycles.\n",
+   "source /work/vq_hold_after_grt.tcl\n"
+  ],
+  "_hold_fix_basis": "CODEX1029 originalGRTTT+40.39/FF-0.926ps; one fixed BUFx2 after normal legalization. Same clock, constraints and RTL; GRT-only trial."
+ }
+}
