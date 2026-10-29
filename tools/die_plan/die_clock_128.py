@@ -496,6 +496,16 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
             return ideal, DRAWN
         return c, mode
 
+    def backbone_xy(cell,pin):
+        actual=pin_xy(cells,cell,pin,row_y)
+        chooser=getattr(router,"stack_backbone_xy",None) if router is not None else None
+        chosen=chooser(cell,pin,actual) if chooser is not None else actual
+        if ties and len(ties.get(cell,()))>1 and abs(chosen[0]-actual[0])>1e-6:
+            raise PlanError([dict(kind="m6_entry_tie",name=cell,detail="M6 entry jog is not implemented for tied clock groups")])
+        if abs(chosen[1]-actual[1])>1e-6:
+            raise PlanError([dict(kind="m6_entry_row",name=cell,detail="M6 entry jog must preserve the actual pin row")])
+        return tuple(chosen)
+
     def stack(cell, pin, pxy, junction):
         if ties and len(ties.get(cell, ())) > 1:
             return tie_stack(cell, pin, junction)
@@ -503,7 +513,10 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
         if r > STACK_RISER_MAX_UM + 1e-9:
             errs.append(dict(kind="no_pin_stack", name=cell, detail=f"{pin} M7 riser {r:.3f} um > "
                              f"STACK_RISER_MAX_UM {STACK_RISER_MAX_UM} (outside the island window)"))
-        return dict(cell=cell, pin=pin, xy=list(pxy), riser_from=[pxy[0], junction[1]], riser_um=round(r, 4))
+        result=dict(cell=cell, pin=pin, xy=list(pxy), riser_from=[pxy[0], junction[1]], riser_um=round(r, 4))
+        actual=pin_xy(cells,cell,pin,row_y)
+        if abs(actual[0]-pxy[0])>1e-6:result["m6_entry_xy"]=list(actual)
+        return result
 
     def tie_stack(cell, pin, junction):
         us = ties[cell]
@@ -525,8 +538,8 @@ def _fixed_wires_stack(M, cells, nets, row_y, off, router, port_on_trunk=False, 
     for n in nets:
         nm = n["name"]
         dcell = not n["drv"].startswith("port:")
-        D = pin_xy(cells, n["drv"], "Y", row_y) if dcell else port_xy(n["drv"])
-        Ls = [(ld, port_xy(ld) if ld.startswith("port:") else pin_xy(cells, ld, "A", row_y)) for ld in n["loads"]]
+        D = backbone_xy(n["drv"], "Y") if dcell else port_xy(n["drv"])
+        Ls = [(ld, port_xy(ld) if ld.startswith("port:") else backbone_xy(ld, "A")) for ld in n["loads"]]
         horiz = max(abs(p[0] - D[0]) for _, p in Ls) >= max(abs(p[1] - D[1]) for _, p in Ls)
         segs, modes, exts, branches, stacks = [], [], [], [], []
 

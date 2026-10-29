@@ -37,3 +37,17 @@ def test_impossible_actual_window_fails_before_route():
     try:C.fixed_wires(M,cells,nets,1.62,.27,router=router,pin_stack=True,l_drops=True)
     except C.PlanError as failure:assert any(r['kind']=='no_clock_track' for r in failure.rows)
     else:raise AssertionError('impossible pin access window was accepted')
+
+
+def test_m6_backbone_column_keeps_cell_pin_and_body_fixed():
+    import copy
+    M,cells,nets=_tree();before=copy.deepcopy(cells);r=_router()
+    def column(cell,pin,actual):
+        return (actual[0]+.08,actual[1]) if (cell,pin)==('H1','A') else actual
+    r.stack_backbone_xy=column
+    wires=C.fixed_wires(M,cells,nets,1.62,.27,off=0.,router=r,pin_stack=True,l_drops=True)
+    assert cells==before
+    s=next(s for w in wires for s in w['stacks'] if (s['cell'],s['pin'])==('H1','A'))
+    actual=C.pin_xy(cells,'H1','A',.27)
+    assert s['m6_entry_xy']==list(actual)
+    assert abs(s['xy'][0]-actual[0]-.08)<1e-8 and s['xy'][1]==actual[1]
