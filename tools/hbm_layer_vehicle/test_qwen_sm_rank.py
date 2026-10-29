@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+import hbm_layer_vehicle as HV
 from hbm_layer_vehicle import qwen_layer_images as Q
 
 
@@ -38,6 +39,7 @@ class RankLoweringTest(unittest.TestCase):
                 return {'records': [{'op': 'SM.MATVEC', 'L': 2, 'tag': 'qkv', 'status': 'unlowered'}]}, {'events': []}
 
             with patch.dict('sys.modules', {'hbm_layer_vehicle.sm_slice_lower': lowerer}), \
+                    patch.object(HV, 'sm_slice_lower', lowerer, create=True), \
                     patch.object(Q, 'SparseVM', return_value=None), patch.object(Q, 'compile_rank', compile_rank):
                 Q.cmd_emit(args)
             self.assertEqual(seen, [(0, 2, 0, ('qkv',)), (5, 2, 0, ('qkv',))])
