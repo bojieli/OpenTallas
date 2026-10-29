@@ -1012,6 +1012,8 @@ def add_sta_ocv_args(ap):
     ap.add_argument("--sta-clock-droop", choices=("stated", "shared"), help="as die_sta_related --clock-droop")
     ap.add_argument("--sta-droop-regions", help="as die_sta_related --droop-regions")
     ap.add_argument("--sta-core-latency-ff", type=float, help="as die_sta_related --core-latency-ff")
+    ap.add_argument("--sta-ca-ring", metavar="SPEC.json",
+                    help="as die_sta_related --ca-ring (DIE-HEAD-18 opt-in): the hull uses the BUILT ring clocks")
     ap.add_argument("--sta-clock-cell", choices=("auto", "buf", "inv", "inv2"), default="auto",
                     help="as die_sta_related --clock-cell: auto = the proof's tap_arrivals clock_cell declaration; "
                          "missing -> FAIL closed (COORD ruling ba28d3143)")
@@ -1019,7 +1021,8 @@ def add_sta_ocv_args(ap):
 
 def sta_ocv_kw(a):
     return dict(clock_ocv=a.sta_clock_ocv, clock_droop=a.sta_clock_droop, droop_regions_file=a.sta_droop_regions,
-                core_latency_ff=a.sta_core_latency_ff, clock_cell=getattr(a, "sta_clock_cell", "auto"))
+                core_latency_ff=a.sta_core_latency_ff, clock_cell=getattr(a, "sta_clock_cell", "auto"),
+                **({"ca_ring": a.sta_ca_ring} if getattr(a, "sta_ca_ring", None) else {}))
 
 
 def add_start_tree_args(ap):
