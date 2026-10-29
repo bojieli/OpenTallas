@@ -1,0 +1,20 @@
+ports K/sched/depth changed: 125
+by (src,dst,dK,dSched):
+   ('hg_EN_1', 'pc_EN_1', 1, 1) 4
+   ('hg_EN_3', 'pc_EN_3', 1, 1) 4
+   ('hg_WN_4', 'pc_WN_4', 1, 1) 4
+   ('hg_WS_7', 'hub_Wo', 1, 1) 4
+   ('pc_EN_3', 'pc_EN_4', 1, 1) 13
+   ('pc_EN_7', 'hroot_EN', 1, 1) 12
+   ('pc_ES_3', 'pc_ES_4', 1, 1) 13
+   ('pc_ES_4', 'pc_ES_5', 1, 1) 13
+   ('pc_WN_1', 'hg_WN_1', 1, 1) 2
+   ('pc_WN_1', 'pc_WN_2', 1, 1) 13
+   ('pc_WN_3', 'pc_WN_4', 1, 1) 13
+   ('pc_WN_6', 'pc_WN_7', 1, 1) 13
+   ('pc_WS_3', 'hg_WS_3', 1, 1) 2
+   ('pc_WS_6', 'hg_WS_6', 1, 1) 2
+   ('pc_WS_6', 'pc_WS_7', 1, 1) 13
+parts n_nominal changed: 0 []
+regions n_nominal changed: 0 edge_fall changed: 0
+sched total 9327 -> 9452
