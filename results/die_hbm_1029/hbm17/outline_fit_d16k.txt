@@ -1,0 +1,44 @@
+q_hub_nw u_sfus_Q__q0 _su_static_sfustore_hw A:shift9um B:shift0um C:shift0um
+q_hub_nw u_sfus_Q__q1 _su_static_sfustore_hw A:NOFIT<302 B:NOFIT<302 C:shift9um
+q_hub_nw u_vmdel_Q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_nw u_vmdel_Q1 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_nw u_vmdel_Q2 t_hbm_svc_vmdel_lane_n A:shift44um Bp:shift0um
+q_hub_nw u_vmdel_Q3 t_hbm_svc_vmdel_lane_n A:shift8um Bp:shift0um
+q_hub_nw u_vmdel_Q4 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_nw u_vmdel_Q5 t_hbm_svc_vmdel_lane_n A:shift25um Bp:shift0um
+q_hub_nw u_vmdel_Q6 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_nw u_vmdel_Q7 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_nw u_vmdel_Q0__q0 t_hbm_svc_vmdel_lane_n A:shift113um Bp:shift0um
+q_hub_nw u_vmdel_Q1__q0 t_hbm_svc_vmdel_lane_n A:shift14um Bp:shift0um
+q_hub_nw u_vmdel_Q2__q0 t_hbm_svc_vmdel_lane_n A:shift16um Bp:shift0um
+q_hub_nw u_vmdel_Q3__q0 t_hbm_svc_vmdel_lane_n A:shift10um Bp:shift0um
+q_hub_nw u_vmdel_Q4__q0 t_hbm_svc_vmdel_lane_n A:shift49um Bp:shift0um
+q_hub_nw u_vmdel_Q5__q0 t_hbm_svc_vmdel_lane_n A:shift49um Bp:shift0um
+q_hub_nw u_vmdel_Q6__q0 t_hbm_svc_vmdel_lane_n A:shift126um Bp:shift0um
+q_hub_nw u_vmdel_Q7__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_nw u_pgp_Q__q0 su_programme_pslice_c5 grow:NOFIT<302 half:shift1um
+q_hub_nw u_pgp_Q__q1 su_programme_pslice_c5 grow:NOFIT<302 half:shift1um
+q_hub_nw u_sucore_Q__q0 bm_su_static_qcore_r13 A:shift0um B:shift0um
+q_hub_nw u_sucore_Q__q1 bm_su_static_qcore_r13 A:shift0um B:shift0um
+q_hub_ne u_sfus_Q__q0 _su_static_sfustore_hw A:NOFIT<302 B:NOFIT<302 C:NOFIT<302
+q_hub_ne u_sfus_Q__q1 _su_static_sfustore_hw A:NOFIT<302 B:NOFIT<302 C:NOFIT<302
+q_hub_ne u_vmdel_Q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q1 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q2 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q3 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q4 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q5 t_hbm_svc_vmdel_lane_n A:shift381um Bp:shift0um
+q_hub_ne u_vmdel_Q6 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q7 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q0__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift4um
+q_hub_ne u_vmdel_Q1__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q2__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q3__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q4__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q5__q0 t_hbm_svc_vmdel_lane_n A:shift83um Bp:shift0um
+q_hub_ne u_vmdel_Q6__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_vmdel_Q7__q0 t_hbm_svc_vmdel_lane_n A:shift1um Bp:shift0um
+q_hub_ne u_pgp_Q__q0 su_programme_pslice_c5 grow:NOFIT<302 half:shift1um
+q_hub_ne u_pgp_Q__q1 su_programme_pslice_c5 grow:NOFIT<302 half:shift1um
+q_hub_ne u_sucore_Q__q0 bm_su_static_qcore_r13 A:shift0um B:shift0um
+q_hub_ne u_sucore_Q__q1 bm_su_static_qcore_r13 A:shift0um B:shift0um
