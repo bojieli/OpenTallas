@@ -1,0 +1,20 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-qc-pg-access-1029
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-qc-pg-access-1029
+ot-run: localhost      admits   677 GB (avail 875, reserve 0, fresh 94.7, peak 39.5, headroom 0, waiters 0/0 GB) load 81/112 running 36 disk 1588 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-781600-1793263688 after 1 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+M1 {'getArea': 666, 'getWidth': 18, 'getMinWidth': 18, 'getSpacing': 18}
+M2 {'getArea': 666, 'getWidth': 18, 'getMinWidth': 18, 'getSpacing': 18}
+M3 {'getArea': 666, 'getWidth': 18, 'getMinWidth': 18, 'getSpacing': 18}
+M4 {'getArea': 2000, 'getWidth': 24, 'getMinWidth': 24, 'getSpacing': 24}
+M5 {'getArea': 2000, 'getWidth': 24, 'getMinWidth': 24, 'getSpacing': 24}
+M6 {'getArea': 2188, 'getWidth': 32, 'getMinWidth': 32, 'getSpacing': 32}
+M7 {'getArea': 2188, 'getWidth': 32, 'getMinWidth': 32, 'getSpacing': 32}
+M8 {'getArea': 7520, 'getWidth': 40, 'getMinWidth': 40, 'getSpacing': 40}
+M9 {'getArea': 7520, 'getWidth': 40, 'getMinWidth': 40, 'getSpacing': 40}
+ot-run: RAN on localhost (unit oth-ubuntu-781600-1793263688): exit 0

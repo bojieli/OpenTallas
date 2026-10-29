@@ -244,6 +244,7 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "die_sta_related.py": ("clock_components.py", "data_droop.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),

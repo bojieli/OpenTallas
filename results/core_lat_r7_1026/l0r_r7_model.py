@@ -39,6 +39,7 @@ def model_x(P, libs, r, c, wire_cls, ffc=H.FFC):
         return (r * NDR_R, c * NDR_C) if wire_cls.get(l, 'std') == 'ndr2w' else (r, c)
     res = {}; stage = {}; P['_int'] = {}
     for corner, L in libs.items():
+        scap = P.get('sinkcap', {}).get(corner, {})
         arr = {'root': 0.0}; slew = {'root': 0.0}; leafarr = {}; cd = {}; drv = {}
         stack = ['root']
         while stack:
@@ -73,7 +74,7 @@ def model_x(P, libs, r, c, wire_cls, ffc=H.FFC):
                     cd[k[0]] = (round(d, 2), round(el, 2), round(so, 1))
             if u in P['leafsinks']:
                 ls = P['leafsinks'][u]; pts = [pos[u]] + [s[:2] for s in ls]
-                par, order = H.mst_edges(pts); sub = [0.0] + [ffc[corner] for _ in ls]; ec = [0.0] * len(pts); er = [0.0] * len(pts)
+                par, order = H.mst_edges(pts); sub = [0.0] + [scap.get('%s/%s' % (q[2], q[3]), ffc[corner]) for q in ls]; ec = [0.0] * len(pts); er = [0.0] * len(pts)
                 lr, lc = (r * NDR_R, c * NDR_C) if LEAF_NDR else (r, c)
                 for v in order[1:]:
                     e = abs(pts[v][0] - pts[par[v]][0]) + abs(pts[v][1] - pts[par[v]][1]); ec[v] = lc * e; er[v] = lr * e

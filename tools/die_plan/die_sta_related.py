@@ -466,7 +466,7 @@ _PIN_RE = re.compile(r"\.(\w+)\s*\(\s*(\\?[^\s()]+)\s*\)")
 
 def netlist_tap_masters(proof, meta=None):
     """MODEL-REFIT-2: {tap port: sorted masters} from the first clock netlist _clock_netlists finds (ctree.v: cells
-    with an A input and a Y output), each tap traced from its port net back to the root through the drivers; None when
+    with an A input and a Y output), each tap traced through continuous assigns and drivers back to the root; None when
     no netlist is found.  The KV tap-pad BUFx24 chains on PHY taps of an inverter tree are the case this resolves."""
     for f in _clock_netlists(proof, meta):
         if not f.is_file():
@@ -482,12 +482,23 @@ def netlist_tap_masters(proof, meta=None):
                 drv[pins["Y"]] = (master, pins["A"])
         if not drv:
             continue
+        aliases = dict(re.findall(r"\bassign\s+(\\?[^\s;=]+)\s*=\s*(\\?[^\s;]+)\s*;", txt))
+        inputs = {x.strip() for y in re.findall(r"^\s*input\s+([^;]+);", txt, re.M) for x in y.split(",")}
         out, memo = {}, {}
 
         def up(net):
             path, seen = [], set()
-            while net in drv and net not in memo and net not in seen:
+            while net not in memo:
+                if net in seen:
+                    raise ClockMasterUncalibrated(f"spice_cell: loop in clock path at {net} -> FAIL closed")
                 seen.add(net)
+                if net in aliases:
+                    net = aliases[net]
+                    continue
+                if net not in drv:
+                    if net not in inputs:
+                        raise ClockMasterUncalibrated(f"spice_cell: undriven clock net {net} -> FAIL closed")
+                    break
                 path.append(net)
                 net = drv[net][1]
             acc = set(memo.get(net, ()))
@@ -538,6 +549,9 @@ def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal, proof=None):
         raise SystemExit(f"--clock-cal {clock_cal!r}: one of {CLOCK_CALS}")
     if clock_cal == "none":
         return meta, taps
+    if meta.get("clock_components_basis") and clock_cal in ("spice_edge", "spice_cell"):
+        from clock_components import apply
+        return apply(meta, taps, corner, clock_cal)
     f = spice_cal_factor(corner, clock_cell)
     fe = None
     if clock_cal in ("spice_edge", "spice_buf_edge") and clock_cell == "inv":
