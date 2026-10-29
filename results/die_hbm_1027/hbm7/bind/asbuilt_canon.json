@@ -382,5 +382,10 @@
   ".*\\.(tgt|qid|sid|bid|bank_id|pc_id|id_sm|id_stack|sm_hbm|sm_stream|stk|attn_column|attn_rowbase|xs_a1|xs_a2|xs_g1|xs_g2|first_ord|quad|lbase|slot|half|rl_cfg|wc_cfg|tile_id)"
  ],
  "strap_note": "position / identity straps of the as-built die (target ids, quadrant/stack/bank/pc ids, SM column/row-base and xs strap words per sm_split README): partition parameters, as built. NOT straps (reported TIED, R7 open for the RTL owners): SM chain-end tile gin / BE qin zeros, hb_idx__selector in_line, quant lg wq_i, SM int8-mux glue literals.",
- "map_file": "asbuilt_map_canon.json"
+ "map_file": "asbuilt_map_canon.json",
+ "release_full": [
+  "ot_hbm_su_static_pgslice_lg",
+  "ot_hgi_sfu_core_split3"
+ ],
+ "release_full_note": "DIE-HBM-10 10-28 (COORD: owner rule no stubs): the 8 SU + 2 SFU release slices must bind full RTL; bind_elab.release_full_check fails closed on a stub / _bb.v / undefined module anywhere under them (after alias) and records the full-RTL manifest (repo-relative). The aliases _s / _sp2 ARE the plan release forms (PIN_REG + side_softplus|side_rest cut; store-side pin-register twin), full RTL."
 }
