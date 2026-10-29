@@ -1,0 +1,26 @@
+{
+ "native_sha256": "f990c450a105cdf131d683db40636a94175f9576566eb1ef0717177b04e63545",
+ "mutants": [
+  {
+   "name": "status_wrong_clock",
+   "verdict": "FAIL",
+   "fails": [
+    "cland_fstart_in_i: ring start reaches [('ff_CLK', 'u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[0]$_DFFE_PP_'), ('ff_CLK', 'u_cland_i/u_ring.g_control_status_copy.u_status/lap_q[0]$_DFFE_PP_')] (want flop D pins only)"
+   ]
+  },
+  {
+   "name": "status_untyped",
+   "verdict": "FAIL",
+   "fails": [
+    "cland_fstart_in_i: ring start reaches non-writer flops ['u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[0]$_DFFE_PP_', 'u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[1]$_DFFE_PP_', 'u_cland_i/u_ring.g_control_status_copy.u_guard_status/lap_q[2]$_DFFE_PP_'] outside one origin instance"
+   ]
+  },
+  {
+   "name": "origin_wrong_clock",
+   "verdict": "FAIL",
+   "fails": [
+    "cland_tstart_in: origin sampler flops ['u_cland_origin/s0$_SDFF_PN0_', 'u_cland_origin/sf$_DFF_N_'] on clock(s) ['u_cland_origin/strap_efall', 'u_srl_9/clk'] (want one clock port, not the ring clock)"
+   ]
+  }
+ ]
+}
