@@ -1344,3 +1344,16 @@ All HBM plan/streets/locality/clock/crossing/core/native boot+token/PG aliases c
     - Byte-identical on all 77 C24 pin tables without w/h. 25 hbm_arch_cores tests pass; test_face_shell_init was not run (needs yosys).
   - UNCHECKED: the parent hop to the moved clock pins (same merged core clock).
   - Branch claude/die-hbm-10-1028@b784e7514b (on main 50c8df87ee): apply_c25a.py, c25a_preflight.py, README section 8.
+- RESULT DIE-HBM-10 2026-10-28 21:10 PDT: stub-bind diagnosis. No stub RTL is bound for the 10 release slices (CHECKED).
+  - SU x8 bind ot_hbm_su_static_pgslice_lg_s and SFU x2 bind ot_hgi_sfu_core_split3_sp2, both via the asbuilt_canon alias map, and both are the release forms (the plan cuts side_rest/side_softplus exist only in _s).
+    - SU: 3568-3607 glue cells + 68 leaves (32 lanes, 32 banks, 2 VM bank leaves, pretree, tap); 49 real RTL files.
+    - SFU: 65 glue cells + 35 leaves (16 full SFU lanes); 50 files.
+  - The "tap+stub / 1 cell" reading (DIE-HBM-9) came from a top-level-only look with wrong slice paths. The real paths are u_slice.g_lane[k].g_pr.u_lane, u_slice.g_bank[k].u_bank and g_tap_r8b.u_tap.
+  - Fix (fail closed): release_full_check in tools/die_plan/bind_elab.py, opt-in via the manifest key release_full, declared for the 2 masters. After aliasing it walks every module below the master; an undefined module, a _bb.v black box or an empty body fails the bind. It records the per-master full-RTL file list, repo-relative, in asbuilt_sources.json.
+    - Negative test: an empty-body lane_pinreg forced first -> bind FAIL "selects a STUB body".
+    - test_bind_release_full.py + all 26 test_bind*.py PASS.
+  - Re-bind on C24: elab rc 0. Strict 473 -> 476; the +3 are the PHY split partitions (canon map still phy_NW->PHY_N), fixed via C25b.
+    - Remaining errors: 201 UNMAPPED hb_idx__s scorer, 200 TIED idx inputs, 30 UNPLANNED fold/root + hub-hub, 28 TYPE_SPLIT ft mirror order, 10 name clash, 4 empty partitions, 3 other.
+  - run_bind.sh now chains elab -> strict -> bind_verify, with logs; bind_verify runs only after a strict pass.
+  - Assumption: the netlist hbm_current_native_top.sv is not on main; a die-hbm-7 copy (50d55436) was used.
+  - Branch claude/die-hbm-10-bindfull-1028@6cddd9f4b3; results/die_hbm_1027/hbm10/bindfull/.
