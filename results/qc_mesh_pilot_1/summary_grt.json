@@ -1,0 +1,460 @@
+{
+ "stage": "grt",
+ "trials": {
+  "tA": {
+   "part": "c_E3_bf_11",
+   "adjust": 0.4,
+   "corners": {
+    "TT": {
+     "pair_U_max_ps": 35.98,
+     "pair_U_p50_ps": 16.6,
+     "nominal_skew_ps": 20.62,
+     "mc": {
+      "nominal_skew_ps": 20.63,
+      "mc_worst_skew_ps": 32.42,
+      "per_load_sigma_ps": 3.32,
+      "pair_3sigma_ps": 14.1,
+      "gradient_worst_pair_ps": 0.86,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 33.28,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 3.76,
+     "insertion_root_to_mesh_ps": 512.31,
+     "trial14_glue_spread_ps": 50.87,
+     "core_required_early_ps": 398.29,
+     "core_got_early_ps": {
+      "L_clk_c0": 325.97,
+      "L_clk_c1": 326.02,
+      "L_clk_c2": 325.69,
+      "L_clk_c3": 325.82
+     },
+     "core_offset_error_ps": 72.6,
+     "W_core_ps": 110.3,
+     "W_core_offset_planned_ps": 37.7
+    },
+    "FF": {
+     "pair_U_max_ps": 34.47,
+     "pair_U_p50_ps": 16.7,
+     "nominal_skew_ps": 18.81,
+     "mc": {
+      "nominal_skew_ps": 18.81,
+      "mc_worst_skew_ps": 32.13,
+      "per_load_sigma_ps": 3.37,
+      "pair_3sigma_ps": 14.28,
+      "gradient_worst_pair_ps": 0.74,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 32.87,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 3.6,
+     "insertion_root_to_mesh_ps": 424.27,
+     "trial14_glue_spread_ps": 57.08,
+     "core_required_early_ps": 339.7,
+     "core_got_early_ps": {
+      "L_clk_c0": 269.9,
+      "L_clk_c1": 269.95,
+      "L_clk_c2": 269.66,
+      "L_clk_c3": 269.77
+     },
+     "core_offset_error_ps": 70.04,
+     "W_core_ps": 102.2,
+     "W_core_offset_planned_ps": 32.1
+    }
+   },
+   "hold_buffers": {
+    "W180": 71208,
+    "k_hop_mesh": 1,
+    "k_core_mesh": 3,
+    "k_core_mesh_planned": 2,
+    "mesh": 44372,
+    "mesh_offset_planned": 34044,
+    "W_glue_ps": 35.98,
+    "W_core_ps": 110.3,
+    "W_core_planned_ps": 37.7,
+    "k180": {
+     "in_": 5,
+     "hop": 4,
+     "core": 5,
+     "out": 1
+    }
+   },
+   "power": {
+    "mesh_mW": 2.04,
+    "tree_wire_mW": 2.33,
+    "cells_mW": 0.59,
+    "total_mW": 4.95,
+    "tree_wire_um": 20836.0,
+    "mesh_C_pF": 3.473,
+    "clock_cells": 76
+   },
+   "tracks": {
+    "M9_straps": 4,
+    "M8_straps": 7,
+    "strap_tracks_each": 8,
+    "M9_pct": 0.207,
+    "M8_pct": 0.171
+   },
+   "drc_violations": null
+  },
+  "tA3": {
+   "part": "c_E3_bf_11",
+   "adjust": 0.4,
+   "corners": {
+    "TT": {
+     "pair_U_max_ps": 51.33,
+     "pair_U_p50_ps": 21.07,
+     "nominal_skew_ps": 34.61,
+     "mc": {
+      "nominal_skew_ps": 34.61,
+      "mc_worst_skew_ps": 47.05,
+      "per_load_sigma_ps": 3.39,
+      "pair_3sigma_ps": 14.39,
+      "gradient_worst_pair_ps": 0.9,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 47.95,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 32.85,
+     "insertion_root_to_mesh_ps": 522.84,
+     "trial14_glue_spread_ps": 50.87,
+     "core_required_early_ps": 398.29,
+     "core_got_early_ps": {
+      "L_clk_c0": 336.5,
+      "L_clk_c1": 336.55,
+      "L_clk_c2": 336.14,
+      "L_clk_c3": 336.2
+     },
+     "core_offset_error_ps": 62.15,
+     "W_core_ps": 107.5,
+     "W_core_offset_planned_ps": 45.3
+    },
+    "FF": {
+     "pair_U_max_ps": 48.26,
+     "pair_U_p50_ps": 20.67,
+     "nominal_skew_ps": 31.35,
+     "mc": {
+      "nominal_skew_ps": 31.35,
+      "mc_worst_skew_ps": 44.02,
+      "per_load_sigma_ps": 3.44,
+      "pair_3sigma_ps": 14.58,
+      "gradient_worst_pair_ps": 0.78,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 44.79,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 29.19,
+     "insertion_root_to_mesh_ps": 433.75,
+     "trial14_glue_spread_ps": 57.08,
+     "core_required_early_ps": 339.7,
+     "core_got_early_ps": {
+      "L_clk_c0": 279.37,
+      "L_clk_c1": 279.43,
+      "L_clk_c2": 279.06,
+      "L_clk_c3": 279.11
+     },
+     "core_offset_error_ps": 60.64,
+     "W_core_ps": 99.7,
+     "W_core_offset_planned_ps": 39.0
+    }
+   },
+   "hold_buffers": {
+    "W180": 71208,
+    "k_hop_mesh": 1,
+    "k_core_mesh": 3,
+    "k_core_mesh_planned": 2,
+    "mesh": 44372,
+    "mesh_offset_planned": 34044,
+    "W_glue_ps": 51.33,
+    "W_core_ps": 107.5,
+    "W_core_planned_ps": 45.3,
+    "k180": {
+     "in_": 5,
+     "hop": 4,
+     "core": 5,
+     "out": 1
+    }
+   },
+   "power": {
+    "mesh_mW": 2.04,
+    "tree_wire_mW": 2.36,
+    "cells_mW": 0.59,
+    "total_mW": 4.99,
+    "tree_wire_um": 21149.0,
+    "mesh_C_pF": 3.473,
+    "clock_cells": 76
+   },
+   "tracks": {
+    "M9_straps": 4,
+    "M8_straps": 7,
+    "strap_tracks_each": 8,
+    "M9_pct": 0.207,
+    "M8_pct": 0.171
+   },
+   "drc_violations": null
+  },
+  "tA2": {
+   "part": "c_E3_bf_11",
+   "adjust": 0.7,
+   "corners": {
+    "TT": {
+     "pair_U_max_ps": 53.86,
+     "pair_U_p50_ps": 20.53,
+     "nominal_skew_ps": 36.83,
+     "mc": {
+      "nominal_skew_ps": 36.83,
+      "mc_worst_skew_ps": 50.35,
+      "per_load_sigma_ps": 3.41,
+      "pair_3sigma_ps": 14.47,
+      "gradient_worst_pair_ps": 0.91,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 51.25,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 28.52,
+     "insertion_root_to_mesh_ps": 525.3,
+     "trial14_glue_spread_ps": 50.87,
+     "core_required_early_ps": 398.29,
+     "core_got_early_ps": {
+      "L_clk_c0": 338.93,
+      "L_clk_c1": 338.99,
+      "L_clk_c2": 338.54,
+      "L_clk_c3": 338.68
+     },
+     "core_offset_error_ps": 59.75,
+     "W_core_ps": 106.4,
+     "W_core_offset_planned_ps": 46.6
+    },
+    "FF": {
+     "pair_U_max_ps": 50.59,
+     "pair_U_p50_ps": 19.99,
+     "nominal_skew_ps": 33.41,
+     "mc": {
+      "nominal_skew_ps": 33.41,
+      "mc_worst_skew_ps": 47.18,
+      "per_load_sigma_ps": 3.45,
+      "pair_3sigma_ps": 14.62,
+      "gradient_worst_pair_ps": 0.78,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 47.96,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 25.23,
+     "insertion_root_to_mesh_ps": 435.9,
+     "trial14_glue_spread_ps": 57.08,
+     "core_required_early_ps": 339.7,
+     "core_got_early_ps": {
+      "L_clk_c0": 281.5,
+      "L_clk_c1": 281.55,
+      "L_clk_c2": 281.16,
+      "L_clk_c3": 281.3
+     },
+     "core_offset_error_ps": 58.54,
+     "W_core_ps": 98.7,
+     "W_core_offset_planned_ps": 40.2
+    }
+   },
+   "hold_buffers": {
+    "W180": 71208,
+    "k_hop_mesh": 2,
+    "k_core_mesh": 3,
+    "k_core_mesh_planned": 2,
+    "mesh": 46432,
+    "mesh_offset_planned": 36104,
+    "W_glue_ps": 53.86,
+    "W_core_ps": 106.4,
+    "W_core_planned_ps": 46.6,
+    "k180": {
+     "in_": 5,
+     "hop": 4,
+     "core": 5,
+     "out": 1
+    }
+   },
+   "power": {
+    "mesh_mW": 2.04,
+    "tree_wire_mW": 2.37,
+    "cells_mW": 0.59,
+    "total_mW": 4.99,
+    "tree_wire_um": 21188.0,
+    "mesh_C_pF": 3.473,
+    "clock_cells": 76
+   },
+   "tracks": {
+    "M9_straps": 4,
+    "M8_straps": 7,
+    "strap_tracks_each": 8,
+    "M9_pct": 0.207,
+    "M8_pct": 0.171
+   },
+   "drc_violations": null
+  },
+  "tB": {
+   "part": "c_W2_bn_01",
+   "adjust": 0.4,
+   "corners": {
+    "TT": {
+     "pair_U_max_ps": 45.32,
+     "pair_U_p50_ps": 21.1,
+     "nominal_skew_ps": 28.75,
+     "mc": {
+      "nominal_skew_ps": 28.75,
+      "mc_worst_skew_ps": 42.8,
+      "per_load_sigma_ps": 3.5,
+      "pair_3sigma_ps": 14.85,
+      "gradient_worst_pair_ps": 0.9,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 43.7,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 39.66,
+     "insertion_root_to_mesh_ps": 524.75,
+     "trial14_glue_spread_ps": 130.89,
+     "core_required_early_ps": 407.69,
+     "core_got_early_ps": {
+      "L_clk_c0": 339.19,
+      "L_clk_c1": 339.24,
+      "L_clk_c2": 338.83,
+      "L_clk_c3": 338.89
+     },
+     "core_offset_error_ps": 68.86,
+     "W_core_ps": 111.2,
+     "W_core_offset_planned_ps": 42.3
+    },
+    "FF": {
+     "pair_U_max_ps": 42.99,
+     "pair_U_p50_ps": 20.95,
+     "nominal_skew_ps": 26.32,
+     "mc": {
+      "nominal_skew_ps": 26.32,
+      "mc_worst_skew_ps": 40.85,
+      "per_load_sigma_ps": 3.54,
+      "pair_3sigma_ps": 15.04,
+      "gradient_worst_pair_ps": 0.77,
+      "routed_minus_sim_mean_ps": 0.0,
+      "routed_minus_sim_spread_ps": 0.0,
+      "dieU_bound_ps": 41.63,
+      "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+     },
+     "driver_input_spread_ps": 35.2,
+     "insertion_root_to_mesh_ps": 436.26,
+     "trial14_glue_spread_ps": 127.72,
+     "core_required_early_ps": 354.31,
+     "core_got_early_ps": {
+      "L_clk_c0": 282.56,
+      "L_clk_c1": 282.61,
+      "L_clk_c2": 282.24,
+      "L_clk_c3": 282.29
+     },
+     "core_offset_error_ps": 72.07,
+     "W_core_ps": 108.5,
+     "W_core_offset_planned_ps": 36.4
+    }
+   },
+   "hold_buffers": {
+    "W180": 110284,
+    "k_hop_mesh": 1,
+    "k_core_mesh": 3,
+    "k_core_mesh_planned": 2,
+    "mesh": 57228,
+    "mesh_offset_planned": 46900,
+    "W_glue_ps": 45.32,
+    "W_core_ps": 111.2,
+    "W_core_planned_ps": 42.3,
+    "k180": {
+     "in_": 5,
+     "hop": 4,
+     "core": 5,
+     "out": 1
+    }
+   },
+   "power": {
+    "mesh_mW": 2.03,
+    "tree_wire_mW": 2.36,
+    "cells_mW": 0.59,
+    "total_mW": 4.97,
+    "tree_wire_um": 21109.0,
+    "mesh_C_pF": 3.45,
+    "clock_cells": 76
+   },
+   "tracks": {
+    "M9_straps": 4,
+    "M8_straps": 7,
+    "strap_tracks_each": 8,
+    "M9_pct": 0.207,
+    "M8_pct": 0.171
+   },
+   "drc_violations": null
+  }
+ },
+ "checked": "UNCHECKED",
+ "stability": {
+  "tA~tA3_TT": {
+   "taps": 28,
+   "abs_move_max_ps": 25.06,
+   "rel_move_max_ps": 14.53
+  },
+  "tA~tA3_FF": {
+   "taps": 28,
+   "abs_move_max_ps": 22.85,
+   "rel_move_max_ps": 13.37
+  },
+  "tA~tA2_TT": {
+   "taps": 28,
+   "abs_move_max_ps": 24.8,
+   "rel_move_max_ps": 12.72
+  },
+  "tA~tA2_FF": {
+   "taps": 28,
+   "abs_move_max_ps": 22.56,
+   "rel_move_max_ps": 11.61
+  },
+  "tA~tB_TT": {
+   "taps": 28,
+   "abs_move_max_ps": 19.93,
+   "rel_move_max_ps": 7.49
+  },
+  "tA~tB_FF": {
+   "taps": 28,
+   "abs_move_max_ps": 18.3,
+   "rel_move_max_ps": 6.98
+  },
+  "tA3~tA2_TT": {
+   "taps": 28,
+   "abs_move_max_ps": 12.44,
+   "rel_move_max_ps": 9.98
+  },
+  "tA3~tA2_FF": {
+   "taps": 28,
+   "abs_move_max_ps": 11.39,
+   "rel_move_max_ps": 9.24
+  },
+  "tA3~tB_TT": {
+   "taps": 28,
+   "abs_move_max_ps": 16.08,
+   "rel_move_max_ps": 17.99
+  },
+  "tA3~tB_FF": {
+   "taps": 28,
+   "abs_move_max_ps": 15.02,
+   "rel_move_max_ps": 17.53
+  },
+  "tA2~tB_TT": {
+   "taps": 28,
+   "abs_move_max_ps": 14.63,
+   "rel_move_max_ps": 14.07
+  },
+  "tA2~tB_FF": {
+   "taps": 28,
+   "abs_move_max_ps": 13.98,
+   "rel_move_max_ps": 14.34
+  }
+ }
+}

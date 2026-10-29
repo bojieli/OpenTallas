@@ -1,0 +1,15 @@
+{
+ "provenance": {
+  "commit": "410e940f4f7618924e1e377ed0af879e505b12fb",
+  "dirty": false,
+  "source": "git",
+  "step": "bind",
+  "plan": "results/tok_qc_1_1028/event/plan.json",
+  "manifest": "physical/die_plan/qwen_compute/bind/asbuilt_tokqc1_ca.json",
+  "external_paths_allowed": false,
+  "inputs": [
+   "results/tok_qc_1_1028/event/plan.json",
+   "physical/die_plan/qwen_compute/bind/asbuilt_tokqc1_ca.json"
+  ]
+ }
+}

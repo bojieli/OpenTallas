@@ -280,3 +280,43 @@ def test_htree_plan_keeps_every_node_out_of_the_block(tmp_path):
     inside = lambda P: [n[0] for n in P["nodes"] if blk[0] <= P["mz"].xy(n[2])[0] <= blk[2] and blk[1] <= P["mz"].xy(n[2])[1] <= blk[3]]
     assert inside(P0)                                      # without the keep-out the W hub sits in the block
     assert not inside(P1)
+
+
+# ---------------------------------------------------------------- QC-A0-KITS-8: symmetric lattice, one master per level
+_LAT = [[(0, -8), (0, 8)], [(-2, -2), (2, -2), (-2, 2), (2, 2)]]
+
+
+def test_lattice_equal_legs_and_every_sink_once():
+    sinks = [(10 + dx, 20 + dy, "r%d_%d" % (dx, dy), "CLK") for dx in (-3, -1, 1, 3) for dy in (-11, -9, -7, -5, 5, 7, 9, 11)]
+    P = F.lattice_build(sinks, (10.0, 20.0), _LAT)
+    leaves = [n for n in P["nodes"] if n[4] == "leaf"]
+    assert len(leaves) == 8 and not P["empty"]
+    got = sorted(s[2] for v in P["leafsinks"].values() for s in v)
+    assert got == sorted(s[2] for s in sinks)
+    pos = {n[0]: n[2] for n in P["nodes"]}
+    for lv in (0, 1):    # every leg of a level lands at the same Manhattan distance
+        segs = {round(P["land"][n[0]][0], 6) for n in P["nodes"] if n[4] == "branch" and len(n[0].split("_")[0]) - 1 == lv + 1}
+        assert len(segs) == 1
+    par = {n[0]: n[1] for n in P["nodes"]}
+    depth = set()
+    for u in (n[0] for n in leaves):
+        d = 0
+        while par[u]: u = par[u]; d += 1
+        depth.add(d)
+    assert depth == {3}
+
+
+def test_lattice_refuses_unequal_legs_and_prunes_empty_leaf():
+    with pytest.raises(SystemExit):
+        F.lattice_build([(0, 0, "a", "CLK")], (0.0, 0.0), [[(0, -8), (0, 5)]])
+    sinks = [(10, 12, "a", "CLK"), (10, 28, "b", "CLK")]      # only the two y tips of level 0 get sinks
+    P = F.lattice_build(sinks, (10.0, 20.0), [[(0, -8), (0, 8)], [(-1, 0), (1, 0)]])
+    assert len(P["empty"]) == 2 and all(u not in {n[0] for n in P["nodes"]} for u in P["empty"])
+    assert all(n[0] + "_br" not in {m[0] for m in P["nodes"]} for n in [(u,) for u in P["empty"]])
+    assert set(P["land"]) <= {n[0] for n in P["nodes"]}
+
+
+def test_lattice_levelkey_one_key_per_level():
+    assert F.lattice_levelkey(("root", None, (0, 0), "B", "entry")) == ("root",)
+    assert F.lattice_levelkey(("T01_br", "T0_br", (0, 0), "B", "branch")) == (0, 2, 0)
+    assert F.lattice_levelkey(("T01", "T01_br", (0, 0), "B", "leaf")) == (1, 2, 0)

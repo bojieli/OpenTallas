@@ -406,6 +406,144 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     return rec
 
 
+# ------------------------------------------------------------------ symmetric lattice + one master per level (QC-A0-KITS-8)
+class _LatticeMaze:
+    """identity 'maze' for lattice plans: a cell IS its (x, y) coordinate in um (legal sites come from the converter)."""
+    G = 1.0
+
+    def __init__(self, core):
+        self.core = core
+
+    def xy(self, p):
+        return (round(p[0], 3), round(p[1], 3))
+
+
+def lattice_levelkey(n):
+    """level key of a plan node for the one-master-per-level rule: (leaf?, tree level, position in edge)."""
+    if n[4] in ("entry", "trunk"):
+        return ("root",)
+    return (1 if n[4] == "leaf" else 0, M7.lvl_of(n[0]), 0)
+
+
+def lattice_build(sinks, entry, levels, master="BUFx16f_ASAP7_75t_R", root="BUFx24_ASAP7_75t_R", pitch=1.08):
+    """SYMMETRIC plan geometry (balance by geometry, not by size compensation): level l = a stack of len(levels[l])
+    branch buffers at every hub (pitch um apart, centred on the hub), branch i drives ONE straight L leg of
+    |dx_i|+|dy_i| to the tip hub + levels[l][i]; every leg of a level has the SAME Manhattan length (refused otherwise).
+    Last level tips = leaf drivers; every sink goes to the NEAREST leaf (Manhattan, ties by name); a leaf with no sink is
+    removed with its exclusive branch.  Returns P in the core_infra_htree form (land/wires) for M7.model_x."""
+    for li, offs in enumerate(levels):
+        ls = {round(abs(o[0]) + abs(o[1]), 6) for o in offs}
+        if len(ls) != 1:
+            raise SystemExit("lattice level %d: legs differ in length %s (symmetric geometry needs one length per level)" % (li, sorted(ls)))
+    nodes = [("root", None, tuple(entry), root, "entry")]; land = {}; wires = []; hubs = [("", tuple(entry), "root", 0.0)]
+    for li, offs in enumerate(levels):
+        nh = []
+        for dg, hp, drv, seg in hubs:
+            k = len(offs)
+            for i, o in enumerate(offs):
+                nm = "T" + dg + str(i)
+                nodes.append((nm + "_br", drv, (hp[0], hp[1] + (i - (k - 1) / 2.0) * pitch), master, "branch"))
+                nh.append((dg + str(i), (hp[0] + o[0], hp[1] + o[1]), nm + "_br", abs(o[0]) + abs(o[1])))
+            land[drv] = (seg, "H" + (dg or "R")); wires.append(dict(level=li, edge="H" + (dg or "R"), segs=[seg], hub=hp))
+        hubs = nh
+    pts = {}
+    for dg, tp, drv, seg in hubs:
+        nodes.append(("T" + dg, drv, tp, master, "leaf")); pts["T" + dg] = tp
+        land[drv] = (seg, "L" + dg); wires.append(dict(level=len(levels), edge="L" + dg, segs=[seg], hub=tp))
+    names = sorted(pts); leafsinks = {u: [] for u in names}
+    for s in sinks:
+        u = min(names, key=lambda u: (abs(s[0] - pts[u][0]) + abs(s[1] - pts[u][1]), u)); leafsinks[u].append(s)
+    empty = {u for u in names if not leafsinks[u]}
+    if empty:
+        brs = {n[1] for n in nodes if n[0] in empty}
+        nodes = [n for n in nodes if n[0] not in empty and n[0] not in brs]
+        for b in brs:
+            land.pop(b, None)
+        wires = [w for w in wires if not (w["edge"].startswith("L") and "T" + w["edge"][1:] in empty)]
+        leafsinks = {u: v for u, v in leafsinks.items() if u not in empty}
+    for w in wires:
+        w["cells"] = [[w["hub"]]]
+    return dict(mz=None, nodes=nodes, land=land, wires=wires, leafsinks=leafsinks, empty=sorted(empty))
+
+
+def lattice_masters(P, libs, r, c, slew_max=60.0, passes=3):
+    """ONE master per level (12.8 d1 by intent, COORD 21:07 QC-A0-KITS-7 ruling): deterministic coordinate descent over
+    the BUFx8..x24 envelope, one level key at a time, minimising TT window + FF window under TT leaf slew <= slew_max;
+    plan model only (no measurement).  Returns {level key: master}."""
+    keys = sorted({lattice_levelkey(n) for n in P["nodes"]}, key=str)
+    cur = {k: "BUFx16f_ASAP7_75t_R" for k in keys}
+
+    def score(m):
+        P["nodes"] = [(n[0], n[1], n[2], m[lattice_levelkey(n)], n[4]) for n in P["nodes"]]
+        res, _ = M7.model_x(P, libs, r, c, {})
+        bad = res["TT"]["leaf_out_slew_max"] > slew_max or res["TT"]["leaf_slew_in_max"] > GATES["slew_ps"]
+        return res["TT"]["window"] + res["FF"]["window"] + (1e3 if bad else 0.0)
+    best = score(cur)
+    for _ in range(passes):
+        for k in keys:
+            for m in ENV:
+                t = dict(cur); t[k] = m; v = score(t)
+                if v < best - 1e-6:
+                    best, cur = v, t
+    score(cur)
+    return cur
+
+
+def plan_lattice(geo, fam, libtt, libff, name):
+    """family key 'lattice' (opt-in; absent = plan() unchanged): {"levels": [[[dx, dy], ...], ...]} tip offsets per level
+    from the core clock entry.  Geometry from the plan lattice (equal leg length per level), ONE master per level
+    (lattice_masters), no d1 per-driver sizing, no uf_phys3 descent.  PLAN MODEL, UNCHECKED until routed arrivals."""
+    L = [l.split() for l in open(geo)]
+    sinks = [(float(f[1]), float(f[2]), f[4], f[5]) for f in L if f[:1] == ["SINK"]]
+    ent = next((float(f[2]), float(f[3])) for f in L if f[:2] == ["PIN", "ck"])
+    core = next([float(v) for v in f[1:5]] for f in L if f[:1] == ["CORE"])
+    levels = [[tuple(map(float, o)) for o in lv] for lv in fam["lattice"]["levels"]]
+    P = lattice_build(sinks, ent, levels)
+    P["mz"] = _LatticeMaze(core)
+    cells = sorted(set(ENV + [H.REP, H.BIG]))
+    libs = {"TT": H.lib_cells(libtt, cells), "FF": H.lib_cells(libff, cells)}
+    kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
+    r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
+    lm = lattice_masters(P, libs, r, c)
+    res, _ = M7.model_x(P, libs, r, c, {})
+    _PLANS[name] = (P, libs, r, c, {})
+    par = {n[0]: n[1] for n in P["nodes"]}; pos = {n[0]: n[2] for n in P["nodes"]}; depths = set()
+    for n in P["nodes"]:
+        if n[4] == "leaf":
+            d = 1; u = n[0]
+            while par[u]: u = par[u]; d += 1
+            depths.add(d)
+    legs = []
+    for n in P["nodes"]:          # one leg per driver -> its landing hub: straight L (x first, then y)
+        if n[0] in P["land"] and n[4] != "entry":
+            seg, hub = P["land"][n[0]]; hp = next(w["hub"] for w in P["wires"] if w["edge"] == hub); a = pos[n[0]]
+            legs.append(dict(level=M7.lvl_of(n[0]), edge=n[0], segs=[round(abs(hp[0] - a[0]) + abs(hp[1] - a[1]), 2)],
+                             paths=[[list(a), [hp[0], a[1]], list(hp)]]))
+    spread = {u: round(max(abs(s[0] - pos[u][0]) + abs(s[1] - pos[u][1]) for s in v), 2) for u, v in P["leafsinks"].items()}
+    cnt = sorted(len(v) for v in P["leafsinks"].values())
+    rec = dict(name=name, family=fam["name"], splits="lattice " + ",".join(str(len(l)) for l in levels), smax=None, wire=fam.get("wire", "std"),
+               sinks=len(sinks), split_leaves=[], reassign=None, entry_trunk=None,
+               level_len_um=[round(abs(l[0][0]) + abs(l[0][1]), 3) for l in levels], repeaters_per_edge=[0] * len(levels),
+               stages=sorted(depths), n_cells=len(P["nodes"]),
+               level_masters={"/".join(map(str, k)): v for k, v in sorted(lm.items(), key=lambda kv: str(kv[0]))},
+               sized_masters={"%s:%s" % k: v for k, v in sorted(collections.Counter((n[4], n[3]) for n in P["nodes"]).items())},
+               frozen_masters={n[0]: n[3] for n in P["nodes"]}, TT=res["TT"], FF=res["FF"],
+               entry=list(ent), islands_xy=[], core=core, maze_g_um=None,
+               nodes_xy=[(n[0], n[1], [round(n[2][0], 3), round(n[2][1], 3)], n[3], n[4]) for n in P["nodes"]],
+               wire_paths=legs, empty_leaves_removed=P["empty"],
+               leaf_members={u: len(v) for u, v in P["leafsinks"].items()},
+               leaf_members_stats=dict(min=cnt[0], median=cnt[len(cnt) // 2], max=cnt[-1]),
+               leaf_sinks={u: ["%s/%s" % (s[2], s[3]) for s in v] for u, v in P["leafsinks"].items()},
+               leaf_spread_um=spread, leaf_mst_um=None,
+               leaf_spread_max=dict(all=max(spread.values()), main=max(spread.values()), strip=0.0,
+                                    n_gt_40=sum(v > GATES["leaf_spread_um"] for v in spread.values()),
+                                    top=sorted(spread.items(), key=lambda kv: -kv[1])[:8]),
+               plan_rule="symmetric lattice (equal leg length per level) + ONE master per level; no d1 per-driver sizing, "
+                         "no uf_phys3 descent (QC-A0-KITS-8, COORD 21:07)",
+               model="R7 NLDM+Elmore chain, lattice geometry, one master per level (core_family_slice lattice); PLAN MODEL, UNCHECKED")
+    return rec
+
+
 # ------------------------------------------------------------------ calibrated structural re-plan (R16)
 WIRE_MENU = ("std", "ndr2w")
 
@@ -625,12 +763,16 @@ def run_core(fams, core, kit, work, a):
     rcal = json.loads(Path(a.replan_cal).read_text()).get(core) if getattr(a, "replan_cal", None) else None
     if rcal and cal:
         raise SystemExit("run: --trunk-cal and --replan-cal both name %s (trunk = built LOW, re-plan = built HIGH)" % core)
-    if rcal:
+    if fam.get("lattice"):
+        if rcal or cal:
+            raise SystemExit("run: family %s is a lattice plan (one master per level); --trunk-cal/--replan-cal do not apply" % fam["name"])
+        rec = plan_lattice(geo, fam, a.libtt, a.libff, "%s_lat_%s" % (core, fam["name"]))
+    elif rcal:
         rec, fam = replan_structure(geo, fam, a.libtt, a.libff, "%s_r16_%s_rp" % (core, fam["name"]), rcal)
     else:
         rec = plan(geo, fam, a.libtt, a.libff, "%s_r13_%s%s" % (core, fam["name"], "_tk" if cal else ""), trunk_cal=cal)
     pj = work / "plan.json"; pj.write_text(json.dumps([rec]))
-    if a.fit:
+    if a.fit and not fam.get("lattice"):   # lattice = one master per level: no per-driver d1/uf3 descent
         r = subprocess.run([sys.executable, str(REPO / "results/core_lat_r9_1026/l0r_r9_d1.py"), str(pj), str(geo), a.libdir, a.fit,
                             str(work / "plan_d1.json"), "--steps", str(a.d1_steps)], capture_output=True, text=True)
         (work / "d1.log").write_text(r.stdout + r.stderr)
