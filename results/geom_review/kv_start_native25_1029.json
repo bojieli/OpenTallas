@@ -1,0 +1,20 @@
+{
+ "image": "results/kv_start_25_1029/native_start.png",
+ "viewed": true,
+ "verdict": "PASS-COND",
+ "scope": "START provider planned legal rows; synth/load build only, not die freeze",
+ "findings": [
+  "Neighbour-forwarded START follows existing clock corridor graph; 1139 short stage rows along spine/ribs, no long control stars.",
+  "Stage row envelopes legal in die SiteMap, max hop394.537um<405; local clock access max4.86um.",
+  "Same160 actual native counter clocks, real hub_C root; no arbitrary nearest data-tap phase.",
+  "Current plot shows partition/corridor layout; actual full mapped cells including reset/control and sourceDB PG connectivity still need placement/load integration.",
+  "Real START ABI pin placement, data source event, full-cell placement/clock-phase after new loads remain pending."
+ ],
+ "gates": {
+  "stages": 1139,
+  "flops": 4464,
+  "edges": 1298,
+  "max_hop_um": 394.537,
+  "physical_qualified": false
+ }
+}
