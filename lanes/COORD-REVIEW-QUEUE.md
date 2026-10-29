@@ -4352,3 +4352,4 @@ FAILED [AUTOPILOT b0592d3eb25d] 2026-10-28 23:03:05 PDT AUTOPILOT -> HBM-CORES: 
   - Binder: wire SM attn_tile gin / attn_be qin from their RTL producers, or file a dead-input proof per class. No silent ties.
   - host_to_provider = 4 cycles, as a declared static boot path with the multicycle constraint checked in die STA. This replaces my repeated-lane choice.
   - Target: strict 0 for TOK-HBM-6.
+- 2026-10-28 23:31 PDT [COORD] QC-MESH-PILOT-2 PARKED (slices routing, no verdict). Slice method OK as an estimate; verdict rule: judge on tA3 (slice GRT = full-region GRT within 0.6 ps) and treat tA2/tB as the reserved-leg-track form; the slice-entry M9 markers must be shown to be cut artifacts (re-check them on the merged tree). Successor QC-MESH-PILOT-3 starts now; verdict goes to DIE-QC-25 (QC die owner now).
