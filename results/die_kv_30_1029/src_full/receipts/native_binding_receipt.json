@@ -1,0 +1,1998 @@
+{
+ "verdict": "NATIVE_SOURCE_ENDPOINTS_BOUND",
+ "clock_cells": 15296,
+ "clock_cells_moved": 15183,
+ "clock_topology_connections_preserved": true,
+ "native_boundary_ports": 331,
+ "clock_ports": 1528,
+ "source_odb_sha256": "fa02813378940f63f3838b692763d3fcb8603c56029aae0f178194c8bea9f68f",
+ "scope": "Native abstract endpoints and legal packed clock bodies; new routed clock/load/reset timing still required",
+ "endpoints": [
+  {
+   "port": "rraw_hg_EN_0",
+   "inst": "hg_EN_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_1",
+   "inst": "hg_EN_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_2",
+   "inst": "hg_EN_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_3",
+   "inst": "hg_EN_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_4",
+   "inst": "hg_EN_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_5",
+   "inst": "hg_EN_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_6",
+   "inst": "hg_EN_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_EN_7",
+   "inst": "hg_EN_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_0",
+   "inst": "hg_ES_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_1",
+   "inst": "hg_ES_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_2",
+   "inst": "hg_ES_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_3",
+   "inst": "hg_ES_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_4",
+   "inst": "hg_ES_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_5",
+   "inst": "hg_ES_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_6",
+   "inst": "hg_ES_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_ES_7",
+   "inst": "hg_ES_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_0",
+   "inst": "hg_WN_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_1",
+   "inst": "hg_WN_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_2",
+   "inst": "hg_WN_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_3",
+   "inst": "hg_WN_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_4",
+   "inst": "hg_WN_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_5",
+   "inst": "hg_WN_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_6",
+   "inst": "hg_WN_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WN_7",
+   "inst": "hg_WN_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_0",
+   "inst": "hg_WS_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_1",
+   "inst": "hg_WS_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_2",
+   "inst": "hg_WS_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_3",
+   "inst": "hg_WS_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_4",
+   "inst": "hg_WS_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_5",
+   "inst": "hg_WS_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_6",
+   "inst": "hg_WS_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hg_WS_7",
+   "inst": "hg_WS_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_0",
+   "inst": "hgi_EN_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_1",
+   "inst": "hgi_EN_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_2",
+   "inst": "hgi_EN_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_3",
+   "inst": "hgi_EN_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_4",
+   "inst": "hgi_EN_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_5",
+   "inst": "hgi_EN_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_6",
+   "inst": "hgi_EN_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_EN_7",
+   "inst": "hgi_EN_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_0",
+   "inst": "hgi_ES_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_1",
+   "inst": "hgi_ES_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_2",
+   "inst": "hgi_ES_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_3",
+   "inst": "hgi_ES_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_4",
+   "inst": "hgi_ES_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_5",
+   "inst": "hgi_ES_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_6",
+   "inst": "hgi_ES_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_ES_7",
+   "inst": "hgi_ES_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_0",
+   "inst": "hgi_WN_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_1",
+   "inst": "hgi_WN_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_2",
+   "inst": "hgi_WN_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_3",
+   "inst": "hgi_WN_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_4",
+   "inst": "hgi_WN_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_5",
+   "inst": "hgi_WN_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_6",
+   "inst": "hgi_WN_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WN_7",
+   "inst": "hgi_WN_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_0",
+   "inst": "hgi_WS_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_1",
+   "inst": "hgi_WS_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_2",
+   "inst": "hgi_WS_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_3",
+   "inst": "hgi_WS_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_4",
+   "inst": "hgi_WS_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_5",
+   "inst": "hgi_WS_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_6",
+   "inst": "hgi_WS_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hgi_WS_7",
+   "inst": "hgi_WS_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hub_C",
+   "inst": "hub_C",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hub_Ei",
+   "inst": "hub_Ei",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hub_Eo",
+   "inst": "hub_Eo",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hub_Wi",
+   "inst": "hub_Wi",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_hub_Wo",
+   "inst": "hub_Wo",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_io_E5",
+   "inst": "io_E5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_io_E6",
+   "inst": "io_E6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_io_W2",
+   "inst": "io_W2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_io_W3",
+   "inst": "io_W3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_0",
+   "inst": "pv_N_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_1",
+   "inst": "pv_N_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_2",
+   "inst": "pv_N_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_3",
+   "inst": "pv_N_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_4",
+   "inst": "pv_N_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_5",
+   "inst": "pv_N_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_6",
+   "inst": "pv_N_6",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_N_7",
+   "inst": "pv_N_7",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_S_0",
+   "inst": "pv_S_0",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_S_1",
+   "inst": "pv_S_1",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_S_2",
+   "inst": "pv_S_2",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_S_3",
+   "inst": "pv_S_3",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_S_4",
+   "inst": "pv_S_4",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rraw_pv_S_5",
+   "inst": "pv_S_5",
+   "pin": "cland_raw_reset_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_0",
+   "inst": "hg_EN_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_1",
+   "inst": "hg_EN_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_2",
+   "inst": "hg_EN_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_3",
+   "inst": "hg_EN_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_4",
+   "inst": "hg_EN_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_5",
+   "inst": "hg_EN_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_6",
+   "inst": "hg_EN_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_EN_7",
+   "inst": "hg_EN_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_0",
+   "inst": "hg_ES_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_1",
+   "inst": "hg_ES_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_2",
+   "inst": "hg_ES_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_3",
+   "inst": "hg_ES_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_4",
+   "inst": "hg_ES_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_5",
+   "inst": "hg_ES_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_6",
+   "inst": "hg_ES_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_ES_7",
+   "inst": "hg_ES_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_0",
+   "inst": "hg_WN_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_1",
+   "inst": "hg_WN_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_2",
+   "inst": "hg_WN_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_3",
+   "inst": "hg_WN_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_4",
+   "inst": "hg_WN_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_5",
+   "inst": "hg_WN_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_6",
+   "inst": "hg_WN_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WN_7",
+   "inst": "hg_WN_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_0",
+   "inst": "hg_WS_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_1",
+   "inst": "hg_WS_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_2",
+   "inst": "hg_WS_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_3",
+   "inst": "hg_WS_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_4",
+   "inst": "hg_WS_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_5",
+   "inst": "hg_WS_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_6",
+   "inst": "hg_WS_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hg_WS_7",
+   "inst": "hg_WS_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_0",
+   "inst": "hgi_EN_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_1",
+   "inst": "hgi_EN_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_2",
+   "inst": "hgi_EN_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_3",
+   "inst": "hgi_EN_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_4",
+   "inst": "hgi_EN_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_5",
+   "inst": "hgi_EN_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_6",
+   "inst": "hgi_EN_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_EN_7",
+   "inst": "hgi_EN_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_0",
+   "inst": "hgi_ES_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_1",
+   "inst": "hgi_ES_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_2",
+   "inst": "hgi_ES_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_3",
+   "inst": "hgi_ES_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_4",
+   "inst": "hgi_ES_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_5",
+   "inst": "hgi_ES_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_6",
+   "inst": "hgi_ES_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_ES_7",
+   "inst": "hgi_ES_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_0",
+   "inst": "hgi_WN_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_1",
+   "inst": "hgi_WN_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_2",
+   "inst": "hgi_WN_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_3",
+   "inst": "hgi_WN_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_4",
+   "inst": "hgi_WN_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_5",
+   "inst": "hgi_WN_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_6",
+   "inst": "hgi_WN_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WN_7",
+   "inst": "hgi_WN_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_0",
+   "inst": "hgi_WS_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_1",
+   "inst": "hgi_WS_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_2",
+   "inst": "hgi_WS_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_3",
+   "inst": "hgi_WS_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_4",
+   "inst": "hgi_WS_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_5",
+   "inst": "hgi_WS_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_6",
+   "inst": "hgi_WS_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hgi_WS_7",
+   "inst": "hgi_WS_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hub_C",
+   "inst": "hub_C",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hub_Ei",
+   "inst": "hub_Ei",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hub_Eo",
+   "inst": "hub_Eo",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hub_Wi",
+   "inst": "hub_Wi",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_hub_Wo",
+   "inst": "hub_Wo",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_io_E5",
+   "inst": "io_E5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_io_E6",
+   "inst": "io_E6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_io_W2",
+   "inst": "io_W2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_io_W3",
+   "inst": "io_W3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_0",
+   "inst": "pv_N_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_1",
+   "inst": "pv_N_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_2",
+   "inst": "pv_N_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_3",
+   "inst": "pv_N_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_4",
+   "inst": "pv_N_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_5",
+   "inst": "pv_N_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_6",
+   "inst": "pv_N_6",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_N_7",
+   "inst": "pv_N_7",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_S_0",
+   "inst": "pv_S_0",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_S_1",
+   "inst": "pv_S_1",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_S_2",
+   "inst": "pv_S_2",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_S_3",
+   "inst": "pv_S_3",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_S_4",
+   "inst": "pv_S_4",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "rs_pv_S_5",
+   "inst": "pv_S_5",
+   "pin": "cland_tstart_out",
+   "direction": "input"
+  },
+  {
+   "port": "pst_hgi_EN_0",
+   "inst": "hgi_EN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_0",
+   "inst": "pc_EN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_0",
+   "inst": "phy_EN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_0",
+   "inst": "hg_EN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_sys_SE",
+   "inst": "sys_SE",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_io_E6",
+   "inst": "io_E6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_sys_c",
+   "inst": "sys_c",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_sys_SW",
+   "inst": "sys_SW",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_io_W2",
+   "inst": "io_W2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_0",
+   "inst": "hgi_WN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_0",
+   "inst": "hg_WN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_0",
+   "inst": "phy_WN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_0",
+   "inst": "pc_WN_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_0",
+   "inst": "pv_N_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_1",
+   "inst": "hgi_EN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_1",
+   "inst": "pc_EN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_1",
+   "inst": "phy_EN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_1",
+   "inst": "hg_EN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_1",
+   "inst": "hg_WN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_1",
+   "inst": "phy_WN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_1",
+   "inst": "pc_WN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_1",
+   "inst": "hgi_WN_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_1",
+   "inst": "pv_N_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_2",
+   "inst": "hgi_EN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_2",
+   "inst": "pc_EN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_2",
+   "inst": "phy_EN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_2",
+   "inst": "hg_EN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_2",
+   "inst": "hg_WN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_2",
+   "inst": "phy_WN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_2",
+   "inst": "pc_WN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_2",
+   "inst": "hgi_WN_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_2",
+   "inst": "pv_N_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_3",
+   "inst": "pc_EN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_3",
+   "inst": "phy_EN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_3",
+   "inst": "hg_EN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_3",
+   "inst": "hgi_EN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_3",
+   "inst": "hg_WN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_3",
+   "inst": "phy_WN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_3",
+   "inst": "pc_WN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_3",
+   "inst": "hgi_WN_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_3",
+   "inst": "pv_N_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_4",
+   "inst": "pc_EN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_4",
+   "inst": "phy_EN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_4",
+   "inst": "hg_EN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_4",
+   "inst": "hgi_EN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_4",
+   "inst": "hg_WN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_4",
+   "inst": "phy_WN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_4",
+   "inst": "pc_WN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_4",
+   "inst": "hgi_WN_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_4",
+   "inst": "pv_N_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_5",
+   "inst": "pv_N_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_5",
+   "inst": "pc_EN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_5",
+   "inst": "phy_EN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_5",
+   "inst": "hg_EN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_5",
+   "inst": "hgi_EN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_5",
+   "inst": "hg_WN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_5",
+   "inst": "phy_WN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_5",
+   "inst": "pc_WN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_5",
+   "inst": "hgi_WN_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_6",
+   "inst": "hgi_EN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_6",
+   "inst": "pc_EN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_6",
+   "inst": "phy_EN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_6",
+   "inst": "hg_EN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_6",
+   "inst": "hgi_WN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_6",
+   "inst": "phy_WN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_6",
+   "inst": "pc_WN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_6",
+   "inst": "hg_WN_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_6",
+   "inst": "pv_N_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_EN_7",
+   "inst": "hgi_EN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_EN_7",
+   "inst": "pc_EN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_EN_7",
+   "inst": "phy_EN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_EN_7",
+   "inst": "hg_EN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WN_7",
+   "inst": "hgi_WN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WN_7",
+   "inst": "hg_WN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WN_7",
+   "inst": "phy_WN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WN_7",
+   "inst": "pc_WN_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_N_7",
+   "inst": "pv_N_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_0",
+   "inst": "hgi_ES_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_0",
+   "inst": "pc_ES_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_0",
+   "inst": "phy_ES_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_0",
+   "inst": "hg_ES_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_0",
+   "inst": "hgi_WS_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_0",
+   "inst": "hg_WS_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_0",
+   "inst": "phy_WS_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_0",
+   "inst": "pc_WS_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_0",
+   "inst": "pv_S_0",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_1",
+   "inst": "hgi_ES_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_1",
+   "inst": "pc_ES_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_1",
+   "inst": "phy_ES_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_1",
+   "inst": "hg_ES_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_1",
+   "inst": "hg_WS_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_1",
+   "inst": "phy_WS_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_1",
+   "inst": "pc_WS_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_1",
+   "inst": "hgi_WS_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_1",
+   "inst": "pv_S_1",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_2",
+   "inst": "hgi_ES_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_2",
+   "inst": "hg_ES_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_2",
+   "inst": "pc_ES_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_2",
+   "inst": "phy_ES_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_2",
+   "inst": "hg_WS_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_2",
+   "inst": "phy_WS_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_2",
+   "inst": "pc_WS_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_2",
+   "inst": "hgi_WS_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_2",
+   "inst": "pv_S_2",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_3",
+   "inst": "hg_ES_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_3",
+   "inst": "pc_ES_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_3",
+   "inst": "phy_ES_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_3",
+   "inst": "hgi_ES_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_3",
+   "inst": "hg_WS_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_3",
+   "inst": "phy_WS_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_3",
+   "inst": "pc_WS_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_3",
+   "inst": "hgi_WS_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_3",
+   "inst": "pv_S_3",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_4",
+   "inst": "hg_ES_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_4",
+   "inst": "pc_ES_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_4",
+   "inst": "phy_ES_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_4",
+   "inst": "hgi_ES_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_4",
+   "inst": "hg_WS_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_4",
+   "inst": "pc_WS_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_4",
+   "inst": "phy_WS_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_4",
+   "inst": "hgi_WS_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_4",
+   "inst": "pv_S_4",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_5",
+   "inst": "hg_ES_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_5",
+   "inst": "pc_ES_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_5",
+   "inst": "phy_ES_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_5",
+   "inst": "hgi_ES_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_5",
+   "inst": "phy_WS_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_5",
+   "inst": "pc_WS_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_5",
+   "inst": "hg_WS_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_5",
+   "inst": "hgi_WS_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_5",
+   "inst": "pv_S_5",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_6",
+   "inst": "pv_S_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_6",
+   "inst": "hg_ES_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_6",
+   "inst": "pc_ES_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_6",
+   "inst": "phy_ES_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_6",
+   "inst": "hgi_ES_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_6",
+   "inst": "phy_WS_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_6",
+   "inst": "pc_WS_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_6",
+   "inst": "hg_WS_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_6",
+   "inst": "hgi_WS_6",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pv_S_7",
+   "inst": "pv_S_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_ES_7",
+   "inst": "hgi_ES_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_ES_7",
+   "inst": "pc_ES_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_ES_7",
+   "inst": "phy_ES_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_ES_7",
+   "inst": "hg_ES_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hgi_WS_7",
+   "inst": "hgi_WS_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_phy_WS_7",
+   "inst": "phy_WS_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_pc_WS_7",
+   "inst": "pc_WS_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hg_WS_7",
+   "inst": "hg_WS_7",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hroot_EN",
+   "inst": "hroot_EN",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hroot_ES",
+   "inst": "hroot_ES",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hub_Eo",
+   "inst": "hub_Eo",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hub_Ei",
+   "inst": "hub_Ei",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hroot_WN",
+   "inst": "hroot_WN",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hroot_WS",
+   "inst": "hroot_WS",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hub_Wo",
+   "inst": "hub_Wo",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  },
+  {
+   "port": "pst_hub_Wi",
+   "inst": "hub_Wi",
+   "pin": "cland_tstart_in",
+   "direction": "output"
+  }
+ ]
+}

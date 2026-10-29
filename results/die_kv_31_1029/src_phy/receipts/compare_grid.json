@@ -1,0 +1,68 @@
+{
+ "odb": "/n/pg_grid/native_grid.odb",
+ "old_grid_rects": 19798,
+ "new_grid_rects": 19798,
+ "only_old": 0,
+ "only_new": 0,
+ "identical": true,
+ "vddphy_m8_m9_wires": {
+  "M9": 92,
+  "M8": 92
+ },
+ "supply_iterms": {
+  "VDD": {
+   "total": 38127,
+   "macro_iterms": 160,
+   "macro_examples": [
+    [
+     "sys_c",
+     "VDD"
+    ],
+    [
+     "sys_SW",
+     "VDD"
+    ],
+    [
+     "sys_SE",
+     "VDD"
+    ],
+    [
+     "pv_S_7",
+     "VDD"
+    ]
+   ]
+  },
+  "VSS": {
+   "total": 38127,
+   "macro_iterms": 160,
+   "macro_examples": [
+    [
+     "sys_c",
+     "VSS"
+    ],
+    [
+     "sys_SW",
+     "VSS"
+    ],
+    [
+     "sys_SE",
+     "VSS"
+    ],
+    [
+     "pv_S_7",
+     "VSS"
+    ]
+   ]
+  },
+  "VDDPHY": {
+   "total": 1,
+   "macro_iterms": 1,
+   "macro_examples": [
+    [
+     "sys_c",
+     "VDDPHY"
+    ]
+   ]
+  }
+ }
+}

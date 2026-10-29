@@ -1,0 +1,19 @@
+{
+  "verdict": "PG_GRID_MATERIALIZED_SOURCE_UNCHANGED",
+  "source": "/n/imported/provider.odb",
+  "target": "/n/pg_grid/native_grid.odb",
+  "cells": 38127,
+  "block_obstructions": 31845,
+  "non_pg_sha256": "cce6226e17592e0d3fde4fa9808970c28dfda5ee15e99794de7fd2354344d4ee",
+  "supply_iterms": {
+    "VDD": 38127,
+    "VSS": 38127,
+    "VDDPHY": 0
+  },
+  "supply_shapes": {
+    "VDD": 1711367,
+    "VSS": 1700546,
+    "VDDPHY": 8648
+  },
+  "scope": "Canonical top PG only. No std-cell access, macro-PG closure, IR, DRC, routed clock timing or freeze claim."
+}

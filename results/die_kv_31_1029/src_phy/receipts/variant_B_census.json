@@ -1,0 +1,436 @@
+{
+ "per_net": {
+  "VSS": {
+   "groups_ok": 18070,
+   "contacts_ok": 30294,
+   "groups_failed": 4525,
+   "contacts_failed": 7673
+  },
+  "VDD": {
+   "groups_ok": 18357,
+   "contacts_ok": 30974,
+   "groups_failed": 4238,
+   "contacts_failed": 6993
+  }
+ },
+ "summary": {
+  "groups": 45190,
+  "attempted": 45190,
+  "connected_groups": 36427,
+  "connected_contacts": 61268,
+  "failed_groups": 8763,
+  "routing_rectangles": 983529,
+  "vias": 291416,
+  "verdict": "INCOMPLETE_NO_MATERIALIZATION",
+  "owned_grid_obstructions": 0,
+  "rejections": {
+   "obstacle_M8": 195086,
+   "obstacle_M5": 25,
+   "obstacle_M7": 968,
+   "obstacle_M4": 1
+  },
+  "obstacle_examples": {
+   "M8": {
+    "candidate": [
+     1065216,
+     95140,
+     1065408,
+     95180
+    ],
+    "blocking": [
+     1009800.0,
+     94840.0,
+     1069200.0,
+     95240.0
+    ]
+   },
+   "M5": {
+    "candidate": [
+     5540820,
+     1520590,
+     5540844,
+     1520686
+    ],
+    "blocking": [
+     5540796.0,
+     1520448.0,
+     5540820.0,
+     1520640.0
+    ]
+   },
+   "M7": {
+    "candidate": [
+     5540944,
+     1520598,
+     5540976,
+     1520678
+    ],
+    "blocking": [
+     5540944.0,
+     1520448.0,
+     5540976.0,
+     1520640.0
+    ]
+   },
+   "M4": {
+    "candidate": [
+     6618352,
+     26667620,
+     6618448,
+     26667644
+    ],
+    "blocking": [
+     6618240.0,
+     26667660.0,
+     6618432.0,
+     26667684.0
+    ]
+   }
+  },
+  "soft_charge": {
+   "layer": "M7",
+   "soft_stripes": 3908,
+   "charged_stripe_gcells": 10786,
+   "max_use": 0.1071,
+   "over_0p6": 0,
+   "tracks_used": 23190,
+   "top": [
+    [
+     3848,
+     1363,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3729,
+     1504,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3610,
+     1645,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3491,
+     1786,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3253,
+     2067,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3134,
+     2208,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3015,
+     2349,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     3015,
+     2361,
+     9,
+     84,
+     0.1071
+    ],
+    [
+     849,
+     70,
+     12,
+     126,
+     0.0952
+    ],
+    [
+     849,
+     211,
+     12,
+     126,
+     0.0952
+    ]
+   ],
+   "note": "use = distinct PG tracks on the stripe within one 10.8-um gcell / stripe tracks"
+  }
+ },
+ "failed_examples": [
+  {
+   "net": "VSS",
+   "rail": [
+    7572852,
+    212751,
+    7574472,
+    212769
+   ],
+   "members": [
+    "ck_r2939_0"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    8851572,
+    212751,
+    8853192,
+    212769
+   ],
+   "members": [
+    "ck_r955_0"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    2223288,
+    213021,
+    2224908,
+    213039
+   ],
+   "members": [
+    "ck_r1935_0"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    3502008,
+    213021,
+    3503628,
+    213039
+   ],
+   "members": [
+    "ck_r3919_0"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    5939568,
+    236511,
+    5941188,
+    236529
+   ],
+   "members": [
+    "ck_b7573"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    5939568,
+    285651,
+    5941188,
+    285669
+   ],
+   "members": [
+    "ck_b7578"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    7585272,
+    297531,
+    7586352,
+    297549
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r2938_0.$auto$ff.cc:337:slice$303"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    8863992,
+    297531,
+    8865072,
+    297549
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r954_0.$auto$ff.cc:337:slice$303"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    2216808,
+    297801,
+    2217888,
+    297819
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r1931_0.$auto$ff.cc:337:slice$303"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    3495528,
+    297801,
+    3496608,
+    297819
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r3915_0.$auto$ff.cc:337:slice$303"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    7585110,
+    298071,
+    7586352,
+    298089
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r2938_0.$abc$357$auto$blifparse.cc:397:parse_blif$359",
+    "start_provider/$flatten\\u_st_r2938_0.$auto$ff.cc:337:slice$300"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    8863830,
+    298071,
+    8865072,
+    298089
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r954_0.$abc$357$auto$blifparse.cc:397:parse_blif$359",
+    "start_provider/$flatten\\u_st_r954_0.$auto$ff.cc:337:slice$300"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    2216646,
+    298341,
+    2217888,
+    298359
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r1931_0.$abc$357$auto$blifparse.cc:397:parse_blif$359",
+    "start_provider/$flatten\\u_st_r1931_0.$auto$ff.cc:337:slice$300"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    3495366,
+    298341,
+    3496608,
+    298359
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r3915_0.$abc$357$auto$blifparse.cc:397:parse_blif$359",
+    "start_provider/$flatten\\u_st_r3915_0.$auto$ff.cc:337:slice$300"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    7577928,
+    298611,
+    7579548,
+    298629
+   ],
+   "members": [
+    "ck_r2938_0"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    7584408,
+    298611,
+    7587432,
+    298629
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r2938_0.$abc$357$auto$blifparse.cc:397:parse_blif$360",
+    "start_provider/$flatten\\u_rst_r2938_0.$abc$357$auto$blifparse.cc:397:parse_blif$358",
+    "start_provider/$flatten\\u_st_r2938_0.$abc$361$auto$blifparse.cc:397:parse_blif$365",
+    "start_provider/$flatten\\u_st_r2938_0.$abc$361$auto$blifparse.cc:397:parse_blif$363",
+    "start_provider/$flatten\\u_st_r2938_0.$abc$361$auto$blifparse.cc:397:parse_blif$362",
+    "start_provider/$flatten\\u_st_r2938_0.$auto$ff.cc:337:slice$301",
+    "start_provider/$flatten\\u_rst_r2938_0.$auto$ff.cc:337:slice$304"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    8856648,
+    298611,
+    8858268,
+    298629
+   ],
+   "members": [
+    "ck_r954_0"
+   ]
+  },
+  {
+   "net": "VSS",
+   "rail": [
+    8863128,
+    298611,
+    8866152,
+    298629
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r954_0.$abc$357$auto$blifparse.cc:397:parse_blif$360",
+    "start_provider/$flatten\\u_rst_r954_0.$abc$357$auto$blifparse.cc:397:parse_blif$358",
+    "start_provider/$flatten\\u_st_r954_0.$abc$361$auto$blifparse.cc:397:parse_blif$365",
+    "start_provider/$flatten\\u_st_r954_0.$abc$361$auto$blifparse.cc:397:parse_blif$363",
+    "start_provider/$flatten\\u_st_r954_0.$abc$361$auto$blifparse.cc:397:parse_blif$362",
+    "start_provider/$flatten\\u_st_r954_0.$auto$ff.cc:337:slice$301",
+    "start_provider/$flatten\\u_rst_r954_0.$auto$ff.cc:337:slice$304"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    2215944,
+    298881,
+    2217888,
+    298899
+   ],
+   "members": [
+    "start_provider/$flatten\\u_rst_r1931_0.$abc$357$auto$blifparse.cc:397:parse_blif$360",
+    "start_provider/$flatten\\u_rst_r1931_0.$abc$357$auto$blifparse.cc:397:parse_blif$358",
+    "start_provider/$flatten\\u_st_r1931_0.$abc$361$auto$blifparse.cc:397:parse_blif$365",
+    "start_provider/$flatten\\u_st_r1931_0.$abc$361$auto$blifparse.cc:397:parse_blif$363",
+    "start_provider/$flatten\\u_st_r1931_0.$abc$361$auto$blifparse.cc:397:parse_blif$362",
+    "start_provider/$flatten\\u_st_r1931_0.$auto$ff.cc:337:slice$301"
+   ]
+  },
+  {
+   "net": "VDD",
+   "rail": [
+    2218212,
+    298881,
+    2219832,
+    298899
+   ],
+   "members": [
+    "ck_r1931_0"
+   ]
+  }
+ ],
+ "VDDPHY": "no std-cell rails in phy_sys_c_ucie; macro pin contacts (sys_c VDDPHY M7 -> M8) are outside plan_access scope"
+}
