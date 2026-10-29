@@ -5447,3 +5447,9 @@ Collection priority for Claude: collect existing live results and preserve failu
 
 OWNER?
 HEAD six analog lanes versus one shared512/544 digital KP4 codeword remains an unresolved physical/architecture interpretation. Preserve current one-shared-codeword semantics and natural hard-module boundaries meanwhile. Broader HFWD/HBC namespace alternatives remain unadopted and are not blocking the selected80XB activation entry. No other owner decision was made by ROOT; functionality-restoration/source-profile or outline contracts require their normal explicit design event. No answer is required to resume other work.
+
+## CODEX takeover 2026-10-29 02:51 PDT onward
+All185 lane files inventoried in lanes/CODEX.md; 8 active owner groups plus independent geometry and root integration cover every lane. Live inherited jobs preserved. Canonical main309dfdf952 on intel2; local checkout fast-forwarded. Critical fixes assigned: S81 FEED9>405 clock tool; QC joint clock/PG484 bases and START native frame; KV physicalSTART140; HEAD popcount/LEP/pads; HBM strictbind280/streetgraph/core closure; all tokens separate.
+
+### OWNER?
+None newly required; pending decisions recorded here as plain text while other work continues. Existing HEAD shared KP4 codeword owner ruling02:39 is closed and binding.

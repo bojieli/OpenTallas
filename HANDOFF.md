@@ -1624,3 +1624,7 @@ CODEX: 2026-10-29 02:56 PDT shared clock FEED balanced/nativepack candidate d643
 CODEX: 2026-10-29 02:56 PDT Qwen native ABI failure fixed reusable post-closure build path dfdd1f4b2/fa6f20524 READY; actual legacyFAIL/preparedPASS/controlCAUGHT,0cycles. Inherited nominal5/14images983frames live; frame mutantCAUGHT; no token/G5claim.
 
 CODEX: 2026-10-29 02:57 PDT independent HEADtileclock G1 PASS-COND diagnostic CTS/GRT; actual378tap/pad rectangles0bad/maxleg365um; post-DPL movabletrunk legality recheck required. Evidence9ada7d622; HEAD owner notified.
+
+CODEX: 2026-10-29 takeover resumed; all185 lanes inventoried, physical5dies/token/sharedclock/flow/independentGEOM active; inherited jobs preserved, no blocking owner dialogs. Canonicalmain309dfdf952.
+
+CODEX: 2026-10-29 02:57 PDT HEAD tile prebuild clock site45→1→0 fixed; independent G1COND/diagnostic CTS+GRT50live epyc2 codex-head-tile-closure-1029, candidatee4be546a7, noRTLcycles/noSIGNED.
