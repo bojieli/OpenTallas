@@ -1,0 +1,16 @@
+{
+  "checks": [
+    {
+      "mode": "exact",
+      "returncode": 0,
+      "accepted": true
+    },
+    {
+      "mode": "wrong_quarter",
+      "returncode": 1,
+      "accepted": true
+    }
+  ],
+  "pass_all": true,
+  "added_cycles": 0
+}
