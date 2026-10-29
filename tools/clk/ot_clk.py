@@ -22,6 +22,9 @@ Usage:
   ot_clk.py kit     CONFIG --out D [--workers N] fail-closed build: check, write stage cal, run die_trial kit
   ot_clk.py replay  CONFIG --out D [--legacy]   P0: run kit, cmp clock outputs vs the config's reference run
   ot_clk.py replay  CONFIG --out D --compare-only   re-judge an existing replay (no die_trial run)
+  ot_clk.py refit   CONFIG --tree T --arr-prefix P --id ID (--tap-from CAL | --tap K1 K2) -o CAL [--write]
+                                                per-stack refit on routed legs (fit_dme_stage_cal) -> registry entry
+                                                keyed by the config's stack (cell, clock_rc); --write appends it
   ot_clk.py register --cal FILE --id ID --cell C --clock-rc R [--route LABEL] [--basis TEXT]
                                                 print a registry entry for a die_trial --region-dme-stage-cal file
 """
@@ -359,6 +362,35 @@ def register_entry(cal_path, eid, cell, clock_rc, route=None, basis=None):
     return e
 
 
+def refit_entry(cfg, registry, a):
+    """OWNER 12.17 (b): refit the region stage model of CONFIG's own stack on the routed legs of a tree it built.
+    Runs fit_dme_stage_cal (rep_um from the config; built_with = the config's current registry model, so rms_built_ps
+    shows how far the old model was off) and returns a registry entry keyed by the config's stack.cell/clock_rc."""
+    sys.path.insert(0, str(REPO / "tools" / "die_plan"))
+    import fit_dme_stage_cal
+    st = cfg["stack"]
+    argv = ["--tree", a.tree, "--arr-prefix", a.arr_prefix, "--corners", a.corners, "-o", a.o,
+            "--rep-um", _fmt((cfg.get("top") or {}).get("rep_um", 250.0))]
+    argv += ["--tap-from", a.tap_from] if a.tap_from else ["--tap"] + [str(x) for x in a.tap]
+    if a.even_legs:
+        argv.append("--even-legs")
+    ok, cur, _ = stage_check(cfg, registry)
+    built = stage_cal_file(cur) if (ok and cur) else None
+    if built is not None:
+        bp = Path(a.o).with_suffix(".built_with.json")
+        bp.write_text(json.dumps(built, indent=1) + "\n")
+        argv += ["--built-with", str(bp)]
+    fit = fit_dme_stage_cal.main(argv)
+    stats = {c: {k: f.get(k) for k in ("legs", "rms_ps", "rms_built_ps")} for c, f in fit["fit"].items()}
+    basis = (f"ot_clk refit ({cfg['die']} {cfg['event'].get('name')}) of stack {st['cell']}/{st.get('clock_rc', 'ndr')}"
+             f" on routed legs {a.arr_prefix}_<C>; " + ", ".join(f"{c} {v['legs']} legs rms {v['rms_ps']} ps"
+                                                               f" (old model {v['rms_built_ps']})" for c, v in stats.items()))
+    e = register_entry(a.o, a.id, st["cell"], st.get("clock_rc", "ndr"), a.route, basis)
+    e["source"].update(tree=str(a.tree), arrivals=str(a.arr_prefix))
+    e["fit"] = stats
+    return e
+
+
 def die_trial_rev(path):
     """provenance of the die_trial.py a build ran: path, file sha256, git commit of its checkout and whether its
     tools/die_plan is dirty (None outside a git checkout)"""
@@ -473,6 +505,20 @@ def main(argv=None):
             p.add_argument("--python", default=sys.executable)
             p.add_argument("--compare-only", action="store_true",
                            help="do not run die_trial: compare the clock outputs already in --out/kit/clock")
+    rf = sub.add_parser("refit")
+    rf.add_argument("config")
+    rf.add_argument("--registry", default=str(REGISTRY))
+    rf.add_argument("--tree", required=True)
+    rf.add_argument("--arr-prefix", required=True)
+    rf.add_argument("--corners", default="TT,FF")
+    rf.add_argument("--id", required=True)
+    g = rf.add_mutually_exclusive_group(required=True)
+    g.add_argument("--tap-from")
+    g.add_argument("--tap", nargs=2, type=float)
+    rf.add_argument("--even-legs", action="store_true")
+    rf.add_argument("--route")
+    rf.add_argument("-o", required=True)
+    rf.add_argument("--write", action="store_true", help="append the entry to --registry (refuses a duplicate id)")
     r = sub.add_parser("register")
     r.add_argument("--cal", required=True)
     r.add_argument("--id", required=True)
@@ -492,6 +538,16 @@ def main(argv=None):
         return 0
     cfg = load_config(a.config)
     registry = load_registry(a.registry)
+    if a.cmd == "refit":
+        e = refit_entry(cfg, registry, a)
+        if a.write:
+            r = json.loads(Path(a.registry).read_text())
+            if e["id"] in [x["id"] for x in r["entries"]]:
+                raise ConfigError(f"registry already has an entry {e['id']!r}")
+            r["entries"].append(e)
+            Path(a.registry).write_text(json.dumps(r, indent=1) + "\n")
+        print(json.dumps(e, indent=1))
+        return 0
     if a.cmd == "check":
         ok, _, why = stage_check(cfg, registry)
         print(("PASS" if ok else "FAIL") + ": " + "; ".join(why))

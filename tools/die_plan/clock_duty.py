@@ -127,11 +127,24 @@ def add_arguments(ap):
     ap.add_argument("arr_tt"); ap.add_argument("arr_ff"); ap.add_argument("out")
     ap.add_argument("--clock-cell", required=True, choices=("buf", "inv", "inv2", "mixed"))
     ap.add_argument("--format", default="auto", choices=("auto", "v1", "legacy"))
-    ap.add_argument("--clock-cal", default="spice_edge", choices=("spice", "spice_edge", "spice_buf_edge", "spice_cell"))
+    ap.add_argument("--clock-cal", default=None, choices=("spice", "spice_edge", "spice_buf_edge", "spice_cell"),
+                    help="default by --clock-cell (COORD 10-29): spice_edge for inv/inv2 trees, spice_cell for buf/mixed")
     ap.add_argument("--period", type=float, default=833.)
 
 
+def gate_clock_cal(clock_cell, clock_cal=None):
+    """COORD 10-29 clock number rule: spice_edge for inverter-only trees, spice_cell for any path with BUF delay
+    cells; spice_buf_edge is withdrawn for BUF paths"""
+    want = "spice_edge" if clock_cell in ("inv", "inv2") else "spice_cell"
+    if clock_cal is None:
+        return want
+    if clock_cal == "spice_buf_edge" and clock_cell in ("buf", "mixed"):
+        raise ValueError("spice_buf_edge is withdrawn for BUF paths (COORD 10-29): use spice_cell")
+    return clock_cal
+
+
 def run(a):
+    a.clock_cal = gate_clock_cal(a.clock_cell, a.clock_cal)
     corners = {c: report(p, c, a.clock_cell, a.format, a.period, a.clock_cal)
                for c, p in (("TT", a.arr_tt), ("FF", a.arr_ff))}
     result = dict(rule="duty45-55%, both phases >= inherited DFFHQNx1 TT MPW table", corners=corners)

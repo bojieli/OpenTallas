@@ -368,3 +368,34 @@ def test_s81_feed03_config_carries_the_geometry03_recipe():
     assert f["--rep-reach-max"] == "400" and f["--rep-actual-max"] == "405" and f["--region-dme-actual-max"] == "405"
     assert f["--region-dme-early"] == "0.9324" and "--region-dme-early-ff" not in f
     assert f["--region-dme-early-mode"] == "merge" and f["--clock-cell"] == "inv2" and f["--region-dme-snake"] == "all"
+
+
+def test_refit_registers_a_per_stack_entry_the_config_then_accepts(tmp_path):
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    import test_fit_dme_stage_cal as TF
+    tp, pre = TF._tree_and_arr(tmp_path)
+    rp = tmp_path / "reg.json"
+    rp.write_text(O.REGISTRY.read_text())
+    argv = ["refit", str(HERE / "configs" / "s81_go16.yaml"), "--registry", str(rp), "--tree", str(tp),
+            "--arr-prefix", str(pre), "--id", "inv2_ndr_refit_test", "--tap", "0.042", "5e-6",
+            "-o", str(tmp_path / "cal.json"), "--write"]
+    assert O.main(argv) == 0
+    e = [x for x in json.loads(rp.read_text())["entries"] if x["id"] == "inv2_ndr_refit_test"][0]
+    assert e["key"]["cell"] == O.CELLS["inv2"] and e["key"]["clock_rc"] == "ndr" and e["key"]["corners"] == ["TT", "FF"]
+    assert e["fit"]["TT"]["legs"] == 40 and e["fit"]["TT"]["rms_built_ps"] is not None
+    assert (tmp_path / "cal.built_with.json").is_file()      # old model of this config priced against the routed legs
+    c = cfg("s81_go16")
+    c["stage_model"]["entry"] = "inv2_ndr_refit_test"
+    assert O.stage_check(c, O.load_registry(rp))[0]
+    with pytest.raises(O.ConfigError):                      # duplicate id refused
+        O.main(argv)
+
+
+def test_duty_clock_cal_follows_the_cell_coord_1029():
+    sys.path.insert(0, str(HERE.parent / "die_plan"))
+    import clock_duty as CD
+    assert CD.gate_clock_cal("inv2") == "spice_edge" and CD.gate_clock_cal("inv") == "spice_edge"
+    assert CD.gate_clock_cal("buf") == "spice_cell" and CD.gate_clock_cal("mixed") == "spice_cell"
+    assert CD.gate_clock_cal("inv2", "spice") == "spice"     # explicit choice kept
+    with pytest.raises(ValueError):
+        CD.gate_clock_cal("buf", "spice_buf_edge")
