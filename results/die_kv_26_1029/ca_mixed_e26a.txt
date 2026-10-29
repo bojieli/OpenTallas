@@ -1,0 +1,3 @@
+DIE-KV-26 CA per COORD 10-29 clock-number rule: spice_cell rows for crossings touching a BUFx24-padded tap (phy partitions, 32 taps), spice_edge rows otherwise
+TT crossings 3595 phy(BUF-path) crossings 32 mixed worst lo 104.8 pc_ES_3->pc_ES_4 fail<100 0 | phy worst (cell) (273.5, 'phy_WS_3->phy_WS_2') | all-cell worst 58.6 pc_ES_3->pc_ES_4 worst hi mixed 515.9 slot_read fail 0 guard fail 0
+FF crossings 3595 phy(BUF-path) crossings 32 mixed worst lo 109.6 hg_EN_1->pc_EN_1 fail<100 0 | phy worst (cell) (280.0, 'phy_WS_3->phy_WS_2') | all-cell worst 101.6 hg_EN_1->pc_EN_1 worst hi mixed 516.3 slot_read fail 0 guard fail 0
