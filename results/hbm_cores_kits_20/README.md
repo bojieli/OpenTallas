@@ -81,3 +81,25 @@ rest are left to the GRT measured-arrival hold repair (UNCHECKED).
 - `qwdec_k20qb`: OT_F4_SEG 8 plus OT_F4_MAX_UM 30. Unit oth-ubuntu-1368473-1793309014.
 
 Collect: the `OT_F4` / `OT_F4_SEG` lines in 4_1_cts.log, then hold_gate.log (post-CTS FF WNS and endpoints), then sign-off.
+
+## qwdec results (15:1x, CTS-only probes from the retained qwdec_v1 3_place, `qwdec/cts_probe.sh` = run_kit_hbm.sh cts + hold_gate)
+
+The OT_F4_SEG full kits (qwdec_k20qa/qb) were stopped in LEC once the probe showed seg did not help. Their run data was deleted.
+
+| probe (epyc2 hbm-cores-kits-20/qw/probe_*) | F4 log | post-CTS FF hold gate (r2r) | TT tap insertion |
+|---|---|---|---|
+| baseline qwdec_v1 | moved 3411 skipped 14581 far 8474 | FAIL -28.98 / 2736 | 250 (233-277) |
+| qa: OT_F4_SEG 8 | moved 6818 far 13311 | FAIL -27.96 / 2877 | 250 (232-277) |
+| w20s: SEG 8 + MAX_UM 30 | moved 7771 far 10739 | FAIL -29.48 / 3118 | - |
+| pr: **OT_F4_PAIR 1** | moved 13277 skipped 4942 far 4043 | **PASS -22.90 / 1278** | 251 (231-275) |
+| pr24: **OT_F4_PAIR 1 + OT_F4_LEAF_ADD 24** | moved 17445 skipped 1512 far 4626 | **PASS -19.54 / 560** | 251 (232-280) |
+
+All numbers are CHECKED (logs). Pair geometry on qa 4_cts.odb (`qwdec/hp.tcl`, `qwdec/dist.py`): all 2,877 failing pairs are on different
+leaves (0 on the same leaf). The launch-capture flop distance is p10/p50/p90 1.3/2.4/6.6 um. The capture sits 2.1/4.4/14.3 um from the
+launch leaf driver, and the two leaf drivers are 7.1 um apart (p50) but have arrivals about 40 ps apart. The cause is co-leafing judged
+from the chain head (or segment head). Placement is not the cause.
+
+Fix: `physical/die_plan/hbm_arch_cores/f4_chain_leaf.tcl` gets OT_F4_PAIR=1 (opt-in, default off, so the existing path is
+byte-identical in behaviour). It walks every chain from head to tail and puts each capture on its own launch flop's current leaf,
+with the same 20 um and leaf-growth bounds. Test `test_f4_pair.py`. A kit opts in with `--orfs-var OT_F4_PAIR=1` (plus
+`--orfs-var OT_F4_LEAF_ADD=24` for pr24). The remaining 560-1278 r2r endpoints go to the GRT measured-arrival hold repair.
