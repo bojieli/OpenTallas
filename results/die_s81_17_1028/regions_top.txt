@@ -1,0 +1,26 @@
+TT
+  bk_sel     h  -566.8 D  523.8 diag  925.4 cls core    clk_c3->clk_t1 ee  778.9 us 146.5 lat -401.6 ocv 53.7 st 202/210 ea 7074 dist 2402 | core:-566.8/544 of 658 reg-reg:-522.9/1722 of 1892
+  svc_12     h  -311.5 D  275.5 diag  275.5 cls reg-reg clk_t1->clk_t19 ee  188.2 us  87.2 lat    0.0 ocv 46.7 st 132/128 ea 4666 dist 2424 | reg-reg:-311.5/699 of 756
+  svc_13     h  -304.7 D  268.0 diag  268.0 cls reg-reg clk_t1->clk_t23 ee  179.9 us  88.0 lat    0.0 ocv 47.4 st 116/112 ea 3982 dist 2774 | reg-reg:-304.7/698 of 756
+  svc_8      h  -280.4 D  244.1 diag  244.1 cls reg-reg clk_t1->clk_t19 ee  155.3 us  88.8 lat    0.0 ocv 46.9 st 156/152 ea 5565 dist 2424 | reg-reg:-280.4/725 of 756
+  svc_9      h  -275.8 D  238.9 diag  238.9 cls reg-reg clk_t1->clk_t23 ee  148.4 us  90.5 lat    0.0 ocv 47.6 st 172/168 ea 6249 dist 2774 | reg-reg:-275.8/718 of 756
+  svc_0      h  -272.5 D  242.2 diag  242.2 cls reg-reg clk_t5->clk_t8 ee  165.3 us  76.9 lat    0.0 ocv 40.9 st 106/104 ea 3701 dist 1379 | reg-reg:-272.5/667 of 756
+  svc_4      h  -262.9 D  232.8 diag  232.8 cls reg-reg clk_t1->clk_t12 ee  158.7 us  74.0 lat    0.0 ocv 40.8 st 178/176 ea 6326 dist 1561 | reg-reg:-262.9/675 of 756
+  s_7S_C     h  -259.4 D  239.9 diag  298.6 cls core    clk_c3->clk_c0 ee   30.4 us  41.8 lat  167.6 ocv 30.2 st 170/164 ea 5628 dist 818 | core:-259.4/104 of 140 reg-reg:-226.7/218 of 240
+  svc_15     h  -247.6 D  212.5 diag  212.5 cls reg-reg clk_t10->clk_t23 ee  125.2 us  87.3 lat    0.0 ocv 45.8 st 128/124 ea 4369 dist 1309 | reg-reg:-247.6/712 of 756
+  s_5N_L2    h  -246.0 D  226.1 diag  293.4 cls core    clk_c0->clk_t3 ee  235.9 us  48.6 lat  -58.4 ocv 30.6 st 146/144 ea 4897 dist 954 | core:-246.0/107 of 140 reg-reg:-236.5/199 of 240
+  svc_6      h  -244.1 D  213.2 diag  213.2 cls reg-reg clk_t5->clk_t8 ee  135.4 us  77.8 lat    0.0 ocv 41.6 st 166/164 ea 5904 dist 1379 | reg-reg:-244.1/639 of 756
+  lk_EN2     h  -243.7 D  218.0 diag  218.0 cls reg-reg clk_t14->clk ee  152.3 us  65.7 lat    0.0 ocv 36.4 st 222/218 ea 7408 dist 1186 | reg-reg:-243.7/801 of 992
+FF
+  bk_sel     h  -559.6 D  513.5 diag  838.5 cls core    clk_c3->clk_t1 ee  701.5 us 137.0 lat -325.0 ocv 47.0 st 202/210 ea 6263 dist 2402 | core:-559.6/566 of 658 reg-reg:-466.9/1741 of 1892
+  svc_12     h  -306.2 D  266.7 diag  266.7 cls reg-reg clk_t1->clk_t19 ee  182.8 us  84.0 lat    0.0 ocv 40.3 st 132/128 ea 4130 dist 2424 | reg-reg:-306.2/693 of 756
+  svc_13     h  -299.4 D  259.4 diag  259.4 cls reg-reg clk_t1->clk_t23 ee  175.9 us  83.5 lat    0.0 ocv 40.9 st 116/112 ea 3520 dist 2774 | reg-reg:-299.4/701 of 756
+  svc_8      h  -274.6 D  234.9 diag  234.9 cls reg-reg clk_t1->clk_t19 ee  152.5 us  82.4 lat    0.0 ocv 40.5 st 156/152 ea 4932 dist 2424 | reg-reg:-274.6/722 of 756
+  svc_9      h  -269.1 D  228.9 diag  228.9 cls reg-reg clk_t1->clk_t23 ee  145.4 us  83.5 lat    0.0 ocv 41.1 st 172/168 ea 5546 dist 2774 | reg-reg:-269.1/717 of 756
+  svc_0      h  -259.1 D  225.1 diag  225.1 cls reg-reg clk_t5->clk_t8 ee  152.6 us  72.5 lat    0.0 ocv 34.9 st 106/104 ea 3275 dist 1379 | reg-reg:-259.1/671 of 756
+  svc_4      h  -249.6 D  215.7 diag  215.7 cls reg-reg clk_t1->clk_t12 ee  144.8 us  70.9 lat    0.0 ocv 34.7 st 178/176 ea 5614 dist 1561 | reg-reg:-249.6/672 of 756
+  svc_15     h  -245.6 D  206.9 diag  206.9 cls reg-reg clk_t10->clk_t23 ee  125.3 us  81.6 lat    0.0 ocv 39.6 st 128/124 ea 3861 dist 1309 | reg-reg:-245.6/713 of 756
+  svc_3      h  -242.5 D  208.0 diag  208.0 cls reg-reg clk_t10->clk_t7 ee  138.9 us  69.1 lat    0.0 ocv 35.4 st 208/202 ea 6584 dist 1122 | reg-reg:-242.5/669 of 756
+  svc_2      h  -240.9 D  206.6 diag  206.6 cls reg-reg clk_t14->clk_t7 ee  137.6 us  68.9 lat    0.0 ocv 35.2 st 192/186 ea 6004 dist 1215 | reg-reg:-240.9/671 of 756
+  svc_7      h  -239.1 D  204.2 diag  204.2 cls reg-reg clk_t10->clk_t7 ee  134.2 us  70.0 lat    0.0 ocv 35.8 st 184/178 ea 5789 dist 1122 | reg-reg:-239.1/650 of 756
+  svc_14     h  -238.8 D  200.3 diag  200.3 cls reg-reg clk_t14->clk_t19 ee  120.7 us  79.6 lat    0.0 ocv 39.4 st 144/140 ea 4436 dist 865 | reg-reg:-238.8/723 of 756

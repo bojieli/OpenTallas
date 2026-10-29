@@ -1,0 +1,7 @@
+START Wed Oct 28 20:29:54 PDT 2026 code 410e940f4f+bindfix
+CA bind width rc 0 Wed Oct 28 21:18:21 PDT 2026
+CA sta rc 0 Wed Oct 28 21:24:21 PDT 2026
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -1317.5 hi -571.0 fail 472 slot_read fail 264 guard fail 24 start-skew fail 1139/1139 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 104.4 hi 105.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/1139 <100 0 ocv table max lo/hi 613.1/613.1 PASS
+COUNT-ALIGN FF crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 105.0 hi 133.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/1139 <100 0 ocv table max lo/hi 526.3/526.3 PASS
+DONE

@@ -1,0 +1,8020 @@
+{
+ "tool_summary": {
+  "intra": {
+   "tt_setup_ps": 85.88,
+   "ff_hold_ps": -559.59,
+   "verdict": "FAIL",
+   "ff_hold_kit_contract_ps": -333.48,
+   "kit_contract_window_ps": 180.0,
+   "kit_contract_window_needed_ps": 513.48,
+   "kit_contract_verdict": "FAIL"
+  },
+  "seam": {
+   "tt_setup_ps": null,
+   "ff_hold_ps": null,
+   "verdict": "FAIL"
+  },
+  "core_insertion": {
+   "mode": "declared",
+   "early_core_taps": 1696,
+   "source": {
+    "TT": {
+     "view": 0,
+     "declared": 1696,
+     "missing": 0
+    },
+    "FF": {
+     "view": 0,
+     "declared": 1696,
+     "missing": 0
+    }
+   },
+   "verdict": "DECLARED",
+   "note": "FAIL = early core taps without a signed core view (fail closed); DECLARED = planning estimate on plan per-tap insertion, not a gate pass"
+  },
+  "landed": {
+   "tt_setup_margin_ps": -6107.71,
+   "ff_hold_margin_ps": -5435.91,
+   "verdict": "FAIL"
+  },
+  "status": "UNCHECKED (NUMBER-CHECK pending)",
+  "label": "declared-budget (no QC kit)",
+  "data_droop": {
+   "mode": "class",
+   "tt_setup_penalty_max_ps": {
+    "intra": 8.78,
+    "intra_cross_region": null,
+    "seam": null,
+    "landed": 8.78,
+    "seam_nearest_INFO": null,
+    "landed_nearest_INFO": 8.78
+   }
+  }
+ },
+ "corners": {
+  "TT": {
+   "pairs": 178894,
+   "neg": 169902,
+   "worst_hold": -566.78,
+   "max_diag": 925.38,
+   "max_D": 523.78,
+   "dominant_all_neg": {
+    "lat": 10129,
+    "unc_spread": 124361,
+    "tree_ee": 22805,
+    "ocv": 12607
+   },
+   "mean_all_neg": {
+    "h": -78.1,
+    "tree_ee": 3.8,
+    "unc_spread": 50.2,
+    "lat": 0.2,
+    "ocv": 34.6,
+    "data": 35.7,
+    "cr": 896.8,
+    "D": 54.2,
+    "diag": 86.2,
+    "n": 169902
+   },
+   "by_class": {
+    "rom": {
+     "pairs": 33888,
+     "neg": 31956,
+     "worst_hold": -237.5,
+     "max_D": 209.1,
+     "max_diag": 244.1,
+     "mean_neg": {
+      "h": -76.5,
+      "tree_ee": 3.8,
+      "unc_spread": 48.7,
+      "lat": 0.2,
+      "ocv": 34.5,
+      "data": 35.7,
+      "cr": 1029.3,
+      "D": 52.7,
+      "diag": 83.9,
+      "n": 31956
+     }
+    },
+    "core": {
+     "pairs": 28882,
+     "neg": 26646,
+     "worst_hold": -566.8,
+     "max_D": 523.8,
+     "max_diag": 925.4,
+     "mean_neg": {
+      "h": -75.8,
+      "tree_ee": 5.5,
+      "unc_spread": 46.9,
+      "lat": 1.0,
+      "ocv": 33.1,
+      "data": 35.7,
+      "cr": 835.9,
+      "D": 53.3,
+      "diag": 123.3,
+      "n": 26646
+     }
+    },
+    "reg-reg": {
+     "pairs": 116124,
+     "neg": 111300,
+     "worst_hold": -522.9,
+     "max_D": 469.5,
+     "max_diag": 469.5,
+     "mean_neg": {
+      "h": -79.2,
+      "tree_ee": 3.4,
+      "unc_spread": 51.4,
+      "lat": 0.0,
+      "ocv": 35.0,
+      "data": 35.7,
+      "cr": 873.4,
+      "D": 54.8,
+      "diag": 78.0,
+      "n": 111300
+     }
+    }
+   },
+   "neg_if_no_unc_spread": 137074,
+   "neg_if_no_unc_spread_no_ocv": 63253,
+   "regions_top20": {
+    "bk_sel": {
+     "pairs": 2550,
+     "worst_hold": -566.8,
+     "hold_neg": 2266,
+     "worst": {
+      "h": -566.8,
+      "a": "t_bk_sel__clk_c3",
+      "b": "t_bk_sel__clk_t1",
+      "tag": "bk_sel",
+      "region": "bk_sel",
+      "ka": "core:dsdv_bksel_q",
+      "kb": "other:clk_t1",
+      "cls": "core",
+      "tree_ee": 778.9,
+      "unc_spread": 146.5,
+      "lat": -401.6,
+      "ocv": 53.7,
+      "data": 35.7,
+      "cr": 989.7,
+      "D": 523.8,
+      "diag": 925.4,
+      "lat_a": 651.6,
+      "lat_b": 250.0,
+      "ea": 7073.5,
+      "lc": 8988.6,
+      "st_a": 202,
+      "st_b": 210,
+      "lca": 189,
+      "dist": 2401.5
+     },
+     "max_diag": 925.4,
+     "max_diag_pair": [
+      "t_bk_sel__clk_c3",
+      "t_bk_sel__clk_t1",
+      "core:dsdv_bksel_q",
+      "other:clk_t1"
+     ],
+     "max_D": 523.8,
+     "max_D_pair": [
+      "t_bk_sel__clk_c3",
+      "t_bk_sel__clk_t1",
+      "core:dsdv_bksel_q",
+      "other:clk_t1"
+     ],
+     "per_class": {
+      "core": {
+       "n": 658,
+       "worst_hold": -566.8,
+       "neg": 544,
+       "max_D": 523.8,
+       "max_diag": 925.4
+      },
+      "reg-reg": {
+       "n": 1892,
+       "worst_hold": -522.9,
+       "neg": 1722,
+       "max_D": 469.5,
+       "max_diag": 469.5
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t25": {
+       "n": 1,
+       "min": 7660.8,
+       "max": 7660.8
+      },
+      "other:clk_t42": {
+       "n": 1,
+       "min": 7634.6,
+       "max": 7634.6
+      },
+      "reg": {
+       "n": 1,
+       "min": 7832.7,
+       "max": 7832.7
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 7638.3,
+       "max": 7638.3
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 7831.8,
+       "max": 7831.8
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 7615.2,
+       "max": 7615.2
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 7680.4,
+       "max": 7680.4
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 7614.8,
+       "max": 7614.8
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 7583.7,
+       "max": 7583.7
+      },
+      "core:dsdv_bk_g": {
+       "n": 1,
+       "min": 7520.6,
+       "max": 7520.6
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 7847.7,
+       "max": 7847.7
+      },
+      "other:clk_t40": {
+       "n": 1,
+       "min": 7559.0,
+       "max": 7559.0
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 7680.4,
+       "max": 7680.4
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 7559.7,
+       "max": 7559.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 7676.6,
+       "max": 7676.6
+      },
+      "other:clk_t33": {
+       "n": 1,
+       "min": 7638.0,
+       "max": 7638.0
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 7643.0,
+       "max": 7643.0
+      },
+      "core:dsdv_bksel_q": {
+       "n": 4,
+       "min": 7073.5,
+       "max": 7376.8
+      },
+      "core:dsdv_idx_tx_n32": {
+       "n": 1,
+       "min": 7143.0,
+       "max": 7143.0
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 7676.6,
+       "max": 7676.6
+      },
+      "other:clk_t35": {
+       "n": 1,
+       "min": 7633.2,
+       "max": 7633.2
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 7646.8,
+       "max": 7646.8
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 7690.2,
+       "max": 7690.2
+      },
+      "other:clk_t39": {
+       "n": 1,
+       "min": 7572.7,
+       "max": 7572.7
+      },
+      "other:clk_t28": {
+       "n": 1,
+       "min": 7578.1,
+       "max": 7578.1
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 7678.2,
+       "max": 7678.2
+      },
+      "other:clk_t36": {
+       "n": 1,
+       "min": 7655.6,
+       "max": 7655.6
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 7603.6,
+       "max": 7603.6
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 7649.1,
+       "max": 7649.1
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 7645.5,
+       "max": 7645.5
+      },
+      "other:clk_t30": {
+       "n": 1,
+       "min": 7622.3,
+       "max": 7622.3
+      },
+      "other:clk_t41": {
+       "n": 1,
+       "min": 7617.0,
+       "max": 7617.0
+      },
+      "other:clk_t37": {
+       "n": 1,
+       "min": 7674.5,
+       "max": 7674.5
+      },
+      "other:clk_t29": {
+       "n": 1,
+       "min": 7564.0,
+       "max": 7564.0
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 7640.5,
+       "max": 7640.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 7683.9,
+       "max": 7683.9
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 7662.9,
+       "max": 7662.9
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 7694.1,
+       "max": 7694.1
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 7852.4,
+       "max": 7852.4
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 7649.7,
+       "max": 7649.7
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 7660.7,
+       "max": 7660.7
+      },
+      "other:clk_t32": {
+       "n": 1,
+       "min": 7611.3,
+       "max": 7611.3
+      },
+      "other:clk_t43": {
+       "n": 1,
+       "min": 7606.1,
+       "max": 7606.1
+      },
+      "other:clk_t31": {
+       "n": 1,
+       "min": 7644.0,
+       "max": 7644.0
+      },
+      "other:clk_t34": {
+       "n": 1,
+       "min": 7667.4,
+       "max": 7667.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 7674.3,
+       "max": 7674.3
+      },
+      "core:dsdv_bksel_c": {
+       "n": 1,
+       "min": 7526.4,
+       "max": 7526.4
+      },
+      "other:clk_t38": {
+       "n": 1,
+       "min": 7529.4,
+       "max": 7529.4
+      }
+     }
+    },
+    "svc_12": {
+     "pairs": 756,
+     "worst_hold": -311.5,
+     "hold_neg": 699,
+     "worst": {
+      "h": -311.5,
+      "a": "t_svc_12__clk_t1",
+      "b": "t_svc_12__clk_t19",
+      "tag": "svc_12",
+      "region": "svc_12",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t19",
+      "cls": "reg-reg",
+      "tree_ee": 188.2,
+      "unc_spread": 87.2,
+      "lat": 0.0,
+      "ocv": 46.7,
+      "data": 35.7,
+      "cr": 605.8,
+      "D": 275.5,
+      "diag": 275.5,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 4666.0,
+      "lc": 5547.2,
+      "st_a": 132,
+      "st_b": 128,
+      "lca": 115,
+      "dist": 2423.6
+     },
+     "max_diag": 275.5,
+     "max_diag_pair": [
+      "t_svc_12__clk_t1",
+      "t_svc_12__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "max_D": 275.5,
+     "max_D_pair": [
+      "t_svc_12__clk_t1",
+      "t_svc_12__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -311.5,
+       "neg": 699,
+       "max_D": 275.5,
+       "max_diag": 275.5
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4775.9,
+       "max": 4775.9
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4718.6,
+       "max": 4718.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4666.0,
+       "max": 4666.0
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4718.0,
+       "max": 4718.0
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 4803.4,
+       "max": 4803.4
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4713.2,
+       "max": 4713.2
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4854.2,
+       "max": 4854.2
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4834.7,
+       "max": 4834.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4796.8,
+       "max": 4796.8
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4742.2,
+       "max": 4742.2
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4718.7,
+       "max": 4718.7
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4717.5,
+       "max": 4717.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4716.5,
+       "max": 4716.5
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 4765.4,
+       "max": 4765.4
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4789.9,
+       "max": 4789.9
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4745.5,
+       "max": 4745.5
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4742.1,
+       "max": 4742.1
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4779.0,
+       "max": 4779.0
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4853.7,
+       "max": 4853.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4739.2,
+       "max": 4739.2
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4668.7,
+       "max": 4668.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4832.4,
+       "max": 4832.4
+      },
+      "reg": {
+       "n": 1,
+       "min": 4728.2,
+       "max": 4728.2
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 4802.2,
+       "max": 4802.2
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4738.7,
+       "max": 4738.7
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 4798.9,
+       "max": 4798.9
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4737.0,
+       "max": 4737.0
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 4801.1,
+       "max": 4801.1
+      }
+     }
+    },
+    "svc_13": {
+     "pairs": 756,
+     "worst_hold": -304.7,
+     "hold_neg": 698,
+     "worst": {
+      "h": -304.7,
+      "a": "t_svc_13__clk_t1",
+      "b": "t_svc_13__clk_t23",
+      "tag": "svc_13",
+      "region": "svc_13",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 179.9,
+      "unc_spread": 88.0,
+      "lat": 0.0,
+      "ocv": 47.4,
+      "data": 35.7,
+      "cr": 510.4,
+      "D": 268.0,
+      "diag": 268.0,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 3981.7,
+      "lc": 4760.1,
+      "st_a": 116,
+      "st_b": 112,
+      "lca": 99,
+      "dist": 2774.1
+     },
+     "max_diag": 268.0,
+     "max_diag_pair": [
+      "t_svc_13__clk_t1",
+      "t_svc_13__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "max_D": 268.0,
+     "max_D_pair": [
+      "t_svc_13__clk_t1",
+      "t_svc_13__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -304.7,
+       "neg": 698,
+       "max_D": 268.0,
+       "max_diag": 268.0
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4036.9,
+       "max": 4036.9
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4019.9,
+       "max": 4019.9
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4130.1,
+       "max": 4130.1
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4086.9,
+       "max": 4086.9
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4025.5,
+       "max": 4025.5
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3985.5,
+       "max": 3985.5
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 4095.6,
+       "max": 4095.6
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4040.4,
+       "max": 4040.4
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3981.7,
+       "max": 3981.7
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4161.7,
+       "max": 4161.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4020.4,
+       "max": 4020.4
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4091.6,
+       "max": 4091.6
+      },
+      "reg": {
+       "n": 1,
+       "min": 4038.6,
+       "max": 4038.6
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4046.9,
+       "max": 4046.9
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4123.9,
+       "max": 4123.9
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4017.5,
+       "max": 4017.5
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4114.5,
+       "max": 4114.5
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 4071.7,
+       "max": 4071.7
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 4096.7,
+       "max": 4096.7
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4049.0,
+       "max": 4049.0
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4028.4,
+       "max": 4028.4
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 4095.1,
+       "max": 4095.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4053.4,
+       "max": 4053.4
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4050.5,
+       "max": 4050.5
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4022.5,
+       "max": 4022.5
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4158.1,
+       "max": 4158.1
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4106.7,
+       "max": 4106.7
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 4093.3,
+       "max": 4093.3
+      }
+     }
+    },
+    "svc_8": {
+     "pairs": 756,
+     "worst_hold": -280.4,
+     "hold_neg": 725,
+     "worst": {
+      "h": -280.4,
+      "a": "t_svc_8__clk_t1",
+      "b": "t_svc_8__clk_t19",
+      "tag": "svc_8",
+      "region": "svc_8",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t19",
+      "cls": "reg-reg",
+      "tree_ee": 155.3,
+      "unc_spread": 88.8,
+      "lat": 0.0,
+      "ocv": 46.9,
+      "data": 35.7,
+      "cr": 733.4,
+      "D": 244.1,
+      "diag": 244.1,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 5565.3,
+      "lc": 6542.8,
+      "st_a": 156,
+      "st_b": 152,
+      "lca": 139,
+      "dist": 2423.6
+     },
+     "max_diag": 244.1,
+     "max_diag_pair": [
+      "t_svc_8__clk_t1",
+      "t_svc_8__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "max_D": 244.1,
+     "max_D_pair": [
+      "t_svc_8__clk_t1",
+      "t_svc_8__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -280.4,
+       "neg": 725,
+       "max_D": 244.1,
+       "max_diag": 244.1
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5720.6,
+       "max": 5720.6
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5677.9,
+       "max": 5677.9
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5602.4,
+       "max": 5602.4
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5673.9,
+       "max": 5673.9
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5570.0,
+       "max": 5570.0
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5670.7,
+       "max": 5670.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 5617.6,
+       "max": 5617.6
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5664.5,
+       "max": 5664.5
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5615.1,
+       "max": 5615.1
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5639.4,
+       "max": 5639.4
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5694.2,
+       "max": 5694.2
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5682.6,
+       "max": 5682.6
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5689.8,
+       "max": 5689.8
+      },
+      "reg": {
+       "n": 1,
+       "min": 5629.2,
+       "max": 5629.2
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5629.3,
+       "max": 5629.3
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5709.4,
+       "max": 5709.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5635.7,
+       "max": 5635.7
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5624.4,
+       "max": 5624.4
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5677.2,
+       "max": 5677.2
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5565.3,
+       "max": 5565.3
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5676.6,
+       "max": 5676.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5608.7,
+       "max": 5608.7
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5604.5,
+       "max": 5604.5
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5720.0,
+       "max": 5720.0
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5599.6,
+       "max": 5599.6
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5654.9,
+       "max": 5654.9
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 5617.1,
+       "max": 5617.1
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5600.1,
+       "max": 5600.1
+      }
+     }
+    },
+    "svc_9": {
+     "pairs": 756,
+     "worst_hold": -275.8,
+     "hold_neg": 718,
+     "worst": {
+      "h": -275.8,
+      "a": "t_svc_9__clk_t1",
+      "b": "t_svc_9__clk_t23",
+      "tag": "svc_9",
+      "region": "svc_9",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 148.4,
+      "unc_spread": 90.5,
+      "lat": 0.0,
+      "ocv": 47.6,
+      "data": 35.7,
+      "cr": 828.8,
+      "D": 238.9,
+      "diag": 238.9,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 6248.7,
+      "lc": 7316.3,
+      "st_a": 172,
+      "st_b": 168,
+      "lca": 155,
+      "dist": 2774.1
+     },
+     "max_diag": 238.9,
+     "max_diag_pair": [
+      "t_svc_9__clk_t1",
+      "t_svc_9__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "max_D": 238.9,
+     "max_D_pair": [
+      "t_svc_9__clk_t1",
+      "t_svc_9__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -275.8,
+       "neg": 718,
+       "max_D": 238.9,
+       "max_diag": 238.9
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6327.7,
+       "max": 6327.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6269.8,
+       "max": 6269.8
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6397.1,
+       "max": 6397.1
+      },
+      "reg": {
+       "n": 1,
+       "min": 6307.0,
+       "max": 6307.0
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6373.1,
+       "max": 6373.1
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6328.6,
+       "max": 6328.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6287.1,
+       "max": 6287.1
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6354.4,
+       "max": 6354.4
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6338.2,
+       "max": 6338.2
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6375.8,
+       "max": 6375.8
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6296.5,
+       "max": 6296.5
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6296.0,
+       "max": 6296.0
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6393.4,
+       "max": 6393.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6293.9,
+       "max": 6293.9
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6293.0,
+       "max": 6293.0
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6310.8,
+       "max": 6310.8
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6274.6,
+       "max": 6274.6
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6339.1,
+       "max": 6339.1
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6313.7,
+       "max": 6313.7
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6358.1,
+       "max": 6358.1
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6367.2,
+       "max": 6367.2
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6353.2,
+       "max": 6353.2
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6254.4,
+       "max": 6254.4
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6292.5,
+       "max": 6292.5
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6271.7,
+       "max": 6271.7
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6248.7,
+       "max": 6248.7
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6333.8,
+       "max": 6333.8
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6274.0,
+       "max": 6274.0
+      }
+     }
+    },
+    "svc_0": {
+     "pairs": 756,
+     "worst_hold": -272.5,
+     "hold_neg": 667,
+     "worst": {
+      "h": -272.5,
+      "a": "t_svc_0__clk_t5",
+      "b": "t_svc_0__clk_t8",
+      "tag": "svc_0",
+      "region": "svc_0",
+      "ka": "other:clk_t5",
+      "kb": "other:clk_t8",
+      "cls": "reg-reg",
+      "tree_ee": 165.3,
+      "unc_spread": 76.9,
+      "lat": 0.0,
+      "ocv": 40.9,
+      "data": 35.7,
+      "cr": 488.1,
+      "D": 242.2,
+      "diag": 242.2,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 3700.9,
+      "lc": 4431.2,
+      "st_a": 106,
+      "st_b": 104,
+      "lca": 91,
+      "dist": 1378.7
+     },
+     "max_diag": 242.2,
+     "max_diag_pair": [
+      "t_svc_0__clk_t5",
+      "t_svc_0__clk_t8",
+      "other:clk_t5",
+      "other:clk_t8"
+     ],
+     "max_D": 242.2,
+     "max_D_pair": [
+      "t_svc_0__clk_t5",
+      "t_svc_0__clk_t8",
+      "other:clk_t5",
+      "other:clk_t8"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -272.5,
+       "neg": 667,
+       "max_D": 242.2,
+       "max_diag": 242.2
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t15": {
+       "n": 1,
+       "min": 3807.7,
+       "max": 3807.7
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 3747.8,
+       "max": 3747.8
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 3865.4,
+       "max": 3865.4
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 3761.4,
+       "max": 3761.4
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 3805.3,
+       "max": 3805.3
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 3841.8,
+       "max": 3841.8
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 3823.1,
+       "max": 3823.1
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 3849.1,
+       "max": 3849.1
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 3760.2,
+       "max": 3760.2
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 3757.8,
+       "max": 3757.8
+      },
+      "reg": {
+       "n": 1,
+       "min": 3762.7,
+       "max": 3762.7
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 3824.6,
+       "max": 3824.6
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 3866.2,
+       "max": 3866.2
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 3848.5,
+       "max": 3848.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 3748.5,
+       "max": 3748.5
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 3814.1,
+       "max": 3814.1
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 3827.6,
+       "max": 3827.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3704.6,
+       "max": 3704.6
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 3793.0,
+       "max": 3793.0
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 3789.8,
+       "max": 3789.8
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 3792.3,
+       "max": 3792.3
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 3793.6,
+       "max": 3793.6
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 3748.3,
+       "max": 3748.3
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 3776.6,
+       "max": 3776.6
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 3748.9,
+       "max": 3748.9
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 3765.0,
+       "max": 3765.0
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3700.9,
+       "max": 3700.9
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 3781.7,
+       "max": 3781.7
+      }
+     }
+    },
+    "svc_4": {
+     "pairs": 756,
+     "worst_hold": -262.9,
+     "hold_neg": 675,
+     "worst": {
+      "h": -262.9,
+      "a": "t_svc_4__clk_t1",
+      "b": "t_svc_4__clk_t12",
+      "tag": "svc_4",
+      "region": "svc_4",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t12",
+      "cls": "reg-reg",
+      "tree_ee": 158.7,
+      "unc_spread": 74.0,
+      "lat": 0.0,
+      "ocv": 40.8,
+      "data": 35.7,
+      "cr": 866.7,
+      "D": 232.8,
+      "diag": 232.8,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 6326.4,
+      "lc": 7425.9,
+      "st_a": 178,
+      "st_b": 176,
+      "lca": 163,
+      "dist": 1561.2
+     },
+     "max_diag": 232.8,
+     "max_diag_pair": [
+      "t_svc_4__clk_t1",
+      "t_svc_4__clk_t12",
+      "other:clk_t1",
+      "other:clk_t12"
+     ],
+     "max_D": 232.8,
+     "max_D_pair": [
+      "t_svc_4__clk_t1",
+      "t_svc_4__clk_t12",
+      "other:clk_t1",
+      "other:clk_t12"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -262.9,
+       "neg": 675,
+       "max_D": 232.8,
+       "max_diag": 232.8
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6381.1,
+       "max": 6381.1
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6443.7,
+       "max": 6443.7
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6443.2,
+       "max": 6443.2
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6381.6,
+       "max": 6381.6
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6481.9,
+       "max": 6481.9
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6469.5,
+       "max": 6469.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6386.2,
+       "max": 6386.2
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6438.7,
+       "max": 6438.7
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6406.3,
+       "max": 6406.3
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6463.3,
+       "max": 6463.3
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6326.4,
+       "max": 6326.4
+      },
+      "reg": {
+       "n": 1,
+       "min": 6390.7,
+       "max": 6390.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6437.9,
+       "max": 6437.9
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6434.5,
+       "max": 6434.5
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6403.2,
+       "max": 6403.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6485.2,
+       "max": 6485.2
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6403.4,
+       "max": 6403.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6398.2,
+       "max": 6398.2
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6464.4,
+       "max": 6464.4
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6400.5,
+       "max": 6400.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6423.4,
+       "max": 6423.4
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6394.9,
+       "max": 6394.9
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6453.6,
+       "max": 6453.6
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6460.2,
+       "max": 6460.2
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6465.0,
+       "max": 6465.0
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6329.4,
+       "max": 6329.4
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6457.5,
+       "max": 6457.5
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6386.7,
+       "max": 6386.7
+      }
+     }
+    },
+    "s_7S_C": {
+     "pairs": 380,
+     "worst_hold": -259.4,
+     "hold_neg": 322,
+     "worst": {
+      "h": -259.4,
+      "a": "t_s_7S_C__clk_c3",
+      "b": "t_s_7S_C__clk_c0",
+      "tag": "s_7S_C",
+      "region": "s_7S_C",
+      "ka": "core:ot_s81dv_xfin",
+      "kb": "core:ot_s81sl_capc5r",
+      "cls": "core",
+      "tree_ee": 30.4,
+      "unc_spread": 41.8,
+      "lat": 167.6,
+      "ocv": 30.2,
+      "data": 35.7,
+      "cr": 789.0,
+      "D": 239.9,
+      "diag": 72.3,
+      "lat_a": 274.4,
+      "lat_b": 442.0,
+      "ea": 5628.2,
+      "lc": 6489.5,
+      "st_a": 170,
+      "st_b": 164,
+      "lca": 155,
+      "dist": 817.5
+     },
+     "max_diag": 298.6,
+     "max_diag_pair": [
+      "t_s_7S_C__clk",
+      "t_s_7S_C__clk_c1",
+      "reg",
+      "core:ot_s81sl_xrt1"
+     ],
+     "max_D": 239.9,
+     "max_D_pair": [
+      "t_s_7S_C__clk_c3",
+      "t_s_7S_C__clk_c0",
+      "core:ot_s81dv_xfin",
+      "core:ot_s81sl_capc5r"
+     ],
+     "per_class": {
+      "core": {
+       "n": 140,
+       "worst_hold": -259.4,
+       "neg": 104,
+       "max_D": 239.9,
+       "max_diag": 298.6
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -226.7,
+       "neg": 218,
+       "max_D": 202.5,
+       "max_diag": 202.5
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5769.0,
+       "max": 5769.0
+      },
+      "core:ot_s81sl_eg": {
+       "n": 1,
+       "min": 5683.0,
+       "max": 5683.0
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5798.5,
+       "max": 5798.5
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5771.7,
+       "max": 5771.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5794.3,
+       "max": 5794.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5737.3,
+       "max": 5737.3
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5762.4,
+       "max": 5762.4
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5734.4,
+       "max": 5734.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5747.8,
+       "max": 5747.8
+      },
+      "core:ot_s81dv_xfin": {
+       "n": 1,
+       "min": 5628.2,
+       "max": 5628.2
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5751.6,
+       "max": 5751.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5767.6,
+       "max": 5767.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5668.8,
+       "max": 5668.8
+      },
+      "reg": {
+       "n": 1,
+       "min": 5811.6,
+       "max": 5811.6
+      },
+      "core:ot_s81sl_xrt1": {
+       "n": 1,
+       "min": 5572.7,
+       "max": 5572.7
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5748.9,
+       "max": 5748.9
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5765.1,
+       "max": 5765.1
+      },
+      "core:ot_s81sl_capc5r": {
+       "n": 1,
+       "min": 5658.7,
+       "max": 5658.7
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5759.5,
+       "max": 5759.5
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5699.6,
+       "max": 5699.6
+      }
+     }
+    },
+    "svc_15": {
+     "pairs": 756,
+     "worst_hold": -247.6,
+     "hold_neg": 712,
+     "worst": {
+      "h": -247.6,
+      "a": "t_svc_15__clk_t10",
+      "b": "t_svc_15__clk_t23",
+      "tag": "svc_15",
+      "region": "svc_15",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 125.2,
+      "unc_spread": 87.3,
+      "lat": 0.0,
+      "ocv": 45.8,
+      "data": 35.7,
+      "cr": 565.0,
+      "D": 212.5,
+      "diag": 212.5,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 4368.9,
+      "lc": 5146.4,
+      "st_a": 128,
+      "st_b": 124,
+      "lca": 111,
+      "dist": 1308.6
+     },
+     "max_diag": 212.5,
+     "max_diag_pair": [
+      "t_svc_15__clk_t10",
+      "t_svc_15__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "max_D": 212.5,
+     "max_D_pair": [
+      "t_svc_15__clk_t10",
+      "t_svc_15__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -247.6,
+       "neg": 712,
+       "max_D": 212.5,
+       "max_diag": 212.5
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t26": {
+       "n": 1,
+       "min": 4422.9,
+       "max": 4422.9
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4410.9,
+       "max": 4410.9
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4459.8,
+       "max": 4459.8
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4383.2,
+       "max": 4383.2
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 4424.7,
+       "max": 4424.7
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4436.3,
+       "max": 4436.3
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4420.9,
+       "max": 4420.9
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4431.4,
+       "max": 4431.4
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4490.4,
+       "max": 4490.4
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4427.9,
+       "max": 4427.9
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4487.2,
+       "max": 4487.2
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4389.0,
+       "max": 4389.0
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4494.1,
+       "max": 4494.1
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4480.5,
+       "max": 4480.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4483.8,
+       "max": 4483.8
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4475.6,
+       "max": 4475.6
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4441.4,
+       "max": 4441.4
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4405.2,
+       "max": 4405.2
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 4426.8,
+       "max": 4426.8
+      },
+      "reg": {
+       "n": 1,
+       "min": 4440.4,
+       "max": 4440.4
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4386.4,
+       "max": 4386.4
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4446.7,
+       "max": 4446.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4368.9,
+       "max": 4368.9
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 4427.1,
+       "max": 4427.1
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4373.7,
+       "max": 4373.7
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4385.3,
+       "max": 4385.3
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 4429.3,
+       "max": 4429.3
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4424.4,
+       "max": 4424.4
+      }
+     }
+    },
+    "s_5N_L2": {
+     "pairs": 380,
+     "worst_hold": -246.0,
+     "hold_neg": 306,
+     "worst": {
+      "h": -246.0,
+      "a": "t_s_5N_L2__clk_c0",
+      "b": "t_s_5N_L2__clk_t3",
+      "tag": "s_5N_L2",
+      "region": "s_5N_L2",
+      "ka": "core:ot_s81sl_ve_m",
+      "kb": "other:clk_t3",
+      "cls": "core",
+      "tree_ee": 235.9,
+      "unc_spread": 48.6,
+      "lat": -58.4,
+      "ocv": 30.6,
+      "data": 35.7,
+      "cr": 713.3,
+      "D": 226.1,
+      "diag": 284.5,
+      "lat_a": 308.4,
+      "lat_b": 250.0,
+      "ea": 4897.2,
+      "lc": 5895.1,
+      "st_a": 146,
+      "st_b": 144,
+      "lca": 137,
+      "dist": 953.7
+     },
+     "max_diag": 293.4,
+     "max_diag_pair": [
+      "t_s_5N_L2__clk_c2",
+      "t_s_5N_L2__clk_t3",
+      "core:ot_s81sl_vn_b",
+      "other:clk_t3"
+     ],
+     "max_D": 226.1,
+     "max_D_pair": [
+      "t_s_5N_L2__clk_c0",
+      "t_s_5N_L2__clk_t3",
+      "core:ot_s81sl_ve_m",
+      "other:clk_t3"
+     ],
+     "per_class": {
+      "core": {
+       "n": 140,
+       "worst_hold": -246.0,
+       "neg": 107,
+       "max_D": 226.1,
+       "max_diag": 293.4
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -236.5,
+       "neg": 199,
+       "max_D": 214.6,
+       "max_diag": 214.6
+      }
+     },
+     "tap_early_by_kind": {
+      "reg": {
+       "n": 1,
+       "min": 5066.4,
+       "max": 5066.4
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5047.2,
+       "max": 5047.2
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5062.4,
+       "max": 5062.4
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5133.2,
+       "max": 5133.2
+      },
+      "core:ot_s81sl_vsw": {
+       "n": 1,
+       "min": 5043.9,
+       "max": 5043.9
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4984.5,
+       "max": 4984.5
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5034.0,
+       "max": 5034.0
+      },
+      "core:ot_s81sl_vn_b": {
+       "n": 1,
+       "min": 4906.2,
+       "max": 4906.2
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4967.1,
+       "max": 4967.1
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4999.7,
+       "max": 4999.7
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5001.2,
+       "max": 5001.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5030.4,
+       "max": 5030.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5044.7,
+       "max": 5044.7
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5067.1,
+       "max": 5067.1
+      },
+      "core:ot_s81sl_ve_m": {
+       "n": 1,
+       "min": 4897.2,
+       "max": 4897.2
+      },
+      "core:ot_s81sl_vn_a": {
+       "n": 1,
+       "min": 4935.1,
+       "max": 4935.1
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5059.1,
+       "max": 5059.1
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4994.7,
+       "max": 4994.7
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5130.9,
+       "max": 5130.9
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4996.1,
+       "max": 4996.1
+      }
+     }
+    },
+    "svc_6": {
+     "pairs": 756,
+     "worst_hold": -244.1,
+     "hold_neg": 639,
+     "worst": {
+      "h": -244.1,
+      "a": "t_svc_6__clk_t5",
+      "b": "t_svc_6__clk_t8",
+      "tag": "svc_6",
+      "region": "svc_6",
+      "ka": "other:clk_t5",
+      "kb": "other:clk_t8",
+      "cls": "reg-reg",
+      "tree_ee": 135.4,
+      "unc_spread": 77.8,
+      "lat": 0.0,
+      "ocv": 41.6,
+      "data": 35.7,
+      "cr": 798.4,
+      "D": 213.2,
+      "diag": 213.2,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 5904.0,
+      "lc": 6915.6,
+      "st_a": 166,
+      "st_b": 164,
+      "lca": 151,
+      "dist": 1378.7
+     },
+     "max_diag": 213.2,
+     "max_diag_pair": [
+      "t_svc_6__clk_t5",
+      "t_svc_6__clk_t8",
+      "other:clk_t5",
+      "other:clk_t8"
+     ],
+     "max_D": 213.2,
+     "max_D_pair": [
+      "t_svc_6__clk_t5",
+      "t_svc_6__clk_t8",
+      "other:clk_t5",
+      "other:clk_t8"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -244.1,
+       "neg": 639,
+       "max_D": 213.2,
+       "max_diag": 213.2
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5961.1,
+       "max": 5961.1
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6039.4,
+       "max": 6039.4
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5985.2,
+       "max": 5985.2
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5911.8,
+       "max": 5911.8
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5985.8,
+       "max": 5985.8
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5977.5,
+       "max": 5977.5
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6033.2,
+       "max": 6033.2
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5904.0,
+       "max": 5904.0
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5970.9,
+       "max": 5970.9
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6040.9,
+       "max": 6040.9
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5909.6,
+       "max": 5909.6
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5919.8,
+       "max": 5919.8
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5912.3,
+       "max": 5912.3
+      },
+      "reg": {
+       "n": 1,
+       "min": 5967.0,
+       "max": 5967.0
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5925.3,
+       "max": 5925.3
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5918.5,
+       "max": 5918.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5984.9,
+       "max": 5984.9
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6021.7,
+       "max": 6021.7
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5965.9,
+       "max": 5965.9
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5909.5,
+       "max": 5909.5
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5970.8,
+       "max": 5970.8
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5980.5,
+       "max": 5980.5
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5981.0,
+       "max": 5981.0
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5918.6,
+       "max": 5918.6
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5909.1,
+       "max": 5909.1
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6036.8,
+       "max": 6036.8
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6037.8,
+       "max": 6037.8
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6021.2,
+       "max": 6021.2
+      }
+     }
+    },
+    "lk_EN2": {
+     "pairs": 992,
+     "worst_hold": -243.7,
+     "hold_neg": 801,
+     "worst": {
+      "h": -243.7,
+      "a": "t_lk_EN2__clk_t14",
+      "b": "t_lk_EN2__clk",
+      "tag": "lk_EN2",
+      "region": "lk_EN2",
+      "ka": "other:clk_t14",
+      "kb": "reg",
+      "cls": "reg-reg",
+      "tree_ee": 152.3,
+      "unc_spread": 65.7,
+      "lat": 0.0,
+      "ocv": 36.4,
+      "data": 35.7,
+      "cr": 1047.8,
+      "D": 218.0,
+      "diag": 218.0,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 7408.0,
+      "lc": 8673.7,
+      "st_a": 222,
+      "st_b": 218,
+      "lca": 207,
+      "dist": 1185.8
+     },
+     "max_diag": 218.0,
+     "max_diag_pair": [
+      "t_lk_EN2__clk",
+      "t_lk_EN2__clk_t14",
+      "reg",
+      "other:clk_t14"
+     ],
+     "max_D": 218.0,
+     "max_D_pair": [
+      "t_lk_EN2__clk_t14",
+      "t_lk_EN2__clk",
+      "other:clk_t14",
+      "reg"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 992,
+       "worst_hold": -243.7,
+       "neg": 801,
+       "max_D": 218.0,
+       "max_diag": 218.0
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t3": {
+       "n": 1,
+       "min": 7476.3,
+       "max": 7476.3
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 7412.8,
+       "max": 7412.8
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 7408.0,
+       "max": 7408.0
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 7521.6,
+       "max": 7521.6
+      },
+      "other:clk_t29": {
+       "n": 1,
+       "min": 7467.6,
+       "max": 7467.6
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 7443.2,
+       "max": 7443.2
+      },
+      "other:clk_t30": {
+       "n": 1,
+       "min": 7469.9,
+       "max": 7469.9
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 7442.9,
+       "max": 7442.9
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 7440.6,
+       "max": 7440.6
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 7539.6,
+       "max": 7539.6
+      },
+      "reg": {
+       "n": 1,
+       "min": 7560.3,
+       "max": 7560.3
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 7416.0,
+       "max": 7416.0
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 7557.7,
+       "max": 7557.7
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 7468.7,
+       "max": 7468.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 7534.0,
+       "max": 7534.0
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 7408.5,
+       "max": 7408.5
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 7519.6,
+       "max": 7519.6
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 7408.5,
+       "max": 7408.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 7555.3,
+       "max": 7555.3
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 7537.2,
+       "max": 7537.2
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 7466.9,
+       "max": 7466.9
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 7414.3,
+       "max": 7414.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 7412.2,
+       "max": 7412.2
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 7552.3,
+       "max": 7552.3
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 7474.4,
+       "max": 7474.4
+      },
+      "other:clk_t28": {
+       "n": 1,
+       "min": 7444.4,
+       "max": 7444.4
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 7531.1,
+       "max": 7531.1
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 7497.1,
+       "max": 7497.1
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 7507.3,
+       "max": 7507.3
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 7417.7,
+       "max": 7417.7
+      },
+      "other:clk_t31": {
+       "n": 1,
+       "min": 7449.7,
+       "max": 7449.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 7448.2,
+       "max": 7448.2
+      }
+     }
+    },
+    "svc_1": {
+     "pairs": 756,
+     "worst_hold": -242.0,
+     "hold_neg": 683,
+     "worst": {
+      "h": -242.0,
+      "a": "t_svc_1__clk_t5",
+      "b": "t_svc_1__clk_t12",
+      "tag": "svc_1",
+      "region": "svc_1",
+      "ka": "other:clk_t5",
+      "kb": "other:clk_t12",
+      "cls": "reg-reg",
+      "tree_ee": 136.8,
+      "unc_spread": 75.0,
+      "lat": 0.0,
+      "ocv": 40.9,
+      "data": 35.7,
+      "cr": 401.8,
+      "D": 211.8,
+      "diag": 211.8,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 3085.7,
+      "lc": 3699.2,
+      "st_a": 90,
+      "st_b": 88,
+      "lca": 75,
+      "dist": 1571.6
+     },
+     "max_diag": 211.8,
+     "max_diag_pair": [
+      "t_svc_1__clk_t12",
+      "t_svc_1__clk_t5",
+      "other:clk_t12",
+      "other:clk_t5"
+     ],
+     "max_D": 211.8,
+     "max_D_pair": [
+      "t_svc_1__clk_t5",
+      "t_svc_1__clk_t12",
+      "other:clk_t5",
+      "other:clk_t12"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -242.0,
+       "neg": 683,
+       "max_D": 211.8,
+       "max_diag": 211.8
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t24": {
+       "n": 1,
+       "min": 3179.6,
+       "max": 3179.6
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 3120.4,
+       "max": 3120.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 3155.3,
+       "max": 3155.3
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 3158.7,
+       "max": 3158.7
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 3159.5,
+       "max": 3159.5
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 3220.5,
+       "max": 3220.5
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 3115.3,
+       "max": 3115.3
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 3222.5,
+       "max": 3222.5
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 3162.1,
+       "max": 3162.1
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3085.7,
+       "max": 3085.7
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3088.7,
+       "max": 3088.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 3209.8,
+       "max": 3209.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 3161.4,
+       "max": 3161.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 3118.6,
+       "max": 3118.6
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 3121.7,
+       "max": 3121.7
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 3213.0,
+       "max": 3213.0
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 3114.6,
+       "max": 3114.6
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 3213.5,
+       "max": 3213.5
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 3162.2,
+       "max": 3162.2
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 3122.6,
+       "max": 3122.6
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 3207.0,
+       "max": 3207.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 3149.7,
+       "max": 3149.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 3117.0,
+       "max": 3117.0
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 3119.7,
+       "max": 3119.7
+      },
+      "reg": {
+       "n": 1,
+       "min": 3141.2,
+       "max": 3141.2
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 3211.5,
+       "max": 3211.5
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 3181.2,
+       "max": 3181.2
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 3167.5,
+       "max": 3167.5
+      }
+     }
+    },
+    "svc_3": {
+     "pairs": 756,
+     "worst_hold": -241.9,
+     "hold_neg": 674,
+     "worst": {
+      "h": -241.9,
+      "a": "t_svc_3__clk_t10",
+      "b": "t_svc_3__clk_t7",
+      "tag": "svc_3",
+      "region": "svc_3",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 137.0,
+      "unc_spread": 74.1,
+      "lat": 0.0,
+      "ocv": 41.5,
+      "data": 35.7,
+      "cr": 1019.9,
+      "D": 211.2,
+      "diag": 211.2,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 7415.7,
+      "lc": 8646.8,
+      "st_a": 208,
+      "st_b": 202,
+      "lca": 191,
+      "dist": 1121.7
+     },
+     "max_diag": 211.2,
+     "max_diag_pair": [
+      "t_svc_3__clk_t10",
+      "t_svc_3__clk_t7",
+      "other:clk_t10",
+      "other:clk_t7"
+     ],
+     "max_D": 211.2,
+     "max_D_pair": [
+      "t_svc_3__clk_t10",
+      "t_svc_3__clk_t7",
+      "other:clk_t10",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -241.9,
+       "neg": 674,
+       "max_D": 211.2,
+       "max_diag": 211.2
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t9": {
+       "n": 1,
+       "min": 7422.1,
+       "max": 7422.1
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 7503.3,
+       "max": 7503.3
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 7547.9,
+       "max": 7547.9
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 7482.1,
+       "max": 7482.1
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 7506.7,
+       "max": 7506.7
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 7487.1,
+       "max": 7487.1
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 7495.7,
+       "max": 7495.7
+      },
+      "reg": {
+       "n": 1,
+       "min": 7494.6,
+       "max": 7494.6
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 7437.9,
+       "max": 7437.9
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 7516.5,
+       "max": 7516.5
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 7441.4,
+       "max": 7441.4
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 7420.5,
+       "max": 7420.5
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 7426.9,
+       "max": 7426.9
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 7510.5,
+       "max": 7510.5
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 7438.6,
+       "max": 7438.6
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 7498.1,
+       "max": 7498.1
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 7552.7,
+       "max": 7552.7
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 7513.9,
+       "max": 7513.9
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 7492.9,
+       "max": 7492.9
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 7536.1,
+       "max": 7536.1
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 7514.2,
+       "max": 7514.2
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 7481.7,
+       "max": 7481.7
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 7433.4,
+       "max": 7433.4
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 7475.4,
+       "max": 7475.4
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 7415.7,
+       "max": 7415.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 7503.1,
+       "max": 7503.1
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 7443.1,
+       "max": 7443.1
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 7440.1,
+       "max": 7440.1
+      }
+     }
+    },
+    "svc_14": {
+     "pairs": 756,
+     "worst_hold": -241.2,
+     "hold_neg": 723,
+     "worst": {
+      "h": -241.2,
+      "a": "t_svc_14__clk_t14",
+      "b": "t_svc_14__clk_t19",
+      "tag": "svc_14",
+      "region": "svc_14",
+      "ka": "other:clk_t14",
+      "kb": "other:clk_t19",
+      "cls": "reg-reg",
+      "tree_ee": 119.4,
+      "unc_spread": 86.9,
+      "lat": 0.0,
+      "ocv": 45.6,
+      "data": 35.7,
+      "cr": 655.8,
+      "D": 206.3,
+      "diag": 206.3,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 5012.6,
+      "lc": 5874.7,
+      "st_a": 144,
+      "st_b": 140,
+      "lca": 127,
+      "dist": 864.6
+     },
+     "max_diag": 206.3,
+     "max_diag_pair": [
+      "t_svc_14__clk_t14",
+      "t_svc_14__clk_t19",
+      "other:clk_t14",
+      "other:clk_t19"
+     ],
+     "max_D": 206.3,
+     "max_D_pair": [
+      "t_svc_14__clk_t14",
+      "t_svc_14__clk_t19",
+      "other:clk_t14",
+      "other:clk_t19"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -241.2,
+       "neg": 723,
+       "max_D": 206.3,
+       "max_diag": 206.3
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5019.3,
+       "max": 5019.3
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5079.6,
+       "max": 5079.6
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5012.6,
+       "max": 5012.6
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5027.5,
+       "max": 5027.5
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5075.6,
+       "max": 5075.6
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 5066.7,
+       "max": 5066.7
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5073.8,
+       "max": 5073.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5114.5,
+       "max": 5114.5
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5113.9,
+       "max": 5113.9
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5066.9,
+       "max": 5066.9
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5046.0,
+       "max": 5046.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5081.4,
+       "max": 5081.4
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5082.3,
+       "max": 5082.3
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5100.5,
+       "max": 5100.5
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5017.6,
+       "max": 5017.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5041.1,
+       "max": 5041.1
+      },
+      "reg": {
+       "n": 1,
+       "min": 5077.1,
+       "max": 5077.1
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5072.4,
+       "max": 5072.4
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5116.6,
+       "max": 5116.6
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5013.0,
+       "max": 5013.0
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5110.2,
+       "max": 5110.2
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5132.0,
+       "max": 5132.0
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5067.3,
+       "max": 5067.3
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5110.6,
+       "max": 5110.6
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 5066.2,
+       "max": 5066.2
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5029.5,
+       "max": 5029.5
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5131.4,
+       "max": 5131.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5075.8,
+       "max": 5075.8
+      }
+     }
+    },
+    "s_7N_L1": {
+     "pairs": 380,
+     "worst_hold": -241.1,
+     "hold_neg": 319,
+     "worst": {
+      "h": -241.1,
+      "a": "t_s_7N_L1__clk_t9",
+      "b": "t_s_7N_L1__clk_c1",
+      "tag": "s_7N_L1",
+      "region": "s_7N_L1",
+      "ka": "other:clk_t9",
+      "kb": "core:ot_s81sl_vsw",
+      "cls": "core",
+      "tree_ee": 129.2,
+      "unc_spread": 43.4,
+      "lat": 48.4,
+      "ocv": 30.9,
+      "data": 35.7,
+      "cr": 778.5,
+      "D": 221.0,
+      "diag": 172.6,
+      "lat_a": 250.0,
+      "lat_b": 298.4,
+      "ea": 5453.0,
+      "lc": 6404.1,
+      "st_a": 162,
+      "st_b": 156,
+      "lca": 149,
+      "dist": 308.8
+     },
+     "max_diag": 209.8,
+     "max_diag_pair": [
+      "t_s_7N_L1__clk_c0",
+      "t_s_7N_L1__clk_t3",
+      "core:ot_s81sl_ve_m",
+      "other:clk_t3"
+     ],
+     "max_D": 221.0,
+     "max_D_pair": [
+      "t_s_7N_L1__clk_t9",
+      "t_s_7N_L1__clk_c1",
+      "other:clk_t9",
+      "core:ot_s81sl_vsw"
+     ],
+     "per_class": {
+      "core": {
+       "n": 140,
+       "worst_hold": -241.1,
+       "neg": 111,
+       "max_D": 221.0,
+       "max_diag": 209.8
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -233.0,
+       "neg": 208,
+       "max_D": 209.3,
+       "max_diag": 209.3
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5546.5,
+       "max": 5546.5
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5587.5,
+       "max": 5587.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5547.5,
+       "max": 5547.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5548.8,
+       "max": 5548.8
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5580.5,
+       "max": 5580.5
+      },
+      "core:ot_s81sl_vsw": {
+       "n": 1,
+       "min": 5582.1,
+       "max": 5582.1
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5578.0,
+       "max": 5578.0
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5548.8,
+       "max": 5548.8
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5554.4,
+       "max": 5554.4
+      },
+      "core:ot_s81sl_ve_m": {
+       "n": 1,
+       "min": 5452.5,
+       "max": 5452.5
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5570.8,
+       "max": 5570.8
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5455.3,
+       "max": 5455.3
+      },
+      "core:ot_s81sl_vn_b": {
+       "n": 1,
+       "min": 5469.9,
+       "max": 5469.9
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5453.0,
+       "max": 5453.0
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5585.1,
+       "max": 5585.1
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5598.9,
+       "max": 5598.9
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5582.3,
+       "max": 5582.3
+      },
+      "reg": {
+       "n": 1,
+       "min": 5606.6,
+       "max": 5606.6
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5542.3,
+       "max": 5542.3
+      },
+      "core:ot_s81sl_vn_a": {
+       "n": 1,
+       "min": 5473.2,
+       "max": 5473.2
+      }
+     }
+    },
+    "svc_7": {
+     "pairs": 756,
+     "worst_hold": -240.5,
+     "hold_neg": 646,
+     "worst": {
+      "h": -240.5,
+      "a": "t_svc_7__clk_t22",
+      "b": "t_svc_7__clk_t7",
+      "tag": "svc_7",
+      "region": "svc_7",
+      "ka": "other:clk_t22",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 132.7,
+      "unc_spread": 74.6,
+      "lat": 0.0,
+      "ocv": 43.8,
+      "data": 35.7,
+      "cr": 885.3,
+      "D": 207.4,
+      "diag": 207.4,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 6527.2,
+      "lc": 7619.8,
+      "st_a": 182,
+      "st_b": 178,
+      "lca": 167,
+      "dist": 2404.4
+     },
+     "max_diag": 207.4,
+     "max_diag_pair": [
+      "t_svc_7__clk_t22",
+      "t_svc_7__clk_t7",
+      "other:clk_t22",
+      "other:clk_t7"
+     ],
+     "max_D": 207.4,
+     "max_D_pair": [
+      "t_svc_7__clk_t22",
+      "t_svc_7__clk_t7",
+      "other:clk_t22",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -240.5,
+       "neg": 646,
+       "max_D": 207.4,
+       "max_diag": 207.4
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6601.4,
+       "max": 6601.4
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6530.4,
+       "max": 6530.4
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6591.5,
+       "max": 6591.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6655.3,
+       "max": 6655.3
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6597.5,
+       "max": 6597.5
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6645.4,
+       "max": 6645.4
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6594.2,
+       "max": 6594.2
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6587.8,
+       "max": 6587.8
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6535.3,
+       "max": 6535.3
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6527.2,
+       "max": 6527.2
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6528.0,
+       "max": 6528.0
+      },
+      "reg": {
+       "n": 1,
+       "min": 6593.1,
+       "max": 6593.1
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6597.9,
+       "max": 6597.9
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6651.4,
+       "max": 6651.4
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6638.0,
+       "max": 6638.0
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6592.0,
+       "max": 6592.0
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6537.0,
+       "max": 6537.0
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6527.7,
+       "max": 6527.7
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6592.8,
+       "max": 6592.8
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6532.6,
+       "max": 6532.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6645.6,
+       "max": 6645.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6541.2,
+       "max": 6541.2
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6582.8,
+       "max": 6582.8
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6634.2,
+       "max": 6634.2
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6594.7,
+       "max": 6594.7
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6532.0,
+       "max": 6532.0
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6536.5,
+       "max": 6536.5
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6659.9,
+       "max": 6659.9
+      }
+     }
+    },
+    "svc_2": {
+     "pairs": 756,
+     "worst_hold": -239.8,
+     "hold_neg": 668,
+     "worst": {
+      "h": -239.8,
+      "a": "t_svc_2__clk_t14",
+      "b": "t_svc_2__clk_t7",
+      "tag": "svc_2",
+      "region": "svc_2",
+      "ka": "other:clk_t14",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 135.8,
+      "unc_spread": 73.4,
+      "lat": 0.0,
+      "ocv": 41.3,
+      "data": 35.7,
+      "cr": 929.4,
+      "D": 209.2,
+      "diag": 209.2,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 6769.0,
+      "lc": 7907.6,
+      "st_a": 192,
+      "st_b": 186,
+      "lca": 175,
+      "dist": 1215.2
+     },
+     "max_diag": 209.2,
+     "max_diag_pair": [
+      "t_svc_2__clk_t14",
+      "t_svc_2__clk_t7",
+      "other:clk_t14",
+      "other:clk_t7"
+     ],
+     "max_D": 209.2,
+     "max_D_pair": [
+      "t_svc_2__clk_t14",
+      "t_svc_2__clk_t7",
+      "other:clk_t14",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -239.8,
+       "neg": 668,
+       "max_D": 209.2,
+       "max_diag": 209.2
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6889.1,
+       "max": 6889.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6831.9,
+       "max": 6831.9
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6856.1,
+       "max": 6856.1
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6901.5,
+       "max": 6901.5
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6800.5,
+       "max": 6800.5
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6858.1,
+       "max": 6858.1
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6801.3,
+       "max": 6801.3
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6879.3,
+       "max": 6879.3
+      },
+      "reg": {
+       "n": 1,
+       "min": 6839.8,
+       "max": 6839.8
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6860.1,
+       "max": 6860.1
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6904.8,
+       "max": 6904.8
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6775.7,
+       "max": 6775.7
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6862.1,
+       "max": 6862.1
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6831.6,
+       "max": 6831.6
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6769.4,
+       "max": 6769.4
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6795.7,
+       "max": 6795.7
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6825.4,
+       "max": 6825.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6775.3,
+       "max": 6775.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6777.5,
+       "max": 6777.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6769.0,
+       "max": 6769.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6837.1,
+       "max": 6837.1
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6779.7,
+       "max": 6779.7
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6802.6,
+       "max": 6802.6
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6862.6,
+       "max": 6862.6
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6865.3,
+       "max": 6865.3
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6864.8,
+       "max": 6864.8
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6879.1,
+       "max": 6879.1
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6857.1,
+       "max": 6857.1
+      }
+     }
+    },
+    "svc_11": {
+     "pairs": 756,
+     "worst_hold": -239.5,
+     "hold_neg": 708,
+     "worst": {
+      "h": -239.5,
+      "a": "t_svc_11__clk_t10",
+      "b": "t_svc_11__clk_t23",
+      "tag": "svc_11",
+      "region": "svc_11",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 118.7,
+      "unc_spread": 85.8,
+      "lat": 0.0,
+      "ocv": 45.7,
+      "data": 35.7,
+      "cr": 572.6,
+      "D": 204.5,
+      "diag": 204.5,
+      "lat_a": 250.0,
+      "lat_b": 250.0,
+      "ea": 4444.3,
+      "lc": 5221.4,
+      "st_a": 128,
+      "st_b": 124,
+      "lca": 111,
+      "dist": 1308.6
+     },
+     "max_diag": 204.5,
+     "max_diag_pair": [
+      "t_svc_11__clk_t10",
+      "t_svc_11__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "max_D": 204.5,
+     "max_D_pair": [
+      "t_svc_11__clk_t10",
+      "t_svc_11__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -239.5,
+       "neg": 708,
+       "max_D": 204.5,
+       "max_diag": 204.5
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4461.8,
+       "max": 4461.8
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 4488.1,
+       "max": 4488.1
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4520.6,
+       "max": 4520.6
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4457.0,
+       "max": 4457.0
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4459.5,
+       "max": 4459.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4562.0,
+       "max": 4562.0
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4503.0,
+       "max": 4503.0
+      },
+      "reg": {
+       "n": 1,
+       "min": 4511.7,
+       "max": 4511.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4444.3,
+       "max": 4444.3
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4460.6,
+       "max": 4460.6
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4554.9,
+       "max": 4554.9
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4559.5,
+       "max": 4559.5
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 4495.7,
+       "max": 4495.7
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4512.6,
+       "max": 4512.6
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4512.5,
+       "max": 4512.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4449.2,
+       "max": 4449.2
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4550.2,
+       "max": 4550.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4475.4,
+       "max": 4475.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4514.7,
+       "max": 4514.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4563.2,
+       "max": 4563.2
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 4486.9,
+       "max": 4486.9
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4478.5,
+       "max": 4478.5
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 4495.4,
+       "max": 4495.4
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 4489.1,
+       "max": 4489.1
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4506.7,
+       "max": 4506.7
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4563.0,
+       "max": 4563.0
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4516.9,
+       "max": 4516.9
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4520.7,
+       "max": 4520.7
+      }
+     }
+    },
+    "fW4_p4_b1": {
+     "pairs": 462,
+     "worst_hold": -237.5,
+     "hold_neg": 426,
+     "worst": {
+      "h": -237.5,
+      "a": "t_fW4_p4_b1__clk_c1",
+      "b": "t_fW4_p4_b1__clk_t5",
+      "tag": "fW4_p4_b1",
+      "region": "fW4_p4_b1",
+      "ka": "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "kb": "other:clk_t5",
+      "cls": "rom",
+      "tree_ee": 167.8,
+      "unc_spread": 76.2,
+      "lat": -35.0,
+      "ocv": 39.1,
+      "data": 35.7,
+      "cr": 933.1,
+      "D": 209.1,
+      "diag": 244.1,
+      "lat_a": 285.0,
+      "lat_b": 250.0,
+      "ea": 6685.1,
+      "lc": 7862.3,
+      "st_a": 190,
+      "st_b": 190,
+      "lca": 177,
+      "dist": 658.7
+     },
+     "max_diag": 244.1,
+     "max_diag_pair": [
+      "t_fW4_p4_b1__clk_c1",
+      "t_fW4_p4_b1__clk_t5",
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "other:clk_t5"
+     ],
+     "max_D": 209.1,
+     "max_D_pair": [
+      "t_fW4_p4_b1__clk_c1",
+      "t_fW4_p4_b1__clk_t5",
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "other:clk_t5"
+     ],
+     "per_class": {
+      "rom": {
+       "n": 156,
+       "worst_hold": -237.5,
+       "neg": 135,
+       "max_D": 209.1,
+       "max_diag": 244.1
+      },
+      "core": {
+       "n": 66,
+       "worst_hold": -168.4,
+       "neg": 65,
+       "max_D": 141.0,
+       "max_diag": 165.4
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -229.3,
+       "neg": 226,
+       "max_D": 199.7,
+       "max_diag": 199.7
+      }
+     },
+     "tap_early_by_kind": {
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb": {
+       "n": 4,
+       "min": 6685.1,
+       "max": 6795.3
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6813.0,
+       "max": 6813.0
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6809.5,
+       "max": 6809.5
+      },
+      "core:ot_v41_bf_col": {
+       "n": 2,
+       "min": 6763.8,
+       "max": 6767.3
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6811.2,
+       "max": 6811.2
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6834.6,
+       "max": 6834.6
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6832.1,
+       "max": 6832.1
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6812.4,
+       "max": 6812.4
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6820.2,
+       "max": 6820.2
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6802.1,
+       "max": 6802.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6770.1,
+       "max": 6770.1
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6729.5,
+       "max": 6729.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6807.6,
+       "max": 6807.6
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6795.6,
+       "max": 6795.6
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6852.9,
+       "max": 6852.9
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6848.3,
+       "max": 6848.3
+      },
+      "reg": {
+       "n": 1,
+       "min": 6804.0,
+       "max": 6804.0
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6790.5,
+       "max": 6790.5
+      }
+     }
+    }
+   }
+  },
+  "FF": {
+   "pairs": 178894,
+   "neg": 170807,
+   "worst_hold": -559.59,
+   "max_diag": 838.48,
+   "max_D": 513.48,
+   "dominant_all_neg": {
+    "lat": 8170,
+    "unc_spread": 128719,
+    "tree_ee": 23678,
+    "ocv": 10240
+   },
+   "mean_all_neg": {
+    "h": -77.7,
+    "tree_ee": 3.6,
+    "unc_spread": 46.3,
+    "lat": -0.2,
+    "ocv": 28.8,
+    "data": 25.9,
+    "cr": 832.2,
+    "D": 49.7,
+    "diag": 80.2,
+    "n": 170807
+   },
+   "by_class": {
+    "rom": {
+     "pairs": 33888,
+     "neg": 32162,
+     "worst_hold": -235.8,
+     "max_D": 203.4,
+     "max_diag": 225.5,
+     "mean_neg": {
+      "h": -76.0,
+      "tree_ee": 3.8,
+      "unc_spread": 44.9,
+      "lat": -0.4,
+      "ocv": 28.6,
+      "data": 25.9,
+      "cr": 956.3,
+      "D": 48.2,
+      "diag": 77.4,
+      "n": 32162
+     }
+    },
+    "core": {
+     "pairs": 28882,
+     "neg": 26822,
+     "worst_hold": -559.6,
+     "max_D": 513.5,
+     "max_diag": 838.5,
+     "mean_neg": {
+      "h": -75.3,
+      "tree_ee": 6.2,
+      "unc_spread": 43.1,
+      "lat": -0.6,
+      "ocv": 27.5,
+      "data": 25.9,
+      "cr": 771.8,
+      "D": 48.7,
+      "diag": 113.5,
+      "n": 26822
+     }
+    },
+    "reg-reg": {
+     "pairs": 116124,
+     "neg": 111823,
+     "worst_hold": -466.9,
+     "max_D": 410.7,
+     "max_diag": 410.7,
+     "mean_neg": {
+      "h": -78.7,
+      "tree_ee": 3.0,
+      "unc_spread": 47.5,
+      "lat": 0.0,
+      "ocv": 29.1,
+      "data": 25.9,
+      "cr": 811.1,
+      "D": 50.4,
+      "diag": 73.0,
+      "n": 111823
+     }
+    }
+   },
+   "neg_if_no_unc_spread": 143813,
+   "neg_if_no_unc_spread_no_ocv": 87055,
+   "regions_top20": {
+    "bk_sel": {
+     "pairs": 2550,
+     "worst_hold": -559.6,
+     "hold_neg": 2307,
+     "worst": {
+      "h": -559.6,
+      "a": "t_bk_sel__clk_c3",
+      "b": "t_bk_sel__clk_t1",
+      "tag": "bk_sel",
+      "region": "bk_sel",
+      "ka": "core:dsdv_bksel_q",
+      "kb": "other:clk_t1",
+      "cls": "core",
+      "tree_ee": 701.5,
+      "unc_spread": 137.0,
+      "lat": -325.0,
+      "ocv": 47.0,
+      "data": 25.9,
+      "cr": 920.8,
+      "D": 513.5,
+      "diag": 838.5,
+      "lat_a": 527.5,
+      "lat_b": 202.5,
+      "ea": 6263.0,
+      "lc": 8022.2,
+      "st_a": 202,
+      "st_b": 210,
+      "lca": 189,
+      "dist": 2401.5
+     },
+     "max_diag": 838.5,
+     "max_diag_pair": [
+      "t_bk_sel__clk_c3",
+      "t_bk_sel__clk_t1",
+      "core:dsdv_bksel_q",
+      "other:clk_t1"
+     ],
+     "max_D": 513.5,
+     "max_D_pair": [
+      "t_bk_sel__clk_c3",
+      "t_bk_sel__clk_t1",
+      "core:dsdv_bksel_q",
+      "other:clk_t1"
+     ],
+     "per_class": {
+      "core": {
+       "n": 658,
+       "worst_hold": -559.6,
+       "neg": 566,
+       "max_D": 513.5,
+       "max_diag": 838.5
+      },
+      "reg-reg": {
+       "n": 1892,
+       "worst_hold": -466.9,
+       "neg": 1741,
+       "max_D": 410.7,
+       "max_diag": 410.7
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6787.3,
+       "max": 6787.3
+      },
+      "other:clk_t42": {
+       "n": 1,
+       "min": 6771.6,
+       "max": 6771.6
+      },
+      "reg": {
+       "n": 1,
+       "min": 6946.3,
+       "max": 6946.3
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6769.5,
+       "max": 6769.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6945.6,
+       "max": 6945.6
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6751.8,
+       "max": 6751.8
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6804.2,
+       "max": 6804.2
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6751.4,
+       "max": 6751.4
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6725.5,
+       "max": 6725.5
+      },
+      "core:dsdv_bk_g": {
+       "n": 1,
+       "min": 6665.2,
+       "max": 6665.2
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6959.8,
+       "max": 6959.8
+      },
+      "other:clk_t40": {
+       "n": 1,
+       "min": 6696.9,
+       "max": 6696.9
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6804.4,
+       "max": 6804.4
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6701.7,
+       "max": 6701.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6800.4,
+       "max": 6800.4
+      },
+      "other:clk_t33": {
+       "n": 1,
+       "min": 6768.8,
+       "max": 6768.8
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6773.7,
+       "max": 6773.7
+      },
+      "core:dsdv_bksel_q": {
+       "n": 4,
+       "min": 6263.0,
+       "max": 6540.4
+      },
+      "core:dsdv_idx_tx_n32": {
+       "n": 1,
+       "min": 6329.2,
+       "max": 6329.2
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6809.4,
+       "max": 6809.4
+      },
+      "other:clk_t35": {
+       "n": 1,
+       "min": 6764.5,
+       "max": 6764.5
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6785.7,
+       "max": 6785.7
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6819.6,
+       "max": 6819.6
+      },
+      "other:clk_t39": {
+       "n": 1,
+       "min": 6710.0,
+       "max": 6710.0
+      },
+      "other:clk_t28": {
+       "n": 1,
+       "min": 6715.2,
+       "max": 6715.2
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6801.8,
+       "max": 6801.8
+      },
+      "other:clk_t36": {
+       "n": 1,
+       "min": 6782.2,
+       "max": 6782.2
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6738.5,
+       "max": 6738.5
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6775.5,
+       "max": 6775.5
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6775.7,
+       "max": 6775.7
+      },
+      "other:clk_t30": {
+       "n": 1,
+       "min": 6754.8,
+       "max": 6754.8
+      },
+      "other:clk_t41": {
+       "n": 1,
+       "min": 6749.6,
+       "max": 6749.6
+      },
+      "other:clk_t37": {
+       "n": 1,
+       "min": 6798.3,
+       "max": 6798.3
+      },
+      "other:clk_t29": {
+       "n": 1,
+       "min": 6701.7,
+       "max": 6701.7
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6770.8,
+       "max": 6770.8
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6807.8,
+       "max": 6807.8
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6792.6,
+       "max": 6792.6
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6823.4,
+       "max": 6823.4
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6964.4,
+       "max": 6964.4
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6776.1,
+       "max": 6776.1
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6790.4,
+       "max": 6790.4
+      },
+      "other:clk_t32": {
+       "n": 1,
+       "min": 6745.0,
+       "max": 6745.0
+      },
+      "other:clk_t43": {
+       "n": 1,
+       "min": 6739.9,
+       "max": 6739.9
+      },
+      "other:clk_t31": {
+       "n": 1,
+       "min": 6780.2,
+       "max": 6780.2
+      },
+      "other:clk_t34": {
+       "n": 1,
+       "min": 6801.8,
+       "max": 6801.8
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6797.9,
+       "max": 6797.9
+      },
+      "core:dsdv_bksel_c": {
+       "n": 1,
+       "min": 6675.5,
+       "max": 6675.5
+      },
+      "other:clk_t38": {
+       "n": 1,
+       "min": 6690.7,
+       "max": 6690.7
+      }
+     }
+    },
+    "svc_12": {
+     "pairs": 756,
+     "worst_hold": -306.2,
+     "hold_neg": 693,
+     "worst": {
+      "h": -306.2,
+      "a": "t_svc_12__clk_t1",
+      "b": "t_svc_12__clk_t19",
+      "tag": "svc_12",
+      "region": "svc_12",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t19",
+      "cls": "reg-reg",
+      "tree_ee": 182.8,
+      "unc_spread": 84.0,
+      "lat": 0.0,
+      "ocv": 40.3,
+      "data": 25.9,
+      "cr": 561.4,
+      "D": 266.7,
+      "diag": 266.7,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 4130.4,
+      "lc": 4958.6,
+      "st_a": 132,
+      "st_b": 128,
+      "lca": 115,
+      "dist": 2423.6
+     },
+     "max_diag": 266.7,
+     "max_diag_pair": [
+      "t_svc_12__clk_t1",
+      "t_svc_12__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "max_D": 266.7,
+     "max_D_pair": [
+      "t_svc_12__clk_t1",
+      "t_svc_12__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -306.2,
+       "neg": 693,
+       "max_D": 266.7,
+       "max_diag": 266.7
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4234.1,
+       "max": 4234.1
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4178.3,
+       "max": 4178.3
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4130.4,
+       "max": 4130.4
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4178.0,
+       "max": 4178.0
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 4262.2,
+       "max": 4262.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4173.0,
+       "max": 4173.0
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4313.2,
+       "max": 4313.2
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4298.6,
+       "max": 4298.6
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4253.3,
+       "max": 4253.3
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4205.3,
+       "max": 4205.3
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4179.3,
+       "max": 4179.3
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4177.5,
+       "max": 4177.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4177.1,
+       "max": 4177.1
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 4226.8,
+       "max": 4226.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4246.9,
+       "max": 4246.9
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4208.8,
+       "max": 4208.8
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4205.3,
+       "max": 4205.3
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4237.2,
+       "max": 4237.2
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4312.7,
+       "max": 4312.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4204.3,
+       "max": 4204.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4133.0,
+       "max": 4133.0
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4295.8,
+       "max": 4295.8
+      },
+      "reg": {
+       "n": 1,
+       "min": 4191.9,
+       "max": 4191.9
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 4261.0,
+       "max": 4261.0
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4203.7,
+       "max": 4203.7
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 4257.7,
+       "max": 4257.7
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4200.2,
+       "max": 4200.2
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 4259.9,
+       "max": 4259.9
+      }
+     }
+    },
+    "svc_13": {
+     "pairs": 756,
+     "worst_hold": -299.4,
+     "hold_neg": 701,
+     "worst": {
+      "h": -299.4,
+      "a": "t_svc_13__clk_t1",
+      "b": "t_svc_13__clk_t23",
+      "tag": "svc_13",
+      "region": "svc_13",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 175.9,
+      "unc_spread": 83.5,
+      "lat": 0.0,
+      "ocv": 40.9,
+      "data": 25.9,
+      "cr": 471.6,
+      "D": 259.4,
+      "diag": 259.4,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 3520.5,
+      "lc": 4251.4,
+      "st_a": 116,
+      "st_b": 112,
+      "lca": 99,
+      "dist": 2774.1
+     },
+     "max_diag": 259.4,
+     "max_diag_pair": [
+      "t_svc_13__clk_t1",
+      "t_svc_13__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "max_D": 259.4,
+     "max_D_pair": [
+      "t_svc_13__clk_t1",
+      "t_svc_13__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -299.4,
+       "neg": 701,
+       "max_D": 259.4,
+       "max_diag": 259.4
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t8": {
+       "n": 1,
+       "min": 3575.5,
+       "max": 3575.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 3556.1,
+       "max": 3556.1
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 3669.4,
+       "max": 3669.4
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 3619.6,
+       "max": 3619.6
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 3560.7,
+       "max": 3560.7
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3524.0,
+       "max": 3524.0
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 3630.0,
+       "max": 3630.0
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 3579.0,
+       "max": 3579.0
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3520.5,
+       "max": 3520.5
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 3696.3,
+       "max": 3696.3
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 3555.8,
+       "max": 3555.8
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 3624.1,
+       "max": 3624.1
+      },
+      "reg": {
+       "n": 1,
+       "min": 3576.6,
+       "max": 3576.6
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 3586.6,
+       "max": 3586.6
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 3662.7,
+       "max": 3662.7
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 3553.8,
+       "max": 3553.8
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 3645.4,
+       "max": 3645.4
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 3608.5,
+       "max": 3608.5
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 3631.0,
+       "max": 3631.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 3586.4,
+       "max": 3586.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 3563.5,
+       "max": 3563.5
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 3629.4,
+       "max": 3629.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 3590.8,
+       "max": 3590.8
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 3590.1,
+       "max": 3590.1
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 3557.4,
+       "max": 3557.4
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 3692.8,
+       "max": 3692.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 3637.8,
+       "max": 3637.8
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 3627.8,
+       "max": 3627.8
+      }
+     }
+    },
+    "svc_8": {
+     "pairs": 756,
+     "worst_hold": -274.6,
+     "hold_neg": 722,
+     "worst": {
+      "h": -274.6,
+      "a": "t_svc_8__clk_t1",
+      "b": "t_svc_8__clk_t19",
+      "tag": "svc_8",
+      "region": "svc_8",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t19",
+      "cls": "reg-reg",
+      "tree_ee": 152.5,
+      "unc_spread": 82.4,
+      "lat": 0.0,
+      "ocv": 40.5,
+      "data": 25.9,
+      "cr": 679.8,
+      "D": 234.9,
+      "diag": 234.9,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 4932.4,
+      "lc": 5847.0,
+      "st_a": 156,
+      "st_b": 152,
+      "lca": 139,
+      "dist": 2423.6
+     },
+     "max_diag": 234.9,
+     "max_diag_pair": [
+      "t_svc_8__clk_t1",
+      "t_svc_8__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "max_D": 234.9,
+     "max_D_pair": [
+      "t_svc_8__clk_t1",
+      "t_svc_8__clk_t19",
+      "other:clk_t1",
+      "other:clk_t19"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -274.6,
+       "neg": 722,
+       "max_D": 234.9,
+       "max_diag": 234.9
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5084.9,
+       "max": 5084.9
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5040.5,
+       "max": 5040.5
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4966.3,
+       "max": 4966.3
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5033.2,
+       "max": 5033.2
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4936.9,
+       "max": 4936.9
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5033.8,
+       "max": 5033.8
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4984.2,
+       "max": 4984.2
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5027.8,
+       "max": 5027.8
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4977.6,
+       "max": 4977.6
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5005.1,
+       "max": 5005.1
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5062.1,
+       "max": 5062.1
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5040.4,
+       "max": 5040.4
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5047.4,
+       "max": 5047.4
+      },
+      "reg": {
+       "n": 1,
+       "min": 4995.6,
+       "max": 4995.6
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4994.4,
+       "max": 4994.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5076.4,
+       "max": 5076.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5001.3,
+       "max": 5001.3
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4989.5,
+       "max": 4989.5
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5036.5,
+       "max": 5036.5
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4932.4,
+       "max": 4932.4
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5039.2,
+       "max": 5039.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4971.3,
+       "max": 4971.3
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4968.3,
+       "max": 4968.3
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5084.3,
+       "max": 5084.3
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4962.3,
+       "max": 4962.3
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5018.6,
+       "max": 5018.6
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4983.7,
+       "max": 4983.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4962.7,
+       "max": 4962.7
+      }
+     }
+    },
+    "svc_9": {
+     "pairs": 756,
+     "worst_hold": -269.1,
+     "hold_neg": 717,
+     "worst": {
+      "h": -269.1,
+      "a": "t_svc_9__clk_t1",
+      "b": "t_svc_9__clk_t23",
+      "tag": "svc_9",
+      "region": "svc_9",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 145.4,
+      "unc_spread": 83.5,
+      "lat": 0.0,
+      "ocv": 41.1,
+      "data": 25.9,
+      "cr": 768.8,
+      "D": 228.9,
+      "diag": 228.9,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 5546.1,
+      "lc": 6543.7,
+      "st_a": 172,
+      "st_b": 168,
+      "lca": 155,
+      "dist": 2774.1
+     },
+     "max_diag": 228.9,
+     "max_diag_pair": [
+      "t_svc_9__clk_t1",
+      "t_svc_9__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "max_D": 228.9,
+     "max_D_pair": [
+      "t_svc_9__clk_t1",
+      "t_svc_9__clk_t23",
+      "other:clk_t1",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -269.1,
+       "neg": 717,
+       "max_D": 228.9,
+       "max_diag": 228.9
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5621.8,
+       "max": 5621.8
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5563.9,
+       "max": 5563.9
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5691.4,
+       "max": 5691.4
+      },
+      "reg": {
+       "n": 1,
+       "min": 5604.2,
+       "max": 5604.2
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5670.9,
+       "max": 5670.9
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5623.7,
+       "max": 5623.7
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5579.8,
+       "max": 5579.8
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5653.0,
+       "max": 5653.0
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5631.7,
+       "max": 5631.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5663.5,
+       "max": 5663.5
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 5593.9,
+       "max": 5593.9
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5592.3,
+       "max": 5592.3
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5687.7,
+       "max": 5687.7
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5586.8,
+       "max": 5586.8
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 5590.4,
+       "max": 5590.4
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5607.2,
+       "max": 5607.2
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5568.6,
+       "max": 5568.6
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5632.5,
+       "max": 5632.5
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5610.2,
+       "max": 5610.2
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5647.8,
+       "max": 5647.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5655.5,
+       "max": 5655.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5643.1,
+       "max": 5643.1
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5551.6,
+       "max": 5551.6
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5588.9,
+       "max": 5588.9
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5566.5,
+       "max": 5566.5
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5546.1,
+       "max": 5546.1
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5627.7,
+       "max": 5627.7
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5568.7,
+       "max": 5568.7
+      }
+     }
+    },
+    "svc_0": {
+     "pairs": 756,
+     "worst_hold": -259.1,
+     "hold_neg": 671,
+     "worst": {
+      "h": -259.1,
+      "a": "t_svc_0__clk_t5",
+      "b": "t_svc_0__clk_t8",
+      "tag": "svc_0",
+      "region": "svc_0",
+      "ka": "other:clk_t5",
+      "kb": "other:clk_t8",
+      "cls": "reg-reg",
+      "tree_ee": 152.6,
+      "unc_spread": 72.5,
+      "lat": 0.0,
+      "ocv": 34.9,
+      "data": 25.9,
+      "cr": 454.6,
+      "D": 225.1,
+      "diag": 225.1,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 3275.1,
+      "lc": 3954.7,
+      "st_a": 106,
+      "st_b": 104,
+      "lca": 91,
+      "dist": 1378.7
+     },
+     "max_diag": 225.1,
+     "max_diag_pair": [
+      "t_svc_0__clk_t5",
+      "t_svc_0__clk_t8",
+      "other:clk_t5",
+      "other:clk_t8"
+     ],
+     "max_D": 225.1,
+     "max_D_pair": [
+      "t_svc_0__clk_t5",
+      "t_svc_0__clk_t8",
+      "other:clk_t5",
+      "other:clk_t8"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -259.1,
+       "neg": 671,
+       "max_D": 225.1,
+       "max_diag": 225.1
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t15": {
+       "n": 1,
+       "min": 3369.9,
+       "max": 3369.9
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 3312.2,
+       "max": 3312.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 3426.6,
+       "max": 3426.6
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 3332.8,
+       "max": 3332.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 3367.6,
+       "max": 3367.6
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 3413.9,
+       "max": 3413.9
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 3394.3,
+       "max": 3394.3
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 3411.8,
+       "max": 3411.8
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 3331.4,
+       "max": 3331.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 3329.4,
+       "max": 3329.4
+      },
+      "reg": {
+       "n": 1,
+       "min": 3336.0,
+       "max": 3336.0
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 3394.2,
+       "max": 3394.2
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 3427.7,
+       "max": 3427.7
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 3411.3,
+       "max": 3411.3
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 3312.7,
+       "max": 3312.7
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 3385.7,
+       "max": 3385.7
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 3397.2,
+       "max": 3397.2
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3278.6,
+       "max": 3278.6
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 3360.6,
+       "max": 3360.6
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 3354.9,
+       "max": 3354.9
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 3357.2,
+       "max": 3357.2
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 3361.1,
+       "max": 3361.1
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 3312.7,
+       "max": 3312.7
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 3348.7,
+       "max": 3348.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 3313.1,
+       "max": 3313.1
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 3336.0,
+       "max": 3336.0
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3275.1,
+       "max": 3275.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 3353.5,
+       "max": 3353.5
+      }
+     }
+    },
+    "svc_4": {
+     "pairs": 756,
+     "worst_hold": -249.6,
+     "hold_neg": 672,
+     "worst": {
+      "h": -249.6,
+      "a": "t_svc_4__clk_t1",
+      "b": "t_svc_4__clk_t12",
+      "tag": "svc_4",
+      "region": "svc_4",
+      "ka": "other:clk_t1",
+      "kb": "other:clk_t12",
+      "cls": "reg-reg",
+      "tree_ee": 144.8,
+      "unc_spread": 70.9,
+      "lat": 0.0,
+      "ocv": 34.7,
+      "data": 25.9,
+      "cr": 802.1,
+      "D": 215.7,
+      "diag": 215.7,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 5614.2,
+      "lc": 6632.0,
+      "st_a": 178,
+      "st_b": 176,
+      "lca": 163,
+      "dist": 1561.2
+     },
+     "max_diag": 215.7,
+     "max_diag_pair": [
+      "t_svc_4__clk_t1",
+      "t_svc_4__clk_t12",
+      "other:clk_t1",
+      "other:clk_t12"
+     ],
+     "max_D": 215.7,
+     "max_D_pair": [
+      "t_svc_4__clk_t1",
+      "t_svc_4__clk_t12",
+      "other:clk_t1",
+      "other:clk_t12"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -249.6,
+       "neg": 672,
+       "max_D": 215.7,
+       "max_diag": 215.7
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5658.5,
+       "max": 5658.5
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5722.5,
+       "max": 5722.5
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5722.0,
+       "max": 5722.0
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5658.9,
+       "max": 5658.9
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5755.8,
+       "max": 5755.8
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5754.1,
+       "max": 5754.1
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5662.8,
+       "max": 5662.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5714.1,
+       "max": 5714.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5691.8,
+       "max": 5691.8
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5745.8,
+       "max": 5745.8
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5614.2,
+       "max": 5614.2
+      },
+      "reg": {
+       "n": 1,
+       "min": 5677.7,
+       "max": 5677.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5713.3,
+       "max": 5713.3
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5711.5,
+       "max": 5711.5
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5688.6,
+       "max": 5688.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5759.0,
+       "max": 5759.0
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5686.9,
+       "max": 5686.9
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5681.7,
+       "max": 5681.7
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 5739.7,
+       "max": 5739.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5684.0,
+       "max": 5684.0
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5701.4,
+       "max": 5701.4
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5678.5,
+       "max": 5678.5
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5737.5,
+       "max": 5737.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5742.7,
+       "max": 5742.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 5740.3,
+       "max": 5740.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5617.1,
+       "max": 5617.1
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5741.2,
+       "max": 5741.2
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5663.3,
+       "max": 5663.3
+      }
+     }
+    },
+    "svc_15": {
+     "pairs": 756,
+     "worst_hold": -245.6,
+     "hold_neg": 713,
+     "worst": {
+      "h": -245.6,
+      "a": "t_svc_15__clk_t10",
+      "b": "t_svc_15__clk_t23",
+      "tag": "svc_15",
+      "region": "svc_15",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 125.3,
+      "unc_spread": 81.6,
+      "lat": 0.0,
+      "ocv": 39.6,
+      "data": 25.9,
+      "cr": 523.2,
+      "D": 206.9,
+      "diag": 206.9,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 3861.1,
+      "lc": 4591.2,
+      "st_a": 128,
+      "st_b": 124,
+      "lca": 111,
+      "dist": 1308.6
+     },
+     "max_diag": 206.9,
+     "max_diag_pair": [
+      "t_svc_15__clk_t10",
+      "t_svc_15__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "max_D": 206.9,
+     "max_D_pair": [
+      "t_svc_15__clk_t10",
+      "t_svc_15__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -245.6,
+       "neg": 713,
+       "max_D": 206.9,
+       "max_diag": 206.9
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t26": {
+       "n": 1,
+       "min": 3915.3,
+       "max": 3915.3
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 3900.4,
+       "max": 3900.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 3956.3,
+       "max": 3956.3
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 3875.1,
+       "max": 3875.1
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 3917.1,
+       "max": 3917.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 3929.5,
+       "max": 3929.5
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 3913.7,
+       "max": 3913.7
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 3925.8,
+       "max": 3925.8
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 3982.7,
+       "max": 3982.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 3922.3,
+       "max": 3922.3
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 3972.7,
+       "max": 3972.7
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3882.2,
+       "max": 3882.2
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 3986.4,
+       "max": 3986.4
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 3967.2,
+       "max": 3967.2
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 3969.5,
+       "max": 3969.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 3962.4,
+       "max": 3962.4
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 3934.2,
+       "max": 3934.2
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 3894.7,
+       "max": 3894.7
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 3920.1,
+       "max": 3920.1
+      },
+      "reg": {
+       "n": 1,
+       "min": 3933.5,
+       "max": 3933.5
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3879.6,
+       "max": 3879.6
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 3944.0,
+       "max": 3944.0
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 3861.1,
+       "max": 3861.1
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 3919.2,
+       "max": 3919.2
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 3865.7,
+       "max": 3865.7
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 3877.1,
+       "max": 3877.1
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 3921.4,
+       "max": 3921.4
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 3917.2,
+       "max": 3917.2
+      }
+     }
+    },
+    "svc_3": {
+     "pairs": 756,
+     "worst_hold": -242.5,
+     "hold_neg": 669,
+     "worst": {
+      "h": -242.5,
+      "a": "t_svc_3__clk_t10",
+      "b": "t_svc_3__clk_t7",
+      "tag": "svc_3",
+      "region": "svc_3",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 138.9,
+      "unc_spread": 69.1,
+      "lat": 0.0,
+      "ocv": 35.4,
+      "data": 25.9,
+      "cr": 944.7,
+      "D": 208.0,
+      "diag": 208.0,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 6583.6,
+      "lc": 7736.3,
+      "st_a": 208,
+      "st_b": 202,
+      "lca": 191,
+      "dist": 1121.7
+     },
+     "max_diag": 208.0,
+     "max_diag_pair": [
+      "t_svc_3__clk_t10",
+      "t_svc_3__clk_t7",
+      "other:clk_t10",
+      "other:clk_t7"
+     ],
+     "max_D": 208.0,
+     "max_D_pair": [
+      "t_svc_3__clk_t10",
+      "t_svc_3__clk_t7",
+      "other:clk_t10",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -242.5,
+       "neg": 669,
+       "max_D": 208.0,
+       "max_diag": 208.0
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6589.4,
+       "max": 6589.4
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6676.8,
+       "max": 6676.8
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6717.6,
+       "max": 6717.6
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6655.8,
+       "max": 6655.8
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6673.0,
+       "max": 6673.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6660.4,
+       "max": 6660.4
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6659.0,
+       "max": 6659.0
+      },
+      "reg": {
+       "n": 1,
+       "min": 6668.0,
+       "max": 6668.0
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6611.8,
+       "max": 6611.8
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6680.7,
+       "max": 6680.7
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6614.7,
+       "max": 6614.7
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6588.1,
+       "max": 6588.1
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6594.0,
+       "max": 6594.0
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6677.5,
+       "max": 6677.5
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6612.1,
+       "max": 6612.1
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6671.9,
+       "max": 6671.9
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6722.4,
+       "max": 6722.4
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6678.3,
+       "max": 6678.3
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6656.9,
+       "max": 6656.9
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6710.3,
+       "max": 6710.3
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6681.2,
+       "max": 6681.2
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6649.0,
+       "max": 6649.0
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6607.5,
+       "max": 6607.5
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6643.2,
+       "max": 6643.2
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6583.6,
+       "max": 6583.6
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6669.4,
+       "max": 6669.4
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6616.5,
+       "max": 6616.5
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6613.7,
+       "max": 6613.7
+      }
+     }
+    },
+    "svc_2": {
+     "pairs": 756,
+     "worst_hold": -240.9,
+     "hold_neg": 671,
+     "worst": {
+      "h": -240.9,
+      "a": "t_svc_2__clk_t14",
+      "b": "t_svc_2__clk_t7",
+      "tag": "svc_2",
+      "region": "svc_2",
+      "ka": "other:clk_t14",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 137.6,
+      "unc_spread": 68.9,
+      "lat": 0.0,
+      "ocv": 35.2,
+      "data": 25.9,
+      "cr": 860.3,
+      "D": 206.6,
+      "diag": 206.6,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 6003.6,
+      "lc": 7070.5,
+      "st_a": 192,
+      "st_b": 186,
+      "lca": 175,
+      "dist": 1215.2
+     },
+     "max_diag": 206.6,
+     "max_diag_pair": [
+      "t_svc_2__clk_t14",
+      "t_svc_2__clk_t7",
+      "other:clk_t14",
+      "other:clk_t7"
+     ],
+     "max_D": 206.6,
+     "max_D_pair": [
+      "t_svc_2__clk_t14",
+      "t_svc_2__clk_t7",
+      "other:clk_t14",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -240.9,
+       "neg": 671,
+       "max_D": 206.6,
+       "max_diag": 206.6
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6130.5,
+       "max": 6130.5
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6073.4,
+       "max": 6073.4
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6086.5,
+       "max": 6086.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6138.0,
+       "max": 6138.0
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6040.8,
+       "max": 6040.8
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6098.7,
+       "max": 6098.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6041.6,
+       "max": 6041.6
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6110.3,
+       "max": 6110.3
+      },
+      "reg": {
+       "n": 1,
+       "min": 6081.2,
+       "max": 6081.2
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6100.8,
+       "max": 6100.8
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6141.3,
+       "max": 6141.3
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6009.8,
+       "max": 6009.8
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6094.3,
+       "max": 6094.3
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6066.1,
+       "max": 6066.1
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6004.1,
+       "max": 6004.1
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6036.3,
+       "max": 6036.3
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6060.4,
+       "max": 6060.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6009.4,
+       "max": 6009.4
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6019.1,
+       "max": 6019.1
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6003.6,
+       "max": 6003.6
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6078.2,
+       "max": 6078.2
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6021.5,
+       "max": 6021.5
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6043.0,
+       "max": 6043.0
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6094.9,
+       "max": 6094.9
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6099.5,
+       "max": 6099.5
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6099.0,
+       "max": 6099.0
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6110.0,
+       "max": 6110.0
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6087.6,
+       "max": 6087.6
+      }
+     }
+    },
+    "svc_7": {
+     "pairs": 756,
+     "worst_hold": -239.1,
+     "hold_neg": 650,
+     "worst": {
+      "h": -239.1,
+      "a": "t_svc_7__clk_t10",
+      "b": "t_svc_7__clk_t7",
+      "tag": "svc_7",
+      "region": "svc_7",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 134.2,
+      "unc_spread": 70.0,
+      "lat": 0.0,
+      "ocv": 35.8,
+      "data": 25.9,
+      "cr": 819.8,
+      "D": 204.2,
+      "diag": 204.2,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 5789.3,
+      "lc": 6813.3,
+      "st_a": 184,
+      "st_b": 178,
+      "lca": 167,
+      "dist": 1121.7
+     },
+     "max_diag": 204.2,
+     "max_diag_pair": [
+      "t_svc_7__clk_t10",
+      "t_svc_7__clk_t7",
+      "other:clk_t10",
+      "other:clk_t7"
+     ],
+     "max_D": 204.2,
+     "max_D_pair": [
+      "t_svc_7__clk_t10",
+      "t_svc_7__clk_t7",
+      "other:clk_t10",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -239.1,
+       "neg": 650,
+       "max_D": 204.2,
+       "max_diag": 204.2
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5863.9,
+       "max": 5863.9
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5791.8,
+       "max": 5791.8
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5859.7,
+       "max": 5859.7
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5918.9,
+       "max": 5918.9
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5855.3,
+       "max": 5855.3
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5903.3,
+       "max": 5903.3
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5863.1,
+       "max": 5863.1
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5849.4,
+       "max": 5849.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5796.5,
+       "max": 5796.5
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5796.5,
+       "max": 5796.5
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5797.2,
+       "max": 5797.2
+      },
+      "reg": {
+       "n": 1,
+       "min": 5861.3,
+       "max": 5861.3
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5860.4,
+       "max": 5860.4
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5919.7,
+       "max": 5919.7
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 5897.6,
+       "max": 5897.6
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5860.2,
+       "max": 5860.2
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5805.6,
+       "max": 5805.6
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5789.3,
+       "max": 5789.3
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5851.4,
+       "max": 5851.4
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5794.0,
+       "max": 5794.0
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5903.5,
+       "max": 5903.5
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5809.6,
+       "max": 5809.6
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5844.5,
+       "max": 5844.5
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 5893.9,
+       "max": 5893.9
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5863.5,
+       "max": 5863.5
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5800.9,
+       "max": 5800.9
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5805.0,
+       "max": 5805.0
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5923.5,
+       "max": 5923.5
+      }
+     }
+    },
+    "svc_14": {
+     "pairs": 756,
+     "worst_hold": -238.8,
+     "hold_neg": 723,
+     "worst": {
+      "h": -238.8,
+      "a": "t_svc_14__clk_t14",
+      "b": "t_svc_14__clk_t19",
+      "tag": "svc_14",
+      "region": "svc_14",
+      "ka": "other:clk_t14",
+      "kb": "other:clk_t19",
+      "cls": "reg-reg",
+      "tree_ee": 120.7,
+      "unc_spread": 79.6,
+      "lat": 0.0,
+      "ocv": 39.4,
+      "data": 25.9,
+      "cr": 607.3,
+      "D": 200.3,
+      "diag": 200.3,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 4435.8,
+      "lc": 5243.4,
+      "st_a": 144,
+      "st_b": 140,
+      "lca": 127,
+      "dist": 864.6
+     },
+     "max_diag": 200.3,
+     "max_diag_pair": [
+      "t_svc_14__clk_t14",
+      "t_svc_14__clk_t19",
+      "other:clk_t14",
+      "other:clk_t19"
+     ],
+     "max_D": 200.3,
+     "max_D_pair": [
+      "t_svc_14__clk_t14",
+      "t_svc_14__clk_t19",
+      "other:clk_t14",
+      "other:clk_t19"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -238.8,
+       "neg": 723,
+       "max_D": 200.3,
+       "max_diag": 200.3
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4444.6,
+       "max": 4444.6
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 4503.5,
+       "max": 4503.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4435.8,
+       "max": 4435.8
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 4451.2,
+       "max": 4451.2
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 4499.7,
+       "max": 4499.7
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4492.9,
+       "max": 4492.9
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 4498.0,
+       "max": 4498.0
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4531.3,
+       "max": 4531.3
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4532.4,
+       "max": 4532.4
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 4491.5,
+       "max": 4491.5
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4468.0,
+       "max": 4468.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4506.0,
+       "max": 4506.0
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 4506.0,
+       "max": 4506.0
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4529.6,
+       "max": 4529.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4442.8,
+       "max": 4442.8
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4463.1,
+       "max": 4463.1
+      },
+      "reg": {
+       "n": 1,
+       "min": 4502.1,
+       "max": 4502.1
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4496.5,
+       "max": 4496.5
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4533.4,
+       "max": 4533.4
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4436.2,
+       "max": 4436.2
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4538.4,
+       "max": 4538.4
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4556.5,
+       "max": 4556.5
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4491.5,
+       "max": 4491.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4529.2,
+       "max": 4529.2
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4492.4,
+       "max": 4492.4
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4453.1,
+       "max": 4453.1
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4556.0,
+       "max": 4556.0
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4500.8,
+       "max": 4500.8
+      }
+     }
+    },
+    "svc_11": {
+     "pairs": 756,
+     "worst_hold": -237.5,
+     "hold_neg": 707,
+     "worst": {
+      "h": -237.5,
+      "a": "t_svc_11__clk_t10",
+      "b": "t_svc_11__clk_t23",
+      "tag": "svc_11",
+      "region": "svc_11",
+      "ka": "other:clk_t10",
+      "kb": "other:clk_t23",
+      "cls": "reg-reg",
+      "tree_ee": 120.3,
+      "unc_spread": 78.7,
+      "lat": 0.0,
+      "ocv": 39.3,
+      "data": 25.9,
+      "cr": 529.3,
+      "D": 199.0,
+      "diag": 199.0,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 3932.6,
+      "lc": 4660.9,
+      "st_a": 128,
+      "st_b": 124,
+      "lca": 111,
+      "dist": 1308.6
+     },
+     "max_diag": 199.0,
+     "max_diag_pair": [
+      "t_svc_11__clk_t10",
+      "t_svc_11__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "max_D": 199.0,
+     "max_D_pair": [
+      "t_svc_11__clk_t10",
+      "t_svc_11__clk_t23",
+      "other:clk_t10",
+      "other:clk_t23"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -237.5,
+       "neg": 707,
+       "max_D": 199.0,
+       "max_diag": 199.0
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t17": {
+       "n": 1,
+       "min": 3950.3,
+       "max": 3950.3
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 3978.7,
+       "max": 3978.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 4015.3,
+       "max": 4015.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 3946.6,
+       "max": 3946.6
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 3948.2,
+       "max": 3948.2
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4043.6,
+       "max": 4043.6
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 3991.3,
+       "max": 3991.3
+      },
+      "reg": {
+       "n": 1,
+       "min": 4001.1,
+       "max": 4001.1
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 3932.6,
+       "max": 3932.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 3950.2,
+       "max": 3950.2
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4037.4,
+       "max": 4037.4
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 4049.4,
+       "max": 4049.4
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 3985.1,
+       "max": 3985.1
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4002.0,
+       "max": 4002.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4001.9,
+       "max": 4001.9
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 3937.3,
+       "max": 3937.3
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4032.8,
+       "max": 4032.8
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 3961.9,
+       "max": 3961.9
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 4010.1,
+       "max": 4010.1
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4044.6,
+       "max": 4044.6
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 3977.6,
+       "max": 3977.6
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 3965.1,
+       "max": 3965.1
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 3985.6,
+       "max": 3985.6
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 3979.5,
+       "max": 3979.5
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 3994.9,
+       "max": 3994.9
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 4052.9,
+       "max": 4052.9
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 4006.5,
+       "max": 4006.5
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 4010.2,
+       "max": 4010.2
+      }
+     }
+    },
+    "svc_6": {
+     "pairs": 756,
+     "worst_hold": -237.3,
+     "hold_neg": 641,
+     "worst": {
+      "h": -237.3,
+      "a": "t_svc_6__clk_t14",
+      "b": "t_svc_6__clk_t7",
+      "tag": "svc_6",
+      "region": "svc_6",
+      "ka": "other:clk_t14",
+      "kb": "other:clk_t7",
+      "cls": "reg-reg",
+      "tree_ee": 133.0,
+      "unc_spread": 69.5,
+      "lat": 0.0,
+      "ocv": 35.6,
+      "data": 25.9,
+      "cr": 738.7,
+      "D": 202.5,
+      "diag": 202.5,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 5236.0,
+      "lc": 6177.2,
+      "st_a": 168,
+      "st_b": 162,
+      "lca": 151,
+      "dist": 1215.2
+     },
+     "max_diag": 202.5,
+     "max_diag_pair": [
+      "t_svc_6__clk_t14",
+      "t_svc_6__clk_t7",
+      "other:clk_t14",
+      "other:clk_t7"
+     ],
+     "max_D": 202.5,
+     "max_D_pair": [
+      "t_svc_6__clk_t14",
+      "t_svc_6__clk_t7",
+      "other:clk_t14",
+      "other:clk_t7"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 756,
+       "worst_hold": -237.3,
+       "neg": 641,
+       "max_D": 202.5,
+       "max_diag": 202.5
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t17": {
+       "n": 1,
+       "min": 5288.0,
+       "max": 5288.0
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5361.9,
+       "max": 5361.9
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 5318.5,
+       "max": 5318.5
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5238.5,
+       "max": 5238.5
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5309.0,
+       "max": 5309.0
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 5311.2,
+       "max": 5311.2
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5366.3,
+       "max": 5366.3
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5238.8,
+       "max": 5238.8
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5304.4,
+       "max": 5304.4
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5369.0,
+       "max": 5369.0
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5236.4,
+       "max": 5236.4
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 5253.3,
+       "max": 5253.3
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5238.9,
+       "max": 5238.9
+      },
+      "reg": {
+       "n": 1,
+       "min": 5301.1,
+       "max": 5301.1
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 5258.4,
+       "max": 5258.4
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 5252.2,
+       "max": 5252.2
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5308.2,
+       "max": 5308.2
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 5345.7,
+       "max": 5345.7
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 5292.6,
+       "max": 5292.6
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5244.1,
+       "max": 5244.1
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5304.3,
+       "max": 5304.3
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 5308.2,
+       "max": 5308.2
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 5308.7,
+       "max": 5308.7
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 5252.3,
+       "max": 5252.3
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5236.0,
+       "max": 5236.0
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5359.3,
+       "max": 5359.3
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5365.9,
+       "max": 5365.9
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 5345.2,
+       "max": 5345.2
+      }
+     }
+    },
+    "s_7N_L1": {
+     "pairs": 380,
+     "worst_hold": -237.2,
+     "hold_neg": 322,
+     "worst": {
+      "h": -237.2,
+      "a": "t_s_7N_L1__clk_t9",
+      "b": "t_s_7N_L1__clk_c1",
+      "tag": "s_7N_L1",
+      "region": "s_7N_L1",
+      "ka": "other:clk_t9",
+      "kb": "core:ot_s81sl_vsw",
+      "cls": "core",
+      "tree_ee": 130.3,
+      "unc_spread": 41.5,
+      "lat": 40.7,
+      "ocv": 25.5,
+      "data": 25.9,
+      "cr": 720.8,
+      "D": 212.5,
+      "diag": 171.8,
+      "lat_a": 202.5,
+      "lat_b": 243.2,
+      "ea": 4823.1,
+      "lc": 5715.7,
+      "st_a": 162,
+      "st_b": 156,
+      "lca": 149,
+      "dist": 308.8
+     },
+     "max_diag": 203.2,
+     "max_diag_pair": [
+      "t_s_7N_L1__clk_t3",
+      "t_s_7N_L1__clk_t9",
+      "other:clk_t3",
+      "other:clk_t9"
+     ],
+     "max_D": 212.5,
+     "max_D_pair": [
+      "t_s_7N_L1__clk_t9",
+      "t_s_7N_L1__clk_c1",
+      "other:clk_t9",
+      "core:ot_s81sl_vsw"
+     ],
+     "per_class": {
+      "core": {
+       "n": 140,
+       "worst_hold": -237.2,
+       "neg": 114,
+       "max_D": 212.5,
+       "max_diag": 199.8
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -231.3,
+       "neg": 208,
+       "max_D": 203.2,
+       "max_diag": 203.2
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4911.0,
+       "max": 4911.0
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4954.2,
+       "max": 4954.2
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4912.5,
+       "max": 4912.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4915.3,
+       "max": 4915.3
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4942.4,
+       "max": 4942.4
+      },
+      "core:ot_s81sl_vsw": {
+       "n": 1,
+       "min": 4953.4,
+       "max": 4953.4
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4940.1,
+       "max": 4940.1
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4913.3,
+       "max": 4913.3
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4920.7,
+       "max": 4920.7
+      },
+      "core:ot_s81sl_ve_m": {
+       "n": 1,
+       "min": 4826.5,
+       "max": 4826.5
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4938.8,
+       "max": 4938.8
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4825.3,
+       "max": 4825.3
+      },
+      "core:ot_s81sl_vn_b": {
+       "n": 1,
+       "min": 4849.2,
+       "max": 4849.2
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4823.1,
+       "max": 4823.1
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4951.8,
+       "max": 4951.8
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4966.9,
+       "max": 4966.9
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4952.0,
+       "max": 4952.0
+      },
+      "reg": {
+       "n": 1,
+       "min": 4972.8,
+       "max": 4972.8
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4907.4,
+       "max": 4907.4
+      },
+      "core:ot_s81sl_vn_a": {
+       "n": 1,
+       "min": 4852.2,
+       "max": 4852.2
+      }
+     }
+    },
+    "s_5N_L2": {
+     "pairs": 380,
+     "worst_hold": -236.1,
+     "hold_neg": 311,
+     "worst": {
+      "h": -236.1,
+      "a": "t_s_5N_L2__clk_c0",
+      "b": "t_s_5N_L2__clk_t3",
+      "tag": "s_5N_L2",
+      "region": "s_5N_L2",
+      "ka": "core:ot_s81sl_ve_m",
+      "kb": "other:clk_t3",
+      "cls": "core",
+      "tree_ee": 217.9,
+      "unc_spread": 44.5,
+      "lat": -50.3,
+      "ocv": 24.9,
+      "data": 25.9,
+      "cr": 660.9,
+      "D": 212.0,
+      "diag": 262.3,
+      "lat_a": 252.8,
+      "lat_b": 202.5,
+      "ea": 4329.9,
+      "lc": 5253.1,
+      "st_a": 146,
+      "st_b": 144,
+      "lca": 137,
+      "dist": 953.7
+     },
+     "max_diag": 268.9,
+     "max_diag_pair": [
+      "t_s_5N_L2__clk_c2",
+      "t_s_5N_L2__clk_t3",
+      "core:ot_s81sl_vn_b",
+      "other:clk_t3"
+     ],
+     "max_D": 212.0,
+     "max_D_pair": [
+      "t_s_5N_L2__clk_c0",
+      "t_s_5N_L2__clk_t3",
+      "core:ot_s81sl_ve_m",
+      "other:clk_t3"
+     ],
+     "per_class": {
+      "core": {
+       "n": 140,
+       "worst_hold": -236.1,
+       "neg": 108,
+       "max_D": 212.0,
+       "max_diag": 268.9
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -226.1,
+       "neg": 203,
+       "max_D": 195.6,
+       "max_diag": 195.6
+      }
+     },
+     "tap_early_by_kind": {
+      "reg": {
+       "n": 1,
+       "min": 4479.6,
+       "max": 4479.6
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 4465.5,
+       "max": 4465.5
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 4476.5,
+       "max": 4476.5
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 4547.7,
+       "max": 4547.7
+      },
+      "core:ot_s81sl_vsw": {
+       "n": 1,
+       "min": 4467.3,
+       "max": 4467.3
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 4411.4,
+       "max": 4411.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 4456.0,
+       "max": 4456.0
+      },
+      "core:ot_s81sl_vn_b": {
+       "n": 1,
+       "min": 4339.8,
+       "max": 4339.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 4396.6,
+       "max": 4396.6
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 4425.1,
+       "max": 4425.1
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 4426.6,
+       "max": 4426.6
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 4452.9,
+       "max": 4452.9
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 4463.2,
+       "max": 4463.2
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 4481.1,
+       "max": 4481.1
+      },
+      "core:ot_s81sl_ve_m": {
+       "n": 1,
+       "min": 4329.9,
+       "max": 4329.9
+      },
+      "core:ot_s81sl_vn_a": {
+       "n": 1,
+       "min": 4366.0,
+       "max": 4366.0
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 4472.5,
+       "max": 4472.5
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 4414.6,
+       "max": 4414.6
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 4545.4,
+       "max": 4545.4
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 4415.6,
+       "max": 4415.6
+      }
+     }
+    },
+    "fW4_p4_b1": {
+     "pairs": 462,
+     "worst_hold": -235.8,
+     "hold_neg": 428,
+     "worst": {
+      "h": -235.8,
+      "a": "t_fW4_p4_b1__clk_c1",
+      "b": "t_fW4_p4_b1__clk_t5",
+      "tag": "fW4_p4_b1",
+      "region": "fW4_p4_b1",
+      "ka": "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "kb": "other:clk_t5",
+      "cls": "rom",
+      "tree_ee": 153.8,
+      "unc_spread": 71.6,
+      "lat": -22.1,
+      "ocv": 33.2,
+      "data": 25.9,
+      "cr": 868.3,
+      "D": 203.4,
+      "diag": 225.5,
+      "lat_a": 224.6,
+      "lat_b": 202.5,
+      "ea": 5920.0,
+      "lc": 7013.7,
+      "st_a": 190,
+      "st_b": 190,
+      "lca": 177,
+      "dist": 658.7
+     },
+     "max_diag": 225.5,
+     "max_diag_pair": [
+      "t_fW4_p4_b1__clk_c1",
+      "t_fW4_p4_b1__clk_t5",
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "other:clk_t5"
+     ],
+     "max_D": 203.4,
+     "max_D_pair": [
+      "t_fW4_p4_b1__clk_c1",
+      "t_fW4_p4_b1__clk_t5",
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "other:clk_t5"
+     ],
+     "per_class": {
+      "rom": {
+       "n": 156,
+       "worst_hold": -235.8,
+       "neg": 134,
+       "max_D": 203.4,
+       "max_diag": 225.5
+      },
+      "core": {
+       "n": 66,
+       "worst_hold": -162.0,
+       "neg": 66,
+       "max_D": 127.8,
+       "max_diag": 153.3
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -217.1,
+       "neg": 228,
+       "max_D": 183.6,
+       "max_diag": 183.6
+      }
+     },
+     "tap_early_by_kind": {
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb": {
+       "n": 4,
+       "min": 5920.0,
+       "max": 6022.5
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6037.5,
+       "max": 6037.5
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6033.2,
+       "max": 6033.2
+      },
+      "core:ot_v41_bf_col": {
+       "n": 2,
+       "min": 5992.1,
+       "max": 5992.4
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6036.4,
+       "max": 6036.4
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6059.4,
+       "max": 6059.4
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6055.4,
+       "max": 6055.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6035.0,
+       "max": 6035.0
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6045.6,
+       "max": 6045.6
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6025.7,
+       "max": 6025.7
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6000.9,
+       "max": 6000.9
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5961.8,
+       "max": 5961.8
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6034.6,
+       "max": 6034.6
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6022.0,
+       "max": 6022.0
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6073.8,
+       "max": 6073.8
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6069.4,
+       "max": 6069.4
+      },
+      "reg": {
+       "n": 1,
+       "min": 6027.7,
+       "max": 6027.7
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6017.0,
+       "max": 6017.0
+      }
+     }
+    },
+    "s_7S_C": {
+     "pairs": 380,
+     "worst_hold": -235.1,
+     "hold_neg": 334,
+     "worst": {
+      "h": -235.1,
+      "a": "t_s_7S_C__clk_c3",
+      "b": "t_s_7S_C__clk",
+      "tag": "s_7S_C",
+      "region": "s_7S_C",
+      "ka": "core:ot_s81dv_xfin",
+      "kb": "reg",
+      "cls": "core",
+      "tree_ee": 175.5,
+      "unc_spread": 57.8,
+      "lat": -25.9,
+      "ocv": 28.6,
+      "data": 25.9,
+      "cr": 732.2,
+      "D": 207.4,
+      "diag": 233.3,
+      "lat_a": 228.4,
+      "lat_b": 202.5,
+      "ea": 4975.7,
+      "lc": 5941.2,
+      "st_a": 170,
+      "st_b": 166,
+      "lca": 155,
+      "dist": 584.8
+     },
+     "max_diag": 278.7,
+     "max_diag_pair": [
+      "t_s_7S_C__clk",
+      "t_s_7S_C__clk_c1",
+      "reg",
+      "core:ot_s81sl_xrt1"
+     ],
+     "max_D": 207.4,
+     "max_D_pair": [
+      "t_s_7S_C__clk_c3",
+      "t_s_7S_C__clk",
+      "core:ot_s81dv_xfin",
+      "reg"
+     ],
+     "per_class": {
+      "core": {
+       "n": 140,
+       "worst_hold": -235.1,
+       "neg": 114,
+       "max_D": 207.4,
+       "max_diag": 278.7
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -223.8,
+       "neg": 220,
+       "max_D": 195.1,
+       "max_diag": 195.1
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t14": {
+       "n": 1,
+       "min": 5106.8,
+       "max": 5106.8
+      },
+      "core:ot_s81sl_eg": {
+       "n": 1,
+       "min": 5032.2,
+       "max": 5032.2
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 5138.4,
+       "max": 5138.4
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 5109.3,
+       "max": 5109.3
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 5135.1,
+       "max": 5135.1
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 5078.8,
+       "max": 5078.8
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 5101.9,
+       "max": 5101.9
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 5076.0,
+       "max": 5076.0
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 5087.9,
+       "max": 5087.9
+      },
+      "core:ot_s81dv_xfin": {
+       "n": 1,
+       "min": 4975.7,
+       "max": 4975.7
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 5091.5,
+       "max": 5091.5
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 5104.9,
+       "max": 5104.9
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 5013.9,
+       "max": 5013.9
+      },
+      "reg": {
+       "n": 1,
+       "min": 5151.2,
+       "max": 5151.2
+      },
+      "core:ot_s81sl_xrt1": {
+       "n": 1,
+       "min": 4930.3,
+       "max": 4930.3
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 5090.8,
+       "max": 5090.8
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 5102.5,
+       "max": 5102.5
+      },
+      "core:ot_s81sl_capc5r": {
+       "n": 1,
+       "min": 5010.8,
+       "max": 5010.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 5099.0,
+       "max": 5099.0
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 5048.3,
+       "max": 5048.3
+      }
+     }
+    },
+    "fW3_p4_b1": {
+     "pairs": 462,
+     "worst_hold": -233.2,
+     "hold_neg": 430,
+     "worst": {
+      "h": -233.2,
+      "a": "t_fW3_p4_b1__clk_c1",
+      "b": "t_fW3_p4_b1__clk_t5",
+      "tag": "fW3_p4_b1",
+      "region": "fW3_p4_b1",
+      "ka": "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "kb": "other:clk_t5",
+      "cls": "rom",
+      "tree_ee": 149.5,
+      "unc_spread": 73.0,
+      "lat": -22.1,
+      "ocv": 33.6,
+      "data": 25.9,
+      "cr": 1047.5,
+      "D": 200.5,
+      "diag": 222.6,
+      "lat_a": 224.6,
+      "lat_b": 202.5,
+      "ea": 7055.7,
+      "lc": 8325.8,
+      "st_a": 220,
+      "st_b": 220,
+      "lca": 207,
+      "dist": 658.7
+     },
+     "max_diag": 222.6,
+     "max_diag_pair": [
+      "t_fW3_p4_b1__clk_c1",
+      "t_fW3_p4_b1__clk_t5",
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "other:clk_t5"
+     ],
+     "max_D": 200.5,
+     "max_D_pair": [
+      "t_fW3_p4_b1__clk_c1",
+      "t_fW3_p4_b1__clk_t5",
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb",
+      "other:clk_t5"
+     ],
+     "per_class": {
+      "rom": {
+       "n": 156,
+       "worst_hold": -233.2,
+       "neg": 135,
+       "max_D": 200.5,
+       "max_diag": 222.6
+      },
+      "core": {
+       "n": 66,
+       "worst_hold": -168.3,
+       "neg": 66,
+       "max_D": 136.0,
+       "max_diag": 154.2
+      },
+      "reg-reg": {
+       "n": 240,
+       "worst_hold": -214.2,
+       "neg": 229,
+       "max_D": 180.3,
+       "max_diag": 180.3
+      }
+     },
+     "tap_early_by_kind": {
+      "core:ot_v41_rom_elem_q_qxpq_w10_gb": {
+       "n": 4,
+       "min": 7055.7,
+       "max": 7161.1
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 7185.6,
+       "max": 7185.6
+      },
+      "other:clk_t3": {
+       "n": 1,
+       "min": 7146.5,
+       "max": 7146.5
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 7169.8,
+       "max": 7169.8
+      },
+      "reg": {
+       "n": 1,
+       "min": 7161.4,
+       "max": 7161.4
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 7202.4,
+       "max": 7202.4
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 7158.7,
+       "max": 7158.7
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 7148.8,
+       "max": 7148.8
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 7162.8,
+       "max": 7162.8
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 7097.9,
+       "max": 7097.9
+      },
+      "core:ot_v41_bf_col": {
+       "n": 2,
+       "min": 7124.0,
+       "max": 7144.2
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 7187.9,
+       "max": 7187.9
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 7205.2,
+       "max": 7205.2
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 7203.5,
+       "max": 7203.5
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 7165.6,
+       "max": 7165.6
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 7176.7,
+       "max": 7176.7
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 7137.6,
+       "max": 7137.6
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 7201.2,
+       "max": 7201.2
+      }
+     }
+    },
+    "lk_EN2": {
+     "pairs": 992,
+     "worst_hold": -232.7,
+     "hold_neg": 811,
+     "worst": {
+      "h": -232.7,
+      "a": "t_lk_EN2__clk_t14",
+      "b": "t_lk_EN2__clk",
+      "tag": "lk_EN2",
+      "region": "lk_EN2",
+      "ka": "other:clk_t14",
+      "kb": "reg",
+      "cls": "reg-reg",
+      "tree_ee": 141.4,
+      "unc_spread": 61.4,
+      "lat": 0.0,
+      "ocv": 30.7,
+      "data": 25.9,
+      "cr": 978.0,
+      "D": 202.8,
+      "diag": 202.8,
+      "lat_a": 202.5,
+      "lat_b": 202.5,
+      "ea": 6546.5,
+      "lc": 7727.3,
+      "st_a": 222,
+      "st_b": 218,
+      "lca": 207,
+      "dist": 1185.8
+     },
+     "max_diag": 202.8,
+     "max_diag_pair": [
+      "t_lk_EN2__clk",
+      "t_lk_EN2__clk_t14",
+      "reg",
+      "other:clk_t14"
+     ],
+     "max_D": 202.8,
+     "max_D_pair": [
+      "t_lk_EN2__clk_t14",
+      "t_lk_EN2__clk",
+      "other:clk_t14",
+      "reg"
+     ],
+     "per_class": {
+      "reg-reg": {
+       "n": 992,
+       "worst_hold": -232.7,
+       "neg": 811,
+       "max_D": 202.8,
+       "max_diag": 202.8
+      }
+     },
+     "tap_early_by_kind": {
+      "other:clk_t3": {
+       "n": 1,
+       "min": 6610.7,
+       "max": 6610.7
+      },
+      "other:clk_t15": {
+       "n": 1,
+       "min": 6551.2,
+       "max": 6551.2
+      },
+      "other:clk_t14": {
+       "n": 1,
+       "min": 6546.5,
+       "max": 6546.5
+      },
+      "other:clk_t19": {
+       "n": 1,
+       "min": 6654.6,
+       "max": 6654.6
+      },
+      "other:clk_t29": {
+       "n": 1,
+       "min": 6605.9,
+       "max": 6605.9
+      },
+      "other:clk_t23": {
+       "n": 1,
+       "min": 6580.8,
+       "max": 6580.8
+      },
+      "other:clk_t30": {
+       "n": 1,
+       "min": 6608.3,
+       "max": 6608.3
+      },
+      "other:clk_t20": {
+       "n": 1,
+       "min": 6580.5,
+       "max": 6580.5
+      },
+      "other:clk_t21": {
+       "n": 1,
+       "min": 6578.1,
+       "max": 6578.1
+      },
+      "other:clk_t24": {
+       "n": 1,
+       "min": 6668.7,
+       "max": 6668.7
+      },
+      "reg": {
+       "n": 1,
+       "min": 6687.8,
+       "max": 6687.8
+      },
+      "other:clk_t4": {
+       "n": 1,
+       "min": 6554.0,
+       "max": 6554.0
+      },
+      "other:clk_t1": {
+       "n": 1,
+       "min": 6685.3,
+       "max": 6685.3
+      },
+      "other:clk_t11": {
+       "n": 1,
+       "min": 6604.0,
+       "max": 6604.0
+      },
+      "other:clk_t16": {
+       "n": 1,
+       "min": 6664.4,
+       "max": 6664.4
+      },
+      "other:clk_t12": {
+       "n": 1,
+       "min": 6547.1,
+       "max": 6547.1
+      },
+      "other:clk_t18": {
+       "n": 1,
+       "min": 6652.7,
+       "max": 6652.7
+      },
+      "other:clk_t13": {
+       "n": 1,
+       "min": 6547.0,
+       "max": 6547.0
+      },
+      "other:clk_t17": {
+       "n": 1,
+       "min": 6684.0,
+       "max": 6684.0
+      },
+      "other:clk_t25": {
+       "n": 1,
+       "min": 6666.3,
+       "max": 6666.3
+      },
+      "other:clk_t10": {
+       "n": 1,
+       "min": 6602.2,
+       "max": 6602.2
+      },
+      "other:clk_t6": {
+       "n": 1,
+       "min": 6552.5,
+       "max": 6552.5
+      },
+      "other:clk_t5": {
+       "n": 1,
+       "min": 6550.3,
+       "max": 6550.3
+      },
+      "other:clk_t9": {
+       "n": 1,
+       "min": 6681.1,
+       "max": 6681.1
+      },
+      "other:clk_t2": {
+       "n": 1,
+       "min": 6608.8,
+       "max": 6608.8
+      },
+      "other:clk_t28": {
+       "n": 1,
+       "min": 6584.5,
+       "max": 6584.5
+      },
+      "other:clk_t8": {
+       "n": 1,
+       "min": 6661.6,
+       "max": 6661.6
+      },
+      "other:clk_t26": {
+       "n": 1,
+       "min": 6637.6,
+       "max": 6637.6
+      },
+      "other:clk_t27": {
+       "n": 1,
+       "min": 6646.9,
+       "max": 6646.9
+      },
+      "other:clk_t7": {
+       "n": 1,
+       "min": 6555.7,
+       "max": 6555.7
+      },
+      "other:clk_t31": {
+       "n": 1,
+       "min": 6589.5,
+       "max": 6589.5
+      },
+      "other:clk_t22": {
+       "n": 1,
+       "min": 6585.5,
+       "max": 6585.5
+      }
+     }
+    }
+   }
+  }
+ }
+}

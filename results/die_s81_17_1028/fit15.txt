@@ -1,0 +1,13 @@
+TT 3par n,L,L2 coef [1.7985262e+01 1.7950600e-01 2.6400000e-04] rms 11.53 resid plain/snake mean 1.26 -4.26
+TT +fanout coef [1.0323351e+01 2.0074200e-01 1.9400000e-04 1.0424635e+01] rms 9.44 resid plain/snake mean -0.07 -3.91
+TT +fanout+sib coef [ 1.3064457e+01  1.9321800e-01  2.0800000e-04  1.2515637e+01
+ -8.2133790e+00] rms 9.22 resid plain/snake mean 0.26 -3.57
+TT ratio routed/model plain med 1.461 snake 1.557
+   fo 1 n 8501 ratio med 1.364
+   fo 2 n 8103 ratio med 1.67
+FF 3par n,L,L2 coef [1.487537e+01 1.666420e-01 2.410000e-04] rms 9.58 resid plain/snake mean 1.02 -3.18
+FF +fanout coef [9.205135e+00 1.823570e-01 1.890000e-04 7.714803e+00] rms 8.23 resid plain/snake mean 0.04 -2.92
+FF +fanout+sib coef [ 1.071739e+01  1.782060e-01  1.970000e-04  8.868398e+00 -4.531281e+00] rms 8.15 resid plain/snake mean 0.22 -2.73
+FF ratio routed/model plain med 1.289 snake 1.396
+   fo 1 n 8501 ratio med 1.216
+   fo 2 n 8103 ratio med 1.461

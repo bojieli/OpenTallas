@@ -1,0 +1,36 @@
+{
+ "scope": "DIE-S81-17 inv2 (CKINVDCx16) DME stage model fitted (least squares) on S81 go15 routed clock GRT legs: 16604 DME legs, N-row EARLY node arrivals; leg delay = n*d0 + k1*L + k2*sum(Ls^2) + kf*(end-node fanout - 1). tap = DIE-QC-21 trial13b fit (S81 go15 tap legs are ~0 um, not refit). For die_trial --region-dme-stage-cal.",
+ "source": {
+  "trial": "intel2:/srv/opentallas-scratch2/claude/die-s81-16/go15",
+  "arrivals": "go15/out_{TT,FF}/arr_{TT,FF}.txt",
+  "fit": "results/die_s81_17_1028/scripts/cal_est.py"
+ },
+ "leg": [
+  12.453375,
+  0.161722,
+  0.000233,
+  12.303575
+ ],
+ "tap": [
+  0.04204,
+  5e-06
+ ],
+ "leg_FF": [
+  10.594136,
+  0.144771,
+  0.000229,
+  8.924815
+ ],
+ "tap_FF": [
+  0.04195,
+  -5e-06
+ ],
+ "rms_ps": {
+  "TT": 7.95,
+  "FF": 7.06
+ },
+ "rms_ps_go15_model": {
+  "TT": 30.77,
+  "FF": 21.57
+ }
+}
