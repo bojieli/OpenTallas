@@ -251,6 +251,91 @@ def snap_macro_placement(placements, tracks_tcl, lef_text_of, outline_um):
     return out, moves
 
 
+def macro_reg_guide_spec(placements, lef_size_of, scope, grow_um, core_box):
+    """HBM-CORES-REBAL-10 (opt-in --macro-reg-guide SCOPE): one GPL guide box per static macro <P>.<leaf>: the macro's
+    placed bbox grown by grow_um on every side, clipped to core_box (x0, y0, x1, y1 um); members = the instances under
+    the sibling scope <P>.<SCOPE>. (registers that drive only that macro, e.g. the WCOPY write copies g_wcopy).
+    lef_size_of(master) -> (w nm, h nm).  Orientations R0/MX/MY/R180 keep the bbox; others are refused."""
+    out = []
+    for i, p_ in enumerate(placements):
+        o = p_.get("orient", "R0")
+        if o not in ("R0", "MX", "MY", "R180"):
+            raise SystemExit(f"macro reg guide: orientation {o} of {p_['inst']} not supported")
+        inst = p_["inst"].replace("\\", "")
+        if "." not in inst:
+            raise SystemExit(f"macro reg guide: {inst} has no parent scope")
+        w, h = lef_size_of(p_["macro"])
+        x, y = (float(c) for c in p_["xy_um"])
+        box = [max(core_box[0], x - grow_um), max(core_box[1], y - grow_um),
+               min(core_box[2], x + w / 1000.0 + grow_um), min(core_box[3], y + h / 1000.0 + grow_um)]
+        out.append(dict(name=f"m{i}", macro=inst, prefix=inst.rsplit(".", 1)[0] + f".{scope}.",
+                        macro_um=[x, y, x + w / 1000.0, y + h / 1000.0], box_um=box))
+    # disjoint guides by construction: two grown boxes that overlap are cut at the middle of the gap between their
+    # macros, on the axis where the macros are apart (the wider gap if both); cuts only shrink boxes, so one pass
+    # over all pairs leaves every pair disjoint.
+    for i, a_ in enumerate(out):
+        for b_ in out[i + 1:]:
+            A, B = a_["box_um"], b_["box_um"]
+            if not (A[0] < B[2] and B[0] < A[2] and A[1] < B[3] and B[1] < A[3]):
+                continue
+            ma, mb = a_["macro_um"], b_["macro_um"]
+            gaps = []
+            for ax in (0, 1):
+                lo_, hi_ = (a_, b_) if ma[ax] <= mb[ax] else (b_, a_)
+                gap = hi_["macro_um"][ax] - lo_["macro_um"][ax + 2]
+                if gap >= 0:
+                    gaps.append((gap, ax, lo_, hi_))
+            if not gaps:
+                raise SystemExit(f"macro reg guide: macros {a_['macro']} and {b_['macro']} overlap")
+            gap, ax, lo_, hi_ = max(gaps, key=lambda g_: g_[0])
+            mid = lo_["macro_um"][ax + 2] + gap / 2.0
+            lo_["box_um"][ax + 2] = min(lo_["box_um"][ax + 2], mid)
+            hi_["box_um"][ax] = max(hi_["box_um"][ax], mid)
+    for g_ in out:
+        g_["box_um"] = [round(v, 3) for v in g_["box_um"]]
+        g_["macro_um"] = [round(v, 3) for v in g_["macro_um"]]
+    return out
+
+
+def relay_reg_guide_spec(relays, pins, mguides, core_box, step_um=5.0):
+    """HBM-CORES-REBAL-10 (opt-in --relay-reg-guide FILE, with --macro-reg-guide): a register stage between boundary
+    pins and a set of macro-side registers (e.g. the pinned bank write regs wd_pin/wa_pin/w_pin between the write pins
+    and the per-column WCOPY copies) gets a GPL guide box centred on the plan point that MINIMISES THE LONGER HOP:
+    P = argmin max(max_i L1(pin_i, P), max_j L1(P, macro_j centre)), searched on a step_um grid over the core, P such
+    that the box (P +- half_um) stays clear of every macro guide box (all guides stay disjoint).
+    relays = [{name, members: [literal instance-name prefixes], pins: regex on plan pin names,
+               sinks: macro instance prefix, half_um}]; pins = [(name, x, y)]; mguides = macro_reg_guide_spec output."""
+    out = []
+    for r in relays:
+        pp = [(x, y) for n, x, y in pins if re.search(r["pins"], n)]
+        sk = [((g["macro_um"][0] + g["macro_um"][2]) / 2, (g["macro_um"][1] + g["macro_um"][3]) / 2)
+              for g in mguides if g["macro"].startswith(r["sinks"])]
+        if not pp or not sk:
+            raise SystemExit(f"relay reg guide {r['name']}: {len(pp)} pins / {len(sk)} sink macros")
+        hf = float(r.get("half_um", 12.0))
+        taken = [g["box_um"] for g in mguides] + [g["box_um"] for g in out]
+        best = None
+        nx, ny = int((core_box[2] - core_box[0]) / step_um), int((core_box[3] - core_box[1]) / step_um)
+        for i in range(nx + 1):
+            for j in range(ny + 1):
+                x, y = core_box[0] + i * step_um, core_box[1] + j * step_um
+                b = [max(core_box[0], x - hf), max(core_box[1], y - hf), min(core_box[2], x + hf), min(core_box[3], y + hf)]
+                if any(b[0] < q[2] and q[0] < b[2] and b[1] < q[3] and q[1] < b[3] for q in taken):
+                    continue
+                h1 = max(abs(px - x) + abs(py - y) for px, py in pp)
+                h2 = max(abs(sx - x) + abs(sy - y) for sx, sy in sk)
+                key = (max(h1, h2), h1 + h2, x, y)
+                if best is None or key < best[0]:
+                    best = (key, b, h1, h2)
+        if best is None:
+            raise SystemExit(f"relay reg guide {r['name']}: no free grid point")
+        (_, _, x, y), b, h1, h2 = best
+        out.append(dict(name=r["name"], prefixes=list(r["members"]), point_um=[round(x, 3), round(y, 3)],
+                        box_um=[round(v, 3) for v in b], hop_pins_um=round(h1, 1), hop_sinks_um=round(h2, 1),
+                        pins=len(pp), sink_macros=len(sk)))
+    return out
+
+
 def sdc(per, ins, tol, clks, rsts, tag, common=None):
     io = IO_BUDGET * per
     hdr = (f"# the partition logic around the core runs on the plan common latency ({ins:g} ps): virtual IO clock\n"
@@ -657,6 +742,14 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
                          "macro_placement[k] = {macro, origin_um, orient} for macro instance k (fixed, place_macro -exact); "
                          "--macro-inst-fmt gives the instance path of k")
+    ap.add_argument("--macro-reg-guide", default=None, metavar="SCOPE",
+                    help="opt-in (HBM-CORES-REBAL-10): GPL guide box per static macro <P>.u_m for the registers under "
+                         "<P>.SCOPE (e.g. g_wcopy), released before DPL; default off = kit unchanged")
+    ap.add_argument("--relay-reg-guide", default=None, metavar="JSON",
+                    help="opt-in with --macro-reg-guide (HBM-CORES-REBAL-10): relay register guides at the plan point "
+                         "that minimises the longer of the pin->relay / relay->macro hops (relay_reg_guide_spec)")
+    ap.add_argument("--macro-reg-guide-um", type=float, default=15.0,
+                    help="guide box = macro bbox grown by this many um on every side (clipped to the core area)")
     ap.add_argument("--macro-grid-snap", default="on", choices=["on", "off"],
                     help="HBM-CORES-REBAL-9: snap --macro-placement origins to the kit pin-layer track grid "
                          "(kit preflight macro_pin_grid); 'off' keeps the table verbatim (that kit fails preflight)")
@@ -1192,6 +1285,37 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                  ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
+    if a.macro_reg_guide:
+        # HBM-CORES-REBAL-10: registers that feed one macro only (WCOPY per-column write copies) are guided beside
+        # that macro during GPL (INCLUSIVE regions, macro_reg_guide.tcl), released before DPL (macro_reg_guide_release).
+        if not rec.get("macro_placement"):
+            raise SystemExit("--macro-reg-guide needs a static macro placement")
+        mrg = macro_reg_guide_spec(
+            rec["macro_placement"], lambda m_: lef_signal_pins((kd / "macros" / f"{m_}.lef").read_text(), m_)[:2],
+            a.macro_reg_guide, a.macro_reg_guide_um, (m, m, w - m, h - m))
+        rly = []
+        if a.relay_reg_guide:
+            rly = relay_reg_guide_spec(json.load(open(a.relay_reg_guide))["relays"],
+                                       [((r_["bus"] if r_["bit"] is None else f"{r_['bus']}[{r_['bit']}]"), r_["x"], r_["y"])
+                                        for r_ in prow], mrg, (m, m, w - m, h - m))
+        spec = " ".join(f"{{{g['name']} {{{' '.join('{' + q + '}' for q in g.get('prefixes', [g.get('prefix')]))}}} "
+                        f"{' '.join(f'{v:g}' for v in g['box_um'])}}}" for g in mrg + rly)
+        (kd / "macro_reg_guide.tcl").write_text(
+            "# GENERATED by gen_core_kit_hbm.py --macro-reg-guide (HBM-CORES-REBAL-10). Do not edit.\n"
+            f"set ::ot_mrg_spec [concat {spec}]\n" + (HERE / "macro_reg_guide.tcl").read_text())
+        shutil.copyfile(HERE / "macro_reg_guide_release.tcl", kd / "macro_reg_guide_release.tcl")
+        for f_, s_ in (("face_flops.tcl", "macro_reg_guide.tcl"), ("face_flops_release.tcl", "macro_reg_guide_release.tcl")):
+            with open(kd / f_, "a") as fh:
+                fh.write(f"# HBM-CORES-REBAL-10 --macro-reg-guide\nsource /work/{s_}\n")
+        (kd / "macro_reg_guide.json").write_text(json.dumps(dict(source="gen_core_kit_hbm.macro_reg_guide_spec",
+                                                                 scope=a.macro_reg_guide, grow_um=a.macro_reg_guide_um,
+                                                                 guides=mrg, relays=rly,
+                                                                 relay_src=(dict(file=a.relay_reg_guide,
+                                                                                 sha256=sha(a.relay_reg_guide))
+                                                                            if a.relay_reg_guide else None)),
+                                                            indent=1) + "\n")
+        rec["macro_reg_guide"] = dict(scope=a.macro_reg_guide, grow_um=a.macro_reg_guide_um, guides=len(mrg),
+                                      relays=len(rly))
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,

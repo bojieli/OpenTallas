@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.hbm_arch.relay_reg_guide.v1",
+ "note": "HBM-CORES-REBAL-10 lanes__canon: pinned-bank write registers (ot_hbm_su_static_pinned_bank wd_pin / wa_pin / w_pin, fed by the write_data / write_addr / write_v pins, which the plan puts at different x) are the relay stage between the boundary and the six WCOPY column copies beside the SRAMs; each group is guided to the point minimising its longer hop",
+ "relays": [
+  {
+   "name": "wdbank0",
+   "members": [
+    "u_fcore.u_core.u_bank0.wd_pin["
+   ],
+   "pins": "^g_bank_k0_u_bank_write_data",
+   "sinks": "u_fcore.u_core.u_bank0.u_data.",
+   "half_um": 10.0
+  },
+  {
+   "name": "wabank0",
+   "members": [
+    "u_fcore.u_core.u_bank0.wa_pin["
+   ],
+   "pins": "^g_bank_k0_u_bank_write_addr",
+   "sinks": "u_fcore.u_core.u_bank0.u_data.",
+   "half_um": 6.0
+  },
+  {
+   "name": "wvbank0",
+   "members": [
+    "u_fcore.u_core.u_bank0.w_pin$"
+   ],
+   "pins": "^g_bank_k0_u_bank_write_v",
+   "sinks": "u_fcore.u_core.u_bank0.u_data.",
+   "half_um": 4.0
+  },
+  {
+   "name": "wdbank1",
+   "members": [
+    "u_fcore.u_core.u_bank1.wd_pin["
+   ],
+   "pins": "^g_bank_k1_u_bank_write_data",
+   "sinks": "u_fcore.u_core.u_bank1.u_data.",
+   "half_um": 10.0
+  },
+  {
+   "name": "wabank1",
+   "members": [
+    "u_fcore.u_core.u_bank1.wa_pin["
+   ],
+   "pins": "^g_bank_k1_u_bank_write_addr",
+   "sinks": "u_fcore.u_core.u_bank1.u_data.",
+   "half_um": 6.0
+  },
+  {
+   "name": "wvbank1",
+   "members": [
+    "u_fcore.u_core.u_bank1.w_pin$"
+   ],
+   "pins": "^g_bank_k1_u_bank_write_v",
+   "sinks": "u_fcore.u_core.u_bank1.u_data.",
+   "half_um": 4.0
+  },
+  {
+   "name": "wdbank2",
+   "members": [
+    "u_fcore.u_core.u_bank2.wd_pin["
+   ],
+   "pins": "^g_bank_k2_u_bank_write_data",
+   "sinks": "u_fcore.u_core.u_bank2.u_data.",
+   "half_um": 10.0
+  },
+  {
+   "name": "wabank2",
+   "members": [
+    "u_fcore.u_core.u_bank2.wa_pin["
+   ],
+   "pins": "^g_bank_k2_u_bank_write_addr",
+   "sinks": "u_fcore.u_core.u_bank2.u_data.",
+   "half_um": 6.0
+  },
+  {
+   "name": "wvbank2",
+   "members": [
+    "u_fcore.u_core.u_bank2.w_pin$"
+   ],
+   "pins": "^g_bank_k2_u_bank_write_v",
+   "sinks": "u_fcore.u_core.u_bank2.u_data.",
+   "half_um": 4.0
+  },
+  {
+   "name": "wdbank3",
+   "members": [
+    "u_fcore.u_core.u_bank3.wd_pin["
+   ],
+   "pins": "^g_bank_k3_u_bank_write_data",
+   "sinks": "u_fcore.u_core.u_bank3.u_data.",
+   "half_um": 10.0
+  },
+  {
+   "name": "wabank3",
+   "members": [
+    "u_fcore.u_core.u_bank3.wa_pin["
+   ],
+   "pins": "^g_bank_k3_u_bank_write_addr",
+   "sinks": "u_fcore.u_core.u_bank3.u_data.",
+   "half_um": 6.0
+  },
+  {
+   "name": "wvbank3",
+   "members": [
+    "u_fcore.u_core.u_bank3.w_pin$"
+   ],
+   "pins": "^g_bank_k3_u_bank_write_v",
+   "sinks": "u_fcore.u_core.u_bank3.u_data.",
+   "half_um": 4.0
+  }
+ ]
+}
