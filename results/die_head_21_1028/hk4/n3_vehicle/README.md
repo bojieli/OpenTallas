@@ -1,0 +1,5 @@
+Actual generated FT wrappers: original four-chain hd_st_n3 versus two split strip wrappers. Four full-width paths (514/512/514/512 payload bits plus epochs), 400 random cycles, 379 compared cycles: PASS. One-stage-short u1 split mutant: 379 mismatches CAUGHT. ot-run epyc2 unit oth-ubuntu-2686324-1793257079 exit0, intel2 copy-back /srv/opentallas-scratch2/claude/codex-head-resize/n3_vehicle2.
+
+Mechanism vehicle uses the same two-flop local reset and one clock in all three wrappers; it proves station/data and epoch identity after reset convergence, not the new production wavefront/CA boot schedule. Plan station counts remain u2/d2=4/4, u1/d1=6/4: no added token-data cycles. New partition reset/START offsets must be recomputed during landed compose.
+
+Initial vehicle incorrectly re-seeded $urandom(seed) on every bit, yielding a repetitive stimulus in Verilator5.050; the one-stage mutant survived. Failure log retained as fail_seeded_mutant_survived.log. Changed to $urandom() continuously advancing state; actual delay mutant then failed379 compared cycles. No source RTL change was made to rescue the mutant.
