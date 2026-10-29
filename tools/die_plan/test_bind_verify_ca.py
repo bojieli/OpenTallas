@@ -35,3 +35,10 @@ def test_r8_count_bank_keeps_actual_identity_and_declared_count():
     assert g.source(20)==('pin',0,'q',0,3) and not errs
     bank.ports['strap_cnt'][0]=99;errs=[];g=Graph(flat,Rules(VERIFY_RULES),errs);g.source(20)
     assert any('RULE_STAGES_PORT' in e for e in errs)
+
+
+def test_modular_negative_k_uses_verified_fixed_transport_latency():
+    from bind_verify import set_count_aligned_transport
+    g,err=graph('ot_dp_clk_landing_cas',k=61) # -3 modulo 64
+    set_count_aligned_transport(g,{'ring':2})
+    assert g.source(20)==('pin',0,'q',0,2) and not err

@@ -20,6 +20,18 @@ def boolean(op,terms):
     return (op,*sorted(items,key=repr))
 
 
+def planned_ring_depths(raw,table):
+    """A hardened type uses the largest DEPTH required by any of its copies (12.15a)."""
+    ca=table.get('count_aligned') or {};parts={p['name']:p for p in raw['partitions']}
+    ports={p['id']:p for p in raw['ports']};depths={}
+    for r in table['ports']:
+        cfg=ca.get('ports',{}).get(r['port'])
+        if cfg is None:continue
+        key=(parts[r['dst']]['type'],ports[r['port']]['dst']['bus'])
+        depths[key]=max(depths.get(key,0),int(cfg['depth']))
+    return depths
+
+
 class Verification:
     def __init__(self,F,G,raw,table,names,live_widths=None,plan_path=None,reset_tree=None):
         self.F,self.G,self.raw,self.table,self.names=F,G,raw,table,names
@@ -30,6 +42,8 @@ class Verification:
         self.observer_seen=set();self.errors=[];self.byname={c.path:c for c in F.cells};self.expected=set();self.memo={}
         self.parts={p['name']:p for p in raw['partitions']};self.collector=table['collector']
         self.live_widths=live_widths
+        self.ring_depths=planned_ring_depths(raw,table)
+        self.transport_stages={}
         self.region={pn:r['tag'] for r in table['regions']
                      if isinstance(r.get('parts'),list) for pn in r['parts']}
         for r in table['regions']:
@@ -188,15 +202,19 @@ class Verification:
                 if ca:
                     cfg=ca['ports'][r['port']]
                     params=getattr(c,'params',{})
-                    if int(params.get('DEPTH',4))!=int(cfg['depth']):
+                    depth=self.ring_depths[(self.parts[r['dst']]['type'],bus)]
+                    if int(params.get('DEPTH',4))!=depth:
                         self.fail(path+': actual count-aligned DEPTH differs from the bound contract')
                     if ca.get('strap_form'):
                         kb=c.ports.get('strap_k',[])
-                        kw=int(cfg['depth']).bit_length()-1+4
+                        kw=depth.bit_length()-1+4
                         expected=list(reversed(format(int(cfg['K']) & ((1<<kw)-1),f'0{kw}b')))
                         if kb!=expected:self.fail(path+': actual strap_k differs from the bound count')
                     elif (int(params.get('K',2)) & 0xffffffff)!=(int(cfg['K']) & 0xffffffff):
                         self.fail(path+': actual count-aligned K differs from the bound contract')
+                    # K is a modular counter offset, not transport cycles. The
+                    # fixed latency includes the proven sender/receiver origins.
+                    self.transport_stages[path]=int(cfg['sched_lat'])
                     # count-aligned (MESO-INTEG-1): read count from the receiver's origin, write count from the
                     # sender's origin forwarded beside the bus; the origins themselves are checked below
                     self.equal_input(c,'rst_n',[self.start_net(r['dst'])])
