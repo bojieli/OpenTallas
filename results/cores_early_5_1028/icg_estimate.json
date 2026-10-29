@@ -1,0 +1,424 @@
+[
+ {
+  "core": "sinks_ot_v41_bf_col_ce1.txt",
+  "die_um": [
+   450.168,
+   198.72
+  ],
+  "gates": 40,
+  "gated_flops": 53011,
+  "direct_flops": 839,
+  "macro_clock_pins": [
+   "g_pp.u_rom1",
+   "g_pp.u_rom0"
+  ],
+  "placed_icg_to_domain_centroid_um_med_max": [
+   52.5,
+   228.0
+  ],
+  "A_asis_gates": {
+   "label": "A: one ICG per RTL gate at its domain centroid, CTS-open domain",
+   "clusters": 40,
+   "levels_hist": {
+    "3": 40
+   },
+   "reach_um_min_med_max": [
+    32.5,
+    110.3,
+    301.4
+   ],
+   "sinks_min_med_max": [
+    831,
+    1400,
+    4874
+   ],
+   "calib_out": 10,
+   "TT": {
+    "subtree_mean_range": [
+     95.5,
+     266.5
+    ],
+    "flop_window": 255.4,
+    "worst_intra_cluster": 109.1,
+    "subtree_mean_wtd": 161.4
+   },
+   "FF": {
+    "subtree_mean_range": [
+     74.0,
+     213.3
+    ],
+    "flop_window": 214.1,
+    "worst_intra_cluster": 98.0,
+    "subtree_mean_wtd": 127.7
+   }
+  },
+  "B40": {
+   "label": "B40: ICG copies per 40 um tile + ungated cts_open tile leaves",
+   "clusters": 249,
+   "levels_hist": {
+    "2": 249
+   },
+   "reach_um_min_med_max": [
+    6.1,
+    30.4,
+    361.5
+   ],
+   "sinks_min_med_max": [
+    25,
+    198,
+    576
+   ],
+   "calib_out": 3,
+   "TT": {
+    "subtree_mean_range": [
+     53.8,
+     279.8
+    ],
+    "flop_window": 324.2,
+    "worst_intra_cluster": 130.9,
+    "subtree_mean_wtd": 74.6
+   },
+   "FF": {
+    "subtree_mean_range": [
+     41.3,
+     225.4
+    ],
+    "flop_window": 271.0,
+    "worst_intra_cluster": 117.5,
+    "subtree_mean_wtd": 58.3
+   },
+   "icg_copies": 246,
+   "ungated_tile_leaves": 3,
+   "tiles_used": 52
+  },
+  "B50": {
+   "label": "B50: ICG copies per 50 um tile + ungated cts_open tile leaves",
+   "clusters": 211,
+   "levels_hist": {
+    "2": 211
+   },
+   "reach_um_min_med_max": [
+    4.5,
+    34.0,
+    383.3
+   ],
+   "sinks_min_med_max": [
+    25,
+    262,
+    566
+   ],
+   "calib_out": 2,
+   "TT": {
+    "subtree_mean_range": [
+     52.7,
+     293.6
+    ],
+    "flop_window": 344.8,
+    "worst_intra_cluster": 138.8,
+    "subtree_mean_wtd": 77.1
+   },
+   "FF": {
+    "subtree_mean_range": [
+     40.5,
+     236.7
+    ],
+    "flop_window": 288.2,
+    "worst_intra_cluster": 124.6,
+    "subtree_mean_wtd": 60.3
+   },
+   "icg_copies": 209,
+   "ungated_tile_leaves": 2,
+   "tiles_used": 32
+  },
+  "B60": {
+   "label": "B60: ICG copies per 60 um tile + ungated cts_open tile leaves",
+   "clusters": 213,
+   "levels_hist": {
+    "2": 213
+   },
+   "reach_um_min_med_max": [
+    5.2,
+    34.3,
+    386.2
+   ],
+   "sinks_min_med_max": [
+    25,
+    295,
+    572
+   ],
+   "calib_out": 2,
+   "TT": {
+    "subtree_mean_range": [
+     53.2,
+     295.5
+    ],
+    "flop_window": 347.0,
+    "worst_intra_cluster": 139.8,
+    "subtree_mean_wtd": 77.5
+   },
+   "FF": {
+    "subtree_mean_range": [
+     40.8,
+     238.1
+    ],
+    "flop_window": 290.1,
+    "worst_intra_cluster": 125.5,
+    "subtree_mean_wtd": 60.7
+   },
+   "icg_copies": 210,
+   "ungated_tile_leaves": 3,
+   "tiles_used": 31
+  },
+  "B80": {
+   "label": "B80: ICG copies per 80 um tile + ungated cts_open tile leaves",
+   "clusters": 180,
+   "levels_hist": {
+    "2": 180
+   },
+   "reach_um_min_med_max": [
+    10.5,
+    34.7,
+    360.5
+   ],
+   "sinks_min_med_max": [
+    26,
+    321,
+    548
+   ],
+   "calib_out": 2,
+   "TT": {
+    "subtree_mean_range": [
+     56.5,
+     279.2
+    ],
+    "flop_window": 320.9,
+    "worst_intra_cluster": 130.5,
+    "subtree_mean_wtd": 79.1
+   },
+   "FF": {
+    "subtree_mean_range": [
+     43.6,
+     224.9
+    ],
+    "flop_window": 268.4,
+    "worst_intra_cluster": 117.2,
+    "subtree_mean_wtd": 61.9
+   },
+   "icg_copies": 177,
+   "ungated_tile_leaves": 3,
+   "tiles_used": 17
+  }
+ },
+ {
+  "core": "sinks_ot_v41_rom_elem_q_qxpq_w10_gb_ce1.txt",
+  "die_um": [
+   510.84,
+   221.4
+  ],
+  "gates": 8,
+  "gated_flops": 38223,
+  "direct_flops": 15703,
+  "macro_clock_pins": [
+   "u_e.g_mac\\[1\\].g_pp.u_rom1",
+   "u_e.g_mac\\[1\\].g_pp.u_rom0",
+   "u_e.g_mac\\[0\\].g_pp.u_rom1",
+   "u_e.g_mac\\[0\\].g_pp.u_rom0"
+  ],
+  "placed_icg_to_domain_centroid_um_med_max": [
+   90.4,
+   139.1
+  ],
+  "A_asis_gates": {
+   "label": "A: one ICG per RTL gate at its domain centroid, CTS-open domain",
+   "clusters": 8,
+   "levels_hist": {
+    "3": 8
+   },
+   "reach_um_min_med_max": [
+    124.6,
+    251.7,
+    278.3
+   ],
+   "sinks_min_med_max": [
+    1816,
+    5936,
+    6703
+   ],
+   "calib_out": 8,
+   "TT": {
+    "subtree_mean_range": [
+     154.0,
+     251.8
+    ],
+    "flop_window": 184.4,
+    "worst_intra_cluster": 100.8,
+    "subtree_mean_wtd": 215.6
+   },
+   "FF": {
+    "subtree_mean_range": [
+     121.7,
+     201.4
+    ],
+    "flop_window": 156.9,
+    "worst_intra_cluster": 90.5,
+    "subtree_mean_wtd": 171.9
+   }
+  },
+  "B40": {
+   "label": "B40: ICG copies per 40 um tile + ungated cts_open tile leaves",
+   "clusters": 196,
+   "levels_hist": {
+    "2": 196
+   },
+   "reach_um_min_med_max": [
+    9.6,
+    30.7,
+    130.8
+   ],
+   "sinks_min_med_max": [
+    26,
+    316,
+    575
+   ],
+   "calib_out": 0,
+   "TT": {
+    "subtree_mean_range": [
+     56.0,
+     133.0
+    ],
+    "flop_window": 113.3,
+    "worst_intra_cluster": 47.3,
+    "subtree_mean_wtd": 72.1
+   },
+   "FF": {
+    "subtree_mean_range": [
+     43.1,
+     105.9
+    ],
+    "flop_window": 94.9,
+    "worst_intra_cluster": 42.5,
+    "subtree_mean_wtd": 56.2
+   },
+   "icg_copies": 149,
+   "ungated_tile_leaves": 47,
+   "tiles_used": 57
+  },
+  "B50": {
+   "label": "B50: ICG copies per 50 um tile + ungated cts_open tile leaves",
+   "clusters": 174,
+   "levels_hist": {
+    "2": 174
+   },
+   "reach_um_min_med_max": [
+    13.3,
+    31.4,
+    122.2
+   ],
+   "sinks_min_med_max": [
+    29,
+    344,
+    574
+   ],
+   "calib_out": 0,
+   "TT": {
+    "subtree_mean_range": [
+     58.3,
+     127.6
+    ],
+    "flop_window": 103.5,
+    "worst_intra_cluster": 44.2,
+    "subtree_mean_wtd": 72.2
+   },
+   "FF": {
+    "subtree_mean_range": [
+     45.0,
+     101.4
+    ],
+    "flop_window": 86.8,
+    "worst_intra_cluster": 39.7,
+    "subtree_mean_wtd": 56.3
+   },
+   "icg_copies": 129,
+   "ungated_tile_leaves": 45,
+   "tiles_used": 42
+  },
+  "B60": {
+   "label": "B60: ICG copies per 60 um tile + ungated cts_open tile leaves",
+   "clusters": 168,
+   "levels_hist": {
+    "2": 168
+   },
+   "reach_um_min_med_max": [
+    11.3,
+    28.3,
+    131.4
+   ],
+   "sinks_min_med_max": [
+    25,
+    321,
+    566
+   ],
+   "calib_out": 0,
+   "TT": {
+    "subtree_mean_range": [
+     57.0,
+     133.5
+    ],
+    "flop_window": 113.0,
+    "worst_intra_cluster": 47.6,
+    "subtree_mean_wtd": 72.8
+   },
+   "FF": {
+    "subtree_mean_range": [
+     43.9,
+     106.2
+    ],
+    "flop_window": 94.6,
+    "worst_intra_cluster": 42.7,
+    "subtree_mean_wtd": 56.8
+   },
+   "icg_copies": 123,
+   "ungated_tile_leaves": 45,
+   "tiles_used": 29
+  },
+  "B80": {
+   "label": "B80: ICG copies per 80 um tile + ungated cts_open tile leaves",
+   "clusters": 153,
+   "levels_hist": {
+    "2": 153
+   },
+   "reach_um_min_med_max": [
+    11.3,
+    28.8,
+    129.9
+   ],
+   "sinks_min_med_max": [
+    40,
+    363,
+    564
+   ],
+   "calib_out": 0,
+   "TT": {
+    "subtree_mean_range": [
+     57.0,
+     132.5
+    ],
+    "flop_window": 111.6,
+    "worst_intra_cluster": 47.0,
+    "subtree_mean_wtd": 76.4
+   },
+   "FF": {
+    "subtree_mean_range": [
+     43.9,
+     105.4
+    ],
+    "flop_window": 93.5,
+    "worst_intra_cluster": 42.2,
+    "subtree_mean_wtd": 59.8
+   },
+   "icg_copies": 111,
+   "ungated_tile_leaves": 42,
+   "tiles_used": 18
+  }
+ }
+]
