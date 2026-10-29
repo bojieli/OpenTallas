@@ -1,0 +1,118 @@
+{
+ "die": "qwen_compute",
+ "ir_budget_mv": 35.0,
+ "window": "PL_SU",
+ "window_um": [
+  26352.0,
+  9504.0,
+  29324.16,
+  12476.16
+ ],
+ "area_mm2": 8.834,
+ "grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.672,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "window_grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.672,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "grid_phase_scope": "core grid rows only; PHY domains are not cropped/translated",
+ "power_w": 0.1052,
+ "load_blocks": 4761,
+ "bumps": 793,
+ "bumps_vdd": 397,
+ "bump_contract": {
+  "pitch_um": 150.0,
+  "pad_um": 70.0,
+  "fields": [
+   {
+    "name": "a0_p75",
+    "pitch_um": 75.0,
+    "pad_um": 37.5,
+    "keep_um": 75.0,
+    "rects_um": [
+     [
+      1495.24,
+      0,
+      31216.32,
+      10531.64
+     ],
+     [
+      1495.24,
+      15733.96,
+      31216.32,
+      26265.6
+     ]
+    ],
+    "note": "OWNER 10-28 19:58 option (c): 75-um power bump field over the A0 array incl. streets = 768 A0 outlines +155 um (QC-PG-4 MEp75/MDp75 solve); rest of the die 150/70"
+   }
+  ]
+ },
+ "nets": [
+  "VDD",
+  "VSS"
+ ],
+ "power_map": "loads",
+ "supply_metric": "requires co-located VDD drop + VSS bounce collector",
+ "bump_pitch_um": 150.0,
+ "bump_pad_um": 70.0,
+ "est_regions_mv": {
+  "core": 159.032
+ },
+ "est_worst_mv": 159.032,
+ "est_detail": {
+  "local_mv": 70.594,
+  "coarse_max_mv": 88.438,
+  "rx_ohm_sq": 6.0823,
+  "ry_ohm_sq": 4.5749,
+  "nodes": 1560
+ },
+ "scope": "window PDNSim: window edges open (no feed from outside), window-local bumps; the estimate above is the same model on the same domain",
+ "plan": "/srv/opentallas-scratch2/claude/qc-pg-5/kits/plan_nodomains.json",
+ "plan_src": "/srv/opentallas-scratch2/claude/qc-pg-5/ev_qc23_pg5.json",
+ "tracks": {
+  "M8": 0.1458,
+  "M9": 0.401
+ },
+ "bump_pads": {
+  "70": 247,
+  "37.5": 546
+ }
+}
