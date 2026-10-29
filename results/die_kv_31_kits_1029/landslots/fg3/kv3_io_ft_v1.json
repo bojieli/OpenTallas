@@ -1,0 +1,150 @@
+{
+ "top": "kv3_io_ft_v1_part",
+ "checked": 2113,
+ "ok": 2111,
+ "fails": {
+  "shared": [
+   "cland_raw_reset_out[0]: net cland_raw_reset_out[0] has 1 loads besides the port chain",
+   "cland_tstart_out[0]: net u_bound.u_cland_origin/start has 44 loads besides the port chain"
+  ]
+ },
+ "flops": {
+  "ft0_i[522]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][522]$_DFFE_PP_",
+  "ft0_i[521]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][521]$_DFFE_PP_",
+  "ft0_i[520]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][520]$_DFFE_PP_",
+  "ft0_i[519]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][519]$_DFFE_PP_",
+  "ft0_i[518]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][518]$_DFFE_PP_",
+  "ft0_i[517]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][517]$_DFFE_PP_",
+  "ft0_i[516]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][516]$_DFFE_PP_",
+  "ft0_i[515]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][515]$_DFFE_PP_",
+  "ft0_i[514]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][514]$_DFFE_PP_",
+  "ft0_i[513]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][513]$_DFFE_PP_",
+  "ft0_i[512]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][512]$_DFFE_PP_",
+  "ft0_i[511]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][511]$_DFFE_PP_",
+  "ft0_i[510]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][510]$_DFFE_PP_",
+  "ft0_i[509]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][509]$_DFFE_PP_",
+  "ft0_i[508]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][508]$_DFFE_PP_",
+  "ft0_i[507]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][507]$_DFFE_PP_",
+  "ft0_i[506]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][506]$_DFFE_PP_",
+  "ft0_i[505]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][505]$_DFFE_PP_",
+  "ft0_i[504]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][504]$_DFFE_PP_",
+  "ft0_i[503]": "u_bound.u_cland_ft0_i/u_ring.s_d[3][503]$_DFFE_PP_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_k_ft0_i",
+  "strap_ca_k_ft1_i",
+  "strap_ca_k_ft2_i",
+  "strap_ca_k_ft3_i",
+  "strap_ca_pad"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_ft0_o": "clk",
+  "fclk_out_ft1_o": "clk",
+  "fclk_out_ft2_o": "clk",
+  "fclk_out_ft3_o": "clk",
+  "fclk_out_cland_up": "clk"
+ },
+ "land_mux_depth": {
+  "2": 4188,
+  "1": 12
+ },
+ "land_slot_bits": 1050,
+ "land_mux_bits": 1050,
+ "ring_start": {
+  "cland_fstart_in_ft0_i[0]": {
+   "ring": [
+    "ft0_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft0_i/fclk"
+   ],
+   "writer_flops": 2118,
+   "writer_groups": {
+    "u_bound.u_cland_ft0_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft0_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft0_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft0_i/u_ring.s_d[N][N]$_DFFE_PP_": 2092,
+    "u_bound.u_cland_ft0_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft1_i[0]": {
+   "ring": [
+    "ft1_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft1_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft1_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft1_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft1_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft1_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft1_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft2_i[0]": {
+   "ring": [
+    "ft2_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft2_i/fclk"
+   ],
+   "writer_flops": 2118,
+   "writer_groups": {
+    "u_bound.u_cland_ft2_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft2_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft2_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft2_i/u_ring.s_d[N][N]$_DFFE_PP_": 2092,
+    "u_bound.u_cland_ft2_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_ft3_i[0]": {
+   "ring": [
+    "ft3_i"
+   ],
+   "ring_clock": [
+    "u_bound.u_cland_ft3_i/fclk"
+   ],
+   "writer_flops": 34,
+   "writer_groups": {
+    "u_bound.u_cland_ft3_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_bound.u_cland_ft3_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_bound.u_cland_ft3_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_bound.u_cland_ft3_i/u_ring.s_d[N][N]$_DFFE_PP_": 8,
+    "u_bound.u_cland_ft3_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_tstart_in[0]": {
+   "ring": [],
+   "ring_clock": [],
+   "writer_flops": 0,
+   "writer_groups": {},
+   "sampler_flops": [
+    "u_bound.u_cland_origin/s0$_SDFF_PN0_",
+    "u_bound.u_cland_origin/sf$_DFF_N_"
+   ],
+   "sampler_clock": "u_bound.u_srl_9/clk"
+  }
+ },
+ "ring_start_bits": 5,
+ "pairs_declared": [],
+ "planned_bits": 2100,
+ "missing_ports": 0,
+ "fail_counts": {
+  "shared": 2
+ },
+ "verdict": "FAIL",
+ "netlist": "/net/1_2_yosys.v"
+}

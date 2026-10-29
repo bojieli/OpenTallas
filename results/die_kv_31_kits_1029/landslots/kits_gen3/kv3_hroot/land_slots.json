@@ -1,0 +1,193 @@
+{
+ "schema": "land_slots/3",
+ "buses": {
+  "ft0_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft0_i": {
+   "form": "ring_start",
+   "ring": "ft0_i"
+  },
+  "ft10_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft10_i": {
+   "form": "ring_start",
+   "ring": "ft10_i"
+  },
+  "ft11_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft11_i": {
+   "form": "ring_start",
+   "ring": "ft11_i"
+  },
+  "ft12_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft12_i": {
+   "form": "ring_start",
+   "ring": "ft12_i"
+  },
+  "ft13_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft13_i": {
+   "form": "ring_start",
+   "ring": "ft13_i"
+  },
+  "ft1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft1_i": {
+   "form": "ring_start",
+   "ring": "ft1_i"
+  },
+  "ft2_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft2_i": {
+   "form": "ring_start",
+   "ring": "ft2_i"
+  },
+  "ft3_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft3_i": {
+   "form": "ring_start",
+   "ring": "ft3_i"
+  },
+  "ft4_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft4_i": {
+   "form": "ring_start",
+   "ring": "ft4_i"
+  },
+  "ft5_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft5_i": {
+   "form": "ring_start",
+   "ring": "ft5_i"
+  },
+  "ft6_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft6_i": {
+   "form": "ring_start",
+   "ring": "ft6_i"
+  },
+  "ft7_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft7_i": {
+   "form": "ring_start",
+   "ring": "ft7_i"
+  },
+  "ft8_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft8_i": {
+   "form": "ring_start",
+   "ring": "ft8_i"
+  },
+  "ft9_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft9_i": {
+   "form": "ring_start",
+   "ring": "ft9_i"
+  },
+  "i_fch_pc_Q_N_q": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_fch_pc_Q_N_q": {
+   "form": "ring_start",
+   "ring": "i_fch_pc_Q_N_q"
+  },
+  "i_host_die_rst_n": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_die_rst_n": {
+   "form": "ring_start",
+   "ring": "i_host_die_rst_n"
+  },
+  "i_host_hbm_rst_n": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_hbm_rst_n": {
+   "form": "ring_start",
+   "ring": "i_host_hbm_rst_n"
+  },
+  "i_idsrc_Q_y": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_idsrc_Q_y": {
+   "form": "ring_start",
+   "ring": "i_idsrc_Q_y"
+  },
+  "i_kvpc_Q_N_o_next": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvpc_Q_N_o_next": {
+   "form": "ring_start",
+   "ring": "i_kvpc_Q_N_o_next"
+  },
+  "i_kvpc_Q_N_pc__fo": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvpc_Q_N_pc__fo": {
+   "form": "ring_start",
+   "ring": "i_kvpc_Q_N_pc__fo"
+  },
+  "i_kvs_ctl_o_hroot_Q": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_kvs_ctl_o_hroot_Q": {
+   "form": "ring_start",
+   "ring": "i_kvs_ctl_o_hroot_Q"
+  },
+  "i_seq__g_fan_N__u_fan_kc": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_seq__g_fan_N__u_fan_kc": {
+   "form": "ring_start",
+   "ring": "i_seq__g_fan_N__u_fan_kc"
+  },
+  "i_slg_Q_N_o_ctl": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_slg_Q_N_o_ctl": {
+   "form": "ring_start",
+   "ring": "i_slg_Q_N_o_ctl"
+  },
+  "cland_tstart_in": {
+   "form": "origin_start",
+   "origin": "u_bound.u_cland_origin"
+  }
+ }
+}

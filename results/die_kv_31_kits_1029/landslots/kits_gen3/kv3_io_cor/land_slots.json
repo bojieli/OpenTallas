@@ -1,0 +1,185 @@
+{
+ "schema": "land_slots/3",
+ "buses": {
+  "ft0_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft0_i": {
+   "form": "ring_start",
+   "ring": "ft0_i"
+  },
+  "ft10_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft10_i": {
+   "form": "ring_start",
+   "ring": "ft10_i"
+  },
+  "ft11_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft11_i": {
+   "form": "ring_start",
+   "ring": "ft11_i"
+  },
+  "ft12_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft12_i": {
+   "form": "ring_start",
+   "ring": "ft12_i"
+  },
+  "ft13_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft13_i": {
+   "form": "ring_start",
+   "ring": "ft13_i"
+  },
+  "ft14_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft14_i": {
+   "form": "ring_start",
+   "ring": "ft14_i"
+  },
+  "ft15_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft15_i": {
+   "form": "ring_start",
+   "ring": "ft15_i"
+  },
+  "ft16_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft16_i": {
+   "form": "ring_start",
+   "ring": "ft16_i"
+  },
+  "ft17_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft17_i": {
+   "form": "ring_start",
+   "ring": "ft17_i"
+  },
+  "ft18_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft18_i": {
+   "form": "ring_start",
+   "ring": "ft18_i"
+  },
+  "ft19_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft19_i": {
+   "form": "ring_start",
+   "ring": "ft19_i"
+  },
+  "ft1_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft1_i": {
+   "form": "ring_start",
+   "ring": "ft1_i"
+  },
+  "ft2_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft2_i": {
+   "form": "ring_start",
+   "ring": "ft2_i"
+  },
+  "ft3_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft3_i": {
+   "form": "ring_start",
+   "ring": "ft3_i"
+  },
+  "ft4_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft4_i": {
+   "form": "ring_start",
+   "ring": "ft4_i"
+  },
+  "ft5_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft5_i": {
+   "form": "ring_start",
+   "ring": "ft5_i"
+  },
+  "ft6_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft6_i": {
+   "form": "ring_start",
+   "ring": "ft6_i"
+  },
+  "ft7_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft7_i": {
+   "form": "ring_start",
+   "ring": "ft7_i"
+  },
+  "ft9_i": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_ft9_i": {
+   "form": "ring_start",
+   "ring": "ft9_i"
+  },
+  "i_host_fdi": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_fdi": {
+   "form": "ring_start",
+   "ring": "i_host_fdi"
+  },
+  "i_host_link_rst_n": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_host_link_rst_n": {
+   "form": "ring_start",
+   "ring": "i_host_link_rst_n"
+  },
+  "i_serdes_W_tx_up": {
+   "D": 4,
+   "form": "hold_mux"
+  },
+  "cland_fstart_in_i_serdes_W_tx_up": {
+   "form": "ring_start",
+   "ring": "i_serdes_W_tx_up"
+  },
+  "cland_tstart_in": {
+   "form": "origin_start",
+   "origin": "u_bound.u_cland_origin"
+  }
+ }
+}
