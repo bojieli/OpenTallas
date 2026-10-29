@@ -168,3 +168,40 @@ def test_tap_footprint_fails_closed_without_room():
                 tap_footprint=dict(core_um=[0.0, 0.0, 300.0, 300.0], max_move_um=2.0))
     with pytest.raises(ValueError):
         reg_spine.legalize_tap_footprints([dict(id=0, x=150.0, y=150.0, node="A", pad=3)], spec)
+
+
+def test_tap_footprint_move_budget_is_manhattan_not_square():
+    import pytest
+    # Only (+1,+1) clears the lower core edges. A square search accepted this
+    # 2um movement despite the explicitly 1um Manhattan budget.
+    spec=dict(site_um=[.01,.1], pad_pitch_um=.1,
+              tap_footprint=dict(core_um=[5.6,5.6,7,7],tap_width_um=.1,
+                                 margin_um=0,step_um=1,max_move_um=1))
+    t=dict(id=0,x=5,y=5,node='A',pad=0)
+    with pytest.raises(ValueError,match='no legal pad'):
+        reg_spine.legalize_tap_footprints([dict(t)],spec)
+    spec['tap_footprint']['max_move_um']=2
+    out=reg_spine.legalize_tap_footprints([dict(t)],spec)
+    assert (out[0]['x'],out[0]['y'])==(6,6)
+
+
+def test_tap_footprint_budget_covers_written_rounding():
+    import pytest
+    spec=dict(tap_footprint=dict(core_um=[0,0,20,20],max_move_um=0))
+    with pytest.raises(ValueError,match='no legal pad'):
+        reg_spine.legalize_tap_footprints([dict(id=0,x=5.004,y=5.004,node='A',pad=0)],spec)
+
+
+def test_tap_footprint_rejects_nonfinite_and_invalid_dimensions():
+    import pytest
+    base=dict(tap_footprint=dict(core_um=[0,0,20,20],max_move_um=1))
+    for key,value in [('step_um',0),('step_um',-1),('step_um',float('nan')),
+                      ('max_move_um',-1),('max_move_um',float('inf')),
+                      ('tap_width_um',0),('margin_um',-1),('keepout_halo_um',float('nan'))]:
+        spec=copy.deepcopy(base);spec['tap_footprint'][key]=value
+        with pytest.raises(ValueError,match='invalid'):
+            reg_spine.legalize_tap_footprints([],spec)
+    for key,value in [('site_um',[0,.27]),('pad_pitch_um',-1)]:
+        spec=copy.deepcopy(base);spec[key]=value
+        with pytest.raises(ValueError,match='invalid'):
+            reg_spine.legalize_tap_footprints([],spec)
