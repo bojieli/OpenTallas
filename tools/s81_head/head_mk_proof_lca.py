@@ -65,7 +65,10 @@ for C in ("TT", "FF"):
             T[x[1]] = (float(x[2]), float(x[3]), float(x[4]))
         elif x and x[0] == "N":
             N[x[1]] = (float(x[2]), float(x[3]))
-    nodes = dict(h=root, **{r: c for r, c in rnode.items()})
+    # CPPR-LCA chooses any shared path prefix, not only a region root. Every
+    # physical tree cell needs the same measured geometry/stages/arrival fields.
+    nodes = {pathof[c]:c for c in pathof}
+    nodes.update(h=root, **{r:c for r,c in rnode.items()})
     meta = dict(corner=C, basis=f"die_trial combo GRT-RC routed die clock {run} (DIE-HEAD-2 mk_proof.py; regions = feed40 map)",
                 node_cell=nodes,
                 node_stages={n: len(chain(c)) for n, c in nodes.items()},
