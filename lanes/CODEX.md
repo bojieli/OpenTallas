@@ -4447,3 +4447,6 @@ Next/failure: Lint: tools/die_plan/rtl_lint.py YC1/YC2 source scan of kit VERILO
 
 ## CODEX takeover 2026-10-29 08:22 PDT
 All lanes covered by active teams; per-file inventory in CODEX-COVERAGE-0822.md. ROOT: reviewed integration/queue and merges. S81: /root/s81 (all S81 physical/LP/cores); HEAD: /root/head (die/START/kits/SerDes); QC: /root/qc (die/A0/BTAB/import/cores); KV: /root/kv (die/kits/HR/cores); HBM: /root/hbm (die/bind/all hard cores); TOK/MODEL: /root/tokens (all designs); SHARED: /root/flow_clock (clock/flow/infra/tools); AUX/GEOM: /root/coverage (remaining files and all-lane census). Every inherited job collected before next-step launch. Frozen plans kept fix-only.
+
+## Coverage takeover 2026-10-29 13:55 PDT
+All inherited and newly added lane files are indexed in [CODEX-COVERAGE-1355.md](CODEX-COVERAGE-1355.md), with owner/current source state/job pointers/next/failure. Die owners own their current tasks; coverage/support and coverage/review handle auxiliary collection and live reviews. Historical job pointers are not treated as live jobs.
