@@ -71,17 +71,18 @@ def plan(insts, sizes, core, halo, ir, ex, C):
         x += W
     gap = min(gaps)
     pl, issues, top_used, bot_used = [], [], 0.0, 0.0
-    sep = 2 * halo
     for j, col in enumerate(cols):
         lo = col[:len(col) // 2]
         hi = col[len(col) // 2:]
         below = ir[1] - halo - M4P - core[1]
         above = core[3] - (ir[3] + halo + M4P)
-        need = lambda part: sum(sizes[m][1] for _, m in part) + sep * max(len(part) - 1, 0)
+        need = lambda part: sum(sizes[m][1] for _, m in part) + CH * max(len(part) - 1, 0)
         if lo and need(lo) > below + 1e-6 and need(col) <= above + 1e-6:
             lo, hi = [], col
         elif hi and need(hi) > above + 1e-6 and need(col) <= below + 1e-6:
             lo, hi = col, []
+        # an unsplit column (entry near an edge) keeps macro_channels' interior horizontal channel between macros
+        sep = CH + 0.27 if (not lo or not hi) and len(col) > 1 else 2 * halo   # +1 row: kit grid snap
         y = ir[1] - halo - M4P
         for k, m in lo:
             y -= sizes[m][1]
