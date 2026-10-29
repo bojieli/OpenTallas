@@ -949,6 +949,7 @@ def virtual_tap(meta, taps, path, leg, fleg=None):
     FLOW-ONEMODEL-1: fall arrival = measured node fall arrival + fall leg (tap_leg_fall) when the proof has both,
     else none (a fall sample on that flop then fails closed)."""
     k = f"__st__{path}"
+    path = path.split("@", 1)[0]  # source-specific retime flops share a node, not a physical clock pin
     if k not in taps:
         taps[k] = dict(port=k, part=None, cppr_node="h", tree_path=path,
                        late_ps=float(meta["node_late_ps"][path]) + leg[0],
@@ -975,7 +976,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
     for pid, c in sorted(bind.get("start_ports", {}).items()):
         ends = []
         for k in (c["launch"], c["capture"]):
-            if k and k.startswith("__st__") and meta is not None and k[6:] in meta.get("node_late_ps", {}):
+            if k and k.startswith("__st__") and meta is not None and k[6:].split("@", 1)[0] in meta.get("node_late_ps", {}):
                 if leg is None:
                     real = {q: t for q, t in taps.items() if not q.startswith("__st__")}
                     leg, fleg = tap_leg(meta, real), tap_leg_fall(meta, real)
