@@ -10,6 +10,7 @@ and the two SRAM macros remain unchanged.
 import argparse
 import copy
 import json
+import os
 from pathlib import Path
 
 MODULE = "ot_s81_kp4_dchn"
@@ -67,7 +68,18 @@ def main():
     source, dest = Path(a.plan).resolve(), Path(a.out).resolve()
     if source == dest:
         raise SystemExit("write a candidate copy; do not overwrite the input plan")
-    p = apply(json.loads(source.read_text()), json.loads(Path(a.core).read_text()))
+    corefile = Path(a.core).resolve()
+    p = apply(json.loads(source.read_text()), json.loads(corefile.read_text()))
+    # Pin tables are plan-relative, unlike repo-relative LEF/lib/source paths.
+    # Keep existing hk3/hk4 assets pointing at their original files when the
+    # candidate is written to a new result directory. New child tables are
+    # relative to the supplied child descriptor.
+    for name, t in p["partition_types"].items():
+        for c in t.get("hard_cores", []):
+            if not c.get("pins_file") or Path(c["pins_file"]).is_absolute():
+                continue
+            base = corefile.parent if name == "hd_serdes" and c["inst"] == INST else source.parent
+            c["pins_file"] = os.path.relpath((base / c["pins_file"]).resolve(), dest.parent)
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(json.dumps(p, indent=2) + "\n")
     print(json.dumps(dict(status="CANDIDATE", module=MODULE, added_cycles=0,

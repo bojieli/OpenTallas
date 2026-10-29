@@ -1,5 +1,6 @@
 import copy
 import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -45,3 +46,20 @@ def test_rejects_bad_extraction(change):
     c.update(change)
     with pytest.raises(ValueError):
         D.apply(vehicle(), c)
+
+
+def test_cli_keeps_original_and_supplied_pin_assets(tmp_path, monkeypatch):
+    source = tmp_path / "hk4" / "plan.json"
+    source.parent.mkdir()
+    p = vehicle()
+    p["partition_types"]["hd_serdes"]["hard_cores"][0]["pins_file"] = "sram_pins.json"
+    source.write_text(json.dumps(p))
+    child = tmp_path / "child" / "view.json"
+    child.parent.mkdir()
+    child.write_text(json.dumps(core()))
+    dest = tmp_path / "candidate" / "plan.json"
+    monkeypatch.setattr("sys.argv", ["delta", "--plan", str(source), "--core", str(child), "--out", str(dest)])
+    D.main()
+    cores = json.loads(dest.read_text())["partition_types"]["hd_serdes"]["hard_cores"]
+    assert (dest.parent / cores[0]["pins_file"]).resolve() == source.parent / "sram_pins.json"
+    assert (dest.parent / cores[1]["pins_file"]).resolve() == child.parent / "actual.json"
