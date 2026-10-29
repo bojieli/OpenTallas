@@ -1,0 +1,58 @@
+{
+ "schema": "kv_event27/1",
+ "src": "../die-kv-26-1029/plan_e26a.json",
+ "src_sha256": "d61a9f06bff535a321782b329d308765960b0ec5bc883e392e67f271b6ee6a44",
+ "pins_files": {
+  "qkd_kvs_pc_pins_r27.json": 4133,
+  "qkd_kvs_pc_pins_fMX_r27.json": 4133
+ },
+ "repointed_hard_cores": 23,
+ "ahub_new_ports": {
+  "ck[3]": {
+   "core_xy_um": [
+    150.0,
+    50.0
+   ],
+   "hub_C_xy_um": [
+    366.0,
+    1095.44
+   ],
+   "entry": "S-W"
+  },
+  "ck[4]": {
+   "core_xy_um": [
+    450.0,
+    50.0
+   ],
+   "hub_C_xy_um": [
+    666.0,
+    1095.44
+   ],
+   "entry": "S-E"
+  },
+  "ck[5]": {
+   "core_xy_um": [
+    580.0,
+    110.0
+   ],
+   "hub_C_xy_um": [
+    796.0,
+    1155.44
+   ],
+   "entry": "E-S"
+  },
+  "ck[6]": {
+   "core_xy_um": [
+    580.0,
+    330.0
+   ],
+   "hub_C_xy_um": [
+    796.0,
+    1375.44
+   ],
+   "entry": "E-N"
+  }
+ },
+ "rtl_delta": "qkd_ahub: ck[2:0] -> ck[6:0] (same clock), sinks by region: S band x<300 -> ck[3], S band x>=300 -> ck[4], E column y<220 -> ck[5], y>=220 -> ck[6], centre -> ck[0]; ck[1]/ck[2] unchanged",
+ "die_tree": "unchanged (tree c, 1920 taps): new entries are hub_C partition-internal leaves"
+}
