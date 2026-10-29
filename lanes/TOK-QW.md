@@ -312,3 +312,6 @@ CODEX 2026-10-29 04:57 PDT — P3 normal-input candidate ready6f18463a2+d9546e8b
 
 ## CODEX notes 2026-10-29 08:26 PDT
 CODEX took over Qwen selected programme on codex/qwen-token-0832. Current QC provider imported48259cells butnotstrictbound; HEAD_CONTEXT/ROPE/L_CONTEXTS/INNERWIT8/TXDP18 adoption notestablished. WaitingselectedGEN/HOST/face dates fromQC owner whileworkingnativeKVproof; no universalHEADscalar ornewlongrun. NarrowfalseCAUGHTfix c61781d53 READYroot;actual36layerstalledmapcontrol nowFAIL.
+
+## CODEX notes 2026-10-29 08:38 PDT
+Actual coherentcandidate native59 entire svc_obs1 producer measured, ef51ab5ef+6ed59d9b4 READY:73full512bwords exact,72code+1scale reads, PRESENTED edges6..90(consumerlast91) underoneedge registeredreply; data/replyage controls72mismatches each. Existing1627window has1536source-localedges left; absoluteGEN/transport/macro datesnotqualified. NoRTLchange. QCimport confirmscurrentphysicalsourceabstractonly, nofreshfunctionalasbuilt; sourceprofile/HEADdates remainblockedandownedQC. Positiveproof-triggered36layercontinuation2ba49ac05 armedintel2PID2207412, codex-qwen-token-0832/continuation.log; no launches until actualproofBOOTPASS+FAR_CAL+layer0result32/0, rejectsfault/mismatch. CurrentWAIT.

@@ -429,3 +429,6 @@ CODEX 2026-10-29 04:33 PDT — TERMINAL inherited corrected native_b5_abi boot n
 
 ## CODEX notes 2026-10-29 08:26 PDT
 CODEX took over Qwen token proof/next-step collection on codex/qwen-token-0832. Inherited intel1 tok-qwen-7-1029/kvl/lr_nominal unit121042 LIVE target7/17751, no new run. Actual old m3_kswap terminal INVALID: bootPASS but36FAIL/allcal_start−1/noresults. New c61781d53 narrowREADY fixes kv_verdict falseCAUGHT for unstarted token controls;7focusedtestsPASS, actualcopiedlog nowFAIL, historicaloriginalunchanged. HOST local-install fc26d4424c stillawaits meaningfulnativeFAR_CAL. Current event27fbind pending, no rebuilt vehicle until source ready.
+
+## CODEX notes 2026-10-29 08:38 PDT
+Continuation2ba49ac05 armedintel2PID2207412 at /srv/opentallas-scratch2/claude/codex-qwen-token-0832/continue_pair.sh; read-only positiveprooftrigger requires BOOTPASS+FAR_CAL+fullactualL0result32/0 andnofault/mismatch. Then ot-runexistingnative_b5_lr 36layernominalPOST300000/mapcontrolPOST40000 intoownintel1 codex-qwen-token-0832/kvl. Correctedclassifierretained. Proofunit121042 currentlyHB20000/8images/3827frames clean; noshortproofduplicate/build. Currentevent27fbindstillpending; thisremains historicalbind5functionaldiag, noG5.

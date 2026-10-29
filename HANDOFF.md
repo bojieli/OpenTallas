@@ -1820,3 +1820,4 @@ CODEX: 2026-10-29 08:31 PDT main26a8b2b99 published: scoped real core-parent hol
 CODEX: 2026-10-29 08:33 PDT TOK-HBM exactD17 LAT60export READY08db45f04/e2281512d;54complete/104incomplete pairs preserved, source0stagevsplan3/6+serial2 diagnosed; NWmaterializercoverage/NEactualIIproofassigned, noG5claim.
 
 CODEX:08:3x DS issuer collision fixed candidate8378df10e/7controlsPASS, L0 smoke legal8jobs before final checks; inherited globalnorm8/16rstd FAIL now under same-binary GO diagnosis on intel1unit1526465, no G5.
+CODEX: 2026-10-29 08:38 PDT Qwen actualnative73wordROPE producer PASSfull512b/edges6..90, data+replyagecontrolsCAUGHT; ef51ab5ef+6ed59d9b4 READY. 36layercontinuation2ba49ac05 armedintel2PID2207412 onlyafteractualnativeproofBOOT+CAL+L0numericPASS; nofreshQCfunctionalasbuiltprovided, HEADprogrammeheld.
