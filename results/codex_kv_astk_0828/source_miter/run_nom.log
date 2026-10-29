@@ -1,0 +1,6 @@
+ECTLK MITER PASS mismatches=0 edges=12060 kreq=2672 sc_valid=2672 lmax_changes=252 fault_edges=2091 so_fault_edges=11942
+ACTUAL_LIVE_SC_ADDR valid_tag_differences=0
+- tb.sv:66: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 12us; walltime 0.063 s; speed 193.357 us/s
+- Verilator: cpu 0.063 s on 1 threads; allocated 7 MB
