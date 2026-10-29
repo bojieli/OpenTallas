@@ -1,0 +1,374 @@
+{
+ "TT": {
+  "legs": 8422,
+  "region_legs": 7982,
+  "feed_legs": 440,
+  "coef_cal": [
+   17.552677,
+   0.146559,
+   0.000484,
+   7.186501
+  ],
+  "k_L": 0.37766,
+  "lin": [
+   0.36318,
+   3.54379
+  ],
+  "rms_kL": 9.44,
+  "rms_lin": 9.2,
+  "rms_cal": 7.54,
+  "rms_around_level_mean": 40.52,
+  "feed_rms_cal_with_region_fit": 19.04,
+  "leg_ps_mean": 61.1,
+  "stages_mean": 1.59,
+  "regions": 128,
+  "region_meas": {
+   "p50": 39.3,
+   "p90": 63.2,
+   "max": 99.2,
+   "max_nopad": 80.5
+  },
+  "region_kL": {
+   "p50": 44.9,
+   "p90": 85.1,
+   "max": 106.2,
+   "max_nopad": 73.5
+  },
+  "region_lin": {
+   "p50": 43.8,
+   "p90": 85.2,
+   "max": 106.5,
+   "max_nopad": 72.9
+  },
+  "region_cal": {
+   "p50": 36.2,
+   "p90": 52.4,
+   "max": 68.8,
+   "max_nopad": 68.8
+  },
+  "region_leaf_wire": {
+   "p50": 13.8,
+   "p90": 24.0,
+   "max": 34.3,
+   "max_nopad": 28.0
+  },
+  "top": [
+   [
+    "phy_WS_7",
+    {
+     "meas": 99.2,
+     "kL": 57.6,
+     "lin": 57.6,
+     "cal": 29.0,
+     "leaf_wire": 17.8,
+     "nq": 13,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "phy_WS_4",
+    {
+     "meas": 90.4,
+     "kL": 62.3,
+     "lin": 62.7,
+     "cal": 44.1,
+     "leaf_wire": 34.3,
+     "nq": 1,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "pv_S_6",
+    {
+     "meas": 80.5,
+     "kL": 62.8,
+     "lin": 62.6,
+     "cal": 68.8,
+     "leaf_wire": 13.1,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "pv_S_7",
+    {
+     "meas": 73.0,
+     "kL": 38.5,
+     "lin": 39.2,
+     "cal": 47.7,
+     "leaf_wire": 15.8,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "phy_WS_5",
+    {
+     "meas": 71.6,
+     "kL": 63.8,
+     "lin": 63.7,
+     "cal": 30.0,
+     "leaf_wire": 14.1,
+     "nq": 13,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "hub_Wi",
+    {
+     "meas": 69.8,
+     "kL": 47.0,
+     "lin": 44.2,
+     "cal": 43.0,
+     "leaf_wire": 18.7,
+     "nq": 7,
+     "ntaps": 8,
+     "pads": 0
+    }
+   ],
+   [
+    "phy_WN_5",
+    {
+     "meas": 69.5,
+     "kL": 64.0,
+     "lin": 63.9,
+     "cal": 27.2,
+     "leaf_wire": 2.8,
+     "nq": 0,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "phy_ES_4",
+    {
+     "meas": 68.3,
+     "kL": 72.3,
+     "lin": 72.8,
+     "cal": 56.0,
+     "leaf_wire": 30.4,
+     "nq": 1,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "pv_S_1",
+    {
+     "meas": 66.1,
+     "kL": 61.5,
+     "lin": 60.8,
+     "cal": 58.7,
+     "leaf_wire": 13.6,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "pv_S_2",
+    {
+     "meas": 65.1,
+     "kL": 40.0,
+     "lin": 39.3,
+     "cal": 43.9,
+     "leaf_wire": 15.7,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ]
+  ]
+ },
+ "FF": {
+  "legs": 8422,
+  "region_legs": 7982,
+  "feed_legs": 440,
+  "coef_cal": [
+   14.760133,
+   0.126799,
+   0.000513,
+   5.343762
+  ],
+  "k_L": 0.33408,
+  "lin": [
+   0.32355,
+   2.57701
+  ],
+  "rms_kL": 8.75,
+  "rms_lin": 8.62,
+  "rms_cal": 7.43,
+  "rms_around_level_mean": 36.26,
+  "feed_rms_cal_with_region_fit": 19.05,
+  "leg_ps_mean": 53.85,
+  "stages_mean": 1.59,
+  "regions": 128,
+  "region_meas": {
+   "p50": 33.1,
+   "p90": 51.9,
+   "max": 71.0,
+   "max_nopad": 70.9
+  },
+  "region_kL": {
+   "p50": 42.8,
+   "p90": 76.6,
+   "max": 97.3,
+   "max_nopad": 63.1
+  },
+  "region_lin": {
+   "p50": 42.0,
+   "p90": 76.6,
+   "max": 97.3,
+   "max_nopad": 62.7
+  },
+  "region_cal": {
+   "p50": 34.5,
+   "p90": 49.0,
+   "max": 64.1,
+   "max_nopad": 64.1
+  },
+  "region_leaf_wire": {
+   "p50": 13.0,
+   "p90": 25.7,
+   "max": 36.3,
+   "max_nopad": 36.3
+  },
+  "top": [
+   [
+    "phy_WS_7",
+    {
+     "meas": 71.0,
+     "kL": 55.8,
+     "lin": 55.8,
+     "cal": 27.0,
+     "leaf_wire": 9.2,
+     "nq": 13,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "pv_S_6",
+    {
+     "meas": 70.9,
+     "kL": 56.7,
+     "lin": 56.5,
+     "cal": 64.1,
+     "leaf_wire": 13.2,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "pv_S_7",
+    {
+     "meas": 63.6,
+     "kL": 31.9,
+     "lin": 32.4,
+     "cal": 44.7,
+     "leaf_wire": 16.8,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "phy_WS_4",
+    {
+     "meas": 59.5,
+     "kL": 65.3,
+     "lin": 65.6,
+     "cal": 46.4,
+     "leaf_wire": 25.6,
+     "nq": 1,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "pv_S_1",
+    {
+     "meas": 56.6,
+     "kL": 54.8,
+     "lin": 54.3,
+     "cal": 54.6,
+     "leaf_wire": 12.7,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "pv_S_2",
+    {
+     "meas": 56.1,
+     "kL": 33.5,
+     "lin": 33.0,
+     "cal": 40.8,
+     "leaf_wire": 14.3,
+     "nq": 13,
+     "ntaps": 24,
+     "pads": 0
+    }
+   ],
+   [
+    "phy_WN_3",
+    {
+     "meas": 55.4,
+     "kL": 91.2,
+     "lin": 91.5,
+     "cal": 53.8,
+     "leaf_wire": 2.0,
+     "nq": 0,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "hgi_ES_3",
+    {
+     "meas": 55.2,
+     "kL": 55.2,
+     "lin": 55.2,
+     "cal": 37.6,
+     "leaf_wire": 21.2,
+     "nq": 14,
+     "ntaps": 16,
+     "pads": 0
+    }
+   ],
+   [
+    "phy_WN_5",
+    {
+     "meas": 55.1,
+     "kL": 53.8,
+     "lin": 53.7,
+     "cal": 27.1,
+     "leaf_wire": 2.7,
+     "nq": 0,
+     "ntaps": 13,
+     "pads": 1
+    }
+   ],
+   [
+    "hgi_ES_7",
+    {
+     "meas": 55.1,
+     "kL": 37.5,
+     "lin": 37.5,
+     "cal": 29.2,
+     "leaf_wire": 14.8,
+     "nq": 14,
+     "ntaps": 16,
+     "pads": 0
+    }
+   ]
+  ]
+ }
+}

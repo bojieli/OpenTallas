@@ -1,0 +1,78 @@
+{
+ "trial": "tB",
+ "part": "c_W2_bn_01",
+ "stage": "grt",
+ "corners": {
+  "TT": {
+   "mc": {
+    "nominal_skew_ps": 28.75,
+    "mc_worst_skew_ps": 42.8,
+    "per_load_sigma_ps": 3.5,
+    "pair_3sigma_ps": 14.85,
+    "gradient_worst_pair_ps": 0.9,
+    "routed_minus_sim_mean_ps": 0.0,
+    "routed_minus_sim_spread_ps": 0.0,
+    "dieU_bound_ps": 43.7,
+    "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+   },
+   "pairs": 378,
+   "pair_U_max_ps": 45.32,
+   "pair_U_p50_ps": 21.1,
+   "worst_pair": [
+    "L_clk_t14",
+    "L_clk_t24"
+   ],
+   "nominal_skew_ps": 28.75,
+   "insertion_root_to_mesh_median_ps": 524.75,
+   "insertion_root_to_mesh_range_ps": [
+    510.68,
+    539.43
+   ],
+   "trial14_glue_spread_ps": 130.89,
+   "trial14_glue_median_minus_core_median_ps": 407.69,
+   "core_tap_early_vs_mesh_ps": {
+    "L_clk_c0": 339.19,
+    "L_clk_c1": 339.24,
+    "L_clk_c2": 338.83,
+    "L_clk_c3": 338.89
+   },
+   "core_early_error_ps": 68.86
+  },
+  "FF": {
+   "mc": {
+    "nominal_skew_ps": 26.32,
+    "mc_worst_skew_ps": 40.85,
+    "per_load_sigma_ps": 3.54,
+    "pair_3sigma_ps": 15.04,
+    "gradient_worst_pair_ps": 0.77,
+    "routed_minus_sim_mean_ps": 0.0,
+    "routed_minus_sim_spread_ps": 0.0,
+    "dieU_bound_ps": 41.63,
+    "dieU_bound_note": "die-wide bound (not a per-pair gate number); routed nominal = sample 0 of this solve (same graph), gap 0 by construction"
+   },
+   "pairs": 378,
+   "pair_U_max_ps": 42.99,
+   "pair_U_p50_ps": 20.95,
+   "worst_pair": [
+    "L_clk_t14",
+    "L_clk_t24"
+   ],
+   "nominal_skew_ps": 26.32,
+   "insertion_root_to_mesh_median_ps": 436.26,
+   "insertion_root_to_mesh_range_ps": [
+    423.12,
+    449.44
+   ],
+   "trial14_glue_spread_ps": 127.72,
+   "trial14_glue_median_minus_core_median_ps": 354.31,
+   "core_tap_early_vs_mesh_ps": {
+    "L_clk_c0": 282.56,
+    "L_clk_c1": 282.61,
+    "L_clk_c2": 282.24,
+    "L_clk_c3": 282.29
+   },
+   "core_early_error_ps": 72.07
+  }
+ },
+ "checked": "UNCHECKED"
+}

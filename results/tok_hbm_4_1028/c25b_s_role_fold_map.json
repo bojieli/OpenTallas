@@ -1,0 +1,1062 @@
+{
+ "schema": "opentallas.hbm.s_role_fold_map.v1",
+ "plan": "c25b/die_plan.json",
+ "plan_sha256": "6b3a80cd5680ce48fdf3da86cf758c46d6dd0d65844d47977223bdd0e42e3b19",
+ "census": "c25b_in/s_role_fold_census.json",
+ "roles": {
+  "NWq0": "SW",
+  "NEq0": "SE",
+  "NWq1": "NW",
+  "NEq1": "NE"
+ },
+ "constraints": "no SW/SE hub rebuild; HBM 8 SMs; IDX single-row calendar",
+ "counts": {
+  "MAPPED": 20,
+  "UNMAPPED": 60,
+  "NO_PROVIDER": 8
+ },
+ "nets": [
+  {
+   "net": "hb_dbk_SE__rq",
+   "width": 136,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "rq",
+   "n_role_template": "hb_dbk_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_hb_dbk_Q__q0",
+   "serving_port": "rq",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "hb_dbk_SW__rq",
+   "width": 136,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "rq",
+   "n_role_template": "hb_dbk_NW",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_hb_dbk_Q__q0",
+   "serving_port": "rq",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "hcollks_SE_p0__vm_kq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NE_p0",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SE_p1__vm_kq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NE_p1",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SE_p2__vm_kq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NE_p2",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SE_p3__vm_kq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NE_p3",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SW_p0__vm_kq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NW_p0",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SW_p1__vm_kq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NW_p1",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SW_p2__vm_kq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NW_p2",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollks_SW_p3__vm_kq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "vm_kq",
+   "n_role_template": "hcollks_NW_p3",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollrs_SE__vm_rq",
+   "width": 136,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "vm_rq",
+   "n_role_template": "hcollrs_NE",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hcollrs_SW__vm_rq",
+   "width": 136,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "vm_rq",
+   "n_role_template": "hb_idx__nwsh",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_hcollgi_Q__q0",
+    "u_hcollgl_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_cfg_addr",
+   "width": 12,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_cfg_addr",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_cfg_data",
+   "width": 256,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_cfg_data",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_cfg_target",
+   "width": 8,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_cfg_target",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_cfg_v",
+   "width": 1,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_cfg_v",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_desc_base",
+   "width": 12,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_desc_base",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_desc_limit",
+   "width": 13,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_desc_limit",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_desc_loops",
+   "width": 16,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_desc_loops",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_desc_v",
+   "width": 1,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_desc_v",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SE__a_launch_v",
+   "width": 1,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "a_launch_v",
+   "n_role_template": "hleaf_NE",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_cfg_addr",
+   "width": 12,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_cfg_addr",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_cfg_data",
+   "width": 256,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_cfg_data",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_cfg_target",
+   "width": 8,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_cfg_target",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_cfg_v",
+   "width": 1,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_cfg_v",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_desc_base",
+   "width": 12,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_desc_base",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_desc_limit",
+   "width": 13,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_desc_limit",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_desc_loops",
+   "width": 16,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_desc_loops",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_desc_v",
+   "width": 1,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_desc_v",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "hleaf_SW__a_launch_v",
+   "width": 1,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "a_launch_v",
+   "n_role_template": "hleaf_NW",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "smw_SE__wq_s0",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_s0",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_s0",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_s1",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_s1",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_s1",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_s2",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_s2",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_s2",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_s3",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_s3",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_s3",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_t0",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_t0",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_t0",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_t1",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_t1",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_t1",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_t2",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_t2",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_t2",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SE__wq_t3",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "wq_t3",
+   "n_role_template": "smw_NE",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_smw_Q__q0",
+   "serving_port": "wq_t3",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_s0",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_s0",
+   "n_role_template": "vmm_NW0",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_s0",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_s1",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_s1",
+   "n_role_template": "vmm_NW1",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_s1",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_s2",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_s2",
+   "n_role_template": "vmm_NW2",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_s2",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_s3",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_s3",
+   "n_role_template": "vmm_NW3",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_s3",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_t0",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_t0",
+   "n_role_template": "vmm_NW4",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_t0",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_t1",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_t1",
+   "n_role_template": "vmm_NW5",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_t1",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_t2",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_t2",
+   "n_role_template": "vmm_NW6",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_t2",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "smw_SW__wq_t3",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "wq_t3",
+   "n_role_template": "vmm_NW7",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_smw_Q__q0",
+   "serving_port": "wq_t3",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "su_SE0__lg_rq",
+   "width": 34,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NE0",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE0__lg_wq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NE0",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE1__lg_rq",
+   "width": 34,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NE1",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE1__lg_wq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NE1",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE2__lg_rq",
+   "width": 34,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NE2",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE2__lg_wq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NE2",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE3__lg_rq",
+   "width": 34,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NE3",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SE3__lg_wq",
+   "width": 562,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NE3",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW0__lg_rq",
+   "width": 34,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NW0",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW0__lg_wq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NW0",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW1__lg_rq",
+   "width": 34,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NW1",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW1__lg_wq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NW1",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW2__lg_rq",
+   "width": 34,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NW2",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW2__lg_wq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NW2",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW3__lg_rq",
+   "width": 34,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_rq",
+   "n_role_template": "su_NW3",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "su_SW3__lg_wq",
+   "width": 562,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "lg_wq",
+   "n_role_template": "su_NW3",
+   "status": "UNMAPPED",
+   "candidates": [
+    "u_sucore_Q__q0"
+   ],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "svg_SW0__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW1__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW2__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW3__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW4__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW5__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW6__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "svg_SW7__sm_packet",
+   "width": 1099,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "sm_packet",
+   "n_role_template": null,
+   "status": "NO_PROVIDER",
+   "why": "no N-role mirror driver (svg_S*: SM key lines of stack 1); the 8-SM release has no S-role SM"
+  },
+  {
+   "net": "vmdel_SE0__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE0",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE1__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE1",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE2__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE2",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE3__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE3",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE4__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE4",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE5__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE5",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE6__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE6",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SE7__dq",
+   "width": 281,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NE7",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW0__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW0",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW1__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW1",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW2__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW2",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW3__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW3",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW4__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW4",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW5__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW5",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW6__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW6",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "vmdel_SW7__dq",
+   "width": 281,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "dq",
+   "n_role_template": "vmdel_NW7",
+   "status": "UNMAPPED",
+   "candidates": [],
+   "why": "the plan has no unique q0-half copy of this family; the serving instance needs the binder's as-built map"
+  },
+  {
+   "net": "xl_SE_ctl__rq",
+   "width": 136,
+   "role": "SE",
+   "partition": "NE_hub",
+   "port": "rq",
+   "n_role_template": "xl_NE_ctl",
+   "status": "MAPPED",
+   "serving_instance": "NE_hub.u_xl_Q_ctl__q0",
+   "serving_port": "rq",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  },
+  {
+   "net": "xl_SW_ctl__rq",
+   "width": 136,
+   "role": "SW",
+   "partition": "NW_hub",
+   "port": "rq",
+   "n_role_template": "xl_NW_ctl",
+   "status": "MAPPED",
+   "serving_instance": "NW_hub.u_xl_Q_ctl__q0",
+   "serving_port": "rq",
+   "basis": "family's unique __q0 copy in the same hub (S role = q0 half)"
+  }
+ ]
+}

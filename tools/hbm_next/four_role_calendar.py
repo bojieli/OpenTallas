@@ -79,7 +79,7 @@ def composed_service(seg, op, n, rgap, wsc, rt_max):
     return go + rt_c + cs + r['pre_sum_to_r'] + rt_s + l['pre_r_to_fin'] + r['fin_to_done'], None
 
 
-def compile_calendar(jobs, bound, service, ready=None):
+def compile_calendar(jobs, bound, service, ready=None, schedule_rgap=False):
     missing = []
     legs = bound.get('legs', {}); rtl = bound.get('rtl', {})
     L = {}
@@ -134,8 +134,17 @@ def compile_calendar(jobs, bound, service, ready=None):
         rdy = int((ready or {}).get(str(j['image_offset']), 0))
         launch = max(prev + 1, start + 3, rdy)
         cap = launch + 1 + L['provider_to_root']
+        rgap = j['fields'].get('rgap', 0)
+        original_rgap = rgap
+        if schedule_rgap and seg and j['op'] != 'HC_POST' and j['fields']['nm1'] + 1 > service['lane']['kx']:
+            # The lane retains KX rows until the root's r return. Raise spacing only;
+            # addresses, arithmetic and row order stay byte-for-byte from the image.
+            rd = (tn['levels'] * (tn['down'] + tn['up_chunk']) + max(rt.values())
+                  + service['root']['pre_sum_to_r'])
+            needed = max(0, -(-(rd - service['lane']['pre_r_return_max']) // service['lane']['kx']))
+            rgap = max(rgap, needed)
         if seg:
-            sv, why = composed_service(service, j['op'], j['fields']['nm1'] + 1, j['fields'].get('rgap', 0), wsc,
+            sv, why = composed_service(service, j['op'], j['fields']['nm1'] + 1, rgap, wsc,
                                        max(rt.values()))
             if why:
                 missing.append(why); continue
@@ -145,6 +154,10 @@ def compile_calendar(jobs, bound, service, ready=None):
         dl = done + 2 + L['root_to_provider']
         recs.append(dict(image_offset=j['image_offset'], op=j['op'], ready_cycle=rdy, launch_cycle=launch,
                          root_capture_cycle=cap, root_done_cycle=done, completion_cycle=dl))
+        if rgap != original_rgap:
+            recs[-1]['rgap_override'] = dict(value=rgap, original=original_rgap, source_job217=j['job217'],
+                                           reason='bound root return exceeds KX retained-row window',
+                                           added_service_cycles=(rgap - original_rgap) * j['fields']['nm1'])
         prev = dl + 3
     if recs and recs[-1]['completion_cycle'] - start >= 1 << 32: missing.append('calendar exceeds 32-bit deadline')
     if missing:
@@ -196,6 +209,7 @@ def main(argv=None):
     p.add_argument('--jobs', type=Path, required=True); p.add_argument('--bound', type=Path, required=True)
     p.add_argument('--service', type=Path, required=True); p.add_argument('--ready', type=Path)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--schedule-rgap', action='store_true', help='raise PRE row spacing from bound KX return window; emitter needs --calendar-rgap')
     p.add_argument('--plan', type=Path, help='die_plan.json: also write <out>.hub_tree.json (per-node pad straps)')
     a = p.parse_args(argv)
     if a.plan:
@@ -205,7 +219,7 @@ def main(argv=None):
             plan_sha256=hashlib.sha256(a.plan.read_bytes()).hexdigest(), hubs=ht), indent=2) + '\n')
         print(json.dumps({r: v['round_trip_regs'] for r, v in ht.items()}))
     ld = lambda f: json.loads(f.read_text()) if f and f.exists() else {}
-    cal, missing = compile_calendar(ld(a.jobs), ld(a.bound), ld(a.service), ld(a.ready) if a.ready else None)
+    cal, missing = compile_calendar(ld(a.jobs), ld(a.bound), ld(a.service), ld(a.ready) if a.ready else None, schedule_rgap=a.schedule_rgap)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     if missing:
         a.out.with_suffix('.MISSING.json').write_text(json.dumps(dict(status='MISSING', missing=missing), indent=2) + '\n')

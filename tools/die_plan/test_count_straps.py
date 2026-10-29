@@ -62,7 +62,7 @@ def test_parameter_form_still_type_splits_and_strap_form_does_not():
     assert "input wire [5:0] strap_ca_k_y" in bb and "input wire [0:0] strap_ca_pad" in bb
     assert "input wire strap_ca_efall" in bb and ".K(" not in bb
     assert ("ot_dp_landing_origin_s #(.PADW(1)) u_cland_origin (" in bb and ".p_start(cland_fstart_in_y)" in bb
-            and ".strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start));" in bb)
+            and ".strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start), .start_d(cland_start_d));" in bb)
     assert c.rows[0]["module"] == "ot_dp_clk_landing_cas"
     c.type_rtl("A", A_BODY)
     tt = c.top_rtl(TOP)
@@ -176,6 +176,30 @@ def test_root_and_child_copies_share_one_strap_type():
     assert "ot_dp_clk_landing_cas #(.W(5), .DEPTH(8))" in bb and "input wire strap_ca_root" in bb
     assert "ot_dp_landing_root #(.SETTLE(40)) u_cland_root" in bb
     assert "assign cland_start = strap_ca_root ? cland_start_root : cland_start_child;" in bb
+    # DIE-HEAD-10 FSTART out: the static strap select picks D-side + raw reset before the pin's own face flop
+    assert ".start(cland_start_root), .start_d(cland_start_root_d));" in bb
+    assert ".start(cland_start_child), .start_d(cland_start_child_d));" in bb
+    assert "assign cland_start_d = strap_ca_root ? cland_start_root_d : cland_start_child_d;" in bb
+    assert "assign cland_start_raw = cland_raw_sel;" in bb
+    assert ("ot_dp_landing_relay u_cland_fstart_x (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), "
+            ".q(cland_fstart_out_x));") in bb and "assign cland_fstart_out_x" not in bb
+
+
+def test_fstart_out_face_flop_per_pin():
+    """DIE-HEAD-10: strap form -> every forwarded start pin is the Q of its own face flop (d = start_d, the origin's
+    raw reset); the parameter form keeps the shared start."""
+    import re
+    p, t = strap_vehicle()
+    c = Landings(p, t)
+    c.type_rtl("B", B_BODY)
+    aa = c.type_rtl("A", A_BODY)
+    outs = re.findall(r"output wire (cland_fstart_out_\w+)", aa)
+    assert outs and "assign cland_fstart_out_" not in aa
+    for o in outs:
+        b = o[len("cland_fstart_out_"):]
+        assert (f"ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), "
+                f".q({o}));") in aa
+    assert ".start(cland_start), .start_d(cland_start_d));" in aa and "assign cland_start_raw = " in aa
 
 
 def test_relay_role_mix_stays_a_type_split():
