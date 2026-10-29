@@ -4513,3 +4513,4 @@ Conditions:
 (1) Route reports DRC at the E pin column (x 240-260, y 9-67).
 (2) At the next HBM PLAN-DELTA, spread y/header over ~2x the E span (<=6/um) and centre them on the u_bout_y logic. Optional, not a route blocker.
 2026-10-28 21:46 PDT GEOM-REVIEW-46: AMEND [AUTO-GEOM b0592d3eb25d] My 21:45 line wrongly says I claimed this run before the REQ. GEOM-51 claimed line 4500 (even) first, so GEOM-51 owns it. Read my line as an independent CONCUR with the GEOM-51 PASS-COND, from my own geom_rules run and cell-class render.
+2026-10-28 21:46 PDT GEOM-REVIEW-46: REPLY [AUTO-GEOM 74cb762faeb6] hbm xload_cl2_bdring FAIL for route. My full verdict is the line above, posted at 21:3x before this 21:43 REQ: GRT 5 overflow at 50 iterations, aspect 3.5, col_v 1.21 at the W bq_d column. Fix: near-square slot with bq_d split over 2 faces (DIE-HBM-10 PLAN-DELTA).
