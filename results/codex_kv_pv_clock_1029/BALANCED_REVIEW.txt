@@ -1,4 +1,4 @@
-2026-10-29 02:03 PDT CODEX structural successor update.
+2026-10-29 01:52 PDT CODEX structural successor update.
 Initial unequal FP-only plan was REJECTED by unmodified compile_slice exact leaf-count gate; preserved as static evidence, never physically run. No electrical model invented or gate bypassed.
 The complete32 FP families are exactly5710 FF each root. Remaining6930 FF are assigned by minimum geometric L1 cost with exact original leaf counts. 3658 non-FP structural groups preserve each old[0..2][bit] shift chain, each tree_sum[bit] -> ts[bit] direct pair, complete fc/tc/wp/cp/lastp/fp/commit_c control families, and command/replica families. No clock timing was an optimizer input. Solver optimal, all positions present, max reach206.577um R0 /233.577um fMX, none>405.
 Original root positions, cell masters/stages, SRAM branches/leaves, pins, IO contract, macro placement, RTL unchanged; compile_slice validates unmodified. Root counts R0 7443/7442/7442/7443 and fMX7442/7443/7443/7442.
