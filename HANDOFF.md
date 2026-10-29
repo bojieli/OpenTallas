@@ -1816,3 +1816,5 @@ CODEX: 2026-10-29 08:31 PDT HEAD SerDes collected half/quarter failures exactly7
 CODEX: 2026-10-29 08:32 PDT S81 cores: inherited64resetLECs live; BFsetup rootcause shared tag fanout not arithmetic, optin0cycle replication qualified minimum miter; station7 generating from actual strictboundRTL after nativeobserver incompatibility diagnosed.
 
 CODEX: 2026-10-29 08:31 PDT main26a8b2b99 published: scoped real core-parent hold receipts, bound hard-wrapper kits + explicit modeled PHY, opt-in clock duty polarity repair (735-tap diagnostic duty0 both corners, frozen passing plans untouched), QC31 independent arithmetic and HBM VM diagnostic import. Focused11+65+1PASS, no file deletions; HEAD==origin/main.
+
+CODEX: 2026-10-29 08:33 PDT TOK-HBM exactD17 LAT60export READY08db45f04/e2281512d;54complete/104incomplete pairs preserved, source0stagevsplan3/6+serial2 diagnosed; NWmaterializercoverage/NEactualIIproofassigned, noG5claim.
