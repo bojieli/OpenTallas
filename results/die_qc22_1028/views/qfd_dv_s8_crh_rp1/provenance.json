@@ -1,0 +1,105 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s8_crh_rp1_f4a",
+  "module": "qfd_dv_s8_crh_rp1",
+  "plan_type": "slw_su_c__cl77ab230a",
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "ref_tile": "physical/ref_tile/qfd_dv_s8_crh_rp1",
+  "spec": "physical/die_plan/qwen_compute/cores/su/f4a/qfd_dv_s8_crh_rp1_f4a_spec.json",
+  "spec_sha256": "1f8e1cf0d4aa8871588545f63b68f1d66ddffefa767762292d24846024e737ee",
+  "pins_file": "cores/su/f4a/qfd_dv_s8_crh_rp1_f4a_pins.json",
+  "pins_sha256": "fac978c6f15268d89e66d5275c73656a4eb19cc759bc69a5721be0305c766e10",
+  "pins": 998,
+  "plan_lef": "physical/ref_tile/qfd_dv_s8_crh_rp1/views/qfd_dv_s8_crh_rp1/qfd_dv_s8_crh_rp1.lef",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "d2e3e4be00453b268d8e196a1f73b0c2365c04c636b6f8284282a5e0b48df130",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "dde2c5192a",
+  "sdc_lint_sha256": "5c5fac00e5518a9fb44110127d73b086f8eea9b3d08f25ec162cee3f4a8826e4",
+  "face_guard_sha256": "7fe91540f1afde9cb64c91ea5e275184b7aa581c6fc6808e5d8641ab061734c1",
+  "signoff_sha256": "198aa774a725fadc5dd50b76661bec0ad956aabddb2bc3e66dc1158df60e7e7f",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns": [
+    [
+     17.904,
+     38.88,
+     "MY"
+    ],
+    [
+     136.08,
+     38.88,
+     "R0"
+    ]
+   ]
+  },
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/s8/qfd_dv_s8_crh_rp1.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "sha256": "5e5c377b455465f6e316c7f451f92b2f5abf8a6218ddb39136c6f35abda887e3"
+   },
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "sha256": "a72fa1cc213c41bb764453ff4df54a44ffb6d366cf8ba714515d8da8b9233120"
+   }
+  ],
+  "kit_hash": "9bc14dad67106dba",
+  "pins_canon_sha256": "c9052d1d3ee5c115a52e64de62df523cf2c069bdda212abb727a735e08117df2",
+  "pins_canon_basis": "kit pins.json"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC record not given)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit",
+ "src_commit": "5ed4500430570dc400c72ab31824a13d4235ee5b",
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-10-28T19:10:28-07:00",
+  "kit": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit",
+  "base": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/base",
+  "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/kit/signoff_main/signoff.json",
+  "signoff_sha256": "4ab18333a125a5a8c7c6618700d2a79cf169774207073a446ca66e5025cfc047",
+  "signoff_generated": "2026-10-26T22:40:42-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8_crh_rp1__f4g__5ed4500430/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": null,
+  "note": null,
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "99a80b2aa31c66e5f5e62522e613bbf69c135f183923c66552fb6f815a72ae20",
+   "qfd_dv_s8_crh_rp1.lef": "6c9e07fc3651866aa34e07a0df65a696d35561f9e807d714689848b672c5762f",
+   "qfd_dv_s8_crh_rp1_ff.lib": "d9390e633799377f74873bb5b2b87a09f00f41a89b274968c694aabb32d46968",
+   "qfd_dv_s8_crh_rp1_tt.lib": "8aaa59c75054b0036220936ce771ce58fe746ce6b6b84579b4adf03b2ab8c750"
+  }
+ }
+}

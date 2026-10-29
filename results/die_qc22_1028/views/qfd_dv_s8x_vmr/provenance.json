@@ -1,0 +1,100 @@
+{
+ "kit": {
+  "schema": "opentallas.qc.core_freeze.v1",
+  "kit": "qfd_dv_s8x_vmr_f4a",
+  "module": "qfd_dv_s8x_vmr",
+  "plan_type": "slw_su_c__cl77ab230a",
+  "outline_um": [
+   250.56,
+   216.0
+  ],
+  "ref_tile": "physical/ref_tile/qfd_dv_s5_vmr",
+  "spec": "physical/die_plan/qwen_compute/cores/su/f4a/qfd_dv_s8x_vmr_f4a_spec.json",
+  "spec_sha256": "9381e3ed68e62cb7acfbbef8bd4053b459963cafed1030143baab88ebefe8f20",
+  "pins_file": "cores/su/f4a/qfd_dv_s8x_vmr_f4a_pins.json",
+  "pins_sha256": "031ecef1fdf416757c261595f5022e3d165a0c91fee769ecf5af85e01892f232",
+  "pins": 1509,
+  "plan_lef": "physical/ref_tile/qfd_dv_s5_vmr/views/qfd_dv_s8x_vmr/qfd_dv_s8x_vmr.lef",
+  "clocks": [
+   "ck"
+  ],
+  "resets": [
+   "rst_n"
+  ],
+  "recipe_sha256": "e41290fb7c3558b2ed4b0f3206a9330d2cf1e777c17e0b52af8077a9a9e00d58",
+  "period_ps": 833.0,
+  "insertion_ps": 250.0,
+  "insertion_ff_ps": 202.5,
+  "insertion_basis": {
+   "tt": "plan clock.insertion_ps",
+   "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+  },
+  "insertion_tol_ps": 40.0,
+  "rc": "setRC_rcx_asap7.tcl",
+  "unc_setup_ps": 60.0,
+  "unc_hold_ps": 25.0,
+  "gates": [
+   "rtl_lint (pre-synth)",
+   "sdc_lint (pre-synth)",
+   "selrange (synth)",
+   "face_guard (post-synth)",
+   "lec (post-synth)",
+   "pin_audit",
+   "signoff.py tt,ff"
+  ],
+  "repo_rev": "dde2c5192a",
+  "sdc_lint_sha256": "5c5fac00e5518a9fb44110127d73b086f8eea9b3d08f25ec162cee3f4a8826e4",
+  "face_guard_sha256": "7fe91540f1afde9cb64c91ea5e275184b7aa581c6fc6808e5d8641ab061734c1",
+  "signoff_sha256": "198aa774a725fadc5dd50b76661bec0ad956aabddb2bc3e66dc1158df60e7e7f",
+  "macros": {
+   "ot_sram_1r1w_1024x256_m1b2_r2c2_ns": [
+    [
+     17.904,
+     38.88,
+     "MY"
+    ],
+    [
+     136.08,
+     38.88,
+     "R0"
+    ]
+   ]
+  },
+  "rtl_patches": [
+   {
+    "file": "rtl/qwen_dv/s5/qfd_dv_s5_vm8x.sv",
+    "why": "OWNER DECISION 13 hard-core reset contract: rst_n is a SYNCHRONOUS registered input at the data IO budget; the internal async 2-flop synchroniser (rl0/rl1 or rs0/rs1, async clear on rst_n) becomes a synchronous 2-stage relay of the same release depth (assertion synchronous, release cycle unchanged). Downstream flops keep their async clear from the relay output (timed recovery/removal).",
+    "sha256": "dee91415b10fdb01e40fbaf31d56270a53a1d01442a4227dab260d45e655f622"
+   }
+  ],
+  "kit_hash": "0baacccee3c9e959",
+  "pins_canon_sha256": "1b9f420d4b36cb398bd3754952bfef2ecc00f9d1beec87ba038ff8e232ccc638",
+  "pins_canon_basis": "kit pins.json"
+ },
+ "verdict": "SIGNED (signoff.py verdict SIGNED; routed LEC EQUIVALENT)",
+ "views_status": "signoff",
+ "src": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit",
+ "src_commit": "77013e505901e6fc6fd1079fc283284d0fe70e4f",
+ "flow_tag": null,
+ "autopilot_id": null,
+ "export": {
+  "tool": "tools/autopilot/export_view.py (autopilot PROBE_VIEW_READ + view_payload)",
+  "exported": "2026-10-28T19:10:27-07:00",
+  "kit": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit",
+  "base": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/base",
+  "signoff": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/signoff_f4k/signoff.json",
+  "signoff_sha256": "dc2be3f59e3e2fff272fa56bfeb466efe307c9b6d06d6e469b1ea5515a8481dd",
+  "signoff_generated": "2026-10-27T09:54:18-07:00",
+  "odb": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/base/6_final.odb",
+  "odb_not_newer_than_signoff": true,
+  "lec": "/srv/opentallas-scratch2/claude/autopilot/closed/qwen_compute/qfd_dv_s8x_vmr__f4kfinal__77013e5059/kit/lec_routed_autopilot_adopt_f4k/lec.json",
+  "note": null,
+  "lib_basis": null,
+  "files_sha256": {
+   "pins.json": "72a3bbb92567bddd8a8b1e66924a661dd3afe35886fb7acfcc8e76bfc89b4346",
+   "qfd_dv_s8x_vmr.lef": "3c337f4604a8ddda68ee282f5893004153afbce45af2645d3052fde77ae76374",
+   "qfd_dv_s8x_vmr_ff.lib": "e11b5fbe7ca6ffe3256da67783b92ab8fcf3f95e22cb8d27eadd52fec75320ef",
+   "qfd_dv_s8x_vmr_tt.lib": "5a818931d4f3772ba04bbeb4cd7b822d01ae538737b5bda85504ed72bab95f27"
+  }
+ }
+}
