@@ -1,0 +1,5573 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/srv/opentallas-scratch2/claude/wt/codex-head-0830/results/codex_head_0830/hk6/plan_hk6.json",
+ "verdict": "FAIL",
+ "pending_view": 0,
+ "mode": "G0C",
+ "errors": 95,
+ "warnings": 16,
+ "summary": {
+  "die": "s81_head",
+  "partitions": 357,
+  "types": {
+   "types": 25,
+   "partitions": 357,
+   "singleton_types": 11,
+   "max_instances": 264,
+   "near_duplicate_groups": 3,
+   "near_duplicate_types": 6,
+   "mergeable_saving": 3
+  },
+  "ports": 466,
+  "lanes": 327,
+  "bits": 226528,
+  "core_pg": {
+   "mode": "WARN",
+   "types_with_macros": 6,
+   "types_missing": [],
+   "macro_insts_missing": 0,
+   "lefs_no_pg": {},
+   "lefs_unresolved": [],
+   "insts_no_pg": 0,
+   "types_cores_without_lef": [
+    "hd_lep0N"
+   ],
+   "types_missing_n": 0,
+   "types_cores_without_lef_n": 1
+  },
+  "taps_cores": {
+   "taps": 5,
+   "hard_cores": 280,
+   "core_pins": 86523,
+   "core_pins_off_track": 3645,
+   "types_no_cells": 0,
+   "over_cap_no_cores": 0,
+   "cell_sources": [],
+   "no_cells": []
+  },
+  "core_faces": {
+   "groups": 0,
+   "groups_away": 0,
+   "pins": 0,
+   "pins_away": 0,
+   "types_away": 0,
+   "cores": 280,
+   "cores_unchecked": 280
+  },
+  "core_pin_form": {
+   "views": 11,
+   "faces": 25,
+   "mixed": 0
+  },
+  "island_ft_rows": {
+   "views": 0,
+   "arcs": 0,
+   "bad": 0
+  },
+  "complete": {
+   "cells": 0,
+   "track_offset": 0,
+   "clock_method": 0,
+   "common_latency": 0,
+   "insertion_target": 0,
+   "reset_sync": 0,
+   "face_flop": 0,
+   "internal_station": 0
+  },
+  "g0c": {
+   "types": 25,
+   "clean": 24,
+   "die_level": {},
+   "g3_eligible": [
+    "hd_ctl",
+    "hd_ctl_e",
+    "hd_ctl_n",
+    "hd_host",
+    "hd_host_n",
+    "hd_mesh",
+    "hd_mesh_e",
+    "hd_serdes",
+    "hd_spn",
+    "hd_spn_end",
+    "hd_spn_eshim_rx",
+    "hd_spn_eshim_tx",
+    "hd_spn_wshim_rx",
+    "hd_spn_wshim_tx",
+    "hd_st_k5",
+    "hd_st_m",
+    "hd_st_n3_transit",
+    "hd_st_n3_turn",
+    "hd_st_n4",
+    "hd_st_str",
+    "hd_st_turn",
+    "hd_tile",
+    "hd_turn_a",
+    "hd_turn_b"
+   ],
+   "by_type": {
+    "hd_lep0N": {
+     "hard_cores": 94
+    }
+   }
+  },
+  "geometry": {
+   "partition_area_mm2": 277.8675342335999,
+   "channel_area_mm2": 33.66211737600004,
+   "uncovered_mm2": 0.0,
+   "fill": 0.903272249530199,
+   "planned_channels": [],
+   "station_macro_intersections": 0
+  },
+  "clock_entry_macro": {
+   "entries": 0,
+   "checked": 0,
+   "over_macro": 0,
+   "unknown_macros": 0,
+   "no_entry": 0,
+   "sidecar": null
+  },
+  "merged_clock_view": {
+   "taps": 0,
+   "by_status": {},
+   "pending_view_modules": []
+  },
+  "landing_islands": {
+   "islands": 0,
+   "errors": 0
+  },
+  "worst_faces": [
+   {
+    "part": "lep0N",
+    "face": "E",
+    "pins_per_um": 4.7
+   },
+   {
+    "part": "ctl_nstrip",
+    "face": "W",
+    "pins_per_um": 4.7
+   },
+   {
+    "part": "ctl",
+    "face": "W",
+    "pins_per_um": 4.7
+   },
+   {
+    "part": "sp5",
+    "face": "N",
+    "pins_per_um": 4.3
+   },
+   {
+    "part": "sp4",
+    "face": "S",
+    "pins_per_um": 4.3
+   },
+   {
+    "part": "sp4",
+    "face": "N",
+    "pins_per_um": 4.3
+   },
+   {
+    "part": "sp3",
+    "face": "S",
+    "pins_per_um": 4.3
+   },
+   {
+    "part": "sp3",
+    "face": "N",
+    "pins_per_um": 4.3
+   },
+   {
+    "part": "sp2",
+    "face": "S",
+    "pins_per_um": 4.3
+   },
+   {
+    "part": "sp2",
+    "face": "N",
+    "pins_per_um": 4.3
+   }
+  ],
+  "m89_signals": {
+   "total": 0,
+   "by": {}
+  },
+  "worst_hops": [
+   {
+    "lane": "m7S_tx",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "m7N_tx",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_ES1_u",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_ES1_d",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_EN1_u",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_EN1_d",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "m0S_tx",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_WS1_u",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_WS1_d",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   },
+   {
+    "lane": "coll_WN2_u",
+    "hop_um": 360.7,
+    "reach_um": 405.0
+   }
+  ],
+  "cuts": {
+   "vertical": [
+    {
+     "at_um": 250,
+     "bits": 6780,
+     "tracks": 117337,
+     "ratio": 0.0578,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "turnW5b",
+     "worst_part_ratio": 0.0886,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 500,
+     "bits": 0,
+     "tracks": 77985,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 750,
+     "bits": 0,
+     "tracks": 77985,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1000,
+     "bits": 0,
+     "tracks": 135765,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1250,
+     "bits": 0,
+     "tracks": 77985,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1500,
+     "bits": 0,
+     "tracks": 94961,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1750,
+     "bits": 0,
+     "tracks": 115594,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 2000,
+     "bits": 1028,
+     "tracks": 98617,
+     "ratio": 0.0104,
+     "m89_only_ratio": 0.0047,
+     "worst_part": "sst1",
+     "worst_part_ratio": 0.0498,
+     "worst_part_bits": 514
+    },
+    {
+     "at_um": 2250,
+     "bits": 2052,
+     "tracks": 116437,
+     "ratio": 0.0176,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst1",
+     "worst_part_ratio": 0.0995,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 2500,
+     "bits": 2052,
+     "tracks": 116437,
+     "ratio": 0.0176,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst1",
+     "worst_part_ratio": 0.0995,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 2750,
+     "bits": 2052,
+     "tracks": 138577,
+     "ratio": 0.0148,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst1",
+     "worst_part_ratio": 0.0995,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 3000,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst2",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 3250,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst2",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 3500,
+     "bits": 2052,
+     "tracks": 86647,
+     "ratio": 0.0237,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst2",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 3750,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst2",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 4000,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst2",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 4250,
+     "bits": 2052,
+     "tracks": 85804,
+     "ratio": 0.0239,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst2",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 4500,
+     "bits": 1026,
+     "tracks": 110475,
+     "ratio": 0.0093,
+     "m89_only_ratio": 0.0047,
+     "worst_part": "nst3_transit",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 4750,
+     "bits": 1540,
+     "tracks": 98150,
+     "ratio": 0.0157,
+     "m89_only_ratio": 0.007,
+     "worst_part": "nst3_transit",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 5000,
+     "bits": 2052,
+     "tracks": 99011,
+     "ratio": 0.0207,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "nst3_transit",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 5250,
+     "bits": 2180,
+     "tracks": 146396,
+     "ratio": 0.0149,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst3_transit",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 5500,
+     "bits": 2180,
+     "tracks": 88616,
+     "ratio": 0.0246,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst3_transit",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 5750,
+     "bits": 2180,
+     "tracks": 106436,
+     "ratio": 0.0205,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst3_transit",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 6000,
+     "bits": 2180,
+     "tracks": 106042,
+     "ratio": 0.0206,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst4",
+     "worst_part_ratio": 0.2266,
+     "worst_part_bits": 2052
+    },
+    {
+     "at_um": 6250,
+     "bits": 2180,
+     "tracks": 88222,
+     "ratio": 0.0247,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst4",
+     "worst_part_ratio": 0.2266,
+     "worst_part_bits": 2052
+    },
+    {
+     "at_um": 6500,
+     "bits": 2180,
+     "tracks": 106042,
+     "ratio": 0.0206,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst4",
+     "worst_part_ratio": 0.2266,
+     "worst_part_bits": 2052
+    },
+    {
+     "at_um": 6750,
+     "bits": 2180,
+     "tracks": 106042,
+     "ratio": 0.0206,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst4",
+     "worst_part_ratio": 0.2266,
+     "worst_part_bits": 2052
+    },
+    {
+     "at_um": 7000,
+     "bits": 2180,
+     "tracks": 128182,
+     "ratio": 0.017,
+     "m89_only_ratio": 0.0099,
+     "worst_part": "nst4",
+     "worst_part_ratio": 0.2266,
+     "worst_part_bits": 2052
+    },
+    {
+     "at_um": 7250,
+     "bits": 128,
+     "tracks": 101739,
+     "ratio": 0.0013,
+     "m89_only_ratio": 0.0006,
+     "worst_part": "sst4",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 7500,
+     "bits": 128,
+     "tracks": 108458,
+     "ratio": 0.0012,
+     "m89_only_ratio": 0.0006,
+     "worst_part": "sst5",
+     "worst_part_ratio": 0.0161,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 7750,
+     "bits": 642,
+     "tracks": 91482,
+     "ratio": 0.007,
+     "m89_only_ratio": 0.0029,
+     "worst_part": "sst5",
+     "worst_part_ratio": 0.0807,
+     "worst_part_bits": 642
+    },
+    {
+     "at_um": 8000,
+     "bits": 1154,
+     "tracks": 109291,
+     "ratio": 0.0106,
+     "m89_only_ratio": 0.0053,
+     "worst_part": "sst5",
+     "worst_part_ratio": 0.1451,
+     "worst_part_bits": 1154
+    },
+    {
+     "at_um": 8250,
+     "bits": 7934,
+     "tracks": 149251,
+     "ratio": 0.0532,
+     "m89_only_ratio": 0.0362,
+     "worst_part": "sst5",
+     "worst_part_ratio": 0.1451,
+     "worst_part_bits": 1154
+    },
+    {
+     "at_um": 8500,
+     "bits": 7934,
+     "tracks": 149359,
+     "ratio": 0.0531,
+     "m89_only_ratio": 0.0362,
+     "worst_part": "sst5",
+     "worst_part_ratio": 0.1451,
+     "worst_part_bits": 1154
+    },
+    {
+     "at_um": 8750,
+     "bits": 7934,
+     "tracks": 154901,
+     "ratio": 0.0512,
+     "m89_only_ratio": 0.0362,
+     "worst_part": "sst5",
+     "worst_part_ratio": 0.1451,
+     "worst_part_bits": 1154
+    },
+    {
+     "at_um": 9000,
+     "bits": 1154,
+     "tracks": 155192,
+     "ratio": 0.0074,
+     "m89_only_ratio": 0.0053,
+     "worst_part": "ctl_nstrip",
+     "worst_part_ratio": 0.1589,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 9250,
+     "bits": 1090,
+     "tracks": 158130,
+     "ratio": 0.0069,
+     "m89_only_ratio": 0.005,
+     "worst_part": "ctl_nstrip",
+     "worst_part_ratio": 0.1589,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 9500,
+     "bits": 1282,
+     "tracks": 114390,
+     "ratio": 0.0112,
+     "m89_only_ratio": 0.0058,
+     "worst_part": "ctl_nstrip",
+     "worst_part_ratio": 0.1589,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 9750,
+     "bits": 770,
+     "tracks": 94847,
+     "ratio": 0.0081,
+     "m89_only_ratio": 0.0035,
+     "worst_part": "ctl_estrip",
+     "worst_part_ratio": 0.1354,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 10000,
+     "bits": 256,
+     "tracks": 113546,
+     "ratio": 0.0023,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "ctl_estrip",
+     "worst_part_ratio": 0.1354,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 10250,
+     "bits": 256,
+     "tracks": 97324,
+     "ratio": 0.0026,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "sst7",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 10500,
+     "bits": 256,
+     "tracks": 120307,
+     "ratio": 0.0021,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "sst7",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 10750,
+     "bits": 256,
+     "tracks": 98167,
+     "ratio": 0.0026,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "sst7",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 11000,
+     "bits": 256,
+     "tracks": 98167,
+     "ratio": 0.0026,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "sst7",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 11250,
+     "bits": 256,
+     "tracks": 80347,
+     "ratio": 0.0032,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "sst7",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 11500,
+     "bits": 256,
+     "tracks": 98167,
+     "ratio": 0.0026,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "sst7",
+     "worst_part_ratio": 0.1084,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 11750,
+     "bits": 256,
+     "tracks": 97380,
+     "ratio": 0.0026,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "mesh7N_estrip",
+     "worst_part_ratio": 0.1625,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 12000,
+     "bits": 256,
+     "tracks": 79560,
+     "ratio": 0.0032,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "mesh7N_estrip",
+     "worst_part_ratio": 0.1625,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 12250,
+     "bits": 256,
+     "tracks": 97380,
+     "ratio": 0.0026,
+     "m89_only_ratio": 0.0012,
+     "worst_part": "mesh7N_estrip",
+     "worst_part_ratio": 0.1625,
+     "worst_part_bits": 128
+    },
+    {
+     "at_um": 12500,
+     "bits": 0,
+     "tracks": 109260,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 12750,
+     "bits": 0,
+     "tracks": 95101,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 13000,
+     "bits": 0,
+     "tracks": 153840,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 13250,
+     "bits": 2052,
+     "tracks": 85804,
+     "ratio": 0.0239,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst9",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 13500,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst9",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 13750,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst9",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 14000,
+     "bits": 2052,
+     "tracks": 86647,
+     "ratio": 0.0237,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst9",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 14250,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst9",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 14500,
+     "bits": 2052,
+     "tracks": 104467,
+     "ratio": 0.0196,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst9",
+     "worst_part_ratio": 0.2369,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 14750,
+     "bits": 2052,
+     "tracks": 138577,
+     "ratio": 0.0148,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0995,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 15000,
+     "bits": 2052,
+     "tracks": 116437,
+     "ratio": 0.0176,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0995,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 15250,
+     "bits": 2052,
+     "tracks": 116437,
+     "ratio": 0.0176,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0995,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 15500,
+     "bits": 1028,
+     "tracks": 98617,
+     "ratio": 0.0104,
+     "m89_only_ratio": 0.0047,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0498,
+     "worst_part_bits": 514
+    },
+    {
+     "at_um": 15750,
+     "bits": 0,
+     "tracks": 116437,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 16000,
+     "bits": 0,
+     "tracks": 94961,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 16250,
+     "bits": 0,
+     "tracks": 77985,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 16500,
+     "bits": 0,
+     "tracks": 95805,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 16750,
+     "bits": 0,
+     "tracks": 86895,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17000,
+     "bits": 0,
+     "tracks": 77985,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17250,
+     "bits": 6780,
+     "tracks": 117337,
+     "ratio": 0.0578,
+     "m89_only_ratio": 0.0309,
+     "worst_part": "turnE5b",
+     "worst_part_ratio": 0.0886,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 17500,
+     "bits": 0,
+     "tracks": 0,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 250,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 500,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 750,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1000,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1250,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 1500,
+     "bits": 3078,
+     "tracks": 59771,
+     "ratio": 0.0515,
+     "m89_only_ratio": 0.0141,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0863,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 1750,
+     "bits": 2564,
+     "tracks": 59771,
+     "ratio": 0.0429,
+     "m89_only_ratio": 0.0117,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0863,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 2000,
+     "bits": 2605,
+     "tracks": 87412,
+     "ratio": 0.0298,
+     "m89_only_ratio": 0.0119,
+     "worst_part": "sst10",
+     "worst_part_ratio": 0.0863,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 2250,
+     "bits": 1837,
+     "tracks": 74261,
+     "ratio": 0.0247,
+     "m89_only_ratio": 0.0084,
+     "worst_part": "host_nstrip",
+     "worst_part_ratio": 0.0615,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 2500,
+     "bits": 809,
+     "tracks": 24176,
+     "ratio": 0.0335,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "host_nstrip",
+     "worst_part_ratio": 0.0615,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 2750,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp5",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 3000,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp5",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 3250,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp5",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 3500,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE5b",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 3750,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE5a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 4000,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE5a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 4250,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE5a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 4500,
+     "bits": 809,
+     "tracks": 125145,
+     "ratio": 0.0065,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp5",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 4750,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp4",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 5000,
+     "bits": 809,
+     "tracks": 157815,
+     "ratio": 0.0051,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp4",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 5250,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp4",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 5500,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE4b",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 5750,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE4a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 6000,
+     "bits": 1939,
+     "tracks": 157815,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE4a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 6250,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE4a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 6500,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE4a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 6750,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp3",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 7000,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp3",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 7250,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp3",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 7500,
+     "bits": 809,
+     "tracks": 125145,
+     "ratio": 0.0065,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp3",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 7750,
+     "bits": 1939,
+     "tracks": 157815,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE3a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 8000,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE3a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 8250,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE3a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 8500,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE3a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 8750,
+     "bits": 809,
+     "tracks": 125145,
+     "ratio": 0.0065,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp3",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 9000,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp2",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 9250,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp2",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 9500,
+     "bits": 809,
+     "tracks": 157815,
+     "ratio": 0.0051,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp2",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 9750,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE2b",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 10000,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE2a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 10250,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE2a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 10500,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE2a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 10750,
+     "bits": 809,
+     "tracks": 125145,
+     "ratio": 0.0065,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp2",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 11000,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp1",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 11250,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp1",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 11500,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp1",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 11750,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE1b",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 12000,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE1a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 12250,
+     "bits": 1939,
+     "tracks": 157815,
+     "ratio": 0.0123,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE1a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 12500,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE1a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 12750,
+     "bits": 809,
+     "tracks": 125145,
+     "ratio": 0.0065,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp1",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 13000,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp0",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 13250,
+     "bits": 809,
+     "tracks": 81405,
+     "ratio": 0.0099,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp0",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 13500,
+     "bits": 809,
+     "tracks": 84555,
+     "ratio": 0.0096,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp0",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 13750,
+     "bits": 809,
+     "tracks": 125145,
+     "ratio": 0.0065,
+     "m89_only_ratio": 0.0037,
+     "worst_part": "sp0",
+     "worst_part_ratio": 0.1511,
+     "worst_part_bits": 809
+    },
+    {
+     "at_um": 14000,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE0a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 14250,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE0a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 14500,
+     "bits": 1939,
+     "tracks": 84555,
+     "ratio": 0.0229,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE0a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 14750,
+     "bits": 1939,
+     "tracks": 125145,
+     "ratio": 0.0155,
+     "m89_only_ratio": 0.0089,
+     "worst_part": "turnE0a",
+     "worst_part_ratio": 0.3587,
+     "worst_part_bits": 565
+    },
+    {
+     "at_um": 15000,
+     "bits": 0,
+     "tracks": 26775,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 15250,
+     "bits": 1028,
+     "tracks": 92306,
+     "ratio": 0.0111,
+     "m89_only_ratio": 0.0047,
+     "worst_part": "nst10",
+     "worst_part_ratio": 0.0432,
+     "worst_part_bits": 514
+    },
+    {
+     "at_um": 15500,
+     "bits": 2052,
+     "tracks": 92306,
+     "ratio": 0.0222,
+     "m89_only_ratio": 0.0094,
+     "worst_part": "nst10",
+     "worst_part_ratio": 0.0863,
+     "worst_part_bits": 1026
+    },
+    {
+     "at_um": 15750,
+     "bits": 3682,
+     "tracks": 71201,
+     "ratio": 0.0517,
+     "m89_only_ratio": 0.0168,
+     "worst_part": "ctl_nstrip",
+     "worst_part_ratio": 0.0945,
+     "worst_part_bits": 1116
+    },
+    {
+     "at_um": 16000,
+     "bits": 4116,
+     "tracks": 71201,
+     "ratio": 0.0578,
+     "m89_only_ratio": 0.0188,
+     "worst_part": "ctl_nstrip",
+     "worst_part_ratio": 0.0879,
+     "worst_part_bits": 1038
+    },
+    {
+     "at_um": 16250,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 16500,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 16750,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17000,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17250,
+     "bits": 0,
+     "tracks": 157815,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    },
+    {
+     "at_um": 17500,
+     "bits": 0,
+     "tracks": 0,
+     "ratio": 0.0,
+     "m89_only_ratio": 0.0
+    }
+   ],
+   "worst_full": {
+    "ratio": 0.0578,
+    "at": "horizontal@16000"
+   },
+   "worst_partition_segment": {
+    "ratio": 0.3587,
+    "at": "horizontal@3500:turnE5b"
+   },
+   "model": {
+    "partition_ft_layers": {
+     "H": [
+      "M4",
+      "M6"
+     ],
+     "V": [
+      "M5",
+      "M7"
+     ]
+    },
+    "ft_track_frac_default": 0.25,
+    "die_layers": [
+     "M8",
+     "M9"
+    ],
+    "cut_avail": {
+     "M8": 0.0,
+     "M9": 0.0
+    },
+    "step_um": 250,
+    "core_obs": "declared/routed union",
+    "ft_bands": "piecewise per-layer reserved shares"
+   }
+  },
+  "latency": {
+   "chE0_h": 3,
+   "chE0_o0": 2,
+   "chE0_o1": 2,
+   "chE0_o2": 2,
+   "chE0_o3": 2,
+   "chE0_o4": 2,
+   "chE0_o5": 2,
+   "chE0_o6": 2,
+   "chE0_o7": 2,
+   "chE0_o8": 2,
+   "chE0_o9": 2,
+   "chE0_t": 7,
+   "chE0_b0": 2,
+   "chE0_b1": 2,
+   "chE0_b2": 2,
+   "chE0_b3": 2,
+   "chE0_b4": 2,
+   "chE0_b5": 2,
+   "chE0_b6": 2,
+   "chE0_b7": 2,
+   "chE0_b8": 2,
+   "chE0_b9": 2,
+   "chE0_r": 3,
+   "chW0_h": 4,
+   "chW0_o0": 2,
+   "chW0_o1": 2,
+   "chW0_o2": 2,
+   "chW0_o3": 2,
+   "chW0_o4": 2,
+   "chW0_o5": 2,
+   "chW0_o6": 2,
+   "chW0_o7": 2,
+   "chW0_o8": 2,
+   "chW0_o9": 2,
+   "chW0_t": 7,
+   "chW0_b0": 2,
+   "chW0_b1": 2,
+   "chW0_b2": 2,
+   "chW0_b3": 2,
+   "chW0_b4": 2,
+   "chW0_b5": 2,
+   "chW0_b6": 2,
+   "chW0_b7": 2,
+   "chW0_b8": 2,
+   "chW0_b9": 2,
+   "chW0_r": 4,
+   "chE1_h": 3,
+   "chE1_o0": 2,
+   "chE1_o1": 2,
+   "chE1_o2": 2,
+   "chE1_o3": 2,
+   "chE1_o4": 2,
+   "chE1_o5": 2,
+   "chE1_o6": 2,
+   "chE1_o7": 2,
+   "chE1_o8": 2,
+   "chE1_o9": 2,
+   "chE1_t": 7,
+   "chE1_b0": 2,
+   "chE1_b1": 2,
+   "chE1_b2": 2,
+   "chE1_b3": 2,
+   "chE1_b4": 2,
+   "chE1_b5": 2,
+   "chE1_b6": 2,
+   "chE1_b7": 2,
+   "chE1_b8": 2,
+   "chE1_b9": 2,
+   "chE1_r": 3,
+   "chW1_h": 4,
+   "chW1_o0": 2,
+   "chW1_o1": 2,
+   "chW1_o2": 2,
+   "chW1_o3": 2,
+   "chW1_o4": 2,
+   "chW1_o5": 2,
+   "chW1_o6": 2,
+   "chW1_o7": 2,
+   "chW1_o8": 2,
+   "chW1_o9": 2,
+   "chW1_t": 7,
+   "chW1_b0": 2,
+   "chW1_b1": 2,
+   "chW1_b2": 2,
+   "chW1_b3": 2,
+   "chW1_b4": 2,
+   "chW1_b5": 2,
+   "chW1_b6": 2,
+   "chW1_b7": 2,
+   "chW1_b8": 2,
+   "chW1_b9": 2,
+   "chW1_r": 4,
+   "chE2_h": 3,
+   "chE2_o0": 2,
+   "chE2_o1": 2,
+   "chE2_o2": 2,
+   "chE2_o3": 2,
+   "chE2_o4": 2,
+   "chE2_o5": 2,
+   "chE2_o6": 2,
+   "chE2_o7": 2,
+   "chE2_o8": 2,
+   "chE2_o9": 2,
+   "chE2_t": 7,
+   "chE2_b0": 2,
+   "chE2_b1": 2,
+   "chE2_b2": 2,
+   "chE2_b3": 2,
+   "chE2_b4": 2,
+   "chE2_b5": 2,
+   "chE2_b6": 2,
+   "chE2_b7": 2,
+   "chE2_b8": 2,
+   "chE2_b9": 2,
+   "chE2_r": 3,
+   "chW2_h": 4,
+   "chW2_o0": 2,
+   "chW2_o1": 2,
+   "chW2_o2": 2,
+   "chW2_o3": 2,
+   "chW2_o4": 2,
+   "chW2_o5": 2,
+   "chW2_o6": 2,
+   "chW2_o7": 2,
+   "chW2_o8": 2,
+   "chW2_o9": 2,
+   "chW2_t": 7,
+   "chW2_b0": 2,
+   "chW2_b1": 2,
+   "chW2_b2": 2,
+   "chW2_b3": 2,
+   "chW2_b4": 2,
+   "chW2_b5": 2,
+   "chW2_b6": 2,
+   "chW2_b7": 2,
+   "chW2_b8": 2,
+   "chW2_b9": 2,
+   "chW2_r": 4,
+   "chE3_h": 3,
+   "chE3_o0": 2,
+   "chE3_o1": 2,
+   "chE3_o2": 2,
+   "chE3_o3": 2,
+   "chE3_o4": 2,
+   "chE3_o5": 2,
+   "chE3_o6": 2,
+   "chE3_o7": 2,
+   "chE3_o8": 2,
+   "chE3_o9": 2,
+   "chE3_t": 7,
+   "chE3_b0": 2,
+   "chE3_b1": 2,
+   "chE3_b2": 2,
+   "chE3_b3": 2,
+   "chE3_b4": 2,
+   "chE3_b5": 2,
+   "chE3_b6": 2,
+   "chE3_b7": 2,
+   "chE3_b8": 2,
+   "chE3_b9": 2,
+   "chE3_r": 3,
+   "chW3_h": 4,
+   "chW3_o0": 2,
+   "chW3_o1": 2,
+   "chW3_o2": 2,
+   "chW3_o3": 2,
+   "chW3_o4": 2,
+   "chW3_o5": 2,
+   "chW3_o6": 2,
+   "chW3_o7": 2,
+   "chW3_o8": 2,
+   "chW3_o9": 2,
+   "chW3_t": 7,
+   "chW3_b0": 2,
+   "chW3_b1": 2,
+   "chW3_b2": 2,
+   "chW3_b3": 2,
+   "chW3_b4": 2,
+   "chW3_b5": 2,
+   "chW3_b6": 2,
+   "chW3_b7": 2,
+   "chW3_b8": 2,
+   "chW3_b9": 2,
+   "chW3_r": 4,
+   "chE4_h": 3,
+   "chE4_o0": 2,
+   "chE4_o1": 2,
+   "chE4_o2": 2,
+   "chE4_o3": 2,
+   "chE4_o4": 2,
+   "chE4_o5": 2,
+   "chE4_o6": 2,
+   "chE4_o7": 2,
+   "chE4_o8": 2,
+   "chE4_o9": 2,
+   "chE4_t": 7,
+   "chE4_b0": 2,
+   "chE4_b1": 2,
+   "chE4_b2": 2,
+   "chE4_b3": 2,
+   "chE4_b4": 2,
+   "chE4_b5": 2,
+   "chE4_b6": 2,
+   "chE4_b7": 2,
+   "chE4_b8": 2,
+   "chE4_b9": 2,
+   "chE4_r": 3,
+   "chW4_h": 4,
+   "chW4_o0": 2,
+   "chW4_o1": 2,
+   "chW4_o2": 2,
+   "chW4_o3": 2,
+   "chW4_o4": 2,
+   "chW4_o5": 2,
+   "chW4_o6": 2,
+   "chW4_o7": 2,
+   "chW4_o8": 2,
+   "chW4_o9": 2,
+   "chW4_t": 7,
+   "chW4_b0": 2,
+   "chW4_b1": 2,
+   "chW4_b2": 2,
+   "chW4_b3": 2,
+   "chW4_b4": 2,
+   "chW4_b5": 2,
+   "chW4_b6": 2,
+   "chW4_b7": 2,
+   "chW4_b8": 2,
+   "chW4_b9": 2,
+   "chW4_r": 4,
+   "chE5_h": 3,
+   "chE5_o0": 2,
+   "chE5_o1": 2,
+   "chE5_o2": 2,
+   "chE5_o3": 2,
+   "chE5_o4": 2,
+   "chE5_o5": 2,
+   "chE5_o6": 2,
+   "chE5_o7": 2,
+   "chE5_o8": 2,
+   "chE5_o9": 2,
+   "chE5_t": 7,
+   "chE5_b0": 2,
+   "chE5_b1": 2,
+   "chE5_b2": 2,
+   "chE5_b3": 2,
+   "chE5_b4": 2,
+   "chE5_b5": 2,
+   "chE5_b6": 2,
+   "chE5_b7": 2,
+   "chE5_b8": 2,
+   "chE5_b9": 2,
+   "chE5_r": 3,
+   "chW5_h": 4,
+   "chW5_o0": 2,
+   "chW5_o1": 2,
+   "chW5_o2": 2,
+   "chW5_o3": 2,
+   "chW5_o4": 2,
+   "chW5_o5": 2,
+   "chW5_o6": 2,
+   "chW5_o7": 2,
+   "chW5_o8": 2,
+   "chW5_o9": 2,
+   "chW5_t": 7,
+   "chW5_b0": 2,
+   "chW5_b1": 2,
+   "chW5_b2": 2,
+   "chW5_b3": 2,
+   "chW5_b4": 2,
+   "chW5_b5": 2,
+   "chW5_b6": 2,
+   "chW5_b7": 2,
+   "chW5_b8": 2,
+   "chW5_b9": 2,
+   "chW5_r": 4,
+   "sp_x0": 2,
+   "sp_b0": 2,
+   "sp_x1": 2,
+   "sp_b1": 2,
+   "sp_x2": 2,
+   "sp_b2": 2,
+   "sp_x3": 2,
+   "sp_b3": 2,
+   "sp_x4": 2,
+   "sp_b4": 2,
+   "sp_x5": 2,
+   "sp_b5": 2,
+   "host_tx": 40,
+   "host_rx": 40,
+   "m0S_tx": 52,
+   "m0S_rx": 54,
+   "m7S_tx": 49,
+   "m7S_rx": 50,
+   "m7N_tx": 12,
+   "m7N_rx": 13,
+   "kd": 2,
+   "ku": 2,
+   "lepf": 3,
+   "unit_lep": 3,
+   "ctrl_lep": 4,
+   "coll_WN0_u": 2,
+   "coll_WN0_d": 2,
+   "coll_WN1_u": 12,
+   "coll_WN1_d": 10,
+   "coll_WN2_u": 21,
+   "coll_WN2_d": 20,
+   "coll_WN3_u": 7,
+   "coll_WN3_d": 7,
+   "coll_EN0_u": 2,
+   "coll_EN0_d": 2,
+   "coll_EN1_u": 13,
+   "coll_EN1_d": 12,
+   "coll_WS0_u": 2,
+   "coll_WS0_d": 2,
+   "coll_WS1_u": 13,
+   "coll_WS1_d": 12,
+   "coll_ES0_u": 2,
+   "coll_ES0_d": 2,
+   "coll_ES1_u": 13,
+   "coll_ES1_d": 12,
+   "coll_HOST1_u": 2,
+   "coll_HOST1_d": 2,
+   "coll_HOST0_u": 6,
+   "coll_HOST0_d": 6,
+   "head_lep_fault_return": 4,
+   "head_lep_landing": 5
+  },
+  "r8": {
+   "checked": false
+  },
+  "clock_branch_buffers": {
+   "buffers": 0,
+   "worst_leg_um": 0.0,
+   "types": []
+  },
+  "reset": {
+   "release": "wavefront"
+  },
+  "seams": {
+   "nets": {
+    "abutted": 226994,
+    "channel": 0
+   },
+   "pairs": {
+    "sp0_xe_o_shim|tE0o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o0|tE0o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o1|tE0o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o2|tE0o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o3|tE0o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o4|tE0o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o5|tE0o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o6|tE0o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o7|tE0o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o8|tE0o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o10|tE0o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0o10|turnE0a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnE0a|turnE0b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b10|turnE0b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b10|tE0b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b8|tE0b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b7|tE0b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b6|tE0b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b5|tE0b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b4|tE0b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b3|tE0b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b2|tE0b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b1|tE0b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE0b0|tE0b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp0_be_i_shim|tE0b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp0_xw_o_shim|tW0o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o0|tW0o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o1|tW0o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o2|tW0o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o3|tW0o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o4|tW0o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o5|tW0o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o6|tW0o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o7|tW0o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o8|tW0o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o10|tW0o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0o10|turnW0a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnW0a|turnW0b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b10|turnW0b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b10|tW0b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b8|tW0b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b7|tW0b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b6|tW0b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b5|tW0b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b4|tW0b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b3|tW0b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b2|tW0b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b1|tW0b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW0b0|tW0b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp0_bw_i_shim|tW0b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1_xe_o_shim|tE1o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o0|tE1o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o1|tE1o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o2|tE1o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o3|tE1o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o4|tE1o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o5|tE1o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o6|tE1o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o7|tE1o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o8|tE1o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o10|tE1o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1o10|turnE1a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnE1a|turnE1b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b10|turnE1b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b10|tE1b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b8|tE1b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b7|tE1b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b6|tE1b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b5|tE1b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b4|tE1b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b3|tE1b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b2|tE1b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b1|tE1b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE1b0|tE1b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1_be_i_shim|tE1b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1_xw_o_shim|tW1o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o0|tW1o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o1|tW1o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o2|tW1o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o3|tW1o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o4|tW1o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o5|tW1o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o6|tW1o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o7|tW1o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o8|tW1o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o10|tW1o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1o10|turnW1a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnW1a|turnW1b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b10|turnW1b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b10|tW1b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b8|tW1b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b7|tW1b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b6|tW1b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b5|tW1b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b4|tW1b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b3|tW1b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b2|tW1b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b1|tW1b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW1b0|tW1b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1_bw_i_shim|tW1b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2_xe_o_shim|tE2o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o0|tE2o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o1|tE2o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o2|tE2o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o3|tE2o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o4|tE2o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o5|tE2o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o6|tE2o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o7|tE2o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o8|tE2o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o10|tE2o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2o10|turnE2a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnE2a|turnE2b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b10|turnE2b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b10|tE2b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b8|tE2b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b7|tE2b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b6|tE2b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b5|tE2b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b4|tE2b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b3|tE2b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b2|tE2b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b1|tE2b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE2b0|tE2b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2_be_i_shim|tE2b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2_xw_o_shim|tW2o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o0|tW2o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o1|tW2o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o2|tW2o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o3|tW2o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o4|tW2o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o5|tW2o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o6|tW2o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o7|tW2o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o8|tW2o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o10|tW2o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2o10|turnW2a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnW2a|turnW2b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b10|turnW2b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b10|tW2b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b8|tW2b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b7|tW2b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b6|tW2b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b5|tW2b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b4|tW2b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b3|tW2b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b2|tW2b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b1|tW2b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW2b0|tW2b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2_bw_i_shim|tW2b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3_xe_o_shim|tE3o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o0|tE3o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o1|tE3o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o2|tE3o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o3|tE3o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o4|tE3o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o5|tE3o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o6|tE3o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o7|tE3o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o8|tE3o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o10|tE3o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3o10|turnE3a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnE3a|turnE3b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b10|turnE3b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b10|tE3b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b8|tE3b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b7|tE3b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b6|tE3b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b5|tE3b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b4|tE3b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b3|tE3b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b2|tE3b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b1|tE3b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE3b0|tE3b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3_be_i_shim|tE3b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3_xw_o_shim|tW3o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o0|tW3o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o1|tW3o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o2|tW3o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o3|tW3o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o4|tW3o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o5|tW3o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o6|tW3o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o7|tW3o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o8|tW3o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o10|tW3o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3o10|turnW3a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnW3a|turnW3b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b10|turnW3b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b10|tW3b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b8|tW3b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b7|tW3b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b6|tW3b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b5|tW3b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b4|tW3b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b3|tW3b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b2|tW3b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b1|tW3b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW3b0|tW3b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3_bw_i_shim|tW3b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4_xe_o_shim|tE4o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o0|tE4o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o1|tE4o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o2|tE4o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o3|tE4o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o4|tE4o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o5|tE4o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o6|tE4o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o7|tE4o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o8|tE4o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o10|tE4o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4o10|turnE4a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnE4a|turnE4b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b10|turnE4b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b10|tE4b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b8|tE4b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b7|tE4b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b6|tE4b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b5|tE4b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b4|tE4b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b3|tE4b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b2|tE4b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b1|tE4b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE4b0|tE4b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4_be_i_shim|tE4b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4_xw_o_shim|tW4o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o0|tW4o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o1|tW4o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o2|tW4o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o3|tW4o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o4|tW4o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o5|tW4o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o6|tW4o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o7|tW4o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o8|tW4o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o10|tW4o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4o10|turnW4a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnW4a|turnW4b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b10|turnW4b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b10|tW4b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b8|tW4b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b7|tW4b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b6|tW4b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b5|tW4b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b4|tW4b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b3|tW4b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b2|tW4b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b1|tW4b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW4b0|tW4b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4_bw_i_shim|tW4b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5_xe_o_shim|tE5o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o0|tE5o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o1|tE5o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o2|tE5o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o3|tE5o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o4|tE5o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o5|tE5o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o6|tE5o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o7|tE5o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o8|tE5o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o10|tE5o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5o10|turnE5a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnE5a|turnE5b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b10|turnE5b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b10|tE5b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b8|tE5b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b7|tE5b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b6|tE5b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b5|tE5b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b4|tE5b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b3|tE5b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b2|tE5b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b1|tE5b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tE5b0|tE5b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5_be_i_shim|tE5b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5_xw_o_shim|tW5o0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o0|tW5o1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o1|tW5o2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o2|tW5o3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o3|tW5o4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o4|tW5o5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o5|tW5o6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o6|tW5o7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o7|tW5o8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o8|tW5o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o10|tW5o9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5o10|turnW5a": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "turnW5a|turnW5b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b10|turnW5b": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b10|tW5b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b8|tW5b9": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b7|tW5b8": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b6|tW5b7": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b5|tW5b6": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b4|tW5b5": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b3|tW5b4": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b2|tW5b3": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b1|tW5b2": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "tW5b0|tW5b1": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5_bw_i_shim|tW5b0": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "ctl|sp0": {
+     "abutted": 1947,
+     "channel": 0
+    },
+    "sp0|sp1": {
+     "abutted": 1947,
+     "channel": 0
+    },
+    "sp1|sp2": {
+     "abutted": 1947,
+     "channel": 0
+    },
+    "sp2|sp3": {
+     "abutted": 1947,
+     "channel": 0
+    },
+    "sp3|sp4": {
+     "abutted": 1947,
+     "channel": 0
+    },
+    "sp4|sp5": {
+     "abutted": 1947,
+     "channel": 0
+    },
+    "host_nstrip|sp5": {
+     "abutted": 815,
+     "channel": 0
+    },
+    "host_nstrip|sst5": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "sst4|sst5": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "mesh0S_estrip|sst4": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "host_nstrip|sst7": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "mesh7S_estrip|sst7": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "ctl_estrip|nst7": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "mesh7N_estrip|nst7": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "ctl|lep0N": {
+     "abutted": 2210,
+     "channel": 0
+    },
+    "ctl_nstrip|lep0N": {
+     "abutted": 1123,
+     "channel": 0
+    },
+    "lep0N|lk_WN0": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_WN1|nst3_turn": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "nst3_turn|nst4": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lep0N|nst4": {
+     "abutted": 2056,
+     "channel": 0
+    },
+    "lk_WN2|nst1": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "nst1|nst2": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "nst2|nst3_transit": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "nst3_transit|nst4": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "ctl_nstrip|lk_WN3": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_EN0|mesh7N": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_EN1|nst10": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "nst10|nst9": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "mesh7N|nst9": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_WS0|mesh0S": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_WS1|sst1": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "sst1|sst2": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "mesh0S|sst2": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_ES0|mesh7S": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_ES1|sst10": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "sst10|sst9": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "mesh7S|sst9": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "host|lk_HOST1": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "lk_HOST0|sst5": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "host|sst5": {
+     "abutted": 1028,
+     "channel": 0
+    },
+    "sp0|sp0_xw_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp0|sp0_bw_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp0|sp0_xe_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp0|sp0_be_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1|sp1_xw_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1|sp1_bw_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1|sp1_xe_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp1|sp1_be_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2|sp2_xw_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2|sp2_bw_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2|sp2_xe_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp2|sp2_be_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3|sp3_xw_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3|sp3_bw_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3|sp3_xe_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp3|sp3_be_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4|sp4_xw_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4|sp4_bw_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4|sp4_xe_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp4|sp4_be_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5|sp5_xw_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5|sp5_bw_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5|sp5_xe_o_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "sp5|sp5_be_i_shim": {
+     "abutted": 566,
+     "channel": 0
+    },
+    "ctl|ctl_estrip": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "ctl|ctl_nstrip": {
+     "abutted": 95,
+     "channel": 0
+    },
+    "host|host_nstrip": {
+     "abutted": 555,
+     "channel": 0
+    },
+    "mesh7N|mesh7N_estrip": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "mesh0S|mesh0S_estrip": {
+     "abutted": 130,
+     "channel": 0
+    },
+    "mesh7S|mesh7S_estrip": {
+     "abutted": 130,
+     "channel": 0
+    }
+   }
+  },
+  "die_io": {
+   "windows": 12,
+   "ports": 0,
+   "placed": 0,
+   "plan": {
+    "windows": 12,
+    "iface_windows": 12,
+    "io_instances": 0,
+    "by_class": {},
+    "host": [
+     "io_lk_HOST0_u_phy",
+     "io_lk_HOST1_u_phy"
+    ],
+    "uncovered": 0,
+    "off_shore": 0,
+    "over_sites": 0,
+    "host_mode": "dedicated"
+   },
+   "pg_domains": {
+    "domains": 12,
+    "serdes_windows": 12,
+    "covered": 12
+   },
+   "source": "plan"
+  },
+  "cut_lines": {
+   "vertical": [
+    {
+     "at_um": 103.68,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0
+    },
+    {
+     "at_um": 276.48,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 984.96,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 1684.8,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0
+    },
+    {
+     "at_um": 1693.44,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 2401.92,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    },
+    {
+     "at_um": 2989.44,
+     "bits": 2056,
+     "abutted_bits": 2056,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 3110.4,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    },
+    {
+     "at_um": 3818.88,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    },
+    {
+     "at_um": 4432.32,
+     "bits": 2056,
+     "abutted_bits": 2056,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 4527.36,
+     "bits": 7818,
+     "abutted_bits": 6792,
+     "route_bits": 1026,
+     "tracks": 384048,
+     "ratio": 0.0204
+    },
+    {
+     "at_um": 4570.56,
+     "bits": 1026,
+     "abutted_bits": 0,
+     "route_bits": 1026,
+     "tracks": 384048,
+     "ratio": 0.0027
+    },
+    {
+     "at_um": 5037.12,
+     "bits": 2182,
+     "abutted_bits": 130,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.0057
+    },
+    {
+     "at_um": 5235.84,
+     "bits": 8972,
+     "abutted_bits": 6792,
+     "route_bits": 2180,
+     "tracks": 384048,
+     "ratio": 0.0234
+    },
+    {
+     "at_um": 5875.2,
+     "bits": 2186,
+     "abutted_bits": 2186,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0057
+    },
+    {
+     "at_um": 5944.32,
+     "bits": 8972,
+     "abutted_bits": 6792,
+     "route_bits": 2180,
+     "tracks": 384048,
+     "ratio": 0.0234
+    },
+    {
+     "at_um": 6652.8,
+     "bits": 8972,
+     "abutted_bits": 6792,
+     "route_bits": 2180,
+     "tracks": 384048,
+     "ratio": 0.0234
+    },
+    {
+     "at_um": 7015.68,
+     "bits": 2184,
+     "abutted_bits": 2056,
+     "route_bits": 128,
+     "tracks": 384048,
+     "ratio": 0.0057
+    },
+    {
+     "at_um": 7318.08,
+     "bits": 130,
+     "abutted_bits": 130,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0003
+    },
+    {
+     "at_um": 7361.28,
+     "bits": 6920,
+     "abutted_bits": 6792,
+     "route_bits": 128,
+     "tracks": 384048,
+     "ratio": 0.018
+    },
+    {
+     "at_um": 8069.76,
+     "bits": 7946,
+     "abutted_bits": 6792,
+     "route_bits": 1154,
+     "tracks": 384048,
+     "ratio": 0.0207
+    },
+    {
+     "at_um": 8760.96,
+     "bits": 11271,
+     "abutted_bits": 4491,
+     "route_bits": 6780,
+     "tracks": 384048,
+     "ratio": 0.0293
+    },
+    {
+     "at_um": 8769.6,
+     "bits": 8036,
+     "abutted_bits": 6792,
+     "route_bits": 1244,
+     "tracks": 384048,
+     "ratio": 0.0209
+    },
+    {
+     "at_um": 9348.48,
+     "bits": 1284,
+     "abutted_bits": 130,
+     "route_bits": 1154,
+     "tracks": 384048,
+     "ratio": 0.0033
+    },
+    {
+     "at_um": 9357.12,
+     "bits": 8074,
+     "abutted_bits": 6792,
+     "route_bits": 1282,
+     "tracks": 384048,
+     "ratio": 0.021
+    },
+    {
+     "at_um": 9452.16,
+     "bits": 8074,
+     "abutted_bits": 6792,
+     "route_bits": 1282,
+     "tracks": 384048,
+     "ratio": 0.021
+    },
+    {
+     "at_um": 10056.96,
+     "bits": 256,
+     "abutted_bits": 0,
+     "route_bits": 256,
+     "tracks": 384048,
+     "ratio": 0.0007
+    },
+    {
+     "at_um": 10160.64,
+     "bits": 7048,
+     "abutted_bits": 6792,
+     "route_bits": 256,
+     "tracks": 384048,
+     "ratio": 0.0184
+    },
+    {
+     "at_um": 10203.84,
+     "bits": 260,
+     "abutted_bits": 260,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0007
+    },
+    {
+     "at_um": 10869.12,
+     "bits": 7048,
+     "abutted_bits": 6792,
+     "route_bits": 256,
+     "tracks": 384048,
+     "ratio": 0.0184
+    },
+    {
+     "at_um": 11577.6,
+     "bits": 7048,
+     "abutted_bits": 6792,
+     "route_bits": 256,
+     "tracks": 384048,
+     "ratio": 0.0184
+    },
+    {
+     "at_um": 11646.72,
+     "bits": 260,
+     "abutted_bits": 260,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0007
+    },
+    {
+     "at_um": 12286.08,
+     "bits": 7048,
+     "abutted_bits": 6792,
+     "route_bits": 256,
+     "tracks": 384048,
+     "ratio": 0.0184
+    },
+    {
+     "at_um": 12484.8,
+     "bits": 260,
+     "abutted_bits": 260,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0007
+    },
+    {
+     "at_um": 12994.56,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 13089.6,
+     "bits": 2056,
+     "abutted_bits": 2056,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 13703.04,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    },
+    {
+     "at_um": 14411.52,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    },
+    {
+     "at_um": 14532.48,
+     "bits": 2056,
+     "abutted_bits": 2056,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 15120.0,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    },
+    {
+     "at_um": 15828.48,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 15837.12,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0
+    },
+    {
+     "at_um": 16536.96,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 17245.44,
+     "bits": 6792,
+     "abutted_bits": 6792,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0177
+    },
+    {
+     "at_um": 17418.24,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 384048,
+     "ratio": 0.0
+    }
+   ],
+   "horizontal": [
+    {
+     "at_um": 103.68,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0
+    },
+    {
+     "at_um": 1330.56,
+     "bits": 6168,
+     "abutted_bits": 6168,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0161
+    },
+    {
+     "at_um": 1900.8,
+     "bits": 2607,
+     "abutted_bits": 555,
+     "route_bits": 2052,
+     "tracks": 383292,
+     "ratio": 0.0068
+    },
+    {
+     "at_um": 1987.2,
+     "bits": 2605,
+     "abutted_bits": 0,
+     "route_bits": 2605,
+     "tracks": 383292,
+     "ratio": 0.0068
+    },
+    {
+     "at_um": 2073.6,
+     "bits": 2605,
+     "abutted_bits": 0,
+     "route_bits": 2605,
+     "tracks": 383292,
+     "ratio": 0.0068
+    },
+    {
+     "at_um": 2099.52,
+     "bits": 2605,
+     "abutted_bits": 0,
+     "route_bits": 2605,
+     "tracks": 383292,
+     "ratio": 0.0068
+    },
+    {
+     "at_um": 2185.92,
+     "bits": 1837,
+     "abutted_bits": 0,
+     "route_bits": 1837,
+     "tracks": 383292,
+     "ratio": 0.0048
+    },
+    {
+     "at_um": 2203.2,
+     "bits": 1837,
+     "abutted_bits": 0,
+     "route_bits": 1837,
+     "tracks": 383292,
+     "ratio": 0.0048
+    },
+    {
+     "at_um": 2462.4,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 2557.44,
+     "bits": 815,
+     "abutted_bits": 815,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 2894.4,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 3594.24,
+     "bits": 1941,
+     "abutted_bits": 1132,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 4631.04,
+     "bits": 1947,
+     "abutted_bits": 1947,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 4968.0,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 5667.84,
+     "bits": 1941,
+     "abutted_bits": 1132,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 6704.64,
+     "bits": 1947,
+     "abutted_bits": 1947,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 7041.6,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 7741.44,
+     "bits": 1941,
+     "abutted_bits": 1132,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 8778.24,
+     "bits": 1947,
+     "abutted_bits": 1947,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 9115.2,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 9815.04,
+     "bits": 1941,
+     "abutted_bits": 1132,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 10851.84,
+     "bits": 1947,
+     "abutted_bits": 1947,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 11188.8,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 11888.64,
+     "bits": 1941,
+     "abutted_bits": 1132,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 12925.44,
+     "bits": 1947,
+     "abutted_bits": 1947,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 13262.4,
+     "bits": 809,
+     "abutted_bits": 0,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0021
+    },
+    {
+     "at_um": 13962.24,
+     "bits": 1941,
+     "abutted_bits": 1132,
+     "route_bits": 809,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 14999.04,
+     "bits": 1947,
+     "abutted_bits": 1947,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0051
+    },
+    {
+     "at_um": 15094.08,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0
+    },
+    {
+     "at_um": 15353.28,
+     "bits": 1028,
+     "abutted_bits": 0,
+     "route_bits": 1028,
+     "tracks": 383292,
+     "ratio": 0.0027
+    },
+    {
+     "at_um": 15370.56,
+     "bits": 1028,
+     "abutted_bits": 0,
+     "route_bits": 1028,
+     "tracks": 383292,
+     "ratio": 0.0027
+    },
+    {
+     "at_um": 15456.96,
+     "bits": 2052,
+     "abutted_bits": 0,
+     "route_bits": 2052,
+     "tracks": 383292,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 15474.24,
+     "bits": 2052,
+     "abutted_bits": 0,
+     "route_bits": 2052,
+     "tracks": 383292,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 15482.88,
+     "bits": 2052,
+     "abutted_bits": 0,
+     "route_bits": 2052,
+     "tracks": 383292,
+     "ratio": 0.0054
+    },
+    {
+     "at_um": 15517.44,
+     "bits": 2147,
+     "abutted_bits": 95,
+     "route_bits": 2052,
+     "tracks": 383292,
+     "ratio": 0.0056
+    },
+    {
+     "at_um": 15569.28,
+     "bits": 2142,
+     "abutted_bits": 0,
+     "route_bits": 2142,
+     "tracks": 383292,
+     "ratio": 0.0056
+    },
+    {
+     "at_um": 15621.12,
+     "bits": 2654,
+     "abutted_bits": 0,
+     "route_bits": 2654,
+     "tracks": 383292,
+     "ratio": 0.0069
+    },
+    {
+     "at_um": 16087.68,
+     "bits": 4115,
+     "abutted_bits": 0,
+     "route_bits": 4115,
+     "tracks": 383292,
+     "ratio": 0.0107
+    },
+    {
+     "at_um": 16225.92,
+     "bits": 6168,
+     "abutted_bits": 6168,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0161
+    },
+    {
+     "at_um": 17452.8,
+     "bits": 0,
+     "abutted_bits": 0,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0
+    }
+   ],
+   "top_vertical": [
+    {
+     "at_um": 8760.96,
+     "bits": 11271,
+     "abutted_bits": 4491,
+     "route_bits": 6780,
+     "tracks": 384048,
+     "ratio": 0.0293
+    },
+    {
+     "at_um": 5235.84,
+     "bits": 8972,
+     "abutted_bits": 6792,
+     "route_bits": 2180,
+     "tracks": 384048,
+     "ratio": 0.0234
+    },
+    {
+     "at_um": 5944.32,
+     "bits": 8972,
+     "abutted_bits": 6792,
+     "route_bits": 2180,
+     "tracks": 384048,
+     "ratio": 0.0234
+    },
+    {
+     "at_um": 6652.8,
+     "bits": 8972,
+     "abutted_bits": 6792,
+     "route_bits": 2180,
+     "tracks": 384048,
+     "ratio": 0.0234
+    },
+    {
+     "at_um": 2401.92,
+     "bits": 8844,
+     "abutted_bits": 6792,
+     "route_bits": 2052,
+     "tracks": 384048,
+     "ratio": 0.023
+    }
+   ],
+   "top_horizontal": [
+    {
+     "at_um": 1330.56,
+     "bits": 6168,
+     "abutted_bits": 6168,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0161
+    },
+    {
+     "at_um": 16225.92,
+     "bits": 6168,
+     "abutted_bits": 6168,
+     "route_bits": 0,
+     "tracks": 383292,
+     "ratio": 0.0161
+    },
+    {
+     "at_um": 16087.68,
+     "bits": 4115,
+     "abutted_bits": 0,
+     "route_bits": 4115,
+     "tracks": 383292,
+     "ratio": 0.0107
+    },
+    {
+     "at_um": 15621.12,
+     "bits": 2654,
+     "abutted_bits": 0,
+     "route_bits": 2654,
+     "tracks": 383292,
+     "ratio": 0.0069
+    },
+    {
+     "at_um": 1900.8,
+     "bits": 2607,
+     "abutted_bits": 555,
+     "route_bits": 2052,
+     "tracks": 383292,
+     "ratio": 0.0068
+    }
+   ],
+   "worst": {
+    "ratio": 0.0293,
+    "at": "vertical@8760.96"
+   },
+   "lines": 85,
+   "model": "face line: abutted port bits + ft/die routes strictly crossing; tracks = partition pin layers x pin_track_max (M4-M7; M8/M9 carry no signals, ruling 9.3)"
+  },
+  "reach": {
+   "margin": 0.9,
+   "table": {
+    "M4": 405.0,
+    "M5": 405.0,
+    "M6": 405.0,
+    "M7": 405.0,
+    "M8": 1001.2,
+    "M9": 1012.8
+   },
+   "source": "results/arch/die_reach_m89_1022.json",
+   "die_reach_um": 405.0,
+   "layers": [
+    "M4",
+    "M5",
+    "M6",
+    "M7"
+   ],
+   "over": 0,
+   "by_layers": {},
+   "over_if_partition_layers": {
+    "limit_um": 364.5,
+    "lanes": 0
+   },
+   "worst": [
+    {
+     "lane": "m7S_tx",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "m7N_tx",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_ES1_u",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_ES1_d",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_EN1_u",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_EN1_d",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "m0S_tx",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_WS1_u",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_WS1_d",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    },
+    {
+     "lane": "coll_WN2_u",
+     "hop_um": 360.7,
+     "reach_um": 405.0,
+     "frac": 0.891
+    }
+   ]
+  },
+  "face_tracks": {
+   "over": 0,
+   "worst": [
+    {
+     "part": "ctl",
+     "face": "W",
+     "ratio": 0.196,
+     "on": "M6",
+     "allowed": [
+      "M4",
+      "M6"
+     ]
+    },
+    {
+     "part": "lep0N",
+     "face": "E",
+     "ratio": 0.196,
+     "on": "M6",
+     "allowed": [
+      "M4",
+      "M6"
+     ]
+    },
+    {
+     "part": "ctl_nstrip",
+     "face": "W",
+     "ratio": 0.196,
+     "on": "M6",
+     "allowed": [
+      "M4",
+      "M6"
+     ]
+    },
+    {
+     "part": "ctl",
+     "face": "S",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "sp0",
+     "face": "N",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "sp0",
+     "face": "S",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "sp1",
+     "face": "N",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "sp1",
+     "face": "S",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "sp2",
+     "face": "N",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    },
+    {
+     "part": "sp2",
+     "face": "S",
+     "ratio": 0.157,
+     "on": "M7",
+     "allowed": [
+      "M5",
+      "M7"
+     ]
+    }
+   ]
+  },
+  "ft_budget": {
+   "over": 0,
+   "worst": [
+    {
+     "type": "hd_turn_a",
+     "instances": 12,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 565,
+      "reserved": 8550,
+      "ratio": 0.0661
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 565,
+      "reserved": 1400,
+      "ratio": 0.4036
+     }
+    },
+    {
+     "type": "hd_turn_b",
+     "instances": 12,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 565,
+      "reserved": 5771,
+      "ratio": 0.0979
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 565,
+      "reserved": 1400,
+      "ratio": 0.4036
+     }
+    },
+    {
+     "type": "hd_st_str",
+     "instances": 4,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 1026,
+      "reserved": 3918,
+      "ratio": 0.2618
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 0,
+      "reserved": 11690,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "hd_st_n3_transit",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 1026,
+      "reserved": 3918,
+      "ratio": 0.2618
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 0,
+      "reserved": 11690,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "hd_st_n4",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 2052,
+      "reserved": 8193,
+      "ratio": 0.2504
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 0,
+      "reserved": 9240,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "hd_st_n3_turn",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 1026,
+      "reserved": 4987,
+      "ratio": 0.2057
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 1026,
+      "reserved": 10570,
+      "ratio": 0.0971
+     }
+    },
+    {
+     "type": "hd_ctl_n",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 1116,
+      "reserved": 5842,
+      "ratio": 0.191
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 1116,
+      "reserved": 10500,
+      "ratio": 0.1063
+     }
+    },
+    {
+     "type": "hd_mesh_e",
+     "instances": 3,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 128,
+      "reserved": 712,
+      "ratio": 0.1796
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 0,
+      "reserved": 6790,
+      "ratio": 0.0
+     }
+    },
+    {
+     "type": "hd_spn",
+     "instances": 5,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 0,
+      "reserved": 17100,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 809,
+      "reserved": 4760,
+      "ratio": 0.17
+     }
+    },
+    {
+     "type": "hd_spn_end",
+     "instances": 1,
+     "H": {
+      "layers": [
+       "M4",
+       "M6"
+      ],
+      "ft_bits": 0,
+      "reserved": 17100,
+      "ratio": 0.0
+     },
+     "V": {
+      "layers": [
+       "M5",
+       "M7"
+      ],
+      "ft_bits": 809,
+      "reserved": 4760,
+      "ratio": 0.17
+     }
+    }
+   ],
+   "total_types": 25
+  },
+  "streets": {
+   "enforce": false,
+   "cfg": {
+    "reach_um": 400.0,
+    "raster_um": 8.64,
+    "clock_um": 4.32,
+    "hold_um": 4.32,
+    "ft_um": 8.64,
+    "fill": 0.6,
+    "leg_max_um": 480.0,
+    "ft_pitch_um": 0.048,
+    "ft_layers": 2.0,
+    "required_width_um": 34.56,
+    "width_um": 34.56
+   },
+   "clock_builds": 0,
+   "streets": {
+    "raster_um": 8.64,
+    "width_um": 34.56,
+    "required_width_um": 34.56,
+    "street_area_mm2": 140.497,
+    "free_area_mm2": 140.652,
+    "pockets": 28,
+    "pocket_area_mm2": 0.002,
+    "demand": {
+     "mode": "per_street",
+     "base_um": 17.28,
+     "ft_um_per_bit": 0.04,
+     "max_req_ew_um": 357.04,
+     "max_req_ns_um": 181.44,
+     "flows": 327,
+     "flow_bits": 178267
+    }
+   },
+   "cores": 1837,
+   "cores_over_reach": 0,
+   "worst_cores": [
+    {
+     "name": "lep0N/u_core.u.g_pp[0].u_pair",
+     "rect_um": [
+      7879.68,
+      15664.32,
+      8657.28,
+      16156.8
+     ],
+     "street_dist_um": 250.56
+    },
+    {
+     "name": "lep0N/u_core.u.g_pp[1].u_pair",
+     "rect_um": [
+      7084.8,
+      15664.32,
+      7862.4,
+      16156.8
+     ],
+     "street_dist_um": 250.56
+    },
+    {
+     "name": "lep0N/u_core.u.g_pp[2].u_pair",
+     "rect_um": [
+      7084.8,
+      15154.56,
+      7862.4,
+      15647.04
+     ],
+     "street_dist_um": 250.56
+    },
+    {
+     "name": "lep0N/u_core.u.g_pp[3].u_pair",
+     "rect_um": [
+      7879.68,
+      15154.56,
+      8657.28,
+      15647.04
+     ],
+     "street_dist_um": 250.56
+    },
+    {
+     "name": "tE0o0/u_core.u_b.g_cv.u_eA0",
+     "rect_um": [
+      9469.44,
+      13970.88,
+      9789.12,
+      14290.56
+     ],
+     "street_dist_um": 164.16
+    },
+    {
+     "name": "tE0o0/u_core.u_b.g_cv.u_eA1",
+     "rect_um": [
+      9823.68,
+      13970.88,
+      10143.36,
+      14290.56
+     ],
+     "street_dist_um": 164.16
+    },
+    {
+     "name": "tE0o0/u_core.u_b.g_cv.u_eA2",
+     "rect_um": [
+      9469.44,
+      14342.4,
+      9789.12,
+      14662.08
+     ],
+     "street_dist_um": 164.16
+    },
+    {
+     "name": "tE0o0/u_core.u_b.g_cv.u_eA3",
+     "rect_um": [
+      9823.68,
+      14342.4,
+      10143.36,
+      14662.08
+     ],
+     "street_dist_um": 164.16
+    },
+    {
+     "name": "tE0b0/u_core.u_b.g_cv.u_eA0",
+     "rect_um": [
+      9823.68,
+      12934.08,
+      10143.36,
+      13253.76
+     ],
+     "street_dist_um": 164.16
+    },
+    {
+     "name": "tE0b0/u_core.u_b.g_cv.u_eA1",
+     "rect_um": [
+      9469.44,
+      12934.08,
+      9789.12,
+      13253.76
+     ],
+     "street_dist_um": 164.16
+    }
+   ],
+   "clock_legs": 0,
+   "clock_legs_over_core": 0,
+   "legs_over_core": [],
+   "points_in_core": 0,
+   "points_in_core_rows": [],
+   "unplaced": 0,
+   "counts": {}
+  },
+  "xdie_counts": {
+   "hard_cores": 94,
+   "core_faces": 0,
+   "complete": 0,
+   "die_io_plan": 0,
+   "cut_lines": 0,
+   "reach": 0,
+   "face_tracks": 0,
+   "ft_budget": 0,
+   "clock_entry_macro": 0,
+   "merged_clock_view": 0,
+   "street_reach": 0,
+   "street_width": 0,
+   "street_clock_leg": 0,
+   "street_die_leg": 0
+  },
+  "census": {
+   "declared": "none",
+   "reason": "top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)"
+  },
+  "known_errors": null,
+  "png": "/srv/opentallas-scratch2/claude/codex-head-0830/hk6_g0/die_plan.png",
+  "streets_png": "/srv/opentallas-scratch2/claude/codex-head-0830/hk6_g0/streets.png"
+ },
+ "findings": [
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "near-duplicate types ['hd_st_n3_transit', 'hd_st_str'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "near-duplicate types ['hd_spn_wshim_rx', 'hd_spn_wshim_tx'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "WARN",
+   "check": "types",
+   "msg": "near-duplicate types ['hd_spn_eshim_rx', 'hd_spn_eshim_tx'] (2): same outline, buses and slots -- merge into one type (orient MX/MY/R180 + lattice origin, pins declared on the type)"
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[1].u_m: origin [185.76, 8.64] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[0].g_safe_write.u_m.g_bank[3].u_m: origin [540.0, 8.64] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[0].u_m: origin [894.24, 8.64] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[2].u_m: origin [1248.48, 8.64] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m: origin [8.64, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[1].g_safe_write.u_m.g_bank[4].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m: origin [185.76, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[0].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m: origin [362.88, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[1].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m: origin [540.0, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[2].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m: origin [717.12, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[3].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m: origin [894.24, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[2].g_safe_write.u_m.g_bank[4].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m: origin [1071.36, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[0].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m: origin [1248.48, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[1].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m: origin [1425.6, 46.44] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m pin clk M4: y 47.2320 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m pin r_ce_in M4: y 47.3280 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m pin r_addr_in[0] M4: y 47.4240 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m pin r_addr_in[1] M4: y 47.5200 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m pin r_addr_in[2] M4: y 47.6160 off the plan track (offset 0.024, pitch 0.048) in the type frame",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[2].u_m: 405 pins off the plan tracks",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[3].u_m: origin [8.64, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_tx[3].g_safe_write.u_m.g_bank[4].u_m: origin [185.76, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m: origin [907.2, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m: origin [967.68, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m: origin [1028.16, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m: origin [1088.64, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[0].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m: origin [1149.12, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m: origin [1209.6, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m: origin [1270.08, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m: origin [1330.56, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m: origin [1391.04, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[1].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m: origin [1451.52, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m: origin [1512.0, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m: origin [1572.48, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m: origin [1632.96, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m: origin [907.2, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[2].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m: origin [967.68, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[0].u_m: origin [1028.16, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[1].u_m: origin [1088.64, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[2].u_m: origin [1149.12, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[3].u_m: origin [1209.6, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_lep.u.g_rx[3].g_sa.g_true_sram.u_rx_mem.g_bank[4].u_m: origin [1270.08, 114.48] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_land.g_sram.g_t[0].g_128.u_m: origin [380.16, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_land.g_sram.g_t[1].g_128.u_m: origin [483.84, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_land.g_sram.g_t[2].g_128.u_m: origin [587.52, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_land.g_sram.g_t[3].g_128.u_m: origin [691.2, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "hard_cores",
+   "msg": "type hd_lep0N core u_core.u.u_land.g_sram.g_t[4].g_128.u_m: origin [794.88, 84.24] not on the 8.64-um lattice (put the sub-lattice shift in track_offset_um)",
+   "type": "hd_lep0N",
+   "g0c": true
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type hd_tile: 5/5 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "hd_tile"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type hd_serdes: 2/2 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "hd_serdes"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type hd_mesh: 110/110 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "hd_mesh"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type hd_lep0N: 49/49 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "hd_lep0N"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type hd_ctl: 4/4 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "hd_ctl"
+  },
+  {
+   "level": "WARN",
+   "check": "core_faces",
+   "msg": "type hd_host: 110/110 hard cores with no known connectivity (no buses[].leaf / contents[].bind / core_conns.json entry): face rule unchecked for them",
+   "type": "hd_host"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type hd_ctl_n slot lepf_ft: crossing ~1002 um > 1 station(s) x reach 405 (see hops)",
+   "type": "hd_ctl_n"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type hd_ctl_n slot unit_ft: crossing ~1002 um > 1 station(s) x reach 405 (see hops)",
+   "type": "hd_ctl_n"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type hd_ctl_n slot ctrl_ft: crossing ~1002 um > 2 station(s) x reach 405 (see hops)",
+   "type": "hd_ctl_n"
+  },
+  {
+   "level": "WARN",
+   "check": "geometry",
+   "msg": "type hd_ctl_n slot lep_fault_ft: crossing ~1002 um > 2 station(s) x reach 405 (see hops)",
+   "type": "hd_ctl_n"
+  },
+  {
+   "level": "WARN",
+   "check": "r8",
+   "msg": "R8 not checked: no as-built bus groups (BINDER2 bind.py bus_groups.json; pass --groups)"
+  },
+  {
+   "level": "WARN",
+   "check": "clock",
+   "msg": "type hd_serdes: farthest boundary point 2592 um from the tap (> 2 hops)",
+   "type": "hd_serdes"
+  },
+  {
+   "level": "ERROR",
+   "check": "reset",
+   "msg": "type hd_lep0N: local reset tap [1512.0, 276.48] is blocked"
+  },
+  {
+   "level": "WARN",
+   "check": "census",
+   "msg": "census coverage not run: top-down plan of a new die: no bound as-built head-die netlist in this partitioning (the bottom-up H10 die chain used a different block split and FAILED STA); census follows the first bind (G3)"
+  }
+ ]
+}

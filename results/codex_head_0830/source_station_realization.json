@@ -1,0 +1,160 @@
+{
+ "hd_spn": {
+  "before_sha256": "77c9a4baf39737cf3d6f0325a087fdf5f29caa4ae7d078fe1bb72be0c2129be4",
+  "after_sha256": "2767e831202e1e03274be426c0f4a3a7a4f10594be191761133a42daa69303e6",
+  "stations": [
+   {
+    "conn": "bus:xw_o",
+    "planned": 1,
+    "bound_pads": 0,
+    "inserted": 1,
+    "stations": [
+     "u_ist_xw_o_0"
+    ]
+   },
+   {
+    "conn": "bus:xe_o",
+    "planned": 2,
+    "bound_pads": 0,
+    "inserted": 2,
+    "stations": [
+     "u_ist_xe_o_0",
+     "u_ist_xe_o_1"
+    ]
+   },
+   {
+    "conn": "bus:bw_i",
+    "planned": 5,
+    "bound_pads": 0,
+    "inserted": 5,
+    "stations": [
+     "u_ist_bw_i_0",
+     "u_ist_bw_i_1",
+     "u_ist_bw_i_2",
+     "u_ist_bw_i_3",
+     "u_ist_bw_i_4"
+    ]
+   },
+   {
+    "conn": "bus:be_i",
+    "planned": 4,
+    "bound_pads": 0,
+    "inserted": 4,
+    "stations": [
+     "u_ist_be_i_0",
+     "u_ist_be_i_1",
+     "u_ist_be_i_2",
+     "u_ist_be_i_3"
+    ]
+   },
+   {
+    "conn": "bus:x_o",
+    "planned": 6,
+    "bound_pads": 0,
+    "inserted": 6,
+    "stations": [
+     "u_ist_x_o_0",
+     "u_ist_x_o_1",
+     "u_ist_x_o_2",
+     "u_ist_x_o_3",
+     "u_ist_x_o_4",
+     "u_ist_x_o_5"
+    ]
+   },
+   {
+    "conn": "bus:b_i",
+    "planned": 6,
+    "bound_pads": 0,
+    "inserted": 6,
+    "stations": [
+     "u_ist_b_i_0",
+     "u_ist_b_i_1",
+     "u_ist_b_i_2",
+     "u_ist_b_i_3",
+     "u_ist_b_i_4",
+     "u_ist_b_i_5"
+    ]
+   },
+   {
+    "cell": "u_spo",
+    "site": [
+     66.126,
+     1863.6
+    ]
+   },
+   {
+    "cell": "u_spr",
+    "site": [
+     215.65,
+     1863.6
+    ]
+   }
+  ],
+  "new_planned_cycles": 0
+ },
+ "hd_spn_end": {
+  "before_sha256": "3fac18723c26b3ed2e3bf27a1b1b415f1042016b7ac7fdfa51ef896d344d7b0c",
+  "after_sha256": "7ef8bd2e28ffae84fdf73caa2635c389a5eccad2f7994462c31f20d35f05337d",
+  "stations": [
+   {
+    "conn": "bus:xw_o",
+    "planned": 1,
+    "bound_pads": 0,
+    "inserted": 1,
+    "stations": [
+     "u_ist_xw_o_0"
+    ]
+   },
+   {
+    "conn": "bus:xe_o",
+    "planned": 2,
+    "bound_pads": 0,
+    "inserted": 2,
+    "stations": [
+     "u_ist_xe_o_0",
+     "u_ist_xe_o_1"
+    ]
+   },
+   {
+    "conn": "bus:bw_i",
+    "planned": 5,
+    "bound_pads": 0,
+    "inserted": 5,
+    "stations": [
+     "u_ist_bw_i_0",
+     "u_ist_bw_i_1",
+     "u_ist_bw_i_2",
+     "u_ist_bw_i_3",
+     "u_ist_bw_i_4"
+    ]
+   },
+   {
+    "conn": "bus:be_i",
+    "planned": 4,
+    "bound_pads": 0,
+    "inserted": 4,
+    "stations": [
+     "u_ist_be_i_0",
+     "u_ist_be_i_1",
+     "u_ist_be_i_2",
+     "u_ist_be_i_3"
+    ]
+   },
+   {
+    "cell": "u_spo",
+    "site": [
+     66.126,
+     1863.6
+    ]
+   },
+   {
+    "cell": "u_spr",
+    "site": [
+     215.65,
+     1863.6
+    ]
+   }
+  ],
+  "new_planned_cycles": 0
+ }
+}

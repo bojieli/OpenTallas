@@ -1,0 +1,788 @@
+{
+ "child_type": {
+  "name": "hd_lep_pair",
+  "module": "ot_s81hd_lep_pair",
+  "params": {
+   "CHB": "1'b1"
+  },
+  "outline_um": [
+   777.6,
+   492.48
+  ],
+  "hard": true,
+  "cells": 109242,
+  "contents": [
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     51.84,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[0].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     51.84,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[1].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     129.6,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[1].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     129.6,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[2].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     207.36,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[2].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     207.36,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[3].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     285.12,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[3].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     285.12,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[4].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     432.0,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[4].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     432.0,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[5].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     509.76,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[5].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     509.76,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[6].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     587.52,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[6].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     587.52,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[7].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     665.28,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[7].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     665.28,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[8].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     730.08,
+     155.52
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_fifo_safe.u_m.g_bank[8].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     730.08,
+     211.68
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[0].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     51.84,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[0].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     51.84,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[1].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     129.6,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[1].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     129.6,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[2].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     207.36,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[2].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     207.36,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[3].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     285.12,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[3].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     285.12,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[4].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     432.0,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[4].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     432.0,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[5].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     509.76,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[5].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     509.76,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[6].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     587.52,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[6].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     587.52,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[7].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     665.28,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[7].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     665.28,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[8].g_depth[0].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     730.08,
+     280.8
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ep.g_rb_safe.u_m.g_bank[8].g_depth[1].g_256.u_m",
+    "module": "ot_sram_1r1w2c_256x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     730.08,
+     336.96
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_256x64_m1/ot_sram_1r1w2c_256x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[0].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     51.84,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[1].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     129.6,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[2].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     207.36,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[3].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     285.12,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[4].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     432.0,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[5].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     509.76,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[6].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     587.52,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[7].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     665.28,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[8].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     730.08,
+     423.36
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_gb.u_sf.g_bank[9].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     354.24,
+     453.6
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[0].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     51.84,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[1].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     129.6,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[2].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     207.36,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[3].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     285.12,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[4].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     432.0,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[5].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     509.76,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[6].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     587.52,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[7].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     665.28,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   },
+   {
+    "inst": "u_lane.u.u_ski.u_head.g_bank[8].u_m",
+    "module": "ot_sram_1r1w2c_32x64_m1",
+    "kind": "sram",
+    "origin_um": [
+     730.08,
+     82.08
+    ],
+    "orient": "R0",
+    "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.lef",
+    "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_tt.lib",
+    "lib_ff": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1_ff.lib",
+    "note": "LEP resized child: same-bit FIFO/replay/head banks share one column; clock/reset centre channel"
+   }
+  ],
+  "note": "Candidate only: fixed 777.6x492.48 outline, bank-wise macro plan, 0 RTL/cycle changes; actual placement/clock/route gates pending"
+ }
+}
