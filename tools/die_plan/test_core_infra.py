@@ -310,3 +310,59 @@ def test_driver_rect_places_drivers_in_channel_pins_unchanged():
     s["pushdown"]["islands"][0]["driver_rect_um"] = [458.64, 427.68, 450.0, 436.32]
     with pytest.raises(CI.InfraError, match="driver_rect_um"):
         CI.compile_slice(s)
+
+
+# ---- CORES-EARLY-5 form C: ICG copy as a PLANNED stage (domain "planned"), planned leaves below the gate
+def icg_planned_tree():
+    s = sample()
+    s["pg_obstructions_um"] = {}
+    g0 = "u_e.g_cgr.u_cg_r0.u_icg"
+    s["core_tree"] = {"clock_port": "ck", "nodes": [
+        dict(name="root", master="BUFx16f_ASAP7_75t_R", xy_um=[432, 432], parent="port:ck"),
+        dict(name="w", master="BUFx12_ASAP7_75t_R", xy_um=[216, 432], parent="root"),
+        dict(name="e", master="BUFx12_ASAP7_75t_R", xy_um=[648, 432], parent="root"),
+        dict(name="bw", master="BUFx8_ASAP7_75t_R", xy_um=[216, 500], parent="w"),
+        dict(name="lw", master="BUFx8_ASAP7_75t_R", xy_um=[216, 520], parent="bw"),
+        dict(name="lg0", master="BUFx8_ASAP7_75t_R", xy_um=[216, 400], parent=g0),
+        dict(name="lc1", master="BUFx8_ASAP7_75t_R", xy_um=[648, 400], parent="ot_cgc_r0_1")],
+        "gates": [dict(inst=g0, master="ICGx1_ASAP7_75t_R", parent="w", xy_um=[216, 420], domain="planned"),
+                  dict(inst="ot_cgc_r0_1", clone_of=g0, master="ICGx1_ASAP7_75t_R", parent="e", xy_um=[648, 420],
+                       members=["m0/CLK", "m1/CLK"], domain="planned")],
+        "leaves": [dict(node="lw", sinks=["u0/CLK", "u1/CLK"]), dict(node="lg0", sinks=["a/CLK", "b/CLK"]),
+                   dict(node="lc1", sinks=["m0/CLK", "m1/CLK"])]}
+    return s
+
+
+def test_planned_domain_gates_drive_planned_leaves():
+    s = icg_planned_tree()
+    p = CI.compile_slice(s)["core_tree"]
+    assert p["depth"] == 4 and p["under_gate"] == {"lg0": "u_e.g_cgr.u_cg_r0.u_icg", "lc1": "ot_cgc_r0_1"}
+    assert p["cts_open"] == []
+    tcl = CI.emit_tcl(s)
+    copy = tcl.index("ot_ci_tree_gate_copy {ot_cgc_r0_1}")
+    pl0 = tcl.index("ot_ci_tree_gate_planned {u_e.g_cgr.u_cg_r0.u_icg}")
+    pl1 = tcl.index("ot_ci_tree_gate_planned {ot_cgc_r0_1}")
+    # copies first, then the planned-domain census, then the nodes below the gates, then the leaf sinks
+    assert copy < pl0 < pl1 < tcl.index("ot_ci_tree_node {lg0} {u_e.g_cgr.u_cg_r0.u_icg}") < tcl.index("ot_ci_tree_sink {lg0} {a/CLK}")
+    assert tcl.index("ot_ci_tree_node {lw} {bw}") < copy
+    assert "ot_ci_tree_domain" not in tcl and "ot_ci_lec_netlist /work/core_infra_post.v" in tcl
+
+
+def test_open_gate_trees_emit_unchanged_without_planned_lines():
+    assert "ot_ci_tree_gate_planned" not in CI.emit_tcl(icg_copy_tree())
+    assert "under_gate" in CI.compile_slice(icg_tree())["core_tree"] and not CI.compile_slice(icg_tree())["core_tree"]["under_gate"]
+
+
+@pytest.mark.parametrize("mut,frag", [
+    (lambda t: t["gates"][0].update(domain="weird"), "open or planned"),
+    (lambda t: t["leaves"].append(dict(node="ot_cgc_r0_1", load_class="gated_domain", domain_sinks=2)), "planned-domain gate drives"),
+    (lambda t: t["leaves"][2].update(sinks=["m0/CLK", "x/CLK"]), "exactly its members"),
+    (lambda t: (t["leaves"].pop(1), t["nodes"].pop(5)), "no planned leaf below"),
+    (lambda t: t["gates"][0].update(domain="open"), "parent must precede child"),
+    (lambda t: t["nodes"][5].update(parent="nope"), "parent must precede child"),
+    (lambda t: t["nodes"][3].update(parent="root"), "unequal stage"),
+])
+def test_planned_domain_mutants_refused(mut, frag):
+    s = icg_planned_tree(); mut(s["core_tree"])
+    with pytest.raises(CI.InfraError, match=frag):
+        CI.emit_tcl(s)
