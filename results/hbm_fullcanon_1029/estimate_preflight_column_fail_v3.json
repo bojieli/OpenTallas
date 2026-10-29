@@ -1,0 +1,1673 @@
+{
+ "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+ "outline_um": [
+  760.32,
+  725.76
+ ],
+ "profile": {
+  "MLAT": 5,
+  "ALAT": 4,
+  "WCOPY": 1
+ },
+ "inventory": {
+  "macros": 24,
+  "master": "ot_sram_1r1w_128x256_m1_r2c2",
+  "readers": 6,
+  "banks": 4
+ },
+ "spacing_failures": [],
+ "read_return": [
+  {
+   "bank": 0,
+   "reader": 0,
+   "span_um": 727.02,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 363.51
+  },
+  {
+   "bank": 0,
+   "reader": 1,
+   "span_um": 711.756,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 355.878
+  },
+  {
+   "bank": 0,
+   "reader": 2,
+   "span_um": 700.428,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 350.214
+  },
+  {
+   "bank": 0,
+   "reader": 3,
+   "span_um": 672.588,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 336.294
+  },
+  {
+   "bank": 0,
+   "reader": 5,
+   "span_um": 691.308,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 345.654
+  },
+  {
+   "bank": 1,
+   "reader": 0,
+   "span_um": 777.948,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 388.974
+  },
+  {
+   "bank": 1,
+   "reader": 1,
+   "span_um": 666.732,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 333.366
+  },
+  {
+   "bank": 1,
+   "reader": 2,
+   "span_um": 777.084,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 388.542
+  },
+  {
+   "bank": 1,
+   "reader": 3,
+   "span_um": 783.42,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 391.71
+  },
+  {
+   "bank": 1,
+   "reader": 5,
+   "span_um": 470.7,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 235.35
+  },
+  {
+   "bank": 2,
+   "reader": 0,
+   "span_um": 447.396,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 223.698
+  },
+  {
+   "bank": 2,
+   "reader": 1,
+   "span_um": 260.292,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 130.146
+  },
+  {
+   "bank": 2,
+   "reader": 2,
+   "span_um": 378.42,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 189.21
+  },
+  {
+   "bank": 2,
+   "reader": 3,
+   "span_um": 343.908,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 171.954
+  },
+  {
+   "bank": 2,
+   "reader": 5,
+   "span_um": 397.212,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 198.606
+  },
+  {
+   "bank": 3,
+   "reader": 0,
+   "span_um": 521.508,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 260.754
+  },
+  {
+   "bank": 3,
+   "reader": 1,
+   "span_um": 438.804,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 219.402
+  },
+  {
+   "bank": 3,
+   "reader": 2,
+   "span_um": 776.532,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 388.266
+  },
+  {
+   "bank": 3,
+   "reader": 3,
+   "span_um": 686.1,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 343.05
+  },
+  {
+   "bank": 3,
+   "reader": 5,
+   "span_um": 755.676,
+   "existing_capture_hops": 2,
+   "minimax_lower_bound_um": 377.838
+  }
+ ],
+ "max_read_hop_lower_bound_um": 391.71,
+ "write_relays": [
+  {
+   "name": "wdbank0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.wd_pin["
+   ],
+   "point_um": [
+    209.32,
+    149.32
+   ],
+   "box_um": [
+    205.0,
+    145.0,
+    213.64,
+    153.64
+   ],
+   "hop_pins_um": 267.4,
+   "hop_sinks_um": 386.9,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.wa_pin["
+   ],
+   "point_um": [
+    219.32,
+    159.32
+   ],
+   "box_um": [
+    217.16,
+    157.16,
+    221.48,
+    161.48
+   ],
+   "hop_pins_um": 249.5,
+   "hop_sinks_um": 386.9,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.w_pin$"
+   ],
+   "point_um": [
+    224.32,
+    164.32
+   ],
+   "box_um": [
+    222.16,
+    162.16,
+    226.48,
+    166.48
+   ],
+   "hop_pins_um": 379.3,
+   "hop_sinks_um": 386.9,
+   "pins": 1,
+   "sink_macros": 6
+  },
+  {
+   "name": "wdbank1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.wd_pin["
+   ],
+   "point_um": [
+    349.32,
+    259.32
+   ],
+   "box_um": [
+    345.0,
+    255.0,
+    353.64,
+    263.64
+   ],
+   "hop_pins_um": 283.0,
+   "hop_sinks_um": 256.8,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.wa_pin["
+   ],
+   "point_um": [
+    284.32,
+    184.32
+   ],
+   "box_um": [
+    282.16,
+    182.16,
+    286.48,
+    186.48
+   ],
+   "hop_pins_um": 326.6,
+   "hop_sinks_um": 326.3,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.w_pin$"
+   ],
+   "point_um": [
+    144.32,
+    259.32
+   ],
+   "box_um": [
+    142.16,
+    257.16,
+    146.48,
+    261.48
+   ],
+   "hop_pins_um": 392.9,
+   "hop_sinks_um": 391.3,
+   "pins": 1,
+   "sink_macros": 6
+  },
+  {
+   "name": "wdbank2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.wd_pin["
+   ],
+   "point_um": [
+    224.32,
+    174.32
+   ],
+   "box_um": [
+    220.0,
+    170.0,
+    228.64,
+    178.64
+   ],
+   "hop_pins_um": 368.7,
+   "hop_sinks_um": 372.8,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.wa_pin["
+   ],
+   "point_um": [
+    149.32,
+    289.32
+   ],
+   "box_um": [
+    147.16,
+    287.16,
+    151.48,
+    291.48
+   ],
+   "hop_pins_um": 306.2,
+   "hop_sinks_um": 305.0,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.w_pin$"
+   ],
+   "point_um": [
+    14.32,
+    364.32
+   ],
+   "box_um": [
+    12.16,
+    362.16,
+    16.48,
+    366.48
+   ],
+   "hop_pins_um": 366.4,
+   "hop_sinks_um": 365.0,
+   "pins": 1,
+   "sink_macros": 6
+  },
+  {
+   "name": "wdbank3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.wd_pin["
+   ],
+   "point_um": [
+    384.32,
+    244.32
+   ],
+   "box_um": [
+    380.0,
+    240.0,
+    388.64,
+    248.64
+   ],
+   "hop_pins_um": 324.3,
+   "hop_sinks_um": 354.5,
+   "pins": 32,
+   "sink_macros": 6
+  },
+  {
+   "name": "wabank3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.wa_pin["
+   ],
+   "point_um": [
+    274.32,
+    289.32
+   ],
+   "box_um": [
+    272.16,
+    287.16,
+    276.48,
+    291.48
+   ],
+   "hop_pins_um": 396.0,
+   "hop_sinks_um": 399.5,
+   "pins": 9,
+   "sink_macros": 6
+  },
+  {
+   "name": "wvbank3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.w_pin$"
+   ],
+   "point_um": [
+    379.32,
+    199.32
+   ],
+   "box_um": [
+    377.16,
+    197.16,
+    381.48,
+    201.48
+   ],
+   "hop_pins_um": 390.0,
+   "hop_sinks_um": 394.5,
+   "pins": 1,
+   "sink_macros": 6
+  }
+ ],
+ "max_write_centre_hop_um": 399.5,
+ "read_relay_guides": [
+  {
+   "name": "readbank0r0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.read_data[0]",
+    "u_fcore.u_core.u_bank0.read_data[1]",
+    "u_fcore.u_core.u_bank0.read_data[2]",
+    "u_fcore.u_core.u_bank0.read_data[3]",
+    "u_fcore.u_core.u_bank0.read_data[4]",
+    "u_fcore.u_core.u_bank0.read_data[5]",
+    "u_fcore.u_core.u_bank0.read_data[6]",
+    "u_fcore.u_core.u_bank0.read_data[7]",
+    "u_fcore.u_core.u_bank0.read_data[8]",
+    "u_fcore.u_core.u_bank0.read_data[9]",
+    "u_fcore.u_core.u_bank0.read_data[10]",
+    "u_fcore.u_core.u_bank0.read_data[11]",
+    "u_fcore.u_core.u_bank0.read_data[12]",
+    "u_fcore.u_core.u_bank0.read_data[13]",
+    "u_fcore.u_core.u_bank0.read_data[14]",
+    "u_fcore.u_core.u_bank0.read_data[15]",
+    "u_fcore.u_core.u_bank0.read_data[16]",
+    "u_fcore.u_core.u_bank0.read_data[17]",
+    "u_fcore.u_core.u_bank0.read_data[18]",
+    "u_fcore.u_core.u_bank0.read_data[19]",
+    "u_fcore.u_core.u_bank0.read_data[20]",
+    "u_fcore.u_core.u_bank0.read_data[21]",
+    "u_fcore.u_core.u_bank0.read_data[22]",
+    "u_fcore.u_core.u_bank0.read_data[23]",
+    "u_fcore.u_core.u_bank0.read_data[24]",
+    "u_fcore.u_core.u_bank0.read_data[25]",
+    "u_fcore.u_core.u_bank0.read_data[26]",
+    "u_fcore.u_core.u_bank0.read_data[27]",
+    "u_fcore.u_core.u_bank0.read_data[28]",
+    "u_fcore.u_core.u_bank0.read_data[29]",
+    "u_fcore.u_core.u_bank0.read_data[30]",
+    "u_fcore.u_core.u_bank0.read_data[31]"
+   ],
+   "point_um": [
+    109.32,
+    719.32
+   ],
+   "box_um": [
+    105.0,
+    715.0,
+    113.64,
+    721.44
+   ],
+   "hop_pins_um": 363.2,
+   "hop_sinks_um": 363.8,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank0r1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.read_data[32]",
+    "u_fcore.u_core.u_bank0.read_data[33]",
+    "u_fcore.u_core.u_bank0.read_data[34]",
+    "u_fcore.u_core.u_bank0.read_data[35]",
+    "u_fcore.u_core.u_bank0.read_data[36]",
+    "u_fcore.u_core.u_bank0.read_data[37]",
+    "u_fcore.u_core.u_bank0.read_data[38]",
+    "u_fcore.u_core.u_bank0.read_data[39]",
+    "u_fcore.u_core.u_bank0.read_data[40]",
+    "u_fcore.u_core.u_bank0.read_data[41]",
+    "u_fcore.u_core.u_bank0.read_data[42]",
+    "u_fcore.u_core.u_bank0.read_data[43]",
+    "u_fcore.u_core.u_bank0.read_data[44]",
+    "u_fcore.u_core.u_bank0.read_data[45]",
+    "u_fcore.u_core.u_bank0.read_data[46]",
+    "u_fcore.u_core.u_bank0.read_data[47]",
+    "u_fcore.u_core.u_bank0.read_data[48]",
+    "u_fcore.u_core.u_bank0.read_data[49]",
+    "u_fcore.u_core.u_bank0.read_data[50]",
+    "u_fcore.u_core.u_bank0.read_data[51]",
+    "u_fcore.u_core.u_bank0.read_data[52]",
+    "u_fcore.u_core.u_bank0.read_data[53]",
+    "u_fcore.u_core.u_bank0.read_data[54]",
+    "u_fcore.u_core.u_bank0.read_data[55]",
+    "u_fcore.u_core.u_bank0.read_data[56]",
+    "u_fcore.u_core.u_bank0.read_data[57]",
+    "u_fcore.u_core.u_bank0.read_data[58]",
+    "u_fcore.u_core.u_bank0.read_data[59]",
+    "u_fcore.u_core.u_bank0.read_data[60]",
+    "u_fcore.u_core.u_bank0.read_data[61]",
+    "u_fcore.u_core.u_bank0.read_data[62]",
+    "u_fcore.u_core.u_bank0.read_data[63]"
+   ],
+   "point_um": [
+    164.32,
+    714.32
+   ],
+   "box_um": [
+    160.0,
+    710.0,
+    168.64,
+    718.64
+   ],
+   "hop_pins_um": 353.9,
+   "hop_sinks_um": 357.9,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank0r2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.read_data[64]",
+    "u_fcore.u_core.u_bank0.read_data[65]",
+    "u_fcore.u_core.u_bank0.read_data[66]",
+    "u_fcore.u_core.u_bank0.read_data[67]",
+    "u_fcore.u_core.u_bank0.read_data[68]",
+    "u_fcore.u_core.u_bank0.read_data[69]",
+    "u_fcore.u_core.u_bank0.read_data[70]",
+    "u_fcore.u_core.u_bank0.read_data[71]",
+    "u_fcore.u_core.u_bank0.read_data[72]",
+    "u_fcore.u_core.u_bank0.read_data[73]",
+    "u_fcore.u_core.u_bank0.read_data[74]",
+    "u_fcore.u_core.u_bank0.read_data[75]",
+    "u_fcore.u_core.u_bank0.read_data[76]",
+    "u_fcore.u_core.u_bank0.read_data[77]",
+    "u_fcore.u_core.u_bank0.read_data[78]",
+    "u_fcore.u_core.u_bank0.read_data[79]",
+    "u_fcore.u_core.u_bank0.read_data[80]",
+    "u_fcore.u_core.u_bank0.read_data[81]",
+    "u_fcore.u_core.u_bank0.read_data[82]",
+    "u_fcore.u_core.u_bank0.read_data[83]",
+    "u_fcore.u_core.u_bank0.read_data[84]",
+    "u_fcore.u_core.u_bank0.read_data[85]",
+    "u_fcore.u_core.u_bank0.read_data[86]",
+    "u_fcore.u_core.u_bank0.read_data[87]",
+    "u_fcore.u_core.u_bank0.read_data[88]",
+    "u_fcore.u_core.u_bank0.read_data[89]",
+    "u_fcore.u_core.u_bank0.read_data[90]",
+    "u_fcore.u_core.u_bank0.read_data[91]",
+    "u_fcore.u_core.u_bank0.read_data[92]",
+    "u_fcore.u_core.u_bank0.read_data[93]",
+    "u_fcore.u_core.u_bank0.read_data[94]",
+    "u_fcore.u_core.u_bank0.read_data[95]"
+   ],
+   "point_um": [
+    414.32,
+    509.32
+   ],
+   "box_um": [
+    410.0,
+    505.0,
+    418.64,
+    513.64
+   ],
+   "hop_pins_um": 349.6,
+   "hop_sinks_um": 350.8,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank0r3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.read_data[96]",
+    "u_fcore.u_core.u_bank0.read_data[97]",
+    "u_fcore.u_core.u_bank0.read_data[98]",
+    "u_fcore.u_core.u_bank0.read_data[99]",
+    "u_fcore.u_core.u_bank0.read_data[100]",
+    "u_fcore.u_core.u_bank0.read_data[101]",
+    "u_fcore.u_core.u_bank0.read_data[102]",
+    "u_fcore.u_core.u_bank0.read_data[103]",
+    "u_fcore.u_core.u_bank0.read_data[104]",
+    "u_fcore.u_core.u_bank0.read_data[105]",
+    "u_fcore.u_core.u_bank0.read_data[106]",
+    "u_fcore.u_core.u_bank0.read_data[107]",
+    "u_fcore.u_core.u_bank0.read_data[108]",
+    "u_fcore.u_core.u_bank0.read_data[109]",
+    "u_fcore.u_core.u_bank0.read_data[110]",
+    "u_fcore.u_core.u_bank0.read_data[111]",
+    "u_fcore.u_core.u_bank0.read_data[112]",
+    "u_fcore.u_core.u_bank0.read_data[113]",
+    "u_fcore.u_core.u_bank0.read_data[114]",
+    "u_fcore.u_core.u_bank0.read_data[115]",
+    "u_fcore.u_core.u_bank0.read_data[116]",
+    "u_fcore.u_core.u_bank0.read_data[117]",
+    "u_fcore.u_core.u_bank0.read_data[118]",
+    "u_fcore.u_core.u_bank0.read_data[119]",
+    "u_fcore.u_core.u_bank0.read_data[120]",
+    "u_fcore.u_core.u_bank0.read_data[121]",
+    "u_fcore.u_core.u_bank0.read_data[122]",
+    "u_fcore.u_core.u_bank0.read_data[123]",
+    "u_fcore.u_core.u_bank0.read_data[124]",
+    "u_fcore.u_core.u_bank0.read_data[125]",
+    "u_fcore.u_core.u_bank0.read_data[126]",
+    "u_fcore.u_core.u_bank0.read_data[127]"
+   ],
+   "point_um": [
+    469.32,
+    509.32
+   ],
+   "box_um": [
+    465.0,
+    505.0,
+    473.64,
+    513.64
+   ],
+   "hop_pins_um": 335.3,
+   "hop_sinks_um": 337.3,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank0r5",
+   "prefixes": [
+    "u_fcore.u_core.u_bank0.read_data[160]",
+    "u_fcore.u_core.u_bank0.read_data[161]",
+    "u_fcore.u_core.u_bank0.read_data[162]",
+    "u_fcore.u_core.u_bank0.read_data[163]",
+    "u_fcore.u_core.u_bank0.read_data[164]",
+    "u_fcore.u_core.u_bank0.read_data[165]",
+    "u_fcore.u_core.u_bank0.read_data[166]",
+    "u_fcore.u_core.u_bank0.read_data[167]",
+    "u_fcore.u_core.u_bank0.read_data[168]",
+    "u_fcore.u_core.u_bank0.read_data[169]",
+    "u_fcore.u_core.u_bank0.read_data[170]",
+    "u_fcore.u_core.u_bank0.read_data[171]",
+    "u_fcore.u_core.u_bank0.read_data[172]",
+    "u_fcore.u_core.u_bank0.read_data[173]",
+    "u_fcore.u_core.u_bank0.read_data[174]",
+    "u_fcore.u_core.u_bank0.read_data[175]",
+    "u_fcore.u_core.u_bank0.read_data[176]",
+    "u_fcore.u_core.u_bank0.read_data[177]",
+    "u_fcore.u_core.u_bank0.read_data[178]",
+    "u_fcore.u_core.u_bank0.read_data[179]",
+    "u_fcore.u_core.u_bank0.read_data[180]",
+    "u_fcore.u_core.u_bank0.read_data[181]",
+    "u_fcore.u_core.u_bank0.read_data[182]",
+    "u_fcore.u_core.u_bank0.read_data[183]",
+    "u_fcore.u_core.u_bank0.read_data[184]",
+    "u_fcore.u_core.u_bank0.read_data[185]",
+    "u_fcore.u_core.u_bank0.read_data[186]",
+    "u_fcore.u_core.u_bank0.read_data[187]",
+    "u_fcore.u_core.u_bank0.read_data[188]",
+    "u_fcore.u_core.u_bank0.read_data[189]",
+    "u_fcore.u_core.u_bank0.read_data[190]",
+    "u_fcore.u_core.u_bank0.read_data[191]"
+   ],
+   "point_um": [
+    169.32,
+    184.32
+   ],
+   "box_um": [
+    165.0,
+    180.0,
+    173.64,
+    188.64
+   ],
+   "hop_pins_um": 344.7,
+   "hop_sinks_um": 346.6,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank1r0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.read_data[0]",
+    "u_fcore.u_core.u_bank1.read_data[1]",
+    "u_fcore.u_core.u_bank1.read_data[2]",
+    "u_fcore.u_core.u_bank1.read_data[3]",
+    "u_fcore.u_core.u_bank1.read_data[4]",
+    "u_fcore.u_core.u_bank1.read_data[5]",
+    "u_fcore.u_core.u_bank1.read_data[6]",
+    "u_fcore.u_core.u_bank1.read_data[7]",
+    "u_fcore.u_core.u_bank1.read_data[8]",
+    "u_fcore.u_core.u_bank1.read_data[9]",
+    "u_fcore.u_core.u_bank1.read_data[10]",
+    "u_fcore.u_core.u_bank1.read_data[11]",
+    "u_fcore.u_core.u_bank1.read_data[12]",
+    "u_fcore.u_core.u_bank1.read_data[13]",
+    "u_fcore.u_core.u_bank1.read_data[14]",
+    "u_fcore.u_core.u_bank1.read_data[15]",
+    "u_fcore.u_core.u_bank1.read_data[16]",
+    "u_fcore.u_core.u_bank1.read_data[17]",
+    "u_fcore.u_core.u_bank1.read_data[18]",
+    "u_fcore.u_core.u_bank1.read_data[19]",
+    "u_fcore.u_core.u_bank1.read_data[20]",
+    "u_fcore.u_core.u_bank1.read_data[21]",
+    "u_fcore.u_core.u_bank1.read_data[22]",
+    "u_fcore.u_core.u_bank1.read_data[23]",
+    "u_fcore.u_core.u_bank1.read_data[24]",
+    "u_fcore.u_core.u_bank1.read_data[25]",
+    "u_fcore.u_core.u_bank1.read_data[26]",
+    "u_fcore.u_core.u_bank1.read_data[27]",
+    "u_fcore.u_core.u_bank1.read_data[28]",
+    "u_fcore.u_core.u_bank1.read_data[29]",
+    "u_fcore.u_core.u_bank1.read_data[30]",
+    "u_fcore.u_core.u_bank1.read_data[31]"
+   ],
+   "point_um": [
+    274.32,
+    689.32
+   ],
+   "box_um": [
+    270.0,
+    685.0,
+    278.64,
+    693.64
+   ],
+   "hop_pins_um": 391.0,
+   "hop_sinks_um": 386.9,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank1r1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.read_data[32]",
+    "u_fcore.u_core.u_bank1.read_data[33]",
+    "u_fcore.u_core.u_bank1.read_data[34]",
+    "u_fcore.u_core.u_bank1.read_data[35]",
+    "u_fcore.u_core.u_bank1.read_data[36]",
+    "u_fcore.u_core.u_bank1.read_data[37]",
+    "u_fcore.u_core.u_bank1.read_data[38]",
+    "u_fcore.u_core.u_bank1.read_data[39]",
+    "u_fcore.u_core.u_bank1.read_data[40]",
+    "u_fcore.u_core.u_bank1.read_data[41]",
+    "u_fcore.u_core.u_bank1.read_data[42]",
+    "u_fcore.u_core.u_bank1.read_data[43]",
+    "u_fcore.u_core.u_bank1.read_data[44]",
+    "u_fcore.u_core.u_bank1.read_data[45]",
+    "u_fcore.u_core.u_bank1.read_data[46]",
+    "u_fcore.u_core.u_bank1.read_data[47]",
+    "u_fcore.u_core.u_bank1.read_data[48]",
+    "u_fcore.u_core.u_bank1.read_data[49]",
+    "u_fcore.u_core.u_bank1.read_data[50]",
+    "u_fcore.u_core.u_bank1.read_data[51]",
+    "u_fcore.u_core.u_bank1.read_data[52]",
+    "u_fcore.u_core.u_bank1.read_data[53]",
+    "u_fcore.u_core.u_bank1.read_data[54]",
+    "u_fcore.u_core.u_bank1.read_data[55]",
+    "u_fcore.u_core.u_bank1.read_data[56]",
+    "u_fcore.u_core.u_bank1.read_data[57]",
+    "u_fcore.u_core.u_bank1.read_data[58]",
+    "u_fcore.u_core.u_bank1.read_data[59]",
+    "u_fcore.u_core.u_bank1.read_data[60]",
+    "u_fcore.u_core.u_bank1.read_data[61]",
+    "u_fcore.u_core.u_bank1.read_data[62]",
+    "u_fcore.u_core.u_bank1.read_data[63]"
+   ],
+   "point_um": [
+    344.32,
+    719.32
+   ],
+   "box_um": [
+    340.0,
+    715.0,
+    348.64,
+    721.44
+   ],
+   "hop_pins_um": 331.7,
+   "hop_sinks_um": 335.0,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank1r2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.read_data[64]",
+    "u_fcore.u_core.u_bank1.read_data[65]",
+    "u_fcore.u_core.u_bank1.read_data[66]",
+    "u_fcore.u_core.u_bank1.read_data[67]",
+    "u_fcore.u_core.u_bank1.read_data[68]",
+    "u_fcore.u_core.u_bank1.read_data[69]",
+    "u_fcore.u_core.u_bank1.read_data[70]",
+    "u_fcore.u_core.u_bank1.read_data[71]",
+    "u_fcore.u_core.u_bank1.read_data[72]",
+    "u_fcore.u_core.u_bank1.read_data[73]",
+    "u_fcore.u_core.u_bank1.read_data[74]",
+    "u_fcore.u_core.u_bank1.read_data[75]",
+    "u_fcore.u_core.u_bank1.read_data[76]",
+    "u_fcore.u_core.u_bank1.read_data[77]",
+    "u_fcore.u_core.u_bank1.read_data[78]",
+    "u_fcore.u_core.u_bank1.read_data[79]",
+    "u_fcore.u_core.u_bank1.read_data[80]",
+    "u_fcore.u_core.u_bank1.read_data[81]",
+    "u_fcore.u_core.u_bank1.read_data[82]",
+    "u_fcore.u_core.u_bank1.read_data[83]",
+    "u_fcore.u_core.u_bank1.read_data[84]",
+    "u_fcore.u_core.u_bank1.read_data[85]",
+    "u_fcore.u_core.u_bank1.read_data[86]",
+    "u_fcore.u_core.u_bank1.read_data[87]",
+    "u_fcore.u_core.u_bank1.read_data[88]",
+    "u_fcore.u_core.u_bank1.read_data[89]",
+    "u_fcore.u_core.u_bank1.read_data[90]",
+    "u_fcore.u_core.u_bank1.read_data[91]",
+    "u_fcore.u_core.u_bank1.read_data[92]",
+    "u_fcore.u_core.u_bank1.read_data[93]",
+    "u_fcore.u_core.u_bank1.read_data[94]",
+    "u_fcore.u_core.u_bank1.read_data[95]"
+   ],
+   "point_um": [
+    329.32,
+    719.32
+   ],
+   "box_um": [
+    325.0,
+    715.0,
+    333.64,
+    721.44
+   ],
+   "hop_pins_um": 387.4,
+   "hop_sinks_um": 389.6,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank1r3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.read_data[96]",
+    "u_fcore.u_core.u_bank1.read_data[97]",
+    "u_fcore.u_core.u_bank1.read_data[98]",
+    "u_fcore.u_core.u_bank1.read_data[99]",
+    "u_fcore.u_core.u_bank1.read_data[100]",
+    "u_fcore.u_core.u_bank1.read_data[101]",
+    "u_fcore.u_core.u_bank1.read_data[102]",
+    "u_fcore.u_core.u_bank1.read_data[103]",
+    "u_fcore.u_core.u_bank1.read_data[104]",
+    "u_fcore.u_core.u_bank1.read_data[105]",
+    "u_fcore.u_core.u_bank1.read_data[106]",
+    "u_fcore.u_core.u_bank1.read_data[107]",
+    "u_fcore.u_core.u_bank1.read_data[108]",
+    "u_fcore.u_core.u_bank1.read_data[109]",
+    "u_fcore.u_core.u_bank1.read_data[110]",
+    "u_fcore.u_core.u_bank1.read_data[111]",
+    "u_fcore.u_core.u_bank1.read_data[112]",
+    "u_fcore.u_core.u_bank1.read_data[113]",
+    "u_fcore.u_core.u_bank1.read_data[114]",
+    "u_fcore.u_core.u_bank1.read_data[115]",
+    "u_fcore.u_core.u_bank1.read_data[116]",
+    "u_fcore.u_core.u_bank1.read_data[117]",
+    "u_fcore.u_core.u_bank1.read_data[118]",
+    "u_fcore.u_core.u_bank1.read_data[119]",
+    "u_fcore.u_core.u_bank1.read_data[120]",
+    "u_fcore.u_core.u_bank1.read_data[121]",
+    "u_fcore.u_core.u_bank1.read_data[122]",
+    "u_fcore.u_core.u_bank1.read_data[123]",
+    "u_fcore.u_core.u_bank1.read_data[124]",
+    "u_fcore.u_core.u_bank1.read_data[125]",
+    "u_fcore.u_core.u_bank1.read_data[126]",
+    "u_fcore.u_core.u_bank1.read_data[127]"
+   ],
+   "point_um": [
+    514.32,
+    569.32
+   ],
+   "box_um": [
+    510.0,
+    565.0,
+    518.64,
+    573.64
+   ],
+   "hop_pins_um": 393.2,
+   "hop_sinks_um": 390.3,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank1r5",
+   "prefixes": [
+    "u_fcore.u_core.u_bank1.read_data[160]",
+    "u_fcore.u_core.u_bank1.read_data[161]",
+    "u_fcore.u_core.u_bank1.read_data[162]",
+    "u_fcore.u_core.u_bank1.read_data[163]",
+    "u_fcore.u_core.u_bank1.read_data[164]",
+    "u_fcore.u_core.u_bank1.read_data[165]",
+    "u_fcore.u_core.u_bank1.read_data[166]",
+    "u_fcore.u_core.u_bank1.read_data[167]",
+    "u_fcore.u_core.u_bank1.read_data[168]",
+    "u_fcore.u_core.u_bank1.read_data[169]",
+    "u_fcore.u_core.u_bank1.read_data[170]",
+    "u_fcore.u_core.u_bank1.read_data[171]",
+    "u_fcore.u_core.u_bank1.read_data[172]",
+    "u_fcore.u_core.u_bank1.read_data[173]",
+    "u_fcore.u_core.u_bank1.read_data[174]",
+    "u_fcore.u_core.u_bank1.read_data[175]",
+    "u_fcore.u_core.u_bank1.read_data[176]",
+    "u_fcore.u_core.u_bank1.read_data[177]",
+    "u_fcore.u_core.u_bank1.read_data[178]",
+    "u_fcore.u_core.u_bank1.read_data[179]",
+    "u_fcore.u_core.u_bank1.read_data[180]",
+    "u_fcore.u_core.u_bank1.read_data[181]",
+    "u_fcore.u_core.u_bank1.read_data[182]",
+    "u_fcore.u_core.u_bank1.read_data[183]",
+    "u_fcore.u_core.u_bank1.read_data[184]",
+    "u_fcore.u_core.u_bank1.read_data[185]",
+    "u_fcore.u_core.u_bank1.read_data[186]",
+    "u_fcore.u_core.u_bank1.read_data[187]",
+    "u_fcore.u_core.u_bank1.read_data[188]",
+    "u_fcore.u_core.u_bank1.read_data[189]",
+    "u_fcore.u_core.u_bank1.read_data[190]",
+    "u_fcore.u_core.u_bank1.read_data[191]"
+   ],
+   "point_um": [
+    79.32,
+    184.32
+   ],
+   "box_um": [
+    75.0,
+    180.0,
+    83.64,
+    188.64
+   ],
+   "hop_pins_um": 237.2,
+   "hop_sinks_um": 233.5,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank2r0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.read_data[0]",
+    "u_fcore.u_core.u_bank2.read_data[1]",
+    "u_fcore.u_core.u_bank2.read_data[2]",
+    "u_fcore.u_core.u_bank2.read_data[3]",
+    "u_fcore.u_core.u_bank2.read_data[4]",
+    "u_fcore.u_core.u_bank2.read_data[5]",
+    "u_fcore.u_core.u_bank2.read_data[6]",
+    "u_fcore.u_core.u_bank2.read_data[7]",
+    "u_fcore.u_core.u_bank2.read_data[8]",
+    "u_fcore.u_core.u_bank2.read_data[9]",
+    "u_fcore.u_core.u_bank2.read_data[10]",
+    "u_fcore.u_core.u_bank2.read_data[11]",
+    "u_fcore.u_core.u_bank2.read_data[12]",
+    "u_fcore.u_core.u_bank2.read_data[13]",
+    "u_fcore.u_core.u_bank2.read_data[14]",
+    "u_fcore.u_core.u_bank2.read_data[15]",
+    "u_fcore.u_core.u_bank2.read_data[16]",
+    "u_fcore.u_core.u_bank2.read_data[17]",
+    "u_fcore.u_core.u_bank2.read_data[18]",
+    "u_fcore.u_core.u_bank2.read_data[19]",
+    "u_fcore.u_core.u_bank2.read_data[20]",
+    "u_fcore.u_core.u_bank2.read_data[21]",
+    "u_fcore.u_core.u_bank2.read_data[22]",
+    "u_fcore.u_core.u_bank2.read_data[23]",
+    "u_fcore.u_core.u_bank2.read_data[24]",
+    "u_fcore.u_core.u_bank2.read_data[25]",
+    "u_fcore.u_core.u_bank2.read_data[26]",
+    "u_fcore.u_core.u_bank2.read_data[27]",
+    "u_fcore.u_core.u_bank2.read_data[28]",
+    "u_fcore.u_core.u_bank2.read_data[29]",
+    "u_fcore.u_core.u_bank2.read_data[30]",
+    "u_fcore.u_core.u_bank2.read_data[31]"
+   ],
+   "point_um": [
+    4.32,
+    374.32
+   ],
+   "box_um": [
+    4.32,
+    370.0,
+    8.64,
+    378.64
+   ],
+   "hop_pins_um": 224.0,
+   "hop_sinks_um": 223.4,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank2r1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.read_data[32]",
+    "u_fcore.u_core.u_bank2.read_data[33]",
+    "u_fcore.u_core.u_bank2.read_data[34]",
+    "u_fcore.u_core.u_bank2.read_data[35]",
+    "u_fcore.u_core.u_bank2.read_data[36]",
+    "u_fcore.u_core.u_bank2.read_data[37]",
+    "u_fcore.u_core.u_bank2.read_data[38]",
+    "u_fcore.u_core.u_bank2.read_data[39]",
+    "u_fcore.u_core.u_bank2.read_data[40]",
+    "u_fcore.u_core.u_bank2.read_data[41]",
+    "u_fcore.u_core.u_bank2.read_data[42]",
+    "u_fcore.u_core.u_bank2.read_data[43]",
+    "u_fcore.u_core.u_bank2.read_data[44]",
+    "u_fcore.u_core.u_bank2.read_data[45]",
+    "u_fcore.u_core.u_bank2.read_data[46]",
+    "u_fcore.u_core.u_bank2.read_data[47]",
+    "u_fcore.u_core.u_bank2.read_data[48]",
+    "u_fcore.u_core.u_bank2.read_data[49]",
+    "u_fcore.u_core.u_bank2.read_data[50]",
+    "u_fcore.u_core.u_bank2.read_data[51]",
+    "u_fcore.u_core.u_bank2.read_data[52]",
+    "u_fcore.u_core.u_bank2.read_data[53]",
+    "u_fcore.u_core.u_bank2.read_data[54]",
+    "u_fcore.u_core.u_bank2.read_data[55]",
+    "u_fcore.u_core.u_bank2.read_data[56]",
+    "u_fcore.u_core.u_bank2.read_data[57]",
+    "u_fcore.u_core.u_bank2.read_data[58]",
+    "u_fcore.u_core.u_bank2.read_data[59]",
+    "u_fcore.u_core.u_bank2.read_data[60]",
+    "u_fcore.u_core.u_bank2.read_data[61]",
+    "u_fcore.u_core.u_bank2.read_data[62]",
+    "u_fcore.u_core.u_bank2.read_data[63]"
+   ],
+   "point_um": [
+    49.32,
+    529.32
+   ],
+   "box_um": [
+    45.0,
+    525.0,
+    53.64,
+    533.64
+   ],
+   "hop_pins_um": 131.5,
+   "hop_sinks_um": 128.7,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank2r2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.read_data[64]",
+    "u_fcore.u_core.u_bank2.read_data[65]",
+    "u_fcore.u_core.u_bank2.read_data[66]",
+    "u_fcore.u_core.u_bank2.read_data[67]",
+    "u_fcore.u_core.u_bank2.read_data[68]",
+    "u_fcore.u_core.u_bank2.read_data[69]",
+    "u_fcore.u_core.u_bank2.read_data[70]",
+    "u_fcore.u_core.u_bank2.read_data[71]",
+    "u_fcore.u_core.u_bank2.read_data[72]",
+    "u_fcore.u_core.u_bank2.read_data[73]",
+    "u_fcore.u_core.u_bank2.read_data[74]",
+    "u_fcore.u_core.u_bank2.read_data[75]",
+    "u_fcore.u_core.u_bank2.read_data[76]",
+    "u_fcore.u_core.u_bank2.read_data[77]",
+    "u_fcore.u_core.u_bank2.read_data[78]",
+    "u_fcore.u_core.u_bank2.read_data[79]",
+    "u_fcore.u_core.u_bank2.read_data[80]",
+    "u_fcore.u_core.u_bank2.read_data[81]",
+    "u_fcore.u_core.u_bank2.read_data[82]",
+    "u_fcore.u_core.u_bank2.read_data[83]",
+    "u_fcore.u_core.u_bank2.read_data[84]",
+    "u_fcore.u_core.u_bank2.read_data[85]",
+    "u_fcore.u_core.u_bank2.read_data[86]",
+    "u_fcore.u_core.u_bank2.read_data[87]",
+    "u_fcore.u_core.u_bank2.read_data[88]",
+    "u_fcore.u_core.u_bank2.read_data[89]",
+    "u_fcore.u_core.u_bank2.read_data[90]",
+    "u_fcore.u_core.u_bank2.read_data[91]",
+    "u_fcore.u_core.u_bank2.read_data[92]",
+    "u_fcore.u_core.u_bank2.read_data[93]",
+    "u_fcore.u_core.u_bank2.read_data[94]",
+    "u_fcore.u_core.u_bank2.read_data[95]"
+   ],
+   "point_um": [
+    4.32,
+    444.32
+   ],
+   "box_um": [
+    4.32,
+    440.0,
+    8.64,
+    448.64
+   ],
+   "hop_pins_um": 189.1,
+   "hop_sinks_um": 189.3,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank2r3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.read_data[96]",
+    "u_fcore.u_core.u_bank2.read_data[97]",
+    "u_fcore.u_core.u_bank2.read_data[98]",
+    "u_fcore.u_core.u_bank2.read_data[99]",
+    "u_fcore.u_core.u_bank2.read_data[100]",
+    "u_fcore.u_core.u_bank2.read_data[101]",
+    "u_fcore.u_core.u_bank2.read_data[102]",
+    "u_fcore.u_core.u_bank2.read_data[103]",
+    "u_fcore.u_core.u_bank2.read_data[104]",
+    "u_fcore.u_core.u_bank2.read_data[105]",
+    "u_fcore.u_core.u_bank2.read_data[106]",
+    "u_fcore.u_core.u_bank2.read_data[107]",
+    "u_fcore.u_core.u_bank2.read_data[108]",
+    "u_fcore.u_core.u_bank2.read_data[109]",
+    "u_fcore.u_core.u_bank2.read_data[110]",
+    "u_fcore.u_core.u_bank2.read_data[111]",
+    "u_fcore.u_core.u_bank2.read_data[112]",
+    "u_fcore.u_core.u_bank2.read_data[113]",
+    "u_fcore.u_core.u_bank2.read_data[114]",
+    "u_fcore.u_core.u_bank2.read_data[115]",
+    "u_fcore.u_core.u_bank2.read_data[116]",
+    "u_fcore.u_core.u_bank2.read_data[117]",
+    "u_fcore.u_core.u_bank2.read_data[118]",
+    "u_fcore.u_core.u_bank2.read_data[119]",
+    "u_fcore.u_core.u_bank2.read_data[120]",
+    "u_fcore.u_core.u_bank2.read_data[121]",
+    "u_fcore.u_core.u_bank2.read_data[122]",
+    "u_fcore.u_core.u_bank2.read_data[123]",
+    "u_fcore.u_core.u_bank2.read_data[124]",
+    "u_fcore.u_core.u_bank2.read_data[125]",
+    "u_fcore.u_core.u_bank2.read_data[126]",
+    "u_fcore.u_core.u_bank2.read_data[127]"
+   ],
+   "point_um": [
+    4.32,
+    479.32
+   ],
+   "box_um": [
+    4.32,
+    475.0,
+    8.64,
+    483.64
+   ],
+   "hop_pins_um": 171.6,
+   "hop_sinks_um": 172.3,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank2r5",
+   "prefixes": [
+    "u_fcore.u_core.u_bank2.read_data[160]",
+    "u_fcore.u_core.u_bank2.read_data[161]",
+    "u_fcore.u_core.u_bank2.read_data[162]",
+    "u_fcore.u_core.u_bank2.read_data[163]",
+    "u_fcore.u_core.u_bank2.read_data[164]",
+    "u_fcore.u_core.u_bank2.read_data[165]",
+    "u_fcore.u_core.u_bank2.read_data[166]",
+    "u_fcore.u_core.u_bank2.read_data[167]",
+    "u_fcore.u_core.u_bank2.read_data[168]",
+    "u_fcore.u_core.u_bank2.read_data[169]",
+    "u_fcore.u_core.u_bank2.read_data[170]",
+    "u_fcore.u_core.u_bank2.read_data[171]",
+    "u_fcore.u_core.u_bank2.read_data[172]",
+    "u_fcore.u_core.u_bank2.read_data[173]",
+    "u_fcore.u_core.u_bank2.read_data[174]",
+    "u_fcore.u_core.u_bank2.read_data[175]",
+    "u_fcore.u_core.u_bank2.read_data[176]",
+    "u_fcore.u_core.u_bank2.read_data[177]",
+    "u_fcore.u_core.u_bank2.read_data[178]",
+    "u_fcore.u_core.u_bank2.read_data[179]",
+    "u_fcore.u_core.u_bank2.read_data[180]",
+    "u_fcore.u_core.u_bank2.read_data[181]",
+    "u_fcore.u_core.u_bank2.read_data[182]",
+    "u_fcore.u_core.u_bank2.read_data[183]",
+    "u_fcore.u_core.u_bank2.read_data[184]",
+    "u_fcore.u_core.u_bank2.read_data[185]",
+    "u_fcore.u_core.u_bank2.read_data[186]",
+    "u_fcore.u_core.u_bank2.read_data[187]",
+    "u_fcore.u_core.u_bank2.read_data[188]",
+    "u_fcore.u_core.u_bank2.read_data[189]",
+    "u_fcore.u_core.u_bank2.read_data[190]",
+    "u_fcore.u_core.u_bank2.read_data[191]"
+   ],
+   "point_um": [
+    4.32,
+    239.32
+   ],
+   "box_um": [
+    4.32,
+    235.0,
+    8.64,
+    243.64
+   ],
+   "hop_pins_um": 199.6,
+   "hop_sinks_um": 197.6,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank3r0",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.read_data[0]",
+    "u_fcore.u_core.u_bank3.read_data[1]",
+    "u_fcore.u_core.u_bank3.read_data[2]",
+    "u_fcore.u_core.u_bank3.read_data[3]",
+    "u_fcore.u_core.u_bank3.read_data[4]",
+    "u_fcore.u_core.u_bank3.read_data[5]",
+    "u_fcore.u_core.u_bank3.read_data[6]",
+    "u_fcore.u_core.u_bank3.read_data[7]",
+    "u_fcore.u_core.u_bank3.read_data[8]",
+    "u_fcore.u_core.u_bank3.read_data[9]",
+    "u_fcore.u_core.u_bank3.read_data[10]",
+    "u_fcore.u_core.u_bank3.read_data[11]",
+    "u_fcore.u_core.u_bank3.read_data[12]",
+    "u_fcore.u_core.u_bank3.read_data[13]",
+    "u_fcore.u_core.u_bank3.read_data[14]",
+    "u_fcore.u_core.u_bank3.read_data[15]",
+    "u_fcore.u_core.u_bank3.read_data[16]",
+    "u_fcore.u_core.u_bank3.read_data[17]",
+    "u_fcore.u_core.u_bank3.read_data[18]",
+    "u_fcore.u_core.u_bank3.read_data[19]",
+    "u_fcore.u_core.u_bank3.read_data[20]",
+    "u_fcore.u_core.u_bank3.read_data[21]",
+    "u_fcore.u_core.u_bank3.read_data[22]",
+    "u_fcore.u_core.u_bank3.read_data[23]",
+    "u_fcore.u_core.u_bank3.read_data[24]",
+    "u_fcore.u_core.u_bank3.read_data[25]",
+    "u_fcore.u_core.u_bank3.read_data[26]",
+    "u_fcore.u_core.u_bank3.read_data[27]",
+    "u_fcore.u_core.u_bank3.read_data[28]",
+    "u_fcore.u_core.u_bank3.read_data[29]",
+    "u_fcore.u_core.u_bank3.read_data[30]",
+    "u_fcore.u_core.u_bank3.read_data[31]"
+   ],
+   "point_um": [
+    4.32,
+    409.32
+   ],
+   "box_um": [
+    4.32,
+    405.0,
+    8.64,
+    413.64
+   ],
+   "hop_pins_um": 259.2,
+   "hop_sinks_um": 262.3,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank3r1",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.read_data[32]",
+    "u_fcore.u_core.u_bank3.read_data[33]",
+    "u_fcore.u_core.u_bank3.read_data[34]",
+    "u_fcore.u_core.u_bank3.read_data[35]",
+    "u_fcore.u_core.u_bank3.read_data[36]",
+    "u_fcore.u_core.u_bank3.read_data[37]",
+    "u_fcore.u_core.u_bank3.read_data[38]",
+    "u_fcore.u_core.u_bank3.read_data[39]",
+    "u_fcore.u_core.u_bank3.read_data[40]",
+    "u_fcore.u_core.u_bank3.read_data[41]",
+    "u_fcore.u_core.u_bank3.read_data[42]",
+    "u_fcore.u_core.u_bank3.read_data[43]",
+    "u_fcore.u_core.u_bank3.read_data[44]",
+    "u_fcore.u_core.u_bank3.read_data[45]",
+    "u_fcore.u_core.u_bank3.read_data[46]",
+    "u_fcore.u_core.u_bank3.read_data[47]",
+    "u_fcore.u_core.u_bank3.read_data[48]",
+    "u_fcore.u_core.u_bank3.read_data[49]",
+    "u_fcore.u_core.u_bank3.read_data[50]",
+    "u_fcore.u_core.u_bank3.read_data[51]",
+    "u_fcore.u_core.u_bank3.read_data[52]",
+    "u_fcore.u_core.u_bank3.read_data[53]",
+    "u_fcore.u_core.u_bank3.read_data[54]",
+    "u_fcore.u_core.u_bank3.read_data[55]",
+    "u_fcore.u_core.u_bank3.read_data[56]",
+    "u_fcore.u_core.u_bank3.read_data[57]",
+    "u_fcore.u_core.u_bank3.read_data[58]",
+    "u_fcore.u_core.u_bank3.read_data[59]",
+    "u_fcore.u_core.u_bank3.read_data[60]",
+    "u_fcore.u_core.u_bank3.read_data[61]",
+    "u_fcore.u_core.u_bank3.read_data[62]",
+    "u_fcore.u_core.u_bank3.read_data[63]"
+   ],
+   "point_um": [
+    69.32,
+    529.32
+   ],
+   "box_um": [
+    65.0,
+    525.0,
+    73.64,
+    533.64
+   ],
+   "hop_pins_um": 221.8,
+   "hop_sinks_um": 217.0,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank3r2",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.read_data[64]",
+    "u_fcore.u_core.u_bank3.read_data[65]",
+    "u_fcore.u_core.u_bank3.read_data[66]",
+    "u_fcore.u_core.u_bank3.read_data[67]",
+    "u_fcore.u_core.u_bank3.read_data[68]",
+    "u_fcore.u_core.u_bank3.read_data[69]",
+    "u_fcore.u_core.u_bank3.read_data[70]",
+    "u_fcore.u_core.u_bank3.read_data[71]",
+    "u_fcore.u_core.u_bank3.read_data[72]",
+    "u_fcore.u_core.u_bank3.read_data[73]",
+    "u_fcore.u_core.u_bank3.read_data[74]",
+    "u_fcore.u_core.u_bank3.read_data[75]",
+    "u_fcore.u_core.u_bank3.read_data[76]",
+    "u_fcore.u_core.u_bank3.read_data[77]",
+    "u_fcore.u_core.u_bank3.read_data[78]",
+    "u_fcore.u_core.u_bank3.read_data[79]",
+    "u_fcore.u_core.u_bank3.read_data[80]",
+    "u_fcore.u_core.u_bank3.read_data[81]",
+    "u_fcore.u_core.u_bank3.read_data[82]",
+    "u_fcore.u_core.u_bank3.read_data[83]",
+    "u_fcore.u_core.u_bank3.read_data[84]",
+    "u_fcore.u_core.u_bank3.read_data[85]",
+    "u_fcore.u_core.u_bank3.read_data[86]",
+    "u_fcore.u_core.u_bank3.read_data[87]",
+    "u_fcore.u_core.u_bank3.read_data[88]",
+    "u_fcore.u_core.u_bank3.read_data[89]",
+    "u_fcore.u_core.u_bank3.read_data[90]",
+    "u_fcore.u_core.u_bank3.read_data[91]",
+    "u_fcore.u_core.u_bank3.read_data[92]",
+    "u_fcore.u_core.u_bank3.read_data[93]",
+    "u_fcore.u_core.u_bank3.read_data[94]",
+    "u_fcore.u_core.u_bank3.read_data[95]"
+   ],
+   "point_um": [
+    259.32,
+    569.32
+   ],
+   "box_um": [
+    255.0,
+    565.0,
+    263.64,
+    573.64
+   ],
+   "hop_pins_um": 389.3,
+   "hop_sinks_um": 387.2,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank3r3",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.read_data[96]",
+    "u_fcore.u_core.u_bank3.read_data[97]",
+    "u_fcore.u_core.u_bank3.read_data[98]",
+    "u_fcore.u_core.u_bank3.read_data[99]",
+    "u_fcore.u_core.u_bank3.read_data[100]",
+    "u_fcore.u_core.u_bank3.read_data[101]",
+    "u_fcore.u_core.u_bank3.read_data[102]",
+    "u_fcore.u_core.u_bank3.read_data[103]",
+    "u_fcore.u_core.u_bank3.read_data[104]",
+    "u_fcore.u_core.u_bank3.read_data[105]",
+    "u_fcore.u_core.u_bank3.read_data[106]",
+    "u_fcore.u_core.u_bank3.read_data[107]",
+    "u_fcore.u_core.u_bank3.read_data[108]",
+    "u_fcore.u_core.u_bank3.read_data[109]",
+    "u_fcore.u_core.u_bank3.read_data[110]",
+    "u_fcore.u_core.u_bank3.read_data[111]",
+    "u_fcore.u_core.u_bank3.read_data[112]",
+    "u_fcore.u_core.u_bank3.read_data[113]",
+    "u_fcore.u_core.u_bank3.read_data[114]",
+    "u_fcore.u_core.u_bank3.read_data[115]",
+    "u_fcore.u_core.u_bank3.read_data[116]",
+    "u_fcore.u_core.u_bank3.read_data[117]",
+    "u_fcore.u_core.u_bank3.read_data[118]",
+    "u_fcore.u_core.u_bank3.read_data[119]",
+    "u_fcore.u_core.u_bank3.read_data[120]",
+    "u_fcore.u_core.u_bank3.read_data[121]",
+    "u_fcore.u_core.u_bank3.read_data[122]",
+    "u_fcore.u_core.u_bank3.read_data[123]",
+    "u_fcore.u_core.u_bank3.read_data[124]",
+    "u_fcore.u_core.u_bank3.read_data[125]",
+    "u_fcore.u_core.u_bank3.read_data[126]",
+    "u_fcore.u_core.u_bank3.read_data[127]"
+   ],
+   "point_um": [
+    89.32,
+    464.32
+   ],
+   "box_um": [
+    85.0,
+    460.0,
+    93.64,
+    468.64
+   ],
+   "hop_pins_um": 341.9,
+   "hop_sinks_um": 344.2,
+   "pins": 32,
+   "sink_macros": 2
+  },
+  {
+   "name": "readbank3r5",
+   "prefixes": [
+    "u_fcore.u_core.u_bank3.read_data[160]",
+    "u_fcore.u_core.u_bank3.read_data[161]",
+    "u_fcore.u_core.u_bank3.read_data[162]",
+    "u_fcore.u_core.u_bank3.read_data[163]",
+    "u_fcore.u_core.u_bank3.read_data[164]",
+    "u_fcore.u_core.u_bank3.read_data[165]",
+    "u_fcore.u_core.u_bank3.read_data[166]",
+    "u_fcore.u_core.u_bank3.read_data[167]",
+    "u_fcore.u_core.u_bank3.read_data[168]",
+    "u_fcore.u_core.u_bank3.read_data[169]",
+    "u_fcore.u_core.u_bank3.read_data[170]",
+    "u_fcore.u_core.u_bank3.read_data[171]",
+    "u_fcore.u_core.u_bank3.read_data[172]",
+    "u_fcore.u_core.u_bank3.read_data[173]",
+    "u_fcore.u_core.u_bank3.read_data[174]",
+    "u_fcore.u_core.u_bank3.read_data[175]",
+    "u_fcore.u_core.u_bank3.read_data[176]",
+    "u_fcore.u_core.u_bank3.read_data[177]",
+    "u_fcore.u_core.u_bank3.read_data[178]",
+    "u_fcore.u_core.u_bank3.read_data[179]",
+    "u_fcore.u_core.u_bank3.read_data[180]",
+    "u_fcore.u_core.u_bank3.read_data[181]",
+    "u_fcore.u_core.u_bank3.read_data[182]",
+    "u_fcore.u_core.u_bank3.read_data[183]",
+    "u_fcore.u_core.u_bank3.read_data[184]",
+    "u_fcore.u_core.u_bank3.read_data[185]",
+    "u_fcore.u_core.u_bank3.read_data[186]",
+    "u_fcore.u_core.u_bank3.read_data[187]",
+    "u_fcore.u_core.u_bank3.read_data[188]",
+    "u_fcore.u_core.u_bank3.read_data[189]",
+    "u_fcore.u_core.u_bank3.read_data[190]",
+    "u_fcore.u_core.u_bank3.read_data[191]"
+   ],
+   "point_um": [
+    254.32,
+    184.32
+   ],
+   "box_um": [
+    250.0,
+    180.0,
+    258.64,
+    188.64
+   ],
+   "hop_pins_um": 377.1,
+   "hop_sinks_um": 378.6,
+   "pins": 32,
+   "sink_macros": 2
+  }
+ ],
+ "max_read_relay_hop_um": 393.2,
+ "drivers": [
+  {
+   "island": 0,
+   "original_centre_um": [
+    380.136,
+    362.88
+   ],
+   "driver_rect_um": [
+    379.056,
+    361.8,
+    381.216,
+    363.96
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 1,
+   "original_centre_um": [
+    95.04,
+    90.72
+   ],
+   "driver_rect_um": [
+    93.96,
+    89.64,
+    96.12,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 2,
+   "original_centre_um": [
+    95.04,
+    272.16
+   ],
+   "driver_rect_um": [
+    93.96,
+    271.08,
+    96.12,
+    273.24
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 3,
+   "original_centre_um": [
+    95.04,
+    453.6
+   ],
+   "driver_rect_um": [
+    93.96,
+    452.52,
+    96.12,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 4,
+   "original_centre_um": [
+    95.04,
+    635.04
+   ],
+   "driver_rect_um": [
+    93.96,
+    633.96,
+    96.12,
+    636.12
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 5,
+   "original_centre_um": [
+    285.12,
+    90.72
+   ],
+   "driver_rect_um": [
+    284.04,
+    89.64,
+    286.2,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 6,
+   "original_centre_um": [
+    285.12,
+    272.16
+   ],
+   "driver_rect_um": [
+    284.04,
+    271.08,
+    286.2,
+    273.24
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 7,
+   "original_centre_um": [
+    285.12,
+    453.6
+   ],
+   "driver_rect_um": [
+    284.04,
+    452.52,
+    286.2,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 8,
+   "original_centre_um": [
+    285.12,
+    635.04
+   ],
+   "driver_rect_um": [
+    284.04,
+    633.96,
+    286.2,
+    636.12
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 9,
+   "original_centre_um": [
+    475.2,
+    90.72
+   ],
+   "driver_rect_um": [
+    474.12,
+    89.64,
+    476.28,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 10,
+   "original_centre_um": [
+    475.2,
+    272.16
+   ],
+   "driver_rect_um": [
+    478.44,
+    271.08,
+    480.6,
+    273.24
+   ],
+   "detour_um": 4.32
+  },
+  {
+   "island": 11,
+   "original_centre_um": [
+    475.2,
+    453.6
+   ],
+   "driver_rect_um": [
+    474.12,
+    452.52,
+    476.28,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 12,
+   "original_centre_um": [
+    475.2,
+    635.04
+   ],
+   "driver_rect_um": [
+    474.12,
+    633.96,
+    476.28,
+    636.12
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 13,
+   "original_centre_um": [
+    665.28,
+    90.72
+   ],
+   "driver_rect_um": [
+    664.2,
+    89.64,
+    666.36,
+    91.8
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 14,
+   "original_centre_um": [
+    665.28,
+    272.16
+   ],
+   "driver_rect_um": [
+    664.2,
+    271.08,
+    666.36,
+    273.24
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 15,
+   "original_centre_um": [
+    665.28,
+    453.6
+   ],
+   "driver_rect_um": [
+    664.2,
+    452.52,
+    666.36,
+    454.68
+   ],
+   "detour_um": 0.0
+  },
+  {
+   "island": 16,
+   "original_centre_um": [
+    665.28,
+    635.04
+   ],
+   "driver_rect_um": [
+    664.2,
+    633.96,
+    666.36,
+    636.12
+   ],
+   "detour_um": 0.0
+  }
+ ],
+ "max_driver_detour_um": 4.32,
+ "clock_contract_candidate": "scalar clk_bank at current planned centre380.136,362.88, replacing76aliases; nonclockpins unchanged; die owner adoption pending",
+ "ft_pin_dx_um": 1.08,
+ "verdict": "PASS-ESTIMATE",
+ "limits": "Read value is lower bound from existing macro->read_dataFF->faceFF two hops, not actualplaced reach. Write guides use actual sourcepins, macrocentres and legal disjoint guide boxes; fullr2r census required afterplace. Clock parentisland metadata adoption pending."
+}

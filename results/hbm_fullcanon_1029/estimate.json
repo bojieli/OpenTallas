@@ -16,6 +16,7 @@
   "banks": 4
  },
  "spacing_failures": [],
+ "column_channel_failures": [],
  "read_return": [
   {
    "bank": 0,
@@ -62,9 +63,9 @@
   {
    "bank": 1,
    "reader": 1,
-   "span_um": 666.732,
+   "span_um": 662.412,
    "existing_capture_hops": 2,
-   "minimax_lower_bound_um": 333.366
+   "minimax_lower_bound_um": 331.206
   },
   {
    "bank": 1,
@@ -236,7 +237,7 @@
     263.64
    ],
    "hop_pins_um": 283.0,
-   "hop_sinks_um": 256.8,
+   "hop_sinks_um": 252.4,
    "pins": 32,
    "sink_macros": 6
   },
@@ -256,7 +257,7 @@
     186.48
    ],
    "hop_pins_um": 326.6,
-   "hop_sinks_um": 326.3,
+   "hop_sinks_um": 330.6,
    "pins": 9,
    "sink_macros": 6
   },
@@ -276,7 +277,7 @@
     261.48
    ],
    "hop_pins_um": 392.9,
-   "hop_sinks_um": 391.3,
+   "hop_sinks_um": 395.6,
    "pins": 1,
    "sink_macros": 6
   },
@@ -746,17 +747,17 @@
     "u_fcore.u_core.u_bank1.read_data[63]"
    ],
    "point_um": [
-    344.32,
-    719.32
+    514.32,
+    549.32
    ],
    "box_um": [
-    340.0,
-    715.0,
-    348.64,
-    721.44
+    510.0,
+    545.0,
+    518.64,
+    553.64
    ],
    "hop_pins_um": 331.7,
-   "hop_sinks_um": 335.0,
+   "hop_sinks_um": 330.7,
    "pins": 32,
    "sink_macros": 2
   },

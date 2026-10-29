@@ -10,7 +10,7 @@ _ns={'re':re};exec(_gsrc[_gsrc.index('def macro_reg_guide_spec('):_gsrc.index('\
 G=types.SimpleNamespace(macro_reg_guide_spec=_ns['macro_reg_guide_spec'],relay_reg_guide_spec=_ns['relay_reg_guide_spec'])
 M='ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77';macro='ot_sram_1r1w_128x256_m1_r2c2'
 ps=json.load(open(P/'cores'/f'{M}__760.32x725.76__canon.json'));mw,mh=94.824,41.064
-xy={0:[(55.008,408.144),(163.008,356.112),(163.008,408.144),(379.008,260.688),(540.000,120.000),(487.008,187.056)],1:[(271.008,304.080),(266.688,460.320),(271.008,386.352),(379.008,312.720),(487.008,239.088),(271.008,200.016)],2:[(55.008,200.016),(163.008,512.640),(55.008,304.080),(55.008,356.112),(163.008,200.016),(163.008,252.048)],3:[(163.008,304.080),(271.008,512.352),(487.008,408.144),(379.008,408.144),(487.008,356.112),(487.008,304.080)]}
+xy={0:[(55.008,408.144),(163.008,356.112),(163.008,408.144),(379.008,260.688),(540.000,120.000),(487.008,187.056)],1:[(271.008,304.080),(271.008,460.320),(271.008,386.352),(379.008,312.720),(487.008,239.088),(271.008,200.016)],2:[(55.008,200.016),(163.008,512.640),(55.008,304.080),(55.008,356.112),(163.008,200.016),(163.008,252.048)],3:[(163.008,304.080),(271.008,512.352),(487.008,408.144),(379.008,408.144),(487.008,356.112),(487.008,304.080)]}
 # Match public gen_core_kit_hbm.io_tcl's face-edge records used by its relay planner.
 for q in ps:
  f=min([(q['x'],'W'),(760.32-q['x'],'E'),(q['y'],'S'),(725.76-q['y'],'N')])[1]
@@ -31,6 +31,12 @@ for b,rows in xy.items():
 for a,b in itertools.combinations(placements,2):
  x,y=a['xy_um'];u,v=b['xy_um'];gx=max(u-(x+mw),x-(u+mw));gy=max(v-(y+mh),y-(v+mh))
  if gx<10.8 and gy<10.8:spacing.append([a['inst'],b['inst'],gx,gy])
+# Existing preflight macro_channels merges overlapping X spans into columns even across different Y bands.
+cols=[]
+for lo,hi in sorted((q['xy_um'][0],q['xy_um'][0]+mw) for q in placements):
+ if cols and lo<=cols[-1][1]:cols[-1][1]=max(cols[-1][1],hi)
+ else:cols.append([lo,hi])
+colfail=[round(b[0]-a[1],3) for a,b in zip(cols,cols[1:]) if b[0]-a[1]<10.8-1e-6]
 mg=G.macro_reg_guide_spec(placements,lambda m:(94824,41064),'g_wcopy',10,[4.32,4.32,756,721.44])
 relays=json.load(open(sys.argv[4]));rg=G.relay_reg_guide_spec(relays['relays'],[(q['name'],q['x'],q['y']) for q in ps],mg,[4.32,4.32,756,721.44])
 isl=[dict(name='entry',centre_um=[380.136,362.88])]+MP.restructure_islands(760.32,725.76,200)['islands']
@@ -64,7 +70,7 @@ for rd in read:
 json.dump(read_guides,open(O/'read_guides.json','w'),indent=1)
 maxhop=max(max(q['hop_pins_um'],q['hop_sinks_um']) for q in rg)
 readhop=max(max(q['hop_pins_um'],q['hop_sinks_um']) for q in read_guides)
-report=dict(module=M,outline_um=[760.32,725.76],profile=dict(MLAT=5,ALAT=4,WCOPY=1),inventory=dict(macros=len(placements),master=macro,readers=6,banks=4),spacing_failures=spacing,read_return=read,max_read_hop_lower_bound_um=max(q['minimax_lower_bound_um'] for q in read),write_relays=rg,max_write_centre_hop_um=maxhop,read_relay_guides=read_guides,max_read_relay_hop_um=readhop,drivers=drs,max_driver_detour_um=max(q['detour_um'] for q in drs),clock_contract_candidate='scalar clk_bank at current planned centre380.136,362.88, replacing76aliases; nonclockpins unchanged; die owner adoption pending',ft_pin_dx_um=1.08,verdict='PASS-ESTIMATE' if not spacing and maxhop<=405 and max(q['minimax_lower_bound_um'] for q in read)<=405 and readhop<=405 else 'FAIL-ESTIMATE',limits='Read value is lower bound from existing macro->read_dataFF->faceFF two hops, not actualplaced reach. Write guides use actual sourcepins, macrocentres and legal disjoint guide boxes; fullr2r census required afterplace. Clock parentisland metadata adoption pending.')
+report=dict(module=M,outline_um=[760.32,725.76],profile=dict(MLAT=5,ALAT=4,WCOPY=1),inventory=dict(macros=len(placements),master=macro,readers=6,banks=4),spacing_failures=spacing,column_channel_failures=colfail,read_return=read,max_read_hop_lower_bound_um=max(q['minimax_lower_bound_um'] for q in read),write_relays=rg,max_write_centre_hop_um=maxhop,read_relay_guides=read_guides,max_read_relay_hop_um=readhop,drivers=drs,max_driver_detour_um=max(q['detour_um'] for q in drs),clock_contract_candidate='scalar clk_bank at current planned centre380.136,362.88, replacing76aliases; nonclockpins unchanged; die owner adoption pending',ft_pin_dx_um=1.08,verdict='PASS-ESTIMATE' if not spacing and not colfail and maxhop<=405 and max(q['minimax_lower_bound_um'] for q in read)<=405 and readhop<=405 else 'FAIL-ESTIMATE',limits='Read value is lower bound from existing macro->read_dataFF->faceFF two hops, not actualplaced reach. Write guides use actual sourcepins, macrocentres and legal disjoint guide boxes; fullr2r census required afterplace. Clock parentisland metadata adoption pending.')
 json.dump(dict(schema='opentallas.macro_placement.v1',macro_placement=[dict(k=q['inst'].removeprefix('u_fcore.'),macro=q['macro'],origin_um=q['xy_um'],orient=q['orient']) for q in placements],placements=[dict(inst=q['inst'].removeprefix('u_fcore.'),macro=q['macro'],xy_um=q['xy_um'],orient=q['orient']) for q in placements]),open(O/'macros.json','w'),indent=1)
 json.dump(report,open(O/'estimate.json','w'),indent=1)
 import matplotlib;matplotlib.use('Agg')
