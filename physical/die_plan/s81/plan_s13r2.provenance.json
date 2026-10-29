@@ -29,6 +29,13 @@
    "change": "74 dsfd_su_t_rxsf hard_cores rows: lef -> physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf.lef (GEOM-21 M5 0.048x0.48 ck); fix-only, die clock tree unchanged",
    "file_sha256": "0fb681e84884aa84535c52b884ebb60064bfe4188af8502d990de99a02ca280c",
    "canonical_sha256": "bd7393902245094226a1f1ad1d60b0bd8ceb4168ee519620f188f9237d81c327"
+  },
+  {
+   "id": "S81-028 delta_clkpin_m5_1029b",
+   "script": "physical/die_plan/s81/delta_clkpin_m5_1029b.py --plans-only --plan physical/die_plan/s81/plan_s13r2.json",
+   "change": "74 ot_s81sl_vsw hard-core LEF rows repointed to plan-owned M5 clock pin copy; seven core pin-site checks PASS 0/7. Frozen geometry, data and cycles unchanged.",
+   "file_sha256": "a737846563bb416834c518e0a326812725ce9ff85f69528c014b2fac15f5ffcc",
+   "canonical_sha256": "29c5077fd7b5327519568ca9f10bfcd35e969b4e707c53ab9009c61032c8d75f"
   }
  ],
  "note_sha": "original/canonical_sha256 above = the frozen e4a0d4d8 content; the file on this branch carries deltas[] on top"
