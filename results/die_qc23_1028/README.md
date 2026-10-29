@@ -47,3 +47,25 @@ hard-core data pins 2.15 M. Glue-to-glue internal paths NOT counted (no netlist)
   pitch 0.08 um): inside the c_* (A0 array) partitions, 620 mm2: clock wire M8 2003 mm / M9 2229 mm = average track use
   0.13 % / 0.14 % (UNCHECKED; local peaks on the feed/region trunks are higher, so straps keep the clock guide corridors
   as obstructions like mk_clkfirst13). Long-hop die signals use leftover M8/M9 (12.1c) and are not in this number.
+
+## 5. trial16 (2b gated form, 5597e5365) = trial15 byte-identical -> snake cap REJECTED (CHECKED on routed GRT)
+- The gated form (rebuild only partitions whose stock tree has a snake leg > 1200 um, keep only if shorter) rebuilt the
+  same 192 partitions as the all-partition form: tree.json nodes/taps, ctree.v, clkonly.v and routed arr_TT/FF are
+  md5-identical to trial15 (val16 == val15). So every regressed region (c_*_tf_00 19.5 -> 136 ps TT routed glue spread)
+  had a stock snake leg > 1.2 mm, and moving the merge point up re-embeds its glue tree worse.
+- Routed c_* glue spread trial14 -> trial15/16: TT p90 76.7 -> 88.7, regions > 92 ps 10 -> 14; FF p90 74.7 -> 80.0,
+  > 92 ps 2 -> 10 (wins: c_W2_bn_01 130.9 -> 34.4, c_E0_tf_11 106.9 -> 28.4). Measured worse -> rejected, not tuned
+  (rule). --region-dme-snake-cap stays an opt-in tool flag on this branch only (default byte-identical, 97/97 tests); no
+  ROOT-MERGE requested. Main path keeps the trial14 stock tree.
+- QC-MESH-EST-1 triggers (COORD 10-28): (b) hold-buffer area max 1.53 % of a partition (sl_E*_sc) < 5 %; (c) tap
+  arrival movement, routed GRT TT, 7889 core/glue taps trial14 -> trial15/16: max |d| 270.8 ps (t_c_W4_tf_00__clk_t24),
+  p99 199.5, 3319 taps > 30 ps; region-relative (median per region removed) max 96.3 ps, 866 > 30 -> trigger (c) FIRES
+  (FF max 237.7 / rel 86.7). trial16 vs trial15 = 0 ps. (a) intra-region hold with OCV after the cap: gate g15 (same
+  inputs as trial16; g16 stopped as duplicate) - see section 6.
+
+## 6. PG delta applied (COORD 20:4x, QC-PG-5 1cee05eb9d approved)
+- plan/ev_qc23pg.json sha ad01d656b2b5 = ev_qc23 6410861441e5 + a0_bump_field.py (DIL 155): 768 A0 outlines -> 2 rects,
+  626.02 mm2 75-um field, M9 width 0.48 -> 0.672; die.pg == qc_pg_delta.json "die.pg" exactly (CHECKED); window 180 /
+  seam_hold 25,180 kept. Built on claude/die-qc23-pg-1028 (= this branch + merge of claude/qc-pg-5-1028; 109/109 die_trial +
+  test_pg_bump_fields PASS locally). QC-PG-5 re-ran trial15 clock GRT with M9 0.672: 0 overflow, arrivals identical
+  (their number, UNCHECKED here). Next QC trial uses ev_qc23pg.
