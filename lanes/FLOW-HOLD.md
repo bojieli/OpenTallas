@@ -60,3 +60,6 @@ CODEX 2026-10-29 14:01 PDT actual q3w16n terminalFAIL after LEC9742/9742: PRE_GL
 
 ## CODEX notes 2026-10-29 14:01 PDT — pair skew actual fix recovered
 CODEX took over sharednegative-edge faulton codex/flow-1355@12e5221e2 (exactcurrentfb1base +pausedClaudeeb315). ActiveLibertyfallCKtransition +falllaunchsourceinsertion andcorrectCPPRcaptureedgefold;9focusedtestsPASS. ExistingactualroutedH0probe(flow-clock-r4-pairskew) TTverify14.746→0.000/FF7.792→0.000, P→Prowsunchanged, no newroute/STA. READYroot;H0ownerappliesmergedscripttofreshretainedsessionaftercurrentSTAends. No tolerance/constraintchange.
+
+CODEX PARKED explicitreset14:02; fullchildhandoffCODEX-LOG14:03. q3w16nrc2/endcapoverlap+deletedODB; E0liveunchangedguardstall. No sourcecommits/newroutes/STA; own2readonlysnapshotattemptsterminal, no afterresetengineering.
+- 2026-10-29 14:17 PDT START [FLOW-CLOCK-R5] successor FLOW-CLOCK-R4. pair_skew fix on main eb27626d6 (= R4 eb315131cd, byte-identical incl tests). E0 plateau -38.91 since it 1500 -> shared guard fix: per-chunk -max_buffer_percent bound (branch claude/flow-clock-r5-holdchunk-1029, local), canary intel2 flow-clock-r5/e0_chunk GRT-only from E0 4_cts (started 14:15).
