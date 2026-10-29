@@ -28,7 +28,7 @@ def plan(record,out,mlat=4,alat=4,wcopy=0,rr=25,wr=22):
                     with contextlib.redirect_stdout(io.StringIO()):C.compile_rec(a)
                     m=json.loads((target/'programme.json').read_text())
                     choices.append(dict(first_row=row,rows=nrows,qpr=qpr,path=str(target),
-                        cycles=m['cycles_serial'],edges=m['edges'],writes=m['expected_vm_writes'],
+                        cycles=m['cycles_stream_833ps'],dispatch_service_edges=m['cycles_serial'],edges=m['edges'],writes=m['expected_vm_writes'],
                         golden=m['reduction'].get('model_check')))
                 except (ValueError,AssertionError,IndexError) as e:
                     failed.append(dict(rows=nrows,qpr=qpr,reason=str(e)))
