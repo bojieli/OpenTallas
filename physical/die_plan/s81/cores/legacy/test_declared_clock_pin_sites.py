@@ -26,3 +26,13 @@ def test_declared_clock_still_cannot_stack_or_break_face_pitch():
     assert r['verdict']=='FAIL' and r['counts']['dup_site']==1
     r=G.plan_pin_sites([pin('ck_k',10,.042),pin('data',10.024,.042)], [112.32]*2, {'clock_port':'ck_k'})
     assert r['verdict']=='FAIL' and r['counts']['pitch']==1
+
+
+def test_width_one_alias_requires_elaborated_source_width_and_input():
+    pins = [pin('clk[0]')]
+    spec = {'clock_port':'clk'}
+    assert G.plan_pin_sites(pins, [112.32]*2, spec)['verdict'] == 'FAIL'
+    assert G.plan_pin_sites(pins, [112.32]*2, spec, {'clk':'INPUT','clk[0]':'INPUT'})['verdict'] == 'PASS'
+    # A multi-bit source has no bare key in rtl_port_dirs.
+    for dirs in ({'clk[0]':'INPUT','clk[1]':'INPUT'}, {'clk':'OUTPUT','clk[0]':'OUTPUT'}, {'clk':'INPUT','clk[1]':'INPUT'}):
+        assert G.plan_pin_sites(pins, [112.32]*2, spec, dirs)['verdict'] == 'FAIL'
