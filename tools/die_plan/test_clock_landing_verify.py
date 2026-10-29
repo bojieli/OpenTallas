@@ -205,3 +205,10 @@ def test_relay_rx_in_inactive_type_fails_closed():
 def test_count_aligned_actual_count_and_depth_are_checked():
     assert any(' K differs' in e for e in vehicle('ca_wrong_count')['errors'])
     assert any('DEPTH differs' in e for e in vehicle('ca_wrong_depth')['errors'])
+
+
+def test_shared_type_depth_is_the_maximum_of_all_used_instances():
+    from clock_landing_verify import planned_ring_depths
+    raw=dict(partitions=[dict(name='a',type='T'),dict(name='b',type='T')],ports=[dict(id='p',dst=dict(bus='x')),dict(id='q',dst=dict(bus='x'))])
+    table=dict(ports=[dict(port='p',dst='a'),dict(port='q',dst='b')],count_aligned=dict(ports={'p':dict(depth=4),'q':dict(depth=8)}))
+    assert planned_ring_depths(raw,table)=={('T','x'):8}

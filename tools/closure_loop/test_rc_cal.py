@@ -10,6 +10,7 @@ import re
 import shutil
 import subprocess
 import unittest
+import tempfile
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -45,6 +46,7 @@ proc set_wire_rc {{args}} {{ lappend ::log "set_wire_rc $args" }}
 proc estimate_parasitics {{args}} {{ lappend ::log "estimate_parasitics $args" }}
 rename source ot_tcl_source
 proc source {{f}} {{ lappend ::log "source $f" }}
+proc ot_hold_structural_gate {{}} {{}}
 proc ot_hold_stats {{}} {{ return {{-5.0 -50.0 3}} }}
 proc ot_hm_guard {{a}} {{ return $a }}
 proc ot_hold_stop {{a}} {{ return 0 }}
@@ -52,7 +54,7 @@ proc ot_hold_window_report {{why hist}} {{ }}
 {'set ::ot_sp_insts {b1 b2}' if spine else ''}
 {env}
 """
-    body = stubs + procs() + "\n" + script + "\nforeach c $::log { puts \"LOG $c\" }\n"
+    body = stubs + procs() + "\nif {[catch {\n" + script + "\n} msg]} {puts stderr $msg; exit 1}\nforeach c $::log { puts \"LOG $c\" }\n"
     r = subprocess.run(["tclsh"], input=body, capture_output=True, text=True)
     if r.returncode:
         raise AssertionError(r.stderr + r.stdout)
@@ -78,6 +80,21 @@ class RcCalHoldTests(unittest.TestCase):
         self.assertEqual(log[restore], "source /orfs/platforms/asap7/setRC.tcl")
         self.assertEqual(log[restore + 1], "estimate_parasitics -global_routing")
         self.assertEqual(restore + 2, len(log))
+
+    def test_selected_kit_baseline_restored_after_hold_and_error(self):
+        with tempfile.TemporaryDirectory() as d:
+            rc = Path(d) / "setRC_rcx.tcl"
+            rc.write_text("# selected kit RC\n")
+            env = f"set ::env(LAYER_PARASITICS_FILE) {{{rc}}}"
+            for body in ("ot_repair_timing {-hold}",
+                         "proc ot_hold_stop {a} { error boom }; catch {ot_repair_timing {-hold}}"):
+                log = run(body, env=env)
+                self.assertEqual(log[-2:], [f"source {rc}", "estimate_parasitics -global_routing"])
+                self.assertNotIn("source /orfs/platforms/asap7/setRC.tcl", log)
+
+    def test_missing_explicit_baseline_cannot_fall_back(self):
+        with self.assertRaisesRegex(AssertionError, "missing selected RC baseline"):
+            run("ot_rc_cal_restore", env="set ::env(LAYER_PARASITICS_FILE) /nonexistent/selected_rc.tcl")
 
     def test_hold_only_call_is_calibrated(self):
         log = run("ot_repair_timing {-hold_margin 30 -hold}")
