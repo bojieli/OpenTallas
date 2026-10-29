@@ -112,7 +112,8 @@ module qfd_tile_nk_rp2_45 #(
     output wire [513:0]  t_out,
     input  wire [513:0]  n_a,
     input  wire [513:0]  n_b,
-    output wire [513:0]  n_y
+    output wire [513:0]  n_y,
+    output wire          me_idle   // QC-PG-5 ICG: u_tile.idle (engine drained, registered; tile-root ICG enable)
 );
     (* keep = "true" *) wire tie_hi_w = 1'b1;
     (* keep = "true" *) wire tie_lo_w = 1'b0;
@@ -174,7 +175,7 @@ module qfd_tile_nk_rp2_45 #(
         .ck_lsl({ck_lsl7,ck_lsl6,ck_lsl5,ck_lsl4,ck_lsl3,ck_lsl2,ck_lsl1,ck_lsl0}),
         .ck_node(ck_node),
         .clk(ck), .rst_n(reset_q), .tile_id(tile_id_q), .ib_go(go), .ib(ib), .xl(xl), .t_out(to), .t_vout(tv),
-        .n_a(n_a_q[511:0]), .n_b(n_b_q[511:0]), .n_va(n_a_q[512]), .n_y(ny), .n_vy(nvy), .fault(tf));
+        .n_a(n_a_q[511:0]), .n_b(n_b_q[511:0]), .n_va(n_a_q[512]), .n_y(ny), .n_vy(nvy), .fault(tf), .idle(me_idle));
     (* keep *) reg [513:0] t_out_q;
     always @(posedge ck_fa2) begin
         t_out_q[511:0]<=to;

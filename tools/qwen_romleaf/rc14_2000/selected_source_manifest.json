@@ -17,8 +17,10 @@
   },
   "rtl/hdc/ot_qwen_rom_tile_w12_land32.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12_land32.sv",
-    "sha256": "3fedd812665e6c9d8aa633e25372bc5569de70e20537c6590036ecff01a20503",
-    "source_commit": "9873bd831"
+    "sha256": "f521a60512169455f3fe3435da11b772d426954ad76a3984df165810ea5b492f",
+    "source_commit": "9873bd831",
+    "sha256_before_repin": "3fedd812665e6c9d8aa633e25372bc5569de70e20537c6590036ecff01a20503",
+    "repin": "QC-PG-5 ICG 2026-10-28: additive output port idle/me_idle (engine idle register to the A0 tile-root ICG enable); existing outputs LEC EQUIVALENT vs main"
   },
   "rtl/hdc/ot_qwen_w12_matvec_land32.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec_land32.sv",
@@ -27,9 +29,11 @@
   },
   "rtl/physical/qfd_tile_nk_rp2_45.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_45.sv",
-    "sha256": "a67e2be7ab583dc43fc16aa34fb3f79817003cd2a96b68b7a0cd32fd31242c68",
+    "sha256": "98ee8f9bea416cbb61bd6bcc395e7f6b6033471d1a1ea741e7e1ba378df9fac3",
     "source_commit": "9873bd831",
-    "scope": "existing component bench dependency"
+    "scope": "existing component bench dependency",
+    "sha256_before_repin": "a67e2be7ab583dc43fc16aa34fb3f79817003cd2a96b68b7a0cd32fd31242c68",
+    "repin": "QC-PG-5 ICG 2026-10-28: additive output port idle/me_idle (engine idle register to the A0 tile-root ICG enable); existing outputs LEC EQUIVALENT vs main"
   },
   "rtl/physical/qfd_tile_nk_rp2_romleaf_rr.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nk_rp2_romleaf_rr.sv",
@@ -38,8 +42,10 @@
   },
   "rtl/physical/qfd_tile_nl_rp2_45.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv",
-    "sha256": "ab8c811cd31f99c992bd8bde8323b6d7b15c02e8027742b239aa99db64518455",
-    "source_commit": "9873bd831"
+    "sha256": "fcd76fd8c5f14b0fa53ece1152db322aa4973f82bce9325daf6ec78433cfb11a",
+    "source_commit": "9873bd831",
+    "sha256_before_repin": "ab8c811cd31f99c992bd8bde8323b6d7b15c02e8027742b239aa99db64518455",
+    "repin": "QC-PG-5 ICG 2026-10-28: additive output port idle/me_idle (engine idle register to the A0 tile-root ICG enable); existing outputs LEC EQUIVALENT vs main"
   },
   "rtl/physical/qfd_tile_nl_rp2_romleaf_rr.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_romleaf_rr.sv",
@@ -48,9 +54,11 @@
   },
   "rtl/hdc/ot_qwen_rom_tile_w12.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_rom_tile_w12.sv",
-    "sha256": "1a15bff269c40148093d0f7792d1e49825fc929b66efe153e3fe3f2ee79e90be",
+    "sha256": "a19a29e9895bc6b8c4698efadf8f29bbc37f9ac9f14427790f4ce298661321e5",
     "source_commit": "9873bd831",
-    "scope": "existing component bench dependency"
+    "scope": "existing component bench dependency",
+    "sha256_before_repin": "1a15bff269c40148093d0f7792d1e49825fc929b66efe153e3fe3f2ee79e90be",
+    "repin": "QC-PG-5 ICG 2026-10-28: additive output port idle/me_idle (engine idle register to the A0 tile-root ICG enable); existing outputs LEC EQUIVALENT vs main"
   },
   "rtl/hdc/ot_qwen_w12_matvec.sv": {
     "selected": "rtl/physical/a0_rc14_selected_2000/ot_qwen_w12_matvec.sv",

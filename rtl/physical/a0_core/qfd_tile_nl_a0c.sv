@@ -100,11 +100,12 @@ module qfd_tile_nl_a0c #(
     // on the low phase, so en computed in cycle c (after edge c) clocks edge c+1:
     //   go face copy go_f = tap_q[0] (edge t)  -> clocks edge t+1, the first gated capture (IREG go_q)       [1-cycle lead]
     //   go hold go_h (ICG_GOH cycles)          -> covers go_q -> engine accept until the engine idle register falls
-    //   ~me_idle (engine drained flag, ot_qwen_w12_matvec_part.idle: OR of every valid stage, cleared on accept)
+    //   ~me_idle (engine drained flag, ot_qwen_w12_matvec_part.idle via body port u_g.me_idle: OR of every valid stage)
     //   node face valid / fault bits           -> node pipe, mis_q, fy_q
     //   ~rst_n                                 -> clocked through reset
     //   drain counter dr (reloaded on any term, also during reset) -> output faces, tree/node drain, reset relays
     wire ck_g;
+    wire me_idle;   // body port: the matvec engine idle register (QC-PG-5: threaded through the 4 body modules)
     generate if (ICG == 0) begin : g_noicg
         assign ck_g = ck;
     end else begin : g_icg
@@ -118,14 +119,7 @@ module qfd_tile_nl_a0c #(
         reg [ICG_GOH-1:0] go_h;
         always @(posedge ck) begin go_f <= tap[0]; go_h <= {go_h[ICG_GOH-2:0], go_f}; end
         wire nv_act = 1'b0;   // node-less tile: no n_a/n_b faces
-        wire me_idle;
-`ifdef SYNTHESIS
-        // The engine idle register is not a port of the pinned body yet: synthesis keeps the gate OPEN (en = 1, safe,
-        // no saving) until the proposed `idle` output is threaded (rp2_45 / rom_tile_nk / rom_tile_w12 / logic_w12).
-        assign me_idle = 1'b0;
-`else
-        assign me_idle = u_g.u_tile.u_tile.u_logic.u_me.idle;
-`endif
+        // me_idle = engine drained flag from the body port (u_g.me_idle = u_me.idle, registered, 1 in reset)
         wire go_act = ((mut == 1) ? 1'b0 : go_f) | ((mut == 6) ? 1'b0 : |go_h);
         wire act = ((mut == 5) ? 1'b0 : !rst_n) | go_act | ((mut == 2) ? 1'b0 : !me_idle) | ((mut == 4) ? 1'b0 : nv_act);
         reg [7:0] dr;
@@ -186,6 +180,7 @@ module qfd_tile_nl_a0c #(
     qfd_tile_nl_rp2_45 #(.RPH(3),.REGROOT(REGROOT_MODE)) u_g (
 `endif
         .ck(ck_g),
+        .me_idle(me_idle),
         .ck_rp0(ck_rp0),
         .ck_rp1(ck_rp1),
         .ck_rp2(ck_rp2),
