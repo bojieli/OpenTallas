@@ -28,6 +28,9 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
     mod = mapped['modules'][top]
     ports, cells = mod['ports'], mod['cells']
     clocks = {s['clock_port'] for s in stages['stages']}
+    local_clocks=physical.get('stage_clock_drivers',{})
+    if local_clocks and set(local_clocks)!=clocks:
+        raise ValueError('local clock-entry drivers must cover every virtual stage')
     expected = set(ports) - clocks
     if not clocks or not clocks <= set(ports):
         raise ValueError('mapped provider lost declared START clock inputs')
@@ -79,7 +82,14 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
     for p, info in ports.items():
         b = net(info['bits'][0])
         if p in clocks:
-            extra.append(f'assign {b} = {word(p)};')
+            if p in local_clocks:
+                q=local_clocks[p]
+                if q['cell']!='BUFx8_ASAP7_75t_R':raise ValueError('unplanned local clock-driver master')
+                inst=word(q['inst']);x,y=finite_xy(q['xy_um'])
+                extra.append(f'{q["cell"]} {inst} (.A({word(p)}), .Y({b}));')
+                place.append(f'ot_place {inst} {x:.3f} {y:.3f} {q.get("orient","R0")}')
+            else:
+                extra.append(f'assign {b} = {word(p)};')
         elif info['direction'] == 'input':
             extra.append(f'assign {b} = start_{word(p)};')
         else:
@@ -103,7 +113,7 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
         x, y = finite_xy(row['xy_um'])
         if row.get('cell') != typ or not row.get('stage'):
             raise ValueError('placement cell master/stage mismatch')
-        place.append(f'place_inst -name {inst} -location {{{x:.3f} {y:.3f}}} -orientation {row.get("orient", "R0")} -status FIRM')
+        place.append(f'ot_place {inst} {x:.3f} {y:.3f} {row.get("orient", "R0")}')
         names[name] = inst
         is_ff = typ.startswith(('DFF', 'SDFF'))
         ff_count += is_ff
@@ -122,6 +132,7 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
     v = ('module die_combo (' + ', '.join(pub) + ');\n' + '\n'.join(decl) + '\n' + body + '\n' +
          '\n'.join(f'wire start_b_{b};' for b in sorted(bits)) + '\n' + '\n'.join(extra) + '\nendmodule\n')
     t = base_tcl
+    t=t.replace('estimate_parasitics -global_routing','estimate_parasitics -global_routing\nwrite_spef /out/paras_$::env(CORNER).spef',1)
     for p in clocks:
         t = re.sub(r'^place_pin -pin_name ' + re.escape(p) + r'\s+.*\n', '', t, flags=re.M)
     marker = 'global_route -congestion_iterations 50'
@@ -152,7 +163,7 @@ def overlay(base_v, base_tcl, mapped, top, stages, physical):
         raise ValueError('expected one post-GRT timing readout insertion point')
     t=t.replace(timing_marker,'\n'.join(readout)+'\n'+timing_marker,1)
     receipt = dict(scope='actual mapped START cells and clock loads, raw partition signal abstracts; NOT G4',
-                   cells=len(cells), flops=ff_count, internal_stage_clocks=len(clocks),
+                   cells=len(cells)+len(local_clocks), mapped_cells=len(cells), local_clock_drivers=len(local_clocks), flops=ff_count, internal_stage_clocks=len(clocks),
                    boundary_ports=len(expected), cell_names=names, stage_clock_pins=clock_pins, reset_form=physical['reset_form'],
                    physical_timing='NOT RUN', logical_cycles_added=0)
     return v, t, receipt

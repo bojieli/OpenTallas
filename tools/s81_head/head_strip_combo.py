@@ -33,7 +33,13 @@ def main():
  (out/'combo.v').write_text('module die_combo ('+', '.join(rp+cp)+');\n'+'\n'.join(decl)+'\n'+rv[rm.end():rv.rindex('endmodule')]+'\n'+'\n'.join(body)+'\nendmodule\n')
  t=(kit/'grt/grt.tcl').read_text().split('source /work/grt/obs.tcl')[0]
  t=t.replace('read_verilog /work/grt/route.v','foreach f [glob $::env(LIBDIR)/*RVT_$::env(CORNER)_nldm*.lib*] { read_liberty $f }\nread_verilog /out/combo.v');t=re.sub(r'link_design \S+','link_design die_combo',t)
- ct=(clock/'ctree.tcl').read_text();lines=[l for l in ct.splitlines() if l.startswith('place_pin')];lines +=[re.sub(r'-name (\S+)',r'-name ck_\1',l) for l in ct.splitlines() if l.startswith('place_inst')]
+ ct=(clock/'ctree.tcl').read_text();lines=[l for l in ct.splitlines() if l.startswith('place_pin')]
+ for l in ct.splitlines():
+  if not l.startswith('place_inst'):continue
+  m=re.search(r'-name (\S+) -location \{([-\d.]+) ([-\d.]+)\}',l)
+  if not m:raise ValueError('unparsed physical clock body placement: '+l)
+  orientation=re.search(r'-orientation (\S+)',l)
+  lines.append(f'ot_place ck_{m[1]} {m[2]} {m[3]} {orientation[1] if orientation else "R0"}')
  # Preserve PG and signal-band ownership, avoid counting phantom clock wires
  # twice when the actual clock nets are present in this route.
  bands,regs=D.band_region_adjust(P,.75)

@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT/'tools/die_plan'))
 import schema as S
 import die_trial as D
 import start_stage_emit as E
+from head_start_sites import Bodies,row_orientation
 
 
 def lef_sizes(text):
@@ -32,7 +33,7 @@ def lef_sizes(text):
 
 def pack(plan, stages, mapped, top, ctree_v, ctree_tcl, sizes):
     cells, xy = E.ctree_cells(ctree_v, ctree_tcl)
-    occupied = E.Rows()
+    occupied = Bodies()
     for name, (master, _, _) in cells.items():
         w, h = sizes[master]
         if h > E.ROW_UM + 1e-6:
@@ -58,7 +59,7 @@ def pack(plan, stages, mapped, top, ctree_v, ctree_tcl, sizes):
         width = sum(sizes[c['type']][0] for c in group.values())
         # The existing stage placer reserves a whole legal row segment in units
         # of FF width; it never substitutes this bound for actual cell count.
-        rejected=E.Rows()
+        rejected=Bodies()
         class CandidateRows:
             def free(self,x0,x1,y):
                 return occupied.free(x0,x1,y) and rejected.free(x0,x1,y)
@@ -66,7 +67,7 @@ def pack(plan, stages, mapped, top, ctree_v, ctree_tcl, sizes):
         # test the remaining finite row candidates without reserving rejected
         # space against the smaller later stages.
         for attempt in range(4*E.MAX_ROW_TRIES):
-            rect=E.place_stage(s['node_xy_um'],math.ceil(width/E.FLOP_W_UM),CandidateRows(),site,W,H)
+            rect=E.place_stage(xy[s['node_cell']],math.ceil(width/E.FLOP_W_UM),CandidateRows(),site,W,H)
             x,y=rect[:2]
             if all(site.legal((min(rect[2],rect[0]+j*.054),yy))
                    for j in range(math.ceil((rect[2]-rect[0])/.054)+1) for yy in (y,y+E.ROW_UM)):
@@ -79,7 +80,7 @@ def pack(plan, stages, mapped, top, ctree_v, ctree_tcl, sizes):
         for n, c in sorted(group.items(), key=lambda q: (not q[1]['type'].startswith(('DFF','SDFF')), q[0])):
             w, h = sizes[c['type']]
             result[n] = dict(cell=c['type'], stage=owner, xy_um=[round(x,3), round(y,3)],
-                             rect_um=[round(x,3), round(y,3),round(x+w,3),round(y+h,3)],orient='R0')
+                             rect_um=[round(x,3), round(y,3),round(x+w,3),round(y+h,3)],orient=row_orientation(y))
             x += w
             ff += c['type'].startswith(('DFF','SDFF'))
         if ff != s['flops']:

@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'tools/die_plan'));sys.path.insert(0,str(ROOT/'tools/s81_head'))
 import schema as S,die_trial as D,start_stage_emit as E
 from head_start_pack import lef_sizes
+from head_start_sites import Bodies,row_orientation
 MASTER='BUFx8_ASAP7_75t_R'
 SEGMENT=180.0
 
@@ -20,7 +21,7 @@ def man(a,b):return abs(a[0]-b[0])+abs(a[1]-b[1])
 
 def build(mapped,top,stages,physical,plan,ctree_v,ctree_tcl,sizes):
     out=copy.deepcopy(mapped);mod=out['modules'][top];ph=copy.deepcopy(physical)
-    cells=mod['cells'];ports=mod['ports'];rows=E.Rows();site=D.SiteMap(plan);w,h=sizes[MASTER]
+    cells=mod['cells'];ports=mod['ports'];rows=Bodies();site=D.SiteMap(plan);w,h=sizes[MASTER]
     if h>E.ROW_UM+1e-6:raise ValueError('driver must fit one actual row')
     for c in ph['cells'].values():
         x,y=c['xy_um'];cw,ch=sizes[c['cell']];rows.add(x,x+cw,y)
@@ -100,7 +101,7 @@ def build(mapped,top,stages,physical,plan,ctree_v,ctree_tcl,sizes):
         for k,point in enumerate(points):
             loc=place(point);name=f'u_st_{b["src"]}.branch_{ordinal}_{k}'
             nbit=fresh();cells[name]=dict(type=MASTER,parameters={},attributes={},port_directions={'A':'input','Y':'output'},connections={'A':[previous],'Y':[nbit]})
-            ph['cells'][name]=dict(cell=MASTER,stage=b['src'],xy_um=loc,rect_um=loc+[round(loc[0]+w,3),round(loc[1]+h,3)],orient='R0',branch=b['dst'])
+            ph['cells'][name]=dict(cell=MASTER,stage=b['src'],xy_um=loc,rect_um=loc+[round(loc[0]+w,3),round(loc[1]+h,3)],orient=row_orientation(loc[1]),branch=b['dst'])
             previous=nbit;locations.append([loc[0]+w/2,loc[1]+h/2])
         for n,pin in b['targets']:cells[n]['connections'][pin]=[previous if v==b['bit'] else v for v in cells[n]['connections'][pin]]
         if 'port' in b:ports[b['port']]['bits']=[previous]
