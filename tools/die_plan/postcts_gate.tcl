@@ -24,6 +24,19 @@ set c [string tolower $C]
 if {$C ni {TT FF SS}} {error "postcts: OT_CORNER must be TT, FF or SS, got $C"}
 set ot_pg_C $C
 set ot_pg_c $c
+# The exact staged plan may declare the mean insertion band a design target
+# (12.3a); missing/malformed measurements remain fatal in either policy.
+set ot_pg_band_policy gate
+if {[file exists /work/master_slice.json]} {
+  set ot_pg_band_policy [exec python3 -c {
+import json, sys
+s = json.load(open(sys.argv[1]))
+p = s.get("core_tree", {}).get("model_qualification", {}).get("band_policy", "gate")
+if p not in ("gate", "info"):
+    raise ValueError("invalid model_qualification band_policy")
+print(p)
+} /work/master_slice.json]
+}
 # BEGIN embedded exact library selector
 # Resolve the exact libraries selected by this kit's ORFS make configuration.
 # No directory glob or installed-version fallback is permitted.
@@ -145,11 +158,12 @@ set ws [expr {[sta::worst_slack_cmd max] * 1e12}]
 set hs [expr {[sta::worst_slack_cmd min] * 1e12}]
 if {$::env(OT_CORNER) ne $ot_pg_C} {error "postcts: OT_CORNER changed during the gate ($ot_pg_C -> $::env(OT_CORNER))"}
 set dev [expr {$n ? abs($mean - $ot_pg_bound) : 1e9}]
-set v [expr {$n && $dev <= $ot_pg_tol ? "PASS" : "FAIL"}]
+set ot_pg_band_verdict [expr {$dev <= $ot_pg_tol ? "PASS" : ($ot_pg_band_policy eq "info" ? "INFO" : "FAIL")}]
+set v [expr {$n && $ot_pg_band_verdict ne "FAIL" ? "PASS" : "FAIL"}]
 set fh [open /work/postcts_gate_${ot_pg_c}.json w]
-puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.2f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\"}" \
+puts $fh [format "{\"corner\": \"%s\", \"pinreg_n\": %d, \"pinreg_mean_ps\": %.2f, \"pinreg_min_ps\": %.2f, \"pinreg_max_ps\": %.2f, \"bound_ps\": %.2f, \"dev_ps\": %.2f, \"tol_ps\": %.1f, \"setup_wns_est_ps\": %.2f, \"hold_wns_est_ps\": %.2f, \"rc\": \"%s\", \"parasitics\": \"%s\", \"verdict\": \"%s\", \"band_policy\": \"%s\", \"band_verdict\": \"%s\"}" \
   $ot_pg_C $n $mean [expr {$n ? [lindex $arr 0] : -1}] [expr {$n ? [lindex $arr end] : -1}] $ot_pg_bound $dev $ot_pg_tol $ws $hs \
-  [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_pg_mode $v]
+  [expr {[info exists ::env(LAYER_PARASITICS_FILE)] ? $::env(LAYER_PARASITICS_FILE) : "platform setRC.tcl"}] $ot_pg_mode $v $ot_pg_band_policy $ot_pg_band_verdict]
 close $fh
 puts [format "OT_POSTCTS_GATE %s (%s) pinreg n %d mean %.2f bound %.2f dev %.2f tol %.1f setup_est %.2f hold_est %.2f %s" \
   $ot_pg_C $ot_pg_mode $n $mean $ot_pg_bound $dev $ot_pg_tol $ws $hs $v]
