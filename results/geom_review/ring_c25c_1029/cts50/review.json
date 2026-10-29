@@ -1,0 +1,13 @@
+{
+  "status": "PASS-COND current-flow GRT datarepair allowed; DRT withheld until result",
+  "image_personally_reviewed": true,
+  "raw_AUTO_GEOM": "FAIL retained:12dedicated mp_isl[0..2] ck/rst FTports, combinational die-owned perMETH12.2a1; functional ports all registered",
+  "GRT50_overflow": 0,
+  "column_v": "0.699 WARN underexistingsoftboundpolicy becauseGRT0",
+  "reach": "370.49ummax/0>405",
+  "clock": "unchanged;24038sinks,163.94umreach",
+  "LEC": "EQUIVALENT26004/26004",
+  "CTS": "TT setup+32.26ps,FFreg2reg\u221211.60ps107endpoints holdgatePASS; currentMMdatarepair required",
+  "job": "epyc2 unit527454-1793264150 32GB8threads resumeGRTonly; no synthesis orLEC rerun",
+  "kit": "0086de4263d64ecc"
+}
