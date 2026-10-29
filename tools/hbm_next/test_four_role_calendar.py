@@ -142,3 +142,50 @@ def test_segments_pre_x_slot_rule():
     ok, why = FRC.composed_service(s, 'HC_PRE', 5, 0, 60, rt_ok); assert why is None and ok > 0
     bad, why = FRC.composed_service(s, 'HC_PRE', 5, 0, 60, rt_ok + 1); assert bad is None and 'x-slot' in why
     ok4, why = FRC.composed_service(s, 'HC_PRE', 4, 0, 60, 60); assert why is None     # n <= KX: no slot reuse
+
+
+def test_scheduled_rgap_reaches_emitted_job(tmp_path):
+    ct, img = setup(tmp_path)
+    img.write_bytes(bytes([0, 6]))  # actual emitter decodes a six-row PRE job
+    assert emit(EMITTER, ct, img, tmp_path / 'p1').returncode == 2
+    jobs = json.loads((tmp_path / 'p1/jobs.json').read_text())
+    b = seg_bound(69); b['legs']['down_NE']['cycles'] += 69  # max station RT = 98, so r return = 267; ceil((267-174)/4)=24
+    cal, miss = FRC.compile_calendar(jobs, b, SEG)
+    assert cal is None and any('rgap to >= 24' in m for m in miss)
+    cal, miss = FRC.compile_calendar(jobs, b, SEG, schedule_rgap=True)
+    assert not miss, miss
+    delta = cal['records'][0]['rgap_override']
+    assert delta['value'] == 24 and delta['added_service_cycles'] == 120
+    # Boundary control: one less row-gap still violates the measured KX invariant.
+    assert FRC.composed_service(SEG, 'HC_PRE', 6, 23, cal['root_config']['wsc'], 98)[0] is None
+    path = tmp_path / 'cal.json'; path.write_text(json.dumps(cal))
+    assert emit(EMITTER, ct, img, tmp_path / 'disabled', path).returncode == 2
+    cmd = [sys.executable, str(EMITTER), '--image', str(img), '--compiler-tools', str(ct),
+           '--calendar', str(path), '--calendar-rgap', '--out', str(tmp_path / 'enabled')]
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    assert r.returncode == 0, r.stdout + r.stderr
+    emitted = json.loads((tmp_path / 'enabled/jobs.json').read_text())['jobs'][0]
+    original = jobs['jobs'][0]
+    assert emitted['fields'] == {**original['fields'], 'rgap': 24}
+    word = int((tmp_path / 'enabled/programme.mem').read_text(), 16)
+    assert (word >> 177) & 255 == 24
+    assert (word & ((1 << 217) - 1)) ^ int(original['job217'], 16) == 24 << 177
+    assert emitted['source_job217'] == original['job217']
+
+
+@pytest.mark.parametrize('damage', ['original', 'source_job217', 'added_service_cycles', 'value'])
+def test_rgap_override_rejects_bad_binding(tmp_path, damage):
+    ct, img = setup(tmp_path); img.write_bytes(bytes([0, 6]))
+    emit(EMITTER, ct, img, tmp_path / 'p1')
+    jobs = json.loads((tmp_path / 'p1/jobs.json').read_text())
+    b = seg_bound(69); b['legs']['down_NE']['cycles'] += 69
+    cal, missing = FRC.compile_calendar(jobs, b, SEG, schedule_rgap=True)
+    assert not missing
+    override = cal['records'][0]['rgap_override']
+    override[damage] = 'mutant' if damage == 'source_job217' else -1
+    path = tmp_path / 'cal.json'; path.write_text(json.dumps(cal))
+    out = tmp_path / 'bad'
+    r = subprocess.run([sys.executable, str(EMITTER), '--image', str(img), '--compiler-tools', str(ct),
+                        '--calendar', str(path), '--calendar-rgap', '--out', str(out)],
+                       capture_output=True, text=True)
+    assert r.returncode == 2 and not (out / 'programme.mem').exists()
