@@ -1,0 +1,11 @@
+{
+ "status":"APPROVED_PREBUILD_REFERENCE_NOT_MEASURED_INTRINSIC",
+ "kind":"hard_core_latency",
+ "core":"qfd_tile_nl_a0c",
+ "io_reference_ps":{"tt":692.6,"ff":601.9},
+ "parent_soft_common_ps":{"tt":250.0,"ff":202.5},
+ "declared_parent_early_feed_ps":{"tt":442.6,"ff":399.4},
+ "scope":"Unsigned ICG0 NL-only experiment, actual119 two cbx_q10 types /48instances. Current declared intrinsic means; old b5 extrema711/622 and rejected DME model are not the reference.",
+ "ordering":"Measure one new nativeCTS intrinsicI and retain raw/baseline; if new mean is needed, QC parent folds intrinsic+earlyfeed into one atomic119 event, then fixes typed IOreference before any data repair/final gate. Canonical released typed helper support required.",
+ "authority":"Root coordinator 2026-10-29 disposition: natural HARDCORE u_t30/CORE slice; common250 belongs parent softtap; established hard_core_latency contract authorized. 833ps TTsetup/FFhold60/25 unchanged."
+}

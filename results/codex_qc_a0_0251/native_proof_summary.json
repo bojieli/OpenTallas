@@ -1,0 +1,6 @@
+{
+ "nl_icg0":{"joint_proved":12547,"full_compare_proved":31707,"kept_missing":0,"kept_constant":0,"path":"epyc2:/srv/opentallas-scratch2/claude/codex-qc-a0-0251/candidate_kits/qfd_tile_nl_a0c_a0nl12icg0/lec_refined","diagnosis":"101 stale gold KV-address replica aliases, SAT-joint reanchored to surviving siblings"},
+ "nk_resetwave":{"joint_proved":12508,"full_compare_proved":34816,"kept_missing":0,"kept_constant":0,"path":"epyc2:/srv/opentallas-scratch2/claude/codex-qc-a0-0251/candidate_kits/qfd_tile_nk_a0c_a0nk12rstwave/lec_nkprofile","diagnosis":"4 NV capture aliases recover gating clock, osh packed37bit-stride layout, u_mt line#t renames and refreshed loaded guards. Every relation jointly SAT proved; no comparison masking"},
+ "source":"candidate_kits generated from pinned codex/qc-a0-0251@4d998ceff, recipes in this packet; physical views not qualified by source proof alone",
+ "reset_contract":"NK local output-reset relay adds1bootedge833ps, steady/data0. Native proof compares actual revised RTL to its actual synthesized netlist; separate operational minimal miter prices boot phase. Existing default unchanged."
+}
