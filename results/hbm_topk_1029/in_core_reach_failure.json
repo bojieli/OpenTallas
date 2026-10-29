@@ -1,0 +1,83 @@
+{
+  "verdict": "CURRENT IN-CORE DATA REACH FAIL; no TOPK P&R approval",
+  "exact_case": {
+    "source": "selected_line[1] face register, record0 score bit0",
+    "stimulus": "first dense ingest after clear: fill=0,flits=0,all64chosen; wd_in[16] of bank0 receives record0 scorebit0 combinationally",
+    "source_pin_local_um": [
+      0.096,
+      8.856
+    ],
+    "bank0_origin_um": [
+      397.17,
+      345.672
+    ],
+    "macro_wd16_lef_rect_um": [
+      0,
+      52.896,
+      0.024,
+      52.92
+    ],
+    "macro_wd16_local_core_centre_um": [
+      397.182,
+      398.58
+    ],
+    "pin_to_macro_manhattan_um": 786.81,
+    "best_case_minus20um_face_reg_allowance": 766.81,
+    "limit_um": 405,
+    "source_files": [
+      "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef"
+    ],
+    "scope": "new paired localW data face; whole-core MY preserves Manhattan distance. Earlier S pin position gives584.298um for this case, also failing."
+  },
+  "successor_estimate": {
+    "status": "ESTIMATE ONLY; no RTL built, no timing/bit-exact qualification",
+    "idea": "register two32record compacted halves near their west-face input bands; register combined bank-write data near centralY; register bank copies in central corridor at each SRAM-bankY, then SRAM capture",
+    "added_internal_write_edges": 3,
+    "external_calendar_cycles": "candidate0: existing first emit follows flush +3idle edges; must prove actual compiler calendar and status/fault timing; never infer0 from buffer depth alone",
+    "timing_assumptions": {
+      "wire_ps_per_um": 1.15,
+      "mux_stage_ps": 15,
+      "flop_and_interface_ps": 151,
+      "uncertainty_ps": 60,
+      "basis": "conservative wire overhead model already used in REBAL10/11; MUX delay is an uncalibrated planning assumption and must be checked on mapped library before build"
+    },
+    "stages": [
+      {
+        "name": "32record half compaction",
+        "logic_mux_layers_upper": 15,
+        "reach_bound_um": 180,
+        "estimated_setup_path_ps": 643.0
+      },
+      {
+        "name": "combine halves/carry + bank packing",
+        "logic_mux_layers_upper": 12,
+        "reach_bound_um": 330,
+        "estimated_setup_path_ps": 770.5
+      },
+      {
+        "name": "write-copy distribution",
+        "logic_mux_layers_upper": 3,
+        "reach_bound_um": 180,
+        "estimated_setup_path_ps": 463.0
+      },
+      {
+        "name": "bank copy -> SRAM capture",
+        "logic_mux_layers_upper": 0,
+        "reach_bound_um": 347,
+        "estimated_setup_path_ps": 610.05
+      }
+    ],
+    "live_data_bits_per_record": 36,
+    "record_format": "index20+score16; inject the existing28literal-zero bits combinationally, rather than storing unreset constants",
+    "added_FF_upper_live_format": 7048,
+    "added_FF_area_um2_at_1p404_by_0p27": 2671.756,
+    "one_core_clock": "unchanged; extra clock load must be included in current17-island CTS estimate",
+    "required_before_build": [
+      "actual mapped-library delay bound for half compaction and packing",
+      "owned source/plan pipeline event with per-stage register fences and macro-channel capacity",
+      "smallest lockstep+mutants preserving fixed171-ingest/flush/II8emit calendar and exact status/fault timing",
+      "price every internal extra edge; only claim external0 if actual existing drain absorbs it"
+    ]
+  }
+}
