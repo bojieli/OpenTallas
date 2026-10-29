@@ -14,6 +14,7 @@ from pathlib import Path
 
 
 _RING_PLAN = {}
+LAND_SLOTS_SCHEMA = "land_slots/1"   # face_guard kit land_slots.json (Landings.land_slots)
 
 
 def ring_taps(plan, tn):
@@ -1195,6 +1196,24 @@ class Landings:
             return {}
         return {q: {sp: (self.strap["types"][v["type"]]["straps"][sp], v["values"][sp]) for sp in v["values"]}
                 for q, v in self.strap["instances"].items()}
+
+    def land_slots(self, tn):
+        """kit land_slots.json of plan type tn for face_guard (DIE-HEAD-21; face_guard.kit_land / land_spec), or None.
+        Only the count-aligned ring (ot_dp_clk_landing_ca / _cas -> ot_meso_ring_ca) is declared: its writer stores
+        s_d[slot] <= t_d under the write-count enable (own-Q hold, no ICG), i.e. face_guard form "hold_mux", with D =
+        the ring DEPTH type_rtl emits for that bus.  With the dataflow monitor the ring d = {cland_dn_fault_b,
+        cland_dn_ready_b, b}, so both status pins land the same D slots.  None (no file): no count-aligned table or
+        no landed input on tn (the default ot_dp_clk_landing ring and non-landed kits stay as they are)."""
+        cat = self.ca_type.get(tn) if self.ca else None
+        ins = (self.by_type.get(tn) or {}).get("inputs") or ()
+        if not cat or not ins:
+            return None
+        buses = {}
+        for b in sorted(ins):
+            d = {"D": int(cat["rings"][b]["depth"]), "form": "hold_mux"}
+            for n in [b] + ([f"cland_dn_ready_{b}", f"cland_dn_fault_{b}"] if self.dataflow else []):
+                buses[n] = dict(d)
+        return {"schema": LAND_SLOTS_SCHEMA, "buses": buses}
 
     def manifest(self):
         by_lane = defaultdict(int)
