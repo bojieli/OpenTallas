@@ -516,3 +516,30 @@ def test_forwarded_clock_rtl_source_follows_landing_contract():
     assert "assign fclk_out_x = clk_t3;" in c.type_rtl("A", a)
     with pytest.raises(LandingError, match="source_clock_port clk_t3"):
         c.type_rtl("A", a.replace(" input wire clk_t3,\n", ""))
+
+
+def test_start_relay_without_landed_input_copies_raw_tap_before_start_gate():
+    c=Landings.__new__(Landings);c.reset_placements={}
+    extra=[]
+    body="ot_dp_rgate u_rrl_4 (.clk(clk), .d(rst_rl_3), .run(run), .q(rst_n_t0));"
+    rtl="\n".join(c._origin_rtl('T', {'role':('relay','origin',2)}, {}, body, extra))
+    assert "ot_dp_rrelay u_cland_origin_rst (.clk(clk), .d(rst_rl_3), .q(cland_origin_reset));" in rtl
+    assert ".rst_raw_n(cland_origin_reset)" in rtl
+    assert ".rst_raw_n(rst_n_t0)" not in rtl
+    assert extra==['    input wire cland_rstart_in']
+
+
+def test_start_relay_without_landed_input_reuses_an_ungated_tap():
+    c=Landings.__new__(Landings);c.reset_placements={}
+    body="ot_dp_rrelay u_rrl_4 (.clk(clk), .d(rst_rl_3), .q(rst_n_t0));"
+    rtl="\n".join(c._origin_rtl('T', {'role':('relay','origin',2)}, {}, body, []))
+    assert ".rst_raw_n(rst_n_t0)" in rtl
+    assert "u_cland_origin_rst" not in rtl
+
+
+def test_root_and_start_pin_share_one_raw_relay():
+    from clock_landings import START_PIN_IN
+    c=Landings.__new__(Landings);c.reset_placements={}
+    body="ot_dp_rgate u_rrl_4 (.clk(clk), .d(rst_rl_3), .run(run), .q(rst_n_t0));"
+    rtl="\n".join(c._origin_rtl('T', {'role':('strap',(START_PIN_IN,),1,64,True)}, {}, body, []))
+    assert rtl.count('ot_dp_rrelay u_cland_origin_rst')==1

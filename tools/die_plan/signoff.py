@@ -244,6 +244,7 @@ def require_signoff_bundle():
 # Dependencies of standalone kit hooks.  Existing custom hooks stay byte-identical;
 # their missing shared helpers are shipped by the same bundle as the sign-off tool.
 KIT_TOOL_DEPENDENCIES = {
+    "die_sta_related.py": ("clock_components.py", "data_droop.py"),
     "kit_preflight.py": ("sdc_lint.py", "rtl_lint.py", "master_slice.py", "core_infra.py", "core_infra.tcl", "ft_ports.py",
                          "kit_contract.py", "die_sta_related.py", "data_droop.py"),
     "postcts_gate.tcl": ("pinreg_measure.tcl", "clock_family.tcl"),
@@ -683,7 +684,7 @@ unset_timing_derate
 set ::ot_ps_lib_only 1
 @PAIR_SKEW@
 unset ::ot_ps_lib_only
-ot_ps_zero_unc
+@PAIR_TARGETS@ot_ps_zero_unc
 set so_t0 [clock seconds]
 set so_pm [ot_ps_measure @PAIR_CREDIT_MAX@]
 ot_ps_write $so_pm /out/pair_skew.tsv @C@
@@ -692,7 +693,7 @@ foreach dly {max min} {
   set m [dict get $so_pm $dly]
   so PAIR_$dly {*}[concat {*}[lmap k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} {list $k [dict get $m $k]}]]
 }
-so PAIR_METHOD [dict get $so_pm method]
+@PAIR_TGT_SO@so PAIR_METHOD [dict get $so_pm method]
 so PAIR_SECONDS [expr {[clock seconds] - $so_t0}]
 unset so_pm
 so PAIR_DONE 1
@@ -785,8 +786,10 @@ def ft_fill_model(decl, model, corners):
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
-                ft_decl=None, tap_window=None, droop=None):
-    """tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
+                ft_decl=None, tap_window=None, droop=None, pair_targets=False):
+    """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
+    (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
+    and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
     golden SDC times every clock port W early, so the overlay's min output delay is the contract + W (exact IO shift);
     None = no window.  hold_in_min / hold_out_min: the kit's seam hold contract (sdc_lint.json hold_in_min_ps / hold_out_min_ps,
     CLOCK-RESET IO-HOLD 10-25); None = legacy overlay (min input -ins_tol, min output 0).  hold_in_min_ports
@@ -846,6 +849,8 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@FANOUT_MAX@", str(int(fanout_max))),
                  ("@CLOCK_FAMILY@", _clock_family_tcl()),
                  ("@PAIR_SKEW@", (HERE / "pair_skew.tcl").read_text()),
+                 ("@PAIR_TARGETS@", "ot_ps_load_targets /sdc/pair_targets.txt\n" if pair_targets else ""),
+                 ("@PAIR_TGT_SO@", PAIR_TGT_SO_TCL if pair_targets else ""),
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
@@ -1008,13 +1013,40 @@ def _kvlist(text):
     return dict(zip(f[0::2], f[1::2]))
 
 
-def pair_skew_result(kv):
-    """the SO PAIR_* lines of a corner session (pair_skew.tcl ot_ps_measure): per check (max = setup, min = hold) the
-    EXHAUSTIVE related-pair count, the worst CPPR-credited damage (setup: launch late vs capture early; hold: capture
-    late vs launch early; = the die_sta.py pair skew), whether it is exact or a bound, and the uncredited p99."""
+PAIR_TGT_SO_TCL = (
+    "so PAIR_TARGETS pins [dict get $so_pm target_pins] unmatched [dict get $so_pm target_unmatched]\n"
+    "foreach dly {max min} {\n"
+    "  set m [dict get $so_pm tgt_$dly]\n"
+    "  so PAIR_TGT_$dly {*}[concat {*}[lmap k {n worst bounded signed launch capture crpr p99_raw searched nopath verify} "
+    "{list $k [dict get $m $k]}]]\n"
+    "}\n")
+PAIR_TARGET_HEADER = "# inst pin mean_pin_register_insertion_ps"
+PAIR_TARGET_FILES = {"tt": "core_latency.txt", "ff": "core_latency_ff.txt"}
+
+
+def pair_target_file(disc, corner):
+    """the kit's planned core clock-pin earliness file for this corner, or None (COORD 2026-10-28 21:33 rule 2: skew =
+    arrival minus planned target).  Only a kit with early core taps has one: config.mk exports OT_CORE_LAT (gen_phys:
+    tap_balance plans core pins to effective = pin + L) and the corner file is a signed mean contract
+    (core_latency.txt TT / core_latency_ff.txt FF, header PAIR_TARGET_HEADER; the legacy ETM_MAX_BOUND diagnostic is not
+    a target).  SS / no kit / no table -> None (pin-arrival skew only, session unchanged)."""
+    kit = disc.get("kit")
+    name = PAIR_TARGET_FILES.get(corner)
+    if not kit or not name:
+        return None
+    cfg, f = Path(kit) / "config.mk", Path(kit) / name
+    if not cfg.is_file() or not re.search(r"^export OT_CORE_LAT\s*=", cfg.read_text(), re.M) or not f.is_file():
+        return None
+    lines = f.read_text().splitlines()
+    if not lines or not lines[0].startswith(PAIR_TARGET_HEADER):
+        return None
+    return f
+
+
+def _pair_checks(kv, prefix):
     checks = {}
     for dly in ("max", "min"):
-        d = _kvlist(kv.get(f"PAIR_{dly}"))
+        d = _kvlist(kv.get(f"{prefix}{dly}"))
         if not d:
             continue
         checks[dly] = dict(n=_f(d.get("n")), worst_abs_ps=_f(d.get("worst")), bounded=d.get("bounded") == "1",
@@ -1022,11 +1054,30 @@ def pair_skew_result(kv):
                            worst_capture=d.get("capture"), worst_crpr_ps=_f(d.get("crpr")),
                            p99_raw_ps=_f(d.get("p99_raw")), searched=_f(d.get("searched")),
                            nopath=_f(d.get("nopath")), verify_ps=_f(d.get("verify")))
+    return checks
+
+
+def pair_skew_result(kv):
+    """the SO PAIR_* lines of a corner session (pair_skew.tcl ot_ps_measure): per check (max = setup, min = hold) the
+    EXHAUSTIVE related-pair count, the worst CPPR-credited damage (setup: launch late vs capture early; hold: capture
+    late vs launch early; = the die_sta.py pair skew), whether it is exact or a bound, and the uncredited p99.
+    With a target file (PAIR_TGT_* lines, pair_target_file) 'checks' is the TARGET-RELATIVE measurement the gate reads
+    (effective arrival = pin arrival + planned core earliness L; skew + L_capture - L_launch) and the pin-arrival one
+    moves to 'checks_pin_arrival' (information); without one the record is unchanged."""
+    checks = _pair_checks(kv, "PAIR_")
     cnt = {k: _f(v) for k, v in _kvlist(kv.get("PAIR_COUNTS")).items()}
-    return dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, method=kv.get("PAIR_METHOD"), seconds=_f(kv.get("PAIR_SECONDS")),
-                measurement="every same-clock register pair with a timing fan-in relation (exhaustive); worst "
-                            "damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
-                tsv="pair_skew.tsv")
+    out = dict(done=kv.get("PAIR_DONE") == "1", checks=checks, counts=cnt, method=kv.get("PAIR_METHOD"), seconds=_f(kv.get("PAIR_SECONDS")),
+               measurement="every same-clock register pair with a timing fan-in relation (exhaustive); worst "
+                           "damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+               tsv="pair_skew.tsv")
+    if "PAIR_TARGETS" in kv:
+        tgt = _pair_checks(kv, "PAIR_TGT_")
+        out.update(checks=tgt, checks_pin_arrival=checks, basis="target_relative",
+                   targets={k: _f(v) for k, v in _kvlist(kv.get("PAIR_TARGETS")).items()},
+                   basis_note="gate = arrival minus planned target: effective arrival = pin arrival + planned core "
+                              "earliness L (kit core_latency file), skew + (L_capture - L_launch), CPPR unchanged; "
+                              "checks_pin_arrival = raw pin arrivals (information)")
+    return out
 
 
 def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, ff_vclk="sdc", droop=None):
@@ -1042,6 +1093,9 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
     mounts.append(("work", disc.get("kit") or str(libconfig.parent)))
     mounts.append(("work/config.mk", str(libconfig)))
     core_overlay = copy_core_tap_overlay(Path(disc["sdc"]), od / "sdcdir")
+    ptf = pair_target_file(disc, corner)
+    if ptf is not None:
+        shutil.copyfile(ptf, od / "sdcdir" / "pair_targets.txt")
     ml_ctr = []
     lctx = json.loads(Path(disc["sdc_lint_ctx"]).read_text()) if disc.get("sdc_lint_ctx") else {}
     ftd = json.loads(Path(disc["ft_ports"]).read_text()) if disc.get("ft_ports") else None
@@ -1053,7 +1107,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 hold_in_min_ports=lctx.get("hold_in_min_ports_ps"), core_taps_ff=core_overlay,
                                                 hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
                                                 tap_window=lctx.get("tap_window_ps"),
-                                                droop=droop if corner == "tt" else None))
+                                                droop=droop if corner == "tt" else None,
+                                                pair_targets=ptf is not None))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")

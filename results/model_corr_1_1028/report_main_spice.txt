@@ -1,0 +1,132 @@
+spice      buf_1x450_d20|TT|t5|fall                         late  1.0355 (model 706.9 spice 682.6 ps)
+spice      buf_1x450_d20|TT|t5|duty                         duty  err   +19.93 ps (model +43.19 spice +23.26)
+spice      buf_1x450_d20|TT|t20|fall                        late  1.0429 (model 2978.5 spice 2855.9 ps)
+spice      buf_1x450_d20|TT|t20|fall                        early 1.0256 (model 2928.9 spice 2855.9 ps)
+spice      buf_1x450_d20|TT|t20|duty                        duty  err   +93.27 ps (model +197.27 spice +104.00)
+spice      buf_1x450_d20|FF|t5|fall                         late  1.0356 (model 630.2 spice 608.5 ps)
+spice      buf_1x450_d20|FF|t5|duty                         duty  err   +21.39 ps (model +43.52 spice +22.14)
+spice      buf_1x450_d20|FF|t20|fall                        late  1.0430 (model 2641.3 spice 2532.5 ps)
+spice      buf_1x450_d20|FF|t20|fall                        early 1.0247 (model 2595.1 spice 2532.5 ps)
+spice      buf_1x450_d20|FF|t20|duty                        duty  err  +100.97 ps (model +204.40 spice +103.43)
+spice      buf_legs_1_2mm|TT|t3|fall                        late  1.0266 (model 205.8 spice 200.5 ps)
+spice      buf_legs_1_2mm|TT|t8|fall                        late  1.0307 (model 664.3 spice 644.5 ps)
+spice      buf_legs_1_2mm|TT|t8|duty                        duty  err   +14.81 ps (model +40.18 spice +25.37)
+spice      buf_legs_1_2mm|TT|t11|fall                       late  1.0334 (model 904.1 spice 874.9 ps)
+spice      buf_legs_1_2mm|TT|t11|duty                       duty  err   +20.61 ps (model +55.78 spice +35.17)
+spice      buf_legs_1_2mm|TT|t16|fall                       late  1.0331 (model 1362.5 spice 1318.8 ps)
+spice      buf_legs_1_2mm|TT|t16|duty                       duty  err   +31.63 ps (model +83.87 spice +52.24)
+spice      buf_legs_1_2mm|FF|t3|fall                        late  1.0321 (model 173.0 spice 167.6 ps)
+spice      buf_legs_1_2mm|FF|t3|duty                        duty  err    +3.38 ps (model +8.88 spice +5.50)
+spice      buf_legs_1_2mm|FF|t8|fall                        late  1.0352 (model 563.0 spice 543.9 ps)
+spice      buf_legs_1_2mm|FF|t8|fall                        early 1.0205 (model 555.0 spice 543.9 ps)
+spice      buf_legs_1_2mm|FF|t8|duty                        duty  err   +14.42 ps (model +34.27 spice +19.85)
+spice      buf_legs_1_2mm|FF|t11|fall                       late  1.0382 (model 763.4 spice 735.3 ps)
+spice      buf_legs_1_2mm|FF|t11|fall                       early 1.0229 (model 752.1 spice 735.3 ps)
+spice      buf_legs_1_2mm|FF|t11|duty                       duty  err   +20.11 ps (model +47.84 spice +27.72)
+spice      buf_legs_1_2mm|FF|t16|fall                       late  1.0376 (model 1153.4 spice 1111.5 ps)
+spice      buf_legs_1_2mm|FF|t16|fall                       early 1.0230 (model 1137.2 spice 1111.5 ps)
+spice      buf_legs_1_2mm|FF|t16|duty                       duty  err   +31.16 ps (model +73.22 spice +42.06)
+spice      buf_ndr450_d50|TT|t5|fall                        late  1.0253 (model 491.5 spice 479.4 ps)
+spice      buf_ndr450_d50|TT|t5|duty                        duty  err   +11.57 ps (model +28.93 spice +17.36)
+spice      buf_ndr450_d50|TT|t20|fall                       late  1.0326 (model 2070.8 spice 2005.4 ps)
+spice      buf_ndr450_d50|TT|t20|duty                       duty  err   +53.76 ps (model +130.04 spice +76.28)
+spice      buf_ndr450_d50|TT|t50|fall                       late  1.0340 (model 5229.4 spice 5057.4 ps)
+spice      buf_ndr450_d50|TT|t50|duty                       duty  err  +138.34 ps (model +332.25 spice +193.90)
+spice      buf_ndr450_d50|FF|t5|fall                        late  1.0288 (model 424.0 spice 412.2 ps)
+spice      buf_ndr450_d50|FF|t5|duty                        duty  err   +11.86 ps (model +26.42 spice +14.55)
+spice      buf_ndr450_d50|FF|t20|fall                       late  1.0363 (model 1780.3 spice 1718.0 ps)
+spice      buf_ndr450_d50|FF|t20|fall                       early 1.0210 (model 1754.1 spice 1718.0 ps)
+spice      buf_ndr450_d50|FF|t20|duty                       duty  err   +56.07 ps (model +123.41 spice +67.34)
+spice      buf_ndr450_d50|FF|t50|fall                       late  1.0377 (model 4492.9 spice 4329.6 ps)
+spice      buf_ndr450_d50|FF|t50|fall                       early 1.0225 (model 4426.8 spice 4329.6 ps)
+spice      buf_ndr450_d50|FF|t50|duty                       duty  err  +144.58 ps (model +317.39 spice +172.81)
+spice      inv2_ndr200_d50|TT|t6|rise                       early 0.8803 (model 165.6 spice 188.2 ps)
+spice      inv2_ndr200_d50|TT|t6|fall                       early 0.8761 (model 163.9 spice 187.1 ps)
+spice      inv2_ndr200_d50|TT|t20|rise                      early 0.8883 (model 577.8 spice 650.4 ps)
+spice      inv2_ndr200_d50|TT|t20|fall                      early 0.8872 (model 576.1 spice 649.4 ps)
+spice      inv2_ndr200_d50|TT|t50|rise                      early 0.8903 (model 1461.0 spice 1641.0 ps)
+spice      inv2_ndr200_d50|TT|t50|fall                      early 0.8899 (model 1459.3 spice 1640.0 ps)
+spice      inv2_ndr200_d50|FF|t6|rise                       early 0.8757 (model 141.6 spice 161.7 ps)
+spice      inv2_ndr200_d50|FF|t6|fall                       early 0.8720 (model 139.7 spice 160.3 ps)
+spice      inv2_ndr200_d50|FF|t20|rise                      early 0.8814 (model 488.9 spice 554.7 ps)
+spice      inv2_ndr200_d50|FF|t20|fall                      early 0.8804 (model 487.1 spice 553.2 ps)
+spice      inv2_ndr200_d50|FF|t50|rise                      early 0.8829 (model 1233.2 spice 1396.8 ps)
+spice      inv2_ndr200_d50|FF|t50|fall                      early 0.8824 (model 1231.3 spice 1395.3 ps)
+spice      inv_1x250_d20|TT|t5|rise                         early 0.8743 (model 247.0 spice 282.5 ps)
+spice      inv_1x250_d20|TT|t5|fall                         early 0.8756 (model 248.4 spice 283.7 ps)
+spice      inv_1x250_d20|TT|t20|rise                        early 0.8851 (model 1050.0 spice 1186.2 ps)
+spice      inv_1x250_d20|TT|t20|fall                        early 0.8838 (model 1046.3 spice 1183.9 ps)
+spice      inv_1x250_d20|FF|t5|rise                         late  0.9760 (model 253.3 spice 259.5 ps)
+spice      inv_1x250_d20|FF|t5|rise                         early 0.8619 (model 223.6 spice 259.5 ps)
+spice      inv_1x250_d20|FF|t5|fall                         late  0.9767 (model 254.5 spice 260.6 ps)
+spice      inv_1x250_d20|FF|t5|fall                         early 0.8624 (model 224.7 spice 260.6 ps)
+spice      inv_1x250_d20|FF|t20|rise                        early 0.8693 (model 938.4 spice 1079.6 ps)
+spice      inv_1x250_d20|FF|t20|fall                        early 0.8682 (model 934.2 spice 1076.1 ps)
+spice      inv_legs_1_2mm|TT|t4|rise                        early 0.8846 (model 137.7 spice 155.7 ps)
+spice      inv_legs_1_2mm|TT|t4|fall                        late  0.9786 (model 150.9 spice 154.2 ps)
+spice      inv_legs_1_2mm|TT|t4|fall                        early 0.8783 (model 135.4 spice 154.2 ps)
+spice      inv_legs_1_2mm|TT|t12|rise                       early 0.9001 (model 452.4 spice 502.6 ps)
+spice      inv_legs_1_2mm|TT|t12|fall                       early 0.8976 (model 451.1 spice 502.5 ps)
+spice      inv_legs_1_2mm|TT|t16|rise                       early 0.9012 (model 613.8 spice 681.1 ps)
+spice      inv_legs_1_2mm|TT|t16|fall                       early 0.8990 (model 613.4 spice 682.3 ps)
+spice      inv_legs_1_2mm|TT|t24|rise                       early 0.9032 (model 928.5 spice 1028.0 ps)
+spice      inv_legs_1_2mm|TT|t24|fall                       early 0.9015 (model 929.1 spice 1030.6 ps)
+spice      inv_legs_1_2mm|FF|t4|rise                        early 0.8772 (model 119.6 spice 136.3 ps)
+spice      inv_legs_1_2mm|FF|t4|fall                        late  0.9748 (model 131.0 spice 134.3 ps)
+spice      inv_legs_1_2mm|FF|t4|fall                        early 0.8710 (model 117.0 spice 134.3 ps)
+spice      inv_legs_1_2mm|FF|t12|rise                       early 0.8865 (model 384.6 spice 433.8 ps)
+spice      inv_legs_1_2mm|FF|t12|fall                       early 0.8846 (model 382.6 spice 432.5 ps)
+spice      inv_legs_1_2mm|FF|t16|rise                       early 0.8870 (model 520.2 spice 586.5 ps)
+spice      inv_legs_1_2mm|FF|t16|fall                       early 0.8855 (model 518.8 spice 585.9 ps)
+spice      inv_legs_1_2mm|FF|t24|rise                       early 0.8883 (model 785.2 spice 884.0 ps)
+spice      inv_legs_1_2mm|FF|t24|fall                       early 0.8873 (model 784.4 spice 884.1 ps)
+spice      inv_ndr150_d50|TT|t5|rise                        early 0.8651 (model 100.9 spice 116.6 ps)
+spice      inv_ndr150_d50|TT|t5|fall                        early 0.8701 (model 102.3 spice 117.5 ps)
+spice      inv_ndr150_d50|TT|t20|rise                       early 0.8803 (model 432.6 spice 491.4 ps)
+spice      inv_ndr150_d50|TT|t20|fall                       early 0.8797 (model 431.7 spice 490.7 ps)
+spice      inv_ndr150_d50|TT|t50|rise                       early 0.8825 (model 1093.7 spice 1239.3 ps)
+spice      inv_ndr150_d50|TT|t50|fall                       early 0.8822 (model 1092.8 spice 1238.7 ps)
+spice      inv_ndr150_d50|FF|t5|rise                        early 0.8641 (model 85.3 spice 98.7 ps)
+spice      inv_ndr150_d50|FF|t5|fall                        early 0.8667 (model 86.1 spice 99.3 ps)
+spice      inv_ndr150_d50|FF|t20|rise                       early 0.8738 (model 360.8 spice 412.9 ps)
+spice      inv_ndr150_d50|FF|t20|fall                       early 0.8730 (model 359.6 spice 411.9 ps)
+spice      inv_ndr150_d50|FF|t50|rise                       early 0.8751 (model 909.8 spice 1039.7 ps)
+spice      inv_ndr150_d50|FF|t50|fall                       early 0.8748 (model 908.6 spice 1038.7 ps)
+spice      inv_ndr250_d50|TT|t5|rise                        early 0.8862 (model 174.1 spice 196.4 ps)
+spice      inv_ndr250_d50|TT|t5|fall                        early 0.8884 (model 175.7 spice 197.8 ps)
+spice      inv_ndr250_d50|TT|t20|rise                       early 0.9051 (model 750.8 spice 829.6 ps)
+spice      inv_ndr250_d50|TT|t20|fall                       early 0.9039 (model 748.6 spice 828.1 ps)
+spice      inv_ndr250_d50|TT|t50|rise                       early 0.9080 (model 1900.5 spice 2093.1 ps)
+spice      inv_ndr250_d50|TT|t50|fall                       early 0.9075 (model 1898.2 spice 2091.6 ps)
+spice      inv_ndr250_d50|FF|t5|rise                        early 0.8770 (model 150.1 spice 171.2 ps)
+spice      inv_ndr250_d50|FF|t5|fall                        early 0.8785 (model 151.1 spice 172.0 ps)
+spice      inv_ndr250_d50|FF|t20|rise                       early 0.8901 (model 637.1 spice 715.8 ps)
+spice      inv_ndr250_d50|FF|t20|fall                       early 0.8891 (model 634.6 spice 713.8 ps)
+spice      inv_ndr250_d50|FF|t50|rise                       early 0.8920 (model 1607.6 spice 1802.2 ps)
+spice      inv_ndr250_d50|FF|t50|fall                       early 0.8916 (model 1605.0 spice 1800.1 ps)
+{
+ "spice": {
+  "late": {
+   "buf_1x450_d20": 4,
+   "buf_legs_1_2mm": 8,
+   "buf_ndr450_d50": 6,
+   "inv_1x250_d20": 2,
+   "inv_legs_1_2mm": 2
+  },
+  "duty": {
+   "buf_1x450_d20": 4,
+   "buf_legs_1_2mm": 7,
+   "buf_ndr450_d50": 6
+  },
+  "early": {
+   "buf_1x450_d20": 2,
+   "buf_legs_1_2mm": 3,
+   "buf_ndr450_d50": 2,
+   "inv2_ndr200_d50": 12,
+   "inv_1x250_d20": 8,
+   "inv_legs_1_2mm": 16,
+   "inv_ndr150_d50": 12,
+   "inv_ndr250_d50": 12
+  }
+ }
+}

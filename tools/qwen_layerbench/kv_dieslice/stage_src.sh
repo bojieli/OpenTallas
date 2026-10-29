@@ -29,7 +29,8 @@ A=${HOSTSIDE_SOURCE_TREE:-$(cd "$H/../../.." && pwd)}  # default: this same sour
 sed -n "s#/rtl/.*##p" $B/bind.f | sort | uniq -c | sort -rn | awk '{print $2}' > $O/src_roots.txt
 for f in $A/rtl/test/qwen_host/qkd_host_board_port_fixture.sv $A/rtl/physical/ot_qfd_link_adp512_split.sv; do
   d=$(dirname $f); mkdir -p $O/src/$(tag $d); cp -a $f $O/src/$(tag $d)/; echo "$O/src/$(tag $d)/$(basename $f)" >> $O/hostside.f; done
-for f in bind_latency.json param_regen.json bus_groups.json bus_groups.json.gz; do [ -f $B/$f ] && cp -a $B/$f $O/ || true; done
+# TOK-KV-1 10-28: + the bind's provenance / report / bind.f (vehicle_closure.py runs the binder's leaf closure from them)
+for f in bind_names.json bind_latency.json param_regen.json bus_groups.json bus_groups.json.gz provenance_bind.json bind_report.json bind.f; do [ -f $B/$f ] && cp -a $B/$f $O/ || true; done
 sha256sum $B/rtl/qwen_kvsys_bound_top.sv | cut -c1-64 > $O/bound_top.sha256
 # Optional coherent boot-window implementation refresh, before any elaboration.
 [ -z "${BOOT_SOURCE_TREE:-}" ] || python3 "$H/native_boot_sources.py" "$O" "$BOOT_SOURCE_TREE"

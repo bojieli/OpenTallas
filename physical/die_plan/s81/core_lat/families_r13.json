@@ -89,7 +89,11 @@
    "leaf_limit": 35.0,
    "wire": "std",
    "reassign": true,
-   "reassign_cap": 1.5
+   "reassign_cap": 1.5,
+   "macro_keepout": {
+    "ot_v41_rom_elem_q_qxpq_w10": true
+   },
+   "macro_keepout_why": "CORES-EARLY-4: the 4 ot_rom_4096x274_m8 (clk via region ICGs, not census MACRO lines) are node keep-outs; the plan put mp_ck_T00_br inside u_rom1 and the converter refused"
   }
  ],
  "other_generators": {

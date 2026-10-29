@@ -261,12 +261,18 @@ TAP_TIME_KEYS = ("late_ps", "early_ps", "abs_late_ps", "abs_early_ps", "fall_lat
 NODE_TIME_KEYS = ("node_late_ps", "node_early_ps", "node_fall_late_ps", "node_fall_early_ps")
 
 
-def scale_clock(meta, taps, f):
+EARLY_TAP_KEYS = ("early_ps", "abs_early_ps", "fall_early_ps", "abs_fall_early_ps")
+EARLY_NODE_KEYS = ("node_early_ps", "node_fall_early_ps")
+
+
+def scale_clock(meta, taps, f, f_early=None):
     """clock arrivals x f (tap late/early incl. mesh-absolute, the CPPR node ranges and the tree NODE arrivals);
     returns new (meta, taps).  DIE-QC-5: node_late_ps / node_early_ps are clock-network arrivals too.  The clock OCV
     branch is tap - node arrival (clock_ocv_fn), so scaling the taps but not the nodes put f-1 of the whole upstream
     insertion into every branch (QC K2: FF intra OCV pessimism 77.45 vs 56.20 ps on a pre-scaled proof); a proof whose
     arr files were scaled before export (scale_arr.py) must give the same answer as --clock-cal spice."""
+    if f_early is not None and f_early != f:
+        return _scale_clock_edge(meta, taps, f, f_early)
     if f == 1.0:
         return meta, taps
     t = {k: dict(v, **{x: float(v[x]) * f for x in TAP_TIME_KEYS if x in v}) for k, v in taps.items()}
@@ -275,6 +281,45 @@ def scale_clock(meta, taps, f):
     for nk in NODE_TIME_KEYS:
         if isinstance(meta.get(nk), dict):
             m[nk] = {k: (None if v is None else float(v) * f) for k, v in meta[nk].items()}
+    return m, t
+
+
+def _scale_clock_edge(meta, taps, f, fe):
+    """--clock-cal spice_edge (CLK-INV-CAL-2): late keys x f (spice / STA max analysis), early keys x fe (spice / STA
+    min analysis).  OpenSTA's min analysis loads every pin with the LOW end of its liberty capacitance_range, so the
+    no-derate STA early/late gap of a clock tree is a load-model difference, not variation; the spice MC AOCV table
+    (clock_variation) is the variation.  Early is capped at late per key (never earlier than late after calibration
+    is only clipped, never reordered); the CPPR node range is re-derived from the scaled node arrivals where both exist."""
+    def pair(late, early):
+        lv, ev = float(late) * f, float(early) * fe
+        return lv, min(ev, lv)
+    t = {}
+    for k, v in taps.items():
+        w = dict(v)
+        for lk, ek in (("late_ps", "early_ps"), ("abs_late_ps", "abs_early_ps"), ("fall_late_ps", "fall_early_ps"),
+                       ("abs_fall_late_ps", "abs_fall_early_ps")):
+            if lk in v and ek in v:
+                w[lk], w[ek] = pair(v[lk], v[ek])
+            elif lk in v:
+                w[lk] = float(v[lk]) * f
+            elif ek in v:
+                w[ek] = float(v[ek]) * fe
+        t[k] = w
+    m = dict(meta, clock_cal_factor=f, clock_cal_factor_early=fe)
+    for lk, ek in (("node_late_ps", "node_early_ps"), ("node_fall_late_ps", "node_fall_early_ps")):
+        L, E = meta.get(lk), meta.get(ek)
+        if isinstance(L, dict):
+            m[lk] = {k: (None if v is None else float(v) * f) for k, v in L.items()}
+        if isinstance(E, dict):
+            m[ek] = {k: (None if v is None else
+                         (min(float(v) * fe, m[lk][k]) if isinstance(L, dict) and L.get(k) is not None
+                          else float(v) * fe)) for k, v in E.items()}
+    nl, ne = m.get("node_late_ps") or {}, m.get("node_early_ps") or {}
+    rng = {}
+    for k, v in (meta.get("cppr_node_range_ps") or {}).items():
+        rng[k] = (round(max(0.0, nl[k] - ne[k]), 4) if nl.get(k) is not None and ne.get(k) is not None
+                  else float(v) * fe)
+    m["cppr_node_range_ps"] = rng
     return m, t
 
 
@@ -288,6 +333,53 @@ def scale_clock(meta, taps, f):
 # 0.9333 / FF 0.9515, not a clock form).  Gate value = the larger NDR slope per corner (keeps more of the arrival, so
 # more OCV, than the smaller one).  BUFx24 control on the same bench: 1.0537 / 1.0640 vs SPICE_CLOCK_CAL 1.0485 / 1.0552.
 SPICE_CLOCK_CAL_INV = {"TT": 0.9324, "FF": 0.9380}
+# CLK-INV-CAL-2 (opt-in --clock-cal spice_edge): spice / OpenSTA MIN-analysis slope on the same benches (sta_arr_min).
+# OpenSTA min analysis takes the low end of the liberty capacitance_range (CKINVDCx16 A 6.68-9.54 fF rise, 6.64-9.53 fall),
+# so STA early sits ~12 % under STA late on a no-derate inverter tree, while ngspice gives ONE delay: spice = 0.93 x late
+# = 1.02-1.07 x early.  Measured: NDR250 TT 1.0241 / FF 1.0487, NDR150 TT 1.0550 / FF 1.0704 (1x250 1.0501 / 1.0761).
+# Gate value = the SMALLER NDR slope per corner (keeps more early/late gap, the hold-safe side).  BUFx24 keeps one
+# factor (its pin-cap range is 1.76-2.35 fF on a 24x driver: 1.2 % gap) -> spice_edge == spice for buf.
+SPICE_CLOCK_CAL_INV_EARLY = {"TT": 1.0241, "FF": 1.0487}
+# MODEL-REFIT-BUF (opt-in --clock-cal spice_buf_edge; COORD 10-28 after MODEL-CORR-1): BUFx24 factors per root edge
+# (rise / fall) and per analysis (late = STA max, early = STA min), from the MODEL-CORR-1 golden raw rows
+# (tools/die_plan/model_corr_golden.json: ngspice r3 xAct3D BUFx24 vs OpenSTA NLDM, NDR450 50-stage chain, 1x450
+# 20-stage chain, 1-2 mm NDR legs; taps 3-50 stages).  The one-factor spice mode (SPICE_CLOCK_CAL, a rise fit) puts the
+# falling edge 2.5-4.3 % LATE of spice (late AND early: early above spice is hold-optimistic) and the BUF duty (fall -
+# rise) 12-145 ps over spice.  Bounding fit, not a slope: late factor = MAX spice / STA-late over all rows of that
+# edge (model late >= spice), early factor = MIN spice / STA-early (model early <= spice), so every bench row keeps
+# late >= spice >= early.  Rise late keeps SPICE_CLOCK_CAL (it already bounds: max 1.0472 TT / 1.0551 FF).
+# Inverter dies: identical to spice_edge.  Default stays spice until NUMBER-CHECK confirms.
+SPICE_CLOCK_CAL_BUF_EDGE = {"TT": dict(rise_late=1.0485, rise_early=1.0524, fall_late=1.0226, fall_early=1.0224),
+                            "FF": dict(rise_late=1.0552, rise_early=1.0593, fall_late=1.0256, fall_early=1.0297)}
+# MODEL-REFIT-2 (opt-in --clock-cal spice_cell; COORD 10-28 22:47 after the routed HEAD h16 path): ONE factor set per
+# clock MASTER, per root edge and per analysis, because the BUFx24 factor over-reads OpenSTA on BUFx4 delay cells (raw
+# OpenSTA ~= spice there; spice_buf_edge early up to 5.6 % LATE of spice = hold-optimistic on the h16 taps).  Bounding fit
+# over the MODEL-CORR golden rows of each master (chains incl. the MODEL-REFIT-2 BUFx4 / BUFx6f ramp benches) and over
+# the routed rows (a mixed path is bounded by the largest late / smallest early factor of its masters):
+# late = MAX spice / STA-late, early = MIN spice / STA-early, rounded outward (model_corr.py fit).  A tap's arrival
+# holds the delay of every master between the root and the tap, so a tap with masters S takes late = max over S and
+# early = min over S (stage-wise bound: sum f_i d_i lies in [min f, max f] x sum d_i).  Masters per tap: tap key
+# 'clock_masters', else meta 'clock_masters' (the die's clock-path master census), else the die clock cell's master;
+# a master without a factor fails closed.  Default stays spice / spice_edge until NUMBER-CHECK confirms.
+SPICE_CLOCK_CAL_CELL = {
+    "BUFx24_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0473, rise_early=1.0222, fall_late=1.0227, fall_early=1.0206),
+        "FF": dict(rise_late=1.0552, rise_early=1.0073, fall_late=1.0257, fall_early=1.0025),
+    },
+    "BUFx4_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0443, rise_early=1.0164, fall_late=1.0388, fall_early=1.0018),
+        "FF": dict(rise_late=1.0263, rise_early=0.9972, fall_late=1.024, fall_early=0.9877),
+    },
+    "BUFx6f_ASAP7_75t_R": {
+        "TT": dict(rise_late=1.0243, rise_early=1.0463, fall_late=1.0218, fall_early=1.0417),
+        "FF": dict(rise_late=1.0101, rise_early=1.0301, fall_late=1.0056, fall_early=1.025),
+    },
+    "CKINVDCx16_ASAP7_75t_R": {
+        "TT": dict(rise_late=0.9483, rise_early=1.0269, fall_late=0.9528, fall_early=1.0274),
+        "FF": dict(rise_late=0.9611, rise_early=1.0515, fall_late=0.9623, fall_early=1.052),
+    },
+}
+CLOCK_CALS = ("none", "spice", "spice_edge", "spice_buf_edge", "spice_cell")
 CLOCK_CELL_MASTERS = {"buf": ("BUFx24_ASAP7_75t_R",), "inv": ("CKINVDCx16_ASAP7_75t_R",)}
 CLOCK_CELL_AOCV_CLASS = {"buf": "A", "inv": "Ainv"}
 CLOCK_CELLS = ("auto", "buf", "inv", "inv2")
@@ -297,6 +389,167 @@ def spice_cal_factor(corner, clock_cell="buf"):
     """12.15b clock spice factor of the die clock cell ('buf' = SPICE_CLOCK_CAL; SS uses the TT factor)."""
     t = SPICE_CLOCK_CAL_INV if clock_cell == "inv" else SPICE_CLOCK_CAL
     return t.get(corner, t["TT"])
+
+
+def buf_edge_factors(corner):
+    """MODEL-REFIT-BUF per-edge BUFx24 factors (SS uses TT, as spice_cal_factor)."""
+    return dict(SPICE_CLOCK_CAL_BUF_EDGE.get(corner, SPICE_CLOCK_CAL_BUF_EDGE["TT"]))
+
+
+def _scale_clock_buf_edge(meta, taps, fe4):
+    """--clock-cal spice_buf_edge on a BUFx24 tree: rise keys (late_ps / early_ps / abs_* / node_late / node_early)
+    x rise_late / rise_early, fall keys (fall_* / abs_fall_* / node_fall_*) x fall_late / fall_early.  Early is capped
+    at late per key (as _scale_clock_edge); the CPPR node range is re-derived from the scaled rise node arrivals, else
+    scaled by the smaller rise factor (less CPPR credit = the pessimistic side)."""
+    fr, fre, ff, ffe = fe4["rise_late"], fe4["rise_early"], fe4["fall_late"], fe4["fall_early"]
+    pairs = ((("late_ps", "early_ps"), fr, fre), (("abs_late_ps", "abs_early_ps"), fr, fre),
+             (("fall_late_ps", "fall_early_ps"), ff, ffe), (("abs_fall_late_ps", "abs_fall_early_ps"), ff, ffe))
+    t = {}
+    for k, v in taps.items():
+        w = dict(v)
+        for (lk, ek), fl, fe in pairs:
+            if lk in v:
+                w[lk] = float(v[lk]) * fl
+            if ek in v:
+                w[ek] = float(v[ek]) * fe
+                if lk in v:
+                    w[ek] = min(w[ek], w[lk])
+        t[k] = w
+    m = dict(meta, clock_cal_factor=fr, clock_cal_factor_early=fre, clock_cal_factor_fall=ff,
+             clock_cal_factor_fall_early=ffe)
+    for (lk, ek), fl, fe in ((("node_late_ps", "node_early_ps"), fr, fre),
+                             (("node_fall_late_ps", "node_fall_early_ps"), ff, ffe)):
+        L, E = meta.get(lk), meta.get(ek)
+        if isinstance(L, dict):
+            m[lk] = {k: (None if v is None else float(v) * fl) for k, v in L.items()}
+        if isinstance(E, dict):
+            m[ek] = {k: (None if v is None else
+                         (min(float(v) * fe, m[lk][k]) if isinstance(L, dict) and L.get(k) is not None
+                          else float(v) * fe)) for k, v in E.items()}
+    nl, ne = m.get("node_late_ps") or {}, m.get("node_early_ps") or {}
+    rng = {}
+    for k, v in (meta.get("cppr_node_range_ps") or {}).items():
+        rng[k] = (round(max(0.0, nl[k] - ne[k]), 4) if nl.get(k) is not None and ne.get(k) is not None
+                  else float(v) * min(fr, fre))
+    m["cppr_node_range_ps"] = rng
+    return m, t
+
+
+class ClockMasterUncalibrated(SystemExit):
+    pass
+
+
+def cell_cal_factors(corner, masters):
+    """MODEL-REFIT-2 bound of a set of clock masters: rise/fall late = max, rise/fall early = min of the per-master
+    SPICE_CLOCK_CAL_CELL factors (SS uses TT).  A master without a factor -> ClockMasterUncalibrated (fail closed)."""
+    ms = sorted(set(masters))
+    if not ms:
+        raise ClockMasterUncalibrated("spice_cell: empty clock master set -> FAIL closed")
+    miss = [m for m in ms if m not in SPICE_CLOCK_CAL_CELL]
+    if miss:
+        raise ClockMasterUncalibrated(f"spice_cell: no spice factor for clock master(s) {miss} (MODEL-REFIT-2 table "
+                                      f"SPICE_CLOCK_CAL_CELL has {sorted(SPICE_CLOCK_CAL_CELL)}) -> FAIL closed")
+    t = [SPICE_CLOCK_CAL_CELL[m].get(corner, SPICE_CLOCK_CAL_CELL[m]["TT"]) for m in ms]
+    return dict(rise_late=max(x["rise_late"] for x in t), fall_late=max(x["fall_late"] for x in t),
+                rise_early=min(x["rise_early"] for x in t), fall_early=min(x["fall_early"] for x in t))
+
+
+def clock_masters_of(meta, tap, clock_cell):
+    """masters on the clock path of one tap: tap 'clock_masters', else meta 'clock_masters', else the clock cell's."""
+    m = (tap or {}).get("clock_masters") or (meta or {}).get("clock_masters")
+    return tuple(m) if m else CLOCK_CELL_MASTERS["inv" if clock_cell == "inv2" else clock_cell]
+
+
+_INST_RE = re.compile(r"^\s*(\w+)\s+(\\?\S+)\s*\((.*?)\)\s*;", re.M | re.S)
+_PIN_RE = re.compile(r"\.(\w+)\s*\(\s*(\\?[^\s()]+)\s*\)")
+
+
+def netlist_tap_masters(proof, meta=None):
+    """MODEL-REFIT-2: {tap port: sorted masters} from the first clock netlist _clock_netlists finds (ctree.v: cells
+    with an A input and a Y output), each tap traced from its port net back to the root through the drivers; None when
+    no netlist is found.  The KV tap-pad BUFx24 chains on PHY taps of an inverter tree are the case this resolves."""
+    for f in _clock_netlists(proof, meta):
+        if not f.is_file():
+            continue
+        txt = f.read_text()
+        drv = {}
+        for m in _INST_RE.finditer(txt):
+            master = m.group(1)
+            if master in ("module", "input", "output", "wire", "assign"):
+                continue
+            pins = dict(_PIN_RE.findall(m.group(3)))
+            if "Y" in pins and "A" in pins:
+                drv[pins["Y"]] = (master, pins["A"])
+        if not drv:
+            continue
+        out, memo = {}, {}
+
+        def up(net):
+            path, seen = [], set()
+            while net in drv and net not in memo and net not in seen:
+                seen.add(net)
+                path.append(net)
+                net = drv[net][1]
+            acc = set(memo.get(net, ()))
+            for n in reversed(path):
+                acc = acc | {drv[n][0]}
+                memo[n] = frozenset(acc)
+            return acc
+        ports = {x.strip() for y in re.findall(r"^\s*output\s+([^;]+);", txt, re.M) for x in y.split(",")}
+        for p in ports:
+            ms = up(p)
+            if ms:
+                out[p] = sorted(ms)
+        return out
+    return None
+
+
+def annotate_clock_masters(proof, meta, taps):
+    """spice_cell input: taps without 'clock_masters' get the masters traced in the proof's clock netlist (by port);
+    a tap the netlist does not reach keeps the meta / clock-cell default.  Returns new taps (input unchanged)."""
+    nm = netlist_tap_masters(proof, meta) if proof is not None else None
+    if not nm:
+        return taps
+    return {k: (v if v.get("clock_masters") or k not in nm else dict(v, clock_masters=nm[k])) for k, v in taps.items()}
+
+
+def _scale_clock_cell(meta, taps, corner, clock_cell):
+    """--clock-cal spice_cell: each tap scaled by the bound of its own masters (cell_cal_factors), keys as
+    _scale_clock_buf_edge; tree NODE arrivals by the bound of the meta / die master set; CPPR node range re-derived from
+    the scaled node arrivals, else scaled by the smaller rise factor (less credit = the pessimistic side)."""
+    t = {}
+    for k, v in taps.items():
+        _, tk = _scale_clock_buf_edge({}, {k: v}, cell_cal_factors(corner, clock_masters_of(meta, v, clock_cell)))
+        t[k] = tk[k]
+    dm = set(clock_masters_of(meta, None, clock_cell))
+    for v in taps.values():
+        dm |= set(clock_masters_of(meta, v, clock_cell))
+    f4 = cell_cal_factors(corner, dm)
+    m, _ = _scale_clock_buf_edge(meta, {}, f4)
+    m["clock_cal_masters"] = sorted(dm)
+    return m, t
+
+
+def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal, proof=None):
+    """the ONE clock calibration step of planner and gate: none / spice (one factor, 12.15b) / spice_edge (inverter:
+    late x SPICE_CLOCK_CAL_INV, early x SPICE_CLOCK_CAL_INV_EARLY; buf: == spice) / spice_buf_edge (buf: per-edge
+    SPICE_CLOCK_CAL_BUF_EDGE, MODEL-REFIT-BUF; inverter: == spice_edge)."""
+    if clock_cal not in CLOCK_CALS:
+        raise SystemExit(f"--clock-cal {clock_cal!r}: one of {CLOCK_CALS}")
+    if clock_cal == "none":
+        return meta, taps
+    if meta.get("clock_components_basis") and clock_cal in ("spice_edge", "spice_cell"):
+        from clock_components import apply
+        return apply(meta, taps, corner, clock_cal)
+    f = spice_cal_factor(corner, clock_cell)
+    fe = None
+    if clock_cal in ("spice_edge", "spice_buf_edge") and clock_cell == "inv":
+        fe = SPICE_CLOCK_CAL_INV_EARLY.get(corner, SPICE_CLOCK_CAL_INV_EARLY["TT"])
+    if clock_cal == "spice_buf_edge" and clock_cell != "inv":
+        return _scale_clock_buf_edge(meta, taps, buf_edge_factors(corner))
+    if clock_cal == "spice_cell":
+        return _scale_clock_cell(meta, annotate_clock_masters(proof, meta, taps), corner, clock_cell)
+    return scale_clock(meta, taps, f) if fe is None else scale_clock(meta, taps, f, fe)
 
 
 def _clock_netlists(proof, meta):
@@ -386,7 +639,7 @@ def _capture_arr(B, node, edge):
     return float(B.get("abs_fall_late_ps", B["fall_late_ps"])), float(B.get("abs_fall_early_ps", B["fall_early_ps"]))
 
 
-def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
+def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise", ring=None):
     """THE count-aligned phase interval of ONE launch -> capture tap pair (FLOW-ONEMODEL-1: the single function the
     planner, the binder and the gate all call).  d = capture clock - launch clock at the pair's last common node,
     lo = capture early - launch late (+ CPPR credit), hi = capture late - launch early (- credit), then exactly one
@@ -397,7 +650,10 @@ def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
     of the rise and fall common-pin ranges): credit = min(rise range at the last common node, its fall range if the
     proof has one (meta-free: cppr_range key '<node>@fall'), launch late-early, capture FALL late-early).  Without a
     measured node fall range the rise range stands for it (the late/early spread is the liberty pin-cap range,
-    transition-independent in the exports, CLOCK-MESH-2; UNCHECKED on spice).  Returns (lo, hi, ocv_setup, ocv_hold)."""
+    transition-independent in the exports, CLOCK-MESH-2; UNCHECKED on spice).  Returns (lo, hi, ocv_setup, ocv_hold).
+    ring (DIE-HEAD-18, opt-in --ca-ring): callable (A, B) -> (shift_lo, shift_hi) | None, the BUILT ring clocks of the
+    pair (ca_ring_fn); the shift is added before the variation term.  None = the declared common latency on both sides
+    (cancels, unchanged)."""
     node = pair_node(A, B)
     la, ea, lc, ec = arr4(A, B, node)
     f = _capture_arr(B, node, edge)
@@ -409,6 +665,10 @@ def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise"):
         if fr:
             cr = min(cr, credit(fr, node, la, ea, lc, ec))
     lo, hi = ec - la + cr, lc - ea - cr
+    if ring is not None:
+        sh = ring(A, B)
+        if sh is not None:
+            lo, hi = lo + sh[0], hi + sh[1]
     os_ = oh = 0.0
     if ocv is not None:
         os_, oh = float(ocv(a, b, "setup")), float(ocv(a, b, "hold"))
@@ -429,7 +689,39 @@ def ca_pair_unshared(A, B, node_late):
     return max(la - n, lc - n)
 
 
-def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None, edge="rise"):
+def ca_ring_fn(spec, plan, corner):
+    """DIE-HEAD-18 (opt-in --ca-ring SPEC.json; COORD 10-28 NUMBER-CHECK-HEAD-1 finding): the BUILT clocks of a
+    count-aligned ring instead of the declared common latency on both sides.  The ring in the capture partition writes
+    on the FORWARDED clock and reads on its own clock, so for a launch tap A (partition type ts) -> capture tap B (td):
+        writer clock = A + fwd_out(ts) [clk port -> fclk_out_o] + fwd_wire + fclk_in(td) [fclk_in_i -> ring writer CK]
+        reader clock = B + reader(td)                       [clk port -> ring reader CK (slot select / guards / rp)]
+    and d = reader - writer shifts the tap-level interval by (reader_early - writer_late, reader_late - writer_early).
+    SPEC = {"types": {TYPE: {CORNER: {"fwd_out_ps": [early, late], "fclk_in_ps": [early, late],
+                                      "reader_ps": [early, late]}}},
+            "fwd_wire_ps": {CORNER: [early, late]}  (die-level fclk_out_o -> fclk_in_i wire, default [0, 0]),
+            "source": "..."}  (each [early, late] = min early / max late arrival over the routed flops/pins).
+    A pair whose launch type has no fwd_out or whose capture type has no fclk_in/reader keeps the declared common
+    latency on both sides (returns None = unchanged) and is counted 'declared' in the record.  Returns the callable
+    (A, B) -> (shift_lo, shift_hi) | None; plan = the die plan (partition name -> type)."""
+    spec = spec if isinstance(spec, dict) else json.loads(Path(spec).read_text())
+    plan = plan if isinstance(plan, dict) else json.loads(Path(plan).read_text())
+    ptype = {p["name"]: p["type"] for p in plan.get("partitions", [])}
+    T = spec.get("types", {})
+    w = [float(x) for x in (spec.get("fwd_wire_ps") or {}).get(corner, (0.0, 0.0))]
+
+    def fn(A, B):
+        s = T.get(ptype.get(A["part"]), {}).get(corner) or {}
+        d = T.get(ptype.get(B["part"]), {}).get(corner) or {}
+        if "fwd_out_ps" not in s or "fclk_in_ps" not in d or "reader_ps" not in d:
+            return None
+        we = float(s["fwd_out_ps"][0]) + w[0] + float(d["fclk_in_ps"][0])
+        wl = float(s["fwd_out_ps"][1]) + w[1] + float(d["fclk_in_ps"][1])
+        return float(d["reader_ps"][0]) - wl, float(d["reader_ps"][1]) - we
+    fn.spec = spec
+    return fn
+
+
+def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None, edge="rise", ring=None):
     """THE count-aligned crossing phase interval (DIE-HEAD-5, COORD 00:22 follow-up: ONE interval model for planner and
     STA): {'srcpart->dstpart': (d_lo, d_hi)} over EVERY landed tap pair of the partition pair, d = capture clock - launch
     clock, d_lo = min(capture early - launch late), d_hi = max(capture late - launch early) (arr4 at the pair's last
@@ -453,7 +745,8 @@ def count_align_d_intervals(landed, taps, cppr_range=None, part_region=None, ocv
         A, B = taps[a], taps[b]
         if part_region is not None:
             tag = f"{part_region[A['part']]}->{part_region[B['part']]}"
-        lo, hi, os_, oh = ca_pair_interval(A, B, a, b, cppr_range, ocv, edge)
+        lo, hi, os_, oh = (ca_pair_interval(A, B, a, b, cppr_range, ocv, edge) if ring is None else
+                             ca_pair_interval(A, B, a, b, cppr_range, ocv, edge, ring))
         if ocv is not None and stats is not None:
             m = stats.setdefault(tag, [0.0, 0.0])
             m[0], m[1] = max(m[0], os_), max(m[1], oh)
@@ -478,7 +771,7 @@ def _port_owners(ports, part_region):
 
 
 def count_align_port_intervals(ports, landed, taps, cppr_range=None, part_region=None, ocv=None, stats=None,
-                               edge="rise"):
+                               edge="rise", ring=None):
     """FLOW-ONEMODEL-1: THE per-crossing interval the planner (count_align_plan --sta-proof) and the gate
     (die_sta_related --count-align) both use.  ports = {port: {src, dst[, src_part, dst_part]}}; part_region =
     {partition: region} (None: src/dst are partitions, the default 'part' key).
@@ -501,7 +794,8 @@ def count_align_port_intervals(ports, landed, taps, cppr_range=None, part_region
             unbound.add(rt)
             continue
         try:
-            lo, hi, os_, oh = ca_pair_interval(A, B, a, b, cppr_range, ocv, edge)
+            lo, hi, os_, oh = (ca_pair_interval(A, B, a, b, cppr_range, ocv, edge) if ring is None else
+                             ca_pair_interval(A, B, a, b, cppr_range, ocv, edge, ring))
         except FallArrivalMissing:
             nofall.update(owners)
             continue
@@ -548,7 +842,8 @@ def ca_ocv(proof, meta, taps, corner, lat, clock_ocv="none", clock_droop=None, d
 
 
 def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lca=False, clock_ocv="none",
-                    clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None, clock_cell="auto"):
+                    clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None, clock_cell="auto",
+                    ca_ring=None):
     """{corner: count_align_d_intervals} exactly as main() feeds count_align_landed: tap_arrivals_<C>.json of PROOF,
     --clock-cal spice scaling (spice_cal_factor of the die clock cell), build_pairs on the plan (dict or path),
     --cppr-lca node choice.  clock_cell (CLK-INV-CAL-1, as main --clock-cell): 'auto' detects it from the proof.
@@ -563,14 +858,15 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
         for c in corners:
             meta, taps = load_taps(Path(proof), c)
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
-            if clock_cal == "spice":
-                meta, taps = scale_clock(meta, taps, spice_cal_factor(c, cc))
+            meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal, proof=Path(proof))
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
             ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table,
                          clock_cell=cc)
-            out[c] = count_align_d_intervals(pairs["landed"], taps, meta.get("cppr_node_range_ps"), ocv=ocv)
+            ring = ca_ring_fn(ca_ring, plan, c) if ca_ring else None
+            out[c] = count_align_d_intervals(pairs["landed"], taps, meta.get("cppr_node_range_ps"), ocv=ocv,
+                                             **({"ring": ring} if ring is not None else {}))
         return out
     finally:
         CPPR_LCA = old
@@ -578,7 +874,7 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
 
 def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal="none", cppr_lca=False,
                        clock_ocv="none", clock_droop=None, droop_regions_file=None, core_latency_ff=None, aocv_table=None,
-                       fall=False, clock_cell="auto"):
+                       fall=False, clock_cell="auto", ca_ring=None):
     """FLOW-ONEMODEL-1: {corner: dict(rise={port: (lo, hi)}, fall={port: (lo, hi) | None} (fall=True), unbound=[...])}
     = count_align_port_intervals on the proof exactly as main() feeds count_align_landed (same tap arrivals, spice
     scale, build_pairs, CPPR node, clock variation term).  The planner hulls on THIS; the gate times on THIS.
@@ -591,20 +887,21 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
         for c in corners:
             meta, taps = load_taps(Path(proof), c)
             cc, _ = resolve_clock_cell(clock_cell, proof, meta)
-            if clock_cal == "spice":
-                meta, taps = scale_clock(meta, taps, spice_cal_factor(c, cc))
+            meta, taps = apply_clock_cal(meta, taps, c, cc, clock_cal, proof=Path(proof))
             pairs, _ = build_pairs(plan, taps)
             lt = float(plan.get("clock", {}).get("common_latency_ps", 250.0))
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
             ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table,
                          clock_cell=cc)
             rng = meta.get("cppr_node_range_ps")
-            iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv)
+            ring = ca_ring_fn(ca_ring, plan, c) if ca_ring else None
+            rk = {"ring": ring} if ring is not None else {}
+            iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv, **rk)
             ush = count_align_port_unshared(ports, pairs["landed"], taps, part_region, meta.get("node_late_ps"))
             out[c] = dict(rise=iv, unbound=unb, unshared=ush)
             if fall:
                 out[c]["fall"] = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv,
-                                                            edge="fall")[0]
+                                                            edge="fall", **rk)[0]
         return out
     finally:
         CPPR_LCA = old
@@ -702,7 +999,7 @@ def count_align_start_ports(bind, taps, meta, period, cppr_range=None, ocv=None,
 
 
 def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, start_wire=None, cppr_range=None,
-                       key="part", ocv=None, ocv_label=None, meta=None):
+                       key="part", ocv=None, ocv_label=None, meta=None, ring=None):
     """MESO-INTEG-1 / MESO-RECONCILE-1 (opt-in --count-align BIND.json, count_align_bind.py v2): the count-aligned ring
     (ot_dp_clk_landing_ca) replaces the +-T/2 placement window by a write->read lag window per crossing.  Bind L_lo/L_hi
     are the plan's TRUE derated lag bounds (wander included, no aperture); d = capture-region clock - launch-region clock.
@@ -749,7 +1046,20 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     nl = (meta or {}).get("node_late_ps")
     ush = {} if isinstance(nl, dict) else None
     dsta, unbound, _ = count_align_port_intervals(bind["ports"], landed, taps, cppr_range, part_region=pr, ocv=ocv,
-                                                  stats=ost)
+                                                  stats=ost, **({"ring": ring} if ring is not None else {}))
+    rstat = None
+    if ring is not None:
+        # DIE-HEAD-18 --ca-ring: per port, are ALL its tap pairs on built ring clocks ('built') or not ('declared')
+        own = _port_owners(bind["ports"], pr)
+        rstat, shifts = {}, {}
+        for a_, b_, _ in landed:
+            owners, _ = own(taps[a_], taps[b_])
+            sh = ring(taps[a_], taps[b_])
+            for pid in owners or ():
+                rstat[pid] = rstat.get(pid, True) and sh is not None
+                if sh is not None:
+                    o = shifts.get(pid)
+                    shifts[pid] = sh if o is None else (min(o[0], sh[0]), max(o[1], sh[1]))
     if ush is not None:
         ush = count_align_port_unshared(bind["ports"], landed, taps, pr, nl)
     # CLK-INV-CAL-1 / COORD 10-28: post-start wander = wander_frac x the worst unshared clock over the crossing's OWN
@@ -759,7 +1069,8 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
     dfall = None
     if any(r.get("edge_fall") for _, r in tree_reg.values()):
         dfall = count_align_port_intervals({p: bind["ports"][p] for p in tree_reg if p in bind["ports"]}, landed, taps,
-                                           cppr_range, part_region=pr, ocv=ocv, edge="fall")[0]
+                                           cppr_range, part_region=pr, ocv=ocv, edge="fall",
+                                           **({"ring": ring} if ring is not None else {}))[0]
     rows, miss, srows = [], [], []
     for pid, b in sorted(bind["ports"].items()):
         tag = f"{b['src']}->{b['dst']}"
@@ -788,6 +1099,10 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
             row["wander_widen_ps"] = round(dw, 1)
         if ocv is not None and src == "sta":
             row["ocv_lo_ps"], row["ocv_hi_ps"] = (round(x, 1) for x in ost.get(pid, (0.0, 0.0)))
+        if rstat is not None:
+            row["ring"] = "built" if rstat.get(pid) else "declared"
+            if pid in shifts:
+                row["ring_shift_ps"] = [round(shifts[pid][0], 1), round(shifts[pid][1], 1)]
         row["lag_ok"] = min(ml, mh) >= need_ps
         if amb_tree and tr[1].get("edge_fall"):
             # FLOW-ONEMODEL-1: an ambiguous tree crossing's lag window is the plan sync window, which places the fall
@@ -838,7 +1153,18 @@ def count_align_landed(landed, taps, bind, period, reg=None, need_ps=100.0, star
              for a_, b_, _ in landed}
     unbound = unbound if key == "region" else []
     ok = rows and not (nfail or sfail or rfail or gfail or miss or unbound)
-    return dict(clock_variation=(ocv_label or "callable") if ocv is not None else "none",
+    ringrec = None
+    if rstat is not None:
+        nb = sum(1 for r in rows if r.get("ring") == "built")
+        dcl = [r for r in rows if r.get("ring") == "declared"]
+        ringrec = dict(form="built ring clocks (--ca-ring): writer = fwd_out + fwd_wire + fclk_in, reader = reader",
+                       source=(getattr(ring, "spec", None) or {}).get("source"), built_ports=nb,
+                       declared_ports=len(dcl), declared_examples=[r["port"] for r in dcl[:10]],
+                       worst_lo_built=min((r["margin_lo_ps"] for r in rows if r.get("ring") == "built"), default=None),
+                       worst_hi_built=min((r["margin_hi_ps"] for r in rows if r.get("ring") == "built"), default=None),
+                       worst_lo_declared=min((r["margin_lo_ps"] for r in dcl), default=None),
+                       worst_hi_declared=min((r["margin_hi_ps"] for r in dcl), default=None))
+    return dict(clock_variation=(ocv_label or "callable") if ocv is not None else "none", ring=ringrec,
                 ocv_max_lo_ps=round(max((v[0] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
                 ocv_max_hi_ps=round(max((v[1] for v in ost.values()), default=0.0), 1) if ocv is not None else None,
                 below_need=sum(1 for r in rows if min(r["margin_lo_ps"], r["margin_hi_ps"]) < need_ps),
@@ -967,6 +1293,7 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
     (gen_phys core_tap_rows), so the kit contract measures each tap's arrival + its declared earliness: a core tap
     delivered as planned is damage-free, a LATE core tap (not early enough) is charged.  None = unchanged."""
     ws, wh, sk, rows = None, None, 0.0, []
+    sk_raw, trows = 0.0, []
     rv = dict(pairs=0, ws=None, wh=None, nneg_s=0, nneg_h=0, both=0, bs=None, bh=None, bneg_s=0, bneg_h=0,
               dmg=[]) if views is not None else None
     ocv_max = {"setup": 0.0, "hold": 0.0}
@@ -1031,7 +1358,15 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                     rec[(a, b, tag, c_[3], c_[4])] = (c_[0] - po_s, c_[1] - po_h, c_[2], c_[5])
         nneg_s += s < 0
         nneg_h += h < 0
-        sk = max(sk, dmg_s, dmg_h)
+        sk_raw = max(sk_raw, dmg_s, dmg_h)
+        # DIE-S81-18 (COORD 10-28 21:33 rule 2): skew = arrival minus PLANNED target.  A planned early core tap is
+        # delivered kit_offset (= its declared earliness) before the plain taps on purpose; its target-relative arrival
+        # is arrival + earliness, so designed earliness is not counted as skew (go15: raw 925 vs real 523.8 TT).
+        # Dies without early core taps: ko = 0, identical to the raw number.
+        ko = (kit_offset.get(b, 0.0) - kit_offset.get(a, 0.0)) if kit_offset else 0.0
+        tdm_s, tdm_h = dmg_s - ko, dmg_h + ko
+        sk = max(sk, tdm_s, tdm_h)
+        trows.append((max(tdm_s, tdm_h), a, b))
         if ws is None or s < ws[0]:
             ws = (s, a, b, tag, dmg_s, cr)
         if wh is None or h < wh[0]:
@@ -1047,10 +1382,13 @@ def time_class(pairs, taps, rng, reg, lat_tol, period, unc_s, unc_h, landed=Fals
                worst_hold_slack_ps=round(wh[0], 2), hold_neg_pairs=int(nneg_h),
                worst_hold=dict(launch=wh[1], capture=wh[2], where=wh[3], clock_damage_ps=round(wh[4], 2),
                                cppr_ps=round(wh[5], 2)),
-               skew_diag_max_ps=round(sk, 2), skew_diag_over_80=sum(1 for r in rows if r[0] > 80.0),
+               skew_diag_max_ps=round(sk, 2), skew_diag_over_80=sum(1 for r in trows if r[0] > 80.0),
+               skew_diag_basis=("arrival minus planned target (early core tap + its declared earliness)" if kit_offset
+                                else "raw tap arrival (no planned early core taps)"),
+               skew_raw_max_ps=round(sk_raw, 2),
                sens_core_tol=dict(tol_ps=lat_tol, worst_setup_slack_ps=round(ws[0] - 2 * lat_tol, 2),
                                   worst_hold_slack_ps=round(wh[0] - 2 * lat_tol, 2)),
-               worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(rows, reverse=True)[:5]])
+               worst_skew=[[round(v, 2), a, b] for v, a, b in sorted(trows, reverse=True)[:5]])
     if rv is not None:
         out["real_view"] = dict(pairs_with_real_endpoint=rv["pairs"], pairs_both_real=int(rv["both"]),
                                 pairs_total=len(pairs), setup_neg_pairs=int(rv["nneg_s"]), hold_neg_pairs=int(rv["nneg_h"]))
@@ -1909,9 +2247,14 @@ def main(argv=None):
                     help="MESO-INTEG-1 opt-in: landed pairs use the count-aligned ring lag window of this count_align_bind "
                          "file (count_align_bind.py v2; rows: lag >= 100 ps to the guards, slot->read, guard T/8, "
                          "start skew per tree edge) instead of +-T/2")
-    ap.add_argument("--clock-cal", choices=("none", "spice"), default="none",
+    ap.add_argument("--clock-cal", choices=CLOCK_CALS, default="none",
                     help="METHODOLOGY 12.15 b: spice = scale clock arrivals x1.0485 TT / x1.0552 FF (SPICE_CLOCK_CAL; SS "
-                         "uses the TT factor) before every class and the --count-align rows")
+                         "uses the TT factor) before every class and the --count-align rows; spice_edge (CLK-INV-CAL-2 "
+                         "opt-in) = inverter early arrivals on their own spice/STA-min factor (no pin-cap-range spread); "
+                         "spice_buf_edge (MODEL-REFIT-BUF opt-in) = spice_edge + BUFx24 per-edge rise/fall late/early "
+                         "factors (SPICE_CLOCK_CAL_BUF_EDGE); spice_cell (MODEL-REFIT-2 opt-in) = per clock MASTER "
+                         "per-edge late/early factors (SPICE_CLOCK_CAL_CELL), a tap bounded by the masters on its path "
+                         "(tap / meta 'clock_masters', else the clock cell's master; unknown master fails closed)")
     ap.add_argument("--clock-cell", choices=CLOCK_CELLS, default="auto",
                     help="CLK-INV-CAL-1: die clock cell of the ONE shared model (spice factor + AOCV die class). auto "
                          "(default) = tap_arrivals meta clock_cell, else the majority master of the proof's clock netlist "
@@ -1920,6 +2263,10 @@ def main(argv=None):
     ap.add_argument("--count-align-ss-scale", type=float, default=1.27,
                     help="--count-align SS INFO row (never gates): TT taps x this SS/TT delay ratio when the proof has no "
                          "tap_arrivals_SS.json; 0 = off")
+    ap.add_argument("--ca-ring", metavar="SPEC.json",
+                    help="DIE-HEAD-18 opt-in (--count-align): time each count-aligned ring on its BUILT clocks (writer = "
+                         "fwd_out + fwd_wire + fclk_in, reader = reader, per partition type, routed) instead of the "
+                         "declared common latency on both sides (ca_ring_fn docstring); default = unchanged")
     ap.add_argument("--count-align-key", choices=("part", "region"), default="part",
                     help="DIE-QC-5 opt-in: how landed pairs meet the bind crossings. part (default, unchanged) = bind "
                          "src/dst are partitions; region = map partitions through bind parts[p].region (bind crossings "
@@ -2044,10 +2391,27 @@ def main(argv=None):
         ccell, cbasis = resolve_clock_cell(a.clock_cell, d, meta)
         if ccell != "buf":              # CLK-INV-CAL-1 record (BUFx24 records stay byte-identical)
             res.setdefault("clock_cell", {})[c] = dict(cell=ccell, basis=cbasis, aocv_class=CLOCK_CELL_AOCV_CLASS[ccell],
-                                                       spice_factor=spice_cal_factor(c, ccell) if a.clock_cal == "spice"
-                                                       else None)
-        if a.clock_cal == "spice":
-            meta, taps = scale_clock(meta, taps, spice_cal_factor(c, ccell))
+                                                       spice_factor=spice_cal_factor(c, ccell) if a.clock_cal != "none"
+                                                       else None,
+                                                       **({"spice_factor_early": SPICE_CLOCK_CAL_INV_EARLY.get(
+                                                           c, SPICE_CLOCK_CAL_INV_EARLY["TT"])}
+                                                          if a.clock_cal in ("spice_edge", "spice_buf_edge")
+                                                          and ccell == "inv" else {}))
+        elif a.clock_cal == "spice_buf_edge":   # MODEL-REFIT-BUF record (only in the opt-in mode)
+            res.setdefault("clock_cell", {})[c] = dict(cell=ccell, basis=cbasis, aocv_class=CLOCK_CELL_AOCV_CLASS[ccell],
+                                                       spice_factor_edge=buf_edge_factors(c))
+        if a.clock_cal == "spice_cell":         # MODEL-REFIT-2 record (only in the opt-in mode)
+            at = annotate_clock_masters(d, meta, taps)
+            dm = sorted({x for v in at.values() for x in clock_masters_of(meta, v, ccell)})
+            res.setdefault("clock_cell", {}).setdefault(c, dict(cell=ccell, basis=cbasis,
+                                                                aocv_class=CLOCK_CELL_AOCV_CLASS[ccell]))
+            res["clock_cell"][c].pop("spice_factor", None)
+            res["clock_cell"][c].pop("spice_factor_early", None)
+            res["clock_cell"][c].update(clock_masters=dm, spice_factor_cell=cell_cal_factors(c, dm),
+                                        masters_basis="tap/netlist/meta clock_masters" if any(
+                                            v.get("clock_masters") for v in at.values()) or meta.get("clock_masters")
+                                        else "clock cell master (no clock_masters declared or traced)")
+        meta, taps = apply_clock_cal(meta, taps, c, ccell, a.clock_cal, proof=d)
         rng = meta["cppr_node_range_ps"]
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
@@ -2134,7 +2498,8 @@ def main(argv=None):
             ca = count_align_landed(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
                                     start_wire=json.loads(Path(a.count_align_start_wire).read_text())
                                     if a.count_align_start_wire else None, cppr_range=rng, key=a.count_align_key,
-                                    ocv=ocv, ocv_label=ca_lab, meta=meta)
+                                    ocv=ocv, ocv_label=ca_lab, meta=meta,
+                                    ring=ca_ring_fn(a.ca_ring, plan, c) if a.ca_ring else None)
             res.setdefault("count_aligned", {})[c] = ca
             if c == "TT" and a.count_align_ss_scale > 0 and "SS" not in corners:
                 ss = count_align_ss_info(pairs["landed"], taps, json.loads(Path(a.count_align).read_text()), period, reg,
@@ -2153,6 +2518,11 @@ def main(argv=None):
                   f"guard fail {ca['guard']['fail']} start-skew fail {ca['start_skew']['fail']}/{ca['start_skew']['tree_ports']} "
                   f"<{ca['need_ps']:g} {ca['below_need']} ocv {ca['clock_variation']} max lo/hi {ca['ocv_max_lo_ps']}/"
                   f"{ca['ocv_max_hi_ps']} {ca['verdict']}")
+            if ca.get("ring"):
+                rr = ca["ring"]
+                print(f"COUNT-ALIGN {c} RING built {rr['built_ports']} (worst lo {rr['worst_lo_built']} hi "
+                      f"{rr['worst_hi_built']}) declared {rr['declared_ports']} (worst lo {rr['worst_lo_declared']} hi "
+                      f"{rr['worst_hi_declared']})")
         for k, pl in pairs.items():
             hrec = hbrec.setdefault(c, {}).setdefault(k, {}) if a.hold_buffers != "none" else None
             cr["classes"][k] = time_class(pl, taps, rng, reg, a.core_tol_ps, period, UNC_SETUP_PS, UNC_HOLD_PS,

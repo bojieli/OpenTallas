@@ -171,7 +171,7 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     for leaf, sinks in sorted(rec["leaf_sinks"].items()):
         if leaf not in names:
             raise ConvertError(f"leaf {leaf} is not a plan node")
-        leaves.append(dict(node=names[leaf], sinks=list(sinks), load_class="register"))
+        leaves.append(dict(node=names[leaf], sinks=list(sinks), load_class="macro" if leaf in rec.get("macro_leaves", []) else "register"))
     allsinks = [s for l in leaves for s in l["sinks"]]
     if len(set(allsinks)) != len(allsinks):
         raise ConvertError("a clock sink is assigned to two leaves")

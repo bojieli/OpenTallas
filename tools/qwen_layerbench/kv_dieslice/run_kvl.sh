@@ -3,15 +3,21 @@
 # compiled 8K token (36 layers on the B48 static calendar) against the compute die's real d2d far end, every layer with its
 # own q / new K,V row / gold and its own HBM history (kv_preload.py per layer, --skip-last: row T-1 arrives over KVN).
 #   run_kvl.sh BIN VEC OUT NAME HEAD [plusargs ...]     HEAD = d<d>_g<g> (the KV head this KV die serves, TP8)
-#   env: CTX (8192)  POST (300000 core cycles after the boot verdict)  MUT_L01 (1: preload layers 0,1 swapped, m5)
+#   env: IMG (boot image dir, required)  PHY_MAP (default dirname(BIN)/../phy_slice_map.json)  CTX (8192)  POST (300000 core cycles after the boot verdict)  MUT_L01 (1: preload layers 0,1 swapped, m5)
 #        MUT_KSWAP (partition, e.g. phy_WS_0: mutant m3)  PRELOAD_ARGS (extra kv_preload.py args)
 set -u
 H=$(cd "$(dirname "$0")" && pwd)
 B=$1; V=$2; O=$3; N=$4; HD=$5; shift 5
 CTX=${CTX:-8192}; POST=${POST:-300000}
-I=/srv/opentallas-scratch2/claude/tok-qk-b48/inputs
-PHYS=/srv/opentallas-scratch2/claude/wt/codex-kv-pv-image-0733/physical
-mkdir -p $O/$N/vecl; cd $O/$N; ln -sfn $PHYS physical
+# TOK-KV-2 10-28: the boot image (IMG) and the PHY slice map (PHY_MAP, generated from the bind by build.sh /
+# kv_phy_slice_map.py) belong to THIS build; no hard-coded older-bind paths.  Both are required (fail closed).
+I=$(readlink -f ${IMG:?IMG=<boot image dir: frames.hex expect.txt epoch.txt>})
+PM=$(readlink -f ${PHY_MAP:-$(dirname $(readlink -f $B))/../phy_slice_map.json})
+[ -f "$PM" ] || { echo "run_kvl: no generated PHY slice map $PM"; exit 2; }
+mkdir -p $O/$N/vecl; cd $O/$N
+if [ -n "${KV_DCAL_VIAMAP:-}" ]; then
+  python3 -I "$H/runtime_rom.py" --build "$(dirname "$(dirname "$(readlink -f "$B")")")" --runtime . --viamap "$KV_DCAL_VIAMAP" || exit 2
+fi
 : > preload.txt; : > preload.log
 for n in $(seq 0 35); do
   S=$V/L${n}_$HD; D=vecl/L$n; mkdir -p $D
@@ -19,10 +25,10 @@ for n in $(seq 0 35); do
   ln -sfn $S/q.hex $D/q.hex; ln -sfn $S/gold.hex $D/gold.hex
   sed -n "${CTX}p;$((2 * CTX))p" $S/kv.hex > $D/kvn.hex
   AS=$n; [ "${MUT_L01:-0}" = 1 ] && [ $n -lt 2 ] && AS=$((n ^ 1))
-  /usr/bin/python3 $H/kv_preload.py --kv $S/kv.hex --ctx $CTX --asbuilt $PHYS/die_plan/qwen_kvsys/bind/asbuilt_map.json \
+  /usr/bin/python3 $H/kv_preload.py --kv $S/kv.hex --ctx $CTX --asbuilt $PM \
     --layers $n --as-layer $AS --skip-last ${MUT_KSWAP:+--mut-kswap $MUT_KSWAP} ${PRELOAD_ARGS:-} >> preload.txt 2>> preload.log || exit 2
 done
-sha256sum preload.txt vecl/L*/kvn.hex > inputs.sha256
+sha256sum preload.txt vecl/L*/kvn.hex $PM $I/frames.hex > inputs.sha256
 /usr/bin/time -v stdbuf -oL $B +PHASE=boot +FRAMES=$I/frames.hex +EXPECT=$I/expect.txt +EPOCH=$(cat $I/epoch.txt) +START_AFTER_SETUP \
   +FAR=1 +VECL=$O/$N/vecl +CTX=$CTX +POST=$POST +HBM_LOG=16 +HBM_PRELOAD=$O/$N/preload.txt +HB=20000 "$@" > sim.log 2> time.log
 rc=$?; echo $rc > exit

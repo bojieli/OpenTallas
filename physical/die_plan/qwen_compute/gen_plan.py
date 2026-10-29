@@ -1298,6 +1298,11 @@ def coll_internal_links(P):
 
 
 # ====================================================================== fault tree
+def FAULT_LOCAL_SLICE(geo, k):
+    """slice partitions whose fault the release RTL collects locally (no plan fault hop)"""
+    return {f"sl_{geo['col_name'][k]}_st_a"}
+
+
 def fault_links(P, variant, geo):
     """1-bit registered OR tree, re-derived from the plan (replaces the as-built flt_root/hop chains)."""
     if variant == "A":
@@ -1322,7 +1327,10 @@ def fault_links(P, variant, geo):
                    dst_leaf="u_pstn.flt_cl")
         # slice: BFS tree to the W-flowing face partition (fw on W slices, fe on E slices)
         root = sl(geo, k, "fw")                          # fw is the W-edge partition of every slice
-        names = [n for n in P.parts if n.startswith(f"sl_{geo['col_name'][k]}_")]
+        # DIE-QC-24 (COORD 10-28 21:4x, one RTL lineage): the release QC RTL collects the st_a station fault INSIDE the
+        # slice (u_r0.fault -> u_ctl.stn_fault -> any_fault -> status word st / ag_own, rtl/qwen_dv/s5/qfd_dv_s5_leaves.sv);
+        # the bound fw leaf has no flt_st_a_i pin, so st_a takes no plan fault hop (it is a BFS leaf: nothing hangs on it)
+        names = [n for n in P.parts if n.startswith(f"sl_{geo['col_name'][k]}_") and n not in FAULT_LOCAL_SLICE(geo, k)]
         seen, q = {root}, [root]
         while q:
             n = q.pop(0)

@@ -1,0 +1,18 @@
+{
+ "rr": {
+  "value": 10,
+  "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_hub RR=10"
+ },
+ "reset_release_edges": {
+  "value": 66,
+  "source": "physical/die_plan/hbm/reset_contract.json assert_edges 66 (2+HOLD 64)"
+ },
+ "reset_sync_stages": {
+  "value": 3,
+  "source": "rtl/hbm_next/fused/ot_hnx_fused_tree.sv ot_hnx_fused_delivered_reset pipe[2:0]"
+ },
+ "host_write_interval": {
+  "value": 5,
+  "source": "results/tok_hbm_6_1028/host_write_interval.log: iverilog sim of rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv at max AXI rate (AW+W together, bready=1): bvalid-to-bvalid 5 edges, cfg_v every 40 edges"
+ }
+}

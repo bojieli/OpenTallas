@@ -20,6 +20,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools"))
+sys.path.insert(0, str(ROOT / "tools" / "s81_head"))
 PLAN = ROOT / "physical/die_plan/s81_head/die_plan.json"
 ROWS_RANK_PLAN = 32384          # established HEAD row bases 0/32384/64768/97024
 SK_CLOSED = 11                  # CUT 0x1ff + SPLIT9 (closed element views), as hd_reskew_images.py --to 11
@@ -27,10 +28,28 @@ SK_CLOSED = 11                  # CUT 0x1ff + SPLIT9 (closed element views), as 
 _U = _X16 = _LOG = None
 
 
-def tiles():
+def tiles(rank=0):
+    """(name, ROW0, TEN) of every hd_tile slot for RANK.  Rank 0 = the plan's own id_straps.  Ranks 1-3 come from the
+    source row-map contract (head_row_map.build: rank sizes 253/253/252/252, bases 0/32384/64768/97024).  Every slot
+    the map enables must carry the plan's ROW0 strap (fail-closed); TEN comes from the map, so ranks 2/3 leave slot
+    tE5o10 dark (the plan holds only the rank-0 strap set, TEN=1 there).  TOK-HEAD-LAND-1."""
     d = json.loads(PLAN.read_text())
-    return [(p['name'], p['id_straps']['strap_row0'], p['id_straps']['strap_ten'])
+    plan = [(p['name'], p['id_straps']['strap_row0'], p['id_straps']['strap_ten'])
             for p in d['partitions'] if p['type'] == 'hd_tile']
+    if rank == 0:
+        return plan
+    import head_row_map as RM
+    m = {s['part']: (s['mask_params']['ROW0'], s['mask_params']['TEN']) for s in RM.build(PLAN)['ranks'][rank]['slots']}
+    for n, r0, ten in plan:
+        if m[n][1] and m[n][0] != r0:
+            raise SystemExit(f'rank {rank}: row map ROW0 {m[n][0]} != plan strap {r0} on enabled slot {n}')
+    return [(n, m[n][0], m[n][1]) for n, _, _ in plan]
+
+
+def rank_base(rank):
+    """controller row base of RANK = prefix sum of the row-map rank sizes (NOT rank * 32384: rank 3 is 97024)."""
+    import head_row_map as RM
+    return RM.build(PLAN)['ranks'][rank]['controller_row_base']
 
 
 def _gen_one(args):
@@ -59,7 +78,7 @@ def cmd_gen(a):
     ck = H.Ckpt(H.SNAP)
     dt, sh, buf = ck.raw("head.weight")
     assert dt == "BF16" and sh == [129280, 5120], (dt, sh)
-    rb = a.rank * ROWS_RANK_PLAN
+    rb = rank_base(a.rank)
     full = np.frombuffer(buf, dtype=np.uint16).reshape(sh)
     _U = np.zeros((ROWS_RANK_PLAN + 128, 5120), dtype=np.uint64)
     n = min(ROWS_RANK_PLAN + 128, 129280 - rb); _U[:n] = full[rb:rb + n]
@@ -68,13 +87,13 @@ def cmd_gen(a):
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     sl = lambda xx, k: "".join("".join(f"{int(v):04x}" for v in xx[16 * i:16 * i + 16][::-1]) + "\n" for i in range(k))
     (out / "xa.hex").write_text(sl(x16[:4096], 256)); (out / "xb.hex").write_text(sl(x16[4096:], 64))
-    act = [(nm, r0, str(out)) for nm, r0, ten in tiles() if ten]
+    act = [(nm, r0, str(out)) for nm, r0, ten in tiles(a.rank) if ten]
     with ProcessPoolExecutor(a.jobs, mp_context=multiprocessing.get_context('fork')) as ex:
         gold = dict(ex.map(_gen_one, act))
     rows_cov = sorted(g['row0'] for g in gold.values())
     assert rows_cov == list(range(0, 128 * len(rows_cov), 128)), "strap rows must tile the rank contiguously"
     best = max(gold.items(), key=lambda kv: (np.float32(np.uint32(int(kv[1]['bits'], 16)).view(np.float32)), -kv[1]['row']))
-    meta = dict(rank=a.rank, row_base=rb, active_tiles=len(gold), inactive_tiles=len(tiles()) - len(gold),
+    meta = dict(rank=a.rank, row_base=rb, active_tiles=len(gold), inactive_tiles=len(tiles(a.rank)) - len(gold),
                 rows=128 * len(gold), rank_argmax_local=best[1]['row'], rank_argmax_global=rb + best[1]['row'],
                 rank_argmax_bits=best[1]['bits'], rank_argmax_tile=best[0],
                 golden_global_argmax=int(np.argmax(logits)), sk=SK_CLOSED,

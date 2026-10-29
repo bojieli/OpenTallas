@@ -68,7 +68,9 @@ def verdicts(kd):
 
 def test_fixture_passes_every_check(kit):
     r = KC.run_all(kit)
-    assert {k: v["verdict"] for k, v in r.items()} == {k: "PASS" for k in KC.CHECKS}, \
+    # macro_instances is NA here: the fixture places by master (foreach {master sites}), no instance paths
+    want = {k: "NA" if k == "macro_instances" else "PASS" for k in KC.CHECKS}
+    assert {k: v["verdict"] for k, v in r.items()} == want, \
         {k: v["errors"] for k, v in r.items() if v["errors"]}
 
 
@@ -162,7 +164,7 @@ def test_preflight_emits_beside_freeze(kit):
     rc = KP.main([str(kit)])
     rec = json.loads((kit / "preflight.json").read_text())
     assert rec["schema"] == "opentallas.kit_preflight.v2" and set(KC.CHECKS) <= set(rec["checks"])
-    assert all(rec["checks"][c]["verdict"] == "PASS" for c in KC.CHECKS)
+    assert all(rec["checks"][c]["verdict"] == ("NA" if c == "macro_instances" else "PASS") for c in KC.CHECKS)
     assert rc == int(rec["verdict"] != "PASS")
 
 

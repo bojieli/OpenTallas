@@ -118,6 +118,58 @@ def pick(idx, name, prefer):
     return nb[0], len(set(nb)) > 1
 
 
+LOGIC_RE = re.compile(r"\b(always(?:_ff|_comb|_latch)?|assign|initial)\b|\b(and|or|nand|nor|xor|xnor|not|buf|bufif[01]|notif[01])\s*\(")
+
+
+def release_full_check(ab, base, idx, prefer):
+    """opt-in (manifest `release_full`: [die master, ...]; DIE-HBM-10 10-28, owner rule "no stubs"): every module the
+    bound netlist reaches under a release master, after `alias`, must resolve to a full RTL body.  Fails closed (ElabError)
+    on an undefined module, a `_bb.v` black box, or a STUB (a module whose selected body has no always / assign / initial /
+    gate primitive and instantiates nothing).  `release_full_allow` (regex list) names hard macros whose black box is the
+    release view.  Returns the full-RTL manifest {master: {module, modules: {module: repo-relative file}}}."""
+    masters = ab.get("release_full", [])
+    if not masters:
+        return None
+    alias = ab.get("alias", {})
+    allow = [re.compile(r) for r in ab.get("release_full_allow", [])]
+    root = Path(base).resolve()
+
+    def rel(f):
+        fp = Path(f).resolve()
+        try:
+            return str(fp.relative_to(root))
+        except ValueError:
+            return str(fp)
+    man, errs = {}, []
+    for m in masters:
+        top = alias.get(m, m)
+        seen, todo, files = set(), [top], {}
+        while todo:
+            n = todo.pop()
+            if n in seen:
+                continue
+            seen.add(n)
+            if any(r.search(n) for r in allow):
+                continue
+            f, _ = pick(idx, n, prefer)
+            if f is None:
+                errs.append(f"{m}: {n} undefined")
+                continue
+            files[n] = rel(f)
+            if f.endswith("_bb.v"):
+                errs.append(f"{m}: {n} selects the black box {rel(f)}")
+                continue
+            body = module_body(f, n)
+            ch = instantiated(body, idx) - {n}
+            if not ch and not LOGIC_RE.search(body):
+                errs.append(f"{m}: {n} selects a STUB body in {rel(f)} (no logic, no instances)")
+            todo += sorted(ch)
+        man[m] = dict(module=top, modules=dict(sorted(files.items())))
+    if errs:
+        raise ElabError("release_full (no stubs): " + "; ".join(errs))
+    return man
+
+
 def make_shim(orig_file, orig, rule, repl_file):
     """a generated module named `orig` (its own header, parameters accepted) that instantiates the substitute module:
     asbuilt.substitute {orig: {"module": M, "ports": {orig_port: [M ports...]}, "params": {...}, "reason": ...}}.
@@ -538,6 +590,10 @@ def elab(ab, base, out_dir, mem_gb=32, idx=None):
     ab["netlist"] = nl
     tops, full, lib, rec = plan_sources(ab, base, idx, shim_dir=out)
     rec["aliased"] = alias
+    if ab.get("release_full"):
+        rf_idx = idx if idx is not None else module_index(ab.get("rtl_roots", ["rtl"]), ab.get("files", []), base)
+        rf_prefer = [str(Path(base) / f) if not Path(f).is_absolute() else f for f in ab.get("prefer", [])]
+        rec["release_full"] = release_full_check(ab, base, rf_idx, rf_prefer)
     pvar = sorted({r["module"] for r in ab.get("substitute_parent", [])})
     if pvar:
         # keep the per-instance parent variants through `hierarchy -top`: a wrapper top instantiates the die and each

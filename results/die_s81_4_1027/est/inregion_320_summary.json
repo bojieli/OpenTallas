@@ -1,0 +1,184 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/die-s81-3/die_plan_r98.json",
+ "map": "/srv/opentallas-scratch2/claude/die-s81-3/map98.json",
+ "v_ps_mm": 320.0,
+ "spice": {
+  "TT": 1.0485,
+  "FF": 1.0552
+ },
+ "pairs": 629,
+ "regions": 98,
+ "htree_TT_spread_max": 157.1,
+ "htree_TT_spread_p95": 83.4,
+ "htree_TT_spread_over150": 4,
+ "htree_FF_spread_max": 135.9,
+ "htree_FF_spread_p95": 71.3,
+ "htree_FF_spread_over150": 0,
+ "dme_TT_spread_max": 151.9,
+ "dme_TT_spread_p95": 89.5,
+ "dme_TT_spread_over150": 4,
+ "dme_FF_spread_max": 131.2,
+ "dme_FF_spread_p95": 76.9,
+ "dme_FF_spread_over150": 0,
+ "fish_TT_spread_max": 1787.7,
+ "fish_TT_spread_p95": 532.5,
+ "fish_TT_spread_over150": 369,
+ "fish_FF_spread_max": 1538.2,
+ "fish_FF_spread_p95": 456.7,
+ "fish_FF_spread_over150": 369,
+ "worst_regions_htree": [
+  {
+   "region": "hard_phy_hbm",
+   "w_mm": 11.54,
+   "h_mm": 3.68,
+   "R_tap_um": 7278.6,
+   "htree_TT_spread": 157.1,
+   "htree_FF_spread": 135.9,
+   "dme_TT_spread": 151.9,
+   "dme_FF_spread": 131.2,
+   "fish_TT_spread": 1787.7,
+   "fish_FF_spread": 1538.2
+  },
+  {
+   "region": "std_b3_2_1",
+   "w_mm": 4.33,
+   "h_mm": 3.68,
+   "R_tap_um": 3800.0,
+   "htree_TT_spread": 93.5,
+   "htree_FF_spread": 80.4,
+   "dme_TT_spread": 90.3,
+   "dme_FF_spread": 77.5,
+   "fish_TT_spread": 543.8,
+   "fish_FF_spread": 466.7
+  },
+  {
+   "region": "std_b7_1_0",
+   "w_mm": 4.33,
+   "h_mm": 3.68,
+   "R_tap_um": 3671.4,
+   "htree_TT_spread": 93.5,
+   "htree_FF_spread": 80.4,
+   "dme_TT_spread": 88.2,
+   "dme_FF_spread": 75.6,
+   "fish_TT_spread": 543.8,
+   "fish_FF_spread": 466.7
+  },
+  {
+   "region": "std_b2_0_2",
+   "w_mm": 4.33,
+   "h_mm": 2.45,
+   "R_tap_um": 3058.0,
+   "htree_TT_spread": 84.6,
+   "htree_FF_spread": 72.2,
+   "dme_TT_spread": 79.1,
+   "dme_FF_spread": 67.3,
+   "fish_TT_spread": 87.1,
+   "fish_FF_spread": 73.1
+  },
+  {
+   "region": "std_b7_0_1",
+   "w_mm": 4.33,
+   "h_mm": 2.45,
+   "R_tap_um": 3058.0,
+   "htree_TT_spread": 84.6,
+   "htree_FF_spread": 72.2,
+   "dme_TT_spread": 79.1,
+   "dme_FF_spread": 67.3,
+   "fish_TT_spread": 298.3,
+   "fish_FF_spread": 255.1
+  },
+  {
+   "region": "std_b4_6_0",
+   "w_mm": 4.33,
+   "h_mm": 2.45,
+   "R_tap_um": 3075.2,
+   "htree_TT_spread": 83.4,
+   "htree_FF_spread": 71.3,
+   "dme_TT_spread": 78.9,
+   "dme_FF_spread": 67.2,
+   "fish_TT_spread": 532.5,
+   "fish_FF_spread": 456.7
+  },
+  {
+   "region": "std_b5_6_1",
+   "w_mm": 4.33,
+   "h_mm": 2.45,
+   "R_tap_um": 3066.6,
+   "htree_TT_spread": 83.4,
+   "htree_FF_spread": 71.3,
+   "dme_TT_spread": 78.7,
+   "dme_FF_spread": 67.0,
+   "fish_TT_spread": 532.5,
+   "fish_FF_spread": 456.7
+  },
+  {
+   "region": "std_b5_9_0",
+   "w_mm": 4.33,
+   "h_mm": 2.45,
+   "R_tap_um": 3058.0,
+   "htree_TT_spread": 83.4,
+   "htree_FF_spread": 71.3,
+   "dme_TT_spread": 78.0,
+   "dme_FF_spread": 66.5,
+   "fish_TT_spread": 532.5,
+   "fish_FF_spread": 456.7
+  },
+  {
+   "region": "std_b7_2_0",
+   "w_mm": 2.89,
+   "h_mm": 3.68,
+   "R_tap_um": 3076.4,
+   "htree_TT_spread": 81.9,
+   "htree_FF_spread": 69.9,
+   "dme_TT_spread": 79.1,
+   "dme_FF_spread": 67.3,
+   "fish_TT_spread": 460.1,
+   "fish_FF_spread": 394.3
+  },
+  {
+   "region": "std_b6_2_0",
+   "w_mm": 2.89,
+   "h_mm": 3.68,
+   "R_tap_um": 3078.5,
+   "htree_TT_spread": 81.9,
+   "htree_FF_spread": 69.9,
+   "dme_TT_spread": 79.1,
+   "dme_FF_spread": 67.3,
+   "fish_TT_spread": 260.6,
+   "fish_FF_spread": 222.7
+  },
+  {
+   "region": "std_b3_1_0",
+   "w_mm": 2.89,
+   "h_mm": 3.68,
+   "R_tap_um": 3076.4,
+   "htree_TT_spread": 81.2,
+   "htree_FF_spread": 69.4,
+   "dme_TT_spread": 78.4,
+   "dme_FF_spread": 66.8,
+   "fish_TT_spread": 460.1,
+   "fish_FF_spread": 394.3
+  },
+  {
+   "region": "std_b2_0_0",
+   "w_mm": 2.89,
+   "h_mm": 3.68,
+   "R_tap_um": 2950.0,
+   "htree_TT_spread": 81.0,
+   "htree_FF_spread": 69.2,
+   "dme_TT_spread": 76.3,
+   "dme_FF_spread": 64.9,
+   "fish_TT_spread": 460.1,
+   "fish_FF_spread": 394.3
+  }
+ ],
+ "regions_dme_over150": [
+  "hard_phy_hbm"
+ ],
+ "dme_R_um_phy": {
+  "hard_phy_hbm": 7278.6
+ },
+ "regions_htree_over150": [
+  "hard_phy_hbm"
+ ]
+}
