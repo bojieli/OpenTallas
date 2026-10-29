@@ -1,0 +1,36 @@
+KV die reset contract receipt (DIE-KV-26, 2026-10-29 05:59 PDT, intel1, Icarus Verilog version 12.0 (stable) ())
+bench: results/die_kv_26_1029/rst/bench_kv_reset.sh OUT MUT  (tb results/die_kv_26_1029/rst/tb_kv_reset_contract.sv; cells = byte copy of bind26b rtl/bind_cells.sv)
+5ae7a3309c8eeacd3797561263f6166d66c4b86055d6c44e97372507de1f0754  results/die_kv_26_1029/rst/tb_kv_reset_contract.sv
+be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950  results/die_kv_26_1029/rst/bind26b_cells.sv
+70b4aad630e531af17a5e9c4a7783a4404edc4530a3d2e34b9ed88d236802f7f  results/die_kv_26_1029/rst/bench_kv_reset.sh
+bound root: /srv/opentallas-scratch2/claude/codex-kv-25-1029/bind26b/rtl/kv3_hub_C_part.sv:4771-4772 (u_rst_root ot_dp_rsync_s2 -> u_rst_lockq ot_dp_lockq STABLE 16), bind_por_gate.json verdict PASS
+e620e73d02b7321d18e2d706af3431b54f0cb3adb6959c4aa0ad70407bc521db  /srv/opentallas-scratch2/claude/codex-kv-25-1029/bind26b/rtl/kv3_hub_C_part.sv
+ba04632844e9f459a278c40571ae736e8c626e4a9f1e2f71598621cfd442c7bf  /srv/opentallas-scratch2/claude/codex-kv-25-1029/bind26b/bind_por_gate.json
+--- MUT 0
+KVRST_PASS checks=20 arms=10 min_edges_rgate=20 min_edges_landing=22 contract=16 stable=16 depth=8 midrun_glitches=8 lock_events=2
+--- MUT 1
+FATAL: sink A (rgate) released after 8 locked edges in reset (contract 16) t=101088
+FATAL: sink B (rsync landing) released after 10 locked edges in reset (contract 16) t=101920
+FATAL: sink A (rgate) released after 8 locked edges in reset (contract 16) t=168480
+FATAL: sink B (rsync landing) released after 10 locked edges in reset (contract 16) t=169312
+FATAL: sink A (rgate) released after 8 locked edges in reset (contract 16) t=235872
+FATAL: sink B (rsync landing) released after 10 locked edges in reset (contract 16) t=236704
+FATAL: sink A (rgate) released after 9 locked edges in reset (contract 16) t=304096
+FATAL: sink B (rsync landing) released after 11 locked edges in reset (contract 16) t=304928
+FATAL: sink A (rgate) released after 9 locked edges in reset (contract 16) t=372320
+FATAL: sink B (rsync landing) released after 11 locked edges in reset (contract 16) t=373152
+FATAL: sink A (rgate) released after 10 locked edges in reset (contract 16) t=441376
+FATAL: sink B (rsync landing) released after 12 locked edges in reset (contract 16) t=442208
+--- MUT 2
+FATAL: sink A (rgate) released after 0 locked edges in reset (contract 16) t=17888
+FATAL: sink B (rsync landing) released after 0 locked edges in reset (contract 16) t=18720
+FATAL: sink A (rgate) released after 2 locked edges in reset (contract 16) t=95264
+FATAL: sink B (rsync landing) released after 4 locked edges in reset (contract 16) t=96096
+FATAL: sink A (rgate) released after 2 locked edges in reset (contract 16) t=162656
+FATAL: sink B (rsync landing) released after 4 locked edges in reset (contract 16) t=163488
+FATAL: sink A (rgate) released after 2 locked edges in reset (contract 16) t=230048
+FATAL: sink B (rsync landing) released after 4 locked edges in reset (contract 16) t=230880
+FATAL: sink A (rgate) released after 3 locked edges in reset (contract 16) t=298272
+FATAL: sink B (rsync landing) released after 5 locked edges in reset (contract 16) t=299104
+FATAL: sink A (rgate) released after 3 locked edges in reset (contract 16) t=366496
+FATAL: sink B (rsync landing) released after 5 locked edges in reset (contract 16) t=367328
