@@ -13,6 +13,7 @@ SRC+=(rtl/physical/ot_qwen_tile_romleaf.sv rtl/physical/ot_qwen_tile_lsl_fp1.sv 
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v)
 DEF=(+define+OT_QWEN_LSL_FP1)
 [[ $TILE == nl ]] && DEF+=(+define+TB_NL)
+DEF+=(+define+TB_REGROOT=${REGROOT:-9}) # Explicit production form; legacy default preserved.
 DEF+=(+define+TB_ICG=${ICG:-1})   # QC-A0-KITS-13: ICG=2 build.sh ... = B-hop form
 printf '%s\n' "${SRC[@]}" > "$OUT/files.txt"
 sha256sum "${SRC[@]}" $D/tb_a0_icg.sv $D/*.sh > "$OUT/sources.sha256"
