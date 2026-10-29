@@ -22,5 +22,10 @@
     "empty": 0.2785,
     "aspect": 1.061
   },
-  "infrastructure": "Role-aware existing classification:20mp_isl clock/resetFT ports + declaredr_g reset informational. No functional unregistered source failure. Parent/GEOM independent finalreview before route."
+  "infrastructure": "Role-aware existing classification:20mp_isl clock/resetFT ports + declaredr_g reset informational. No functional unregistered source failure. Parent/GEOM independent finalreview before route.",
+  "independent_review": {
+    "reviewer": "codex hbm_cores/qcore (non-implementer)",
+    "verdict": "CONCUR PASS-COND for unchanged standard two-mode GRT hold repair only; no DRT/adoption",
+    "basis": "Viewed existing actual_cts.png, exact dump and metadata only. Exactanchor matches, full37757census max387.75/zero>405, actual5islands/20FTports and declaredr_g reset informational; fill.290/empty.2785 with no macros. No new probe/STA/source edit. Final hold/GRT/timing must pass before DRT."
+  }
 }

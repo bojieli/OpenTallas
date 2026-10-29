@@ -1,0 +1,2046 @@
+{
+  "status": "ESTIMATE ONLY; exact candidatepin coordinates vs published parent station sites. Manhattan lowerbound, not route length; all bit endpoints checked, root ft-slot bus spreading and clock paths remain owner obligation.",
+  "source_plan": "/srv/opentallas-scratch/claude/codex-hbm-1028/c25c_direct/die_plan.json",
+  "candidates": [
+    {
+      "origin_um": [
+        34.56,
+        501.12
+      ],
+      "rows": [
+        {
+          "index": 59,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            36.744,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 60,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            36.744,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 61,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            36.744,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 62,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            36.744,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 63,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            37.080000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 64,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            37.080000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 65,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            37.080000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 66,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            37.080000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 67,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            37.416000000000004,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 68,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            37.416000000000004,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 69,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            37.416000000000004,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 70,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            37.416000000000004,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 71,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L106_o",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[0]",
+          "new_endpoint_um": [
+            39.72,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.749,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 72,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L125_i",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[0]",
+          "new_endpoint_um": [
+            39.72,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.749,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 73,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L48_i",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[0]",
+          "new_endpoint_um": [
+            39.72,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.749,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 74,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L53_o",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[0]",
+          "new_endpoint_um": [
+            39.72,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.749,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 75,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L106_o",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[0]",
+          "new_endpoint_um": [
+            42.36,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.791,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 76,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L125_i",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[0]",
+          "new_endpoint_um": [
+            42.36,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.791,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 77,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L48_i",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[0]",
+          "new_endpoint_um": [
+            42.36,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.791,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 78,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L53_o",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[0]",
+          "new_endpoint_um": [
+            42.36,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.791,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 79,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L106_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[0]",
+          "new_endpoint_um": [
+            44.664,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 382.407,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 80,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L125_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[0]",
+          "new_endpoint_um": [
+            44.664,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 382.407,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 81,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L48_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[0]",
+          "new_endpoint_um": [
+            44.664,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 382.407,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 82,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L53_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[0]",
+          "new_endpoint_um": [
+            44.664,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 382.407,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 83,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            37.752,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 84,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            37.752,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 85,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            37.752,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 86,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            37.752,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 87,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            38.04,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 88,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            38.04,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 89,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            38.04,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 90,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            38.04,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.701,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 91,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            38.376000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 92,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            38.376000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 93,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            38.376000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 94,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            38.376000000000005,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 95,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            38.712,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 96,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            38.712,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 97,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            38.712,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 98,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            38.712,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.653,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 99,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L106_o",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[0]",
+          "new_endpoint_um": [
+            40.344,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.629,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 100,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L125_i",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[0]",
+          "new_endpoint_um": [
+            40.344,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.629,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 101,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L48_i",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[0]",
+          "new_endpoint_um": [
+            40.344,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.629,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 102,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L53_o",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[0]",
+          "new_endpoint_um": [
+            40.344,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 277.629,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 103,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            39.048,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 104,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            39.048,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 105,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            39.048,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 106,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            39.048,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 107,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L106_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            246.024,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 388.015,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 108,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L125_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            246.024,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 388.015,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 109,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L48_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            246.024,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 388.015,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 110,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L53_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            246.024,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 388.015,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 111,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            39.384,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 112,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            39.384,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 113,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            39.384,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 114,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            39.384,
+            734.304
+          ],
+          "max_manhattan_lower_bound_um": 276.605,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        }
+      ],
+      "unmatched": [],
+      "max_leg_lower_bound_um": 388.015,
+      "rows_gt405": 0,
+      "matched_station_rows": 56
+    },
+    {
+      "origin_um": [
+        43.2,
+        622.08
+      ],
+      "rows": [
+        {
+          "index": 59,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            45.384,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 60,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            45.384,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 61,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            45.384,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 62,
+          "ref": "u_host_cp_rxs.ep_phy_up",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            36.888,
+            1010.861
+          ],
+          "new_worst_pin": "ep_phy_up",
+          "new_endpoint_um": [
+            45.384,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 63,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            45.720000000000006,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 64,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            45.720000000000006,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 65,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            45.720000000000006,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 66,
+          "ref": "u_host_cp_rxs.ep_rx_arm_bank",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.224,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_bank",
+          "new_endpoint_um": [
+            45.720000000000006,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 67,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            46.056000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 68,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            46.056000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 69,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            46.056000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 70,
+          "ref": "u_host_cp_rxs.ep_rx_arm_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.512,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_arm_v",
+          "new_endpoint_um": [
+            46.056000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 71,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L106_o",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[1]",
+          "new_endpoint_um": [
+            48.696000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.381,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 72,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L125_i",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[1]",
+          "new_endpoint_um": [
+            48.696000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.381,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 73,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L48_i",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[1]",
+          "new_endpoint_um": [
+            48.696000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.381,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 74,
+          "ref": "u_host_cp_rxs.ep_rx_block_ready",
+          "conn": "bus:L53_o",
+          "bits": 2,
+          "existing_adjacent_station_um": [
+            39.912,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_ready[1]",
+          "new_endpoint_um": [
+            48.696000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.381,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 75,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L106_o",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[6]",
+          "new_endpoint_um": [
+            52.968,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.971,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 76,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L125_i",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[6]",
+          "new_endpoint_um": [
+            52.968,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.971,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 77,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L48_i",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[6]",
+          "new_endpoint_um": [
+            52.968,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.971,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 78,
+          "ref": "u_host_cp_rxs.ep_rx_block_words",
+          "conn": "bus:L53_o",
+          "bits": 7,
+          "existing_adjacent_station_um": [
+            43.594,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_block_words[6]",
+          "new_endpoint_um": [
+            52.968,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.971,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 79,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L106_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[611]",
+          "new_endpoint_um": [
+            254.32799999999997,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 259.411,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 80,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L125_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[611]",
+          "new_endpoint_um": [
+            254.32799999999997,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 259.411,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 81,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L48_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[611]",
+          "new_endpoint_um": [
+            254.32799999999997,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 259.411,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 82,
+          "ref": "u_host_cp_rxs.ep_rx_pin_flit",
+          "conn": "bus:L53_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            150.514,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_flit[611]",
+          "new_endpoint_um": [
+            254.32799999999997,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 259.411,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 83,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            46.392,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 84,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            46.392,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 85,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            46.392,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 86,
+          "ref": "u_host_cp_rxs.ep_rx_pin_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            37.848,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_pin_v",
+          "new_endpoint_um": [
+            46.392,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 87,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            46.68,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 88,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            46.68,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 89,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            46.68,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 90,
+          "ref": "u_host_cp_rxs.ep_rx_release_bank",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.184,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_bank",
+          "new_endpoint_um": [
+            46.68,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.093,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 91,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            47.016000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 92,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            47.016000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 93,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            47.016000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 94,
+          "ref": "u_host_cp_rxs.ep_rx_release_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.472,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_release_v",
+          "new_endpoint_um": [
+            47.016000000000005,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 95,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            47.352000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 96,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            47.352000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 97,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            47.352000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 98,
+          "ref": "u_host_cp_rxs.ep_rx_slot_bank",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            38.808,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_bank",
+          "new_endpoint_um": [
+            47.352000000000004,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.141,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 99,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L106_o",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[5]",
+          "new_endpoint_um": [
+            50.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.845,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 100,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L125_i",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[5]",
+          "new_endpoint_um": [
+            50.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.845,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 101,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L48_i",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[5]",
+          "new_endpoint_um": [
+            50.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.845,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 102,
+          "ref": "u_host_cp_rxs.ep_rx_slot_index",
+          "conn": "bus:L53_o",
+          "bits": 6,
+          "existing_adjacent_station_um": [
+            41.416,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_index[5]",
+          "new_endpoint_um": [
+            50.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.845,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 103,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            47.688,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 104,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            47.688,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 105,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            47.688,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 106,
+          "ref": "u_host_cp_rxs.ep_rx_slot_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.096,
+            1010.861
+          ],
+          "new_worst_pin": "ep_rx_slot_v",
+          "new_endpoint_um": [
+            47.688,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 107,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L106_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            254.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 258.415,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 108,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L125_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            254.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 258.415,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 109,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L48_i",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            254.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 258.415,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 110,
+          "ref": "u_host_cp_rxs.ep_tx_frame",
+          "conn": "bus:L53_o",
+          "bits": 612,
+          "existing_adjacent_station_um": [
+            361.783,
+            1006.56
+          ],
+          "new_worst_pin": "ep_tx_frame[0]",
+          "new_endpoint_um": [
+            254.664,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 258.415,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 111,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L106_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            48.024,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 112,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L125_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            48.024,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 113,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L48_i",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            48.024,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        },
+        {
+          "index": 114,
+          "ref": "u_host_cp_rxs.ep_tx_v",
+          "conn": "bus:L53_o",
+          "bits": 1,
+          "existing_adjacent_station_um": [
+            39.432,
+            1010.861
+          ],
+          "new_worst_pin": "ep_tx_v",
+          "new_endpoint_um": [
+            48.024,
+            855.264
+          ],
+          "max_manhattan_lower_bound_um": 164.189,
+          "bits_gt405": 0,
+          "additional_hops_min": 0
+        }
+      ],
+      "unmatched": [],
+      "max_leg_lower_bound_um": 259.411,
+      "rows_gt405": 0,
+      "matched_station_rows": 56
+    }
+  ]
+}
