@@ -23,7 +23,9 @@ SIZES = {"ot_sram_1r1w2c_256x64_m1": (34.584, 41.352),
 
 
 def geometry(base):
-    delta = copy.deepcopy(base)
+    # Parent placement is owned by the die event. Do not carry the old parent
+    # entries into a child-only output that another tool might apply wholesale.
+    delta = dict(child_type=copy.deepcopy(base["child_type"]))
     child = delta["child_type"]
     child["outline_um"] = list(OUTLINE)
     seen = set()
