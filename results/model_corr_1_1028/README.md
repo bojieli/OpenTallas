@@ -228,3 +228,17 @@ On the h16 path, early is now hold-safe.
 - A delay-weighted split (tree node arrival x inverter factor + pad segment x BUFx24 factor) needs the node -> net map; this is the next step if KV adopts spice_cell.
 - The h16 / h15 BUFx4 arrivals enter the HEAD gate unscaled (core latency + ca-ring). On that path spice / raw-STA-early is 0.995-1.031 FF, so raw STA early is up to 0.5 % (~2 ps) later than spice (hold-optimistic).
 - Full mode (`model_corr.py full`) needs `--lib` = the MODEL-REFIT-2 lib (intel1:/srv/opentallas-scratch2/claude/model-refit2-1028/lib, cells.sp md5 fb2de1d8..., which adds BUFx4 / BUFx6f and the other BUF / HB masters).
+
+## 8. HEAD-START-4: BUFx8 row (COORD MODEL-CORR ruling, 2026-10-29)
+The HEAD START vehicle has 1356 local clock-entry `BUFx8_ASAP7_75t_R` buffers, and spice_cell failed closed on them (no row).
+- Bench `bufx8_1x60_d20`: BUFx8 on 60 um 1x legs, taps 5/20, ramp deck. It is the same form as `bufx6f_1x60_d20`: the TT deck equals the BUFx6f deck with the cell name changed.
+- Run with the MODEL-REFIT-2 lib unchanged (cells.sp md5 fb2de1d8, which already holds the BUFx8 subckt), the same models/OSDI md5s and the same `run_ref.sh`.
+  Data: intel2:/srv/opentallas-scratch2/claude/head-start-4-bufx8-1029/ref/bufx8_1x60_d20.
+- Raw spice / OpenSTA (CHECKED): TT late 1.0328-1.0407, early 1.0437-1.0536; FF late 1.0187-1.0235, early 1.0306-1.0358.
+- Refit with `fit_cell_factors` on the 208 golden rows. BUFx24 / BUFx4 / BUFx6f / CKINVDCx16 are unchanged, and every old golden key of every mode is byte-identical.
+
+| master | TT rise late / early | TT fall late / early | FF rise late / early | FF fall late / early |
+|---|---|---|---|---|
+| BUFx8 | 1.0408 / 1.0528 | 1.0332 / 1.0437 | 1.0236 / 1.0347 | 1.0189 / 1.0305 |
+
+The row comes from one load form, the 60 um legs. BUFx4 showed that the OpenSTA error depends on load by about 4 % between the abutted and the loaded form, so a BUFx8 entry at a very different load is not covered by this bench.
