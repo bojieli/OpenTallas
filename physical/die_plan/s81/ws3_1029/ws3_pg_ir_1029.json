@@ -1,0 +1,151 @@
+{
+ "lane": "DIE-S81-29/WS3IR",
+ "ruling": "COORD [DIE-S81-28-PARK](3)",
+ "tool": "tools/die_trial/s81_ir_domains.py @ claude/die-s81-29-ws3ir-1029 e547a6c144 (opt-in; default byte-identical)",
+ "plan_in": {
+  "file": "plan_s13r2_ws3v2.json (claude/die-s81-27-ws3-1029@74340c6433)",
+  "sha256_16": "7cd8cfdd426fe18a"
+ },
+ "case": "--window 5875.2 0 13824 2851.2 --mode domains --phy-box 1 --nets VDDPHY,VSSPHY; docker 8 thr/24 GB epyc2; gate 35 mV",
+ "baseline": {
+  "v2_phy_b1": {
+   "VDDPHY": 46.69,
+   "VSSPHY": 48.28,
+   "verdict": "FAIL",
+   "src": "epyc2 die-s81-28/ir/v2_phy_b1/result.json"
+  }
+ },
+ "variants": {
+  "a45": {
+   "plan_sha256_16": "f2d1e1534c976fc9",
+   "verdict": "PASS",
+   "VDDPHY": 33.7,
+   "VDDPHY_at": [
+    8932.6,
+    126.7
+   ],
+   "VSSPHY": 27.23,
+   "VSSPHY_at": [
+    10531.0,
+    219.0
+   ],
+   "bumps": {
+    "VDD": 403,
+    "VSS": 403,
+    "VDDPHY": 175,
+    "VSSPHY": 175
+   },
+   "ws3": "plan grid 1.92/8.64",
+   "anchor": "rect"
+  },
+  "a75": {
+   "plan_sha256_16": "b268b31eb605aaf1",
+   "verdict": "FAIL",
+   "VDDPHY": 90.28,
+   "VDDPHY_at": [
+    8846.2,
+    126.7
+   ],
+   "VSSPHY": 113.24,
+   "VSSPHY_at": [
+    11049.4,
+    126.7
+   ],
+   "bumps": {
+    "VDD": 403,
+    "VSS": 403,
+    "VDDPHY": 60,
+    "VSSPHY": 60
+   },
+   "ws3": "plan grid 1.92/8.64",
+   "anchor": "rect"
+  },
+  "b": {
+   "plan_sha256_16": "1bd50ec52d0cb681",
+   "verdict": "FAIL",
+   "VDDPHY": 35.64,
+   "VDDPHY_at": [
+    8846.2,
+    126.7
+   ],
+   "VSSPHY": 32.55,
+   "VSSPHY_at": [
+    11049.4,
+    219.0
+   ],
+   "bumps": {
+    "VDD": 403,
+    "VSS": 403,
+    "VDDPHY": 175,
+    "VSSPHY": 175
+   },
+   "ws3": [
+    {
+     "layer": "M8",
+     "width_um": 1.92,
+     "pitch_um": 5.92,
+     "offset_um": 2.96,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 1.92,
+     "pitch_um": 5.92,
+     "offset_um": 2.96,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    }
+   ],
+   "anchor": null
+  },
+  "ab": {
+   "plan_sha256_16": "2248c702b91d7aeb",
+   "verdict": "PASS",
+   "VDDPHY": 23.18,
+   "VDDPHY_at": [
+    8846.2,
+    126.7
+   ],
+   "VSSPHY": 20.49,
+   "VSSPHY_at": [
+    11049.4,
+    403.5
+   ],
+   "bumps": {
+    "VDD": 403,
+    "VSS": 403,
+    "VDDPHY": 175,
+    "VSSPHY": 175
+   },
+   "ws3": [
+    {
+     "layer": "M8",
+     "width_um": 1.92,
+     "pitch_um": 5.92,
+     "offset_um": 2.96,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 1.92,
+     "pitch_um": 5.92,
+     "offset_um": 2.96,
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ]
+    }
+   ],
+   "anchor": "rect"
+  }
+ },
+ "winner": "a45"
+}
