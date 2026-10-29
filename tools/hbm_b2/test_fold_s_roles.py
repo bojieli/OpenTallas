@@ -57,6 +57,10 @@ class T(unittest.TestCase):
     def test_shared_queue(self):   # the N client already reads rq: a request queue may not be shared
         self.bad(dict(GOOD, hb_x_SE__rq={'src_instance': 'hb_x_NE', 'src_port': 'rq'}), 'SHARED_SRC')
     def test_shared_cfg_needs_broadcast(self): self.bad(dict(GOOD, hleaf_SE__cfg={'src_instance': 'hb_x_NE', 'src_port': 'cfg'}), 'SHARED_SRC')
+    def test_tie_declared(self):
+        rc, rep, svh = self.go(dict(GOOD, hleaf_SE__cfg={'tie': 0, 'reason': '8-SM release, nkeys=0'}))
+        self.assertEqual((rc, rep['tied']), (0, 1)); self.assertIn("assign hleaf_SE__cfg = '0; // TIED", svh)
+    def test_tie_without_reason(self): self.bad(dict(GOOD, hleaf_SE__cfg={'tie': 0}), 'TIE_UNDECLARED')
     def test_new_sm(self): self.bad(dict(GOOD, hb_x_SE__rq={'src_instance': 'sm_SW4', 'src_port': 'y'}), 'SM_COUNT')
 
 if __name__ == '__main__':
