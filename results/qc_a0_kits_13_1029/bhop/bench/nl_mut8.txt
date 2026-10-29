@@ -1,0 +1,5 @@
+A0ICG_COUNTS tile=nl MUT=8 checks=12000 cmds=11 t_valid=4139 t_nonzero=4139 n_valid=0 gated_cycles=6647 (55%) engine_busy=4626 wakeups=10
+A0ICG_STRICT tile=nl MUT=8 strict_mismatch_cycles=6820 (t_out 6820 n_y 0) first=834
+A0ICG_PASS tile=nl MUT=8 checks=12000 gated=6647 qualified_errors=0 strict=6820
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.05
+	Maximum resident set size (kbytes): 20664

@@ -1,0 +1,1369 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 15.2.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/on.ys' --
+
+1. Executing Verilog-2005 frontend: rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv
+Parsing SystemVerilog input from `rtl/physical/a0_rc14_selected_2000/qfd_tile_nl_rp2_45.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_tile_nl_rp2_45'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/icg_model.v
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/icg_model.v' to AST representation.
+Generating RTLIL representation for module `\ICGx8DC_ASAP7_75t_R'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gold.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gold.sv' to AST representation.
+Generating RTLIL representation for module `\gold'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv' to AST representation.
+Generating RTLIL representation for module `\gate'.
+Successfully finished Verilog frontend.
+Parameter \REGROOT_MODE = 9
+
+5. Executing AST frontend in derive mode using pre-parsed AST for module `\gate'.
+Parameter \REGROOT_MODE = 9
+Generating RTLIL representation for module `$paramod\gate\REGROOT_MODE=s32'00000000000000000000000000001001'.
+Parameter \REGROOT_MODE = 9
+
+6. Executing AST frontend in derive mode using pre-parsed AST for module `\gold'.
+Parameter \REGROOT_MODE = 9
+Generating RTLIL representation for module `$paramod\gold\REGROOT_MODE=s32'00000000000000000000000000001001'.
+Parameter \ICG = 1
+
+7. Executing AST frontend in derive mode using pre-parsed AST for module `\gate'.
+Parameter \ICG = 1
+Generating RTLIL representation for module `$paramod\gate\ICG=s32'00000000000000000000000000000001'.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+
+9. Executing PROC pass (convert processes to netlists).
+
+9.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 1 empty switch in `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:254$18'.
+Removing empty process `gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:254$18'.
+Cleaned up 1 empty switch.
+
+9.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 2 switch rules as full_case in process $proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:168$11 in module gate.
+Removed a total of 0 dead cases.
+
+9.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 2 assignments to connections.
+
+9.4. Executing PROC_INIT pass (extract init attributes).
+
+9.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:168$11'.
+
+9.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~2 debug messages>
+
+9.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:168$11'.
+     1/1: $0\g_icg.dr[7:0]
+Creating decoders for process `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:162$3'.
+
+9.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+9.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\gate.\g_icg.dr' using process `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:168$11'.
+  created $adff cell `$procdff$28' with positive edge clock and positive level reset.
+Creating register for signal `\gate.\g_icg.go_f' using process `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:162$3'.
+  created $dff cell `$procdff$29' with positive edge clock.
+Creating register for signal `\gate.\g_icg.go_h' using process `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:162$3'.
+  created $dff cell `$procdff$30' with positive edge clock.
+
+9.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+9.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:168$11'.
+Removing empty process `gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:168$11'.
+Removing empty process `gate.$proc$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:162$3'.
+Cleaned up 2 empty switches.
+
+9.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+<suppressed ~6 debug messages>
+Optimizing module gold.
+Optimizing module ICGx8DC_ASAP7_75t_R.
+
+10. Executing FLATTEN pass (flatten design).
+<suppressed ~1 debug messages>
+
+11. Executing SETUNDEF pass (replace undef values with defined constants).
+Using default as -undef with -expose.
+
+12. Executing ASYNC2SYNC pass.
+Replacing gate.$procdff$28 ($adff): ARST=\rst_n, D=$procmux$22_Y, Q=\g_icg.dr
+
+13. Executing OPT pass (performing simple optimizations).
+
+13.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+<suppressed ~1 debug messages>
+Optimizing module gold.
+Optimizing module ICGx8DC_ASAP7_75t_R.
+
+13.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 21 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Computing hashes of 19 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+<suppressed ~6 debug messages>
+Finding identical cells in module `\gold'.
+Computing hashes of 1 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Finding identical cells in module `\ICGx8DC_ASAP7_75t_R'.
+Computing hashes of 2 cells of `\ICGx8DC_ASAP7_75t_R'.
+Finding duplicate cells in `\ICGx8DC_ASAP7_75t_R'.
+Removed a total of 2 cells.
+
+13.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ICGx8DC_ASAP7_75t_R..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~5 debug messages>
+
+13.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gate.
+  Optimizing cells in module \gold.
+  Optimizing cells in module \ICGx8DC_ASAP7_75t_R.
+Performed a total of 0 changes.
+
+13.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 19 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Finding identical cells in module `\gold'.
+Computing hashes of 1 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Finding identical cells in module `\ICGx8DC_ASAP7_75t_R'.
+Computing hashes of 2 cells of `\ICGx8DC_ASAP7_75t_R'.
+Finding duplicate cells in `\ICGx8DC_ASAP7_75t_R'.
+Removed a total of 0 cells.
+
+13.6. Executing OPT_SHARE pass.
+
+13.7. Executing OPT_DFF pass (perform DFF optimizations).
+Adding SRST signal on $procdff$28 ($sdff) from module gate (D = $procmux$19_Y, Q = $auto$async2sync.cc:253:execute$32, rval = 8'01000000).
+
+13.8. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \ICGx8DC_ASAP7_75t_R..
+Removed 2 unused cells and 18 unused wires.
+<suppressed ~4 debug messages>
+
+13.9. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module gold.
+Optimizing module ICGx8DC_ASAP7_75t_R.
+
+13.10. Rerunning OPT passes. (Maybe there is more to do..)
+
+13.11. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \gate..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Running muxtree optimizer on module \gold..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Running muxtree optimizer on module \ICGx8DC_ASAP7_75t_R..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+<suppressed ~4 debug messages>
+
+13.12. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \gate.
+  Optimizing cells in module \gold.
+  Optimizing cells in module \ICGx8DC_ASAP7_75t_R.
+Performed a total of 0 changes.
+
+13.13. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\gate'.
+Computing hashes of 19 cells of `\gate'.
+Finding duplicate cells in `\gate'.
+Finding identical cells in module `\gold'.
+Computing hashes of 1 cells of `\gold'.
+Finding duplicate cells in `\gold'.
+Finding identical cells in module `\ICGx8DC_ASAP7_75t_R'.
+Computing hashes of 2 cells of `\ICGx8DC_ASAP7_75t_R'.
+Finding duplicate cells in `\ICGx8DC_ASAP7_75t_R'.
+Removed a total of 0 cells.
+
+13.14. Executing OPT_SHARE pass.
+
+13.15. Executing OPT_DFF pass (perform DFF optimizations).
+
+13.16. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \ICGx8DC_ASAP7_75t_R..
+
+13.17. Executing OPT_EXPR pass (perform const folding).
+Optimizing module gate.
+Optimizing module gold.
+Optimizing module ICGx8DC_ASAP7_75t_R.
+
+13.18. Finished fast OPT passes. (There is nothing left to do.)
+
+14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \gate..
+Finding unused cells or wires in module \gold..
+Finding unused cells or wires in module \ICGx8DC_ASAP7_75t_R..
+Removed 1 unused cells and 74 unused wires.
+<suppressed ~75 debug messages>
+
+15. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: me_idle_gold (\me_idle_gold), me_idle_gate (\me_idle_gate) -> me_idle
+Presumably equivalent wires: t_out_gold (\t_out_gold), t_out_gate (\t_out_gate) -> t_out
+Presumably equivalent wires: tap_gold (\tap_gold), tap_gate (\tap_gate) -> tap
+Presumably equivalent wires: tie_lo_gold (\tie_lo_gold), tie_lo_gate (\tie_lo_gate) -> tie_lo
+Presumably equivalent wires: tie_hi_gold (\tie_hi_gold), tie_hi_gate (\tie_hi_gate) -> tie_hi
+Presumably equivalent wires: tile_id_gold (\tile_id_gold), tile_id_gate (\tile_id_gate) -> tile_id
+Presumably equivalent wires: rst_n_gold (\rst_n_gold), rst_n_gate (\rst_n_gate) -> rst_n
+Presumably equivalent wires: ck_gold (\ck_gold), ck_gate (\ck_gate) -> ck
+Changing input A of cell $logic_not$/srv/opentallas-scratch2/claude/qc-a0-kits-13-1029/bhop/lec_nl/gate.sv:166$8_gate ($logic_not): \me_idle_gate -> \me_idle
+Presumably equivalent cells: u_g_gold u_g_gate (qfd_tile_nl_rp2_45) -> u_g
+
+16. Executing HIERARCHY pass (managing design hierarchy).
+
+16.1. Analyzing design hierarchy..
+Top module:  \lec_eq
+
+16.2. Analyzing design hierarchy..
+Top module:  \lec_eq
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removing unused module `\ICGx8DC_ASAP7_75t_R'.
+Removed 3 unused modules.
+
+17. Executing ASYNC2SYNC pass.
+
+18. Executing EQUIV_STRUCT pass.
+Running equiv_struct on module lec_eq:
+  Starting iteration 1.
+    Fwd merging 44 $equiv cells (from group of 44) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$639 and $auto$equiv_make.cc:370:find_same_cells$637.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$635 and $auto$equiv_make.cc:370:find_same_cells$633.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$631 and $auto$equiv_make.cc:370:find_same_cells$629.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$627 and $auto$equiv_make.cc:370:find_same_cells$625.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$623 and $auto$equiv_make.cc:370:find_same_cells$621.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$619 and $auto$equiv_make.cc:370:find_same_cells$617.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$615 and $auto$equiv_make.cc:370:find_same_cells$613.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$611 and $auto$equiv_make.cc:370:find_same_cells$609.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$607 and $auto$equiv_make.cc:370:find_same_cells$605.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$603 and $auto$equiv_make.cc:370:find_same_cells$601.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$599 and $auto$equiv_make.cc:370:find_same_cells$597.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$595 and $auto$equiv_make.cc:370:find_same_cells$593.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$591 and $auto$equiv_make.cc:370:find_same_cells$589.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$587 and $auto$equiv_make.cc:370:find_same_cells$585.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$583 and $auto$equiv_make.cc:370:find_same_cells$581.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$579 and $auto$equiv_make.cc:370:find_same_cells$577.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$575 and $auto$equiv_make.cc:370:find_same_cells$573.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$571 and $auto$equiv_make.cc:370:find_same_cells$569.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$567 and $auto$equiv_make.cc:370:find_same_cells$565.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$563 and $auto$equiv_make.cc:370:find_same_cells$561.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$559 and $auto$equiv_make.cc:370:find_same_cells$557.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$643 and $auto$equiv_make.cc:370:find_same_cells$641.
+  Starting iteration 2.
+    Fwd merging 22 $equiv cells (from group of 22) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$639 and $auto$equiv_make.cc:370:find_same_cells$595.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$619 and $auto$equiv_make.cc:370:find_same_cells$591.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$631 and $auto$equiv_make.cc:370:find_same_cells$587.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$615 and $auto$equiv_make.cc:370:find_same_cells$583.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$579 and $auto$equiv_make.cc:370:find_same_cells$611.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$575 and $auto$equiv_make.cc:370:find_same_cells$627.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$571 and $auto$equiv_make.cc:370:find_same_cells$607.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$567 and $auto$equiv_make.cc:370:find_same_cells$635.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$563 and $auto$equiv_make.cc:370:find_same_cells$603.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$559 and $auto$equiv_make.cc:370:find_same_cells$623.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$643 and $auto$equiv_make.cc:370:find_same_cells$599.
+  Starting iteration 3.
+    Fwd merging 10 $equiv cells (from group of 11) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$575 and $auto$equiv_make.cc:370:find_same_cells$619.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$571 and $auto$equiv_make.cc:370:find_same_cells$615.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$567 and $auto$equiv_make.cc:370:find_same_cells$639.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$563 and $auto$equiv_make.cc:370:find_same_cells$559.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$579 and $auto$equiv_make.cc:370:find_same_cells$643.
+  Starting iteration 4.
+    Fwd merging 6 $equiv cells (from group of 6) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$571 and $auto$equiv_make.cc:370:find_same_cells$563.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$575 and $auto$equiv_make.cc:370:find_same_cells$579.
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$567 and $auto$equiv_make.cc:370:find_same_cells$631.
+  Starting iteration 5.
+    Fwd merging 2 $equiv cells (from group of 3) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$575 and $auto$equiv_make.cc:370:find_same_cells$571.
+  Starting iteration 6.
+    Fwd merging 2 $equiv cells (from group of 2) using strategy deduplicate:
+      Merging cells $auto$equiv_make.cc:370:find_same_cells$575 and $auto$equiv_make.cc:370:find_same_cells$567.
+  Starting iteration 7.
+    Nothing to merge.
+  Performed a total of 43 merges in module lec_eq.
+
+19. Executing EQUIV_SIMPLE pass.
+Found 518 unproven $equiv cells (5 groups) in lec_eq:
+  Trying to prove $equiv for $auto$equiv_make.cc:369:find_same_cells$574:ezsat
+ failed.
+  Trying to prove $equiv for \tie_hi:ezsat
+ success!
+  Trying to prove $equiv for \tie_lo:ezsat
+ success!
+ Grouping SAT models for \t_out:
+  Trying to prove $equiv for \t_out [0]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [1]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [2]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [3]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [4]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [5]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [6]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [7]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [8]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [9]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [10]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [11]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [12]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [13]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [14]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [15]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [16]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [17]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [18]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [19]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [20]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [21]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [22]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [23]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [24]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [25]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [26]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [27]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [28]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [29]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [30]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [31]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [32]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [33]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [34]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [35]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [36]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [37]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [38]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [39]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [40]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [41]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [42]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [43]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [44]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [45]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [46]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [47]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [48]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [49]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [50]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [51]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [52]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [53]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [54]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [55]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [56]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [57]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [58]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [59]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [60]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [61]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [62]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [63]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [64]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [65]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [66]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [67]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [68]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [69]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [70]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [71]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [72]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [73]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [74]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [75]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [76]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [77]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [78]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [79]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [80]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [81]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [82]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [83]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [84]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [85]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [86]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [87]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [88]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [89]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [90]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [91]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [92]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [93]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [94]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [95]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [96]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [97]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [98]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [99]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [100]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [101]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [102]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [103]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [104]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [105]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [106]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [107]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [108]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [109]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [110]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [111]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [112]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [113]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [114]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [115]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [116]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [117]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [118]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [119]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [120]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [121]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [122]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [123]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [124]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [125]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [126]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [127]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [128]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [129]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [130]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [131]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [132]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [133]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [134]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [135]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [136]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [137]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [138]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [139]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [140]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [141]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [142]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [143]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [144]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [145]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [146]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [147]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [148]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [149]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [150]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [151]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [152]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [153]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [154]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [155]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [156]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [157]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [158]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [159]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [160]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [161]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [162]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [163]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [164]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [165]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [166]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [167]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [168]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [169]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [170]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [171]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [172]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [173]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [174]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [175]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [176]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [177]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [178]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [179]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [180]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [181]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [182]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [183]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [184]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [185]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [186]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [187]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [188]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [189]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [190]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [191]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [192]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [193]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [194]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [195]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [196]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [197]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [198]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [199]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [200]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [201]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [202]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [203]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [204]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [205]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [206]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [207]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [208]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [209]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [210]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [211]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [212]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [213]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [214]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [215]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [216]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [217]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [218]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [219]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [220]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [221]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [222]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [223]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [224]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [225]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [226]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [227]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [228]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [229]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [230]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [231]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [232]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [233]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [234]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [235]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [236]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [237]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [238]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [239]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [240]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [241]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [242]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [243]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [244]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [245]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [246]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [247]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [248]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [249]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [250]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [251]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [252]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [253]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [254]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [255]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [256]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [257]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [258]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [259]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [260]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [261]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [262]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [263]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [264]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [265]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [266]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [267]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [268]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [269]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [270]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [271]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [272]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [273]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [274]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [275]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [276]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [277]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [278]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [279]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [280]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [281]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [282]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [283]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [284]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [285]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [286]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [287]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [288]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [289]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [290]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [291]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [292]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [293]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [294]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [295]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [296]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [297]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [298]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [299]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [300]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [301]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [302]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [303]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [304]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [305]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [306]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [307]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [308]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [309]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [310]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [311]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [312]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [313]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [314]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [315]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [316]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [317]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [318]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [319]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [320]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [321]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [322]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [323]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [324]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [325]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [326]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [327]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [328]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [329]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [330]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [331]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [332]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [333]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [334]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [335]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [336]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [337]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [338]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [339]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [340]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [341]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [342]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [343]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [344]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [345]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [346]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [347]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [348]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [349]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [350]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [351]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [352]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [353]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [354]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [355]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [356]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [357]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [358]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [359]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [360]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [361]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [362]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [363]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [364]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [365]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [366]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [367]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [368]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [369]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [370]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [371]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [372]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [373]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [374]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [375]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [376]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [377]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [378]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [379]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [380]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [381]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [382]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [383]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [384]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [385]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [386]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [387]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [388]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [389]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [390]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [391]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [392]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [393]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [394]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [395]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [396]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [397]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [398]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [399]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [400]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [401]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [402]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [403]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [404]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [405]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [406]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [407]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [408]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [409]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [410]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [411]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [412]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [413]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [414]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [415]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [416]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [417]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [418]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [419]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [420]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [421]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [422]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [423]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [424]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [425]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [426]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [427]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [428]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [429]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [430]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [431]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [432]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [433]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [434]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [435]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [436]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [437]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [438]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [439]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [440]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [441]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [442]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [443]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [444]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [445]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [446]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [447]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [448]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [449]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [450]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [451]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [452]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [453]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [454]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [455]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [456]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [457]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [458]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [459]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [460]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [461]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [462]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [463]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [464]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [465]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [466]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [467]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [468]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [469]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [470]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [471]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [472]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [473]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [474]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [475]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [476]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [477]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [478]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [479]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [480]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [481]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [482]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [483]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [484]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [485]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [486]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [487]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [488]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [489]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [490]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [491]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [492]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [493]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [494]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [495]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [496]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [497]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [498]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [499]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [500]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [501]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [502]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [503]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [504]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [505]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [506]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [507]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [508]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [509]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [510]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [511]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [512]:ezsat
+ success!
+  Trying to prove $equiv for \t_out [513]:ezsat
+ success!
+  Trying to prove $equiv for \me_idle:ezsat
+ success!
+Proved 517 previously unproven $equiv cells.
+
+20. Executing EQUIV_INDUCT pass.
+Found 1 unproven $equiv cells in module lec_eq:
+ERROR: No SAT model available for cell u_g (qfd_tile_nl_rp2_45).
