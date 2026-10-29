@@ -1,0 +1,5 @@
+FAULT ref 0 w 1 e 0
+SM5 fault routing ref 1 w 1 e 1 (want 1 0 1)
+lockstep lane-edges 100564, SM-writer emissions 2368, half-1 emissions 768/768
+TB_WRQ4_LOCKSTEP FAIL MUT=0 mismatches+faults=2
+/srv/opentallas-scratch2/claude/codex-hbm-corepush-1029/wrq_oneclk/tb.sv:169: $finish called at 12578000 (1ps)

@@ -1,0 +1,13 @@
+# HBM current core push
+
+Current C25c overlay input: die-hbm-11/c25c_types_6658. Inventory: 81 used partition types, 78 distinct hard-core modules, 80 module/pin views, 1069 hard-core references across the templates. It replaces the old 210-recipe count for current source coverage; this is not a sign-off count.
+
+`gen_selector.sh` launches generation only on approved process-split source 23c203b01. The initial fresh worktree missed recipes_split.json; the failure is preserved in selector_procsplit, and v2 adds the required sparse path. Current job intel2 unit2770515-1793267988. The inherited old-source GEN remains live and untouched. No physical build is authorized by this generation job.
+
+`ctlx_candidate.py` emits an unsigned 216x233.28 proposal from the actual current overlay. It preserves 5782 bit identities per core over all four affected instances and exports all before/after coordinates, root/tap impacts and station dependencies. The macro and nine island locations are the reviewed native-area/pin-capacity packet. See ctlx_review.json. This proposal is held until the die owner jointly translates BFQ3 or implements actual priced relays, rebuilds all incident source-bound stations and clocks, and checks lower-layer pin access. No standalone outline adoption or route.
+
+`wrq_oneclk` is a source candidate with five clock references replaced by clk; the default released module is untouched. It removes five redundant physical clock roots only when current native bind proves all six inputs are the same clock. Existing real WRQ4 vs 8-lane calendar bench passes 100564 lane-edge checks and 2368 emitted writer results, with 768 half1 results for each quadrant. Existing row/phase mutants are caught (832/1284 mismatches). The wrong lane-clock-polarity control is caught with 2 mismatches. Added data/reset/model cycles: 0. No new physical tree, timing, region or pin admission is claimed.
+
+WRQ old k12 root cause is separate face/body clock trees on a short data path, not an input-pad failure. Measured raw CTS launch126.64ps vs capture256.49ps; data44.43ps vs hold+unc38.48ps gives -123.89ps. Clock clk_l1 carries an extra root buffer28.65ps and leaf51 wire68.46ps+buffer47.33ps. Corrected-RC CTS guard was -69.58/1275, later GRT guard -101.66/2533. Fresh current one-root local tree with paired body/face sinks is the structural successor; the old failure stays unchanged.
+
+QW_DEC k3fp4 short shiftline12114->13202 has data40.67ps, capture205.59-launch181.82=23.77ps, hold12.05+unc25ps, yielding -18.89ps (guard -19.23/2898). Current full-face pin redistribution plus a local tree is required before a fresh kit. Legacy placement data is absent, so no old geometry retry.

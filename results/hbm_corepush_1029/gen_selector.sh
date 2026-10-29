@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 w=/srv/opentallas-scratch2/claude/wt/codex-hbm-corepush-1029
-r=/srv/opentallas-scratch2/claude/codex-hbm-corepush-1029/selector_procsplit
+r=/srv/opentallas-scratch2/claude/codex-hbm-corepush-1029/selector_procsplit_v2
 p=/srv/opentallas-scratch2/claude/codex-hbm-corepush-1029/plan
 v=/srv/opentallas-scratch2/claude/hbm-cores-kits-4/k9/views.json
 m=$w/results/hbm_cores_kits_3/mp/ot_hbm_idx_selector_static_sel.json

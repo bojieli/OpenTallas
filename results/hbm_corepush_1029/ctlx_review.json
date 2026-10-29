@@ -1,0 +1,18 @@
+{
+ "image": "/srv/opentallas-scratch/claude/codex-hbm-corepush-1029/ctlx_candidate_v2/ctlx_candidate.png",
+ "viewed": true,
+ "verdict": "PASS-COND sourceplanfeasibility ONLY; not PNR approval",
+ "findings": [
+  "SRAM uppercentred at60.48,142.56, clearof9islands; centralentry legal belowmacro",
+  "Pin faces and orderedbitidentities preserved,2lowerlayers allowfullspan at5.2pins/um",
+  "M2/M3 externalpin viaaccess andPG contact NOT measured",
+  "4newlots whollyinsideoldlots,4rootcoordinates+perbitold/new recorded",
+  "BFQ3paired+69.12Y/currentstrictgraphstation/clocksourcecompose required; standalone shrink forbidden"
+ ],
+ "counts": {
+  "instances": 4,
+  "pins_per_instance": 5782,
+  "perbit_records": 23128,
+  "station_dependency_records": 1044
+ }
+}

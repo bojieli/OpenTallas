@@ -1,0 +1,52 @@
+{
+ "classification": "SOURCE CANDIDATE ONLY, default master unchanged; enable only with source-bound six-clock alias proof",
+ "original_source_sha256": "bc6c11b50466288705aa63942a13bd0e65a827cdeaecdbcce13283e9a43da4ef",
+ "candidate_sha256": "4d53338bbffd3334d86abd60571eb3b806d97f7e0b50b3f1a056baabfaeedad5",
+ "body_changes": {
+  "clk_cal": "clk",
+  "clk_l0": "clk",
+  "clk_l1": "clk",
+  "clk_l2": "clk",
+  "clk_l3": "clk"
+ },
+ "data_reset_logic_changes": 0,
+ "added_cycles": 0,
+ "clockpins": {
+  "before": [
+   "clk",
+   "clk_cal",
+   "clk_l0",
+   "clk_l1",
+   "clk_l2",
+   "clk_l3"
+  ],
+  "after": [
+   "clk"
+  ]
+ },
+ "current_plan_entry": {
+  "xy_um": [
+   69.12,
+   108.0
+  ],
+  "merged_clock_ports": [
+   "clk",
+   "clk_cal",
+   "clk_l0",
+   "clk_l1",
+   "clk_l2",
+   "clk_l3"
+  ]
+ },
+ "proof": {
+  "positive": "PASS100564laneedges/2368writeremissions/768+768half1results",
+  "row_mutant": "CAUGHT832mismatches",
+  "phase_mutant": "CAUGHT1284mismatches",
+  "wrong_lane_clock_polarity": "CAUGHT2mismatches",
+  "admitted_jobs": [
+   "intel2:oth-ubuntu-3007684-1793268560",
+   "intel2:oth-ubuntu-3027293-1793268613"
+  ]
+ },
+ "physical_next": "New one-root localclocktree, sourceface/body paired sinks cluster beforeCTS; no reusing old independently-rootedclk_l trees"
+}
