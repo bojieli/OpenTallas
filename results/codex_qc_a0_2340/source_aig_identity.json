@@ -1,0 +1,8 @@
+{
+ "verdict": "EXACT_SOURCE_AIG_EQUIVALENT",
+ "aig_sha256": "86da9d2367ef5686ac7add6cfd0990f8c1303031fecf357c758679acd985f6c7",
+ "map_set_sha256": "73ce577b2f2699f4a203611c8b0a5781a459cc4b917c6c807b316055d1464302",
+ "map_entries": 175241,
+ "basis": "Actual NLparent: parser-explicit original undeclared unused clocks and original inactive twin expression vs new declared groupclock alias + guarded twin index. Native gold AIG bytes identical and every input/latch/output point mapping identical as a multiset. No circuit function, state, point mapping or cycle changed.",
+ "superseded_jobs": "Only my two extra old-gate solver checks intentionally stopped after exact source AIG identity; their partial files and exit errors retained. The normal new-kit RTL-vs-synth LEC continues."
+}
