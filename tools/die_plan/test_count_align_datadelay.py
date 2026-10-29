@@ -183,3 +183,14 @@ def test_clock_start_plan_missing_one_corner_fails_closed():
         data_delay=dict(ports=ports, model=None, corners=dict(FF=ports)))
     assert info["data_delay"]["missing"] > 0
     assert not any(e["clean_ok"] for e in edges)
+
+
+def test_corner_model_predicts_candidates_but_does_not_qualify_the_gate():
+    _, _, _, _, _, s0, _, _ = plan_with(None)
+    ctx = ST.ctx_chain()
+    doc = dict(ports={}, model=None, corners={}, corner_models={c: ZERO for c in ctx})
+    root, edges, info = cap.clock_start_edges(ST.chain_rows(), ctx, max_hop_um=HOP, data_delay=doc)
+    s, out, regs = cap.plan(ST.chain_rows(), T, AP, .05, start_edges=edges, start_root=root)
+    assert info["data_delay"]["modelled"] == len(edges)
+    assert s["start_tree"]["start_fail"] == s0["start_tree"]["start_fail"] == 0
+    assert all(not r["ok"] for r in gate(bind_of(s, out, regs, edges), ctx, {}).values())
