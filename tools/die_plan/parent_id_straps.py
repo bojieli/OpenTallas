@@ -19,7 +19,7 @@ PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
-def validate_parent_id_straps(descriptor, inputs=None, pins=None):
+def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=None):
     """Return {port: {width, value}}; inputs optionally maps input names to widths.
 
     The caller's actual input inventory is authoritative. A missing or output
@@ -55,6 +55,8 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None):
     # Exact owner-approved key-buffer position ID; never authorize a similarly
     # named data/control port on another hardware master.
     if 'strap_lane_id' in raw:
+        if actual_module is not None and actual_module != 'ot_hnx_idxn_keybuf_slice':
+            raise ValueError('strap_lane_id actual hardware master differs from KEYBUF contract')
         pos = descriptor.get('position_id_contract')
         if descriptor.get('module') != 'ot_hnx_idxn_keybuf_slice' or not isinstance(pos, dict):
             raise ValueError('strap_lane_id requires exact KEYBUF hardware master and position contract')

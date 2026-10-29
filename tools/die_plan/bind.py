@@ -2897,7 +2897,7 @@ class Binder:
                     descriptor = next(d for d in t.get("contents", []) + t.get("hard_cores", [])
                                       if d.get("parent_id_leaf", d.get("inst")) == r
                                       and (d.get("parent_id_straps") or d.get("straps")))
-                    validate_parent_id_straps(descriptor, actual_inputs)
+                    validate_parent_id_straps(descriptor, actual_inputs, actual_module=F.cells[ci].module)
                 except ValueError as e:
                     raise BindError(f"parent ID {tn}.{r}: {e}") from e
                 expected = id_decls[r][pn]["value"]
