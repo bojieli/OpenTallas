@@ -250,3 +250,9 @@ def test_pins_rebase_refuses_missing_foreign_or_sidecar(tmp_path):
 def test_configs_without_rebase_pass_the_plan_through(tmp_path):
     c = cfg("kv")
     assert O.rebase_plan(c, tmp_path) == (c["inputs"]["plan"], None)
+
+def test_reference_prefers_generated_copy(tmp_path):
+    (tmp_path / "tree.json").write_text("{}")
+    assert O.reference_file(tmp_path, "tree.json").name == "tree.json"
+    (tmp_path / "tree_GENERATED.json").write_text("{}")
+    assert O.reference_file(tmp_path, "tree.json").name == "tree_GENERATED.json"
