@@ -125,3 +125,41 @@ def test_lint_closure_unchanged_when_manifest_complete(tmp_path):
     old, _ = E.closure(["solo"], idx, prefer)
     new, missing = V.LintSources(ab0, tmp_path, rep, idx, prefer).closure(["solo"])
     assert new == old and missing == []
+
+
+def test_split_leaves_take_native_glue_cells(tmp_path):
+    ab0, rep, idx, prefer = _tree(tmp_path)
+    LS = V.LintSources(ab0, tmp_path, rep, idx, prefer)
+    part = ("module part (input wire clk);\n  leaf2 u_l (.clk(clk));\n  ot_bind_native_abc g_u_x_1 (.clk(clk));\n"
+            "  ot_dp_st u_st (.clk(clk));\nendmodule\n")
+    # MUTANT (bind6 lint): the u_-only pattern missed the g_ native glue cells (4750 MODMISSING)
+    assert V.split_leaves(part, ["part"], idx) == ["leaf2"]
+    assert V.split_leaves(part, ["part"], LS) == ["leaf2", "ot_bind_native_abc"]
+
+
+def test_macro_provider_file_is_added_before_its_user(tmp_path):
+    ab0, rep, idx, prefer = _tree(tmp_path)
+    (tmp_path / "rtl/sel").mkdir()
+    (tmp_path / "rtl/sel/sel_tile.sv").write_text("`define SELT_OB 354\nmodule sel_t (input wire clk);\n"
+                                                  "  ot_ve_qadd u_q (.clk(clk));\nendmodule\n")
+    (tmp_path / "rtl/sel/ctl.sv").write_text("module ctl (input wire [`SELT_OB-1:0] f, input wire clk);\n"
+                                             "`ifdef OT_X\n`endif\nendmodule\n")
+    (tmp_path / "rtl/leaf3.sv").write_text("module leaf3 (input wire clk);\n  ctl u_c (.clk(clk));\nendmodule\n")
+    ab0["files"].append("rtl/leaf3.sv")
+    ab0["defines"] = ["OT_X"]
+    idx = E.module_index([], ab0["files"], tmp_path)
+    files, missing = V.LintSources(ab0, tmp_path, rep, idx, prefer).closure(["leaf3"])
+    names = [Path(f).relative_to(tmp_path).as_posix() for f in files]
+    assert missing == []
+    assert names.index("rtl/sel/sel_tile.sv") < names.index("rtl/sel/ctl.sv")
+    assert "rtl/eng/ot_ve_fp.sv" in names                      # the provider's own children are closed too
+
+
+def test_declared_literal_matches_only_its_own_value():
+    # bind6/bind6chk: 125,994 proven-dead literals (want ['literal','0'], bound 1'b0 = ['tied','0']) failed as TIED
+    assert V.declared_constant(["literal", "0"], ["tied", "0"])
+    assert V.declared_constant(["strap", "1"], ["tied", "1"])
+    assert not V.declared_constant(["literal", "0"], ["tied", "1"])      # MUTANT: wrong value stays TIED
+    assert not V.declared_constant(["pin", "a.q[0]", 0, False], ["tied", "0"])
+    assert not V.declared_constant(None, ["tied", "0"])
+    assert not V.declared_constant(["literal", "0"], ["pin", "a.q[0]", 0, False])
