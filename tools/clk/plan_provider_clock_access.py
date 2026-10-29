@@ -46,6 +46,7 @@ def main(argv=None):
     ap=argparse.ArgumentParser(description=__doc__)
     for key in ('geometry','loads','graph','via-facts','out'):ap.add_argument('--'+key,type=Path,required=True)
     ap.add_argument('--retained-clock',type=Path,action='append',default=[])
+    ap.add_argument('--reserved-power',type=Path,action='append',default=[])
     a=ap.parse_args(argv);a.out.mkdir(parents=True,exist_ok=True);t=time.time()
     import numpy as np
     from shapely import box
@@ -73,6 +74,10 @@ def main(argv=None):
     for file in a.retained_clock:
         for net,ly,*r in json.loads(file.read_text()):
             if ly in SPACING:b[ly].append([round(v*D) for v in r]);meta[ly].append((net,net,'retained_clock'))
+    for file in a.reserved_power:
+        for net,ly,*r in json.loads(file.read_text()):
+            if net not in ('VDD','VSS'):raise ValueError('reserved power is not VDD/VSS')
+            if ly in SPACING:b[ly].append([round(v*D) for v in r]);meta[ly].append((net,net,'planned_PG'))
     trees={};arrays={}
     for ly,rr in b.items():
         ar=np.asarray(rr,dtype=float);arrays[ly]=ar;trees[ly]=STRtree(box(ar[:,0],ar[:,1],ar[:,2],ar[:,3]))
@@ -115,8 +120,9 @@ def main(argv=None):
                 if selected:break
         if selected is None:failed.append(dict(inst=load['inst'],stage=load['stage'],net=load['net'],pin='CLK',cause='no all-layer-clear stack or bounded M3 jog on actual M1 pin'));continue
         x,y,ss=selected[:3]
+        original=P.pin_entry(load,D,via12)['xy'];changes+=int(original!=[x/D,y/D]);load['entry_xy_dbu']=[x,y]
         if len(selected)>3:load['upper_xy_dbu']=[x+selected[3],y+selected[4]]
-        original=P.pin_entry(load,D,via12)['xy'];changes+=int(original!=[x/D,y/D]);load['entry_xy_dbu']=[x,y];load['access_basis']='actual M1 pin + full lower-stack signal/OBS/PG clearance'
+        load['entry_xy_dbu']=[x,y];load['access_basis']='actual M1 pin + full lower-stack signal/OBS/PG clearance'
         ep=P.pin_entry(load,D,via12);rows.append(dict(port=f'provider_clk_{index:05d}',stage=load['stage'],**ep))
         for ly,r in ss:
             for key in bins(r):placed[ly][key].append((load['net'],r))

@@ -25,3 +25,12 @@ def test_m3_jog_keeps_native_m1_endpoint_and_upper_column_separate():
     p=F.provider_join('M8',(10.,20.),'M1',(11.109,20.364),False,original,(11.109,20.236))
     assert ('M3',11.109,20.364) in p and ('M3',11.109,20.236) in p
     assert p[-1]==('M1',11.109,20.236)
+
+
+def test_parent_stub_is_explicit_without_growing_native_pin():
+    ep=dict(inst='phy',pin='clk',net='ck_n1',layer='M7',xy=[1.,1.],rect_um=[.984,.8,1.016,1.2])
+    stub=dict(port='phy_clk',inst='phy',pin='clk',net='ck_n1',rect_um=list(ep['rect_um']),entry_xy_um=[1.,1.32],m7_stub_um=[.984,.8,1.016,1.347])
+    plan,ss=F.native_access({'phy_clk':ep},{'records':[]},{'status':'PASS_GEOMETRY','failures':[],'stubs':[stub]})
+    assert ep['rect_um']==[.984,.8,1.016,1.2] and ss['phy_clk']['m7_stub_um'][3]>ep['rect_um'][3]
+    stub['rect_um']=[.984,.8,1.016,1.5]
+    with pytest.raises(ValueError,match='pin geometry changed'):F.native_access({'phy_clk':ep},{'records':[]},{'status':'PASS_GEOMETRY','failures':[],'stubs':[stub]})
