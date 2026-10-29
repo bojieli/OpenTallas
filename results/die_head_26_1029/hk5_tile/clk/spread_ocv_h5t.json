@@ -1,0 +1,166 @@
+{
+ "rule": "12.15c in-region spread <=150 ps incl. OCV+droop",
+ "method": "DIE-HEAD-26: in-region spread incl. OCV + droop (12.15c \"in-region spread <=150 ps incl. OCV+droop\").\nPer region (spine_regions part_region), every ordered tap pair (a late, b early):\n  skew = f*(arr_a - arr_b) on OpenSTA late arrivals, f = spice factor (inverter tree: SPICE_CLOCK_CAL_INV 0.9324/0.9380\n         = die_sta_related spice for inv; also reported with the x1.0485/1.0552 BUF factor as the pessimistic bound)\n  ocv  = clk_aocv.branch_pessimism (approved table clk_aocv_table_g021, class Ainv, one stage per CKINVDCx16) on the two\n         branches below their last common clock CELL (cell-level LCA from tree.json parent_of), core latency NOT included\n         (die tap spread), distance = bbox diagonal of the 2 taps + LCA cell.  droop: shared rule (same region -> 0) and,\n         as a bound, stated (+one_sided_late_frac on the late branch always).\nusage: spread_ocv.py TAG REGIONS_JSON TOOLS_DIE_PLAN_DIR",
+ "corners": {
+  "TT": {
+   "regions": 38,
+   "worst_shared_droop": 90.68,
+   "worst_stated_droop": 105.73,
+   "worst_bufx105_stated": 114.13,
+   "n_over_150_shared": 0,
+   "n_over_150_stated": 0,
+   "worst5": [
+    {
+     "region": "sp3",
+     "spread_ocv": 90.7,
+     "stated": 105.7,
+     "raw": 72.3,
+     "a": "t_sp3__clk_t4",
+     "b": "t_sp3_xe_o_shim__clk",
+     "ocv_shared": 23.2,
+     "ocv_stated": 38.3,
+     "stages": [
+      12,
+      11
+     ]
+    },
+    {
+     "region": "sp5",
+     "spread_ocv": 84.8,
+     "stated": 100.8,
+     "raw": 65.0,
+     "a": "t_sp5__clk_t3",
+     "b": "t_sp5__clk_t15",
+     "ocv_shared": 24.1,
+     "ocv_stated": 40.2,
+     "stages": [
+      13,
+      12
+     ]
+    },
+    {
+     "region": "sp0",
+     "spread_ocv": 81.8,
+     "stated": 96.6,
+     "raw": 63.1,
+     "a": "t_sp0__clk_t28",
+     "b": "t_sp0__clk_t5",
+     "ocv_shared": 23.0,
+     "ocv_stated": 37.7,
+     "stages": [
+      11,
+      12
+     ]
+    },
+    {
+     "region": "sp4",
+     "spread_ocv": 78.3,
+     "stated": 95.4,
+     "raw": 55.9,
+     "a": "t_sp4__clk_t4",
+     "b": "t_sp4_xe_o_shim__clk",
+     "ocv_shared": 26.2,
+     "ocv_stated": 43.3,
+     "stages": [
+      13,
+      13
+     ]
+    },
+    {
+     "region": "sp2",
+     "spread_ocv": 72.6,
+     "stated": 88.8,
+     "raw": 51.7,
+     "a": "t_sp2__clk_t12",
+     "b": "t_sp2__clk_t26",
+     "ocv_shared": 24.4,
+     "ocv_stated": 40.5,
+     "stages": [
+      13,
+      13
+     ]
+    }
+   ]
+  },
+  "FF": {
+   "regions": 38,
+   "worst_shared_droop": 79.21,
+   "worst_stated_droop": 92.31,
+   "worst_bufx105_stated": 99.23,
+   "n_over_150_shared": 0,
+   "n_over_150_stated": 0,
+   "worst5": [
+    {
+     "region": "sp5",
+     "spread_ocv": 79.2,
+     "stated": 92.3,
+     "raw": 59.0,
+     "a": "t_sp5_xw_o_shim__clk",
+     "b": "t_sp5__clk_t15",
+     "ocv_shared": 23.9,
+     "ocv_stated": 37.0,
+     "stages": [
+      13,
+      13
+     ]
+    },
+    {
+     "region": "sp3",
+     "spread_ocv": 75.5,
+     "stated": 86.7,
+     "raw": 58.0,
+     "a": "t_sp3__clk_t4",
+     "b": "t_sp3_xe_o_shim__clk",
+     "ocv_shared": 21.1,
+     "ocv_stated": 32.3,
+     "stages": [
+      12,
+      11
+     ]
+    },
+    {
+     "region": "sp0",
+     "spread_ocv": 74.3,
+     "stated": 85.4,
+     "raw": 57.0,
+     "a": "t_sp0__clk_t22",
+     "b": "t_sp0__clk_t5",
+     "ocv_shared": 20.8,
+     "ocv_stated": 32.0,
+     "stages": [
+      11,
+      12
+     ]
+    },
+    {
+     "region": "sp2",
+     "spread_ocv": 71.4,
+     "stated": 84.4,
+     "raw": 50.8,
+     "a": "t_sp2_xe_o_shim__clk",
+     "b": "t_sp2__clk_t26",
+     "ocv_shared": 23.8,
+     "ocv_stated": 36.8,
+     "stages": [
+      13,
+      14
+     ]
+    },
+    {
+     "region": "sp4",
+     "spread_ocv": 69.4,
+     "stated": 82.5,
+     "raw": 48.1,
+     "a": "t_sp4__clk_t4",
+     "b": "t_sp4_xe_o_shim__clk",
+     "ocv_shared": 24.3,
+     "ocv_stated": 37.4,
+     "stages": [
+      13,
+      13
+     ]
+    }
+   ]
+  }
+ }
+}
