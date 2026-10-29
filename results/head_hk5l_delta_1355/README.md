@@ -1,0 +1,5 @@
+Current DIE-HEAD-30 hk5l extraction, 2026-10-29 14:01 PDT. Inputs are the inherited intel2 `die-head-30/hk5l/{base_plan.json,source_plan_hk5l.json}` on branch f9092c01b. This physical trial is 21 types/351 parts, whereas the adopted realized source remains 25 types/357 parts. It must not replace that source of record.
+
+All 327 canonical `schema.Plan.lane_latency()` cycle values are identical before/after. The 54 changed leaves comprise the note and tile/shim/turn landing pin/window/edge-clock geometry. Data/RTL parameters, lane membership and latency remain unchanged. Existing 9371/9480 component prices therefore incur zero new **data-cycle** increment from this delta; no phase/CA/START qualification is implied.
+
+`apply_delta.py SOURCE_CANDIDATE OUT` replays only the non-note changed fields and refuses any stale old value before writing. It preserves unrelated source types/parts and fails closed if re-composition is required. After composing compatible geometry onto the adopted 25-type source, the die owner must regenerate the clock/CA/START interface, as planned.
