@@ -874,3 +874,30 @@ def test_glue_source_names_share_only_same_typed_source(tmp_path):
     assert bind.main(["bind", str(pf), "--out", str(out), "--strict"]) == 0
     assert not report(out)["type_splits"]
     assert run(pf, out, "verify") == 0 and verify(out)["verdict"] == "PASS"
+
+
+def test_kit_closure_wide_index_finds_helpers_outside_manifest(tmp_path):
+    """DIE-S81-23 10-29 (S81 LP: VE/CN/FP4QDQ helpers absent from synthesis): a child defined outside the selected
+    (manifest) index was dropped with no missing entry.  With the repo-wide index it is taken when unique, reported as
+    missing when ambiguous; without `wide` the old (silent) behaviour is unchanged."""
+    import bind_elab as E
+    sel, other = tmp_path / "rtl" / "s81", tmp_path / "rtl" / "hbm"
+    sel.mkdir(parents=True); other.mkdir(parents=True)
+    (sel / "leaf.sv").write_text("module leaf (input wire a, output wire y, output wire z);\n"
+                                 "  fp4qdq u_q (.a(a), .y(y));\n  dup_h u_d (.a(a), .y(z));\nendmodule\n")
+    (other / "fp4qdq.sv").write_text("module fp4qdq (input wire a, output wire y);\n  inner u_i (.a(a), .y(y));\nendmodule\n"
+                                     "module inner (input wire a, output wire y);\n  assign y = a;\nendmodule\n")
+    (other / "d1.sv").write_text("module dup_h (input wire a, output wire y);\n  assign y = a;\nendmodule\n")
+    (other / "d2.sv").write_text("module dup_h (input wire a, output wire y);\n  assign y = ~a;\nendmodule\n")
+    idx = E.module_index([str(sel)], [], str(tmp_path))
+    wide = E.module_index([str(tmp_path / "rtl")], [], str(tmp_path))
+    files, missing, _ = bind.kit_closure(["leaf"], idx, [])
+    assert [Path(f).name for f in files] == ["leaf.sv"] and not missing          # old: silent omission
+    widened = {}
+    files, missing, _ = bind.kit_closure(["leaf"], idx, [], wide=wide, widened=widened)
+    assert sorted(Path(f).name for f in files) == ["fp4qdq.sv", "leaf.sv"], files
+    assert sorted(widened) == ["fp4qdq", "inner"]
+    assert len(missing) == 1 and missing[0].startswith("dup_h (outside the selected index, 2 definitions"), missing
+    widened = {}
+    files, missing, _ = bind.kit_closure(["leaf"], idx, [str(other / "d2.sv")], wide=wide, widened=widened)
+    assert not missing and Path(widened["dup_h"]).name == "d2.sv"
