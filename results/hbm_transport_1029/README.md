@@ -102,3 +102,32 @@ The group wrapper keeps stdout and exit JSON at street_logs/<group>.* on epyc2.
 --keep-going preserves completed type fragments while independently diagnosing
 other failures. The candidate remains held until all required fragments, latency
 prices, complete source allocation, typed metadata, G0 and visual review close.
+
+## Wide-bank window alignment
+
+First stable batch: 39/64 parts passed actual-site construction, plus reusable
+NE_b101 = 40. Twenty-five failures remain recorded: six dedicated Z-band
+packing failures, four legal-row failures caused by protected banks absent from
+DP projection obstacles, two b110 path failures, one wide NW_b101 turn failure,
+and twelve SU path failures. Row allocation now gives protected bank rectangles
+to the proposal geometry as well as to the final legal-row allocator.
+
+The exact endpoint-cut lower bound proved a real NW/NE_b011 problem: 3,664
+vertical FT bits cross one cut, against 3,564 M7 tracks at 60%. The blind compact
+face packing had displaced the wide L15 input/output windows by ~609.5um.
+`align.py` translates entire edge window stacks within their unused physical
+face space. Bounded potential constraints prioritize wide EW bank flows; payload
+widths and order remain unchanged, all pins remain snapped by the canonical
+technology mapper, and usable PG-clear track supply is checked at every shifted
+window. Window bounds use the exact feasible translation plus a 16nm search of
+one 8.64um PG phase period; no macro origin or physical track rule is relaxed.
+Eighteen of twenty constraints fit; the two smaller L36 cycle conflicts remain
+reported. Eighteen parts' interfaces change (including held hubs/b002); only
+fourteen currently stable banks need reruns. Other passed fragments remain
+reusable only when their exact allocator-input identity matches.
+
+Lower-bound M7 utilization before -> after alignment:
+NE/NW_b003 0.7967 -> 0.0021; b010 0.5319 -> 0.3791;
+b011 1.0281 FAIL -> 0.7276. These bounds omit ordinary logic and are necessary
+conditions, not physical route or sign-off claims. Six scoped repair groups are
+running on geometry_street50_aligned; prior failures are retained.

@@ -14,7 +14,7 @@ turn_corridor.install(F)
 from tools.die_trial.legal_sites import RowAllocator
 src=Path(a.geometry);out=Path(a.out);out.mkdir(parents=True,exist_ok=False);P=json.loads((src/'die_plan.json').read_text());report=json.loads((src/'report.json').read_text());report['status']='ALLOCATING';report['allocation_failures']=[];report['clock_ff_load']={};model=S.Plan(P);parts=model.parts;selected=set(a.parts.split(',')) if a.parts else set(report['changed_types']);report['completed_parts']=[];report['wrapper_transport_ff']={};report['part_failures']=[];report['geometry_sha256']={pn:geometry_identity.identity(P,pn) for pn in selected}
 # All PHY supply domains are physical keepouts, including digital-core side strips.
-extra=collections.defaultdict(list)
+extra=collections.defaultdict(list);placement_extra=collections.defaultdict(list)
 for dom in P['die'].get('pg',{}).get('domains',[]):
  rr=dom.get('rect_um')
  if not rr:continue
@@ -26,6 +26,7 @@ orig_boxes=S.placed_macro_boxes
 def boxes(t,halo=0):
  d=dict(orig_boxes(t,halo=halo));tn=next((n for n,ty in P['partition_types'].items() if ty is t),None)
  for i,r in enumerate(extra.get(tn,[])):d['PHYPG'+str(i)]=r
+ for i,r in enumerate(placement_extra.get(tn,[])):d['PROTECTED_BANK'+str(i)]=r
  return d
 S.placed_macro_boxes=boxes
 orig_build=F.build_path
@@ -65,6 +66,7 @@ try:
      x,y=tp['xy'];fixed.append([x-4.32,y-4.32,x+4.32,y+4.32])
    if 'tap_um' in t.get('clock',{}):
     x,y=t['clock']['tap_um'];fixed.append([x-4.32,y-4.32,x+4.32,y+4.32])
+   placement_extra[tn]=list(fixed)
    class ReservedRows(RowAllocator):
     def __init__(self,*args,**kwargs):
      super().__init__(*args,**kwargs)
