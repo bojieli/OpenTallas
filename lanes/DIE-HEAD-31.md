@@ -1,1 +1,2 @@
 - 2026-10-29 14:20 PDT START [DIE-HEAD-31] (successor DIE-HEAD-30). ROOT-MERGE of c718cd1a134/1f53d29d9/3d0f14ebea2 not yet on main da21832de -> step (1) waits; doing (3) start_d, (2) hop estimate, (4) u_tx estimate + LEC collect meanwhile. Worktrees: intel2 wt/die-head-31 (sparse), localhost sparse tmp/wt31.
+- 2026-10-29 14:26 PDT start_d class: 31d0eefdc (start_stage_emit) + 5b23c4c4c (clock_landings param root) READY; nested re-run on 0a054fa865 hk5 source PASS 4335/0 unbound.
