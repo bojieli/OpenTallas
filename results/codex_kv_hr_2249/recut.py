@@ -5,7 +5,7 @@ from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('plan');p.add_argument('out');a=p.parse_args()
 HERE=Path(__file__).resolve().parent;out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 x=json.load(open(a.plan));t=x['partition_types']['kv3_hub_Wi'];cs=t['hard_cores']
-new={'qkd_hr_phy_adp':(207.36,86.4),'qkd_hr_cdc_ch':(198.72,198.72),'qkd_hr_cdc_pc':(259.2,259.2),'qkd_hr_core_guard':(155.52,155.52)}
+new={'qkd_hr_phy_adp':(207.36,86.4),'qkd_hr_cdc_ch':(198.72,198.72),'qkd_hr_cdc_pc':(259.2,259.2),'qkd_hr_core_guard':(155.52,155.52),'qkd_hr_core_rx':(241.92,241.92)}
 PITCH=dict(M3=.036,M4=.048,M5=.048,M6=.064,M7=.064);OFF=dict(M3=.009,M4=.024,M5=.024,M6=.032,M7=.032)
 def snap(v,l):return round(OFF[l]+round((v-OFF[l])/PITCH[l])*PITCH[l],6)
 report={'scope':'PREP; not adopted until parent plan/source/clock gates','added_data_cycles':0,'changes':[],'fill_estimate':{}}
@@ -36,7 +36,7 @@ for mod,(nw,nh) in new.items():
   for tp in t['clock']['taps']:
    if tp['name']==c['inst']+'.ck[0]':tp['xy']=[round(c['origin_um'][0]+cp['x'],6),round(c['origin_um'][1]+cp['y'],6)]
  # keep full no-halo area for SRAM fill estimate; final place measures the standard-cell band.
- area={'qkd_hr_phy_adp':6245.5,'qkd_hr_cdc_ch':6481.6,'qkd_hr_cdc_pc':11228.8,'qkd_hr_core_guard':4150.5}[mod]
+ area={'qkd_hr_phy_adp':6245.5,'qkd_hr_cdc_ch':6481.6,'qkd_hr_cdc_pc':11228.8,'qkd_hr_core_guard':4150.5,'qkd_hr_core_rx':8664.62}[mod]
  report['fill_estimate'][mod]=round(area/(nw*nh-(174.12*29.736 if mod=='qkd_hr_phy_adp' else 0)),4)
 # Unsigned neighbouring cores move inside the same parent outline; no parent pin changes.
 moves={'host__qkd_hr_phy_pad':[1019.52,120.96],'host__qkd_hr_cdc_ci':[25.92,622.08],'host__qkd_hr_cdc_hi':[267.84,622.08]}

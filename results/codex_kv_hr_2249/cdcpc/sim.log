@@ -1,0 +1,5 @@
+CDCPC_PROJECTION_PASS cmp=1765 rx_words=843 tx_words=842 reserved18_valid_zero=842 mutant_valid_diffs=842 added_cycles=0
+- tb.sv:140: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.095 s; speed 37.821 us/s
+- Verilator: cpu 0.095 s on 1 threads; allocated 8 MB

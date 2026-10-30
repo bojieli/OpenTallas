@@ -1,0 +1,180 @@
+{
+  "physical_macro": {
+    "name": "ot_sram_1r1w_512x128_m2_r2c2",
+    "words": 512,
+    "bits": 128,
+    "mux": 2,
+    "banks": 1,
+    "ports": "1r1w",
+    "spare_rows": 2,
+    "spare_cols": 2
+  },
+  "area": {
+    "cell_area_um2": 0.03265919999999999,
+    "cell_col_pitch_um": 0.3024,
+    "cell_row_pitch_um": 0.108,
+    "array_width_um": 78.624,
+    "array_height_um": 27.864,
+    "data_array_area_um2": 2140.3533311999995,
+    "physical_array_area_um2": 2190.779136,
+    "core_width_um": 96.22399999999999,
+    "core_height_um": 42.637163260579264,
+    "decoder_width_um": 17.599999999999998,
+    "column_height_um": 14.773163260579265,
+    "bank_control_height_um": 0.0,
+    "geometry_constants_um": {
+      "decoder_fixed": 4.0,
+      "decoder_per_row_bit": 0.45,
+      "column_fixed": 9.082108840386176,
+      "column_per_mux_bit": 0.5,
+      "control_extra": 1.5,
+      "fuse_compare_per_spare": 0.6,
+      "rom_decoder_fixed": 3.2,
+      "rom_column_fixed": 5.0
+    },
+    "macro_width_um": 96.36,
+    "macro_height_um": 42.696,
+    "macro_area_um2": 4114.18656,
+    "outline": {
+      "signal_pins": 439,
+      "pins_per_edge": 220,
+      "pin_limited": false,
+      "pin_stretch_um": 0.0,
+      "snap_overhead_um2": 6.975,
+      "aligned_v2": {
+        "rule": "H and W = 0.024 mod 0.048 um: pins on track at origin 0 mod 0.048 in R0/MX/MY/R180, M5 crossing on both pin edges",
+        "v1_width_um": 96.336,
+        "v1_height_um": 42.66,
+        "width_um": 96.36,
+        "height_um": 42.696,
+        "delta_width_nm": 24,
+        "delta_height_nm": 36,
+        "row_multiple": false
+      }
+    },
+    "array_efficiency": 0.5202373057190677,
+    "density_mb_per_mm2": 15.929272784362992
+  },
+  "timing_tt": {
+    "corner": "tt",
+    "voltage": 0.7,
+    "temperature": 25.0,
+    "clk_to_q_ps": 411.038580705137,
+    "out_r_kohm": 0.4562575976456151,
+    "out_slew_intrinsic_ps": 27.39737815666667,
+    "setup_ps": 28.256178771111113,
+    "hold_ps": 21.600259385555557,
+    "min_period_ps": 388.37126411891285,
+    "min_pulse_ps": 155.34850564756516,
+    "read_energy_fj": 408.8724097725867,
+    "write_energy_fj": 1272.7009921725864,
+    "leakage_nw": 20570.9328,
+    "pin_cap_ff": 0.619928,
+    "clk_cap_ff": 9.3458,
+    "breakdown": {
+      "control_ps": 54.79475631333334,
+      "decode_ps": 126.02793952066668,
+      "wordline_ps": 49.08912615972111,
+      "bitline_ps": 80.3412,
+      "column_mux_ps": 9.132459385555556,
+      "sense_ps": 36.529837542222225,
+      "output_ps": 54.79475631333334,
+      "write_ps": 289.7651453478017,
+      "precharge_ps": 41.58840458296952,
+      "read_cycle_ps": 388.37126411891285,
+      "write_cycle_ps": 331.35354993077124,
+      "wordline_cap_ff": 67.48173314133334,
+      "bitline_cap_ff": 16.06824,
+      "cell_current_ua": 20.0,
+      "fo4_ps": 18.264918771111113
+    }
+  },
+  "timing_ff": {
+    "corner": "ff",
+    "voltage": 0.77,
+    "temperature": 0.0,
+    "clk_to_q_ps": 334.10146651971803,
+    "out_r_kohm": 0.31724855211381614,
+    "out_slew_intrinsic_ps": 22.165861613333334,
+    "setup_ps": 24.694771075555558,
+    "hold_ps": 19.67222053777778,
+    "min_period_ps": 315.22454780262467,
+    "min_pulse_ps": 126.08981912104987,
+    "read_energy_fj": 462.56699934482987,
+    "write_energy_fj": 1523.63644139283,
+    "leakage_nw": 20570.9328,
+    "pin_cap_ff": 0.683716,
+    "clk_cap_ff": 10.3732,
+    "breakdown": {
+      "control_ps": 44.33172322666667,
+      "decode_ps": 101.96296342133334,
+      "wordline_ps": 41.303449557406296,
+      "bitline_ps": 65.00008544123416,
+      "column_mux_ps": 7.388620537777778,
+      "sense_ps": 29.554482151111113,
+      "output_ps": 44.33172322666667,
+      "write_ps": 235.44722128583493,
+      "precharge_ps": 33.07184400487305,
+      "read_cycle_ps": 315.22454780262467,
+      "write_cycle_ps": 268.519065290708,
+      "wordline_cap_ff": 67.48173314133334,
+      "bitline_cap_ff": 16.06824,
+      "cell_current_ua": 24.720336736368004,
+      "fo4_ps": 14.777241075555557
+    }
+  },
+  "alignment": {
+    "ot_sram_1r1w_512x128_m2_r2c2": {
+      "size_um": [
+        96.36,
+        42.696
+      ],
+      "symmetry": [
+        "X",
+        "Y"
+      ],
+      "allowed_orientations": [
+        "R0",
+        "MX",
+        "MY",
+        "R180"
+      ],
+      "signal_pins": 439,
+      "layers": {
+        "M4": {
+          "rule_mod_track_nm": {
+            "R0": [
+              0
+            ],
+            "MX": [
+              0
+            ],
+            "MY": [
+              0
+            ],
+            "R180": [
+              0
+            ]
+          },
+          "orientation_invariant": true,
+          "origin_0_legal_all_orientations": true
+        }
+      },
+      "m5_crossing_at_origin_0": {
+        "R0": {
+          "L": true,
+          "R": true
+        },
+        "MY": {
+          "L": true,
+          "R": true
+        }
+      },
+      "pass": true
+    }
+  },
+  "logical_latency_edges": 1,
+  "data_capacity_bits": 65536,
+  "credit_capture_edges": 1,
+  "assumption": "same compiler model as existing macro; no physical signoff claim"
+}

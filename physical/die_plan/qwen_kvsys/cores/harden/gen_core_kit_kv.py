@@ -1015,6 +1015,7 @@ def main():
     ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
+    ap.add_argument("--hr-phy-sram-mux2", action="store_true", help="opt-in PHY adapter same-capacity512x128 mux2 SRAM view, constant spare-row-address width adapted; no logical read-cycle change")
     ap.add_argument("--hr-credit-return-capture", action="store_true", help="opt-in PHY-adapter credit-return pin capture: +1 return edge, same credit capacity; requires independently gated retimed contract")
     ap.add_argument("--related-clock", action="append", default=[], metavar="PORT",
                     help="DIE-KV-10 opt-in: this clock-class port is its own RELATED clock root at the core period "
@@ -1137,6 +1138,8 @@ def main():
         if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
             raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
         files = [str(fpd / f"{mod}.v")] + [f for f in files if f.endswith("_bb.v")]
+    if a.hr_phy_sram_mux2 and (mod != "qkd_hr_phy_adp" or not a.hr_face_ports):
+        raise SystemExit("--hr-phy-sram-mux2 requires qkd_hr_phy_adp --hr-face-ports")
     if a.hr_credit_return_capture and (mod != "qkd_hr_phy_adp" or not a.hr_face_ports):
         raise SystemExit("--hr-credit-return-capture requires qkd_hr_phy_adp --hr-face-ports")
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
@@ -1166,6 +1169,14 @@ def main():
             credit_rtl, credit_receipt = enabled_vehicle(dst.read_text(), mod)
             dst.write_text(credit_rtl)
             (kd / "credit_return_capture.json").write_text(json.dumps(credit_receipt, indent=1)+"\n")
+        if a.hr_phy_sram_mux2 and dst.stem == mod:
+            memory_rtl = dst.read_text()
+            old_memory = "ot_sram_1r1w_512x128_m4_r2c2"
+            if memory_rtl.count(old_memory) != 1 or memory_rtl.count(".rr_addr(14'h0000)") != 1:
+                raise SystemExit("PHY mux2 swap expected one512x128 SRAM and constant0 spare-row address")
+            memory_rtl = memory_rtl.replace(old_memory, "ot_sram_1r1w_512x128_m2_r2c2").replace(".rr_addr(14'h0000)", ".rr_addr(16'h0000)")
+            dst.write_text(memory_rtl)
+            (kd / "phy_memory_mux2.json").write_text(json.dumps(dict(old_master=old_memory,new_master="ot_sram_1r1w_512x128_m2_r2c2",capacity_bits=65536,read_latency_edges=1,added_data_cycles=0,spare_row_address="constant0 width14->16"),indent=1)+"\n")
         if a.astk_face_ports and dst.stem == mod:
             from astk_face_ports import transform
             dst.write_text(transform(dst.read_text()))
