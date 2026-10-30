@@ -1,0 +1,103 @@
+{
+ "per_um": 9.4,
+ "site_radius_um": 140,
+ "label": "DIE-HBM-42 d41d SU-corridor widen + reverse-L59 lane + face re-window 10/um",
+ "clones": [
+  {
+   "new": "L724",
+   "rev_of": "L59",
+   "bus": "L724",
+   "width": 1941,
+   "note": "DIE-HBM-42 d41d: NW_hub->NW_su20 D-class data on the L59 corridor (reverse), 8 cyc = L104",
+   "respace": {
+    "via": [
+     [
+      1749,
+      1540
+     ],
+     [
+      8,
+      1540
+     ],
+     [
+      8,
+      1150
+     ]
+    ]
+   }
+  },
+  {
+   "new": "L724m",
+   "rev_of": "L59m",
+   "bus": "L724",
+   "width": 1941,
+   "note": "DIE-HBM-42 d41d: NE mirror of L724",
+   "respace": {
+    "via": [
+     [
+      1749,
+      1540
+     ],
+     [
+      8,
+      1540
+     ],
+     [
+      8,
+      1150
+     ]
+    ]
+   }
+  }
+ ],
+ "lanes": [
+  {
+   "lane": "L102",
+   "add": 1198
+  },
+  {
+   "lane": "L102m",
+   "add": 1198
+  },
+  {
+   "lane": "L55",
+   "add": 1207
+  },
+  {
+   "lane": "L55m",
+   "add": 1207
+  },
+  {
+   "lane": "L59",
+   "add": 1207
+  },
+  {
+   "lane": "L59m",
+   "add": 1207
+  }
+ ],
+ "faces": [
+  "NW_hub|NW_su21",
+  "NW_su21|NW_su20",
+  "NW_hub|NW_su01",
+  "NW_su01|NW_su00",
+  "NE_hub|NE_su21",
+  "NE_su21|NE_su20",
+  "NE_hub|NE_su01",
+  "NE_su01|NE_su00"
+ ],
+ "order_hint": {
+  "NW_su21|NW_su20": [
+   "L724_1",
+   "L48_4",
+   "L53_7",
+   "L59_0"
+  ],
+  "NE_su21|NE_su20": [
+   "L724m_1",
+   "L48m_4",
+   "L53m_7",
+   "L59m_0"
+  ]
+ }
+}
