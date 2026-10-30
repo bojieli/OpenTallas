@@ -1,0 +1,110 @@
+{
+  "sink_count": 14330,
+  "max_residual": {
+    "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[215]$_DFF_P_",
+    "leaf": "mp_a0_ldtx5_7",
+    "leg_um": 174.04,
+    "wire_ff_ps": 143.0,
+    "model_wire_ff_ps": 47.851,
+    "residual_ff_ps": 95.149
+  },
+  "p99_residual_ps": 9.838,
+  "worst_sinks": [
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[215]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 174.04,
+      "wire_ff_ps": 143.0,
+      "model_wire_ff_ps": 47.851,
+      "residual_ff_ps": 95.149
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[185]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 183.37,
+      "wire_ff_ps": 144.02,
+      "model_wire_ff_ps": 50.485,
+      "residual_ff_ps": 93.535
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[186]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 185.21,
+      "wire_ff_ps": 144.31,
+      "model_wire_ff_ps": 51.005,
+      "residual_ff_ps": 93.305
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[250]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 197.58,
+      "wire_ff_ps": 145.14,
+      "model_wire_ff_ps": 54.497,
+      "residual_ff_ps": 90.643
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[219]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 202.6,
+      "wire_ff_ps": 145.29,
+      "model_wire_ff_ps": 55.914,
+      "residual_ff_ps": 89.376
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx/q[223]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 205.08,
+      "wire_ff_ps": 145.32,
+      "model_wire_ff_ps": 56.614,
+      "residual_ff_ps": 88.706
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.t_out[301]$_DFF_P_",
+      "leaf": "mp_a0_ldck_75",
+      "leg_um": 284.47,
+      "wire_ff_ps": 153.16,
+      "model_wire_ff_ps": 79.026,
+      "residual_ff_ps": 74.134
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.t_out[304]$_DFF_P_",
+      "leaf": "mp_a0_ldck_75",
+      "leg_um": 285.27,
+      "wire_ff_ps": 153.18,
+      "model_wire_ff_ps": 79.252,
+      "residual_ff_ps": 73.928
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.t_out[433]$_DFF_P_",
+      "leaf": "mp_a0_ldck_75",
+      "leg_um": 289.06,
+      "wire_ff_ps": 153.24,
+      "model_wire_ff_ps": 80.322,
+      "residual_ff_ps": 72.918
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[1].u_tx/q[378]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 127.61,
+      "wire_ff_ps": 102.07,
+      "model_wire_ff_ps": 34.744,
+      "residual_ff_ps": 67.326
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[1].u_tx/q[377]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 112.58,
+      "wire_ff_ps": 94.13,
+      "model_wire_ff_ps": 30.501,
+      "residual_ff_ps": 63.629
+    },
+    {
+      "sink": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[1].u_tx/q[376]$_DFF_P_",
+      "leaf": "mp_a0_ldtx5_7",
+      "leg_um": 101.52,
+      "wire_ff_ps": 87.56,
+      "model_wire_ff_ps": 27.379,
+      "residual_ff_ps": 60.181
+    }
+  ]
+}

@@ -1,0 +1,358 @@
+{
+ "T": 30,
+ "leg_um": 150.0,
+ "reg_domains": "planned",
+ "port": [
+  228.948,
+  578.64
+ ],
+ "reg_gates": 17,
+ "mac_gates": 19,
+ "root_registers": 1633,
+ "root_leaves": 409,
+ "gate_depth": {
+  "u_hop_lsl0": 21,
+  "u_hop_lsl1": 19,
+  "u_hop_lsl2": 18,
+  "u_hop_lsl3": 21,
+  "u_hop_lsl4": 17,
+  "u_hop_lsl5": 16,
+  "u_hop_lsl6": 16,
+  "u_hop_lsl7": 15,
+  "u_hop_node": 18,
+  "u_hop_rp0": 17,
+  "u_hop_rp1": 17,
+  "u_hop_rp2": 18,
+  "u_hop_rp3": 20,
+  "u_hop_rp4": 19,
+  "u_hop_rp5": 17,
+  "u_hop_rp6": 17,
+  "u_hop_rp7": 18,
+  "u_hop_rp8": 20,
+  "u_hop_rp9": 19,
+  "u_hop_ck": 24,
+  "u_hop_de": 24,
+  "u_hop_dw": 24,
+  "u_hop_fa2": 25,
+  "u_hop_fa3": 25,
+  "u_hop_rn": 25,
+  "u_hop_rnw": 25,
+  "u_hop_rs": 25,
+  "u_hop_rsw": 25,
+  "u_hop_tx0": 25,
+  "u_hop_tx1": 25,
+  "u_hop_tx2": 25,
+  "u_hop_tx3": 25,
+  "u_hop_tx4": 25,
+  "u_hop_tx5": 25,
+  "u_hop_tx6": 25,
+  "u_hop_tx7": 25
+ },
+ "early": [
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl0/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 1,
+   "gate_depth": 21,
+   "leaf_depth": 22,
+   "gate_pin_um": 139.5,
+   "corridor_um": 139.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl1/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 3,
+   "gate_depth": 19,
+   "leaf_depth": 22,
+   "gate_pin_um": 264.2,
+   "corridor_um": 400.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 4,
+   "gate_depth": 18,
+   "leaf_depth": 22,
+   "gate_pin_um": 410.2,
+   "corridor_um": 545.9
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl3/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 1,
+   "gate_depth": 21,
+   "leaf_depth": 22,
+   "gate_pin_um": 118.6,
+   "corridor_um": 118.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl4/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 5,
+   "gate_depth": 17,
+   "leaf_depth": 22,
+   "gate_pin_um": 160.0,
+   "corridor_um": 699.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl5/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 16,
+   "leaf_depth": 22,
+   "gate_pin_um": 319.1,
+   "corridor_um": 856.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl6/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 16,
+   "leaf_depth": 22,
+   "gate_pin_um": 93.5,
+   "corridor_um": 865.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl7/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 7,
+   "gate_depth": 15,
+   "leaf_depth": 22,
+   "gate_pin_um": 365.6,
+   "corridor_um": 954.1
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_node/u_icg",
+   "macro": "ot_qwen_tile_node",
+   "k": 8,
+   "r": 4,
+   "gate_depth": 18,
+   "leaf_depth": 22,
+   "gate_pin_um": 361.2,
+   "corridor_um": 566.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp0/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 17,
+   "leaf_depth": 21,
+   "gate_pin_um": 522.9,
+   "corridor_um": 567.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp1/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 17,
+   "leaf_depth": 21,
+   "gate_pin_um": 409.2,
+   "corridor_um": 452.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp2/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 3,
+   "gate_depth": 18,
+   "leaf_depth": 21,
+   "gate_pin_um": 270.8,
+   "corridor_um": 314.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp3/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 1,
+   "gate_depth": 20,
+   "leaf_depth": 21,
+   "gate_pin_um": 59.8,
+   "corridor_um": 104.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp4/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 2,
+   "gate_depth": 19,
+   "leaf_depth": 21,
+   "gate_pin_um": 117.8,
+   "corridor_um": 199.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp5/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 17,
+   "leaf_depth": 21,
+   "gate_pin_um": 518.6,
+   "corridor_um": 565.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp6/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 17,
+   "leaf_depth": 21,
+   "gate_pin_um": 409.9,
+   "corridor_um": 451.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp7/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 3,
+   "gate_depth": 18,
+   "leaf_depth": 21,
+   "gate_pin_um": 241.6,
+   "corridor_um": 341.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp8/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 1,
+   "gate_depth": 20,
+   "leaf_depth": 21,
+   "gate_pin_um": 22.8,
+   "corridor_um": 22.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp9/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 2,
+   "gate_depth": 19,
+   "leaf_depth": 21,
+   "gate_pin_um": 110.4,
+   "corridor_um": 207.9
+  }
+ ],
+ "geometry": {
+  "max_fanout": 4,
+  "max_node_leg_um": 208.6,
+  "node_legs_over": [
+   [
+    208.6,
+    "mp_a0_d2576",
+    "mp_a0_ldtx7_193"
+   ],
+   [
+    202.1,
+    "mp_a0_d1512",
+    "mp_a0_d1516"
+   ],
+   [
+    201.4,
+    "mp_a0_d1512",
+    "mp_a0_d1515"
+   ],
+   [
+    200.6,
+    "mp_a0_d1512",
+    "mp_a0_d1514"
+   ],
+   [
+    199.8,
+    "mp_a0_d1512",
+    "mp_a0_d1513"
+   ],
+   [
+    199.1,
+    "mp_a0_d1507",
+    "mp_a0_d1511"
+   ],
+   [
+    198.2,
+    "mp_a0_d1507",
+    "mp_a0_d1510"
+   ],
+   [
+    197.8,
+    "mp_a0_d2511",
+    "mp_a0_d2512"
+   ],
+   [
+    197.5,
+    "mp_a0_d1507",
+    "mp_a0_d1509"
+   ],
+   [
+    197.5,
+    "mp_a0_d2128",
+    "mp_a0_d2132"
+   ],
+   [
+    197.5,
+    "mp_a0_d2128",
+    "mp_a0_d2131"
+   ],
+   [
+    197.5,
+    "mp_a0_d2128",
+    "mp_a0_d2130"
+   ],
+   [
+    196.7,
+    "mp_a0_d1507",
+    "mp_a0_d1508"
+   ],
+   [
+    196.6,
+    "mp_a0_d1517",
+    "mp_a0_d1528"
+   ],
+   [
+    196.6,
+    "mp_a0_d1538",
+    "mp_a0_d1554"
+   ],
+   [
+    196.6,
+    "mp_a0_d1538",
+    "mp_a0_d1544"
+   ],
+   [
+    196.6,
+    "mp_a0_d1517",
+    "mp_a0_d1518"
+   ],
+   [
+    196.6,
+    "mp_a0_d1517",
+    "mp_a0_d1533"
+   ],
+   [
+    196.5,
+    "mp_a0_d1538",
+    "mp_a0_d1549"
+   ],
+   [
+    196.5,
+    "mp_a0_d1517",
+    "mp_a0_d1523"
+   ]
+  ],
+  "max_leaf_sink_leg_um": {
+   "register": 235.3,
+   "macro": 74.8
+  },
+  "total_stage_counts": {
+   "30": 3868
+  },
+  "cells": 6427
+ },
+ "attempts": 1
+}
