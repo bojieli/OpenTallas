@@ -1,0 +1,15 @@
+{
+  "scope": "Proposed die-local measured view binding; no routing/signoff claim",
+  "type": "hd_mesh_e",
+  "pinreg_n": 248,
+  "old_ff_ps": 380,
+  "measured_ff_ps": 342.67,
+  "measured_tt_ps": 452.6,
+  "retained_tt_target_ps": 450,
+  "tt_ff_measured_ratio": 0.757114449845338,
+  "old_plan_ratio": 0.8444444444444444,
+  "added_cycles": 0,
+  "clock_padding_cells_added": 0,
+  "route_qualified": false,
+  "next": "ot_clk build/GRT+clock+related STA on this exact binding; keep forwarded edge writer obligations separate"
+}

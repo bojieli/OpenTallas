@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL",
+  "reason": "type hd_tile: sink (653.4000000000001, 5.4) has no legal clock tap within 200.0 um",
+  "route_qualified": false,
+  "local_sinks": 25769,
+  "excluded_clock_roots": {
+    "fclk_in_i": 2306
+  },
+  "added_cycles": 0,
+  "source": "/srv/opentallas-scratch/claude/codex-head-1847/input/source_plan.json"
+}
