@@ -1455,6 +1455,16 @@ class TestCrashTriage1025(unittest.TestCase):
                                capture_output=True, text=True, env={"PATH": ""}, timeout=60).stdout
             return json.loads(o.split("AP_JSON ", 1)[1])
 
+    def test_caught_hold_chunk_error_does_not_hide_terminal_route_error(self):
+        c = self.classify_probe("[ERROR RSZ-0060] maximum buffer chunk reached\n"
+                                "OT_HOLD_GATE PASS FF 4.39\n"
+                                "[ERROR DRT-0255] No access point for mp_isl0_ck_i\n")
+        self.assertIn("DRT-0255", c["orfs_error"])
+        self.assertIn("RSZ-0060", c["orfs_errors"][0])
+        self.assertIn("DRT-0255", self.ap.classify(c, {"exit": 2})[2])
+        c = self.classify_probe("[ERROR RSZ-0060] maximum buffer count\n")
+        self.assertIn("RSZ-0060", c["orfs_error"])
+
     def test_error_247_at_mem_cap_is_infra_oom(self):
         c = self.classify_probe("[INFO PSM-0040] All shapes on net VDD are connected.\n"
                                 "make[1]: *** [Makefile:654: do-6_report] Error 247\nmake: *** [Makefile:672: do-finish] Error 2\n")

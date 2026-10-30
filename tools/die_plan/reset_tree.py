@@ -693,11 +693,20 @@ _TAPS = {}
 
 
 def _taps(P, tn):
-    """schema.tap_grid memoised per Plan instance (tap_clear on a fully tiled core array costs ~40 s per call); the entry
-    holds P, so the id cannot be reused while cached."""
+    """Geometry-only explicit endpoints, otherwise schema.tap_grid, memoised per Plan.
+    The entry retains P, preventing identity reuse; full explicit sink budgets stay
+    in schema.tap_grid/taps.explicit_taps after reset/START positions are solved.
+    """
     e = _TAPS.get((id(P), tn))
     if e is None or e[0] is not P:
-        e = _TAPS[(id(P), tn)] = (P, _S_TAP_GRID(P, tn))
+        if P.types[tn].get("clock", {}).get("tap_mode") == "explicit":
+            import taps
+            # Control topology must exist before its sink census can be
+            # assigned. This geometry phase cannot qualify clock capacity.
+            sites = taps.explicit_tap_sites(P, tn)
+        else:
+            sites = _S_TAP_GRID(P, tn)
+        e = _TAPS[(id(P), tn)] = (P, sites)
     return list(e[1])
 
 
