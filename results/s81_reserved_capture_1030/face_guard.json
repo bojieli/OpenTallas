@@ -1,0 +1,19 @@
+{
+ "top": "ot_dp_reserved_capture",
+ "checked": 3,
+ "ok": 3,
+ "fails": {},
+ "flops": {
+  "d[2]": "q_reg[2]",
+  "d[1]": "q_reg[1]",
+  "d[0]": "q_reg[0]"
+ },
+ "straps_exempt": [],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "pairs_declared": [],
+ "fail_counts": {},
+ "verdict": "PASS",
+ "netlist": "/home/ubuntu/s81types1030/reserved_capture/capture.v"
+}

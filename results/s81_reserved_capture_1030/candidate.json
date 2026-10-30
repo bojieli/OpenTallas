@@ -1,0 +1,25 @@
+{
+  "private_candidate": true,
+  "adopted": false,
+  "port": "leafdn_i0",
+  "bits": [
+    594,
+    595,
+    596
+  ],
+  "epoch_bit": 597,
+  "functional_bound_data_bits": [
+    0,
+    593
+  ],
+  "functional_body_connection_unchanged": true,
+  "added_dff": 3,
+  "observable_added_cycles": 0,
+  "source_sha256": "287728da5b6364337a62bec1088e5a2981866b3901644f92f2abff166cfe6849",
+  "candidate_sha256": "6110788c80c8c46f16dfcf8da2deeb45095bf1fa331336110cb95c0d5f1358dd",
+  "remaining_failures": [
+    "t1 FT3 spare capture",
+    "current wrapper/source ABI qualification",
+    "native hard views/composition"
+  ]
+}
