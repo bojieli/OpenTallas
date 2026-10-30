@@ -27,6 +27,11 @@ class Joint(unittest.TestCase):
  def test_every_corner_input_output_slew_can_reject(self):
   for key in ('TT_in','TT_out','FF_in','FF_out','nan'):
    with self.subTest(key=key):self.assertIsNone(J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate(key)))
+ def test_invalid_requested_slew_refused(self):
+  for limit in (float('nan'),float('inf'),-1.,0.):
+   with self.subTest(limit=limit),self.assertRaises(ValueError):
+    J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate('TT_out'),limit)
+  self.assertIsNone(J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate('TT_out'),160.))
  def test_over_three_ties_refused(self):
   t=dict(TT,d=9.99);f=dict(FF,d=7.99)
   self.assertIsNone(J.propose(t,f,dict(PAR,d='root'),dict(CELLS,d='small'),['small','large'],evaluate()))

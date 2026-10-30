@@ -27,6 +27,9 @@ def propose(tt, ff, parents, cells, envelope, evaluate, slew_limit=80.0):
     Re-evaluate all <=8 combined proposals from the unchanged current tree;
     accept only a strict global improvement with both corners' IN/OUT slew<=80.
     """
+    if not math.isfinite(slew_limit) or slew_limit <= 0:
+        raise ValueError("joint RVT slew limit must be positive and finite")
+    slew_limit=min(slew_limit,80.0)
     if not finite(tt) or not finite(ff):
         return None
     old=objective(tt,ff)

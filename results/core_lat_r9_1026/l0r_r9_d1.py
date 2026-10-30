@@ -12,7 +12,7 @@ is tried instead.  Plans whose descent never crossed the limit are unchanged.
 Opt-in --joint3 escapes a single-step plateau using at most three independent near-tied late paths,
 strict full-tree TT/FF improvement and both corners IN/OUT slew <=80. Default behavior is unchanged.
 usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80] [--joint3]   PLAN MODEL, UNCHECKED."""
-import gzip, json, sys, time, multiprocessing as MP
+import gzip, json, math, sys, time, multiprocessing as MP
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[0] / "core_lat_r8_1026"))
@@ -47,6 +47,8 @@ def main():
     rj, geo, libdir, fit, out = sys.argv[1:6]
     steps = int(sys.argv[sys.argv.index('--steps') + 1]) if '--steps' in sys.argv else 300
     slew_lim = float(sys.argv[sys.argv.index('--slew') + 1]) if '--slew' in sys.argv else 80.0
+    if '--joint3' in sys.argv and (not math.isfinite(slew_lim) or slew_lim <= 0):
+        raise ValueError("joint RVT slew limit must be positive and finite")
     op = gzip.open if rj.endswith(".gz") else open
     rec = json.load(op(rj, "rt"))[0]
     F = json.load(open(fit)); pmax, pmin = dict(F["PMAX"]), dict(F["PMIN"])
