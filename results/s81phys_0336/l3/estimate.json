@@ -1,0 +1,44 @@
+{
+  "scope": "ANALYTIC ESTIMATE ONLY, no source/slice adoption, no measured gate",
+  "clock_pin": {
+    "layer": "M4",
+    "xy_um": [
+      345.558,
+      98.46
+    ],
+    "change": "NONE"
+  },
+  "common_trunk": {
+    "root_xy_um": [
+      172.8,
+      86.265
+    ],
+    "Manhattan_um": 184.95299999999997,
+    "r_kohm_per_um": 0.014812,
+    "c_ff_per_um": 0.15423255000000002,
+    "root_pin_cap_ff_assumption": 2.44,
+    "Elmore_ps": 45.75795545040092,
+    "includes_root_slew_penalty": false
+  },
+  "original_tree": {
+    "TT_mean_ps": 275.03,
+    "TT_window_ps": 17.32,
+    "FF_mean_ps": 206.02,
+    "FF_window_ps": 14.34,
+    "sinks": 5986,
+    "cells": 422,
+    "max_leaf_spread_um": 22.83
+  },
+  "estimate": {
+    "TT_lower_mean_ps": 320.7879554504009,
+    "TT_slew_allowance_ps": 20,
+    "max_trunk_per_registered_hop_um": 405,
+    "extra_data_cycles": 0
+  },
+  "blockers": [
+    "Existing single-root slice fixes centre M5 entry. A legal implementation must preserve native E M4 pin rectangle and independently reserve centre driver sites; do not rewrite frozen pin table.",
+    "Actual facehook-corrected PLACE review remains required: partial faces and pin registration are unresolved; this estimate grants no geometry exception.",
+    "Need actual GRT routed-RC TT/FF related-pair STA, data localities and final pin audit."
+  ],
+  "reason": "Same common input trunk feeds every tree leaf, adding common insertion without changing logic or schedule. No post-measurement clock sizing/trims."
+}
