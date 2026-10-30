@@ -52,3 +52,14 @@ def test_opt_in_is_forwarded_into_native_docker_run():
     s=inspect.getsource(lec.via_docker)
     assert 'if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":' in s
     assert '["-e", "OT_LEC_HINTS_PRESEED=1"]' in s
+
+
+def test_hint_only_mode_disables_search_but_not_existing_proof_gates():
+    s=inspect.getsource(lec.check)
+    assert 'os.environ.get("OT_LEC_HINTS_ONLY") == "1"' in s
+    assert 'OT_LEC_HINTS_ONLY requires explicit preseed mode and a hints file' in s
+    assert 'correspond(L, out, conflicts, log, rounds=0, sim_iters=0)' in s
+    assert s.index('rounds=0, sim_iters=0)') < s.index('apply_hints(L, json.loads(hf.read_text())')
+    assert 'noreset_filter(L, log' in s and 'kept_registers(L, kf)' in s
+    assert 'prove(m, out, conflicts, log, tag="miter")' in s
+    assert 'OT_LEC_HINTS_ONLY=1' in inspect.getsource(lec.via_docker)

@@ -5371,7 +5371,15 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
             L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
-        correspond(L, out, conflicts, log)
+        if os.environ.get("OT_LEC_HINTS_ONLY") == "1":
+            if not hf.is_file() or os.environ.get("OT_LEC_HINTS_PRESEED") != "1":
+                raise LecError("OT_LEC_HINTS_ONLY requires explicit preseed mode and a hints file")
+            rec["hints_discovery_disabled"] = True
+            # Disable candidate search only; ordinary induction/refinement,
+            # reset qualification, kept checks and final comparisons all run.
+            correspond(L, out, conflicts, log, rounds=0, sim_iters=0)
+        else:
+            correspond(L, out, conflicts, log)
         if hf.is_file():
             import hashlib
             rec["hints"] = dict(file=str(hf), sha256=hashlib.sha256(hf.read_bytes()).hexdigest())
@@ -5522,6 +5530,8 @@ def via_docker(args, image, mem):
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
     if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
         cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
+    if os.environ.get("OT_LEC_HINTS_ONLY") == "1":
+        cmd += ["-e", "OT_LEC_HINTS_ONLY=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
