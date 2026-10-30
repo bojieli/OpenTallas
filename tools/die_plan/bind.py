@@ -2777,6 +2777,15 @@ class Binder:
         self._bumps = res
         return res
 
+    def _gap(self, msg):
+        """An emission gap (plan/source mismatch).  Default: raise at the first one (unchanged).  With --all-gaps
+        (opt-in, self.collect_gaps) record it, skip that one item and go on, so one strict bind lists every gap;
+        the bound top is then not emitted (cmd_bind reports each gap as its own EMIT error)."""
+        if getattr(self, "collect_gaps", False):
+            self.__dict__.setdefault("emit_gaps", []).append(str(msg))
+            return
+        raise BindError(msg)
+
     def emit(self, out):
         out = Path(out) / "rtl"            # generated RTL only; rewritten from scratch on every bind
         if out.exists():
@@ -2810,7 +2819,14 @@ class Binder:
         self.parent_id_values = {}
         for tn, ps in sorted(self.by_type.items()):
             t = self.types[tn]
-            txt, pnames = self.emit_type(tn, ps[0])
+            if getattr(self, "collect_gaps", False):
+                try:
+                    txt, pnames = self.emit_type(tn, ps[0])
+                except BindError as exc:          # --all-gaps: this type stops at its gap; the other types go on
+                    self._gap(exc)
+                    continue
+            else:
+                txt, pnames = self.emit_type(tn, ps[0])
             if getattr(self, "clock_landings", None):
                 try:
                     txt = self.clock_landings.type_rtl(tn, txt, base=t.get("split_of", tn))
@@ -2834,6 +2850,8 @@ class Binder:
             files.append(f)
         if self._native_glue is not None:
             files.extend(self._native_glue.files)
+        if getattr(self, "emit_gaps", None):
+            return files                          # --all-gaps: gaps recorded; no bound top from an incomplete type set
         f = out / f"{sv_id(self.plan['die']['name'])}_bound_top.sv"
         top_text = self.emit_top()
         if getattr(self, "clock_landings", None):
@@ -2954,12 +2972,14 @@ class Binder:
                                       and (d.get("parent_id_straps") or d.get("straps")))
                     validate_parent_id_straps(descriptor, actual_inputs, actual_module=F.cells[ci].module)
                 except ValueError as e:
-                    raise BindError(f"parent ID {tn}.{r}: {e}") from e
+                    self._gap(f"parent ID {tn}.{r}: {e}")
+                    continue
                 expected = id_decls[r][pn]["value"]
                 try:
                     validate_bound_id_bits(bitsv, w, expected)
                 except ValueError as e:
-                    raise BindError(f"parent ID {tn}.{r}.{pn}: {e}") from e
+                    self._gap(f"parent ID {tn}.{r}.{pn}: {e}")
+                    continue
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
                 pdecl.append(f"    parameter [{w - 1}:0] {nm} = {w}'b{''.join(reversed(v0))}")
@@ -2967,7 +2987,7 @@ class Binder:
         used_ids = {(x["leaf"], x["port"]) for x in id_ports.values()}
         missing_ids = {(r, pn) for r, ids in id_decls.items() for pn in ids} - used_ids
         if missing_ids:
-            raise BindError(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
+            self._gap(f"parent ID {tn}: declarations do not match bound known strap inputs {sorted(missing_ids)}")
         self.__dict__.setdefault("parent_id_ports", {})[tn] = id_ports   # test vehicles skip __init__ and emit
         for k, vals in params.items():
             if k[0] == "param":
@@ -3114,9 +3134,10 @@ class Binder:
                     modules = {c["module"] for c in t.get("hard_cores", []) if c["inst"] == target["inst"]}
                     candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and F.cells[ci].module in modules]
                 if len(candidates) != 1:
-                    raise BindError(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)} "
-                                    f"(partition {p} root {getattr(self, 'root', {}).get(p)}; e.g. " + ", ".join(
-                                        f"{F.cells[ci].path} rel {self.rel_of(ci)}" for ci in candidates[:3]) + ")")
+                    self._gap(f"wavefront core reset {tn}/{target['inst']}.{pin}: expected one bound leaf, found {len(candidates)} "
+                              f"(partition {p} root {getattr(self, 'root', {}).get(p)}; e.g. " + ", ".join(
+                                  f"{F.cells[ci].path} rel {self.rel_of(ci)}" for ci in candidates[:3]) + ")")
+                    continue
                 core_reset[(candidates[0], pin)] = f"rst_n_t{target['tap']}"
         need_rst = False
         obus = sorted(self.out_bus[p], key=lambda L: L["oname"])
@@ -3401,7 +3422,10 @@ class Binder:
                     except bind_native_glue.NativeGlueError as exc:
                         raise BindError(str(exc)) from exc
                 else:
-                    insts.append(_glue(c, dict(conns), r))
+                    try:
+                        insts.append(_glue(c, dict(conns), r))
+                    except BindError as exc:
+                        self._gap(exc)
                 continue
             ps = []
             for k, v in sorted(c.params.items()):
@@ -3869,6 +3893,7 @@ def cmd_bind(a):
     B = Binder(raw, yjs, Path(a.plan).parent, plan_base(a.plan, raw))
     B.source_plan = Path(a.plan).resolve()
     B.strict_types = bool(getattr(a, "strict", False))
+    B.collect_gaps = bool(getattr(a, "all_gaps", False))
     if B.ab.get("clock_landing_table"):
         import clock_landings as CL
         landing_base = Path(B.base).resolve()
@@ -3912,7 +3937,10 @@ def cmd_bind(a):
     try:
         files = B.emit(out)
     except BindError as e:
+        B.errors.extend(f"EMIT {g}" for g in getattr(B, "emit_gaps", []))   # --all-gaps: gaps before the stop
         B.errors.append(f"EMIT {e}")
+    else:
+        B.errors.extend(f"EMIT {g}" for g in getattr(B, "emit_gaps", []))   # --all-gaps: every recorded gap
     n_tied = sum(len(v) for v in B.tied_pins.values())
     if n_tied > 200:
         # the per-bit TIED list is capped at 200 lines; state the true count so a strict report is honest
@@ -4678,6 +4706,9 @@ def main(argv=None):
         s.add_argument("--out", required=True)
         s.add_argument("--mem", type=int, default=32)
         s.add_argument("--strict", action="store_true")
+        s.add_argument("--all-gaps", action="store_true",
+                       help="report every EMIT plan/source gap (core reset leaf, parent ID, glue) in one run instead of "
+                            "stopping at the first; no new checks; the bound top is not emitted while gaps remain")
         s.add_argument("--asbuilt", help="as-built binding section in its own file (overrides the plan's `asbuilt`)")
         s.add_argument("--allow-external-paths", action="store_true",
                        help="diagnostic only: do not fail on absolute / out-of-repository paths in an in-repo manifest")
