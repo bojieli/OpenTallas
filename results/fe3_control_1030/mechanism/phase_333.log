@@ -1,0 +1,15 @@
+PRIVATE_ADMISSION cws3_i cycle402 up0/0
+PRIVATE_ADMISSION x_st_a_i cycle402 up0/0
+PRIVATE_ADMISSION x_st_b_i cycle402 up0/0
+PRIVATE_ADMISSION x_su_l0_ctl_i cycle402 up0/0
+PRIVATE_ADMISSION x_su_l0_sc_i cycle402 up0/0
+EDGE cws3_i checks676
+EDGE x_st_a_i checks676
+EDGE x_st_b_i checks676
+EDGE x_su_l0_ctl_i checks676
+EDGE x_su_l0_sc_i checks676
+EDGE cws3_o checks689
+EDGE x_fw_ctl_p2_o checks695
+EDGE x_su_l0_ctl_o checks695
+PASS phase333 checks5467 collector_first_base113 collector_first_candidate113 private_delta_edges5
+tb.sv:170: $finish called at 916300000 (1fs)

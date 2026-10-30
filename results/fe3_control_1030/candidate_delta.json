@@ -1,0 +1,665 @@
+{
+  "type": "sle_fe_v3",
+  "landing_relay_start_copy": true,
+  "clock": {
+    "landing_reader_start": {
+      "depth": 1,
+      "branches": {
+        "cws3_i": {
+          "stages": [
+            {
+              "xy_um": [
+                378.12633333333355,
+                669.5999999999999
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        },
+        "x_st_a_i": {
+          "stages": [
+            {
+              "xy_um": [
+                304.3170000000004,
+                595.7906666666668
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        },
+        "x_st_b_i": {
+          "stages": [
+            {
+              "xy_um": [
+                321.67800000000034,
+                726.0483333333332
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        },
+        "x_su_l0_ctl_i": {
+          "stages": [
+            {
+              "xy_um": [
+                229.6350000000004,
+                521.1086666666667
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        },
+        "x_su_l0_sc_i": {
+          "stages": [
+            {
+              "xy_um": [
+                331.50600000000037,
+                622.9796666666668
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        }
+      },
+      "origin_rect_um": [
+        29.984,
+        667.44,
+        34.304,
+        671.76
+      ]
+    },
+    "landing_writer_start": {
+      "depth": 3,
+      "reuse_relay_origin": true,
+      "branches": {
+        "cws3_o": {
+          "stages": [
+            {
+              "xy_um": [
+                322.6230000000004,
+                614.0966666666668
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            },
+            {
+              "xy_um": [
+                322.6230000000004,
+                268.1143333333332
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        },
+        "x_fw_ctl_p2_o": {
+          "stages": [
+            {
+              "xy_um": [
+                277.2630000000004,
+                770.4633333333331
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            },
+            {
+              "xy_um": [
+                277.2630000000004,
+                1116.4456666666667
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        },
+        "x_su_l0_ctl_o": {
+          "stages": [
+            {
+              "xy_um": [
+                356.1030000000004,
+                691.6233333333331
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            },
+            {
+              "xy_um": [
+                356.1030000000004,
+                1037.6056666666668
+              ],
+              "raw_reset": "cland_reset_cws3_i"
+            }
+          ]
+        }
+      }
+    },
+    "landing_raw_branches": [
+      {
+        "name": "origin",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              90.26966666666715
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              430.5063333333335
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              776.4886666666671
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              378.12633333333355,
+              669.5999999999999
+            ]
+          }
+        ],
+        "consumers": [
+          "origin"
+        ]
+      },
+      {
+        "name": "reader_cws3_i",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              90.26966666666715
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              350.43733333333364
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              562.711333333333
+            ]
+          }
+        ],
+        "consumers": [
+          "reader:cws3_i:0"
+        ]
+      },
+      {
+        "name": "reader_x_st_a_i",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              216.72899999999936
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              562.711333333333
+            ]
+          }
+        ],
+        "consumers": [
+          "reader:x_st_a_i:0"
+        ]
+      },
+      {
+        "name": "reader_x_st_b_i",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              350.43733333333364
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              696.4196666666674
+            ]
+          }
+        ],
+        "consumers": [
+          "reader:x_st_b_i:0"
+        ]
+      },
+      {
+        "name": "reader_x_su_l0_ctl_i",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              350.43733333333364
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              696.4196666666674
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              575.617333333334,
+              521.1086666666667
+            ]
+          }
+        ],
+        "consumers": [
+          "reader:x_su_l0_ctl_i:0"
+        ]
+      },
+      {
+        "name": "reader_x_su_l0_sc_i",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              216.72899999999925
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              562.711333333333
+            ]
+          }
+        ],
+        "consumers": [
+          "reader:x_su_l0_sc_i:0"
+        ]
+      },
+      {
+        "name": "writer_cws3_o_0",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              216.72899999999925
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              562.711333333333
+            ]
+          }
+        ],
+        "consumers": [
+          "writer:cws3_o:0"
+        ]
+      },
+      {
+        "name": "writer_x_fw_ctl_p2_o_0",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              90.26966666666709
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              436.25200000000063
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              782.2343333333342
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              776.4886666666671
+            ]
+          }
+        ],
+        "consumers": [
+          "writer:x_fw_ctl_p2_o:0"
+        ]
+      },
+      {
+        "name": "writer_x_su_l0_ctl_o_0",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              350.43733333333364
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              696.4196666666674
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              617.22,
+              776.4886666666671
+            ]
+          }
+        ],
+        "consumers": [
+          "writer:x_su_l0_ctl_o:0"
+        ]
+      },
+      {
+        "name": "writer_cws3_o_1",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              617.22,
+              4.455000000000041
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              495.6141666666672,
+              95.1231666666664
+            ]
+          }
+        ],
+        "consumers": [
+          "writer:cws3_o:1",
+          "fstart:cws3_o"
+        ]
+      },
+      {
+        "name": "writer_x_fw_ctl_p2_o_1",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              453.1270000000008,
+              254.36266666666637
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              453.12700000000075,
+              600.3449999999999
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              453.12700000000075,
+              946.3273333333335
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              450.2541666666672,
+              1289.4368333333337
+            ]
+          }
+        ],
+        "consumers": [
+          "writer:x_fw_ctl_p2_o:1",
+          "fstart:x_fw_ctl_p2_o"
+        ]
+      },
+      {
+        "name": "writer_x_su_l0_ctl_o_1",
+        "base": "rst_root_n",
+        "stages": [
+          {
+            "original": "rst_rl_0",
+            "xy_um": [
+              353.0023333333336,
+              8.504999999999995
+            ]
+          },
+          {
+            "original": "rst_rl_5",
+            "xy_um": [
+              531.9670000000008,
+              175.52266666666634
+            ]
+          },
+          {
+            "original": "rst_rl_6",
+            "xy_um": [
+              531.9670000000008,
+              521.5049999999999
+            ]
+          },
+          {
+            "original": "rst_rl_7",
+            "xy_um": [
+              531.9670000000008,
+              867.4873333333335
+            ]
+          },
+          {
+            "original": "cland_reset_cws3_i",
+            "xy_um": [
+              529.0941666666672,
+              1210.5968333333335
+            ]
+          }
+        ],
+        "consumers": [
+          "writer:x_su_l0_ctl_o:1",
+          "fstart:x_su_l0_ctl_o"
+        ]
+      }
+    ]
+  }
+}

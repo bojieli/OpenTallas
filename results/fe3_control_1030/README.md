@@ -1,0 +1,11 @@
+# FE3 +1 reader / +3 writer source preparation
+
+DEFAULT-OFF preparation only. The production plan and region N values are unchanged. The candidate delta affects the existing five incoming and three outgoing non-tree bindings. One shared CAB source sets reader K−1 and downstream writer K+3; the writer reuses the existing origin Q as phase 1 and adds two bridges. Sixty literal raw copies preserve the exact five-stage chain after rst_root_n. Source emission adds 71 FF instances; actual native retention is pending the current full-wrapper synth/LEC.
+
+Fresh normal strict Binder passed 377 partitions /119 types /790393 crossing bits /zero errors. Every one of the 140 raw/reset/START/CA/collector primitive instances in the small mechanism vehicle has exactly the same module, parameters and pin equations as the fresh actual bound wrapper. Arithmetic leaves are outside this mechanism cut; the fresh actual Binder and native kit use all real leaves and parent ties.
+
+The native CA/collector/reset/pad/station vehicle passed cold and warm resets at 833 ps with five forwarded phases. It compares the actual root collector admission and fault outputs directly, then data whenever either actual collector admits. The three outgoing native CAs also compare their own ready/fault/data. All eight edges are independently nonvacuous. Wrong K, missing writer stage and wrong raw-reset depth mutants fail. The stricter private per-CA status check fails for one warm-reset edge; both native root collectors already withdraw admission on that edge, and the complete admitted-output check passes. The private failure is retained verbatim.
+
+The vehicle uses a common parent START and relative origins selected inside each actual CA lag window. It does not establish absolute current die START origins, global cold admission, timeout, physical row packing, clock closure or production token latency. Those remain unqualified until native phase-provider, TOK and source peer review. No P&R or route activation is authorized by this packet.
+
+Absent options preserve FE3 emitted RTL byte for byte and all 116 active landing-placement decks byte for byte against current main. The added literal-copy placement groups and outline checks are only active when their explicit list exists.

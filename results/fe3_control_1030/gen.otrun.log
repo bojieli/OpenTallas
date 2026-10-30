@@ -1,0 +1,9 @@
+ot-run: epyc2          admits   811 GB (avail 888, reserve 0, fresh 0, peak 13.3, headroom 0, waiters 0/0 GB) load 13/128 running 10 disk 44 GB scratch disk /srv/opentallas-scratch2 has 44 GB free < floor 50 GB (the root fs is never a fallback; free the scratch disk, OT_RUN_SCRATCH_DISK_FLOOR_GB overrides)
+ot-run: intel1         admits   520 GB (avail 719, reserve 0, fresh 96.7, peak 37.4, headroom 0, waiters 0/0 GB) load 44/112 running 27 disk 851 GB 
+ot-run: localhost      admits   670 GB (avail 785, reserve 0, fresh 24, peak 26.6, headroom 0, waiters 0/0 GB) load 49/112 running 29 disk 535 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-2413196-1793378753 after 1 s
+{"kit": "/srv/opentallas-scratch2/claude/codex-fe3-mechanism-1030/rtl/sle_fe_v3", "module": "qfd_qc_sle_fe", "bound": "qfd_qc_sle_fe__sle_fe_v3", "variants": 1, "files": 9, "spare_out": 0, "narrow": 0, "unbound": 0, "bound_only": ["start_i", "fclk_out_cws3_o", "cland_fstart_out_cws3_o", "fclk_out_x_fw_ctl_p2_o", "cland_fstart_out_x_fw_ctl_p2_o", "fclk_out_x_su_l0_ctl_o", "cland_fstart_out_x_su_l0_ctl_o", "fclk_in_cws3_i", "cland_fstart_in_cws3_i", "strap_ca_k_cws3_i", "fclk_in_x_st_a_i", "cland_fstart_in_x_st_a_i", "strap_ca_k_x_st_a_i", "fclk_in_x_st_b_i", "cland_fstart_in_x_st_b_i", "strap_ca_k_x_st_b_i", "fclk_in_x_su_l0_ctl_i", "cland_fstart_in_x_su_l0_ctl_i", "strap_ca_k_x_su_l0_ctl_i", "fclk_in_x_su_l0_sc_i", "cland_fstart_in_x_su_l0_sc_i", "strap_ca_k_x_su_l0_sc_i", "cland_rstart_in", "cland_up_ready", "cland_up_fault", "fclk_out_cland_up"]}
+/srv/opentallas-scratch2/claude/codex-fe3-mechanism-1030/gen/sle_fe_v3/sle_fe_v3
+KIT_READY /srv/opentallas-scratch2/claude/codex-fe3-mechanism-1030/gen/sle_fe_v3/sle_fe_v3
+ot-run: RAN on localhost (unit oth-ubuntu-2413196-1793378753): exit 0
