@@ -1,0 +1,14 @@
+g0 base 6 new-total 5 NEW 5 GONE 6
+ new by check {'schema': 5}
+  NEW schema latency_groups SOUTHERN_VMS_NW_hub: unknown lane 'L701'
+  NEW schema partition NE_sm1: bus 'L700r0_4_i' is unbound (no port; tie-offs are not allowed)
+  NEW schema partition NE_sm1: bus 'L700r0_4_o' is unbound (no port; tie-offs are not allowed)
+  NEW schema partition NW_sm1: bus 'L700r0_2_i' is unbound (no port; tie-offs are not allowed)
+  NEW schema partition NW_sm1: bus 'L700r0_2_o' is unbound (no port; tie-offs are not allowed)
+g0c base 14 new-total 5 NEW 5 GONE 14
+ new by check {'schema': 5}
+  NEW schema latency_groups SOUTHERN_VMS_NW_hub: unknown lane 'L701'
+  NEW schema partition NE_sm1: bus 'L700r0_4_i' is unbound (no port; tie-offs are not allowed)
+  NEW schema partition NE_sm1: bus 'L700r0_4_o' is unbound (no port; tie-offs are not allowed)
+  NEW schema partition NW_sm1: bus 'L700r0_2_i' is unbound (no port; tie-offs are not allowed)
+  NEW schema partition NW_sm1: bus 'L700r0_2_o' is unbound (no port; tie-offs are not allowed)
