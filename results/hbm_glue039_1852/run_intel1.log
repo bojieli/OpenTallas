@@ -1,0 +1,10 @@
+ot-run: intel1         admits   646 GB (avail 904, reserve 0, fresh 168.8, peak 24.6, headroom 0, waiters 0/0 GB) load 36/112 running 14 disk 1281 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3230956-1793325252 after 1 s
+MISMATCH 19
+MISMATCH 25
+MISMATCH 41
+GLUE039_RING checks=5000 mismatches=481 mutant=1191
+FATAL: tb.sv:63: ring locality failed
+       Time: 50036000  Scope: tb
+ot-run: RAN on intel1 (unit oth-ubuntu-3230956-1793325252): exit 1

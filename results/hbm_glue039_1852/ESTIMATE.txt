@@ -1,0 +1,4 @@
+HBM-039 ring locality candidate, estimate before build
+Measured failure: GEOM65 21365/36866 captures >405um in full NW glue; global source_q/enable_q drive 2224-bit registered ring flit mux.
+Each ring gets 9 independently preserved 3-bit selector +1 enable register sets, 8 payload lanes of276bits and16-bit header. +36 FF/ring=72FF for CW+CCW (original controls retained for status/diagnostics), +0 calendar/output cycles, +0 bytes/cycle. No arithmetic or bank order change.
+Default-off; exactness on actual full2224-bit ring. Candidate requires input/control pin replication or full reach census and lane-bay placement before physical adoption. Hub be/br and status pin relocation remain separate required fixes; this candidate does not close HBM039.

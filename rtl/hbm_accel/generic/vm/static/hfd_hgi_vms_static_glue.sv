@@ -9,6 +9,7 @@ module ot_vms_slice_static_glue #(
     parameter integer WB=$clog2(WG+5),
     parameter integer RMUT=0,
     parameter integer NATIVE_SHAPE=0,
+    parameter integer LOCAL_CTRL_REPLICAS=0, PRESERVE_STATUS_VALID=0,
     parameter integer BANK_PIN_IN=0 // the die-level banks carry literal input pin flops: ring-stop COMMIT_DELAY 5 + this
 )(
     input wire clk_hub,
@@ -70,13 +71,13 @@ module ot_vms_slice_static_glue #(
     // H-NETLIST 2200: the 8 banks are die-level instances (vmb_<Q>b); their nets are the bk_* ports
     assign bk_xq=xq0; assign bk_xq2=xq1; assign xd0=bk_xq_done; assign xd1=bk_xq2_done;
     assign eg=bk_eg; assign bk_pq=pq; assign pr=bk_pr;
-    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT)) u_cw(
+    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT),.LOCAL_CTRL_REPLICAS(LOCAL_CTRL_REPLICAS)) u_cw(
         .clk(clk_ring[0]),.rst_n(rst_n),.sid(sid),.dir(1'b0),
         .tx_enable(ring_tx_enable[0]),.tx_source(ring_tx_source[0+:3]),
         .l_in(cw_in),.l_out(cw_out),.pi(pi0),.eg(eg),.xq(xq0),.xq_done(xd0),
         .rce(rce0),.ri(ri0),.wko(wk01),.wki(wk10),.cco(cco0),
         .ack_o(ack01),.ack_i(ack10),.mirror_busy(mirror_busy[0]),.fault(ring_fault[0]));
-    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT)) u_ccw(
+    ot_vms_rstop_static #(.COMMIT_DELAY(5+BANK_PIN_IN),.MUT(RMUT),.LOCAL_CTRL_REPLICAS(LOCAL_CTRL_REPLICAS)) u_ccw(
         .clk(clk_ring[1]),.rst_n(rst_n),.sid(sid),.dir(1'b1),
         .tx_enable(ring_tx_enable[1]),.tx_source(ring_tx_source[3+:3]),
         .l_in(ccw_in),.l_out(ccw_out),.pi(pi1),.eg(eg),.xq(xq1),.xq_done(xd1),
@@ -85,7 +86,7 @@ module ot_vms_slice_static_glue #(
     ot_vms_rcl_static u_replay(.clk(clk_replay),.rst_n(rst_n),.sid(sid),
         .rx_enable(replay_enable),.rx_source(replay_source),.rce0(rce0),.rce1(rce1),
         .hq(hq),.hr(hr),.ri0(ri0),.ri1(ri1),.fault(ring_fault[2]));
-    ot_vms_status_static u_status(.clk(clk_hub),.rst_n(rst_n),
+    ot_vms_status_static #(.PRESERVE_STATUS_VALID(PRESERVE_STATUS_VALID)) u_status(.clk(clk_hub),.rst_n(rst_n),
         .bank_status(bank_status),.hub_status(hub_status),.ring_fault(|ring_fault),.vmstat(vmstat));
 endmodule
 module hfd_hgi_vms_static_SW_glue  (
@@ -153,7 +154,7 @@ module hfd_hgi_vms_static_SW_glue  (
         .ring_fault(ring_fault)
     );
 endmodule
-module hfd_hgi_vms_static_NW_glue  (
+module hfd_hgi_vms_static_NW_glue #(parameter integer LOCAL_CTRL_REPLICAS=0, PRESERVE_STATUS_VALID=0) (
     input wire clk_hub,
     input wire [1:0] clk_ring,
     input wire clk_replay,
@@ -191,7 +192,7 @@ module hfd_hgi_vms_static_NW_glue  (
     generate for(fb=0;fb<8;fb=fb+1)begin:g_flt
         assign bank_status_m[fb*18+:18]={bank_status[fb*18+17]|bk_flt[fb],bank_status[fb*18+:17]};
     end endgenerate
-    ot_vms_slice_static_glue #(.NC(0),.RG(5),.WG(3),.NATIVE_SHAPE(1),.BANK_PIN_IN(1)) u_slice (
+    ot_vms_slice_static_glue #(.NC(0),.RG(5),.WG(3),.NATIVE_SHAPE(1),.BANK_PIN_IN(1),.LOCAL_CTRL_REPLICAS(LOCAL_CTRL_REPLICAS),.PRESERVE_STATUS_VALID(PRESERVE_STATUS_VALID)) u_slice (
         .clk_hub(clk_hub),
         .clk_ring(clk_ring),
         .clk_replay(clk_replay),

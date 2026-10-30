@@ -1,0 +1,6 @@
+ot-run: intel1         admits   559 GB (avail 900, reserve 0, fresh 251, peak 25.3, headroom 0, waiters 0/0 GB) load 31/112 running 16 disk 1269 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-3248405-1793325319 after 1 s
+GLUE039_RING checks=5000 mismatches=0 mutant=1191
+tb.sv:63: $finish called at 50036000 (1ps)
+ot-run: RAN on intel1 (unit oth-ubuntu-3248405-1793325319): exit 0
