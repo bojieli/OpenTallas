@@ -1,0 +1,2146 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67 (git sha1 2d1509d1b, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1030/hbm32/synth/nw/hub_synth.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1030/hbm32/synth/nw/hard_stubs.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1030/hbm32/synth/nw/hard_stubs.sv' to AST representation.
+Generating RTLIL representation for module `\hfd_hgi_vm_calendar_f20'.
+Generating RTLIL representation for module `\hfd_hgi_vms_glue_nw_t'.
+Generating RTLIL representation for module `\hfd_hgi_vms_glue_sw_t'.
+Generating RTLIL representation for module `\hfd_vms_bank_native_q0_faces'.
+Generating RTLIL representation for module `\ot_hbm_hc_subtree32_core'.
+Generating RTLIL representation for module `\ot_hbm_idx_qctl_static'.
+Generating RTLIL representation for module `\ot_hbm_idx_query_static'.
+Generating RTLIL representation for module `\ot_hbm_idx_vm_query_static_n12'.
+Generating RTLIL representation for module `\ot_hbm_sm_vm_wr_q_t_lanes4'.
+Generating RTLIL representation for module `\ot_hbm_su_programme_pslice_c5'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_ij_q'.
+Generating RTLIL representation for module `\ot_hbm_su_static_qcore_r13_w2'.
+Generating RTLIL representation for module `\ot_hbm_su_static_sfustore_hw'.
+Generating RTLIL representation for module `\ot_hbm_svc_pc_ctrl_leaf_cfg_h9b'.
+Generating RTLIL representation for module `\ot_hbm_svc_sm_group_rel_id_rc'.
+Generating RTLIL representation for module `\ot_hbm_svc_vm_kshare_splitstrap'.
+Generating RTLIL representation for module `\ot_hbm_svc_vmdel_lane_n'.
+Generating RTLIL representation for module `\ot_hbm_svc_wb_kport_q'.
+Generating RTLIL representation for module `\ot_hbm_xp_aq_tree13_fmt'.
+Generating RTLIL representation for module `\ot_hfd_coll_q2_hard_v8g__reduce__nw_actual'.
+Generating RTLIL representation for module `\ot_hfd_coll_q2_hard_v8g__ring_ag'.
+Generating RTLIL representation for module `\ot_hfd_coll_q3_body_core'.
+Generating RTLIL representation for module `\ot_hfd_coll_q3_edge_core'.
+Generating RTLIL representation for module `\ot_hfd_coll_q3_vm_core'.
+Generating RTLIL representation for module `\ot_hgi_coll_gq_issue'.
+Generating RTLIL representation for module `\ot_hgi_coll_gq_land'.
+Generating RTLIL representation for module `\ot_hgi_coll_inj_idx_join_rg'.
+Generating RTLIL representation for module `\ot_hgi_dma_back_static_vp4_banks_cp'.
+Generating RTLIL representation for module `\ot_hgi_qw_dec'.
+Generating RTLIL representation for module `\ot_hgi_sfu_programme_store_r10'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bdring'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bfqg'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctlx'.
+Generating RTLIL representation for module `\ot_hnx_fused_lane'.
+Generating RTLIL representation for module `\ot_hnx_fused_tnode'.
+Generating RTLIL representation for module `\ot_hnx_idxn_keybuf_slice'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_host_boot_hop.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_host_boot_hop'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_calendar_cfg_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_calendar_cfg_leaf'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_xq_tree'.
+Warning: Replacing memory \g_reg.s with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv:33
+Generating RTLIL representation for module `\ot_hgi_sm_xload_xq_pegress'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_xq_pair'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_static_xql'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctl'.
+Warning: Replacing memory \g_s0.s0q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:312
+Warning: Replacing memory \q_s with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:253
+Warning: Replacing memory \qt with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:486
+Warning: Replacing memory \e5r with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:423
+Warning: Replacing memory \ed with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:395
+Warning: Replacing memory \md with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:278
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctlw'.
+Replacing existing blackbox module `\ot_hgi_sm_xload_cl2_ctlx' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:726.1-794.10.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_ctlx'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bfq'.
+Replacing existing blackbox module `\ot_hgi_sm_xload_cl2_bdring' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:855.1-932.10.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_cl2_bdring'.
+Warning: Replacing memory \bs with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:925
+Warning: Replacing memory \wsel_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:886
+Generating RTLIL representation for module `\ot_hgi_sm_xload_static_cl2'.
+Generating RTLIL representation for module `\ot_hgi_sm_xload_static_cl2f'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1030/hbm32/synth/nw/sram_stubs.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1030/hbm32/synth/nw/sram_stubs.sv' to AST representation.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x256_m1_r2c2'.
+Generating RTLIL representation for module `\ot_sram_1r1w_64x16_m1'.
+Generating RTLIL representation for module `\ot_sram_1r1w_128x64_m1_p192'.
+Generating RTLIL representation for module `\ot_sram_1r1w_1024x256_m2_r2c2'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv' to AST representation.
+Generating RTLIL representation for module `\ot_static_cmd_target_core'.
+Generating RTLIL representation for module `\ot_static_cmd_target'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_xp_aq_tree13'.
+Warning: Replacing memory \s10_g with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:220
+Warning: Replacing memory \s10_c with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:219
+Warning: Replacing memory \s9_rs with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:191
+Warning: Replacing memory \s9_g with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:189
+Warning: Replacing memory \s9_sig with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:186
+Warning: Replacing memory \s2a_m with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:118
+Warning: Replacing memory \s1_m with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:105
+Warning: Replacing memory \t16 with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv:97
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_scale13.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_xp_aq_mul_pipe13'.
+Generating RTLIL representation for module `\ot_hbm_xp_aq_scale13'.
+Successfully finished Verilog frontend.
+
+12. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl'.
+Warning: Replacing memory \dst with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:105
+Warning: Replacing memory \hp with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:101
+Warning: Replacing memory \dp with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:101
+Warning: Replacing memory \sp with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:101
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_rslice'.
+Warning: Replacing memory \read_bank_local with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:127
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_wslice'.
+Warning: Replacing memory \write_bank_local with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:156
+Generating RTLIL representation for module `\ot_hgi_qdq_static_transport_split'.
+Successfully finished Verilog frontend.
+
+13. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_s4'.
+Warning: Replacing memory \wbl with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:143
+Warning: Replacing memory \dst with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:139
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_r4'.
+Warning: Replacing memory \src_lo_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:195
+Generating RTLIL representation for module `\ot_hgi_qdq_static_transport_split_r4'.
+Successfully finished Verilog frontend.
+
+14. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_nw_program_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_nw_program_leaf'.
+Successfully finished Verilog frontend.
+
+15. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_calendar_static'.
+Successfully finished Verilog frontend.
+
+16. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv' to AST representation.
+Generating RTLIL representation for module `\ot_static_program_target'.
+Successfully finished Verilog frontend.
+
+17. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_record_calendar.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_record_calendar'.
+Successfully finished Verilog frontend.
+
+18. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_bf16_r2.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_lg_bf16_r2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_lg_bf16_r2'.
+Successfully finished Verilog frontend.
+
+19. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_qdq_transport_ctl_r2'.
+Generating RTLIL representation for module `\ot_hgi_qdq_lg_port_group_r2'.
+Generating RTLIL representation for module `\ot_hgi_qdq_static_transport_split_r2'.
+Successfully finished Verilog frontend.
+
+20. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_b_stop.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_ring_b_stop'.
+Successfully finished Verilog frontend.
+
+21. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_ring_ag_lane'.
+Warning: Replacing memory \out_p with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv:65
+Warning: Replacing memory \pin_p with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv:64
+Warning: Replacing memory \nx_out with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv:54
+Successfully finished Verilog frontend.
+
+22. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv' to AST representation.
+Replacing existing blackbox module `\ot_hgi_coll_gq_issue' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:52.1-413.10.
+Generating RTLIL representation for module `\ot_hgi_coll_gq_issue'.
+Warning: Replacing memory \cb with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:352
+Warning: Replacing memory \p_d with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:325
+Warning: Replacing memory \p_i with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:323
+Warning: Replacing memory \rdx with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:273
+Warning: Replacing memory \ev_k with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:231
+Replacing existing blackbox module `\ot_hgi_coll_gq_land' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:417.1-542.10.
+Generating RTLIL representation for module `\ot_hgi_coll_gq_land'.
+Warning: Replacing memory \nb_11.gd with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:530, /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:506
+Warning: Replacing memory \ln_sq with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:492
+Warning: Replacing memory \ln_s with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:491
+Warning: Replacing memory \ln_bk with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:491
+Warning: Replacing memory \base_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:479
+Warning: Replacing memory \le_k with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:456
+Generating RTLIL representation for module `\ot_hgi_coll_gq'.
+Generating RTLIL representation for module `\ot_hgi_coll_kq_share2_leaf'.
+Generating RTLIL representation for module `\ot_hgi_coll_kq_share2'.
+Successfully finished Verilog frontend.
+
+23. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_copy.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_coll_inj_copy'.
+Successfully finished Verilog frontend.
+
+24. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat'.
+Generating RTLIL representation for module `\ot_hdc_w11_cut'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4i'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat3'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat7'.
+Successfully finished Verilog frontend.
+
+25. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksa'.
+Generating RTLIL representation for module `\ot_hdc_lzc32'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows'.
+Generating RTLIL representation for module `\ot_hdc_mul24_sum'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_fast'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_fast'.
+Generating RTLIL representation for module `\ot_hdc_qadd'.
+Generating RTLIL representation for module `\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+26. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat7'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat9'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_lat5i'.
+Generating RTLIL representation for module `\ot_hdc_mul_kcp48'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows_k'.
+Successfully finished Verilog frontend.
+
+27. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksadd_k__u1'.
+Generating RTLIL representation for module `\ot_hdc_inc_k__u1'.
+Successfully finished Verilog frontend.
+
+28. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_svc_wbw_copy'.
+Successfully finished Verilog frontend.
+
+29. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_stree_rsync'.
+Generating RTLIL representation for module `\ot_hbm_su_stree_leaf'.
+Warning: Replacing memory \dd with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv:54
+Generating RTLIL representation for module `\ot_hbm_su_stree_root_n'.
+Warning: Replacing memory \id with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv:80
+Generating RTLIL representation for module `\ot_hbm_su_stree_root'.
+Generating RTLIL representation for module `\ot_hbm_su_stree_root2'.
+Generating RTLIL representation for module `\ot_hbm_su_stree_leg'.
+Warning: Replacing memory \g_st.sd with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv:137
+Warning: Replacing memory \g_st.sv with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv:135
+Generating RTLIL representation for module `\ot_hbm_su_stree_net'.
+Successfully finished Verilog frontend.
+
+30. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_cx_epoch'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_dl_s'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_dl_q'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_dl'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_ij_s'.
+Warning: Replacing memory \rqd with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv:178
+Replacing existing blackbox module `\ot_hbm_su_static_cxport_ij_q' at /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv:235.1-342.10.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_ij_q'.
+Warning: Replacing memory \g_ctl_legacy.ipgb with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv:290
+Warning: Replacing memory \g_ctl_legacy.ipv with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv:288
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_ij'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_rc_s'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_rc_q'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_rc'.
+Generating RTLIL representation for module `\ot_hbm_su_static_cxport_split'.
+Generating RTLIL representation for module `\ot_hbm_cxijq_sel_copy'.
+Successfully finished Verilog frontend.
+
+31. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_static_cfg_collar'.
+Warning: Replacing memory \r_pay with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:275
+Warning: Replacing memory \r_go with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:275
+Warning: Replacing memory \r_off with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:274
+Warning: Replacing memory \page with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:244
+Warning: Replacing memory \need with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:244
+Warning: Replacing memory \hwm with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:244
+Successfully finished Verilog frontend.
+
+32. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_obs_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_obs_leaf'.
+Successfully finished Verilog frontend.
+
+33. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_kqs_fault_or4.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_kqs_fault_or4.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_kqs_fault_or4'.
+Successfully finished Verilog frontend.
+
+34. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_idx_vm_share2_leaf'.
+Warning: Replacing memory \own with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv:48
+Generating RTLIL representation for module `\ot_hbm_idx_vm_share2_leaf_r'.
+Warning: Replacing memory \own with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv:115
+Generating RTLIL representation for module `\ot_hbm_idx_vm_share2_static'.
+Generating RTLIL representation for module `\ot_hbm_idx_vm_share2_static_r'.
+Successfully finished Verilog frontend.
+
+35. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_host_cfg_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_host_cfg_leaf'.
+Generating RTLIL representation for module `\ot_hbm_host_cfg_leaf2'.
+Generating RTLIL representation for module `\ot_hbm_host_cfg_leaf_sw'.
+Generating RTLIL representation for module `\ot_hbm_host_cfg_leaf_se'.
+Generating RTLIL representation for module `\ot_hbm_host_cfg_leaf_nw'.
+Generating RTLIL representation for module `\ot_hbm_host_cfg_leaf_ne'.
+Successfully finished Verilog frontend.
+
+36. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_hc_q_static'.
+Warning: Replacing memory \done_cal with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv:149
+Successfully finished Verilog frontend.
+
+37. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_result_vm_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_result_vm_static'.
+Successfully finished Verilog frontend.
+
+38. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_residual_vm_static'.
+Warning: Replacing memory \order with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv:63
+Successfully finished Verilog frontend.
+
+39. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hgi_hc_gathered_mix_reader_static'.
+Successfully finished Verilog frontend.
+
+40. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_fault_leaf_variants.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_fault_leaf_n8_s0'.
+Generating RTLIL representation for module `\ot_hbm_fault_leaf_n8_s40'.
+Generating RTLIL representation for module `\ot_hbm_fault_leaf_n9_s40'.
+Generating RTLIL representation for module `\ot_hbm_fault_leaf_n11_s100'.
+Successfully finished Verilog frontend.
+
+41. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/ot_hbm_fault_leaf.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_fault_leaf'.
+Successfully finished Verilog frontend.
+
+42. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_626a9a88cf25221c8bfe5338.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_626a9a88cf25221c8bfe5338.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_626a9a88cf25221c8bfe5338'.
+Successfully finished Verilog frontend.
+
+43. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/wq_merge/hfd_vms_wq2_merge.sv' to AST representation.
+Generating RTLIL representation for module `\hfd_vms_wq2_merge'.
+Successfully finished Verilog frontend.
+
+44. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv' to AST representation.
+Generating RTLIL representation for module `\hfd_hgi_vm_calendar_f20_role'.
+Successfully finished Verilog frontend.
+
+45. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv' to AST representation.
+Generating RTLIL representation for module `\ot_vms_calendar_static_xcap'.
+Successfully finished Verilog frontend.
+
+46. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/hbfd_qdq_split_glue.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/die_glue/hbfd_qdq_split_glue.sv' to AST representation.
+Generating RTLIL representation for module `\hbfd_qdq_split_or'.
+Generating RTLIL representation for module `\hbfd_qdq_split_and'.
+Successfully finished Verilog frontend.
+
+47. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/bind_cells.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/bind_cells.sv' to AST representation.
+Generating RTLIL representation for module `\ot_dp_st'.
+Generating RTLIL representation for module `\ot_dp_rsync'.
+Generating RTLIL representation for module `\ot_dp_or'.
+Generating RTLIL representation for module `\ot_dp_and'.
+Generating RTLIL representation for module `\ot_dp_dly'.
+Warning: Replacing memory \r with list of registers. See /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/bind_cells.sv:60
+Generating RTLIL representation for module `\ot_dp_rrelay'.
+Generating RTLIL representation for module `\ot_dp_rgate'.
+Generating RTLIL representation for module `\ot_dp_rsync_s2'.
+Generating RTLIL representation for module `\ot_dp_rsync_s3'.
+Generating RTLIL representation for module `\ot_dp_lockq'.
+Successfully finished Verilog frontend.
+
+48. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_129bb1e301d3931c53ca86a8.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_129bb1e301d3931c53ca86a8.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_129bb1e301d3931c53ca86a8'.
+Successfully finished Verilog frontend.
+
+49. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_81d476fcdeae3bef6e625d82.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_81d476fcdeae3bef6e625d82.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_81d476fcdeae3bef6e625d82'.
+Successfully finished Verilog frontend.
+
+50. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_ae8f4c379baf3e206f511477.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_ae8f4c379baf3e206f511477.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_ae8f4c379baf3e206f511477'.
+Successfully finished Verilog frontend.
+
+51. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_7dd3b9e580e15a9577069521.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_7dd3b9e580e15a9577069521.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_7dd3b9e580e15a9577069521'.
+Successfully finished Verilog frontend.
+
+52. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_ba122f83495a00500f6b5212.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_ba122f83495a00500f6b5212.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_ba122f83495a00500f6b5212'.
+Successfully finished Verilog frontend.
+
+53. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_974cbc95d4993d1877d9b509.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_974cbc95d4993d1877d9b509.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_974cbc95d4993d1877d9b509'.
+Successfully finished Verilog frontend.
+
+54. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_005beba15a80a308e879b26d.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_005beba15a80a308e879b26d.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_005beba15a80a308e879b26d'.
+Successfully finished Verilog frontend.
+
+55. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_a6cd61606ddc74fb0338941a.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_a6cd61606ddc74fb0338941a.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_a6cd61606ddc74fb0338941a'.
+Successfully finished Verilog frontend.
+
+56. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_6f922c5d0dd37fdfbb9f06c8.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_6f922c5d0dd37fdfbb9f06c8.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_6f922c5d0dd37fdfbb9f06c8'.
+Successfully finished Verilog frontend.
+
+57. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_d696d9eee6b1c8b5bd724061.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_d696d9eee6b1c8b5bd724061.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_d696d9eee6b1c8b5bd724061'.
+Successfully finished Verilog frontend.
+
+58. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_45f66b912fda1eb8622b9d8e.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/native_glue/ot_bind_native_45f66b912fda1eb8622b9d8e.sv' to AST representation.
+Generating RTLIL representation for module `\ot_bind_native_45f66b912fda1eb8622b9d8e'.
+Successfully finished Verilog frontend.
+
+59. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/hbm_arch_q_hub__q_hub_nw.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/hbm_arch_q_hub__q_hub_nw.sv' to AST representation.
+Generating RTLIL representation for module `\hbm_arch_q_hub__q_hub_nw'.
+Successfully finished Verilog frontend.
+
+60. Executing HIERARCHY pass (managing design hierarchy).
+
+60.1. Analyzing design hierarchy..
+Top module:  \hbm_arch_q_hub__q_hub_nw
+Used module:     \ot_hgi_sm_xload_xq_pegress
+Used module:     \ot_hgi_sm_xload_cl2_bdring
+Used module:     \ot_hgi_sm_xload_cl2_ctlx
+Used module:         \ot_hgi_sm_xload_cl2_ctlw
+Used module:             \ot_hgi_sm_xload_cl2_ctl
+Used module:             \ot_static_cmd_target_core
+Used module:     \ot_hbm_svc_wbw_copy
+Used module:     \hfd_vms_wq2_merge
+Used module:     \hfd_hgi_vm_calendar_f20_role
+Used module:         \ot_vms_calendar_static_xcap
+Used module:         \ot_static_program_target
+Used module:     \ot_hbm_su_stree_leaf
+Used module:         \ot_hbm_su_stree_rsync
+Used module:     \ot_hbm_obs_leaf
+Used module:         \ot_rst_relay
+Used module:     \ot_hnx_host_boot_hop
+Used module:     \ot_hnx_calendar_cfg_leaf
+Used module:     \ot_hbm_host_cfg_leaf2
+Used module:         \ot_hbm_host_cfg_leaf
+Used module:     \ot_hbm_idx_vm_share2_static_r
+Used module:         \ot_hbm_idx_vm_share2_static
+Used module:             \ot_hbm_idx_vm_share2_leaf
+Used module:     \ot_hgi_coll_kq_share2_leaf
+Used module:     \ot_hbm_kqs_fault_or4
+Used module:     \ot_hgi_coll_gq_land
+Used module:     \ot_hgi_coll_gq_issue
+Used module:         \ot_hbm_xp_aq_tree13
+Used module:             \ot_hdc_delay
+Used module:             \ot_hbm_xp_aq_scale13
+Used module:                 \ot_hbm_xp_aq_mul_pipe13
+Used module:     \ot_hgi_coll_ring_b_stop
+Used module:         \ot_hgi_coll_ring_ag_lane
+Used module:     \ot_hbm_hc_q_static
+Used module:         \ot_hgi_hc_result_vm_static
+Used module:         \ot_hgi_hc_gathered_mix_reader_static
+Used module:         \ot_hgi_hc_residual_vm_static
+Used module:         \ot_vms_calendar_static
+Used module:     \ot_hdc_fp32_add_lat
+Used module:         \ot_hdc_w11_cut
+Used module:         \ot_hdc_ksadd_k__u1
+Used module:         \ot_hdc_lzc32
+Used module:     \ot_bind_native_626a9a88cf25221c8bfe5338
+Used module:     \ot_hgi_qdq_transport_wslice
+Used module:     \ot_hgi_qdq_transport_rslice
+Used module:     \ot_hgi_qdq_transport_ctl_r4
+Used module:         \ot_hgi_qdq_transport_ctl_s4
+Used module:     \ot_hgi_qdq_lg_bf16_r2
+Used module:         \ot_hgi_qdq_lg_port_group_r2
+Used module:     \ot_hgi_qdq_nw_program_leaf
+Used module:     \hbfd_qdq_split_or
+Used module:     \hbfd_qdq_split_and
+Used module:     \ot_hbm_fault_leaf_n8_s0
+Used module:         \ot_hbm_fault_leaf
+Used module:     \ot_hbm_su_static_cxport_rc_s
+Used module:     \ot_hbm_su_static_cxport_rc_q
+Used module:     \ot_hbm_su_static_cxport_ij_s
+Used module:     \ot_hbm_su_static_cxport_ij_q
+Used module:     \ot_hbm_static_cfg_collar
+Used module:     \ot_hgi_coll_inj_copy
+Used module:     \ot_dp_st
+Used module:     \ot_dp_dly
+Used module:     \ot_dp_rrelay
+Parameter \TARGET = 8'11111111
+Parameter \PCW = 8
+Parameter \TGT_PIN = 1
+Parameter \CAP_CLK = 0
+
+60.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_program_target'.
+Parameter \TARGET = 8'11111111
+Parameter \PCW = 8
+Parameter \TGT_PIN = 1
+Parameter \CAP_CLK = 0
+Generating RTLIL representation for module `$paramod$d0e3e25f2666fa833ba84ed3a4778aba0814d801\ot_static_program_target'.
+Parameter \REGIONS = 1
+
+60.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Generating RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Parameter \REGIONS = 1
+Found cached RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0000000000000000000000000000000000000000000000000000000000000110
+Parameter \MUT = 0
+Parameter \NR = 32
+Parameter \LEAD = 8
+Parameter \EGRESS_SPLIT = 1
+Parameter \SEL_KEEP = 1
+Parameter \PIN_NATIVE = 1
+Parameter \RST_PRE = 1
+
+60.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_sm_xload_cl2_ctlw'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0000000000000000000000000000000000000000000000000000000000000110
+Parameter \MUT = 0
+Parameter \NR = 32
+Parameter \LEAD = 8
+Parameter \EGRESS_SPLIT = 1
+Parameter \SEL_KEEP = 1
+Parameter \PIN_NATIVE = 1
+Parameter \RST_PRE = 1
+Generating RTLIL representation for module `$paramod$7e70e049285cb0b82013e2325f8463635c389b54\ot_hgi_sm_xload_cl2_ctlw'.
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+60.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Parameter \W = 1024
+Parameter \D = 9
+
+60.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 1024
+Parameter \D = 9
+Generating RTLIL representation for module `$paramod$2cfa8cb701a5b6a1f66a63577042fd2a95defc32\ot_hdc_delay'.
+Parameter \W = 2
+Parameter \D = 5
+
+60.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_delay'.
+Parameter \W = 2
+Parameter \D = 5
+Generating RTLIL representation for module `$paramod$c7810d087bc46beadc463d87c97f988966edfc9b\ot_hdc_delay'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0000000000000000000000000000000000000000000000000000000000000110
+Parameter \MUT = 0
+Parameter \NR = 32
+Parameter \EGRESS_SPLIT = 0
+Parameter \SEL_KEEP = 0
+Parameter \PIN_NATIVE = 0
+Parameter \RST_PRE = 0
+
+60.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_sm_xload_cl2_ctl'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0000000000000000000000000000000000000000000000000000000000000110
+Parameter \MUT = 0
+Parameter \NR = 32
+Parameter \EGRESS_SPLIT = 0
+Parameter \SEL_KEEP = 0
+Parameter \PIN_NATIVE = 0
+Parameter \RST_PRE = 0
+Generating RTLIL representation for module `$paramod$414fb0b6ed111392661c520f2bcbbb48d42e201c\ot_hgi_sm_xload_cl2_ctl'.
+Warning: Replacing memory \g_s0.s0q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:312
+Warning: Replacing memory \q_s with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:253
+Warning: Replacing memory \qt with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:486
+Warning: Replacing memory \e5r with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:423
+Warning: Replacing memory \ed with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:395
+Warning: Replacing memory \md with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:278
+Parameter \TARGET = 8'11111111
+Parameter \MODE = 1
+Parameter \CW = 108
+Parameter \RELF = 0
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \LEAD = 8
+Parameter \MUT = 0
+Parameter \TGT_PIN = 1
+
+60.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_cmd_target_core'.
+Parameter \TARGET = 8'11111111
+Parameter \MODE = 1
+Parameter \CW = 108
+Parameter \RELF = 0
+Parameter \NA = 1
+Parameter \NF = 1
+Parameter \LEAD = 8
+Parameter \MUT = 0
+Parameter \TGT_PIN = 1
+Generating RTLIL representation for module `$paramod$9bbe76735c73e77a7984e1fc0ed6a7f81e990eb7\ot_static_cmd_target_core'.
+Parameter \DL = 25
+Parameter \MUT = 0
+
+60.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_ctl_s4'.
+Parameter \DL = 25
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4'.
+Warning: Replacing memory \wbl with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:143
+Warning: Replacing memory \dst with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:139
+Parameter \W = 48
+
+60.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_calendar_static'.
+Parameter \W = 48
+Generating RTLIL representation for module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000000110000'.
+Parameter \TARGET = 8'00110000
+Parameter \PCW = 10
+
+60.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_program_target'.
+Parameter \TARGET = 8'00110000
+Parameter \PCW = 10
+Generating RTLIL representation for module `$paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010'.
+Parameter \BANKS = 2
+
+60.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_lg_port_group_r2'.
+Parameter \BANKS = 2
+Generating RTLIL representation for module `$paramod\ot_hgi_qdq_lg_port_group_r2\BANKS=s32'00000000000000000000000000000010'.
+Parameter \MUT_TTL = 0
+Parameter \MUT_SRC = 0
+
+60.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_ring_ag_lane'.
+Parameter \MUT_TTL = 0
+Parameter \MUT_SRC = 0
+Generating RTLIL representation for module `$paramod$ae067ad122e3c2f668cd5cddcc60cf1390c385de\ot_hgi_coll_ring_ag_lane'.
+Warning: Replacing memory \out_p with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv:65
+Warning: Replacing memory \pin_p with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv:64
+Warning: Replacing memory \nx_out with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag_lane.sv:54
+Parameter \REGIONS = 1
+Found cached RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+
+60.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Generating RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Parameter \W = 71
+Parameter \CUT = 0
+Parameter \VB = 70
+
+60.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 71
+Parameter \CUT = 0
+Parameter \VB = 70
+Generating RTLIL representation for module `$paramod$1c29fa24ae8f8c474682ab12c63b329637660ec4\ot_hdc_w11_cut'.
+Parameter \W = 24
+
+60.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k__u1'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011000'.
+Parameter \W = 8
+
+60.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k__u1'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000'.
+Parameter \W = 108
+Parameter \CUT = 0
+Parameter \VB = 107
+
+60.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 108
+Parameter \CUT = 0
+Parameter \VB = 107
+Generating RTLIL representation for module `$paramod$c67cdf08d386e3bbb83c287e75200b2d65a1b5a0\ot_hdc_w11_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+Parameter \VB = 101
+
+60.20. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 102
+Parameter \CUT = 0
+Parameter \VB = 101
+Generating RTLIL representation for module `$paramod$e00ae5522a72f887e4f2046a5a8f8416ba117c72\ot_hdc_w11_cut'.
+Parameter \W = 28
+
+60.21. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k__u1'.
+Parameter \W = 28
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011100'.
+Parameter \W = 120
+Parameter \CUT = 0
+Parameter \VB = 118
+
+60.22. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_w11_cut'.
+Parameter \W = 120
+Parameter \CUT = 0
+Parameter \VB = 118
+Generating RTLIL representation for module `$paramod$71f6928b6d84d89d931fa7411cefa37b1e1cfb53\ot_hdc_w11_cut'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000'.
+Parameter \W = 31
+
+60.23. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_ksadd_k__u1'.
+Parameter \W = 31
+Generating RTLIL representation for module `$paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011111'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Parameter \MUT = 0
+Parameter \BANK_RT = 6
+
+60.24. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_vm_share2_leaf'.
+Parameter \MUT = 0
+Parameter \BANK_RT = 6
+Generating RTLIL representation for module `$paramod$999df201a3e29677c97c84403a5916390d2d0f1a\ot_hbm_idx_vm_share2_leaf'.
+Warning: Replacing memory \own with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/quad_1017/ot_hbm_idx_vm_share2_static.sv:48
+Parameter \MUT = 0
+Parameter \BANK_RT = 6
+Found cached RTLIL representation for module `$paramod$999df201a3e29677c97c84403a5916390d2d0f1a\ot_hbm_idx_vm_share2_leaf'.
+Parameter \MUT = 0
+Parameter \BANK_RT = 6
+Found cached RTLIL representation for module `$paramod$999df201a3e29677c97c84403a5916390d2d0f1a\ot_hbm_idx_vm_share2_leaf'.
+Parameter \MUT = 0
+Parameter \BANK_RT = 6
+Found cached RTLIL representation for module `$paramod$999df201a3e29677c97c84403a5916390d2d0f1a\ot_hbm_idx_vm_share2_leaf'.
+Parameter \MUT = 0
+Parameter \REG = 1
+Parameter \BANK_RT = 6
+
+60.25. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_vm_share2_static'.
+Parameter \MUT = 0
+Parameter \REG = 1
+Parameter \BANK_RT = 6
+Generating RTLIL representation for module `$paramod$8efb4871714e87862f4439dbc0d2a9695f74478b\ot_hbm_idx_vm_share2_static'.
+Parameter \REGIONS = 2
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay'.
+Parameter \NCP = 2
+Parameter \NT = 20
+Parameter \NF = 32
+Parameter \MUT = 0
+
+60.26. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_host_cfg_leaf'.
+Parameter \NCP = 2
+Parameter \NT = 20
+Parameter \NF = 32
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$40c500cd74b4ef6668c6929a20a71558a47514d8\ot_hbm_host_cfg_leaf'.
+Parameter \RESP_PHASE = 23
+
+60.27. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_hc_gathered_mix_reader_static'.
+Parameter \RESP_PHASE = 23
+Generating RTLIL representation for module `$paramod\ot_hgi_hc_gathered_mix_reader_static\RESP_PHASE=s32'00000000000000000000000000010111'.
+Parameter \CAPTURE_LAT = 23
+Parameter \MUT_POSITION = 0
+Parameter \BEATS = 4
+Parameter \MUT_BEAT = 0
+
+60.28. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_hc_residual_vm_static'.
+Parameter \CAPTURE_LAT = 23
+Parameter \MUT_POSITION = 0
+Parameter \BEATS = 4
+Parameter \MUT_BEAT = 0
+Generating RTLIL representation for module `$paramod$837dcf1e4f7f868e4a6e96f893ca879742e05b95\ot_hgi_hc_residual_vm_static'.
+Warning: Replacing memory \order with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_vm_static.sv:63
+Parameter \W = 79
+
+60.29. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_calendar_static'.
+Parameter \W = 79
+Generating RTLIL representation for module `$paramod\ot_vms_calendar_static\W=s32'00000000000000000000000001001111'.
+Parameter \PCW = 10
+Parameter \TGT_PIN = 1
+
+60.30. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_program_target'.
+Parameter \PCW = 10
+Parameter \TGT_PIN = 1
+Generating RTLIL representation for module `$paramod$a84cf026b52e64956de919dcd341d5864d52c644\ot_static_program_target'.
+Parameter \REGIONS = 6
+
+60.31. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 6
+Generating RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000110'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Parameter \N = 8
+Parameter \SYNC_MASK = 64'0000000000000000000000000000000000000000000000000000000000000000
+Parameter \MUT = 0
+
+60.32. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_fault_leaf'.
+Parameter \N = 8
+Parameter \SYNC_MASK = 64'0000000000000000000000000000000000000000000000000000000000000000
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$c18c629f8c88cf6e946a6eb8804f0d0ee0ec51ed\ot_hbm_fault_leaf'.
+Parameter \W = 19
+
+60.33. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_calendar_static_xcap'.
+Parameter \W = 19
+Generating RTLIL representation for module `$paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000000010011'.
+Parameter \TARGET = 8'11111111
+Parameter \PCW = 10
+Parameter \TGT_PIN = 1
+Parameter \CAP_CLK = 1
+
+60.34. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_static_program_target'.
+Parameter \TARGET = 8'11111111
+Parameter \PCW = 10
+Parameter \TGT_PIN = 1
+Parameter \CAP_CLK = 1
+Generating RTLIL representation for module `$paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target'.
+Parameter \PMAX = 8
+Parameter \NR = 32
+
+60.35. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_sm_xload_xq_pegress'.
+Parameter \PMAX = 8
+Parameter \NR = 32
+Generating RTLIL representation for module `$paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress'.
+Parameter \PMAX = 8
+Parameter \NR = 32
+Found cached RTLIL representation for module `$paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress'.
+Parameter \PMAX = 8
+Parameter \NR = 32
+
+60.36. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_sm_xload_cl2_bdring'.
+Parameter \PMAX = 8
+Parameter \NR = 32
+Generating RTLIL representation for module `$paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring'.
+Warning: Replacing memory \bs with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:925
+Warning: Replacing memory \wsel_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv:886
+Parameter \PMAX = 8
+Parameter \NR = 32
+Found cached RTLIL representation for module `$paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0010111000101100010000100011111000011110000111000010110000101010
+Parameter \NR = 32
+Parameter \LEAD = 8
+
+60.37. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_sm_xload_cl2_ctlx'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0010111000101100010000100011111000011110000111000010110000101010
+Parameter \NR = 32
+Parameter \LEAD = 8
+Generating RTLIL representation for module `$paramod$fecbefbd9ba865a7907558e5fa8895d7aa076073\ot_hgi_sm_xload_cl2_ctlx'.
+Parameter \NS = 4
+Parameter \MUT = 0
+
+60.38. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_svc_wbw_copy'.
+Parameter \NS = 4
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$b6ef2feb2256743c537cca125af0bee9c2d0b640\ot_hbm_svc_wbw_copy'.
+Parameter \W = 89
+
+60.39. Executing AST frontend in derive mode using pre-parsed AST for module `\hfd_hgi_vm_calendar_f20_role'.
+Parameter \W = 89
+Generating RTLIL representation for module `$paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000001011001'.
+Parameter \MUT = 0
+Parameter \NLEG = 2
+
+60.40. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_su_stree_leaf'.
+Parameter \MUT = 0
+Parameter \NLEG = 2
+Generating RTLIL representation for module `$paramod$6db47097bb51ef1f9bf522073f8c1df77bece45f\ot_hbm_su_stree_leaf'.
+Warning: Replacing memory \dd with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_stree.sv:54
+Parameter \N = 209
+Parameter \LID = 4
+Parameter \SYNC_MASK = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001111111111111111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
+60.41. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_obs_leaf'.
+Parameter \N = 209
+Parameter \LID = 4
+Parameter \SYNC_MASK = 512'00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001111111111111111110000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+Generating RTLIL representation for module `$paramod$1a2cbec3ba8d885535c53e5ef0845421e5fbcf0d\ot_hbm_obs_leaf'.
+Parameter \NT = 20
+Parameter \NF = 32
+
+60.42. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_host_cfg_leaf2'.
+Parameter \NT = 20
+Parameter \NF = 32
+Generating RTLIL representation for module `$paramod$0003f2fddf5f57f2fbd452cd5da4ab4d54ef6ef7\ot_hbm_host_cfg_leaf2'.
+Parameter \BANK_RT = 7
+
+60.43. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_vm_share2_static_r'.
+Parameter \BANK_RT = 7
+Generating RTLIL representation for module `$paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000000111'.
+Parameter \VM_RT = 3
+
+60.44. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_coll_gq_issue'.
+Parameter \VM_RT = 3
+Generating RTLIL representation for module `$paramod\ot_hgi_coll_gq_issue\VM_RT=s32'00000000000000000000000000000011'.
+Warning: Replacing memory \cb with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:352
+Warning: Replacing memory \p_d with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:325
+Warning: Replacing memory \p_i with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:323
+Warning: Replacing memory \rdx with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:273
+Warning: Replacing memory \ev_k with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv:231
+Parameter \RD_CAPTURE = 51
+Parameter \GATHER_PHASE = 51
+Parameter \DONE_LAT = 47
+Parameter \XW_BEATS = 4
+
+60.45. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_hc_q_static'.
+Parameter \RD_CAPTURE = 51
+Parameter \GATHER_PHASE = 51
+Parameter \DONE_LAT = 47
+Parameter \XW_BEATS = 4
+Generating RTLIL representation for module `$paramod$782575dec3c9f4bf2c94584a2290f60d1e4efa5a\ot_hbm_hc_q_static'.
+Warning: Replacing memory \done_cal with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv:149
+Parameter \REGIONS = 9
+
+60.46. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_rst_relay'.
+Parameter \REGIONS = 9
+Generating RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001'.
+Warning: Replacing memory \relay_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv:42
+Parameter \LAT = 7
+Parameter \DRST = 0
+
+60.47. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Generating RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \LAT = 7
+Parameter \DRST = 0
+Found cached RTLIL representation for module `$paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat'.
+Parameter \NW = 2
+Parameter \MUT = 0
+
+60.48. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_wslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice'.
+Warning: Replacing memory \write_bank_local with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:156
+Parameter \NW = 2
+Parameter \MUT = 0
+
+60.49. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_rslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice'.
+Warning: Replacing memory \read_bank_local with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_split.sv:127
+Parameter \NW = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice'.
+Parameter \NW = 2
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice'.
+Parameter \DL = 25
+Parameter \MUT = 0
+
+60.50. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_transport_ctl_r4'.
+Parameter \DL = 25
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_r4'.
+Warning: Replacing memory \src_lo_q with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r4.sv:195
+Parameter \BANKS = 2
+
+60.51. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_lg_bf16_r2'.
+Parameter \BANKS = 2
+Generating RTLIL representation for module `$paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010'.
+Parameter \BANKS = 2
+Found cached RTLIL representation for module `$paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010'.
+Parameter \BANKS = 2
+Found cached RTLIL representation for module `$paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010'.
+Parameter \BANKS = 2
+Found cached RTLIL representation for module `$paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010'.
+Parameter \COMPACT = 1
+Parameter \PIN_BOUNDARY = 1
+
+60.52. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_qdq_nw_program_leaf'.
+Parameter \COMPACT = 1
+Parameter \PIN_BOUNDARY = 1
+Generating RTLIL representation for module `$paramod$5d887d8dde147f7968f6566c580b30da8bdee2b8\ot_hgi_qdq_nw_program_leaf'.
+Parameter \BANK_RT = 54
+
+60.53. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_vm_share2_static_r'.
+Parameter \BANK_RT = 54
+Generating RTLIL representation for module `$paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000110110'.
+Parameter \N = 14
+Parameter \SYNC_MASK = 64'0000000000000000000000000000000000000000000000000000000010000000
+
+60.54. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_fault_leaf'.
+Parameter \N = 14
+Parameter \SYNC_MASK = 64'0000000000000000000000000000000000000000000000000000000010000000
+Generating RTLIL representation for module `$paramod$79ffc597cf6e6d6bf7b1bf44efbf8413f6708d24\ot_hbm_fault_leaf'.
+Parameter \N = 6
+Parameter \SYNC_MASK = 64'0000000000000000000000000000000000000000000000000000000000111111
+
+60.55. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_fault_leaf'.
+Parameter \N = 6
+Parameter \SYNC_MASK = 64'0000000000000000000000000000000000000000000000000000000000111111
+Generating RTLIL representation for module `$paramod$a6e11202609093a63751e51047362ae464c7e0b0\ot_hbm_fault_leaf'.
+Parameter \W = 57
+
+60.56. Executing AST frontend in derive mode using pre-parsed AST for module `\hfd_hgi_vm_calendar_f20_role'.
+Parameter \W = 57
+Generating RTLIL representation for module `$paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000000111001'.
+Parameter \QID = 2
+Parameter \B39_NOOP = 1
+Parameter \INJ_RET = 9
+Parameter \RQ = 0
+Parameter \RQC = 0
+Parameter \SD = 0
+Parameter \OBR = 0
+
+60.57. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_su_static_cxport_ij_s'.
+Parameter \QID = 2
+Parameter \B39_NOOP = 1
+Parameter \INJ_RET = 9
+Parameter \RQ = 0
+Parameter \RQC = 0
+Parameter \SD = 0
+Parameter \OBR = 0
+Generating RTLIL representation for module `$paramod$6c6dfe08ea2dde717a15cb4c610d8824e2f4e5d1\ot_hbm_su_static_cxport_ij_s'.
+Warning: Replacing memory \rqd with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv:178
+Parameter \SD = 0
+Parameter \SAFE_GATHER = 1
+
+60.58. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_su_static_cxport_ij_q'.
+Parameter \SD = 0
+Parameter \SAFE_GATHER = 1
+Generating RTLIL representation for module `$paramod$1c1d8063e38c32fd68f65fcfed1ac481486be9a3\ot_hbm_su_static_cxport_ij_q'.
+Warning: Replacing memory \g_ctl_ring.mem with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport_split.sv:278
+Parameter \PAGE_W = 3
+Parameter \NS = 2
+Parameter \NPR = 1
+Parameter \NREC = 0
+Parameter \NGO = 1
+Parameter \NB = 2
+Parameter \NF = 1
+Parameter \XSER = 0
+
+60.59. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_static_cfg_collar'.
+Parameter \PAGE_W = 3
+Parameter \NS = 2
+Parameter \NPR = 1
+Parameter \NREC = 0
+Parameter \NGO = 1
+Parameter \NB = 2
+Parameter \NF = 1
+Parameter \XSER = 0
+Generating RTLIL representation for module `$paramod$f588d14f666a95cb09f7ea03b084f2e61df00462\ot_hbm_static_cfg_collar'.
+Warning: Replacing memory \r_pay with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:275
+Warning: Replacing memory \r_go with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:275
+Warning: Replacing memory \r_off with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:274
+Warning: Replacing memory \page with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:244
+Warning: Replacing memory \need with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:244
+Warning: Replacing memory \hwm with list of registers. See /srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_hbm_static_cfg_collar.sv:244
+Parameter \W = 180
+
+60.60. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 180
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 180
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010110100'.
+Parameter \W = 257
+
+60.61. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 257
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 1
+
+60.62. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 257
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000001'.
+Parameter \W = 256
+
+60.63. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 256
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000000'.
+Parameter \W = 256
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000000'.
+Parameter \W = 128
+
+60.64. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 128
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 36
+
+60.65. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 36
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100100'.
+Parameter \W = 36
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100100'.
+Parameter \W = 9
+
+60.66. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 9
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001001'.
+Parameter \W = 32
+
+60.67. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 32
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 471
+
+60.68. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 471
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000111010111'.
+Parameter \W = 1742
+
+60.69. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1742
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011011001110'.
+Parameter \W = 1190
+
+60.70. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1190
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010010100110'.
+Parameter \W = 262
+
+60.71. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 262
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000110'.
+Parameter \W = 280
+
+60.72. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 280
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100011000'.
+Parameter \W = 280
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100011000'.
+Parameter \W = 2170
+
+60.73. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2170
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100001111010'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 612
+
+60.74. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 612
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001100100'.
+Parameter \W = 19
+
+60.75. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 19
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010011'.
+Parameter \W = 271
+
+60.76. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 271
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100001111'.
+Parameter \W = 320
+
+60.77. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 320
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000101000000'.
+Parameter \W = 1842
+
+60.78. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1842
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011100110010'.
+Parameter \W = 15
+
+60.79. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 15
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001111'.
+Parameter \W = 22
+
+60.80. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 22
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010110'.
+Parameter \W = 18
+
+60.81. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 18
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010010'.
+Parameter \W = 3070
+
+60.82. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 3070
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000101111111110'.
+Parameter \W = 2
+
+60.83. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000010'.
+Parameter \W = 28
+
+60.84. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 28
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011100'.
+Parameter \W = 28
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011100'.
+Parameter \W = 2484
+
+60.85. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2484
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100110110100'.
+Parameter \W = 154
+
+60.86. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 154
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010011010'.
+Parameter \W = 1171
+
+60.87. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1171
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010010010011'.
+Parameter \W = 274
+
+60.88. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 274
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100010010'.
+Parameter \W = 828
+
+60.89. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 828
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001100111100'.
+Parameter \W = 828
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001100111100'.
+Parameter \W = 828
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001100111100'.
+Parameter \W = 268
+
+60.90. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 268
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100001100'.
+Parameter \W = 304
+
+60.91. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 304
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100110000'.
+Parameter \W = 210
+
+60.92. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 210
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000011010010'.
+Parameter \W = 126
+
+60.93. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 126
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000001111110'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 611
+
+60.94. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 611
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001100011'.
+Parameter \W = 618
+
+60.95. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 618
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001101010'.
+Parameter \W = 2816
+
+60.96. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2816
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000101100000000'.
+Parameter \W = 618
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001101010'.
+Parameter \W = 788
+
+60.97. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 788
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001100010100'.
+Parameter \W = 788
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001100010100'.
+Parameter \W = 2064
+
+60.98. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2064
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100000010000'.
+Parameter \W = 1329
+
+60.99. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1329
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010100110001'.
+Parameter \W = 1329
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010100110001'.
+Parameter \W = 1329
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010100110001'.
+Parameter \W = 1329
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010100110001'.
+Parameter \W = 1608
+
+60.100. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1608
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001000'.
+Parameter \W = 1615
+
+60.101. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1615
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 1615
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 1615
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 1615
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 1615
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 1522
+
+60.102. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1522
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010111110010'.
+Parameter \W = 1615
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 1615
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011001001111'.
+Parameter \W = 2080
+
+60.103. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2080
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100000100000'.
+Parameter \W = 160
+
+60.104. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 160
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010100000'.
+Parameter \W = 2172
+
+60.105. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2172
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100001111100'.
+Parameter \W = 2172
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100001111100'.
+Parameter \W = 4986
+
+60.106. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 4986
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000001001101111010'.
+Parameter \W = 2740
+
+60.107. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2740
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000101010110100'.
+Parameter \W = 16
+
+60.108. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 16
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 21
+
+60.109. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 21
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010101'.
+Parameter \W = 21
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010101'.
+Parameter \W = 21
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010101'.
+Parameter \W = 21
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010101'.
+Parameter \W = 21
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010101'.
+Parameter \W = 22
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010110'.
+Parameter \W = 1820
+
+60.110. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1820
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011100011100'.
+Parameter \W = 562
+
+60.111. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 562
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000110010'.
+Parameter \W = 34
+
+60.112. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 34
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100010'.
+Parameter \W = 562
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000110010'.
+Parameter \W = 34
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100010'.
+Parameter \W = 37
+
+60.113. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 37
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100101'.
+Parameter \W = 37
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100101'.
+Parameter \W = 37
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100101'.
+Parameter \W = 37
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100101'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 67
+
+60.114. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 67
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000001000011'.
+Parameter \W = 67
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000001000011'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+
+60.115. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 24
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 24
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 8
+
+60.116. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 8
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 280
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100011000'.
+Parameter \W = 280
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100011000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 2170
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000100001111010'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 612
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001100100'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 256
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000000'.
+Parameter \W = 256
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100000000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001000'.
+Parameter \W = 8
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 128
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010000000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 32
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000100000'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 1
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000001'.
+Parameter \W = 174
+Parameter \D = 13
+
+60.117. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_dly'.
+Parameter \W = 174
+Parameter \D = 13
+Generating RTLIL representation for module `$paramod$ba709a019ac084a5e9159ea88edae1e304bb6c0d\ot_dp_dly'.
+Warning: Replacing memory \r with list of registers. See /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/bind_cells.sv:60
+Parameter \W = 173
+
+60.118. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 173
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010101101'.
+Parameter \W = 22
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000010110'.
+Parameter \W = 68
+
+60.119. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 68
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000001000100'.
+Parameter \W = 68
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000001000100'.
+Parameter \W = 140
+
+60.120. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 140
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000010001100'.
+Parameter \W = 268
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100001100'.
+Parameter \W = 268
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100001100'.
+Parameter \W = 268
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100001100'.
+Parameter \W = 268
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000100001100'.
+Parameter \W = 324
+
+60.121. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 324
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000101000100'.
+Parameter \W = 514
+
+60.122. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 514
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000000010'.
+Parameter \W = 514
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000000010'.
+Parameter \W = 514
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000000010'.
+Parameter \W = 514
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000000010'.
+Parameter \W = 610
+
+60.123. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 610
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001100010'.
+Parameter \W = 2816
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000101100000000'.
+Parameter \W = 1064
+
+60.124. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1064
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010000101000'.
+Parameter \W = 1064
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010000101000'.
+Parameter \W = 611
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001100011'.
+Parameter \W = 512
+
+60.125. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 512
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000000000'.
+Parameter \W = 611
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001001100011'.
+Parameter \W = 512
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000000000'.
+Parameter \W = 330
+
+60.126. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 330
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000101001010'.
+Parameter \W = 1536
+
+60.127. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1536
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011000000000'.
+Parameter \W = 2560
+
+60.128. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2560
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000101000000000'.
+Parameter \W = 4098
+
+60.129. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 4098
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000001000000000010'.
+Parameter \W = 410
+
+60.130. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 410
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000110011010'.
+Parameter \W = 1108
+
+60.131. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1108
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010001010100'.
+Parameter \W = 1108
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000010001010100'.
+Parameter \W = 558
+
+60.132. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 558
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000101110'.
+Parameter \W = 559
+
+60.133. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 559
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000101111'.
+Parameter \W = 559
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000101111'.
+Parameter \W = 559
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001000101111'.
+Parameter \W = 2628
+
+60.134. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 2628
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000101001000100'.
+Parameter \W = 3
+
+60.135. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 3
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000011'.
+Parameter \W = 3
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000011'.
+Parameter \W = 3
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000011'.
+Parameter \W = 4
+
+60.136. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 4
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000100'.
+Parameter \W = 1017
+Parameter \D = 11
+
+60.137. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_dly'.
+Parameter \W = 1017
+Parameter \D = 11
+Generating RTLIL representation for module `$paramod$8bb481a724279a054ca0be71d7db7ccbb8c5984f\ot_dp_dly'.
+Warning: Replacing memory \r with list of registers. See /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/bind_cells.sv:60
+Parameter \W = 1016
+
+60.138. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1016
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000001111111000'.
+Parameter \W = 1981
+Parameter \D = 6
+
+60.139. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_dly'.
+Parameter \W = 1981
+Parameter \D = 6
+Generating RTLIL representation for module `$paramod$4356675e08215818570b5eceb9d506c2f2a880b8\ot_dp_dly'.
+Warning: Replacing memory \r with list of registers. See /srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/rtl/bind_cells.sv:60
+Parameter \W = 1980
+
+60.140. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 1980
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000011110111100'.
+Parameter \W = 5
+
+60.141. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 5
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000101'.
+Parameter \W = 9
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001001'.
+Parameter \W = 9
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001001'.
+Parameter \W = 9
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001001'.
+Parameter \W = 9
+Found cached RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001001'.
+Parameter \W = 10
+
+60.142. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 10
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000001010'.
+Parameter \W = 6
+
+60.143. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_dp_st'.
+Parameter \W = 6
+Generating RTLIL representation for module `$paramod\ot_dp_st\W=s32'00000000000000000000000000000110'.
+
+60.144. Analyzing design hierarchy..
+Top module:  \hbm_arch_q_hub__q_hub_nw
+Used module:     $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress
+Used module:     $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring
+Used module:     $paramod$fecbefbd9ba865a7907558e5fa8895d7aa076073\ot_hgi_sm_xload_cl2_ctlx
+Used module:         \ot_hgi_sm_xload_cl2_ctlw
+Used module:             $paramod$414fb0b6ed111392661c520f2bcbbb48d42e201c\ot_hgi_sm_xload_cl2_ctl
+Used module:             $paramod$9bbe76735c73e77a7984e1fc0ed6a7f81e990eb7\ot_static_cmd_target_core
+Used module:     $paramod$b6ef2feb2256743c537cca125af0bee9c2d0b640\ot_hbm_svc_wbw_copy
+Used module:     \hfd_vms_wq2_merge
+Used module:     $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000001011001
+Used module:         \ot_vms_calendar_static_xcap
+Used module:         \ot_static_program_target
+Used module:     $paramod$6db47097bb51ef1f9bf522073f8c1df77bece45f\ot_hbm_su_stree_leaf
+Used module:         \ot_hbm_su_stree_rsync
+Used module:     $paramod$1a2cbec3ba8d885535c53e5ef0845421e5fbcf0d\ot_hbm_obs_leaf
+Used module:         \ot_rst_relay
+Used module:     \ot_hnx_host_boot_hop
+Used module:     \ot_hnx_calendar_cfg_leaf
+Used module:         $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+Used module:     $paramod$0003f2fddf5f57f2fbd452cd5da4ab4d54ef6ef7\ot_hbm_host_cfg_leaf2
+Used module:         \ot_hbm_host_cfg_leaf
+Used module:     $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000000111
+Used module:         \ot_hbm_idx_vm_share2_static
+Used module:             $paramod$999df201a3e29677c97c84403a5916390d2d0f1a\ot_hbm_idx_vm_share2_leaf
+Used module:     \ot_hgi_coll_kq_share2_leaf
+Used module:         $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+Used module:     \ot_hbm_kqs_fault_or4
+Used module:     \ot_hgi_coll_gq_land
+Used module:         $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_hgi_coll_gq_issue\VM_RT=s32'00000000000000000000000000000011
+Used module:         \ot_hbm_xp_aq_tree13
+Used module:             $paramod$2cfa8cb701a5b6a1f66a63577042fd2a95defc32\ot_hdc_delay
+Used module:             $paramod$c7810d087bc46beadc463d87c97f988966edfc9b\ot_hdc_delay
+Used module:             \ot_hbm_xp_aq_scale13
+Used module:                 \ot_hbm_xp_aq_mul_pipe13
+Used module:     \ot_hgi_coll_ring_b_stop
+Used module:         $paramod$ae067ad122e3c2f668cd5cddcc60cf1390c385de\ot_hgi_coll_ring_ag_lane
+Used module:     $paramod$782575dec3c9f4bf2c94584a2290f60d1e4efa5a\ot_hbm_hc_q_static
+Used module:         \ot_hgi_hc_result_vm_static
+Used module:         \ot_hgi_hc_gathered_mix_reader_static
+Used module:         \ot_hgi_hc_residual_vm_static
+Used module:         \ot_vms_calendar_static
+Used module:     $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001
+Used module:     $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+Used module:         \ot_hdc_w11_cut
+Used module:         \ot_hdc_ksadd_k__u1
+Used module:         \ot_hdc_lzc32
+Used module:     \ot_bind_native_626a9a88cf25221c8bfe5338
+Used module:     $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice
+Used module:     $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice
+Used module:     $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_r4
+Used module:         \ot_hgi_qdq_transport_ctl_s4
+Used module:     $paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010
+Used module:         \ot_hgi_qdq_lg_port_group_r2
+Used module:     $paramod$5d887d8dde147f7968f6566c580b30da8bdee2b8\ot_hgi_qdq_nw_program_leaf
+Used module:         \ot_hgi_qdq_record_calendar
+Used module:     \hbfd_qdq_split_or
+Used module:     \hbfd_qdq_split_and
+Used module:     $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000110110
+Used module:     \ot_hbm_fault_leaf_n8_s0
+Used module:         $paramod$c18c629f8c88cf6e946a6eb8804f0d0ee0ec51ed\ot_hbm_fault_leaf
+Used module:     $paramod$79ffc597cf6e6d6bf7b1bf44efbf8413f6708d24\ot_hbm_fault_leaf
+Used module:     $paramod$a6e11202609093a63751e51047362ae464c7e0b0\ot_hbm_fault_leaf
+Used module:     $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000000111001
+Used module:     \ot_hbm_su_static_cxport_rc_s
+Used module:     \ot_hbm_su_static_cxport_rc_q
+Used module:     $paramod$6c6dfe08ea2dde717a15cb4c610d8824e2f4e5d1\ot_hbm_su_static_cxport_ij_s
+Used module:     $paramod$1c1d8063e38c32fd68f65fcfed1ac481486be9a3\ot_hbm_su_static_cxport_ij_q
+Used module:         \ot_hbm_cxijq_sel_copy
+Used module:     $paramod$f588d14f666a95cb09f7ea03b084f2e61df00462\ot_hbm_static_cfg_collar
+Used module:     \ot_hgi_coll_inj_copy
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000010110100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100000001
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000010000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000100100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000001001
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000100000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000111010111
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011011001110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000010010100110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100000110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100011000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000100001111010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001001100100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000010011
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100001111
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000101000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011100110010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000001111
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000010110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000010010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000101111111110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000000010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000011100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000100110110100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000010011010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000010010010011
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100010010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001100111100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100001100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000100110000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000011010010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000001111110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001001100011
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001001101010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000101100000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001100010100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000100000010000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000010100110001
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011001001000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011001001111
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000010111110010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000100000100000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000010100000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000100001111100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000001001101111010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000101010110100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000010000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000010101
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011100011100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001000110010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000100010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000100101
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000001000011
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000011000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000001000
+Used module:     $paramod$ba709a019ac084a5e9159ea88edae1e304bb6c0d\ot_dp_dly
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000010101101
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000001000100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000010001100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000101000100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001000000010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001001100010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000010000101000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001000000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000101001010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011000000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000101000000000
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000001000000000010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000110011010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000010001010100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001000101110
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001000101111
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000101001000100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000000011
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000000100
+Used module:     $paramod$8bb481a724279a054ca0be71d7db7ccbb8c5984f\ot_dp_dly
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000001111111000
+Used module:     $paramod$4356675e08215818570b5eceb9d506c2f2a880b8\ot_dp_dly
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000011110111100
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000000101
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000001010
+Used module:     $paramod\ot_dp_st\W=s32'00000000000000000000000000000110
+Used module:     \ot_dp_rrelay
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0010111000101100010000100011111000011110000111000010110000101010
+Parameter \MUT = 0
+Parameter \NR = 32
+Parameter \LEAD = 8
+Parameter \EGRESS_SPLIT = 1
+Parameter \SEL_KEEP = 1
+Parameter \PIN_NATIVE = 1
+Parameter \RST_PRE = 1
+
+60.145. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_sm_xload_cl2_ctlw'.
+Parameter \PMAX = 8
+Parameter \RD_LAT = 64'0010111000101100010000100011111000011110000111000010110000101010
+Parameter \MUT = 0
+Parameter \NR = 32
+Parameter \LEAD = 8
+Parameter \EGRESS_SPLIT = 1
+Parameter \SEL_KEEP = 1
+Parameter \PIN_NATIVE = 1
+Parameter \RST_PRE = 1
+Generating RTLIL representation for module `$paramod$5fc50134dae0d922f9a416a1ed0a82877f1721a7\ot_hgi_sm_xload_cl2_ctlw'.
+Parameter \W = 89
+
+60.146. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_vms_calendar_static_xcap'.
+Parameter \W = 89
+Generating RTLIL representation for module `$paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000001011001'.
+Parameter \TARGET = 8'11111111
+Parameter \PCW = 10
+Parameter \TGT_PIN = 1
+Parameter \CAP_CLK = 1
+Found cached RTLIL representation for module `$paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target'.
+Parameter \REGIONS = 1
+Parameter \SYNC_STAGES = 2
+Parameter \TREE_STAGES = 1
+Found cached RTLIL representation for module `$paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay'.
+Parameter \NCP = 2
+Parameter \NT = 20
+Parameter \NF = 32
+Parameter \MUT = 0
+Found cached RTLIL representation for module `$paramod$40c500cd74b4ef6668c6929a20a71558a47514d8\ot_hbm_host_cfg_leaf'.
+Parameter \MUT = 0
+Parameter \REG = 1
+Parameter \BANK_RT = 7
+
+60.147. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hbm_idx_vm_share2_static'.
+Parameter \MUT = 0
+Parameter \REG = 1
+Parameter \BANK_RT = 7
+Generating RTLIL representation for module `$paramod$603d850713249113ca42382f204aef05048483d6\ot_hbm_idx_vm_share2_static'.
+Parameter \TARGET = 8'11111111
+Parameter \PCW = 8
+Parameter \TGT_PIN = 1
+Parameter \CAP_CLK = 0
+Found cached RTLIL representation for module `$paramod$d0e3e25f2666fa833ba84ed3a4778aba0814d801\ot_static_program_target'.
+Parameter \REGIONS = 1
+Found cached RTLIL representation for module `$paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001'.
+Parameter \RESP_PHASE = 51
+
+60.148. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_hgi_hc_gathered_mix_reader_static'.
+Parameter \RESP_PHASE = 51
+Generating RTLIL representation for module `$paramod\ot_hgi_hc_gathered_mix_reader_static\RESP_PHASE=s32'00000000000000000000000000110011'.
+/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv:28: ERROR: Can't resolve task name `$fatal'.

@@ -1,0 +1,269 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-29/plan/d29d",
+ "base_sha": "1aefc6184b2a",
+ "out_sha": "d26dee264ab7",
+ "near_um": 1200.0,
+ "totals": {
+  "built": 1,
+  "built_bits": 2,
+  "far": 27,
+  "far_bits": 19730,
+  "failed": 2,
+  "by_kind": {
+   "adj": 1,
+   "same": 0,
+   "reverse": 0,
+   "path": 0
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [
+  {
+   "lane": "L420",
+   "src": "NE_b101",
+   "dst": "NE_hub",
+   "bits": 2,
+   "kind": "adj",
+   "template": null,
+   "chain": [
+    "NE_b101",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_b101|NE_hub",
+     "face": "N",
+     "window_um": [
+      15527.6,
+      15528.1
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [],
+   "cycles": 2,
+   "stations": 0,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  }
+ ],
+ "far": [
+  {
+   "src": "NE_b100",
+   "dst": "NE_b102",
+   "bits": 2777,
+   "gap_um": 11188.8
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "bits": 2775,
+   "gap_um": 1684.8
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b113",
+   "bits": 2277,
+   "gap_um": 3283.2
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b111",
+   "bits": 1662,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b112",
+   "bits": 1662,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b110",
+   "bits": 1534,
+   "gap_um": 13945.0
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_b113",
+   "bits": 798,
+   "gap_um": 13945.0
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_hub",
+   "bits": 693,
+   "gap_um": 3283.2
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "bits": 632,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su11",
+   "bits": 596,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su20",
+   "bits": 596,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su31",
+   "bits": 596,
+   "gap_um": 12113.3
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_hub",
+   "bits": 410,
+   "gap_um": 2920.3
+  },
+  {
+   "src": "NE_b002",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 10670.4
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b111",
+   "bits": 160,
+   "gap_um": 2920.3
+  },
+  {
+   "src": "NE_b103",
+   "dst": "NE_b101",
+   "bits": 102,
+   "gap_um": 11214.7
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1572.5
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1572.5
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1555.2
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "bits": 37,
+   "gap_um": 1555.2
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b103",
+   "bits": 6,
+   "gap_um": 11214.7
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "bits": 4,
+   "gap_um": 2453.8
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "bits": 3,
+   "gap_um": 2073.6
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "bits": 1,
+   "gap_um": 3939.8
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b103",
+   "bits": 1,
+   "gap_um": 10480.3
+  }
+ ],
+ "failed": [
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "bits": 2126,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su21",
+     "NE_su20"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_su20"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "bits": 1198,
+   "why": "no macro-free station chain with 17 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su01",
+     "NE_su00"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_b001",
+     "NE_su00"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_su00"
+    ]
+   ]
+  }
+ ]
+}

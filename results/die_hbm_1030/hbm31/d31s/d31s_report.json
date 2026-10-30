@@ -1,0 +1,112 @@
+{
+ "lane": "DIE-HBM-31",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-30/plan/d30o",
+ "changes": [
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp0",
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap_value": 0
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp0",
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap_value": 16
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "inst": "u_su_Q0_lane_exp0",
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap_value": 0
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp0",
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap_value": 16
+  }
+ ],
+ "pin_table": {
+  "old": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0__440.64x207.36__q_su00_u_su_Q0_lane_exp0__codex_g21.json",
+  "new": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__d31s.json",
+  "pins_old": 2057,
+  "pins_new": 2068,
+  "strap_pins": [
+   [
+    "strap_lane_lane_id[0]",
+    "M5",
+    415.848,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[1]",
+    "M5",
+    417.384,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[2]",
+    "M5",
+    418.92,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[3]",
+    "M5",
+    420.456,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[4]",
+    "M5",
+    421.992,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[5]",
+    "M5",
+    423.528,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[6]",
+    "M5",
+    425.064,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[7]",
+    "M5",
+    426.6,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[8]",
+    "M5",
+    428.136,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[9]",
+    "M5",
+    429.672,
+    207.264
+   ],
+   [
+    "strap_lane_lane_id[10]",
+    "M5",
+    431.208,
+    207.264
+   ]
+  ]
+ },
+ "budget_owner_relabelled": 4,
+ "sidecars": {
+  "core_macros": "+NEW",
+  "entries": "+NEW",
+  "clock_entries": 4,
+  "pin_windows": 1
+ },
+ "die_plan_sha256": "e675f45fd407c1ab792e2f23c56de7b0caa56916519e1f44eebf9017183d01cd"
+}
