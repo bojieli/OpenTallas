@@ -1,0 +1,134 @@
+{
+ "schema": "opentallas.t6_k5.prep.v1",
+ "instance": "s_0S_x07",
+ "type": "slice_station__t6__cl54a9ceeb",
+ "source_plan_commit": "0428e13f7f3",
+ "old_source_sha256": "247229a44cf50e6fa95769f7e6f5759874c039890c4992e6406505da54a180a1",
+ "candidate_source_sha256": "c3a57c84ccc050e163b4d08cdcdaa8b98530934c507027557406aefefe7488cc",
+ "selected_slots": [
+  "ft0",
+  "ft1"
+ ],
+ "unchanged_slots": [
+  "ft2",
+  "ft3",
+  "ft4",
+  "ft5",
+  "ft6",
+  "ft7",
+  "ft8",
+  "ft9",
+  "ft10",
+  "ft11",
+  "ft12"
+ ],
+ "added_flops": 2210,
+ "added_cycles_per_selected_path": 1,
+ "outline_changed": false,
+ "pins_changed": false,
+ "clock_roles_changed": false,
+ "old_mapped_stage_counts": {
+  "ft0_stage0": 1105,
+  "ft0_stage1": 1105,
+  "ft0_stage2": 1105,
+  "ft0_stage3": 1105,
+  "ft1_stage0": 1105,
+  "ft1_stage1": 1105,
+  "ft1_stage2": 1105,
+  "ft1_stage3": 1105
+ },
+ "old_mapped_masters": [
+  {
+   "stage": "ft0_stage0",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft0_stage0",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "count": 34
+  },
+  {
+   "stage": "ft0_stage0",
+   "master": "DFFHQNx2_ASAP7_75t_R",
+   "count": 1070
+  },
+  {
+   "stage": "ft0_stage1",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft0_stage1",
+   "master": "DFFHQNx2_ASAP7_75t_R",
+   "count": 1104
+  },
+  {
+   "stage": "ft0_stage2",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft0_stage2",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "count": 1104
+  },
+  {
+   "stage": "ft0_stage3",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft0_stage3",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "count": 1104
+  },
+  {
+   "stage": "ft1_stage0",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft1_stage0",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "count": 26
+  },
+  {
+   "stage": "ft1_stage0",
+   "master": "DFFHQNx2_ASAP7_75t_R",
+   "count": 1078
+  },
+  {
+   "stage": "ft1_stage1",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft1_stage1",
+   "master": "DFFHQNx2_ASAP7_75t_R",
+   "count": 1104
+  },
+  {
+   "stage": "ft1_stage2",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft1_stage2",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "count": 1104
+  },
+  {
+   "stage": "ft1_stage3",
+   "master": "DFFASRHQNx1_ASAP7_75t_R",
+   "count": 1
+  },
+  {
+   "stage": "ft1_stage3",
+   "master": "DFFHQNx1_ASAP7_75t_R",
+   "count": 1104
+  }
+ ],
+ "state": "PRIVATE_SOURCE_PREP_NOT_ADOPTED; no fresh physical packet/native sizing/clock qualification",
+ "generator_integration": "Current approved-main exporter integration remains gated; candidate is surgical private source preparation against immutable native source, not a regenerated current-main binding."
+}
