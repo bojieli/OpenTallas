@@ -1,4 +1,4 @@
-import csv,matplotlib
+import csv,json,matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
@@ -11,6 +11,8 @@ for ax in axs:
   if ax is axs[1] and not (60<x<78 and 96<y<111): continue
   if ax is axs[0] and hash(r['name']) % 20: continue
   ax.add_patch(Rectangle((x,y),w,h,facecolor='#85a4b5',alpha=.45,lw=.1))
+ for pg in json.load(open(p+'island_pg.json')):
+  x0,y0,x1,y1=pg['rect'];ax.add_patch(Rectangle((x0,y0),x1-x0,y1-y0,facecolor='orange' if pg['net']=='VDD' else 'black',alpha=.6))
  ax.add_patch(Rectangle((64.8,99.36),8.64,8.64,facecolor='none',edgecolor='purple',lw=1.5))
  for name,y in [('clock',105.84),('reset',101.52)]:
   for x in [66.96,71.28]:ax.plot(x,y,'rx',ms=8)

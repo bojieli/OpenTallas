@@ -16,3 +16,9 @@ existing shared post_route_drv scripts (source17495b11ea); netlist timing/clock
 qualification repeated by that flow. PG and pins unchanged. Uses actual routed
 SPEF, guarded MM hold repair, frozen sink masters/clock checks. +0 cycles.
 Old NOT SIGNED verdict retained. Trial epyc2 codex-hbm-ring-prd-1856/m15.
+
+Actual ODB root-cause probe (unit3540402 rc0) confirms M5 PG access trap:
+old input pin x66.944..66.976 lies between VSS ending66.924 and VDD starting66.996,
+20nm clearance each side. Output x71.264..71.296 has the same trap. The +/-1.08
+pins provide >=0.908um to these PG stripes. Updated review.png overlays actual
+ODB PG stripes (orangeVDD/blackVSS), viewed. PG geometry remains unchanged.
