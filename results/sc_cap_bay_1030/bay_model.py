@@ -19,10 +19,10 @@ faces={b['bus']:b for b in F['buses']}
 # The child source net map must assign each raw output bit to its parent payload
 # bit; parent epoch pins are not child ports. Compact slots would violate the
 # ordinary per-port occupancy budget, so no density exception is assumed.
-f=faces['x_ctl_o'];N=[f['xmin']+222.912,f['xmax']+222.912,B[3],B[3]]
-f=faces['x_fe_o'];E=[B[2],B[2],f['ymin']+384.336,f['ymax']+384.336]
+f=faces['x_ctl_o'];N=[f['xmin']+224.64,f['xmax']+224.64,B[3],B[3]]
+f=faces['x_fe_o'];E=[B[2],B[2],f['ymin']+388.8,f['ymax']+388.8]
 f=faces['x_fw_o'];A=[B[0],B[0],f['ymin'],f['ymax']]
-reach={'x_ctl_o':222.912+H-B[3], 'x_fe_o':W-B[2]+384.336, 'x_fw_o':B[0]}
+reach={'x_ctl_o':224.64+H-B[3], 'x_fe_o':W-B[2]+388.8, 'x_fw_o':B[0]}
 def overlaps(b):
  return B[0]-halo<b[2] and b[0]<B[2]+halo and B[1]-halo<b[3] and b[1]<B[3]+halo
 hit=[q for q in D['landing_groups'] if overlaps(q['rect_um'])]
@@ -37,7 +37,7 @@ report=dict(verdict='CONDITIONAL CHILD PLAN ONLY; parent placement HOLD',body_um
  parent_outline_um=[W,H],state_or_data_cycles_added=0,output_port_to_public_face_bit_correlated_L1_um=reach,
  output_proxy_all_le405=all(v<=405 for v in reach.values()),
  source_scope='Existing u_bound.u_core only. 27ports/572bits unchanged. Affine copies preserve actual parent payload spacing/layers. Exact child-output net to parent-payload bit mapping is required; epoch pins omitted. This is not actual parent boutFF geometry or child timing.',
- output_pin_transforms=dict(N=dict(x_add=222.912,y=B[3]),E=dict(x=B[2],y_add=384.336),W=dict(x=B[0],y_add=0)),
+ output_pin_transforms=dict(N=dict(x_add=224.64,y=B[3]),E=dict(x=B[2],y_add=388.8),W=dict(x=B[0],y_add=0)),
  preserved_parent_clock_reset=[311.04,673.92],preserved_count_strap_bounds=[280.8,643.68,341.28,704.16],
  intersecting_reserved_groups=hit,intersecting_FT_ideal_stages=ft,
  required_work=['Move same-depth reset/run/collector instances intersecting bay and recheck entire reset graph.',
