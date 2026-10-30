@@ -841,6 +841,9 @@
       "type": "string",
       "minLength": 1
      },
+     "ft_full_stage_preserve_ff_families": {
+      "type": "boolean"
+     },
      "lec": {
       "type": "object",
       "additionalProperties": false,

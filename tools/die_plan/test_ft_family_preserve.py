@@ -41,3 +41,15 @@ if {$::events ne {exclusions data_pin_repair_allowed}} {error "PRE-hook/native o
 
 def test_nonsequential_family_rejected(tmp_path):
  with pytest.raises(ValueError):install_family_preservation({'slots':{'f':{'targets':[{'master':'BUFx8_ASAP7_75t_R'}]}}},tmp_path)
+
+
+def test_family_flag_in_actual_full_plan_schema():
+ import copy,json,schema
+ fixture=json.loads((Path(__file__).parent/'examples/tiny_plan.json').read_text())
+ tn=next(iter(fixture['partition_types']))
+ for value in (True,False):
+  doc=copy.deepcopy(fixture);doc['partition_types'][tn]['ft_full_stage_preserve_ff_families']=value
+  assert schema.validate(doc)==[]
+ for value in (1,'true',None):
+  doc=copy.deepcopy(fixture);doc['partition_types'][tn]['ft_full_stage_preserve_ff_families']=value
+  assert any('ft_full_stage_preserve_ff_families' in e for e in schema.validate(doc))
