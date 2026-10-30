@@ -1,0 +1,199 @@
+{
+ "status": "FAIL",
+ "physical_route": false,
+ "source_cells": 44590,
+ "source_nets": 44591,
+ "tap_iterms": 7889,
+ "source_masters": [
+  "CKINVDCx16_ASAP7_75t_R"
+ ],
+ "pin_access": {
+  "CKINVDCx16_ASAP7_75t_R": {
+   "A": [
+    0.16699999999999998,
+    0.09
+   ],
+   "Y": [
+    1.5390000000000001,
+    0.18
+   ]
+  }
+ },
+ "inputs": {
+  "tree": {
+   "path": "/srv/opentallas-scratch2/claude/die-qc36/resite/tree_resite.json",
+   "sha256": "48b559ec5ac1f3e4e24fa7cdd63161ef02bdebcf5d93f84c4d808372d256cc22"
+  },
+  "netlist": {
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/mechanics/clkonly.v",
+   "sha256": "f0f1424fdc9f7fa1ac2937263dcb0792411458dee2a53b832169cdb5b36dab48"
+  },
+  "lef": {
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-physical-1029/inputs/cells.lef",
+   "sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1"
+  },
+  "plan": {
+   "path": "/srv/opentallas-scratch2/claude/qc-import-1/plan/plan_qc_import1.json",
+   "sha256": "d0b301f8738717f3f225690e9540ecfd5005961c85a1ce2937d84123702dffed"
+  },
+  "endpoints": {
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/mechanics/endpoints.json",
+   "sha256": "2c3e3e1229cdd2ed17c0ae1f6c0c1fa693f6cc6cbb2fa520a870b07e52621e55"
+  }
+ },
+ "actual_tech_vias": {
+  "path": "/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/census119_h800/probe_census.json",
+  "sha256": "7010e4c8e26624ca6862262b6cce39abcdcc64720263fb117b367515f7307f9e",
+  "enclosures_um": {
+   "VIA89": {
+    "M8": [
+     0.02,
+     0.02
+    ],
+    "M9": [
+     0.02,
+     0.02
+    ]
+   },
+   "VIA78": {
+    "M7": [
+     0.016,
+     0.027
+    ],
+    "M8": [
+     0.027,
+     0.02
+    ]
+   },
+   "VIA67": {
+    "M6": [
+     0.027,
+     0.016
+    ],
+    "M7": [
+     0.016,
+     0.027
+    ]
+   },
+   "VIA56": {
+    "M5": [
+     0.012,
+     0.027
+    ],
+    "M6": [
+     0.023,
+     0.016
+    ]
+   },
+   "VIA45": {
+    "M4": [
+     0.023,
+     0.012
+    ],
+    "M5": [
+     0.012,
+     0.023
+    ]
+   },
+   "VIA34": {
+    "M3": [
+     0.009,
+     0.017
+    ],
+    "M4": [
+     0.02,
+     0.012
+    ]
+   },
+   "VIA23": {
+    "M2": [
+     0.014,
+     0.009
+    ],
+    "M3": [
+     0.009,
+     0.014
+    ]
+   },
+   "VIA12": {
+    "M1": [
+     0.009,
+     0.011
+    ],
+    "M2": [
+     0.014,
+     0.009
+    ]
+   }
+  }
+ },
+ "access_minarea_patches": {
+  "m8_dimensions_um": [
+   0.192,
+   0.08
+  ],
+  "m8_area_um2": 0.01536,
+  "short_m7_dimensions_um": [
+   0.032,
+   0.072
+  ],
+  "short_m7_area_um2": 0.002304,
+  "tree_width_um": 0.08,
+  "tree_spacing_um": 0.32
+ },
+ "physical_m7_windows": {
+  "radius_um": 8.64,
+  "host_and_macro_clipped": 3726,
+  "pins": 89180,
+  "macro_halo_um": 2.16
+ },
+ "clock_column_windows": {
+  "pins_clipped": 2108,
+  "pins": 89180,
+  "bisector_margin_um": 0.048,
+  "note": "conservative disjoint M7 windows; no extra M7 conductor or cell move"
+ },
+ "m6_entry_jogs": {
+  "path": "/srv/opentallas-scratch2/claude/die-qc40/prov_R7F1c/backbone_plan_e3.json",
+  "count": 89144,
+  "sha256": "547d0404513249c4488e67b868f4bd6a53f36073029618d8b76580ac069e5c6c"
+ },
+ "cause": "no legal fixed-wire geometry",
+ "findings": [
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn38_2",
+   "detail": "trunk M8 ideal 11016.675"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn58_2",
+   "detail": "trunk M8 ideal 11016.675"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn152_2",
+   "detail": "trunk M8 ideal 11016.675"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn270_2",
+   "detail": "trunk M8 ideal 11016.675"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn446_2",
+   "detail": "trunk M8 ideal 11016.675"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn630_2",
+   "detail": "trunk M8 ideal 11016.675"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn808_2",
+   "detail": "trunk M8 ideal 11016.675"
+  }
+ ]
+}
