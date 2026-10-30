@@ -3019,7 +3019,7 @@ def clock_parity(verilog):
     return cells, taps
 
 
-def clock_edge_readout(verilog, path, period="833.333", cells="b*", tap_slew=False, prefix=""):
+def clock_edge_readout(verilog, path, period=str(die_sta.PERIOD_PS), cells="b*", tap_slew=False, prefix=""):
     """FLOW-ONEMODEL-2 (COORD 10-28): Tcl lines writing the clock arrivals of BOTH source edges at every tap AND every
     clock cell, so every die proof carries measured fall arrivals by construction (no rise + T/2 anywhere).
     PATH gets: header EDGES_HDR; 'T port late early [slew]' = source RISING edge at the tap (period - slack_max_rise,
@@ -3266,13 +3266,13 @@ def clock_kit(P, out, leaf_um, rep_um, full_depth=False, site_legal=False, site_
     tcl += [f"set_wire_rc -signal -resistance {wire_r:.6e} -capacitance {wire_c:.6e}",
             f"set_wire_rc -clock -resistance {wire_r:.6e} -capacitance {wire_c:.6e}",
             "estimate_parasitics -placement",
-            "create_clock -name vclk -period 833.333",
+            f"create_clock -name vclk -period {die_sta.PERIOD_PS}",
             f"set_driving_cell -lib_cell {BUF} -pin Y [get_ports root]",
             "set_input_delay 0 -clock vclk [get_ports root]",
             f"set_load {TAP_LOAD_FF} [all_outputs]",
             "set_output_delay 0 -clock vclk [all_outputs]",
             # FLOW-ONEMODEL-2: both source edges at every tap and clock cell (polarity-resolved, clock_edge_readout)
-            *clock_edge_readout(v, "/work/clock/arr_$::env(CORNER).txt", period="833.333",
+            *clock_edge_readout(v, "/work/clock/arr_$::env(CORNER).txt", period=str(die_sta.PERIOD_PS),
                                 cells="{b* r* p*}" if any(int(x) > 0 for x in (tap_pad or {}).values()) else "b*",
                                 tap_slew=any(int(x) > 0 for x in (tap_pad or {}).values())),
             "report_checks -path_delay max -group_path_count 1 -format full -fields {cap slew fanout}",
@@ -5254,7 +5254,7 @@ def main(argv=None):
                                          "or combo GRT script (writes the shared arr_<C>.txt format)")
     e.add_argument("ctree_v")
     e.add_argument("--path", default="/out/arr_$::env(CORNER).txt")
-    e.add_argument("--period", default="833.333")
+    e.add_argument("--period", default=str(die_sta.PERIOD_PS))
     e.add_argument("--cells", default="b*", help="get_cells glob, e.g. 'ck_*' or '{b* r* p*}'")
     e.add_argument("--prefix", default="", help="instance prefix in the routed design (e.g. ck_)")
     e.add_argument("--tap-slew", action="store_true")

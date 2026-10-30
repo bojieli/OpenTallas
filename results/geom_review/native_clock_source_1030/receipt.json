@@ -1,0 +1,25 @@
+{
+  "schema": "opentallas.native_clock_source.v1",
+  "status": "CONNECTED_UNROUTED",
+  "clock_cells": 50812,
+  "clock_nets": 50813,
+  "native_taps": 7889,
+  "preserved_old_clock_ids": false,
+  "provider_imported": false,
+  "physical_route": false,
+  "timing_qualified": false,
+  "inputs": {
+    "target": {
+      "path": "/srv/opentallas-scratch2/claude/codex-native-clock-0336/inputs/native_target.odb",
+      "sha256": "7dd156f3c393c53e4de95d63416928945a98a95617680e77c2a806f036b8ea26"
+    },
+    "netlist": {
+      "path": "/srv/opentallas-scratch2/claude/codex-native-clock-0336/inputs/ctree.v",
+      "sha256": "e937b444e6bb2e0abc3bb49471c062be2a345e5697d9cccb57c354639cc5eef8"
+    },
+    "tree": {
+      "path": "/srv/opentallas-scratch2/claude/codex-native-clock-0336/inputs/tree.json",
+      "sha256": "48cc1b674f09560e6b029d69be9aa0ffa046918895f978e70a60e40347cd4a48"
+    }
+  }
+}

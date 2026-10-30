@@ -31,6 +31,9 @@ TAP_MARGIN_UM = 17.28          # keep the interior tap pins off the face pin ban
 FACE_INSET_UM = 2.0            # a face register sits just inside its pin
 SEP_UM = 8.64                  # two taps closer than one lattice step merge (one spine drop)
 
+# Retain the exact Plan with its result: id(P) alone can be reused after a
+# transient compose Plan is collected, otherwise returning another plan's taps.
+# The identity check also keeps cache hits correct for plan-like test objects.
 _CACHE = {}
 
 
@@ -388,8 +391,9 @@ def density_taps(P, tn, control=True):
     # taps (control=True, the default = schema.tap_grid) then add the control pins as sinks (clock.control_sinks).
     control = bool(control and P.types[tn].get("clock", {}).get("control_sinks"))
     key = ("density", id(P), tn, control)
-    if key in _CACHE:
-        return _CACHE[key]
+    cached = _CACHE.get(key)
+    if cached is not None and cached[0] is P:
+        return cached[1]
     import schema
     t = P.types[tn]
     ck = t.get("clock", {})
@@ -459,7 +463,7 @@ def density_taps(P, tn, control=True):
     i0 = min(range(len(out)), key=lambda i: (abs(out[i][0] - root[0]) + abs(out[i][1] - root[1]), i))
     out = [out[i0]] + [p for i, p in enumerate(out) if i != i0]
     res = [("clk" if i == 0 else f"clk_t{i}", x, y, n, r) for i, (x, y, n, r) in enumerate(out)]
-    _CACHE[key] = res
+    _CACHE[key] = (P, res)
     return res
 
 
@@ -481,8 +485,9 @@ def recentre_displaced(P, tn, grid, moved, iters=12):
     under macros / clock keepouts, e.g. a PHY) is a dead spine drop + unloaded reset synchroniser: it is dropped and
     the taps are renumbered clk, clk_t1.. in grid order.  Deterministic."""
     key = ("recentre", id(P), tn)
-    if key in _CACHE:
-        return _CACHE[key]
+    cached = _CACHE.get(key)
+    if cached is not None and cached[0] is P:
+        return cached[1]
     import schema
     t = P.types[tn]
     pts = recentre_sinks(P, tn)
@@ -524,7 +529,7 @@ def recentre_displaced(P, tn, grid, moved, iters=12):
         return True
     keep = [i for i in range(len(xy)) if not (i in moved and grp[i] == 0 and dead(i))]
     res = [("clk" if m == 0 else f"clk_t{m}",) + xy[i] for m, i in enumerate(keep)]
-    _CACHE[key] = res
+    _CACHE[key] = (P, res)
     return res
 
 
@@ -603,8 +608,9 @@ def sink_taps(P, tn):
     if P.types[tn].get("clock", {}).get("tap_mode") == "density":
         return density_taps(P, tn)
     key = (id(P), tn)
-    if key in _CACHE:
-        return _CACHE[key]
+    cached = _CACHE.get(key)
+    if cached is not None and cached[0] is P:
+        return cached[1]
     t = P.types[tn]
     ck = t.get("clock", {})
     w, h = t["outline_um"]
@@ -641,7 +647,7 @@ def sink_taps(P, tn):
     order = [merged[i0]] + [q for i, q in enumerate(merged) if i != i0]
     out = [("clk" if i == 0 else f"clk_t{i}", round(q[0], 4), round(q[1], 4), q[2], round(q[3], 1))
            for i, q in enumerate(order)]
-    _CACHE[key] = out
+    _CACHE[key] = (P, out)
     return out
 
 

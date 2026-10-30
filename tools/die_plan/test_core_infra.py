@@ -366,3 +366,48 @@ def test_planned_domain_mutants_refused(mut, frag):
     s = icg_planned_tree(); mut(s["core_tree"])
     with pytest.raises(CI.InfraError, match=frag):
         CI.emit_tcl(s)
+
+
+def test_typed_clock_feedthroughs_use_via_access_shape():
+    sl = sample()
+    tcl = CI.emit_tcl(sl)
+    for name in ("mp_isl0_ck_i", "mp_isl0_ck_o"):
+        line = next(v for v in tcl.splitlines() if v.startswith("ot_ci_port {" + name + "}"))
+        assert line.endswith("{0.048 0.48}")
+    for name in ("mp_isl0_rst_i", "mp_isl0_rst_o"):
+        line = next(v for v in tcl.splitlines() if v.startswith("ot_ci_port {" + name + "}"))
+        assert not line.endswith("{0.048 0.48}")
+    # An unconnected misleading port name cannot acquire clock access geometry.
+    island = sl["pushdown"]["islands"][0]
+    island["ft_ports"].append(dict(name="unused_clk", dir="in", xy_um=[400, 400]))
+    with pytest.raises(CI.InfraError, match="every feedthrough port"):
+        CI.emit_tcl(sl)
+
+
+def test_tcl_clock_ft_generic_ft_and_m7_entry_shapes_execute():
+    impl = Path(CI.__file__).with_suffix(".tcl")
+    script = "source {%s}\n" % impl + r"""
+proc block {cmd name} {return bt}
+proc bt {cmd} {return INPUT}
+proc place_pin {args} {puts $args}
+set ::ot_ci_b block
+set ::ot_ci_ports {}
+ot_ci_port ck INPUT 1 2 {0.048 0.48}
+ot_ci_port rst INPUT 1 2
+ot_ci_entry entry 1 2
+"""
+    run = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+    assert not run.stderr
+    lines = run.stdout.splitlines()
+    assert "-layer M5" in lines[0] and "-pin_size {0.048 0.48}" in lines[0]
+    assert "-layer M5" in lines[1] and "-pin_size {0.032 0.192}" in lines[1]
+    assert "-layer M7" in lines[2] and "-pin_size {0.032 0.192}" in lines[2]
+
+
+def test_clock_ft_overlap_uses_actual_larger_shape():
+    s = sample()
+    ports = s["pushdown"]["islands"][0]["ft_ports"]
+    # .30um spacing clears the old generic .192um shape, but clocks are .48um.
+    ports[1]["xy_um"] = [ports[0]["xy_um"][0], ports[0]["xy_um"][1] + .30]
+    with pytest.raises(CI.InfraError, match="pin shapes overlap"):
+        CI.compile_slice(s)

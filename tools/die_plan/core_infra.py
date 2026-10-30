@@ -170,6 +170,16 @@ def buffer(cell, where):
     return cell
 
 
+
+def clock_feedthrough_ports(arcs):
+    """Clock ownership comes from the existing timing FT declaration."""
+    import ft_ports
+    if not arcs:
+        return set()
+    declaration = ft_ports.from_core_infra_plan(dict(arcs=arcs))
+    return {a[k] for a in declaration["arcs"] if a["kind"] == "clock" for k in ("source", "sink")}
+
+
 def compile_slice(sl, kd=None):
     """Compile physical identities before a build; returns cells, FT ports/arcs, tree and bay assignments."""
     outline = sl["outline_um"]
@@ -294,12 +304,14 @@ def compile_slice(sl, kd=None):
                 raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
         planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
         deferred = []
+        deferred_names = set()
         for c in tree.get("nodes", []):
             c = dict(c)
             par = c.get("parent")
             if par not in depth:
-                if planned_names and (par in planned_names or par in {d.get("name") for d in deferred}):
+                if planned_names and (par in planned_names or par in deferred_names):
                     deferred.append(c)
+                    deferred_names.add(c.get("name"))
                     continue
                 raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
             n = add_cell(c, c.get("island_rect_um"))
@@ -568,12 +580,14 @@ def compile_slice(sl, kd=None):
         if kd is not None:
             import master_slice as MS
             entry = dict(entry, xy_um=list(MS.snap_on_track(kd, entry["layer"], *entry["xy_um"])))
-    pin_shapes = [(p["name"], p["xy_um"]) for p in ports]
+    clock_ft = clock_feedthrough_ports(arcs)
+    pin_shapes = [(p["name"], p["xy_um"], (.048, .48) if p["name"] in clock_ft else (.032, .192)) for p in ports]
     if entry:
-        pin_shapes.append((clock_port, entry["xy_um"]))
-    for k, (name, loc) in enumerate(pin_shapes):
-        for other, q in pin_shapes[:k]:
-            if abs(loc[0] - q[0]) < .032 - 1e-9 and abs(loc[1] - q[1]) < .192 - 1e-9:
+        pin_shapes.append((clock_port, entry["xy_um"], (.048, .48)))
+    for k, (name, loc, size) in enumerate(pin_shapes):
+        for other, q, other_size in pin_shapes[:k]:
+            if (abs(loc[0] - q[0]) < (size[0] + other_size[0]) / 2 - 1e-9 and
+                    abs(loc[1] - q[1]) < (size[1] + other_size[1]) / 2 - 1e-9):
                 raise InfraError(f"M5 planned pin shapes overlap: {name}, {other}; revise the slice")
     placements = sl.get("cell_placements", {})
     if placements:
@@ -776,9 +790,13 @@ def emit_tcl(sl, kd=None):
     if plan["clock_entry"]:
         x, y = plan["clock_entry"]["xy_um"]
         lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
+    # Use the same typed arc declaration that drives FT timing/ownership; a
+    # port spelling alone cannot grant clock pin geometry.
+    clock_ft = clock_feedthrough_ports(plan["arcs"])
     for p in plan["ports"]:
         x, y = p["xy_um"]
-        lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}")
+        shape = " {0.048 0.48}" if p["name"] in clock_ft else ""
+        lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}{shape}")
     for c in plan["cells"]:
         if c["name"] in late_cells:
             continue

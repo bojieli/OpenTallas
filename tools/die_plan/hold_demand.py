@@ -35,7 +35,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
 SCHEMA = "opentallas.hold_demand.v1"
-PERIOD_PS = 833.333
+from die_sta import PERIOD_PS  # exact canonical timing policy
 UNC_HOLD_PS, UNC_SPLIT = 25.0, 0.5
 # region_clock stage model (QC-MP-REGION-2): stage delay = d0 + k x um, full stage 450 um; cell share of a full stage
 STAGE = {"TT": (52.713, 0.058822), "FF": (38.561, 0.060298)}
