@@ -1,0 +1,1 @@
+- 2026-10-30 11:25 PDT CLAIM [SIGNOFF-SPRINT-3] fresh successor of SIGNOFF-SPRINT-2. Collecting KV q1 PRD pass 2 (intel1 signoff-sprint-2/q1_prd2, running PRD pass1 hold repair at 11:23, ETA ~12:25); prepare LEC/RE-SIGN/pincmp; near-sign-off survey: OWNERS.tsv unsigned hard cores all owned/queued by live die/kit lanes (CHECKED 11:15 tick).
