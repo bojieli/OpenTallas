@@ -2066,3 +2066,66 @@ CODEX: 2026-10-29 19:05 PDT explicitreset finalROOT main=e4b3808d5c7 intel2/orig
 CODEX: 2026-10-29 22:50 PDT takeoverall5dies+sharedFLOW/merge/coverageactive; currentmain1abb3fcb1, collectbeforeduplicate, currentfreeze/rulesretained. KF3merge+QCshield/YC1/STARTbenchsourceunblocks underway.
 
 CODEX:2026-10-29 22:55 PDT ROOTMERGE2249 main0d836d178f0:KF3d762/QCshield126/TOKSTART5fa/QCYC1fb430 integrated;37focusedPASS+2subtests/16sidEQ; mainbindguard preserved/no deletions. KVb64heldrealKV+HEADbyteidentity; BF/ROMresetmirrorHOLD preserved.
+
+CODEX:2026-10-29 22:55 PDT ROOTMERGE mainb3546d09c02==origin/main intel2+hub: HBM29cdf results19filesonly merged/adoptedd29d +2pgpcycpricedperCOORD. KF3NDloopcounterexample discoveredactualfalsePASS/assignedFLOWpathstackfix; oldfailurepreserved,nophysicalclaim.
+
+CODEX:22:57 sharedLEC old248actualFAIL407unchanged;targeted18copyinvariantprobe2694778LIVE. UrgentGEOMNDfeedbackfix1f27READY/8PASS/bothmainmutantsCAUGHT, genuineparallelPASS;noLECsourceadoption.
+
+CODEX:2026-10-29 22:57 PDT QCwave46da3e91c READYR8physicalstrapfix28pins0cycles,actualsle_scportgate12extra->PASSboth;4testsPASS. Ringholdnamesmismatch/tt_ctlmmacromissing/coll_uciePHYslotfitdiagnosed,parentnotified;inheritedjobsuntouched.
+
+CODEX: 2026-10-29 22:57 PDT FLOW64d28d2ac typedrelaySTARTfaceproof READY73tests+oldcontrol;QC35typeeventparentowned. KF4actualprobescollected,no repeats; NDcyclefix8testschildpublishing, SYS_C407failureowned,PVJ/E0/PRDchildrenactive.
+
+CODEX:2026-10-29 22:58 PDT ROOTMERGE main8cfbf00f494 KVb64PHYband+787conditionalreceipt integrated14PASS; actualJSON50hash+6ERR/KV56,HEAD23/23identity(no newerrors). NDcyclefix1f27 reviewed8PASSpublishing; FLOWtypedrelay64heldactualQCcontrol.
+CODEX: 2026-10-29 22:59 PDT HEADkitsst_n4PLACE0/GEOMFAIL379classified;st_str506FTfailuresestimated0withsame4stages/399.64um,ownPLACEunit2378386live;affectedq2kitsheldforparentq3M7rectanglefix,noRTL/cycles.
+CODEX: 2026-10-29 22:59 PDT S81cores held-source mirrorcandidate0bf70739cpushed, ROM3seed+mutant/BF12frames/source-reset4shapesPASS; actual2kitLECsinheritedLIVE/HOLDmerge. 3reviewedQB/SSTNE1routes+100%capfixeslive; allphysical/facefailuresowned.
+
+CODEX: 2026-10-29 22:58 PDT sharedHOLD takeoverb8b14a57b85: currentmainPRD38a8alreadyintegrated; E0LEC/PVJroutecollectedLIVE, minimalHBMw60dataresizeunit1306996LIVE(+0cycles), actualRCXwhatif−3.55→+4.20; clock291.3separateHBMowner.
+
+CODEX:2026-10-29 22:59 PDT ROOTMERGE maina6c2b57cdfc==origin/main intel2+hub: concreteNDselfloop/2BUFcyclefalsePASS corrected1f27(pick7f4),8focusedPASS inclactualoldfailurecontrols; genuineparallelBUFarcPASSretained,nogatechange. Typedrelay64/QCautogenstraps pendingactualcombinedcontrol; BF/ROMmirror0bfheldactualLECs.
+CODEX:2026-10-29 23:10 PDT S81H2actual4master/28childABI +plainLN2clockcontracts f0e4b2cdd39 pushed/planownersent;2232/2236pins112.32sq,sourcepin+multirootPASS/diagramVIEWED,0RTLcycles.8KVleaforiginal/nsjobslive/progressing,noqualifiedcountsorroute.
+
+CODEX: 2026-10-29 23:01 PDT HEADLEP liveVBhold−9.357->+4.367/TNS0butmargin10pending; newdata-onlystandardHB4continuationunit1375164epyc2codex-head-lep-serdes-2249/hb4 passespreflight,0RTL/cycles/CLKchanges. SerDesr2DRT6viol/stubborn19,PGvia-stackhypothesisactualcellprobe2425692terminal0. Inheritedjobsuntouched.
+CODEX: 2026-10-29 23:01 PDT KV2249realbandidentity787met/rootmergedb64; STARTloadedSTAactualunits2831765/2836309LIVE; SDtry4PLACEprogress, coreE0localECO/HRrecutGEN/tokenFAROBSownednopduplicates.
+CODEX: 2026-10-29 23:04 PDT KV-HR33e2afc09 planrecut fixesactual174umSRAMvs103umslot; CDCch/pc compactfill16.4/16.7%,8PHY49%freefill/all21halosclear, GENliveintel1ownWT; parentadoption/CLK/sourcegatesopen,noSIGNED.
+
+CODEX: 2026-10-29 23:04 PDT CRS4 signedview packet d72126da553 READY13exactcontractrefs/no planedit; CAPTR17facefailuresclosedactualFACE347PASS, full3node12klockstep+mutantPASS, nativeLEClive.
+CODEX:2026-10-29 23:04 ECTL/PC:q0V4bothcollectedFAIL,V4bPRD60m15LIVE2775994;q3h432PRD60LIVE2848650parallelh0DRT;q1GRT0183staleclocklockfixedowntrialLIVE;PC94015EQexactreuse→actualCTSunit2616950LIVE,oldformaluntouched. NoSIGNED.
+
+CODEX:2026-10-29 23:05 PDT HBM row1 source exact split/clonePASS miter4096/0 mutant4096; actualbind83/57312/0EMIT moves2746b perhalf from remoteb100 to hub input,31metadataremain. Unadopted,physicalcorridorowed; ownjobsterminal.
+CODEX: 2026-10-29 23:07 PDT KVTOK conditionalsource27877197a pushed: nativeK/Canchor+2 measured, actualHOST/SRAM/PHYRX170PASS548 vsold172actual08; productionoffsetflag0byteidentical, -2candidatecompiled/noadoption. FAROBS+WcbuildLIVEuntouched.
+
+CODEX: 2026-10-29 23:07 PDT S81PHYS QBN_e1cap100 SIGNED287.41/3.53/11.1-9.5+postLECEQ384; sstnLOCAL413.06/.57+postLECEQ1707, QBSLOCAL338.97/9.55(parentreceipt only). VESlatticeCprototype48GBLIVEepyc2; actualXRT1/L3geometryFAILdiagnosed noCTS.
+
+CODEX: 2026-10-29 23:10 PDT FLOW actualIQF1369missing→0/9583landedFIRM currenthook recovered5e022ef04, resetretry0effect→bindergridfixcoverage0f308; relaymappedoneFFproof941/74tests+QCmiterPASS, SYS_C407→221allhypPROVED/notEQ, childstockproofLIVE.
+CODEX: 2026-10-29 23:12 PDT HEADq3dcc496311 fixes35rawpinmetaloverlaps/36pins18types<=.128um,clock/data/RTL/cyclesfixed;G0C2680FAILexactbaseline. ReaderR2K-Rproof4572casesPASS/mutantscaught4572,3-typegeometry361.616maxready/defaultoffgenbuilding. Meshvclkhelpermixed542+aggregate742failowned,allkit/LEP/SerDes/STARTjobscovered.
+CODEX:2026-10-29 23:13 PDT S81H2LNreset8eb946787de pushed:currentplain2masters64cold/warm/independentreset1680/0PASS;exact4edgecontrolcaught560,6sourcefilesMATCHcurrentemitted,0RTLcycles. H2ownerowns2allowlistadds;8KVjobsremainlive/nsOPT300.
+
+CODEX: 2026-10-29 23:15 PDT coverage245lanes; IQFrootcausesstaleFT+resetgrid+coarseclockdiagnosed, shared0f3086READY37tests andexact3inputrelayproofbef8cef360/0+mutant5; KVSTA/HBMprebuildvisualdone, noownheavyjobs.
+
+CODEX:2026-10-29 23:18 PDT ROOTMERGE main4048fc03dd6: QC447 source/defaultOFF+690, CRS4d721actual13contracts, scalar2a301+61ae4PASS, IQF0f3083PASS, KVrecipeaaf integrated; native4b229reader4PASS nextmain. QCNEWflag-onprivatecopyfullinputproofstillFAIL/held35types (oldreceiverproofnotnewcombo), assignedQC/FLOW. d441actualcanonical276PASS; QB_Nf5bSIGNEDview104matchespendingPINEVeventonly, canonicalck[0]M4x.042 vsviewM5x.06, helpercorrectlyrefusescanonicalattachment. ProvisionalQB_S/SSTNstayLOCAL.
+CODEX:2026-10-29 23:21 PDT KVcorebe2768e28: RXnom17769EQ/componentmut2048caught/sourcepreserve0cycles/synthLIVE; E0realINVx2+GRTclock1878FIXED/DRTlive; ECTLPC5fixjobsowned; PHYbaselineDBrecovered→FLOWpostroutecandidate; noSIGNED.
+
+CODEX:2026-10-29 23:25 PDT HEADSerDes0d387pinfixREADY+nativeBPinactualgap.108reviewPASSCOND,ownroute2946706LIVEintel2rstwest; originalr2DRC0/IR3.23%finishLIVEpreserved(firstSIGNEDwins). LEPVB/VB2+4.8holdmarginchase;HB4unit1375164activeIOscan,0RTL/cycles/CLKchanges.
+CODEX: 2026-10-29 23:24 PDT S81LP collectedoldV3all34028PASS+KEEP3742/3742/copy-mutantcaught; currentH2freshLECsTypesowned. NativecurrentmiddleV6directionsPASS3264checks0errors, G114/96 BK235/229 E149/151 at833ps;45sourcesMATCH4be/24currentbindwordsPASS. Results-onlyd1a9089a2READY,noRTL/cycles/80tokenclaim.
+
+CODEX: 2026-10-29 23:32 PDT HBMTOK c793a755e native3rowoldVM238592/220160+NL3attentionnative;129commands/10sourceepochs/1.954MBaddedDMA,995472canonicalwordreads+191160boundaryPASS/10controls. FullprogrammeG5/calendar/scratchauthorityOPEN.
+CODEX: 2026-10-29 23:32 PDT S81core QB_NSIGNED+3postrouteEQviewsf5b/CRS4d721main; BFheld-source27701EQ READY712/BFframe+resetcouponPASS; LDfacezero-cycle nativeEQ READY017; RT746FACEPASS/LEClive. Everyphysical/clock/mirror/fill/parenthostingfailureowned; EDfaultOWNER? plainlog.
+CODEX: 2026-10-29 23:34 PDT KV-HR actualPHYmappedface560/560PASSbothYosys/nativeODB afterRCR+1capture/2deadaliasfixa56afe532; native1765/256bitexact+496mutantcaught, capacityunchanged/+51componentburstcycles; actualLEC/PLACEintel1live,noSIGNED. CDCchcompactlive; CDCpcprojectioncouponlive.
+CODEX: 2026-10-29 23:35 PDT A0 adaptive2/P2P9ad6937f5 actualnormalNLCTS LIVEintel2unit3356301 (halo-corrected/G1viewed,0datacycles); NKframeplanitemownedQC, noSDC-onlyfix/noSIGNED.
+CODEX:2026-10-29 23:32 FIRSTq0PHYSICALSIGNED ownPRD60:TT68.55FF2.19clock75.54/69.97DRC0DRV0means232.17/188.28;postrouteLECpending/adoptionheld,freshAIGonlylaunch3499699. q3/q2failurescollectedandstructuralfixesLIVE.
+CODEX: 2026-10-29 23:39 PDT HEADSTART proof15a7PASS4572/0wrongKcaughtall; defaultoffreaderR2tools807+c97READY52tests/defaultHEADbytesidentical; actualnativeSPEFmesh_eDD170..191TT/132..154FFmeasured(componentonly). CanonicalGEN3unit3468700live; stalecloneSDC+rawsource differencesheld, noSTA/G5claim.
+CODEX: 2026-10-29 23:44 PDT KVTOK0f5873354pushedREADY: actualfar08/RX2earlyfixedsourceofs+target11; coherentMU7404frames/DCAL64PASS/autopad88, token290059/period293376unchanged, admission+2. Ownintel2continuation3569610waitsWc→privatecorrectedtop/probe/pair; inheriteduntouched/noG5yet.
+
+CODEX:23:46 sharedLEC preseed d5a4 MERGEDbb172/28PASS unlocksq0current6finalproof; SYS_C357relationsindependentlyproved407→221residual/noEQclaim, full3025390+approvedmainpreseedLIVE, rawcalendar16/24candidatesrefutedpreserved. Experimentaltool/resultse83pushed.
+
+CODEX: 2026-10-29 23:47 PDT rootHBMLEC b8c306c21:114literalID/preloadcause+actual0/16ABIidentified;42PCsource-rangeconstraintsprovedbut143hardremain, noEQ;1080conditionalproofCOVERAGEowned. NoRTLchange/PNR,3read/probejobsterminal.
+
+CODEX:2026-10-29 23:50 PDT HBM SFU88aebd3c4 actualM16bankchunkproofPASS0/mutant402; native4SRAM12FF genericbankcut, fullstores80SRAM2049FF/source-only. ActualringNEqid3/NW2 sentparentforstrapfix. Ownjobsterminal.
+
+CODEX:2026-10-29 23:47 PDT ROOTMERGE main620077f4297==origin/main intel2+hub: BF-only712 correctedheld-source reset mirror27701EQ/frame12/midreset48k; ROMcandidateNOTmerged. CAP_LD017 exactdefaultOFF+LDrecipe/nativeFACE140/LECEQ/48kmiter, physicalclockhostingheld. CPPRbbaf exactsame-nodefallmap6newtestsPASS/actualtimingresultsownedKV; dieSTAhold56kitsNOTcleared. Criticalpreseed d5a mainbb172 opt-in/freshAIG/allgates preserved, q0actualproofLIVE. CompleteQCcopyguard/sourceef874andHEADreader807defaultOFF mainE767; fullnewwrapper/35typesadoptionstillheld.
+
+CODEX:2026-10-29 23:54 PDT QC30type418memorysitesG0Cnew0vs155baseline;c5547024fREADYparentfold. BTABMIF1H13PLACEPASS/newtreewindow+siteFAILdiagnosed,noCTS. VMRC1DRC0onlyM6stub;ownsingle/fullrerouteslive; C2missing66leafclockguidesdiagnosed. WaveR8/statuswindow/keep2FFcandidatesowned,noSIGNED.
+
+CODEX: 2026-10-29 23:55 PDT FLOWLNc931+2f READY94tests/actual2228FACEPASS140reset+rotationproofs,5assertedges≤64;ROOTreviewpending beforePLACE. RSTARTcopies6dactualcomboPASS; q0hintpreseedmainbb172/SYS_C221failureowned. ExactRING2bstaticIDsupportchildactive, SU11OWNERprefixambiguityPREPonly.
+
+CODEX: 2026-10-29 23:56 PDT OWNER explicitlyauthorizeskv_leaf__t2LARGERLOCALslotfirst(C), neighbour/clock/performanceestimateBEFOREadoption; S81plannerassignednow, no16writeportreduction or gatewaiver.
