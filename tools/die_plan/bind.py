@@ -2948,6 +2948,7 @@ class Binder:
             except ValueError as e:
                 raise BindError(str(e)) from e
         id_ports = {}
+        invalid_id_leaves = set()
         # strap parameters: one per (leaf, port), the port width, constant bits in place
         straps = defaultdict(dict)
         for k, vals in params.items():
@@ -2973,12 +2974,14 @@ class Binder:
                     validate_parent_id_straps(descriptor, actual_inputs, actual_module=F.cells[ci].module)
                 except ValueError as e:
                     self._gap(f"parent ID {tn}.{r}: {e}")
+                    invalid_id_leaves.add(r)
                     continue
                 expected = id_decls[r][pn]["value"]
                 try:
                     validate_bound_id_bits(bitsv, w, expected)
                 except ValueError as e:
                     self._gap(f"parent ID {tn}.{r}.{pn}: {e}")
+                    invalid_id_leaves.add(r)
                     continue
                 id_ports[nm] = dict(leaf=r, port=pn, width=w)
             else:
@@ -3404,6 +3407,8 @@ class Binder:
         for ci in sorted(self.members[p], key=lambda ci: self.rel_of(ci)):
             c = F.cells[ci]
             r = self.rel_of(ci)
+            if r in invalid_id_leaves:
+                continue  # all-gaps only: ID error already recorded; never synthesize replacement straps
             conns = []
             for pn, bits in sorted(c.ports.items()):
                 dd = G.dirs[ci].get(pn)
