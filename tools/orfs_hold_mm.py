@@ -133,6 +133,34 @@ def tolerate_flow_errors(errors: dict, logs_dir) -> dict:
     return out
 
 
+# MM-STAGE-SDC (FLOW-9 2026-10-30, DIE-KV-44 finding): a POST hook that calls ot_mm_sync (pv_native_post, kit ECO
+# hooks) leaves mode ss with 'set_false_path -hold -from [all_clocks]' when ORFS writes the stage SDC, so 5_1_grt /
+# 5_route / 6_final.sdc carried a hold-blind constraint and any ECO restarted from them skipped hold repair.  Every
+# stage SDC write restores the route-SDC state first (ot_mm_unsync) and re-syncs afterwards, so the session the stage
+# continues in is unchanged; inert when no FF mode is synced.
+WSDC_ANCHOR = "proc orfs_write_sdc { output_file } {\n"
+WSDC_WRITE = "  log_cmd write_sdc -no_timestamp $output_file\n"
+WSDC_BLOCK = ("  set ot_mm_resync [expr {[llength [info commands ot_mm_unsync]] && [info exists ::ot_mm_synced]}]\n"
+              "  if {$ot_mm_resync} { puts \"OT_HOLD_MM: stage SDC $output_file written from the route-SDC state\"; ot_mm_unsync }\n"
+              + WSDC_WRITE +
+              "  if {$ot_mm_resync} { ot_mm_sync }\n")
+
+
+def patch_stage_sdc(scripts: Path) -> str:
+    """Fail closed unless orfs_write_sdc has exactly one recognized write_sdc."""
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    i = ut.find(WSDC_ANCHOR)
+    body = ut[i:ut.find("\n}\n", i) + 3] if i >= 0 else ""
+    if ut.count(WSDC_ANCHOR) == 1 and body.count(WSDC_BLOCK) == 1 and ut.count("ot_mm_resync") == WSDC_BLOCK.count("ot_mm_resync"):
+        return "already patched"
+    if (ut.count(WSDC_ANCHOR) != 1 or body.count(WSDC_WRITE) != 1 or "ot_mm_resync" in ut
+            or ut.count(WSDC_WRITE) != 1):
+        raise SystemExit("orfs_hold_mm: orfs_write_sdc write_sdc anchor not found exactly once in util.tcl; refusing")
+    util.write_text(ut.replace(WSDC_WRITE, WSDC_BLOCK, 1))
+    return "patched"
+
+
 # FP-LINT (owner 2026-10-08): the floorplan margin lint runs at the start of ORFS global placement (after the block's own
 # PRE_GLOBAL_PLACE hook), on 3_2_place_iop.odb.  Inert unless the container env has OT_FP_LINT=1 (the closure loop's docker
 # shim passes it); tools/fp_margin_lint.tcl stops the flow with FLOORPLAN_MARGIN on a failing floorplan.
@@ -223,6 +251,7 @@ def patch_abc_no_dch(scripts: Path, env=None) -> str:
 
 if __name__ == "__main__":
     print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
+    print("orfs_hold_mm: stage SDC", patch_stage_sdc(Path(sys.argv[1])))
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
     try:
         print("orfs_hold_mm: abc no-dch", patch_abc_no_dch(Path(sys.argv[1])))
