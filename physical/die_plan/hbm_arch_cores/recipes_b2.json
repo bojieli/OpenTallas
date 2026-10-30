@@ -1426,7 +1426,37 @@
    "ot_sram_1r1w_128x256_m1_r2c2",
    "ot_sram_1r1w2c_32x64_m1"
   ],
-  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required.; current216x207.36 static SCB/pad SRAM sites leave clock/reset centre clear and place pad control beside pad data; no RTL/cycle change, prototype requires rendered review.",
+  "macro_placement": [
+   {
+    "inst": "u_native.u_scb",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     15.12,
+     15.12
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.u_t5.u_pad.u_d",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     15.12,
+     129.6
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_native.u_t5.u_pad.u_c",
+    "macro": "ot_sram_1r1w2c_32x64_m1",
+    "xy_um": [
+     151.2,
+     142.56
+    ],
+    "orient": "MY"
+   }
+  ],
+  "macro_place_halo_um": 4.32
  },
  "ot_hnx_fused_host_program": {
   "top": "ot_hnx_fused_host_program",
