@@ -1,10 +1,11 @@
 {
  "status": "CANDIDATE_NOT_ADOPTED",
  "why": "KVleaf omitted ordinaryleaf natural hardcores; sameoutline1442.88x1226.88",
- "hard_core_count": 25,
+ "hard_core_count": 24,
  "storage_masters_remaining_parent": [
   "u_bound.u_u_vp_u_b0",
-  "u_bound.u_u_vp_u_b1"
+  "u_bound.u_u_vp_u_b1",
+  "u_bound.u_u_vq.g_xr.u_xm"
  ],
  "params_source": "Actual inherited native emitted boundRTL; no re-elaboration or inventedinterfaces",
  "latency_cycles_change": 0,
@@ -428,60 +429,6 @@
      0.012
     ],
     "pins_file": "inputs/core_pins/dsfd_su_t_rxsf.json",
-    "obs_max": "M5"
-   },
-   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
-  },
-  {
-   "source_plan_inst": "u_lf.u_vq",
-   "candidate_only": true,
-   "source_interface": {
-    "module": "ot_s81sl_vq",
-    "physical_inst": "u_bound.u_u_vq",
-    "actual_params": ".AQ_XMEM(2)",
-    "ports": [
-     "clk",
-     "fault",
-     "k",
-     "m_b",
-     "m_i",
-     "m_q",
-     "m_v",
-     "rst_n",
-     "sid",
-     "u",
-     "u_i",
-     "u_v",
-     "um_b",
-     "um_i",
-     "um_q",
-     "um_v",
-     "xf",
-     "xf_s",
-     "xf_v",
-     "y",
-     "y_i",
-     "y_v"
-    ]
-   },
-   "known_parent_placement": {
-    "inst": "u_lf.u_vq",
-    "module": "ot_s81sl_vq",
-    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_tpl.lef",
-    "origin_um": [
-     432.0,
-     933.12
-    ],
-    "outline_um": [
-     172.8,
-     129.6
-    ],
-    "orient": "MY",
-    "track_offset_um": [
-     0.132,
-     0.012
-    ],
-    "pins_file": "inputs/core_pins/ot_s81sl_vq_tpl.json",
     "obs_max": "M5"
    },
    "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
@@ -1261,5 +1208,6 @@
   "Internalmacroplacement/corridor and vectorbus reach review",
   "Compose actualcoreclock contract",
   "Parentstrictbind and preflight beforePLACE"
- ]
+ ],
+ "probe_result": "All4exact savedRTLIL probes with24naturalchildrenblackboxed map94717/138117/123432/88282 totalcells. VQ remainssoft; no requirement toqualifyVQmacro tofixcapacity. 24childabstracts/3SRAMs counted; nofakephysicalviewadoption."
 }
