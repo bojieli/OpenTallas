@@ -88,7 +88,16 @@ if {![llength [info commands ::ot_ci_tritoncts]]} {
     if {![llength $targets]} {puts "OT_CORE_SCOPE_CTS no buildable nets; checked $nck clock pins"; return}
     puts "OT_CORE_SCOPE_CTS $::ot_ci_scope_owned: [llength $open] planned open nets + [llength $normal] ordinary CTS nets; $nck pins"
     try {
-      set result [::ot_ci_tritoncts {*}$a -clk_nets $targets]
+      # A late selected-root installer wraps CTS with plan-only balancing
+      # flags. Those flags must not change the ordinary roots' CTS method.
+      # Build the independent domains separately; the graph/domain checks
+      # around both calls still protect every selected planned net.
+      set result {}
+      if {[llength $open]} {set result [::ot_ci_tritoncts {*}$a -clk_nets $open]}
+      if {[llength $normal]} {
+        set runner [expr {[llength [info commands ::ot_ci_late_tritoncts]] ? "::ot_ci_late_tritoncts" : "::ot_ci_tritoncts"}]
+        set result [$runner {*}$a -clk_nets [lsort -unique $normal]]
+      }
     } finally {
       if {[ot_ci_scope_snapshot $protected $open] ne $before} {
         error "OT_CORE_SCOPE_CTS_CHANGED TritonCTS changed the selected planned tree outside its open leaves"
