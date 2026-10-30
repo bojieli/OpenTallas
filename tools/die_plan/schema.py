@@ -961,6 +961,11 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["h
                 'reset_pin': {'const': 'rst_n'}},
  'required': ['kind', 'reset_pin', 'memory_alignment', 'members'],
  'type': 'object'}
+# DIE-HBM-25 (HBM-047/048): split piece of a reuse content bound whole -> where the piece reset comes from in the master
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["hard_cores"]["items"]["properties"]["reset_from_master"] = {'additionalProperties': False,
+ 'properties': {'kind': {'enum': ['port', 'internal']}, 'content': {'minLength': 1, 'type': 'string'},
+                'pin': {'const': 'rst_n'}, 'source': {'minLength': 1, 'type': 'string'}},
+ 'required': ['kind', 'content', 'source'], 'type': 'object'}
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["bit_route"]["enum"].append("chain")
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["internal_stations"]["items"]["properties"]["core_glob"] = {"type":"string"}
 SCHEMA["properties"]["die"]["properties"]["channels"]["items"]["properties"]["clock_channel"] = {"type":"boolean"}

@@ -1,0 +1,73 @@
+{
+ "changed": [
+  {
+   "inst": "su_NW0.__cut_pretree",
+   "terminal": {
+    "member": "su_NW0.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NW1.__cut_pretree",
+   "terminal": {
+    "member": "su_NW1.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NW2.__cut_pretree",
+   "terminal": {
+    "member": "su_NW2.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NW3.__cut_pretree",
+   "terminal": {
+    "member": "su_NW3.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NE0.__cut_pretree",
+   "terminal": {
+    "member": "su_NE0.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NE1.__cut_pretree",
+   "terminal": {
+    "member": "su_NE1.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NE2.__cut_pretree",
+   "terminal": {
+    "member": "su_NE2.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  },
+  {
+   "inst": "su_NE3.__cut_pretree",
+   "terminal": {
+    "member": "su_NE3.u_slice.g_pretree.u_pt",
+    "port": "rst_n",
+    "bit": 0
+   }
+  }
+ ],
+ "rename": {
+  "ot_hnx_su_pretree__40a88add71d7": "ot_hnx_su_pretree__rst"
+ },
+ "port": "pretree_rst_n -> rst_n",
+ "n_changed": 8
+}

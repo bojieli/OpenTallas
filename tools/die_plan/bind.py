@@ -3075,6 +3075,19 @@ class Binder:
                             raise BindError("overlapping bound-group reset projection")
                         core_reset[key] = f"rst_n_t{target['tap']}"
                     continue
+                rfm = next((h.get("reset_from_master") for h in t.get("hard_cores", []) if h["inst"] == target["inst"]), None)
+                if rfm is not None:
+                    # DIE-HBM-25 (HBM-047): the piece reset IS the reuse master's reset port; the master is bound as
+                    # one leaf, so the wavefront tap drives that leaf's port.  Exact content name, one leaf, one target.
+                    mpin = rfm.get("pin", pin)
+                    candidates = [ci for ci in self.members[p] if mpin in F.cells[ci].ports and
+                                  self.rel_of(ci) == rfm["content"]]
+                    if len(candidates) != 1 or rfm.get("kind") != "port" or (candidates[0], mpin) in core_reset:
+                        self._gap(f"wavefront core reset {tn}/{target['inst']}.{pin}: reset_from_master "
+                                  f"{rfm.get('content')}.{mpin}: expected one unshared bound master leaf, found {len(candidates)}")
+                        continue
+                    core_reset[(candidates[0], mpin)] = f"rst_n_t{target['tap']}"
+                    continue
                 candidates = [ci for ci in self.members[p] if pin in F.cells[ci].ports and
                               target["inst"] in {self.rel_of(ci), short_id("u_" + self.rel_of(ci), 90), F.cells[ci].path}]
                 if not candidates:
