@@ -86,3 +86,14 @@ PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_phase_region.
  --out-dir /tmp/hbm-finite-region
 PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 results/tok_hbm_1847/check_region.py
 ```
+
+`census_boundary.py` traces the remaining2442 records after the region exit. The
+static linear descriptor scan exposes191105 words/39 intervals of exit boundary
+obligations; only56 static pass-through words lie outside this region's writes.
+It also finds1118 unresolved dynamic obligations. This is neither a full upper
+nor lower bound: skipped dynamic writes may cover static reads, and dynamic
+reads may require additional values. Control-loop/predicate execution also needs
+semantic composition. The concrete next compiler task is to resolve those
+runtime-selected row/table footprints before deciding which outside values stay
+in the45784-word reserve versus explicit HBM publication. No whole-fit claim is
+made from a static-only census.

@@ -1,0 +1,265 @@
+{
+ "schema": "opentallas.hbm.vm_region_boundary_census.v1",
+ "status": "STATIC_LINEAR_DESCRIPTOR_CENSUS_ONLY",
+ "executable": false,
+ "source_region_exit": 1473,
+ "future_records": 2442,
+ "known_boundary_intervals": [
+  [
+   0,
+   122884
+  ],
+  [
+   122888,
+   122892
+  ],
+  [
+   122896,
+   122900
+  ],
+  [
+   122904,
+   122908
+  ],
+  [
+   122912,
+   122916
+  ],
+  [
+   122920,
+   122924
+  ],
+  [
+   147504,
+   147696
+  ],
+  [
+   178445,
+   179712
+  ],
+  [
+   179725,
+   180992
+  ],
+  [
+   181005,
+   182272
+  ],
+  [
+   182285,
+   183552
+  ],
+  [
+   183565,
+   184832
+  ],
+  [
+   184845,
+   186112
+  ],
+  [
+   186122,
+   187136
+  ],
+  [
+   187146,
+   188160
+  ],
+  [
+   188170,
+   189184
+  ],
+  [
+   189194,
+   190208
+  ],
+  [
+   190218,
+   191232
+  ],
+  [
+   191242,
+   192256
+  ],
+  [
+   192261,
+   192768
+  ],
+  [
+   192773,
+   193280
+  ],
+  [
+   193285,
+   193792
+  ],
+  [
+   193797,
+   194304
+  ],
+  [
+   194309,
+   194816
+  ],
+  [
+   194821,
+   195328
+  ],
+  [
+   270634,
+   274688
+  ],
+  [
+   274730,
+   278784
+  ],
+  [
+   278826,
+   282880
+  ],
+  [
+   282922,
+   286976
+  ],
+  [
+   287018,
+   291072
+  ],
+  [
+   291114,
+   295168
+  ],
+  [
+   350464,
+   354560
+  ],
+  [
+   354613,
+   359680
+  ],
+  [
+   359733,
+   364800
+  ],
+  [
+   364853,
+   369920
+  ],
+  [
+   369973,
+   375040
+  ],
+  [
+   423984,
+   424368
+  ],
+  [
+   424608,
+   424609
+  ],
+  [
+   481328,
+   483536
+  ]
+ ],
+ "known_boundary_words": 191105,
+ "known_pass_through_intervals": [
+  [
+   122880,
+   122884
+  ],
+  [
+   122888,
+   122892
+  ],
+  [
+   122896,
+   122900
+  ],
+  [
+   122904,
+   122908
+  ],
+  [
+   122912,
+   122916
+  ],
+  [
+   122920,
+   122924
+  ],
+  [
+   483504,
+   483536
+  ]
+ ],
+ "known_pass_through_words": 56,
+ "unresolved_dynamic_obligation_count": 1118,
+ "unresolved_dynamic_examples": [
+  {
+   "record": 1530,
+   "reason": "row selection"
+  },
+  {
+   "record": 1531,
+   "reason": "row selection"
+  },
+  {
+   "record": 1535,
+   "reason": "row selection"
+  },
+  {
+   "record": 1536,
+   "reason": "row selection"
+  },
+  {
+   "record": 1560,
+   "slot": 0,
+   "operand": "A",
+   "reason": "dynamic descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 1,
+   "operand": "A",
+   "reason": "dynamic descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 2,
+   "operand": "A",
+   "reason": "dynamic descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 3,
+   "operand": "A",
+   "reason": "dynamic descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 4,
+   "operand": "A",
+   "reason": "dynamic descriptor"
+  },
+  {
+   "record": 1560,
+   "slot": 5,
+   "operand": "A",
+   "reason": "dynamic descriptor"
+  },
+  {
+   "record": 1562,
+   "reason": "row selection"
+  },
+  {
+   "record": 1563,
+   "reason": "row selection"
+  }
+ ],
+ "limitations": [
+  "control loops/predicates and dynamic addressing need programme semantic composition; static census is neither full upper nor lower bound",
+  "region outputs need transfer to the addresses required by later consumers",
+  "original boundary addresses are logical source values, not permission to reuse them"
+ ]
+}
