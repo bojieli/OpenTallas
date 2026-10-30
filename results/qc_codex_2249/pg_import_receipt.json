@@ -1,0 +1,19 @@
+{
+  "verdict": "IMPORTED_NO_SIGNOFF",
+  "provider_cells": 54791,
+  "contacts": 198762,
+  "groups": 116372,
+  "planned_wire_rectangles": 3141516,
+  "planned_technology_vias": 930844,
+  "added_wire_rectangles": 2776540,
+  "added_technology_vias": 923190,
+  "non_pg_before_sha256": "54dcf3d20f23dd2756444a784ef1b544249a7763a19fed824ecf85cce2a2c865",
+  "non_pg_after_sha256": "54dcf3d20f23dd2756444a784ef1b544249a7763a19fed824ecf85cce2a2c865",
+  "actual_grid_rectangles": 13304,
+  "freeze_qualified": false,
+  "DRC": "NOT RUN",
+  "IR": "NOT RUN",
+  "source": "/srv/opentallas-scratch2/claude/codex-qc-2249/materialized_clock/provider.odb",
+  "plan": "/srv/opentallas-scratch2/claude/codex-qc-2249/pg_full_netaware/plan",
+  "scope": "Actual complete clock/provider PG access import. Physical DRC/IR/STA and die GRT pending."
+}
