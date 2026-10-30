@@ -44,3 +44,15 @@ V2 = plan delta built through bind + gen_phys, per-tap trees balanced to the 12.
 - clk_clk_phy domain: PHY macro clk pin arrival 349 ps vs rq_d capture 753 ps (-186 ps in varA) is a separate tree
   (5259 sinks from one E-face port); taps above do not change it.
 - sink_bins_file path is kv39/... relative to the tool root (run copy); a main landing needs it under results/.
+
+## try2 / try3 (Thu Oct 29 21:05:47 PDT 2026)
+- try2 (intel1 unit oth-ubuntu-520830-1793328962): PLACE FAIL 3_3 GP again, same "OT_CLAND no legal row/site in reserved band
+  ring:i_host_fdi". Root cause: the plan kept the event28b ring bands i_host_fdi [1853.28,175.8,1883.52,263.1] and
+  i_host_link_rst_n [1857.6,428.7,1883.52,437.4], drawn before the x6 PHY footprint; x 1853-1866 lies on the macro.
+- Fix (fix-only, no new rule): those two bands per type := DIE-KV-33-SD die_plan_sd33s bands (the form varC placed with):
+  i_host_fdi [1872.72,17.28,1883.52,436.32], i_host_link_rst_n [1874.88,438.48,1883.52,522.72]. All other bands equal.
+  plan_sd39c sha256 9c6774fc6994.., kitplan_sd39 8e8aa0af11cb.. (intel1 bindroot37/kv39).
+- try3: strict bind 0 errors/unbound/undriven/multiply_bound; kit-rtl/spec rc 0; gen rc 0; KIT_PREFLIGHT PASS both.
+  GP passed the old fail point (overflow ~0.40 at 21:05); place + CTS + FF hold gate live on intel1
+  unit oth-ubuntu-1014057-1793331596. Collect: intel2:/srv/opentallas-scratch2/claude/die-kv-39-1029/sdv2_otrun5.log
+  (SD39 ... PLACE_RC / CTS_RC) and intel1 sdv2/kits/kv3_sys_SD{,_v1}/hold_gate.log (pass > -100 ps; baseline -251..-379).
