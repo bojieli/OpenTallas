@@ -1,0 +1,201 @@
+%Warning-WIDTHEXPAND: ot_hbm_svc_ring_h9b.sv:7:64: Operator VAR 'MUT' expects 32 bits on the Initial value, but Initial value's CONST '1'h0' generates 1 bits.
+    7 | module ot_hbm_svc_ring_h9b #(parameter integer WIDTH=1,DEPTH=3,MUT=0)(
+      |                                                                ^~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:205:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  205 |       .TIMING_833(TIMING_833),.T_CCDS(TIMING_833?2:1),.COL_TDM(TIMING_833?1:0),.ROW_CADENCE(TIMING_833?2:1),
+      |                                                 ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:205:74: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  205 |       .TIMING_833(TIMING_833),.T_CCDS(TIMING_833?2:1),.COL_TDM(TIMING_833?1:0),.ROW_CADENCE(TIMING_833?2:1),
+      |                                                                          ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:205:103: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  205 |       .TIMING_833(TIMING_833),.T_CCDS(TIMING_833?2:1),.COL_TDM(TIMING_833?1:0),.ROW_CADENCE(TIMING_833?2:1),
+      |                                                                                                       ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:206:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  206 |       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
+      |                        ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:206:48: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  206 |       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
+      |                                                ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:206:73: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  206 |       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
+      |                                                                         ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:206:98: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  206 |       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
+      |                                                                                                  ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:206:122: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  206 |       .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
+      |                                                                                                                          ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:207:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  207 |       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
+      |                         ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:207:59: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  207 |       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
+      |                                                           ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:207:84: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  207 |       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
+      |                                                                                    ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:207:113: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  207 |       .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
+      |                                                                                                                 ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:208:25: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  208 |       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
+      |                         ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:208:57: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  208 |       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
+      |                                                         ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:208:86: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  208 |       .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
+      |                                                                                      ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:209:24: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  209 |       .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      |                        ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:209:49: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  209 |       .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      |                                                 ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:209:74: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                              : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  209 |       .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      |                                                                          ^
+%Warning-WIDTHTRUNC: ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv:209:100: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TIMING_833' generates 32 bits.
+                                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl'
+  209 |       .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
+      |                                                                                                    ^
+%Warning-WIDTHTRUNC: ot_hbm_r14_stream_pc_strap_h9.sv:112:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                            : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+  112 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHTRUNC: ot_hbm_r14_stream_pc_strap_h9.sv:119:42: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'REF_MODE' generates 32 bits.
+                                                            : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+  119 |     localparam integer PERIOD = REF_MODE ? T_REFIPB : T_REFI;
+      |                                          ^
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:134:32: Constant function may not be declared under generate (IEEE 1800-2023 13.4.3)
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+  134 |     function automatic integer timing_width(input integer floor_bits,input integer cycles);
+      |                                ^~~~~~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:137:30: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:137:30: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h5
+           cycles = 32'h18
+  137 |     localparam integer W_RCD=timing_width(5,T_RCD),W_RAS=timing_width(5,T_RAS),W_RTP=timing_width(3,T_RTP);
+      |                              ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:137:58: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:137:58: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h5
+           cycles = 32'h22
+  137 |     localparam integer W_RCD=timing_width(5,T_RCD),W_RAS=timing_width(5,T_RAS),W_RTP=timing_width(3,T_RTP);
+      |                                                          ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:137:86: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:137:86: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h3
+           cycles = 32'h7
+  137 |     localparam integer W_RCD=timing_width(5,T_RCD),W_RAS=timing_width(5,T_RAS),W_RTP=timing_width(3,T_RTP);
+      |                                                                                      ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:138:30: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:138:30: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h5
+           cycles = 32'h22
+  138 |     localparam integer W_WRR=timing_width(5,T_WRR),W_AOK=timing_width(9,T_RFC>T_RFCPB?(T_RFC>T_RAS+T_RP?T_RFC:T_RAS+T_RP):(T_RFCPB>T_RAS+T_RP?T_RFCPB:T_RAS+T_RP));
+      |                              ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:138:58: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:138:58: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h9
+           cycles = 32'h1a5
+  138 |     localparam integer W_WRR=timing_width(5,T_WRR),W_AOK=timing_width(9,T_RFC>T_RFCPB?(T_RFC>T_RAS+T_RP?T_RFC:T_RAS+T_RP):(T_RFCPB>T_RAS+T_RP?T_RFCPB:T_RAS+T_RP));
+      |                                                          ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:139:31: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:139:31: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h3
+           cycles = 32'h4
+  139 |     localparam integer W_RRDL=timing_width(3,T_RRDL),W_CCDL=timing_width(2,T_CCDL),W_FAW=timing_width(4,T_FAW);
+      |                               ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:139:61: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:139:61: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h2
+           cycles = 32'h4
+  139 |     localparam integer W_RRDL=timing_width(3,T_RRDL),W_CCDL=timing_width(2,T_CCDL),W_FAW=timing_width(4,T_FAW);
+      |                                                             ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:139:90: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:139:90: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h4
+           cycles = 32'h13
+  139 |     localparam integer W_RRDL=timing_width(3,T_RRDL),W_CCDL=timing_width(2,T_CCDL),W_FAW=timing_width(4,T_FAW);
+      |                                                                                          ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:140:31: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:140:31: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h2
+           cycles = 32'h4
+  140 |     localparam integer W_RRDS=timing_width(2,T_RRDS),W_RREFD=timing_width(4,T_RREFD),W_SACT=timing_width(4,T_RREFD+3);
+      |                               ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:140:62: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:140:62: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h4
+           cycles = 32'ha
+  140 |     localparam integer W_RRDS=timing_width(2,T_RRDS),W_RREFD=timing_width(4,T_RREFD),W_SACT=timing_width(4,T_RREFD+3);
+      |                                                              ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:140:93: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:140:93: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h4
+           cycles = 32'hd
+  140 |     localparam integer W_RRDS=timing_width(2,T_RRDS),W_RREFD=timing_width(4,T_RREFD),W_SACT=timing_width(4,T_RREFD+3);
+      |                                                                                             ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:141:30: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:141:30: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h4
+           cycles = 32'hc
+  141 |     localparam integer W_RTW=timing_width(4,T_RTW),W_WTR=timing_width(4,T_WTR);
+      |                              ^~~~~~~~~~~~
+%Error: ot_hbm_r14_stream_pc_strap_h9.sv:141:58: Expecting expression to be constant, but can't determine constant for FUNCREF 'timing_width'
+                                               : ... note: In instance 'tb_timing833_provider.GROUP[3].PC[3].ctl.controller'
+        ot_hbm_r14_stream_pc_strap_h9.sv:134:32: ... Location of non-constant FUNC 'timing_width': Constant function called under generate
+        ot_hbm_r14_stream_pc_strap_h9.sv:141:58: ... Called from 'timing_width()' with parameters:
+           floor_bits = ?32?h4
+           cycles = 32'h11
+  141 |     localparam integer W_RTW=timing_width(4,T_RTW),W_WTR=timing_width(4,T_WTR);
+      |                                                          ^~~~~~~~~~~~
+%Error: Exiting due to 14 error(s)
