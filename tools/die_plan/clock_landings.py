@@ -682,6 +682,10 @@ class Landings:
                                   ports=dict(ready=spec["ready_port"],fault=spec["fault_port"]),gating="ready AND, fault OR",
                                   added_data_cycles=0,added_external_ports=0,check="native leaf header (gen_rtl)")
 
+    def _branch_raw(self, tn, role, default):
+        graph = getattr(self, "_raw_graphs", {}).get(tn)
+        return graph.raw_for(role, default) if graph is not None else default
+
     def _reader_start_rtl(self, tn, bus, body, logic, type_key=None, head=""):
         """Transport the mature origin to one reader; mission/writer START stay unchanged. Returns (ring reset, body)."""
         key = type_key or tn
@@ -705,6 +709,7 @@ class Landings:
         prev = "cland_start"
         for i, stage in enumerate(stages):
             xy, raw = stage.get("xy_um"), stage.get("raw_reset")
+            raw = self._branch_raw(tn, f"reader:{bus}:{i}", raw)
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
                 raise LandingError(f"{tn}.{bus}: reader START stage {i} needs finite xy_um")
@@ -760,13 +765,23 @@ class Landings:
         depth = CAB.writer_start_depth(self.plan, key)
         branch = cfg["branches"][bus]
         stages = branch.get("stages", []) if isinstance(branch, dict) else []
-        if len(stages) != depth:
-            raise LandingError(f"{tn}.{bus}: writer START needs exactly {depth} physical stages")
+        reuse = cfg.get("reuse_relay_origin", False)
+        if not isinstance(reuse, bool):
+            raise LandingError(f"{tn}: reuse_relay_origin must be boolean")
+        if reuse and (self.ca_type.get(key, {}).get("role", (None,))[0] != "relay" or
+                      not self.types[key].get("landing_relay_start_copy", False)):
+            raise LandingError(f"{tn}: writer origin reuse requires the actual registered relay origin")
+        if reuse and depth < 2:
+            raise LandingError(f"{tn}: relay-origin writer reuse needs phase >= 2")
+        physical_depth = depth - int(reuse)
+        if len(stages) != physical_depth:
+            raise LandingError(f"{tn}.{bus}: writer START needs exactly {physical_depth} new physical stages for phase {depth}")
         outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
         records = []
-        prev = "cland_start_d"
+        prev = "cland_start" if reuse else "cland_start_d"
         for i, stage in enumerate(stages):
             xy, raw = stage.get("xy_um"), stage.get("raw_reset")
+            raw = self._branch_raw(tn, f"writer:{bus}:{i}", raw)
             if (not isinstance(xy, list) or len(xy) != 2 or
                     any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
                 raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
@@ -791,6 +806,7 @@ class Landings:
             prev = net
         self.reset_placements.setdefault(tn, {}).setdefault(bus, {})["writer_start"] = dict(
             depth=depth, stages=records, fstart_d=prev, K_adjustment_at_receiver=depth,
+            **(dict(reused_origin_stage=1, added_flops=len(records)) if reuse else {}),
             boot_extra_cycles=depth, steady_data_cycles_added=0,
             qualification="local raw-reset release and actual placed hops require plan timing")
         return prev
@@ -856,6 +872,18 @@ class Landings:
         if relay_copy and (not cat or not self.strap or cat["role"][0] != "relay"):
             raise LandingError(f"{tn}: landing_relay_start_copy needs a strap-form relay origin")
         face_start = bool(cat) and bool(self.strap) and (cat["role"][0] != "relay" or relay_copy)
+        raw_graph = None
+        raw_cfg = self.types[key].get("clock", {}).get("landing_raw_branches")
+        if raw_cfg is not None:
+            if not cat or cat["role"][0] != "relay" or not relay_copy:
+                raise LandingError(f"{tn}: literal START raw branches require a registered relay origin")
+            from landing_raw_branches import RawBranches
+            raw_graph = RawBranches(tn, raw_cfg, body)
+            if not hasattr(self, "_raw_graphs"):
+                self._raw_graphs = {}
+            self._raw_graphs[tn] = raw_graph
+            logic.extend(raw_graph.rtl)
+            self.reset_placements.setdefault(tn, {})["local_resets"] = list(raw_graph.rows)
         if cat:
             logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
             if face_start:
@@ -896,7 +924,8 @@ class Landings:
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
                     fstart_d = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
-                    logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n(cland_start_raw), "
+                    fstart_raw = self._branch_raw(tn, f"fstart:{b}", "cland_start_raw")
+                    logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n({fstart_raw}), "
                                  f".d({fstart_d}), .q(cland_fstart_out_{b}));")
                 elif (self.types[key].get("clock", {}).get("landing_writer_start") or {}).get("branches", {}).get(b):
                     raise LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)")
@@ -1077,6 +1106,8 @@ class Landings:
             if collector_info["mask"].get("observer"):
                 body=gate_observer(body,self.collector["observer"])
         logic[:] = self._local_resets(tn, key, body, logic)
+        if raw_graph is not None:
+            self.reset_placements[tn]["literal_raw_branches"] = raw_graph.validate(body + "\n" + "\n".join(logic))
         # The former last port can carry an end-of-line comment.
         lines = head.splitlines()
         code, sep, comment = lines[-1].partition("//")
@@ -1182,6 +1213,7 @@ class Landings:
             return raw
         if role[0] == "relay":
             raw = local_raw("start relay rx")
+            raw = self._branch_raw(tn, "origin", raw)
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="relay", raw_reset=raw, stages=role[-1])
             extra.append("    input wire cland_rstart_in")
             if getattr(self, "types", {}).get(type_key or tn, {}).get("landing_relay_start_copy", False):
@@ -1429,7 +1461,7 @@ class Landings:
                      f"// local same-cycle reset copy (depth {depth(raw) + 1})"]
             rec.append(dict(name=name, instance=inst, net=net, raw=raw, depth=depth(raw) + 1, xy_um=list(xy),
                             replaced=olds, added_flops=1, added_cycles=0))
-        self.reset_placements.setdefault(tn, {})["local_resets"] = rec
+        self.reset_placements.setdefault(tn, {}).setdefault("local_resets", []).extend(rec)
         return decl + [text]
 
     def _dataflow_monitor(self, tn, key, mask, info, extra, logic, body):
