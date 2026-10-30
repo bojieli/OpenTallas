@@ -1,0 +1,29 @@
+{
+ "status": "ALL_PROVED",
+ "retained_only": true,
+ "ordinary_native_gate": false,
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": {
+   "file": "/srv/opentallas-scratch2/claude/s81-kits-e/kits/rom_gb2r2_bt5/reset_contract.json",
+   "die": "s81",
+   "edges": 64,
+   "assert_edges": 66,
+   "receipt": "/srv/opentallas-scratch2/claude/s81-kits-e/kits/rom_gb2r2_bt5/reset_contract/receipt.txt"
+  },
+  "used": 64,
+  "debug_overrides": {}
+ },
+ "baseline": {
+  "proved": 58721,
+  "differs": 23
+ },
+ "all_compare": {
+  "proved": 58775
+ },
+ "new_aliases": 31,
+ "wrong": {
+  "hyp:gate:ff:u_dut.u_e.g_mac[1].g_mi.u_c2.q#t[10]": "differs"
+ }
+}
