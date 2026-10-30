@@ -6130,3 +6130,4 @@ FAILED [AUTOPILOT ce508538d99b] 2026-10-30 10:23:08 PDT AUTOPILOT -> CODEX-S81PH
   (7) FLOW-9 claude/flow-9-g2cut-1030@7518687ff52 (g2 probe_blockages '<inst>.<cut>'): APPROVED -> ROOT-MERGE-AD.
   (8) FLOW-9 claude/flow-9-ecodrt-1030@86eb52446d7 (opt-in eco_drt_pre.tcl + prd_mk staging): APPROVED -> ROOT-MERGE-AD; kits use it via PRE_DETAIL_ROUTE_TCL now.
   (9) DIE-QC-47 PARKED -> successor DIE-QC-48 launched.
+- [COORD] RULING 2026-10-30 11:43 PDT: TOK-11 DS f8e3bd575 CONCUR -> HOLD lifted: APPROVED -> ROOT-MERGE-AD as results + one standalone tool, NO GO/START credit; the 11-cycle link latency is NOT qualified (drops to 10 at +1 ps source shift) and the bad-payload test must not be cited as a check. KV dcal_fault = stale tile copy in the probe vehicle (main fixed 10-29); bWc_o3 probe running (~14:50). Pre-approved: if it passes L0, TOK-12 lifts CLAUDE_PARK and launches nominal 300000 + Kswap 40000. TOK-12 starts ~14:5x.
