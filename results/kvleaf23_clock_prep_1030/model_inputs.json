@@ -1,0 +1,4217 @@
+{
+  "schema": "opentallas.kvleaf23.proposed_clock_input.v1",
+  "status": "MODEL_INPUT_PREP_NOT_ADOPTED",
+  "outline_um": [
+    1442.88,
+    1226.88
+  ],
+  "die_core_roots": [
+    {
+      "pin": "clk",
+      "xy_um": [
+        180.384,
+        152.864
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t1",
+      "xy_um": [
+        541.088,
+        152.864
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t2",
+      "xy_um": [
+        901.792,
+        152.864
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t3",
+      "xy_um": [
+        1262.496,
+        152.864
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t4",
+      "xy_um": [
+        180.384,
+        460.576
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t5",
+      "xy_um": [
+        541.088,
+        460.576
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t6",
+      "xy_um": [
+        901.792,
+        460.576
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t7",
+      "xy_um": [
+        1262.496,
+        460.576
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t8",
+      "xy_um": [
+        180.384,
+        766.304
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t9",
+      "xy_um": [
+        541.088,
+        766.304
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t10",
+      "xy_um": [
+        901.792,
+        766.304
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t11",
+      "xy_um": [
+        1262.496,
+        766.304
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t12",
+      "xy_um": [
+        180.384,
+        1074.016
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t13",
+      "xy_um": [
+        541.088,
+        1074.016
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t14",
+      "xy_um": [
+        901.792,
+        1074.016
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    },
+    {
+      "pin": "clk_t15",
+      "xy_um": [
+        1262.496,
+        1074.016
+      ],
+      "layer": "M7",
+      "provenance": "actual private 23-cut kit io.tcl; not current adopted plan"
+    }
+  ],
+  "other_clock_inputs": {
+    "fclk_in_ft3_i": [
+      35.232,
+      2.656
+    ],
+    "fclk_in_ft4_i": [
+      217.952,
+      2.656
+    ],
+    "scope": "actual io.tcl forwarded-clock roles; excluded from proposed core clock FF grid, not silently merged"
+  },
+  "children": [
+    {
+      "inst": "u_lf.u_ve.u_m",
+      "source_interface": {
+        "module": "ot_s81sl_ve_m",
+        "physical_inst": "u_bound.u_u_ve_u_m",
+        "actual_params": ".LA(4), .LM(5), .MUT(0)",
+        "ports": [
+          "a_c",
+          "a_g",
+          "a_h",
+          "a_v",
+          "a_val",
+          "clk",
+          "fault",
+          "m_dd",
+          "m_hh",
+          "m_kk",
+          "m_pre",
+          "m_v",
+          "o_c",
+          "o_v",
+          "o_y",
+          "r_c",
+          "r_h",
+          "r_k",
+          "r_v",
+          "r_w",
+          "rst_n"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_ve.u_m",
+        "module": "ot_s81sl_ve_m",
+        "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_tpl.lef",
+        "origin_um": [
+          216.0,
+          829.44
+        ],
+        "outline_um": [
+          172.8,
+          345.6
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_s81sl_ve_m_tpl.json",
+        "obs_max": "M7"
+      },
+      "proposed_origin_um": [
+        185.76,
+        829.44
+      ],
+      "body_um": [
+        172.8,
+        345.6
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          172.8
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_ve.u_s",
+      "source_interface": {
+        "module": "ot_s81sl_ve_s",
+        "physical_inst": "u_bound.u_u_ve_u_s",
+        "actual_params": ".LA(4), .LM(5), .MUT(0)",
+        "ports": [
+          "clk",
+          "fault",
+          "m_dd",
+          "m_hh",
+          "m_kk",
+          "m_pre",
+          "m_v",
+          "p_c",
+          "p_dd",
+          "p_hh",
+          "p_kk",
+          "p_v",
+          "rst_n"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_ve.u_s",
+        "module": "ot_s81sl_ve_s",
+        "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+        "origin_um": [
+          34.56,
+          838.08
+        ],
+        "outline_um": [
+          164.16,
+          345.6
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+        "obs_max": "M7"
+      },
+      "proposed_origin_um": [
+        371.52,
+        838.08
+      ],
+      "body_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          172.8
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vsw",
+      "source_interface": {
+        "module": "ot_s81sl_vsw",
+        "physical_inst": "u_bound.u_u_vsw",
+        "actual_params": ".LA(4), .LM(5), .LR(1)",
+        "ports": [
+          "clk",
+          "i_d",
+          "i_lim",
+          "i_v",
+          "i_w",
+          "o_d",
+          "o_f",
+          "o_v",
+          "rst_n"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vsw",
+        "module": "ot_s81sl_vsw",
+        "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vsw_tpl.lef",
+        "origin_um": [
+          51.84,
+          587.52
+        ],
+        "outline_um": [
+          224.64,
+          224.64
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_s81sl_vsw_tpl.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        51.84,
+        514.08
+      ],
+      "body_um": [
+        224.64,
+        224.64
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          112.32
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vs",
+      "source_interface": {
+        "module": "ot_s81sl_vs",
+        "physical_inst": "u_bound.u_u_vs",
+        "actual_params": ".MUT(0), .XL(6)",
+        "ports": [
+          "clk",
+          "e_c",
+          "e_d",
+          "e_v",
+          "fault",
+          "g_c",
+          "g_d",
+          "g_v",
+          "ra_fi",
+          "ra_ri",
+          "ra_v",
+          "ra_vi",
+          "ra_x",
+          "rst_n",
+          "s_d",
+          "s_v",
+          "sw_d",
+          "sw_fi",
+          "sw_lim",
+          "sw_ri",
+          "sw_v",
+          "sw_vi",
+          "sw_w",
+          "u",
+          "u_i",
+          "u_v",
+          "um_b",
+          "um_i",
+          "um_q",
+          "um_v",
+          "ve_ac",
+          "ve_ag",
+          "ve_ah",
+          "ve_av",
+          "ve_aval",
+          "ve_fi",
+          "ve_oc",
+          "ve_ov",
+          "ve_oy",
+          "ve_pc",
+          "ve_pdd",
+          "ve_phh",
+          "ve_pkk",
+          "ve_pv",
+          "ve_rc",
+          "ve_rh",
+          "ve_rk",
+          "ve_rv",
+          "ve_rw",
+          "x_qd",
+          "x_qv",
+          "x_ra",
+          "x_rv",
+          "x_wa",
+          "x_wd",
+          "x_wm",
+          "x_wv"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vs",
+        "module": "ot_s81sl_vs",
+        "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_tpl.lef",
+        "origin_um": [
+          362.88,
+          639.36
+        ],
+        "outline_um": [
+          172.8,
+          172.8
+        ],
+        "orient": "MY",
+        "track_offset_um": [
+          0.132,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_s81sl_vs_tpl.json",
+        "obs_max": "M7"
+      },
+      "proposed_origin_um": [
+        362.88,
+        639.36
+      ],
+      "body_um": [
+        172.8,
+        172.8
+      ],
+      "orient": "MY",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          86.4
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vn.u_a",
+      "source_interface": {
+        "module": "ot_s81sl_vn_a",
+        "physical_inst": "u_bound.u_u_vn_u_a",
+        "actual_params": ".LA(6), .LM(5)",
+        "ports": [
+          "c_s",
+          "c_v",
+          "clk",
+          "fault",
+          "hq_d",
+          "hq_v",
+          "hr_hf",
+          "hr_j",
+          "hr_v",
+          "hw_d",
+          "hw_hf",
+          "hw_j",
+          "hw_v",
+          "n_go",
+          "n_pre",
+          "rb_d",
+          "rb_v",
+          "rst_n",
+          "wl_d",
+          "wl_i",
+          "wl_v",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vn.u_a",
+        "module": "ot_s81sl_vn_a",
+        "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
+        "origin_um": [
+          622.08,
+          691.2
+        ],
+        "outline_um": [
+          356.4,
+          164.16
+        ],
+        "orient": "MY",
+        "track_offset_um": [
+          0.132,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_s81sl_vn_a_tpl.json",
+        "obs_max": "M7"
+      },
+      "proposed_origin_um": [
+        609.12,
+        501.12
+      ],
+      "body_um": [
+        356.4,
+        164.16
+      ],
+      "orient": "MY",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          82.08
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_rxsb",
+      "source_interface": {
+        "module": "dsfd_su_t_rxsb",
+        "physical_inst": "u_bound.u_u_rxsb",
+        "actual_params": null,
+        "ports": [
+          "ck",
+          "i_f",
+          "i_mx",
+          "i_u",
+          "i_u2",
+          "i_v",
+          "o_f",
+          "o_r",
+          "o_v",
+          "rst"
+        ]
+      },
+      "clock_port": "ck",
+      "reference_geometry": {
+        "inst": "u_lf.u_rxsb",
+        "module": "dsfd_su_t_rxsb",
+        "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+        "origin_um": [
+          345.6,
+          285.12
+        ],
+        "outline_um": [
+          140.4,
+          140.4
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/dsfd_su_t_rxsb.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        345.6,
+        285.12
+      ],
+      "body_um": [
+        140.4,
+        140.4
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "ck",
+        "local_xy_um": [
+          0.012,
+          70.2
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_rxsf",
+      "source_interface": {
+        "module": "dsfd_su_t_rxsf",
+        "physical_inst": "u_bound.u_u_rxsf",
+        "actual_params": null,
+        "ports": [
+          "ck",
+          "i_v",
+          "i_x",
+          "o_f",
+          "o_mx",
+          "o_u",
+          "o_u2",
+          "o_v",
+          "rst"
+        ]
+      },
+      "clock_port": "ck",
+      "reference_geometry": {
+        "inst": "u_lf.u_rxsf",
+        "module": "dsfd_su_t_rxsf",
+        "lef": "physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf.lef",
+        "origin_um": [
+          397.44,
+          440.64
+        ],
+        "outline_um": [
+          140.4,
+          140.4
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/dsfd_su_t_rxsf.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        388.8,
+        440.64
+      ],
+      "body_um": [
+        140.4,
+        140.4
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "ck",
+        "local_xy_um": [
+          0.012,
+          70.2
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[0].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_0_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[0].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1002.24,
+          777.6
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1002.24,
+        777.6
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[10].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_10_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[10].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1123.2,
+          501.12
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1123.2,
+        501.12
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[11].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_11_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[11].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1140.48,
+          1054.08
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1140.48,
+        1054.08
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[12].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_12_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[12].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1278.72,
+          915.84
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1278.72,
+        915.84
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[13].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_13_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[13].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1278.72,
+          639.36
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1278.72,
+        639.36
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[14].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_14_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[14].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          984.96,
+          224.64
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        984.96,
+        224.64
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[15].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_15_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[15].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1114.56,
+          371.52
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1114.56,
+        371.52
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[1].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_1_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[1].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1002.24,
+          915.84
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1002.24,
+        915.84
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[2].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_2_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[2].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1002.24,
+          639.36
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1002.24,
+        639.36
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[3].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_3_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[3].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1140.48,
+          777.6
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1140.48,
+        777.6
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[4].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_4_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[4].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          984.96,
+          501.12
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        984.96,
+        501.12
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[5].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_5_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[5].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1002.24,
+          1054.08
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1002.24,
+        1054.08
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[6].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_6_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[6].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1140.48,
+          915.84
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1140.48,
+        915.84
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[7].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_7_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[7].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1140.48,
+          639.36
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1140.48,
+        639.36
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[8].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_8_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[8].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          1278.72,
+          777.6
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        1278.72,
+        777.6
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[9].u_l",
+      "source_interface": {
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "physical_inst": "u_bound.u_u_vp_g_ln_9_u_l",
+        "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+        "ports": [
+          "c0",
+          "c1",
+          "c2",
+          "c3",
+          "clk",
+          "fault",
+          "o",
+          "p",
+          "r0",
+          "r1",
+          "r2",
+          "r3",
+          "rst_n",
+          "v",
+          "vo",
+          "y"
+        ]
+      },
+      "clock_port": "clk",
+      "reference_geometry": {
+        "inst": "u_lf.u_vp.g_ln[9].u_l",
+        "module": "ot_dsrom_su_hcpost_lane_pr",
+        "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+        "origin_um": [
+          984.96,
+          362.88
+        ],
+        "outline_um": [
+          114.48,
+          114.48
+        ],
+        "orient": "R0",
+        "track_offset_um": [
+          0.108,
+          0.012
+        ],
+        "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+        "obs_max": "M5"
+      },
+      "proposed_origin_um": [
+        984.96,
+        362.88
+      ],
+      "body_um": [
+        114.48,
+        114.48
+      ],
+      "orient": "R0",
+      "clock_input_proposal": {
+        "pin": "clk",
+        "local_xy_um": [
+          0.012,
+          57.24
+        ],
+        "root_master": "BUFx24_ASAP7_75t_R",
+        "basis": "PROPOSED west-face entry feeding planned native BUF24 root; no measured child pin/cap/timing claim",
+        "cap_fF": {
+          "TT": 2.35026,
+          "FF": 2.60735
+        }
+      },
+      "qualification": "MODEL_ONLY; exact source/parameters/ABI and new native full views remain required"
+    }
+  ],
+  "real_sram_loads": [
+    {
+      "inst": "PROPOSED_REAL_SRAM_0",
+      "master": "ot_sram_1r1w_512x128_m4_r0c0",
+      "body_um": [
+        169.368,
+        29.16
+      ],
+      "proposed_origin_um": [
+        635.04,
+        885.6
+      ],
+      "placement_basis": "proposed tower, not measured parent placement",
+      "clock_port": "clk",
+      "clock_xy_um": [
+        635.0519999999999,
+        886.38
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      }
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_1",
+      "master": "ot_sram_1r1w_512x128_m4_r0c0",
+      "body_um": [
+        169.368,
+        29.16
+      ],
+      "proposed_origin_um": [
+        635.04,
+        928.8
+      ],
+      "placement_basis": "proposed tower, not measured parent placement",
+      "clock_port": "clk",
+      "clock_xy_um": [
+        635.0519999999999,
+        929.5799999999999
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      }
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_2",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "body_um": [
+        94.824,
+        41.064
+      ],
+      "proposed_origin_um": [
+        635.04,
+        972
+      ],
+      "placement_basis": "proposed tower, not measured parent placement",
+      "clock_port": "clk",
+      "clock_xy_um": [
+        635.0519999999999,
+        972.78
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      }
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_3",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "body_um": [
+        94.824,
+        41.064
+      ],
+      "proposed_origin_um": [
+        635.04,
+        1028.16
+      ],
+      "placement_basis": "proposed tower, not measured parent placement",
+      "clock_port": "clk",
+      "clock_xy_um": [
+        635.0519999999999,
+        1028.94
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      }
+    }
+  ],
+  "hard_clock_terminals": [
+    {
+      "inst": "u_lf.u_ve.u_m",
+      "pin": "clk",
+      "xy_um": [
+        185.772,
+        1002.24
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t12",
+      "manhattan_to_root_um": 77.16400000000007,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_ve.u_s",
+      "pin": "clk",
+      "xy_um": [
+        371.532,
+        1010.8800000000001
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t13",
+      "manhattan_to_root_um": 232.69199999999995,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vsw",
+      "pin": "clk",
+      "xy_um": [
+        51.852000000000004,
+        626.4000000000001
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t8",
+      "manhattan_to_root_um": 268.43599999999986,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vs",
+      "pin": "clk",
+      "xy_um": [
+        362.892,
+        725.76
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t9",
+      "manhattan_to_root_um": 218.73999999999995,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vn.u_a",
+      "pin": "clk",
+      "xy_um": [
+        609.132,
+        583.2
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t5",
+      "manhattan_to_root_um": 190.668,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_rxsb",
+      "pin": "ck",
+      "xy_um": [
+        345.612,
+        355.32
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t4",
+      "manhattan_to_root_um": 270.48400000000004,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_rxsf",
+      "pin": "ck",
+      "xy_um": [
+        388.812,
+        510.84
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t5",
+      "manhattan_to_root_um": 202.5399999999999,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[0].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1002.252,
+        834.84
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t10",
+      "manhattan_to_root_um": 168.99599999999998,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[10].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1123.212,
+        558.36
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t7",
+      "manhattan_to_root_um": 237.0680000000001,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[11].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1140.492,
+        1111.32
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t15",
+      "manhattan_to_root_um": 159.308,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[12].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1278.732,
+        973.08
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t15",
+      "manhattan_to_root_um": 117.17199999999991,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[13].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1278.732,
+        696.6
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t11",
+      "manhattan_to_root_um": 85.93999999999983,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[14].u_l",
+      "pin": "clk",
+      "xy_um": [
+        984.972,
+        281.88
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t2",
+      "manhattan_to_root_um": 212.19599999999994,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[15].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1114.572,
+        428.76
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t7",
+      "manhattan_to_root_um": 179.74000000000024,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[1].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1002.252,
+        973.08
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t14",
+      "manhattan_to_root_um": 201.39599999999996,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[2].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1002.252,
+        696.6
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t10",
+      "manhattan_to_root_um": 170.16399999999987,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[3].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1140.492,
+        834.84
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t11",
+      "manhattan_to_root_um": 190.5400000000002,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[4].u_l",
+      "pin": "clk",
+      "xy_um": [
+        984.972,
+        558.36
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t6",
+      "manhattan_to_root_um": 180.96399999999994,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[5].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1002.252,
+        1111.32
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t14",
+      "manhattan_to_root_um": 137.76399999999978,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[6].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1140.492,
+        973.08
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t15",
+      "manhattan_to_root_um": 222.94000000000017,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[7].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1140.492,
+        696.6
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t11",
+      "manhattan_to_root_um": 191.70800000000008,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[8].u_l",
+      "pin": "clk",
+      "xy_um": [
+        1278.732,
+        834.84
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t11",
+      "manhattan_to_root_um": 84.77199999999993,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "u_lf.u_vp.g_ln[9].u_l",
+      "pin": "clk",
+      "xy_um": [
+        984.972,
+        420.12
+      ],
+      "cap_fF": {
+        "TT": 2.35026,
+        "FF": 2.60735
+      },
+      "basis": "PROPOSED child entry, scalar ABI source verified; native entry unknown",
+      "proposed_core_root": "clk_t6",
+      "manhattan_to_root_um": 123.63599999999997,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_0",
+      "pin": "clk",
+      "xy_um": [
+        635.0519999999999,
+        886.38
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      },
+      "basis": "native SRAM local clock shape + PROPOSED placement",
+      "proposed_core_root": "clk_t9",
+      "manhattan_to_root_um": 214.03999999999996,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_1",
+      "pin": "clk",
+      "xy_um": [
+        635.0519999999999,
+        929.5799999999999
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      },
+      "basis": "native SRAM local clock shape + PROPOSED placement",
+      "proposed_core_root": "clk_t13",
+      "manhattan_to_root_um": 238.4000000000001,
+      "proposed_repeater_segments_200um": 2
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_2",
+      "pin": "clk",
+      "xy_um": [
+        635.0519999999999,
+        972.78
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      },
+      "basis": "native SRAM local clock shape + PROPOSED placement",
+      "proposed_core_root": "clk_t13",
+      "manhattan_to_root_um": 195.20000000000005,
+      "proposed_repeater_segments_200um": 1
+    },
+    {
+      "inst": "PROPOSED_REAL_SRAM_3",
+      "pin": "clk",
+      "xy_um": [
+        635.0519999999999,
+        1028.94
+      ],
+      "cap_fF": {
+        "TT": 9.3458,
+        "FF": 10.3732
+      },
+      "basis": "native SRAM local clock shape + PROPOSED placement",
+      "proposed_core_root": "clk_t13",
+      "manhattan_to_root_um": 139.03999999999996,
+      "proposed_repeater_segments_200um": 1
+    }
+  ],
+  "geometry_checks": {
+    "body_and_halo_overlap": [],
+    "clock_input_reserve_halfsize_um": [
+      5.184,
+      4.86
+    ],
+    "macro_halo_um": 4.32,
+    "free_area_lower_bound_um2": 1183630.7450880003,
+    "qualification": "Analytical proposal only. Actual PG openings, rows, clock access and track phases must be reviewed."
+  },
+  "variants": [
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "measured_parent_census": {
+        "type": "ot_s81sl_kv_leaf__t1",
+        "mapped_total": 288060,
+        "mapped_total_24cut": 94717,
+        "measured_VNb_soft_delta": 193343,
+        "flops": 58177,
+        "flop_types": {
+          "DFFHQNx1_ASAP7_75t_R": 56024,
+          "DFFLQNx1_ASAP7_75t_R": 10,
+          "DFFASRHQNx1_ASAP7_75t_R": 2143
+        },
+        "real_sram_instances": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 2,
+          "ot_sram_1r1w_512x128_m4_r0c0": 2
+        },
+        "real_sram_total": 4,
+        "reported_chip_area_um2": 54603.3127,
+        "real_sram_area_um2": 17665.2472,
+        "standard_cell_area_um2": 36938.0655,
+        "cycles_added": 0,
+        "retained_soft": [
+          "VN_b",
+          "VQ"
+        ],
+        "expected_abstract_children": 23,
+        "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+        "report_sha256": "ee29005bd031e9ef6a6d37a7e5c1430fba6f8549c7d0efb7d7046ee1b3efe87e"
+      },
+      "soft_ff_total_clock_pin_cap_fF": {
+        "TT": 27593.409971,
+        "FF": 30328.572335999997
+      },
+      "distributed_tree": [
+        {
+          "root": "clk",
+          "proposed_soft_ff": 5414,
+          "free_area_lower_bound_um2": 110140.64640000001,
+          "ff_leaves_48": 113,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 18,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t1",
+          "proposed_soft_ff": 5273,
+          "free_area_lower_bound_um2": 107276.31360000002,
+          "ff_leaves_48": 110,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 17,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t2",
+          "proposed_soft_ff": 5007,
+          "free_area_lower_bound_um2": 101865.18527999999,
+          "ff_leaves_48": 105,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 17,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t3",
+          "proposed_soft_ff": 5346,
+          "free_area_lower_bound_um2": 108777.32352000005,
+          "ff_leaves_48": 112,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 17,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t4",
+          "proposed_soft_ff": 4132,
+          "free_area_lower_bound_um2": 84063.05280000002,
+          "ff_leaves_48": 87,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 14,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t5",
+          "proposed_soft_ff": 2893,
+          "free_area_lower_bound_um2": 58862.9376,
+          "ff_leaves_48": 61,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t6",
+          "proposed_soft_ff": 2634,
+          "free_area_lower_bound_um2": 53597.92895999998,
+          "ff_leaves_48": 55,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t7",
+          "proposed_soft_ff": 3694,
+          "free_area_lower_bound_um2": 75149.30304000006,
+          "ff_leaves_48": 77,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t8",
+          "proposed_soft_ff": 3095,
+          "free_area_lower_bound_um2": 62976.75263999999,
+          "ff_leaves_48": 65,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t9",
+          "proposed_soft_ff": 2605,
+          "free_area_lower_bound_um2": 52996.06655999994,
+          "ff_leaves_48": 55,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 11.696060000000001,
+            "FF": 12.980550000000001
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t10",
+          "proposed_soft_ff": 3503,
+          "free_area_lower_bound_um2": 71260.74143999995,
+          "ff_leaves_48": 73,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t11",
+          "proposed_soft_ff": 1820,
+          "free_area_lower_bound_um2": 37031.59296000001,
+          "ff_leaves_48": 38,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 9.40104,
+            "FF": 10.4294
+          },
+          "branch_buffers_upper_budget": 7,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t12",
+          "proposed_soft_ff": 3154,
+          "free_area_lower_bound_um2": 64171.422720000046,
+          "ff_leaves_48": 66,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t13",
+          "proposed_soft_ff": 2524,
+          "free_area_lower_bound_um2": 51349.14432,
+          "ff_leaves_48": 53,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 30.38766,
+            "FF": 33.72695
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t14",
+          "proposed_soft_ff": 4230,
+          "free_area_lower_bound_um2": 86057.16652800002,
+          "ff_leaves_48": 89,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 15,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t15",
+          "proposed_soft_ff": 2853,
+          "free_area_lower_bound_um2": 58055.16672000017,
+          "ff_leaves_48": 60,
+          "non_ff_terminal_budget": 3,
+          "hard_terminal_cap_fF": {
+            "TT": 7.05078,
+            "FF": 7.822049999999999
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        }
+      ],
+      "ff_leaf_count_bounds": {
+        "32": 1819,
+        "48": 1213,
+        "64": 910
+      },
+      "clock_bom_budget": {
+        "ff_leaf_buffers": 1219,
+        "branch_buffers_conservative": 200,
+        "hard_terminal_roots": 23,
+        "die_input_roots": 16,
+        "buffer_body_envelope_um": [
+          1.62,
+          0.27
+        ]
+      },
+      "standard_cell_utilization_of_free_area": 0.03120742313706437,
+      "clock_timing_status": "UNRUN: source/capacity model only; no latency/window/slew prediction or 833ps qualification",
+      "cycles_added": 0
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t3",
+      "measured_parent_census": {
+        "type": "ot_s81sl_kv_leaf__t3",
+        "mapped_total": 330365,
+        "mapped_total_24cut": 138117,
+        "measured_VNb_soft_delta": 192248,
+        "flops": 70729,
+        "flop_types": {
+          "DFFHQNx1_ASAP7_75t_R": 68536,
+          "DFFLQNx1_ASAP7_75t_R": 35,
+          "DFFASRHQNx1_ASAP7_75t_R": 2158
+        },
+        "real_sram_instances": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 2,
+          "ot_sram_1r1w_512x128_m4_r0c0": 2
+        },
+        "real_sram_total": 4,
+        "reported_chip_area_um2": 60451.2049,
+        "real_sram_area_um2": 17665.2472,
+        "standard_cell_area_um2": 42785.9577,
+        "cycles_added": 0,
+        "retained_soft": [
+          "VN_b",
+          "VQ"
+        ],
+        "expected_abstract_children": 23,
+        "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+        "report_sha256": "60025cc145460dae6a798dee35437bcdb86edc856e0d534532e6be094148d613"
+      },
+      "soft_ff_total_clock_pin_cap_fF": {
+        "TT": 33552.269663,
+        "FF": 36880.582136
+      },
+      "distributed_tree": [
+        {
+          "root": "clk",
+          "proposed_soft_ff": 6582,
+          "free_area_lower_bound_um2": 110140.64640000001,
+          "ff_leaves_48": 138,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 22,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t1",
+          "proposed_soft_ff": 6410,
+          "free_area_lower_bound_um2": 107276.31360000002,
+          "ff_leaves_48": 134,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 21,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t2",
+          "proposed_soft_ff": 6087,
+          "free_area_lower_bound_um2": 101865.18527999999,
+          "ff_leaves_48": 127,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 19,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t3",
+          "proposed_soft_ff": 6500,
+          "free_area_lower_bound_um2": 108777.32352000005,
+          "ff_leaves_48": 136,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 21,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t4",
+          "proposed_soft_ff": 5023,
+          "free_area_lower_bound_um2": 84063.05280000002,
+          "ff_leaves_48": 105,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 17,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t5",
+          "proposed_soft_ff": 3517,
+          "free_area_lower_bound_um2": 58862.9376,
+          "ff_leaves_48": 74,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t6",
+          "proposed_soft_ff": 3203,
+          "free_area_lower_bound_um2": 53597.92895999998,
+          "ff_leaves_48": 67,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t7",
+          "proposed_soft_ff": 4491,
+          "free_area_lower_bound_um2": 75149.30304000006,
+          "ff_leaves_48": 94,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 15,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t8",
+          "proposed_soft_ff": 3763,
+          "free_area_lower_bound_um2": 62976.75263999999,
+          "ff_leaves_48": 79,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t9",
+          "proposed_soft_ff": 3167,
+          "free_area_lower_bound_um2": 52996.06655999994,
+          "ff_leaves_48": 66,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 11.696060000000001,
+            "FF": 12.980550000000001
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t10",
+          "proposed_soft_ff": 4258,
+          "free_area_lower_bound_um2": 71260.74143999995,
+          "ff_leaves_48": 89,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 15,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t11",
+          "proposed_soft_ff": 2213,
+          "free_area_lower_bound_um2": 37031.59296000001,
+          "ff_leaves_48": 47,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 9.40104,
+            "FF": 10.4294
+          },
+          "branch_buffers_upper_budget": 8,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t12",
+          "proposed_soft_ff": 3835,
+          "free_area_lower_bound_um2": 64171.422720000046,
+          "ff_leaves_48": 80,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 14,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t13",
+          "proposed_soft_ff": 3068,
+          "free_area_lower_bound_um2": 51349.14432,
+          "ff_leaves_48": 64,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 30.38766,
+            "FF": 33.72695
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t14",
+          "proposed_soft_ff": 5143,
+          "free_area_lower_bound_um2": 86057.16652800002,
+          "ff_leaves_48": 108,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 17,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t15",
+          "proposed_soft_ff": 3469,
+          "free_area_lower_bound_um2": 58055.16672000017,
+          "ff_leaves_48": 73,
+          "non_ff_terminal_budget": 3,
+          "hard_terminal_cap_fF": {
+            "TT": 7.05078,
+            "FF": 7.822049999999999
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        }
+      ],
+      "ff_leaf_count_bounds": {
+        "32": 2211,
+        "48": 1474,
+        "64": 1106
+      },
+      "clock_bom_budget": {
+        "ff_leaf_buffers": 1481,
+        "branch_buffers_conservative": 244,
+        "hard_terminal_roots": 23,
+        "die_input_roots": 16,
+        "buffer_body_envelope_um": [
+          1.62,
+          0.27
+        ]
+      },
+      "standard_cell_utilization_of_free_area": 0.03614806211950752,
+      "clock_timing_status": "UNRUN: source/capacity model only; no latency/window/slew prediction or 833ps qualification",
+      "cycles_added": 0
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t4",
+      "measured_parent_census": {
+        "type": "ot_s81sl_kv_leaf__t4",
+        "mapped_total": 315654,
+        "mapped_total_24cut": 123432,
+        "measured_VNb_soft_delta": 192222,
+        "flops": 64761,
+        "flop_types": {
+          "DFFHQNx1_ASAP7_75t_R": 62585,
+          "DFFLQNx1_ASAP7_75t_R": 30,
+          "DFFASRHQNx1_ASAP7_75t_R": 2146
+        },
+        "real_sram_instances": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 2,
+          "ot_sram_1r1w_512x128_m4_r0c0": 2
+        },
+        "real_sram_total": 4,
+        "reported_chip_area_um2": 58186.53724,
+        "real_sram_area_um2": 17665.2472,
+        "standard_cell_area_um2": 40521.29003999999,
+        "cycles_added": 0,
+        "retained_soft": [
+          "VN_b",
+          "VQ"
+        ],
+        "expected_abstract_children": 23,
+        "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+        "report_sha256": "c3cb2683aa0b940acdbf02e090b6aee4b5ecf5859d49d54866d8438c8a5952ab"
+      },
+      "soft_ff_total_clock_pin_cap_fF": {
+        "TT": 30719.157064,
+        "FF": 33765.448122
+      },
+      "distributed_tree": [
+        {
+          "root": "clk",
+          "proposed_soft_ff": 6026,
+          "free_area_lower_bound_um2": 110140.64640000001,
+          "ff_leaves_48": 126,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 19,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t1",
+          "proposed_soft_ff": 5869,
+          "free_area_lower_bound_um2": 107276.31360000002,
+          "ff_leaves_48": 123,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 19,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t2",
+          "proposed_soft_ff": 5573,
+          "free_area_lower_bound_um2": 101865.18527999999,
+          "ff_leaves_48": 117,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 18,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t3",
+          "proposed_soft_ff": 5952,
+          "free_area_lower_bound_um2": 108777.32352000005,
+          "ff_leaves_48": 124,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 19,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t4",
+          "proposed_soft_ff": 4599,
+          "free_area_lower_bound_um2": 84063.05280000002,
+          "ff_leaves_48": 96,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 16,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t5",
+          "proposed_soft_ff": 3221,
+          "free_area_lower_bound_um2": 58862.9376,
+          "ff_leaves_48": 68,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t6",
+          "proposed_soft_ff": 2933,
+          "free_area_lower_bound_um2": 53597.92895999998,
+          "ff_leaves_48": 62,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t7",
+          "proposed_soft_ff": 4112,
+          "free_area_lower_bound_um2": 75149.30304000006,
+          "ff_leaves_48": 86,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 14,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t8",
+          "proposed_soft_ff": 3446,
+          "free_area_lower_bound_um2": 62976.75263999999,
+          "ff_leaves_48": 72,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t9",
+          "proposed_soft_ff": 2900,
+          "free_area_lower_bound_um2": 52996.06655999994,
+          "ff_leaves_48": 61,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 11.696060000000001,
+            "FF": 12.980550000000001
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t10",
+          "proposed_soft_ff": 3899,
+          "free_area_lower_bound_um2": 71260.74143999995,
+          "ff_leaves_48": 82,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 14,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t11",
+          "proposed_soft_ff": 2026,
+          "free_area_lower_bound_um2": 37031.59296000001,
+          "ff_leaves_48": 43,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 9.40104,
+            "FF": 10.4294
+          },
+          "branch_buffers_upper_budget": 7,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t12",
+          "proposed_soft_ff": 3511,
+          "free_area_lower_bound_um2": 64171.422720000046,
+          "ff_leaves_48": 74,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t13",
+          "proposed_soft_ff": 2809,
+          "free_area_lower_bound_um2": 51349.14432,
+          "ff_leaves_48": 59,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 30.38766,
+            "FF": 33.72695
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t14",
+          "proposed_soft_ff": 4709,
+          "free_area_lower_bound_um2": 86057.16652800002,
+          "ff_leaves_48": 99,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 16,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t15",
+          "proposed_soft_ff": 3176,
+          "free_area_lower_bound_um2": 58055.16672000017,
+          "ff_leaves_48": 67,
+          "non_ff_terminal_budget": 3,
+          "hard_terminal_cap_fF": {
+            "TT": 7.05078,
+            "FF": 7.822049999999999
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        }
+      ],
+      "ff_leaf_count_bounds": {
+        "32": 2024,
+        "48": 1350,
+        "64": 1012
+      },
+      "clock_bom_budget": {
+        "ff_leaf_buffers": 1359,
+        "branch_buffers_conservative": 219,
+        "hard_terminal_roots": 23,
+        "die_input_roots": 16,
+        "buffer_body_envelope_um": [
+          1.62,
+          0.27
+        ]
+      },
+      "standard_cell_utilization_of_free_area": 0.03423473934600045,
+      "clock_timing_status": "UNRUN: source/capacity model only; no latency/window/slew prediction or 833ps qualification",
+      "cycles_added": 0
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "measured_parent_census": {
+        "type": "ot_s81sl_kv_leaf__t5",
+        "mapped_total": 280220,
+        "mapped_total_24cut": 88282,
+        "measured_VNb_soft_delta": 191938,
+        "flops": 53767,
+        "flop_types": {
+          "DFFHQNx1_ASAP7_75t_R": 51603,
+          "DFFLQNx1_ASAP7_75t_R": 30,
+          "DFFASRHQNx1_ASAP7_75t_R": 2134
+        },
+        "real_sram_instances": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 2,
+          "ot_sram_1r1w_512x128_m4_r0c0": 2
+        },
+        "real_sram_total": 4,
+        "reported_chip_area_um2": 53161.43818,
+        "real_sram_area_um2": 17665.2472,
+        "standard_cell_area_um2": 35496.19098,
+        "cycles_added": 0,
+        "retained_soft": [
+          "VN_b",
+          "VQ"
+        ],
+        "expected_abstract_children": 23,
+        "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+        "report_sha256": "acd902831297a7c6c6465b2b6e5688e3e12e53607a05811675e522cea375bdf9"
+      },
+      "soft_ff_total_clock_pin_cap_fF": {
+        "TT": 25500.051524,
+        "FF": 28026.696477999998
+      },
+      "distributed_tree": [
+        {
+          "root": "clk",
+          "proposed_soft_ff": 5003,
+          "free_area_lower_bound_um2": 110140.64640000001,
+          "ff_leaves_48": 105,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 17,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t1",
+          "proposed_soft_ff": 4873,
+          "free_area_lower_bound_um2": 107276.31360000002,
+          "ff_leaves_48": 102,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 16,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t2",
+          "proposed_soft_ff": 4627,
+          "free_area_lower_bound_um2": 101865.18527999999,
+          "ff_leaves_48": 97,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 16,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t3",
+          "proposed_soft_ff": 4941,
+          "free_area_lower_bound_um2": 108777.32352000005,
+          "ff_leaves_48": 103,
+          "non_ff_terminal_budget": 0,
+          "hard_terminal_cap_fF": {
+            "TT": 0,
+            "FF": 0
+          },
+          "branch_buffers_upper_budget": 16,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t4",
+          "proposed_soft_ff": 3819,
+          "free_area_lower_bound_um2": 84063.05280000002,
+          "ff_leaves_48": 80,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 14,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t5",
+          "proposed_soft_ff": 2674,
+          "free_area_lower_bound_um2": 58862.9376,
+          "ff_leaves_48": 56,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t6",
+          "proposed_soft_ff": 2435,
+          "free_area_lower_bound_um2": 53597.92895999998,
+          "ff_leaves_48": 51,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 8,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t7",
+          "proposed_soft_ff": 3414,
+          "free_area_lower_bound_um2": 75149.30304000006,
+          "ff_leaves_48": 72,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 13,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t8",
+          "proposed_soft_ff": 2861,
+          "free_area_lower_bound_um2": 62976.75263999999,
+          "ff_leaves_48": 60,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t9",
+          "proposed_soft_ff": 2407,
+          "free_area_lower_bound_um2": 52996.06655999994,
+          "ff_leaves_48": 51,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 11.696060000000001,
+            "FF": 12.980550000000001
+          },
+          "branch_buffers_upper_budget": 8,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t10",
+          "proposed_soft_ff": 3237,
+          "free_area_lower_bound_um2": 71260.74143999995,
+          "ff_leaves_48": 68,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 12,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t11",
+          "proposed_soft_ff": 1682,
+          "free_area_lower_bound_um2": 37031.59296000001,
+          "ff_leaves_48": 36,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 9.40104,
+            "FF": 10.4294
+          },
+          "branch_buffers_upper_budget": 6,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t12",
+          "proposed_soft_ff": 2915,
+          "free_area_lower_bound_um2": 64171.422720000046,
+          "ff_leaves_48": 61,
+          "non_ff_terminal_budget": 1,
+          "hard_terminal_cap_fF": {
+            "TT": 2.35026,
+            "FF": 2.60735
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t13",
+          "proposed_soft_ff": 2333,
+          "free_area_lower_bound_um2": 51349.14432,
+          "ff_leaves_48": 49,
+          "non_ff_terminal_budget": 4,
+          "hard_terminal_cap_fF": {
+            "TT": 30.38766,
+            "FF": 33.72695
+          },
+          "branch_buffers_upper_budget": 8,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t14",
+          "proposed_soft_ff": 3909,
+          "free_area_lower_bound_um2": 86057.16652800002,
+          "ff_leaves_48": 82,
+          "non_ff_terminal_budget": 2,
+          "hard_terminal_cap_fF": {
+            "TT": 4.70052,
+            "FF": 5.2147
+          },
+          "branch_buffers_upper_budget": 14,
+          "branch_depth_upper_budget": 3,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        },
+        {
+          "root": "clk_t15",
+          "proposed_soft_ff": 2637,
+          "free_area_lower_bound_um2": 58055.16672000017,
+          "ff_leaves_48": 55,
+          "non_ff_terminal_budget": 3,
+          "hard_terminal_cap_fF": {
+            "TT": 7.05078,
+            "FF": 7.822049999999999
+          },
+          "branch_buffers_upper_budget": 9,
+          "branch_depth_upper_budget": 2,
+          "basis": "MODEL spatial population proportional to free area; native FF placement unknown. Hard terminals assigned by nearest root using proposed entry coordinates; 200um chain segments separate geometry budget, not delay proof."
+        }
+      ],
+      "ff_leaf_count_bounds": {
+        "32": 1681,
+        "48": 1121,
+        "64": 841
+      },
+      "clock_bom_budget": {
+        "ff_leaf_buffers": 1128,
+        "branch_buffers_conservative": 184,
+        "hard_terminal_roots": 23,
+        "die_input_roots": 16,
+        "buffer_body_envelope_um": [
+          1.62,
+          0.27
+        ]
+      },
+      "standard_cell_utilization_of_free_area": 0.029989243796941872,
+      "clock_timing_status": "UNRUN: source/capacity model only; no latency/window/slew prediction or 833ps qualification",
+      "cycles_added": 0
+    }
+  ],
+  "blocking_contracts": [
+    "Native parent 594 data+epoch versus plan597 ABI remains unresolved; no remapping inferred.",
+    "Child ordinary mapped FF/area and current exact-source full views unqualified. Footprints reference templates; proposed BUF24 roots give explicit input load contracts, not measured hardened-child input caps.",
+    "Actual FF spatial distribution, 16 input phases and child clock insertion windows unknown; no homogeneous phase assumption.",
+    "The four actual SRAM master/pin/cap contracts are measured; their tower placement is proposed.",
+    "Budget does not qualify postplacement wires, PG, DRC, NLDM timing, or full 833ps clock gates."
+  ],
+  "native_libcaps": {
+    "schema": "opentallas.kvleaf.proposed_root_native_libcaps.v1",
+    "scope": "Native library input pin caps for proposed clock-buffer roots and actual mapped FF populations; NOT measured hardened-child cap/timing",
+    "corners": {
+      "TT": {
+        "seq_source": {
+          "file": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+          "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+          "capacitive_load_unit": "capacitive_load_unit (1,ff);",
+          "time_unit": "time_unit : \"1ps\";"
+        },
+        "invbuf_source": {
+          "file": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+          "sha256": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+          "capacitive_load_unit": "capacitive_load_unit (1,ff);",
+          "time_unit": "time_unit : \"1ps\";"
+        },
+        "cells": {
+          "DFFHQNx1_ASAP7_75t_R": {
+            "input_pin": "CLK",
+            "capacitance": 0.474736,
+            "rise_capacitance": 0.474467,
+            "fall_capacitance": 0.474736
+          },
+          "DFFLQNx1_ASAP7_75t_R": {
+            "input_pin": "CLK",
+            "capacitance": 0.480775,
+            "rise_capacitance": 0.480263,
+            "fall_capacitance": 0.480775
+          },
+          "DFFASRHQNx1_ASAP7_75t_R": {
+            "input_pin": "CLK",
+            "capacitance": 0.462899,
+            "rise_capacitance": 0.462899,
+            "fall_capacitance": 0.461096
+          },
+          "BUFx8_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 0.852045,
+            "rise_capacitance": 0.852045,
+            "fall_capacitance": 0.850973,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx10_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 1.20694,
+            "rise_capacitance": 1.20694,
+            "fall_capacitance": 1.20673,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx12_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 1.20393,
+            "rise_capacitance": 1.20393,
+            "fall_capacitance": 1.20365,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx12f_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 2.34288,
+            "rise_capacitance": 2.34288,
+            "fall_capacitance": 2.34141,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx16f_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 2.34187,
+            "rise_capacitance": 2.34154,
+            "fall_capacitance": 2.34187,
+            "output_limits": {
+              "max_capacitance": 737.28
+            }
+          },
+          "BUFx24_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 2.35026,
+            "rise_capacitance": 2.34978,
+            "fall_capacitance": 2.35026,
+            "output_limits": {
+              "max_capacitance": 1474.56
+            }
+          }
+        }
+      },
+      "FF": {
+        "seq_source": {
+          "file": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+          "sha256": "d9b6e75c8720cdd450cff15178528502cc8df34c5ab6b0ffb53fc99d664b5302",
+          "capacitive_load_unit": "capacitive_load_unit (1,ff);",
+          "time_unit": "time_unit : \"1ps\";"
+        },
+        "invbuf_source": {
+          "file": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+          "sha256": "e0c65688e6067ee485b0693651298636ae9ef5a0512154bcd4b7c4914d1a0ac6",
+          "capacitive_load_unit": "capacitive_load_unit (1,ff);",
+          "time_unit": "time_unit : \"1ps\";"
+        },
+        "cells": {
+          "DFFHQNx1_ASAP7_75t_R": {
+            "input_pin": "CLK",
+            "capacitance": 0.52201,
+            "rise_capacitance": 0.517449,
+            "fall_capacitance": 0.52201
+          },
+          "DFFLQNx1_ASAP7_75t_R": {
+            "input_pin": "CLK",
+            "capacitance": 0.522936,
+            "rise_capacitance": 0.522936,
+            "fall_capacitance": 0.52255
+          },
+          "DFFASRHQNx1_ASAP7_75t_R": {
+            "input_pin": "CLK",
+            "capacitance": 0.503152,
+            "rise_capacitance": 0.503152,
+            "fall_capacitance": 0.502958
+          },
+          "BUFx8_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 0.938203,
+            "rise_capacitance": 0.938203,
+            "fall_capacitance": 0.937541,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx10_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 1.3354,
+            "rise_capacitance": 1.33381,
+            "fall_capacitance": 1.3354,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx12_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 1.33622,
+            "rise_capacitance": 1.33321,
+            "fall_capacitance": 1.33622,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx12f_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 2.60175,
+            "rise_capacitance": 2.60175,
+            "fall_capacitance": 2.59691,
+            "output_limits": {
+              "max_capacitance": 368.64
+            }
+          },
+          "BUFx16f_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 2.5975,
+            "rise_capacitance": 2.59713,
+            "fall_capacitance": 2.5975,
+            "output_limits": {
+              "max_capacitance": 737.28
+            }
+          },
+          "BUFx24_ASAP7_75t_R": {
+            "input_pin": "A",
+            "capacitance": 2.60735,
+            "rise_capacitance": 2.60735,
+            "fall_capacitance": 2.60404,
+            "output_limits": {
+              "max_capacitance": 1474.56
+            }
+          }
+        }
+      }
+    }
+  },
+  "real_sram_contract_source": {
+    "schema": "opentallas.kvleaf.real_sram_clock_contracts.v1",
+    "scope": "Actual native macro LEF bodies/clock-metal and TT/FF Liberty input caps; no parent placement or timing qualification",
+    "variants": [
+      {
+        "type": "ot_s81sl_kv_leaf__t1",
+        "kit": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1",
+        "macro_masters": [
+          {
+            "master": "ot_sram_1r1w_128x256_m1_r2c2",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1/macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+            "body_um": [
+              94.824,
+              41.064
+            ],
+            "body_area_um2": 3893.852736,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+                "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+                "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "master": "ot_sram_1r1w_512x128_m4_r0c0",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1/macros/ot_sram_1r1w_512x128_m4_r0c0.lef",
+            "body_um": [
+              169.368,
+              29.16
+            ],
+            "body_area_um2": 4938.77088,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1/macros/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+                "sha256": "4ec33f16d7dbc74a5ed47803feb5796f9d59cf98c881581001d305adad74436f",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t1/macros/ot_sram_1r1w_512x128_m4_r0c0_ff.lib",
+                "sha256": "3b6e6dbe88c2be0645178f18a7bd7f040ecdf048cd70af4febf0499c32072450",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "instance_contract": "two instances of each actual master per measured census; source exact instance/origin mapping remains in proposedpacking"
+      },
+      {
+        "type": "ot_s81sl_kv_leaf__t3",
+        "kit": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3",
+        "macro_masters": [
+          {
+            "master": "ot_sram_1r1w_128x256_m1_r2c2",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3/macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+            "body_um": [
+              94.824,
+              41.064
+            ],
+            "body_area_um2": 3893.852736,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+                "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+                "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "master": "ot_sram_1r1w_512x128_m4_r0c0",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3/macros/ot_sram_1r1w_512x128_m4_r0c0.lef",
+            "body_um": [
+              169.368,
+              29.16
+            ],
+            "body_area_um2": 4938.77088,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3/macros/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+                "sha256": "4ec33f16d7dbc74a5ed47803feb5796f9d59cf98c881581001d305adad74436f",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t3/macros/ot_sram_1r1w_512x128_m4_r0c0_ff.lib",
+                "sha256": "3b6e6dbe88c2be0645178f18a7bd7f040ecdf048cd70af4febf0499c32072450",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "instance_contract": "two instances of each actual master per measured census; source exact instance/origin mapping remains in proposedpacking"
+      },
+      {
+        "type": "ot_s81sl_kv_leaf__t4",
+        "kit": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4",
+        "macro_masters": [
+          {
+            "master": "ot_sram_1r1w_128x256_m1_r2c2",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4/macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+            "body_um": [
+              94.824,
+              41.064
+            ],
+            "body_area_um2": 3893.852736,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+                "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+                "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "master": "ot_sram_1r1w_512x128_m4_r0c0",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4/macros/ot_sram_1r1w_512x128_m4_r0c0.lef",
+            "body_um": [
+              169.368,
+              29.16
+            ],
+            "body_area_um2": 4938.77088,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4/macros/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+                "sha256": "4ec33f16d7dbc74a5ed47803feb5796f9d59cf98c881581001d305adad74436f",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t4/macros/ot_sram_1r1w_512x128_m4_r0c0_ff.lib",
+                "sha256": "3b6e6dbe88c2be0645178f18a7bd7f040ecdf048cd70af4febf0499c32072450",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "instance_contract": "two instances of each actual master per measured census; source exact instance/origin mapping remains in proposedpacking"
+      },
+      {
+        "type": "ot_s81sl_kv_leaf__t5",
+        "kit": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5",
+        "macro_masters": [
+          {
+            "master": "ot_sram_1r1w_128x256_m1_r2c2",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5/macros/ot_sram_1r1w_128x256_m1_r2c2.lef",
+            "body_um": [
+              94.824,
+              41.064
+            ],
+            "body_area_um2": 3893.852736,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5/macros/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
+                "sha256": "2191cc3df60536cc97aa55bf81e11e7208e72c0de0f9e03a87038144444d7e48",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5/macros/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
+                "sha256": "293f3a6cddd1c5d993e3f3aba3aa81437ae1cd9042372b9246086a0e38e1cb49",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "master": "ot_sram_1r1w_512x128_m4_r0c0",
+            "lef": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5/macros/ot_sram_1r1w_512x128_m4_r0c0.lef",
+            "body_um": [
+              169.368,
+              29.16
+            ],
+            "body_area_um2": 4938.77088,
+            "corners": {
+              "TT": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5/macros/ot_sram_1r1w_512x128_m4_r0c0_tt.lib",
+                "sha256": "4ec33f16d7dbc74a5ed47803feb5796f9d59cf98c881581001d305adad74436f",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 9.3458,
+                    "capacitance_fF": 9.3458,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "FF": {
+                "lib": "/srv/opentallas-scratch2/claude/codex-s81types-1030/kv_cut23_t5/macros/ot_sram_1r1w_512x128_m4_r0c0_ff.lib",
+                "sha256": "3b6e6dbe88c2be0645178f18a7bd7f040ecdf048cd70af4febf0499c32072450",
+                "capacitive_load_unit": "capacitive_load_unit (1, ff)",
+                "clock_pins": [
+                  {
+                    "pin": "clk",
+                    "capacitance_native": 10.3732,
+                    "capacitance_fF": 10.3732,
+                    "local_clock_xy_um": [
+                      0.012,
+                      0.78
+                    ],
+                    "entry_point_basis": "centre of first actual native pin rectangle; all shapes retained",
+                    "shapes": [
+                      {
+                        "layer": "M4",
+                        "rect_um": [
+                          0.0,
+                          0.768,
+                          0.024,
+                          0.792
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "instance_contract": "two instances of each actual master per measured census; source exact instance/origin mapping remains in proposedpacking"
+      }
+    ]
+  }
+}
