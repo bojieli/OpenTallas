@@ -1,4 +1,16 @@
 `timescale 1ns/1ps
+// Same fixed quarter protocol as ot_s81ph_sel_tile.sv. Keep this compilation
+// unit self-contained: a separate-file frontend must not depend on macro state
+// leaked from that other source file by the synthesis frontend.
+`ifndef SELT_SB
+`define SELT_SB 865
+`endif
+`ifndef SELT_CB
+`define SELT_CB 66
+`endif
+`ifndef SELT_OB
+`define SELT_OB 354
+`endif
 // ---------------------------------------------------------------------------------------------------------------
 // S81-TOPK7 (2026-10-20) HIERARCHICAL QUARTER tile dsfd_selt_q_hq (opt-in OT_S81PH_SEL_HQ; dsdv_bksel_q binds it).
 // Same ports, function and EVERY edge as dsfd_selt_q2 #(DM 4, CMP_RETIME 1, PIPE2 1, QIO 1, ILD 1, FRPR 1) with the
