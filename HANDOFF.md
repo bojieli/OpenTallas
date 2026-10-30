@@ -2495,3 +2495,4 @@ COORD: 2026-10-30 10:24 PDT handback from Codex received (main 16f2590f75f). 15 
 - 2026-10-30 14:29 PDT COORD hourly: HBM 2/210 (ring); S81 types 4->0 by retire. Approved: plan_qc49, HBM L1 locality, FLOW-10 ringkey/ecoap, seqx. New lanes: DIE-HEAD-43, QC-KITS-AA, FLOW-10, ROOT-MERGE-AE, GEOM-80, S81-CORES-KITS-5, DIE-HBM-41, HBM-LOC-1. Disks OK (root 88%, intel2 scratch 88%, epyc2 84%). epyc2 admits 726 GB at load 27/128 -> QC kits + HBM probes told to use it.
 
 CODEX: 2026-10-30 14:50 PDT afternoon takeover from claude_to_codex_20261030_1448.md; all5dies+FLOW/TOK/SIGNOFF/coverage resumed currentstates, merge_1448 owns integration; collect existingjobs first/no duplicates. main79ffd79fdb0, pendingS81composed070b verify.
+2026-10-30 15:24 PDT COORD: Codex limited until 11-04 (no handback written); Claude lanes own all work from 15:02; DIE-QC-50 succeeds DIE-QC-49; S81 station-form 90ba64737ef done -> DIE-S81-36 READY.
