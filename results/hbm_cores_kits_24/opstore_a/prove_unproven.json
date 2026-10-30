@@ -1,0 +1,89 @@
+{
+ "g_operand_0_u_group_sw_mask": {
+  "width": 64,
+  "same_net": 0,
+  "differ": 0,
+  "unresolved": 64,
+  "verdict": "NOT_PROVED",
+  "examples": [
+   [
+    "g_operand_0_u_group_sw_mask",
+    0,
+    "1",
+    "stage_mask",
+    0,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "g_operand_0_u_group_sw_mask",
+    1,
+    "1",
+    "stage_mask",
+    1,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "g_operand_0_u_group_sw_mask",
+    2,
+    "1",
+    "stage_mask",
+    2,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "g_operand_0_u_group_sw_mask",
+    3,
+    "1",
+    "stage_mask",
+    3,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "g_operand_0_u_group_sw_mask",
+    4,
+    "1",
+    "stage_mask",
+    4,
+    null,
+    "UNRESOLVED"
+   ],
+   [
+    "g_operand_0_u_group_sw_mask",
+    5,
+    "1",
+    "stage_mask",
+    5,
+    null,
+    "UNRESOLVED"
+   ]
+  ]
+ },
+ "glue": {
+  "width": 4,
+  "same_net": 4,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "glue_1": {
+  "width": 1,
+  "same_net": 1,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ },
+ "x_u_core_u_engine_u_arithmetic_vm_waddr": {
+  "width": 144,
+  "same_net": 144,
+  "differ": 0,
+  "unresolved": 0,
+  "verdict": "PROVED",
+  "examples": []
+ }
+}
