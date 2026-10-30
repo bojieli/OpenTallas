@@ -50,3 +50,28 @@ work, not a steady-state token-price delta against the old nonexecuting
 3920template-only words. Actual source/transport dates,MUconfiguration,
 HLOAD/GAIN/store completion,KIT/END/retirement and interpage reload authority
 are still missing and are not priced as zero. No hardware cycle changed.
+
+Existing local VP proof reused, not resimulated:
+The real prior VP gate's11source/dependency files, including real r0c0 SRAM
+and bench, are byte-identical to the selected source. Binder file/preference
+selection picks those VP/SRAM implementations;80actual destinations retain
+unoverridden measured defaults. No activated conditional guard is accepted.
+Intake compares the exact bound transport/inventory identities, preserves the
+old proof's distinct die/asbuilt identity, and annotates only local body facts:
+VPtarget5pin->itsstorecommit2edges, HLOADlastVP_HWoutput20, GAINlastVP_WL12.
+Six negative controls reject missingpayloadmutant, dirtysource, wronginventory,
+parameterdrift, incoherentstorefieldage and activatedmemory-faultvariant.
+
+This advances the previouslyNone local VP commit stage. It deliberately does
+NOT label last VP output as VN capture/store readiness. Existing HLOAD/GAIN
+readiness placeholders remainNone; physical clock/reset phase, XRtarget5
+decode, actualper-commandarrival, VNstore and programme retire remainheld.
+No old proof was relabelled as a new whole-die proof; compact vp_intake.json
+retains both identities and exact stage ranges. The compiler CLI is
+ tools/s81_dv/layer_prog/vp_local_intake.py --transport ACTUAL_BOUND_ENTRY \
+ --inventory SAME_SOURCE_INVENTORY --proof VP_GATE --source-root SOURCE \
+ --manifest EXACT_ASBUILT_MANIFEST --out FRESH_OUTPUT
+No RTL cycles added; these are existing formerlyomitted stages, not zero
+latency. Scratch fulloutput remains beside sourceinputs for the next compiler
+step. A preliminarycomparison against stale remote~/OpenTallas was discarded;
+qualification uses actual explicitselectedsource root, where all11match.
