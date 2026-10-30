@@ -1,0 +1,514 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/head-kits-t/src25m_kt",
+ "out": "/srv/opentallas-scratch2/claude/die-head-34/src25p",
+ "added_cycles": 0,
+ "types": {
+  "hd_tile": {
+   "taps_before": 2,
+   "taps_after": 38,
+   "max_load": 1252,
+   "empty": 0,
+   "sinks": 25769,
+   "worst_sink_nearest_tap_l1_um": 191.16,
+   "taps": [
+    [
+     "clk",
+     351.0,
+     372.6,
+     802
+    ],
+    [
+     "clk_t1",
+     346.68,
+     17.28,
+     29
+    ],
+    [
+     "clk_t2",
+     692.28,
+     17.28,
+     9
+    ],
+    [
+     "clk_t3",
+     693.36,
+     102.6,
+     8
+    ],
+    [
+     "clk_t4",
+     8.64,
+     167.4,
+     3
+    ],
+    [
+     "clk_t5",
+     353.16,
+     167.4,
+     466
+    ],
+    [
+     "clk_t6",
+     178.2,
+     338.04,
+     11
+    ],
+    [
+     "clk_t7",
+     437.4,
+     361.8,
+     404
+    ],
+    [
+     "clk_t8",
+     523.8,
+     361.8,
+     330
+    ],
+    [
+     "clk_t9",
+     588.6,
+     361.8,
+     567
+    ],
+    [
+     "clk_t10",
+     653.4,
+     370.44,
+     663
+    ],
+    [
+     "clk_t11",
+     351.0,
+     448.2,
+     454
+    ],
+    [
+     "clk_t12",
+     351.0,
+     513.0,
+     1130
+    ],
+    [
+     "clk_t13",
+     361.8,
+     556.2,
+     833
+    ],
+    [
+     "clk_t14",
+     351.0,
+     599.4,
+     785
+    ],
+    [
+     "clk_t15",
+     351.0,
+     675.0,
+     996
+    ],
+    [
+     "clk_t16",
+     340.2,
+     709.56,
+     424
+    ],
+    [
+     "clk_t17",
+     156.6,
+     718.2,
+     651
+    ],
+    [
+     "clk_t18",
+     253.8,
+     718.2,
+     938
+    ],
+    [
+     "clk_t19",
+     286.2,
+     718.2,
+     919
+    ],
+    [
+     "clk_t20",
+     318.6,
+     718.2,
+     812
+    ],
+    [
+     "clk_t21",
+     361.8,
+     718.2,
+     1126
+    ],
+    [
+     "clk_t22",
+     415.8,
+     718.2,
+     918
+    ],
+    [
+     "clk_t23",
+     480.6,
+     718.2,
+     727
+    ],
+    [
+     "clk_t24",
+     685.8,
+     718.2,
+     902
+    ],
+    [
+     "clk_t25",
+     199.8,
+     729.0,
+     1081
+    ],
+    [
+     "clk_t26",
+     556.2,
+     729.0,
+     676
+    ],
+    [
+     "clk_t27",
+     27.0,
+     739.8,
+     730
+    ],
+    [
+     "clk_t28",
+     135.0,
+     761.4,
+     794
+    ],
+    [
+     "clk_t29",
+     610.2,
+     772.2,
+     932
+    ],
+    [
+     "clk_t30",
+     167.4,
+     804.6,
+     745
+    ],
+    [
+     "clk_t31",
+     664.2,
+     837.0,
+     832
+    ],
+    [
+     "clk_t32",
+     199.8,
+     847.8,
+     686
+    ],
+    [
+     "clk_t33",
+     523.8,
+     858.6,
+     1252
+    ],
+    [
+     "clk_t34",
+     199.8,
+     901.8,
+     1012
+    ],
+    [
+     "clk_t35",
+     685.8,
+     912.6,
+     659
+    ],
+    [
+     "clk_t36",
+     556.2,
+     955.8,
+     853
+    ],
+    [
+     "clk_t37",
+     189.0,
+     988.2,
+     610
+    ]
+   ],
+   "instances": 264
+  },
+  "hd_turn_b": {
+   "taps_before": 1,
+   "taps_after": 5,
+   "max_load": 1141,
+   "empty": 0,
+   "sinks": 1802,
+   "worst_sink_nearest_tap_l1_um": 151.2,
+   "taps": [
+    [
+     "clk",
+     91.8,
+     232.2,
+     8
+    ],
+    [
+     "clk_t1",
+     91.8,
+     17.28,
+     2
+    ],
+    [
+     "clk_t2",
+     17.28,
+     437.4,
+     259
+    ],
+    [
+     "clk_t3",
+     70.2,
+     534.6,
+     1141
+    ],
+    [
+     "clk_t4",
+     102.6,
+     621.0,
+     392
+    ]
+   ],
+   "instances": 12
+  },
+  "hd_spn_eshim_rx": {
+   "taps_before": 1,
+   "taps_after": 5,
+   "max_load": 822,
+   "empty": 0,
+   "sinks": 1238,
+   "worst_sink_nearest_tap_l1_um": 122.04,
+   "taps": [
+    [
+     "clk",
+     17.28,
+     243.0,
+     4
+    ],
+    [
+     "clk_t1",
+     48.6,
+     17.28,
+     8
+    ],
+    [
+     "clk_t2",
+     17.28,
+     556.2,
+     4
+    ],
+    [
+     "clk_t3",
+     27.0,
+     739.8,
+     822
+    ],
+    [
+     "clk_t4",
+     77.76,
+     901.8,
+     400
+    ]
+   ],
+   "instances": 6
+  },
+  "hd_spn_eshim_tx": {
+   "taps_before": 1,
+   "taps_after": 4,
+   "max_load": 578,
+   "empty": 0,
+   "sinks": 590,
+   "worst_sink_nearest_tap_l1_um": 165.24,
+   "taps": [
+    [
+     "clk",
+     17.28,
+     243.0,
+     6
+    ],
+    [
+     "clk_t1",
+     17.28,
+     17.28,
+     2
+    ],
+    [
+     "clk_t2",
+     17.28,
+     556.2,
+     4
+    ],
+    [
+     "clk_t3",
+     77.76,
+     858.6,
+     578
+    ]
+   ],
+   "instances": 6
+  },
+  "hd_spn_wshim_rx": {
+   "taps_before": 2,
+   "taps_after": 11,
+   "max_load": 1139,
+   "empty": 0,
+   "sinks": 1810,
+   "worst_sink_nearest_tap_l1_um": 172.8,
+   "taps": [
+    [
+     "clk",
+     351.0,
+     178.2,
+     4
+    ],
+    [
+     "clk_t1",
+     178.2,
+     17.28,
+     8
+    ],
+    [
+     "clk_t2",
+     523.8,
+     17.28,
+     2
+    ],
+    [
+     "clk_t3",
+     17.28,
+     189.0,
+     2
+    ],
+    [
+     "clk_t4",
+     351.0,
+     513.0,
+     4
+    ],
+    [
+     "clk_t5",
+     17.28,
+     523.8,
+     2
+    ],
+    [
+     "clk_t6",
+     27.0,
+     718.2,
+     280
+    ],
+    [
+     "clk_t7",
+     27.0,
+     750.6,
+     365
+    ],
+    [
+     "clk_t8",
+     351.0,
+     772.2,
+     1139
+    ],
+    [
+     "clk_t9",
+     351.0,
+     858.6,
+     2
+    ],
+    [
+     "clk_t10",
+     682.56,
+     858.6,
+     2
+    ]
+   ],
+   "instances": 6
+  },
+  "hd_spn_wshim_tx": {
+   "taps_before": 2,
+   "taps_after": 4,
+   "max_load": 575,
+   "empty": 0,
+   "sinks": 1155,
+   "worst_sink_nearest_tap_l1_um": 183.6,
+   "taps": [
+    [
+     "clk",
+     17.28,
+     523.8,
+     2
+    ],
+    [
+     "clk_t1",
+     17.28,
+     858.6,
+     6
+    ],
+    [
+     "clk_t2",
+     351.0,
+     858.6,
+     575
+    ],
+    [
+     "clk_t3",
+     682.56,
+     858.6,
+     572
+    ]
+   ],
+   "instances": 6
+  }
+ },
+ "src25n_delta": [
+  "type hd_lep0N",
+  "type hd_st_n4",
+  "partition lep0N",
+  "note",
+  "reset.in_sites"
+ ],
+ "ea1": "m864",
+ "sha256": {
+  "ot_dp_cells.sv": "7926db02ce52e74f2fe54bd5480c9c92db3f62a3252842cd62e6d1a26e193fa9",
+  "ot_s81hd_ctl.sv": "6b11baa47a5a02dbbb6ce53684afb3aad3259ff61286f58334e27cf92ad275ba",
+  "ot_s81hd_ctl_estrip.sv": "20bc4746a990be856575e6d59d18286b25fe6a0c7197902805708da05340198d",
+  "ot_s81hd_ctl_nstrip.sv": "8c38cc2b0fdf26308d4ccca187c19e75fc6a4cfd6e0dd5aac728830e00b0ce5d",
+  "ot_s81hd_host_ep.sv": "d23b109316f072cc5a375d3e05bb4b6f82248252e429249bbfd6dc121fcda61f",
+  "ot_s81hd_host_nstrip.sv": "4b94e3ec8cf76dbf073e6246167d7aa2ee06237e0d2f41fbe758b7d746ec6b0b",
+  "ot_s81hd_lep0N.sv": "d31637cc9afc4e0e7b9e2d2b12149e1eef9c970f72a1596293ef62bef1089c4c",
+  "ot_s81hd_mesh_ep.sv": "9dbdcb7bb1d64bd44711e873eeacd6e6eb82ceff6e29799a15d677afd349f907",
+  "ot_s81hd_mesh_estrip.sv": "53cd3fd325b31e0b42aa496139ddcb895c4ff041eadceb42dec7881b52e3b4ac",
+  "ot_s81hd_serdes.sv": "9430e80cae8b9c1489a37291d4afcad3e4875e4fe77e12010c94eb13a4223683",
+  "ot_s81hd_spn_end_strip.sv": "3fac18723c26b3ed2e3bf27a1b1b415f1042016b7ac7fdfa51ef896d344d7b0c",
+  "ot_s81hd_spn_eshim_rx.sv": "f770e21f0a452a81c05222989219548129e7591fc81272c06a7b8fce00df1814",
+  "ot_s81hd_spn_eshim_tx.sv": "322ec31567b36dc6d6edef70fdd82e47182fddd608b6b19bf6598627264374bf",
+  "ot_s81hd_spn_strip.sv": "77c9a4baf39737cf3d6f0325a087fdf5f29caa4ae7d078fe1bb72be0c2129be4",
+  "ot_s81hd_spn_wshim_rx.sv": "ed7125e043f896c23fd47b612cd41434882df5607d65beab3e363d535ab7d3d4",
+  "ot_s81hd_spn_wshim_tx.sv": "e849770f3285f84200348e16a47c9e4a194ff387b112d8652a7524935831b791",
+  "ot_s81hd_st_k5.sv": "c028fcf2eddb3483e56a79692624f13dac81ecbaba95e195fee6c6245394e33e",
+  "ot_s81hd_st_m.sv": "24bced7a3940b1d19fa8294b20f67fe617db115423ea82ddd018b9afb0d03c88",
+  "ot_s81hd_st_n3_transit.sv": "dab3165419cc9540026257dfb133ec6638e40cc1246dff9f721d060dccbb3751",
+  "ot_s81hd_st_n3_turn.sv": "191816a0c98c5d2fe882a9ebf0419701d30b0338b8b0345d06ad72d3b33a85df",
+  "ot_s81hd_st_n4.sv": "5936ec75595ee94794cd5fcdb1805b6a7b959004ab70d6c71e9465cfc7411d3d",
+  "ot_s81hd_st_str.sv": "1f91c509642c8352c4706a931acae9637a4fe0e037e2959917f4731a508dcb82",
+  "ot_s81hd_st_turn.sv": "05cf775d0756e12894593cde02f176f10d5b0a64ee1ae3a2eff99961c9e7a1b4",
+  "ot_s81hd_tile_p.sv": "50793fe93b6ab9cad56af8ebf69982c21b474e2b7b702500d9977843c562a422",
+  "ot_s81hd_turn_a.sv": "f9cf0e0e14ead1ab121eb70485a00fc52290043a49d268aeaddca1135fdbe628",
+  "ot_s81hd_turn_b.sv": "1a31d78335e022d51572de509934650137a56897f4a24bf36fd1a2b63655ccdb",
+  "s81_head_top.sv": "cb851377deeb3d512d5f46b6638cd2f4fade420468989f8f26cbb08ebf232c28",
+  "start_stages.sv": "5dbf94b164946f059ef55b7c1747333f4f0809548d3f95aecf16d499339ea5a3",
+  "source_plan.json": "dfc1826f91e0059650b82897ae062bdbf82313c418db809a2eaebecf081f4b99"
+ }
+}
