@@ -147,5 +147,8 @@
   "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no AR-token equivalence or fixed acceptance gamma."
  },
  "fixture_is_complete_programme": false,
- "ownership_epochs_are_MTP_steps_or_ARtokens": false
+ "ownership_epochs_are_MTP_steps_or_ARtokens": false,
+ "historical_provider_source": "codex/hbm-bind-1030@5fe9b74a9",
+ "current_provider_source": "canonical dd491a076, source_dependencies.json; actual legalU32 proof also covered by corrected-source CP fixture",
+ "current_corrected_source_proof": "cp_receipt.json and cp_dd_* logs"
 }

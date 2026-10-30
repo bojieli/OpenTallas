@@ -1,8 +1,9 @@
 {
  "status": "PASS_ACTUAL_NATIVE_CP_PORT_PROVIDER_AT833PS",
  "source_component_commits": [
-  "73430d378 canonicalcounter/map/quad_vehicle/provider",
-  "7af555e3e canonicalnativeCPfront"
+  "73430d378",
+  "7af555e3e",
+  "dd491a076"
  ],
  "ot_run_unit": "intel1:oth-ubuntu-664942-1793365517",
  "clock_ps": 833,
@@ -83,5 +84,27 @@
   "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no AR-token equivalence or fixed acceptance gamma."
  },
  "fixture_is_complete_programme": false,
- "ownership_epochs_are_MTP_steps_or_ARtokens": false
+ "ownership_epochs_are_MTP_steps_or_ARtokens": false,
+ "historical_source_proof": {
+  "commits": [
+   "73430d378 canonicalcounter/map/quad_vehicle/provider",
+   "7af555e3e canonicalnativeCPfront"
+  ],
+  "unit": "intel1:oth-ubuntu-664942-1793365517",
+  "logs": [
+   "cp_baseline.log",
+   "cp_wrong_epoch.log",
+   "cp_early_drain.log"
+  ],
+  "scope": "legalU32subset on oldcounter; superseded current source proof below, no old broadformat validity claim"
+ },
+ "format_control_results_commit": "5a703c0a9",
+ "current_corrected_source_rerun_unit": "intel1:oth-ubuntu-946601-1793366647",
+ "current_source_dependency_manifest": "source_dependencies.json",
+ "current_corrected_source_logs": [
+  "cp_dd_baseline.log",
+  "cp_dd_wrong_epoch.log",
+  "cp_dd_early_drain.log"
+ ],
+ "current_corrected_source_result": "PASS exact833ps, same42cmds/2688packets/21504words/3epochs, everypacketlatency8 andsamefirst/lastdates; bothwrongcmdepoch/earlydrain controls caught"
 }
