@@ -138,8 +138,11 @@ def _typed_raw_reset_output(P,tn,name,pinmap,cache):
         return len(a or ())==len(b or ())==2 and all(abs(x-y)<=1e-6 for x,y in zip(a,b))
     if source is None or source.get("q")!=row.get("net") or not same_xy(source.get("xy"),row.get("xy_um")):
         return False,"raw reset export source instance/net/xy differs from actual reset tree"
-    if pin.get("source_instance")!=row["instance"] or not same_xy(pin.get("xy_um"),row["xy_um"]):
-        return False,"raw reset export pin source/site differs from declaration"
+    # The physical output pin is track-snapped and may be de-duplicated beside
+    # this raw FF. Source coordinates stay exact above; ordinary pin/GEOM gates
+    # continue to judge the separate pin location and pin-to-register distance.
+    if pin.get("source_instance")!=row["instance"]:
+        return False,"raw reset export pin source differs from declaration"
     if P.types[tn].get("private_reset_start_exports"):
         if (pin.get("source_net"),pin.get("source_copy_from_net"),pin.get("source_output_pin"))!=(name,row["net"],"export_q"):
             return False,"raw reset private output does not copy the declared raw source"
