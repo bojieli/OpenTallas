@@ -1,0 +1,44 @@
+{
+  "scope": "CONDITIONAL CHILD source/pins only; no GEN/P&R/STA or parent activation",
+  "parent_body_um": [
+    345.6,
+    656.64,
+    598.8,
+    1162.08
+  ],
+  "child_outline_um": [
+    253.2,
+    505.44
+  ],
+  "pins": 572,
+  "inputs": 357,
+  "outputs": 215,
+  "track_and_PG_errors": [],
+  "source_bits_unchanged": true,
+  "parent_epoch_bits_omitted": true,
+  "output_map": {
+    "N119": "w1_we/data/addr + tok_val/v/user/own/idx + fault/busy, exact concatenation bits0..118",
+    "E48": "up_o[47:0]\u2192x_fe_o[47:0]",
+    "W48": "dn_o[47:0]\u2192x_fw_o[47:0]"
+  },
+  "output_exact_per_bit_L1_um": {
+    "x_ctl_o": 401.76000000000016,
+    "x_fe_o": 403.44000000000017,
+    "x_fw_o": 345.60000000000014
+  },
+  "input_direct_public_proxies_not_delivery_clearance": {
+    "sc_cfg": 453.6000000000002,
+    "dn_i": 472.5600000000001,
+    "up_i": 345.60000000000014,
+    "red_we": 656.6400000000001,
+    "red_addr": 656.6400000000001,
+    "red_data": 656.6400000000001,
+    "vm_we": 656.6400000000001,
+    "vm_win0": 187.44000000000005,
+    "vm_wdata0": 187.44000000000028,
+    "am_v": 453.60000000000014,
+    "am_idx": 453.60000000000014,
+    "am_val": 453.60000000000014,
+    "am_u": 453.60000000000014
+  }
+}

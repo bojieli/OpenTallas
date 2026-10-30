@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.die_plan.v1",
+  "die": {
+    "name": "sc_cap_child_conditional",
+    "period_ps": 833
+  },
+  "clock": {
+    "insertion_ps": 250,
+    "insertion_ff_ps": 202.5,
+    "insertion_tol_ps": 40
+  },
+  "partition_types": {
+    "sc_cap_child_holder": {
+      "module": "sc_cap_child_holder",
+      "outline_um": [
+        253.2,
+        505.44
+      ],
+      "hard_cores": [
+        {
+          "inst": "u_core",
+          "module": "qfd_dv_s5_sc2_leaf",
+          "origin_um": [
+            0,
+            0
+          ],
+          "outline_um": [
+            253.2,
+            505.44
+          ],
+          "pins_file": "pins.json"
+        }
+      ]
+    }
+  },
+  "note": "Standalone child generation input only; NOT parent source activation; nominal IO frames are not measured child timing"
+}

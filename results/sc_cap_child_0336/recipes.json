@@ -1,0 +1,13 @@
+{
+  "qfd_dv_s5_sc2_leaf": {
+    "ref_tile": "results/sc_cap_child_0336/source",
+    "plan_type": "sc_cap_child_holder",
+    "plan_pins_contract": true,
+    "suffix": "sc_cap0336",
+    "util": 0.5,
+    "orfs_vars": {
+      "MAX_ROUTING_LAYER": "M7"
+    },
+    "note": "Conditional source/pin prep only; root/GEOM review before native physical launch; no RTL patches"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "sc_cap_child_0336",
+  "top": "qfd_dv_s5_sc2_leaf",
+  "kind": "core",
+  "sources": [
+    "results/sc_cap_child_0336/source/rtl/qfd_dv_s5_sc2_leaf.sv",
+    "results/sc_cap_child_0336/source/rtl/qfd_dv_s5_sc2_k79.sv",
+    "results/sc_cap_child_0336/source/rtl/qfd_dv_s5_sc2_k79_helpers.sv"
+  ],
+  "params": {},
+  "defines": [
+    "SYNTHESIS"
+  ],
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 253.2,
+    "h": 505.44
+  },
+  "layer_cap": "M7",
+  "route": {
+    "pd": 0.5
+  },
+  "children": [],
+  "macros": [],
+  "note": "Exact existing production source LA7/LM9, no reset/RTL/state/data-cycle patch; internal629 async-reset0 helper flops retained. Conditional child plan only."
+}
