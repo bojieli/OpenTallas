@@ -1,0 +1,579 @@
+{
+ "kv3_sys_SD": {
+  "raw_depth": 5,
+  "relays": 52,
+  "copies": [
+   {
+    "name": "sd_origin",
+    "raw": "rst_rl_7",
+    "xy_um": [
+     190.56,
+     21.6
+    ],
+    "consumers": [
+     "u_cland_origin"
+    ]
+   },
+   {
+    "name": "sd_fstart_o_serdes_W_rx_flit",
+    "raw": "rst_rl_25",
+    "xy_um": [
+     1872.72,
+     655.136
+    ],
+    "consumers": [
+     "u_cland_fstart_o_serdes_W_rx_flit"
+    ]
+   },
+   {
+    "name": "sd_fstart_o_serdes_W_tx_up",
+    "raw": "rst_rl_25",
+    "xy_um": [
+     1872.72,
+     868.96
+    ],
+    "consumers": [
+     "u_cland_fstart_o_serdes_W_tx_up"
+    ]
+   }
+  ],
+  "reader": {
+   "depth": 6,
+   "origin_rect_um": [
+    188.4,
+    19.44,
+    192.72,
+    23.76
+   ],
+   "branches": {
+    "i_host_fdi": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        250.0
+       ],
+       "raw_reset": "rst_n_t5"
+      }
+     ]
+    },
+    "i_host_link_rst_n": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        450.0
+       ],
+       "raw_reset": "rst_n_t6"
+      }
+     ]
+    }
+   }
+  },
+  "writer": {
+   "depth": 7,
+   "branches": {
+    "o_serdes_W_rx_flit": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        500.0
+       ],
+       "raw_reset": "rst_n_t6"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        800.0
+       ],
+       "raw_reset": "rst_n_t13"
+      }
+     ]
+    },
+    "o_serdes_W_tx_up": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        500.0
+       ],
+       "raw_reset": "rst_n_t6"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        800.0
+       ],
+       "raw_reset": "rst_n_t13"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "kv3_sys_SD_v1": {
+  "raw_depth": 5,
+  "relays": 52,
+  "copies": [
+   {
+    "name": "sd_origin",
+    "raw": "rst_rl_7",
+    "xy_um": [
+     190.56,
+     21.6
+    ],
+    "consumers": [
+     "u_cland_origin"
+    ]
+   },
+   {
+    "name": "sd_fstart_o_serdes_E_rx_flit",
+    "raw": "rst_rl_25",
+    "xy_um": [
+     1872.72,
+     655.584
+    ],
+    "consumers": [
+     "u_cland_fstart_o_serdes_E_rx_flit"
+    ]
+   },
+   {
+    "name": "sd_fstart_o_serdes_E_tx_up",
+    "raw": "rst_rl_25",
+    "xy_um": [
+     1872.72,
+     868.96
+    ],
+    "consumers": [
+     "u_cland_fstart_o_serdes_E_tx_up"
+    ]
+   }
+  ],
+  "reader": {
+   "depth": 6,
+   "origin_rect_um": [
+    188.4,
+    19.44,
+    192.72,
+    23.76
+   ],
+   "branches": {
+    "i_host_fdi": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        250.0
+       ],
+       "raw_reset": "rst_n_t5"
+      }
+     ]
+    },
+    "i_host_link_rst_n": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        450.0
+       ],
+       "raw_reset": "rst_n_t6"
+      }
+     ]
+    }
+   }
+  },
+  "writer": {
+   "depth": 7,
+   "branches": {
+    "o_serdes_E_rx_flit": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        500.0
+       ],
+       "raw_reset": "rst_n_t6"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        800.0
+       ],
+       "raw_reset": "rst_n_t13"
+      }
+     ]
+    },
+    "o_serdes_E_tx_up": {
+     "stages": [
+      {
+       "xy_um": [
+        570.72,
+        21.6
+       ],
+       "raw_reset": "rst_n_t1"
+      },
+      {
+       "xy_um": [
+        949.92,
+        21.6
+       ],
+       "raw_reset": "rst_n_t2"
+      },
+      {
+       "xy_um": [
+        1331.04,
+        21.6
+       ],
+       "raw_reset": "rst_n_t3"
+      },
+      {
+       "xy_um": [
+        1711.2,
+        21.6
+       ],
+       "raw_reset": "rst_n_t4"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        200.0
+       ],
+       "raw_reset": "rst_n_t5"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        500.0
+       ],
+       "raw_reset": "rst_n_t6"
+      },
+      {
+       "xy_um": [
+        1872.72,
+        800.0
+       ],
+       "raw_reset": "rst_n_t13"
+      }
+     ]
+    }
+   }
+  }
+ },
+ "K_changes": [
+  {
+   "part": "io_E6",
+   "type": "kv3_io_ft_v1",
+   "bus": "ft2_i",
+   "old": 35,
+   "new": 42,
+   "bits": 42
+  },
+  {
+   "part": "io_E6",
+   "type": "kv3_io_ft_v1",
+   "bus": "ft3_i",
+   "old": 35,
+   "new": 42,
+   "bits": 42
+  },
+  {
+   "part": "io_W2",
+   "type": "kv3_io_ft",
+   "bus": "ft2_i",
+   "old": 35,
+   "new": 42,
+   "bits": 42
+  },
+  {
+   "part": "io_W2",
+   "type": "kv3_io_ft",
+   "bus": "ft3_i",
+   "old": 35,
+   "new": 42,
+   "bits": 42
+  },
+  {
+   "part": "sys_SE",
+   "type": "kv3_sys_SD_v1",
+   "bus": "i_host_fdi",
+   "old": -32,
+   "new": -38,
+   "bits": 26
+  },
+  {
+   "part": "sys_SE",
+   "type": "kv3_sys_SD_v1",
+   "bus": "i_host_link_rst_n",
+   "old": -32,
+   "new": -38,
+   "bits": 26
+  },
+  {
+   "part": "sys_SW",
+   "type": "kv3_sys_SD",
+   "bus": "i_host_fdi",
+   "old": -32,
+   "new": -38,
+   "bits": 26
+  },
+  {
+   "part": "sys_SW",
+   "type": "kv3_sys_SD",
+   "bus": "i_host_link_rst_n",
+   "old": -32,
+   "new": -38,
+   "bits": 26
+  }
+ ],
+ "boot": {
+  "public_budget": 392,
+  "status": "OPEN: actual native reset/status maturity proof required; no arithmetic-only bound adopted"
+ },
+ "physical_qualified": false
+}

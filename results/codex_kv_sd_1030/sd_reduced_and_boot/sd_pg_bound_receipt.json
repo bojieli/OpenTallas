@@ -1,0 +1,36 @@
+{
+ "phy_sys_SW_serdes": {
+  "binding": {
+   "part": "sys_SW",
+   "inst": "u_bound.u_core.u_phy.g_native.u_macro",
+   "module": "ot_qfd_serdes_112g_x6_phy_w522"
+  },
+  "origin_world_um": [
+   50.4,
+   26096.4
+  ],
+  "counts": [
+   41,
+   21
+  ],
+  "sites_unchanged": 861,
+  "functional_io_window_changed": false
+ },
+ "phy_sys_SE_serdes": {
+  "binding": {
+   "part": "sys_SE",
+   "inst": "u_bound.u_core.u_phy.g_native.u_macro",
+   "module": "ot_qfd_serdes_112g_x6_phy_w521"
+  },
+  "origin_world_um": [
+   9226.08,
+   26096.4
+  ],
+  "counts": [
+   41,
+   21
+  ],
+  "sites_unchanged": 861,
+  "functional_io_window_changed": false
+ }
+}

@@ -1,0 +1,4 @@
+PREFIX_POR ticks=3045001000
+PREFIX_LOCK ticks=3125000000 afterpor=79999
+PREFIX_Q ticks=3140826000 afterpor=95825 ceil833=116
+/srv/opentallas-scratch2/claude/codex-kv-sd-1030/pll_prefix/tb.sv:11: $finish called at 3140826000 (1fs)
