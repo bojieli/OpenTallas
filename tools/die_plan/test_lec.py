@@ -25,6 +25,17 @@ def test_flop_key_polarity_and_names():
     assert lec.flop_key("u_dut.a.r[0]$_DFF_PN0_.IQN$_DFFSR_PPP_.lecq") == ("u_dut.a.r[0]", True)
 
 
+def test_macro_libs_skip_explicit_standard_cell_libs():
+    # DIE-KV-45 Q2 10-30: platform (or kit-copied) INVBUF_LVT libs in the kit lists became gold black boxes and the
+    # gate side re-defined BUFx10_ASAP7_75t_L; standard cells are modelled functionally on both sides instead
+    nl = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM"
+    env = dict(ADDITIONAL_LIBS=f"/work/macros/ot_sram_tt.lib {nl}/asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz "
+                               "/work/stdlib_lvt/asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz",
+               TC_LIB_FILES=f"$(TC_NLDM_LIB_FILES) /work/macros/ot_sram_tt.lib {nl}/asap7sc7p5t_SEQ_SLVT_TT_nldm_220123.lib "
+                            "/work/macros/my_asap7sc7p5t_like_macro_tt.lib")
+    assert lec.macro_libs(env, "/k") == ["/k/macros/ot_sram_tt.lib", "/k/macros/my_asap7sc7p5t_like_macro_tt.lib"]
+
+
 def test_odb_hierarchy_separator():
     # OpenROAD write_verilog keeps '/' between hierarchy levels in flop instance names (3_place / 6_final)
     assert lec.flop_key("u_twca/q[0]$_DFF_P_.IQN$_DFF_P_.lecq") == ("u_twca.q[0]", True)
