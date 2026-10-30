@@ -1,0 +1,68 @@
+{
+  "parent_plan_outline_um": [
+    336.96,
+    414.72
+  ],
+  "legacy_parent_spec_outline": {
+    "w": 329.184,
+    "h": 411.48
+  },
+  "legacy_spec_matches_current_plan": false,
+  "children": [
+    {
+      "instance": "u_rt",
+      "master": "ot_s81sl_cap_rt",
+      "box": [
+        43.2,
+        43.2,
+        302.4,
+        159.84
+      ]
+    },
+    {
+      "instance": "u_tw",
+      "master": "ot_s81sl_cap_tr",
+      "box": [
+        43.2,
+        302.4,
+        133.92000000000002,
+        388.79999999999995
+      ]
+    },
+    {
+      "instance": "u_te",
+      "master": "ot_s81sl_cap_tr",
+      "box": [
+        216,
+        302.4,
+        306.72,
+        388.79999999999995
+      ]
+    },
+    {
+      "instance": "u_ed",
+      "master": "ot_s81sl_cap_ed",
+      "box": [
+        216,
+        216,
+        267.84000000000003,
+        263.52
+      ]
+    },
+    {
+      "instance": "u_ld3",
+      "master": "ot_s81sl_cap_ld",
+      "box": [
+        43.2,
+        216,
+        86.4,
+        259.2
+      ]
+    }
+  ],
+  "fit": "PASS all unchanged child sites inside actual current plan slot and no overlap",
+  "external_contract_changed": false,
+  "child_clock_compensation": "NOT RUN",
+  "parent_signoff": "NOT RUN",
+  "functional_cycles_added": 0
+}
