@@ -1,4 +1,4 @@
-`timescale 1ps/1ps
+`timescale 1ps/1fs
 module tb_xpos;
  reg clk=0; always #416.5 clk=~clk;
  reg rst_n=0,in_v=0,in_tree=0,in_final=0,in_err=0; reg [2:0] in_pos=0;reg[31:0] in_val=0;
