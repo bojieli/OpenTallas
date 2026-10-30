@@ -7,7 +7,7 @@
 // physical/path constraint; firststep never waits. Actual RAW+COPY lifecycle,
 // host multi-target arm/launch dates and regional routing still need proof.
 module ot_hbm_static_load_native_provider_quad #(
- parameter integer SOURCE_QUAD=2,SOURCE_STACK=2,SOURCE_LOW_QUAD=2
+ parameter integer SOURCE_QUAD=2,SOURCE_STACK=2,SOURCE_LOW_QUAD=2,CP_CYCLE_AGE=0
 )(
  input wire clk,rst_n,input wire cmd_v,input wire[307:0]cmd,input wire[31:0]cycle,input wire command_fault_i,
  // Selected PC/VMKS/refresh/RAW sticky faults, returned by a bounded static
@@ -21,10 +21,15 @@ module ot_hbm_static_load_native_provider_quad #(
  output wire dated_step_o,admit_o,output wire[280:0]vm_dq,output wire[15:0]block_ready,
  output wire[7:0]leaf_fault,output wire busy_o,fault_o,load_done_o
 );
+ // The CPcycle pin may be transported with the command. Correct its age to
+ // the actual local wall-clock reference; NEVER add this age to command dates.
+ // Caller drain_at includes physicalpacket/ACK/sourcefault/outerface paths.
+ initial if(CP_CYCLE_AGE<0)$fatal(1,"negative CP cycle age");
+ wire[31:0]wall_cycle=cycle+32'(CP_CYCLE_AGE);
  wire held_v,context_v,hold_busy,hold_fault,route_fault,calendar_fault,consumer_fault,consumer_busy,consumer_done;
  wire[307:0]held_cmd,context_cmd;wire[15:0]copy_fv;wire copy_cv;wire[88:0]copy_cp;
  wire rv,rb,bv,bb;wire[15:0]re,be;wire[14:0]br;wire[3:0]bc;
- ot_hbm_static_load_dated_cmd_hold dated_context(.clk(clk),.rst_n(rst_n),.cmd_v_i(cmd_v),.cmd_i(cmd),.cycle_i(cycle),
+ ot_hbm_static_load_dated_cmd_hold dated_context(.clk(clk),.rst_n(rst_n),.cmd_v_i(cmd_v),.cmd_i(cmd),.cycle_i(wall_cycle),
  .consumer_done_i(load_done_o),.consumer_fault_i(command_fault_i|source_fault_i|route_fault|calendar_fault|consumer_fault),
  .consumer_cmd_v_o(held_v),.consumer_cmd_o(held_cmd),.context_v_o(context_v),.context_cmd_o(context_cmd),.busy_o(hold_busy),.fault_o(hold_fault));
  ot_hbm_static_load_raw_copy_fill_route fill_route(.clk(clk),.rst_n(rst_n),.context_v_i(context_v),.context_cmd_i(context_cmd),
@@ -35,7 +40,7 @@ module ot_hbm_static_load_native_provider_quad #(
  .load_fault_i(command_fault_i|source_fault_i|hold_fault|route_fault|consumer_fault),.release_v_o(rv),.release_buffer_o(rb),.release_epoch_o(re),
  .begin_v_o(bv),.begin_buffer_o(bb),.begin_epoch_o(be),.begin_row_o(br),.begin_col_o(bc),.fault_o(calendar_fault));
  ot_hbm_static_load_cmd_provider_quad #(.SOURCE_QUAD(SOURCE_QUAD),.VM_COMMIT_AUDIT(1),.SOURCE_STACK(SOURCE_STACK),.SOURCE_LOW_QUAD(SOURCE_LOW_QUAD))consumer(
- .clk(clk),.rst_n(rst_n),.cmd_v(held_v),.cmd(held_cmd),.cycle(cycle),.command_fault_i(command_fault_i|source_fault_i|hold_fault|route_fault|calendar_fault),
+ .clk(clk),.rst_n(rst_n),.cmd_v(held_v),.cmd(held_cmd),.cycle(wall_cycle),.command_fault_i(command_fault_i|source_fault_i|hold_fault|route_fault|calendar_fault),
  .begin_v(bv),.begin_bank(bb),.begin_epoch(be),.begin_row(br),.begin_col(bc),
  .fill_v(copy_fv),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),
  .release_v_i(rv),.release_buffer_i(rb),.release_epoch_i(re),.vm_dq_done_i(vm_dq_done_i),.vm_fault_i(vm_fault_i),
