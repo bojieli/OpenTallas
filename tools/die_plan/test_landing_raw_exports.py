@@ -88,3 +88,12 @@ def test_private_same_cycle_output_must_copy_exact_raw_source(raw):
     assert not L.check(p,side)['errors']
     pin['source_copy_from_net']='wrong'
     assert L.check(p,side)['errors']
+
+
+def test_track_snapped_pin_is_distinct_from_exact_producer_site(raw):
+    p,side=raw
+    pin=p.types['t_lnc']['clock']['landing_contract']['pins'][-1]
+    pin['xy_um']=[1.128,1.]
+    assert not L.check(p,side)['errors']  # ordinary pin/geometry checks still apply
+    p.types['t_lnc']['reset_start_raw_exports'][0]['xy_um']=[1.128,1.]
+    assert L.check(p,side)['errors']  # the declared producer location must stay exact
