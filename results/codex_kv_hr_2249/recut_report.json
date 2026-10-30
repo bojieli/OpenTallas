@@ -1,0 +1,279 @@
+{
+  "scope": "PREP; not adopted until parent plan/source/clock gates",
+  "added_data_cycles": 0,
+  "changes": [
+    {
+      "inst": "host__qkd_hr_phy_adp_0",
+      "old_origin": [
+        181.44,
+        120.96
+      ],
+      "new_origin": [
+        25.92,
+        120.96
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_1",
+      "old_origin": [
+        302.4,
+        120.96
+      ],
+      "new_origin": [
+        250.56,
+        120.96
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_2",
+      "old_origin": [
+        423.36,
+        120.96
+      ],
+      "new_origin": [
+        475.2,
+        120.96
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_3",
+      "old_origin": [
+        544.32,
+        120.96
+      ],
+      "new_origin": [
+        699.84,
+        120.96
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_4",
+      "old_origin": [
+        181.44,
+        233.28
+      ],
+      "new_origin": [
+        25.92,
+        224.64
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_5",
+      "old_origin": [
+        302.4,
+        233.28
+      ],
+      "new_origin": [
+        250.56,
+        224.64
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_6",
+      "old_origin": [
+        423.36,
+        233.28
+      ],
+      "new_origin": [
+        475.2,
+        224.64
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_adp_7",
+      "old_origin": [
+        544.32,
+        233.28
+      ],
+      "new_origin": [
+        699.84,
+        224.64
+      ],
+      "old_outline": [
+        103.68,
+        95.04
+      ],
+      "new_outline": [
+        207.36,
+        86.4
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_cdc_ch",
+      "old_origin": [
+        751.68,
+        1192.32
+      ],
+      "new_origin": [
+        751.68,
+        1192.32
+      ],
+      "old_outline": [
+        319.68,
+        319.68
+      ],
+      "new_outline": [
+        198.72,
+        198.72
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_cdc_pc",
+      "old_origin": [
+        25.92,
+        855.36
+      ],
+      "new_origin": [
+        25.92,
+        855.36
+      ],
+      "old_outline": [
+        319.68,
+        319.68
+      ],
+      "new_outline": [
+        259.2,
+        259.2
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_core_guard",
+      "old_origin": [
+        25.92,
+        362.88
+      ],
+      "new_origin": [
+        25.92,
+        362.88
+      ],
+      "old_outline": [
+        259.2,
+        250.56
+      ],
+      "new_outline": [
+        155.52,
+        155.52
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_cdc_hi",
+      "old_origin": [
+        907.2,
+        120.96
+      ],
+      "new_origin": [
+        267.84,
+        622.08
+      ],
+      "old_outline": [
+        224.64,
+        224.64
+      ],
+      "new_outline": [
+        224.64,
+        224.64
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_cdc_ci",
+      "old_origin": [
+        665.28,
+        120.96
+      ],
+      "new_origin": [
+        25.92,
+        622.08
+      ],
+      "old_outline": [
+        224.64,
+        216.0
+      ],
+      "new_outline": [
+        224.64,
+        216.0
+      ]
+    },
+    {
+      "inst": "host__qkd_hr_phy_pad",
+      "old_origin": [
+        77.76,
+        120.96
+      ],
+      "new_origin": [
+        1019.52,
+        120.96
+      ],
+      "old_outline": [
+        86.4,
+        95.04
+      ],
+      "new_outline": [
+        86.4,
+        95.04
+      ]
+    }
+  ],
+  "fill_estimate": {
+    "qkd_hr_phy_adp": 0.4903,
+    "qkd_hr_cdc_ch": 0.1641,
+    "qkd_hr_cdc_pc": 0.1671,
+    "qkd_hr_core_guard": 0.1716
+  },
+  "halo_errors": []
+}
