@@ -41,3 +41,35 @@ dates; preserve the guards against mixed-source graphs and omitted bodies.
 Runs: intel1:/srv/opentallas-scratch2/claude/codex-s81-native-v-2249
 units2823707/2946605/3177778 all terminal0.
 Current route export: intel2:codex-s81-middle-ages-2249 unit2790180 terminal0.
+
+23:56 continuation: current publication input contract is complete:
+48/48 ring words,80/80 XF278-bit words,160/160 RSTD pulse/data words PASS,
+with exact16 source SID straps and actual k straps. Current228 $buf instances
+and43602 bit paths were checked against35735-module Yosys source metadata,
+including exact A/Y directions/widths; no named-port identity was assumed.
+current_buffer_proof.json and current_publication_inputs.json record the result.
+Runtime scratch ijson3.6.0/yajl2_c streams the3.1GB source graph without a whole
+die flatten. Required scratch source inputs remain on intel2.
+
+Failed parser attempts are preserved remotely: first syntax error; then actual
+quasi-static SID descriptors were 'strap', not 'const'; then raw words were
+blocked on source $buf boundaries. A source-checked buffer pass resolves those
+boundaries. Its first uncached hierarchy resolver scanned all cell names per
+bit; own exact PID3747054 stopped after a profile identified that hotspot.
+Source/stack/failure note retained in out_stitched_slow. Pure path memoization
+successor3898214 and final cached-input qualification3979727 both exit0.
+No source data, gate threshold or live job of another lane was changed.
+
+Next failure diagnosed on CURRENT bindings (analytic estimate, not adopted):
+the existing k straps cause within-slice4-fragment overlaps on all16 slices.
+A uniform per-SID release hold cannot alter those internal relative phases.
+Exhaustive120 common permutations leave exactly [2,0,1,3,4] and [2,0,4,1,3]
+without internal overlaps under the stated common-release/uniform-local-latency
+premise. slot_collision_estimate.json and estimate_publication_slots.py expose
+that calculation. They do not prove the inter-slice calendar or real producer
+dates. Existing plan k straps are unchanged. A candidate still needs the real
+80-VQ/16-stop calendar including these bodies, controller occupancy and actual
+released-vector dates before any plan event or token claim.
+
+Reproduce parsers with PYTHONPATH=tools/s81_dv/layer_prog (bound_die helper),
+and the private scratch ijson dependency for stitch_current_buffers.py.
