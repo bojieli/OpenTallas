@@ -13,7 +13,9 @@ for tag,td in [('localctrl_affinity_td',True),('localctrl_affinity_notd',False)]
  kd=out/(v['view'].replace('@','_')+'-'+tag)
  if kd.exists():raise SystemExit(f'refuse existing kit {kd}')
  recipes=G.load_recipes();rk=mod if mod in recipes else next(k for k in v['recipe_keys'] if k in recipes)
- rec=dict(recipes[rk]);rec['params']=dict(rec.get('params',{}),LOCAL_CTRL=1)
+ rec=dict(recipes[rk]);rec['params']=dict(rec.get('params',{}),STRUCT=1,LOCAL_CTRL=1)
+ rec['files']=list(dict.fromkeys(rec.get('files',[])+['rtl/hbm_accel/index/ot_hbm_idx_selector_compact.sv','rtl/hbm_accel/index/ot_hbm_idx_compact_tree.sv']))
+ rec['source_commit']='HEAD'
  rec['macro_placement']=[]
  for q in range(4):
   for row in range(3):
