@@ -1,0 +1,14 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/die-s81-35/h2g1
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/die-s81-35/h2g1
+ot-run: localhost      admits   519 GB (avail 734, reserve 0, fresh 114.5, peak 35.8, headroom 0, waiters 0/0 GB) load 73/112 running 31 disk 473 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-166993-1793382865 after 0 s
+H2G1_BIND PASS: native 3_place 56af214f7b53 late hook 02be638dfb8a
+OT_CORE_INFRA_LATE_DPL cells=1811 held=76763 max_disp_um=7.074 (bound 20)
+OT_CORE_INFRA cells=1811 ports=0 bay_cells=0 added_data_cycles=0 added_reset_cycles=0
+OT_CORE_INFRA_CTS leaf-complete plan tree: 19692 register clock pins on planned dont_touch nets; TritonCTS not run
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: cts.tcl, 87 DPL-0033
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:556: do-cts] Error 2
+ot-run: RAN on localhost (unit oth-ubuntu-166993-1793382865): exit 2

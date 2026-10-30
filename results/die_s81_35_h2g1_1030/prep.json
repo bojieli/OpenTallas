@@ -1,0 +1,44 @@
+{
+ "admitted_tcl_regenerated_exact": true,
+ "cells": 1811,
+ "cells_equal": true,
+ "sinks": 19747,
+ "sinks_equal": true,
+ "nodes": 1811,
+ "nodes_equal": true,
+ "clock_entry": [],
+ "admitted_clock_entry": [],
+ "entry_ok": true,
+ "core_islands": 6,
+ "cts_open": 0,
+ "late_legalize": [
+  "ot_ci_late_legalize 20"
+ ],
+ "install_stage": "pre_cts",
+ "cts_hook_installed": true,
+ "config_lines_added": [],
+ "kit_files_changed": [
+  "core_infra_cts.tcl",
+  "core_infra_impl.tcl",
+  "core_infra_late.tcl",
+  "core_infra_plan.json",
+  "cts_post.tcl",
+  "hold_budget.tcl",
+  "master_core_infra.tcl",
+  "master_core_infra_late.tcl",
+  "master_slice.json",
+  "master_slice.tcl"
+ ],
+ "slice_sha256_admitted": "39eb59be3618b14e7c0068485f424601871dd38e0bdec5827541e49fb32657c1",
+ "slice_sha256_pre_cts": "632908c333c5e9a1bfad22d1ee271b8ca80dab7f45f3c995e563b36d29747dec",
+ "admitted_tcl_sha256": "5ab1c6a03ca44547c6f6dfa2504f2d190cd622a35fdbc3e7a272f87390d6b7af",
+ "late_tcl_sha256": "02be638dfb8a0cdc270b65c342e507502179b6f8b05eea887d2eb8e793e7f0df",
+ "stamp": {
+  "slice_sha256": "a3342307c79dbf939b5f1f1ad152386e7d22fa74e9316ab8eafcaced8dd4e3d0",
+  "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+  "type": "dsfd_coll_lane_w_safe8_ntf",
+  "frozen": false
+ },
+ "place_odb_sha256": "56af214f7b538dbe07f42249f6d158491338cd68b7eb302750f0ef617ccb323e",
+ "verdict": "PASS"
+}
