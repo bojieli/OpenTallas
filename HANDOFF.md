@@ -2189,3 +2189,5 @@ CODEX: 2026-10-30 03:38 PDT QCkits takeover codex/qc-kits-0336; inherited failur
 
 CODEX: 2026-10-30 03:39 PDT takeover all lanes assigned incl orphan support; inventory lanes/CODEX-COVERAGE-0336.md. Merged QC plan record fa9a→fdebbf10f69 + landing slot-order d87→facd45bafb4, pushed HEAD=origin/main intel2; real failures owned and progressing.
 CODEX: 2026-10-30 03:39 PDT S81 takeover event3clock GRTTTFF0+CA2306PASS; viewSTAFAIL−26.90/−607.30missingcores; bindRC0verifylive; typesactualKVleaf1.89–1.94Mhardcutowned, corejobscollecting.
+
+CODEX: 2026-10-30 03:40 PDT support collected q0 native postroute EQ27583 (signed +68.55/+2.19), qualification now KV identity/FLOW tag, no redundant physical/proof run; KV wave terminal SD/_v1 macro-not-declared PLAN diagnosed, S81 nonROM recipe canary coordinated, HEAD held pending src25s.
