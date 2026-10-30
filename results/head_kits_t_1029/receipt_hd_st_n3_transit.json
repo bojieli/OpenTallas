@@ -1,0 +1,47 @@
+{
+  "type": "hd_st_n3_transit",
+  "cells": 5337,
+  "raw_reset_exports": 6,
+  "count_strap_sites": {
+    "hd_st_n3_transit": {
+      "pins": 14,
+      "layer": "M5",
+      "macro_halo_um": 4.32,
+      "pin_extent_margin_um": 1.08,
+      "pitch_um": 4.32,
+      "anchor_um": [
+        725.76,
+        457.92
+      ],
+      "max_anchor_hop_um": 12.95999999999998
+    }
+  },
+  "private_raw_rtl": {
+    "added_flops": 5,
+    "added_cycles": 0,
+    "private_ports": [
+      "rst_start_raw_0",
+      "rst_start_raw_1",
+      "rst_start_raw_2",
+      "rst_start_raw_3",
+      "rst_start_raw_4"
+    ]
+  },
+  "gen_cmd": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/wt/head-kits-t/tools/die_plan/gen.py",
+    "phys",
+    "/srv/opentallas-scratch2/claude/head-kits-t/rekit/hd_st_n3_transit/source_plan_rekit.json",
+    "--clock-landing",
+    "/srv/opentallas-scratch2/claude/head-kits-t/src25m_kt/source_sidecar.json",
+    "--types",
+    "hd_st_n3_transit",
+    "--out",
+    "/srv/opentallas-scratch2/claude/head-kits-t/rekit/hd_st_n3_transit/gen",
+    "--rtl-root",
+    "/srv/opentallas-scratch2/claude/wt/head-kits-t",
+    "--trial"
+  ],
+  "added_cycles": 0,
+  "route_qualified": false
+}
