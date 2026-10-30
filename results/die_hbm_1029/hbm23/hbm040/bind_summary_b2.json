@@ -1,0 +1,835 @@
+{
+ "schema": "opentallas.die_plan.bind.v1",
+ "partitions": 90,
+ "types": {
+  "NE_io": {
+   "instances": 1,
+   "module": "hbm_arch_NE_io",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 3
+  },
+  "NW_io": {
+   "instances": 1,
+   "module": "hbm_arch_NW_io",
+   "leaves": 3,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "PHY_NC": {
+   "instances": 1,
+   "module": "hbm_arch_PHY_NC",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 4,
+   "in_buses": 4
+  },
+  "PHY_NE": {
+   "instances": 1,
+   "module": "hbm_arch_PHY_NE",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "PHY_NW": {
+   "instances": 1,
+   "module": "hbm_arch_PHY_NW",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "q_b000": {
+   "instances": 1,
+   "module": "hbm_arch_q_b000",
+   "leaves": 692,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 5
+  },
+  "q_b000__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b000__physical_v1",
+   "leaves": 692,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 5
+  },
+  "q_b001": {
+   "instances": 1,
+   "module": "hbm_arch_q_b001",
+   "leaves": 705,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 5
+  },
+  "q_b001__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b001__physical_v1",
+   "leaves": 705,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 5
+  },
+  "q_b002": {
+   "instances": 1,
+   "module": "hbm_arch_q_b002",
+   "leaves": 533,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 9,
+   "in_buses": 6
+  },
+  "q_b002__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b002__physical_v1",
+   "leaves": 533,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 9,
+   "in_buses": 6
+  },
+  "q_b003": {
+   "instances": 1,
+   "module": "hbm_arch_q_b003",
+   "leaves": 465,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 1
+  },
+  "q_b003__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b003__physical_v1",
+   "leaves": 465,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 1
+  },
+  "q_b010": {
+   "instances": 1,
+   "module": "hbm_arch_q_b010",
+   "leaves": 694,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "q_b010__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b010__physical_v1",
+   "leaves": 694,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 3
+  },
+  "q_b011": {
+   "instances": 1,
+   "module": "hbm_arch_q_b011",
+   "leaves": 550,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 6
+  },
+  "q_b011__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b011__physical_v1",
+   "leaves": 550,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 6
+  },
+  "q_b012": {
+   "instances": 1,
+   "module": "hbm_arch_q_b012",
+   "leaves": 465,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 2
+  },
+  "q_b012__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b012__physical_v1",
+   "leaves": 465,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 2
+  },
+  "q_b013": {
+   "instances": 1,
+   "module": "hbm_arch_q_b013",
+   "leaves": 465,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "q_b013__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b013__physical_v1",
+   "leaves": 465,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "q_b100": {
+   "instances": 1,
+   "module": "hbm_arch_q_b100",
+   "leaves": 314,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 28,
+   "in_buses": 4
+  },
+  "q_b100__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b100__physical_v1",
+   "leaves": 314,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 28,
+   "in_buses": 4
+  },
+  "q_b101": {
+   "instances": 1,
+   "module": "hbm_arch_q_b101__q_b101",
+   "leaves": 159,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 15
+  },
+  "q_b101_nw": {
+   "instances": 1,
+   "module": "hbm_arch_q_b101__q_b101_nw",
+   "leaves": 159,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 7,
+   "in_buses": 15
+  },
+  "q_b102": {
+   "instances": 1,
+   "module": "hbm_arch_q_b102",
+   "leaves": 158,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 8,
+   "in_buses": 23
+  },
+  "q_b102__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b102__physical_v1",
+   "leaves": 158,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 8,
+   "in_buses": 23
+  },
+  "q_b103": {
+   "instances": 1,
+   "module": "hbm_arch_q_b103",
+   "leaves": 217,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 6
+  },
+  "q_b103__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b103__physical_v1",
+   "leaves": 217,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 5,
+   "in_buses": 6
+  },
+  "q_b110": {
+   "instances": 1,
+   "module": "hbm_arch_q_b110",
+   "leaves": 4,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 41,
+   "in_buses": 4
+  },
+  "q_b110__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b110__physical_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 41,
+   "in_buses": 4
+  },
+  "q_b111": {
+   "instances": 1,
+   "module": "hbm_arch_q_b111",
+   "leaves": 5,
+   "params": 0,
+   "straps": 5,
+   "out_buses": 75,
+   "in_buses": 8
+  },
+  "q_b111__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b111__physical_v1",
+   "leaves": 5,
+   "params": 0,
+   "straps": 5,
+   "out_buses": 75,
+   "in_buses": 8
+  },
+  "q_b112": {
+   "instances": 1,
+   "module": "hbm_arch_q_b112",
+   "leaves": 5,
+   "params": 0,
+   "straps": 5,
+   "out_buses": 51,
+   "in_buses": 4
+  },
+  "q_b112__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b112__physical_v1",
+   "leaves": 5,
+   "params": 0,
+   "straps": 5,
+   "out_buses": 51,
+   "in_buses": 4
+  },
+  "q_b113": {
+   "instances": 1,
+   "module": "hbm_arch_q_b113",
+   "leaves": 1152,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 31,
+   "in_buses": 152
+  },
+  "q_b113__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_b113__physical_v1",
+   "leaves": 1152,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 31,
+   "in_buses": 152
+  },
+  "q_hub_ne": {
+   "instances": 1,
+   "module": "hbm_arch_q_hub__q_hub_ne",
+   "leaves": 347,
+   "params": 0,
+   "straps": 120,
+   "out_buses": 97,
+   "in_buses": 127
+  },
+  "q_hub_nw": {
+   "instances": 1,
+   "module": "hbm_arch_q_hub__q_hub_nw",
+   "leaves": 399,
+   "params": 0,
+   "straps": 122,
+   "out_buses": 99,
+   "in_buses": 141
+  },
+  "q_mca": {
+   "instances": 2,
+   "module": "hbm_arch_q_mca",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_mcb": {
+   "instances": 2,
+   "module": "hbm_arch_q_mcb",
+   "leaves": 2,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 1,
+   "in_buses": 2
+  },
+  "q_sm0": {
+   "instances": 2,
+   "module": "hbm_arch_q_sm0",
+   "leaves": 3349,
+   "params": 0,
+   "straps": 104,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "q_sm1": {
+   "instances": 2,
+   "module": "hbm_arch_q_sm1",
+   "leaves": 3349,
+   "params": 0,
+   "straps": 104,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "q_sm2": {
+   "instances": 2,
+   "module": "hbm_arch_q_sm2",
+   "leaves": 3349,
+   "params": 0,
+   "straps": 104,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "q_sm3": {
+   "instances": 2,
+   "module": "hbm_arch_q_sm3",
+   "leaves": 3349,
+   "params": 0,
+   "straps": 104,
+   "out_buses": 3,
+   "in_buses": 4
+  },
+  "q_spb0": {
+   "instances": 1,
+   "module": "hbm_arch_q_spb0",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 3
+  },
+  "q_spb0__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_spb0__physical_v1",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 3
+  },
+  "q_spb1": {
+   "instances": 2,
+   "module": "hbm_arch_q_spb1",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_spb2": {
+   "instances": 1,
+   "module": "hbm_arch_q_spb2",
+   "leaves": 4,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 4,
+   "in_buses": 2
+  },
+  "q_spb2__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_spb2__physical_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "q_spt0": {
+   "instances": 1,
+   "module": "hbm_arch_q_spt0",
+   "leaves": 4,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 6,
+   "in_buses": 2
+  },
+  "q_spt0__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_spt0__physical_v1",
+   "leaves": 4,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 8,
+   "in_buses": 2
+  },
+  "q_spt1": {
+   "instances": 2,
+   "module": "hbm_arch_q_spt1",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_spt2": {
+   "instances": 2,
+   "module": "hbm_arch_q_spt2",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_spu0": {
+   "instances": 1,
+   "module": "hbm_arch_q_spu0",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_spu0__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_spu0__physical_v1",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_spu1": {
+   "instances": 1,
+   "module": "hbm_arch_q_spu1",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_spu1__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_spu1__physical_v1",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "q_su00": {
+   "instances": 1,
+   "module": "hbm_arch_q_su00",
+   "leaves": 1987,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 20,
+   "in_buses": 13
+  },
+  "q_su00__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su00__physical_v1",
+   "leaves": 1987,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 20,
+   "in_buses": 13
+  },
+  "q_su01": {
+   "instances": 1,
+   "module": "hbm_arch_q_su01",
+   "leaves": 1252,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "q_su01__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su01__physical_v1",
+   "leaves": 1252,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "q_su10": {
+   "instances": 1,
+   "module": "hbm_arch_q_su10",
+   "leaves": 1598,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "q_su10__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su10__physical_v1",
+   "leaves": 1598,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "q_su11": {
+   "instances": 1,
+   "module": "hbm_arch_q_su11",
+   "leaves": 1602,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 7,
+   "in_buses": 7
+  },
+  "q_su11__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su11__physical_v1",
+   "leaves": 1602,
+   "params": 0,
+   "straps": 10,
+   "out_buses": 7,
+   "in_buses": 7
+  },
+  "q_su20": {
+   "instances": 1,
+   "module": "hbm_arch_q_su20",
+   "leaves": 1958,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 14,
+   "in_buses": 15
+  },
+  "q_su20__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su20__physical_v1",
+   "leaves": 1958,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 14,
+   "in_buses": 15
+  },
+  "q_su21": {
+   "instances": 1,
+   "module": "hbm_arch_q_su21",
+   "leaves": 1246,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "q_su21__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su21__physical_v1",
+   "leaves": 1246,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "q_su30": {
+   "instances": 1,
+   "module": "hbm_arch_q_su30",
+   "leaves": 1592,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 100,
+   "in_buses": 48
+  },
+  "q_su30__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su30__physical_v1",
+   "leaves": 1592,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 100,
+   "in_buses": 48
+  },
+  "q_su31": {
+   "instances": 1,
+   "module": "hbm_arch_q_su31",
+   "leaves": 1596,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 51,
+   "in_buses": 105
+  },
+  "q_su31__physical_v1": {
+   "instances": 1,
+   "module": "hbm_arch_q_su31__physical_v1",
+   "leaves": 1596,
+   "params": 0,
+   "straps": 4,
+   "out_buses": 51,
+   "in_buses": 105
+  },
+  "root": {
+   "instances": 1,
+   "module": "hbm_arch_root",
+   "leaves": 27,
+   "params": 0,
+   "straps": 3,
+   "out_buses": 23,
+   "in_buses": 41
+  },
+  "vsN0": {
+   "instances": 1,
+   "module": "hbm_arch_vsN0",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 3,
+   "in_buses": 1
+  },
+  "vsN1": {
+   "instances": 1,
+   "module": "hbm_arch_vsN1",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "vsN2": {
+   "instances": 1,
+   "module": "hbm_arch_vsN2",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "vsN4": {
+   "instances": 1,
+   "module": "hbm_arch_vsN4",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "vsN5": {
+   "instances": 1,
+   "module": "hbm_arch_vsN5",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "vsN6": {
+   "instances": 1,
+   "module": "hbm_arch_vsN6",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  }
+ },
+ "crossings": 1258,
+ "crossing_bits": 387217,
+ "n_errors": 93,
+ "errors": [
+  "UNPLANNED NE_b002 -> NE_hub: 4 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b002 -> root: 297 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b011 -> NE_hub: 3 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b013 -> NE_hub: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b100 -> NE_b101: 3332 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b100 -> NE_b102: 2777 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b100 -> NE_b103: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b101 -> NE_b102: 35 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b101 -> NE_b103: 569 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b102 -> NE_b101: 1146 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b103 -> NE_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b103 -> root: 297 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b110 -> NE_b113: 800 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b111 -> NE_b113: 1000 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b111 -> NE_hub: 410 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b112 -> NE_b113: 1000 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_b110: 1534 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_b111: 1662 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_b112: 1662 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_hub: 693 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_su11: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_su20: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_b113 -> NE_su31: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NE_b111: 160 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NE_b113: 2277 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NE_spb0: 632 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NE_su00: 2846 as-built crossing bits with no plan lane path (1350 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NE_su20: 2846 as-built crossing bits with no plan lane path (1350 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NW_hub: 2775 as-built crossing bits with no plan lane path (2838 b planned on direct lanes)",
+  "UNPLANNED NE_sm0 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_sm1 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_sm2 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_sm3 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NE_spb0 -> NE_hub: 615 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_spb2 -> NW_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_spt0 -> NW_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_spt0 -> root: 9 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su00 -> NE_hub: 1207 as-built crossing bits with no plan lane path (517 b planned on direct lanes)",
+  "UNPLANNED NE_su11 -> NE_b113: 516 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su11 -> NE_su20: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su20 -> NE_b113: 516 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su20 -> NE_hub: 1207 as-built crossing bits with no plan lane path (517 b planned on direct lanes)",
+  "UNPLANNED NE_su20 -> NE_su31: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su30 -> NE_su31: 3356 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su31 -> NE_b113: 516 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_su31 -> NE_su30: 1399 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b002 -> NW_hub: 4 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b002 -> root: 297 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b011 -> NW_hub: 3 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b013 -> NW_hub: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b100 -> NW_b101: 3333 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b100 -> NW_b102: 2777 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b100 -> NW_b103: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b101 -> NW_b102: 35 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b101 -> NW_b103: 569 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b102 -> NW_b101: 1146 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b103 -> NW_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b103 -> root: 297 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b110 -> NW_b113: 800 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b111 -> NW_b113: 1000 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b111 -> NW_hub: 410 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b112 -> NW_b113: 1000 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_b110: 1534 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_b111: 1662 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_b112: 1662 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_hub: 693 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_su11: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_su20: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b113 -> NW_su31: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NE_hub: 2730 as-built crossing bits with no plan lane path (2838 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_b111: 160 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_b113: 2277 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_spb0: 632 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_su00: 2846 as-built crossing bits with no plan lane path (1350 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_su20: 2846 as-built crossing bits with no plan lane path (1350 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> root: 2065 as-built crossing bits with no plan lane path (4504 b planned on direct lanes)",
+  "UNPLANNED NW_sm0 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_sm1 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_sm2 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_sm3 -> NW_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)",
+  "UNPLANNED NW_spb0 -> NW_hub: 615 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_spt0 -> root: 9 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su00 -> NW_hub: 1207 as-built crossing bits with no plan lane path (517 b planned on direct lanes)",
+  "UNPLANNED NW_su11 -> NW_b113: 516 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su11 -> NW_su20: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su20 -> NW_b113: 516 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su20 -> NW_hub: 1207 as-built crossing bits with no plan lane path (517 b planned on direct lanes)",
+  "UNPLANNED NW_su20 -> NW_su31: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su30 -> NW_su31: 3356 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su31 -> NW_b113: 516 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_su31 -> NW_su30: 1399 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED root -> NE_b000: 180 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "EMIT glue cell hc_NE.u_cen.$div$ot_hbm_hc_qcen_static.sv:85$54922 type $div (in a dissolved parent) is not supported: map that parent whole"
+ ],
+ "plan": "/srv/opentallas-scratch2/claude/die-hbm-23/plan/d23a/die_plan.json",
+ "plan_sha256": "4133ce1e4e0dae70be2ec25086d5e53457f20a40c7fd8e7441922071f2d24496"
+}
