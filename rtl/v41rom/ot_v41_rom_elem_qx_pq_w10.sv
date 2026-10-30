@@ -1737,7 +1737,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         if (go_e) begin n_coh_s <= qn_ohf; n_cgt_s <= qx_gt(qn_ohf); n_ca_r_s <= ca_f(qn_a_go, c_first, 3'd0); end
         else if (WRT != 0) {n_coh_s, n_cgt_s, n_ca_r_s} <= {n_coh, n_cgt, n_ca_r};
         else if (hit) {n_coh_s, n_cgt_s, n_ca_r_s} <= nC_c;
-    end
+    end else begin n_coh_s <= NSEG'(1) << n_c_s; n_cgt_s <= qx_gt(NSEG'(1) << n_c_s); end
+    // reset: the mirrors are reloaded FROM their held (unreset) source n_c_s, so mirror == onehot(n_c_s) holds in every
+    // post-go state (cycle-identical); the reset state is a defined function of the source (gold/gate LEC reset match)
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 3 && rst_n && qy_seen) begin
         if (n_coh !== NSEG'(1) << n_c || n_cgt !== qx_gt(NSEG'(1) << n_c) || (n_run && n_ca_r !== |(n_coh & qn_cmpA))) begin
@@ -1759,7 +1761,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             if (w_restart) begin w_coh <= qx_ohl; w_cgt <= qx_gt(qx_ohl); end
             else begin w_coh <= qx_nxoh; w_cgt <= qx_nxgt; end
         end
-    end
+    end else begin w_coh <= NSEG'(1) << w_c; w_cgt <= qx_gt(NSEG'(1) << w_c); end   // reset: reload from held w_c (as above)
 `ifdef QP_CHECK
     // the mirrors equal the one-hot / mask of w_c, and every QX consequence equals the encoded walker's
     always @(negedge clk) if (QX != 0 && FAST != 0 && rst_n && qy_seen) begin
@@ -2256,7 +2258,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         end
         ot_v41_bterm5_w10 #(.TW(TW), .FPC(QM >= 5 ? 32 : 4), .P0B(QS >= 3 ? 3 : QS)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(p_v0), .fp4(p_t[0]),
             .xq(p_xq0), .xe(p_xe0), .wq(p_w0q), .we(p_we0), .tag(p_t), .ov(l0_v), .y(l0_y), .f(l0_f), .otag(l0_t));
-        ot_v41_bterm5_w10 #(.TW(TW), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
+        ot_v41_bterm5_w10 #(.TW(TW), .FP4K(1), .P0B(QS >= 3 ? 3 : QS)) u_l1 (.clk(gclk_l1), .rst_n(rst_m), .v(p_v1), .fp4(1'b1),
             .xq(p_xq1), .xe(p_xe1), .wq(p_w1q), .we(p_we1), .tag(p_t), .ov(l1_v), .y(l1_y), .f(l1_f), .otag(l1_t));
     end else if (FAST != 0 && QPIPE != 0) begin : g_l3
         ot_v41_bterm4_w10 #(.TW(TW), .P1S(QP_P1), .CSAM(QP_CSAM), .P2S(QX >= 4 ? 1 : 0), .NS(QX >= 10 ? 1 : 0), .WD(QW)) u_l0 (.clk(gclk_l0), .rst_n(rst_m), .v(l_v0), .fp4(l_fp4),
