@@ -1,0 +1,57 @@
+[
+ {
+  "type": "hd_st_m",
+  "kit": "/srv/opentallas-scratch2/claude/codex-head-start-2249/canonical_gen7/gen/hd_st_m",
+  "canonical_fwd_ring_sdc": true,
+  "explicit_origin_anchor": true,
+  "private_raw": {
+   "added_flops": 4,
+   "added_cycles": 0,
+   "private_ports": [
+    "rst_start_raw_0",
+    "rst_start_raw_1",
+    "rst_start_raw_2",
+    "rst_start_raw_3"
+   ]
+  },
+  "boot_extra_cycles": 2,
+  "steady_data_cycles_added": 0
+ },
+ {
+  "type": "hd_st_n3_transit",
+  "kit": "/srv/opentallas-scratch2/claude/codex-head-start-2249/canonical_gen7/gen/hd_st_n3_transit",
+  "canonical_fwd_ring_sdc": true,
+  "explicit_origin_anchor": true,
+  "private_raw": {
+   "added_flops": 5,
+   "added_cycles": 0,
+   "private_ports": [
+    "rst_start_raw_0",
+    "rst_start_raw_1",
+    "rst_start_raw_2",
+    "rst_start_raw_3",
+    "rst_start_raw_4"
+   ]
+  },
+  "boot_extra_cycles": 2,
+  "steady_data_cycles_added": 0
+ },
+ {
+  "type": "hd_st_str",
+  "kit": "/srv/opentallas-scratch2/claude/codex-head-start-2249/canonical_gen7/gen/hd_st_str",
+  "canonical_fwd_ring_sdc": true,
+  "explicit_origin_anchor": true,
+  "private_raw": {
+   "added_flops": 4,
+   "added_cycles": 0,
+   "private_ports": [
+    "rst_start_raw_0",
+    "rst_start_raw_1",
+    "rst_start_raw_2",
+    "rst_start_raw_3"
+   ]
+  },
+  "boot_extra_cycles": 2,
+  "steady_data_cycles_added": 0
+ }
+]

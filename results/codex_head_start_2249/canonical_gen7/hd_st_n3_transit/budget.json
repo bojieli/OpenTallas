@@ -1,0 +1,165 @@
+{
+ "schema": "opentallas.die_plan.partition_budget.v1",
+ "die": "s81_head",
+ "type": "hd_st_n3_transit",
+ "module": "ot_s81hd_st_n3_transit",
+ "outline_um": [
+  1442.88,
+  475.2
+ ],
+ "period_ps": 833,
+ "pins": 2056,
+ "signal_max": "M7",
+ "clock": {
+  "tap_um": [
+   725.76,
+   457.92
+  ],
+  "insertion_ps": 450.0,
+  "insertion_ff_ps": 380.0,
+  "insertion_basis": {
+   "tt": "parent_budget one-entry regional CTS trial; publish actual routed mean before release",
+   "ff": "parent_budget one-entry regional CTS trial; publish actual routed mean before release"
+  },
+  "parent_early_tap_ps": 0.0,
+  "common_latency_ps": 450.0,
+  "insertion_tol_ps": 40,
+  "tap_mode": "density",
+  "tap_pitch_um": 100000.0,
+  "grid_taps": 0,
+  "taps": [
+   {
+    "name": "clk",
+    "xy": [
+     721.44,
+     230.56
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     17.28,
+     127.968
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     360.72,
+     230.56
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1082.16,
+     230.56
+    ],
+    "kind": "density"
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     1425.6,
+     349.56
+    ],
+    "kind": "density"
+   }
+  ],
+  "sink_taps": [
+   {
+    "name": "clk",
+    "xy": [
+     721.44,
+     230.56
+    ],
+    "planned_sinks": 1028,
+    "radius_um": 221.4
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     17.28,
+     127.968
+    ],
+    "planned_sinks": 515,
+    "radius_um": 117.9
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     360.72,
+     230.56
+    ],
+    "planned_sinks": 1028,
+    "radius_um": 221.4
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1082.16,
+     230.56
+    ],
+    "planned_sinks": 1028,
+    "radius_um": 221.4
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     1425.6,
+     349.56
+    ],
+    "planned_sinks": 513,
+    "radius_um": 117.7
+   }
+  ],
+  "taps_snapped": [
+   {
+    "name": "clk",
+    "xy": [
+     721.952,
+     230.56
+    ]
+   },
+   {
+    "name": "clk_t1",
+    "xy": [
+     17.76,
+     127.968
+    ]
+   },
+   {
+    "name": "clk_t2",
+    "xy": [
+     360.736,
+     230.56
+    ]
+   },
+   {
+    "name": "clk_t3",
+    "xy": [
+     1082.144,
+     230.56
+    ]
+   },
+   {
+    "name": "clk_t4",
+    "xy": [
+     1425.12,
+     349.536
+    ]
+   }
+  ],
+  "core_taps": [],
+  "uncertainty_split": 0.5
+ },
+ "core_latency": [],
+ "pin_reg_p90_um": 30.0,
+ "io_budget": 0.2,
+ "instances": [
+  "nst3_transit"
+ ]
+}
