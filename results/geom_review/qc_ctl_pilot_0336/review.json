@@ -1,0 +1,15 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "One current-flow PLACE trial only, no GRT/route approval",
+  "type": "sle_ctl__cla4f6f12f",
+  "plan": "plan_qc46",
+  "plan45_type_identical": true,
+  "viewed": true,
+  "picture": "plan.png",
+  "findings": [
+    "Input landing rings follow their boundary windows. Resized ring bands stay in open edge channels, no macro walls or blocked core streets.",
+    "FT lanes span 1227/1339um with3-5planned hops; exact r2r and every station must be checked in actual placement before GRT.",
+    "Clock and reset sites distributed across tile; reset relay tree uses known planned depths. Actual per-pin timing/skew and PG are NOT RUN.",
+    "Large empty interior is current control/glue partition shape; trial specifically replaces old per-cell O(N2) landing placement with current bulk allocator and sized reserves. No repeated route or relaxed requirement."
+  ]
+}
