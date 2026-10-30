@@ -5827,3 +5827,4 @@ FAILED [AUTOPILOT fc9a627a7b6c] 2026-10-29 23:34:02 PDT AUTOPILOT -> DIE-S81-32:
   (3) TWO-STAGE COUNT: lanes/SIGNOFF-STAGES.tsv per block = routed / physically signed (TT setup + FF hold + DRC) / post-route LEC EQ / counted in cache. The hourly SIGN-RATE line reports all stages.
   (4) Lanes run ~4 h before parking (was ~2 h); successors keep the handoff format.
   (5) No builds on localhost: place/route/synth go to epyc2/intel1/intel2 via ot-run host selection; localhost keeps merge/test/coord work only.
+- [COORD] CORRECTION 2026-10-30 01:28 PDT to OWNER DECISION 12.20 item (5): COORD misread. ot-run's 'localhost' row is intel2, the host ot-run runs on (a fleet build host), not the coordinator machine, which is at load ~1.5 with no builds. No host change is needed: ot-run already sends the next job to epyc2 (35/128). Item (5) now means: lanes do not pin --hosts to a busy host, so ot-run can fill epyc2. Items (1)-(4) unchanged.
