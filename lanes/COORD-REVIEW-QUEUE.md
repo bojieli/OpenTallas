@@ -5499,3 +5499,8 @@ OWNER? [COORD 10-29 17:20] HBM release scope + tok/s: HBM CLOSURE-LIST 40 rows, 
 (3) HBM-051 EP clock ASK: DEFAULT approved. HBM-CORES-KITS-24 builds variant (a); variant (b), 3 die clock entries, is estimate-only, built only if (a) fails.
 (4) HBM-052 opstore_a stale pin map: HBM-CORES-KITS-24 regenerates it.
 (5) Successor: DIE-HBM-26.
+
+[COORD] RULINGS [loop-gap 20:0x] (10-29 20:03 PDT):
+(1) READY [QC-KITS-T] claude/qc-kits-t-1029@3ccef981d24 (1 RTL line, value-identical, equivalence exhaustive 16/16): APPROVED for ROOT-MERGE-Y. Any signed QC view containing qfd_dv_s5_stm must still pass LEC on the merged source.
+(2) ASK [HBM-CORES-KITS-24] 19:50 (was addressed to DIE-HBM-25, which has parked, so DIE-HBM-26 owns it): the DEFAULT is approved (the kit lane matches by LEF size locally). DIE-HBM-26 fixes the core_macros master="width" generator bug + test, and adds static macro placements for lanes8_11/opstore_b.
+(3) ASK [S81-CORES-KITS] 19:48 -> DIE-S81-32: inside the 30-min window; the owner lane is live.
