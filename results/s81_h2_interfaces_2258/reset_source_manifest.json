@@ -1,0 +1,52 @@
+{
+ "source_event": "1dfae74037a",
+ "files": [
+  {
+   "path": "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv",
+   "sha256": "bf7ae358770168ed041ea29ddec31ae3a463b8efaac69e7bb8e54a696db42d51",
+   "matches_emitted_kit": true
+  },
+  {
+   "path": "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+   "sha256": "49a79b888cf0194f084055fb11c902d2c7e27878711f045cd9ce0eab332e54db",
+   "matches_emitted_kit": true
+  },
+  {
+   "path": "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+   "sha256": "892cac6b5d719ef22a801d3d3dfc9a1729785fe1ad6d47953df3a1c069ebf473",
+   "matches_emitted_kit": true
+  },
+  {
+   "path": "rtl/common/landed_parent/ot_pl_land.sv",
+   "sha256": "8f9ed5859110a84004d49494f2f8e0a1ffa955b76120701cb121feabf3c838f1",
+   "matches_emitted_kit": true
+  },
+  {
+   "path": "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+   "sha256": "315329a060fb11d4a2171241d9f4031f36638d4e93857f5d2498e78d4824f2ab",
+   "matches_emitted_kit": true
+  },
+  {
+   "path": "rtl/common/landed_parent/ot_pl_land_kept_enable.sv",
+   "sha256": "025a6b50e3241d1fce3dbc1cebe210fea0d262c06ce3add491d7b7f1dd6194aa",
+   "matches_emitted_kit": true
+  }
+ ],
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "OT_S81ENG_TAP_N32R2",
+  "OT_S81SL_KV_TRANSPORT",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "OT_ATTN_HCORE",
+  "OT_S81ENG_RR_N32",
+  "OT_S81C_HCORE_CTLA",
+  "OT_S81C_HCORE_RST_TIMED",
+  "S81_HOSTB_LAND_OBS"
+ ]
+}

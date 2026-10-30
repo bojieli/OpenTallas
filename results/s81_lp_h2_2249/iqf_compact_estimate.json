@@ -1,0 +1,311 @@
+{
+ "verdict": "ANALYTIC CANDIDATE ONLY; no plan adoption/P&R",
+ "source_plan": "/srv/opentallas-scratch/claude/wt/codex-s81-lp-plan-2249/physical/die_plan/s81/plan_s13r2.json",
+ "old_box_um": [
+  10203.84,
+  103.68,
+  11646.720000000001,
+  1330.5600000000002
+ ],
+ "new_box_um": [
+  11240.64,
+  1071.36,
+  11646.72,
+  1330.56
+ ],
+ "outline_um": [
+  406.08,
+  259.2
+ ],
+ "anchor": "old NE corner; N/E abutment lines unchanged; no W/S functional signals",
+ "lattice_note": "403.2um width requires an off-grid origin; round up to406.08=47x8.64um",
+ "std_area_um2": 19865.25,
+ "fill": 0.1887328235815603,
+ "per_layer_pins": {
+  "N_M7": 2159,
+  "N_M5": 2145,
+  "E_M6": 1246,
+  "E_M4": 1244,
+  "E_M7": 2
+ },
+ "per_layer_density": {
+  "N_M7": 5.316686367218282,
+  "N_M5": 5.282210401891253,
+  "E_M6": 4.807098765432099,
+  "E_M4": 4.799382716049383,
+  "E_M7": 0.00771604938271605
+ },
+ "regular_windows": {
+  "ft1_i": {
+   "face": "N",
+   "window_um": [
+    4.32,
+    128.928
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 1368
+  },
+  "ft0_o": {
+   "face": "N",
+   "window_um": [
+    129.36,
+    231.504
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 1120
+  },
+  "flt_o0": {
+   "face": "N",
+   "window_um": [
+    231.936,
+    232.128
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 1
+  },
+  "idx_i0": {
+   "face": "N",
+   "window_um": [
+    232.56,
+    279.408
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 513
+  },
+  "idx_o0": {
+   "face": "N",
+   "window_um": [
+    279.84,
+    326.688
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 513
+  },
+  "ql_i0": {
+   "face": "N",
+   "window_um": [
+    327.12,
+    373.968
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 513
+  },
+  "qc_o0": {
+   "face": "N",
+   "window_um": [
+    374.4,
+    398.208
+   ],
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "order": "lsb_low",
+   "width": 258
+  },
+  "ft1_o": {
+   "face": "E",
+   "window_um": [
+    4.32,
+    128.928
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ],
+   "order": "lsb_low",
+   "width": 1368
+  },
+  "ft0_i": {
+   "face": "E",
+   "window_um": [
+    129.36,
+    231.504
+   ],
+   "layers": [
+    "M6",
+    "M4"
+   ],
+   "order": "lsb_low",
+   "width": 1120
+  }
+ },
+ "immediate_endpoint_draft": [
+  {
+   "port": "idx__s_3S_C__iqf__8",
+   "iqf_bus": "idx_i0",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "ft0_o"
+   },
+   "world_window_um": [
+    11473.199999999999,
+    11520.047999999999
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  },
+  {
+   "port": "dfi__svc_0__phy_hbm__0",
+   "iqf_bus": "ft1_i",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "dfi_o0"
+   },
+   "world_window_um": [
+    11244.96,
+    11369.568
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  },
+  {
+   "port": "dfi__svc_0__phy_hbm__1",
+   "iqf_bus": "ft1_o",
+   "neighbour": {
+    "part": "phy_hbm",
+    "bus": "dfi_i7"
+   },
+   "world_window_um": [
+    1075.6799999999998,
+    1200.288
+   ],
+   "unchanged_abutment_line": 11646.720000000001
+  },
+  {
+   "port": "hbmrd__phy_hbm__svc_0__0",
+   "iqf_bus": "ft0_i",
+   "neighbour": {
+    "part": "phy_hbm",
+    "bus": "hbmrd_o7"
+   },
+   "world_window_um": [
+    1200.7199999999998,
+    1302.8639999999998
+   ],
+   "unchanged_abutment_line": 11646.720000000001
+  },
+  {
+   "port": "hbmrd__phy_hbm__svc_0__1",
+   "iqf_bus": "ft0_o",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "hbmrd_i0"
+   },
+   "world_window_um": [
+    11370.0,
+    11472.144
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  },
+  {
+   "port": "idx__iqf__svc_0__0",
+   "iqf_bus": "idx_o0",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "idx_i0"
+   },
+   "world_window_um": [
+    11520.48,
+    11567.328
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  },
+  {
+   "port": "ql__s_0N_LP__iqf__13",
+   "iqf_bus": "ql_i0",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "ft2_o"
+   },
+   "world_window_um": [
+    11567.76,
+    11614.608
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  },
+  {
+   "port": "qc__iqf__s_0N_LP__0",
+   "iqf_bus": "qc_o0",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "ft1_i"
+   },
+   "world_window_um": [
+    11615.039999999999,
+    11638.848
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  },
+  {
+   "port": "flt__iqf__svc_0__0",
+   "iqf_bus": "flt_o0",
+   "neighbour": {
+    "part": "svc_0",
+    "bus": "flt_i0"
+   },
+   "world_window_um": [
+    11472.576,
+    11472.768
+   ],
+   "unchanged_abutment_line": 1330.5600000000002
+  }
+ ],
+ "freed_channel_rects_um": [
+  [
+   10203.84,
+   103.68,
+   11240.64,
+   1330.5600000000002
+  ],
+  [
+   11240.64,
+   103.68,
+   11646.720000000001,
+   1071.36
+  ]
+ ],
+ "kv_leaf_t2_adjacency": [
+  {
+   "part": "s_3N_L0",
+   "box_um": [
+    14532.48,
+    16053.12,
+    15975.36,
+    17280.0
+   ],
+   "adjacent_to_iqf": false,
+   "minimum_y_gap_um": 14722.56
+  }
+ ],
+ "rtl_or_cycle_changes": 0,
+ "pending": [
+  "author-approved application of local partition outline event",
+  "couple neighbour bus/FT endpoints",
+  "recompute FT reach/station counts and every resulting lane-cycle change",
+  "reset/START/clock/landing contract recomposition; no new ft0_i ring assumed",
+  "G0C/bind/die clock and actual placement review before route"
+ ]
+}
