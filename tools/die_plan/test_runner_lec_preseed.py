@@ -16,6 +16,7 @@ def test_generated_runner_forwards_preseed_without_changing_default(tmp_path,val
     kit=tmp_path/"kit";kit.mkdir()
     GP.write_lec_options(kit, {"lec": {"superset_vec": True}} if configured else {})
     (kit/"kit_preflight.py").write_text("raise SystemExit(0)\n")
+    (kit/"lec.py").write_text(Path(GP.__file__).with_name("lec.py").read_text())
     runner=kit/"run_kit.sh";runner.write_text(GP.RUN_KIT)
     bin=tmp_path/"bin";bin.mkdir()
     docker=bin/"docker"
@@ -49,3 +50,29 @@ def test_persisted_optin_removed_on_regeneration_and_bad_options_reject(tmp_path
     for options in ({"superset_vec": "1"}, {"unknown": True}, True):
         with pytest.raises(ValueError):
             GP.write_lec_options(tmp_path, {"lec": options})
+
+
+@pytest.mark.parametrize("option",["OT_LEC_HINTS_PRESEED","OT_LEC_SUPERSET_VEC","OT_LEC_EARLY_COMPARE"])
+def test_explicit_method_rejects_old_driver_before_container_or_proof(tmp_path,option):
+    kit=tmp_path/"kit";kit.mkdir()
+    (kit/"kit_preflight.py").write_text("raise SystemExit(0)\n")
+    # Old ordinary driver: unknown flags fail argument parsing, never prove.
+    (kit/"lec.py").write_text("import argparse\np=argparse.ArgumentParser();p.add_argument('kit');p.parse_args()\nraise AssertionError('proof must not start')\n")
+    runner=kit/"run_kit.sh";runner.write_text(GP.RUN_KIT)
+    env=dict(os.environ)
+    for key in ("OT_LEC_HINTS_PRESEED","OT_LEC_SUPERSET_VEC","OT_LEC_EARLY_COMPARE"):env.pop(key,None)
+    env[option]="1"
+    run=subprocess.run(["bash",str(runner),str(kit),"place","1","1"],env=env,text=True,capture_output=True)
+    assert run.returncode==10
+    assert "copied driver does not support requested options: "+option in run.stderr
+    assert "proof must not start" not in run.stderr
+    assert (kit/"FAIL_PREFLOOR").read_text().strip()=="FAIL_PREFLOOR lec_options_unsupported"
+
+
+def test_driver_capability_api_does_not_enter_proof():
+    driver=Path(GP.__file__).with_name("lec.py")
+    run=subprocess.run([sys.executable,"-I",str(driver),"--capabilities"],capture_output=True,text=True,check=True)
+    options=json.loads(run.stdout)["proof_options"]
+    assert set(options)=={"OT_LEC_HINTS_PRESEED","OT_LEC_SUPERSET_VEC","OT_LEC_EARLY_COMPARE"}
+    run=subprocess.run([sys.executable,"-I",str(driver),"--require-options","UNKNOWN"],capture_output=True,text=True)
+    assert run.returncode==2 and "LEC CONFIG ERROR" in run.stderr

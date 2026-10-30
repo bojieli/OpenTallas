@@ -5646,8 +5646,21 @@ def _provenance(kit=None):
         return dict(commit=None, dirty=None, source=f"kit provenance invalid: {type(e).__name__}: {e}")
 
 
+PROOF_OPTIONS = ("OT_LEC_HINTS_PRESEED", "OT_LEC_SUPERSET_VEC", "OT_LEC_EARLY_COMPARE")
+
+
 def main(argv=None):
     global PROVE_JOBS
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv == ["--capabilities"]:
+        print(json.dumps(dict(schema="opentallas.lec_capabilities.v1", proof_options=list(PROOF_OPTIONS))))
+        return 0
+    if argv[:1] == ["--require-options"]:
+        missing = sorted(set(argv[1:]) - set(PROOF_OPTIONS))
+        if missing:
+            print("LEC CONFIG ERROR: unsupported proof option(s): " + ", ".join(missing), file=sys.stderr)
+            return 2
+        return 0
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("kit")
     ap.add_argument("--netlist", help="gate netlist (default: KIT/run/results/asap7/*/base/1_2_yosys.v)")
