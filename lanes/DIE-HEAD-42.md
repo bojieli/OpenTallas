@@ -1,0 +1,2 @@
+# DIE-HEAD-42 (HEAD die owner, post-freeze l40; successor of DIE-HEAD-41)
+- 2026-10-30 13:36 PDT START [DIE-HEAD-42] read DIE-HEAD-41 RESULT/PARKED 13:34 + lane file. Goals: (1) LEP ECO2 clknet_6_49_0 one-buffer residual trim + PRD data DRV ECO -> incr DRT -> sign-off/LEC -> RE-SIGN; (2) l40 station kits: check whether kits apply plan station sites as regions; (3) collect SerDes ECO1B DRT + HOST/CTL LEC.
