@@ -1651,6 +1651,11 @@ def main():
     MS.plan_tree_cts(kd, cfg)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     tm = timing_modes_stage(kd) if a.two_mode_grt else None   # after config.mk, before kit_hash
+    # FLOW-KITFAIL-1 10-29: carry the KV die's PROVEN reset contract into the kit for contract-listed modules (before
+    # kit_hash), so kit LEC uses the proven reset window instead of the 4-edge default.  Unlisted modules: kit unchanged.
+    sys.path.append(str(REPO / "tools/die_plan"))
+    import kit_reset_contract
+    reset_contract = kit_reset_contract.stage(kd, mod, kit_reset_contract.DIE_CONTRACT["qwen_kvsys"])
     fz = dict(schema="opentallas.kv.core_freeze.v1", type=tid, module=mod, outline_um=[w, h],
               plan_sha256=sha(a.plan), pins_file=hc["pins_file"], pins_sha256=sha(plandir / hc["pins_file"]),
               core_json_sha256=sha(a.core_json), pins=len(allp), plan_pins=len(pins), added_pins=len(added),
@@ -1675,6 +1680,8 @@ def main():
         fz["timing_modes"] = tm
     if ms is not None:
         fz["master_plan"] = ms
+    if reset_contract is not None:
+        fz["reset_contract"] = reset_contract
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     LEC.write_kit_provenance(kd, REPO, provenance=source_provenance)
     print(json.dumps(dict(kit=str(kd), pins=len(allp), added=[p["name"] for p in added], clocks=clks, resets=len(rsts),
