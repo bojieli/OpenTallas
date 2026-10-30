@@ -29,7 +29,7 @@ Actual d32q detour candidate `intel1:/srv/opentallas-scratch2/claude/codex-hbm-b
 - L700 NE_hub->NE_b112->root->NW_b112->NW_hub:2775bits, counts[4,5,5],14stations,16natural cycles.
 - L701 NW_hub->NW_b112->root->NE_b112->NE_hub:2730bits, counts[5,5,6],16stations,18natural cycles.
 
-No station growth was needed. The strict original-cycle control correctly rejects these paths: existing pair L4/L4m(width2816) have11cycles and L96/L96m(width22) have12cycles. The event flag only emits an UNADOPTED candidate with those mismatches recorded. For all lanes to match16/18, NE->NW L4m needs+5 and L96m+4; NW->NE L4 needs+7 and L96+6. The die owner owns padding/coherence, TOK pricing, clock/crossing updates and adoption. G0/G0C checks are pending; no P&R/STA run.
+No station growth was needed. The strict original-cycle control correctly rejects these paths: existing pair L4/L4m(width2816) have11cycles and L96/L96m(width22) have12cycles. The event flag only emits an UNADOPTED candidate with those mismatches recorded. For all lanes to match16/18, NE->NW L4m needs+5 and L96m+4; NW->NE L4 needs+7 and L96+6. The die owner owns padding/coherence, TOK pricing, clock/crossing updates and adoption. G0 PASS0errors; G0C FAIL8errors/128pending exactly the inheritedd32q error set (new/removederrors0). Worstglobalcut0.1673, worstsegment0.5995 at baselineNW_b101. No P&R/STA run.
 
 ## Current fused recipe facts
 
