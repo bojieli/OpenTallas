@@ -1,0 +1,22 @@
+{
+  "scope": "347 actual mapped source INV -> literal single BUF8A, explicit source-home first-leg Manhattan construction (MODEL, not routed); stock TTFF NLDM, input INV slew5..80ps, M6/7 maxRC1.7coupling. The downstream BUF8Y, clockQ, source timing, nativeBTerm loads and global routes are NOT qualified by this bounded leg estimate.",
+  "summary": {
+    "TT": {
+      "max_source_inv_output_slew_ps": 33.77564300548761,
+      "delay_ps": [
+        4.443561337736027,
+        29.10083066419606
+      ]
+    },
+    "FF": {
+      "max_source_inv_output_slew_ps": 27.018022044008404,
+      "delay_ps": [
+        3.5735592446439663,
+        22.026763253812856
+      ]
+    }
+  },
+  "source_records": 347,
+  "unknown_native_load_records": 125,
+  "build_allowed": false
+}
