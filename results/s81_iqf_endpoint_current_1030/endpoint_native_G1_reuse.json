@@ -1,0 +1,23 @@
+{
+ "native_G1_RTL_byte_identical": true,
+ "RTL_hashes": {
+  "ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+  "dsdv_idx_qfs.sv": "78d8982a406f9dd0f1da5e567a024b007fa65735be570adbeaffe36815d52df9",
+  "bind_cells.sv": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950",
+  "ot_dp_clk_landing.sv": "ecce50dabd9af5944c4c9e4c8d508993fc9f02ed2c9ffce38117e5f2e426e66a",
+  "s81p_iqf__t1_bound.sv": "2a29f5a320ff3a527bd813049205e81382d46db04a2f33ea9c7319380744d094",
+  "dsdv_idx_tree.sv": "4b9717536bceab7bd2299c45206e276b04130dc049afc4f303bc07b8d61e2337",
+  "s81p_iqf__t1.sv": "de96e76fd7754a67b384adafc2de752b2c081bcb658d49aed5523ef5b388bd2a",
+  "ot_meso_fifo.sv": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+ },
+ "synthesis_options": {
+  "DESIGN_NAME": "s81p_iqf__t1",
+  "PLATFORM": "asap7",
+  "VERILOG_DEFINES": "-DSYNTHESIS",
+  "SYNTH_HIERARCHICAL": "0"
+ },
+ "source_native_G1": "gen/iqf__t1 raw+post FACE6785/6785",
+ "physical_only_new_field": "ft_full_stage_placement_file",
+ "reuse": "Actual native cached Yosys+post1_synth outputs copied; no RTL/define/SYNTH changes",
+ "adopted": false
+}

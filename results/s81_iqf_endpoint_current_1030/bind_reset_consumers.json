@@ -1,0 +1,34 @@
+{
+ "iqf__t1": [
+  {
+   "consumer": "u_bin_idx_i0.rst_n",
+   "old_reset": "rst_n",
+   "old_node": "rst_n_t5",
+   "new_reset": "rst_n_t13",
+   "new_node": "rst_n_t13",
+   "depth": 5,
+   "clock_net": "clk",
+   "cycles_added": 0
+  },
+  {
+   "consumer": "u_bin_ql_i0.rst_n",
+   "old_reset": "rst_n",
+   "old_node": "rst_n_t5",
+   "new_reset": "rst_n_t14",
+   "new_node": "rst_n_t14",
+   "depth": 5,
+   "clock_net": "clk",
+   "cycles_added": 0
+  },
+  {
+   "consumer": "u_core.rst",
+   "old_reset": "rst_n",
+   "old_node": "rst_n_t5",
+   "new_reset": "rst_n_t14",
+   "new_node": "rst_n_t14",
+   "depth": 5,
+   "clock_net": "clk",
+   "cycles_added": 0
+  }
+ ]
+}

@@ -1,0 +1,23 @@
+{
+ "actual_fresh_FF_inventory": 8095,
+ "FT0rows": 6726,
+ "FT1readrows": 1369,
+ "refreshed_master_counts": {
+  "FT0": 434,
+  "FT1read": 670
+ },
+ "actual_FT0masters": {
+  "DFFHQNx1_ASAP7_75t_R": 6720,
+  "DFFASRHQNx1_ASAP7_75t_R": 6
+ },
+ "max_nominal_hop_fresh_size": [
+  402.56999999999994,
+  5,
+  1
+ ],
+ "over405_fresh_size": 0,
+ "cycles_added": 0,
+ "adopted": false,
+ "held": "Native preflight/actual fullstage runtime guard against fresh rows/taps/masters/completechain + independentLOOK BEFORE PLACE; actualnewGRT+clockdriverislands/STA stillopen",
+ "packet_sha256": "1d5911a7030174c047ed1274eb74b1d34cf6be525c9df6f75341aa0490ecca61"
+}
