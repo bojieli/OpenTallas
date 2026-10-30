@@ -1,0 +1,77 @@
+{
+  "scope": "Actual native synth complete; cap and independent public-clock ABI failures remain. Natural RED child is an unadopted source cut, no area/face/physical/proof claim.",
+  "counts": [
+    {
+      "type": "sle_su_c",
+      "stdcell": 473444,
+      "macros": 18,
+      "area_um2": 65212.6,
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_noncb/sle_su_c/sle_su_c/run/logs/asap7/dp_sle_su_c/base/1_synth.json",
+      "stats_sha256": "6661915e795145207e029841e76ec316f359441010f815853f88a138db87ab73",
+      "verdict": "CAP_FAIL",
+      "limit": 400000,
+      "post_synth_port_bind": "FAIL missing clk_c0..7",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "natural_cut": {
+        "instance": "u_bound.u_u_red",
+        "child_std": 173100,
+        "child_seq": 34216,
+        "remainder_std": 300344,
+        "source_module": "qfd_dv_s5_red2_leaf",
+        "implementation": "qfd_dv_s5_red2_k79",
+        "interface_bits": 354,
+        "adopted": false
+      }
+    },
+    {
+      "type": "slw_su_c__cl92142dac",
+      "stdcell": 464986,
+      "macros": 18,
+      "area_um2": 64001,
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_noncb/slw_su_c__cl92142dac/slw_su_c__cl92142dac/run/logs/asap7/dp_slw_su_c__cl92142dac/base/1_synth.json",
+      "stats_sha256": "de202cdb786c892561a75f88662635a397aad59dc3842b8ddbdd928b42d1fb30",
+      "verdict": "CAP_FAIL",
+      "limit": 400000,
+      "post_synth_port_bind": "FAIL missing clk_c0..7",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "natural_cut": {
+        "instance": "u_bound.u_u_red",
+        "child_std": 173100,
+        "child_seq": 34216,
+        "remainder_std": 291886,
+        "source_module": "qfd_dv_s5_red2_leaf",
+        "implementation": "qfd_dv_s5_red2_k79",
+        "interface_bits": 354,
+        "adopted": false
+      }
+    },
+    {
+      "type": "slw_su_c__cl19bb38ef",
+      "stdcell": 464067,
+      "macros": 18,
+      "area_um2": 63884.1,
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_noncb/slw_su_c__cl19bb38ef/slw_su_c__cl19bb38ef/run/logs/asap7/dp_slw_su_c__cl19bb38ef/base/1_synth.json",
+      "stats_sha256": "c057bb53fd5dd92ccf179925fbfa47ff6dd3b0a111ae6bcbcac62cd4b8e97347",
+      "verdict": "CAP_FAIL",
+      "limit": 400000,
+      "post_synth_port_bind": "FAIL missing clk_c0..7",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "natural_cut": {
+        "instance": "u_bound.u_u_red",
+        "child_std": 173100,
+        "child_seq": 34216,
+        "remainder_std": 290967,
+        "source_module": "qfd_dv_s5_red2_leaf",
+        "implementation": "qfd_dv_s5_red2_k79",
+        "interface_bits": 354,
+        "adopted": false
+      }
+    }
+  ]
+}

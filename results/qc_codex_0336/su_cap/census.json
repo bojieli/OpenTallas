@@ -1,0 +1,6548 @@
+{
+  "scope": "Actual completed native synth ODB export; no count omissions, no cut adoption or physical claim",
+  "counts": [
+    {
+      "type": "sle_su_c",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/su_hierarchy/sle_su_c.v",
+      "netlist_sha256": "ccc28dae02742cfdbbfac351653b3f521843bf13eacbc97bb58597184edf48e6",
+      "std": 473444,
+      "seq": 114556,
+      "hierarchy": {
+        "1": [
+          {
+            "prefix": "u_bound",
+            "std": 382795,
+            "seq": 114556,
+            "comb": 268239
+          },
+          {
+            "prefix": "_069582_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069583_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069584_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069585_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069586_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069587_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069588_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069589_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069590_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069591_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069592_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069593_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069594_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069595_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069596_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069597_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069598_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069599_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069600_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069601_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069602_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069603_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069604_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069605_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069606_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069607_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069608_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069609_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069610_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069611_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069612_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069613_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069614_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069615_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069616_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069617_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069618_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069619_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069620_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069621_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069622_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069623_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069624_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069625_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069626_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069627_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069628_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069629_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069630_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069631_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069632_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069633_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069634_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069635_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069636_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069637_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069638_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069639_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069640_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          }
+        ],
+        "2": [
+          {
+            "prefix": "u_bound.u_u_red",
+            "std": 173100,
+            "seq": 34216,
+            "comb": 138884
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8",
+            "std": 15632,
+            "seq": 5310,
+            "comb": 10322
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i",
+            "std": 12470,
+            "seq": 2866,
+            "comb": 9604
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i",
+            "std": 12470,
+            "seq": 2866,
+            "comb": 9604
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i",
+            "std": 12446,
+            "seq": 2861,
+            "comb": 9585
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i",
+            "std": 11695,
+            "seq": 2686,
+            "comb": 9009
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i",
+            "std": 11695,
+            "seq": 2686,
+            "comb": 9009
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i",
+            "std": 10377,
+            "seq": 2382,
+            "comb": 7995
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i",
+            "std": 10292,
+            "seq": 2362,
+            "comb": 7930
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_i",
+            "std": 9964,
+            "seq": 2288,
+            "comb": 7676
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i",
+            "std": 8450,
+            "seq": 1939,
+            "comb": 6511
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_p1_i",
+            "std": 7612,
+            "seq": 1744,
+            "comb": 5868
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i",
+            "std": 6033,
+            "seq": 1380,
+            "comb": 4653
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i",
+            "std": 5358,
+            "seq": 1226,
+            "comb": 4132
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_stm_i",
+            "std": 5358,
+            "seq": 1226,
+            "comb": 4132
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va",
+            "std": 4602,
+            "seq": 3736,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_bt",
+            "std": 3504,
+            "seq": 2408,
+            "comb": 1096
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg",
+            "std": 3348,
+            "seq": 2363,
+            "comb": 985
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch",
+            "std": 2807,
+            "seq": 2137,
+            "comb": 670
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb",
+            "std": 2730,
+            "seq": 1864,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc",
+            "std": 2730,
+            "seq": 1864,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_cl",
+            "std": 2621,
+            "seq": 1951,
+            "comb": 670
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l0_o",
+            "std": 1535,
+            "seq": 767,
+            "comb": 768
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l1_o",
+            "std": 1535,
+            "seq": 767,
+            "comb": 768
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l0_p1_o",
+            "std": 1533,
+            "seq": 766,
+            "comb": 767
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l1_p1_o",
+            "std": 1531,
+            "seq": 765,
+            "comb": 766
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_i",
+            "std": 1107,
+            "seq": 553,
+            "comb": 554
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_p1_i",
+            "std": 1107,
+            "seq": 553,
+            "comb": 554
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_p2_i",
+            "std": 1105,
+            "seq": 552,
+            "comb": 553
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vwb",
+            "std": 1042,
+            "seq": 1042,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_0",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_1",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_2",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_3",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_4",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_0",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_1",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_2",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_3",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_4",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twb",
+            "std": 1034,
+            "seq": 1034,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_0",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_1",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_2",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_3",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l0_i",
+            "std": 907,
+            "seq": 453,
+            "comb": 454
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l1_i",
+            "std": 879,
+            "seq": 439,
+            "comb": 440
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l0_p1_i",
+            "std": 741,
+            "seq": 370,
+            "comb": 371
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l1_p1_i",
+            "std": 663,
+            "seq": 331,
+            "comb": 332
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twh2",
+            "std": 538,
+            "seq": 538,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_x_st_a_fe_o_0",
+            "std": 519,
+            "seq": 259,
+            "comb": 260
+          },
+          {
+            "prefix": "u_bound.u_ft_x_st_a_fe_o_1",
+            "std": 519,
+            "seq": 259,
+            "comb": 260
+          },
+          {
+            "prefix": "u_bound.u_ft_x_st_a_fe_o_2",
+            "std": 519,
+            "seq": 259,
+            "comb": 260
+          },
+          {
+            "prefix": "u_bound.u_ft_x_st_a_fe_o_3",
+            "std": 519,
+            "seq": 259,
+            "comb": 260
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rach",
+            "std": 514,
+            "seq": 514,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_racl",
+            "std": 514,
+            "seq": 514,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twl2",
+            "std": 512,
+            "seq": 512,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_sc_i",
+            "std": 465,
+            "seq": 94,
+            "comb": 371
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_0",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_1",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          }
+        ],
+        "3": [
+          {
+            "prefix": "u_bound.u_u_red.u",
+            "std": 173100,
+            "seq": 34216,
+            "comb": 138884
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring",
+            "std": 4950,
+            "seq": 2847,
+            "comb": 2103
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring",
+            "std": 4950,
+            "seq": 2847,
+            "comb": 2103
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring",
+            "std": 4942,
+            "seq": 2842,
+            "comb": 2100
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring",
+            "std": 4649,
+            "seq": 2667,
+            "comb": 1982
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring",
+            "std": 4649,
+            "seq": 2667,
+            "comb": 1982
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring",
+            "std": 4117,
+            "seq": 2363,
+            "comb": 1754
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring",
+            "std": 4084,
+            "seq": 2343,
+            "comb": 1741
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_i.u_ring",
+            "std": 3939,
+            "seq": 2269,
+            "comb": 1670
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring",
+            "std": 3331,
+            "seq": 1920,
+            "comb": 1411
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_p1_i.u_ring",
+            "std": 3003,
+            "seq": 1725,
+            "comb": 1278
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring",
+            "std": 2371,
+            "seq": 1361,
+            "comb": 1010
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.u_output_pins",
+            "std": 2116,
+            "seq": 1058,
+            "comb": 1058
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring",
+            "std": 2093,
+            "seq": 1207,
+            "comb": 886
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_stm_i.u_ring",
+            "std": 2093,
+            "seq": 1207,
+            "comb": 886
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_bt.u_twpd",
+            "std": 2048,
+            "seq": 1024,
+            "comb": 1024
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[7]",
+            "std": 1960,
+            "seq": 208,
+            "comb": 1752
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[3]",
+            "std": 1953,
+            "seq": 208,
+            "comb": 1745
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[5]",
+            "std": 1837,
+            "seq": 208,
+            "comb": 1629
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[6]",
+            "std": 1829,
+            "seq": 200,
+            "comb": 1629
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.u_twcd",
+            "std": 1024,
+            "seq": 512,
+            "comb": 512
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_cl.u_twcd",
+            "std": 1024,
+            "seq": 512,
+            "comb": 512
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.u_input_pins",
+            "std": 972,
+            "seq": 486,
+            "comb": 486
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg.u_twd0",
+            "std": 914,
+            "seq": 457,
+            "comb": 457
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg.u_twd1",
+            "std": 914,
+            "seq": 457,
+            "comb": 457
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[1]",
+            "std": 624,
+            "seq": 208,
+            "comb": 416
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[2]",
+            "std": 605,
+            "seq": 200,
+            "comb": 405
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[4]",
+            "std": 585,
+            "seq": 192,
+            "comb": 393
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rach.g_reg",
+            "std": 257,
+            "seq": 257,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_racl.g_reg",
+            "std": 257,
+            "seq": 257,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[0]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[1]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[2]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[3]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_sc_i.u_ring",
+            "std": 129,
+            "seq": 75,
+            "comb": 54
+          },
+          {
+            "prefix": "u_bound.u_cland_monitor_0.u_ring",
+            "std": 109,
+            "seq": 67,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_cland_monitor_1.u_ring",
+            "std": 109,
+            "seq": 67,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_cland_flt_su_l0_i.u_ring",
+            "std": 102,
+            "seq": 60,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[0]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[1]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[2]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[3]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[4]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[5]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[6]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[7]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[0]",
+            "std": 97,
+            "seq": 0,
+            "comb": 97
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[0]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          }
+        ],
+        "4": [
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[7].u",
+            "std": 1736,
+            "seq": 96,
+            "comb": 1640
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[3].u",
+            "std": 1729,
+            "seq": 96,
+            "comb": 1633
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[5].u",
+            "std": 1613,
+            "seq": 96,
+            "comb": 1517
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[6].u",
+            "std": 1613,
+            "seq": 92,
+            "comb": 1521
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[1].u",
+            "std": 400,
+            "seq": 96,
+            "comb": 304
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[2].u",
+            "std": 389,
+            "seq": 92,
+            "comb": 297
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[4].u",
+            "std": 377,
+            "seq": 88,
+            "comb": 289
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          }
+        ],
+        "5": [
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_st_a_fe_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          }
+        ],
+        "6": [
+          {
+            "prefix": "_069582_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069583_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069584_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069585_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069586_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069587_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069588_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069589_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069590_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069591_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069592_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069593_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069594_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069595_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069596_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069597_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069598_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069599_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069600_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069601_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069602_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069603_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069604_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069605_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069606_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069607_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069608_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069609_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069610_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069611_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069612_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069613_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069614_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069615_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069616_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069617_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069618_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069619_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069620_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069621_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069622_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069623_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069624_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069625_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069626_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069627_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069628_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069629_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069630_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069631_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069632_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069633_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069634_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069635_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069636_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069637_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069638_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069639_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069640_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069641_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          }
+        ]
+      }
+    },
+    {
+      "type": "slw_su_c__cl19bb38ef",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/su_hierarchy/slw_su_c__cl19bb38ef.v",
+      "netlist_sha256": "773869a55c7fb499f7b7fca589181eca7552524b3f70f9fe878c632ff147c6c1",
+      "std": 464067,
+      "seq": 111929,
+      "hierarchy": {
+        "1": [
+          {
+            "prefix": "u_bound",
+            "std": 373843,
+            "seq": 111929,
+            "comb": 261914
+          },
+          {
+            "prefix": "_068953_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068954_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068955_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068956_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068957_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068958_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068959_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068960_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068961_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068962_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068963_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068964_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068965_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068966_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068967_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068968_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068969_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068970_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068971_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068972_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068973_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068974_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068975_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068976_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068977_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068978_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068979_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068980_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068981_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068982_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068983_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068984_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068985_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068986_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068987_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068988_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068989_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068990_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068991_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068992_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068993_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068994_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068995_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068996_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068997_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068998_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068999_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069000_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069001_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069002_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069003_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069004_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069005_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069006_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069007_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069008_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069009_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069010_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069011_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          }
+        ],
+        "2": [
+          {
+            "prefix": "u_bound.u_u_red",
+            "std": 173100,
+            "seq": 34216,
+            "comb": 138884
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8",
+            "std": 15632,
+            "seq": 5310,
+            "comb": 10322
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i",
+            "std": 12470,
+            "seq": 2866,
+            "comb": 9604
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i",
+            "std": 12470,
+            "seq": 2866,
+            "comb": 9604
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i",
+            "std": 12447,
+            "seq": 2861,
+            "comb": 9586
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i",
+            "std": 11695,
+            "seq": 2686,
+            "comb": 9009
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i",
+            "std": 11695,
+            "seq": 2686,
+            "comb": 9009
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i",
+            "std": 10377,
+            "seq": 2382,
+            "comb": 7995
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i",
+            "std": 10292,
+            "seq": 2362,
+            "comb": 7930
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_i",
+            "std": 9964,
+            "seq": 2288,
+            "comb": 7676
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i",
+            "std": 8450,
+            "seq": 1939,
+            "comb": 6511
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_p1_i",
+            "std": 7612,
+            "seq": 1744,
+            "comb": 5868
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i",
+            "std": 5358,
+            "seq": 1226,
+            "comb": 4132
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_stm_i",
+            "std": 5358,
+            "seq": 1226,
+            "comb": 4132
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va",
+            "std": 4602,
+            "seq": 3736,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_bt",
+            "std": 3504,
+            "seq": 2408,
+            "comb": 1096
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg",
+            "std": 3348,
+            "seq": 2363,
+            "comb": 985
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch",
+            "std": 2807,
+            "seq": 2137,
+            "comb": 670
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb",
+            "std": 2730,
+            "seq": 1864,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc",
+            "std": 2730,
+            "seq": 1864,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_cl",
+            "std": 2621,
+            "seq": 1951,
+            "comb": 670
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l0_o",
+            "std": 1535,
+            "seq": 767,
+            "comb": 768
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l1_o",
+            "std": 1535,
+            "seq": 767,
+            "comb": 768
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l0_p1_o",
+            "std": 1533,
+            "seq": 766,
+            "comb": 767
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l1_p1_o",
+            "std": 1531,
+            "seq": 765,
+            "comb": 766
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_i",
+            "std": 1107,
+            "seq": 553,
+            "comb": 554
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_p1_i",
+            "std": 1107,
+            "seq": 553,
+            "comb": 554
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_p2_i",
+            "std": 1105,
+            "seq": 552,
+            "comb": 553
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vwb",
+            "std": 1042,
+            "seq": 1042,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_0",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_1",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_2",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_3",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_4",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_0",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_1",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_2",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_3",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_4",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twb",
+            "std": 1034,
+            "seq": 1034,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_0",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_1",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_2",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_3",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l0_i",
+            "std": 907,
+            "seq": 453,
+            "comb": 454
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l1_i",
+            "std": 879,
+            "seq": 439,
+            "comb": 440
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l0_p1_i",
+            "std": 741,
+            "seq": 370,
+            "comb": 371
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l1_p1_i",
+            "std": 663,
+            "seq": 331,
+            "comb": 332
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twh2",
+            "std": 538,
+            "seq": 538,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rach",
+            "std": 514,
+            "seq": 514,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_racl",
+            "std": 514,
+            "seq": 514,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twl2",
+            "std": 512,
+            "seq": 512,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_sc_i",
+            "std": 466,
+            "seq": 94,
+            "comb": 372
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_0",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_1",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_2",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_3",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_stm_o_0",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_opg",
+            "std": 456,
+            "seq": 456,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rapg",
+            "std": 456,
+            "seq": 456,
+            "comb": 0
+          }
+        ],
+        "3": [
+          {
+            "prefix": "u_bound.u_u_red.u",
+            "std": 173100,
+            "seq": 34216,
+            "comb": 138884
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring",
+            "std": 4950,
+            "seq": 2847,
+            "comb": 2103
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring",
+            "std": 4950,
+            "seq": 2847,
+            "comb": 2103
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring",
+            "std": 4942,
+            "seq": 2842,
+            "comb": 2100
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring",
+            "std": 4649,
+            "seq": 2667,
+            "comb": 1982
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring",
+            "std": 4649,
+            "seq": 2667,
+            "comb": 1982
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring",
+            "std": 4117,
+            "seq": 2363,
+            "comb": 1754
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring",
+            "std": 4084,
+            "seq": 2343,
+            "comb": 1741
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_i.u_ring",
+            "std": 3939,
+            "seq": 2269,
+            "comb": 1670
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring",
+            "std": 3331,
+            "seq": 1920,
+            "comb": 1411
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_p1_i.u_ring",
+            "std": 3003,
+            "seq": 1725,
+            "comb": 1278
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.u_output_pins",
+            "std": 2116,
+            "seq": 1058,
+            "comb": 1058
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring",
+            "std": 2093,
+            "seq": 1207,
+            "comb": 886
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_stm_i.u_ring",
+            "std": 2093,
+            "seq": 1207,
+            "comb": 886
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_bt.u_twpd",
+            "std": 2048,
+            "seq": 1024,
+            "comb": 1024
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[7]",
+            "std": 1960,
+            "seq": 208,
+            "comb": 1752
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[3]",
+            "std": 1953,
+            "seq": 208,
+            "comb": 1745
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[5]",
+            "std": 1837,
+            "seq": 208,
+            "comb": 1629
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[6]",
+            "std": 1829,
+            "seq": 200,
+            "comb": 1629
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.u_twcd",
+            "std": 1024,
+            "seq": 512,
+            "comb": 512
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_cl.u_twcd",
+            "std": 1024,
+            "seq": 512,
+            "comb": 512
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.u_input_pins",
+            "std": 972,
+            "seq": 486,
+            "comb": 486
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg.u_twd0",
+            "std": 914,
+            "seq": 457,
+            "comb": 457
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg.u_twd1",
+            "std": 914,
+            "seq": 457,
+            "comb": 457
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[1]",
+            "std": 624,
+            "seq": 208,
+            "comb": 416
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[2]",
+            "std": 605,
+            "seq": 200,
+            "comb": 405
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[4]",
+            "std": 585,
+            "seq": 192,
+            "comb": 393
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rach.g_reg",
+            "std": 257,
+            "seq": 257,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_racl.g_reg",
+            "std": 257,
+            "seq": 257,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[0]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[1]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[2]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[3]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_sc_i.u_ring",
+            "std": 129,
+            "seq": 75,
+            "comb": 54
+          },
+          {
+            "prefix": "u_bound.u_cland_flt_su_l0_i.u_ring",
+            "std": 102,
+            "seq": 60,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[0]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[1]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[2]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[3]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[4]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[5]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[6]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[7]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[0]",
+            "std": 97,
+            "seq": 0,
+            "comb": 97
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[0]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[1]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[2]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[3]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          }
+        ],
+        "4": [
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[7].u",
+            "std": 1736,
+            "seq": 96,
+            "comb": 1640
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[3].u",
+            "std": 1729,
+            "seq": 96,
+            "comb": 1633
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[5].u",
+            "std": 1613,
+            "seq": 96,
+            "comb": 1517
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[6].u",
+            "std": 1613,
+            "seq": 92,
+            "comb": 1521
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[1].u",
+            "std": 400,
+            "seq": 96,
+            "comb": 304
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[2].u",
+            "std": 389,
+            "seq": 92,
+            "comb": 297
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[4].u",
+            "std": 377,
+            "seq": 88,
+            "comb": 289
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          }
+        ],
+        "5": [
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          }
+        ],
+        "6": [
+          {
+            "prefix": "_068953_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068954_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068955_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068956_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068957_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068958_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068959_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068960_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068961_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068962_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068963_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068964_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068965_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068966_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068967_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068968_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068969_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068970_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068971_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068972_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068973_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068974_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068975_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068976_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068977_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068978_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068979_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068980_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068981_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068982_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068983_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068984_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068985_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068986_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068987_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068988_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068989_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068990_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068991_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068992_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068993_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068994_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068995_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068996_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068997_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068998_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_068999_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069000_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069001_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069002_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069003_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069004_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069005_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069006_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069007_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069008_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069009_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069010_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069011_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069012_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          }
+        ]
+      }
+    },
+    {
+      "type": "slw_su_c__cl92142dac",
+      "source": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/su_hierarchy/slw_su_c__cl92142dac.v",
+      "netlist_sha256": "279408d3dce3a2036f4afec0504aba53d933621be57cb5003d94adf0f26bbdd0",
+      "std": 464986,
+      "seq": 112104,
+      "hierarchy": {
+        "1": [
+          {
+            "prefix": "u_bound",
+            "std": 374593,
+            "seq": 112104,
+            "comb": 262489
+          },
+          {
+            "prefix": "_069122_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069123_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069124_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069125_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069126_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069127_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069128_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069129_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069130_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069131_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069132_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069133_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069134_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069135_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069136_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069137_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069138_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069139_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069140_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069141_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069142_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069143_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069144_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069145_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069146_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069147_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069148_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069149_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069150_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069151_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069152_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069153_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069154_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069155_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069156_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069157_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069158_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069159_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069160_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069161_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069162_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069163_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069164_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069165_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069166_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069167_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069168_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069169_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069170_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069171_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069172_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069173_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069174_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069175_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069176_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069177_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069178_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069179_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069180_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          }
+        ],
+        "2": [
+          {
+            "prefix": "u_bound.u_u_red",
+            "std": 173100,
+            "seq": 34216,
+            "comb": 138884
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8",
+            "std": 15632,
+            "seq": 5310,
+            "comb": 10322
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i",
+            "std": 12470,
+            "seq": 2866,
+            "comb": 9604
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i",
+            "std": 12470,
+            "seq": 2866,
+            "comb": 9604
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i",
+            "std": 12446,
+            "seq": 2861,
+            "comb": 9585
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i",
+            "std": 11695,
+            "seq": 2686,
+            "comb": 9009
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i",
+            "std": 11695,
+            "seq": 2686,
+            "comb": 9009
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i",
+            "std": 10377,
+            "seq": 2382,
+            "comb": 7995
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i",
+            "std": 10292,
+            "seq": 2362,
+            "comb": 7930
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_i",
+            "std": 9964,
+            "seq": 2288,
+            "comb": 7676
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i",
+            "std": 8450,
+            "seq": 1939,
+            "comb": 6511
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_p1_i",
+            "std": 7612,
+            "seq": 1744,
+            "comb": 5868
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i",
+            "std": 5358,
+            "seq": 1226,
+            "comb": 4132
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_stm_i",
+            "std": 5358,
+            "seq": 1226,
+            "comb": 4132
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va",
+            "std": 4602,
+            "seq": 3736,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_bt",
+            "std": 3504,
+            "seq": 2408,
+            "comb": 1096
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg",
+            "std": 3348,
+            "seq": 2363,
+            "comb": 985
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch",
+            "std": 2807,
+            "seq": 2137,
+            "comb": 670
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb",
+            "std": 2730,
+            "seq": 1864,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc",
+            "std": 2730,
+            "seq": 1864,
+            "comb": 866
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_cl",
+            "std": 2621,
+            "seq": 1951,
+            "comb": 670
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l0_o",
+            "std": 1535,
+            "seq": 767,
+            "comb": 768
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l1_o",
+            "std": 1535,
+            "seq": 767,
+            "comb": 768
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l0_p1_o",
+            "std": 1533,
+            "seq": 766,
+            "comb": 767
+          },
+          {
+            "prefix": "u_bound.u_bout_x_su_l1_p1_o",
+            "std": 1531,
+            "seq": 765,
+            "comb": 766
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_i",
+            "std": 1107,
+            "seq": 553,
+            "comb": 554
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_p1_i",
+            "std": 1107,
+            "seq": 553,
+            "comb": 554
+          },
+          {
+            "prefix": "u_bound.u_bin_x_ctl_p2_i",
+            "std": 1105,
+            "seq": 552,
+            "comb": 553
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vwb",
+            "std": 1042,
+            "seq": 1042,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_0",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_1",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_2",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_3",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws1_o_4",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_0",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_1",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_2",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_3",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_ft_cws2_o_4",
+            "std": 1035,
+            "seq": 517,
+            "comb": 518
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twb",
+            "std": 1034,
+            "seq": 1034,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_0",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_1",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_2",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_ctl_o_3",
+            "std": 915,
+            "seq": 457,
+            "comb": 458
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l0_i",
+            "std": 907,
+            "seq": 453,
+            "comb": 454
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l1_i",
+            "std": 879,
+            "seq": 439,
+            "comb": 440
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l0_p1_i",
+            "std": 741,
+            "seq": 370,
+            "comb": 371
+          },
+          {
+            "prefix": "u_bound.u_bin_x_su_l1_p1_i",
+            "std": 663,
+            "seq": 331,
+            "comb": 332
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twh2",
+            "std": 538,
+            "seq": 538,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rach",
+            "std": 514,
+            "seq": 514,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_racl",
+            "std": 514,
+            "seq": 514,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_twl2",
+            "std": 512,
+            "seq": 512,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_sc_i",
+            "std": 465,
+            "seq": 94,
+            "comb": 371
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_0",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_1",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_2",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l0_stm_o_3",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_ft_x_su_l1_stm_o_0",
+            "std": 459,
+            "seq": 229,
+            "comb": 230
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_opg",
+            "std": 456,
+            "seq": 456,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rapg",
+            "std": 456,
+            "seq": 456,
+            "comb": 0
+          }
+        ],
+        "3": [
+          {
+            "prefix": "u_bound.u_u_red.u",
+            "std": 173100,
+            "seq": 34216,
+            "comb": 138884
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring",
+            "std": 4950,
+            "seq": 2847,
+            "comb": 2103
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring",
+            "std": 4950,
+            "seq": 2847,
+            "comb": 2103
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring",
+            "std": 4942,
+            "seq": 2842,
+            "comb": 2100
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring",
+            "std": 4649,
+            "seq": 2667,
+            "comb": 1982
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring",
+            "std": 4649,
+            "seq": 2667,
+            "comb": 1982
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring",
+            "std": 4117,
+            "seq": 2363,
+            "comb": 1754
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring",
+            "std": 4084,
+            "seq": 2343,
+            "comb": 1741
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_i.u_ring",
+            "std": 3939,
+            "seq": 2269,
+            "comb": 1670
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring",
+            "std": 3331,
+            "seq": 1920,
+            "comb": 1411
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_p1_i.u_ring",
+            "std": 3003,
+            "seq": 1725,
+            "comb": 1278
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.u_output_pins",
+            "std": 2116,
+            "seq": 1058,
+            "comb": 1058
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring",
+            "std": 2093,
+            "seq": 1207,
+            "comb": 886
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_stm_i.u_ring",
+            "std": 2093,
+            "seq": 1207,
+            "comb": 886
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_bt.u_twpd",
+            "std": 2048,
+            "seq": 1024,
+            "comb": 1024
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[7]",
+            "std": 1960,
+            "seq": 208,
+            "comb": 1752
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[3]",
+            "std": 1953,
+            "seq": 208,
+            "comb": 1745
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[5]",
+            "std": 1837,
+            "seq": 208,
+            "comb": 1629
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[6]",
+            "std": 1829,
+            "seq": 200,
+            "comb": 1629
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.u_twcd",
+            "std": 1024,
+            "seq": 512,
+            "comb": 512
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_cl.u_twcd",
+            "std": 1024,
+            "seq": 512,
+            "comb": 512
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.u_input_pins",
+            "std": 972,
+            "seq": 486,
+            "comb": 486
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg.u_twd0",
+            "std": 914,
+            "seq": 457,
+            "comb": 457
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_pg.u_twd1",
+            "std": 914,
+            "seq": 457,
+            "comb": 457
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[1]",
+            "std": 624,
+            "seq": 208,
+            "comb": 416
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[2]",
+            "std": 605,
+            "seq": 200,
+            "comb": 405
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[4]",
+            "std": 585,
+            "seq": 192,
+            "comb": 393
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[0]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[1]",
+            "std": 550,
+            "seq": 275,
+            "comb": 275
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_rach.g_reg",
+            "std": 257,
+            "seq": 257,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_racl.g_reg",
+            "std": 257,
+            "seq": 257,
+            "comb": 0
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[0]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[1]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[2]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_curl[3]",
+            "std": 192,
+            "seq": 96,
+            "comb": 96
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_sc_i.u_ring",
+            "std": 129,
+            "seq": 75,
+            "comb": 54
+          },
+          {
+            "prefix": "u_bound.u_cland_monitor_0.u_ring",
+            "std": 109,
+            "seq": 67,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_cland_monitor_1.u_ring",
+            "std": 109,
+            "seq": 67,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_cland_flt_su_l0_i.u_ring",
+            "std": 102,
+            "seq": 60,
+            "comb": 42
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[0]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[1]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[2]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[3]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[4]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[5]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[6]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_lane[7]",
+            "std": 99,
+            "seq": 97,
+            "comb": 2
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[0]",
+            "std": 97,
+            "seq": 0,
+            "comb": 97
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_wb[0]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_wb[1]",
+            "std": 64,
+            "seq": 32,
+            "comb": 32
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[0]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_ch.g_cext[1]",
+            "std": 32,
+            "seq": 16,
+            "comb": 16
+          }
+        ],
+        "4": [
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[7].u",
+            "std": 1736,
+            "seq": 96,
+            "comb": 1640
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[3].u",
+            "std": 1729,
+            "seq": 96,
+            "comb": 1633
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[5].u",
+            "std": 1613,
+            "seq": 96,
+            "comb": 1517
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[6].u",
+            "std": 1613,
+            "seq": 92,
+            "comb": 1521
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_va.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vb.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[0].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_vm8q_u_vc.g_mw[1].u_d",
+            "std": 512,
+            "seq": 256,
+            "comb": 256
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[1].u",
+            "std": 400,
+            "seq": 96,
+            "comb": 304
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[2].u",
+            "std": 389,
+            "seq": 92,
+            "comb": 297
+          },
+          {
+            "prefix": "u_bound.u_u_suvm_u_su8.g_xsl[4].u",
+            "std": 377,
+            "seq": 88,
+            "comb": 289
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[7]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[0]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[1]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[2]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[3]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[4]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[5]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[6]",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          }
+        ],
+        "5": [
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws1_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p1_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_ctl_p2_i.u_ring.dch[7].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[5].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_i.u_ring.dch[6].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_p1_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l0_stm_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[0].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[1].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[2].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[3].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          },
+          {
+            "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring.dch[4].u_dsel",
+            "std": 309,
+            "seq": 68,
+            "comb": 241
+          }
+        ],
+        "6": [
+          {
+            "prefix": "_069122_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069123_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069124_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069125_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069126_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069127_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069128_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069129_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069130_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069131_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069132_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069133_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069134_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069135_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069136_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069137_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069138_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069139_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069140_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069141_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069142_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069143_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069144_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069145_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069146_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069147_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069148_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069149_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069150_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069151_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069152_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069153_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069154_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069155_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069156_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069157_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069158_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069159_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069160_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069161_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069162_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069163_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069164_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069165_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069166_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069167_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069168_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069169_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069170_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069171_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069172_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069173_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069174_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069175_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069176_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069177_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069178_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069179_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069180_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          },
+          {
+            "prefix": "_069181_",
+            "std": 1,
+            "seq": 0,
+            "comb": 1
+          }
+        ]
+      }
+    }
+  ]
+}
