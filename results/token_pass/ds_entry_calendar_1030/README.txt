@@ -245,3 +245,13 @@ master/parametercontrols caught; guard_paths.json. Actual selectedphase remains
 3mod4 from resetreleasepin, separate from externalHOST/KSbookings. HEAD says
 ROOT88candidate stillnotfrozen/noactualhostproducerdates; S81 similarlynoadopted
 globaldispatcherdates. Actual admission needs registeredready&&!fault&&hostdone.
+
+Independentreview closure follow-up
+----------------------------------
+9d6df8e98's strictguard initially required onlyfour keyfiles; actualcurrent
+receipt was complete, but a caller selectivelyomittingHWIN/reset hashes could
+weaken the guard. native_phase now requires all24nestedproductiondependencies
+of the measured selectedseqhost cut plus every measuredmaster source_path.
+Actualcurrentreceipt passes; independent selective HWIN and resetrelay omission
+controls refuse. No runtimefixture rerun: nativehardware/currentbyteprogramme
+unchanged. Fixedclosure explicitly requires requalification for source migration.

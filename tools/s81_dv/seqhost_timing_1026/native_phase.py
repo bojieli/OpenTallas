@@ -3,6 +3,37 @@ import hashlib
 from pathlib import Path
 
 
+# Exact production dependency set of the selected native seqhost measurement.
+# A source/parameter migration needs a new measured closure, never omission of
+# an inconvenient nested dependency from a caller-provided receipt.
+SELECTED_SEQHOST_CLOSURE = (
+ 'rtl/lib/ot_rst_relay.sv',
+ 'rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv',
+ 'rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv',
+ 'rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv',
+ 'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv',
+ 'physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v',
+ 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv',
+ 'rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv',
+ 'rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv',
+ 'rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv',
+ 'rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv',
+ 'rtl/lib/ot_reset_sync.sv',
+ 'physical/rom_host_ingest/rtl/dsfd_host.sv',
+ 'rtl/hdc/ingest/ot_rom_host_ingest.sv',
+ 'rtl/link/ot_link_afifo.sv',
+ 'rtl/hdc/ingest/ot_hdc_kv_ingest.sv',
+ 'physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v',
+ 'rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv',
+ 'rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv',
+ 'physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v',
+ 'rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv',
+ 'physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v',
+ 'rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv',
+ 'rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv',
+)
+
+
 def seqhost_phase_contract(receipt):
     current=receipt.get('seqhost_input_clock');prior=receipt.get('input_clock')
     if current is not None and prior is not None and current!=prior:
@@ -22,7 +53,7 @@ def qualify_selected(receipt, source_root, manifest, inventory):
     import bind_elab
     root=Path(source_root).resolve();master=receipt['masters']['dsdv_hostb_seqhost_mux']
     hashes=receipt.get('source_sha256',{})
-    required={master['source_path'],'rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv','rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv','rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv'}
+    required=set(SELECTED_SEQHOST_CLOSURE)|{m['source_path']for m in receipt['masters'].values()}
     if not required<=set(hashes):raise ValueError('complete selected seqhost dependency identities required')
     for name,digest in hashes.items():
         path=(root/name).resolve()
