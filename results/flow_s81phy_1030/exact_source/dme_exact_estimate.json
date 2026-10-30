@@ -1,0 +1,101 @@
+{
+ "stage_model": "cal_g03b_refit existing routed-stage model; regional geometry estimate only",
+ "variants": [
+  {
+   "part": "lk_ES0",
+   "macro_origin_um": [
+    63.64,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1759.698,
+    66.42
+   ],
+   "stats": {
+    "merges": 31,
+    "imbalanced": 0,
+    "worst_imbalance_um": 0.0,
+    "extra_wire_um": 17.3,
+    "topology": {
+     "median": 1
+    },
+    "snakes": 4,
+    "snake_wire_um": 230.3,
+    "snake_buffers": 4,
+    "spread_um": 2.4
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 701.6850531952143,
+     "max_ps": 704.1128512089743,
+     "mean_ps": 703.0953496330783,
+     "window_ps": 2.4277980137600252,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 149.52599999999995,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 610.0618649208051,
+     "max_ps": 615.3513428488171,
+     "mean_ps": 612.5384717924895,
+     "window_ps": 5.289477928012047,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 149.52599999999995,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  },
+  {
+   "part": "lk_ES1",
+   "macro_origin_um": [
+    63.64,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1759.698,
+    66.42
+   ],
+   "stats": {
+    "merges": 31,
+    "imbalanced": 0,
+    "worst_imbalance_um": 0.0,
+    "extra_wire_um": 17.3,
+    "topology": {
+     "median": 1
+    },
+    "snakes": 4,
+    "snake_wire_um": 230.3,
+    "snake_buffers": 4,
+    "spread_um": 2.4
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 701.6850531952143,
+     "max_ps": 704.1128512089743,
+     "mean_ps": 703.0953496330783,
+     "window_ps": 2.4277980137600252,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 149.52599999999995,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 610.0618649208051,
+     "max_ps": 615.3513428488171,
+     "mean_ps": 612.5384717924895,
+     "window_ps": 5.289477928012047,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 149.52599999999995,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  }
+ ]
+}

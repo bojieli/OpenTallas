@@ -1,0 +1,26 @@
+{
+ "scope": "Conditional exact-cycle arithmetic, NOT mapped warm/cold simulation or native-reset physical qualification",
+ "root_start_hold_after_raw_cycles": 64,
+ "virtual_raw_cycles_per_hop": 2,
+ "virtual_start_cycles_per_hop": 3,
+ "virtual_lead_range_cycles": [
+  65,
+  106
+ ],
+ "native_origins_old": {
+  "lk_ES0": 12,
+  "lk_ES1": 11
+ },
+ "native_origins_new": {
+  "lk_ES0": 74,
+  "lk_ES1": 137
+ },
+ "native_global_raw_path": "existing global reset_tree plus inputrelay1 and collector9/8, not transported from last START stage",
+ "new_data_buffers_register_cycles": 0,
+ "holds": [
+  "actual emitter buffered/mapped inventory and warm/cold LEC/simulation",
+  "source recomposed native raw collector preserves9/8 and actual perleg timing",
+  "source provider b705 actual existing output gate homes"
+ ],
+ "build_allowed": false
+}
