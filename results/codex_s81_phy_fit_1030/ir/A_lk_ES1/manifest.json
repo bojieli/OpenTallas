@@ -1,0 +1,177 @@
+{
+ "schema": "opentallas.s81_ir_domains.case.v1",
+ "plan": "/srv/opentallas-scratch2/claude/codex-s81-phy-ir-1030/A_lk_ES1/ir_coupon.json",
+ "phy_box": null,
+ "nets": [
+  "VDD",
+  "VSS",
+  "VDDPHY",
+  "VSSPHY"
+ ],
+ "die": "S81 isolated PHY PG sizing coupon",
+ "mode": "domains",
+ "window_um": [
+  26187.84,
+  95.04,
+  28995.84,
+  1209.6000000000001
+ ],
+ "tile_um": 43.2,
+ "density_w_mm2": 0.15,
+ "voltage_v": 0.7,
+ "gate_mv": 35.0,
+ "core_grid": [
+  {
+   "layer": "M8",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 0.48,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDD",
+    "VSS"
+   ]
+  }
+ ],
+ "domain_grid": [
+  {
+   "layer": "M8",
+   "width_um": 1.92,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDDPHY",
+    "VSS"
+   ]
+  },
+  {
+   "layer": "M9",
+   "width_um": 1.92,
+   "pitch_um": 8.64,
+   "offset_um": 4.32,
+   "nets": [
+    "VDDPHY",
+    "VSS"
+   ]
+  }
+ ],
+ "domains": [
+  {
+   "name": "phy_lk_ES1",
+   "io": [
+    "io_lk_ES1_u_phy"
+   ],
+   "rect_um": [
+    26278.36,
+    179.28,
+    28908.44,
+    1125.36
+   ],
+   "bumps_rect_um": [
+    26289.16,
+    190.08,
+    28897.64,
+    1114.56
+   ],
+   "phy_macro_um": [
+    26289.16,
+    190.08,
+    28897.64,
+    1114.56
+   ],
+   "core_strip_um": [
+    [
+     26075.52,
+     103.68,
+     28961.28,
+     179.28
+    ],
+    [
+     26075.52,
+     1125.36,
+     28961.28,
+     1330.5600000000002
+    ],
+    [
+     26075.52,
+     179.28,
+     26278.36,
+     1125.36
+    ],
+    [
+     28908.44,
+     179.28,
+     28961.28,
+     1125.36
+    ]
+   ]
+  }
+ ],
+ "region_boxes": [
+  [
+   26278.36,
+   179.28,
+   28908.44,
+   1125.36
+  ]
+ ],
+ "phy": [
+  {
+   "dom": "phy_lk_ES1",
+   "rect_um": [
+    26289.16,
+    190.08,
+    28897.64,
+    1114.56
+   ],
+   "w": 4.368,
+   "w_per_mm2": 1.8113
+  }
+ ],
+ "phy_w_basis": "6 lanes x 112 Gb/s x 6.5 pJ/bit (hbm_b2_power.py SERDES_*; hbrom-power.json board_serdes_112g)",
+ "tiles": {
+  "core": 329,
+  "phy": 1260
+ },
+ "core_load_w": 0.0868,
+ "phy_load_w": 4.368,
+ "core_area_mm2": 0.5789,
+ "channels_unloaded": [
+  [
+   28961.280000000002,
+   103.68,
+   28995.84,
+   1209.6000000000001
+  ],
+  [
+   26187.84,
+   95.04,
+   28995.84,
+   103.68
+  ]
+ ],
+ "uncovered_core_area_mm2": 0.0768,
+ "bumps": {
+  "core": 48,
+  "core_relocated_to_domain_edges": 12,
+  "domain": 1230,
+  "by_net": {
+   "VDD": 24,
+   "VSS": 24,
+   "VDDPHY": 615,
+   "VSSPHY": 615
+  }
+ },
+ "io_in_window": [
+  "io_lk_ES1_u_phy"
+ ]
+}
