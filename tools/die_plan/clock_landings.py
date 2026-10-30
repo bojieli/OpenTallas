@@ -775,7 +775,7 @@ class Landings:
             raise LandingError(f"{tn}: relay-origin writer reuse needs phase >= 2")
         physical_depth = depth - int(reuse)
         if len(stages) != physical_depth:
-            raise LandingError(f"{tn}.{bus}: writer START needs exactly {physical_depth} new physical stages for phase {depth}")
+            raise LandingError(f"{tn}.{bus}: writer START needs exactly {physical_depth} physical stages (new stages for phase {depth})")
         outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
         records = []
         prev = "cland_start" if reuse else "cland_start_d"
