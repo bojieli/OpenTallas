@@ -8,7 +8,9 @@ proc cland_place_ff {prefix rect tag} {
  }
  set ::env(OT_GEOM_OUT) /work/head_native_live.tsv
  uplevel #0 {source /work/head_native_tools/geom_dump.tcl}
- puts [exec python3 /work/head_native_pack.py --kit /work --dump /work/head_native_live.tsv --geom-tools /work/head_native_tools --out /work/head_native_generated]
+ set cmd [list python3 /work/head_native_pack.py --kit /work --dump /work/head_native_live.tsv --geom-tools /work/head_native_tools --out /work/head_native_generated]
+ if {[file exists /work/head_native_private_write_comb.enabled]} {lappend cmd --private-write-comb}
+ puts [exec {*}$cmd]
  uplevel #0 {source /work/head_native_generated/native_ring_layout.tcl}
  return 2941
 }
