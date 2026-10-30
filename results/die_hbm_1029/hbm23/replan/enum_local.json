@@ -1,0 +1,590 @@
+{
+ "base": {
+  "adj_bits": 120380,
+  "nonadj_bits": 78941,
+  "over_bits": 5959,
+  "moved_nw": 0
+ },
+ "top": [
+  {
+   "cost": 452524,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 454427,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b101",
+    "NW_b100",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 455793,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_spu1",
+    "NW_su31",
+    "NW_su30"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 456128,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b100",
+    "NW_b101",
+    "NW_b110",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 456278,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_spu0",
+    "NW_su11",
+    "NW_su10"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 457120,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_su30",
+    "NW_su31",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 457433,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su10",
+    "NW_su11",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 457696,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b101",
+    "NW_b100",
+    "NW_spu1",
+    "NW_su31",
+    "NW_su30"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 458031,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b101",
+    "NW_b100",
+    "NW_b110",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 458180,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b101",
+    "NW_b100",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_spu0",
+    "NW_su11",
+    "NW_su10"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 459023,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b101",
+    "NW_b100",
+    "NW_su30",
+    "NW_su31",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 459335,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b101",
+    "NW_b100",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su10",
+    "NW_su11",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 459398,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b100",
+    "NW_b101",
+    "NW_b110",
+    "NW_spu1",
+    "NW_su31",
+    "NW_su30"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 459547,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_spu1",
+    "NW_su31",
+    "NW_su30"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_spu0",
+    "NW_su11",
+    "NW_su10"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 459882,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b100",
+    "NW_b101",
+    "NW_b110",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_spu0",
+    "NW_su11",
+    "NW_su10"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 460390,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_spu1",
+    "NW_su30",
+    "NW_su31"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 460702,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_spu1",
+    "NW_su31",
+    "NW_su30"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su10",
+    "NW_su11",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 460725,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b100",
+    "NW_b101",
+    "NW_b110",
+    "NW_su30",
+    "NW_su31",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su11",
+    "NW_su10",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 460874,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b110",
+    "NW_b100",
+    "NW_b101",
+    "NW_su30",
+    "NW_su31",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_spu0",
+    "NW_su11",
+    "NW_su10"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  },
+  {
+   "cost": 461037,
+   "A": [
+    "NW_b102",
+    "NW_b103",
+    "NW_b111",
+    "NW_su20",
+    "NW_su21",
+    "NW_b100",
+    "NW_b101",
+    "NW_b110",
+    "NW_su31",
+    "NW_su30",
+    "NW_spu1"
+   ],
+   "C": [
+    "NW_b113",
+    "NW_su00",
+    "NW_su01",
+    "NW_b112",
+    "NW_su10",
+    "NW_su11",
+    "NW_spu0"
+   ],
+   "adj_bits": 135601,
+   "nonadj_bits": 63720,
+   "over_bits": 5959,
+   "moved_nw": 10
+  }
+ ]
+}

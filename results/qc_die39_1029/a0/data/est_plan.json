@@ -1,0 +1,160 @@
+{
+ "nl": {
+  "model_bias_removed_ps": 38.2,
+  "worst_mean_model": [
+   [
+    -92.1,
+    "reg->reg"
+   ],
+   [
+    -89.4,
+    "reg->reg"
+   ],
+   [
+    -89.0,
+    "reg->reg"
+   ],
+   [
+    -78.5,
+    "reg->outport"
+   ],
+   [
+    -78.0,
+    "reg->outport"
+   ]
+  ],
+  "v2_slice": "nl_v2_slice.json",
+  "new_slice": "nl_std_T26_l21.json",
+  "calibration_on_v2": {
+   "n_regs": 14330,
+   "bias_med": 38.2,
+   "rms": 40.4,
+   "v2_meas_spread": 265.8,
+   "model_spread": 191.4,
+   "macro_bias": 24.0
+  },
+  "ws_v2": -281.18,
+  "reg_insertion_model": {
+   "min": 506.9,
+   "median": 536.3,
+   "max": 622.4
+  },
+  "ws_mean_model": -92.1,
+  "ws_pred_p50": -112.5,
+  "ws_pred_p05": -139.5,
+  "ws_pred_min": -160.0,
+  "fails_p50": 2546,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -18.3,
+    "worst_p05": -42.9,
+    "fails_p50": 43
+   },
+   "macro->": {
+    "worst_p50": -20.2,
+    "worst_p05": -46.6,
+    "fails_p50": 16
+   },
+   "port->*": {
+    "worst_p50": -32.3,
+    "worst_p05": -74.2,
+    "fails_p50": 42
+   },
+   "reg->async": {
+    "worst_p50": -15.8,
+    "worst_p05": -57.4,
+    "fails_p50": 2
+   },
+   "reg->outport": {
+    "worst_p50": -90.0,
+    "worst_p05": -114.5,
+    "fails_p50": 516
+   },
+   "reg->reg": {
+    "worst_p50": -110.8,
+    "worst_p05": -139.5,
+    "fails_p50": 1878
+   }
+  },
+  "unprobed_bound_ps": -88.5
+ },
+ "nk": {
+  "model_bias_removed_ps": 68.8,
+  "worst_mean_model": [
+   [
+    -383.6,
+    "port->*"
+   ],
+   [
+    -377.3,
+    "port->*"
+   ],
+   [
+    -377.0,
+    "port->*"
+   ],
+   [
+    -376.6,
+    "port->*"
+   ],
+   [
+    -370.4,
+    "port->*"
+   ]
+  ],
+  "v2_slice": "nk_v2_slice.json",
+  "new_slice": "nk_std_T20.json",
+  "calibration_on_v2": {
+   "n_regs": 15360,
+   "bias_med": 68.8,
+   "rms": 67.8,
+   "v2_meas_spread": 249.9,
+   "model_spread": 254.5,
+   "macro_bias": 50.6
+  },
+  "ws_v2": -289.88,
+  "reg_insertion_model": {
+   "min": 397.8,
+   "median": 464.9,
+   "max": 620.5
+  },
+  "ws_mean_model": -383.6,
+  "ws_pred_p50": -394.3,
+  "ws_pred_p05": -456.4,
+  "ws_pred_min": -522.2,
+  "fails_p50": 5633,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -207.4,
+    "worst_p05": -272.6,
+    "fails_p50": 2052
+   },
+   "macro->": {
+    "worst_p50": -28.5,
+    "worst_p05": -63.2,
+    "fails_p50": 73
+   },
+   "port->*": {
+    "worst_p50": -394.3,
+    "worst_p05": -456.4,
+    "fails_p50": 1556
+   },
+   "reg->async": {
+    "worst_p50": -32.9,
+    "worst_p05": -65.2,
+    "fails_p50": 5
+   },
+   "reg->outport": {
+    "worst_p50": 230.1,
+    "worst_p05": 176.0,
+    "fails_p50": 0
+   },
+   "reg->reg": {
+    "worst_p50": -204.1,
+    "worst_p05": -301.3,
+    "fails_p50": 1890
+   }
+  },
+  "unprobed_bound_ps": -151.8
+ }
+}

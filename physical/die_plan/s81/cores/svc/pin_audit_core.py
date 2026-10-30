@@ -41,6 +41,18 @@ def main():
         if not lay:
             res["wrong_layer"].append([n, p["layer"], sorted({b[0] for b in boxes})])
             continue
+        if "native_rects" in p:
+            # A multiPORT contract includes all original rectangles, not a
+            # bounding box or an implicitly projected access point.
+            expected = p["native_rects"]
+            matches = (len(boxes) == len(expected) and all(
+                any(a[0] == b[0] and all(abs(x-y) <= TOL for x,y in zip(a[1:], b[1:]))
+                    for b in boxes) for a in expected))
+            if matches:
+                res["ok"] += 1
+            else:
+                res["wrong_place"].append([n, p, boxes])
+            continue
         good = False
         for _, x0, y0, x1, y1 in lay:
             cx, cy = (x0 + x1) / 2, (y0 + y1) / 2

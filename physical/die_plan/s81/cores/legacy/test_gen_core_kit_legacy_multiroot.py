@@ -135,7 +135,8 @@ def test_generator_kits_declared_crs4(tmp_path):
     assert "set ::ot_fc_map [dict create" in (kd / "core_clock_map.tcl").read_text()
     assert "{xl3} {xk[3]}" in (kd / "core_clock_map.tcl").read_text()
     assert "global ot_fc" not in fps and "$::ot_fc_map" in fps   # sourced inside a proc (synth_odb.tcl)
-    assert "set vck [get_clocks vclk]" in (kd / "postcts_gate.tcl").read_text()
+    assert "set ot_pg_virtual {}" in (kd / "postcts_gate.tcl").read_text()
+    assert "get_property $ot_pg_clock sources" in (kd / "postcts_gate.tcl").read_text()
     assert "set_propagated_clock [get_clocks {clk clk_cr_s clk_xk}]" in (kd / "corners.tcl").read_text()
     assert "OT_CORE_SKIP = cr cr_s xk rst" in (kd / "config.mk").read_text()
     fz = json.loads((kd / "freeze.json").read_text())
@@ -150,3 +151,29 @@ def test_generator_multi_root_master_slice_fail_closed(tmp_path):
                        capture_output=True, text=True)
     assert r.returncode != 0 and "master-plan slice for 'dsfd_cfifo_crs4' not found" in r.stderr, r.stderr[-1500:]
     assert "master slices carry one clock entry" not in r.stderr
+
+
+def test_multi_root_postcts_preserves_virtual_selector_and_all_roots(tmp_path):
+    import shutil
+    shutil.copyfile(HERE / "core_face_post_synth.tcl", tmp_path / "core_face_post_synth.tcl")
+    shutil.copyfile(G.TOOL / "postcts_gate.tcl", tmp_path / "postcts_gate.tcl")
+    (tmp_path / "corners.tcl").write_text("set_propagated_clock [get_clocks clk]\n")
+    mr = G.multi_root_contract("dsfd_cfifo_crs4", FULL, {"multi_root": True})
+    G.multi_root_tcl_patches(tmp_path, mr)
+    t = (tmp_path / "postcts_gate.tcl").read_text()
+    assert "get_property $ot_pg_clock sources" in t
+    assert "set_clock_latency -source $ot_pg_bound $ot_pg_virtual" in t
+    assert "set_propagated_clock [get_clocks {clk clk_cr_s clk_xk}]" in t
+    assert "foreach ot_rc [get_clocks {clk clk_cr_s clk_xk}]" in t
+    assert "set_propagated_clock [get_clocks vclk]" not in t
+
+
+def test_multi_root_postcts_rejects_missing_virtual_selector(tmp_path):
+    import shutil
+    shutil.copyfile(HERE / "core_face_post_synth.tcl", tmp_path / "core_face_post_synth.tcl")
+    t = (G.TOOL / "postcts_gate.tcl").read_text()
+    (tmp_path / "postcts_gate.tcl").write_text(t.replace("get_property $ot_pg_clock sources", "get_property $ot_pg_clock period"))
+    (tmp_path / "corners.tcl").write_text("set_propagated_clock [get_clocks clk]\n")
+    mr = G.multi_root_contract("dsfd_cfifo_crs4", FULL, {"multi_root": True})
+    with pytest.raises(AssertionError, match="virtual-clock selector changed"):
+        G.multi_root_tcl_patches(tmp_path, mr)

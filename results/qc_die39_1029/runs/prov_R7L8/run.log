@@ -1,0 +1,15 @@
+PREBUILD_STAGE access shapes
+PREBUILD_STAGE access census 1036329 shapes
+PREBUILD_STAGE encoder census=18/6
+PREBUILD_STAGE top access reservation
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-qc39/src_pc/tools/clk/fixed_tree_provider.py", line 147, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/srv/opentallas-scratch2/claude/die-qc39/src_pc/tools/clk/fixed_tree_provider.py", line 144, in main
+    try:ns['main']()
+        ^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/die-qc39/fixed_tree_prov_jog7.py", line 681, in main
+    if ties['untied'] or ties['shorts']:
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: fixed-wire pin stacks short; revise before materializing
