@@ -83,3 +83,55 @@ A native-address issue was found in the older unreserved publication preparation
 scratch0xF000000000 is40-bit encodable but has illegal HGI stripe code7. It was
 never installed. New native DMA publication must enforce the actual HGI address
 and sector rules; no old result is promoted to full-fit or token success.
+
+## Native boundary DMA and canonical cross-phase epochs
+
+`vm_phase_shadow.py` emits real native prefetch, unit-drain, early-publication and
+retirement commands around those producer phases. The actual HGI decoder's
+linear-address and whole-sector rules are enforced. Candidate scratch starts at
+0x1F00000000 (linear stripe code0, stack3/local28GiB); it remains explicitly
+UNRESERVED for the release. The component test allocates only its own model
+regions. The old stripe-code7 candidate is refused.
+
+The source epoch analysis follows the ORIGINAL all-six-row record order. It
+found10 phase3 boundary sectors requiring earlier phase0 values, mostly the
+ALL_GATHER1459slot0 contents under scalar partial-sector writes and the shared
+constant sector from DMA1467slot2. Merely retaining one entry snapshot is not
+sufficient. Ten actual32-byte early stores publish those values immediately
+after the native producer group. Phase3 prefetches those immutable producer
+epochs. There is no reverse phase dependency in this real slice. Phase-private
+retirement banks and a canonical final-writer selector prevent outputs from
+overwriting still-pending inputs or selecting stale final values.
+
+The native component contains129 commands, including40 body commands; both SM
+operations retain three-row shared-weight issue. Added boundary data movement is
+**1953856 bytes** (excluding existing source-body DMA traffic). The commands use
+explicit unit-drain waits before workspace reuse; lost overlap and transfer
+service cycles are UNPRICED. No new token rate is claimed.
+
+`check_shadow.py` executes every added LOAD/STORE/FENCE through the real HGI
+machine model, with raw U32/NaN payload patterns and the actual stripe/sector
+checks. Original body DMA loads also execute through that model. The unchanged
+arithmetic operators are represented by unique word versions, and every read is
+compared to the ORIGINAL all-six-row order. This checks995472 canonical read
+words and191160 final boundary words. Ten negative controls catch wrong load,
+partial-sector store, missing drain, wrong retirement, corrupted producer epoch
+and illegal stripe code. This is a compiler address/value-version proof plus
+real DMA execution; no whole numerical RTL token pass is asserted.
+
+Whole-programme scratch authority, all other regions, dynamic expert/selection
+footprints, source/physical binding and the measured full calendar remain open.
+The packet declares whole_programme_executable=false/full_programme_fits=null.
+
+```
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_value_phase.py \
+ --image /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r \
+ --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
+ --live-out results/tok_hbm_1847/future_boundary.json --out-dir /tmp/hbm-values
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_phase_shadow.py \
+ --values /tmp/hbm-values/values.json \
+ --image /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r \
+ --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
+ --scratch-base 0x1F00000000 --out-dir /tmp/hbm-shadow
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 results/tok_hbm_2249/check_shadow.py
+```
