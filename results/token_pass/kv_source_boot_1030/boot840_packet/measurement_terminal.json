@@ -1,0 +1,166 @@
+{
+  "schema": "opentallas.native_clock_boot_measurement.v1",
+  "native_control_measurement_pass": true,
+  "physical_qualified": false,
+  "scope": "Clock-landing raw reset -> native CA START -> rings -> registered returned status at glue; excludes programming/install/first-token and physical/analog qualification",
+  "current_logical_cohort": "main75aa0966bb9 canonical + ONLY kv3_sys_SD/_v1 R52 R6W7 types + exact actual R52 sidecar",
+  "emitted_RTL_semantic_sha256": "f80f821a3a371413a11f75c548735aedcb9720dc5d4473676b2b923c04e5dec5",
+  "emitted_RTL_manifest_rule": "sorted filename->SHA256 entire emitted SV after comments/attributes/whitespace removal only; all58files equal",
+  "emitted_RTL_files": 58,
+  "current_strict_bind": {
+    "parts": 160,
+    "types": 56,
+    "crossings": 2545,
+    "bits": 430554,
+    "errors": 0
+  },
+  "sources": {
+    "current_plan": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/plan_of_record/plan_c_main75_sd_r52_compare.json",
+      "sha256": "ed8e13c6bd7fa97db14d2440cf5d17857dacd76f77ac2da7984a12532546a42c"
+    },
+    "R52_sidecar": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/bindbase/kv40/eW_sidecar_sd_anchor_v2.json",
+      "sha256": "6ad86eb034892fff85777b3a17c347b17c3011fb1c4f11dc2d4178a42ff19502"
+    },
+    "recipe": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/recipe_sd_anchor_v2.json",
+      "sha256": "8f2863c518840a8f6b8f5fb148e0cf471f219512d9070340ee3c5e6272cdb460"
+    },
+    "phase_provider": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/kv_nativeB_clock_provider.sv",
+      "sha256": "00a37818c08d40e7867aa0cb96d968b719fb5821917ab4c1d90d0e8a534f3a32"
+    },
+    "phase_map": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/clock_provider_map.json",
+      "sha256": "5f13e7fe0ae82a9b8cbb002f7fa60558279a92ec272118799ae56320f01a5194"
+    },
+    "compiled_control_source": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/full_boot_full_wiring/controls.sv",
+      "sha256": "fa074ef53b00dc89c3cbe5191ceee6ad6a8e6d94f97bc534b27212892271e376"
+    },
+    "compiled_bound_top": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/full_boot_full_wiring/top.sv",
+      "sha256": "af9f2dd207872754425498cb0d1c34dff5dd1b2f009a7aedb00358478cfe07b1"
+    },
+    "native_standard_landing": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/sdpg_diamond/rtl/ot_dp_clk_landing.sv",
+      "sha256": "ba518aa441e7e8389292c56725eecc791a9b180300eec470106017ae3734224c"
+    },
+    "native_meso_ring": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/sdpg_diamond/rtl/ot_meso_fifo.sv",
+      "sha256": "12326142ee9281ef5549dc5bf926b5f4ccae81d11a98181088b7645a406a2c85"
+    },
+    "native_bind_cells": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/sdpg_diamond/rtl/bind_cells.sv",
+      "sha256": "be7f7687ed209ec80ad16d0eeaf4b8c33fd7ad3c4e9c3b1357da151c566d7950"
+    },
+    "native_PLL": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/bindbase/rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+      "sha256": "931d838764e4cbcd77a56368228214357507bd472e00278709669d51b3795095"
+    },
+    "refmax_testbench_VPI": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/vpi_heartbeat/heartbeat_refmax.c",
+      "sha256": "86d6ef88fdc119627782d8e8bf37a0d570b97d13319e14917d2108433dff18c1"
+    }
+  },
+  "period_ps": 833,
+  "period_fs": 833000,
+  "historic_ready_at_glue_max_cycles": 392,
+  "ready_at_glue_max_cycles": 840,
+  "observer_input_capture_cycles": 1,
+  "initial_HOST_clock_guard_cycles": 841,
+  "warm_mission_observed_max_cycles": 74,
+  "one_time_boot_delta_cycles": 448,
+  "one_time_boot_delta_ps": 373184,
+  "steady_data_cycle_delta": 0,
+  "old392_negative_pass": true,
+  "839_negative_fs": 31141,
+  "nominal_selected_cases": {
+    "tt": {
+      "terminal_pass": true,
+      "all_160_part_ready": true,
+      "all_160_part_fault_zero": true,
+      "old392_negative": true,
+      "CA_faults": 0,
+      "qualified_raw_fs": 120242142,
+      "ready_glue_fs": 723334142,
+      "por_release_fs": 25000001,
+      "post_qualified_raw_cycles": 724,
+      "cold_ceil_cycles": 839,
+      "warm_observed_ceil_cycles": 74,
+      "warm_source": "actual top.start mission epoch 0->1, pad POR and PLL locked retained"
+    },
+    "ff": {
+      "terminal_pass": true,
+      "all_160_part_ready": true,
+      "all_160_part_fault_zero": true,
+      "old392_negative": true,
+      "CA_faults": 0,
+      "qualified_raw_fs": 120127090,
+      "ready_glue_fs": 723219090,
+      "por_release_fs": 25000001,
+      "post_qualified_raw_cycles": 724,
+      "cold_ceil_cycles": 839,
+      "warm_observed_ceil_cycles": 73,
+      "warm_source": "actual top.start mission epoch 0->1, pad POR and PLL locked retained"
+    }
+  },
+  "worst_REF_case": {
+    "global_clock_case": "whole TTlate, immutable calibrated nativeB provider; all input-region phases coherent",
+    "REF_first_rise_ps": 4416,
+    "REF_period_ps": 10000,
+    "POR_fs": 24416001,
+    "PLL_LOCK_fs": 104416000,
+    "qualified_raw_fs": 120242142,
+    "complete_glue_ready_fs": 723334142,
+    "cold_elapsed_fs": 698918141,
+    "cold_ceil833_cycles": 840,
+    "warm_start_release_fs": 1266993000,
+    "warm_complete_fs": 1328371673,
+    "warm_elapsed_fs": 61378673,
+    "warm_ceil833_cycles": 74,
+    "warm_retained_PLL_POR": true,
+    "CA_faults_observed": 0,
+    "required_cold_warm_measurement_complete": true,
+    "extended_terminal_monitor_complete": true,
+    "all_160_part_ready": true,
+    "all_160_part_fault_zero": true
+  },
+  "causal_bound": {
+    "PLL_LOCK_wait_ps_strict_upper": 80000,
+    "lockq_first_sample_wait_ps_strict_upper": 833,
+    "lockq_cycles_after_first_sample": 18,
+    "qualified_raw_prefix_ps_strict_upper": 95827,
+    "measured_post_qualified_raw_cycles": 724,
+    "whole_cold_ps_strict_upper": 698919,
+    "whole_cold_cycles_ceiling": 840,
+    "reason": "All selected clocks have fixed phases and period833; shifting qualified raw by whole cycles preserves reset/START/count/status trajectory once reset zeros propagated. Unreset standard writer counter rotations preserve status/data transport after fixed SETTLE; native pointwise proof below removes TC phase assumption."
+  },
+  "standard_free_counter_rotation": {
+    "native_instances": 128,
+    "initial_legal_tc_values": 8,
+    "clock_offset_cases": 16,
+    "cold_warm_epochs": 2,
+    "pointwise_ready_fault_and_q_checks": 22400,
+    "ready_edges_checked": 256,
+    "every_training_latency_cycles": 21,
+    "writer_reinitialized_on_warm": false,
+    "proof": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/free_ring_rotation/tb.sv"
+  },
+  "data_slice_scope": "Native protocol count/tag/ready/fault retained; functional CA payload reduced64->1 only in replay. Prior native all64K/16384-cycle bitwise data/status miter passed; no production RTL modified.",
+  "phase_scope": "Actual old loaded nativeB input-tap TTlate/FFearly calibrated per-master case model. New SDseven-root replication is explicit source-replay assumption. No current internal/core/PMA/new-geometry phase qualification.",
+  "recorded_failures": [
+    "old inherited392 underbudget",
+    "commonphase0PCcrossing falsefixture zero lag; K retained, actual selected phases pass",
+    "earlier pruned/disconnected control fixtures failed and are not credited"
+  ],
+  "immutable_measurement_logs": {
+    "tt_terminal.log": "e42ed8827495107c8a3d7cfd534db8e30b80d249bc46679b56d58a00c8bbec77",
+    "free_ring_rotation.log": "57e9dedd0ce51691fb461882957406e2b089fa36bc43b61e195aad0ebb257961",
+    "refmax_measured_interval.log": "f2b4b703bf2c73ec419b980ed95536fc6f634bd80beb8b21dd59aa40ffa423c2",
+    "ff_terminal.log": "dd1db6ffbe2497c3be145a0c96acca56230da41c582ed31ab49fbc00e421e491",
+    "refmax_terminal.log": "88eb71bddfb2aa87b1e98d5b4c501f7abb58e6a0c77c1229837148ba00749fc3"
+  },
+  "immutable_original_measurement_sha256": "d42be15a8aad38e77405f938f440423ce31a4bd4b836fa2272729c08d30aabc6"
+}

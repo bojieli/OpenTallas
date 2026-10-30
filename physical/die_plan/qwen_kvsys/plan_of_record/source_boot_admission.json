@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.kv.source_boot_admission.v1",
+  "status": "SOURCE_BOUND_PHYSICAL_HELD",
+  "source_causal_bound_qualified": true,
+  "emitted_RTL_requalification_required": false,
+  "period_ps": 833,
+  "ready_at_glue_max_cycles": 840,
+  "observer_input_capture_cycles": 1,
+  "cold_registered_ready_bound_cycles": 841,
+  "warm_mission_restore_max_cycles": 74,
+  "one_time_boot_bound_increase_cycles": 448,
+  "one_time_boot_bound_increase_ps": 373184,
+  "steady_token_cycle_delta": 0,
+  "physical_qualified": false,
+  "production_admission_granted": false,
+  "requires": [
+    "actual registered root ready",
+    "no registered root fault",
+    "actual programme/local installation",
+    "delivered mission START"
+  ],
+  "budget_alone_grants_START": false,
+  "first_token_latency_inferred": false,
+  "measurement_sha256": "8639e9b5adb17db044cf5664d110ed6f0c840b505fb4a086dca1cc6620175a47",
+  "source_control_identity_sha256": "e9d8d16ff0502f95bca3e999026b8b8312ddeb14b129a67a3518fa1ac6d686dc",
+  "emitted_RTL_semantic_sha256": "f80f821a3a371413a11f75c548735aedcb9720dc5d4473676b2b923c04e5dec5",
+  "source_profile": "main75aa0966bb9 canonical + ONLY kv3_sys_SD/_v1 R52 R6W7 types + exact actual R52 sidecar",
+  "holds": [
+    "current die clock load 2337 FAIL",
+    "four current raw-clock holds",
+    "current new-SD/internal/core/PMA phase qualification"
+  ],
+  "source_template_scope": "Only the measured emitted RTL cohort; any regeneration requires fresh full semantic comparison",
+  "phase_scope": "Actual old loaded nativeB input-tap TTlate/FFearly calibrated per-master case model. New SDseven-root replication is explicit source-replay assumption. No current internal/core/PMA/new-geometry phase qualification.",
+  "generated_source_sidecar": "results/token_pass/kv_source_boot_1030/eW_source_boot840.json"
+}

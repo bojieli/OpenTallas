@@ -1,0 +1,364 @@
+{
+  "old": "portable f1ba+SD R52 controls, actual compiled cohort",
+  "new": "main75aa0966bb9 canonical+ONLY two SD R52 types/actualR52sidecar",
+  "cleaning": "Remove comments, synthesis attributes and whitespace only; compare ENTIRE emitted SV contents including every module/header/always/assign/functional instance/parameter/pin/complete bound top/straps",
+  "files": [
+    {
+      "file": "bind_cells.sv",
+      "old_sha256": "d6a45e4c509f60414cb3608df0a3e5160d964821fba3f4c60a7f0122dea4a110",
+      "current_sha256": "d6a45e4c509f60414cb3608df0a3e5160d964821fba3f4c60a7f0122dea4a110",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_part.sv",
+      "old_sha256": "e5064a87d1a27ab8f322ed9c9cee9335ee0a174fbe4108b864a2f2605ad63df7",
+      "current_sha256": "e5064a87d1a27ab8f322ed9c9cee9335ee0a174fbe4108b864a2f2605ad63df7",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v1_part.sv",
+      "old_sha256": "87d793948d5fe35cc8c4218805180a26babd7ff95c18ae6c0dad5b7e67742335",
+      "current_sha256": "87d793948d5fe35cc8c4218805180a26babd7ff95c18ae6c0dad5b7e67742335",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v1p2.sv",
+      "old_sha256": "b7d15040ed8d9596356dc034f2345078be0adebedba0db3e241465c5b7bf2ef7",
+      "current_sha256": "b7d15040ed8d9596356dc034f2345078be0adebedba0db3e241465c5b7bf2ef7",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v1p3.sv",
+      "old_sha256": "ab81879eb2fa8f46fb022e9ee27687636c047ce02914d07160be8b362cee06cb",
+      "current_sha256": "ab81879eb2fa8f46fb022e9ee27687636c047ce02914d07160be8b362cee06cb",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v1p4.sv",
+      "old_sha256": "d663d6fcafd6363337c3deba068090335df10f8cefb3ef4a1ec510d4b124aad9",
+      "current_sha256": "d663d6fcafd6363337c3deba068090335df10f8cefb3ef4a1ec510d4b124aad9",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v1p5.sv",
+      "old_sha256": "60f1bd37bd1d0f8b5dfb968c7486e6dc47bb11dfd20d2f5a7cf78f77b8c0f210",
+      "current_sha256": "60f1bd37bd1d0f8b5dfb968c7486e6dc47bb11dfd20d2f5a7cf78f77b8c0f210",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v1p6.sv",
+      "old_sha256": "23b8792e0b910cdc69b4630efd4be3520fee11b0c4fbd41011e77896e8dbccfc",
+      "current_sha256": "23b8792e0b910cdc69b4630efd4be3520fee11b0c4fbd41011e77896e8dbccfc",
+      "equal": true
+    },
+    {
+      "file": "kv3_hg_v3_part.sv",
+      "old_sha256": "1d9484d1399255e011ba1d2e36edd40e1b0b6631ef8ebe573e734f1983cb0eb4",
+      "current_sha256": "1d9484d1399255e011ba1d2e36edd40e1b0b6631ef8ebe573e734f1983cb0eb4",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_part.sv",
+      "old_sha256": "b116b36be24ac49ded3069aa5a4c92c323089d5ed416bf0e45d080cc404bcd12",
+      "current_sha256": "b116b36be24ac49ded3069aa5a4c92c323089d5ed416bf0e45d080cc404bcd12",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v1__cl141fc26e.sv",
+      "old_sha256": "2cd5eabab0cd581c1937e497e519563a493cec01f5abd3c01b5185f3f75e114f",
+      "current_sha256": "2cd5eabab0cd581c1937e497e519563a493cec01f5abd3c01b5185f3f75e114f",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v1__cl42bc8b12.sv",
+      "old_sha256": "e72f59fb987dcc0d86c5df5df5bef5a7a34374fc54c94a58585a417767202da2",
+      "current_sha256": "e72f59fb987dcc0d86c5df5df5bef5a7a34374fc54c94a58585a417767202da2",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v2__cl2862d491.sv",
+      "old_sha256": "712bf1a69390c664a77ee069b636a6213cb018b6403e5c172d0d4fc796ae0719",
+      "current_sha256": "712bf1a69390c664a77ee069b636a6213cb018b6403e5c172d0d4fc796ae0719",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v2__cle0015330.sv",
+      "old_sha256": "dddc4d5152780d73a13dae988714606dab33984039e4d65716acd2032a2209c0",
+      "current_sha256": "dddc4d5152780d73a13dae988714606dab33984039e4d65716acd2032a2209c0",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v3_part.sv",
+      "old_sha256": "1e4758482cb60438d4c1510b2f4d7ae50632216b59ece097065a5929c8b6495b",
+      "current_sha256": "1e4758482cb60438d4c1510b2f4d7ae50632216b59ece097065a5929c8b6495b",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v4_part.sv",
+      "old_sha256": "0e0da501f1b811ffc380fbc1582c5621a8bbfa90a7a6e1594af16cffc912955c",
+      "current_sha256": "0e0da501f1b811ffc380fbc1582c5621a8bbfa90a7a6e1594af16cffc912955c",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v5_part.sv",
+      "old_sha256": "a052d290edfb870e1eab046c5e8141da9fbc16baf1fea4df8902b62bc4ac3f0d",
+      "current_sha256": "a052d290edfb870e1eab046c5e8141da9fbc16baf1fea4df8902b62bc4ac3f0d",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v6_part.sv",
+      "old_sha256": "6c0056dace3d3f737e11f11d22411010e4725358ff297647181e6623c89c8a1d",
+      "current_sha256": "6c0056dace3d3f737e11f11d22411010e4725358ff297647181e6623c89c8a1d",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v7_part.sv",
+      "old_sha256": "c27cc5343fcdfa134fed70d51c1e725dae75e029c4d69e8fb66859103fed91a9",
+      "current_sha256": "c27cc5343fcdfa134fed70d51c1e725dae75e029c4d69e8fb66859103fed91a9",
+      "equal": true
+    },
+    {
+      "file": "kv3_hgi_v8_part.sv",
+      "old_sha256": "aad3276aa4b4cff0e8181ba42b1b162e9a617e50c6f466113a3ba7b16ba0c3c9",
+      "current_sha256": "aad3276aa4b4cff0e8181ba42b1b162e9a617e50c6f466113a3ba7b16ba0c3c9",
+      "equal": true
+    },
+    {
+      "file": "kv3_hroot_part.sv",
+      "old_sha256": "8abfd8ab23ae176df898c6211b524f56181bd4a7cebb3b3ebc105b27e76c350f",
+      "current_sha256": "8abfd8ab23ae176df898c6211b524f56181bd4a7cebb3b3ebc105b27e76c350f",
+      "equal": true
+    },
+    {
+      "file": "kv3_hub_C_part.sv",
+      "old_sha256": "cd465225287e5b199b72091ece480f3dc58e235b0464fd6ad0cb96dfaba0240b",
+      "current_sha256": "cd465225287e5b199b72091ece480f3dc58e235b0464fd6ad0cb96dfaba0240b",
+      "equal": true
+    },
+    {
+      "file": "kv3_hub_Ei_part.sv",
+      "old_sha256": "becc81be05b2ae4ca18996754561acf64dd4dd85f85adc6f8c688bdbbc3f6d98",
+      "current_sha256": "becc81be05b2ae4ca18996754561acf64dd4dd85f85adc6f8c688bdbbc3f6d98",
+      "equal": true
+    },
+    {
+      "file": "kv3_hub_Eo_part.sv",
+      "old_sha256": "c11e057eff607f0d02d1dcef44a9f8ccb38ac35871205417564a0a3d01c09155",
+      "current_sha256": "c11e057eff607f0d02d1dcef44a9f8ccb38ac35871205417564a0a3d01c09155",
+      "equal": true
+    },
+    {
+      "file": "kv3_hub_Wi_part.sv",
+      "old_sha256": "b6c1942752fa2dd1247387e2acd9da2e3d79e0d12f60e31b577222e3d4dfcffa",
+      "current_sha256": "b6c1942752fa2dd1247387e2acd9da2e3d79e0d12f60e31b577222e3d4dfcffa",
+      "equal": true
+    },
+    {
+      "file": "kv3_hub_Wo_part.sv",
+      "old_sha256": "768e4f1a77bbdab1a643c9ec459ec1b589de91963c219061ac179c28152dba1e",
+      "current_sha256": "768e4f1a77bbdab1a643c9ec459ec1b589de91963c219061ac179c28152dba1e",
+      "equal": true
+    },
+    {
+      "file": "kv3_io_cor_part.sv",
+      "old_sha256": "b8b964d6acd39dd4c3c78f517713f234d3ae29aefa310e8bcdf96cff32f01c4f",
+      "current_sha256": "b8b964d6acd39dd4c3c78f517713f234d3ae29aefa310e8bcdf96cff32f01c4f",
+      "equal": true
+    },
+    {
+      "file": "kv3_io_cor_v1_part.sv",
+      "old_sha256": "b54cfa76bb98234ad439e7695bd5a8992a36770412cfd73aede1329c9187e20c",
+      "current_sha256": "b54cfa76bb98234ad439e7695bd5a8992a36770412cfd73aede1329c9187e20c",
+      "equal": true
+    },
+    {
+      "file": "kv3_io_ft_part.sv",
+      "old_sha256": "59da62fb11cb4c2d9445c2f9924e2b888d5a6bca3597349450d1574f2f55ed5c",
+      "current_sha256": "59da62fb11cb4c2d9445c2f9924e2b888d5a6bca3597349450d1574f2f55ed5c",
+      "equal": true
+    },
+    {
+      "file": "kv3_io_ft_v1_part.sv",
+      "old_sha256": "15ae7d1e967d1a2aeff57e14ffea567fb035e18f74395d01521a85f445cf4a5f",
+      "current_sha256": "15ae7d1e967d1a2aeff57e14ffea567fb035e18f74395d01521a85f445cf4a5f",
+      "equal": true
+    },
+    {
+      "file": "kv3_pc__cl254f2e73.sv",
+      "old_sha256": "edfc496a607cd58725c748e9c435e223b565652c914838013a677d294bc660ff",
+      "current_sha256": "edfc496a607cd58725c748e9c435e223b565652c914838013a677d294bc660ff",
+      "equal": true
+    },
+    {
+      "file": "kv3_pc__cl5a95b461.sv",
+      "old_sha256": "85546fd07f8a12aa90cc2bae8082e21ace3387ddfb858cf1775a218e11d8fea3",
+      "current_sha256": "85546fd07f8a12aa90cc2bae8082e21ace3387ddfb858cf1775a218e11d8fea3",
+      "equal": true
+    },
+    {
+      "file": "kv3_pc_v1__cl23f6a148.sv",
+      "old_sha256": "ca661aa85bd90efe39a35562d6aa2ab784b08171139592698fab14c3492be3d8",
+      "current_sha256": "ca661aa85bd90efe39a35562d6aa2ab784b08171139592698fab14c3492be3d8",
+      "equal": true
+    },
+    {
+      "file": "kv3_pc_v1__cl4ea58a5c.sv",
+      "old_sha256": "6d358668f3a90bcec2c1d3557297e5c85a0fc11b9aae947a138750eff1a30ef8",
+      "current_sha256": "6d358668f3a90bcec2c1d3557297e5c85a0fc11b9aae947a138750eff1a30ef8",
+      "equal": true
+    },
+    {
+      "file": "kv3_pc_v1__cl7f648944.sv",
+      "old_sha256": "40d924a7e7a4c1c877b0f67676caf7ae6fefb5dce665bdfcb529b35c86b1f761",
+      "current_sha256": "40d924a7e7a4c1c877b0f67676caf7ae6fefb5dce665bdfcb529b35c86b1f761",
+      "equal": true
+    },
+    {
+      "file": "kv3_pc_v3_part.sv",
+      "old_sha256": "84c9283c2abb2d2704aa695c45915cf6cabb34faa8f8f39ca63a4f6d890ea582",
+      "current_sha256": "84c9283c2abb2d2704aa695c45915cf6cabb34faa8f8f39ca63a4f6d890ea582",
+      "equal": true
+    },
+    {
+      "file": "kv3_phy_part.sv",
+      "old_sha256": "934cb2686ab263b9df3caa28bfb4b21f0816879bd240fd57150d97609e4b943f",
+      "current_sha256": "934cb2686ab263b9df3caa28bfb4b21f0816879bd240fd57150d97609e4b943f",
+      "equal": true
+    },
+    {
+      "file": "kv3_phy_v1_part.sv",
+      "old_sha256": "ef928a08ce4ae50ac920c6aaf7e767521e7bc6ae3f093fccffdc066cb3991770",
+      "current_sha256": "ef928a08ce4ae50ac920c6aaf7e767521e7bc6ae3f093fccffdc066cb3991770",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_part.sv",
+      "old_sha256": "8183d0b46a5d2f61a225128bace9d86b7384f612faf61ceacd12a1313e5b2f27",
+      "current_sha256": "8183d0b46a5d2f61a225128bace9d86b7384f612faf61ceacd12a1313e5b2f27",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v12_part.sv",
+      "old_sha256": "d1a0923a5655db1a4f034713bc69c14a4c4d181b16400c83398e8c27f1061f09",
+      "current_sha256": "d1a0923a5655db1a4f034713bc69c14a4c4d181b16400c83398e8c27f1061f09",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v1_part.sv",
+      "old_sha256": "5ed10b2fab884ea85058a8cc691d863c1c6afa2b8e0f06e83b2e4fb4ff26afd8",
+      "current_sha256": "5ed10b2fab884ea85058a8cc691d863c1c6afa2b8e0f06e83b2e4fb4ff26afd8",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v1n.sv",
+      "old_sha256": "6ad59af998f4b81244737afa985b375756bce0e4810637377b66c8b383cdc5d2",
+      "current_sha256": "6ad59af998f4b81244737afa985b375756bce0e4810637377b66c8b383cdc5d2",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v2_part.sv",
+      "old_sha256": "0d60b2eada14de366e8ec9731abf1209f7013fddf573fc401df3264613909cd2",
+      "current_sha256": "0d60b2eada14de366e8ec9731abf1209f7013fddf573fc401df3264613909cd2",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v2n.sv",
+      "old_sha256": "58ec038ff426d573596905de50560a4b516b933c024ac79044ce540f60144915",
+      "current_sha256": "58ec038ff426d573596905de50560a4b516b933c024ac79044ce540f60144915",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v3_part.sv",
+      "old_sha256": "b6f30c1920510b921b733ef34ba6246cb16e81667bdb02009cee0492b51aa6fe",
+      "current_sha256": "b6f30c1920510b921b733ef34ba6246cb16e81667bdb02009cee0492b51aa6fe",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v3n.sv",
+      "old_sha256": "f716b761c7e5ec5188f1d2df21bda66e05c61be0bd9414336b6e8e9e79a2a846",
+      "current_sha256": "f716b761c7e5ec5188f1d2df21bda66e05c61be0bd9414336b6e8e9e79a2a846",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v4_part.sv",
+      "old_sha256": "3d80cad418676e14bf6220f9074abaa63805f9a469d1c32d3bd82583c10e9209",
+      "current_sha256": "3d80cad418676e14bf6220f9074abaa63805f9a469d1c32d3bd82583c10e9209",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v4n.sv",
+      "old_sha256": "f1d92a5e27f97d5aaf05cf0607f5dbf4e799ea17d715d4d31fdaa6f4ca24f730",
+      "current_sha256": "f1d92a5e27f97d5aaf05cf0607f5dbf4e799ea17d715d4d31fdaa6f4ca24f730",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v5_part.sv",
+      "old_sha256": "3a1f09da4c6bb47c74cc3c10f2cfd98a11c971b20965b9fd91bb94fe4d381ed4",
+      "current_sha256": "3a1f09da4c6bb47c74cc3c10f2cfd98a11c971b20965b9fd91bb94fe4d381ed4",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v5n.sv",
+      "old_sha256": "5c9840cad764a9bf280cc1693c783858ec6e6c23a27fa35312001ff95cb27f96",
+      "current_sha256": "5c9840cad764a9bf280cc1693c783858ec6e6c23a27fa35312001ff95cb27f96",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v6_part.sv",
+      "old_sha256": "45c41d7aa927a5c9f7d84509daad144cf04b7c30115723a08559e3dc2b1f0614",
+      "current_sha256": "45c41d7aa927a5c9f7d84509daad144cf04b7c30115723a08559e3dc2b1f0614",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v6n.sv",
+      "old_sha256": "21be7bb6fdc50f58814a586906040477fec3fce6b7ef1440b3494b4a4f70cbac",
+      "current_sha256": "21be7bb6fdc50f58814a586906040477fec3fce6b7ef1440b3494b4a4f70cbac",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v7_part.sv",
+      "old_sha256": "72718ca4ba3dee8ba453a25463fdc2a25cd283481e6d3c217a754196be8cebfc",
+      "current_sha256": "72718ca4ba3dee8ba453a25463fdc2a25cd283481e6d3c217a754196be8cebfc",
+      "equal": true
+    },
+    {
+      "file": "kv3_pv_v8_part.sv",
+      "old_sha256": "693a6a240811e88cf1ecd76877b0ba6ed5a9b1fb1f715c3589cc0b944972d37e",
+      "current_sha256": "693a6a240811e88cf1ecd76877b0ba6ed5a9b1fb1f715c3589cc0b944972d37e",
+      "equal": true
+    },
+    {
+      "file": "kv3_sys_SD_part.sv",
+      "old_sha256": "ab8105b85e3e75e93e6480398918571145daf5add4cd4460e4e950529f9ec951",
+      "current_sha256": "ab8105b85e3e75e93e6480398918571145daf5add4cd4460e4e950529f9ec951",
+      "equal": true
+    },
+    {
+      "file": "kv3_sys_SD_v1_part.sv",
+      "old_sha256": "0d307df35316e1f3dfdb28c8415992fac6f4a7d5c092e004cca990f84b32363a",
+      "current_sha256": "0d307df35316e1f3dfdb28c8415992fac6f4a7d5c092e004cca990f84b32363a",
+      "equal": true
+    },
+    {
+      "file": "kv3_sys_c_part.sv",
+      "old_sha256": "dcf9e16270e33c88c3584ce185fd43e8cccea483778db431b9c34aa460a57312",
+      "current_sha256": "dcf9e16270e33c88c3584ce185fd43e8cccea483778db431b9c34aa460a57312",
+      "equal": true
+    },
+    {
+      "file": "qwen_kvsys_bound_top.sv",
+      "old_sha256": "4e08ad3c6459f6fc21ba03ee67cf6b87f5b43db7ef2631a273e478c9d60c298c",
+      "current_sha256": "4e08ad3c6459f6fc21ba03ee67cf6b87f5b43db7ef2631a273e478c9d60c298c",
+      "equal": true
+    }
+  ],
+  "different_files": [],
+  "all_entire_emitted_RTL_equal": true,
+  "strict_bind": {
+    "parts": 160,
+    "types": 56,
+    "crossings": 2545,
+    "bits": 430554,
+    "errors": 0
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "source_model_admission": "PASS",
+  "bounds": {
+    "cold840": 840,
+    "observer_capture1": 1,
+    "registered841": 841,
+    "warm74": 74,
+    "one_time_increase448": 448,
+    "steady0": 0
+  },
+  "controls": {
+    "observer_input_capture_cycles": "REJECTED",
+    "ready_at_glue_max_cycles": "REJECTED",
+    "regenerated_profile_not_qualified": "PASS",
+    "changed_graph_even_with_restated_identity": "REJECTED",
+    "changed_measurement": "REJECTED"
+  },
+  "physical_qualified": false,
+  "measurement_sha256": "8639e9b5adb17db044cf5664d110ed6f0c840b505fb4a086dca1cc6620175a47",
+  "generated_source_sidecar_sha256": "2aab2b75908501e0b9c271871642b60b2196002a3a82f76361f1e4d91cccca7d"
+}
