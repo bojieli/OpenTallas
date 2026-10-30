@@ -22,7 +22,8 @@ for i,c in ring.items():
  n=c[6].replace('\\','');m=re.search(r'\.dch\[(\d+)\]\.u_dsel/y\[(\d+)\]',n)
  if m:
   chunk,local=map(int,m.groups());b=CHUNK*chunk+local;assert b not in reads;reads[b]=i
-assert len(writes)==568 and all(len(x)==4 for x in writes.values()), 'native8 profile requires 568 live bits x 4 writer slots'
+assert land['buses']['i']['D']==4, 'native8 profile requires production ring depth4'
+assert len(writes)==568 and all(len(x)==4 and {slot for slot,i in x}=={0,1,2,3} for x in writes.values()), 'native8 profile requires 568 live bits x 4 writer slots'
 assert set(reads)==set(writes),('write/read global bit inventory mismatch',set(reads)^set(writes))
 def group(names,rect,label):
  ids=sorted((i for i in names if i not in used),key=lambda i:D.cells[i][6]);used.update(ids)
@@ -33,6 +34,7 @@ assert len(set(cap['caps'][fstart])-data_ids)==26, 'unexpected START controls'
 group(set(cap['caps'][fstart])-data_ids,[17.28,fp['y']-4.32,26.46,fp['y']+4.32],'proved_fstart_control_captures')
 # FSTART directly enables every writer: keep ALL writer cells within150um of it.
 # Preserve each data pin's Y except the few edge groups that need finite packing room.
+assert all(0<=pin[where[b]]['x']<=3 and 708<=pin[where[b]]['y']<=1010 for b in writes), 'requires actual west native input pins, not unplaced DB'
 order=sorted(writes,key=lambda b:(pin[where[b]]['y'],b));target={};prev=742-.27
 for b in order:
  target[b]=max(742,pin[where[b]]['y'],prev+.27);prev=target[b]
