@@ -1,0 +1,20 @@
+{
+ "status": "PASS",
+ "scope": "model-only compiler emit; not installed or adopted",
+ "clock_nodes": 8328,
+ "source": "natural_model/nl_pin_w16_centres_pins.json",
+ "corners": {
+  "TT": {
+   "leaf_min": 878.1911948425434,
+   "leaf_max": 982.7167445717139,
+   "leaf_window": 104.5255497291705,
+   "slew_max": 54.026035959110445
+  },
+  "FF": {
+   "leaf_min": 700.4278699226952,
+   "leaf_max": 780.1836907672335,
+   "leaf_window": 79.75582084453833,
+   "slew_max": 52.96086466907344
+  }
+ }
+}

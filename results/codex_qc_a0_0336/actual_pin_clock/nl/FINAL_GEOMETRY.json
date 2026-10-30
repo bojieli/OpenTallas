@@ -1,0 +1,42 @@
+{
+  "scope": "actual geometry and exact planned clock connectivity; no STA/GRT",
+  "clock_cells": 8328,
+  "functional_gates": 34,
+  "clock_sinks": 14348,
+  "clock_input_terms": 22710,
+  "direct_parent_mismatches": 0,
+  "missing_clock_terms": 0,
+  "extra_clock_terms": 0,
+  "buffer_master_mismatches": 0,
+  "public_signal_pins": 1042,
+  "public_pin_mismatches": 0,
+  "all_original_geometry_unchanged": true,
+  "all_clock_body_displacement_dbu": 0,
+  "ff_reach": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 403.0,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 10218,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_g.u_tile.u_tile.u_logic.t_out\\[26\\]$_DFF_P_ -> u_g.t_out\\[26\\]$_DFF_P_"
+  },
+  "face": {
+    "pins_registered": 1041,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 6.8,
+    "pin_reg_p90": 8.57,
+    "pin_reg_max": 28.81,
+    "pin_reg_worst": [
+      "28.8 tap[416]",
+      "22.9 tap[350]",
+      "17.0 tap[479]",
+      "16.9 tap[381]",
+      "16.8 tap[357]"
+    ]
+  },
+  "macro_interface_direct_reach": "A0_MACRO_INTERFACE_DIRECT_REACH edges=9310 max_um=268.264 over405=0 worst={u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.g_tx.g_r\\[1\\].u_tx/_598_/Y} {u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[5\\].g_hd.u_lh.u_native_rawleaf/w_d[53]}"
+}

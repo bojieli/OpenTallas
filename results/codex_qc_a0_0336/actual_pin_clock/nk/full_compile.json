@@ -1,0 +1,20 @@
+{
+ "status": "PASS",
+ "scope": "model-only compiler emit; not installed or adopted",
+ "clock_nodes": 9521,
+ "source": "natural_model/nk_pin_flex_centres_pins.json",
+ "corners": {
+  "TT": {
+   "leaf_min": 1004.1761026986211,
+   "leaf_max": 1097.4025953734294,
+   "leaf_window": 93.22649267480836,
+   "slew_max": 51.32931733213013
+  },
+  "FF": {
+   "leaf_min": 784.6660274270635,
+   "leaf_max": 873.6893126156191,
+   "leaf_window": 89.02328518855563,
+   "slew_max": 47.66381759624736
+  }
+ }
+}

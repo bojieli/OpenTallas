@@ -1,3 +1,67 @@
+# Current A0 milestone: actual-pin clock geometry installed
+
+The current candidates are NK **9,521** and NL **8,328** clock cells, installed
+in fresh widened PLACE checkpoints. Current reports and source are under
+`actual_pin_clock/`. Earlier reports below are historical experiments. In
+particular, all body-centred clock-leaf predictions and the 9,557/8,108 physical
+prototypes are superseded by the actual OpenDB clock-ITerm candidate here.
+
+| Result | NK | NL |
+|---|---:|---:|
+| Related-pair TT/FF maximum ps | 77.674 / 60.532 | 74.863 / 55.681 |
+| Maximum TT/FF slew ps | 51.329 / 47.664 | 54.026 / 52.961 |
+| Weighted absolute insertion TT/FF ps | 1052.686 / 823.265 | 937.164 / 733.122 |
+| Full effective insertion TT ps | 1004.176..1097.403 | 878.191..982.717 |
+| Full effective insertion FF ps | 784.666..873.689 | 700.428..780.184 |
+| Actual FF reach maximum um | 404.08 | 403.00 |
+| Direct macro-interface reach maximum um | 340.944 | 268.264 |
+| Public signal pins restored exactly | 2,584 | 1,042 |
+
+These are pure joint-NLDM geometry predictions, not measured timing. Related
+pairs and electrical slew pass 80ps. Every leaf uses its actual clock ITerm
+coordinate; buffer interconnect retains the compiler cell-centre convention.
+Both models assume 20ps external clock slew. Explicit passive entry wire and
+four-buffer public E/M4 feed are included once. The public pin centres/layers
+match plan45; 192x24nm M4 boxes touch the legal edge. Leaf macro views and actual
+signed internal insertion are retained. No scalar stage-delay surrogate is used.
+
+The final ODBs are on intel2 under
+`/srv/opentallas-scratch2/claude/codex-qc-a0-0336/physical/`:
+`nk_pin_clock_install/clock_installed.odb` and
+`nl_pin_clock_install/clock_installed.odb`. Installation guards confirm all
+planned buffer masters and direct clock parents, all actual row/site/body
+footprints, zero installed-body displacement and every original instance
+master/bbox/orientation unchanged. Native PG and check_placement pass. Original
+functional ICGs remain 36/34. Exact data graph and clock-gate ancestry comparisons
+pass; a real wrong-domain ODB mutant is rejected despite unchanged sink totals.
+This is structural netlist proof, not a fresh RTL simulation claim.
+
+NK clock-first placement requested 8um displacement but the DPL request was soft:
+its actual maximum axis displacement was 61.02um. Three residual overlaps were
+repaired locally, maximum 65.178um. Actual reach and complete final geometry were
+then rechecked. Direct macro-interface reach covers actual macro pins; FF reach
+is the separate standard-cell graph scope, not hidden flattened macro FF reach.
+
+The current frame file records old per-core NK insertion 665.8/576.5ps and NL
+692.6/601.9ps separately from these absolute new models. Wrapper 250/202.5ps is
+not old core insertion. Exact safe-tree binding and actual input slew/pricing
+remain with the die owner; no SDC adoption or compensation has occurred.
+
+Shared source dependencies are FLOW electrical compiler dd97876d3, deferred-set
+performance fix f3f3e2d60, and private late-hook row-cache e6a71788c. The latter
+was replayed against every completed NL placement with zero mismatches and used
+only for these guarded candidate installations. Source snapshots here are
+results-local opt-in helpers; this branch does not adopt shared defaults.
+
+**GRT/STA remain held** for ROOT/FLOW layer/OBS and die clock-frame review.
+M7 vertical/M6 horizontal access is a proposed budget: actual child clock pins
+are interior M5, with child OBS through M5. No routed capacity, setup/hold,
+SIGNED view, or project closure is claimed. Source RTL/data/reset cycles added:0.
+Rendered actual-pin candidates were personally viewed; see
+`../geom_review/a0_actual_clock_pins_0336.md`.
+
+---
+
 # A0 internal clock corridor rebuild and electrical planning
 
 Both fresh placement prototypes passed: NL on intel2 unit99116, NK on epyc2

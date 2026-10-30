@@ -1,0 +1,42 @@
+{
+  "scope": "actual geometry and exact planned clock connectivity; no STA/GRT",
+  "clock_cells": 9521,
+  "functional_gates": 36,
+  "clock_sinks": 15379,
+  "clock_input_terms": 24936,
+  "direct_parent_mismatches": 0,
+  "missing_clock_terms": 0,
+  "extra_clock_terms": 0,
+  "buffer_master_mismatches": 0,
+  "public_signal_pins": 2584,
+  "public_pin_mismatches": 0,
+  "all_original_geometry_unchanged": true,
+  "all_clock_body_displacement_dbu": 0,
+  "ff_reach": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 404.08,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 9708,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_g.u_tile.u_tile.u_logic.u_me.s2_x\\[69\\]$_DFF_P_ -> u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\\[4\\].g_hd.g_tx.g_r\\[0\\].u_tx/q\\[80\\]$_DFF_P_"
+  },
+  "face": {
+    "pins_registered": 2583,
+    "pins_to_macro": 0,
+    "pins_exempt": 1,
+    "pins_unregistered": 0,
+    "unregistered_sample": [],
+    "pin_reg_p50": 6.84,
+    "pin_reg_p90": 8.43,
+    "pin_reg_max": 20.25,
+    "pin_reg_worst": [
+      "20.3 rst_n",
+      "16.6 tile_id[7]",
+      "16.5 tile_id[10]",
+      "16.1 tile_id[3]",
+      "15.3 tile_id[0]"
+    ]
+  },
+  "macro_interface_direct_reach": "A0_MACRO_INTERFACE_DIRECT_REACH edges=11695 max_um=340.944 over405=0 worst=place13848/Y {u_g.u_tile.u_tile.u_logic.g_ndh.u_node/a[484]}"
+}

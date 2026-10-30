@@ -1,0 +1,29 @@
+{
+  "scope": "actual netlist data graph and ideal gated-clock ancestry; no new RTL simulation or timing claim",
+  "kind": "nk",
+  "clock_terminals": 15415,
+  "clock_signature_mismatches": 1,
+  "clock_signature_sample": [
+    [
+      "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.g_tx.g_r[1].u_tx/q[170]$_DFF_P_/CLK",
+      [
+        [
+          0,
+          [
+            "g_icg.g_hop.u_hop_tx5/u_icg"
+          ]
+        ],
+        [
+          0,
+          []
+        ]
+      ]
+    ]
+  ],
+  "data_nets_before": 55145,
+  "data_nets_after": 55145,
+  "data_net_mismatches": 0,
+  "data_sample": [],
+  "data_master_mismatches": 0,
+  "master_sample": []
+}

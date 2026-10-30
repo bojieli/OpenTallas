@@ -1,0 +1,54 @@
+{
+  "TT": {
+    "BUFx6f_ASAP7_75t_R": {
+      "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "signal_pins": [
+        "Y",
+        "A"
+      ],
+      "output_functions": [
+        "A"
+      ],
+      "controlled_or_sequential": false,
+      "qualified": true
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "liberty": "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+      "signal_pins": [
+        "Y",
+        "A"
+      ],
+      "output_functions": [
+        "A"
+      ],
+      "controlled_or_sequential": false,
+      "qualified": true
+    }
+  },
+  "FF": {
+    "BUFx6f_ASAP7_75t_R": {
+      "liberty": "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "signal_pins": [
+        "Y",
+        "A"
+      ],
+      "output_functions": [
+        "A"
+      ],
+      "controlled_or_sequential": false,
+      "qualified": true
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "liberty": "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+      "signal_pins": [
+        "Y",
+        "A"
+      ],
+      "output_functions": [
+        "A"
+      ],
+      "controlled_or_sequential": false,
+      "qualified": true
+    }
+  }
+}
