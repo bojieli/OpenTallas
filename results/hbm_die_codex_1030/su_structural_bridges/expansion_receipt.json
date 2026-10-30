@@ -89,6 +89,12 @@
     },
     {
       "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "mode": "undriven_physical_input",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
       "mode": "wrong_tie1",
       "structural_accept": true,
       "functional_constant_contract_pass": false,
@@ -242,6 +248,12 @@
     },
     {
       "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "mode": "undriven_physical_input",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
       "mode": "wrong_tie1",
       "structural_accept": true,
       "functional_constant_contract_pass": false,
@@ -390,6 +402,12 @@
     {
       "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
       "mode": "existing_driver",
+      "structural_reject": true,
+      "atomic": true
+    },
+    {
+      "master": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+      "mode": "undriven_physical_input",
       "structural_reject": true,
       "atomic": true
     },
