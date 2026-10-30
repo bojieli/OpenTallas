@@ -799,8 +799,8 @@ def check_hops(P, R, geo):
             else:
                 sp = x["len_um"] / max(1, x["stations"])
             if sp > smax + EPS:
-                R.err("stations", f"type {key[0]} slot {key[1]}: {x['len_um']:.0f} um route / {x['stations']} "
-                      f"station(s) = {sp:.0f} um > ft_station_max_um {smax:.0f} (R3: add stations)", type=key[0])
+                detail = "exact per-bit internal hop" if key[1] in full else f"{x['len_um']:.0f}um route / {x['stations']} stations"
+                R.err("stations", f"type {key[0]} slot {key[1]}: {detail} = {sp:.0f} um > ft_station_max_um {smax:.0f}", type=key[0])
     worst.sort(reverse=True)
     result = []
     for _, lid, h, reach in worst[:10]:

@@ -82,7 +82,7 @@ proc ff_full_obstacle {name rect} {
 foreach i [$ff_blk getInsts] {
   if {[dict exists $ff_full_owned [$i getName]]} continue
   set m [$i getMaster]
-  if {[$m isBlock] || [$i getPlacementStatus] in {FIRM LOCKED} || [string match *TAP* [$m getName]]} {
+  if {[$m isBlock] || [$i getPlacementStatus] in {FIRM LOCKED COVER} || [string match *TAP* [$m getName]]} {
     set b [$i getBBox]; ff_full_obstacle [$i getName] [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
   }
 }

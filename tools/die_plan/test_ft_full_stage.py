@@ -46,6 +46,18 @@ class FullStageTests(unittest.TestCase):
                 self.assertEqual(chains['ft0'][0],expected)
                 self.assertEqual([r[:2] for r in taps.planned_sinks(P,'t')],expected)
                 self.assertEqual(ft_station_probe.station_sites(P,'t',self.t['ft_slots'][0],1),[[list(x)] for x in expected])
+    def test_lane_hops_preserve_pin_detour(self):
+        import ft_full_stage, schema
+        P=SimpleNamespace(parts={'a':{'type':'t'}},lanes={'L':{'ports':['i','o']}},
+            ports={'i':{'src':{'part':schema.DIE_PART},'dst':{'part':'a','bus':'ft0_i'}},
+                   'o':{'src':{'part':'a','bus':'ft0_o'},'dst':{'part':schema.DIE_PART}}},
+            lane_crossings=lambda lid:[('a','ft0','i','o')],to_die=lambda part,xy:xy,
+            port_point=lambda pid:(0,10) if pid=='i' else (1000,10))
+        table=({'ft0_i':{0:(0,10,'W')},'ft0_o':{0:(1000,10,'E')}},
+               {'ft0':{0:[(10,10),(340,10),(670,10),(990,10)]}})
+        with patch('die_hop_scan.type_tables',return_value=table), patch('schema.port_pins_count',return_value=1):
+            self.assertEqual(ft_full_stage.lane_hops(P,'L'),[10,330,330,320,10])
+
     def test_synthetic_g2_fails_closed(self):
         import g2
         self.t['ft_full_stage_placement_file']='map.json'
