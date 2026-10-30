@@ -2216,3 +2216,5 @@ CODEX: 2026-10-30 03:43 PDT S81cores collected TR SIGNED+12270EQ; inherited ROM 
 CODEX: 2026-10-30 03:44 PDT TOK-DS b3d0b8f97 READY current16stop/native-middle transport80/80+1280checksPASS/currentkFAIL253errors/payloadmutant33; one-master VQ temporal-map proposalUNAPPLIED OWNER?logged; noG5/physicalSTART.
 CODEX: 2026-10-30 03:43 PDT HEAD takeover; original src25s live preserved, sibling stale-reset-driver failure diagnosed; own corrected/memoized final-event GEN3242658 launched via ot-run; LEP long-hop placement fixes and source residual overlays owned.
 CODEX: 2026-10-30 03:44 PDT BTAB D10 fixed clock placement FAIL398 overlaps diagnosed; shared late-DPL CTS-only variantB live3247045; codex/btab-0336 a8b60688be1.
+
+CODEX: 2026-10-30 03:44 PDT main8d753778fab pushed: opt-in PHY insets/S81 schema, BF exact source61723EQ, live clock entry metric, Qwen parameterized child parser, VMR typed FT receipts integrated. Near-signoff q0 qualified; all die blockers actively diagnosed; no blanket gate/plan changes.

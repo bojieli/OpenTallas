@@ -642,3 +642,5 @@ OWNER carry-forward: user23:56 explicitly authorizes larger LOCAL kv_leaf__t2 sl
 
 ## CODEX notes 2026-10-30 03:39 PDT
 CODEX took over integration. Reviewed narrow diff and existing gates; merged QC fa9a7a5f64b plan-of-record data/calibration (fdebbf10f69) and FLOW slot order d87dea6c502 (facd45bafb4). Plain merges under intel2 merge.lock, pushed, HEAD=origin/main. No new route, no gate changes. FLOW-7-SD HOLD still applies; flow agent replacing global reset avoidance with per-type opt-in.
+
+CODEX 2026-10-30 03:44 PDT: plain intel2 locked merges/push HEAD=origin/main: 760e1549ca4 core-margin+macro metadata9e1; f65e3548996 BF46ee (native61723EQ+lockstep/mutant,0cycles); 0a4a93a55a1 geom88a9 (17focusedtests, real live roots included/no threshold change); dc14e86daaf Qwen parserf3ee (19tests); 8d753778fab VMR14ea metadata-only typed die FT arcs,1509ordinarypins unchanged. Failed artifacts preserved.
