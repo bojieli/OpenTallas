@@ -5,7 +5,7 @@ reg yv=0,mv=0;reg[2:0]yi=0,k=0;reg[127:0]y=0;reg[7:0]idx=0;
 wire[2:0]kp=k==0?3'd2:k==1?3'd0:k==2?3'd1:k;
 wire[1:0]v,s,f;wire[275:0]d[0:1];
 for(genvar g=0;g<2;g=g+1)begin:G
- ot_s81sl_vq #(.AQ_XMEM(2))q(.clk(ck),.rst_n(rs),.y_v(yv),.y_i(yi),.y((g==1&&bad_payload)?(y^128'd1):y),.u_v(1'b0),.u_i(3'd0),.u(256'd0),.sid(4'd9),.k(g==0?k:(bad_age?(kp==3'd4?3'd0:kp+3'd1):kp)),.m_v(mv),.m_q(1'b1),.m_b(1'b1),.m_i(idx),.um_v(1'b0),.um_q(1'b0),.um_b(1'b0),.um_i(8'd0),.xf_v(v[g]),.xf_s(s[g]),.xf(d[g]),.fault(f[g]));
+ ot_s81sl_vq #(.AQ_XMEM(2))q(.clk(ck),.rst_n(rs),.y_v(yv),.y_i(yi),.y((g==1&&bad_payload)?(y^128'd1):y),.u_v(1'b0),.u_i(3'd0),.u(256'd0),.sid(4'd9),.k(g==0?k:(bad_age?(kp == 3'd4 ? 3'd0 : kp + 3'd1):kp)),.m_v(mv),.m_q(1'b1),.m_b(1'b1),.m_i(idx),.um_v(1'b0),.um_q(1'b0),.um_b(1'b0),.um_i(8'd0),.xf_v(v[g]),.xf_s(s[g]),.xf(d[g]),.fault(f[g]));
 end
 integer cycle=0,vec=0,j,l,g,checks=0,errors=0,bad_payload=0,bad_age=0,n[0:1],dates[0:1][0:7];reg[276:0]words[0:1][0:7];integer delta,expected;
 always @(posedge ck)begin #1;cycle=cycle+1;if(rs)for(integer a=0;a<2;a=a+1)if(v[a])begin if(n[a]<8)begin words[a][n[a]]={s[a],d[a]};dates[a][n[a]]=cycle;end n[a]=n[a]+1;end end
