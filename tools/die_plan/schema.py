@@ -934,7 +934,14 @@ SCHEMA = {
             # FLOW-6 10-30 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=resize (landing_placement fits CLAND cells on
             # the widest drive variant of their own family, the in-place GPL upsize; not the w/0.4 reserve of the
             # boolean above, which overfills ring bands); unset = unchanged kits; both keys set = gen error
-            cland_fit_resize={"type": "boolean"})},
+            cland_fit_resize={"type": "boolean"},
+            # FLOW-7 10-30 opt-in: gen phys exports DETAIL_PLACEMENT_ARGS=-use_diamond_legalizer (3_5 DPL). KV-022 SD
+            # sdpg 3_4: the default negotiation legalizer stalled at 902 illegal cells after 2847 s around 12308 FIRM
+            # landing cells (fragmented 5/9-site gaps, 92.9 % fixed); diamond legalised in 44 s; unset = unchanged kits
+            dpl_legalizer={"enum": ["diamond"]},
+            # FLOW 10-30: only named types may move landing bands to avoid reset relay/collector sites.
+            # Absent/empty preserves all existing bands; compose also accepts the unsplit base type name.
+            cland_avoid_reset_types={"type": "array", "uniqueItems": True, "items": _name})},
     },
 }
 
