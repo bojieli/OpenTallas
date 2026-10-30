@@ -267,7 +267,9 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                   log=kd / "face_shell_work" / "yosys.log")
     widths, dirs = rep.pop("port_width"), rep.pop("port_dirs")
     base = lambda n: re.sub(r"\[\d+\]$", "", n)
-    passthru = {n for n in widths if re.match(clk_re, n) or (dirs[n] == "input" and re.match(rst_re, n))}
+    from static_id_contracts import static_inputs
+    straps = static_inputs(module, widths, dirs)
+    passthru = {n for n in widths if re.match(clk_re, n) or (dirs[n] == "input" and re.match(rst_re, n))} | set(straps)
     clks = sorted(n for n in passthru if re.match(clk_re, n) and dirs[n] == "input")
     if not clks:
         raise RuntimeError(f"face_shell: {module}: no input clock port")
@@ -301,6 +303,8 @@ def apply(kd, module, local, srcs, params, defines, macro_libs, clk_re, rst_re, 
                widths=widths, dirs=dirs, keep=keep,
                top_fanout_in=sorted(((v, k) for k, v in rep["in_fanout"].items() if base(k) in sig_in), reverse=True)[:16],
                files=[f"{module}__fshell.sv", f"{CELL}.sv"])
+    if straps:
+        out["straps"] = straps
     (kd / "face_shell.json").write_text(json.dumps(out, indent=1) + "\n")
     return out
 
