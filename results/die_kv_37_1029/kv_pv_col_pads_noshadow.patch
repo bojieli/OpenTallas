@@ -1,0 +1,18 @@
+--- a/physical/die_plan/qwen_kvsys/r8/kv_pv_col_pads.py
++++ b/physical/die_plan/qwen_kvsys/r8/kv_pv_col_pads.py
+@@ -32,6 +32,14 @@
+ from collections import defaultdict
+ from pathlib import Path
+ 
+-sys.path.insert(0, str(Path(__file__).resolve().parents[4] / "tools/die_plan"))
+-import regen_constants as RC  # noqa: E402
++# DIE-KV-37-FACE 10-29: load regen_constants by FILE, never by prepending a tools dir to sys.path.  Loaded as the bind's
++# param_regen hook (kv_pv_col_regen.py), the old sys.path.insert(0, <resolved tree>/tools/die_plan) made every LATER
++# lazy import in the running bind (clock_landings -> `import landing_collector`) resolve from that other tree: on a
++# symlinked bindroot it picked the pre-DIE-KV-32 landing_collector (no face rule) and silently dropped 49 raw
++# pre-START reset copies on 25 KV types (monitors on the rst_o face flop Q).
++import importlib.util as _ilu  # noqa: E402
++_spec = _ilu.spec_from_file_location("kv_pv_col_pads_regen_constants",
++                                     Path(__file__).resolve().parents[4] / "tools/die_plan/regen_constants.py")
++RC = _ilu.module_from_spec(_spec)
++_spec.loader.exec_module(RC)

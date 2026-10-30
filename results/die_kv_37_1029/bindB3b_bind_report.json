@@ -1,0 +1,2655 @@
+{
+ "schema": "opentallas.die_plan.bind.v1",
+ "die": "qwen_kvsys",
+ "top": "qfd_die",
+ "cells": {
+  "leaf": 3107,
+  "transport": 37497,
+  "reducer": 357
+ },
+ "dissolved": 10,
+ "partitions": 160,
+ "types": {
+  "kv3_hg": {
+   "instances": 4,
+   "module": "kv3_hg_part",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 14,
+   "in_buses": 11
+  },
+  "kv3_hg_v1": {
+   "instances": 4,
+   "module": "kv3_hg_v1_part",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "kv3_hg_v1p2": {
+   "instances": 4,
+   "module": "kv3_hg_v1p2",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "kv3_hg_v1p3": {
+   "instances": 4,
+   "module": "kv3_hg_v1p3",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "kv3_hg_v1p4": {
+   "instances": 4,
+   "module": "kv3_hg_v1p4",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "kv3_hg_v1p5": {
+   "instances": 4,
+   "module": "kv3_hg_v1p5",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "kv3_hg_v1p6": {
+   "instances": 4,
+   "module": "kv3_hg_v1p6",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 19,
+   "in_buses": 19
+  },
+  "kv3_hg_v3": {
+   "instances": 4,
+   "module": "kv3_hg_v3_part",
+   "leaves": 35,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 14,
+   "in_buses": 17
+  },
+  "kv3_hgi": {
+   "instances": 2,
+   "module": "kv3_hgi_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v1__cl141fc26e": {
+   "instances": 6,
+   "module": "kv3_hgi_v1__cl141fc26e",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v1__cl42bc8b12": {
+   "instances": 6,
+   "module": "kv3_hgi_v1__cl42bc8b12",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v2__cl2862d491": {
+   "instances": 1,
+   "module": "kv3_hgi_v2__cl2862d491",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v2__cle0015330": {
+   "instances": 1,
+   "module": "kv3_hgi_v2__cle0015330",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v3": {
+   "instances": 1,
+   "module": "kv3_hgi_v3_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v4": {
+   "instances": 6,
+   "module": "kv3_hgi_v4_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v5": {
+   "instances": 1,
+   "module": "kv3_hgi_v5_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v6": {
+   "instances": 1,
+   "module": "kv3_hgi_v6_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v7": {
+   "instances": 6,
+   "module": "kv3_hgi_v7_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hgi_v8": {
+   "instances": 1,
+   "module": "kv3_hgi_v8_part",
+   "leaves": 28,
+   "params": 0,
+   "straps": 24,
+   "out_buses": 2,
+   "in_buses": 3
+  },
+  "kv3_hroot": {
+   "instances": 4,
+   "module": "kv3_hroot_part",
+   "leaves": 2,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 12,
+   "in_buses": 9
+  },
+  "kv3_hub_C": {
+   "instances": 1,
+   "module": "kv3_hub_C_part",
+   "leaves": 12,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 50,
+   "in_buses": 211
+  },
+  "kv3_hub_Ei": {
+   "instances": 1,
+   "module": "kv3_hub_Ei_part",
+   "leaves": 4,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 1,
+   "in_buses": 5
+  },
+  "kv3_hub_Eo": {
+   "instances": 1,
+   "module": "kv3_hub_Eo_part",
+   "leaves": 8,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 33,
+   "in_buses": 26
+  },
+  "kv3_hub_Wi": {
+   "instances": 1,
+   "module": "kv3_hub_Wi_part",
+   "leaves": 3,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 183,
+   "in_buses": 52
+  },
+  "kv3_hub_Wo": {
+   "instances": 1,
+   "module": "kv3_hub_Wo_part",
+   "leaves": 8,
+   "params": 0,
+   "straps": 2,
+   "out_buses": 33,
+   "in_buses": 26
+  },
+  "kv3_io_cor": {
+   "instances": 1,
+   "module": "kv3_io_cor_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 3
+  },
+  "kv3_io_cor_v1": {
+   "instances": 1,
+   "module": "kv3_io_cor_v1_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "kv3_io_ft": {
+   "instances": 1,
+   "module": "kv3_io_ft_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "kv3_io_ft_v1": {
+   "instances": 1,
+   "module": "kv3_io_ft_v1_part",
+   "leaves": 0,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 0,
+   "in_buses": 0
+  },
+  "kv3_pc__cl254f2e73": {
+   "instances": 2,
+   "module": "kv3_pc__cl254f2e73",
+   "leaves": 9,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 19,
+   "in_buses": 23
+  },
+  "kv3_pc__cl5a95b461": {
+   "instances": 2,
+   "module": "kv3_pc__cl5a95b461",
+   "leaves": 9,
+   "params": 0,
+   "straps": 1,
+   "out_buses": 19,
+   "in_buses": 23
+  },
+  "kv3_pc_v1__cl23f6a148": {
+   "instances": 4,
+   "module": "kv3_pc_v1__cl23f6a148",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 29,
+   "in_buses": 34
+  },
+  "kv3_pc_v1__cl4ea58a5c": {
+   "instances": 8,
+   "module": "kv3_pc_v1__cl4ea58a5c",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 29,
+   "in_buses": 34
+  },
+  "kv3_pc_v1__cl7f648944": {
+   "instances": 12,
+   "module": "kv3_pc_v1__cl7f648944",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 29,
+   "in_buses": 34
+  },
+  "kv3_pc_v3": {
+   "instances": 4,
+   "module": "kv3_pc_v3_part",
+   "leaves": 9,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 28,
+   "in_buses": 33
+  },
+  "kv3_phy": {
+   "instances": 4,
+   "module": "kv3_phy_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 5
+  },
+  "kv3_phy_v1": {
+   "instances": 28,
+   "module": "kv3_phy_v1_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 6,
+   "in_buses": 5
+  },
+  "kv3_pv": {
+   "instances": 1,
+   "module": "kv3_pv_part",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 15,
+   "in_buses": 13
+  },
+  "kv3_pv_v1": {
+   "instances": 1,
+   "module": "kv3_pv_v1_part",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 34,
+   "in_buses": 22
+  },
+  "kv3_pv_v12": {
+   "instances": 1,
+   "module": "kv3_pv_v12_part",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 37,
+   "in_buses": 21
+  },
+  "kv3_pv_v1n": {
+   "instances": 1,
+   "module": "kv3_pv_v1n",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 34,
+   "in_buses": 22
+  },
+  "kv3_pv_v2": {
+   "instances": 1,
+   "module": "kv3_pv_v2_part",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 23,
+   "in_buses": 16
+  },
+  "kv3_pv_v2n": {
+   "instances": 1,
+   "module": "kv3_pv_v2n",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 23,
+   "in_buses": 16
+  },
+  "kv3_pv_v3": {
+   "instances": 1,
+   "module": "kv3_pv_v3_part",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 37,
+   "in_buses": 22
+  },
+  "kv3_pv_v3n": {
+   "instances": 1,
+   "module": "kv3_pv_v3n",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 37,
+   "in_buses": 22
+  },
+  "kv3_pv_v4": {
+   "instances": 1,
+   "module": "kv3_pv_v4_part",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 23,
+   "in_buses": 16
+  },
+  "kv3_pv_v4n": {
+   "instances": 1,
+   "module": "kv3_pv_v4n",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 23,
+   "in_buses": 16
+  },
+  "kv3_pv_v5": {
+   "instances": 1,
+   "module": "kv3_pv_v5_part",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 37,
+   "in_buses": 22
+  },
+  "kv3_pv_v5n": {
+   "instances": 1,
+   "module": "kv3_pv_v5n",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 37,
+   "in_buses": 22
+  },
+  "kv3_pv_v6": {
+   "instances": 1,
+   "module": "kv3_pv_v6_part",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 23,
+   "in_buses": 16
+  },
+  "kv3_pv_v6n": {
+   "instances": 1,
+   "module": "kv3_pv_v6n",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 23,
+   "in_buses": 16
+  },
+  "kv3_pv_v7": {
+   "instances": 1,
+   "module": "kv3_pv_v7_part",
+   "leaves": 46,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 37,
+   "in_buses": 21
+  },
+  "kv3_pv_v8": {
+   "instances": 1,
+   "module": "kv3_pv_v8_part",
+   "leaves": 44,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 15,
+   "in_buses": 13
+  },
+  "kv3_sys_SD": {
+   "instances": 1,
+   "module": "kv3_sys_SD_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "kv3_sys_SD_v1": {
+   "instances": 1,
+   "module": "kv3_sys_SD_v1_part",
+   "leaves": 1,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 2,
+   "in_buses": 2
+  },
+  "kv3_sys_c": {
+   "instances": 1,
+   "module": "kv3_sys_c_part",
+   "leaves": 6,
+   "params": 0,
+   "straps": 0,
+   "out_buses": 21,
+   "in_buses": 22
+  }
+ },
+ "load_bits": {
+  "crossing": 576561,
+  "clock": 3406,
+  "intra_kept_stages": 94649,
+  "intra": 1970854,
+  "tied": 0,
+  "por_rebind": 3,
+  "or_input": 2,
+  "die_io": 4,
+  "start": 1,
+  "por_pad_analog": 1,
+  "strap": 3094,
+  "plan_driven": 1935
+ },
+ "crossings": 2545,
+ "crossing_bits": 430554,
+ "lanes": {
+  "planned": 2404,
+  "carrying": 2404,
+  "unused": 0,
+  "unused_examples": [],
+  "lane_bits": 430413,
+  "unplanned_bits": 0,
+  "unplanned_pairs": {},
+  "unplanned_bit_list": [],
+  "reset_spine_bits": {
+   "host.die_rst_n": 113,
+   "host.hbm_rst_n": 28
+  },
+  "landing_alignment": {
+   "groups": 6167,
+   "padded_groups": 3520,
+   "padded_bits": 155331,
+   "pad_flops": 866689,
+   "max_pad": 116,
+   "mode": "r8",
+   "table": "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/kv36/r8_28b/qwen_kvsys_r8_landing_bind.json",
+   "table_sha": "2458325e5455a01a",
+   "table_summary": {
+    "members": 6167,
+    "classes": 3824,
+    "replica_links": 13,
+    "padded_members": 464,
+    "padded_bits": 17431,
+    "pad_flops": 71549,
+    "max_pad": 17,
+    "max_depth_before": 106,
+    "max_depth_after": 106,
+    "max_offset_before": 102,
+    "max_offset_after": 102,
+    "binder_landed_max": 121,
+    "landed_bundles": 0,
+    "landed_over_margin": 0
+   },
+   "members": 6167,
+   "stale": 0,
+   "uncovered": 0,
+   "excluded_bits": 0,
+   "r8_excluded": [],
+   "async_bits": 41421,
+   "table_exempt": [
+    "^kreq$",
+    "^krsp$"
+   ],
+   "table_bus": "leaf",
+   "table_replica": "type",
+   "renamed_cells": 0,
+   "gone_pad0": [],
+   "extra_tables": [
+    {
+     "table": "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/results/die_kv_15_1028/vport_w_pads_b2.json",
+     "sha": "de521f7fc7d92a9a",
+     "replaced": 24,
+     "added": 0,
+     "inner": 0
+    },
+    {
+     "table": "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/kv37/pv_col_pads_28b.json",
+     "sha": "27cc9f955acdbab2",
+     "replaced": 1178,
+     "added": 0,
+     "inner": 0
+    },
+    {
+     "table": "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/results/die_kv_16_1028/pv_v_pads_b4.json",
+     "sha": "de92b34e91c72526",
+     "replaced": 2022,
+     "added": 0,
+     "inner": 0
+    }
+   ],
+   "inner": {
+    "members": 0,
+    "self_noop": 0,
+    "matched": 0,
+    "changed_bits": 0,
+    "stale": 0,
+    "dly_sets_before": 441,
+    "dly_sets_after": 441
+   }
+  },
+  "ft_hops": 1511,
+  "forwarded_bits": 18710,
+  "forwarding_partitions": {
+   "pv_N_4": 4300,
+   "pv_S_4": 4300,
+   "pv_N_2": 3494,
+   "pv_S_2": 3494,
+   "pv_N_3": 3276,
+   "pv_S_3": 3276,
+   "pv_N_5": 3120,
+   "pv_S_5": 3120,
+   "pv_N_6": 3058,
+   "pv_S_6": 3058,
+   "pv_N_1": 1384,
+   "pv_S_1": 1384,
+   "hg_EN_6": 1163,
+   "hg_ES_6": 1163,
+   "hg_WN_6": 1163,
+   "hg_WS_6": 1163,
+   "hg_EN_5": 1158,
+   "hg_ES_5": 1158,
+   "hg_WN_5": 1158,
+   "hg_WS_5": 1158,
+   "hg_EN_4": 1153,
+   "hg_ES_4": 1153,
+   "hg_WN_4": 1153,
+   "hg_WS_4": 1153,
+   "hg_EN_3": 1148,
+   "hg_ES_3": 1148,
+   "hg_WN_3": 1148,
+   "hg_WS_3": 1148,
+   "hg_EN_2": 1143,
+   "hg_ES_2": 1143,
+   "hg_WN_2": 1143,
+   "hg_WS_2": 1143,
+   "hg_EN_1": 1138,
+   "hg_ES_1": 1138,
+   "hg_WN_1": 1138,
+   "hg_WS_1": 1138,
+   "io_W3": 1049,
+   "pv_N_7": 916,
+   "pv_S_7": 916,
+   "hg_EN_7": 646,
+   "hg_ES_7": 646,
+   "hg_WN_7": 646,
+   "hg_WS_7": 646,
+   "hub_Eo": 134,
+   "hub_Wo": 134,
+   "pv_N_0": 96,
+   "pv_S_0": 96,
+   "pc_EN_7": 49,
+   "pc_EN_6": 49,
+   "pc_EN_5": 49,
+   "pc_EN_4": 49,
+   "pc_EN_3": 49,
+   "pc_EN_2": 49,
+   "pc_EN_1": 49,
+   "pc_ES_7": 49,
+   "pc_ES_6": 49,
+   "pc_ES_5": 49,
+   "pc_ES_4": 49,
+   "pc_ES_3": 49,
+   "pc_ES_2": 49
+  },
+  "forwarded_pairs": {
+   "hg_EN_7->hg_EN_0": 522,
+   "hg_EN_7->pv_N_0": 256,
+   "hg_ES_7->hg_ES_0": 522,
+   "hg_ES_7->pv_S_0": 256,
+   "hg_WN_7->hg_WN_0": 522,
+   "hg_WN_7->pv_N_0": 256,
+   "hg_WS_7->hg_WS_0": 522,
+   "hg_WS_7->pv_S_0": 256,
+   "hroot_EN->hg_EN_0": 28,
+   "hroot_EN->hg_EN_1": 5,
+   "hroot_EN->hg_EN_2": 5,
+   "hroot_EN->hg_EN_3": 5,
+   "hroot_EN->hg_EN_4": 5,
+   "hroot_EN->hg_EN_5": 5,
+   "hroot_EN->hg_EN_6": 5,
+   "hroot_ES->hg_ES_0": 28,
+   "hroot_ES->hg_ES_1": 5,
+   "hroot_ES->hg_ES_2": 5,
+   "hroot_ES->hg_ES_3": 5,
+   "hroot_ES->hg_ES_4": 5,
+   "hroot_ES->hg_ES_5": 5,
+   "hroot_ES->hg_ES_6": 5,
+   "hroot_WN->hg_WN_0": 28,
+   "hroot_WN->hg_WN_1": 5,
+   "hroot_WN->hg_WN_2": 5,
+   "hroot_WN->hg_WN_3": 5,
+   "hroot_WN->hg_WN_4": 5,
+   "hroot_WN->hg_WN_5": 5,
+   "hroot_WN->hg_WN_6": 5,
+   "hroot_WS->hg_WS_0": 28,
+   "hroot_WS->hg_WS_1": 5,
+   "hroot_WS->hg_WS_2": 5,
+   "hroot_WS->hg_WS_3": 5,
+   "hroot_WS->hg_WS_4": 5,
+   "hroot_WS->hg_WS_5": 5,
+   "hroot_WS->hg_WS_6": 5,
+   "hub_C->hg_EN_0": 16,
+   "hub_C->hg_ES_0": 16,
+   "hub_C->hg_WN_0": 16,
+   "hub_C->hg_WS_0": 16,
+   "hub_C->pv_N_0": 32,
+   "hub_C->pv_N_1": 62,
+   "hub_C->pv_N_3": 62,
+   "hub_C->pv_N_5": 62,
+   "hub_C->pv_S_0": 32,
+   "hub_C->pv_S_1": 62,
+   "hub_C->pv_S_3": 62,
+   "hub_C->pv_S_5": 62,
+   "hub_Eo->hg_EN_0": 572,
+   "hub_Eo->hg_ES_0": 572,
+   "hub_Wi->hroot_EN": 2,
+   "hub_Wi->hroot_ES": 2,
+   "hub_Wi->hroot_WN": 2,
+   "hub_Wi->hroot_WS": 2,
+   "hub_Wi->pc_EN_0": 49,
+   "hub_Wi->pc_EN_7": 1,
+   "hub_Wi->pc_ES_0": 49,
+   "hub_Wi->pc_ES_7": 1,
+   "hub_Wi->pc_WN_0": 49,
+   "hub_Wi->pc_WN_7": 1,
+   "hub_Wi->pc_WS_0": 49,
+   "hub_Wi->pc_WS_7": 1,
+   "hub_Wi->phy_EN_0": 1,
+   "hub_Wi->phy_ES_0": 1,
+   "hub_Wi->phy_WN_0": 1,
+   "hub_Wi->phy_WS_0": 1,
+   "hub_Wi->sys_SE": 523,
+   "hub_Wi->sys_SW": 524,
+   "hub_Wo->hg_WN_0": 572,
+   "hub_Wo->hg_WS_0": 572,
+   "pv_N_1->hg_EN_0": 12,
+   "pv_N_1->hg_WN_0": 12,
+   "pv_N_1->hub_C": 62,
+   "pv_N_1->pv_N_3": 256,
+   "pv_N_1->pv_N_4": 256,
+   "pv_N_1->pv_N_5": 256,
+   "pv_N_1->pv_N_6": 256,
+   "pv_N_1->pv_N_7": 256,
+   "pv_N_3->hg_EN_0": 12,
+   "pv_N_3->hg_WN_0": 12,
+   "pv_N_3->hub_C": 62,
+   "pv_N_3->pv_N_0": 256,
+   "pv_N_3->pv_N_1": 256,
+   "pv_N_3->pv_N_5": 256,
+   "pv_N_3->pv_N_6": 256,
+   "pv_N_3->pv_N_7": 256,
+   "pv_N_5->hg_EN_0": 12,
+   "pv_N_5->hg_WN_0": 12,
+   "pv_N_5->hub_C": 62,
+   "pv_N_5->pv_N_0": 256,
+   "pv_N_5->pv_N_1": 256,
+   "pv_N_5->pv_N_2": 256,
+   "pv_N_5->pv_N_3": 256,
+   "pv_N_5->pv_N_7": 256,
+   "pv_N_7->hg_EN_0": 12,
+   "pv_N_7->hg_WN_0": 12,
+   "pv_N_7->pv_N_0": 256,
+   "pv_N_7->pv_N_1": 256,
+   "pv_N_7->pv_N_2": 256,
+   "pv_N_7->pv_N_3": 256,
+   "pv_N_7->pv_N_4": 256,
+   "pv_N_7->pv_N_5": 256,
+   "pv_S_1->hg_ES_0": 12,
+   "pv_S_1->hg_WS_0": 12,
+   "pv_S_1->hub_C": 62,
+   "pv_S_1->pv_S_3": 256,
+   "pv_S_1->pv_S_4": 256,
+   "pv_S_1->pv_S_5": 256,
+   "pv_S_1->pv_S_6": 256,
+   "pv_S_1->pv_S_7": 256,
+   "pv_S_3->hg_ES_0": 12,
+   "pv_S_3->hg_WS_0": 12,
+   "pv_S_3->hub_C": 62,
+   "pv_S_3->pv_S_0": 256,
+   "pv_S_3->pv_S_1": 256,
+   "pv_S_3->pv_S_5": 256,
+   "pv_S_3->pv_S_6": 256,
+   "pv_S_3->pv_S_7": 256,
+   "pv_S_5->hg_ES_0": 12,
+   "pv_S_5->hg_WS_0": 12,
+   "pv_S_5->hub_C": 62,
+   "pv_S_5->pv_S_0": 256,
+   "pv_S_5->pv_S_1": 256,
+   "pv_S_5->pv_S_2": 256,
+   "pv_S_5->pv_S_3": 256,
+   "pv_S_5->pv_S_7": 256,
+   "pv_S_7->hg_ES_0": 12,
+   "pv_S_7->hg_WS_0": 12,
+   "pv_S_7->pv_S_0": 256,
+   "pv_S_7->pv_S_1": 256,
+   "pv_S_7->pv_S_2": 256,
+   "pv_S_7->pv_S_3": 256,
+   "pv_S_7->pv_S_4": 256,
+   "pv_S_7->pv_S_5": 256,
+   "sys_SE->hub_Wi": 1,
+   "sys_SW->hub_Wi": 1,
+   "sys_SW->sys_c": 1
+  }
+ },
+ "unmapped": 0,
+ "open_outputs": 42,
+ "open_output_examples": [
+  "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_addr",
+  "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_v",
+  "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_addr",
+  "astk_EN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_v",
+  "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_addr",
+  "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_v",
+  "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_addr",
+  "astk_ES__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_v",
+  "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_addr",
+  "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_v",
+  "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_addr",
+  "astk_WN__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_v",
+  "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_addr",
+  "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.next_v",
+  "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_addr",
+  "astk_WS__u_strip_g_er_chain_u_er_g_owner_7__u_owner.response_v",
+  "host.d2d_boot_begin",
+  "hsl_ES_1.ao",
+  "hsl_ES_1.co",
+  "hsl_ES_1.fault_o",
+  "hsl_ES_1.sdo",
+  "hsl_ES_1.sfo",
+  "hsl_ES_1.sko",
+  "hsl_ES_1.soo",
+  "hsl_ES_31.bgo",
+  "hsl_ES_31.fo",
+  "hsl_WS_1.ao",
+  "hsl_WS_1.co",
+  "hsl_WS_1.fault_o",
+  "hsl_WS_1.sdo",
+  "hsl_WS_1.sfo",
+  "hsl_WS_1.sko",
+  "hsl_WS_1.soo",
+  "hsl_WS_31.bgo",
+  "hsl_WS_31.fo",
+  "pll.pll_host",
+  "pll.pll_ingest",
+  "pvw_0__u_ctl.busy",
+  "pvw_0__u_ctl.out_age",
+  "pvw_1__u_ctl.busy",
+  "pvw_1__u_ctl.out_age",
+  "seq__u_core.hs"
+ ],
+ "proof": {
+  "unbound": 0,
+  "tied": 0,
+  "undriven": 0,
+  "multiply_bound": 0,
+  "straps": 3094,
+  "plan_driven": 1935
+ },
+ "errors": [],
+ "n_errors": 0,
+ "warnings": [],
+ "files": [
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/bind_cells.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v1_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v1p2.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v1p3.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v1p4.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v1p5.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v1p6.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hg_v3_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v1__cl141fc26e.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v1__cl42bc8b12.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v2__cl2862d491.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v2__cle0015330.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v3_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v4_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v5_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v6_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v7_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hgi_v8_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hroot_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hub_C_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hub_Ei_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hub_Eo_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hub_Wi_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_hub_Wo_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_io_cor_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_io_cor_v1_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_io_ft_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_io_ft_v1_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pc__cl254f2e73.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pc__cl5a95b461.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pc_v1__cl23f6a148.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pc_v1__cl4ea58a5c.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pc_v1__cl7f648944.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pc_v3_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_phy_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_phy_v1_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v1_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v12_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v1n.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v2_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v2n.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v3_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v3n.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v4_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v4n.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v5_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v5n.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v6_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v6n.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v7_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_pv_v8_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_sys_SD_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_sys_SD_v1_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/kv3_sys_c_part.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindB3b/rtl/qwen_kvsys_bound_top.sv"
+ ],
+ "findings": [],
+ "extra_lib": [
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ep_s_head_e.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_ep_s_e.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_plan_leaves_1023/qkd_astk_er_owner_st_head.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_plan_leaves_1025/qkd_astk_zn_head_p.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_plan_leaves_1023/qkd_host_pc_slice_die_head.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_plan_leaves_1023/qkd_kvs_pc_h_head_p.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kv45/qkd_astk_ctl_s_g0.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kvbind1025/composed_rtl/2204b735ffa15ab0d2d002b776b7d28a681d6fcfd4bc968753de1a4912dcaa6a.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kvbind1025/composed_rtl/bd12dd6c99c7c915b197a1d7979a29bf87fd7408538a4e4cbbb71b74937ad046.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kvbind1025/composed_rtl/34f66e887d155f5f2008a882b51ad358c8c0e86dce3f710538a42cd069472368.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kvbind1025/composed_rtl/840286727d44c0ecf5db0a776c4c6c2821463cb58c7e3dd4fbc91f45118269fb.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kvbind1025/composed_rtl/9f20da4363565c6740f19c36fb48ea8bc71e7776a34585e29277627bfffad5da.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/physical/die_plan/qwen_kvsys/bind/kvbind1025/composed_rtl/c6b9852b87c66735beaa7d419caccbb7c7463f870b6f69849502bdf353e1761a.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/lib/ot_dp_efault.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/qwen_sys/kv_health_20261019/qkd_hp_or2.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/lib/ot_dp_id.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/common/ot_meso_fifo.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/common/ot_dp_clk_landing.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/common/ot_dp_clk_landing_ca.sv",
+  "/srv/opentallas-scratch2/claude/die-kv-37-1029/bindroot37/rtl/common/ot_dp_dly_cnt.sv"
+ ],
+ "parent_variants": [],
+ "variants": {
+  "instances": 52,
+  "removed_input_bits": {
+   "qkd_astk_ep_s_head_e.eo": 32,
+   "qkd_astk_ep_s_head_e.xi": 1068,
+   "qkd_astk_ep_s_head_e.zi": 2604,
+   "qkd_astk_ep_s_e.eo": 224,
+   "qkd_astk_er_owner_st_head.prev_addr": 176,
+   "qkd_astk_er_owner_st_head.prev_data": 1024,
+   "qkd_astk_er_owner_st_head.prev_fault": 4,
+   "qkd_astk_er_owner_st_head.prev_v": 16,
+   "qkd_astk_zn_head_p.fi": 4,
+   "qkd_astk_zn_head_p.zc": 16,
+   "qkd_host_pc_slice_die_head.ai": 128,
+   "qkd_host_pc_slice_die_head.ci": 128,
+   "qkd_host_pc_slice_die_head.fault_i": 4,
+   "qkd_host_pc_slice_die_head.sdi": 128,
+   "qkd_host_pc_slice_die_head.sfi": 128,
+   "qkd_host_pc_slice_die_head.ski": 128,
+   "qkd_host_pc_slice_die_head.soi": 128,
+   "qkd_kvs_pc_h_head_p.pc__fi": 4,
+   "qkd_kvs_pc_h_head_p.pc__pc": 20,
+   "qkd_astk_ctl_s_g0.am": 4
+  },
+  "list": [
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_0__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_head_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_0__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_head_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_0__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_head_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_0__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_head_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_1__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_2__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_3__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_4__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_5__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_6__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_ep_7__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_1__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_2__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_3__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_4__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_5__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_6__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_ep_7__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_1__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_2__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_3__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_4__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_5__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_6__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_ep_7__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_1__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_2__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_3__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_4__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_5__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_6__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_ep_7__u_ep",
+    "master": "qkd_astk_ep_s",
+    "variant": "qkd_astk_ep_s_e",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[1]: eo computed from sq inside qkd_astk_ep_s_e"
+   },
+   {
+    "inst": "astk_EN__u_strip_g_er_chain_u_er_g_owner_0__u_owner",
+    "master": "qkd_astk_er_owner_st",
+    "variant": "qkd_astk_er_owner_st_head",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_ES__u_strip_g_er_chain_u_er_g_owner_0__u_owner",
+    "master": "qkd_astk_er_owner_st",
+    "variant": "qkd_astk_er_owner_st_head",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_WN__u_strip_g_er_chain_u_er_g_owner_0__u_owner",
+    "master": "qkd_astk_er_owner_st",
+    "variant": "qkd_astk_er_owner_st_head",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_WS__u_strip_g_er_chain_u_er_g_owner_0__u_owner",
+    "master": "qkd_astk_er_owner_st",
+    "variant": "qkd_astk_er_owner_st_head",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_g_zn_0__u_zn",
+    "master": "qkd_astk_zn",
+    "variant": "qkd_astk_zn_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_g_zn_0__u_zn",
+    "master": "qkd_astk_zn",
+    "variant": "qkd_astk_zn_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_g_zn_0__u_zn",
+    "master": "qkd_astk_zn",
+    "variant": "qkd_astk_zn_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_g_zn_0__u_zn",
+    "master": "qkd_astk_zn",
+    "variant": "qkd_astk_zn_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "hsl_EN_0",
+    "master": "qkd_host_pc_slice_die",
+    "variant": "qkd_host_pc_slice_die_head",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "bgo",
+     "fo"
+    ],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023); S chains re-headed (plan_rewires hsl_S_orientation): the chain end is hsl_*_0 in all four quadrants"
+   },
+   {
+    "inst": "hsl_ES_0",
+    "master": "qkd_host_pc_slice_die",
+    "variant": "qkd_host_pc_slice_die_head",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023); S chains re-headed (plan_rewires hsl_S_orientation): the chain end is hsl_*_0 in all four quadrants"
+   },
+   {
+    "inst": "hsl_WN_0",
+    "master": "qkd_host_pc_slice_die",
+    "variant": "qkd_host_pc_slice_die_head",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "bgo",
+     "fo"
+    ],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023); S chains re-headed (plan_rewires hsl_S_orientation): the chain end is hsl_*_0 in all four quadrants"
+   },
+   {
+    "inst": "hsl_WS_0",
+    "master": "qkd_host_pc_slice_die",
+    "variant": "qkd_host_pc_slice_die_head",
+    "dropped_params": [],
+    "open_new_outputs": [],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023); S chains re-headed (plan_rewires hsl_S_orientation): the chain end is hsl_*_0 in all four quadrants"
+   },
+   {
+    "inst": "kvpc_EN_0",
+    "master": "qkd_kvs_pc_h",
+    "variant": "qkd_kvs_pc_h_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "pc__er",
+     "pc__ko",
+     "pc__completion_v",
+     "pc__completion_we"
+    ],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "kvpc_ES_0",
+    "master": "qkd_kvs_pc_h",
+    "variant": "qkd_kvs_pc_h_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "pc__er",
+     "pc__ko",
+     "pc__completion_v",
+     "pc__completion_we"
+    ],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "kvpc_WN_0",
+    "master": "qkd_kvs_pc_h",
+    "variant": "qkd_kvs_pc_h_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "pc__er",
+     "pc__ko",
+     "pc__completion_v",
+     "pc__completion_we"
+    ],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "kvpc_WS_0",
+    "master": "qkd_kvs_pc_h",
+    "variant": "qkd_kvs_pc_h_head_p",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "pc__er",
+     "pc__ko",
+     "pc__completion_v",
+     "pc__completion_we"
+    ],
+    "reason": "KV-P3b kv_binder_requests[0]: class-C chain head (claude/kv-p3-rtl-1023 @8d7467e8a rtl/qwen_sys/kv_plan_leaves_1023)"
+   },
+   {
+    "inst": "astk_EN__u_strip_u_strip_u_ctl",
+    "master": "qkd_astk_ctl_s",
+    "variant": "qkd_astk_ctl_s_g0",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "tc_faces",
+     "qo_face"
+    ],
+    "reason": "Approved HEADS1 static g=0: drop interior am.g bit1, retain valid0 and all34payloadbits exactly"
+   },
+   {
+    "inst": "astk_ES__u_strip_u_strip_u_ctl",
+    "master": "qkd_astk_ctl_s",
+    "variant": "qkd_astk_ctl_s_g0",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "tc_faces",
+     "qo_face"
+    ],
+    "reason": "Approved HEADS1 static g=0: drop interior am.g bit1, retain valid0 and all34payloadbits exactly"
+   },
+   {
+    "inst": "astk_WN__u_strip_u_strip_u_ctl",
+    "master": "qkd_astk_ctl_s",
+    "variant": "qkd_astk_ctl_s_g0",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "tc_faces",
+     "qo_face"
+    ],
+    "reason": "Approved HEADS1 static g=0: drop interior am.g bit1, retain valid0 and all34payloadbits exactly"
+   },
+   {
+    "inst": "astk_WS__u_strip_u_strip_u_ctl",
+    "master": "qkd_astk_ctl_s",
+    "variant": "qkd_astk_ctl_s_g0",
+    "dropped_params": [],
+    "open_new_outputs": [
+     "tc_faces",
+     "qo_face"
+    ],
+    "reason": "Approved HEADS1 static g=0: drop interior am.g bit1, retain valid0 and all34payloadbits exactly"
+   }
+  ]
+ },
+ "type_splits": [],
+ "r8_strap_sites": {
+  "types": 4,
+  "sites": 8,
+  "bits": 116,
+  "used_constants": [
+   [
+    1,
+    12,
+    0
+   ],
+   [
+    1,
+    12,
+    9
+   ],
+   [
+    1,
+    12,
+    10
+   ],
+   [
+    1,
+    12,
+    12
+   ],
+   [
+    15,
+    2,
+    0
+   ],
+   [
+    15,
+    2,
+    2
+   ],
+   [
+    15,
+    3,
+    0
+   ],
+   [
+    15,
+    3,
+    3
+   ],
+   [
+    15,
+    15,
+    0
+   ],
+   [
+    15,
+    15,
+    12
+   ],
+   [
+    15,
+    15,
+    13
+   ],
+   [
+    15,
+    15,
+    15
+   ],
+   [
+    16,
+    1,
+    0
+   ],
+   [
+    16,
+    1,
+    1
+   ],
+   [
+    18,
+    2,
+    0
+   ],
+   [
+    18,
+    2,
+    2
+   ]
+  ],
+  "list": {
+   "kv3_pc__cl5a95b461": {
+    "strap_r8pad_slg_x_tok": {
+     "leaf": "slg",
+     "port": "x__tok",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "width": 18,
+     "base": 0,
+     "span": 2,
+     "pads": {
+      "pc_EN_0": 2,
+      "pc_WN_0": 0
+     },
+     "counts": {
+      "pc_EN_0": 2,
+      "pc_WN_0": 0
+     },
+     "used": [
+      0,
+      2
+     ]
+    }
+   },
+   "kv3_pc_v1__cl4ea58a5c": {
+    "strap_r8pad_slg_vreq": {
+     "leaf": "slg",
+     "port": "vreq",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+     ],
+     "width": 15,
+     "base": 0,
+     "span": 3,
+     "pads": {
+      "pc_EN_5": 3,
+      "pc_EN_6": 0,
+      "pc_ES_5": 3,
+      "pc_ES_6": 0,
+      "pc_WN_5": 3,
+      "pc_WN_6": 0,
+      "pc_WS_5": 3,
+      "pc_WS_6": 0
+     },
+     "counts": {
+      "pc_EN_5": 3,
+      "pc_EN_6": 0,
+      "pc_ES_5": 3,
+      "pc_ES_6": 0,
+      "pc_WN_5": 3,
+      "pc_WN_6": 0,
+      "pc_WS_5": 3,
+      "pc_WS_6": 0
+     },
+     "used": [
+      0,
+      3
+     ]
+    },
+    "strap_r8pad_slg_x_tok": {
+     "leaf": "slg",
+     "port": "x__tok",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "width": 18,
+     "base": 0,
+     "span": 2,
+     "pads": {
+      "pc_EN_5": 2,
+      "pc_EN_6": 2,
+      "pc_ES_5": 0,
+      "pc_ES_6": 0,
+      "pc_WN_5": 0,
+      "pc_WN_6": 0,
+      "pc_WS_5": 0,
+      "pc_WS_6": 0
+     },
+     "counts": {
+      "pc_EN_5": 2,
+      "pc_EN_6": 2,
+      "pc_ES_5": 0,
+      "pc_ES_6": 0,
+      "pc_WN_5": 0,
+      "pc_WN_6": 0,
+      "pc_WS_5": 0,
+      "pc_WS_6": 0
+     },
+     "used": [
+      0,
+      2
+     ]
+    }
+   },
+   "kv3_pc_v1__cl7f648944": {
+    "strap_r8pad_slg_afv": {
+     "leaf": "slg",
+     "port": "afv",
+     "bits": [
+      0
+     ],
+     "width": 1,
+     "base": 0,
+     "span": 12,
+     "pads": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 9,
+      "pc_EN_4": 0,
+      "pc_ES_2": 0,
+      "pc_ES_3": 10,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 12,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 12,
+      "pc_WS_4": 0
+     },
+     "counts": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 9,
+      "pc_EN_4": 0,
+      "pc_ES_2": 0,
+      "pc_ES_3": 10,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 12,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 12,
+      "pc_WS_4": 0
+     },
+     "used": [
+      0,
+      9,
+      10,
+      12
+     ]
+    },
+    "strap_r8pad_slg_vreq": {
+     "leaf": "slg",
+     "port": "vreq",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+     ],
+     "width": 15,
+     "base": 0,
+     "span": 15,
+     "pads": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 12,
+      "pc_EN_4": 0,
+      "pc_ES_2": 0,
+      "pc_ES_3": 13,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 15,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 15,
+      "pc_WS_4": 0
+     },
+     "counts": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 12,
+      "pc_EN_4": 0,
+      "pc_ES_2": 0,
+      "pc_ES_3": 13,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 15,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 15,
+      "pc_WS_4": 0
+     },
+     "used": [
+      0,
+      12,
+      13,
+      15
+     ]
+    },
+    "strap_r8pad_slg_x_tep": {
+     "leaf": "slg",
+     "port": "x__tep",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+     ],
+     "width": 16,
+     "base": 0,
+     "span": 1,
+     "pads": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 0,
+      "pc_EN_4": 0,
+      "pc_ES_2": 0,
+      "pc_ES_3": 1,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 0,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 0,
+      "pc_WS_4": 0
+     },
+     "counts": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 0,
+      "pc_EN_4": 0,
+      "pc_ES_2": 0,
+      "pc_ES_3": 1,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 0,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 0,
+      "pc_WS_4": 0
+     },
+     "used": [
+      0,
+      1
+     ]
+    },
+    "strap_r8pad_slg_x_tok": {
+     "leaf": "slg",
+     "port": "x__tok",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17
+     ],
+     "width": 18,
+     "base": 0,
+     "span": 2,
+     "pads": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 0,
+      "pc_EN_4": 2,
+      "pc_ES_2": 0,
+      "pc_ES_3": 0,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 0,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 0,
+      "pc_WS_4": 0
+     },
+     "counts": {
+      "pc_EN_2": 0,
+      "pc_EN_3": 0,
+      "pc_EN_4": 2,
+      "pc_ES_2": 0,
+      "pc_ES_3": 0,
+      "pc_ES_4": 0,
+      "pc_WN_2": 0,
+      "pc_WN_3": 0,
+      "pc_WN_4": 0,
+      "pc_WS_2": 0,
+      "pc_WS_3": 0,
+      "pc_WS_4": 0
+     },
+     "used": [
+      0,
+      2
+     ]
+    }
+   },
+   "kv3_pc_v3": {
+    "strap_r8pad_slg_vreq": {
+     "leaf": "slg",
+     "port": "vreq",
+     "bits": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+     ],
+     "width": 15,
+     "base": 3,
+     "span": 2,
+     "pads": {
+      "pc_EN_7": 5,
+      "pc_ES_7": 3,
+      "pc_WN_7": 5,
+      "pc_WS_7": 3
+     },
+     "counts": {
+      "pc_EN_7": 2,
+      "pc_ES_7": 0,
+      "pc_WN_7": 2,
+      "pc_WS_7": 0
+     },
+     "used": [
+      0,
+      2
+     ]
+    }
+   }
+  }
+ },
+ "bound_groups": {},
+ "inner_uniform": {
+  "types": 6,
+  "edges": 4428,
+  "changed_bits": 21884,
+  "added_stage_bits": 36233,
+  "max_added": 7
+ },
+ "type_canon_merged": [],
+ "param_regen": {
+  "file": "physical/die_plan/qwen_kvsys/r8/kv_pv_col_regen.py",
+  "changed": [
+   {
+    "inst": "ectl_EN_0",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_0",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_1",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_1",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_2",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_2",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_3",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_3",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_4",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_4",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_5",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_5",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_6",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_6",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_EN_7",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_EN_7",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_0",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_0",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_1",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_1",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_2",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_2",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_3",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_3",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_4",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_4",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_5",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_5",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_6",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_6",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_ES_7",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_ES_7",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_0",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_0",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_1",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_1",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_2",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_2",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_3",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_3",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_4",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_4",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_5",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_5",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_6",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_6",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WN_7",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WN_7",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_0",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_0",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_1",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_1",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_2",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_2",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_3",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_3",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_4",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_4",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_5",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_5",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_6",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_6",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ectl_WS_7",
+    "param": "RESPONSE_LAT",
+    "asbuilt": "80",
+    "bound": 18
+   },
+   {
+    "inst": "ectl_WS_7",
+    "param": "QK_ISSUE_AGE",
+    "asbuilt": "91",
+    "bound": 34
+   },
+   {
+    "inst": "ahub",
+    "param": "AP_OFS",
+    "asbuilt": "64'b1111111111011101111111111101111011111111110111001111111111011100",
+    "bound": "64'hffddffdcffdfffdf"
+   },
+   {
+    "inst": "pvw_0__u_ctl",
+    "param": "FIRST_INPUT_AGE",
+    "asbuilt": "127",
+    "bound": 255
+   },
+   {
+    "inst": "pvw_0__u_ctl",
+    "param": "TRUNK_D",
+    "asbuilt": "54",
+    "bound": 63
+   },
+   {
+    "inst": "pvw_0__u_ctl",
+    "param": "FLAG_D",
+    "asbuilt": "58",
+    "bound": 78
+   },
+   {
+    "inst": "pvw_1__u_ctl",
+    "param": "FIRST_INPUT_AGE",
+    "asbuilt": "127",
+    "bound": 255
+   },
+   {
+    "inst": "pvw_1__u_ctl",
+    "param": "TRUNK_D",
+    "asbuilt": "54",
+    "bound": 63
+   },
+   {
+    "inst": "pvw_1__u_ctl",
+    "param": "FLAG_D",
+    "asbuilt": "58",
+    "bound": 78
+   },
+   {
+    "inst": "vport_EN_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_EN_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_EN_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_EN_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_ES_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WN_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_0",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_1",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_2",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "vport_WS_3",
+    "param": "RT",
+    "asbuilt": "31",
+    "bound": 63
+   },
+   {
+    "inst": "d2d_kv",
+    "param": "TXDP",
+    "asbuilt": "50529302",
+    "bound": "32'h03039da9"
+   },
+   {
+    "inst": "seq__u_core",
+    "param": "KVN_A0",
+    "asbuilt": "32",
+    "bound": 28
+   }
+  ],
+  "record": {
+   "kv_regen": {
+    "ectl": {
+     "rule": "RESPONSE_LAT = 8 + krq + krs; QK_ISSUE_AGE = max(34, RESPONSE_LAT + 11)",
+     "frames": 32,
+     "RESPONSE_LAT": 18,
+     "QK_ISSUE_AGE": 34,
+     "krq": [
+      4,
+      5
+     ],
+     "krs": [
+      5,
+      6
+     ]
+    },
+    "ahub": {
+     "rule": "AP_OFS_s += dD(ap_s) - dD(ks_ahs); FR_OFS += dD(ks_pvfst) - dPV_LEAD - dD(ks_ahfr) - dD(ks_ahs)",
+     "stacks": [
+      "WS",
+      "WN",
+      "ES",
+      "EN"
+     ],
+     "AP_OFS_asbuilt": [
+      -36,
+      -36,
+      -34,
+      -35
+     ],
+     "AP_OFS": [
+      -33,
+      -33,
+      -36,
+      -35
+     ],
+     "FR_OFS_asbuilt": -7,
+     "FR_OFS": -7,
+     "dD": {
+      "ap": [
+       3,
+       3,
+       -2,
+       0
+      ],
+      "ks_ahs": 0,
+      "ks_pvfst": 0,
+      "ks_ahfr": 0,
+      "PV_LEAD": 0
+     }
+    },
+    "open": [
+     "PV ctl ot_qwen_tp8_pv_wide_ctl_tbf FIRST_INPUT_AGE/TRUNK_D/FLAG_D: 4 + W + DQ + RT_die + 1 needs the boot vport RT/DQ (per-port bound round trips differ) -> KV-P5 rule + boot image",
+     "vport RT/DQ: boot-programmable, boot image must carry the bound round trip",
+     "ahub am lag (EXP_START), d2d sys_c<->hub_C, kvs_ctl<->hroot: compiler schedule terms (bind_latency.json)"
+    ]
+   },
+   "agebounds": {
+    "counts": {
+     "FIRST_INPUT_AGE": 2,
+     "RT": 16
+    },
+    "added_schedule_cycles": 0,
+    "source": "PATH-KV decision 2026-10-25 21:21; RTL source 453dda0da433"
+   },
+   "txdp": {
+    "inst": "d2d_kv",
+    "TXDP": [
+     169,
+     157,
+     3,
+     3
+    ],
+    "word": "32'h03039da9",
+    "source": {
+     "kv": "KV bind of record event28b bindB2 (intel1 die-kv-36-1029/bindB2; SK_TXV/SK_TXP 77, HOST_REC_RT 153): TOK-KV-4 run_mu833.sh (KST + HRT derived from the bind) -> img_bnd D2D_TXDP_K 32'h03039da9 (intel1 tok-kv-4-1029/mu833_B2)",
+     "qc": "codex/qc-bind-1027 fresh_v3"
+    },
+    "commit": null
+   },
+   "kvn_a0": {
+    "inst": "seq__u_core",
+    "asbuilt": 32,
+    "dD_kvn": 75,
+    "dD_att_rx": 79,
+    "KVN_A0": 28
+   },
+   "hook": "physical/die_plan/qwen_kvsys/r8/kv_pv_col_regen.py",
+   "pv_trunk": {
+    "TRUNK_D_asb": 54,
+    "FLAG_D_asb": 58,
+    "C": 9,
+    "TRUNK_D": 63,
+    "FLAG_D": 78,
+    "k0": {
+     "S": 2,
+     "N": 1
+    },
+    "rule": "regen_constants.kv_pv_trunk law on the padded bind (kv_pv_col_pads.py)"
+   }
+  }
+ },
+ "rewires": {
+  "file": "physical/die_plan/qwen_kvsys/bind/kv44/plan_rewires_kv44.json",
+  "bits": {
+   "astk_ectl_relabel": 24816,
+   "astk_ectl_relabel dropped": 0,
+   "hsl_S_orientation": 29298,
+   "hsl_S_orientation (same-sink template)": 1742,
+   "opened outputs": 4,
+   "hsl_S_orientation dropped": 0,
+   "kvpc_hbm_reset (template-less, beside)": 128,
+   "kvpc_hbm_reset dropped": 0,
+   "d2d_boot_order (template-less, beside)": 1,
+   "d2d_boot_order dropped": 0
+  }
+ },
+ "plan_cells": {
+  "file": "physical/die_plan/qwen_kvsys/bind/kvbind1025/plan_cells_b3.json",
+  "rewired": 7,
+  "cells_emitted": 114
+ },
+ "tied_by_port": {},
+ "bump_ports": [
+  {
+   "die_port": "sys_c_link_v",
+   "dir": "output",
+   "width": 1,
+   "partition": "sys_c",
+   "leaf": "sys_c.u_ucie_rom",
+   "pin": "link_v",
+   "part_port": "bump_ucie_rom_link_v"
+  },
+  {
+   "die_port": "sys_c_link_flit",
+   "dir": "output",
+   "width": 583,
+   "partition": "sys_c",
+   "leaf": "sys_c.u_ucie_rom",
+   "pin": "link_flit",
+   "part_port": "bump_ucie_rom_link_flit"
+  },
+  {
+   "die_port": "sys_c_far_v",
+   "dir": "input",
+   "width": 1,
+   "partition": "sys_c",
+   "leaf": "sys_c.u_ucie_rom",
+   "pin": "far_v",
+   "part_port": "bump_ucie_rom_far_v"
+  },
+  {
+   "die_port": "sys_c_far_flit",
+   "dir": "input",
+   "width": 583,
+   "partition": "sys_c",
+   "leaf": "sys_c.u_ucie_rom",
+   "pin": "far_flit",
+   "part_port": "bump_ucie_rom_far_flit"
+  }
+ ],
+ "bus_groups": {
+  "landing_groups": 5294,
+  "landing_misaligned_by_lanes": 1742,
+  "landing_misaligned_after_pads": 1656,
+  "replica_sets": 234,
+  "replica_unequal": 156,
+  "internal_changed_edges": 88
+ }
+}
