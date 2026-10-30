@@ -1,0 +1,132 @@
+{
+ "done": true,
+ "design": "ot_s81_kp4_dchn",
+ "cells": 180962.0,
+ "parasitics": "global_routing_G2",
+ "clocks": [
+  "clk",
+  "vclk"
+ ],
+ "vclks": [
+  "vclk"
+ ],
+ "periods": {
+  "clk": 833.0,
+  "vclk": 833.0
+ },
+ "clock_ports": [
+  "clk"
+ ],
+ "inputs": [
+  "k_L",
+  "k_any",
+  "k_lo",
+  "k_v",
+  "rst_n"
+ ],
+ "outputs": [
+  "apply",
+  "cw_q",
+  "fs",
+  "n_corr",
+  "n_unc",
+  "o_ne",
+  "o_unc"
+ ],
+ "overlay": "applied vclk in_min -40 out_min 0",
+ "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 267.622252 samples 1253 missing 0 clocks 1",
+ "sdc_wns_max": -11.75,
+ "sdc_wns_min": 20.82,
+ "sdc_tns_max": -93.43,
+ "sdc_tns_min": 0.0,
+ "sdc_nviol_max": 18.0,
+ "sdc_nviol_min": 0.0,
+ "std_wns_max": -11.75,
+ "std_wns_min": 28.28,
+ "std_tns_max": -93.43,
+ "std_tns_min": 0.0,
+ "std_nviol_max": 18.0,
+ "std_nviol_min": 0.0,
+ "slew_viol": 0.0,
+ "cap_viol": 0.0,
+ "fanout_max": 66.0,
+ "fanout_worst_net": "g_ch[54].u_iv/net33787",
+ "fanout_viol": 1.0,
+ "check_setup": {
+  "unconstrained": 0,
+  "unclocked": 0,
+  "loops": 0,
+  "multiple_clock": 0,
+  "generated": 0
+ },
+ "ck_errors": 0.0,
+ "pg_terms": 361924.0,
+ "pg_open": 0.0,
+ "pg_first_open": null,
+ "insertion_all": {
+  "n": 3237,
+  "min": 253.04,
+  "mean": 267.31,
+  "max": 291.3,
+  "spread": 38.26
+ },
+ "insertion_pinflops": {
+  "n": 1253,
+  "min": 257.99,
+  "mean": 267.62,
+  "max": 291.24,
+  "spread": 33.25
+ },
+ "pair_skew": {
+  "done": true,
+  "checks": {
+   "max": {
+    "n": 105296.0,
+    "worst_abs_ps": 41.81,
+    "bounded": false,
+    "worst_signed_ps": -41.81,
+    "worst_launch": "Ro[2][2]$_DFF_P_",
+    "worst_capture": "e1_ov[2][2]$_DFF_P_",
+    "worst_crpr_ps": 2.08,
+    "p99_raw_ps": 38.28,
+    "searched": 111.0,
+    "nopath": 0.0,
+    "verify_ps": 0.0
+   },
+   "min": {
+    "n": 105296.0,
+    "worst_abs_ps": 37.65,
+    "bounded": false,
+    "worst_signed_ps": 37.65,
+    "worst_launch": "e1_ov[34][8]$_DFF_P_",
+    "worst_capture": "crc[204]$_SDFF_PN0_",
+    "worst_crpr_ps": 3.18,
+    "p99_raw_ps": 36.46,
+    "searched": 516.0,
+    "nopath": 0.0,
+    "verify_ps": 0.0
+   }
+  },
+  "counts": {
+   "regs": 3237.0,
+   "no_clock_arrival": 0.0,
+   "data_pins": 3237.0,
+   "pairs": 105296.0,
+   "inter_clock": 0.0
+  },
+  "method": "tag",
+  "seconds": 60.0,
+  "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+  "tsv": "pair_skew.tsv"
+ },
+ "clock_endpoint_masters": [
+  "DFFHQNx1_ASAP7_75t_R",
+  "DFFHQNx2_ASAP7_75t_R"
+ ],
+ "clock_endpoint_mapping_errors": 0.0,
+ "ocv5_wns_max": -64.17,
+ "ocv5_wns_min": 16.33,
+ "scope": "G2 actualglobalroute parasitics estimate/noDRT/noRCX/noSIGNED",
+ "corner": "tt",
+ "bound_insertion_ps": 250
+}
