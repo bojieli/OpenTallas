@@ -90,6 +90,16 @@ def test_macro_face_reparent_rejects_occupied_repeater_site():
     assert next(x for x in record if x['edge']=='X')['fixed'] is False
 
 
+def test_macro_face_reparent_rejects_short_stub_across_macro_wall():
+    P=_obstructed_repeated_plan()
+    P['mz']=F.H.Maze((0,0,100,80), [('wall',(30,5,65,45),(30,10)),
+        ('thin',(75,20.5,85,21.5),(75,21))], G=1, halo=0)
+    # A nominal two-micron donor stub crosses the thin wall. The previous
+    # implementation accepted it and priced only its Manhattan length.
+    r=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in r if x['edge']=='X')['fixed'] is False
+
+
 class _Maze:
     """minimal maze: cells are (x, y) tuples on a 1 um grid."""
     G = 1.0
