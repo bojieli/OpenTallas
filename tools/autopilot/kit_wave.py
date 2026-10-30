@@ -46,6 +46,8 @@ import sys
 import time
 from pathlib import Path
 
+import plan_block_identity as BI
+
 HOME = Path.home()
 AP_DIR = Path(os.environ.get("AP_DIR", str(HOME / "coord" / "autopilot")))
 OT_RUN = os.environ.get("AP_OT_RUN", str(HOME / ".local/bin/ot-run"))
@@ -171,6 +173,8 @@ PLAN_BLOCK = {
 
 def plan_entry_block(d, item):
     """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
+    if item in (d.get("_identity_holds") or {}):
+        return "plan block identity held: " + d["_identity_holds"][item]
     f = (d.get("_plan_flags") or {}).get(item)
     if f == "hard" and item in (d.get("hard_wrappers") or []):
         return None
@@ -571,21 +575,20 @@ def _descends(AP):
     return f
 
 
-PROBE_PLAN = r'''
+PROBE_PLAN = Path(BI.__file__).read_text().rsplit("\nif __name__", 1)[0] + r'''
 import hashlib, json, os, sys
 a = json.loads(sys.argv[1]); out = {}
 H = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, default=str).encode()).hexdigest()
 try:
     st = os.stat(a["plan"]); raw = open(a["plan"], "rb").read(); p = json.loads(raw)
     pt = p.get("partition_types") or {}; bud = p.get("budgets") if isinstance(p.get("budgets"), dict) else {}
-    blocks = {t: H({"type": v, "budget": bud.get(t)}) for t, v in pt.items()}
-    hc = [h for h in (p.get("hard_cores") or []) if isinstance(h, dict)]
-    for v in pt.values():
-        hc += [h for h in ((v.get("hard_cores") if isinstance(v, dict) else None) or []) if isinstance(h, dict)]
-    for h in hc:
-        m = str(h.get("module") or h.get("name") or "")
-        if m and m not in blocks:
-            blocks[m] = H({"core": h})
+    mode = a.get("block_identity", "raw")
+    ids = identities(p, a["plan"], mode)
+    blocks = {name: value["block_sha"] for name, value in ids.items()}
+    baseline = None
+    if mode != "raw" and a.get("identity_baseline_plan"):
+        baseline_path = a["identity_baseline_plan"]
+        baseline = identities(json.loads(Path(baseline_path).read_text()), baseline_path, mode)
     flags = {}
     for t, v in pt.items():
         if not isinstance(v, dict):
@@ -600,6 +603,8 @@ try:
             flags[t] = "contract"
     out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks}
+    if mode != "raw":
+        out.update(block_identity=mode, identities=ids, baseline_identities=baseline)
 except Exception as e:
     out = {"error": f"{type(e).__name__}: {e}"}
 print("AP_JSON " + json.dumps(out))
@@ -610,13 +615,18 @@ def plan_names(AP, st, d):
     """partition types + hard-core modules of the plan of record (probe on gen_host, cached by plan path + event)"""
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
     c = (st.get("plans") or {}).get(key)
-    if c and c.get("blocks") and time.time() - c.get("t", 0) < 6 * 3600:
+    mode = d.get("block_identity", "raw")
+    if mode == "raw" and c and c.get("blocks") and time.time() - c.get("t", 0) < 6 * 3600:
         return c
-    p = AP.rpy(d["gen_host"], PROBE_PLAN, {"plan": d["plan"]}, timeout=600)
+    args = {"plan": d["plan"]}
+    if mode != "raw":
+        args.update(block_identity=mode, identity_baseline_plan=d.get("identity_baseline_plan"))
+    p = AP.rpy(d["gen_host"], PROBE_PLAN, args, timeout=600)
     if p.get("error"):
         return {"error": p["error"]}
     p["t"] = time.time()
-    st.setdefault("plans", {})[key] = p
+    if mode == "raw":
+        st.setdefault("plans", {})[key] = p
     return p
 
 
@@ -638,6 +648,12 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
                     d["_plan_flags"] = pn.get("flags") or {}
+                    d["_identity_holds"] = {}
+                    if d.get("block_identity", "raw") != "raw":
+                        names, d["_identity_holds"] = BI.reuse_blocks(
+                            names, pn["identities"], pn.get("baseline_identities"),
+                            st.get("items") or {}, die=die, event=d["event"],
+                            receipts=d.get("identity_reuse_receipts"))
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
                 n = capacity(cfg, die, st, status, hub, launched_now=len(launch))
