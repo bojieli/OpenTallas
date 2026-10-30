@@ -1,0 +1,3 @@
+# Native HBM FUSED tnode actual placement
+
+Independent Codex GEOM2026-10-30: viewed render.png, **PASS-COND for CTS/standard route under existing FILL-EXCEPTION**. Exact kit intel1 codex-hbm-residual-1030/tnode_castfix/kits/ot_hnx_fused_tnode_50055cbac918-_res1030castfix. Only fill.084/empty.7496 fail; H.783 WARN with actualGRT0. Two W SRAMs and central clock island clear; W/E face register strips coherent, r2r203.53/0bad,pinp907.26/max61.19,clock159.73,no collapse/unregistered/loops. NativeLEC6244/0D/0U,FACE1339 remain receipts. Actual routed timing/DRV/DRC/antenna/LEC/sign-off required before any count. Typed request/reply tag HBM-FUSED-TNODE-1030 actual placed review recorded in coordination.

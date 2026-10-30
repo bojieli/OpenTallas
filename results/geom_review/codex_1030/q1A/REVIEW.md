@@ -1,0 +1,3 @@
+# KV Q1 source-side driver prototype
+
+Independent Codex GEOM2026-10-30: viewed placed.png, **PASS-COND GRT50+TT/FF prototype only; no DRT**. Same frozen243.648x172.8 pins/macros/outline with82source drivers near FF,123drive sizes,151combinational cells touched; reported clock365nets/7557instances unchanged. Broadcentralstreets/facepins remain sound, r2r267.3/0bad,pinp908.49/max28.94. Independently recomputed current merged mainf5f7 model on exactdump: H1.006 (old1.863),V.603,col.644,zero blockedcuts. Remaining H hardfinding preserved and is purpose of diagnostic, not waived. No oldrouteDRC0 reuse. Need actualnewGRT/TTFF, structuralfix if needed and finalreview before DRT.
