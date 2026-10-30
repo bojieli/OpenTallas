@@ -1,0 +1,8 @@
+S81 event3 macro-site and clock review, Codex 2026-10-30 03:43 PDT
+Plan: plan_h2_2249.json sha25639aa595f5bd3e5006d7d6045103a7c145b8779ed8a2fb50cd125bfddd94338a2
+Images personally viewed:
+- physical/die_plan/s81/delta_kvt2site_1030.png (actual183-site candidate, unchanged1442.88x1226.88)
+- epyc2:/srv/opentallas-scratch2/claude/die-s81-34/ev3clk/run/ctree.png (built regionalclock)
+Macro findings: regular banks preserve horizontal landing streets and clock/reset sites. Large SRAMs have channels; narrow vertical banks use existing macro-edge pin faces with10.8um channels. No new macro wall across landing bands. Per-LEF M1-M4 obstruction keeps M5/M7 feedthrough corridor layers available; station sites remain macrofree. This is a macro-fit review only: full soft-logic placement and1432um worst bus-to-macro distance still require planned registered relays; no single-cycle-reach signoff implied.
+Clock findings: region feeds follow row/spine links, repeated local trees cover outer replicated regions. Long highlighted graphlegs remain diagnostic, not assumed single unbuffered wires; actualbuilt routedRC and CA measurements govern. GRTTT/FF0overflow, countaligned phase/width2306crossings with0missing/0fail and>=100psmargin. Full real-view STA unmeasured/missingviews remains unresolved, no release claim.
+Verdict: PASS-COND for candidate macro-site/clock plan; condition = strictbind verify stillLIVE and all type/real-view gates outstanding. No authority to route types with existing GEOM FAIL.
