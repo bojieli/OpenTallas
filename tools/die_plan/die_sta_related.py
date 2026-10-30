@@ -595,6 +595,20 @@ def apply_clock_cal(meta, taps, corner, clock_cell, clock_cal, proof=None):
     return scale_clock(meta, taps, f) if fe is None else scale_clock(meta, taps, f, fe)
 
 
+def clock_cppr_ranges(meta):
+    """Common-path ranges after calibration, including measured opposite-edge arrivals.
+
+    Preserve calibration output and old proof records; derive fall ranges in the
+    consumer from the calibrated node arrays.  A partial ``__source__@fall`` map
+    never implies zero common-path range for other tree nodes.
+    """
+    ranges = meta.get("cppr_node_range_ps")
+    late, early = meta.get("node_fall_late_ps") or {}, meta.get("node_fall_early_ps") or {}
+    measured = {k + "@fall": round(max(0.0, float(v) - float(early[k])), 4)
+                for k, v in late.items() if v is not None and early.get(k) is not None}
+    return dict(ranges or {}, **measured) if measured else ranges
+
+
 def _clock_netlists(proof, meta):
     """candidate die clock netlists of a proof: PROOF/{,clk/,clock/}ctree.v, then the same names beside / above the
     arrival file the proof's tap_arrivals 'source' names (die_trial run dir: run/out_<C>/arr_<C>.txt + run/clk/ctree.v)."""
@@ -704,9 +718,9 @@ def ca_pair_interval(A, B, a, b, cppr_range=None, ocv=None, edge="rise", ring=No
         lc, ec = f
     cr = credit(cppr_range, node, la, ea, lc, ec) if cppr_range else 0.0
     if f is not None and cppr_range:
-        fr = {k[:-5]: v for k, v in cppr_range.items() if k.endswith("@fall")}
-        if fr:
-            cr = min(cr, credit(fr, node, la, ea, lc, ec))
+        fk = node + "@fall"
+        if fk in cppr_range:
+            cr = min(cr, credit({node: cppr_range[fk]}, node, la, ea, lc, ec))
     lo, hi = ec - la + cr, lc - ea - cr
     if ring is not None:
         sh = ring(A, B)
@@ -908,7 +922,7 @@ def sta_d_intervals(proof, plan, corners=("TT", "FF"), clock_cal="none", cppr_lc
             ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table,
                          clock_cell=cc)
             ring = ca_ring_fn(ca_ring, plan, c) if ca_ring else None
-            out[c] = count_align_d_intervals(pairs["landed"], taps, meta.get("cppr_node_range_ps"), ocv=ocv,
+            out[c] = count_align_d_intervals(pairs["landed"], taps, clock_cppr_ranges(meta), ocv=ocv,
                                              **({"ring": ring} if ring is not None else {}))
         return out
     finally:
@@ -936,7 +950,7 @@ def sta_port_intervals(proof, plan, corners, ports, part_region=None, clock_cal=
             lat = core_latency_ff if (c == "FF" and core_latency_ff is not None) else lt
             ocv = ca_ocv(Path(proof), meta, taps, c, lat, clock_ocv, clock_droop, "mesh", droop_regions_file, aocv_table,
                          clock_cell=cc)
-            rng = meta.get("cppr_node_range_ps")
+            rng = clock_cppr_ranges(meta)
             ring = ca_ring_fn(ca_ring, plan, c) if ca_ring else None
             rk = {"ring": ring} if ring is not None else {}
             iv, unb, _ = count_align_port_intervals(ports, pairs["landed"], taps, rng, part_region, ocv, **rk)
@@ -2566,7 +2580,7 @@ def main(argv=None):
                                             v.get("clock_masters") for v in at.values()) or meta.get("clock_masters")
                                         else "clock cell master (no clock_masters declared or traced)")
         meta, taps = apply_clock_cal(meta, taps, c, ccell, a.clock_cal, proof=d)
-        rng = meta["cppr_node_range_ps"]
+        rng = clock_cppr_ranges(meta)
         slew = max(r["slew_ps"] for r in taps.values())
         reg = characterise(out, c, slew, a.seam_wire_um * a.wire_ff_per_um)
         pairs, cov = build_pairs(plan, taps)
@@ -2602,7 +2616,7 @@ def main(argv=None):
         if a.mesh_signoff:
             so = dict(x.split("=", 1) for x in a.mesh_signoff.split(","))
             unc, mrec = mesh_signoff(d, taps, meta, c, so[c], a.mesh_band)
-            rng = meta["cppr_node_range_ps"]
+            rng = clock_cppr_ranges(meta)
         cr = dict(basis=meta.get("basis"), tap_slew_max_ps=round(slew, 2), register=reg, classes={})
         dd = DD.fracs(ddm, a.data_droop, c) if a.data_droop != "none" else None
         if real:
