@@ -170,5 +170,26 @@
  "global_RSTD_dates_qualified": false,
  "physical_START_qualified": false,
  "full_stage": false,
- "full_token": false
+ "full_token": false,
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "OT_S81ENG_TAP_N32R2",
+  "OT_S81SL_KV_TRANSPORT",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "OT_ATTN_HCORE",
+  "OT_S81ENG_RR_N32",
+  "OT_S81C_HCORE_CTLA",
+  "OT_S81C_HCORE_RST_TIMED",
+  "S81_HOSTB_LAND_OBS"
+ ],
+ "source_selection": {
+  "path": "/srv/opentallas-scratch2/claude/die-s81-34/h2bind/asbuilt_h2_frozen_d34.json",
+  "sha256": "3227f2285519f204a661539b79ce1b92cc0f841442f840a54eb3246746c40cd2"
+ }
 }

@@ -121,6 +121,8 @@ def main():
     p.add_argument('--entry-engram-inputs',type=Path,required=True)
     p.add_argument('--inference-config',type=Path,required=True)
     p.add_argument('--first-issue',type=int,required=True)
+    p.add_argument('--math-chain',type=Path,help='actual current component chain; does not qualify native scheduling')
+    p.add_argument('--math-source-root',type=Path,help='exact current operator source for --math-chain')
     p.add_argument('--out',type=Path,required=True)
     a=p.parse_args()
     if a.out.exists():raise ValueError('preserve prior result; choose fresh output')
@@ -134,6 +136,11 @@ def main():
     entry=compile_inputs(die,a.fixtures,a.entry_engram_inputs)
     result=compile_selected(die,entry,eps,a.first_issue)
     result['epsilon_source']=dict(path=key,sha256=config_sha,key='norm_eps',value=config['norm_eps'])
+    if a.math_chain:
+        if not a.math_source_root:p.error('--math-chain requires --math-source-root')
+        from layer_prog.norm_math_intake import attach_math
+        result['math_component_contract']=attach_math(entry,result,a.math_chain,a.math_source_root)
+    elif a.math_source_root:p.error('--math-source-root requires --math-chain')
     words=encode_unsealed(result)
     check_host(result,words)
     result.update(host_boot_file='norm.unsealed.host_boot.memh',host_word_count=len(words),

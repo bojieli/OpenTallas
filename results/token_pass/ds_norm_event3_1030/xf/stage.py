@@ -1,4 +1,4 @@
-import hashlib,json,shutil,sys
+import hashlib,json,shutil,sys,re
 from pathlib import Path
 R=Path(sys.argv[1]);P=Path('/srv/opentallas-scratch2/claude/codex-ds-norm-producer-1030')
 stage=json.loads((P/'stage.json').read_text());source=Path('/srv/opentallas-scratch2/claude/codex-s81-h2-bind-2249/frozen_source')
@@ -7,7 +7,14 @@ for name,digest in stage['source_sha256'].items():
  if hashlib.sha256(path.read_bytes()).hexdigest()!=digest:raise ValueError('current selected source changed '+name)
  target=R/'src'/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
 (R/'source.f').write_text('\n'.join('src/'+n for n in stage['source_sha256'])+'\n');shutil.copyfile(P/'defines.f',R/'defines.f')
-shutil.copyfile(P/'partial.memh',R/'actual_partials80.hex')
+capture=Path('/srv/opentallas-scratch2/claude/codex-ds-valid-partial-1030')
+observed=re.findall(r'ACTUAL_VALID_PARTIAL leaf(\d+) cycle\d+ data([0-9a-f]{8})',(capture/'base.log').read_text())
+partials={int(i):word for i,word in observed}
+assert len(observed)==80 and sorted(partials)==list(range(80)) and 'NORM_PRODUCER_PASS checks80 errors0'in(capture/'base.log').read_text()
+assert 'GATE_PASS'in(capture/'status.txt').read_text()
+# The input is captured actual producer words. The independently generated
+# partial.memh remains a scoreboard file,never the source of this handoff.
+(R/'actual_partials80.hex').write_text(''.join(partials[i]+'\n'for i in range(80)))
 native=json.load(open('/srv/opentallas-scratch2/claude/codex-ds-norm-event3-1030/L14/norm_control.json'))
 eps=native['eps_fp32_bits'];assert eps=='1e3ce508' and native['epsilon_source']['key']=='norm_eps' and native['epsilon_source']['value']==1e-20
 for c in native['commands']:

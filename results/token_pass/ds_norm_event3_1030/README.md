@@ -75,3 +75,13 @@ dsdv_seq_host_mux; it was corrected from emitted source,not aliased by name.
 control_routes.json records every component/transport and its current source.
 These are source-relative local transport facts only,no HOST/KS/reset/START,
 global producer/RSTD/Q-profile or final norm/GO schedule is adopted.
+
+Actual math chain is now optionally consumed by selected_entry_norm via
+--math-chain DIR --math-source-root CURRENT_SOURCE. It links the current3920-row
+entry image to valid-time80partial capture,currentSIW7XFscalar,andcurrent5120BF16
+rescale,verifies complete measured dependency closure/defines/currentnative80
+leaf bodies and source selection. Actualentryword and selectiveVNhash-omission
+controls failclosed. It attaches measured116/17 public-pin component contracts
+and retains all nativePDSK/GO/physical/globaldate/retirement holds. Defaultcontrol
+lowering remains unsealed. This is source-qualified compiler integration,not a
+new simulation vehicle or production-admission shortcut.
