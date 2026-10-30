@@ -1,0 +1,511 @@
+{
+ "type": "coll_ft__cla4a25d77",
+ "changes": [
+  {
+   "what": "clock.taps",
+   "old": [
+    {
+     "name": "glue",
+     "kind": "glue",
+     "xy": [
+      397.44,
+      501.12
+     ],
+     "insertion_ps": 279,
+     "insertion_tol_ps": 40,
+     "from_root_um": 8.6
+    }
+   ],
+   "new": [
+    {
+     "name": "clk",
+     "xy": [
+      365.024,
+      17.312
+     ]
+    },
+    {
+     "name": "clk_t1",
+     "xy": [
+      116.128,
+      17.312
+     ]
+    },
+    {
+     "name": "clk_t2",
+     "xy": [
+      119.968,
+      331.168
+     ]
+    },
+    {
+     "name": "clk_t3",
+     "xy": [
+      365.024,
+      331.168
+     ]
+    },
+    {
+     "name": "clk_t4",
+     "xy": [
+      119.968,
+      662.368
+     ]
+    },
+    {
+     "name": "clk_t5",
+     "xy": [
+      365.024,
+      662.368
+     ]
+    },
+    {
+     "name": "clk_t6",
+     "xy": [
+      119.968,
+      976.288
+     ]
+    },
+    {
+     "name": "clk_t7",
+     "xy": [
+      365.024,
+      978.976
+     ]
+    }
+   ]
+  },
+  {
+   "what": "clock.tap_mode/tap_max_sinks/tap_radius_um",
+   "new": [
+    "explicit",
+    1500,
+    200.0
+   ]
+  },
+  {
+   "what": "collector_local_sources[crec_rx_s1_i].tap",
+   "old": 0,
+   "new": 1
+  },
+  {
+   "what": "collector_local_sources[crec_rx_s2_i].tap",
+   "old": 0,
+   "new": 1
+  },
+  {
+   "what": "collector_local_sources[crec_tx_s1_i].tap",
+   "old": 4,
+   "new": 7
+  },
+  {
+   "what": "collector_local_sources[crec_tx_s2_i].tap",
+   "old": 5,
+   "new": 7
+  },
+  {
+   "what": "collector_local_sources[fltk_i].tap",
+   "old": 1,
+   "new": 0
+  },
+  {
+   "what": "collector_local_sources[fltv_i].tap",
+   "old": 1,
+   "new": 0
+  },
+  {
+   "what": "collector_children[coll_f0].node",
+   "old": "rst_n_t6",
+   "new": "rst_n_t8"
+  },
+  {
+   "what": "pins[fclk_out_crec_rx_s1_o].source_clock_tap",
+   "old": "clk_t4",
+   "new": "clk_t6"
+  },
+  {
+   "what": "pins[fclk_out_crec_rx_s2_o].source_clock_tap",
+   "old": "clk_t4",
+   "new": "clk_t6"
+  },
+  {
+   "what": "pins[fclk_out_crec_tx_s2_o].source_clock_tap",
+   "old": "clk_t1",
+   "new": "clk"
+  },
+  {
+   "what": "pins[fclk_out_fltk_o].source_clock_tap",
+   "old": "clk_t5",
+   "new": "clk_t7"
+  },
+  {
+   "what": "pins[fclk_out_fltv_o].source_clock_tap",
+   "old": "clk_t5",
+   "new": "clk_t7"
+  },
+  {
+   "what": "pins[fclk_out_cland_up].source_clock_tap",
+   "old": "clk_t5",
+   "new": "clk_t7"
+  },
+  {
+   "what": "collector_tree (= reset_tree.for_type)",
+   "old": {
+    "n_tree": 12,
+    "n_pad": 10,
+    "max_hop_um": 362.2,
+    "depth": 4,
+    "taps": [
+     "clk",
+     "clk_t1",
+     "clk_t2",
+     "clk_t3",
+     "clk_t4",
+     "clk_t5",
+     "o0"
+    ]
+   },
+   "new": {
+    "n_tree": 16,
+    "n_pad": 7,
+    "max_hop_um": 368.2,
+    "depth": 4,
+    "taps": [
+     "clk",
+     "clk_t1",
+     "clk_t2",
+     "clk_t3",
+     "clk_t4",
+     "clk_t5",
+     "clk_t6",
+     "clk_t7",
+     "o0"
+    ]
+   }
+  }
+ ],
+ "codex_taps": [
+  [
+   "clk",
+   365.024,
+   17.312
+  ],
+  [
+   "clk_t1",
+   119.968,
+   17.312
+  ],
+  [
+   "clk_t2",
+   119.968,
+   331.168
+  ],
+  [
+   "clk_t3",
+   365.024,
+   331.168
+  ],
+  [
+   "clk_t4",
+   119.968,
+   662.368
+  ],
+  [
+   "clk_t5",
+   365.024,
+   662.368
+  ],
+  [
+   "clk_t6",
+   119.968,
+   976.288
+  ],
+  [
+   "clk_t7",
+   365.024,
+   976.288
+  ]
+ ],
+ "nudge_um": {
+  "clk_t1": [
+   116.128,
+   17.312
+  ],
+  "clk_t7": [
+   365.024,
+   978.976
+  ]
+ },
+ "proposal_check": "taps + export taps == Codex eight_entry_proposal (CHECKED)",
+ "codex_die_bindings": [
+  {
+   "part": "coll_f1",
+   "origin_um": [
+    777.6,
+    6445.44
+   ],
+   "taps": [
+    {
+     "port": "clk",
+     "die_xy_um": [
+      1142.624,
+      6462.7519999999995
+     ]
+    },
+    {
+     "port": "clk_t1",
+     "die_xy_um": [
+      897.568,
+      6462.7519999999995
+     ]
+    },
+    {
+     "port": "clk_t2",
+     "die_xy_um": [
+      897.568,
+      6776.607999999999
+     ]
+    },
+    {
+     "port": "clk_t3",
+     "die_xy_um": [
+      1142.624,
+      6776.607999999999
+     ]
+    },
+    {
+     "port": "clk_t4",
+     "die_xy_um": [
+      897.568,
+      7107.808
+     ]
+    },
+    {
+     "port": "clk_t5",
+     "die_xy_um": [
+      1142.624,
+      7107.808
+     ]
+    },
+    {
+     "port": "clk_t6",
+     "die_xy_um": [
+      897.568,
+      7421.727999999999
+     ]
+    },
+    {
+     "port": "clk_t7",
+     "die_xy_um": [
+      1142.624,
+      7421.727999999999
+     ]
+    }
+   ]
+  },
+  {
+   "part": "coll_f2",
+   "origin_um": [
+    777.6,
+    7439.04
+   ],
+   "taps": [
+    {
+     "port": "clk",
+     "die_xy_um": [
+      1142.624,
+      7456.352
+     ]
+    },
+    {
+     "port": "clk_t1",
+     "die_xy_um": [
+      897.568,
+      7456.352
+     ]
+    },
+    {
+     "port": "clk_t2",
+     "die_xy_um": [
+      897.568,
+      7770.208
+     ]
+    },
+    {
+     "port": "clk_t3",
+     "die_xy_um": [
+      1142.624,
+      7770.208
+     ]
+    },
+    {
+     "port": "clk_t4",
+     "die_xy_um": [
+      897.568,
+      8101.408
+     ]
+    },
+    {
+     "port": "clk_t5",
+     "die_xy_um": [
+      1142.624,
+      8101.408
+     ]
+    },
+    {
+     "port": "clk_t6",
+     "die_xy_um": [
+      897.568,
+      8415.328
+     ]
+    },
+    {
+     "port": "clk_t7",
+     "die_xy_um": [
+      1142.624,
+      8415.328
+     ]
+    }
+   ]
+  }
+ ],
+ "self_test": "composer-rule re-derivation reproduces plan_qc49 coll_ft landing data byte-identically (CHECKED)",
+ "kept": {
+  "tap_pin_heights_um": {
+   "clk_t2": 1.312,
+   "clk_t3": 1.312
+  },
+  "outline_um": [
+   786.24,
+   993.6
+  ],
+  "bands": "unchanged (budgets.cland_avoid_reset_types unset: frozen bands keep geometry)"
+ },
+ "die_bindings": [
+  {
+   "part": "coll_f1",
+   "taps": [
+    {
+     "port": "clk",
+     "die_xy_um": [
+      1142.624,
+      6462.752
+     ]
+    },
+    {
+     "port": "clk_t1",
+     "die_xy_um": [
+      893.728,
+      6462.752
+     ]
+    },
+    {
+     "port": "clk_t2",
+     "die_xy_um": [
+      897.568,
+      6776.608
+     ]
+    },
+    {
+     "port": "clk_t3",
+     "die_xy_um": [
+      1142.624,
+      6776.608
+     ]
+    },
+    {
+     "port": "clk_t4",
+     "die_xy_um": [
+      897.568,
+      7107.808
+     ]
+    },
+    {
+     "port": "clk_t5",
+     "die_xy_um": [
+      1142.624,
+      7107.808
+     ]
+    },
+    {
+     "port": "clk_t6",
+     "die_xy_um": [
+      897.568,
+      7421.728
+     ]
+    },
+    {
+     "port": "clk_t7",
+     "die_xy_um": [
+      1142.624,
+      7424.416
+     ]
+    }
+   ]
+  },
+  {
+   "part": "coll_f2",
+   "taps": [
+    {
+     "port": "clk",
+     "die_xy_um": [
+      1142.624,
+      7456.352
+     ]
+    },
+    {
+     "port": "clk_t1",
+     "die_xy_um": [
+      893.728,
+      7456.352
+     ]
+    },
+    {
+     "port": "clk_t2",
+     "die_xy_um": [
+      897.568,
+      7770.208
+     ]
+    },
+    {
+     "port": "clk_t3",
+     "die_xy_um": [
+      1142.624,
+      7770.208
+     ]
+    },
+    {
+     "port": "clk_t4",
+     "die_xy_um": [
+      897.568,
+      8101.408
+     ]
+    },
+    {
+     "port": "clk_t5",
+     "die_xy_um": [
+      1142.624,
+      8101.408
+     ]
+    },
+    {
+     "port": "clk_t6",
+     "die_xy_um": [
+      897.568,
+      8415.328
+     ]
+    },
+    {
+     "port": "clk_t7",
+     "die_xy_um": [
+      1142.624,
+      8418.016
+     ]
+    }
+   ]
+  }
+ ],
+ "src_sha256": "9deec4c7040b2e5044dfce2ef4d64674bafb91010dd6a432c96466651f0aa442",
+ "dst_sha256": "dc20ac547f6112e9dda951fe94ee6c098165c551a52e1cd3f36ee29caa287bb4",
+ "unpriced": "9190 cross-family RCLK x FCLK sequential pairs UNPRICED (Codex 515014cc720 README)"
+}
