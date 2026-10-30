@@ -91,3 +91,15 @@ def sdc(P, tn, text):
         text += (f"create_generated_clock -name {p['name']} -master_clock {master} "
                  f"-source [get_ports {{{p['source_clock_port']}}}] -divide_by 1 [get_ports {{{p['name']}[0]}}]\n")
     return text
+
+
+def write_contract(P, tn, kit):
+    """Replace or remove exactly this generator-owned optional sidecar."""
+    import json
+    from pathlib import Path
+    path = Path(kit) / 'pad_clock.json'
+    ps = pins(P, tn)
+    if ps:
+        path.write_text(json.dumps(dict(schema='opentallas.pad_clock.v1', pins=ps), indent=1) + '\n')
+    else:
+        path.unlink(missing_ok=True)

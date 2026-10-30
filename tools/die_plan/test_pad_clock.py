@@ -81,7 +81,7 @@ endmodule'''
 def guard(net=NET, typed=True):
     ps = copy.deepcopy(PC.pins(plan(), 'mid'))
     if not typed: ps[0].pop('sink_pins')
-    return FG.guard(net, clocks=['pma_rck'], exports=[('pma_tck', 'clk')], pad_clocks=ps)
+    return FG.guard(net, clocks=['pma_rck'], exports=[('pma_tck', 'clk')], pad_clocks=ps, native_clock_pins={('native_mem', 'clk')})
 
 
 def test_clock_roles_are_structural_and_native_endpoints_are_typed():
@@ -97,3 +97,52 @@ def test_absent_contract_keeps_original_sdc_bytes():
     p = plan(); p.types['mid']['clock'].pop('pad_clock')
     assert PC.sdc(p, 'mid', 'unchanged\n') == 'unchanged\n'
     assert PC.io_tcl(p, 'mid') == '' and PC.pins(p, 'mid') == []
+
+
+def test_regeneration_removes_only_owned_pad_clock_sidecar(tmp_path):
+    p = plan()
+    keep = tmp_path / 'unrelated.json'; keep.write_text('untouched')
+    PC.write_contract(p, 'mid', tmp_path)
+    assert json.loads((tmp_path / 'pad_clock.json').read_text())['pins'][0]['period_ps'] == 1250
+    p.types['mid']['clock'].pop('pad_clock')
+    PC.write_contract(p, 'mid', tmp_path)
+    assert not (tmp_path / 'pad_clock.json').exists() and keep.read_text() == 'untouched'
+
+
+def test_native_clock_whitelist_is_subset_of_actual_selected_liberty(tmp_path):
+    from types import SimpleNamespace
+    lib = tmp_path / 'native.lib'
+    lib.write_text('library(test) { cell(native_mem) { pin(clk) { direction: input; clock: true; } '
+                   'pin(D) { direction: input; clock: false; /* clock: true; */ } } }')
+    p = plan(); PC.write_contract(p, 'mid', tmp_path)
+    def selected(cmd, **kwargs):
+        assert cmd[-1] == 'print-LIB_FILES' and f'DESIGN_CONFIG={tmp_path / "config.mk"}' in cmd
+        return SimpleNamespace(returncode=0, stdout=f'LIB_FILES = {lib}\n')
+    ps, actual = FG.kit_pad_clocks(tmp_path, execute=selected)
+    assert actual == {('native_mem', 'clk')}
+    good = FG.guard(NET, clocks=['pma_rck'], exports=[('pma_tck', 'clk')], pad_clocks=ps, native_clock_pins=actual)
+    assert good['verdict'] == 'PASS'
+    ps[0]['sink_pins'] = [dict(module='native_mem', pin='D')]
+    bad = FG.guard(NET.replace('mem(.clk(', 'mem(.D('), clocks=['pma_rck'],
+                   exports=[('pma_tck', 'clk')], pad_clocks=ps, native_clock_pins=actual)
+    assert bad['fail_counts'].get('pad_clock')
+    assert 'lack actual Liberty clock:true' in str(bad['fails'])
+
+
+def test_routed_guard_uses_consumed_native_roles_and_rejects_stale_liberty(tmp_path):
+    import hashlib
+    import signoff as SO
+    lib = tmp_path / 'native.lib'
+    lib.write_text('library(test) { cell(native_mem) { pin(clk) { direction: input; clock: true; } pin(D) { direction: input; } } }')
+    PC.write_contract(plan(), 'mid', tmp_path)
+    receipt = tmp_path / 'libraries.json'
+    receipt.write_text(json.dumps(dict(status='LOADED', libraries=[dict(path='/work/native.lib', sha256=hashlib.sha256(lib.read_bytes()).hexdigest())])))
+    net = tmp_path / 'net.v'; net.write_text(NET)
+    sdc = tmp_path / 'constraint.sdc'
+    sdc.write_text('create_generated_clock -name pma_tck -master_clock clk -source [get_ports clk] -divide_by 1 [get_ports {pma_tck[0]}]\n')
+    disc = dict(kit=str(tmp_path), synth=str(net), sdc=str(sdc))
+    result = SO.run_face_guard(disc, ['clk', 'pma_rck[0]'], receipt)
+    assert result['verdict'] == 'PASS', result
+    lib.write_text(lib.read_text().replace('clock: true', 'clock: false'))
+    result = SO.run_face_guard(disc, ['clk', 'pma_rck[0]'], receipt)
+    assert result['verdict'] == 'NOT RUN' and 'changed' in result['reason']

@@ -2274,9 +2274,7 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # measured as tap sinks (tap_balance.tcl tb_passthru)
         cfg.append("export OT_TAP_PASSTHRU = 1")
     import pad_clock as PC
-    pad_clocks = PC.pins(P, tn)
-    if pad_clocks:
-        (kd / 'pad_clock.json').write_text(json.dumps(dict(schema='opentallas.pad_clock.v1', pins=pad_clocks), indent=1) + '\n')
+    PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",

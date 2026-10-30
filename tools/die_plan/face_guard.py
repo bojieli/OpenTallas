@@ -17,6 +17,9 @@ The source-side prevention is gen_rtl.CELLS: ot_dp_st / ot_dp_ste / ot_dp_ep car
 run_kit.sh runs this guard right after `make synth` and stops the kit on FAIL.
 """
 import argparse
+import gzip
+import hashlib
+import subprocess
 import itertools
 import json
 import re
@@ -525,6 +528,66 @@ def _std_cell(master):
     return "_ASAP7_" in master.upper() or master.startswith("$")
 
 
+def clock_pins_from_liberties(files):
+    """Actual selected native Liberty clock:true INPUT pins; config may select a subset only."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from signoff import _lib_groups
+    roles = {}
+    for path in files:
+        path = Path(path)
+        text = gzip.open(path, 'rt').read() if path.suffix == '.gz' else path.read_text()
+        text = re.sub(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*',
+                      lambda m: m[0] if m[0].startswith('"') else '', text, flags=re.S)
+        for master, body in _lib_groups(text, 'cell'):
+            for pin, definition in _lib_groups(body, 'pin'):
+                role = bool(re.search(r'\bclock\s*:\s*true\s*;', definition) and
+                            re.search(r'\bdirection\s*:\s*input\s*;', definition))
+                if (master, pin) in roles and roles[master, pin] != role:
+                    raise ValueError(f'conflicting consumed Liberty clock role: {master}/{pin}')
+                roles[master, pin] = role
+    return {key for key, clock in roles.items() if clock}
+
+
+def kit_pad_clocks(kit, library_receipt=None, execute=subprocess.run):
+    """Validate opaque endpoints against effective ORFS libraries or an actual loaded-library receipt."""
+    kit = Path(kit); sidecar = kit / 'pad_clock.json'
+    if not sidecar.exists():
+        return [], set()
+    ps = json.loads(sidecar.read_text())['pins']
+    if not any(p.get('sink_pins') for p in ps):
+        return ps, set()
+    files = []
+    if library_receipt:
+        receipt = json.loads(Path(library_receipt).read_text())
+        if receipt.get('status') != 'LOADED':
+            raise ValueError('pad clock native loaded-library receipt unavailable')
+        for row in receipt['libraries']:
+            source = row['path']
+            if source.startswith('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/'):
+                continue
+            if not source.startswith('/work/') or '..' in Path(source).parts:
+                raise ValueError('pad clock native consumed library is outside the kit')
+            path = kit / source[len('/work/'):]
+            if hashlib.sha256(path.read_bytes()).hexdigest() != row['sha256']:
+                raise ValueError('pad clock consumed native library changed')
+            files.append(path)
+    else:
+        # Same effective make configuration/environment as the pre-floor
+        # synthesis invocation; resolve the actual native views, no glob/guess.
+        cmd = ['make', '--no-print-directory', '-s', '-C', '/OpenROAD-flow-scripts/flow',
+               f'DESIGN_CONFIG={kit / "config.mk"}', f'WORK_HOME={kit / "run"}',
+               'FLOW_VARIANT=base', 'print-LIB_FILES']
+        result = execute(cmd, capture_output=True, text=True)
+        values = re.findall(r'^LIB_FILES\s*[:=]\s*(.+)$', result.stdout, re.M)
+        if result.returncode or len(values) != 1 or '$' in values[0]:
+            raise ValueError('pad clock actual ORFS LIB_FILES unavailable')
+        files = [Path(p) for p in values[0].split()
+                 if not p.startswith('/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/')]
+    if not files:
+        raise ValueError('pad clock actual native Liberty list is empty')
+    return ps, clock_pins_from_liberties(files)
+
+
 def sdc_clock_ports(text):
     """port names of every `create_clock ... [get_ports NAME]` in a kit SDC (virtual clocks have no port)."""
     out = []
@@ -548,7 +611,7 @@ def sdc_clock_exports(text):
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None, pad_clocks=()):
+          exports=(), types=None, pad_clocks=(), native_clock_pins=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -1196,6 +1259,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             fail('pad_clock', name, 'want one input bit with an actual SDC create_clock')
             continue
         allowed = {(x['module'], x['pin']) for x in pad.get('sink_pins', [])}
+        if allowed - set(native_clock_pins):
+            fail('pad_clock', name, f'declared native clock pins lack actual Liberty clock:true input roles: {sorted(allowed - set(native_clock_pins))}')
+            continue
         root = port_root[_bits_of(T, name)[0]]
         stack, visited, terminals, why = [(root, None)], set(), 0, None
         while stack and why is None:
@@ -1499,9 +1565,8 @@ def main(argv=None):
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
-    pcf = Path(bd) / 'pad_clock.json' if bd else None
-    pad_clocks = json.loads(pcf.read_text()).get('pins', []) if pcf and pcf.exists() else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks,
+    pad_clocks, native_clock_pins = kit_pad_clocks(bd) if bd else ([], set())
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks, native_clock_pins=native_clock_pins,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:
