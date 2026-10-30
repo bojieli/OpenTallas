@@ -9,5 +9,5 @@
   (1) LEC probes intel2 /srv/opentallas-scratch2/claude/s81ck4/lecprobe_{pos,neg}/status + lec/lec.json (pos expect EQ, neg expect NOT EQ) -> post to ROOT-MERGE for 7912008a0a6.
   (2) 4 leaf places: intel1 s81ck4/kits/ot_s81sl_{vs,vn_b}_ck4 (units oth-ubuntu-1723369/1723062-1793391508), epyc2 s81ck4/kits/ot_s81sl_{ve_m,vn_a}_ck4 (units oth-ubuntu-4171796/4171799-1793391508); logs localhost /home/ubuntu/.claude/jobs/b7f906df/tmp/s81ck4logs/place_*.otrun.log. On 3_place: bash <host>:/srv/opentallas-scratch2/claude/s81ck4/ageom4.sh KITDIR ID TITLE (tools copy of main geom_check in s81ck4/geomtools). Expect clock_reach FAIL (estimate ~250-440) -> V1 fixed in-core islands / V2 regional_taps variants per ASK.
   (3) attn_hcore ev3k3 placed (epyc2 s81ck3/gen/...; unit 4051320 done): AUTO-GEOM FAIL clock_reach 328 -> variants V1/V2.
-  (4) ROM CGR0 k3 intel1 (unit 1483108) in-flow LEC running; XFIN LEC intel1 unit 237372 at hyp2. iqfboot: 0691bf1143a IS on main -> intel1 s81-kits-g/iqfboot may be deleted (not deleted by me: not my data, predecessor's instruction; successor may do it).
+  (4) ROM CGR0 k3 intel1 (unit 1483108) in-flow LEC running; XFIN LEC intel1 unit 237372 at hyp2. iqfboot DELETED (0691bf1143a on main, per brief).
   Worktree intel2 wt/s81-cores-kits-4-1030 KEPT (sparse 1.8 GB; branch pushed) for the variant regen.
