@@ -1,0 +1,57 @@
+{
+ "RCLK8 validate+compile+emit": {
+  "result": "PASS",
+  "ok": true,
+  "msg": "roots 8 cells 4948 sinks 9428 begin/finish 8/8 tcl_sha e34ad661cd50 cts_open set ::ot_ci_cts_plan_open 0"
+ },
+ "ALL15 validate+compile+emit": {
+  "result": "PASS",
+  "ok": true,
+  "msg": "roots 15 cells 8436 sinks 18501 begin/finish 15/15 tcl_sha 332ce744610c cts_open set ::ot_ci_cts_plan_open 0"
+ },
+ "mutant shared sink across roots": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk']: clock sinks shared with root 'clk_t1': ['u_bound.u_cland_crec_rx_s1_i/u_ring.dch\\\\[0\\\\].u_dsel/y\\\\[0\\\\]$_DFF_P_/CLK']"
+ },
+ "mutant tree drops a listed sink": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk_t6']: tree sinks != sinks_file (missing ['u_bound.u_ft_crec_rx_s1_o_2/q\\\\[18\\\\]$_DFF_P_/CLK'], unlisted []); no implicit sink"
+ },
+ "mutant sinks sha mismatch": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk']: sinks_file sha256 != sinks_sha256"
+ },
+ "mutant forest misses a clock_entries root": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest ports ['clk', 'clk_t1', 'clk_t2', 'clk_t3', 'clk_t5', 'clk_t6', 'clk_t7'] must equal clock_entries ports ['clk', 'clk_t1', 'clk_t2', 'clk_t3', 'clk_t4', 'clk_t5', 'clk_t6', 'clk_t7'] exactly (no implicit or missing root)"
+ },
+ "mutant node outside its root prefix": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk_t7']: planned nodes outside name_prefix 'f3_': ['f0_mp_collft_3_98']"
+ },
+ "mutant latency != 12.3 entry budget": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk_t1']: latency {'TT': 260, 'FF': 202.5} != clock_entries common_clock_latency_ps {'TT': 250, 'FF': 202.5}"
+ },
+ "mutant core_tree beside core_forest": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest is exclusive with core_tree / core_clock_port / pushdown.core_tree"
+ },
+ "mutant root_scope inside forest": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk_t1']: tree.root_scope is not supported in a forest (fail-closed)"
+ },
+ "mutant root listed twice": {
+  "result": "PASS",
+  "ok": false,
+  "msg": "core_forest['clk_t1']: root listed twice"
+ }
+}
