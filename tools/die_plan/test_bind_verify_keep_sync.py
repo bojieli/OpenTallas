@@ -177,3 +177,20 @@ def test_macro_definer_inside_the_closure_moves_before_its_user(tmp_path):
     names = [Path(f).relative_to(tmp_path).as_posix() for f in files]
     # MUTANT (bind6chk bk_sel): sel_tile.sv was listed after hq_tile.sv -> `SELT_* undefined
     assert missing == [] and names.index("rtl/z_def.sv") < names.index("rtl/a_user.sv")
+
+
+def test_lint_sources_declared_view_absent_fails_closed(tmp_path):
+    """DIE-S81-32/BIND: S81 verify256 ran from a sparse worktree without physical/asap7_memory_macros*; the manifest
+    declared the macro views but module_index skipped them silently -> 1,769 MODMISSING (ROMs, r2c2 p192/p192bs
+    ambiguity).  A declared source that is absent stops the verify; the closure never falls back to rtl/."""
+    ab0, rep, idx, prefer = _tree(tmp_path)
+    assert V.declared_missing(ab0, tmp_path) == []
+    V.LintSources(ab0, tmp_path, rep, idx, prefer)              # complete checkout: unchanged
+    ab0["files"].append("physical/asap7_memory_macros_v2/ot_rom_y/ot_rom_y_bb.v")
+    assert V.declared_missing(ab0, tmp_path) == ["physical/asap7_memory_macros_v2/ot_rom_y/ot_rom_y_bb.v"]
+    try:
+        V.LintSources(ab0, tmp_path, rep, idx, prefer)
+    except ValueError as e:
+        assert "ot_rom_y_bb.v" in str(e) and "absent" in str(e)
+    else:
+        raise AssertionError("absent declared macro view was skipped silently")

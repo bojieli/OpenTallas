@@ -94,6 +94,12 @@ def vehicle(mutant=None,reset_tree=None):
             oc.ports['p_start']=[77]        # die-top start-stage port pst_h1
         if mutant=='cast_pstart':oc.ports['p_start']=[bt]
         if mutant=='cast_stage_wrong':oc.ports['p_start']=[ao]
+    if mutant and mutant.startswith('outcopy'):
+        # DIE-S81-27 wavefront out: rst_n_t0 is the tap of out relay u_rrl_0 (n_reset_consumers 0, one out);
+        # u_rrl_0 drives rst_o_0, the tap net is driven by the same-d copy u_rrl_0_t
+        if mutant!='outcopy_not_out':tree.update(n_reset_consumers=0,outs=[[1,0]])
+        btc=next(c for c in cells if c.path=='b.u_rrl_0');btc.path='b.u_rrl_0_t'
+        if mutant=='outcopy_wrong_d':btc.ports['d']=[rst]
     F=N(cells=cells);G=N(drv=drv,top_in={aclk:('clk_region_h0',0),bclk:('clk_region_h1',0),rst:('rst_n',0),77:('pst_h1',0)})
     live=None
     if mutant in ('spare_capacity','epoch_truncated','spare_epoch_truncated'):
@@ -212,3 +218,15 @@ def test_shared_type_depth_is_the_maximum_of_all_used_instances():
     raw=dict(partitions=[dict(name='a',type='T'),dict(name='b',type='T')],ports=[dict(id='p',dst=dict(bus='x')),dict(id='q',dst=dict(bus='x'))])
     table=dict(ports=[dict(port='p',dst='a'),dict(port='q',dst='b')],count_aligned=dict(ports={'p':dict(depth=4),'q':dict(depth=8)}))
     assert planned_ring_depths(raw,table)=={('T','x'):8}
+
+
+def test_out_relay_tap_copy_is_the_planned_hop():
+    """DIE-S81-32/BIND (S81 verify256: 444 CLOCK_LANDING errors): at a wavefront out tap the tap net is driven by
+    <relay>_t (reset_tree 68e405472), same d and depth as the planned out relay; the raw reset contract accepts it."""
+    assert vehicle('outcopy')['errors']==[]
+
+
+def test_out_relay_tap_copy_mutants_fail():
+    # a _t name at a tap that is not an out-relay tap, or a _t copy with the wrong parent -> FAIL
+    assert any('b.u_cland_y' in e and 'reset-parent/depth' in e for e in vehicle('outcopy_not_out')['errors'])
+    assert any('b.u_cland_y' in e and 'reset-parent/depth' in e for e in vehicle('outcopy_wrong_d')['errors'])
