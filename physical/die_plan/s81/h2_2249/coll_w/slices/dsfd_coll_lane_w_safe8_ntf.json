@@ -59,5 +59,100 @@
   "clock_repeaters": [],
   "note": "in-core clock tree built by CTS from the centre entry; no feedthrough ports"
  },
- "event": "H2LP2249 authorized source preparation, no signedview/physicalrunclaim"
+ "event": "H2LP2249 authorized source preparation, no signedview/physicalrunclaim | event3-h2fix-1030",
+ "core_islands": [
+  {
+   "name": "ck_isl0",
+   "xy_um": [
+    55.632,
+    70.332
+   ],
+   "use": "core_tree_island",
+   "rect_um": [
+    54.552,
+    69.252,
+    56.712,
+    71.412
+   ],
+   "macro_clearance_um": 5.373
+  },
+  {
+   "name": "ck_isl1",
+   "xy_um": [
+    240.312,
+    70.332
+   ],
+   "use": "core_tree_island",
+   "rect_um": [
+    239.232,
+    69.252,
+    241.392,
+    71.412
+   ],
+   "macro_clearance_um": 5.373
+  },
+  {
+   "name": "ck_isl2",
+   "xy_um": [
+    55.632,
+    227.244
+   ],
+   "use": "core_tree_island",
+   "rect_um": [
+    54.552,
+    226.164,
+    56.712,
+    228.324
+   ],
+   "macro_clearance_um": 5.373
+  },
+  {
+   "name": "ck_isl3",
+   "xy_um": [
+    240.312,
+    227.244
+   ],
+   "use": "core_tree_island",
+   "rect_um": [
+    239.232,
+    226.164,
+    241.392,
+    228.324
+   ],
+   "macro_clearance_um": 5.373
+  },
+  {
+   "name": "ck_isl4",
+   "xy_um": [
+    55.632,
+    386.076
+   ],
+   "use": "core_tree_island",
+   "rect_um": [
+    54.552,
+    384.996,
+    56.712,
+    387.156
+   ],
+   "macro_clearance_um": 5.325
+  },
+  {
+   "name": "ck_isl5",
+   "xy_um": [
+    240.312,
+    386.076
+   ],
+   "use": "core_tree_island",
+   "rect_um": [
+    239.232,
+    384.996,
+    241.392,
+    387.156
+   ],
+   "macro_clearance_um": 5.325
+  }
+ ],
+ "core_islands_note": "12.2a1/12.8b in-core tree islands (event3 H2FIX): plan-fixed node sites of the core clock tree (centre entry -> these six islands -> CTS-open local trees), built by the S81 family path (core_family_slice.py family s81_coll -> core_tree nodes at these coordinates); node-legal vs the 4.32-um kit macro halo. Not die feedthrough islands (pushdown stays empty: no ft ports)",
+ "core_tree_family": "s81_coll",
+ "h2fix_event": "event3-h2fix-1030"
 }
