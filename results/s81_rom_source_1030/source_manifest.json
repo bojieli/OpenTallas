@@ -1,0 +1,83 @@
+{
+  "receipt_sha256": "c6237f7f93663854b165c469836b86c1dd1e2fbb9aca1b569cac093dd4a323ba",
+  "files": {
+    "rom_kit/config.mk": "5fbda5da5fa79d10cd1cdce1db0e24eff3c7a836b0f7acaa6ea46bdffc3de2b5",
+    "rom_kit/freeze.json": "492671da4089548c74df2723c0a45ea5073cbe529c5fbae6de59703b8e77a90e",
+    "rom_kit/core.json": "10a6ee6780be5f09394411f3afbdffd9dfe944390da6f67d1c667cce92323973",
+    "rom_kit/reset_contract.json": "c46fd87332e1a6ab24498887b1c9a7cd61ee8dc74844c492c2aa1aba4d0769ca",
+    "rom_fresh_lec.py": "26d0f40f3c8cbc8181a369ae899e856d1836e42d3d8e1099195b74b278b228b9",
+    "rom_fresh_hints.json": "019e142cc7b4d516d18e312a11eefacc5a33ddf589431186c8d9915786672297",
+    "rom_kit/rtl/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rom_kit/rtl/ot_hdc_cg.sv": "151f926bd2822e0fb2a684930748fbf79feba020f6618f8af543f88eb6bef047",
+    "rom_kit/rtl/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rom_kit/rtl/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rom_kit/rtl/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rom_kit/rtl/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rom_kit/rtl/ot_rom_4096x274_m8_bb.v": "e627e117aaf1cd3244285fc820700b13500f69f38ce5b153f180a7bd943baad8",
+    "rom_kit/rtl/ot_rom_8192x274_m8_bb.v": "f5f80f8e408e9d80f838c2def44e5876b13973dd6f4d6f0a56b7bac705de8756",
+    "rom_kit/rtl/ot_v41_bf16_lanes.sv": "6625f65a614e82e0b0eb089ca3cef664ffe0f4218e7df4b76a8a03be14d1a040",
+    "rom_kit/rtl/ot_v41_bf16_lanes2.sv": "f1fabb343d3105f3badd8358e5e7bc871de8a4141d8a17a8b1b69205662c1afd",
+    "rom_kit/rtl/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rom_kit/rtl/ot_v41_bterm2_w10.sv": "c0ce5e3c2590bb74682a0217f2b4faf98545ff61fbb7e319796d30b21970a32e",
+    "rom_kit/rtl/ot_v41_bterm3_w10.sv": "5108a707a3d042619a43dd1800e5c49478c48ece028b2f039107ca04730a2266",
+    "rom_kit/rtl/ot_v41_bterm4_w10.sv": "93dec42cae3a02b1a3430e74c8ac60e0631e99eb826f5a69aac9cbb3970b222e",
+    "rom_kit/rtl/ot_v41_bterm5_w10.sv": "9b985bac1f89f7d6f447bbae8e33750df7741c81f1e92a70f363d7bd89cbe46a",
+    "rom_kit/rtl/ot_v41_chain.sv": "36077c08bf24d80e20e6bbf064ea8d0fc20b33e668cf54d24b99575423c11db3",
+    "rom_kit/rtl/ot_v41_chain2.sv": "9237e7d809a8f25f9ad943eb9c06f5e7ee51871e3905031bd06187e1e1c2a1b2",
+    "rom_kit/rtl/ot_v41_chain3.sv": "4fa02ebdfe2753b5c46516673fb0989c4261e92a8b41f3902d5a6479dd512c35",
+    "rom_kit/rtl/ot_v41_chain4.sv": "8a53efcfd26811a2306258e4b2e2cb7b6cb7339d3e9a28d05ea70db9136251b9",
+    "rom_kit/rtl/ot_v41_elem_pq_tags.sv": "bcd16c74b5ee9bd27dc132af30eb39f8dc737bf426a8d74ab49531aa4745c60d",
+    "rom_kit/rtl/ot_v41_fadd.sv": "821bfb17da8332d265c4a85201af5bb1abe1ff47964ebac78b2fe3e973fd346d",
+    "rom_kit/rtl/ot_v41_fadd2.sv": "aa07f55d6b16fea496670efed1168f986a4505608b05da092f379d94a18775fb",
+    "rom_kit/rtl/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rom_kit/rtl/ot_v41_rom_elem_q_qxpq_w10_gb.sv": "b2988f08b50d33e59a245e5855794ac2ba7e8c4a64e5944d531aaba6094b3450",
+    "rom_kit/rtl/ot_v41_rom_elem_qx_pq_w10.sv": "00c80b4255ad8a5bd7d51bb620bcecf3f47dbf6df0e0fe7aa39e42b149d307b2",
+    "rom_kit/rtl/ot_v41_rom_elem_w10.sv": "24429918ae2c2011163f168d858c2231dba95f899549733cadbf03119138d845",
+    "rom_kit/rtl/ot_v41_segtree.sv": "c0a52710641dc04af3648908cc500229d772d695d4b7fe3d067e99ee16b49a17",
+    "rom_kit/rtl/ot_v41_segtree2.sv": "f5ce508d87c80c31f2a22f84cec98d3814230f5dc06cc878a1f2868008f256c3",
+    "rom_kit/rtl/ot_v41_segtree3.sv": "7a7f3eb49ef245225d0b55303791c60bf96665f6978dd03cb06b0a75821cd565",
+    "rom_kit/rtl/ot_v41_segtree4.sv": "5a7f7acfc21ed32b7f80bc1d251d822a88e22991ef28574246a48e372e726073",
+    "rom_kit/rtl/ot_v41_segtree5.sv": "97767f696b44341636899caa5a9dc34aeb4ea810b02155c9d2aa5a89d893a672",
+    "rom_kit/rtl/ot_v41_segtree6.sv": "efd98d14774e11404f8031095f4634e661f51678487afa91bfe54ca0fc104854"
+  },
+  "counts": {
+    "compare_points": 74608,
+    "proved": 74608,
+    "differs": 0,
+    "undecided": 0
+  },
+  "kept": {
+    "declared": 1826,
+    "in_netlist": 1823,
+    "constant_proved": {
+      "n": 3,
+      "first": [
+        "ff:u_dut.u_e.g_qt_hit.g_hc[0].d_fam",
+        "ff:u_dut.u_e.g_qt_hit.g_hc[1].d_fam",
+        "ff:u_dut.u_e.g_qt_hit.g_hc[2].d_fam"
+      ]
+    },
+    "missing": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_removed": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_reason": null
+  },
+  "reset": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/work/reset_contract.json",
+      "die": "s81",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/work/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  }
+}
