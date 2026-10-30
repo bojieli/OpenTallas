@@ -9,7 +9,8 @@ ML7 MUTANT0 = RTL defaults), so their plan views (lef/pins_file/obs) are reused 
 
 Per KV type this script copies ONE existing final leaf arrangement (same bus face; best on the generator's leaf
 ranking key in the KV type's own buses/ft slots: cores/leaf/search.py faces-away / lanes-behind / reach / station
-cycles), keeps only the 23 natural cores, renames u_lf.<path> to the bound-RTL instance u_bound.u_<flat path>, carries
+cycles), keeps only the 23 natural cores under the SAME names as the ordinary leaf types (u_lf.<path>: the KV partition's
+mapped source root is u_slice.lf[k].u_lf exactly like a leaf, so bind resolves them by the same rule), carries
 their early clock taps and internal_stations (core<->core only), and moves the KV type's remaining 4 soft-child SRAM
 sites (vp b0/b1 onto the template's store sites; vn_b h1 / vq xm inside the template's soft vn_b / vq boxes).  The 3
 SRAM contents now inside hard views (vn_a h0, vsw la/lb) are dropped.  Outline, buses, ft slots, edge clocks,
@@ -37,9 +38,11 @@ LAT = 8.64
 
 
 def flat(inst):
-    """u_lf.u_vp.g_ln[3].u_l -> u_bound.u_u_vp_g_ln_3_u_l (the kit-rtl bound instance of the leaf child)"""
+    """core instance name in the KV type = the leaf name unchanged (u_lf.u_vp.g_ln[3].u_l).  A first cut renamed to the
+    kit-rtl bound name u_bound.u_u_vp_g_ln_3_u_l: strict bind could not resolve the 16 same-module lanes (wavefront
+    core reset, 'expected one bound leaf, found 16'), while the leaf form u_lf.<path> resolves exactly."""
     assert inst.startswith("u_lf."), inst
-    return "u_bound.u_" + re.sub(r"[.\[]", "_", inst[len("u_lf."):]).replace("]", "")
+    return inst
 
 
 def ren(s, names):
