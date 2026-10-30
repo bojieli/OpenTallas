@@ -2301,3 +2301,7 @@ CODEX: 2026-10-30 04:23 PDT HBMcollar12058EQ+wronghintrefutedREADY4713; correcte
 CODEX: 2026-10-30 04:14 PDT QC-A0 dc484bf9fa8 rootcause artificialclockwall+capacity; bounded internalchannel rebuild NLmicro-islandV2PLACE+NKfloorplanLIVE,0RTLcycles/0newaffectedpin405fails; V1rowhalo failure diagnosed/preserved.
 
 CODEX: 2026-10-30 04:15 PDT tokenKV correctedfrontendFAILstalegeneratedpaths fixed; owncompile-only51archives resumedintel1unit3073251/clientintel2PID87799. HBMbudgetscopee738GENERICONLY/currentstaticBACKstk2dispatchBLOCKED; tnodecalendar15d2READY20tests/4seriallevels+16RT.
+CODEX: 2026-10-30 04:16 PDT HEAD localDPL2 pin148.39/reach403.06x0/GRT50ov0; exactsameblockfreshCTS+rootedinfrarecipeunderwaynoadoption. SourceGEN3PASS/SYNTHlive3586558; SerDeswest4M2EOLcauseinverseLUT44owned.
+
+CODEX: 2026-10-30 04:18 PDT selectorliteralbranchrestore isolateda5e17c4bf PUSHED/ROOTready defaultOFF; honestbranchcoupon8PASS/Xmut3caught, full4stateNOTPROVEN; sourcecorrectXfixGENonlylive, oldsetupfailsowned/noroute.
+CODEX: 2026-10-30 04:17 PDT S81PHYS results62dfREADY; L0cf2 anchoredall3497/dataGEOMclean, actualresetpair185um->Wanchorx4.536PLACE0+newGEOM/clockmodellive; L0rclockmodel21763live; L3M4tinyclkpreflightholdOWNERplain; VSWAP410e+VEcorrectedce508 queued/running, BF1354498nativeproofpreserved.
