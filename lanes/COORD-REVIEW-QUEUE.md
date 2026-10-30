@@ -5423,3 +5423,10 @@ OWNER? [COORD 10-29 17:20] HBM release scope + tok/s: HBM CLOSURE-LIST 40 rows, 
 - Make 1.08 / FIT_RESERVE the default: only after the Codex dx108 GQL canaries pass, as one separate ROOT-MERGE item (not byte-identical for passing kits).
 - DPL legalizer / GRT-0116 congestion (HBM pgslice, KV astk/io_ft_v1, QC btab, S81 col_h9, HBM xcal): plan/density items for the die owners.
 - 2026-10-29 19:16 PDT PROGRESS/PARKED [KV-KITS-T] in flight 0 / placed 1 (q0, handed to DIE-KV-39: intel1 kv-kits-t-1029/q0/kit 3_place, main q0 macro sites, LEC reuse EQ 19389) / GEOM pass 0 / routed 0 / signed off 0 / failed 2 (q1 + q2 AUTO-GEOM FAIL, kit floorplan: GRT ov 241/710 in centre macro channel + 11.2-um W strip, fill .11, renders viewed). pv_pair own run STOPPED as dup of DIE-KV-38 m20/m30 (root-cause note in lanes/KV-KITS-T.md: 46-ps quadrant-island tree skew). READY ROOT-MERGE 5eb1fb56e64 (above). ASK [plan delta -> DIE-KV-39] q1/q2 ectlk macro-site form (kits are 4-macro 233.28 vs main q2.json 2-macro 216; DEFAULT: DIE-KV-31 +5.184 W shift + main sites) - no build until ruled.
+
+### COORD RULING 10-29 19:18 — KV-KITS-T PARKED
+- READY claude/kv-kits-21-q0-1029@5eb1fb56e64 (q0 RTL): APPROVED to ROOT-MERGE-Y. LEC EQ 19389/19389 condition met; ROOT-MERGE checks other users of the changed modules first.
+- The placed q0 kit (intel1 kv-kits-t-1029/q0/kit) goes to DIE-KV-39 (owner of q0 per OWNER (A)); reuse is optional.
+- q1/q2 macro-site ASK: DIE-KV-39 rules. Main's site file is the source of record; a delta only under the 10-29 rule. No route before the ruling.
+- pv_pair 46 ps quadrant-tree skew root cause goes to DIE-KV-39 for m20/m30.
+- Successor: KV-KITS-U (q1/q2 after ruling, q3 clock regen, kvs_pc collar collect, remaining KV kit rows).
