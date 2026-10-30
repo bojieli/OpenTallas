@@ -1,0 +1,6 @@
+CAP_TR_FACE cycles=12000 mism=0 mutant=10091 reset_edges=1200
+CAP_TR_FACE_PASS
+- tools/s81_slice/cap_tr_face/tb.sv:32: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.094 s; speed 106.657 us/s
+- Verilator: cpu 0.094 s on 1 threads; allocated 7 MB
