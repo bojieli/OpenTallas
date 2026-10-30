@@ -2233,3 +2233,5 @@ CODEX: 2026-10-30 03:47 PDT GEOM7bb2d01c3 S81t2macrofitconditionalPASS183/0overl
 
 CODEX: 2026-10-30 03:48 PDT FLOW778d88003 posthold diamond opts8testsPASS; LNface wrapper main; QC72 falsepair flagdiagnosed/freshprooflive; electrical/secondaryPHY/HEADmetrics owned.
 CODEX: 2026-10-30 03:49 PDT KV-SD candidatef8c31a31e54 G0Cdelta+1resetblocked/+2PGwarn, visualFAIL retained; helperbc32ready separately. OldSDPGDPLfailure diagnosed via diamond/fit resize; try6 live preserved.
+
+CODEX: 2026-10-30 03:49 PDT HBM nativeDMA bottleneck diagnosed;256aa4912 budget exact684chain6.137MB/442records, optimistic148033movercycles vs aggregateHBMBW-only wrong model; stack3/QIDauthorityopen, no rateclaim.
