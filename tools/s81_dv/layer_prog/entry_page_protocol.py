@@ -160,6 +160,16 @@ def main():
         name=f'job{index:03d}'
         (a.out/(name+'.json')).write_text(json.dumps(j,indent=1)+'\n')
         (a.out/(name+'.host_boot.memh')).write_text(D.memh(words,515))
+    # Reference the exact prefix already emitted in page0. This file is for
+    # caller binding/verification; sending it again would reconfigure an armed MU.
+    initialization_file='native_mu_initialization.reference.memh'
+    (a.out/initialization_file).write_text(D.memh(streams[0][:record['initial_MU_words']],515))
+    record['native_mu_initialization_reference']=dict(file=initialization_file,already_in_first_page=True,send_additional_copy=False)
+    record['native_mu_return_calendar_template']=dict(schema='opentallas.s81.native_mu_return_calendar.v1',
+        local_timing_receipt=str(a.timing.resolve()),seqhost_phase_receipt=str(a.seqhost_receipt.resolve()),
+        initialization_host_file=initialization_file,bound_inventory=str(a.inventory.resolve()),
+        source_root=str(a.source_root.resolve()),asbuilt_manifest=str(a.manifest),
+        clock_reset_identity=None,initialization_last_seq_capture=None,first_KS_seq_capture=None)
     record.update(input_pages=[str(p)for p in paths],selected_local_header_stage=a.stage,selected_local_header_phase=a.start_phase,
         measured_reset_relative_phase=contract['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4'],
         seqhost_phase_receipt_sha256=hashlib.sha256(a.seqhost_receipt.read_bytes()).hexdigest())

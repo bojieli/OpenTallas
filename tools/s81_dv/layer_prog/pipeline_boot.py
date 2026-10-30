@@ -33,7 +33,7 @@ def uint(obj, key, bits=48):
     return x
 
 
-def native_job(directory, job_index=0):
+def native_job(directory, job_index=0, *, allow_mu_initialization=False):
     """Read actual compiler PW bytes, checking them against calendar.json rows."""
     directory = Path(directory)
     cp = directory / 'prog/calendar.json'
@@ -49,6 +49,7 @@ def native_job(directory, job_index=0):
     hp /= 'host_boot.memh'
     words = [int(x, 16) for x in hp.read_text().split()]
     cells, begin, seal, lengths = {}, [], [], []
+    mu_words,mu_indices=[],[]
     for index, word in enumerate(words):
         if not 0 <= word < 1 << 515 or not word & 1 or word >> 513:
             raise ValueError('native boot contains inactive or non-CSR host word')
@@ -66,11 +67,14 @@ def native_job(directory, job_index=0):
                 if key in cells:
                     raise ValueError('duplicate native PW row part')
                 cells[key] = value & ((1 << 26)-1)
+        elif op in (0x15,0x16) and allow_mu_initialization:
+            mu_words.append(word);mu_indices.append(index)
         elif op not in (0x13, 0x14):
             raise ValueError(f'unsupported native boot CSR 0x{op:02x}')
     rows = job['rows']
     if not rows or len(rows) > D.NOPS or lengths != [len(rows)] or len(begin) != 1 or len(seal) != 1:
         raise ValueError('native length, BEGIN, SEAL and real command rows required')
+    if mu_indices and max(mu_indices)>=begin[0][0]:raise ValueError('native MU initialization must precede BEGIN')
     if begin[0][0] >= seal[0][0] or (begin[0][1] ^ seal[0][1]) != 1 << 25:
         raise ValueError('native BEGIN/SEAL contract differs')
     if len(cells) != 3 * len(rows):
@@ -100,6 +104,8 @@ def native_job(directory, job_index=0):
     low = json.loads(lowering.read_text())
     complete = bool(low.get('ops')) and all(x['status']=='LOWERED' for x in low['ops']) and not low.get('die_gaps')
     return dict(words=words, rows=decoded, commands=commands, nops=len(rows),
+                native_mu_initialization_words=mu_words,native_mu_initialization_indices=mu_indices,
+                KIT_issues=[r['issue']for r in decoded if r['engine']==14],
                 issuer_stage=seal[0][1] & 127,
                 all_stage_ops_lowered=complete, lowering_status_counts=low.get('status_counts'),
                 native_die_sha256=manifest.get('die_v_sha256'),
@@ -206,6 +212,8 @@ def compile_pipeline(calendar, bookings, root, out):
     covered, coverage, compiled, gaps = set(), {}, [], []
     root = Path(root)
     out = Path(out); out.mkdir(parents=True, exist_ok=False)
+    from layer_prog.native_mu_calendar import bind_contract,check_job
+    mu_cache={}
     reset_contract = None
     reset_ref = bookings.get('reset_boot_contract')
     if reset_ref:
@@ -227,7 +235,7 @@ def compile_pipeline(calendar, bookings, root, out):
         key = (stage, user, pos, rank)
         if key not in expected:
             raise ValueError('unexpected graph position booking ' + str(key))
-        job = native_job(root / booking['native_programme'], booking.get('native_job', 0))
+        job = native_job(root / booking['native_programme'], booking.get('native_job', 0),allow_mu_initialization=True)
         chain = coverage.setdefault(key, dict(calendar_sha256=job['native_calendar_sha256'],
                                               total=job['native_job_count'], jobs=set()))
         if chain['calendar_sha256'] != job['native_calendar_sha256'] or job['native_job'] in chain['jobs']:
@@ -263,6 +271,17 @@ def compile_pipeline(calendar, bookings, root, out):
                 raise ValueError('receiver source and clock/reset identity are explicit')
         ks_slots = booking['ks_slots']
         seq_ks = uint(ks_slots, 'receiver_edge') + 2
+        mu=None;mu_contract=contract.get('native_mu_return_calendar')
+        if not mu_contract:
+            gaps.append(dict(job=index,cause='selected_native_MU_return_calendar_missing',resource=[stage,slots[user]['copy'].get(stage,'A'),rank],native_KIT_issues=job['KIT_issues']))
+        else:
+            cache_key=json.dumps(mu_contract,sort_keys=True)
+            try:
+                if cache_key not in mu_cache:mu_cache[cache_key]=bind_contract(mu_contract,root)
+                mu=mu_cache[cache_key]
+                gaps.extend(dict(p,job=index)for p in check_job(job,contract,mu,seq_ks))
+            except (ValueError,KeyError,OSError,TypeError)as exc:
+                gaps.append(dict(job=index,cause='selected_native_MU_return_calendar_unqualified',detail=str(exc)))
         first_cmd = seq_ks + D.SEQ['job_to_age0'] + job['first_command_issue']
         if first_cmd != uint(booking, 'first_command_edge'):
             raise ValueError('actual native first command differs from booked first-command anchor')
@@ -339,7 +358,8 @@ def compile_pipeline(calendar, bookings, root, out):
             last_host_seq_capture=last_host_capture,
             native_direct_reload_edges=job['reload_direct_edges'],
             HBE_reload_seq_capture_span=last_host_capture-host_slots[0]['receiver_header_edge'],
-            pipeline_window=window, receiver_contract=contract, receiver_capability=capability,
+            pipeline_window=window, receiver_contract=contract, receiver_capability=capability,native_mu_calendar=mu,
+            native_mu_last_init_seq_capture=(host_slots[max(job['native_mu_initialization_indices'])]['receiver_body_capture_edge']+4 if job['native_mu_initialization_indices']else None),
             static_ks6_enabled=False, inline_ARM_emitted=False, hbc=hbc, packets=packets)
         (path/'programme.json').write_text(json.dumps(record,indent=1)+'\n')
         compiled.append(dict(stage=stage,rank=rank,user=user,position_index=pos,
@@ -355,6 +375,27 @@ def compile_pipeline(calendar, bookings, root, out):
         physical.setdefault((item['stage'], rec['copy'], rec['context']['rank']), []).append(rec)
     for resource, jobs in physical.items():
         jobs.sort(key=lambda x:x['seq_ks_capture'])
+        kit_set={k for rec in jobs for k in rec['programme']['KIT_issues']}
+        if any(len(rec['programme']['KIT_issues'])!=1 for rec in jobs):
+            gaps.append(dict(cause='native_MU_requires_one_KIT_per_start',resource=resource))
+        if len(kit_set)>1:
+            gaps.append(dict(cause='native_MU_KIT_varies_within_one_physical_resource',resource=resource,KIT_issues=sorted(kit_set)))
+        bindings=[rec['native_mu_calendar']for rec in jobs if rec['native_mu_calendar']]
+        if len({m['identity']for m in bindings})>1:
+            gaps.append(dict(cause='native_MU_reconfiguration_while_tracker_armed',resource=resource))
+        for ordinal,rec in enumerate(jobs):
+            actual=rec['programme']['native_mu_initialization_words'];mu=rec['native_mu_calendar']
+            if ordinal and actual:
+                gaps.append(dict(cause='native_MU_reinitialized_after_first_start',resource=resource,job=ordinal))
+            if ordinal==0 and mu:
+                if not actual or len(actual)!=mu['initialization_HOST_words']:
+                    gaps.append(dict(cause='native_MU_initialization_not_emitted_in_first_resource_boot',resource=resource))
+                else:
+                    contract=rec['receiver_contract']['native_mu_return_calendar']
+                    wanted=[int(v,16)for v in(root/contract['initialization_host_file']).read_text().split()]
+                    if actual!=wanted:gaps.append(dict(cause='native_MU_emitted_initialization_bytes_differ',resource=resource))
+                if rec['seq_ks_capture']!=mu['first_KS_seq_capture'] or rec['native_mu_last_init_seq_capture']!=mu['initialization_last_seq_capture']:
+                    gaps.append(dict(cause='native_MU_initialization_or_first_KS_booking_differs',resource=resource))
         for prev, nxt in zip(jobs, jobs[1:]):
             old = prev['hbc']['fields']
             earliest_reload = max(prev['seq_END_command']+4,
