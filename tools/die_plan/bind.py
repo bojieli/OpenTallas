@@ -4420,6 +4420,31 @@ def kit_native_station_geometry(out, bound_type, bound_text, kit):
                 source=str(source), rtl_cycles_changed=0)
 
 
+NATIVE_GLUE_INST = re.compile(r"\b(ot_bind_native_[0-9a-f]{24})\b")
+
+
+def kit_native_glue(tn, fl, out):
+    """FLOW-KITFAIL-2 10-29 (S81-KITS-A kv_leaf preflight: module_closure "ot_bind_native_<h> ... has no definition"):
+    the bind's native-glue helpers (bind_native_glue.NativeGlue, OUT/rtl/native_glue/<module>.sv) are instantiated by
+    the bound module as g_* cells, which the u_* leaf closure never sees.  Append the helper file of every
+    ot_bind_native_* module the kit files reference (helpers are single-primitive leaves: no further closure).
+    Returns (filelist, added module names); a kit without native glue keeps its filelist unchanged."""
+    have = {Path(f).name for f in fl}
+    need = set()
+    for f in fl:
+        if Path(f).suffix in (".sv", ".v") and Path(f).is_file():
+            need.update(NATIVE_GLUE_INST.findall(Path(f).read_text(errors="ignore")))
+    add = []
+    for m in sorted(need):
+        if f"{m}.sv" in have:
+            continue
+        src = next((d / f"{m}.sv" for d in (out / "rtl" / "native_glue", out / "native_glue") if (d / f"{m}.sv").is_file()), None)
+        if src is None:
+            raise BindError(f"kit-rtl {tn}: native glue {m} is instantiated but {out}/rtl/native_glue/{m}.sv is missing")
+        add.append(src.resolve())
+    return list(fl) + add, [p.stem for p in add]
+
+
 def cmd_kit_rtl(a):
     """bind.py kit-rtl PLAN --out BIND_OUT --type T [--variant V] [--kit DIR]  (COORD 18:04 G3 KIT RTL OWNERSHIP)
     The G3 kit RTL of plan partition type T = the BOUND partition module (bind.py output: as-built leaves, boundary
@@ -4623,6 +4648,7 @@ def cmd_kit_rtl(a):
     fl, incl = kit_inline_includes(fl, kd)
     fl, inlined = kit_inline_imports(fl, kd)
     fl, deduped = kit_strip_dups(fl, kd, picks)
+    fl, native_glue = kit_native_glue(tn, fl, out)
     sims = [str(f) for f in fl if SIM_FILE.search(f.name)]
     if sims:
         raise BindError(f"kit-rtl {tn}: simulation models in the kit filelist {sims[:5]} (no *_sim in a kit)")
@@ -4636,6 +4662,7 @@ def cmd_kit_rtl(a):
                packages=[str(x) for x in pkgs], sim_files="kit_rtl_sim.f", package_inlined=inlined, include_inlined=incl, module_dedup=deduped,
                hard_macros=dict(sorted(macros.items())), unindexed_sources=dict(sorted(widened.items())), native_station_geometry=native_geometry,
                hbm_spb_native_geometry=spb_geometry,
+               **({"native_glue": native_glue} if native_glue else {}),
                hard_macros_note="memory macros reached by the bound module: black box (_bb.v) in kit_rtl.f, lef + libs here; "
                                 "the plan type must place them (contents[]/hard_cores[] with lef/lib/origin_um, gen_phys "
                                 "type_macros); kit_rtl_sim.f carries the behavioural models")
