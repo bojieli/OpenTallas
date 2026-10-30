@@ -1,0 +1,3 @@
+{"taps": 12439, "odd_parity_taps": 0, "odd_first": [], "roots": ["root"], "stages_med": 118, "stages_max": 216}
+TT {"taps": 12439, "fall_minus_rise_ps": {"min": -11.0, "med": 0.6, "max": 11.7}, "duty_min": 0.4861, "duty_med": 0.5007, "duty_max": 0.5147, "outside_45_55": 0, "mpw_est_fail": 0} worst {'port': 't_tW5b1__clk_t40', 'duty': 0.5147, 'high_ps': 428.9, 'low_ps': 404.4, 'mpw_ps': 41.0}
+FF {"taps": 12439, "fall_minus_rise_ps": {"min": -23.5, "med": -3.4, "max": 19.1}, "duty_min": 0.4702, "duty_med": 0.4957, "duty_max": 0.5241, "outside_45_55": 0, "mpw_est_fail": 0} worst {'port': 't_tW3b10__clk_t8', 'duty': 0.4702, 'high_ps': 391.9, 'low_ps': 441.5, 'mpw_ps': 42.2}

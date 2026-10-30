@@ -1,0 +1,166 @@
+{
+ "rule": "12.15c in-region spread <=150 ps incl. OCV+droop",
+ "method": "DIE-HEAD-26: in-region spread incl. OCV + droop (12.15c \"in-region spread <=150 ps incl. OCV+droop\").\nPer region (spine_regions part_region), every ordered tap pair (a late, b early):\n  skew = f*(arr_a - arr_b) on OpenSTA late arrivals, f = spice factor (inverter tree: SPICE_CLOCK_CAL_INV 0.9324/0.9380\n         = die_sta_related spice for inv; also reported with the x1.0485/1.0552 BUF factor as the pessimistic bound)\n  ocv  = clk_aocv.branch_pessimism (approved table clk_aocv_table_g021, class Ainv, one stage per CKINVDCx16) on the two\n         branches below their last common clock CELL (cell-level LCA from tree.json parent_of), core latency NOT included\n         (die tap spread), distance = bbox diagonal of the 2 taps + LCA cell.  droop: shared rule (same region -> 0) and,\n         as a bound, stated (+one_sided_late_frac on the late branch always).\nusage: spread_ocv.py TAG REGIONS_JSON TOOLS_DIE_PLAN_DIR",
+ "corners": {
+  "TT": {
+   "regions": 314,
+   "worst_shared_droop": 174.49,
+   "worst_stated_droop": 190.78,
+   "worst_bufx105_stated": 209.61,
+   "n_over_150_shared": 12,
+   "n_over_150_stated": 17,
+   "worst5": [
+    {
+     "region": "tE5o3",
+     "spread_ocv": 174.5,
+     "stated": 190.8,
+     "raw": 162.2,
+     "a": "t_tE5o3__clk_t4",
+     "b": "t_tE5o3__clk_t25",
+     "ocv_shared": 23.2,
+     "ocv_stated": 39.5,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW0b6",
+     "spread_ocv": 172.3,
+     "stated": 188.4,
+     "raw": 160.2,
+     "a": "t_tW0b6__clk_t4",
+     "b": "t_tW0b6__clk_t31",
+     "ocv_shared": 23.0,
+     "ocv_stated": 39.0,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW0b5",
+     "spread_ocv": 172.1,
+     "stated": 188.0,
+     "raw": 160.4,
+     "a": "t_tW0b5__clk_t4",
+     "b": "t_tW0b5__clk_t27",
+     "ocv_shared": 22.6,
+     "ocv_stated": 38.5,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW5b0",
+     "spread_ocv": 166.1,
+     "stated": 182.0,
+     "raw": 153.6,
+     "a": "t_tW5b0__clk_t4",
+     "b": "t_tW5b0__clk_t27",
+     "ocv_shared": 22.9,
+     "ocv_stated": 38.8,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW0b0",
+     "spread_ocv": 161.9,
+     "stated": 177.8,
+     "raw": 149.1,
+     "a": "t_tW0b0__clk_t4",
+     "b": "t_tW0b0__clk_t27",
+     "ocv_shared": 22.9,
+     "ocv_stated": 38.8,
+     "stages": [
+      10,
+      11
+     ]
+    }
+   ]
+  },
+  "FF": {
+   "regions": 314,
+   "worst_shared_droop": 166.8,
+   "worst_stated_droop": 179.35,
+   "worst_bufx105_stated": 197.52,
+   "n_over_150_shared": 10,
+   "n_over_150_stated": 13,
+   "worst5": [
+    {
+     "region": "tE5o3",
+     "spread_ocv": 166.8,
+     "stated": 179.3,
+     "raw": 155.1,
+     "a": "t_tE5o3__clk_t4",
+     "b": "t_tE5o3__clk_t25",
+     "ocv_shared": 21.4,
+     "ocv_stated": 33.9,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW0b6",
+     "spread_ocv": 163.1,
+     "stated": 175.5,
+     "raw": 151.4,
+     "a": "t_tW0b6__clk_t4",
+     "b": "t_tW0b6__clk_t31",
+     "ocv_shared": 21.1,
+     "ocv_stated": 33.5,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW0b5",
+     "spread_ocv": 161.9,
+     "stated": 174.1,
+     "raw": 150.5,
+     "a": "t_tW0b5__clk_t4",
+     "b": "t_tW0b5__clk_t27",
+     "ocv_shared": 20.7,
+     "ocv_stated": 32.9,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW5b0",
+     "spread_ocv": 156.3,
+     "stated": 168.5,
+     "raw": 144.2,
+     "a": "t_tW5b0__clk_t4",
+     "b": "t_tW5b0__clk_t27",
+     "ocv_shared": 21.0,
+     "ocv_stated": 33.2,
+     "stages": [
+      10,
+      11
+     ]
+    },
+    {
+     "region": "tW3b0",
+     "spread_ocv": 152.7,
+     "stated": 165.3,
+     "raw": 139.7,
+     "a": "t_tW3b0__clk_t4",
+     "b": "t_tW3b0__clk_t38",
+     "ocv_shared": 21.7,
+     "ocv_stated": 34.3,
+     "stages": [
+      10,
+      12
+     ]
+    }
+   ]
+  }
+ }
+}
