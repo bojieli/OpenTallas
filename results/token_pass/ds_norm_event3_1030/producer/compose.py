@@ -7,6 +7,10 @@ for line in lines:
  m=re.fullmatch(r'NORM_PRODUCER leaf(\d+) norm_pin\d+ n_go_age(\d+) partial_age(\d+) data([0-9a-f]{8})',line)
  if m:ages[int(m[1])]=(int(m[2]),int(m[3]));partials[int(m[1])]=m[4]
 assert sorted(ages)==list(range(80))and set(ages.values())=={(5,116)}
+# The original late pd diagnostic can drift after p_v; use only valid-time dump.
+valid=(P.parent/'valid_capture/actual_partials80.hex').read_text().split()
+assert len(valid)==80
+partials={i:word for i,word in enumerate(valid)}
 assert 'BASE_RC=0\nPAYLOAD_RC=1\nAGE_RC=1\nGATE_PASS'in(P/'status.txt').read_text()
 routes=json.loads((P.parent/'leaf_routes.json').read_text());native=json.loads((P/'native_params.json').read_text())
 assert len(native['leaves'])==80 and all(r['a']['params']==dict(LA=6,LM=5)and r['b']['params']==dict(HW_STAGE=0,LA=6,LM=5)and r['vp_n_go_to_vn_edges']==0 and r['vn_chain_extra_edges']==0 for r in native['leaves'])
@@ -31,4 +35,4 @@ result=dict(schema='opentallas.s81.current_norm_producer_boundary_constraints.v1
   extra_data_ff=64,extra_valid_ff=2,total_extra_ff=66,local_NORM_max_path_delta_edges=0,
   qualification='source/physical hardfreeze exception required; no RTL/plan/strap adoption, no physical area/timing proof'),
  go_readiness_qualified=False,global_exchange_qualified=False,physical_START_qualified=False,full_token=False,added_rtl_cycles=0)
-(P/'composition.json').write_text(json.dumps(result,indent=1)+'\n');print(result['status'],result['blocked_sids'],'producer116,80actualpartials, candidate unapplied')
+(P/'composition_valid_capture.json').write_text(json.dumps(result,indent=1)+'\n');print(result['status'],result['blocked_sids'],'producer116,80actualpartials, candidate unapplied')

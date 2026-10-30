@@ -1,0 +1,92 @@
+{
+ "status": "PASS_CURRENT16XF_POSITIVE_SCALAR",
+ "actual_rstd": "40ca3c85",
+ "golden_rstd": "40ca3c85",
+ "actual16traces": [
+  {
+   "sid": 13,
+   "cycle": 351,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 10,
+   "cycle": 354,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 5,
+   "cycle": 355,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 8,
+   "cycle": 355,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 9,
+   "cycle": 355,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 4,
+   "cycle": 356,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 6,
+   "cycle": 356,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 12,
+   "cycle": 356,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 2,
+   "cycle": 357,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 3,
+   "cycle": 357,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 7,
+   "cycle": 357,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 11,
+   "cycle": 357,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 15,
+   "cycle": 357,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 0,
+   "cycle": 358,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 1,
+   "cycle": 358,
+   "rstd": "40ca3c85"
+  },
+  {
+   "sid": 14,
+   "cycle": 358,
+   "rstd": "40ca3c85"
+  }
+ ],
+ "eps_fp32_bits": "1e3ce508",
+ "clock_ps": 833,
+ "ring": "component1registerededgeonly",
+ "global_GO_qualified": false,
+ "physical_START_qualified": false
+}

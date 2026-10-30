@@ -1,0 +1,121 @@
+{
+ "schema": "opentallas.s81.pdsk_current_consumer_repair_proof.v1",
+ "status": "PASS_UNADOPTED_PARAMETER_SCHEDULE_MITER",
+ "clock_ps": 833,
+ "actual_source_sha256": {
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+ },
+ "bench_sha256": "153ac3d2a6c6c98da6a3303623dbe481b9a0149ad9892be026ad7716ccfe7471",
+ "actual_partial_producer_source": "producer/partial.memh from actual current VP/VN80partial PASS,not checkpoint operation answers",
+ "actual_partial_file_sha256": "0fd94acb3a618ab6e8e0234a056ebe52e474935ecd3d0faed78d991b5925a87f",
+ "bookings": [
+  {
+   "sid": 0,
+   "current_issuer_dates": [
+    20,
+    21,
+    22,
+    23,
+    24
+   ],
+   "current_common_CTL_transport_edges": 209,
+   "negative_component_normalization": "omit common SID CTL transport and shift first issuer to20; preserve every actual per-leaf difference",
+   "negative_normalized_current_input_dates": [
+    147,
+    142,
+    159,
+    161,
+    175
+   ],
+   "reference_legal_XR_input_dates": [
+    96,
+    97,
+    98,
+    99,
+    100
+   ],
+   "candidate_legal_XR_input_dates": [
+    96,
+    97,
+    98,
+    100,
+    100
+   ],
+   "candidate_actual_issuer_dates": [
+    40,
+    47,
+    32,
+    33,
+    20
+   ],
+   "candidate_partial_alignment_before_common_CTL": 171,
+   "compare": "same genuine FP32 partials,leaf0..4 output order,valid andindex; matched semantic input-set event100,firstoutput104"
+  },
+  {
+   "sid": 5,
+   "current_issuer_dates": [
+    30,
+    31,
+    32,
+    33,
+    34
+   ],
+   "current_common_CTL_transport_edges": 88,
+   "negative_component_normalization": "omit common SID CTL transport and shift first issuer to20; preserve every actual per-leaf difference",
+   "negative_normalized_current_input_dates": [
+    147,
+    142,
+    161,
+    163,
+    175
+   ],
+   "reference_legal_XR_input_dates": [
+    96,
+    97,
+    98,
+    99,
+    100
+   ],
+   "candidate_legal_XR_input_dates": [
+    96,
+    97,
+    98,
+    100,
+    100
+   ],
+   "candidate_actual_issuer_dates": [
+    44,
+    51,
+    34,
+    35,
+    24
+   ],
+   "candidate_partial_alignment_before_common_CTL": 175,
+   "compare": "same genuine FP32 partials,leaf0..4 output order,valid andindex; matched semantic input-set event100,firstoutput104"
+  }
+ ],
+ "scalar_output_checks": 20,
+ "reference_and_candidate_faults": "00",
+ "old_actual_calendar_control": "bothSIDs fault01;21referencepackets vs5candidate",
+ "wrong_selector_control": "bothSIDs fault01;6referencepackets vs5candidate",
+ "wrong_date_control": "bothSIDs fault10;5referencepackets vs6candidate",
+ "model": {
+  "changed_existing_PDSK_fields": 2,
+  "data_FF_delta": -64,
+  "valid_FF_delta": -2,
+  "total_FF_delta": -66,
+  "local_max_partial_path_delta_cycles": 0,
+  "local_partial_set_to_first_XR_x_sv_edges": 4,
+  "XR_output_partial_beats": 5,
+  "note": "path includes116currentproducer; source-only component bookings,globalGO/XFIN/RSTD/physicalSTART andaffectedphysicaltiming stillheld"
+ },
+ "production_RTL_changed": false,
+ "source_adopted": false,
+ "plan_adopted": false,
+ "forced_GO": false,
+ "global_exchange_qualified": false,
+ "physical_START_qualified": false,
+ "physical_timing_qualified": false,
+ "full_token": false
+}
