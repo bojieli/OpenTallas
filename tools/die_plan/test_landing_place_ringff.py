@@ -54,7 +54,7 @@ def test_default_tags_take_the_unchanged_path():
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_ffkey_sorts_bit_major():
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[10\]$_DFFE_PP_",
              r"u/u_ring.s_d\[1\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_", "u/u_ring.s_d[2][9]$_DFFE_PP_"]
     body = proc + "set l {}\nforeach n {" + " ".join("{" + n + "}" for n in names) + "} { lappend l [list [cland_ffkey $n] $n] }\n" \
@@ -86,12 +86,12 @@ def test_lsb_high_bus_gets_reversed_ff_tag_only():
     # the placer takes the +ffr tag down the flop-only path
     assert "if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]}" in TCL
     assert "set rev [string match {ring:*+ffr} $tag]" in TCL
-    assert "[cland_ffkey [lindex $pr 0] $rev $wch]" in TCL
+    assert "[cland_ffkey [lindex $pr 0] $rev $wch $nbits]" in TCL
 
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_ffkey_rev_sorts_bits_descending_slots_ascending():
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[10\]$_DFFE_PP_",
              r"u/u_ring.s_d\[1\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_", "u/u_ring.s_d[2][565]$_DFFE_PP_"]
     def order(rev):
@@ -105,7 +105,7 @@ def test_ffkey_rev_sorts_bits_descending_slots_ascending():
 
 
 def _keyed_order(names, rev):
-    procs = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0) + \
+    procs = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0) + \
         re.search(r"proc cland_dsel_wch \{names\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     body = procs + "set ns {" + " ".join("{" + n + "}" for n in names) + "}\nset w [cland_dsel_wch $ns]\nputs W=$w\n" \
         "set l {}\nforeach n $ns { lappend l [list [cland_ffkey $n %d $w] $n] }\n" % rev + \
@@ -140,8 +140,20 @@ def test_band_without_chunked_registers_keeps_old_keys():
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.rp\[0\]$_DFF_P_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_"]
     w, out = _keyed_order(names, 0)
     assert w == "W=0"
-    old = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    old = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     body = old + "foreach n {" + " ".join("{" + n + "}" for n in names) + "} { puts [cland_ffkey $n 0] }\n"
     keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
     assert keys == ["u/u_ring.s_d|000000009|000000003|$_DFFE_PP_", r"u/u_ring.rp\[0\]$_DFF_P_",
                     "u/u_ring.s_d|000000009|000000000|$_DFFE_PP_"]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_status_bits_above_bus_width_keep_raw_key():
+    # HEAD st_str d ring: word bits 512..514 (above the 512-bit d_i bus) feed the plan-sited status stage at the band's
+    # low corner; they keep the raw-name key instead of following bit 514 to the band's far end (r2r 537.8)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\} \{nbits 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    names = [r"u/u_ring.dch\[8\].u_dsel/y\[2\]$_DFF_P_", r"u/u_ring.dch\[7\].u_dsel/y\[63\]$_DFF_P_"]
+    body = proc + "foreach n {" + " ".join("{" + n + "}" for n in names) + "} { puts [cland_ffkey $n 0 64 512] }\n"
+    keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
+    assert keys == [names[0], "u/u_ring.s_d|000000511|999999998|$_DFF_P_"]
+    assert "set nbits [expr {max($nbits,$bi+1)}]" in TCL
