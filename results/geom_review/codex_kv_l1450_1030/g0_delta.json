@@ -1,0 +1,239 @@
+{
+ "source_tool": "main b2bbfe718 check.py",
+ "mode": "G0",
+ "baseline": {
+  "verdict": "FAIL",
+  "errors": 1,
+  "warnings": 2094,
+  "error_findings": [
+   {
+    "level": "ERROR",
+    "check": "hops",
+    "msg": "lane L1450: hop 4 via mandatory slot pins is 444 um > reach 405 (add stations to the crossed partition's slot or shorten it)",
+    "lane": "L1450"
+   }
+  ]
+ },
+ "candidate": {
+  "verdict": "PASS",
+  "errors": 0,
+  "warnings": 2094,
+  "error_findings": []
+ },
+ "clock_summary_unchanged": {
+  "clock_landings": true,
+  "clock_branch_buffers": true,
+  "clock_entry_macro": true,
+  "merged_clock_view": true
+ },
+ "g0c": {
+  "types": 56,
+  "clean": 20,
+  "die_level": {},
+  "g3_eligible": [
+   "kv3_hg_v1p2",
+   "kv3_hg_v1p3",
+   "kv3_hg_v1p4",
+   "kv3_hg_v1p5",
+   "kv3_hg_v1p6",
+   "kv3_hroot",
+   "kv3_hub_Ei",
+   "kv3_io_cor",
+   "kv3_io_cor_v1",
+   "kv3_io_ft",
+   "kv3_io_ft_v1",
+   "kv3_phy",
+   "kv3_phy_v1",
+   "kv3_pv_v1n",
+   "kv3_pv_v2n",
+   "kv3_pv_v3n",
+   "kv3_pv_v4n",
+   "kv3_pv_v5n",
+   "kv3_pv_v6n",
+   "kv3_sys_c"
+  ],
+  "by_type": {
+   "kv3_hg": {
+    "complete:cells": 1
+   },
+   "kv3_hg_v3": {
+    "complete:cells": 1
+   },
+   "kv3_hgi": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v3": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v4": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v5": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v6": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v7": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v8": {
+    "complete:cells": 1
+   },
+   "kv3_hub_C": {
+    "complete:cells": 1
+   },
+   "kv3_hub_Eo": {
+    "complete:cells": 1
+   },
+   "kv3_hub_Wi": {
+    "complete:cells": 1
+   },
+   "kv3_hub_Wo": {
+    "complete:cells": 1
+   },
+   "kv3_pc_v3": {
+    "complete:cells": 1
+   },
+   "kv3_pv": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v2": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v4": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v6": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v7": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v8": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v12": {
+    "complete:cells": 1
+   },
+   "kv3_sys_SD": {
+    "complete:cells": 1
+   },
+   "kv3_sys_SD_v1": {
+    "complete:cells": 1
+   },
+   "kv3_hg_v1": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v1": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v3": {
+    "complete:cells": 1
+   },
+   "kv3_pv_v5": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v1__cl42bc8b12": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v1__cl141fc26e": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v2__cl2862d491": {
+    "complete:cells": 1
+   },
+   "kv3_hgi_v2__cle0015330": {
+    "complete:cells": 1
+   },
+   "kv3_pc__cl5a95b461": {
+    "complete:cells": 1
+   },
+   "kv3_pc__cl254f2e73": {
+    "complete:cells": 1
+   },
+   "kv3_pc_v1__cl23f6a148": {
+    "complete:cells": 1
+   },
+   "kv3_pc_v1__cl7f648944": {
+    "complete:cells": 1
+   },
+   "kv3_pc_v1__cl4ea58a5c": {
+    "complete:cells": 1
+   }
+  }
+ },
+ "worst_hops_after": [
+  {
+   "lane": "L1863",
+   "hop_um": 401.8,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 401.8,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L343",
+   "hop_um": 400.7,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 400.7,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L342",
+   "hop_um": 400.5,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 400.5,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L341",
+   "hop_um": 400.4,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 400.4,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L640",
+   "hop_um": 400.3,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 400.3,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L816",
+   "hop_um": 400.3,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 400.3,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L659",
+   "hop_um": 399.7,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 399.7,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L1450",
+   "hop_um": 399.2,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 395.0,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L5",
+   "hop_um": 399.0,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 399.0,
+   "via_pin_role": "mandatory seam pin lower bound"
+  },
+  {
+   "lane": "L817",
+   "hop_um": 399.0,
+   "reach_um": 405.0,
+   "direct_ff_hop_um": 399.0,
+   "via_pin_role": "mandatory seam pin lower bound"
+  }
+ ],
+ "scope": "G0 ordinary geometry delta only, completeness not qualified; no physical/die timing signoff"
+}
