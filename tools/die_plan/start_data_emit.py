@@ -281,7 +281,9 @@ def placement_tcl(doc):
                     'if {[lsort $sd_sinks] ne [lsort $sd_expected]} {error "START DATA unpriced source output loads"}']
             if e["signal"] == "raw":
                 out += [f"set sd_keep [$sd_block findInst {{{src['kept_buf2_instance']}}}]",
-                        'if {$sd_keep eq "NULL" || [[$sd_keep getMaster] getName] ne "BUFx2_ASAP7_75t_R" || [[$sd_keep findITerm A] getNet] ne [$sd_y getNet]} {error "START DATA kept RAW BUF2 missing/wrong load"}']
+                        'if {$sd_keep eq "NULL" || [[$sd_keep getMaster] getName] ne "BUFx2_ASAP7_75t_R" || [[$sd_keep findITerm A] getNet] ne [$sd_y getNet]} {error "START DATA kept RAW BUF2 missing/wrong load"}',
+                        'set_dont_touch [get_cells [$sd_keep getName]]',
+                        'foreach sd_t [$sd_keep getITerms] {if {[$sd_t getNet] ne {NULL}} {set_dont_touch [get_nets [[$sd_t getNet] getName]]}}']
         out += [f"set sd_prev_net [[[$sd_block findInst {{{src['instance']}}}] findITerm Y] getNet]"]
         for c in e["cells"]:
             x, y = point(c["xy_um"]); n = c["instance"]
