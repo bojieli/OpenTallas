@@ -98,10 +98,8 @@ def kit_build_commit(kit):
 
 
 def find_lec(d):
-    for p in [os.path.join(d, 'lec', 'lec.json')] + sorted(glob.glob(os.path.join(d, 'lec', '*.json'))):
-        if os.path.isfile(p):
-            return p
-    return None
+    p = os.path.join(d, 'lec', 'lec.json')  # lec.py's verdict file; other lec/*.json are its work files
+    return p if os.path.isfile(p) else None
 
 
 def build_record(d, kit, tag, repo=REPO, tools=None, build_commit=None, routed_db=None, lec=None, src_commit=None,
