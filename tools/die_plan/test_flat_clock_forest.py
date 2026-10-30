@@ -9,7 +9,7 @@ import flat_clock_forest as F
 def fixture():
     t=dict(module='m',outline_um=[100,100])
     sink=dict(name='u/q',master='DFFHQNx1_ASAP7_75t_R',clock_pin='CLK',source_root='clk',xy_um=[52,50])
-    p=dict(schema='opentallas.flat_clock_forest.v1',module='m',outline_um=[100,100],build_allowed=True,
+    p=dict(intrinsic_reference='native_input_phase_zero',schema='opentallas.flat_clock_forest.v1',module='m',outline_um=[100,100],build_allowed=True,
         install_stage='post_place_pre_cts',input_slew_ps=80,clock_periods={'clk':833},wire_rc=dict(r_kohm_um=.0214161,c_ff_um=.113298),geometry_review='review.png; LOOK; actual legal cohort',
         model_source='native geometry + TT/FF NLDM + per-master spice_cell/g021; no measured timing',measured_timing_used=False,
         roots={'clk':dict(kind='primary',xy_um=[50,50],node='ot_flat_clk_0',qualification={c:dict(slew_max_ps=20,sink_latency_ps={'u/q':250},calibrated_sink_latency_ps={case:{'u/q':250} for case in ['late','early']}) for c in ['TT','FF']})},
@@ -210,3 +210,25 @@ def test_consistent_calibration_window_does_not_double_common_uncertainty():
     for c in q:
         q[c]['calibrated_sink_latency_ps']={'late':{'u/q':300},'early':{'u/q':200}}
     F.validate(t,p)  # one common path: zero spatial spread, despite100ps insertion range
+
+
+def robust_landing_fixture(local=236.0168):
+    t,p=fixture();root='fclk_i[0]';t['clock']=dict(landing_contract=dict(pins=[dict(name='fclk_i',kind='clock',dir='in')]),edge_clocks=[dict(port='fclk_i',period_mult=1)])
+    r=copy.deepcopy(p['roots']['clk']);r.update(kind='forwarded',node='ot_flat_clk_1',xy_um=[60,50])
+    for q in r['qualification'].values():
+        q['sink_latency_ps']={'v/q':250};q['calibrated_sink_latency_ps']={c:{'v/q':250} for c in ('late','early')}
+    p['roots'][root]=r;p['clock_periods'][root]=833;p['native_sdc_sha256']='0'*64
+    n=copy.deepcopy(p['cells'][0]);n.update(name='ot_flat_clk_1',root=root,parent='port:'+root);n['placement'].update(origin_um=[59.194,49.95],centre_um=[60.004,50.085]);n['sinks'][0].update(name='v/q',source_root=root,xy_um=[62,50]);p['cells'].append(n)
+    p['native_source_envelopes']={r:dict(clock='same_clock_object',early=-180.,late=0.) for r in p['roots']}
+    p['landing_clock_contract']=dict(kind='canonical_landed_forwarded_default',window_ps=416.5,external_basis='native_SDC_root_source_envelope_uncorrelated_robust',external_window_ps=180.,robust_max_ps={c:local+180 for c in ('TT','FF')})
+    for c in ('TT','FF'):p['related_pair_model'][c]['forwarded_landing_window']=dict(pairs=1,max_ps=local,over80=1)
+    return t,p
+
+
+def test_robust_forwarded_envelope_is_charged_once_without_fake_correlation():
+    t,p=robust_landing_fixture();F.validate(t,p)
+    assert F.landing_external_window(p['roots'],p['native_source_envelopes'])==180
+    p['landing_clock_contract']['external_window_ps']=0
+    with pytest.raises(ValueError,match='robust external'):F.validate(t,p)
+    t,p=robust_landing_fixture(local=236.6)
+    with pytest.raises(ValueError,match='robust forwarded'):F.validate(t,p)

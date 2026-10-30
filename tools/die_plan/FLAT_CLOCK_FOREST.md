@@ -35,7 +35,12 @@ related-pair PASS. The exact native SDC hash is frozen and checked at installati
 no SDC command is added or relaxed. Every nonprimary root must individually
 match an input clock in the existing landing contract and an833ps edge clock;
 PMA or other clock roles are rejected. The canonical landed clock-damage window
-is416.5ps, distinct from the356.5ps DATA-only SDC limit. Unknown cross-forwarded relationships or
+is416.5ps, distinct from the356.5ps DATA-only SDC limit. Intrinsic20/80ps
+results use reference input phase0; they do not claim hierarchical80ps
+closure. Native source-clock early/late envelopes remain the full upstream
+DATA contract. The landing gate adds the exact robust external envelope once
+(local damage +180ps for these kits), since one clock object is not evidence
+of physical port correlation. It never adds two independent180ps spreads. Unknown cross-forwarded relationships or
 unmodeled native root loads fail closed. Existing non-tie export buffers require
 explicit modeling and are currently rejected.
 

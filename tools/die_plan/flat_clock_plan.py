@@ -243,6 +243,21 @@ def attach_native_sdc(inv,path):
             if period and targets:
                 for name in targets[1].strip('{} ').split():periods[actual(name)]=float(period[1])
     inv['clock_periods']=periods
+    envelopes={}
+    for line in text.splitlines():
+        if not line.startswith('set_clock_latency -source '):continue
+        match=re.fullmatch(r'set_clock_latency -source -(early|late) -clock (\S+) ([0-9.eE+-]+) \[get_ports ([^\]]+)\]',line)
+        if not match:
+            if '[get_ports ' in line:raise ValueError('unsupported native source-clock latency form')
+            continue
+        case,clock,value,targets=match.groups()
+        for name in targets.strip('{} ').split():
+            name=actual(name);record=envelopes.setdefault(name,dict(clock=clock))
+            if record['clock']!=clock or case in record:raise ValueError('ambiguous native source-clock latency')
+            record[case]=float(value)
+    if envelopes and (set(envelopes)!=set(periods) or any(set(v)!={'clock','early','late'} or v['early']>v['late'] for v in envelopes.values())):
+        raise ValueError('incomplete native source-clock envelope')
+    inv['clock_source_envelopes']=envelopes
     for line in text.splitlines():
         if not line.startswith('create_generated_clock '):continue
         fields=re.findall(r'\[get_ports\s+([^\]]+)\]',line)
@@ -288,7 +303,7 @@ def actual_relations(candidate,geometry_path=None,sdc_path=None):
     if sdc:
         if hashlib.sha256(Path(sdc).read_bytes()).hexdigest()!=candidate.get('native_sdc_sha256'):raise ValueError('native SDC hash changed')
         attach_native_sdc(native,sdc)
-    for key in ('cells','ports','roots','outline','core','clock_exports','clock_periods'):
+    for key in ('cells','ports','roots','outline','core','clock_exports','clock_periods','clock_source_envelopes'):
         if native.get(key)!=original.get(key):raise ValueError('candidate native inventory differs from source: '+key)
     pairs=structural_pairs(geometry,native)
     if 'structural_pairs' in candidate:

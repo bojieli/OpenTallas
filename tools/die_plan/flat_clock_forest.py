@@ -33,6 +33,23 @@ def check_forwarded_roles(t, roots):
             raise ValueError('flat clock forest: nonprimary root is not a declared833ps source-forwarded landing clock')
 
 
+def landing_external_window(roots,envelopes):
+    """Robust unknown upstream phase envelope, charged once per root pair.
+
+    A common clock object does not establish physical inter-port correlation.
+    This is a DATA/frame contract check separate from local intrinsic20/80.
+    """
+    if set(envelopes)!=set(roots) or any(not all(finite(v.get(k)) for k in ('early','late')) or v['early']>v['late'] for v in envelopes.values()):
+        raise ValueError('flat clock forest: complete native external clock envelope required')
+    values=[]
+    for a in roots:
+        for b in roots:
+            if bool(PRIMARY.fullmatch(a))==bool(PRIMARY.fullmatch(b)):continue
+            x,y=envelopes[a],envelopes[b]
+            values.extend([abs(y['early']-x['late']),abs(y['late']-x['early'])])
+    return max(values,default=0.)
+
+
 def finite(x):
     return isinstance(x,(int,float)) and not isinstance(x,bool) and math.isfinite(x)
 
@@ -52,6 +69,8 @@ def validate(t, packet):
         raise ValueError('flat clock forest: exact post-place cohort only')
     if t.get('hard_cores') or t.get('master_slice') or t.get('reg_spine') or t.get('clock',{}).get('branch_buffers'):
         raise ValueError('flat clock forest: incompatible macro/other clock owner')
+    if packet.get('intrinsic_reference')!='native_input_phase_zero':
+        raise ValueError('flat clock forest: intrinsic input-phase reference required')
     roots=packet['roots']; cells=packet['cells'];seen=set();sinks={};parents={};counts=Counter()
     if not roots or not cells:raise ValueError('flat clock forest: empty ownership')
     for root,r in roots.items():
@@ -130,8 +149,16 @@ def validate(t, packet):
         policy=packet.get('landing_clock_contract',{})
         if policy.get('kind')!='canonical_landed_forwarded_default' or policy.get('window_ps')!=PERIOD_PS/2:
             raise ValueError('flat clock forest: explicit existing landed clock-damage contract required')
-        if any(v.get('forwarded_landing_window',{}).get('max_ps',0)>policy['window_ps'] for v in packet['related_pair_model'].values()):
-            raise ValueError('flat clock forest: forwarded landing clock-damage window FAIL')
+        envelopes=packet.get('native_source_envelopes',{})
+        if set(envelopes)!=set(roots) or any(set(v)!={'clock','early','late'} or not isinstance(v['clock'],str) or not all(finite(v[k]) for k in ('early','late')) or v['early']>v['late'] for v in envelopes.values()):
+            raise ValueError('flat clock forest: complete actual native source envelopes required')
+        external=landing_external_window(roots,envelopes)
+        if policy.get('external_basis')!='native_SDC_root_source_envelope_uncorrelated_robust' or policy.get('external_window_ps')!=external:
+            raise ValueError('flat clock forest: explicit robust external landing envelope required')
+        for corner,v in packet['related_pair_model'].items():
+            local=v.get('forwarded_landing_window',{}).get('max_ps',0)
+            if abs(policy.get('robust_max_ps',{}).get(corner,float('inf'))-(local+external))>1e-8 or local+external>policy['window_ps']:
+                raise ValueError('flat clock forest: robust forwarded landing clock-damage window FAIL')
     if not packet.get('model_source') or packet.get('measured_timing_used') is not False:
         raise ValueError('flat clock forest: plan model source required')
     return sinks
@@ -270,12 +297,15 @@ def freeze_candidate(candidate, module, placements, library_dir, geometry_review
         visit(index,'port:'+root)
     outline=[inv['outline'][2]-inv['outline'][0],inv['outline'][3]-inv['outline'][1]]
     packet=dict(schema='opentallas.flat_clock_forest.v1',module=module,outline_um=outline,
-        roots=root_records,cells=cells,clock_periods={r:inv.get('clock_periods',{}).get(r) for r in roots},related_pair_model=bounds,build_allowed=True,input_slew_ps=candidate['input_slew_ps'],wire_rc=candidate['wire_rc'],
+        intrinsic_reference='native_input_phase_zero',native_source_envelopes=inv.get('clock_source_envelopes',{}),roots=root_records,cells=cells,clock_periods={r:inv.get('clock_periods',{}).get(r) for r in roots},related_pair_model=bounds,build_allowed=True,input_slew_ps=candidate['input_slew_ps'],wire_rc=candidate['wire_rc'],
         install_stage='post_place_pre_cts',geometry_review=geometry_review,measured_timing_used=False,
         geometry_sha256=inv['geometry_sha256'],native_sdc_sha256=candidate.get('native_sdc_sha256'),model_source='native legal geometry + TT/FF RVT NLDM; per-master spice_cell/g021; actual planned-cell CPPR; one CORE-PDN shared droop region',
         band_policy='info: existing12.3a design target; actual TT/FF timing/signoff mandatory',
         landing_policy='existing declared forwarded landing window; no clock/SDC exception added',
         landing_clock_contract=dict(kind='canonical_landed_forwarded_default',window_ps=PERIOD_PS/2,source='die_sta_related.py time_class landed / default period/2; DATA-only SDC budget is separate'))
+    if any('forwarded_landing_window' in v for v in bounds.values()):
+        external=landing_external_window(root_records,inv['clock_source_envelopes'])
+        packet['landing_clock_contract'].update(external_basis='native_SDC_root_source_envelope_uncorrelated_robust',external_window_ps=external,robust_max_ps={corner:v.get('forwarded_landing_window',{}).get('max_ps',0)+external for corner,v in bounds.items()})
     validate(type_spec or dict(module=module,outline_um=outline),packet)
     return packet
 
