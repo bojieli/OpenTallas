@@ -1,0 +1,204 @@
+{
+ "schema": "opentallas.core_die_owned_ft.v1",
+ "module": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+ "plan": "die_plan.json (HBM d35c)",
+ "plan_sha256": "9d53f97a0a602e7d40695a8e76a16d5b5608976ae673fdecf9e64fa2fe6a876b",
+ "plan_core_pins": "cores/ot_hfd_coll_q2_hard_v8g__ring_ag__233.28x233.28__q_hub_u_hb_coll_Q_ring_ag__oneclk__c25c_centerclk.json",
+ "plan_core_pins_sha256": "bb7960a3d6b9d8606e842d00f0d47e183ef410b83d2592099c062c58727b48b7",
+ "outline_um": [
+  233.28,
+  233.28
+ ],
+ "core_signal_pins": 2228,
+ "die_owned_ft_pins": [
+  {
+   "name": "mp_isl0_ck_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    115.544,
+    118.704,
+    115.576,
+    118.896
+   ]
+  },
+  {
+   "name": "mp_isl0_ck_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    117.704,
+    118.704,
+    117.736,
+    118.896
+   ]
+  },
+  {
+   "name": "mp_isl0_rst_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    115.544,
+    114.384,
+    115.576,
+    114.576
+   ]
+  },
+  {
+   "name": "mp_isl0_rst_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    117.704,
+    114.384,
+    117.736,
+    114.576
+   ]
+  },
+  {
+   "name": "mp_isl1_ck_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    59.384,
+    118.704,
+    59.416,
+    118.896
+   ]
+  },
+  {
+   "name": "mp_isl1_ck_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    61.544,
+    118.704,
+    61.576,
+    118.896
+   ]
+  },
+  {
+   "name": "mp_isl1_rst_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    59.384,
+    114.384,
+    59.416,
+    114.576
+   ]
+  },
+  {
+   "name": "mp_isl1_rst_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    61.544,
+    114.384,
+    61.576,
+    114.576
+   ]
+  },
+  {
+   "name": "mp_isl2_ck_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    171.704,
+    118.704,
+    171.736,
+    118.896
+   ]
+  },
+  {
+   "name": "mp_isl2_ck_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    173.864,
+    118.704,
+    173.896,
+    118.896
+   ]
+  },
+  {
+   "name": "mp_isl2_rst_i",
+   "direction": "INPUT",
+   "layer": "M5",
+   "rect_um": [
+    171.704,
+    114.384,
+    171.736,
+    114.576
+   ]
+  },
+  {
+   "name": "mp_isl2_rst_o",
+   "direction": "OUTPUT",
+   "layer": "M5",
+   "rect_um": [
+    173.864,
+    114.384,
+    173.896,
+    114.576
+   ]
+  }
+ ],
+ "ft_declaration": {
+  "source": "hbm-cores-kits-27/ring_wl120 ft_ports.json (opentallas.ft_ports.v1, sha 194b7272)",
+  "arcs": [
+   {
+    "source": "mp_isl0_ck_i",
+    "sink": "mp_isl0_ck_o",
+    "kind": "clock",
+    "cells": [
+     "mp_isl0_ck0"
+    ]
+   },
+   {
+    "source": "mp_isl0_rst_i",
+    "sink": "mp_isl0_rst_o",
+    "kind": "reset",
+    "cells": [
+     "mp_isl0_rst0"
+    ]
+   },
+   {
+    "source": "mp_isl1_ck_i",
+    "sink": "mp_isl1_ck_o",
+    "kind": "clock",
+    "cells": [
+     "mp_isl1_ck0"
+    ]
+   },
+   {
+    "source": "mp_isl1_rst_i",
+    "sink": "mp_isl1_rst_o",
+    "kind": "reset",
+    "cells": [
+     "mp_isl1_rst0"
+    ]
+   },
+   {
+    "source": "mp_isl2_ck_i",
+    "sink": "mp_isl2_ck_o",
+    "kind": "clock",
+    "cells": [
+     "mp_isl2_ck0"
+    ]
+   },
+   {
+    "source": "mp_isl2_rst_i",
+    "sink": "mp_isl2_rst_o",
+    "kind": "reset",
+    "cells": [
+     "mp_isl2_rst0"
+    ]
+   }
+  ],
+  "note": "in-core clock/reset island feedthroughs (3 islands); die-owned, not core signal pins"
+ },
+ "signed_view": {
+  "def": "/srv/opentallas-scratch2/claude/hbm-cores-kits-27/ring_wl120/run/results/asap7/hbc_ot_hfd_coll_q2_hard_v8g__ring_ag/base/6_final.def"
+ }
+}

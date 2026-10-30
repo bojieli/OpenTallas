@@ -1,0 +1,28 @@
+d38r g0 new 3 gone 3
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  NEW {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 900 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  GONE {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 936 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+d38r g0c new 3 gone 3
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  NEW {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 900 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  GONE {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 936 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+d38a g0 new 3 gone 3
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  NEW {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 900 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  GONE {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 936 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+d38a g0c new 3 gone 3
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  NEW {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 5 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  NEW {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 900 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010"}
+  GONE {"check": "geometry", "level": "WARN", "msg": "type q_b010__physical_v1 slot L28x2: crossing ~2575 um > 4 station(s) x reach 405 (see hops)", "type": "q_b010__physical_v1"}
+  GONE {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 936 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
