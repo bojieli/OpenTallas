@@ -2199,3 +2199,5 @@ CODEX: 2026-10-30 03:41 PDT TOK-DS takeover18946602f: actual16stop+native middle
 
 CODEX: KV takeover1030 full ownership split; q0/q3 fresh EQ collected27583/9742, E0SIGNED+EQ; current SDtry6 live preserved; START CELL measured-components emitter fix and frozen-plan package underway, no die gate claim.
 CODEX: 2026-10-30 03:41 PDT KV-SD declaration repair READY bc32cb591c5 (wave ORD2013 diagnosed; existing PHY views only); try6 unit2012423 LIVE preserved, no duplicate, no gate claim.
+
+CODEX: 2026-10-30 03:41 PDT SUPPORT all261 lane inventory a9dbbbafb; shared AUTO-GEOM live clock-entry fix88a9ac71675 READY/17testsPASS; HEADturn/eshimfalse reach removed,wshim337stillFAIL; explicitFF380parent contract mismatch diagnosed/HEADowned.
