@@ -96,3 +96,24 @@ The explicit synthetic one-command arithmetic control tests lowering only;
 actual programme commands lowered0. Existing old86dd input data was never
 retagged current. Native jobs remain UNSEALED: current-source entry data,
 residency/reload, VN capture, actual root phase and start remain holds.
+
+Actual current-source L14 entry lowered (1030 05:09 PDT)
+-----------------------------------------------------
+Found surviving intel1 tok-ds/s81_877/l14_prog/fix/L14, metaSHA21e463… exactly
+matches genuine Engram checkpoint input manifest already qualified1025. Used
+original input byte files (not reconstructed old row outputs), actual current
+strict BoundDie c09217/062ef0 and inventory_entry. Native entry_inputs produces
+3920writes, then entry_write_calendar produces32UNSEALEDpages/15712HOSTwords.
+Actual selected seqhost7/8edge local stages and exact current control paths plus
+measured target5/VP stages lower all3920commands to page-relative store commits.
+current_L14.json has per-page first/last commit and source input identities.
+All32page/HOST/arrival artifacts on intel1 codex-ds-entry-current-1030; local
+original entry data and page outputs codex-ds-entry-calendar-1030/out_current_L14.
+No olddie retagging, no ops-output injection. Source generationunit3918328 PASS;
+compositionunit3964051 PASS. First compositionunit3951330 performed expensive
+per-command selected-source validation; client cancelled143 for optimization,
+unfinished output retained arrivals_L14_slow_unfinished. Validations now once
+per-page/twoissuerports; actual output regenerated completely in terminal0unit.
+Native KIT/END, page retirement/reload and rootphase/MU remain unqualified;
+noBEGIN/SEAL/START emitted. This closes current-source data/dated-write lowering,
+not a full native runtime programme or rate claim.

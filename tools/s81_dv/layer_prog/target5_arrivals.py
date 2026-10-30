@@ -64,6 +64,36 @@ def compose(control, transport, inventory, receipt, source_root, manifest):
     return out
 
 
+def lower_page(page, control, local_control):
+    """Lower one native page against existing exact routes and selected local stages.
+
+    local_control is BoundControl for the same source/inventory; its local()
+    checks selected body, parameters, defines and measured dependency hashes.
+    """
+    if page.get('die_sha256')!=control.get('die_sha256') or local_control.die.die_sha!=control.get('die_sha256'):
+        raise ValueError('TARGET5 page/control source differs')
+    if local_control.die.inventory['source_asbuilt_sha256']!=control.get('source_asbuilt_sha256'):
+        raise ValueError('TARGET5 local inventory differs')
+    out=copy.deepcopy(control);out['commands']=[]
+    templates={t['i']:t['payload186']for t in page['templates']}
+    # Validate the two selected issuer stages once per page, not per write.
+    stages={port:local_control.local('u_seqhost','calendar_command_to_'+port)
+            for port in ('vo_n','vo_s')}
+    for command in page['commands']:
+        if command.get('kind')!='TARGET5':raise ValueError('entry page must contain actual TARGET5 commands')
+        sl=command['slice'];path=control['paths'][sl]
+        if path.get('status')!='PASS':raise ValueError('entry page control route blocked')
+        sid=local_control.die.slices()[sl]['sid']
+        if command['sid']!=sid:raise ValueError('entry page SID differs from source')
+        local=stages['vo_n'if sid&1 else'vo_s']
+        tx=command['issue']+local['edges']
+        out['commands'].append(dict(command,status='PARTIAL',payload186=templates[command['template']],
+            seqhost_output_edge_from_age0_command=tx,
+            xr_input_edge_from_age0_command=tx+path['xr_input_edge'],
+            xr_command_pin_edge_from_age0_command=tx+path['xr_command_pin_edge']))
+    return out
+
+
 def main():
     import argparse,json
     p=argparse.ArgumentParser(description=__doc__)
