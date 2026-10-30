@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.kit_provenance.v1",
+ "provenance": {
+  "commit": "07980c5bed40de9d85b58ba8ba9ef6f39b83de46",
+  "dirty": false,
+  "source": "git"
+ },
+ "kit_hash": "d7f909ffc62a63a1",
+ "files": {
+  "config.mk": "aaeca159b3043e2829df5fbeb89654d49baaf88e2e3ec85e6b51f5345b9f4052",
+  "freeze.json": "3ecc7184a01e7f19a0181efbbe5a09d8f9e3deccb31ba10b66cf2fc9d8b40ac2",
+  "lec.py": "df83e39031c18ae763daacf340c7a854712abd3903a222553e85179f2aea4ee5",
+  "core.json": "b4560686d20bc59b2adc926145518b01b3c8c0e85db81b41f33f7385ae5fd0c3",
+  "pins.json": "b9213030bf7dad59e763c5b21ebafb2f594d92bfcecf7ee5a3e1aa865bfd01ef",
+  "rtl/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/ot_qkd_ectl_parts.sv": "d6fcd94c18c6f1292c1b21d8df427fa77381a754a669bfc6dfa2fd454287213c",
+  "rtl/ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+  "rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/qkd_ectl_c_st.sv": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+  "rtl/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+  "rtl/qkd_ectlk_columns.sv": "0e4c63c364d9ccfd92e92de54907758c8539911c5aa6357f554b4b4125f59167",
+  "rtl/qkd_static_ectl_st.sv": "544f57797ad5216a63f2e0b4e1d60d7a2f7462ba2da99f72e9864b61e5139c99",
+  "rtl/qkd_static_ectla_kiss.sv": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+  "rtl/qkd_static_k_issuer.sv": "6ff31cbca264936d970452800c9ad8bfb0eafe159b3571c2cbfa314c8bc9ad76"
+ }
+}
