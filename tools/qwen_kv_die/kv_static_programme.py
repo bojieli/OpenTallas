@@ -182,11 +182,28 @@ def image_host_stages(img=None, root=None):
     return k1 - 4
 
 
+def image_calendar_offset(img=None, root=None):
+    """The pair image's signed K-minus-C start offset for native target 11.
+
+    Historical images omit the field and use zero; a malformed explicit field
+    fails rather than silently rebuilding another calendar.
+    """
+    import re
+    txt = ((root or ROOT) / (img or LINK_IMAGE)).read_text()
+    m = re.search(r"localparam\s+integer\s+D2D_CAL_OFS\s*=\s*([+-]?\d+)\s*;", txt)
+    if not m:
+        if 'D2D_CAL_OFS' in txt:
+            raise SystemExit(f'kv_static_programme: malformed D2D_CAL_OFS in {img or LINK_IMAGE}')
+        return 0
+    return int(m.group(1))
+
+
 LINK_DIE_STAGES = image_die_stages()
 LINK_HOST_STAGES = image_host_stages()
+LINK_CAL_OFS = image_calendar_offset()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
-             '--host-stages', str(LINK_HOST_STAGES), '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
+             '--host-stages', str(LINK_HOST_STAGES), '--ofs', str(LINK_CAL_OFS), '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
              '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else []) \
     + (['--head-prepare-edges', LINK_HEAD_PREP] if LINK_HEAD_PREP else []) \
     + (['--compute-record-txd', LINK_COMPUTE_RECORD_TXD] if LINK_COMPUTE_RECORD_TXD else [])

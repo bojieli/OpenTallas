@@ -50,10 +50,14 @@ COMPUTE_RECORD_TXD=${D2D_COMPUTE_RECORD_TXD:-${OT_KV_COMPUTE_RECORD_TXD:-}}
 # the HOST record port next to the d2d end (the historical images); a bind whose HOST sits across lanes needs the value
 # (regen_constants D2D_HOST_REC_RT / D2D_TXDP_K fail the bind gate on a mismatch).
 HOST_STAGES=${D2D_HOST_STAGES:-0}
+# Calendar offset is the compiler's existing C/K start-anchor difference.
+# Positive means K starts later; preserve the historical zero until an as-built
+# anchor measurement supplies it. It changes RX calendars, never clock timing.
+CAL_OFS=${D2D_CAL_OFS:-0}
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \
-  "${MU_ARGS[@]}" --host-stages "$HOST_STAGES" --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
+  "${MU_ARGS[@]}" --host-stages "$HOST_STAGES" --ofs "$CAL_OFS" --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
   --token-path "$OUT/token_path_compiled.json" > "$OUT/program.log"
 python3 tools/qwen_split/d2d_cal_seq_image.py "$OUT/program" "$OUT/d2d_cal_image.svh"
 echo "image: $OUT/d2d_cal_image.svh (die stages $STAGES, kv codec $KV_CODEC)"

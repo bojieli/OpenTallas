@@ -1,0 +1,13 @@
+Process 3268114: python3 physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py compile --ages /srv/opentallas-scratch2/claude/codex-kvtok-2249/mu833_Wc_ofs-2/prep/die_ages_bound_padded.json --rs /srv/opentallas-scratch2/claude/codex-kvtok-2249/mu833_Wc_ofs-2/prep/relay_stages_bound.json --mu --native-contract results/rtl/native_die_cfg_contract_1713/contract.json --capability 1 --out /srv/opentallas-scratch2/claude/codex-kvtok-2249/mu833_Wc_ofs-2/cmp_mu833
+Python v3.14.4 (/usr/bin/python3.14)
+
+Thread 3268114 (active+gil): "MainThread"
+    collides (mu_calendar.py:241)
+    earliest (mu_calendar.py:261)
+    compile_frame (mu_opcal.py:428)
+    kv_frame_search (mu_calendar.py:843)
+    _mu_images (kv_static_programme.py:1391)
+    mu_images (kv_static_programme.py:1361)
+    compile_all (kv_static_programme.py:1316)
+    compile_ (kv_boot_v36.py:307)
+    <module> (kv_boot_v36.py:356)

@@ -1,0 +1,12 @@
+PHASEOBS cyc 43 Kstart1 Cstart0 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 44 Kstart1 Cstart0 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 45 Kstart0 Cstart1 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 46 Kstart0 Cstart1 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 209 Kstart0 Cstart0 Ktx1 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 215 Kstart0 Cstart0 Ktx0 phyRx1 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 216 Kstart0 Cstart0 Ktx0 phyRx0 pinRx1 Cexpect0 Cnf00
+PHASEOBS cyc 217 Kstart0 Cstart0 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf08
+PHASEOBS cyc 218 Kstart0 Cstart0 Ktx0 phyRx0 pinRx0 Cexpect1 Cnf00
+PHASEOBS cyc 219 Kstart0 Cstart0 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf04
+HOST_RX_PHASE_CAUGHT phase=2 rxdt=172 fc=08
+/srv/opentallas-scratch2/claude/codex-kvtok-2249/tb_host_rx_phase.sv:87: $finish called at 205164 (1ps)
