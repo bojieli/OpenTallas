@@ -164,7 +164,15 @@ def compose(F, rules, spec, Cell):
 def apply(binder, spec_path):
     path=Path(spec_path)
     if not path.is_absolute(): path=Path(binder.base)/path
-    sources,receipt=compose(binder.F,binder.R,json.loads(path.read_text()),__import__('bind_elab').Cell)
+    gz=path if path.name.endswith('.gz') else path.with_name(path.name+'.gz')
+    if path.name.endswith('.gz') or (not path.exists() and gz.exists()):
+        # Large composition specs are committed gzip-compressed (same JSON bytes inside).
+        import gzip
+        spec=json.loads(gzip.open(gz).read())
+        path=gz.with_name(gz.name[:-3])
+    else:
+        spec=json.loads(path.read_text())
+    sources,receipt=compose(binder.F,binder.R,spec,__import__('bind_elab').Cell)
     # Keep source paths outside the repository tree, immutable content-addressed.
     out=path.parent/'composed_rtl';out.mkdir(exist_ok=True)
     for mod,rtl in sources:
