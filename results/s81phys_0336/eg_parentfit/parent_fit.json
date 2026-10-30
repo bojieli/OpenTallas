@@ -1,0 +1,741 @@
+{
+  "scope": "Private unsignedcandidate exactevent3parent-fit only; no sourceadoption/P&R; originalFAILs preserved",
+  "plan_sha256": "bcfcb4e1737e8140fab9c94aec6128c4a086ab5fa953e07159813abb11819d10",
+  "candidate_source": "908787e642a",
+  "types": 16,
+  "instances": 16,
+  "all_contained": true,
+  "all_die_M5_track_PASS": true,
+  "PG": "NativechildM5PG startsy4.32 so newrecty0..0.48 clear; parentconservativeM5PGbandblocked alreadyoldclockXunchanged: requires actualparentPDN/accessadjudication, noPGPASSclaim",
+  "unchanged": [
+    "all other200childpins",
+    "parentexternalpins",
+    "outline",
+    "neighbors",
+    "RTL",
+    "cycles",
+    "clockperiodandcyclecontract"
+  ],
+  "rows": [
+    {
+      "type": "dsdv_slice_lepw_mus_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        414.732,
+        896.196,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        414.732,
+        896.208,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_0S_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            11100.012,
+            10333.452,
+            11100.036,
+            10333.536
+          ],
+          "new_clock_rect_die": [
+            11100.0,
+            10333.452,
+            11100.048,
+            10333.932
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_lepw_mu_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        414.732,
+        896.196,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        414.732,
+        896.208,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_0N_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            11100.012,
+            17694.732,
+            11100.036,
+            17694.816
+          ],
+          "new_clock_rect_die": [
+            11100.0,
+            17694.732,
+            11100.048,
+            17695.212
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        1071.4679999999998,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        1198.572,
+        414.732,
+        1198.596,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        1198.56,
+        414.732,
+        1198.608,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_1S_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            12845.292,
+            10333.452,
+            12845.316,
+            10333.536
+          ],
+          "new_clock_rect_die": [
+            12845.28,
+            10333.452,
+            12845.328,
+            10333.932
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t10",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        769.068,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        803.472,
+        896.196,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        803.076,
+        896.208,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_1N_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            12542.892,
+            18083.472,
+            12542.916,
+            18083.556
+          ],
+          "new_clock_rect_die": [
+            12542.88,
+            18083.076,
+            12542.928,
+            18083.556
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t3",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        907.308,
+        933.132
+      ],
+      "old_clock_rect_type": [
+        1034.412,
+        933.132,
+        1034.436,
+        933.216
+      ],
+      "new_clock_rect_type": [
+        1034.4,
+        933.132,
+        1034.448,
+        933.612
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.279999999999973,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_2S_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            14124.012,
+            10851.852,
+            14124.036,
+            10851.936
+          ],
+          "new_clock_rect_die": [
+            14124.0,
+            10851.852,
+            14124.048,
+            10852.332
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t4",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        769.068,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        803.472,
+        896.196,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        803.076,
+        896.208,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_2N_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            13985.772,
+            18083.472,
+            13985.796,
+            18083.556
+          ],
+          "new_clock_rect_die": [
+            13985.76,
+            18083.076,
+            13985.808,
+            18083.556
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_iq_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        769.068,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        803.472,
+        896.196,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        803.076,
+        896.208,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_3S_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            15428.652,
+            10722.192,
+            15428.676,
+            10722.276
+          ],
+          "new_clock_rect_die": [
+            15428.64,
+            10721.796,
+            15428.688,
+            10722.276
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_kv512_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        769.068,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        803.472,
+        896.196,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        803.076,
+        896.208,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_3N_C",
+          "partition_orient": "R0",
+          "old_clock_rect_die": [
+            15428.652,
+            18083.472,
+            15428.676,
+            18083.556
+          ],
+          "new_clock_rect_die": [
+            15428.64,
+            18083.076,
+            15428.688,
+            18083.556
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c3x_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        1028.268,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        1155.372,
+        803.472,
+        1155.396,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        1155.36,
+        803.076,
+        1155.408,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_4S_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            16262.844,
+            10722.192,
+            16262.868,
+            10722.276
+          ],
+          "new_clock_rect_die": [
+            16262.832,
+            10721.796,
+            16262.88,
+            10722.276
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t5",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        414.732,
+        896.196,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        414.732,
+        896.208,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_4N_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            16522.044,
+            17694.732,
+            16522.068,
+            17694.816
+          ],
+          "new_clock_rect_die": [
+            16522.032,
+            17694.732,
+            16522.08,
+            17695.212
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t6",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        769.068,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        803.472,
+        896.196,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        803.076,
+        896.208,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_5S_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            17964.924,
+            10722.192,
+            17964.948,
+            10722.276
+          ],
+          "new_clock_rect_die": [
+            17964.912,
+            10721.796,
+            17964.96,
+            10722.276
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t7",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        414.732,
+        896.196,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        414.732,
+        896.208,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_5N_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            17964.924,
+            17694.732,
+            17964.948,
+            17694.816
+          ],
+          "new_clock_rect_die": [
+            17964.912,
+            17694.732,
+            17964.96,
+            17695.212
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t8",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        933.132
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        933.132,
+        896.196,
+        933.216
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        933.132,
+        896.208,
+        933.612
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.279999999999973,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_6S_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            19407.804,
+            10851.852,
+            19407.828,
+            10851.936
+          ],
+          "new_clock_rect_die": [
+            19407.792,
+            10851.852,
+            19407.84,
+            10852.332
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_c1x_C__t9",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        414.732,
+        896.196,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        414.732,
+        896.208,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_6N_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            19407.804,
+            17694.732,
+            19407.828,
+            17694.816
+          ],
+          "new_clock_rect_die": [
+            19407.792,
+            17694.732,
+            19407.84,
+            17695.212
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_lepe_nh_mus_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "R0",
+      "core_origin_with_track_offset": [
+        769.068,
+        414.732
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        414.732,
+        896.196,
+        414.816
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        414.732,
+        896.208,
+        415.212
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.28000000000003,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_7S_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            20850.684,
+            10333.452,
+            20850.708,
+            10333.536
+          ],
+          "new_clock_rect_die": [
+            20850.672,
+            10333.452,
+            20850.72,
+            10333.932
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    },
+    {
+      "type": "dsdv_slice_lepe_mu_C__t1",
+      "core_inst": "u_c.u_eg",
+      "core_orient": "MX",
+      "core_origin_with_track_offset": [
+        769.068,
+        544.356
+      ],
+      "old_clock_rect_type": [
+        896.172,
+        803.472,
+        896.196,
+        803.556
+      ],
+      "new_clock_rect_type": [
+        896.16,
+        803.076,
+        896.208,
+        803.556
+      ],
+      "contained_in_parent": true,
+      "contained_in_child": true,
+      "nearest_other_core": "u_c.u_xf",
+      "nearest_other_core_clearance_um": 17.27999999999986,
+      "parent_PG_band_blocked_old_and_new": true,
+      "instances": [
+        {
+          "partition": "s_7N_C",
+          "partition_orient": "MY",
+          "old_clock_rect_die": [
+            20850.684,
+            18083.472,
+            20850.708,
+            18083.556
+          ],
+          "new_clock_rect_die": [
+            20850.672,
+            18083.076,
+            20850.72,
+            18083.556
+          ],
+          "M5_track_PASS": true
+        }
+      ]
+    }
+  ]
+}
