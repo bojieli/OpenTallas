@@ -1,0 +1,116 @@
+[
+  {
+    "direction": "input",
+    "range": "",
+    "name": "clk",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "",
+    "name": "clk_quant",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "",
+    "name": "clk_quant_delay",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "[3:0]",
+    "name": "clk_bank",
+    "width": 4
+  },
+  {
+    "direction": "input",
+    "range": "",
+    "name": "rst_n",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "",
+    "name": "frame_start",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "",
+    "name": "block_v",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "[4:0]",
+    "name": "block_head",
+    "width": 5
+  },
+  {
+    "direction": "input",
+    "range": "[1:0]",
+    "name": "block_number",
+    "width": 2
+  },
+  {
+    "direction": "input",
+    "range": "[1023:0]",
+    "name": "block_data",
+    "width": 1024
+  },
+  {
+    "direction": "input",
+    "range": "[15:0]",
+    "name": "head_weight",
+    "width": 16
+  },
+  {
+    "direction": "input",
+    "range": "",
+    "name": "emit_v",
+    "width": 1
+  },
+  {
+    "direction": "input",
+    "range": "[4:0]",
+    "name": "emit_head",
+    "width": 5
+  },
+  {
+    "direction": "output",
+    "range": "",
+    "name": "ql_v",
+    "width": 1
+  },
+  {
+    "direction": "output",
+    "range": "[7:0]",
+    "name": "ql_head",
+    "width": 8
+  },
+  {
+    "direction": "output",
+    "range": "[511:0]",
+    "name": "ql_codes",
+    "width": 512
+  },
+  {
+    "direction": "output",
+    "range": "[31:0]",
+    "name": "ql_sc",
+    "width": 32
+  },
+  {
+    "direction": "output",
+    "range": "[15:0]",
+    "name": "ql_w",
+    "width": 16
+  },
+  {
+    "direction": "output",
+    "range": "",
+    "name": "fault",
+    "width": 1
+  }
+]

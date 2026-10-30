@@ -1,0 +1,20 @@
+{
+  "status": "PRIVATE_SOURCE_CANDIDATE_ONLY",
+  "removed_physical_pins": [
+    "ql_head[5]",
+    "ql_head[6]",
+    "ql_head[7]"
+  ],
+  "physical_output_width_change": "ql_head8->5; everyotherport unchanged",
+  "parent_TIE0": "literal zero feeds first unreset3-bit parentstage",
+  "parent_cold_state_flops": 9,
+  "stages": 3,
+  "source_basis": "nativecoreupperzero-fed everyclk unreset; nativepublichead everyclk unreset; physicalouterhead everyclk unreset",
+  "warm_reset": "no reset on reconstructedstate; warmresetdoesnotrestartzero pipeline",
+  "added_payload_cycles": 0,
+  "physical_adoption_holds": [
+    "Actualsource/currentclosure proof and wholeparent calendar/context",
+    "ActualearlyKEEP/nativegate proof must retain exact9coldFFs OR actualcontextual unobservability proof; RTLkeep alone is not an adoption proof",
+    "No new physicalpins, noface_guard exemption; type/view/parentbinding event required"
+  ]
+}

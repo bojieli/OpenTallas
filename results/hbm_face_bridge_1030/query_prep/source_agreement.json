@@ -1,0 +1,71 @@
+{
+  "scope": "seven unique preferredr18 sourcefiles agree exactly withactualphysical7excepttoprename; no sourcepreferenceguessbetweenmultiplecandidates",
+  "defines": [
+    "OT_SMH_FC_HIER",
+    "OT_SMH_HIER",
+    "OT_SMH_XLK",
+    "OT_FP_DATA_NORST",
+    "OT_SMH_DRST0",
+    "OT_SMH_RSTRELAY",
+    "OT_SM_QSPLIT",
+    "SYNTHESIS"
+  ],
+  "rows": [
+    {
+      "name": "ot_hdc_delay.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+      "current_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_hdc_delay.sv",
+      "physical_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "only_normalization": "NONE exactbytes"
+    },
+    {
+      "name": "ot_rst_relay.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+      "current_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_rst_relay.sv",
+      "physical_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "only_normalization": "NONE exactbytes"
+    },
+    {
+      "name": "ot_hdc_delay_rf.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay_rf.sv",
+      "current_sha256": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_hdc_delay_rf.sv",
+      "physical_sha256": "f7262daea7a3d709b503470c5335cbde92ded954aa14a25b8b2488fabf86074f",
+      "only_normalization": "NONE exactbytes"
+    },
+    {
+      "name": "ot_hbm_idx_query_static.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_query_static.sv",
+      "current_sha256": "9572322a2a57381db8a74eaebaf9b96924890bc33e49a9f10baafaed39357bae",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_hbm_idx_query_static.sv",
+      "physical_sha256": "9ca51f7b2fcf49e1d8965468e9674aba093fbc94a7cfc418c4d3f1a0bc404e83",
+      "only_normalization": "public top __fcore name restored"
+    },
+    {
+      "name": "ot_hbm_idx_actquant_owned_native.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_actquant_owned_native.sv",
+      "current_sha256": "a0f7bb8055bf5c5c0681052965d787411960d0b71dcd4ab01265d1ddd02d55db",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_hbm_idx_actquant_owned_native.sv",
+      "physical_sha256": "a0f7bb8055bf5c5c0681052965d787411960d0b71dcd4ab01265d1ddd02d55db",
+      "only_normalization": "NONE exactbytes"
+    },
+    {
+      "name": "ot_hdc_fp32_mul_pipe.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "current_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_hdc_fp32_mul_pipe.sv",
+      "physical_sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+      "only_normalization": "NONE exactbytes"
+    },
+    {
+      "name": "ot_hdc_fpu.sv",
+      "current_preferred_source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fpu.sv",
+      "current_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "physical_source": "/srv/opentallas-scratch2/claude/codex-hbm-cores-1030/ftshape/kits/ot_hbm_idx_query_static_8685b722456c-_ftshape1030/rtl/ot_hdc_fpu.sv",
+      "physical_sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+      "only_normalization": "NONE exactbytes"
+    }
+  ]
+}
