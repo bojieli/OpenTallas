@@ -569,7 +569,46 @@ def placed_pins(kd):
             added.add(p if isinstance(p, str) else (p.get("name") or
                       (p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]")))
     pins = {}
-    for line in (kd / "io.tcl").read_text(errors="replace").splitlines():
+    lines = (kd / "io.tcl").read_text(errors="replace").splitlines()
+    # Native multiPORT pins have one logical plan centre and several exact
+    # original LEF rectangles. They are emitted through OpenDB, not place_pin.
+    # Read the actual emitted boxes and accept metadata only when ALL boxes
+    # match and the claimed logical point is an original rectangle centre.
+    meta_file = kd / "pins.json"
+    meta = {}
+    if meta_file.is_file():
+        data = json.loads(meta_file.read_text())
+        rows = data.get("pins", []) if isinstance(data, dict) else data
+        for row in rows:
+            if isinstance(row, dict) and "native_rects" in row:
+                name = row["bus"] if row.get("bit") is None else f"{row['bus']}[{row['bit']}]"
+                meta[name] = row
+    native, active = {}, None
+    for line in lines:
+        hit = re.fullmatch(r"set ot_mp_bt \[\[ord::get_db_block\] findBTerm \{([^}]+)\}\]", line.strip())
+        if hit:
+            active = hit.group(1)
+            native.setdefault(active, [])
+            continue
+        if active and line.startswith("odb::dbBox_create $ot_mp_bp "):
+            lay = re.search(r"findLayer (M[0-9]+)\]", line)
+            values = re.findall(r"round\(([-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+))\*\$ot_mp_u\)", line)
+            if lay and len(values) == 4:
+                native[active].append((lay.group(1), *map(float, values)))
+            else:
+                native[active].append(("MALFORMED",))
+    for name, boxes in native.items():
+        if name in added or name not in meta:
+            continue
+        row = meta[name]
+        expected = [tuple(box) for box in row["native_rects"]]
+        same = sorted(boxes) == sorted(expected)
+        centered = any(len(box) == 5 and box[0] == row["layer"]
+                       and abs((box[1]+box[3])/2-row["x"]) < 1e-4
+                       and abs((box[2]+box[4])/2-row["y"]) < 1e-4 for box in boxes)
+        if same and centered:
+            pins[name] = dict(name=name, layer=row["layer"], x=row["x"], y=row["y"])
+    for line in lines:
         m = re.match(r"\s*place_pin\s+-pin_name\s+(\{[^}]*\}|\S+)\s+-layer\s+(\S+)\s+-location\s+\{\s*" + _NUM +
                      r"\s+" + _NUM + r"\s*\}", line)
         if m and m.group(1).strip("{}").strip() not in added:
