@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81ph_native_sel_hist_bank_cp1",
+ "module": "ot_s81ph_native_sel_hist_bank",
+ "plan_type": "bk_sel__t2",
+ "outline_um": [
+  64.8,
+  54.0
+ ],
+ "ref_tile": "physical/ref_tile/s81dvbk_hist32_b0r3",
+ "spec": "bd6f52e8c:physical/ref_tile/s81dvbk_hist32_b0r3/spec.json",
+ "spec_sha256": "ecfc0a201c77269f2463481d576995779bd17c6538a97b4e02bf54c108a87900",
+ "child_of": "dsdv_bksel_q",
+ "child_count": 16,
+ "drop_sources": [
+  "results/arch/s81_topk5_1020/gold_hist256.sv"
+ ],
+ "pin_expand": {
+  "clr": 17,
+  "gsel": 64
+ },
+ "pins_file": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank.lef",
+ "pins_sha256": "8c93992ea279186582cd4186e843618bb62cb6d3a87c4a59d45dd88cc29ae477",
+ "pins": 435,
+ "plan_lef": "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank/ot_s81ph_native_sel_hist_bank.lef",
+ "pins_canon_sha256": "33d548782c6ccb63b18c5bbcef4756f6c8dd5c970346333111da7579a51b2b3e",
+ "pins_placed_canon_sha256": "33d548782c6ccb63b18c5bbcef4756f6c8dd5c970346333111da7579a51b2b3e",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "7ea712855c2b4ae0f3c53873d7716256ee3a4bbf7a44ab8c09f1510bb0e9c8ad",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "65902f47b3a",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+ "signoff_sha256": "89929556eba9a21b4f74b5d9710188d7391535eac95a5698e0a56b12284e86a2",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "143637653181d91d"
+}

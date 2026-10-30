@@ -1,0 +1,46 @@
+{
+  "status": "SOURCE_ONLY_GEN_PASS_PHYSICAL_BLOCKED",
+  "module": "dsdv_bksel_q",
+  "parent_outline_um": [
+    648,
+    648
+  ],
+  "parent_pins": 1803,
+  "hard_children": 16,
+  "total_macros": 32,
+  "child_master": "ot_s81ph_native_sel_hist_bank",
+  "child_profile": "actual SIGNED cp1 PIN_COPY, clr[16:0]/gsel[63:0]",
+  "child_tt_insertion_ps": 250.02,
+  "child_ff_insertion_ps": 192.12,
+  "child_outline_um": [
+    64.8,
+    54
+  ],
+  "total_child_area_um2": 55987.2,
+  "functional_cycles_added": 0,
+  "controls": {
+    "unsigned": "CAUGHT",
+    "missing_ff": "CAUGHT",
+    "wrong_blackbox_abi": "CAUGHT",
+    "physical_goal": "REFUSED exit78"
+  },
+  "preflight": {
+    "status": "FAIL",
+    "issues": [
+      "clock_pin_geometry: native parent ck is M3 (304.569,647.868), not approved M5 entry",
+      "clock_entry_clear: static clock reader cannot parse native multiPORT clock block; parent clock event still required"
+    ]
+  },
+  "remaining": [
+    "Parent clock M5/interface adoption + local compensation estimate and placement review",
+    "Parent PIN_COPY functional/interface proof before adoption",
+    "Parent synthesis/LEC/physical stages NOT RUN"
+  ],
+  "failures_retained": [
+    "bkq_source1 sparse parent LEF missing; restored exact tracked folder",
+    "bkq_source2 duplicate child body+BB; replaced only child module, preserved helper",
+    "bkq_source3 mixed-module refusal; exact commented-mask module extraction added"
+  ],
+  "ordinary_generator_guard": "UNCHANGED",
+  "physical_runner_guard": "source-only runner accepts synth only; all physical goals refused"
+}

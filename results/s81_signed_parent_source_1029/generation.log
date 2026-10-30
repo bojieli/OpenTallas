@@ -1,0 +1,3 @@
+SIGNOFF_BUNDLE signoff.py sdc_lint.py face_guard.py io_hold_qualification.py pair_skew.tcl clock_family.tcl kit_modes.py data_droop.py core_io_reference.py
+{"kit": "/srv/opentallas-scratch2/claude/codex-s81ck-tr-2249/bkq_source4/kits/dsdv_bksel_q_signed_source", "pins": 1803, "clocks": ["ck"], "resets": ["rst"], "ins": 4, "outs": 2, "macros": 32, "kit_hash": "2e5f1ca7382c844c"}
+SIGNED_PARENT_SOURCE GEN PASS dsdv_bksel_q: 16 actual signed instances; PHYSICAL HELD

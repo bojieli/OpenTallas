@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.s81.signed_parent_source.v1",
+  "module": "dsdv_bksel_q",
+  "source_only": true,
+  "physical_status": "NOT RUN",
+  "children": {
+    "physical/ref_tile/s81dvbk_hist32_b0r3/views/ot_s81ph_native_sel_hist_bank": {
+      "master": "ot_s81ph_native_sel_hist_bank",
+      "view": "/srv/opentallas-scratch2/claude/codex-s81ck-tr-2249/parent_views/ot_s81ph_native_sel_hist_bank",
+      "outline_um": [
+        64.8,
+        54.0
+      ],
+      "tt_insertion_ps": 250.02,
+      "ff_insertion_ps": 192.12,
+      "pins": 435,
+      "signoff": "SIGNED",
+      "routed_lec": "EQUIVALENT"
+    }
+  },
+  "instances": 16,
+  "original_spec": "physical/ref_tile/s81dvbk_sq_hk2l/spec.json",
+  "defines_added": [
+    "OT_HB_PINCOPY"
+  ],
+  "clock_status": "parent compensation/local clock plan NOT RUN",
+  "functional_cycles_added": 0,
+  "child_sites": "exact original instances/sites/orientations",
+  "source_replacements": [
+    {
+      "source": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_hist_bank.sv",
+      "removed_modules": [
+        "ot_s81ph_native_sel_hist_bank"
+      ],
+      "preserved_helpers": true
+    }
+  ]
+}
