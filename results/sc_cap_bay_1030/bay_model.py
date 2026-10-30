@@ -15,14 +15,14 @@ halo=4.32
 area=36859.27518
 usable=(B[2]-B[0]-2*halo)*(B[3]-B[1]-2*halo)
 faces={b['bus']:b for b in F['buses']}
-# Independent span bounds: all output bits are covered without assuming an
-# undocumented per-bit correspondence. Two signal layers give one slot per pair.
-N=[B[0]+.048,B[0]+.048+59*.048,B[3],B[3]]
-E=[B[2],B[2],B[1]+.048,B[1]+.048+23*.048]
-A=[B[0],B[0],892.368,893.472]
-def bound(pin,face):
- return max(abs(x-y)+abs(a-b) for x in pin[:2] for y in [face['xmin'],face['xmax']] for a in pin[2:] for b in [face['ymin'],face['ymax']])
-reach={bus:bound(pin,faces[bus]) for bus,pin in [('x_ctl_o',N),('x_fe_o',E),('x_fw_o',A)]}
+# Copy the actual parent payload pin spacing/layers, preserving track phase.
+# The child source net map must assign each raw output bit to its parent payload
+# bit; parent epoch pins are not child ports. Compact slots would violate the
+# ordinary per-port occupancy budget, so no density exception is assumed.
+f=faces['x_ctl_o'];N=[f['xmin']+222.912,f['xmax']+222.912,B[3],B[3]]
+f=faces['x_fe_o'];E=[B[2],B[2],f['ymin']+384.336,f['ymax']+384.336]
+f=faces['x_fw_o'];A=[B[0],B[0],f['ymin'],f['ymax']]
+reach={'x_ctl_o':222.912+H-B[3], 'x_fe_o':W-B[2]+384.336, 'x_fw_o':B[0]}
 def overlaps(b):
  return B[0]-halo<b[2] and b[0]<B[2]+halo and B[1]-halo<b[3] and b[1]<B[3]+halo
 hit=[q for q in D['landing_groups'] if overlaps(q['rect_um'])]
@@ -34,9 +34,10 @@ for f in D['ft_target_envelopes']:
 report=dict(verdict='CONDITIONAL CHILD PLAN ONLY; parent placement HOLD',body_um=B,halo_um=halo,
  child_cells=281884,parent_remaining_cells=260481,child_cell_area_um2=area,
  usable_child_core_area_um2=usable,child_utilization=area/usable,
- parent_outline_um=[W,H],state_or_data_cycles_added=0,output_port_to_public_face_L1_upper_um=reach,
+ parent_outline_um=[W,H],state_or_data_cycles_added=0,output_port_to_public_face_bit_correlated_L1_um=reach,
  output_proxy_all_le405=all(v<=405 for v in reach.values()),
- source_scope='Existing u_bound.u_core only. 27ports/572bits unchanged. Output-pin model is not actual parent boutFF geometry or child timing.',
+ source_scope='Existing u_bound.u_core only. 27ports/572bits unchanged. Affine copies preserve actual parent payload spacing/layers. Exact child-output net to parent-payload bit mapping is required; epoch pins omitted. This is not actual parent boutFF geometry or child timing.',
+ output_pin_transforms=dict(N=dict(x_add=222.912,y=B[3]),E=dict(x=B[2],y_add=384.336),W=dict(x=B[0],y_add=0)),
  preserved_parent_clock_reset=[311.04,673.92],preserved_count_strap_bounds=[280.8,643.68,341.28,704.16],
  intersecting_reserved_groups=hit,intersecting_FT_ideal_stages=ft,
  required_work=['Move same-depth reset/run/collector instances intersecting bay and recheck entire reset graph.',
@@ -63,4 +64,4 @@ for bus,pin in [('x_ctl_o',N),('x_fe_o',E),('x_fw_o',A)]:
 ax.set_xlim(-20,W+20);ax.set_ylim(-20,H+20);ax.set_aspect('equal');ax.set_xlabel('um');ax.set_ylabel('um')
 ax.set_title('SC same-outline natural-cut bay proposal\nRed reset groups / orange FT targets require relocation\nMODEL ONLY — no parent placement or route approval')
 fig.tight_layout();fig.savefig(R/'bay_model.png',dpi=150)
-print(json.dumps({k:report[k] for k in ['body_um','child_utilization','output_port_to_public_face_L1_upper_um','output_proxy_all_le405']},indent=1))
+print(json.dumps({k:report[k] for k in ['body_um','child_utilization','output_port_to_public_face_bit_correlated_L1_um','output_proxy_all_le405']},indent=1))

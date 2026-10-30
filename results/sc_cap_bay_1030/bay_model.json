@@ -17,13 +17,27 @@
   1339.2
  ],
  "state_or_data_cycles_added": 0,
- "output_port_to_public_face_L1_upper_um": {
-  "x_ctl_o": 402.84000000000015,
-  "x_fe_o": 400.08000000000015,
-  "x_fw_o": 352.20799999999997
+ "output_port_to_public_face_bit_correlated_L1_um": {
+  "x_ctl_o": 400.03200000000015,
+  "x_fe_o": 398.9760000000001,
+  "x_fw_o": 345.6
  },
  "output_proxy_all_le405": true,
- "source_scope": "Existing u_bound.u_core only. 27ports/572bits unchanged. Output-pin model is not actual parent boutFF geometry or child timing.",
+ "source_scope": "Existing u_bound.u_core only. 27ports/572bits unchanged. Affine copies preserve actual parent payload spacing/layers. Exact child-output net to parent-payload bit mapping is required; epoch pins omitted. This is not actual parent boutFF geometry or child timing.",
+ "output_pin_transforms": {
+  "N": {
+   "x_add": 222.912,
+   "y": 1162.08
+  },
+  "E": {
+   "x": 598.8,
+   "y_add": 384.336
+  },
+  "W": {
+   "x": 345.6,
+   "y_add": 0
+  }
+ },
  "preserved_parent_clock_reset": [
   311.04,
   673.92
