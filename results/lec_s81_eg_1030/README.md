@@ -8,4 +8,19 @@ Each of the four affected half-times-square multipliers additionally needs its f
 
 Negative control: requesting fill-one at the same four square roots is refused for all four because their actual reset-state value is zero (wrong_fill_refused.json, epyc2 unit2954474 expected exit1). No wrong fill is admitted and no old failed verdict is overwritten.
 
-Fresh ordinary main lec.py is running on a protected copy of the unchanged ot_s81sl_eg_k1 source/netlist, epyc2:/srv/opentallas-scratch2/claude/codex-flow-lec-1030/eg_kit -> eg_fresh (unit2984321). It regenerates AIGs and re-proves 6,874 untrusted preseed entries with ordinary main checks; the stock native EQUIVALENT/KEEP receipt is pending. input_hashes.json pins 26 source/config/netlist files; netlist d6970bc88fba22b5... . S81 physical owner confirmed no intervening EG source change or duplicate native proof. No RTL, timing, pin or cycle change; no SIGNED claim.
+Fresh ordinary native proof COMPLETED EQUIVALENT72,512/72,512, differs0,
+undecided0, 11,612.7s, epyc2 unit2984321 exit0. It regenerated independent
+AIGs and proved all6,874 untrusted preseed entries through the ordinary CLI.
+KEEP35/35, missing0/removed0. The existing declared S81 reset contract used64
+(assert66), no requested override and debug_overrides{}. All six NR0/1/2
+square-sign fill-zero proposals passed the ordinary reset-base checks and
+were admitted as base_filled; final full compare/induction passed. The prior
+wrong-fill-one negative control remains refused.
+
+Protected unchanged kit: epyc2 codex-flow-lec-1030/eg_kit, fresh output eg_fresh.
+input_hashes.json already pins26 source/config/netlist files; exact config,
+freeze and netlist hashes match that manifest. The native receipt's optional
+git provenance helper reports ModuleNotFoundError in the isolated driver copy;
+this is metadata collection, not a proof failure. Exact executed lec.py hash
+is3d8f969777db13cb36ce278e441ff03eea9e2eb201592bc15bb85e951888bbba.
+No RTL/timing/pin/cycle change or physical SIGNED/adoption claim is made.
