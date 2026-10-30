@@ -5,9 +5,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.u_rx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          95.04,
-          82.08
+          103.68,
+          86.4
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -23,9 +28,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.u_tx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          285.12,
-          116.64
+          293.76,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -41,9 +51,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          64.8,
-          427.68
+          60.48,
+          423.36
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -59,9 +74,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.u_tx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          263.52,
+          259.2,
           449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -80,6 +100,11 @@
           43.2,
           907.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
         "outline_um": [
           177.768,
           81.0
@@ -98,6 +123,11 @@
           241.92,
           907.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
         "outline_um": [
           177.768,
           81.0
@@ -114,8 +144,13 @@
         "module": "ot_sram_1r1w_32x546_m1",
         "origin_um": [
           43.2,
-          1017.36
+          1019.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
         "outline_um": [
           177.768,
           81.0
@@ -132,8 +167,13 @@
         "module": "ot_sram_1r1w_32x546_m1",
         "origin_um": [
           241.92,
-          1017.36
+          1019.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x546_m1.json",
         "outline_um": [
           177.768,
           81.0
@@ -149,9 +189,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          64.8,
-          205.2
+          60.48,
+          207.36
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -167,9 +212,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          263.52,
-          213.84
+          259.2,
+          216.0
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -185,9 +235,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          64.8,
-          293.76
+          60.48,
+          311.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -203,9 +258,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          263.52,
-          302.4
+          259.2,
+          311.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -222,8 +282,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           17.28,
-          546.48
+          544.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -240,8 +305,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           276.48,
-          546.48
+          544.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -257,9 +327,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          64.8,
-          643.68
+          60.48,
+          639.36
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -275,9 +350,14 @@
         "inst": "u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          263.52,
-          643.68
+          259.2,
+          639.36
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -293,9 +373,14 @@
         "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m",
         "module": "ot_sram_1r1w_512x128_m4_r2c2",
         "origin_um": [
-          453.6,
+          449.28,
           898.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
         "outline_um": [
           174.12,
           29.736
@@ -311,9 +396,14 @@
         "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m",
         "module": "ot_sram_1r1w_512x128_m4_r2c2",
         "origin_um": [
-          453.6,
-          939.6
+          449.28,
+          941.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
         "outline_um": [
           174.12,
           29.736
@@ -329,9 +419,14 @@
         "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m",
         "module": "ot_sram_1r1w_512x128_m4_r2c2",
         "origin_um": [
-          453.6,
+          449.28,
           1002.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
         "outline_um": [
           174.12,
           29.736
@@ -347,9 +442,14 @@
         "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m",
         "module": "ot_sram_1r1w_512x128_m4_r2c2",
         "origin_um": [
-          453.6,
-          1043.28
+          449.28,
+          1045.44
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
         "outline_um": [
           174.12,
           29.736
@@ -365,9 +465,14 @@
         "inst": "u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m",
         "module": "ot_sram_1r1w_512x128_m4_r2c2",
         "origin_um": [
-          453.6,
+          449.28,
           1088.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_512x128_m4_r2c2.json",
         "outline_um": [
           174.12,
           29.736
@@ -388,9 +493,14 @@
         "inst": "u_bound.u_core.u_rx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          64.8,
+          60.48,
           432.0
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -406,9 +516,14 @@
         "inst": "u_bound.u_core.u_tx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          263.52,
+          259.2,
           432.0
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -425,8 +540,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           17.28,
-          529.2
+          527.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -443,8 +563,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           276.48,
-          529.2
+          527.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -460,9 +585,14 @@
         "inst": "u_bound.u_core.g_codec.u_codec.g_bank[2].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          64.8,
-          626.4
+          60.48,
+          622.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -478,9 +608,14 @@
         "inst": "u_bound.u_core.g_codec.u_codec.g_bank[3].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          263.52,
-          626.4
+          259.2,
+          622.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -501,9 +636,14 @@
         "inst": "u_bound.u_g_face_3_u_face.u_rx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          64.8,
-          45.36
+          60.48,
+          43.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -519,9 +659,14 @@
         "inst": "u_bound.u_g_face_3_u_face.u_tx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          263.52,
-          54.0
+          259.2,
+          51.84
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -537,9 +682,14 @@
         "inst": "u_bound.u_g_face_4_u_face.u_rx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          324.0,
+          328.32,
           449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -555,9 +705,14 @@
         "inst": "u_bound.u_g_face_4_u_face.u_tx.u_mem",
         "module": "ot_sram_1r1w2c_64x546_m1",
         "origin_um": [
-          522.72,
+          518.4,
           449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
         "outline_um": [
           178.632,
           81.0
@@ -573,9 +728,14 @@
         "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          64.8,
-          151.2
+          60.48,
+          146.88
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -592,8 +752,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           276.48,
-          151.2
+          146.88
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -609,9 +774,14 @@
         "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          64.8,
-          248.4
+          60.48,
+          250.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -627,9 +797,14 @@
         "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          263.52,
-          248.4
+          259.2,
+          250.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -645,9 +820,14 @@
         "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          324.0,
-          546.48
+          328.32,
+          544.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -664,8 +844,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           535.68,
-          546.48
+          544.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -681,9 +866,14 @@
         "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          324.0,
-          643.68
+          328.32,
+          639.36
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -699,9 +889,14 @@
         "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          522.72,
-          678.24
+          518.4,
+          691.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -723,8 +918,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           302.4,
-          1010.88
+          1105.92
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -743,6 +943,11 @@
           302.4,
           414.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x72_m8.json",
         "outline_um": [
           38.04,
           62.952
@@ -761,6 +966,11 @@
           354.24,
           414.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x72_m8.json",
         "outline_um": [
           38.04,
           62.952
@@ -779,6 +989,11 @@
           406.08,
           414.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x72_m8.json",
         "outline_um": [
           38.04,
           62.952
@@ -799,9 +1014,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -817,9 +1037,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          507.6
+          449.28,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -835,9 +1060,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -853,9 +1083,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          1125.36
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -871,9 +1106,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -889,9 +1129,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -907,9 +1152,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -925,9 +1175,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -943,9 +1198,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -961,9 +1221,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -979,9 +1244,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -997,9 +1267,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1015,9 +1290,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1033,9 +1313,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1051,9 +1336,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1069,9 +1359,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1087,9 +1382,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1105,9 +1405,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1123,9 +1428,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1141,9 +1451,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1159,9 +1474,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1177,9 +1497,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1195,9 +1520,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1213,9 +1543,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1236,9 +1571,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1254,9 +1594,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          507.6
+          449.28,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1272,9 +1617,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1290,9 +1640,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          1125.36
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1308,9 +1663,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1326,9 +1686,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1344,9 +1709,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1362,9 +1732,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1380,9 +1755,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1398,9 +1778,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1416,9 +1801,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1434,9 +1824,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1452,9 +1847,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1470,9 +1870,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1488,9 +1893,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1506,9 +1916,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1524,9 +1939,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1542,9 +1962,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1560,9 +1985,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1578,9 +2008,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1596,9 +2031,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1614,9 +2054,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1632,9 +2077,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1650,9 +2100,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1673,9 +2128,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1691,9 +2151,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          507.6
+          449.28,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1709,9 +2174,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1727,9 +2197,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          1125.36
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -1745,9 +2220,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1763,9 +2243,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1781,9 +2266,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1799,9 +2289,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1817,9 +2312,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1835,9 +2335,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1853,9 +2358,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1871,9 +2381,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1889,9 +2404,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1907,9 +2427,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1925,9 +2450,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1943,9 +2473,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1961,9 +2496,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1979,9 +2519,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -1997,9 +2542,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2015,9 +2565,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2033,9 +2588,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2051,9 +2611,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2069,9 +2634,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2087,9 +2657,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2110,9 +2685,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -2128,9 +2708,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          507.6
+          449.28,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -2146,9 +2731,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -2164,9 +2754,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          453.6,
-          1125.36
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -2182,9 +2777,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2200,9 +2800,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2218,9 +2823,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2236,9 +2846,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2254,9 +2869,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2272,9 +2892,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2290,9 +2915,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2308,9 +2938,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2326,9 +2961,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2344,9 +2984,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2362,9 +3007,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2380,9 +3030,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2398,9 +3053,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2416,9 +3076,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2434,9 +3099,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2452,9 +3122,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2470,9 +3145,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2488,9 +3168,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2506,9 +3191,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2524,9 +3214,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2547,9 +3242,14 @@
         "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          267.84,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2565,9 +3265,14 @@
         "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          311.04,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2583,9 +3288,14 @@
         "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2601,9 +3311,14 @@
         "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          267.84,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2619,9 +3334,14 @@
         "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          311.04,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2637,9 +3357,14 @@
         "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          259.2,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2655,9 +3380,14 @@
         "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2673,9 +3403,14 @@
         "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          371.52,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2691,9 +3426,14 @@
         "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          259.2,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2709,9 +3449,14 @@
         "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          371.52,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2727,9 +3472,14 @@
         "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2745,9 +3495,14 @@
         "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2763,9 +3518,14 @@
         "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2781,9 +3541,14 @@
         "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2799,9 +3564,14 @@
         "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2817,9 +3587,14 @@
         "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2835,9 +3610,14 @@
         "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2853,9 +3633,14 @@
         "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2871,9 +3656,14 @@
         "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2889,9 +3679,14 @@
         "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2912,9 +3707,14 @@
         "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          267.84,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2930,9 +3730,14 @@
         "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          311.04,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2948,9 +3753,14 @@
         "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2966,9 +3776,14 @@
         "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          267.84,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -2984,9 +3799,14 @@
         "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          311.04,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3002,9 +3822,14 @@
         "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          267.84,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3020,9 +3845,14 @@
         "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3038,9 +3868,14 @@
         "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3056,9 +3891,14 @@
         "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3074,9 +3914,14 @@
         "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          535.68
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3092,9 +3937,14 @@
         "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3110,9 +3960,14 @@
         "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3128,9 +3983,14 @@
         "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3146,9 +4006,14 @@
         "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3164,9 +4029,14 @@
         "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3182,9 +4052,14 @@
         "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3200,9 +4075,14 @@
         "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3218,9 +4098,14 @@
         "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3236,9 +4121,14 @@
         "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3254,9 +4144,14 @@
         "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3277,9 +4172,14 @@
         "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          267.84,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3295,9 +4195,14 @@
         "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          311.04,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3313,9 +4218,14 @@
         "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3331,9 +4241,14 @@
         "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          267.84,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3349,9 +4264,14 @@
         "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          311.04,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3367,9 +4287,14 @@
         "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          267.84,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3385,9 +4310,14 @@
         "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3403,9 +4333,14 @@
         "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3421,9 +4356,14 @@
         "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3439,9 +4379,14 @@
         "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          535.68
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3457,9 +4402,14 @@
         "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3475,9 +4425,14 @@
         "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3493,9 +4448,14 @@
         "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3511,9 +4471,14 @@
         "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3529,9 +4494,14 @@
         "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3547,9 +4517,14 @@
         "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3565,9 +4540,14 @@
         "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3583,9 +4563,14 @@
         "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3601,9 +4586,14 @@
         "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3619,9 +4609,14 @@
         "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3642,9 +4637,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          590.76
+          164.16,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3660,9 +4660,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          590.76
+          319.68,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3678,9 +4683,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m2",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          685.8
+          164.16,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3696,9 +4706,208 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m3",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          685.8
+          319.68,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      }
+    ],
+    "core_pg_connect": true
+  },
+  "sle_stm_v1__clbe630b9c": {
+    "hard_cores": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      }
+    ],
+    "core_pg_connect": true
+  },
+  "sle_stm_v2__cl55be2264": {
+    "hard_cores": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3719,9 +4928,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          590.76
+          164.16,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3737,9 +4951,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          590.76
+          319.68,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3755,9 +4974,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m2",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          685.8
+          164.16,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3773,9 +4997,111 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m3",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          685.8
+          319.68,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      }
+    ],
+    "core_pg_connect": true
+  },
+  "sle_stm_v3": {
+    "hard_cores": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -3796,9 +5122,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -3814,9 +5145,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          481.68
+          449.28,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -3832,9 +5168,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -3850,9 +5191,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          1151.28
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -3868,9 +5214,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3886,9 +5237,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3904,9 +5260,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3922,9 +5283,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3940,9 +5306,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3958,9 +5329,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3976,9 +5352,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -3994,9 +5375,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4012,9 +5398,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4030,9 +5421,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4048,9 +5444,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4066,9 +5467,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4084,9 +5490,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4102,9 +5513,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          845.64
+          267.84,
+          846.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4120,9 +5536,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4138,9 +5559,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4156,9 +5582,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4174,9 +5605,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4192,9 +5628,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4210,9 +5651,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4233,9 +5679,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4251,9 +5702,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          481.68
+          449.28,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4269,9 +5725,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4287,9 +5748,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          1151.28
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4305,9 +5771,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4323,9 +5794,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4341,9 +5817,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4359,9 +5840,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4377,9 +5863,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4395,9 +5886,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4413,9 +5909,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4431,9 +5932,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4449,9 +5955,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4467,9 +5978,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4485,9 +6001,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4503,9 +6024,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4521,9 +6047,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4539,9 +6070,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          845.64
+          267.84,
+          846.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4557,9 +6093,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4575,9 +6116,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4593,9 +6139,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4611,9 +6162,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4629,9 +6185,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4647,9 +6208,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4670,9 +6236,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4688,9 +6259,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          481.68
+          449.28,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4706,9 +6282,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4724,9 +6305,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          1151.28
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -4742,9 +6328,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4760,9 +6351,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4778,9 +6374,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4796,9 +6397,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4814,9 +6420,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4832,9 +6443,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4850,9 +6466,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4868,9 +6489,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4886,9 +6512,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4904,9 +6535,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4922,9 +6558,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4940,9 +6581,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4958,9 +6604,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4976,9 +6627,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          845.64
+          267.84,
+          846.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -4994,9 +6650,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5012,9 +6673,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5030,9 +6696,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5048,9 +6719,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5066,9 +6742,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5084,9 +6765,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5107,9 +6793,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          146.88
+          449.28,
+          120.96
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -5125,9 +6816,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          481.68
+          449.28,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -5143,9 +6839,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          816.48
+          483.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -5161,9 +6862,14 @@
         "inst": "u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
         "module": "ot_sram_1r1w_128x256_m1_r2c2",
         "origin_um": [
-          475.2,
-          1151.28
+          449.28,
+          1123.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_128x256_m1_r2c2.json",
         "outline_um": [
           94.824,
           41.064
@@ -5179,9 +6885,14 @@
         "inst": "u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          190.08,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5197,9 +6908,14 @@
         "inst": "u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          345.6,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5215,9 +6931,14 @@
         "inst": "u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          112.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5233,9 +6954,14 @@
         "inst": "u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          345.6,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5251,9 +6977,14 @@
         "inst": "u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          345.6,
+          198.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5269,9 +7000,14 @@
         "inst": "u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          285.12,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5287,9 +7023,14 @@
         "inst": "u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5305,9 +7046,14 @@
         "inst": "u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          440.64
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5323,9 +7069,14 @@
         "inst": "u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          267.84,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5341,9 +7092,14 @@
         "inst": "u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          311.04,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5359,9 +7115,14 @@
         "inst": "u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5377,9 +7138,14 @@
         "inst": "u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5395,9 +7161,14 @@
         "inst": "u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5413,9 +7184,14 @@
         "inst": "u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5431,9 +7207,14 @@
         "inst": "u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5449,9 +7230,14 @@
         "inst": "u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5467,9 +7253,14 @@
         "inst": "u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5485,9 +7276,14 @@
         "inst": "u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5503,9 +7299,14 @@
         "inst": "u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5521,9 +7322,14 @@
         "inst": "u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5544,9 +7350,14 @@
         "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          267.84,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5562,9 +7373,14 @@
         "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          311.04,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5580,9 +7396,14 @@
         "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5598,9 +7419,14 @@
         "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          267.84,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5616,9 +7442,14 @@
         "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          311.04,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5634,9 +7465,14 @@
         "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          259.2,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5652,9 +7488,14 @@
         "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5670,9 +7511,14 @@
         "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          371.52,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5688,9 +7534,14 @@
         "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          259.2,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5706,9 +7557,14 @@
         "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          371.52,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5724,9 +7580,14 @@
         "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5742,9 +7603,14 @@
         "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5760,9 +7626,14 @@
         "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5778,9 +7649,14 @@
         "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          845.64
+          267.84,
+          846.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5796,9 +7672,14 @@
         "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5814,9 +7695,14 @@
         "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5832,9 +7718,14 @@
         "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5850,9 +7741,14 @@
         "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5868,9 +7764,14 @@
         "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5886,9 +7787,14 @@
         "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5909,9 +7815,14 @@
         "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          267.84,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5927,9 +7838,14 @@
         "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          311.04,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5945,9 +7861,14 @@
         "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5963,9 +7884,14 @@
         "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          267.84,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5981,9 +7907,14 @@
         "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          311.04,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -5999,9 +7930,14 @@
         "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          259.2,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6017,9 +7953,14 @@
         "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6035,9 +7976,14 @@
         "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          371.52,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6053,9 +7999,14 @@
         "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          259.2,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6071,9 +8022,14 @@
         "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          371.52,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6089,9 +8045,14 @@
         "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6107,9 +8068,14 @@
         "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6125,9 +8091,14 @@
         "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6143,9 +8114,14 @@
         "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          841.32
+          267.84,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6161,9 +8137,14 @@
         "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6179,9 +8160,14 @@
         "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6197,9 +8183,14 @@
         "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6215,9 +8206,14 @@
         "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6233,9 +8229,14 @@
         "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6251,9 +8252,14 @@
         "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6274,9 +8280,14 @@
         "inst": "u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          141.48
+          267.84,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6292,9 +8303,14 @@
         "inst": "u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          141.48
+          311.04,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6310,9 +8326,14 @@
         "inst": "u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          141.48
+          354.24,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6328,9 +8349,14 @@
         "inst": "u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          171.72
+          267.84,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6346,9 +8372,14 @@
         "inst": "u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          171.72
+          311.04,
+          172.8
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6364,9 +8395,14 @@
         "inst": "u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          476.28
+          267.84,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6382,9 +8418,14 @@
         "inst": "u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          476.28
+          311.04,
+          449.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6400,9 +8441,14 @@
         "inst": "u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          476.28
+          354.24,
+          475.2
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6418,9 +8464,14 @@
         "inst": "u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          506.52
+          233.28,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6436,9 +8487,14 @@
         "inst": "u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          506.52
+          354.24,
+          509.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6454,9 +8510,14 @@
         "inst": "u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          811.08
+          267.84,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6472,9 +8533,14 @@
         "inst": "u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          811.08
+          311.04,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6490,9 +8556,14 @@
         "inst": "u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          811.08
+          354.24,
+          812.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6508,9 +8579,14 @@
         "inst": "u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          845.64
+          267.84,
+          846.72
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6526,9 +8602,14 @@
         "inst": "u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          841.32
+          311.04,
+          838.08
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6544,9 +8625,14 @@
         "inst": "u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1145.88
+          267.84,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6562,9 +8648,14 @@
         "inst": "u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1145.88
+          311.04,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6580,9 +8671,14 @@
         "inst": "u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          350.406,
-          1145.88
+          354.24,
+          1149.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6598,9 +8694,14 @@
         "inst": "u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          264.006,
-          1176.12
+          267.84,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6616,9 +8717,14 @@
         "inst": "u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m",
         "module": "ot_sram_1r1w_32x64_m1",
         "origin_um": [
-          307.206,
-          1176.12
+          311.04,
+          1175.04
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x64_m1.json",
         "outline_um": [
           31.968,
           17.28
@@ -6639,9 +8745,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          590.76
+          164.16,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6657,9 +8768,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          590.76
+          319.68,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6675,9 +8791,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m2",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          685.8
+          164.16,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6693,9 +8814,111 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m3",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          685.8
+          319.68,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      }
+    ],
+    "core_pg_connect": true
+  },
+  "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+    "hard_cores": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6716,9 +8939,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          590.76
+          164.16,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6734,9 +8962,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          590.76
+          319.68,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6752,9 +8985,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m2",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          685.8
+          164.16,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6770,9 +9008,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m3",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          685.8
+          319.68,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6793,9 +9036,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          590.76
+          164.16,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6811,9 +9059,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          590.76
+          319.68,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6829,9 +9082,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m2",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          685.8
+          164.16,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6847,9 +9105,111 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m3",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          685.8
+          319.68,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      }
+    ],
+    "core_pg_connect": true
+  },
+  "slw_stm_v2__cl9beb65e6": {
+    "hard_cores": [
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m0",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m1",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          587.52
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m2",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          164.16,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
+        "outline_um": [
+          121.848,
+          62.952
+        ],
+        "orient": "R0",
+        "halo_um": 4.32,
+        "lef": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8.lef",
+        "lib": "physical/asap7_memory_macros_v2/ot_rom_4096x266_m8/ot_rom_4096x266_m8_tt.lib",
+        "obs_max": "M4",
+        "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
+      },
+      {
+        "inst": "u_bound.u_core.u_tload.u_ld.m3",
+        "module": "ot_rom_4096x266_m8",
+        "origin_um": [
+          319.68,
+          682.56
+        ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6870,9 +9230,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          590.76
+          164.16,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6888,9 +9253,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          590.76
+          319.68,
+          587.52
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6906,9 +9276,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m2",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          161.73,
-          685.8
+          164.16,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6924,9 +9299,14 @@
         "inst": "u_bound.u_core.u_tload.u_ld.m3",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          308.61,
-          685.8
+          319.68,
+          682.56
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -6950,6 +9330,11 @@
           17.28,
           86.4
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -6968,6 +9353,11 @@
           302.4,
           86.4
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -6984,8 +9374,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           17.28,
-          185.76
+          181.44
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -7004,6 +9399,11 @@
           207.36,
           233.28
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -7022,6 +9422,11 @@
           17.28,
           285.12
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -7038,8 +9443,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           267.84,
-          324.0
+          328.32
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -7056,8 +9466,13 @@
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
           17.28,
-          384.48
+          380.16
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -7073,9 +9488,14 @@
         "inst": "u_bound.u_core.u_hr.u_24526",
         "module": "ot_sram_1r1w_64x512_m1_r2c2",
         "origin_um": [
-          207.36,
-          414.72
+          449.28,
+          397.44
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
         "outline_um": [
           171.288,
           77.784
@@ -7091,9 +9511,14 @@
         "inst": "u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m0",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          421.2,
-          12.96
+          483.84,
+          60.48
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -7109,9 +9534,14 @@
         "inst": "u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m1",
         "module": "ot_rom_4096x266_m8",
         "origin_um": [
-          555.12,
-          60.48
+          552.96,
+          138.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x266_m8.json",
         "outline_um": [
           121.848,
           62.952
@@ -7127,9 +9557,14 @@
         "inst": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom1",
         "module": "ot_rom_4096x72_m8",
         "origin_um": [
-          421.2,
+          423.36,
           181.44
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x72_m8.json",
         "outline_um": [
           38.04,
           62.952
@@ -7145,9 +9580,14 @@
         "inst": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
         "module": "ot_rom_4096x72_m8",
         "origin_um": [
-          481.68,
+          483.84,
           181.44
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x72_m8.json",
         "outline_um": [
           38.04,
           62.952
@@ -7163,9 +9603,14 @@
         "inst": "u_bound.u_core.u_gi.g_op.u_leaf.g_op.u_rom",
         "module": "ot_rom_4096x72_m8",
         "origin_um": [
-          542.16,
-          181.44
+          544.32,
+          216.0
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_rom_4096x72_m8.json",
         "outline_um": [
           38.04,
           62.952
@@ -7181,9 +9626,14 @@
         "inst": "u_bound.u_core.u_hr.u_24527",
         "module": "ot_sram_1r1w_32x128_m1",
         "origin_um": [
-          421.2,
+          423.36,
           293.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x128_m1.json",
         "outline_um": [
           51.408,
           20.79
@@ -7199,9 +9649,14 @@
         "inst": "u_bound.u_core.u_hr.u_24528",
         "module": "ot_sram_1r1w_32x128_m1",
         "origin_um": [
-          498.96,
+          501.12,
           293.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x128_m1.json",
         "outline_um": [
           51.408,
           20.79
@@ -7217,9 +9672,14 @@
         "inst": "u_bound.u_core.u_hr.u_24529",
         "module": "ot_sram_1r1w_32x128_m1",
         "origin_um": [
-          576.72,
+          578.88,
           293.76
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x128_m1.json",
         "outline_um": [
           51.408,
           20.79
@@ -7235,9 +9695,14 @@
         "inst": "u_bound.u_core.u_hr.u_24530",
         "module": "ot_sram_1r1w_32x128_m1",
         "origin_um": [
-          421.2,
-          414.72
+          449.28,
+          354.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x128_m1.json",
         "outline_um": [
           51.408,
           20.79
@@ -7253,9 +9718,14 @@
         "inst": "u_bound.u_core.u_hr.u_24531",
         "module": "ot_sram_1r1w_32x128_m1",
         "origin_um": [
-          498.96,
-          371.52
+          509.76,
+          362.88
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x128_m1.json",
         "outline_um": [
           51.408,
           20.79
@@ -7271,9 +9741,14 @@
         "inst": "u_bound.u_core.u_hr.u_24532",
         "module": "ot_sram_1r1w_32x128_m1",
         "origin_um": [
-          576.72,
-          358.56
+          578.88,
+          354.24
         ],
+        "track_offset_um": [
+          0.0,
+          0.012
+        ],
+        "pins_file": "macro_pins/ot_sram_1r1w_32x128_m1.json",
         "outline_um": [
           51.408,
           20.79

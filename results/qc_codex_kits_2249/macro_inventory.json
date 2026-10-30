@@ -39,6 +39,18 @@
       "sle_stm_v2__cl7b3062fa/u_bound.u_core.u_tload.u_ld.m0"
     ]
   },
+  "sle_stm_v1__clbe630b9c": {
+    "module": "sle_stm_v1__clbe630b9c",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "sle_stm_v1__clbe630b9c/u_bound.u_core.u_tload.u_ld.m3",
+      "sle_stm_v1__clbe630b9c/u_bound.u_core.u_tload.u_ld.m2",
+      "sle_stm_v1__clbe630b9c/u_bound.u_core.u_tload.u_ld.m1",
+      "sle_stm_v1__clbe630b9c/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
   "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
     "module": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
     "macros": {
@@ -223,6 +235,18 @@
       "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
     ]
   },
+  "slw_stm_v2__cl9beb65e6": {
+    "module": "slw_stm_v2__cl9beb65e6",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "slw_stm_v2__cl9beb65e6/u_bound.u_core.u_tload.u_ld.m3",
+      "slw_stm_v2__cl9beb65e6/u_bound.u_core.u_tload.u_ld.m2",
+      "slw_stm_v2__cl9beb65e6/u_bound.u_core.u_tload.u_ld.m1",
+      "slw_stm_v2__cl9beb65e6/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
   "sle_st_b_v2__clfde1249e": {
     "module": "sle_st_b_v2__clfde1249e",
     "macros": {
@@ -277,6 +301,18 @@
       "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
       "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
       "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "slw_stm_v1__cl05fc43f7__cl389df4e9": {
+    "module": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "slw_stm_v1__cl05fc43f7__cl389df4e9/u_bound.u_core.u_tload.u_ld.m3",
+      "slw_stm_v1__cl05fc43f7__cl389df4e9/u_bound.u_core.u_tload.u_ld.m2",
+      "slw_stm_v1__cl05fc43f7__cl389df4e9/u_bound.u_core.u_tload.u_ld.m1",
+      "slw_stm_v1__cl05fc43f7__cl389df4e9/u_bound.u_core.u_tload.u_ld.m0"
     ]
   },
   "sle_st_a_v1__cl989804f6__cled3c1d7b": {
@@ -527,6 +563,18 @@
       "qfd_qc_coll_n_part/u_bound.u_core.u_tx.u_mem"
     ]
   },
+  "sle_stm_v2__cl55be2264": {
+    "module": "sle_stm_v2__cl55be2264",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "sle_stm_v2__cl55be2264/u_bound.u_core.u_tload.u_ld.m3",
+      "sle_stm_v2__cl55be2264/u_bound.u_core.u_tload.u_ld.m2",
+      "sle_stm_v2__cl55be2264/u_bound.u_core.u_tload.u_ld.m1",
+      "sle_stm_v2__cl55be2264/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
   "sle_stm_v1__cl27746664": {
     "module": "sle_stm_v1__cl27746664",
     "macros": {
@@ -549,6 +597,18 @@
       "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m2",
       "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m1",
       "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "sle_stm_v3": {
+    "module": "qfd_qc_sle_stm",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "qfd_qc_sle_stm/u_bound.u_core.u_tload.u_ld.m3",
+      "qfd_qc_sle_stm/u_bound.u_core.u_tload.u_ld.m2",
+      "qfd_qc_sle_stm/u_bound.u_core.u_tload.u_ld.m1",
+      "qfd_qc_sle_stm/u_bound.u_core.u_tload.u_ld.m0"
     ]
   },
   "tt_ctlm": {

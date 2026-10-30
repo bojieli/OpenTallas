@@ -5,6 +5,10 @@ from pathlib import Path
 from collections import Counter,defaultdict
 ROOT=Path(__file__).resolve().parents[2] if '/results/' in str(Path(__file__).resolve()) else Path('/srv/opentallas-scratch/claude/wt/codex-qc-kits-2249')
 R=ROOT/'results/qc_codex_kits_2249';base=json.loads((R/'base_plan.json').read_text());inv=json.loads((R/'macro_inventory.json').read_text());exact=json.loads((R/'macro_exact_map.json').read_text())
+sys.path.insert(0,str(ROOT/'tools/die_plan'))
+import schema as S,check as C,gen_phys as GP
+P=S.Plan(base,path=R/'base_plan.json')
+(R/'macro_pins').mkdir(exist_ok=True)
 views={}
 for master in {c['module'] for a in exact.values() for c in a}:
  for family in ['asap7_memory_macros_v2','asap7_memory_macros']:
@@ -13,10 +17,38 @@ for master in {c['module'] for a in exact.values() for c in a}:
  else:raise ValueError('missing exact TT/FF macro views '+master)
  s=lef.read_text();size=[float(x) for x in re.search(r'\bSIZE\s+(\S+)\s+BY\s+(\S+)\s*;',s).groups()]
  layers=[int(x) for x in re.findall(r'\bLAYER\s+M([1-9])\b',s)]
- views[master]={'lef':str(lef.relative_to(ROOT)),'lib':str(lib.relative_to(ROOT)),'size':size,'obs_max':'M'+str(max(layers))}
+ # Individual LEF pin rectangles, retaining every signal/clock bit.
+ pins=[];cur=None;layer=None;use='SIGNAL'
+ for line in s.splitlines():
+  z=line.strip();mt=re.match(r'PIN\s+(\S+)',z)
+  if mt:cur=mt[1];layer=None;use='SIGNAL';continue
+  if cur is None:continue
+  if z=='END '+cur:cur=None;continue
+  if z.startswith('USE '):use=z.split()[1]
+  mt=re.match(r'LAYER\s+(M[1-9])',z)
+  if mt:layer=mt[1]
+  mt=re.match(r'RECT\s+([-.0-9]+)\s+([-.0-9]+)\s+([-.0-9]+)\s+([-.0-9]+)',z)
+  if mt and layer and use not in ('POWER','GROUND') and not any(q['name']==cur for q in pins):pins.append({'name':cur,'layer':layer,'rect':[float(q) for q in mt.groups()]})
+ shifts=[]
+ for axis,direction in [(0,'V'),(1,'H')]:
+  a=[q for q in pins if P.layers.get(q['layer'],{}).get('dir')==direction];choices=[]
+  for ii in range(-24,25):
+   shift=ii*.006;minimum=1e9;ok=True
+   for q in a:
+    L=P.layers[q['layer']];lo,hi=q['rect'][axis],q['rect'][axis+2];mid=(lo+hi)/2+shift;v=L['offset_um']+round((mid-L['offset_um'])/L['pitch_um'])*L['pitch_um'];margin=min(v-shift-lo,hi-(v-shift))
+    if margin<1e-7:ok=False;break
+    minimum=min(minimum,margin)
+   if ok:choices.append((-round(minimum,6) if a else 0,abs(shift),shift))
+  if not choices:raise ValueError('no common legal pin phase '+master+' axis'+str(axis))
+  shifts.append(min(choices)[2])
+ pp=[]
+ for q in pins:
+  L=P.layers[q['layer']];a=0 if L['dir']=='V' else 1;pt=[(q['rect'][i]+q['rect'][i+2])/2 for i in [0,1]];pt[a]=L['offset_um']+round((pt[a]+shifts[a]-L['offset_um'])/L['pitch_um'])*L['pitch_um']-shifts[a];pp.append({'name':q['name'],'layer':q['layer'],'x':round(pt[0],6),'y':round(pt[1],6)})
+ (R/'macro_pins'/(master+'.json')).write_text(json.dumps({'module':master,'pins':pp},indent=1)+'\n')
+ views[master]={'offset':shifts,'pins_file':'macro_pins/'+master+'.json','lef':str(lef.relative_to(ROOT)),'lib':str(lib.relative_to(ROOT)),'size':size,'obs_max':'M'+str(max(layers))}
 def rect_hit(a,b):return a[0]<b[2]-1e-8 and b[0]<a[2]-1e-8 and a[1]<b[3]-1e-8 and b[1]<a[3]-1e-8
 def ptbox(p,h=2):return [p[0]-h,p[1]-h,p[0]+h,p[1]+h]
-def obs(t):
+def obs(t,tn):
  o=[]
  for b in t.get('clock',{}).get('landing_contract',{}).get('bands',{}).values():o.append(b['rect_um'])
  ck=t.get('clock',{});o += [ptbox(z['xy']) for z in ck.get('taps',[]) if 'xy'in z]
@@ -29,6 +61,21 @@ def obs(t):
    for p in f.get('regs_um',[]):o.append(ptbox(p,1.5))
    for row in f.get('bit_sites_um',[]):
     for p in row:o.append([p[0],p[1],p[0]+1.404,p[1]+.27])
+ # Reserve actual implicit bit station geometry using the same generator as G0.
+ pins=defaultdict(dict)
+ for bus,bit,layer,x,y,face in GP.type_pins(P,tn):pins[bus][bit]=(x,y,face)
+ for f in t.get('ft_slots',[]):
+  groups=defaultdict(list);pi=pins[f['name']+'_i'];po=pins[f['name']+'_o'];st=int(f.get('stations',1))
+  for bit in sorted(set(pi)|set(po)):
+   ap=pi.get(bit)or po[bit];bp=po.get(bit)or pi[bit]
+   def inset(q):
+    x,y,face=q;return {'E':(x-1,y),'W':(x+1,y),'N':(x,y-1),'S':(x,y+1)}[face]
+   a,b=inset(ap),inset(bp);rt=C.zroute(a,b,ap[2],bp[2]);length=C.plen(rt)
+   for ii in range(st):
+    if f.get('bit_sites_um') and ii>0:x,y=f['bit_sites_um'][ii-1][bit]
+    else:x,y=a if f.get('bit_sites_um') else tuple(f['regs_um'][ii]) if f.get('regs_um') else C.point_at(rt,length*ii/st)
+    groups[ii].append((x,y))
+  for a in groups.values():o.append([min(q[0] for q in a)-1,min(q[1] for q in a)-1,max(q[0] for q in a)+1,max(q[1] for q in a)+1])
  return o
 
 def cells(tn):
@@ -81,7 +128,7 @@ def desires(tn,cc,t):
 
 report={};delta={}
 for tn in sorted(inv):
- t=base['partition_types'][tn];cc=cells(tn);pref=desires(tn,cc,t);occupied=obs(t);placed=[];fail=[]
+ t=base['partition_types'][tn];cc=cells(tn);pref=desires(tn,cc,t);occupied=obs(t,tn);placed=[];fail=[]
  # Larger macros first; all candidates are ranked by displacement within their own dataflow region.
  for c in sorted(cc,key=lambda c:(-math.prod(views[c['module']]['size']),pref[c['inst']][1],pref[c['inst']][0])):
   n=c['inst'];m=c['module'];w,h=views[m]['size'];px,py,bounds=pref[n];W,H=t['outline_um'];halo=4.32
@@ -89,7 +136,7 @@ for tn in sorted(inv):
   candidates=[]
   for dx in range(-60 if tn=='tt_ctlm' else -24,61 if tn=='tt_ctlm' else 25):
    for dy in range(-60 if tn=='tt_ctlm' else -24,61 if tn=='tt_ctlm' else 25):
-    x=round((px+dx*4.32)/.054)*.054;y=round((py+dy*4.32)/.27)*.27
+    x=round((px+dx*8.64)/8.64)*8.64+views[m]['offset'][0];y=round((py+dy*8.64)/8.64)*8.64+views[m]['offset'][1]
     a=[x-halo,y-halo,x+w+halo,y+h+halo]
     if a[0]<bounds[0]-1e-6 or a[1]<bounds[1]-1e-6 or a[2]>bounds[2]+1e-6 or a[3]>bounds[3]+1e-6:continue
     candidates.append((abs(dx)+abs(dy),abs(dx),abs(dy),x,y,a))
@@ -99,7 +146,7 @@ for tn in sorted(inv):
    choice=x,y,a;break
   if choice is None:fail.append(n);continue
   x,y,a=choice;occupied.append(a);v=views[m]
-  placed.append({'inst':n,'module':m,'origin_um':[round(x,6),round(y,6)],'outline_um':v['size'],'orient':'R0','halo_um':halo,'lef':v['lef'],'lib':v['lib'],'obs_max':v['obs_max'],'note':'Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.'})
+  placed.append({'inst':n,'module':m,'origin_um':[round(x-views[m]['offset'][0],6),round(y-views[m]['offset'][1],6)],'track_offset_um':[round(q,6) for q in views[m]['offset']],'pins_file':views[m]['pins_file'],'outline_um':v['size'],'orient':'R0','halo_um':halo,'lef':v['lef'],'lib':v['lib'],'obs_max':v['obs_max'],'note':'Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.'})
  if fail:raise ValueError('No macro site '+tn+' '+str(fail))
  area=sum(math.prod(c['outline_um']) for c in placed);W,H=t['outline_um']
  report[tn]={'macros':len(placed),'macro_area_um2':round(area,3),'fraction':round(area/(W*H),5),'added_cells':0,'added_cycles':0,'max_shift_from_group_target_um':max(round(abs(c['origin_um'][0]-pref[c['inst']][0])+abs(c['origin_um'][1]-pref[c['inst']][1]),3) for c in placed)}
