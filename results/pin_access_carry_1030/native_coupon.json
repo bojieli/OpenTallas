@@ -1,0 +1,36 @@
+{
+  "verdict": "PASS",
+  "scope": "synthetic metadata coupon only; no placement/STA/GRT/DRT",
+  "first": {
+    "instance": "good",
+    "old_master": "BUFx24_ASAP7_75t_R",
+    "new_master": "BUFx24_ASAP7_75t_L",
+    "scope": "core_preferred_global_routing_only",
+    "pin_access_idx": 0,
+    "cloned_preferred_positions": 2,
+    "preferred_APs": 2,
+    "pose_unchanged": true,
+    "nets_unchanged": true,
+    "full_AP_catalog_preserved": false,
+    "detailed_route_qualified": false
+  },
+  "reuse": {
+    "instance": "reuse",
+    "old_master": "BUFx24_ASAP7_75t_R",
+    "new_master": "BUFx24_ASAP7_75t_L",
+    "scope": "core_preferred_global_routing_only",
+    "pin_access_idx": 0,
+    "cloned_preferred_positions": 0,
+    "preferred_APs": 2,
+    "pose_unchanged": true,
+    "nets_unchanged": true,
+    "full_AP_catalog_preserved": false,
+    "detailed_route_qualified": false
+  },
+  "negative_controls": [
+    "wrong footprint",
+    "DRT scope",
+    "routing-layer exception",
+    "pre-existing target catalog"
+  ]
+}
