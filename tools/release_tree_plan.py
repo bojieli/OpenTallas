@@ -14,6 +14,10 @@ flow release tag -- 'src_commit'/'flow_tag' in the signoff.json itself, else in 
 SIGNED, written by the autopilot archive) or AUTOPILOT.json up to 6 directories above it.  Every record carries
 'versioned'; signed_types/signed_cores hold versioned records only, unversioned_types/unversioned_cores the rest;
 the cache says provenance_rule 'v1' (tools/autopilot/ownership.py counts only such caches).
+RE-SIGN (COORD ruling 2026-10-30 02:03 (3b)): a hand-built SIGNED block counts when its SAME routed DB is re-signed
+(signoff.py TT/FF/DRC + post-route LEC) with tools at a released flow tag; the re-sign dir holds signoff.json and a
+PROVENANCE.json {kind: 'resign', verdict: 'SIGNED', src_commit: <tag commit>, flow_tag, routed_db, build_commit, lec}.
+It counts only with all fields, LEC verdict EQUIVALENT, the routed DB present and flow_tag -> src_commit on origin.
 GRANDFATHER (COORD ruling 2026-10-25 19:13): a SIGNED record completed before the first flow-* tag on origin (or while
 no flow tag exists) counts as SIGNED-LEGACY -- in signed_types/signed_cores, ref suffixed 'SIGNED-LEGACY' -- when it
 names a source commit or a run dir (its scanned path is the run dir; origin/main records name main).  The
@@ -49,6 +53,27 @@ def retired_refs():
         out[f[0].strip()] = '\t'.join(f[1:]).strip()
     return out
 PROV_PY = r'''
+RESIGN_KEYS = ('src_commit', 'flow_tag', 'routed_db', 'build_commit', 'lec')
+def resign(f, x, load):
+    # COORD ruling 2026-10-30 02:03 (3b): RE-SIGN record = a routed DB re-checked (signoff.py TT/FF/DRC + post-route LEC)
+    # with tools at a released flow tag.  PROVENANCE.json {kind: resign, src_commit: tag commit, flow_tag, routed_db,
+    # build_commit: original build commit, lec: post-route lec.json}.  Counts only when every field is present, the
+    # routed DB exists and the LEC verdict is EQUIVALENT; the tag -> src_commit match is checked on the hub (refresh).
+    miss = [k for k in RESIGN_KEYS if not x.get(k)]
+    if miss:
+        return dict(resign_error='re-sign PROVENANCE %s lacks %s' % (f, ','.join(miss)), prov_file=f)
+    lp = x['lec'] if os.path.isabs(x['lec']) else os.path.join(os.path.dirname(f), x['lec'])
+    db = x['routed_db'] if os.path.isabs(x['routed_db']) else os.path.join(os.path.dirname(f), x['routed_db'])
+    try:
+        lv = (load(lp) or {}).get('verdict')
+    except Exception:
+        lv = None
+    if lv != 'EQUIVALENT':
+        return dict(resign_error='re-sign LEC %s verdict %s' % (lp, lv), prov_file=f)
+    if not os.path.exists(db):
+        return dict(resign_error='re-sign routed DB %s missing' % db, prov_file=f)
+    return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f, resign=True, routed_db=db,
+                build_commit=x['build_commit'], lec=lp)
 def prov(p, d, load):
     if d.get('src_commit') and d.get('flow_tag'):
         return dict(src_commit=d['src_commit'], flow_tag=d['flow_tag'], prov_file=p)
@@ -64,6 +89,8 @@ def prov(p, d, load):
                 continue
             if n == 'PROVENANCE.json' and x.get('verdict') not in (None, 'SIGNED'):
                 return {}
+            if n == 'PROVENANCE.json' and x.get('kind') == 'resign':
+                return resign(f, x, load)
             if x.get('src_commit') and x.get('flow_tag'):
                 return dict(src_commit=x['src_commit'], flow_tag=x['flow_tag'], prov_file=f)
             return {}
@@ -124,6 +151,23 @@ def first_flow_tag_ts():
     return min(ts) if ts else None
 
 
+def tag_commit(tag):
+    r = sh(['git', '-C', str(REPO), 'rev-parse', '-q', '--verify', 'refs/tags/%s^{commit}' % tag], 30)
+    return r.stdout.strip() if r.returncode == 0 else ''
+
+
+def check_resign_tag(r, tag_commit=tag_commit):
+    """a RE-SIGN record counts only when its flow_tag is a flow release tag on origin whose commit is its src_commit
+    (the re-sign tools ran at the released flow); otherwise it is unversioned with the reason."""
+    if not r.get('resign'): return r
+    full = tag_commit(r['flow_tag']) if re.match(r'^flow-\d{8}-[a-z](?:-(qc|s81|head|kv|hbm))?$', r['flow_tag'] or '') else ''
+    sc = str(r.get('src_commit') or '')
+    if not full or len(sc) < 7 or not full.startswith(sc):
+        r['resign_error'] = 're-sign flow_tag %s %s src_commit %s' % (r['flow_tag'], 'is at ' + full[:12] if full else 'not a flow tag on origin', sc[:12])
+        r['versioned'] = False
+    return r
+
+
 def gen_ts(r):
     g = r.get('generated')
     if isinstance(g, (int, float)): return float(g)
@@ -138,7 +182,7 @@ def gen_ts(r):
 
 def is_legacy(r, cutoff):
     """GRANDFATHER: unversioned SIGNED record made before the first flow tag that names a src commit or run dir."""
-    if r.get('versioned'): return False
+    if r.get('versioned') or r.get('resign_error'): return False
     names = bool(r.get('src_commit') or r.get('source_commit') or r.get('path'))
     if not names: return False
     if cutoff is None: return True
@@ -227,6 +271,8 @@ def refresh(log=lambda *a: None):
                     errs.append('SIGNED scan %s: %s' % (h, e))
         cutoff = first_flow_tag_ts(); res['first_flow_tag_ts'] = cutoff
         for r_ in recs:
+            check_resign_tag(r_)
+        for r_ in recs:
             r_['legacy'] = is_legacy(r_, cutoff)
         ret = retired_refs()
         res['retired_records'] = [dict(r_, retired=ret[r_['scan_host'] + ':' + r_['path']]) for r_ in recs
@@ -243,6 +289,10 @@ def refresh(log=lambda *a: None):
                 ref = r_['scan_host'] + ':' + r_['path'] if r_['scan_host'] != 'origin/main' else r_['path']
                 if r_.get('versioned'):
                     ref += ' src %s flow %s' % (str(r_['src_commit'])[:12], r_['flow_tag'])
+                    if r_.get('resign'):
+                        ref += ' RE-SIGN build %s db %s' % (str(r_['build_commit'])[:12], r_['routed_db'])
+                elif r_.get('resign_error'):
+                    ref += ' RE-SIGN-INVALID ' + r_['resign_error']
                 elif r_.get('legacy'):
                     ref += ' SIGNED-LEGACY'
                 T, C = (st, sc) if (r_.get('versioned') or r_.get('legacy')) else (ut, uc)
