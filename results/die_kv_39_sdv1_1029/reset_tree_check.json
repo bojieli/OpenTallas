@@ -1,0 +1,50 @@
+{
+ "kv3_sys_SD": {
+  "summary": {
+   "entry": "relayed",
+   "depth": 5,
+   "own_depth": 5,
+   "relays": 97,
+   "tree_relays": 44,
+   "pad_relays": 53,
+   "max_hop_um": 378.0,
+   "reach_um": 405.0,
+   "root_um": [
+    1108.768,
+    8.608
+   ],
+   "sync_stages": 2,
+   "entry_stages": 1,
+   "release_clocks": 6,
+   "outs": 0,
+   "note": "OWNER DECISION 13: one root synchroniser per die + neighbour wavefront (registered reset in / out per partition, relays <= reach, equal depth inside the partition)"
+  },
+  "relays_on_macro": [],
+  "consumers": 29,
+  "verify": "PASS"
+ },
+ "kv3_sys_SD_v1": {
+  "summary": {
+   "entry": "relayed",
+   "depth": 5,
+   "own_depth": 5,
+   "relays": 97,
+   "tree_relays": 44,
+   "pad_relays": 53,
+   "max_hop_um": 378.0,
+   "reach_um": 405.0,
+   "root_um": [
+    1108.768,
+    8.608
+   ],
+   "sync_stages": 2,
+   "entry_stages": 1,
+   "release_clocks": 6,
+   "outs": 0,
+   "note": "OWNER DECISION 13: one root synchroniser per die + neighbour wavefront (registered reset in / out per partition, relays <= reach, equal depth inside the partition)"
+  },
+  "relays_on_macro": [],
+  "consumers": 29,
+  "verify": "PASS"
+ }
+}
