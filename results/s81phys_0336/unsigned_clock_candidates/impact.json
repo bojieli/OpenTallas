@@ -1,0 +1,102 @@
+{
+  "scope": "PRIVATE CANDIDATE; NOT ADOPTED; NO PHYSICAL LAUNCH",
+  "rtl_changes": 0,
+  "added_cycles": 0,
+  "external_die_ports_changed": 0,
+  "neighbors_changed": 0,
+  "outline_changed": 0,
+  "cores": {
+    "ot_s81sl_eg_c": {
+      "module": "ot_s81sl_eg",
+      "outline_um": [
+        259.2,
+        259.2
+      ],
+      "native_clock": {
+        "name": "clk",
+        "layer": "M5",
+        "x": 127.116,
+        "y": 0.042
+      },
+      "candidate_clock": {
+        "name": "clk",
+        "layer": "M5",
+        "x": 127.116,
+        "y": 0.24
+      },
+      "clock_shape_um": [
+        0.048,
+        0.48
+      ],
+      "clock_rect_um": [
+        127.092,
+        0.0,
+        127.14,
+        0.48
+      ],
+      "native_track_validator": "master_slice.on_track(existing pinned ASAP7 kit)",
+      "native_track_pass": true,
+      "pin_sites": {
+        "pins": 201,
+        "counts": {
+          "dup_site": 0,
+          "pitch": 0
+        },
+        "stacked_pins": 0,
+        "verdict": "PASS",
+        "examples": {}
+      },
+      "unchanged_other_pins": 200,
+      "source_lef": "physical/die_plan/s81/cores/eg/lef/ot_s81sl_eg_c.lef",
+      "candidate_lef": "results/s81phys_0336/unsigned_clock_candidates/ot_s81sl_eg_c.lef",
+      "g0c_parent_fit": "NOT RUN; candidate not adopted",
+      "rtl_eq": "EG fresh proof running separately; L3 existing source unchanged"
+    },
+    "dsdv_gunit_l3": {
+      "module": "dsdv_gunit_l3",
+      "outline_um": [
+        345.6,
+        172.8
+      ],
+      "native_clock": {
+        "name": "clk",
+        "layer": "M4",
+        "x": 345.558,
+        "y": 98.46
+      },
+      "candidate_clock": {
+        "name": "clk",
+        "layer": "M5",
+        "x": 345.564,
+        "y": 98.46
+      },
+      "clock_shape_um": [
+        0.048,
+        0.48
+      ],
+      "clock_rect_um": [
+        345.54,
+        98.22,
+        345.588,
+        98.69999999999999
+      ],
+      "native_track_validator": "master_slice.on_track(existing pinned ASAP7 kit)",
+      "native_track_pass": true,
+      "pin_sites": {
+        "pins": 1540,
+        "counts": {
+          "dup_site": 0,
+          "pitch": 0
+        },
+        "stacked_pins": 0,
+        "verdict": "PASS",
+        "examples": {}
+      },
+      "unchanged_other_pins": 1539,
+      "source_lef": "physical/ref_tile/dsdv_gunit_l3/views/dsdv_gunit_l3/dsdv_gunit_l3.lef",
+      "candidate_lef": "results/s81phys_0336/unsigned_clock_candidates/dsdv_gunit_l3.lef",
+      "g0c_parent_fit": "NOT RUN; candidate not adopted",
+      "rtl_eq": "EG fresh proof running separately; L3 existing source unchanged"
+    }
+  }
+}
