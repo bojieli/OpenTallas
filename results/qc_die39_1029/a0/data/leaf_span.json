@@ -1,0 +1,256 @@
+{
+ "nl": {
+  "21": {
+   "leaves": 692,
+   "leg_max": 292.5,
+   "leg_p99": 84.9,
+   "regs_leg_gt60": 307,
+   "regs_leg_gt40": 631,
+   "worst_domains": [
+    [
+     "u_hop_ck/u_icg",
+     292.5
+    ],
+    [
+     "u_hop_rn/u_icg",
+     214.3
+    ],
+    [
+     "root",
+     178.7
+    ],
+    [
+     "u_hop_dw/u_icg",
+     178.1
+    ]
+   ]
+  },
+  "16": {
+   "leaves": 904,
+   "leg_max": 201.9,
+   "leg_p99": 83.1,
+   "regs_leg_gt60": 257,
+   "regs_leg_gt40": 454,
+   "worst_domains": [
+    [
+     "u_hop_ck/u_icg",
+     201.9
+    ],
+    [
+     "u_hop_rn/u_icg",
+     201.0
+    ],
+    [
+     "u_hop_dw/u_icg",
+     183.2
+    ],
+    [
+     "root",
+     175.0
+    ]
+   ]
+  },
+  "12": {
+   "leaves": 1204,
+   "leg_max": 195.9,
+   "leg_p99": 67.8,
+   "regs_leg_gt60": 174,
+   "regs_leg_gt40": 343,
+   "worst_domains": [
+    [
+     "u_hop_ck/u_icg",
+     195.9
+    ],
+    [
+     "u_hop_rn/u_icg",
+     182.3
+    ],
+    [
+     "u_hop_dw/u_icg",
+     168.6
+    ],
+    [
+     "u_hop_tx0/u_icg",
+     146.1
+    ]
+   ]
+  },
+  "10": {
+   "leaves": 1444,
+   "leg_max": 240.1,
+   "leg_p99": 56.5,
+   "regs_leg_gt60": 129,
+   "regs_leg_gt40": 263,
+   "worst_domains": [
+    [
+     "u_hop_ck/u_icg",
+     240.1
+    ],
+    [
+     "u_hop_dw/u_icg",
+     172.0
+    ],
+    [
+     "u_hop_rn/u_icg",
+     167.0
+    ],
+    [
+     "u_hop_tx0/u_icg",
+     162.1
+    ]
+   ]
+  },
+  "8": {
+   "leaves": 1800,
+   "leg_max": 265.2,
+   "leg_p99": 49.1,
+   "regs_leg_gt60": 100,
+   "regs_leg_gt40": 189,
+   "worst_domains": [
+    [
+     "u_hop_ck/u_icg",
+     265.2
+    ],
+    [
+     "u_hop_dw/u_icg",
+     166.2
+    ],
+    [
+     "u_hop_tx7/u_icg",
+     155.1
+    ],
+    [
+     "u_hop_tx5/u_icg",
+     144.5
+    ]
+   ]
+  }
+ },
+ "nk": {
+  "21": {
+   "leaves": 742,
+   "leg_max": 257.4,
+   "leg_p99": 81.5,
+   "regs_leg_gt60": 302,
+   "regs_leg_gt40": 609,
+   "worst_domains": [
+    [
+     "root",
+     257.4
+    ],
+    [
+     "u_hop_fa3/u_icg",
+     226.0
+    ],
+    [
+     "u_hop_ck/u_icg",
+     207.6
+    ],
+    [
+     "u_hop_rn/u_icg",
+     203.3
+    ]
+   ]
+  },
+  "16": {
+   "leaves": 969,
+   "leg_max": 286.7,
+   "leg_p99": 84.7,
+   "regs_leg_gt60": 288,
+   "regs_leg_gt40": 478,
+   "worst_domains": [
+    [
+     "root",
+     286.7
+    ],
+    [
+     "u_hop_fa3/u_icg",
+     217.9
+    ],
+    [
+     "u_hop_rn/u_icg",
+     185.2
+    ],
+    [
+     "u_hop_fa2/u_icg",
+     174.7
+    ]
+   ]
+  },
+  "12": {
+   "leaves": 1290,
+   "leg_max": 262.3,
+   "leg_p99": 59.8,
+   "regs_leg_gt60": 152,
+   "regs_leg_gt40": 334,
+   "worst_domains": [
+    [
+     "root",
+     262.3
+    ],
+    [
+     "u_hop_fa3/u_icg",
+     207.0
+    ],
+    [
+     "u_hop_ck/u_icg",
+     182.1
+    ],
+    [
+     "u_hop_tx0/u_icg",
+     169.0
+    ]
+   ]
+  },
+  "10": {
+   "leaves": 1548,
+   "leg_max": 270.9,
+   "leg_p99": 57.5,
+   "regs_leg_gt60": 133,
+   "regs_leg_gt40": 259,
+   "worst_domains": [
+    [
+     "root",
+     270.9
+    ],
+    [
+     "u_hop_fa3/u_icg",
+     198.8
+    ],
+    [
+     "u_hop_fa2/u_icg",
+     170.5
+    ],
+    [
+     "u_hop_dw/u_icg",
+     169.5
+    ]
+   ]
+  },
+  "8": {
+   "leaves": 1929,
+   "leg_max": 212.0,
+   "leg_p99": 45.3,
+   "regs_leg_gt60": 98,
+   "regs_leg_gt40": 188,
+   "worst_domains": [
+    [
+     "root",
+     212.0
+    ],
+    [
+     "u_hop_fa3/u_icg",
+     186.1
+    ],
+    [
+     "u_hop_ck/u_icg",
+     176.1
+    ],
+    [
+     "u_hop_fa2/u_icg",
+     169.6
+    ]
+   ]
+  }
+ }
+}

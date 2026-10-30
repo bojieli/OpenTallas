@@ -1,0 +1,479 @@
+{
+ "T": 19,
+ "leg_um": 100.0,
+ "reg_domains": "planned",
+ "port": [
+  228.948,
+  578.64
+ ],
+ "reg_gates": 17,
+ "mac_gates": 19,
+ "root_registers": 1633,
+ "root_leaves": 137,
+ "gate_depth": {
+  "u_hop_lsl0": 8,
+  "u_hop_lsl1": 5,
+  "u_hop_lsl2": 5,
+  "u_hop_lsl3": 9,
+  "u_hop_lsl4": 5,
+  "u_hop_lsl5": 5,
+  "u_hop_lsl6": 7,
+  "u_hop_lsl7": 5,
+  "u_hop_node": 4,
+  "u_hop_rp0": 3,
+  "u_hop_rp1": 3,
+  "u_hop_rp2": 4,
+  "u_hop_rp3": 8,
+  "u_hop_rp4": 6,
+  "u_hop_rp5": 2,
+  "u_hop_rp6": 3,
+  "u_hop_rp7": 4,
+  "u_hop_rp8": 9,
+  "u_hop_rp9": 6,
+  "u_hop_ck": 10,
+  "u_hop_de": 12,
+  "u_hop_dw": 13,
+  "u_hop_fa2": 9,
+  "u_hop_fa3": 8,
+  "u_hop_rn": 13,
+  "u_hop_rnw": 14,
+  "u_hop_rs": 11,
+  "u_hop_rsw": 11,
+  "u_hop_tx0": 9,
+  "u_hop_tx1": 10,
+  "u_hop_tx2": 9,
+  "u_hop_tx3": 12,
+  "u_hop_tx4": 11,
+  "u_hop_tx5": 9,
+  "u_hop_tx6": 11,
+  "u_hop_tx7": 9
+ },
+ "early": [
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl0/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 3,
+   "gate_depth": 8,
+   "leaf_depth": 11,
+   "gate_pin_um": 139.5,
+   "corridor_um": 139.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl1/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 5,
+   "leaf_depth": 11,
+   "gate_pin_um": 264.2,
+   "corridor_um": 400.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 5,
+   "leaf_depth": 11,
+   "gate_pin_um": 410.2,
+   "corridor_um": 545.9
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl3/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 2,
+   "gate_depth": 9,
+   "leaf_depth": 11,
+   "gate_pin_um": 118.6,
+   "corridor_um": 118.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl4/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 5,
+   "leaf_depth": 11,
+   "gate_pin_um": 160.0,
+   "corridor_um": 699.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl5/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 5,
+   "leaf_depth": 11,
+   "gate_pin_um": 319.1,
+   "corridor_um": 856.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl6/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 4,
+   "gate_depth": 7,
+   "leaf_depth": 11,
+   "gate_pin_um": 93.5,
+   "corridor_um": 865.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl7/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 8,
+   "r": 6,
+   "gate_depth": 5,
+   "leaf_depth": 11,
+   "gate_pin_um": 365.6,
+   "corridor_um": 954.1
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_node/u_icg",
+   "macro": "ot_qwen_tile_node",
+   "k": 8,
+   "r": 7,
+   "gate_depth": 4,
+   "leaf_depth": 11,
+   "gate_pin_um": 361.2,
+   "corridor_um": 566.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp0/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 7,
+   "gate_depth": 3,
+   "leaf_depth": 10,
+   "gate_pin_um": 522.9,
+   "corridor_um": 567.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp1/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 7,
+   "gate_depth": 3,
+   "leaf_depth": 10,
+   "gate_pin_um": 409.2,
+   "corridor_um": 452.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp2/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 6,
+   "gate_depth": 4,
+   "leaf_depth": 10,
+   "gate_pin_um": 270.8,
+   "corridor_um": 314.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp3/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 2,
+   "gate_depth": 8,
+   "leaf_depth": 10,
+   "gate_pin_um": 59.8,
+   "corridor_um": 104.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp4/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 6,
+   "leaf_depth": 10,
+   "gate_pin_um": 117.8,
+   "corridor_um": 199.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp5/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 8,
+   "gate_depth": 2,
+   "leaf_depth": 10,
+   "gate_pin_um": 518.6,
+   "corridor_um": 565.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp6/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 7,
+   "gate_depth": 3,
+   "leaf_depth": 10,
+   "gate_pin_um": 409.9,
+   "corridor_um": 451.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp7/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 6,
+   "gate_depth": 4,
+   "leaf_depth": 10,
+   "gate_pin_um": 241.6,
+   "corridor_um": 341.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp8/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 1,
+   "gate_depth": 9,
+   "leaf_depth": 10,
+   "gate_pin_um": 22.8,
+   "corridor_um": 22.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp9/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 9,
+   "r": 4,
+   "gate_depth": 6,
+   "leaf_depth": 10,
+   "gate_pin_um": 110.4,
+   "corridor_um": 207.9
+  }
+ ],
+ "geometry": {
+  "max_fanout": 4,
+  "max_node_leg_um": 244.6,
+  "node_legs_over": [
+   [
+    244.6,
+    "mp_a0_s38",
+    "g_icg.g_hop.u_hop_rp2/u_icg"
+   ],
+   [
+    229.3,
+    "mp_a0_s204",
+    "g_icg.g_hop.u_hop_lsl7/u_icg"
+   ],
+   [
+    206.7,
+    "mp_a0_s328",
+    "g_icg.g_hop.u_hop_lsl2/u_icg"
+   ],
+   [
+    204.6,
+    "mp_a0_s227",
+    "g_icg.g_hop.u_hop_rp6/u_icg"
+   ],
+   [
+    202.5,
+    "mp_a0_s37",
+    "g_icg.g_hop.u_hop_rp0/u_icg"
+   ],
+   [
+    201.3,
+    "mp_a0_d1342",
+    "mp_a0_d1343"
+   ],
+   [
+    201.1,
+    "mp_a0_d1358",
+    "mp_a0_d1362"
+   ],
+   [
+    197.7,
+    "mp_a0_m434",
+    "mp_a0_m435"
+   ],
+   [
+    197.7,
+    "g_icg.g_hop.u_hop_lsl6/u_icg",
+    "mp_a0_m433"
+   ],
+   [
+    197.7,
+    "mp_a0_m435",
+    "mp_a0_m436"
+   ],
+   [
+    197.7,
+    "mp_a0_m433",
+    "mp_a0_m434"
+   ],
+   [
+    194.6,
+    "mp_a0_s167",
+    "g_icg.g_hop.u_hop_node/u_icg"
+   ],
+   [
+    194.2,
+    "mp_a0_s228",
+    "g_icg.g_hop.u_hop_rp7/u_icg"
+   ],
+   [
+    191.8,
+    "mp_a0_d1342",
+    "mp_a0_d1344"
+   ],
+   [
+    191.5,
+    "mp_a0_d1110",
+    "mp_a0_d1111"
+   ],
+   [
+    187.9,
+    "mp_a0_d1315",
+    "mp_a0_d1316"
+   ],
+   [
+    184.9,
+    "mp_a0_d1263",
+    "mp_a0_ldtx5_48"
+   ],
+   [
+    183.1,
+    "mp_a0_d1375",
+    "mp_a0_ldtx7_48"
+   ],
+   [
+    182.0,
+    "mp_a0_d1349",
+    "mp_a0_d1350"
+   ],
+   [
+    181.6,
+    "mp_a0_d1212",
+    "mp_a0_d1213"
+   ]
+  ],
+  "max_leaf_sink_leg_um": {
+   "register": 279.7,
+   "macro": 74.8
+  },
+  "total_stage_counts": {
+   "19": 1309
+  },
+  "cells": 2678
+ },
+ "attempts": 2,
+ "std_stage": {
+  "std_leg": 50.0,
+  "window_max": 60.0,
+  "leaf_max": 12,
+  "early_tap_stage_ps": {
+   "TT": 32.1,
+   "FF": 25.02,
+   "source": "DIE-QC-39 results/qc_die39_1029/a0/data/stage_std.json STD_fo2_leg40-60 (V2 measured FF 25.02 / TT 32.10)"
+  },
+  "node_legs": 2677,
+  "legs_under_2_3_std": 343,
+  "legs_over_window": 544,
+  "legs_over_1p5_window": 241,
+  "gate_legs_over_window": [
+   [
+    244.6,
+    "g_icg.g_hop.u_hop_rp2/u_icg"
+   ],
+   [
+    229.3,
+    "g_icg.g_hop.u_hop_lsl7/u_icg"
+   ],
+   [
+    206.7,
+    "g_icg.g_hop.u_hop_lsl2/u_icg"
+   ],
+   [
+    204.6,
+    "g_icg.g_hop.u_hop_rp6/u_icg"
+   ],
+   [
+    202.5,
+    "g_icg.g_hop.u_hop_rp0/u_icg"
+   ],
+   [
+    194.6,
+    "g_icg.g_hop.u_hop_node/u_icg"
+   ],
+   [
+    194.2,
+    "g_icg.g_hop.u_hop_rp7/u_icg"
+   ],
+   [
+    181.2,
+    "g_icg.g_hop.u_hop_rp1/u_icg"
+   ],
+   [
+    129.7,
+    "g_icg.g_hop.u_hop_lsl6/u_icg"
+   ],
+   [
+    100.6,
+    "g_icg.g_hop.u_hop_lsl5/u_icg"
+   ],
+   [
+    99.8,
+    "g_icg.g_hop.u_hop_lsl4/u_icg"
+   ],
+   [
+    92.7,
+    "g_icg.g_hop.u_hop_rp9/u_icg"
+   ],
+   [
+    90.0,
+    "g_icg.g_hop.u_hop_rp4/u_icg"
+   ],
+   [
+    85.7,
+    "g_icg.g_hop.u_hop_rp5/u_icg"
+   ],
+   [
+    75.2,
+    "g_icg.g_hop.u_hop_lsl1/u_icg"
+   ],
+   [
+    73.7,
+    "g_icg.g_hop.u_hop_tx2/u_icg"
+   ],
+   [
+    69.8,
+    "g_icg.g_hop.u_hop_rsw/u_icg"
+   ],
+   [
+    66.1,
+    "g_icg.g_hop.u_hop_rs/u_icg"
+   ],
+   [
+    61.0,
+    "g_icg.g_hop.u_hop_ck/u_icg"
+   ],
+   [
+    60.0,
+    "g_icg.g_hop.u_hop_rp3/u_icg"
+   ]
+  ],
+  "macro_chain_leg_um": {
+   "u_hop_lsl0": 46.5,
+   "u_hop_lsl1": 66.7,
+   "u_hop_lsl2": 91.0,
+   "u_hop_lsl3": 59.3,
+   "u_hop_lsl4": 116.6,
+   "u_hop_lsl5": 142.8,
+   "u_hop_lsl6": 216.4,
+   "u_hop_lsl7": 159.0,
+   "u_hop_node": 80.9,
+   "u_hop_rp0": 81.1,
+   "u_hop_rp1": 64.7,
+   "u_hop_rp2": 52.4,
+   "u_hop_rp3": 52.3,
+   "u_hop_rp4": 49.9,
+   "u_hop_rp5": 70.7,
+   "u_hop_rp6": 64.5,
+   "u_hop_rp7": 57.0,
+   "u_hop_rp8": 22.8,
+   "u_hop_rp9": 52.0
+  },
+  "leaf_sink_leg_max_um": {
+   "register": 279.7,
+   "macro": 74.8
+  }
+ }
+}
