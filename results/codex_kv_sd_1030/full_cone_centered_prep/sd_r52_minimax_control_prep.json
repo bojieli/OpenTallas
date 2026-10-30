@@ -1,0 +1,421 @@
+{
+  "qualified": false,
+  "native_controls": 79,
+  "FDI_link_boundary_FF_count": 526,
+  "all_FFpairs": 99645,
+  "over405": 4,
+  "worst": [
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bout_o_serdes_W_tx_up/eq$_DFF_PN0_",
+      "L1_um": 1738.2,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1879.2,
+        830.52
+      ]
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bout_o_serdes_W_rx_flit/eq$_DFF_PN0_",
+      "L1_um": 1587.0,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1883.52,
+        675.0
+      ]
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bin_i_host_link_rst_n/eq$_DFF_PN0_",
+      "L1_um": 1338.0059999999999,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1875.906,
+        433.62
+      ]
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bin_i_host_fdi/eq$_DFF_PN0_",
+      "L1_um": 1214.778,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1874.718,
+        311.58
+      ]
+    }
+  ],
+  "failing_sources": {
+    "u_bound.u_rrl_4": 4
+  },
+  "controls": {
+    "u_bound.u_core.u_fdi_cdc.c_rx_v$_DFF_PN0_": [
+      1872.72,
+      454.14
+    ],
+    "u_bound.u_core.u_fdi_cdc.p_tx_v$_DFF_PN0_": [
+      1872.72,
+      568.08
+    ],
+    "u_bound.u_core.u_fdi_cdc.rq_v$_DFF_PN0_": [
+      1872.72,
+      681.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_crs.reset_pipe\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      222.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      625.32
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.g_ir.rd_reset_conditioner.reset_pipe\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      329.4
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.g_ir.wr_reset_conditioner.reset_pipe\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      527.58
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      539.19
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      539.19
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      539.19
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_empty$_DFF_PN1_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      495.18
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      495.18
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      495.18
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      495.18
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      588.6
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      588.6
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      588.6
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      588.6
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_online$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w1$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_": [
+      1872.72,
+      625.32
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      681.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      681.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      681.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      523.26
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_full$_DFF_PN0_": [
+      1872.72,
+      681.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      523.26
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      523.26
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      523.26
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      293.76
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      293.76
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      293.76
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      293.76
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_online$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r1$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_": [
+      1872.72,
+      222.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      396.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      396.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      396.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_empty$_DFF_PN1_": [
+      1872.72,
+      510.84
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      289.98
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      289.98
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      289.98
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      289.98
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      222.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      222.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      222.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_full$_DFF_PN0_": [
+      1872.72,
+      222.75
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      356.94
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      491.13
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      558.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      558.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[2\\]$_DFF_PN0_": [
+      1872.72,
+      558.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[3\\]$_DFF_PN0_": [
+      1872.72,
+      558.09
+    ],
+    "u_bound.u_core.u_fdi_cdc.up_s\\[0\\]$_DFF_PN0_": [
+      1872.72,
+      364.77
+    ],
+    "u_bound.u_core.u_fdi_cdc.up_s\\[1\\]$_DFF_PN0_": [
+      1872.72,
+      530.55
+    ]
+  },
+  "tap_capacity": [
+    {
+      "root": "clk",
+      "load": 7.0,
+      "maxL1": 0.0
+    },
+    {
+      "root": "clk_t1",
+      "load": 9.0,
+      "maxL1": 0.4800000000000182
+    },
+    {
+      "root": "clk_t2",
+      "load": 18.0,
+      "maxL1": 174.016
+    },
+    {
+      "root": "clk_t3",
+      "load": 46.0,
+      "maxL1": 189.67999999999995
+    },
+    {
+      "root": "clk_t4",
+      "load": 2307.0,
+      "maxL1": 169.84000000000003
+    },
+    {
+      "root": "clk_t5",
+      "load": 2333.0,
+      "maxL1": 206.93000000000006
+    },
+    {
+      "root": "clk_t6",
+      "load": 1865.0,
+      "maxL1": 214.8739999999999
+    }
+  ],
+  "primary_over220": 0,
+  "scope": "Actual CURRENT SYNTH graph before mandatory physical reset tap rebinding. Raw-prefix edges excluded ONLY from choosing control anchor locations, INCLUDED in final failures. Collocated control anchors require legal packing, not a physical PASS."
+}

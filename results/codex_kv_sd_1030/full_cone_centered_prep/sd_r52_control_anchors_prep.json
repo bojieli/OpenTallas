@@ -1,0 +1,1756 @@
+{
+  "qualified": false,
+  "actual_control_FFs_anchored": 79,
+  "moves": [
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.c_rx_v$_DFF_PN0_",
+      "old": [
+        1883.52,
+        675.0
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.p_tx_v$_DFF_PN0_",
+      "old": [
+        1757.7,
+        48.195
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.rq_v$_DFF_PN0_",
+      "old": [
+        1797.606,
+        37.394999999999996
+      ],
+      "new": [
+        1872.72,
+        505.44
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_crs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "old": [
+        1723.68,
+        12.285
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "old": [
+        1743.228,
+        11.475
+      ],
+      "new": [
+        1872.72,
+        505.44
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.g_ir.rd_reset_conditioner.reset_pipe\\[0\\]$_DFF_PN0_",
+      "old": [
+        1719.252,
+        9.585
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.g_ir.wr_reset_conditioner.reset_pipe\\[0\\]$_DFF_PN0_",
+      "old": [
+        1729.728,
+        10.125
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[0\\]$_DFF_PN0_",
+      "old": [
+        1802.628,
+        30.375
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[1\\]$_DFF_PN0_",
+      "old": [
+        1795.014,
+        25.515
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[2\\]$_DFF_PN0_",
+      "old": [
+        1799.874,
+        31.455
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_bin\\[3\\]$_DFF_PN0_",
+      "old": [
+        1779.3,
+        29.835
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_empty$_DFF_PN1_",
+      "old": [
+        1770.336,
+        21.195
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray\\[0\\]$_DFF_PN0_",
+      "old": [
+        1781.19,
+        23.625
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray\\[1\\]$_DFF_PN0_",
+      "old": [
+        1781.838,
+        26.865000000000002
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray\\[2\\]$_DFF_PN0_",
+      "old": [
+        1783.296,
+        32.535
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[0\\]$_DFF_PN0_",
+      "old": [
+        1787.886,
+        28.485
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[1\\]$_DFF_PN0_",
+      "old": [
+        1782.648,
+        29.295
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[2\\]$_DFF_PN0_",
+      "old": [
+        1788.858,
+        30.915
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w1\\[3\\]$_DFF_PN0_",
+      "old": [
+        1783.08,
+        30.104999999999997
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[0\\]$_DFF_PN0_",
+      "old": [
+        1792.854,
+        26.055
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[1\\]$_DFF_PN0_",
+      "old": [
+        1790.64,
+        26.325000000000003
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[2\\]$_DFF_PN0_",
+      "old": [
+        1792.53,
+        29.025
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_gray_w2\\[3\\]$_DFF_PN0_",
+      "old": [
+        1789.074,
+        28.215
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_online$_DFF_PN0_",
+      "old": [
+        1687.392,
+        9.045
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w1$_DFF_PN0_",
+      "old": [
+        1699.326,
+        9.855
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_",
+      "old": [
+        1730.754,
+        9.855
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[0\\]$_DFF_PN0_",
+      "old": [
+        1796.526,
+        26.055
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[1\\]$_DFF_PN0_",
+      "old": [
+        1788.48,
+        27.945
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[2\\]$_DFF_PN0_",
+      "old": [
+        1803.222,
+        29.835
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_bin\\[3\\]$_DFF_PN0_",
+      "old": [
+        1795.986,
+        27.405
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_full$_DFF_PN0_",
+      "old": [
+        1792.206,
+        27.405
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray\\[0\\]$_DFF_PN0_",
+      "old": [
+        1779.408,
+        26.595
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray\\[1\\]$_DFF_PN0_",
+      "old": [
+        1783.998,
+        27.405
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray\\[2\\]$_DFF_PN0_",
+      "old": [
+        1791.342,
+        29.564999999999998
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[0\\]$_DFF_PN0_",
+      "old": [
+        1774.926,
+        27.674999999999997
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[1\\]$_DFF_PN0_",
+      "old": [
+        1779.03,
+        31.185000000000002
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[2\\]$_DFF_PN0_",
+      "old": [
+        1784.862,
+        28.215
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r1\\[3\\]$_DFF_PN0_",
+      "old": [
+        1790.748,
+        23.354999999999997
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[0\\]$_DFF_PN0_",
+      "old": [
+        1771.038,
+        26.055
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[1\\]$_DFF_PN0_",
+      "old": [
+        1780.11,
+        30.104999999999997
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[2\\]$_DFF_PN0_",
+      "old": [
+        1774.872,
+        25.785
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_gray_r2\\[3\\]$_DFF_PN0_",
+      "old": [
+        1782.972,
+        24.705
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online$_DFF_PN0_",
+      "old": [
+        1663.956,
+        7.695
+      ],
+      "new": [
+        1872.72,
+        675.0
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r1$_DFF_PN0_",
+      "old": [
+        1666.926,
+        8.775
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "old": [
+        1696.302,
+        13.095
+      ],
+      "new": [
+        1872.72,
+        650.16
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[0\\]$_DFF_PN0_",
+      "old": [
+        1729.242,
+        24.975
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[1\\]$_DFF_PN0_",
+      "old": [
+        1718.172,
+        17.685000000000002
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[2\\]$_DFF_PN0_",
+      "old": [
+        1707.966,
+        17.415
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[3\\]$_DFF_PN0_",
+      "old": [
+        1698.246,
+        17.415
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_empty$_DFF_PN1_",
+      "old": [
+        1693.764,
+        14.985
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[0\\]$_DFF_PN0_",
+      "old": [
+        1690.254,
+        13.365
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[1\\]$_DFF_PN0_",
+      "old": [
+        1692.09,
+        12.285
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[2\\]$_DFF_PN0_",
+      "old": [
+        1697.922,
+        14.715
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[0\\]$_DFF_PN0_",
+      "old": [
+        1669.95,
+        10.395
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[1\\]$_DFF_PN0_",
+      "old": [
+        1660.986,
+        7.695
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[2\\]$_DFF_PN0_",
+      "old": [
+        1687.5,
+        10.935
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w1\\[3\\]$_DFF_PN0_",
+      "old": [
+        1675.134,
+        15.525
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[0\\]$_DFF_PN0_",
+      "old": [
+        1648.89,
+        7.965
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[1\\]$_DFF_PN0_",
+      "old": [
+        1643.058,
+        7.695
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[2\\]$_DFF_PN0_",
+      "old": [
+        1651.914,
+        8.504999999999999
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray_w2\\[3\\]$_DFF_PN0_",
+      "old": [
+        1652.778,
+        12.015
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[0\\]$_DFF_PN0_",
+      "old": [
+        1653.264,
+        7.695
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[1\\]$_DFF_PN0_",
+      "old": [
+        1645.866,
+        8.504999999999999
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[2\\]$_DFF_PN0_",
+      "old": [
+        1660.068,
+        8.775
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_bin\\[3\\]$_DFF_PN0_",
+      "old": [
+        1644.624,
+        10.395
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_full$_DFF_PN0_",
+      "old": [
+        1680.426,
+        16.604999999999997
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray\\[0\\]$_DFF_PN0_",
+      "old": [
+        1657.908,
+        8.235
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray\\[1\\]$_DFF_PN0_",
+      "old": [
+        1644.894,
+        9.585
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray\\[2\\]$_DFF_PN0_",
+      "old": [
+        1669.518,
+        10.935
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[0\\]$_DFF_PN0_",
+      "old": [
+        1672.866,
+        8.235
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[1\\]$_DFF_PN0_",
+      "old": [
+        1665.792,
+        10.665
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[2\\]$_DFF_PN0_",
+      "old": [
+        1678.536,
+        11.475
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r1\\[3\\]$_DFF_PN0_",
+      "old": [
+        1673.352,
+        10.665
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[0\\]$_DFF_PN0_",
+      "old": [
+        1677.834,
+        14.985
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[1\\]$_DFF_PN0_",
+      "old": [
+        1677.294,
+        14.445
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[2\\]$_DFF_PN0_",
+      "old": [
+        1669.518,
+        18.225
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[3\\]$_DFF_PN0_",
+      "old": [
+        1678.698,
+        15.795
+      ],
+      "new": [
+        1872.72,
+        285.12
+      ],
+      "clock": "clk_clk_phy[0]"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.up_s\\[0\\]$_DFF_PN0_",
+      "old": [
+        1875.366,
+        847.665
+      ],
+      "new": [
+        1872.72,
+        450.36
+      ],
+      "clock": "clk"
+    },
+    {
+      "instance": "u_bound.u_core.u_fdi_cdc.up_s\\[1\\]$_DFF_PN0_",
+      "old": [
+        1878.66,
+        845.775
+      ],
+      "new": [
+        1872.72,
+        450.36
+      ],
+      "clock": "clk"
+    }
+  ],
+  "actual_FFpair_count": 99645,
+  "over405": 4929,
+  "maxL1_um": 1738.2,
+  "failing_sources": {
+    "u_bound.u_bin_i_host_link_rst_n": 3,
+    "u_bound.u_rrl_4": 4,
+    "u_bound.u_cland_i_host_link_rst_n": 2,
+    "u_bound.u_cland_i_host_fdi": 3,
+    "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_": 3426,
+    "u_bound.u_bin_i_host_fdi": 1491
+  },
+  "worst": [
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bout_o_serdes_W_tx_up/eq$_DFF_PN0_",
+      "L1_um": 1738.2,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1879.2,
+        830.52
+      ],
+      "source_basis": "current reset/run geometry",
+      "capture_basis": "held same-cycle TXup four-FF named anchor proposal"
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bout_o_serdes_W_rx_flit/eq$_DFF_PN0_",
+      "L1_um": 1587.0,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1883.52,
+        675.0
+      ],
+      "source_basis": "current reset/run geometry",
+      "capture_basis": "RX actual scalar boundary/control proposed anchor"
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bin_i_host_link_rst_n/eq$_DFF_PN0_",
+      "L1_um": 811.8570000000001,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1731.942,
+        51.435
+      ],
+      "source_basis": "current reset/run geometry",
+      "capture_basis": "same-name old actual DPL position (unqualified for new)"
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bin_i_host_fdi/eq$_DFF_PN0_",
+      "L1_um": 770.493,
+      "source_xy": [
+        949.92,
+        21.6
+      ],
+      "capture_xy": [
+        1690.308,
+        51.705
+      ],
+      "source_basis": "current reset/run geometry",
+      "capture_basis": "same-name old actual DPL position (unqualified for new)"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 745.1999999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[9\\]$_DFFE_PP_",
+      "L1_um": 744.3899999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 744.0120000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[19\\]$_DFFE_PP_",
+      "L1_um": 743.5799999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        18.9
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[5\\]\\[9\\]$_DFFE_PP_",
+      "L1_um": 743.202,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[2\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 742.824,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[28\\]$_DFFE_PP_",
+      "L1_um": 742.7699999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        19.71
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[19\\]$_DFFE_PP_",
+      "L1_um": 742.392,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        18.9
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[6\\]\\[9\\]$_DFFE_PP_",
+      "L1_um": 742.0139999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[38\\]$_DFFE_PP_",
+      "L1_um": 741.9599999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        20.52
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[3\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 741.6360000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1763.964,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[5\\]\\[28\\]$_DFFE_PP_",
+      "L1_um": 741.582,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        19.71
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[2\\]\\[19\\]$_DFFE_PP_",
+      "L1_um": 741.204,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        18.9
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[47\\]$_DFFE_PP_",
+      "L1_um": 741.1499999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        21.33
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[7\\]\\[9\\]$_DFFE_PP_",
+      "L1_um": 740.826,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1763.964,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[38\\]$_DFFE_PP_",
+      "L1_um": 740.772,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        20.52
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 740.448,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1765.152,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[6\\]\\[28\\]$_DFFE_PP_",
+      "L1_um": 740.3939999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        19.71
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[57\\]$_DFFE_PP_",
+      "L1_um": 740.3399999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        22.14
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[3\\]\\[19\\]$_DFFE_PP_",
+      "L1_um": 740.0160000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1763.964,
+        18.9
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[5\\]\\[47\\]$_DFFE_PP_",
+      "L1_um": 739.962,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        21.33
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[10\\]$_DFFE_PP_",
+      "L1_um": 739.6379999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1765.152,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[2\\]\\[38\\]$_DFFE_PP_",
+      "L1_um": 739.584,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        20.52
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[66\\]$_DFFE_PP_",
+      "L1_um": 739.5299999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        22.95
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[5\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 739.2600000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1766.34,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[7\\]\\[28\\]$_DFFE_PP_",
+      "L1_um": 739.206,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1763.964,
+        19.71
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[57\\]$_DFFE_PP_",
+      "L1_um": 739.152,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        22.14
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[19\\]$_DFFE_PP_",
+      "L1_um": 738.828,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1765.152,
+        18.9
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[6\\]\\[47\\]$_DFFE_PP_",
+      "L1_um": 738.7739999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        21.33
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[76\\]$_DFFE_PP_",
+      "L1_um": 738.7199999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        23.76
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[10\\]$_DFFE_PP_",
+      "L1_um": 738.45,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1766.34,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[3\\]\\[38\\]$_DFFE_PP_",
+      "L1_um": 738.3960000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1763.964,
+        20.52
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[5\\]\\[66\\]$_DFFE_PP_",
+      "L1_um": 738.342,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        22.95
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[6\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 738.072,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1767.528,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[29\\]$_DFFE_PP_",
+      "L1_um": 738.0179999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1765.152,
+        19.71
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[2\\]\\[57\\]$_DFFE_PP_",
+      "L1_um": 737.9639999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        22.14
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[85\\]$_DFFE_PP_",
+      "L1_um": 737.9099999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        24.57
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[5\\]\\[19\\]$_DFFE_PP_",
+      "L1_um": 737.6400000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1766.34,
+        18.9
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[7\\]\\[47\\]$_DFFE_PP_",
+      "L1_um": 737.586,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1763.964,
+        21.33
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[76\\]$_DFFE_PP_",
+      "L1_um": 737.532,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1761.588,
+        23.76
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[2\\]\\[10\\]$_DFFE_PP_",
+      "L1_um": 737.262,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1767.528,
+        18.09
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[4\\]\\[38\\]$_DFFE_PP_",
+      "L1_um": 737.208,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1765.152,
+        20.52
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[6\\]\\[66\\]$_DFFE_PP_",
+      "L1_um": 737.1539999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1762.776,
+        22.95
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[0\\]\\[95\\]$_DFFE_PP_",
+      "L1_um": 737.0999999999999,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1760.4,
+        25.38
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[7\\]\\[0\\]$_DFFE_PP_",
+      "L1_um": 736.8840000000001,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1768.716,
+        17.28
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    },
+    {
+      "source": "u_bound.u_core.u_fdi_cdc.u_rx.wr_online_r2$_DFF_PN0_",
+      "capture": "u_bound.u_core.u_fdi_cdc.u_tx.mem\\[1\\]\\[29\\]$_DFFE_PP_",
+      "L1_um": 736.83,
+      "source_xy": [
+        1872.72,
+        650.16
+      ],
+      "capture_xy": [
+        1766.34,
+        19.71
+      ],
+      "source_basis": "held full current native control peer-group anchor",
+      "capture_basis": "split data row candidate:TXmem_S4"
+    }
+  ],
+  "tap_capacity": [
+    {
+      "root": "clk",
+      "load": 7.0,
+      "maxL1": 0.0
+    },
+    {
+      "root": "clk_t1",
+      "load": 9.0,
+      "maxL1": 0.4800000000000182
+    },
+    {
+      "root": "clk_t2",
+      "load": 18.0,
+      "maxL1": 174.016
+    },
+    {
+      "root": "clk_t3",
+      "load": 46.0,
+      "maxL1": 189.67999999999995
+    },
+    {
+      "root": "clk_t4",
+      "load": 2400.0,
+      "maxL1": 169.84000000000003
+    },
+    {
+      "root": "clk_t5",
+      "load": 2224.0,
+      "maxL1": 166.12899999999982
+    },
+    {
+      "root": "clk_t6",
+      "load": 1881.0,
+      "maxL1": 214.8739999999999
+    }
+  ],
+  "primary_over220": 0,
+  "scope": "Only named anchor model; control anchors NOT cell-packing/legalization. Actual SYNTH graph is before mandatory local physical reset tap rebinding. All failures retained. No source/control cycles or pins changed."
+}

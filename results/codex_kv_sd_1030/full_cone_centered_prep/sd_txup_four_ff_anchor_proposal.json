@@ -1,0 +1,116 @@
+{
+  "physical_qualified": false,
+  "adoption": "HELD pending proper bounded physical-group anchor source support; no misuse of status anchor field",
+  "source_control_delta": 0,
+  "pins_delta": 0,
+  "cycle_delta": 0,
+  "tap_delta": 0,
+  "actual_mapped_named_FFs": {
+    "u_bound.u_bout_o_serdes_W_tx_up/eq$_DFF_PN0_": {
+      "old_xy": [
+        1895.022,
+        860.625
+      ],
+      "new_xy": [
+        1879.2,
+        830.52
+      ],
+      "clock_net": "clk",
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "body_um": [
+        1.404,
+        0.27
+      ]
+    },
+    "u_bound.u_bout_o_serdes_W_tx_up/q$_DFF_P_": {
+      "old_xy": [
+        1894.536,
+        860.085
+      ],
+      "new_xy": [
+        1880.658,
+        830.52
+      ],
+      "clock_net": "clk",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "body_um": [
+        1.08,
+        0.27
+      ]
+    },
+    "u_bound.u_cland_fstart_o_serdes_W_tx_up/q$_SDFF_PN0_": {
+      "old_xy": [
+        1895.13,
+        868.725
+      ],
+      "new_xy": [
+        1874.88,
+        830.52
+      ],
+      "clock_net": "clk",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "body_um": [
+        1.08,
+        0.27
+      ]
+    },
+    "u_bound.u_cland_lrst_sd_fstart_o_serdes_W_tx_up/q$_DFF_P_": {
+      "old_xy": [
+        1872.72,
+        868.96
+      ],
+      "new_xy": [
+        1872.72,
+        830.52
+      ],
+      "clock_net": "clk",
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "body_um": [
+        1.08,
+        0.27
+      ]
+    }
+  },
+  "data_overlap": [],
+  "primary_sinks": 6585,
+  "roots": [
+    {
+      "name": "clk",
+      "sinks": 7.0,
+      "max_L1_um": 0.0
+    },
+    {
+      "name": "clk_t1",
+      "sinks": 9.0,
+      "max_L1_um": 0.4800000000000182
+    },
+    {
+      "name": "clk_t2",
+      "sinks": 18.0,
+      "max_L1_um": 174.016
+    },
+    {
+      "name": "clk_t3",
+      "sinks": 46.0,
+      "max_L1_um": 189.67999999999995
+    },
+    {
+      "name": "clk_t4",
+      "sinks": 2400.0,
+      "max_L1_um": 169.84000000000003
+    },
+    {
+      "name": "clk_t5",
+      "sinks": 2244.0,
+      "max_L1_um": 166.12899999999982
+    },
+    {
+      "name": "clk_t6",
+      "sinks": 1861.0,
+      "max_L1_um": 214.8739999999999
+    }
+  ],
+  "over220": 0,
+  "pin_reach_note": "Fixed output data/epoch face ~860 and FSTART868.96 remain; new native FFanchor830.52 adds only ~30..39um final wire, pending actual STA/G1. Last W7stage800 unchanged.",
+  "four_anchor_pairwise_overlaps": 0
+}

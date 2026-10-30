@@ -1,0 +1,80 @@
+{
+  "qualified": false,
+  "coordinates": "DATA/face fixed FF points now actual master bbox CENTRES; current generated reset/run/group/minimax points are anchorcentres, not legal packing",
+  "actual_FFcount": 14000,
+  "FFpair_count": 99645,
+  "max_nonraw_FFpair_L1_um": 396.6299999999999,
+  "over405": [
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bin_i_host_fdi/eq$_DFF_PN0_",
+      "L1_um": 1215.615
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bin_i_host_link_rst_n/eq$_DFF_PN0_",
+      "L1_um": 1338.8429999999998
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bout_o_serdes_W_rx_flit/eq$_DFF_PN0_",
+      "L1_um": 1588.107
+    },
+    {
+      "source": "u_bound.u_rrl_4/q$_DFF_P_",
+      "capture": "u_bound.u_bout_o_serdes_W_tx_up/eq$_DFF_PN0_",
+      "L1_um": 1739.037
+    }
+  ],
+  "macro_RXbit_pairs": 522,
+  "macro_RXbit_to_FF_max": {
+    "pin": "rx_flit[521]",
+    "FF": "u_bound.u_core.u_fdi_cdc.rq_d\\[521\\]$_DFF_P_",
+    "L1": 174.87300000000005
+  },
+  "macro_TXbit_pairs": 522,
+  "FF_to_macro_TXbit_max": {
+    "pin": "tx_flit[521]",
+    "FF": "u_bound.u_core.u_fdi_cdc.p_tx_d\\[521\\]$_DFF_P_",
+    "L1": 70.3829999999999
+  },
+  "primaryroots": [
+    {
+      "name": "clk",
+      "load": 7.0,
+      "max_L1_um": 0.0
+    },
+    {
+      "name": "clk_t1",
+      "load": 9.0,
+      "max_L1_um": 0.4800000000000182
+    },
+    {
+      "name": "clk_t2",
+      "load": 18.0,
+      "max_L1_um": 174.016
+    },
+    {
+      "name": "clk_t3",
+      "load": 46.0,
+      "max_L1_um": 189.67999999999995
+    },
+    {
+      "name": "clk_t4",
+      "load": 2303.0,
+      "max_L1_um": 169.84000000000003
+    },
+    {
+      "name": "clk_t5",
+      "load": 2337.0,
+      "max_L1_um": 206.93000000000006
+    },
+    {
+      "name": "clk_t6",
+      "load": 1865.0,
+      "max_L1_um": 215.54899999999986
+    }
+  ],
+  "primary_over220": 0,
+  "raw_edge_note": "Four pre-hook rawtap2\u2192boundaryepoch edges remain FAIL until actual mandatory reset_taps physical rebind is run and measured; not removed from report. No waveform/depth change authorized."
+}
