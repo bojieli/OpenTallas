@@ -62,3 +62,34 @@ def test_wrong_data_is_not_hidden_by_exact_bit_alias_candidate(tmp_path):
 
 def test_different_bit_identity_gets_no_proposal(tmp_path):
     assert lec.json_bit_alias_proposals(alias(tmp_path,ambiguous=True),[],tmp_path) == 0
+
+
+def holding(tmp_path, mutant=False, other_state=False):
+    regs_g=["ga","o"] + (["gx"] if other_state else [])
+    regs_t=["ta","o"] + (["tx"] if other_state else [])
+    def ns(m,l,k,extra,inv):
+        v=l[extra] if extra in l else l["x"]
+        d={k:mux(m,l["en"],v^inv,l[k]),"o":l[k]}
+        if extra in l:d[extra]=l["x"]
+        return d
+    g,gm=_seq(tmp_path,"g",["en","x"],regs_g,lambda m,l:ns(m,l,"ga","gx",0))
+    t,tm=_seq(tmp_path,"t",["en","x"],regs_t,lambda m,l:ns(m,l,"ta","tx",int(mutant)))
+    return lec.Lec(g,gm,t,tm)
+
+
+def test_rare_self_holding_alias_has_exact_cofactors(tmp_path):
+    L=holding(tmp_path)
+    assert lec.self_hold_alias_proposals(L,[]) == 1
+    m,_=L.build(with_compare=True,with_hyp=True)
+    assert set(_sim_prove(m).values()) == {"proved"}
+
+
+def test_mutated_load_is_not_a_self_hold_alias(tmp_path):
+    L=holding(tmp_path,mutant=True)
+    assert lec.self_hold_alias_proposals(L,[]) == 0
+    m,_=L.build(with_compare=True,with_hyp=True)
+    assert "differs" in _sim_prove(m).values()
+
+
+def test_other_unpaired_state_is_not_assumed_equal_by_cofactoring(tmp_path):
+    assert lec.self_hold_alias_proposals(holding(tmp_path,other_state=True),[]) == 0

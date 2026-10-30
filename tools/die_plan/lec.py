@@ -2845,6 +2845,52 @@ def structural_twin_closure(L, log):
 
 
 
+
+def self_hold_alias_proposals(L, log):
+    """Propose cross-design aliases by exact own-state 0/1 D cofactors.
+
+    Only a register whose next state has no OTHER unpaired state or X input
+    qualifies. Substituting its own state on both sides then compares exact
+    AIG literals in the same miter, including the hold and load branches.
+    Every proposed relation still enters ordinary simultaneous induction.
+    """
+    m, kind = L.build(with_compare=False, with_hyp=False)
+    own = {(sd, key): v for v, (sd, key) in kind.items() if sd in ("gold_only", "gate_only")}
+    eligible = {}
+    for side, keys, tag in (("gold", L.gonly, "gold_only"), ("gate", L.tonly, "gate_only")):
+        candidates = []
+        for key in keys:
+            v = own.get((tag, key))
+            if not key.startswith("ff:") or v is None or (side, key) in L.hyp:
+                continue
+            inputs = m.cone_inputs(L.dlit[(side, key)])
+            if v in inputs and all(i == v or kind[i][0] in ("matched", "paired") for i in inputs):
+                candidates.append(key)
+        eligible[side] = candidates
+    if not eligible["gold"] or not eligible["gate"]:
+        return 0
+    L.build(with_compare=False, with_hyp=False, free_const=0)
+    zero = dict(L.dlit)
+    L.build(with_compare=False, with_hyp=False, free_const=1)
+    one = dict(L.dlit)
+    groups = {}
+    for side in ("gold", "gate"):
+        g = collections.defaultdict(list)
+        for key in eligible[side]:
+            sig = (zero[(side, key)], one[(side, key)])
+            if sig[0] != sig[1]:
+                g[sig].append(key)
+        groups[side] = g
+    n = 0
+    for sig, gs in groups["gold"].items():
+        ts = groups["gate"].get(sig, ())
+        if len(gs) == len(ts) == 1:
+            L.hyp[("gate", ts[0])] = ("eq", "gold", gs[0], 0)
+            n += 1
+    if n:
+        log.append(f"self-hold aliases: {n} exact own-state cofactor relations proposed (induction pending)")
+    return n
+
 def matched_d_copy_closure(L, log, tried, words=8, seed=5151, rounds=8):
     """Propose matched copies with one exact gold D function, even when their
     sequential traces stay constant until a rare command. Bound-state simulation
@@ -4747,6 +4793,10 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
                 continue     # prove the new surviving relations before returning
             if structural_twin_closure(L, log) and surviving_change():
                 continue     # rejected constants must not starve the twin closure
+            if matched_d_copy_closure(L, log, tried) and surviving_change():
+                continue     # aliases learned in later rounds can expose additional exact copies
+            if self_hold_alias_proposals(L, log) and surviving_change():
+                continue     # prove rare-event self-holding aliases before returning
             if traces is None:
                 traces = seq_traces(L, log)
             if os.environ.get("OT_LEC_COPY_CLOSURE", "1") != "0":
