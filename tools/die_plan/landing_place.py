@@ -35,6 +35,8 @@ def _reader_start_groups(t):
     if cfg is None:
         return []
     groups = []
+    if 'origin_rect_um' in cfg:
+        groups.append(('u_cland_origin', cfg['origin_rect_um'], 'reader-start-origin'))
     for bus, branch in sorted(cfg['branches'].items()):
         for i, stage in enumerate(branch['stages']):
             x, y = stage['xy_um']

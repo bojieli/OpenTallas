@@ -953,6 +953,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
     "properties": {
         "depth": {"type": "integer", "minimum": 1},
+        "origin_rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                           "items": {"type": "number"}},
         "branches": {"type": "object", "additionalProperties": {
             "type": "object", "additionalProperties": False, "required": ["stages"],
             "properties": {"stages": {"type": "array", "minItems": 1, "items": {

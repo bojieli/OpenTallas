@@ -2024,6 +2024,14 @@
           "type": "integer",
           "minimum": 1
          },
+         "origin_rect_um": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+           "type": "number"
+          }
+         },
          "branches": {
           "type": "object",
           "additionalProperties": {
