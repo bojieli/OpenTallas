@@ -84,6 +84,21 @@ class Identity(unittest.TestCase):
         semantic=probe({'plan':str(self.newpath),'block_identity':B.PINS,'identity_baseline_plan':str(self.oldpath)})
         self.assertEqual(semantic['blocks']['x'],self.ids()['x']['block_sha']);self.assertEqual(semantic['baseline_identities']['x']['block_sha'],semantic['blocks']['x'])
         (self.newpath.parent/'pins.json').unlink();self.assertIn('error',probe({'plan':str(self.newpath),'block_identity':B.PINS}))
+    def test_semantic_optin_holds_automatic_infra_retry_before_probe(self):
+        from unittest.mock import patch
+        from test_kit_wave import FakeAP, cfg
+        for mode,expected in ((B.RAW,1),(B.PINS,0)):
+            with tempfile.TemporaryDirectory() as directory:
+                rec=dict(self.record,status='RETRY-INFRA',event='event28w_c',kind='type')
+                rec['die']='qwen_kvsys'
+                state={'items':{K.item_key(rec['die'],rec['event'],'x',rec['block_sha']):rec}}
+                K.save_state(state,directory)
+                ap=FakeAP(directory,json.dumps(cfg(block_identity=mode)))
+                with patch.object(K,'collect'),patch.object(K,'plan_dies',return_value=([],[])):
+                    result=K.step(ap)
+                self.assertEqual(len(ap.units),expected)
+                if mode==B.PINS:self.assertEqual(next(iter(result['items'].values())),rec)
+
     def test_pin_free_type_keeps_legacy_hash(self):
         p={'partition_types':{'z':{'width':12}}}
         self.assertEqual(B.identities(p,self.newpath)['z']['block_sha'],self.ids(p)['z']['block_sha'])

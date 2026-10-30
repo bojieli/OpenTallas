@@ -40,7 +40,10 @@ state. Proven reuse keeps the original state key and record, including FAIL,
 reason, attempts and stage evidence. It creates no alias, duplicate stage row or
 retry. Unapproved unchanged legacy profiles are held. Real profile changes get a
 new semantic hash; the configured item allowlist and normal gates still apply.
-No retries or wave launch are authorized by generating a receipt.
+No retries or wave launch are authorized by generating a receipt. Semantic mode
+also holds automatic pending INFRA retries, which run before profile selection;
+an owner must review and explicitly release these after the current identity is
+proven. The default raw mode keeps its existing once-only INFRA retry.
 
 `results/plan_block_identity_1030/kv_portable_coupon.json` records the read-only
 controls against the actual old KV16980115, portable E0 and AHUB plans. Their real

@@ -799,7 +799,10 @@ def _step(AP, ap_dir):
     notices = {}
     collect(AP, cfg, st, notices)
     for key, rec in st["items"].items():                 # INFRA relaunch once
-        if rec.get("status") == "RETRY-INFRA" and not stop_reason(cfg, rec["die"], ap_dir):
+        # Semantic adoption requires a fresh profile proof. Never launch an
+        # old pending retry before plan_dies has had a chance to hold it.
+        identity_mode = (cfg.get("dies", {}).get(rec["die"]) or {}).get("block_identity", "raw")
+        if rec.get("status") == "RETRY-INFRA" and identity_mode == "raw" and not stop_reason(cfg, rec["die"], ap_dir):
             rec["status"] = "FAIL"
             launch(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
                                               "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
