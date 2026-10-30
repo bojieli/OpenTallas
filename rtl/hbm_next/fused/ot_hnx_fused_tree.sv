@@ -350,6 +350,7 @@ module ot_hnx_fused_hub #(
     localparam [2:0] S_IDLE = 0, S_SC = 1, S_SCW = 2, S_WG = 3, S_RUN = 4;
     reg [2:0] st; reg post; reg [3:0] nm1; reg [5:0] nsc, scs; reg [7:0] wt; reg sfault;
     reg [15:0] cs_r; reg [1:0] cj; reg [15:0] rsc_s;
+    wire [15:0] scrd_index = cs_r + {14'd0, cj};
     reg [3:0] wrow; reg [2:0] wb; reg [15:0] tg; reg [15:0] tw_next; reg [15:0] per; reg [4:0] gofs;
     reg [3:0] hr; reg dec; reg busy_q;
     assign busy = busy_q;                                        // registered output (1 edge after the state)
@@ -391,7 +392,7 @@ module ot_hnx_fused_hub #(
                         cd <= {19'd0, jq[184:177], rsO[18:3], rsB[18:3], rsA[18:3], jo[18:3], jb[18:3], ja[18:3], j_nm1, j_post};
                     end
                 end else begin                                          // one SCRD a cycle
-                    cv <= 1'b1; cop <= 3'd2; cx <= 8'(scs); cd <= {112'd0, cs_r + 16'(cj)};
+                    cv <= 1'b1; cop <= 3'd2; cx <= 8'(scs); cd <= {112'd0, scrd_index};
                     if (cj == (post ? 2'd2 : 2'd0)) begin cj <= '0; cs_r <= cs_r + rsc_s; end else cj <= cj + 2'd1;
                     scs <= scs + 6'd1;
                     if (scs + 6'd1 == nsc) begin st <= S_SCW; wt <= wsc; end

@@ -1,0 +1,3 @@
+PASS four-state35 X/Z/carry cases
+PASS exhaustive known-bit cast lockstep 262144 combinations, mismatch0, mutantCAUGHT262144, cycles_added0
+cast_lockstep_xz.sv:24: $finish called at 262179 (1s)
