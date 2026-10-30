@@ -673,6 +673,20 @@ def test_probe_blockages_keeps_hard_cores_no_leaf_names():
     assert obs == {"bq_0": "M5", "head2_e0": "M7", "e1": "M5"}
 
 
+def test_probe_blockages_dot_split_cores_replace_the_leaf_outline():
+    """DIE-HBM-36 10-30: split cores named '<leaf inst>.<cut>' (u_hcb_Q7.<cut>) stand for the leaf like '<inst>_*';
+    the whole leaf outline is no longer blocked (it put 1,929 ft station sites 'in a blockage').  Other prefixes of
+    the leaf name (u_hcb_Q70, u_hcb_Q7x.c) are not its cuts."""
+    leaf = {"inst": "u_hcb_Q7", "module": "m", "origin_um": [276.48, 1218.24], "outline_um": [51.84, 915.84]}
+    cut = lambda n, y: {"inst": n, "module": "c", "origin_um": [276.48, y], "outline_um": [51.84, 200.0]}  # noqa: E731
+    t = {"contents": [leaf], "hard_cores": [cut("u_hcb_Q7.c0", 1218.24), cut("u_hcb_Q7.c1", 1500.0),
+                                             cut("u_hcb_Q7.c2", 1800.0), cut("u_hcb_Q70", 2000.0),
+                                             cut("u_hcb_Q7x.c", 2100.0)]}
+    obs = {o["inst"]: o.get("obs_max") for o in g2.probe_blockages(t, "M7")}
+    assert obs == {"u_hcb_Q7.c0": "M5", "u_hcb_Q7.c1": "M5", "u_hcb_Q7.c2": "M5", "u_hcb_Q70": "M7",
+                   "u_hcb_Q7x.c": "M7"}
+
+
 def test_station_out_of_cores():
     boxes = [(100.0, 100.0, 300.0, 200.0), (301.0, 100.0, 400.0, 200.0)]
     assert g2.out_of_cores((50.0, 50.0), boxes, 500, 500) == (50.0, 50.0)

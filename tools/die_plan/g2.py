@@ -234,7 +234,7 @@ def worst_types(P, summ, n):
 
 def probe_blockages(t, top="M7"):
     """Leaf obstructions of a partition probe.  A content leaf that the plan splits into planned hard cores
-    (hard_cores[].inst == leaf inst or '<leaf inst>_*', e.g. an over-cap bankq leaf -> 3 cores) is represented by
+    (hard_cores[].inst == leaf inst, '<leaf inst>_*' or '<leaf inst>.<cut>', e.g. an over-cap bankq leaf -> 3 cores) is represented by
     those cores, not by the whole leaf outline: the space between the cores is glue / routing area of the partition.
     Every other content leaf with an outline is blocked as before."""
     cores = [h for h in t.get("hard_cores", []) if "origin_um" in h and "outline_um" in h]
@@ -242,7 +242,8 @@ def probe_blockages(t, top="M7"):
     for c in t.get("contents", []):
         if "origin_um" not in c or "outline_um" not in c:
             continue
-        sub = [h for h in cores if h["inst"] == c["inst"] or h["inst"].startswith(c["inst"] + "_")]
+        # split-core cuts are named '<leaf inst>_*' or '<leaf inst>.<cut>' (HBM u_hcb_Q7.<cut>, DIE-HBM-36 10-30)
+        sub = [h for h in cores if h["inst"] == c["inst"] or h["inst"].startswith((c["inst"] + "_", c["inst"] + "."))]
         if sub:
             covered.update(h["inst"] for h in sub)
             out += [dict(h, obs_max=max(
