@@ -18,9 +18,12 @@ FF's actual active edge. Rise/fall common-path duty distortion is retained;
 ideal half-cycle phase remains in the unchanged native library/SDC. Ordinary
 pair bounds include per-master SPICE and g021 AOCV with actual tree CPPR.
 Forwarded/primary pairs use the existing416.5ps clock-damage window; the356.5ps
-SDC limit is DATA-only. Native tap_window180 is an available kit hold budget
-(`die_sta_related.kit_windows`), not extra180ps clock damage added a second time.
-Full native STA, landing/frame checks and signoff remain required.
+SDC limit is DATA-only. The20/80ps results are intrinsic at input phase0,
+not hierarchical clock closure. The full native tap_window180 DATA contract
+remains. Robust forwarded qualification conservatively adds its180ps unknown
+external phase envelope once: T7a416.017ps (margin0.483), T7b338.784ps
+(margin77.716) against416.5. One clock object supplies no physical cross-port
+correlation proof. Full native STA, landing/frame checks and signoff remain required.
 
 All packets have `physical_authority=false`. Source/model preparation is ready
 for root review; no P&R was started. Use only the exact complete corrected

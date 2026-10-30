@@ -1,10 +1,11 @@
 {
   "source_commits": [
     "d1e6868ef",
-    "82bd918b6"
+    "82bd918b6",
+    "baace874c"
   ],
   "qualification": "MODEL_PREPARATION_ONLY_PHYSICAL_RECOVERY_HELD",
-  "tests": "22 focused controls PASS; prior bfe compatibility57 PASS",
+  "tests": "23 focused controls PASS; prior bfe compatibility57 PASS",
   "policy": {
     "clock_period_ps": 833,
     "input_slew_ps": 80,
@@ -34,8 +35,8 @@
       },
       "geometry_sha256": "aa9ee7831a22e2acf529976a8d0aabfc2d218be65f4a522d3027f0b2d36a90ec",
       "native_sdc_sha256": "5c5d757d58d1a9e21788aa10cdacb8203d2ee4ba2fd1cd9a58c1afe335f60fdd",
-      "packet_sha256": "7d15585b69b4a8d36b1532e5ad1a378738d52921d54d4ab12c1a045b30ff80ce",
-      "packet_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7a_flat_clock_forest_v5.json",
+      "packet_sha256": "655e785e98787e20191c8050be35344383e0ae8fba7f7b4759abcb46cf81009d",
+      "packet_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7a_flat_clock_forest_v6.json",
       "candidate_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7a_corrected_native80_sites_v4.json.gz",
       "native_geometry": "intel2:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/t7a_native/complete_corrected.odb",
       "render": "/srv/opentallas-scratch/claude/flat-clock-model/t7a_flat_clock_sites_v4.png",
@@ -281,6 +282,123 @@
           },
           "max_root_feed_delay_ps": 0.18457051765616123
         }
+      },
+      "native_source_envelopes": {
+        "clk": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t1": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t2": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t3": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t4": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t5": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t6": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t7": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t8": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t9": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t10": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t11": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t12": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t13": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t14": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t15": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "fclk_in_ft2_i[0]": {
+          "clock": "fclk_in_ft2_i",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "fclk_in_ft3_i[0]": {
+          "clock": "fclk_in_ft3_i",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "fclk_in_ft4_i[0]": {
+          "clock": "fclk_in_ft4_i",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "fclk_in_cland_dn_0[0]": {
+          "clock": "fclk_in_cland_dn_0",
+          "early": -180.0,
+          "late": 0.0
+        }
+      },
+      "robust_landing_clock_contract": {
+        "kind": "canonical_landed_forwarded_default",
+        "window_ps": 416.5,
+        "source": "die_sta_related.py time_class landed / default period/2; DATA-only SDC budget is separate",
+        "external_basis": "native_SDC_root_source_envelope_uncorrelated_robust",
+        "external_window_ps": 180.0,
+        "robust_max_ps": {
+          "TT": 416.01679280744895,
+          "FF": 360.88216723046423
+        }
+      },
+      "robust_landing_margin_ps": {
+        "TT": 0.48320719255104905,
+        "FF": 55.61783276953577
       }
     },
     "t7b": {
@@ -298,8 +416,8 @@
       },
       "geometry_sha256": "a351efd5e18a19b6bc5cfd7c73d0dfc249815d804879c92ef22f3b2a8f3305d8",
       "native_sdc_sha256": "8fd18251127bdd52efb8812ed7ee405fbd815ccfa77c656fc7b781619db2f5aa",
-      "packet_sha256": "a4e3706c048be75a02a3299f59d2ae391d48ac97c80c1092d255847d91ab2f1d",
-      "packet_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7b_flat_clock_forest_v5.json",
+      "packet_sha256": "0fc8cfc5ce2331968bb2e82e36f9a31e050af05b3f3aa8d5336e9d88227aa5f6",
+      "packet_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7b_flat_clock_forest_v6.json",
       "candidate_path": "intel2:/srv/opentallas-scratch2/claude/codex-flow-flat-clock-1030/t7b_corrected_native80_sites_v4.json.gz",
       "native_geometry": "intel2:/srv/opentallas-scratch2/claude/codex-signoff-wave-1030/t7b_native/complete_corrected.odb",
       "render": "/srv/opentallas-scratch/claude/flat-clock-model/t7b_flat_clock_sites_v4.png",
@@ -545,6 +663,113 @@
           },
           "max_root_feed_delay_ps": 0.10582685107401349
         }
+      },
+      "native_source_envelopes": {
+        "clk": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t1": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t2": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t3": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t4": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t5": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t6": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t7": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t8": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t9": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t10": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t11": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t12": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t13": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t14": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "clk_t15": {
+          "clock": "clk",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "fclk_in_ft0_i[0]": {
+          "clock": "fclk_in_ft0_i",
+          "early": -180.0,
+          "late": 0.0
+        },
+        "fclk_in_ft1_i[0]": {
+          "clock": "fclk_in_ft1_i",
+          "early": -180.0,
+          "late": 0.0
+        }
+      },
+      "robust_landing_clock_contract": {
+        "kind": "canonical_landed_forwarded_default",
+        "window_ps": 416.5,
+        "source": "die_sta_related.py time_class landed / default period/2; DATA-only SDC budget is separate",
+        "external_basis": "native_SDC_root_source_envelope_uncorrelated_robust",
+        "external_window_ps": 180.0,
+        "robust_max_ps": {
+          "TT": 338.7844925710224,
+          "FF": 301.67485268974093
+        }
+      },
+      "robust_landing_margin_ps": {
+        "TT": 77.71550742897762,
+        "FF": 114.82514731025907
       }
     }
   },
@@ -553,5 +778,7 @@
     "Native exact checkpoint recovery, full G1 and clock graph/placement/PG checks",
     "Actual TT setup/FF hold STA and signoff.py SIGNED",
     "T6 normal FT0/1 four-stage horizontal span impossible: OWNER/source event held; vertical-only overlay is architecture input"
-  ]
+  ],
+  "intrinsic_reference": "native_input_phase_zero;20/80 are local insertion bounds, not hierarchical closure",
+  "native_DATA_contract": "Preserve full native per-port sourceearly\u2212180/late0. No physical cross-port correlation inferred from shared clock object."
 }
