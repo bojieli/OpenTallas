@@ -13,7 +13,7 @@ proc ::ot_clock_rc_restore_checked {maps baseline checker stem tag} {
     error "OT_MM_FROZEN_CLOCK_RC: immutable original clock graph identity is required"
   }
   if {![file readable $checker]} { error "OT_MM_FROZEN_CLOCK_RC: existing clock geometry checker absent: $checker" }
-  set expected {};set unwired {};set pins {};set f [open $baseline r]
+  set expected {};set routed {};set unwired {};set pins {};set f [open $baseline r]
   while {[gets $f line] >= 0} {
     set fields [split $line \t]
     set kind [lindex $fields 0];set name [lindex $fields 1]
@@ -26,21 +26,23 @@ proc ::ot_clock_rc_restore_checked {maps baseline checker stem tag} {
         close $f;error "OT_MM_FROZEN_CLOCK_RC: malformed unwired clock: $name"
       }
       lappend unwired $name
-    }
+    } else {lappend routed $name}
     lappend expected $name
   }
   close $f
   foreach name $unwired {
     # A historical clock alias can be only an unloaded port. It has no
     # instance timing endpoint or RC to restore. Keep it in the FULL identity
-    # dump/freeze-set check: acquiring a load, wire or changed port still fails.
+    # dump/graph check: acquiring a load, wire or changed port still fails.
     if {![dict exists $pins $name] || [llength [dict get $pins $name]]!=1 ||
         ![string match {PORT:?*} [lindex [dict get $pins $name] 0]]} {
       error "OT_MM_FROZEN_CLOCK_RC: original loaded clock has no routed wire: $name"
     }
   }
-  if {![llength $expected] || [lsort $expected] ne [lsort $::ot_clk_frozen_nets]} {
-    error "OT_MM_FROZEN_CLOCK_RC: original identity and active frozen clock net sets differ"
+  # ot_clk_freeze stores only nets with nonempty wire ops; the immutable
+  # graph inventory additionally includes the unloaded aliases checked above.
+  if {![llength $routed] || [lsort $routed] ne [lsort $::ot_clk_frozen_nets]} {
+    error "OT_MM_FROZEN_CLOCK_RC: original routed identity and active frozen clock net sets differ"
   }
   # Existing freeze restores any destroyed clock wire byte-identically; the
   # existing graph checker also guards connectivity, masters and physical homes.
