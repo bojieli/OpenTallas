@@ -1,0 +1,88 @@
+{
+ "scope": "External START wave pricing; nativecollectorfinalrst_n_t depths9/8 unchanged and needcounterresetmappingconfirmation beforephysicaladoption.",
+ "external_origins": {
+  "old": {
+   "lk_ES0": 12,
+   "lk_ES1": 11
+  },
+  "new": {
+   "lk_ES0": 74,
+   "lk_ES1": 137
+  }
+ },
+ "boot_delta_cycles": {
+  "lk_ES0": 62,
+  "lk_ES1": 126
+ },
+ "start_from_b705_cycles": {
+  "lk_ES0": 66,
+  "lk_ES1": 129
+ },
+ "raw_reset_from_b705_cycles": {
+  "lk_ES0": 44,
+  "lk_ES1": 86
+ },
+ "reset_lead_growth_cycles": {
+  "lk_ES0": 22,
+  "lk_ES1": 43
+ },
+ "nativecollector_depth": {
+  "lk_ES0": 9,
+  "lk_ES1": 8
+ },
+ "if_counter_resets_use_final_native_tap_origin": {
+  "lk_ES0": 83,
+  "lk_ES1": 145
+ },
+ "crossings": [
+  {
+   "port": "coll__lk_ES1__s_7S_LP__0",
+   "K_old": 2,
+   "K_new": 66,
+   "lat_old": 4,
+   "lat_new": 4,
+   "depth": 4
+  },
+  {
+   "port": "coll__s_7S_LP__lk_ES1__9",
+   "K_old": 1,
+   "K_new": -63,
+   "lat_old": 1,
+   "lat_new": 1,
+   "depth": 4
+  },
+  {
+   "port": "coll__s_7S_LP__lk_ES0__8",
+   "K_old": -2,
+   "K_new": -64,
+   "lat_old": 1,
+   "lat_new": 1,
+   "depth": 4
+  },
+  {
+   "port": "coll__lk_ES0__s_7S_LP__0",
+   "K_old": 5,
+   "K_new": 67,
+   "lat_old": 4,
+   "lat_new": 4,
+   "depth": 4
+  },
+  {
+   "port": "coll__lk_ES1__s_7S_LP__1",
+   "K_old": 5,
+   "K_new": 67,
+   "lat_old": 4,
+   "lat_new": 4,
+   "depth": 4
+  },
+  {
+   "port": "coll__s_7S_LP__lk_ES1__8",
+   "K_old": -2,
+   "K_new": -64,
+   "lat_old": 1,
+   "lat_new": 1,
+   "depth": 4
+  }
+ ],
+ "build_allowed": false
+}
