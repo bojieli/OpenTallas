@@ -787,9 +787,11 @@ def _pin_freeze_hashes(kd, plan_pins_file, outline, declared_pins=None):
     declared = declared_pins if declared_pins is not None else json.loads(Path(plan_pins_file).read_text())
     source = Path(plan_pins_file)
     payload = source.read_bytes()
-    staged = Path(kd) / source.name
-    if staged.name == 'freeze.json':
-        raise ValueError('declared pin contract collides with owned freeze.json')
+    contract_dir = Path(kd) / kit_contract.PIN_CONTRACT_DIR
+    if contract_dir.is_symlink() or (contract_dir.exists() and not contract_dir.is_dir()):
+        raise ValueError('declared pin contract directory collision')
+    contract_dir.mkdir(exist_ok=True)
+    staged = contract_dir / source.name
     if staged.is_symlink() or (staged.exists() and staged.read_bytes() != payload):
         raise ValueError('declared pin contract basename collision: ' + staged.name)
     if not staged.exists():
@@ -799,7 +801,7 @@ def _pin_freeze_hashes(kd, plan_pins_file, outline, declared_pins=None):
         raise ValueError('staged declared pin contract differs from its source')
     return dict(pins_canon_sha256=kit_contract._canon(declared, outline),
                 pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), outline),
-                pins_staged_file=staged.name, pins_staged_sha256=digest)
+                pins_staged_file=str(staged.relative_to(kd)), pins_staged_sha256=digest)
 
 
 def git_show(spec):
