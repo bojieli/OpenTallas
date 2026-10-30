@@ -1,5 +1,6 @@
 """Exact existing HBM physical identity contracts; no name-pattern exemptions."""
 RING_MASTER = "ot_hfd_coll_q2_hard_v8g__ring_ag"
+KEYBUF_MASTER = "ot_hnx_idxn_keybuf_slice"
 SU_MASTER = "ot_hbm_su_static_pgslice_lg__lane_exp0_id"
 # OWNER 2026-10-30 00:10 (3)(B): the SU free-ID master exposes the physical strap_* ALIAS of its native 11-bit
 # lane_lane_id (wired straight through in the master's own wrapper; same row as tools/die_plan/parent_id_straps.py
@@ -8,7 +9,8 @@ SU_ALIAS, SU_NATIVE, SU_WIDTH = "strap_lane_lane_id", "lane_lane_id", 11
 
 # exact (master, strap port) -> (contract kind, width)
 CONTRACTS = {(RING_MASTER, "strap_qid"): ("HBM_RING_QID", 2),
-             (SU_MASTER, SU_ALIAS): ("HBM_SU_LANE_ID_ALIAS", SU_WIDTH)}
+             (SU_MASTER, SU_ALIAS): ("HBM_SU_LANE_ID_ALIAS", SU_WIDTH),
+             (KEYBUF_MASTER, "strap_lane_id"): ("KEYBUF_LANE_ID", 3)}
 
 
 def static_inputs(module, widths, dirs):

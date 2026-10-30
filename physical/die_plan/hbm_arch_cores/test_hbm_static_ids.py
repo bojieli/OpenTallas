@@ -99,4 +99,36 @@ class TestStaticIds(unittest.TestCase):
     def test_su_alias_matches_shared_plan_table(self):
         self.assertEqual(P.PHYSICAL_ID_ALIASES[C.SU_ALIAS],{'native':C.SU_NATIVE,'width':C.SU_WIDTH,'module':C.SU_MASTER})
 
+class TestKeybufStaticId(unittest.TestCase):
+    def test_keybuf_exact_three_bit_input(self):
+        self.assertEqual(C.static_inputs(C.KEYBUF_MASTER, {'strap_lane_id':3}, {'strap_lane_id':'input'}), ['strap_lane_id'])
+        self.assertEqual(C.contract(C.KEYBUF_MASTER, ['strap_lane_id'])['kind'], 'KEYBUF_LANE_ID')
+        self.assertEqual(C.static_inputs('unrelated', {'strap_lane_id':3}, {'strap_lane_id':'input'}), [])
+        for width, direction in ((2,'input'), (4,'input'), (3,'output')):
+            with self.assertRaises(ValueError): C.static_inputs(C.KEYBUF_MASTER, {'strap_lane_id':width}, {'strap_lane_id':direction})
+        with self.assertRaises(ValueError): C.contract('unrelated', ['strap_lane_id'])
+
+    def test_keybuf_parent_values_exact(self):
+        for base in (0,4):
+            for lane in range(4):
+                d={'module':C.KEYBUF_MASTER,'position_id_contract':{'kind':'KEYBUF_LANE_ID','pbase':base,'lane':lane},
+                   'parent_id_straps':{'strap_lane_id':{'width':3,'value':base+lane}}}
+                self.assertEqual(P.validate_parent_id_straps(d,inputs={'strap_lane_id':3},actual_module=C.KEYBUF_MASTER),d['parent_id_straps'])
+                with self.assertRaises(ValueError): P.validate_parent_id_straps(d,actual_module='unrelated')
+                d['parent_id_straps']['strap_lane_id']['value']=(base+lane+1)%8
+                with self.assertRaises(ValueError): P.validate_parent_id_straps(d,actual_module=C.KEYBUF_MASTER)
+        with self.assertRaises(ValueError):
+            P.validate_parent_id_straps({'module':C.KEYBUF_MASTER,'parent_id_straps':{'strap_lane_id':{'width':3,'value':0}}})
+
+    def test_keybuf_shell_passthrough_and_sdc(self):
+        widths={'clk':1,'strap_lane_id':3,'data':4,'out':4}
+        dirs={'clk':'input','strap_lane_id':'input','data':'input','out':'output'}
+        sv=F.emit_shell(C.KEYBUF_MASTER,'body',{},widths,dirs,widths,{'clk',*C.static_inputs(C.KEYBUF_MASTER,widths,dirs)},'clk')
+        self.assertNotIn('u_bin_strap_lane_id', sv)
+        self.assertIn('u_bin_data', sv)
+        text=load_sdc()(833,250,40,['clk'],[],'keybuf',straps=['strap_lane_id'])
+        kw=dict(period_ps=833,insertion_ps=250,insertion_tol_ps=40,clock_ports=['clk'],inputs=['strap_lane_id','data'],outputs=['out'],straps=['strap_lane_id'])
+        self.assertEqual(S.lint(text, **kw), [])
+        self.assertTrue(S.lint(text+'set_false_path -from [get_ports {data}]\n', **kw))
+
 if __name__=='__main__': unittest.main()

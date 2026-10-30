@@ -1,0 +1,77 @@
+{
+ "ot_hnx_idxn_keybuf_slice": {
+  "verdict": "PASS",
+  "ports": [
+   [
+    "clk",
+    "input",
+    1
+   ],
+   [
+    "rst_n",
+    "input",
+    1
+   ],
+   [
+    "clear",
+    "input",
+    1
+   ],
+   [
+    "strap_lane_id",
+    "input",
+    3
+   ],
+   [
+    "live_v",
+    "input",
+    1
+   ],
+   [
+    "live_index",
+    "input",
+    8
+   ],
+   [
+    "key_in",
+    "input",
+    1099
+   ],
+   [
+    "pre_v",
+    "input",
+    1
+   ],
+   [
+    "pre_index",
+    "input",
+    8
+   ],
+   [
+    "replay_v",
+    "input",
+    1
+   ],
+   [
+    "replay_index",
+    "input",
+    8
+   ],
+   [
+    "key_out",
+    "output",
+    1099
+   ],
+   [
+    "fault",
+    "output",
+    1
+   ]
+  ],
+  "mismatch": [],
+  "source_sha256": {
+   "ot_hnx_idxn_keybuf_slice.sv": "3da6e52595cb1fb1b9de012ff47985ed98d04cdf5c374fac9b235c9afc1807b9",
+   "ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f"
+  }
+ }
+}

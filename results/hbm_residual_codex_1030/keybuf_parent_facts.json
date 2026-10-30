@@ -1,0 +1,246 @@
+{
+ "verdict": "PASS",
+ "instances": 16,
+ "rows": [
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s0__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 0
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 0
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s1__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 1
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 1
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s2__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 2
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 2
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s3__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 3
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 3
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s0__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 0
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 0
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s1__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 1
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 1
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s2__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 2
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 2
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s3__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 0,
+    "lane": 3
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 3
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s0__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 0
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 4
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s1__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 1
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 5
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s2__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 2
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 6
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s3__q0",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 3
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 7
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s0__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 0
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 4
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s1__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 1
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 5
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s2__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 2
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 6
+    }
+   }
+  },
+  {
+   "partition_type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s3__q1",
+   "position_id_contract": {
+    "kind": "KEYBUF_LANE_ID",
+    "pbase": 4,
+    "lane": 3
+   },
+   "parent_id_straps": {
+    "strap_lane_id": {
+     "width": 3,
+     "value": 7
+    }
+   }
+  }
+ ]
+}
