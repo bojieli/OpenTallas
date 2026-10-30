@@ -1,0 +1,16 @@
+DIE-S81-32 S81 source-pin event (ve_s centre clock entry), 2026-10-29 20:24 PDT
+Fix-only delta on frozen plan_s13r2, H0 330ee0e6e50 form: physical/die_plan/s81/delta_ves_clkc_1029.py (exact-old-form asserts; 2nd run refuses, CHECKED)
+  inputs/core_pins/ot_s81sl_ve_s_tpl.json clk M5 E face (164.124,172.332) -> M5 interior (82.092,172.8) face C; pinhash 00c6f5c32fc4 -> 19c69837f893
+  cores/leaf/lef/ot_s81sl_ve_s_tpl.lef clk PORT M5 RECT 82.068 172.56 82.116 173.04 (USE SIGNAL kept);
+  M6/M7 full-outline OBS opened over the slice ck_entry island [79.92,170.64,84.24,174.96] so the parent drops onto the M5 pin
+  (plan reserves M6/M7 for the core, obs_max M7; routed ce27m abstract obstructs to M5 only).
+Source: master-plan slice island ck_entry (via stack M9->M5, clock_pin M5 (82.08,172.8)) snapped to M5 track 1710; routed
+  ce27m abstract PIN clk RECT 82.068 172.56 82.116 173.04 (intel2 die-s81-27/ce/kits/ot_s81sl_ve_s_ce27m).
+CHECKED: PIN_AUDIT routed ce27m 6_final.odb vs the new kit pins.json: PASS 488/488 (pin_audit_routed_ce27m.json; was 487/488 FAIL).
+CHECKED: gen_core_kit_legacy --plan --master-slice (lattice clock slice C) emits clk {M5,82.092,172.8,face C}; other 487 pins identical;
+  KIT_PREFLIGHT PASS 0 issues (intel2 die-s81-32/ves_kit/kits/ot_s81sl_ve_s_d32Cp).
+CHECKED: G0C (check.py plan_s13r2.json --completeness): FAIL 20 errors / 1591 warnings = main baseline, identical error set;
+  3 warning lines differ only in the absolute LEF path (run dir). intel2 die-s81-32/vescpin/g0c/branch.
+Plan impact: plan_s13r2/die_plan.json reference the core by path -> plan sha unchanged. ve_s is not an early die tap (no u_ve.u_s
+  core_taps rows; early = ve_m/vsw/vn_a/vn_b): the leaf partition-local tree reaches the pin; die tree unchanged.
+UNCHECKED: die clock check (estimate: unchanged, no die tap datum moves); strict bind not affected (bind.py never reads pins/LEF).
