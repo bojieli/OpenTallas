@@ -1,0 +1,550 @@
+{
+  "schema": "opentallas.geom_review.v1",
+  "source_base": "1bc6e6577ec4d1a3c6d918c896c1f89b092a8932",
+  "scope": "CAP_RT internal clock hardening, no RTL/pin/outline change",
+  "verdict": "FAIL",
+  "look": "Both actual completed-model images personally viewed; SRAM rectangle and 4.32um node keepout displayed. Top/bottom branches on opposite SRAM faces create long corner detours. No macros moved. External north M5 pin retained.",
+  "native_n_clock_um": [
+    129.612,
+    129.36
+  ],
+  "macro_rect_um": [
+    43.2,
+    43.2,
+    217.32,
+    72.936
+  ],
+  "variants": {
+    "std": {
+      "verdict": "FAIL",
+      "checks": {
+        "legs": {
+          "n": 572,
+          "over_1p10": 8,
+          "worst_ratio": 1.78
+        },
+        "leaf_spread": {
+          "max": 27.11,
+          "n_gt_40": 0
+        },
+        "sinks": {
+          "census": 10723,
+          "planned": 10723,
+          "missing": 0,
+          "dup": 0,
+          "extra": 0
+        },
+        "stages": [
+          10
+        ],
+        "TT": {
+          "mean": 317.99,
+          "window": 58.48,
+          "leaf_out_slew_max": 45.8,
+          "band_info": "OUT"
+        },
+        "FF": {
+          "mean": 247.59,
+          "window": 59.14,
+          "leaf_out_slew_max": 35.0,
+          "band_info": "OUT"
+        },
+        "macro_clock_pins": 1,
+        "macro_leaves": 1,
+        "verdict": "FAIL",
+        "fails": [
+          "legs over 1.10x Manhattan: 8",
+          "TT window 58.5 > 20",
+          "FF window 59.1 > 20",
+          "converter rc 1: srv/opentallas-scratch2/claude/codex-rtclock-1030/src/tools/die_plan/core_infra.py\", line 764, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+        ],
+        "scope": "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
+      },
+      "actual_input_priced": {
+        "scope": "PLAN MODEL ONLY UNCHECKED; preserved native north clock input; no RTL/pin movement",
+        "native_entry_um": [
+          129.612,
+          129.36
+        ],
+        "root_um": [
+          129.6,
+          125.28
+        ],
+        "trunk_um": 4.092000000000013,
+        "wire": "std",
+        "r_kohm_um": 0.014812,
+        "c_ff_um": 0.15423255000000002,
+        "root_arrival_ps": {
+          "TT": 0.16157721465149089,
+          "FF": 0.17715962054285092
+        },
+        "root_slew_ps": {
+          "TT": 0.35546987223327997,
+          "FF": 0.38975116519427205
+        },
+        "baseline": {
+          "TT": {
+            "mean": 317.99,
+            "leaf_mean_min": 298.25,
+            "leaf_mean_max": 356.73,
+            "window": 58.48,
+            "sink_min": 298.25,
+            "sink_max": 356.73,
+            "leaf_slew_in_max": 57.1,
+            "leaf_ct_ff": [
+              0.5,
+              38.3
+            ],
+            "leaf_out_slew_max": 45.8
+          },
+          "FF": {
+            "mean": 247.59,
+            "leaf_mean_min": 227.26,
+            "leaf_mean_max": 286.4,
+            "window": 59.14,
+            "sink_min": 226.88,
+            "sink_max": 286.4,
+            "leaf_slew_in_max": 56.5,
+            "leaf_ct_ff": [
+              0.6,
+              40.5
+            ],
+            "leaf_out_slew_max": 35.0
+          }
+        },
+        "full_input": {
+          "TT": {
+            "mean": 318.28,
+            "leaf_mean_min": 298.54,
+            "leaf_mean_max": 357.02,
+            "window": 58.48,
+            "sink_min": 298.54,
+            "sink_max": 357.02,
+            "leaf_slew_in_max": 57.1,
+            "leaf_ct_ff": [
+              0.5,
+              38.3
+            ],
+            "leaf_out_slew_max": 45.8
+          },
+          "FF": {
+            "mean": 247.89,
+            "leaf_mean_min": 227.57,
+            "leaf_mean_max": 286.7,
+            "window": 59.14,
+            "sink_min": 227.19,
+            "sink_max": 286.7,
+            "leaf_slew_in_max": 56.5,
+            "leaf_ct_ff": [
+              0.6,
+              40.5
+            ],
+            "leaf_out_slew_max": 35.0
+          }
+        },
+        "macro_sinkcap": {
+          "TT": {
+            "u_st/clk": 9.3458
+          },
+          "FF": {
+            "u_st/clk": 10.3732
+          }
+        },
+        "baseline_reproduces_frozen_model": true
+      },
+      "forbidden_legs": [
+        {
+          "edge": "Tqpq",
+          "level": 3,
+          "length_um": 50.22,
+          "direct_um": 40.5,
+          "ratio": 1.24,
+          "source_um": [
+            214.92,
+            77.76
+          ],
+          "target_um": [
+            213.84,
+            38.34
+          ]
+        },
+        {
+          "edge": "Tppuu",
+          "level": 4,
+          "length_um": 58.32,
+          "direct_um": 42.12,
+          "ratio": 1.385,
+          "source_um": [
+            48.6,
+            38.34
+          ],
+          "target_um": [
+            49.14,
+            79.92
+          ]
+        },
+        {
+          "edge": "Tqput",
+          "level": 4,
+          "length_um": 59.94,
+          "direct_um": 40.5,
+          "ratio": 1.48,
+          "source_um": [
+            210.06,
+            38.34
+          ],
+          "target_um": [
+            208.98,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tqpuu",
+          "level": 4,
+          "length_um": 56.16,
+          "direct_um": 44.28,
+          "ratio": 1.268,
+          "source_um": [
+            208.98,
+            38.34
+          ],
+          "target_um": [
+            213.84,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tqpuv",
+          "level": 4,
+          "length_um": 63.72,
+          "direct_um": 39.96,
+          "ratio": 1.595,
+          "source_um": [
+            207.9,
+            38.34
+          ],
+          "target_um": [
+            207.36,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tppwv",
+          "level": 4,
+          "length_um": 73.44,
+          "direct_um": 58.32,
+          "ratio": 1.259,
+          "source_um": [
+            64.8,
+            38.34
+          ],
+          "target_um": [
+            48.06,
+            79.92
+          ]
+        },
+        {
+          "edge": "Tqpux",
+          "level": 4,
+          "length_um": 58.32,
+          "direct_um": 52.92,
+          "ratio": 1.102,
+          "source_um": [
+            203.58,
+            38.34
+          ],
+          "target_um": [
+            217.08,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tqpvx",
+          "level": 4,
+          "length_um": 78.84,
+          "direct_um": 44.28,
+          "ratio": 1.78,
+          "source_um": [
+            197.64,
+            77.76
+          ],
+          "target_um": [
+            202.5,
+            38.34
+          ]
+        }
+      ],
+      "image": "results/rtclock_1030/std/clock_review.png"
+    },
+    "ndr": {
+      "verdict": "FAIL",
+      "checks": {
+        "legs": {
+          "n": 572,
+          "over_1p10": 8,
+          "worst_ratio": 1.78
+        },
+        "leaf_spread": {
+          "max": 27.11,
+          "n_gt_40": 0
+        },
+        "sinks": {
+          "census": 10723,
+          "planned": 10723,
+          "missing": 0,
+          "dup": 0,
+          "extra": 0
+        },
+        "stages": [
+          10
+        ],
+        "TT": {
+          "mean": 300.61,
+          "window": 41.27,
+          "leaf_out_slew_max": 45.8,
+          "band_info": "OUT"
+        },
+        "FF": {
+          "mean": 228.15,
+          "window": 37.22,
+          "leaf_out_slew_max": 35.0,
+          "band_info": "OUT"
+        },
+        "macro_clock_pins": 1,
+        "macro_leaves": 1,
+        "verdict": "FAIL",
+        "fails": [
+          "legs over 1.10x Manhattan: 8",
+          "TT window 41.3 > 20",
+          "FF window 37.2 > 20",
+          "converter rc 1: srv/opentallas-scratch2/claude/codex-rtclock-1030/src/tools/die_plan/core_infra.py\", line 764, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"
+        ],
+        "scope": "automated geometry gates on the PLAN (GEOM-REVIEW-10 form); latency numbers PLAN MODEL, UNCHECKED"
+      },
+      "actual_input_priced": {
+        "scope": "PLAN MODEL ONLY UNCHECKED; preserved native north clock input; no RTL/pin movement",
+        "native_entry_um": [
+          129.612,
+          129.36
+        ],
+        "root_um": [
+          129.6,
+          125.28
+        ],
+        "trunk_um": 4.092000000000013,
+        "wire": "ndr2w",
+        "r_kohm_um": 0.007406,
+        "c_ff_um": 0.19279068750000003,
+        "root_arrival_ps": {
+          "TT": 0.08317939500930174,
+          "FF": 0.09097059795498176
+        },
+        "root_slew_ps": {
+          "TT": 0.18299466902046385,
+          "FF": 0.2001353155009599
+        },
+        "baseline": {
+          "TT": {
+            "mean": 300.61,
+            "leaf_mean_min": 279.51,
+            "leaf_mean_max": 320.77,
+            "window": 41.27,
+            "sink_min": 279.5,
+            "sink_max": 323.27,
+            "leaf_slew_in_max": 40.4,
+            "leaf_ct_ff": [
+              0.5,
+              38.3
+            ],
+            "leaf_out_slew_max": 45.8
+          },
+          "FF": {
+            "mean": 228.15,
+            "leaf_mean_min": 212.85,
+            "leaf_mean_max": 250.07,
+            "window": 37.22,
+            "sink_min": 212.85,
+            "sink_max": 250.07,
+            "leaf_slew_in_max": 37.5,
+            "leaf_ct_ff": [
+              0.6,
+              40.5
+            ],
+            "leaf_out_slew_max": 35.0
+          }
+        },
+        "full_input": {
+          "TT": {
+            "mean": 300.76,
+            "leaf_mean_min": 279.66,
+            "leaf_mean_max": 320.92,
+            "window": 41.27,
+            "sink_min": 279.65,
+            "sink_max": 323.42,
+            "leaf_slew_in_max": 40.4,
+            "leaf_ct_ff": [
+              0.5,
+              38.3
+            ],
+            "leaf_out_slew_max": 45.8
+          },
+          "FF": {
+            "mean": 228.31,
+            "leaf_mean_min": 213.01,
+            "leaf_mean_max": 250.23,
+            "window": 37.22,
+            "sink_min": 213.0,
+            "sink_max": 250.23,
+            "leaf_slew_in_max": 37.5,
+            "leaf_ct_ff": [
+              0.6,
+              40.5
+            ],
+            "leaf_out_slew_max": 35.0
+          }
+        },
+        "macro_sinkcap": {
+          "TT": {
+            "u_st/clk": 9.3458
+          },
+          "FF": {
+            "u_st/clk": 10.3732
+          }
+        },
+        "baseline_reproduces_frozen_model": true
+      },
+      "forbidden_legs": [
+        {
+          "edge": "Tqpq",
+          "level": 3,
+          "length_um": 50.22,
+          "direct_um": 40.5,
+          "ratio": 1.24,
+          "source_um": [
+            214.92,
+            77.76
+          ],
+          "target_um": [
+            213.84,
+            38.34
+          ]
+        },
+        {
+          "edge": "Tppuu",
+          "level": 4,
+          "length_um": 58.32,
+          "direct_um": 42.12,
+          "ratio": 1.385,
+          "source_um": [
+            48.6,
+            38.34
+          ],
+          "target_um": [
+            49.14,
+            79.92
+          ]
+        },
+        {
+          "edge": "Tqput",
+          "level": 4,
+          "length_um": 59.94,
+          "direct_um": 40.5,
+          "ratio": 1.48,
+          "source_um": [
+            210.06,
+            38.34
+          ],
+          "target_um": [
+            208.98,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tqpuu",
+          "level": 4,
+          "length_um": 56.16,
+          "direct_um": 44.28,
+          "ratio": 1.268,
+          "source_um": [
+            208.98,
+            38.34
+          ],
+          "target_um": [
+            213.84,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tqpuv",
+          "level": 4,
+          "length_um": 63.72,
+          "direct_um": 39.96,
+          "ratio": 1.595,
+          "source_um": [
+            207.9,
+            38.34
+          ],
+          "target_um": [
+            207.36,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tppwv",
+          "level": 4,
+          "length_um": 73.44,
+          "direct_um": 58.32,
+          "ratio": 1.259,
+          "source_um": [
+            64.8,
+            38.34
+          ],
+          "target_um": [
+            48.06,
+            79.92
+          ]
+        },
+        {
+          "edge": "Tqpux",
+          "level": 4,
+          "length_um": 58.32,
+          "direct_um": 52.92,
+          "ratio": 1.102,
+          "source_um": [
+            203.58,
+            38.34
+          ],
+          "target_um": [
+            217.08,
+            77.76
+          ]
+        },
+        {
+          "edge": "Tqpvx",
+          "level": 4,
+          "length_um": 78.84,
+          "direct_um": 44.28,
+          "ratio": 1.78,
+          "source_um": [
+            197.64,
+            77.76
+          ],
+          "target_um": [
+            202.5,
+            38.34
+          ]
+        }
+      ],
+      "image": "results/rtclock_1030/ndr/clock_review.png"
+    }
+  },
+  "diagnosis": "Equal-count grouping and stray reparenting still place eight edges across opposite SRAM faces. NDR reduces RC but preserves invalid geometry; no physical build permitted.",
+  "next_step": "Macro-face component-aware grouping/reparenting, preserving equal depth, exact SRAM cap, keepout and native clock pin. Both allotted std/NDR variants exhausted; return to core lead for structural scope.",
+  "limits": "Native-input stub priced to frozen modeled root; converter rejects invalid window, so no legal converted root or physical GRT claimed. Internal-conversion displacement remains unmeasured. No RTL/cycles; no SIGNED or standalone closure.",
+  "fleet": {
+    "host": "epyc2",
+    "root": "/srv/opentallas-scratch2/claude/codex-rtclock-1030",
+    "std_unit": "oth-ubuntu-3273183-1793361903",
+    "ndr_unit": "oth-ubuntu-3290338-1793362034"
+  }
+}

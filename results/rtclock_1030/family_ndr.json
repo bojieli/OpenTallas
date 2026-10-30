@@ -1,0 +1,26 @@
+{
+  "families": [
+    {
+      "name": "s81sl_macro_rt_native_n_ndr",
+      "members": [
+        "ot_s81sl_cap_rt"
+      ],
+      "leaf_target": 48,
+      "smax": 70.0,
+      "leaf_limit": 35.0,
+      "wire": "ndr2w",
+      "reassign": true,
+      "reassign_cap": 1.5,
+      "macro_leaves": true,
+      "macro_keepout": {
+        "ot_s81sl_cap_rt": true
+      },
+      "macro_d1": true,
+      "keepout_stray": "reparent",
+      "keepout_halo_um": 4.32,
+      "entry_node_legal": true,
+      "why": "DIE-S81-30/VSW 10-29 (COORD 13:29 (4)): 2 SRAM macro leaves (exact liberty clock caps), calibrated d1 on macro leaves (macro_d1), kit row-cut macro halo 4.32 um as node keep-out, root on a node-legal site, split-off strays re-hung on a same-level driver (<=1.10x, <=smax legs). PLAN MODEL TT 256.47/w19.84, FF 192.56/w18.90, disp 0.62 um, 13199/13199 sinks (UNCHECKED until built)",
+      "entry": "centre"
+    }
+  ]
+}
