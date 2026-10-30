@@ -1,0 +1,9 @@
+The mirror registers follow encoded class registers n_c/n_c_s/w_c. Those class registers hold during reset. Resetting the mirror alone to zero violates mirror == onehot(class) after a mid-run reset. Both source files now reload each mirror from its held encoded source during reset. Normal-run logic, arithmetic, outputs, pipeline depths and clock targets are unchanged; added cycles = 0.
+
+This is a new commit on origin/main 1abb3fcb1 after the reverted zero-clear commits. Do not remerge the old branch or reapply zero-clears. Exact source was recovered from already-running rc2/gb2r2 kits.
+
+Collected inherited actual ROM bench: intel2 s81ck/bench_rom_r2, unit1289174-1793337594, terminal0. Seeds1/2/3 run1773914/1806452/1849282cycles with50/42/26mid-runresets; all0mismatches. Actual mutant caught377mismatches. Inherited actual BF frame bench col_h9:12/12PASS, unit1289167-1793337594.
+
+New smallest BF control vehicle copies qx_gt plus the two mirror always blocks verbatim from current RTL. The rest of the datapath is boundary stimulus; normal source-class updates obey the encoded walker's existing mirror invariant. NSEG1/2/8/32 each12000cycles and1412resetedges, comparing old hold behavior with the proposed reset reload on every edge. Every shapePASS. The rejected zero-clear alternative is the negative control; caught6405..6834edges. This isolates the reset mechanism; it is not a complete BF arithmetic or cold-start proof. Actual full-frame and ROM receipts above cover complementary integration behavior.
+
+Qualification still PENDING: actual synth-kit LEC rc2 and gb2r2 remain live on intel2 s81ck/kits/dsfd_bf_front_roots_rc2 (unit1326760-1793337685) and ot_v41_rom_elem_q_qxpq_w10_gb_gb2r2 (unit1327058-1793337686). Only declare READY/adopt after both actual kit equivalence results qualify; no SIGNED claim. Existing rejected zero-clear bench and original failed LEC evidence remain untouched.
