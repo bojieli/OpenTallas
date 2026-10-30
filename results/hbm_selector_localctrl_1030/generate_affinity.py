@@ -5,6 +5,7 @@ from pathlib import Path
 ap=argparse.ArgumentParser();ap.add_argument('--repo',required=True);ap.add_argument('--views',required=True);ap.add_argument('--slice',required=True);ap.add_argument('--out',required=True);a=ap.parse_args()
 repo=Path(a.repo).resolve();out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
 mod='ot_hbm_idx_selector_static_sel';H=repo/'physical/die_plan/hbm_arch_cores'
+sys.path.insert(0,str(H))
 sp=importlib.util.spec_from_file_location('selector_coregen',H/'gen_core_kit_hbm.py');G=importlib.util.module_from_spec(sp);sp.loader.exec_module(G)
 V=json.load(open(a.views));v=next(x for x in V['view_list'] if x['module']==mod)
 boxes=[(4.32,4.32,300.024,225.18),(4.32,225.18,300.024,446.04),(300.024,4.32,595.728,225.18),(300.024,225.18,595.728,446.04)]
