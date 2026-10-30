@@ -1,0 +1,30 @@
+{
+ "base": "base",
+ "variant": "out_shared_v4",
+ "target": "/srv/opentallas-scratch2/claude/codex-hbm-1851/L7c",
+ "additions": {
+  "ports": 24,
+  "lanes": 10,
+  "q_b100.ft_slots": 1,
+  "q_sm0.buses": 1,
+  "q_sm1.buses": 1,
+  "q_sm2.buses": 1,
+  "q_sm3.buses": 1,
+  "q_spb0.buses": 1,
+  "q_spb1.ft_slots": 1,
+  "q_spb2.ft_slots": 1,
+  "q_spu1.ft_slots": 1,
+  "q_su01.ft_slots": 1,
+  "q_su10.ft_slots": 1,
+  "q_su21.ft_slots": 1,
+  "q_hub_nw.buses": 5,
+  "q_hub_ne.buses": 5,
+  "q_b100__physical_v1.ft_slots": 1,
+  "q_spb0__physical_v1.buses": 1,
+  "q_spb2__physical_v1.ft_slots": 1,
+  "q_spu1__physical_v1.ft_slots": 1,
+  "q_su01__physical_v1.ft_slots": 1,
+  "q_su10__physical_v1.ft_slots": 1,
+  "q_su21__physical_v1.ft_slots": 1
+ }
+}

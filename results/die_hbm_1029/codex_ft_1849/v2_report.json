@@ -1,0 +1,1286 @@
+{
+ "schema": "die_hbm_24.v2_event.v1",
+ "base": "base",
+ "base_sha": "70c2dce28269",
+ "groups": [
+  "G3",
+  "G4"
+ ],
+ "built": [
+  {
+   "lane": "L700",
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "bits": 632,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_hub",
+    "NW_spu1",
+    "NW_spb2",
+    "NW_spb1",
+    "NW_spb0"
+   ],
+   "windows": [
+    {
+     "edge": "NW_hub|NW_spu1",
+     "face": "S",
+     "window_um": [
+      7418.768,
+      7524.268
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_spu1|NW_spb2",
+     "face": "S",
+     "window_um": [
+      7418.768,
+      7524.268
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_spb2|NW_spb1",
+     "face": "S",
+     "window_um": [
+      7418.768,
+      7524.268
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_spb1|NW_spb0",
+     "face": "S",
+     "window_um": [
+      7418.768,
+      7524.268
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_spu1",
+     "slot": "L700x1",
+     "stations": 5,
+     "route_um": 1555.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_spb2",
+     "slot": "L700x2",
+     "stations": 5,
+     "route_um": 1503.4,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_spb1",
+     "slot": "L700x3",
+     "stations": 5,
+     "route_um": 1503.4,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 17,
+   "stations": 15,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "group": "G3"
+  },
+  {
+   "lane": "L702",
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_sm0",
+    "NW_su01",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_sm0|NW_su01",
+     "face": "S",
+     "window_um": [
+      4882.752,
+      4889.0853
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_su01|NW_hub",
+     "face": "S",
+     "window_um": [
+      5886.416,
+      5892.7493
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_su01",
+     "slot": "L702x1",
+     "stations": 8,
+     "route_um": 2576.1,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 10,
+   "stations": 8,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    7,
+    8
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L703",
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_sm1",
+    "NW_su10",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_sm1|NW_su10",
+     "face": "S",
+     "window_um": [
+      8684.352,
+      8690.6853
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_su10|NW_hub",
+     "face": "S",
+     "window_um": [
+      8958.032,
+      8964.3653
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_su10",
+     "slot": "L703x1",
+     "stations": 6,
+     "route_um": 1846.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 8,
+   "stations": 6,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8,
+    9
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L704",
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_sm2",
+    "NW_su21",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_sm2|NW_su21",
+     "face": "N",
+     "window_um": [
+      5012.352,
+      5018.6853
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_su21|NW_hub",
+     "face": "N",
+     "window_um": [
+      6108.752,
+      6115.0853
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_su21",
+     "slot": "L704x1",
+     "stations": 8,
+     "route_um": 2651.6,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 10,
+   "stations": 8,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L705",
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_sm3",
+    "NW_b100",
+    "NW_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NW_sm3|NW_b100",
+     "face": "N",
+     "window_um": [
+      7949.952,
+      7956.2853
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NW_b100|NW_hub",
+     "face": "N",
+     "window_um": [
+      7829.28,
+      7835.6133
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b100",
+     "slot": "L705x1",
+     "stations": 5,
+     "route_um": 1675.9,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 7,
+   "stations": 5,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L700m",
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "bits": 632,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_hub",
+    "NE_spu1",
+    "NE_spb2",
+    "NE_spb1",
+    "NE_spb0"
+   ],
+   "windows": [
+    {
+     "edge": "NE_hub|NE_spu1",
+     "face": "S",
+     "window_um": [
+      20875.412,
+      20980.912
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_spu1|NE_spb2",
+     "face": "S",
+     "window_um": [
+      20875.412,
+      20980.912
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_spb2|NE_spb1",
+     "face": "S",
+     "window_um": [
+      20875.412,
+      20980.912
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_spb1|NE_spb0",
+     "face": "S",
+     "window_um": [
+      20875.412,
+      20980.912
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_spu1",
+     "slot": "L700mx1",
+     "stations": 5,
+     "route_um": 1555.2,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_spb2",
+     "slot": "L700mx2",
+     "stations": 5,
+     "route_um": 1503.4,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_spb1",
+     "slot": "L700mx3",
+     "stations": 5,
+     "route_um": 1503.4,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 17,
+   "stations": 15,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "group": "G3"
+  },
+  {
+   "lane": "L702m",
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_sm0",
+    "NE_su01",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_sm0|NE_su01",
+     "face": "S",
+     "window_um": [
+      23510.5947,
+      23516.928
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_su01|NE_hub",
+     "face": "S",
+     "window_um": [
+      22506.9307,
+      22513.264
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_su01",
+     "slot": "L702mx1",
+     "stations": 8,
+     "route_um": 2576.1,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 10,
+   "stations": 8,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    7,
+    8
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L703m",
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_sm1",
+    "NE_su10",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_sm1|NE_su10",
+     "face": "S",
+     "window_um": [
+      19708.9947,
+      19715.328
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_su10|NE_hub",
+     "face": "S",
+     "window_um": [
+      19435.3147,
+      19441.648
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_su10",
+     "slot": "L703mx1",
+     "stations": 6,
+     "route_um": 1846.2,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 8,
+   "stations": 6,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8,
+    9
+   ],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L704m",
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_sm2",
+    "NE_su21",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_sm2|NE_su21",
+     "face": "N",
+     "window_um": [
+      23380.9947,
+      23387.328
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_su21|NE_hub",
+     "face": "N",
+     "window_um": [
+      22284.5947,
+      22290.928
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_su21",
+     "slot": "L704mx1",
+     "stations": 8,
+     "route_um": 2651.6,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 10,
+   "stations": 8,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "group": "G4"
+  },
+  {
+   "lane": "L705m",
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "bits": 37,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_sm3",
+    "NE_b100",
+    "NE_hub"
+   ],
+   "windows": [
+    {
+     "edge": "NE_sm3|NE_b100",
+     "face": "N",
+     "window_um": [
+      20443.3947,
+      20449.728
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    },
+    {
+     "edge": "NE_b100|NE_hub",
+     "face": "N",
+     "window_um": [
+      20564.0667,
+      20570.4
+     ],
+     "layers": [
+      "M7",
+      "M5"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b100",
+     "slot": "L705mx1",
+     "stations": 5,
+     "route_um": 1675.9,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 7,
+   "stations": 5,
+   "clock_landing": 0,
+   "existing_pair_cycles": [
+    8
+   ],
+   "cycles_match_pair": false,
+   "macro_hits": 0,
+   "group": "G4"
+  }
+ ],
+ "failed": [
+  {
+   "r": {
+    "src": "NW_spb0",
+    "dst": "NW_hub",
+    "bits": 615,
+    "group": "G3"
+   },
+   "why": "no macro-free station chain with 22 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_spb0",
+     "NW_spb1",
+     "NW_spb2",
+     "NW_spu1",
+     "NW_hub"
+    ],
+    [
+     "NW_spb0",
+     "NW_sm3",
+     "NW_su30",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "r": {
+    "src": "NE_spb0",
+    "dst": "NE_hub",
+    "bits": 615,
+    "group": "G3"
+   },
+   "why": "no macro-free station chain with 5 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_spb0",
+     "NE_spb1",
+     "NE_spb2",
+     "NE_spu1",
+     "NE_hub"
+    ],
+    [
+     "NE_spb0",
+     "NE_sm3",
+     "NE_su30",
+     "NE_hub"
+    ]
+   ]
+  }
+ ],
+ "far": [
+  {
+   "src": "NW_b100",
+   "dst": "NW_b101",
+   "bits": 3333,
+   "group": null
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b102",
+   "bits": 2777,
+   "group": null
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "bits": 2775,
+   "group": "G1"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "bits": 2730,
+   "group": "G1"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b113",
+   "bits": 2277,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b111",
+   "bits": 1662,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b112",
+   "bits": 1662,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b110",
+   "bits": 1534,
+   "group": null
+  },
+  {
+   "src": "NW_b102",
+   "dst": "NW_b101",
+   "bits": 1146,
+   "group": null
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_b113",
+   "bits": 1000,
+   "group": null
+  },
+  {
+   "src": "NW_b112",
+   "dst": "NW_b113",
+   "bits": 1000,
+   "group": null
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_b113",
+   "bits": 800,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_hub",
+   "bits": 693,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su11",
+   "bits": 596,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su20",
+   "bits": 596,
+   "group": null
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su31",
+   "bits": 596,
+   "group": null
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b103",
+   "bits": 569,
+   "group": null
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_b113",
+   "bits": 516,
+   "group": null
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_b113",
+   "bits": 516,
+   "group": null
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_b113",
+   "bits": 516,
+   "group": null
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_hub",
+   "bits": 410,
+   "group": null
+  },
+  {
+   "src": "NW_b002",
+   "dst": "root",
+   "bits": 297,
+   "group": "G2"
+  },
+  {
+   "src": "NW_b103",
+   "dst": "root",
+   "bits": 297,
+   "group": "G2"
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b111",
+   "bits": 160,
+   "group": null
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b102",
+   "bits": 35,
+   "group": null
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "bits": 9,
+   "group": "G2"
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "bits": 4,
+   "group": null
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "bits": 3,
+   "group": null
+  },
+  {
+   "src": "NW_b103",
+   "dst": "NW_hub",
+   "bits": 2,
+   "group": null
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "bits": 2,
+   "group": "G2"
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "bits": 2,
+   "group": "G2"
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b103",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b101",
+   "bits": 3332,
+   "group": null
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b102",
+   "bits": 2777,
+   "group": null
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b113",
+   "bits": 2277,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b111",
+   "bits": 1662,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b112",
+   "bits": 1662,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b110",
+   "bits": 1534,
+   "group": null
+  },
+  {
+   "src": "NE_b102",
+   "dst": "NE_b101",
+   "bits": 1146,
+   "group": null
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "group": null
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "group": null
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_b113",
+   "bits": 800,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_hub",
+   "bits": 693,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su11",
+   "bits": 596,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su20",
+   "bits": 596,
+   "group": null
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su31",
+   "bits": 596,
+   "group": null
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b103",
+   "bits": 569,
+   "group": null
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_b113",
+   "bits": 516,
+   "group": null
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_b113",
+   "bits": 516,
+   "group": null
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_b113",
+   "bits": 516,
+   "group": null
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_hub",
+   "bits": 410,
+   "group": null
+  },
+  {
+   "src": "NE_b002",
+   "dst": "root",
+   "bits": 297,
+   "group": "G2"
+  },
+  {
+   "src": "NE_b103",
+   "dst": "root",
+   "bits": 297,
+   "group": "G2"
+  },
+  {
+   "src": "root",
+   "dst": "NE_b000",
+   "bits": 180,
+   "group": "G2"
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b111",
+   "bits": 160,
+   "group": null
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b102",
+   "bits": 35,
+   "group": null
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "bits": 9,
+   "group": "G2"
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "bits": 4,
+   "group": null
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "bits": 3,
+   "group": null
+  },
+  {
+   "src": "NE_b103",
+   "dst": "NE_hub",
+   "bits": 2,
+   "group": null
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b103",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "bits": 1,
+   "group": null
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "bits": 1,
+   "group": null
+  }
+ ],
+ "estimate": [],
+ "out_sha": "72de7f6ec0b0",
+ "totals": {
+  "rows": 79,
+  "built_rows": 10,
+  "built_lanes": 10,
+  "built_bits": 1560,
+  "failed": 2,
+  "far_left": 67,
+  "far_left_bits": 51708,
+  "by_group": {
+   "G3": 2,
+   "G4": 8
+  }
+ },
+ "built_list": [
+  {
+   "lane": "L700",
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "bits": 632,
+   "group": "G3",
+   "cycles": 17,
+   "stations": 15,
+   "chain": [
+    "NW_hub",
+    "NW_spu1",
+    "NW_spb2",
+    "NW_spb1",
+    "NW_spb0"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L702",
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 10,
+   "stations": 8,
+   "chain": [
+    "NW_sm0",
+    "NW_su01",
+    "NW_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L703",
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 8,
+   "stations": 6,
+   "chain": [
+    "NW_sm1",
+    "NW_su10",
+    "NW_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L704",
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 10,
+   "stations": 8,
+   "chain": [
+    "NW_sm2",
+    "NW_su21",
+    "NW_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L705",
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 7,
+   "stations": 5,
+   "chain": [
+    "NW_sm3",
+    "NW_b100",
+    "NW_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L700m",
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "bits": 632,
+   "group": "G3",
+   "cycles": 17,
+   "stations": 15,
+   "chain": [
+    "NE_hub",
+    "NE_spu1",
+    "NE_spb2",
+    "NE_spb1",
+    "NE_spb0"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L702m",
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 10,
+   "stations": 8,
+   "chain": [
+    "NE_sm0",
+    "NE_su01",
+    "NE_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L703m",
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 8,
+   "stations": 6,
+   "chain": [
+    "NE_sm1",
+    "NE_su10",
+    "NE_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L704m",
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 10,
+   "stations": 8,
+   "chain": [
+    "NE_sm2",
+    "NE_su21",
+    "NE_hub"
+   ],
+   "macro_hits": 0
+  },
+  {
+   "lane": "L705m",
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "bits": 37,
+   "group": "G4",
+   "cycles": 7,
+   "stations": 5,
+   "chain": [
+    "NE_sm3",
+    "NE_b100",
+    "NE_hub"
+   ],
+   "macro_hits": 0
+  }
+ ]
+}

@@ -1,0 +1,200 @@
+{
+ "verdict": "FAIL",
+ "errors": 30,
+ "warnings": 903,
+ "mode": "G0C",
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_vmb_Q6_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q6: mean cos -0.53, 282 pins on the far side (re-pin to face N)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_vmb_Q7_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q7: mean cos -0.98, 282 pins on the far side (re-pin to face W)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_hb_idx__qctl_Q__q0 port key_index: 8 pins on face E face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.42, 8 pins on the far side (re-pin to face S)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_hb_idx__qctl_Q__q0 port key_slot: 1 pins on face E face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.42, 1 pins on the far side (re-pin to face S)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_hb_idx__qctl_Q__q0 port nq: 12 pins on face E face away from its partner(s) face S (L137_i), face S (L6_o), face S (L7_o) ...: mean cos -0.42, 12 pins on the far side (re-pin to face S)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw: 11 core ports face away from their partners (6 more not listed)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q0 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p0: mean cos -0.27, 281 pins on the far side (re-pin to face E)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q2 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p1: mean cos -0.79, 281 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q3 port rr0: 257 pins on face W face away from its partner(s) face N (L103_o), face N (L135_i), face N (L25_i) ...: mean cos -0.10, 257 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q4 port rq1: 17 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 17 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q4 port rr1: 257 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 257 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne: 22 core ports face away from their partners (17 more not listed)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NW_hub.S M7: ports L700_0 and L7s1_0 share track 7425.568",
+   "part": "NW_hub"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NW_hub.S M5: ports L700_0 and L7s1_0 share track 7419.864",
+   "part": "NW_hub"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NE_hub.S M7: ports L705m_1 and L7m_0 share track 20568.096",
+   "part": "NE_hub"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NE_hub.S M5: ports L705m_1 and L7m_0 share track 20564.232",
+   "part": "NE_hub"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NW_spu1.N M7: ports L700_0 and L7s1_0 share track 7425.568",
+   "part": "NW_spu1"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NW_spu1.N M5: ports L700_0 and L7s1_0 share track 7419.864",
+   "part": "NW_spu1"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NE_spu1.N M7: ports L700m_0 and L7ms1_0 share track 20875.936",
+   "part": "NE_spu1"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NE_spu1.N M5: ports L700m_0 and L7ms1_0 share track 20876.136",
+   "part": "NE_spu1"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NW_b100.N M7: ports L705_1 and L7_0 share track 7830.112",
+   "part": "NW_b100"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NW_b100.N M5: ports L705_1 and L7_0 share track 7829.448",
+   "part": "NW_b100"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NE_b100.N M7: ports L705m_1 and L7m_0 share track 20568.096",
+   "part": "NE_b100"
+  },
+  {
+   "level": "ERROR",
+   "check": "abutment",
+   "msg": "NE_b100.N M5: ports L705m_1 and L7m_0 share track 20564.232",
+   "part": "NE_b100"
+  },
+  {
+   "level": "ERROR",
+   "check": "faces",
+   "msg": "NW_hub.S: 126 pins in the 10-um window at 7469.86 (12.60/um > 6)",
+   "part": "NW_hub"
+  },
+  {
+   "level": "ERROR",
+   "check": "faces",
+   "msg": "NE_hub.S: 126 pins in the 10-um window at 20887.61 (12.60/um > 6)",
+   "part": "NE_hub"
+  },
+  {
+   "level": "ERROR",
+   "check": "faces",
+   "msg": "NW_spu1.N: 126 pins in the 10-um window at 7469.86 (12.60/um > 6)",
+   "part": "NW_spu1"
+  },
+  {
+   "level": "ERROR",
+   "check": "faces",
+   "msg": "NE_spu1.N: 126 pins in the 10-um window at 20887.61 (12.60/um > 6)",
+   "part": "NE_spu1"
+  },
+  {
+   "level": "ERROR",
+   "check": "faces",
+   "msg": "NW_b100.N: 98 pins in the 10-um window at 7825.76 (9.80/um > 6)",
+   "part": "NW_b100"
+  },
+  {
+   "level": "ERROR",
+   "check": "faces",
+   "msg": "NE_b100.N: 98 pins in the 10-um window at 20564.13 (9.80/um > 6)",
+   "part": "NE_b100"
+  }
+ ]
+}
