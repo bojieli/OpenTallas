@@ -105,7 +105,7 @@ def build(target, netlist, tree_path, output, root_xy=None):
             raise ValueError('clock body outside die: '+name)
         if not any(r.getBBox().xMin() <= x and x+master.getWidth() <= r.getBBox().xMax()
                    and (x-r.getOrigin()[0]) % r.getSpacing() == 0 for r in rows.get(y, [])):
-            raise ValueError('clock body has no actual reserved R0 row/site: '+name)
+            raise ValueError('clock body has no actual reserved R0 row/site: '+name+' xy='+str((x,y))+' rows_at_y='+str([(r.getOrigin(),r.getSpacing(),r.getBBox().xMin(),r.getBBox().xMax()) for r in rows.get(y,[])][:6]))
         placed.append((c, master, x, y))
     for port, raw in graph['aliases'].items():
         tap = graph['taps'][port]; inst = block.findInst(tap['part'])
