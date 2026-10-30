@@ -6,11 +6,24 @@
 # Set: registers in the fanout of the data inputs / fanin of the outputs (the sign-off clock check's pin registers).
 # Measure: clock_family.tcl ot_cf_wire (active-edge propagated clock arrival); fallback arrival_max_rise folded to
 # the active edge when clock_family is absent.  Callers set propagated clocks + parasitics before measuring.
-#   ot_pinreg_set        -> dict {instance name -> CK pin}, sorted by instance name
+#   ot_pinreg_set        -> clk-family boundary registers only, sorted by instance name
+#   ot_pinreg_set_for_clock name -> same boundary census for another actual clock root
 #   ot_pinreg_arr p clk  -> arrival (ps) of CK pin p for clock clk, or "" when not timed
-proc ot_pinreg_set {} {
+proc ot_pinreg_set {} { return [ot_pinreg_set_for_clock clk] }
+proc ot_pinreg_set_for_clock {name} {
+  # Forwarded landing writers belong to their source clock, not the local clk
+  # insertion budget. Use STA graph ownership, never instance-name exemptions.
+  # Generated descendants of clk remain in its family. The edge-clock source
+  # and landing-window timing retain their own SDC/sign-off obligations.
+  set clock [get_clocks -quiet $name]
+  if {[llength $clock] != 1} {error "OT_PINREG: missing unique clock $name"}
+  if {[llength [info commands ot_cf_pins]]} {
+    lassign [ot_cf_pins $clock] pins owners
+  } else {
+    set pins [all_registers -clock_pins -clock $clock]
+  }
   set regs {}
-  foreach p [all_registers -clock_pins] { dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
+  foreach p $pins { dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
   set bnd {}
   set din [all_inputs -no_clocks]
   if {[llength $din]} {
