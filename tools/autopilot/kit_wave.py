@@ -406,6 +406,12 @@ def _ssh(host, hub):
     return [] if host in ("localhost", hub) else ["ssh", "-o", "BatchMode=yes", "-o", "ControlPath=none", host]
 
 
+def geom_result_line(txt):
+    """Ignore PNG/GRT status lines after the actual geometry verdict."""
+    return next((ln for ln in reversed(txt.splitlines())
+                 if ln.startswith("AP_AUTO_GEOM AUTO-GEOM ") or ln.startswith("AP_AUTO_GEOM_ERROR")), "")
+
+
 def run_item(spec_path):
     """the per-item pipeline; prints KW_STAGE lines, writes result.json next to SPEC (never raises)"""
     sp = json.loads(Path(spec_path).read_text())
@@ -550,7 +556,7 @@ def run_item(spec_path):
     if rc:
         return fail("geom_cfg", txt)
     rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
-    line = next((ln for ln in reversed(txt.splitlines()) if ln.startswith("AP_AUTO_GEOM")), "")
+    line = geom_result_line(txt)
     res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
     if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
         # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
