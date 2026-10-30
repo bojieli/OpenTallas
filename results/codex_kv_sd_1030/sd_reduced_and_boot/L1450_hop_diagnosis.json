@@ -1,0 +1,109 @@
+{
+ "plan": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/plan_of_record/plan_c_sd_r6w7_pg_bound.json",
+ "source": "d834ee77b33",
+ "report": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/g0_sd_pg_bound_d834/g0_report.json",
+ "lane": "L1450",
+ "width": 1118,
+ "hop4": {
+  "launch_part_slot_stage": [
+   "hub_Wi",
+   "ft6",
+   3
+  ],
+  "launch_die_um": [
+   3525.8857,
+   12944.2019
+  ],
+  "mandatory_port": "L1450_1",
+  "mandatory_pin_die_um": [
+   3179.52,
+   12885.5262
+  ],
+  "capture_part_slot_stage": [
+   "hub_Wo",
+   "ft3",
+   0
+  ],
+  "capture_die_um": [
+   3179.52,
+   12924.7225
+  ],
+  "first_leg_um": 405.0413999999996,
+  "second_leg_um": 39.19629999999961,
+  "total_um": 444.2376999999992
+ },
+ "slots": {
+  "hub_Wi.ft6": {
+   "type": "kv3_hub_Wi",
+   "stations": 4,
+   "regs_type_um": [
+    [
+     1278.72,
+     748.338
+    ],
+    [
+     934.9532,
+     697.1068
+    ],
+    [
+     584.5371,
+     677.2899
+    ],
+    [
+     346.3657,
+     779.0819
+    ]
+   ],
+   "mapped_bit_site_sizes": [
+    1119,
+    1119,
+    1119
+   ],
+   "native_calls": [
+    "ot_dp_st #(.W(1118)) u_ft_ft6_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_ft6_i[1117:0]), .ea(cland_ft6_i[1118]), .q(ft6_o_s0[1117:0]), .eq(ft6_o_s0[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft6_o_1 (.clk(clk), .rst_n(rst_n), .d(ft6_o_s0[1117:0]), .ea(ft6_o_s0[1118]), .q(ft6_o_s1[1117:0]), .eq(ft6_o_s1[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft6_o_2 (.clk(clk), .rst_n(rst_n), .d(ft6_o_s1[1117:0]), .ea(ft6_o_s1[1118]), .q(ft6_o_s2[1117:0]), .eq(ft6_o_s2[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft6_o_3 (.clk(clk), .rst_n(rst_n), .d(ft6_o_s2[1117:0]), .ea(ft6_o_s2[1118]), .q(ft6_o[1117:0]), .eq(ft6_o[1118]));"
+   ]
+  },
+  "hub_Wo.ft3": {
+   "type": "kv3_hub_Wo",
+   "stations": 5,
+   "regs_type_um": [
+    [
+     1278.72,
+     759.6025
+    ],
+    [
+     979.0063,
+     779.1463
+    ],
+    [
+     697.3126,
+     759.7239
+    ],
+    [
+     601.3982,
+     555.4968
+    ],
+    [
+     301.5018,
+     555.5006
+    ]
+   ],
+   "mapped_bit_site_sizes": [
+    1119,
+    1119,
+    1119,
+    1119
+   ],
+   "native_calls": [
+    "ot_dp_st #(.W(1118)) u_ft_ft3_o_0 (.clk(clk), .rst_n(rst_n), .d(cland_ft3_i[1117:0]), .ea(cland_ft3_i[1118]), .q(ft3_o_s0[1117:0]), .eq(ft3_o_s0[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft3_o_1 (.clk(clk), .rst_n(rst_n), .d(ft3_o_s0[1117:0]), .ea(ft3_o_s0[1118]), .q(ft3_o_s1[1117:0]), .eq(ft3_o_s1[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft3_o_2 (.clk(clk), .rst_n(rst_n), .d(ft3_o_s1[1117:0]), .ea(ft3_o_s1[1118]), .q(ft3_o_s2[1117:0]), .eq(ft3_o_s2[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft3_o_3 (.clk(clk), .rst_n(rst_n), .d(ft3_o_s2[1117:0]), .ea(ft3_o_s2[1118]), .q(ft3_o_s3[1117:0]), .eq(ft3_o_s3[1118]));",
+    "ot_dp_st #(.W(1118)) u_ft_ft3_o_4 (.clk(clk), .rst_n(rst_n), .d(ft3_o_s3[1117:0]), .ea(ft3_o_s3[1118]), .q(ft3_o[1117:0]), .eq(ft3_o[1118]));"
+   ]
+  }
+ }
+}
