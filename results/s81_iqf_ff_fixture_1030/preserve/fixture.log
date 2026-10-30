@@ -1,0 +1,800 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+link_design s81p_iqf__t1
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/1_2_yosys.sdc
+source /work/setRC_rcx.tcl
+source /work/face_keep.tcl
+OT_FACE_KEEP dont_touch 36324 boundary cells before eliminate_dead_logic
+eliminate_dead_logic
+Removed 881 unused instances and 881 unused nets.
+Design area 14792 um^2 100% utilization.
+source /work/face_keep_release.tcl
+OT_FACE_KEEP released 36324 boundary cells
+write_db /work/run/results/asap7/dp_iqf__t1/base/1_synth.odb
+write_sdc -no_timestamp /work/run/results/asap7/dp_iqf__t1/base/1_synth.sdc
+Elapsed time: 0:10.01[h:]min:sec. CPU time: user 9.41 sys 0.58 (99%). Peak memory: 599384KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .v             10            585 1302c72b5e6da3effbd3
+1_synth                   .odb                             96abeffec6057b417018
+1_synth                   .sdc                             d8908ae5ab0bf4eb5566
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+Running floorplan.tcl, stage 2_1_floorplan
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/1_synth.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/1_synth.sdc
+source /work/setRC_rcx.tcl
+source /work/prects_estimate.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+Warning: There are 5 output ports missing set_output_delay.
+Warning: There are 5 unconstrained endpoints.
+number instances in verilog is 101706
+[INFO IFP-0001] Added 4512 rows of 26560 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 1442.880 1226.880 ) um
+[INFO IFP-0101] Core BBox: (  4.320  4.320 ) ( 1438.560 1222.560 ) um
+[INFO IFP-0102] Core area:                      1747248.538 um^2
+[INFO IFP-0103] Total instances area:             14791.949 um^2
+[INFO IFP-0104] Effective utilization:                0.008
+[INFO IFP-0105] Number of instances:                 101706
+source /work/make_tracks.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl
+set_dont_use "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*"
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIEHIx1_ASAP7_75t_R/H
+[INFO RSZ-0042] Inserted 268 tie TIEHIx1_ASAP7_75t_R instances.
+repair_timing -setup_margin 0 -hold_margin 5 -repair_tns 100 -skip_last_gasp -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+[WARNING EST-0027] no estimated parasitics. Using wire load models.
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 1.99s
+Default units for flow
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+   Layer   | Unit Resistance | Unit Capacitance 
+           |       (kohm/um) |          (fF/um)
+------------------------------------------------
+        M1 |        7.04e-02 |         1.00e-10
+        M2 |        2.97e-02 |         1.68e-01
+        M3 |        3.13e-02 |         1.32e-01
+        M4 |        1.80e-02 |         1.28e-01
+        M5 |        1.90e-02 |         9.80e-02
+        M6 |        1.19e-02 |         1.31e-01
+        M7 |        1.25e-02 |         9.25e-02
+        M8 |        8.45e-03 |         1.04e-01
+        M9 |        8.90e-03 |         9.28e-02
+       Pad |        0.00e+00 |         0.00e+00
+------------------------------------------------
+
+   Layer   | Via Resistance 
+           |         (kohm) 
+----------------------------
+        V1 |       1.72e-02 
+        V2 |       1.72e-02 
+        V3 |       1.72e-02 
+        V4 |       1.18e-02 
+        V5 |       1.18e-02 
+        V6 |       8.20e-03 
+        V7 |       8.20e-03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 14798 um^2 1% utilization.
+source /work/io.tcl
+write_db /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.odb
+write_sdc -no_timestamp /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.sdc
+Elapsed time: 1:05.06[h:]min:sec. CPU time: user 73.75 sys 3.83 (119%). Peak memory: 772412KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb           65            754 5ac6cddd7bd7b24c57fb
+2_1_floorplan             .sdc                             3f50e430a9b978bd0c42
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+No macros found: Skipping macro_placement
+Design area 14798 um^2 1% utilization.
+write_db /work/run/results/asap7/dp_iqf__t1/base/2_2_floorplan_macro.odb
+Elapsed time: 0:06.64[h:]min:sec. CPU time: user 6.26 sys 0.38 (99%). Peak memory: 468840KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            6            457 5ac6cddd7bd7b24c57fb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+Running tapcell.tcl, stage 2_3_floorplan_tapcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/2_2_floorplan_macro.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO TAP-0004] Inserted 9024 endcaps.
+[INFO TAP-0005] Inserted 128649 tapcells.
+Design area 18812 um^2 1% utilization.
+write_db /work/run/results/asap7/dp_iqf__t1/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:06.99[h:]min:sec. CPU time: user 6.57 sys 0.42 (99%). Peak memory: 483348KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            6            472 1fea02ad812e45c6dfce
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/2_3_floorplan_tapcell.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.sdc
+source /work/setRC_rcx.tcl
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0500] Runtime: 69.09s
+Design area 18812 um^2 1% utilization.
+write_db /work/run/results/asap7/dp_iqf__t1/base/2_4_floorplan_pdn.odb
+Elapsed time: 1:19.02[h:]min:sec. CPU time: user 77.51 sys 1.51 (99%). Peak memory: 1205964KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb           79           1177 2816305e1c693a6c0e86
+cp /work/run/results/asap7/dp_iqf__t1/base/2_4_floorplan_pdn.odb /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.odb
+cp /work/run/results/asap7/dp_iqf__t1/base/2_1_floorplan.sdc /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+Running global_place_skip_io.tcl, stage 3_1_place_gp_skip_io
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+All pins are placed. Skipping global placement without IOs
+Design area 18812 um^2 1% utilization.
+write_db /work/run/results/asap7/dp_iqf__t1/base/3_1_place_gp_skip_io.odb
+Elapsed time: 0:09.21[h:]min:sec. CPU time: user 8.35 sys 0.86 (99%). Peak memory: 812968KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb            9            793 2816305e1c693a6c0e86
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/3_1_place_gp_skip_io.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+place_pins -hor_layers M4 -ver_layers M5
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 53859
+[INFO PPL-0002] Number of I/O             0
+[INFO PPL-0003] Number of I/O w/sink      0
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 0.00 um.
+Design area 18812 um^2 1% utilization.
+write_db /work/run/results/asap7/dp_iqf__t1/base/3_2_place_iop.odb
+Elapsed time: 0:09.62[h:]min:sec. CPU time: user 8.66 sys 0.96 (99%). Peak memory: 955508KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb            9            933 2816305e1c693a6c0e86
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/3_2_place_iop.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/face_flops.tcl
+OT_FACE_FLOPS placed 777 pin registers FIRM at their faces (2405 signal ports without a flop within 2 buffers; 0 cells duplicated for output ports sharing a merged flop); 0 ft stations j>=1 FIRM on their routes (0 missing)
+OT_FACE_FLOPS landed ft slots: 9583 stations s0..s<k-1> FIRM after their landing rings at L*(j+1)/k
+OT_RESET_TREE entry relayed depth 5 (17 tree + 23 pad relays, planned max hop 379.1 um): placed 41 flops FIRM, placed max hop 379.1 um, 0 hops > 405 um: PASS (missing: 0 )
+OT_RESET_TAPS role mission
+OT_RESET_TAPS 16 taps (0 without a synchroniser: their flops use the nearest tap that has one), 0 synchroniser flops FIRM at their taps; FIRM flop reset/epoch pins: 13 re-pointed to the nearest tap's synchroniser, 0 already there, 0 without a same-polarity net (kept); per tap: 1 1 2 1 3 2 4 1 8 1 12 1 13 2 14 4
+OT_CLAND ring_place=ff u_cland_ft1_i: 6999 ring flops FIRM bit-major at spread 1.1330, 23518 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_idx_i0: 2672 ring flops FIRM bit-major at spread 1.3218, 8983 ring logic cells left to global placement
+OT_CLAND ring_place=ff u_cland_ql_i0: 2672 ring flops FIRM bit-major at spread 1.3034, 8983 ring logic cells left to global placement
+OT_CLAND placed 12409 actual mapped cells FIRM in nonoverlapping reserved bands/relay sites
+FT_FULL_STAGE exact_existing_flops=6726 data_cycles_added=0
+OT_FT_FAMILY_PRESERVE physical new-master exclusions *x1p*_ASAP7* *xp*_ASAP7* SDF* ICG* DFFASRHQNx*_ASAP7_75t_R DFFHQNx*_ASAP7_75t_R
+Took 78 seconds: source /work/face_flops.tcl
+[INFO RSZ-0026] Removed 4532 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 3519 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 3267 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  4.320  4.320 ) ( 1438.560 1222.560 ) um
+[INFO GPL-0016] Core area:                  1747248.538 um^2
+[INFO GPL-0036] Movable instances area:       6319.118 um^2
+[INFO GPL-0037] Total instances area:        18939.128 um^2
+[INFO GPL-0035] Pin density area adjust:       482.010 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            241762
+[INFO GPL-0007] Movable instances:               74555
+[INFO GPL-0008] Fixed instances:                167207
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                 107627
+[INFO GPL-0011] Number of pins:                 311568
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1442.880 1226.880 ) um
+[INFO GPL-0013] Placement BBox: (  4.320  4.320 ) ( 1438.560 1222.560 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                1747248.538 um^2
+[INFO GPL-0017] Fixed instances area:        12620.011 um^2
+[INFO GPL-0018] Movable instances area:       6801.127 um^2
+[INFO GPL-0019] Utilization:                     0.392 %
+[INFO GPL-0020] Standard cells area:          6801.127 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 74555	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00343689 HPWL: 87300457814
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00004723 HPWL: 8342966054
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00000084 HPWL: 6593166502
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00000027 HPWL: 6394453391
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00000012 HPWL: 6332516682
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.091 um^2
+[INFO GPL-0025] Ideal bin area:                  0.182 um^2
+[INFO GPL-0026] Ideal bin count:               9576903
+[INFO GPL-0027] Total bin area:             1747248.538 um^2
+[INFO GPL-0028] Bin count (X, Y):        2048 ,   2048
+[INFO GPL-0029] Bin size (W * H):       0.700 *  0.595 um
+[INFO GPL-0030] Number of bins:                4194304
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.4660 |  6.221500e+06 |   +0.00% |  1.69e-13 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 1, overflow: 0.466, keep resizer changes at: 1, HPWL: 6221500264
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    107627
+    final |    +47.5% |    4533 |   35564 |         16938 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 16209 slew violations.
+[INFO RSZ-0036] Found 1015 capacitance violations.
+[INFO RSZ-0037] Found 16792 long wires.
+[INFO RSZ-0039] Resized 4533 instances.
+[INFO RSZ-0038] Inserted 35564 buffers in 16938 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    103821
+    10300 |     +0.0% |      96 |      158 |     93521
+    20600 |     -0.3% |     805 |     1003 |     83221
+    30900 |     -0.4% |    1099 |     1580 |     72921
+    41200 |     -6.7% |    9269 |     5789 |     62621
+    51500 |    -12.0% |   16024 |     9223 |     52321
+    61800 |    -12.4% |   16876 |    10046 |     42021
+    72100 |    -15.4% |   21499 |    12683 |     31721
+    82400 |    -22.7% |   31454 |    18142 |     21421
+    92700 |    -23.1% |   32315 |    18674 |     11121
+   103000 |    -25.2% |   35564 |    20282 |       821
+    final |    -25.2% |   35564 |    20285 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -1.0433855e-09
+[INFO GPL-0107] Timing-driven: repair_design delta area: 1948.337 um^2 (+28.65%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 20285 (+27.21%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 55849, deleted: 35564
+[INFO GPL-0110] Timing-driven: new target density: 0.5011232
+[INFO GPL-0038] Routability snapshot saved at iter = 1
+        0 |   0.4660 |  6.250743e+06 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+       10 |   0.4081 |  6.238191e+06 |   +0.27% |  2.74e-13 |      
+       20 |   0.4088 |  6.231549e+06 |   -0.11% |  4.47e-13 |      
+       30 |   0.4064 |  6.227704e+06 |   -0.06% |  7.28e-13 |      
+       40 |   0.4054 |  6.225239e+06 |   -0.04% |  1.19e-12 |      
+       50 |   0.4067 |  6.223406e+06 |   -0.03% |  1.93e-12 |      
+       60 |   0.4075 |  6.221942e+06 |   -0.02% |  3.15e-12 |      
+       70 |   0.4084 |  6.220729e+06 |   -0.02% |  5.13e-12 |      
+       80 |   0.4076 |  6.219669e+06 |   -0.02% |  8.35e-12 |      
+       90 |   0.4072 |  6.218523e+06 |   -0.02% |  1.36e-11 |      
+      100 |   0.4074 |  6.217212e+06 |   -0.02% |  2.22e-11 |      
+      110 |   0.4074 |  6.215891e+06 |   -0.02% |  3.61e-11 |      
+      120 |   0.4088 |  6.214550e+06 |   -0.02% |  5.88e-11 |      
+      130 |   0.4093 |  6.213212e+06 |   -0.02% |  9.58e-11 |      
+      140 |   0.4101 |  6.211732e+06 |   -0.02% |  1.56e-10 |      
+      150 |   0.4119 |  6.210594e+06 |   -0.02% |  2.54e-10 |      
+      160 |   0.4128 |  6.209537e+06 |   -0.02% |  4.14e-10 |      
+      170 |   0.4130 |  6.209642e+06 |   +0.00% |  6.74e-10 |      
+      180 |   0.4122 |  6.213726e+06 |   +0.07% |  1.10e-09 |      
+      190 |   0.4052 |  6.222024e+06 |   +0.13% |  1.79e-09 |      
+      200 |   0.3960 |  6.231359e+06 |   +0.15% |  2.91e-09 |      
+      210 |   0.3919 |  6.231147e+06 |   -0.00% |  4.73e-09 |      
+      220 |   0.3976 |  6.215686e+06 |   -0.25% |  7.71e-09 |      
+      230 |   0.3918 |  6.216698e+06 |   +0.02% |  1.26e-08 |      
+      240 |   0.3714 |  6.232992e+06 |   +0.26% |  2.04e-08 |      
+      250 |   0.3687 |  6.216675e+06 |   -0.26% |  3.32e-08 |      
+      260 |   0.3508 |  6.223358e+06 |   +0.11% |  5.40e-08 |      
+      270 |   0.3408 |  6.221626e+06 |   -0.03% |  8.54e-08 |      
+      280 |   0.3366 |  6.217820e+06 |   -0.06% |  1.26e-07 |      
+      290 |   0.3305 |  6.215034e+06 |   -0.04% |  1.85e-07 |      
+      300 |   0.3225 |  6.213953e+06 |   -0.02% |  2.73e-07 |      
+      310 |   0.3124 |  6.213676e+06 |   -0.00% |  4.02e-07 |      
+      320 |   0.3023 |  6.214253e+06 |   +0.01% |  5.92e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net clk has a large fanout of 24526 terminals.
+[WARNING GRT-0281] Net fclk_in_ft1_i[0] has a large fanout of 5494 terminals.
+[WARNING GRT-0281] Net fclk_in_idx_i0[0] has a large fanout of 2074 terminals.
+[WARNING GRT-0281] Net fclk_in_ql_i0[0] has a large fanout of 2074 terminals.
+[INFO GPL-0041] Total routing overflow: 788.8548
+[INFO GPL-0042] Number of overflowed tiles: 5218 (0.10%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.8698
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.7291
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.6255
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.5409
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.7995
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      330 |   0.2895 |  6.214891e+06 |   +0.01% |  8.73e-07 |      
+      340 |   0.2766 |  6.216063e+06 |   +0.02% |  1.29e-06 |      
+      350 |   0.2624 |  6.217113e+06 |   +0.02% |  1.89e-06 |      
+      360 |   0.2451 |  6.217975e+06 |   +0.01% |  2.79e-06 |      
+      370 |   0.2287 |  6.219630e+06 |   +0.03% |  4.11e-06 |      
+      380 |   0.2091 |  6.221961e+06 |   +0.04% |  6.05e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 389, overflow: 0.194, keep resizer changes at: 1, HPWL: 6224064090
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    127912
+    final |    +11.2% |      19 |   11796 |         11683 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 86 slew violations.
+[INFO RSZ-0037] Found 11647 long wires.
+[INFO RSZ-0039] Resized 19 instances.
+[INFO RSZ-0038] Inserted 11796 buffers in 11683 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    103821
+    10300 |     -0.1% |     158 |       55 |     93521
+    20600 |     -0.3% |    1092 |      649 |     83221
+    30900 |     -0.5% |    1684 |      805 |     72921
+    41200 |     -3.2% |    9099 |     5077 |     62621
+    51500 |     -5.2% |   14915 |     8552 |     52321
+    61800 |     -5.4% |   16000 |     9504 |     42021
+    72100 |     -6.7% |   20063 |    11992 |     31721
+    82400 |     -9.5% |   28777 |    17470 |     21421
+    92700 |     -9.7% |   29573 |    18023 |     11121
+   103000 |    -10.5% |   32070 |    19593 |       821
+    final |    -10.5% |   32081 |    19612 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -7.052606e-11
+[INFO GPL-0107] Timing-driven: repair_design delta area: -88.136 um^2 (-1.01%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -673 (-0.71%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 31408, deleted: 32081
+[INFO GPL-0110] Timing-driven: new target density: 0.50107235
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      390 |   0.1920 |  6.216824e+06 |   -0.08% |  8.91e-06 |      
+      400 |   0.1550 |  6.223734e+06 |   +0.11% |  1.31e-05 |      
+      410 |   0.1308 |  6.225445e+06 |   +0.03% |  1.93e-05 |      
+      420 |   0.1117 |  6.227382e+06 |   +0.03% |  2.85e-05 |      
+      428 |   0.0989 |  6.228990e+06 |          |  4.03e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 428
+[INFO GPL-1017] Routability mode iteration count: 322
+[INFO GPL-1005] Routability final weighted congestion: 0.7895
+[INFO GPL-1002] Placed Cell Area             8661.3281
+[INFO GPL-1003] Available Free Area         1734628.5270
+[INFO GPL-1004] Minimum Feasible Density        0.0100 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0055
+[INFO GPL-1008]     - For 80% usage of free space: 0.0062
+[INFO GPL-1009]     - For 50% usage of free space: 0.0100
+[INFO GPL-1011] Original area (um^2): 6801.13
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 1860.20 (+27.35%)
+[INFO GPL-1014] Final placement area: 8661.33 (+27.35%)
+Took 800 seconds: global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Took 10 seconds: estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 20800 um^2 1% utilization.
+write_db /work/run/results/asap7/dp_iqf__t1/base/3_3_place_gp.odb
+Elapsed time: 16:05.09[h:]min:sec. CPU time: user 1598.29 sys 47.28 (170%). Peak memory: 11792404KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          965          11516 1e4e5c9bed93f1471010
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty -corner tc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner bc /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/run/results/asap7/dp_iqf__t1/base/3_3_place_gp.odb
+read_sdc /work/run/results/asap7/dp_iqf__t1/base/2_floorplan.sdc
+source /work/setRC_rcx.tcl
+source /work/ft_family_pre_resize.tcl
+OT_FT_FAMILY_PRESERVE physical new-master exclusions *x1p*_ASAP7* *xp*_ASAP7* SDF* ICG* DFFASRHQNx*_ASAP7_75t_R DFFHQNx*_ASAP7_75t_R
+estimate_parasitics -placement
+Took 12 seconds: estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    127239
+     1000 |     +0.0% |       0 |       0 |             0 |    126239
+     2000 |     +0.0% |       0 |       0 |             0 |    125239
+     3000 |     +0.0% |       0 |       0 |             0 |    124239
+     4000 |     +0.0% |       0 |       0 |             0 |    123239
+     5000 |     +0.0% |       0 |       0 |             0 |    122239
+     6000 |     +0.0% |       0 |       0 |             0 |    121239
+     7000 |     +0.0% |       0 |       0 |             0 |    120239
+     8000 |     +0.0% |       0 |       0 |             0 |    119239
+     9000 |     +0.0% |       0 |       0 |             0 |    118239
+    10000 |     +0.0% |       0 |       0 |             0 |    117239
+    11000 |     +0.0% |       0 |       0 |             0 |    116239
+    12000 |     +0.0% |       0 |       0 |             0 |    115239
+    13000 |     +0.0% |       0 |       0 |             0 |    114239
+    14000 |     +0.0% |       0 |       0 |             0 |    113239
+    15000 |     +0.0% |       0 |       0 |             0 |    112239
+    16000 |     +0.0% |       0 |       0 |             0 |    111239
+    17000 |     +0.0% |       0 |       0 |             0 |    110239
+    18000 |     +0.0% |       0 |       0 |             0 |    109239
+    19000 |     +0.0% |       0 |       0 |             0 |    108239
+    20000 |     +0.0% |       0 |       0 |             0 |    107239
+    21000 |     +0.0% |       0 |       0 |             0 |    106239
+    22000 |     +0.0% |       0 |       0 |             0 |    105239
+    23000 |     +0.0% |       0 |       0 |             0 |    104239
+    24000 |     +0.0% |       0 |       0 |             0 |    103239
+    25000 |     +0.0% |       0 |       0 |             0 |    102239
+    26000 |     +0.0% |       0 |       0 |             0 |    101239
+    27000 |     +0.0% |       0 |       1 |             1 |    100239
+    28000 |     +0.0% |       0 |       1 |             1 |     99239
+    29000 |     +0.0% |       0 |       1 |             1 |     98239
+    30000 |     +0.0% |       0 |       2 |             2 |     97239
+    31000 |     +0.0% |       0 |       2 |             2 |     96239
+    32000 |     +0.0% |       0 |       2 |             2 |     95239
+    33000 |     +0.0% |       0 |       2 |             2 |     94239
+    34000 |     +0.0% |       0 |       2 |             2 |     93239
+    35000 |     +0.0% |       0 |       2 |             2 |     92239
+    36000 |     +0.0% |       0 |       2 |             2 |     91239
+    37000 |     +0.0% |       0 |       2 |             2 |     90239
+    38000 |     +0.0% |       0 |       2 |             2 |     89239
+    39000 |     +0.0% |       0 |       2 |             2 |     88239
+    40000 |     +0.0% |       0 |       2 |             2 |     87239
+    41000 |     +0.0% |       0 |       2 |             2 |     86239
+    42000 |     +0.0% |       0 |       2 |             2 |     85239
+    43000 |     +0.0% |       0 |       2 |             2 |     84239
+    44000 |     +0.0% |       0 |       2 |             2 |     83239
+    45000 |     +0.0% |       0 |       2 |             2 |     82239
+    46000 |     +0.0% |       0 |       2 |             2 |     81239
+    47000 |     +0.0% |       0 |       4 |             4 |     80239
+    48000 |     +0.0% |       0 |       4 |             4 |     79239
+    49000 |     +0.0% |       0 |       4 |             4 |     78239
+    50000 |     +0.0% |       0 |       4 |             4 |     77239
+    51000 |     +0.0% |       0 |       4 |             4 |     76239
+    52000 |     +0.0% |       0 |       4 |             4 |     75239
+    53000 |     +0.0% |       0 |       4 |             4 |     74239
+    54000 |     +0.0% |       0 |       4 |             4 |     73239
+    55000 |     +0.0% |       0 |       4 |             4 |     72239
+    56000 |     +0.0% |       0 |       4 |             4 |     71239
+    57000 |     +0.0% |       0 |       4 |             4 |     70239
+    58000 |     +0.0% |       0 |       4 |             4 |     69239
+    59000 |     +0.0% |       0 |       4 |             4 |     68239
+    60000 |     +0.0% |       0 |       4 |             4 |     67239
+    61000 |     +0.0% |       0 |       4 |             4 |     66239
+    62000 |     +0.0% |       0 |       4 |             4 |     65239
+    63000 |     +0.0% |       0 |       4 |             4 |     64239
+    64000 |     +0.0% |       0 |       4 |             4 |     63239
+    65000 |     +0.0% |       0 |       4 |             4 |     62239
+    66000 |     +0.0% |       0 |       4 |             4 |     61239
+    67000 |     +0.0% |       0 |       4 |             4 |     60239
+    68000 |     +0.0% |       0 |       4 |             4 |     59239
+    69000 |     +0.0% |       0 |       4 |             4 |     58239
+    70000 |     +0.0% |       0 |       4 |             4 |     57239
+    71000 |     +0.0% |       0 |       4 |             4 |     56239
+    72000 |     +0.0% |       0 |       4 |             4 |     55239
+    73000 |     +0.0% |       0 |       4 |             4 |     54239
+    74000 |     +0.0% |       0 |       4 |             4 |     53239
+    75000 |     +0.0% |       0 |       4 |             4 |     52239
+    76000 |     +0.0% |       0 |       4 |             4 |     51239
+    77000 |     +0.0% |       0 |       4 |             4 |     50239
+    78000 |     +0.0% |       0 |       4 |             4 |     49239
+    79000 |     +0.0% |       0 |       4 |             4 |     48239
+    80000 |     +0.0% |       0 |       4 |             4 |     47239
+    81000 |     +0.0% |       0 |       4 |             4 |     46239
+    82000 |     +0.0% |       0 |       4 |             4 |     45239
+    83000 |     +0.0% |       0 |       4 |             4 |     44239
+    84000 |     +0.0% |       0 |       4 |             4 |     43239
+    85000 |     +0.0% |       0 |       4 |             4 |     42239
+    86000 |     +0.0% |       0 |       4 |             4 |     41239
+    87000 |     +0.0% |       0 |       4 |             4 |     40239
+    88000 |     +0.0% |       0 |       4 |             4 |     39239
+    89000 |     +0.0% |       0 |       4 |             4 |     38239
+    90000 |     +0.0% |       0 |       4 |             4 |     37239
+    91000 |     +0.0% |       0 |       4 |             4 |     36239
+    92000 |     +0.0% |       0 |       4 |             4 |     35239
+    93000 |     +0.0% |       0 |       4 |             4 |     34239
+    94000 |     +0.0% |       0 |       4 |             4 |     33239
+    95000 |     +0.0% |       0 |       4 |             4 |     32239
+    96000 |     +0.0% |       0 |       4 |             4 |     31239
+    97000 |     +0.0% |       0 |       4 |             4 |     30239
+    98000 |     +0.0% |       0 |       4 |             4 |     29239
+    99000 |     +0.0% |       0 |       4 |             4 |     28239
+   100000 |     +0.0% |       0 |       4 |             4 |     27239
+   101000 |     +0.0% |       0 |       4 |             4 |     26239
+   102000 |     +0.0% |       0 |       4 |             4 |     25239
+   103000 |     +0.0% |       0 |       4 |             4 |     24239
+   104000 |     +0.0% |       0 |       4 |             4 |     23239
+   105000 |     +0.0% |       0 |       4 |             4 |     22239
+   106000 |     +0.0% |       0 |       4 |             4 |     21239
+   107000 |     +0.0% |       0 |       4 |             4 |     20239
+   108000 |     +0.0% |       0 |       4 |             4 |     19239
+   109000 |     +0.0% |       0 |       4 |             4 |     18239
+   110000 |     +0.0% |       0 |       4 |             4 |     17239
+   111000 |     +0.0% |       0 |       4 |             4 |     16239
+   112000 |     +0.0% |       0 |       4 |             4 |     15239
+   113000 |     +0.0% |       0 |       4 |             4 |     14239
+   114000 |     +0.0% |       0 |       4 |             4 |     13239
+   115000 |     +0.0% |       0 |       4 |             4 |     12239
+   116000 |     +0.0% |       0 |       4 |             4 |     11239
+   117000 |     +0.0% |       0 |       4 |             4 |     10239
+   118000 |     +0.0% |       0 |       4 |             4 |      9239
+   119000 |     +0.0% |       0 |       4 |             4 |      8239
+   120000 |     +0.0% |       0 |       4 |             4 |      7239
+   121000 |     +0.0% |       0 |       4 |             4 |      6239
+   122000 |     +0.0% |       0 |       4 |             4 |      5239
+   123000 |     +0.0% |       0 |       4 |             4 |      4239
+   124000 |     +0.0% |       0 |       4 |             4 |      3239
+   125000 |     +0.0% |       0 |       4 |             4 |      2239
+   126000 |     +0.0% |       0 |       4 |             4 |      1239
+   127000 |     +0.0% |       0 |       4 |             4 |       239
+    final |     +0.0% |       0 |       4 |             4 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 4 slew violations.
+[INFO RSZ-0038] Inserted 4 buffers in 4 nets.
+[INFO RSZ-0504] Runtime: 30.06s
+Took 30 seconds: repair_design -verbose
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 20802 um^2 1% utilization.
+Instance count before 261374, after 261378
+Pin count before 343982, after 343990
+source /work/fixture_force_repair.tcl
+FIXTURE_SCOPE_ONE_ACTUAL_DNET target=u_bound.u_ft_ft0_o_1/q\[7\]$_DFF_P_ net=u_bound.ft0_o_s0\[7\] length_um=124.683 protected_other_nets=127244
+[WARNING RSZ-0065] max wire length less than 169u increases wire delays.
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    127243
+     1000 |     +0.0% |       0 |       0 |             0 |    126243
+     2000 |     +0.0% |       0 |       0 |             0 |    125243
+     3000 |     +0.0% |       0 |       0 |             0 |    124243
+     4000 |     +0.0% |       0 |       0 |             0 |    123243
+     5000 |     +0.0% |       0 |       0 |             0 |    122243
+     6000 |     +0.0% |       0 |       0 |             0 |    121243
+     7000 |     +0.0% |       0 |       0 |             0 |    120243
+     8000 |     +0.0% |       0 |       0 |             0 |    119243
+     9000 |     +0.0% |       0 |       0 |             0 |    118243
+    10000 |     +0.0% |       0 |       0 |             0 |    117243
+    11000 |     +0.0% |       0 |       0 |             0 |    116243
+    12000 |     +0.0% |       0 |       0 |             0 |    115243
+    13000 |     +0.0% |       0 |       0 |             0 |    114243
+    14000 |     +0.0% |       0 |       0 |             0 |    113243
+    15000 |     +0.0% |       0 |       0 |             0 |    112243
+    16000 |     +0.0% |       0 |       0 |             0 |    111243
+    17000 |     +0.0% |       0 |       0 |             0 |    110243
+    18000 |     +0.0% |       0 |       0 |             0 |    109243
+    19000 |     +0.0% |       0 |       0 |             0 |    108243
+    20000 |     +0.0% |       0 |       0 |             0 |    107243
+    21000 |     +0.0% |       0 |       0 |             0 |    106243
+    22000 |     +0.0% |       0 |       0 |             0 |    105243
+    23000 |     +0.0% |       0 |       0 |             0 |    104243
+    24000 |     +0.0% |       0 |       0 |             0 |    103243
+    25000 |     +0.0% |       0 |       0 |             0 |    102243
+    26000 |     +0.0% |       0 |       0 |             0 |    101243
+    27000 |     +0.0% |       0 |       0 |             0 |    100243
+    28000 |     +0.0% |       0 |       0 |             0 |     99243
+    29000 |     +0.0% |       0 |       0 |             0 |     98243
+    30000 |     +0.0% |       0 |       0 |             0 |     97243
+    31000 |     +0.0% |       0 |       0 |             0 |     96243
+    32000 |     +0.0% |       0 |       0 |             0 |     95243
+    33000 |     +0.0% |       0 |       0 |             0 |     94243
+    34000 |     +0.0% |       0 |       0 |             0 |     93243
+    35000 |     +0.0% |       0 |       0 |             0 |     92243
+    36000 |     +0.0% |       0 |       0 |             0 |     91243
+    37000 |     +0.0% |       0 |       0 |             0 |     90243
+    38000 |     +0.0% |       0 |       0 |             0 |     89243
+    39000 |     +0.0% |       0 |       0 |             0 |     88243
+    40000 |     +0.0% |       0 |       0 |             0 |     87243
+    41000 |     +0.0% |       0 |       0 |             0 |     86243
+    42000 |     +0.0% |       0 |       0 |             0 |     85243
+    43000 |     +0.0% |       0 |       0 |             0 |     84243
+    44000 |     +0.0% |       0 |       2 |             1 |     83243
+    45000 |     +0.0% |       0 |       2 |             1 |     82243
+    46000 |     +0.0% |       0 |       2 |             1 |     81243
+    47000 |     +0.0% |       0 |       2 |             1 |     80243
+    48000 |     +0.0% |       0 |       2 |             1 |     79243
+    49000 |     +0.0% |       0 |       2 |             1 |     78243
+    50000 |     +0.0% |       0 |       2 |             1 |     77243
+    51000 |     +0.0% |       0 |       2 |             1 |     76243
+    52000 |     +0.0% |       0 |       2 |             1 |     75243
+    53000 |     +0.0% |       0 |       2 |             1 |     74243
+    54000 |     +0.0% |       0 |       2 |             1 |     73243
+    55000 |     +0.0% |       0 |       2 |             1 |     72243
+    56000 |     +0.0% |       0 |       2 |             1 |     71243
+    57000 |     +0.0% |       0 |       2 |             1 |     70243
+    58000 |     +0.0% |       0 |       2 |             1 |     69243
+    59000 |     +0.0% |       0 |       2 |             1 |     68243
+    60000 |     +0.0% |       0 |       2 |             1 |     67243
+    61000 |     +0.0% |       0 |       2 |             1 |     66243
+    62000 |     +0.0% |       0 |       2 |             1 |     65243
+    63000 |     +0.0% |       0 |       2 |             1 |     64243
+    64000 |     +0.0% |       0 |       2 |             1 |     63243
+    65000 |     +0.0% |       0 |       2 |             1 |     62243
+    66000 |     +0.0% |       0 |       2 |             1 |     61243
+    67000 |     +0.0% |       0 |       2 |             1 |     60243
+    68000 |     +0.0% |       0 |       2 |             1 |     59243
+    69000 |     +0.0% |       0 |       2 |             1 |     58243
+    70000 |     +0.0% |       0 |       2 |             1 |     57243
+    71000 |     +0.0% |       0 |       2 |             1 |     56243
+    72000 |     +0.0% |       0 |       2 |             1 |     55243
+    73000 |     +0.0% |       0 |       2 |             1 |     54243
+    74000 |     +0.0% |       0 |       2 |             1 |     53243
+    75000 |     +0.0% |       0 |       2 |             1 |     52243
+    76000 |     +0.0% |       0 |       2 |             1 |     51243
+    77000 |     +0.0% |       0 |       2 |             1 |     50243
+    78000 |     +0.0% |       0 |       2 |             1 |     49243
+    79000 |     +0.0% |       0 |       2 |             1 |     48243
+    80000 |     +0.0% |       0 |       2 |             1 |     47243
+    81000 |     +0.0% |       0 |       2 |             1 |     46243
+    82000 |     +0.0% |       0 |       2 |             1 |     45243
+    83000 |     +0.0% |       0 |       2 |             1 |     44243
+    84000 |     +0.0% |       0 |       2 |             1 |     43243
+    85000 |     +0.0% |       0 |       2 |             1 |     42243
+    86000 |     +0.0% |       0 |       2 |             1 |     41243
+    87000 |     +0.0% |       0 |       2 |             1 |     40243
+    88000 |     +0.0% |       0 |       2 |             1 |     39243
+    89000 |     +0.0% |       0 |       2 |             1 |     38243
+    90000 |     +0.0% |       0 |       2 |             1 |     37243
+    91000 |     +0.0% |       0 |       2 |             1 |     36243
+    92000 |     +0.0% |       0 |       2 |             1 |     35243
+    93000 |     +0.0% |       0 |       2 |             1 |     34243
+    94000 |     +0.0% |       0 |       2 |             1 |     33243
+    95000 |     +0.0% |       0 |       2 |             1 |     32243
+    96000 |     +0.0% |       0 |       2 |             1 |     31243
+    97000 |     +0.0% |       0 |       2 |             1 |     30243
+    98000 |     +0.0% |       0 |       2 |             1 |     29243
+    99000 |     +0.0% |       0 |       2 |             1 |     28243
+   100000 |     +0.0% |       0 |       2 |             1 |     27243
+   101000 |     +0.0% |       0 |       2 |             1 |     26243
+   102000 |     +0.0% |       0 |       2 |             1 |     25243
+   103000 |     +0.0% |       0 |       2 |             1 |     24243
+   104000 |     +0.0% |       0 |       2 |             1 |     23243
+   105000 |     +0.0% |       0 |       2 |             1 |     22243
+   106000 |     +0.0% |       0 |       2 |             1 |     21243
+   107000 |     +0.0% |       0 |       2 |             1 |     20243
+   108000 |     +0.0% |       0 |       2 |             1 |     19243
+   109000 |     +0.0% |       0 |       2 |             1 |     18243
+   110000 |     +0.0% |       0 |       2 |             1 |     17243
+   111000 |     +0.0% |       0 |       2 |             1 |     16243
+   112000 |     +0.0% |       0 |       2 |             1 |     15243
+   113000 |     +0.0% |       0 |       2 |             1 |     14243
+   114000 |     +0.0% |       0 |       2 |             1 |     13243
+   115000 |     +0.0% |       0 |       2 |             1 |     12243
+   116000 |     +0.0% |       0 |       2 |             1 |     11243
+   117000 |     +0.0% |       0 |       2 |             1 |     10243
+   118000 |     +0.0% |       0 |       2 |             1 |      9243
+   119000 |     +0.0% |       0 |       2 |             1 |      8243
+   120000 |     +0.0% |       0 |       2 |             1 |      7243
+   121000 |     +0.0% |       0 |       2 |             1 |      6243
+   122000 |     +0.0% |       0 |       2 |             1 |      5243
+   123000 |     +0.0% |       0 |       2 |             1 |      4243
+   124000 |     +0.0% |       0 |       2 |             1 |      3243
+   125000 |     +0.0% |       0 |       2 |             1 |      2243
+   126000 |     +0.0% |       0 |       2 |             1 |      1243
+   127000 |     +0.0% |       0 |       2 |             1 |       243
+    final |     +0.0% |       0 |       2 |             1 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0037] Found 1 long wires.
+[INFO RSZ-0038] Inserted 2 buffers in 1 nets.
+[INFO RSZ-0504] Runtime: 12.49s
+FIXTURE_SCOPE_DNT_RESTORED all temporary other-net flags cleared; preexisting flags retained; no FF flags changed
+Took 22 seconds: source /work/fixture_force_repair.tcl
+write_db /work/run/results/asap7/dp_iqf__t1/base/3_4_place_resized.odb
+Elapsed time: 3:08.29[h:]min:sec. CPU time: user 254.69 sys 21.43 (146%). Peak memory: 1517668KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb          188           1482 ed2baf0be6c6a1b6f153
