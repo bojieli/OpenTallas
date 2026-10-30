@@ -1,0 +1,9 @@
+# QC native clock source construction coupon — FAIL for routing
+
+The new shared `ot_clk native-source` reconstructs the exact clock graph in a fresh native target, without carrying old clock/provider identifiers. The actual OpenROAD coupon completed with 50,812 clock cells, 50,813 nets and 7,889 connected native M7 clock pins; provider, PG and routed timing are not qualified. The target contains the current 377 exact-origin partition macros.
+
+I viewed `row_legalization.png`: the clock sites follow the repeated partition streets; the worst relocation is a small cluster beside a hard-core boundary. The allocator uses actual R0 row intervals and native-body plan exclusions, retaining the graph, primitive count and cycles. It moved 42,606 cells by at most 2.238 um, adding 2,241.383 um of straight parent-wire length. Original raw-tree failure and all failed construction logs are preserved.
+
+Verdict: **FAIL for P&R/STA** on this graph. It still has 750 actual clock-cell parent gaps above 405 um; worst 678.834 um (`r9769_1` to `r9769_2`). Legal row placement does not repair missing clock repeaters. QC clock owner is generating one reach-safe graph with the existing coherent physical-reach/body-placement options; the fresh native provider must follow that graph, with fresh CA/START contracts and token counter-origin pricing. No route is launched on this coupon.
+
+The coupon is an infrastructure construction result only. Full native reset/START import, signal coverage, PG continuity/IR, clock routing/STA and die release gates remain open. Source at actual run: c80136afc74; latest tool adds explicit PG-clear root input and hoists an invariant search bound without changing candidate selection. Original live run was preserved; only an accidentally started own duplicate was cancelled. Artifacts: intel2 `/srv/opentallas-scratch2/claude/codex-native-clock-0336/build4/`.
