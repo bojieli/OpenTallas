@@ -34,7 +34,7 @@ def epoch_plan(phases,raws,original,base,bank_bytes,IR):
                     key=(ph['start_row'],tuple(load['source_anchor']),sector)
                     if anchor is not None:
                         rec,source_slot=divmod(anchor,16);provider=source_phase[(rec,source_slot)]
-                        if provider>=ph['start_row']:raise ValueError('source epoch is cyclic or not an external earlier phase')
+                        if provider>=ph['start_row']:raise ValueError(f'source epoch is cyclic or not an external earlier phase: consumer={ph["start_row"]}/{index}/{slot}, sector={sector}, producer={provider}/{rec}/{source_slot}')
                         requirements[key]=(provider,rec,source_slot,sector)
                         dependencies.append(dict(consumer_phase=ph['start_row'],before_source_record=index,consumer_slot=slot,source_sector=sector,provider_phase=provider,producer_record=rec,producer_slot=source_slot))
             for k in IR.written_operands(row):
