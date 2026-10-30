@@ -724,8 +724,23 @@ def enqueue_pass(AP, cfg, st, rec, notices):
 
 
 def step(AP, ap_dir=None):
-    """one wave pass inside the autopilot tick; never raises into the tick"""
+    """one wave pass; a non-blocking lock keeps two passes (tick + CLI step) from double-launching"""
+    import fcntl
     ap_dir = ap_dir or AP.AP_DIR
+    lk = open(Path(ap_dir) / "kit_wave.lock", "w")
+    try:
+        fcntl.flock(lk, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        AP.log("KIT-WAVE step skipped: another wave pass holds kit_wave.lock")
+        lk.close()
+        return None
+    try:
+        return _step(AP, ap_dir)
+    finally:
+        lk.close()
+
+
+def _step(AP, ap_dir):
     cfg = load_config(AP.read_coord("autopilot/kit_wave.json"))
     st = load_state(ap_dir)
     st.setdefault("items", {})
