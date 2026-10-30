@@ -27,6 +27,21 @@ class Joint(unittest.TestCase):
  def test_every_corner_input_output_slew_can_reject(self):
   for key in ('TT_in','TT_out','FF_in','FF_out','nan'):
    with self.subTest(key=key):self.assertIsNone(J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate(key)))
+ def test_global_shortlist_retains_safe_move_over_two_local_fast_moves(self):
+  t=dict(TT,z=8.);f=dict(FF,z=6.)
+  parents=dict(PAR,z='root');cells=dict(CELLS,z='small')
+  def composed(changes,need_slew):
+   a=dict(t);b=dict(f)
+   for node,master in changes.items():
+    a[node]-={'flash1':5.,'flash2':4.,'safe':2.}[master];b[node]-=1.
+    # True composed side effect on an untargeted endpoint: the two locally
+    # fastest options on branch b make the global objective worse.
+    if node=='b'and master.startswith('flash'):a['z']+=4.
+   return a,b,dict(TT_in=30.,TT_out=50.,FF_in=20.,FF_out=40.)
+  bad=composed({'b':'flash1'},False);safe=composed({'b':'safe'},False)
+  self.assertLess(bad[0]['b'],safe[0]['b']);self.assertGreater(J.objective(*bad[:2]),J.objective(*safe[:2]))
+  q=J.propose(t,f,parents,cells,['small','flash1','flash2','safe'],composed)
+  self.assertEqual(q['assignments']['b'],'safe');self.assertLess(q['key'][0],J.objective(t,f)-J.GAIN)
  def test_rejection_audit_retains_actual_ff_predicate(self):
   audit=[]
   q=J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate('FF'),audit=audit)

@@ -64,7 +64,9 @@ def propose(tt, ff, parents, cells, envelope, evaluate, slew_limit=80.0, audit=N
                 values=t if corner=='TT'else f
                 note(kind="single",leaf=leaf,node=node,master=master,target_gain_ps=late_values[leaf]-values[leaf],TT_window_ps=max(t.values())-min(t.values()),FF_window_ps=max(f.values())-min(f.values()))
                 if values[leaf]>=late_values[leaf]-GAIN:continue
-                candidates.append((values[leaf],objective(t,f),node,master))
+                candidates.append((objective(t,f),values[leaf],node,master))
+        # Rank the actual whole-tree objective first. A locally fastest leaf
+        # can slow another branch through the composed upstream load/slew.
         choices=sorted(candidates)[:2]
         if not choices:
             note(kind="scope",leaf=leaf,reason="no_independent_target_improving_driver",unique_drivers=sorted(unique))
