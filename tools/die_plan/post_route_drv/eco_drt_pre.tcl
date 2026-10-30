@@ -39,8 +39,10 @@ proc ot_eco_drt_pre {} {
   dict for {mn m} $masters {
     foreach t [$m getMTerms] { foreach p [$t getMPins] { for {set k 0} {$k < $nslot} {incr k} { $p clearPinAccess $k }; incr nm } }
   }
+  # DIE-HEAD-42 10-30 (LEP ECO4 SIGSEGV in dbAccessPoint::destroy): clearPinAccess already frees the mpin-owned access
+  # points, so the list read before the clear dangles; destroy only what a fresh read still returns.
   set nap 0
-  foreach ap $aps { odb::dbAccessPoint_destroy $ap; incr nap }
+  foreach ap [$b getAccessPoints] { odb::dbAccessPoint_destroy $ap; incr nap }
   puts "OT_ECO_DRT_PRE access points: STALE catalog (insts idx -1 $nneg / idx>=0 $npos) wiped: masters [dict size $masters]\
  mpins $nm block_aps_destroyed $nap insts_idx_reset [llength $insts]"
 }

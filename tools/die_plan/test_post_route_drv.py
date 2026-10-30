@@ -4,6 +4,7 @@ re-extracted RCX), the kit's own runner kept, opt-in only.  The loop runs agains
 import json
 import os
 import re
+import shutil
 import stat
 import subprocess
 from pathlib import Path
@@ -320,3 +321,31 @@ def test_eco_drt_pre_hook_contract():
     code = "\n".join(ln for ln in t.splitlines() if not ln.lstrip().startswith("#"))
     for forbidden in ("setLocation", "setPlacementStatus", "destroy $n", "swapMaster", "write_db", "dbWire"):
         assert forbidden not in code
+
+
+
+_ECO_MOCK = r"""
+# minimal odb mock: two insts (one ECO'd at idx -1), one master with one mpin; access points a1 (mpin-owned, freed by
+# clearPinAccess) and a2 (block-only).  Destroying a freed access point is the LEP ECO4 use-after-free.
+set ::aps {a1 a2}; set ::freed {}; set ::idx [dict create i1 0 i2 -1]
+proc blk {m args} { switch $m { getNets {return {}} getInsts {return {i1 i2}} getAccessPoints {return $::aps} } }
+proc ord::get_db_block {} { return blk }
+foreach i {i1 i2} { proc $i {m args} "switch \$m { getPinAccessIdx {return \[dict get \$::idx $i\]} setPinAccessIdx {dict set ::idx $i \[lindex \$args 0\]} getMaster {return mst} getName {return $i} }" }
+proc mst {m args} { switch $m { getName {return M} getMTerms {return {mt}} } }
+proc mt {m args} { return {mp} }
+proc mp {m args} { if {$m eq "clearPinAccess" && [lsearch $::aps a1] >= 0} { set ::aps [lsearch -all -inline -not $::aps a1]; lappend ::freed a1 } }
+proc odb::dbAccessPoint_destroy {ap} {
+  if {$ap in $::freed} { error "SIGSEGV dbAccessPoint::destroy on freed $ap" }
+  set ::aps [lsearch -all -inline -not $::aps $ap]
+}
+"""
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_eco_drt_pre_destroys_only_live_access_points():
+    """DIE-HEAD-42 14:12: clearPinAccess frees mpin-owned access points; the wipe must not destroy the stale list."""
+    hook = (PRD / "eco_drt_pre.tcl").read_text()
+    r = subprocess.run(["tclsh"], input="namespace eval ord {}\nnamespace eval odb {}\n" + _ECO_MOCK + hook +
+                       "\nputs AFTER=[llength $::aps]\n", capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "block_aps_destroyed 1" in r.stdout and "AFTER=0" in r.stdout
