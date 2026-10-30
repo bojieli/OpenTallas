@@ -1,0 +1,895 @@
+{
+  "scope": "actual native existing hierarchy census only; no new build/P&R or E-side bay reuse",
+  "rows": [
+    {
+      "type": "slw_sc_v3",
+      "host": "epyc2",
+      "actual_std": 540262,
+      "actual_macro": 0,
+      "existing_core_std": 277342,
+      "existing_core_seq": 42779,
+      "remaining_wrapper_std": 262920,
+      "remaining_wrapper_seq": 62043,
+      "both_under_400k": true,
+      "top_hierarchy": [
+        {
+          "prefix": "u_bound.u_core",
+          "std": 277342,
+          "seq": 42779
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i",
+          "std": 12450,
+          "seq": 2861
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_p1_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_i",
+          "std": 12187,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p1_i",
+          "std": 12187,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p2_i",
+          "std": 12165,
+          "seq": 2796
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p1_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p2_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_cws2_i",
+          "std": 11694,
+          "seq": 2686
+        }
+      ],
+      "native": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v3/slw_sc_v3/1_synth_odb.v",
+      "outline_um": [
+        613.44,
+        1339.2
+      ],
+      "existing_core_module": "qfd_dv_s5_sc2_leaf_up0",
+      "core_instance": "u_bound.u_core",
+      "bound_source": [
+        [
+          "qfd_dv_s5_sc2_leaf_up0",
+          "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v3/slw_sc_v3/rtl/qfd_qc_slw_sc__slw_sc_v3.sv"
+        ]
+      ],
+      "leaf_file": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v3/slw_sc_v3/rtl/qfd_dv_s5_sc2_ce_leaf.sv",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "sc_cfg",
+          "direction": "input",
+          "bits": 101
+        },
+        {
+          "name": "dn_i",
+          "direction": "input",
+          "bits": 48
+        },
+        {
+          "name": "dn_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "up_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "red_we",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "red_addr",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "red_data",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "vm_we",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "vm_win0",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "vm_wdata0",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_v",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "am_idx",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "am_val",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_u",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "w1_we",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "w1_addr",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "w1_data",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_v",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_idx",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "tok_own",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_val",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_user",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "busy",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "bits": 1
+        }
+      ],
+      "interface_bits": 524
+    },
+    {
+      "type": "slw_sc_v1__cl63e5a7a2",
+      "host": "epyc2",
+      "actual_std": 554097,
+      "actual_macro": 0,
+      "existing_core_std": 281884,
+      "existing_core_seq": 43052,
+      "remaining_wrapper_std": 272213,
+      "remaining_wrapper_seq": 64334,
+      "both_under_400k": true,
+      "top_hierarchy": [
+        {
+          "prefix": "u_bound.u_core",
+          "std": 281884,
+          "seq": 43052
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i",
+          "std": 12450,
+          "seq": 2861
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_p1_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_i",
+          "std": 12187,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p1_i",
+          "std": 12187,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p2_i",
+          "std": 12165,
+          "seq": 2796
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p1_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p2_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_cws2_i",
+          "std": 11694,
+          "seq": 2686
+        }
+      ],
+      "native": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v1__cl63e5a7a2/slw_sc_v1__cl63e5a7a2/1_synth_odb.v",
+      "outline_um": [
+        613.44,
+        1339.2
+      ],
+      "existing_core_module": "qfd_dv_s5_sc2_leaf",
+      "core_instance": "u_bound.u_core",
+      "bound_source": [
+        [
+          "qfd_dv_s5_sc2_leaf",
+          "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v1__cl63e5a7a2/slw_sc_v1__cl63e5a7a2/rtl/slw_sc_v1__cl63e5a7a2_bound.sv"
+        ]
+      ],
+      "leaf_file": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v1__cl63e5a7a2/slw_sc_v1__cl63e5a7a2/rtl/qfd_dv_s5_sc2_leaf.sv",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "sc_cfg",
+          "direction": "input",
+          "bits": 101
+        },
+        {
+          "name": "dn_i",
+          "direction": "input",
+          "bits": 48
+        },
+        {
+          "name": "dn_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "up_i",
+          "direction": "input",
+          "bits": 48
+        },
+        {
+          "name": "up_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "red_we",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "red_addr",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "red_data",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "vm_we",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "vm_win0",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "vm_wdata0",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_v",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "am_idx",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "am_val",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_u",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "w1_we",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "w1_addr",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "w1_data",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_v",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_idx",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "tok_own",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_val",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_user",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "busy",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "bits": 1
+        }
+      ],
+      "interface_bits": 572
+    },
+    {
+      "type": "sle_sc_v3",
+      "host": "epyc2",
+      "actual_std": 528057,
+      "actual_macro": 0,
+      "existing_core_std": 277136,
+      "existing_core_seq": 42770,
+      "remaining_wrapper_std": 250921,
+      "remaining_wrapper_seq": 57156,
+      "both_under_400k": true,
+      "top_hierarchy": [
+        {
+          "prefix": "u_bound.u_core",
+          "std": 277136,
+          "seq": 42770
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i",
+          "std": 12450,
+          "seq": 2861
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_p1_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_i",
+          "std": 12190,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p1_i",
+          "std": 12190,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p2_i",
+          "std": 12165,
+          "seq": 2796
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p1_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p2_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_cws2_i",
+          "std": 11694,
+          "seq": 2686
+        }
+      ],
+      "native": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/sle_sc_v3/sle_sc_v3/1_synth_odb.v",
+      "outline_um": [
+        613.44,
+        1339.2
+      ],
+      "existing_core_module": "qfd_dv_s5_sc2_leaf_dn0",
+      "core_instance": "u_bound.u_core",
+      "bound_source": [
+        [
+          "qfd_dv_s5_sc2_leaf_dn0",
+          "/srv/opentallas-scratch2/claude/qc-kits-w/gen/sle_sc_v3/sle_sc_v3/rtl/qfd_qc_sle_sc__sle_sc_v3.sv"
+        ]
+      ],
+      "leaf_file": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/sle_sc_v3/sle_sc_v3/rtl/qfd_dv_s5_sc2_ce_leaf.sv",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "sc_cfg",
+          "direction": "input",
+          "bits": 101
+        },
+        {
+          "name": "dn_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "up_i",
+          "direction": "input",
+          "bits": 48
+        },
+        {
+          "name": "up_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "red_we",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "red_addr",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "red_data",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "vm_we",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "vm_win0",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "vm_wdata0",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_v",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "am_idx",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "am_val",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_u",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "w1_we",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "w1_addr",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "w1_data",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_v",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_idx",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "tok_own",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_val",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_user",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "busy",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "bits": 1
+        }
+      ],
+      "interface_bits": 524
+    },
+    {
+      "type": "slw_sc_v1__cl64543eaf__cl5e017c6f",
+      "host": "epyc2",
+      "actual_std": 554020,
+      "actual_macro": 0,
+      "existing_core_std": 281884,
+      "existing_core_seq": 43052,
+      "remaining_wrapper_std": 272136,
+      "remaining_wrapper_seq": 64304,
+      "both_under_400k": true,
+      "top_hierarchy": [
+        {
+          "prefix": "u_bound.u_core",
+          "std": 281884,
+          "seq": 43052
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i",
+          "std": 12467,
+          "seq": 2866
+        },
+        {
+          "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i",
+          "std": 12450,
+          "seq": 2861
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_stm_fe_p1_i",
+          "std": 12299,
+          "seq": 2826
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_i",
+          "std": 12187,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p1_i",
+          "std": 12187,
+          "seq": 2801
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_fe_p2_i",
+          "std": 12165,
+          "seq": 2796
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p1_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_x_fw_ctl_p2_i",
+          "std": 12119,
+          "seq": 2786
+        },
+        {
+          "prefix": "u_bound.u_cland_cws2_i",
+          "std": 11694,
+          "seq": 2686
+        }
+      ],
+      "native": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v1__cl64543eaf__cl5e017c6f/slw_sc_v1__cl64543eaf__cl5e017c6f/1_synth_odb.v",
+      "outline_um": [
+        613.44,
+        1339.2
+      ],
+      "existing_core_module": "qfd_dv_s5_sc2_leaf",
+      "core_instance": "u_bound.u_core",
+      "bound_source": [
+        [
+          "qfd_dv_s5_sc2_leaf",
+          "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v1__cl64543eaf__cl5e017c6f/slw_sc_v1__cl64543eaf__cl5e017c6f/rtl/slw_sc_v1__cl64543eaf__cl5e017c6f_bound.sv"
+        ]
+      ],
+      "leaf_file": "/srv/opentallas-scratch2/claude/qc-kits-w/gen/slw_sc_v1__cl64543eaf__cl5e017c6f/slw_sc_v1__cl64543eaf__cl5e017c6f/rtl/qfd_dv_s5_sc2_leaf.sv",
+      "ports": [
+        {
+          "name": "ck",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "rst_n",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "sc_cfg",
+          "direction": "input",
+          "bits": 101
+        },
+        {
+          "name": "dn_i",
+          "direction": "input",
+          "bits": 48
+        },
+        {
+          "name": "dn_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "up_i",
+          "direction": "input",
+          "bits": 48
+        },
+        {
+          "name": "up_o",
+          "direction": "output",
+          "bits": 48
+        },
+        {
+          "name": "red_we",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "red_addr",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "red_data",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "vm_we",
+          "direction": "input",
+          "bits": 8
+        },
+        {
+          "name": "vm_win0",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "vm_wdata0",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_v",
+          "direction": "input",
+          "bits": 1
+        },
+        {
+          "name": "am_idx",
+          "direction": "input",
+          "bits": 24
+        },
+        {
+          "name": "am_val",
+          "direction": "input",
+          "bits": 32
+        },
+        {
+          "name": "am_u",
+          "direction": "input",
+          "bits": 2
+        },
+        {
+          "name": "w1_we",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "w1_addr",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "w1_data",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_v",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_idx",
+          "direction": "output",
+          "bits": 24
+        },
+        {
+          "name": "tok_own",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "tok_val",
+          "direction": "output",
+          "bits": 32
+        },
+        {
+          "name": "tok_user",
+          "direction": "output",
+          "bits": 2
+        },
+        {
+          "name": "busy",
+          "direction": "output",
+          "bits": 1
+        },
+        {
+          "name": "fault",
+          "direction": "output",
+          "bits": 1
+        }
+      ],
+      "interface_bits": 572
+    }
+  ]
+}
