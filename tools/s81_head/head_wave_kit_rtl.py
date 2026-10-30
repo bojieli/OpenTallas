@@ -40,6 +40,23 @@ def prepare(args):
     for typ in types:
         if typ not in plan['partition_types']:
             raise ValueError('unknown type: ' + typ)
+    # The reset solver traverses all types, including held profiles. Snapshot
+    # every declared native census instead of relying on mutable lane results.
+    asset_receipts = {}
+    for t in plan['partition_types'].values():
+        clock = t.get('clock', {})
+        ref = clock.get('sink_bins_file')
+        if not ref:
+            continue
+        if ref not in asset_receipts:
+            source_asset = (args.assets / ref if args.assets else ROOT / ref).resolve()
+            if not source_asset.is_file():
+                raise ValueError('missing exact native sink census: ' + str(source_asset))
+            target = out / 'assets' / ('sink_bins_' + str(len(asset_receipts)) + '.json')
+            target.parent.mkdir(exist_ok=True)
+            shutil.copy2(source_asset, target)
+            asset_receipts[ref] = dict(path=str(target), sha256=digest(target))
+        clock['sink_bins_file'] = asset_receipts[ref]['path']
     plan, straps = count_sites(plan, plan_path, ROOT, types=set(types))
     plan, private = prepare_plan(plan, set(types))
     # Copy relative native pin/domain material; never depend on a mutable lane symlink.
@@ -59,7 +76,7 @@ def prepare(args):
           enabled=False, release=False, eligible_types=types, held_types=sorted(HELD),
           source_plan_sha256=digest(plan_path), prepared_plan_sha256=digest(out / 'source_plan.json'),
           sidecar_sha256=digest(out / 'source_sidecar.json'), published_wrappers=wrappers,
-          count_straps=straps, private_exports=private, added_cycles=0))
+          native_sink_censuses=asset_receipts, count_straps=straps, private_exports=private, added_cycles=0))
     print('HEAD_WAVE_PREPARED_DISABLED', out)
 
 def export(args):
@@ -73,6 +90,9 @@ def export(args):
     sidecar = prepared / 'source_sidecar.json'
     if digest(sidecar) != receipt['sidecar_sha256']:
         raise ValueError('prepared sidecar changed')
+    for asset in receipt.get('native_sink_censuses', {}).values():
+        if digest(asset['path']) != asset['sha256']:
+            raise ValueError('native sink census changed')
     out.mkdir(parents=True, exist_ok=False)
     plan = json.loads(plan_path.read_text()); t = plan['partition_types'][args.type]
     bootstrap = out / 'bootstrap'
@@ -116,6 +136,7 @@ def export(args):
 if __name__ == '__main__':
     p = argparse.ArgumentParser(description=__doc__); sub = p.add_subparsers(dest='mode', required=True)
     q = sub.add_parser('prepare'); q.add_argument('--source', type=Path, required=True)
+    q.add_argument('--assets', type=Path, help='exact native source-assets root; defaults to the pinned source checkout')
     q.add_argument('--published', type=Path, required=True); q.add_argument('--out', type=Path, required=True)
     q.add_argument('--types', required=True); q.set_defaults(run=prepare)
     q = sub.add_parser('export'); q.add_argument('--plan', type=Path, required=True)
