@@ -18,7 +18,7 @@ def finite(values):
     return bool(values) and all(math.isfinite(float(v)) for v in values.values())
 
 
-def propose(tt, ff, parents, cells, envelope, evaluate, slew_limit=80.0):
+def propose(tt, ff, parents, cells, envelope, evaluate, slew_limit=80.0, audit=None):
     """evaluate(assignments, need_slew)->(full_tt,full_ff,corner_in_out_slews).
 
     At a single-step plateau, target the dominant corner's at most three leaves
@@ -32,10 +32,13 @@ def propose(tt, ff, parents, cells, envelope, evaluate, slew_limit=80.0):
     slew_limit=min(slew_limit,80.0)
     if not finite(tt) or not finite(ff):
         return None
+    def note(**event):
+        if audit is not None:audit.append(event)
     old=objective(tt,ff)
     corner,late_values=('TT',tt) if max(tt.values())-min(tt.values()) >= max(ff.values())-min(ff.values()) else ('FF',ff)
     late=max(late_values.values());near=sorted(n for n,v in late_values.items() if late-v <= GAIN+1e-9)
     if not 2<=len(near)<=3:
+        note(kind="scope",reason="near_tied_leaf_count_outside_2_to_3",count=len(near))
         return None
     def path(n):
         result=[]
@@ -55,20 +58,29 @@ def propose(tt, ff, parents, cells, envelope, evaluate, slew_limit=80.0):
             for master in envelope:
                 if master==cells[node]:continue
                 t,f,_=evaluate({node:master},False);trials+=1
-                if not finite(t)or not finite(f):continue
+                if not finite(t)or not finite(f):
+                    note(kind="single",node=node,master=master,reason="nonfinite")
+                    continue
                 values=t if corner=='TT'else f
+                note(kind="single",leaf=leaf,node=node,master=master,target_gain_ps=late_values[leaf]-values[leaf],TT_window_ps=max(t.values())-min(t.values()),FF_window_ps=max(f.values())-min(f.values()))
                 if values[leaf]>=late_values[leaf]-GAIN:continue
                 candidates.append((values[leaf],objective(t,f),node,master))
         choices=sorted(candidates)[:2]
-        if not choices:return None
+        if not choices:
+            note(kind="scope",leaf=leaf,reason="no_independent_target_improving_driver",unique_drivers=sorted(unique))
+            return None
+        note(kind="shortlist",leaf=leaf,choices=choices)
         options.append(choices)
     best=None
     for batch in itertools.product(*options):
         assignment={p[2]:p[3]for p in batch}
         assert len(assignment)==len(near)<=3
         t,f,slews=evaluate(assignment,True);trials+=1
-        if not finite(t)or not finite(f)or not finite(slews)or set(slews)!={'TT_in','TT_out','FF_in','FF_out'}:continue
+        if not finite(t)or not finite(f)or not finite(slews)or set(slews)!={'TT_in','TT_out','FF_in','FF_out'}:
+            note(kind='batch',assignments=assignment,reason='missing_or_nonfinite')
+            continue
         score=objective(t,f)
+        note(kind="batch",assignments=assignment,TT_window_ps=max(t.values())-min(t.values()),FF_window_ps=max(f.values())-min(f.values()),slews=slews,strict_gain_pass=score<old-GAIN,slew_pass=max(slews.values())<=slew_limit)
         if score>=old-GAIN or max(slews.values())>slew_limit:continue
         key=(score,(max(t.values())-min(t.values()))+(max(f.values())-min(f.values())),tuple(sorted(assignment.items())))
         if best is None or key<best['key']:

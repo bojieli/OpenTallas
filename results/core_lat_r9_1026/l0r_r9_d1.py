@@ -67,7 +67,7 @@ def main():
         q = A.calibrated_summary(P, L, pmax, pmin)
         return max(q[c][k] for c in ("TT", "FF") for k in ("leaf_out_slew_max", "leaf_slew_in_max"))
     cap = max(slew_lim, slew_max()); rejected = 0
-    t0 = time.time(); tried = set(); joint_log = []
+    t0 = time.time(); tried = set(); joint_log = []; joint_attempts = []
     for s in range(steps):
         best = None
         cand = []
@@ -106,8 +106,10 @@ def main():
                     return jt, jf, sl
                 finally:
                     for u, master in originals.items(): P.nodes[u]["cell"] = master
+            audit = []
             joint = propose(tt, ff, par, {u: n["cell"] for u, n in P.nodes.items()},
-                            ENV, evaluate_joint, min(slew_lim, 80.0))
+                            ENV, evaluate_joint, min(slew_lim, 80.0), audit=audit)
+            joint_attempts.append(dict(step=s, events=audit))
             if joint is not None:
                 previous = cur
                 for u, master in sorted(joint['assignments'].items()):
@@ -130,6 +132,8 @@ def main():
     rec["nodes_xy"] = [[n[0], n[1], n[2], P.nodes[n[0]]["cell"], n[4]] for n in rec["nodes_xy"]]
     rec["frozen_masters"] = {n[0]: n[3] for n in rec["nodes_xy"]}
     rec["d1_uf3"] = dict(rule="12.8 d1 plan-computed sizing under uf_phys3 v1 (pre-build, no measurement)", start=dict(obj=round(o0[0], 2), TTw=round(o0[1], 2), FFw=round(o0[2], 2)), changes=log)
+    if joint_attempts:
+        rec["d1_uf3"]["joint3_attempts"] = joint_attempts
     if joint_log:
         rec["d1_uf3"]["joint3"] = joint_log
     if rejected:

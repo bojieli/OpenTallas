@@ -27,6 +27,12 @@ class Joint(unittest.TestCase):
  def test_every_corner_input_output_slew_can_reject(self):
   for key in ('TT_in','TT_out','FF_in','FF_out','nan'):
    with self.subTest(key=key):self.assertIsNone(J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate(key)))
+ def test_rejection_audit_retains_actual_ff_predicate(self):
+  audit=[]
+  q=J.propose(TT,FF,PAR,CELLS,['small','large'],evaluate('FF'),audit=audit)
+  self.assertIsNone(q)
+  batches=[e for e in audit if e['kind']=='batch']
+  self.assertTrue(batches);self.assertTrue(all(not e['strict_gain_pass']and e['slew_pass'] for e in batches))
  def test_invalid_requested_slew_refused(self):
   for limit in (float('nan'),float('inf'),-1.,0.):
    with self.subTest(limit=limit),self.assertRaises(ValueError):
