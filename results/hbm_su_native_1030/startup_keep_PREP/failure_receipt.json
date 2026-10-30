@@ -1,0 +1,39 @@
+{
+  "status": "FAIL_KEEP_ALIAS_DOES_NOT_PRESERVE_CONSTANT_FFS",
+  "actual_tool": "Yosys0.68 ORFS asap7lock",
+  "runtime": "intel1:/srv/opentallas-scratch2/claude/codex-hbm-su-startup-keep6-1030",
+  "hook": "physical/common_flow/ot_keep_regs.tcl unchanged",
+  "actual_synthesized_Qs": [
+    {
+      "name": "a_lo30",
+      "index": 0,
+      "actual_bit": "0"
+    },
+    {
+      "name": "d_lo.genblk1.g_line.line",
+      "index": 30,
+      "actual_bit": "0"
+    },
+    {
+      "name": "d_lo.genblk1.g_line.line",
+      "index": 62,
+      "actual_bit": "0"
+    },
+    {
+      "name": "d_lo.genblk1.g_line.line",
+      "index": 94,
+      "actual_bit": "0"
+    },
+    {
+      "name": "d_lo.genblk1.g_line.line",
+      "index": 126,
+      "actual_bit": "0"
+    },
+    {
+      "name": "u_ca.genblk1.g_rv.rd",
+      "index": 71,
+      "actual_bit": "0"
+    }
+  ],
+  "next": "Superseded source-only proposal startup_ff_PREP uses variable-D keep_hierarchy leaves; no waiver or alias-hint."
+}
