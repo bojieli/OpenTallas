@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS",
+  "scope": "Actual placed private RT G1, not timing signoff or standalone closure",
+  "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81cores-1030/kits/ot_s81sl_cap_rt_m5tall_balanced3",
+  "odb": "run/results/asap7/kl_ot_s81sl_cap_rt_m5tall_balanced3/base/3_place.odb",
+  "look": "Personally viewed actual auto_geom.png. Standard cells form continuous bands around the unchanged SRAM, with clear halo/side channels and no macro wall. Native north clock entry remains at129.612,129.36; 807 preplaced clock cells reduce entry-to-nearest-source reach. N/S pin spans remain broad and pin-to-register connections short. No blocked crossing, macro overlap or congestion hotspot.",
+  "reviewer": "Codex g2_gate",
+  "metrics": {
+    "clock_reach_um": 28.51,
+    "own_leaf_um_info": 71.06,
+    "root_to_farthest_sink_um_info": 248.96,
+    "clock_sinks": 10723,
+    "unrooted_sinks": 0,
+    "fill": 0.3027,
+    "pin_p90_um": 7.74,
+    "pin_max_um": 53.09,
+    "unregistered_pins": 0,
+    "r2r_max_um": 232.58,
+    "r2r_over405": 0,
+    "horizontal_channel_ratio": 0.511,
+    "vertical_channel_ratio": 0.29,
+    "column_vertical_ratio": 0.547,
+    "blocked_crossings": 0,
+    "macros_overlapped": 0,
+    "pin_audit": "748/748 PASS"
+  },
+  "grt": {
+    "configured_iterations": 50,
+    "actual_early_convergence_iterations": 15,
+    "overflow": 0,
+    "layers": "M2-M5",
+    "adjustment": 0.25,
+    "unit": "oth-ubuntu-4089634-1793365488",
+    "exit": 0
+  },
+  "next": "Parent/S81 independent image review, actual AP pinned-source/default-preflight compatibility, then parent-owned GRT/G2; no DRT before actual G2. No original KIT edits, duplicate probes, CTS or DRT by this agent.",
+  "source_material": "Private model/slice and exact prior13119EQ-material reuse eligibility retained at150ccf59e; no RTL change or added cycles"
+}
