@@ -7,7 +7,7 @@
 // producer-qualified ACKs from an exact regional owner-tag return partner.
 // One target stores <=128 literal run descriptors; whole-programme paging/
 // compression/dispatch remains explicit. This is not a 95313-entry ROM claim.
-module ot_hbm_static_load_cmd_provider_quad #(parameter integer SOURCE_QUAD=2,VM_COMMIT_AUDIT=1)(
+module ot_hbm_static_load_cmd_provider_quad #(parameter integer SOURCE_QUAD=2,VM_COMMIT_AUDIT=1,SOURCE_STACK=2,SOURCE_LOW_QUAD=2)(
  input wire clk,rst_n,input wire cmd_v,input wire[307:0]cmd,input wire[31:0]cycle,input wire command_fault_i,
  input wire begin_v,begin_bank,input wire[15:0]begin_epoch,input wire[14:0]begin_row,input wire[3:0]begin_col,
  input wire[15:0]fill_v,fill_bank,input wire[95:0]fill_slot,input wire[255:0]fill_epoch,input wire[4095:0]fill_data,
@@ -30,7 +30,7 @@ module ot_hbm_static_load_cmd_provider_quad #(parameter integer SOURCE_QUAD=2,VM
  reg wb;reg[15:0]we;reg[14:0]wr;reg[3:0]wc;
  reg[20:0]expected_words;reg[21:0]emitted_words;
  wire dated_step=busy_o&&counter_active&&!fault_o&&($signed(cycle-issue_at)>=0)&&($signed(drain_at-cycle)>0);
- ot_hbm_static_load_provider_quad #(.SOURCE_QUAD(SOURCE_QUAD)) provider(.clk(clk),.rst_n(rst_n),.desc_v_i(admit),.desc_i(move),.step_i(dated_step),
+ ot_hbm_static_load_provider_quad #(.SOURCE_QUAD(SOURCE_QUAD),.SOURCE_STACK(SOURCE_STACK),.SOURCE_LOW_QUAD(SOURCE_LOW_QUAD)) provider(.clk(clk),.rst_n(rst_n),.desc_v_i(admit),.desc_i(move),.step_i(dated_step),
  .window_buffer_i(wb),.window_epoch_i(we),.window_row_i(wr),.window_col_i(wc),
  .begin_v(begin_v&&safe_begin),.begin_bank(begin_bank),.begin_epoch(begin_epoch),.begin_row(begin_row),.begin_col(begin_col),
  .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),

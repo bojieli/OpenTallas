@@ -7,7 +7,7 @@
 // producer-qualified ACKs from an exact regional owner-tag return partner.
 // One target stores <=128 literal run descriptors; whole-programme paging/
 // compression/dispatch remains explicit. This is not a 95313-entry ROM claim.
-module ot_hbm_static_load_cp_provider_quad #(parameter integer SOURCE_QUAD=2,VM_COMMIT_AUDIT=1)(
+module ot_hbm_static_load_cp_provider_quad #(parameter integer SOURCE_QUAD=2,VM_COMMIT_AUDIT=1,SOURCE_STACK=2,SOURCE_LOW_QUAD=2)(
  input wire clk,rst_n,input wire[7:0]tgt,
  input wire cfg_v,input wire[7:0]cfg_target,input wire[11:0]cfg_addr,input wire[255:0]cfg_data,
  input wire desc_v,input wire[11:0]desc_base,input wire[12:0]desc_limit,input wire[15:0]desc_loops,input wire launch_v,
@@ -24,7 +24,7 @@ module ot_hbm_static_load_cp_provider_quad #(parameter integer SOURCE_QUAD=2,VM_
  ot_hgi_dma_back_cp_collar cp(.clk(clk),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
  .tgt_active(busy_o),.tgt_fault(fault_o),.cmd_v(cmd_v),.cmd(cmd),.cycle(cycle),.configured(configured),.fault(cp_fault),.active(cp_active));
- ot_hbm_static_load_cmd_provider_quad #(.SOURCE_QUAD(SOURCE_QUAD),.VM_COMMIT_AUDIT(VM_COMMIT_AUDIT)) command_provider(
+ ot_hbm_static_load_cmd_provider_quad #(.SOURCE_QUAD(SOURCE_QUAD),.VM_COMMIT_AUDIT(VM_COMMIT_AUDIT),.SOURCE_STACK(SOURCE_STACK),.SOURCE_LOW_QUAD(SOURCE_LOW_QUAD)) command_provider(
  .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd(cmd),.cycle(cycle),.command_fault_i(cp_fault),
  .begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),.begin_row(begin_row),.begin_col(begin_col),
  .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),
