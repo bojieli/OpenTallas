@@ -9,5 +9,29 @@
   "2525 exact affected NL data edges stay<=405um,0newfails.",
   "Clock-only2.16um columns fit max1.62umBUF+0.256umM6clock/shield crosssection; projected total rowfill49.67%.",
   "Placement legality,density,clock electrical timing and actual clockcorridor occupancy remain pending; no CTS/route authorized by this review."
- ]
+ ],
+ "followup": {
+  "image": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/widen/home_projection2.png",
+  "viewed": true,
+  "verdict": "PASS-COND FRESH FLOORPLAN/PLACE ONLY",
+  "findings": [
+   "V1knownfailure1375oldgraphhomesinside newmacro rowhalos, ownjobstopped/logspreserved.",
+   "Exactactualrow/sitefootprints and explicit1.944umclockmicroislands3/5rows nowmapall13324homes; maxmotion4.458um,0roworclockreservationerrors.",
+   "EachBUF24body1.62umplus0.256umM6clock/shield fits1.944umcolumn.52%estimatedclockfill;49%remainingstdpixels.",
+   "M6insideexistingA0clockceilingM7; macrochildobsM5. CurrentdieFTbudgetadoptioncheckpendingparent."
+  ]
+ },
+ "nk_followup": {
+  "image": "widen/nk_home_projection2.png",
+  "viewed": true,
+  "verdict": "PASS-COND FRESH PLACE ONLY",
+  "homes": 12814,
+  "changed": 6526,
+  "max_home_manhattan_motion_um": 4.438,
+  "row_footprint_errors": 0,
+  "reserved_clock_column_errors": 0,
+  "data_pin_affected_edges": 2525,
+  "new_over405": 0,
+  "notes": "Exact unchanged synthesized NK vehicle; completed new macro/PDN floorplan reused; wholecore pins/outline/RTL unchanged; clock electrical budget/CTS remain held"
+ }
 }

@@ -1,0 +1,26 @@
+{
+ "nl": {
+  "host": "intel2",
+  "unit": "oth-ubuntu-99116-1793358734",
+  "exit": 0,
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/physical/nl_widen2",
+  "stage": "3_place",
+  "r2r_um": 403.0,
+  "pin_reg_p90_um": 8.62,
+  "pin_reg_max_um": 28.86,
+  "std_on_macro": 0
+ },
+ "nk": {
+  "host": "epyc2",
+  "unit": "oth-ubuntu-2816354-1793359288",
+  "exit": 0,
+  "kit": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/physical/nk_widen2",
+  "stage": "3_place",
+  "r2r_um": 401.92,
+  "pin_reg_p90_um": 8.28,
+  "pin_reg_max_um": 15.55,
+  "std_on_macro": 0
+ },
+ "geometry_verdict": "AUTO-GEOM FAIL retained; clock not installed, inherited aspect/partialfaces and narrow-window channel warnings diagnosed separately",
+ "rtl_cycles_added": 0
+}

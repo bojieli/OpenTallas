@@ -1,0 +1,101 @@
+{
+ "basis": "Actual hardmacro boxes + unchanged AUTO-GEOM equivalent demand; native layer pitches and existing routing derate; no measured timing",
+ "clock_layers": {
+  "vertical_spine": "M7",
+  "horizontal_branches": "M6",
+  "entry": "M5",
+  "existing_parent_max_clock": "M7"
+ },
+ "dies": {
+  "nl": {
+   "scope": "pre-route corridor feasibility estimate, not a routing PASS",
+   "auto_geom_verdict": "FAIL",
+   "original_warning_windows_um": {
+    "channel_v": 9.0,
+    "col_v": 7.5,
+    "channel_h": 9.0
+   },
+   "actual_clear_vertical_corridor_um": 73.032,
+   "actual_clear_horizontal_corridor_um": 20.112,
+   "proposed_data_vertical_rect_um": [
+    232.0,
+    4.32,
+    264.0,
+    669.6
+   ],
+   "proposed_data_horizontal_rect_um": [
+    64.0,
+    976.86,
+    449.0,
+    992.86
+   ],
+   "equivalent_demand_tracks": {
+    "channel_v": 845.9926200000001,
+    "col_v": 634.16925,
+    "channel_h": 163.47474
+   },
+   "track_supply_per_um": {
+    "vertical": 48.18,
+    "horizontal": 48.18
+   },
+   "clock_reserved_equivalent_tracks": 8.0,
+   "ratios": {
+    "channel_v": 0.5515808340287921,
+    "col_v": 0.41347358778426874,
+    "channel_h": 0.21428630977348992
+   },
+   "r2r_endpoint_max_um": 403.0,
+   "r2r_captures_gt405": 0,
+   "pending": [
+    "Current die-over-core FT/obs budget owner check",
+    "Clock subtree model and physical clock placement",
+    "Actual >=50iter GRT and routed-geometry reach/STA; estimates never freeze core/die"
+   ]
+  },
+  "nk": {
+   "scope": "pre-route corridor feasibility estimate, not a routing PASS",
+   "auto_geom_verdict": "FAIL",
+   "original_warning_windows_um": {
+    "channel_v": 9.0,
+    "col_v": 7.5,
+    "channel_h": 9.0
+   },
+   "actual_clear_vertical_corridor_um": 79.32,
+   "actual_clear_horizontal_corridor_um": 20.112,
+   "proposed_data_vertical_rect_um": [
+    232.0,
+    4.32,
+    264.0,
+    669.6
+   ],
+   "proposed_data_horizontal_rect_um": [
+    64.0,
+    976.86,
+    449.0,
+    992.86
+   ],
+   "equivalent_demand_tracks": {
+    "channel_v": 700.2963,
+    "col_v": 680.7833999999999,
+    "channel_h": 418.8769199999999
+   },
+   "track_supply_per_um": {
+    "vertical": 48.18,
+    "horizontal": 48.18
+   },
+   "clock_reserved_equivalent_tracks": 8.0,
+   "ratios": {
+    "channel_v": 0.4565879277070728,
+    "col_v": 0.4438656634675568,
+    "channel_h": 0.5490731438758388
+   },
+   "r2r_endpoint_max_um": 401.92,
+   "r2r_captures_gt405": 0,
+   "pending": [
+    "Current die-over-core FT/obs budget owner check",
+    "Clock subtree model and physical clock placement",
+    "Actual >=50iter GRT and routed-geometry reach/STA; estimates never freeze core/die"
+   ]
+  }
+ }
+}
