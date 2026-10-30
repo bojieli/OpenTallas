@@ -177,6 +177,9 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
+    import pad_clock as PC
+    for p in PC.pins(P, tn):
+        add(p['name'] + '[0]', p['layer'], *p['xy_um'])
     return list(recs.values())
 
 
@@ -257,6 +260,9 @@ def io_tcl(P, tn, pins):
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
+    import pad_clock as PC
+    if t.get('clock', {}).get('pad_clock') is not None:
+        lines.append(PC.io_tcl(P, tn).rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -1370,7 +1376,8 @@ def sdc(P, tn, pins):
     if P.types[tn].get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         out = LC.sdc(P, tn, out)
-    return out
+    import pad_clock as PC
+    return PC.sdc(P, tn, out)
 
 
 
@@ -2284,6 +2291,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-GEN-2 (opt-in clock.tap_passthrough): hard-core island ft clock pass-through inputs are followed, not
         # measured as tap sinks (tap_balance.tcl tb_passthru)
         cfg.append("export OT_TAP_PASSTHRU = 1")
+    import pad_clock as PC
+    PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",

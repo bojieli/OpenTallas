@@ -2021,6 +2021,88 @@
        "landing_contract": {
         "type": "object"
        },
+       "pad_clock": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "pins"
+        ],
+        "properties": {
+         "pins": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "name",
+            "dir",
+            "period_ps",
+            "source",
+            "layer",
+            "xy_um"
+           ],
+           "properties": {
+            "name": {
+             "type": "string",
+             "minLength": 1
+            },
+            "dir": {
+             "enum": [
+              "in",
+              "out"
+             ]
+            },
+            "period_ps": {
+             "type": "number",
+             "exclusiveMinimum": 0
+            },
+            "source": {
+             "type": "string",
+             "minLength": 1
+            },
+            "layer": {
+             "type": "string",
+             "minLength": 1
+            },
+            "xy_um": {
+             "type": "array",
+             "items": {
+              "type": "number"
+             },
+             "minItems": 2,
+             "maxItems": 2
+            },
+            "source_clock_port": {
+             "type": "string",
+             "minLength": 1
+            },
+            "sink_pins": {
+             "type": "array",
+             "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "module",
+               "pin"
+              ],
+              "properties": {
+               "module": {
+                "type": "string",
+                "minLength": 1
+               },
+               "pin": {
+                "type": "string",
+                "minLength": 1
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       },
        "landing_export_form": {
         "enum": [
          "tie",

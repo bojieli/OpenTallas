@@ -1,0 +1,40 @@
+{
+ "status": "PASS",
+ "scope": "Actual effective ORFS native Liberty clock input roles only; no PHY period/plan/physical adoption",
+ "pins": [
+  [
+   "ot_s81_kp4_dchn",
+   "clk"
+  ],
+  [
+   "ot_sram_1r1w2c_64x546_m1",
+   "rclk"
+  ],
+  [
+   "ot_sram_1r1w2c_64x546_m1",
+   "wclk"
+  ],
+  [
+   "ot_sram_1r1w_32x546_m1",
+   "clk"
+  ]
+ ],
+ "libraries": [
+  {
+   "path": "/work/macros/ot_sram_1r1w2c_64x546_m1_tt.lib",
+   "sha256": "0e6668f4417a0a449784d60e1ec8545cb9eb750d92591e9639523795b796a058"
+  },
+  {
+   "path": "/work/macros/ot_sram_1r1w_32x546_m1_tt.lib",
+   "sha256": "6fd25b08829e040b4089f00701d64711ed6b3bf331fd37328bbafc58d003cf1c"
+  },
+  {
+   "path": "/work/macros/ot_s81_kp4_dchn_tt.lib",
+   "sha256": "80295d97d5f7de10af000789d1deac0b742ad089073a858bd94ecad282599604"
+  }
+ ],
+ "host": "intel2",
+ "unit": "oth-ubuntu-814393-1793364745",
+ "source_kit": "/srv/opentallas-scratch2/claude/codex-head-collect-1030/parent_sizing/kit3/gen/hd_serdes",
+ "method": "Same effective ORFS make print-LIB_FILES; parse native pin clock:true and direction:input. Actual source kit mounted read-only; no STA/placement/route or period authority."
+}
