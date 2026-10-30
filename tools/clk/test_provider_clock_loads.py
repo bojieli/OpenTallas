@@ -45,6 +45,20 @@ def test_native_prefixed_net_is_preserved():
     assert nets[0]['name']=='ck_n1' and report['rows'][0]['raw_net']=='ck_n1'
 
 
+def test_selected_access_must_remain_on_the_actual_m1_pin():
+    g,i,b=fixture();i['loads'][0]['entry_xy_dbu']=[109,220]
+    _,_,e,_=P.extend(*g,i,b);assert e['provider_clk_00000']['xy']==[.109,.220]
+    i['loads'][0]['entry_xy_dbu']=[1000,1000]
+    with pytest.raises(ValueError,match='outside actual M1'):P.extend(*g,i,b)
+
+
+def test_different_known_clock_net_cannot_replace_selected_stage_phase():
+    g,i,b=fixture();g[0].append(dict(name='n2',drv='other',loads=['other_child']))
+    b['ports']['t_st_other__clk']=dict(role='clock',net='ck_n2')
+    i['loads'][0]['net']='ck_n2'
+    with pytest.raises(ValueError,match='selected stage tap'):P.extend(*g,i,b)
+
+
 def leaf_fixture():
     # ot_clk leaf drivers: the trunk net ck_n1 now carries the trunk-side inverter A pin; the flop sits on the leaf net.
     g,i,b=fixture()

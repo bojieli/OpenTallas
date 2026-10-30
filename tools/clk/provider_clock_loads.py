@@ -21,9 +21,6 @@ def tcl_word(value):
     return '{' + value + '}'
 
 
-# ot_clk leaf-drivers (tools/clk/leaf_drivers.py, 12.16 / KV-019): register CLK pins leave the trunk nets; the trunk
-# net then carries the trunk-side inverter A pin of each leaf driver pair (role clock_leaf). Those A pins are the actual
-# fixed-tree loads. Plans without leaf drivers keep the sequential-CLK-only path unchanged.
 LEAF_ROLE = 'clock_leaf'
 LEAF_MASTERS = ('CKINVDC', 'INV')
 
@@ -43,7 +40,7 @@ def load_pin(load):
 
 
 def pin_entry(load, dbu, via12):
-    """Select a VIA12 enclosure wholly inside actual M1 clock pin metal (CLK, or A of a leaf driver)."""
+    """Select a VIA12 enclosure wholly inside actual M1 CLK pin metal."""
     candidates = []
     hx, hy = via12
     for shape in load['shapes_dbu']:
@@ -53,11 +50,23 @@ def pin_entry(load, dbu, via12):
         x, y = (x0+x1)/2, (y0+y1)/2
         candidates.append((-(y1-y0), -(x1-x0), x, y, shape))
     if not candidates:
-        raise ValueError(f"actual M1 {load_pin(load)} metal cannot enclose VIA12: {load['inst']}")
-    _, _, x, y, shape = min(candidates)
-    return dict(layer='M1', xy=[x/dbu,y/dbu], rect_um=[v/dbu for v in shape[1:]],
+        raise ValueError(f"actual M1 clock pin metal cannot enclose VIA12: {load['inst']}")
+    if load.get('entry_xy_dbu') is not None:
+        x,y=map(float,load['entry_xy_dbu'])
+        legal=[r for r in candidates if r[4][1]+hx <= x <= r[4][3]-hx and r[4][2]+hy <= y <= r[4][4]-hy]
+        if not legal:raise ValueError(f"selected CLK access is outside actual M1 metal: {load['inst']}")
+        shape=min(legal)[4]
+    else:
+        _, _, x, y, shape = min(candidates)
+    row=dict(layer='M1', xy=[x/dbu,y/dbu], rect_um=[v/dbu for v in shape[1:]],
                 inst=load['inst'], pin=load_pin(load), net=load['net'],
                 via12_enclosure_um=[hx/dbu,hy/dbu], actual_m1=True)
+    if load.get('upper_xy_dbu') is not None:
+        ux,uy=map(float,load['upper_xy_dbu'])
+        if (ux!=x and uy!=y) or abs(ux-x)+abs(uy-y)>405:
+            raise ValueError('CLK access M3 jog must be one bounded straight segment')
+        row.update(upper_xy=[ux/dbu,uy/dbu],jog_layer='M3')
+    return row
 
 
 def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
@@ -84,6 +93,9 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         seen.add(name)
         if actual not in known:
             raise ValueError(f'provider clock has no selected tap binding: {actual}')
+        stage_port=f"t_st_{load['stage']}__clk"
+        if stage_port not in clock_bind or clock_bind[stage_port]['net']!=actual:
+            raise ValueError(f'provider CLK differs from selected stage tap: {stage_port} -> {actual}')
         raw = actual if actual in bynet else actual[3:] if actual.startswith('ck_') else actual
         if raw not in bynet:
             raise ValueError(f'provider clock is absent from the unchanged tree: {actual}')
@@ -92,7 +104,7 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
         if port in ports or port in endpoints:
             raise ValueError(f'duplicate physical endpoint key: {port}')
         ep = pin_entry(load, dbu, via12)
-        ports[port] = dict(layer=ep['layer'],xy=ep['xy'])
+        ports[port] = dict(layer=ep['layer'],xy=ep.get('upper_xy',ep['xy']))
         endpoints[port] = ep
         bynet[raw]['loads'].append('port:'+port)
         rows.append(dict(port=port,stage=load['stage'],raw_net=raw,**ep))
@@ -109,23 +121,29 @@ def extend(nets, ports, endpoints, inventory, bindings, via12=(9,11)):
 
 
 def lower_escape_shapes(report, tech_vias_dbu, dbu):
-    """Actual M1->M7 access stacks, including real via enclosures and AREA pads.
+    """Real M1->M7 stacks, optional bounded M3 escape jog, VIA enclosures/AREA.
 
-    M7->M8 risers/landings are deliberately absent: they require the joint
-    clock/PG track allocation. These shapes reserve the fixed lower escape
-    before a power planner consumes the same cell-local columns.
+    M7->M8 risers/landings remain the joint clock/PG track allocator's work.
+    Actual pin coordinates never change when the upper access column moves.
     """
     pads={'M2':(.019,.009),'M3':(.009,.020),'M4':(.043,.012),
           'M5':(.012,.043),'M6':(.036,.016),'M7':(.016,.036)}
     out=[]
     for row in report['rows']:
-        x,y=row['xy'];net=row['net']
+        x,y=row['xy'];ux,uy=row.get('upper_xy',row['xy']);net=row['net']
+        if (ux!=x and uy!=y) or abs(ux-x)+abs(uy-y)>.405+1e-9:
+            raise ValueError('invalid physical M3 CLK escape')
         for via in ('VIA12','VIA23','VIA34','VIA45','VIA56','VIA67'):
+            vx,vy=(x,y) if via in ('VIA12','VIA23') else (ux,uy)
             for layer,x0,y0,x1,y1 in tech_vias_dbu[via]:
                 if not layer.startswith('M'):continue
-                out.append([net,layer,x+x0/dbu,y+y0/dbu,x+x1/dbu,y+y1/dbu])
+                out.append([net,layer,vx+x0/dbu,vy+y0/dbu,vx+x1/dbu,vy+y1/dbu])
         for layer,(hx,hy) in pads.items():
-            out.append([net,layer,x-hx,y-hy,x+hx,y+hy])
+            vx,vy=(x,y) if layer in ('M2','M3') else (ux,uy)
+            out.append([net,layer,vx-hx,vy-hy,vx+hx,vy+hy])
+        if (ux,uy)!=(x,y):
+            hx,hy=pads['M3'];out.append([net,'M3',ux-hx,uy-hy,ux+hx,uy+hy])
+            hw=.009;out.append([net,'M3',min(x,ux)-hw,min(y,uy)-hw,max(x,ux)+hw,max(y,uy)+hw])
     return out
 
 
@@ -156,7 +174,6 @@ def main(argv=None):
     (a.out/'graph.json').write_text(json.dumps(dict(graph,nets=nets,ports=ports,endpoints=endpoints))+'\n')
     report['inputs']={key:dict(path=str(getattr(a,key)),sha256=hashlib.sha256(getattr(a,key).read_bytes()).hexdigest()) for key in ('graph','loads','bindings')}
     (a.out/'provider_endpoints.json').write_text(json.dumps(report)+'\n')
-    kind='clock' if report.get('leaf_driver_loads') else 'CLK'
-    print(f"PROVIDER_CLOCK_ENDPOINTS {report['loads']} actual M1 {kind} terminals on {report['nets']} unchanged nets; UNROUTED")
+    print(f"PROVIDER_CLOCK_ENDPOINTS {report['loads']} actual M1 CLK terminals on {report['nets']} unchanged nets; UNROUTED")
 
 if __name__=='__main__':main()
