@@ -1,0 +1,4 @@
+VN_COMMIT FAIL checks64 errors48 H_A2 H_B2 G_A3 G_B3 clock833
+[572693000] %Fatal: tb_vn_commit.sv:43: Assertion failed in tb_vn_commit: actual VN store commit payload/age
+%Error: tb_vn_commit.sv:43: Verilog $stop
+Aborting...

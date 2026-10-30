@@ -688,6 +688,14 @@
            "pitch_um"
           ],
           "additionalProperties": false,
+          "dependentRequired": {
+           "origin_um": [
+            "counts"
+           ],
+           "counts": [
+            "origin_um"
+           ]
+          },
           "properties": {
            "rect_um": {
             "type": "array",
@@ -700,6 +708,23 @@
            "pitch_um": {
             "type": "number",
             "exclusiveMinimum": 0
+           },
+           "origin_um": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+           },
+           "counts": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+             "type": "integer",
+             "minimum": 1
+            }
            },
            "use": {
             "enum": [
@@ -742,6 +767,29 @@
           },
           "minItems": 4,
           "maxItems": 4
+         },
+         "phy_macro_binding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "part",
+           "inst",
+           "module"
+          ],
+          "properties": {
+           "part": {
+            "type": "string",
+            "minLength": 1
+           },
+           "inst": {
+            "type": "string",
+            "minLength": 1
+           },
+           "module": {
+            "type": "string",
+            "minLength": 1
+           }
+          }
          },
          "core_strip_um": {
           "type": "array",
@@ -789,6 +837,10 @@
       "type": "string",
       "minLength": 1
      },
+     "ft_full_stage_placement_file": {
+      "type": "string",
+      "minLength": 1
+     },
      "lec": {
       "type": "object",
       "additionalProperties": false,
@@ -810,6 +862,9 @@
        "type": "number",
        "minimum": 0
       }
+     },
+     "fully_fixed_macros": {
+      "type": "boolean"
      },
      "phy_pg_offmodel": {
       "type": "string",
@@ -1700,6 +1755,119 @@
        "sink_bins_file": {
         "type": "string"
        },
+       "native_domains": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "schema",
+         "census_file",
+         "source_odb_sha256",
+         "core_root",
+         "macro_pins"
+        ],
+        "properties": {
+         "schema": {
+          "const": "opentallas.native_clock_domains.v1"
+         },
+         "census_file": {
+          "type": "string",
+          "minLength": 1
+         },
+         "source_odb_sha256": {
+          "type": "string",
+          "minLength": 1
+         },
+         "core_root": {
+          "const": "clk"
+         },
+         "macro_pins": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "inst",
+            "module",
+            "pin",
+            "root"
+           ],
+           "properties": {
+            "inst": {
+             "type": "string",
+             "minLength": 1
+            },
+            "module": {
+             "type": "string",
+             "minLength": 1
+            },
+            "pin": {
+             "type": "string",
+             "minLength": 1
+            },
+            "root": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
+          }
+         },
+         "children": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "inst",
+            "module",
+            "pin",
+            "root",
+            "census_file",
+            "source_odb_sha256"
+           ],
+           "properties": {
+            "inst": {
+             "type": "string",
+             "minLength": 1
+            },
+            "module": {
+             "type": "string",
+             "minLength": 1
+            },
+            "pin": {
+             "type": "string",
+             "minLength": 1
+            },
+            "root": {
+             "type": "string",
+             "minLength": 1
+            },
+            "census_file": {
+             "type": "string",
+             "minLength": 1
+            },
+            "source_odb_sha256": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
+          }
+         },
+         "planned_sink_sites": {
+          "type": "object",
+          "additionalProperties": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+             "type": "number"
+            }
+           }
+          }
+         }
+        }
+       },
        "tap_balance_rc": {
         "enum": [
          "placement",
@@ -2021,6 +2189,88 @@
        },
        "landing_contract": {
         "type": "object"
+       },
+       "pad_clock": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "pins"
+        ],
+        "properties": {
+         "pins": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "name",
+            "dir",
+            "period_ps",
+            "source",
+            "layer",
+            "xy_um"
+           ],
+           "properties": {
+            "name": {
+             "type": "string",
+             "minLength": 1
+            },
+            "dir": {
+             "enum": [
+              "in",
+              "out"
+             ]
+            },
+            "period_ps": {
+             "type": "number",
+             "exclusiveMinimum": 0
+            },
+            "source": {
+             "type": "string",
+             "minLength": 1
+            },
+            "layer": {
+             "type": "string",
+             "minLength": 1
+            },
+            "xy_um": {
+             "type": "array",
+             "items": {
+              "type": "number"
+             },
+             "minItems": 2,
+             "maxItems": 2
+            },
+            "source_clock_port": {
+             "type": "string",
+             "minLength": 1
+            },
+            "sink_pins": {
+             "type": "array",
+             "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+               "module",
+               "pin"
+              ],
+              "properties": {
+               "module": {
+                "type": "string",
+                "minLength": 1
+               },
+               "pin": {
+                "type": "string",
+                "minLength": 1
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
        },
        "landing_export_form": {
         "enum": [

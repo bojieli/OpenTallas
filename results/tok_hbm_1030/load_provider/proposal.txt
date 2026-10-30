@@ -18,7 +18,7 @@ Observed current source (intel1 codex-hbm-bind-0300/top_native.sv):
 Existing static-compatible source that supplies the missing mechanism:
 1. ot_static_cmd_target MODE1: CW62, RELF0 is a direct fixed-dated command
    issuer for the existing62-bit LOAD command. No ready, credit, deferred issue
-   or runtime rescheduling. It uses a128-entry command table, so full-token
+   or runtime rescheduling. It uses a128-entry command table, so full MTP VERIFY programme
    operation needs descriptor/loop compression or programme tiling, not a
    fictitious unbounded table. Target ID is NOT allocated by this proposal.
 2. ot_hbm_svc_vm_kshare_splitstrap: existing PHY-boundary ownership windows,
@@ -170,10 +170,10 @@ Actual compact counter / programme capacity follow-up (CODEX):
   window controller is still open. Code0 uses full physical row arithmetic;
   code1 explicitly selects row-striped stack with local arithmetic. Every
   request must preserve physical capacity and no-cross-stack-run guards.
-- counter_budget.json covers actual3916-record full40-layer single-token+head
+- counter_budget.json covers actual3916-record full40-layer N6 MTP VERIFY+head
   source candidate, inserted LOADs only. A single global one-word-per-cycle
   counter needs43117008 issuecycles+12528 setupedges=43129536cycles,
-  35.926903488ms at833ps (conditional ceiling27.8343token/s before othercosts).
+  35.926903488ms at833ps (conditional ceiling27.8343programme-steps/s before othercosts).
   This floor belongs to that serial implementation, not every architecture.
   Existing about1.8ktoken/s model excludes this spill/provider cost. All8leaf
   landing does not create8parallelissuers. Eightcycle tentative counter-to-DQ
@@ -185,3 +185,5 @@ Actual compact counter / programme capacity follow-up (CODEX):
 - All inserted U32 copies are whole aligned sectors, so an explicitly proven
   existing-count8 coalescing counter could reduce issue work to5389626 sector
   commands. No such implementation is assumed in the current budget.
+
+Current rate scope: actual a1223916 is N=6 MTP VERIFY across40layers/head, with six row positions, CTL.ACCEPT3913 and CTL.TOKX3914 A.n7. Programme traffic/cycles are per verify STEP, not one AR token. Earlier 27.8343token/s and single-token labels are superseded; the same serial floor is27.8343programme-steps/s. Accepted tokens/s requires actual native ACCEPT/TOKX observations plus draft/seed costs. No fixed acceptance gamma is assumed. Historical counts, source bytes and cycle results remain unchanged.

@@ -1,0 +1,29 @@
+{
+  "status": "PASS_SELECTED_FUNCTIONAL_VN_STORE_INTAKE",
+  "die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+  "source_asbuilt_sha256": "062ef0c41db92b2c3b89369cdffd96f2cb2dbdee2ec0f4c3050f4652123f3dec",
+  "local_HLOAD_pin_to_last_VN_store_commit_edges": [
+    22
+  ],
+  "local_GAIN_pin_to_last_VN_store_commit_edges": [
+    15
+  ],
+  "from_XR_command_output_to_H_store_range": [
+    24,
+    42
+  ],
+  "from_XR_command_output_to_GAIN_store_range": [
+    17,
+    35
+  ],
+  "actual_instances": 160,
+  "controls_caught": [
+    "missing_actual_payload_control",
+    "different_VN_write_stage",
+    "incoherent_H_payload_age",
+    "changed_VN_source"
+  ],
+  "native_job_sealed": false,
+  "full_token": false,
+  "physical_START_qualified": false
+}

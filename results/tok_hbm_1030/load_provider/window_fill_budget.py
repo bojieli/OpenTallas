@@ -3,7 +3,7 @@
 One prefetch batch = adjacent inserted LOADs before a source body. The compiler
 may read each needed PC-window half once within that batch, then release it.
 No cross-batch cache reuse or source-epoch assumption is made. This is a proposed
-policy cost, not current provider execution or a whole-token rate.
+policy cost, not current provider execution or a whole MTP VERIFY programme rate.
 """
 import json
 from pathlib import Path
@@ -42,4 +42,5 @@ if __name__=='__main__':
   for sector in range(begin,begin+n):direct.add((0,sector>>15,sector>>8&15,((sector>>6)^(sector>>11)^(sector>>16))&1))
   assert windows(begin*32,(begin+n)*32)==direct
  result=dict(status='CONSERVATIVE_PROPOSED_WINDOW_POLICY_NOT_CURRENT_EXECUTION',source='canonical_group_anchored inserted LOADs only',inserted_load_bytes=bytes_,prefetch_batches=batches,window_half_fills=count,max_window_halves_per_batch=max_windows,existing_NPC2_half_fill_bytes=32768,proposed_HBM_fill_bytes=filled,overfetch_ratio=filled/bytes_,source_stacks=sorted(stacks),current_selected_stack2_matches=stacks=={2},cache_between_batches=False,original_source_DMA_LOADs_included=False,calendar_or_cycle_price_assigned=False,holds=['source stack3 unselected; actual path supports stack2 only','dates/target/routing/PHYcompletion and scratch authority unresolved','possible cache reuse requires source-epoch invalidation proof, not a free discount'])
+ result['programme_scope']=p.get('programme_scope',dict(kind='MTP_VERIFY',row_positions=6,rate_unit='programme_steps_per_second',accepted_outputs_data_dependent=True))
  Path(__file__).with_name('window_fill_budget.json').write_text(json.dumps(result,indent=1)+'\n');print(json.dumps(result))

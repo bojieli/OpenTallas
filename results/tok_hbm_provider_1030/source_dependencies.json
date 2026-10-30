@@ -1,0 +1,47 @@
+{
+ "status": "PINNED_REVIEWED_DESTINATION_FORMAT_CORRECTED_SOURCE",
+ "canonical_RTL_branch": "codex/hbm-load-provider-rtl-1030",
+ "canonical_RTL_tip": "dd491a076",
+ "canonical_RTL_order": [
+  "73430d378",
+  "7af555e3e",
+  "dd491a076"
+ ],
+ "format_control_results": {
+  "branch": "codex/hbm-bind-1030",
+  "commit": "5a703c0a9",
+  "scope": "wrongdestinationformat controls; results branch separate from canonicalRTL ancestry",
+  "files_sha256": {
+   "counter_model.json": "bc2f01ca8c44afbe82564016b5fdc004248c29f872036fca90bbdedadb46898f",
+   "counter_scalar_current.log": "7b73e2c3cb470064ab1a5be9a3555b84eabd4549c53f184b0c3bf0b0f638c128"
+  },
+  "tested_counter_matches_canonical_dd491": true
+ },
+ "canonical_directory": "rtl/hbm_accel/loader/service_native/split/",
+ "provider_files": {
+  "ot_hbm_static_load_addr_counter.sv": "f2ebfa09cc72b60e4461df45110ba3b2399c2d0d60ca6c9182c0070301889b3b",
+  "ot_hbm_static_load_addr_map.sv": "2105a2c3dd7a9dfd18223a602da11edf354d2c453b1855d938afaf2fb22fb974",
+  "ot_hbm_static_load_quad_vehicle.sv": "5ff1d8b050ab276238b0da56d81971471c9afc1602e743ae34009a59b9c98800",
+  "ot_hbm_static_load_provider_quad.sv": "7ea83328a00506f2c9697c657d738aacb1abfd27f8ad1ce2172b909a63a9e356",
+  "ot_hbm_static_load_cp_provider_quad.sv": "a99befd82f304190239adf072ba9079fb5402787fb887a806e36c4d04bc0dfed"
+ },
+ "shared_repo_files": {
+  "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv": "27c68f04777546e13dc32628eeb0481afa8d81668b29fc34d894a23e5eca7789",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv": "54ffc8c1fc8cd14ce59cddae0d3a0529f2541f4625f12454aa9b95356b7fc81a",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "0c779d0cbf900226d481fdcacee3236246dabbeadb36e332ec0461f5afc9358a",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+ },
+ "history": {
+  "source": "5fe9b74a9/73430d378 plus7af555e3e packet-onlyCP",
+  "source_hashes": {
+   "ot_hbm_static_load_addr_counter.sv": "5038abae11c9fda7e1a6bf4cfc151f9d4bed40c472aaecc9d7d99a8356ecc994",
+   "ot_hbm_static_load_addr_map.sv": "2105a2c3dd7a9dfd18223a602da11edf354d2c453b1855d938afaf2fb22fb974",
+   "ot_hbm_static_load_quad_vehicle.sv": "5ff1d8b050ab276238b0da56d81971471c9afc1602e743ae34009a59b9c98800",
+   "ot_hbm_static_load_provider_quad.sv": "7ea83328a00506f2c9697c657d738aacb1abfd27f8ad1ce2172b909a63a9e356",
+   "ot_hbm_static_load_cp_provider_quad.sv": "a99befd82f304190239adf072ba9079fb5402787fb887a806e36c4d04bc0dfed"
+  },
+  "status": "supersededcountermissingdestinationformatguard; historicallegalU32fixture evidence only, currentdefaultguardrequiresdd491"
+ },
+ "normative_formats": "destinationFP32(0) for FP32/BF16/E4M3/INT8/UE8M0 inputs; destinationU32(5) iff sourceU32(5)",
+ "release_scope": "Caller dates release afterlastconsumer; no completeinflight/actualVMdone guard in this packet-only source snapshot"
+}

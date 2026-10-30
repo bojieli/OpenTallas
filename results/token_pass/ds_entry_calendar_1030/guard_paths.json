@@ -1,0 +1,28 @@
+{
+  "status": "PASS_NATIVE_BOOKED_UNBOOKED_PAGE_PHASE_AND_SOURCE_GUARDS",
+  "controls_caught": [
+    "missing:booked",
+    "missing:unbooked",
+    "missing:entry_page",
+    "boolean:booked",
+    "boolean:unbooked",
+    "boolean:entry_page",
+    "negative:booked",
+    "negative:unbooked",
+    "negative:entry_page",
+    "outside:booked",
+    "outside:unbooked",
+    "outside:entry_page",
+    "conflicting_key_versions:booked",
+    "conflicting_key_versions:unbooked",
+    "conflicting_key_versions:entry_page",
+    "changed_dependency",
+    "changed_master",
+    "changed_actual_parameter",
+    "missing_dependencies"
+  ],
+  "phase_controls_per3_APIs": 15,
+  "source_controls": 4,
+  "selected_measured_reset_relative_phase": 3,
+  "missing_default_phase": false
+}

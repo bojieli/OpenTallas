@@ -35,10 +35,31 @@
   "VM slot6 calendar, physical wrapper/commit/done transport",
   "source arithmetic, STORE and all other engines"
  ],
- "qualification": "43,129,536 cycles is full-token serialized counter-only issue+setup arithmetic floor for12528 original effective descriptors under chosen singleword serial implementation. Window-safe segmentation adds setups; a future coalescing/parallel implementation can lower this floor. No installed provider, token-rate qualification, or current stack coverage.",
- "programme_scope": "a122 actual3916-record source range0..3915: full40-layer single token programme including head, not perlayer",
+ "qualification": "43,129,536 cycles is per-N6-MTP-VERIFY-step serialized counter-only issue+setup arithmetic floor for12528 original effective descriptors under chosen singleword serial implementation. Window-safe segmentation adds setups; a future coalescing/parallel implementation can lower this floor. No installed provider, accepted-token-rate qualification, or current stack coverage.",
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ },
  "issuer_scope": "One serial global227counter producing one datedword microop/cycle, routed to one sourceleaf/destinationquad perstep. Eightlanding leaves do not imply8parallelissuers. Replicated counter/calendar/VMslot support is not installed or priced.",
  "counter_floor_at_833ps_ms": 35.926903488,
- "serial_counter_only_ceiling_tokens_per_second": 27.834294161588726,
- "model_relation": "Existing about1.8ktoken/s model excludes this source-only VMspill/selectedserialcounter capacity cost. This conditional ceiling is not qualified hardware/token performance."
+ "model_relation": "Existing about1.8k accepted tokens/s MTP model excludes this spill/provider cost. Normalize by actual native accepted outputs per programme step and include draft/seed costs before comparison.",
+ "serial_counter_only_ceiling_programme_steps_per_second": 27.834294161588726,
+ "supersedes_prior_rate_label": "Earlier 27.8343token/s and one-AR-token wording was incorrect. Same35.926903488ms budget is per N6 MTP VERIFY step; byte/cycle counts are unchanged."
 }

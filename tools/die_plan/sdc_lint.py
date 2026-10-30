@@ -38,6 +38,7 @@ liberty files before synthesis):
                (lint(landed_clock_inputs=...)) and a real tap clock, both directions, W = period/2 - setup
                uncertainty (the meso-ring phase window, held HERE); every landed clock needs all four.
 """
+import math
 import argparse
 import gzip
 import hashlib
@@ -309,7 +310,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
          hold_in_min_ps=None, hold_out_min_ps=None, seam_hold_ps=None, hold_in_min_ports_ps=None,
          reset_pad_pins=None, root_async_reset=False, ft_ports=None, ft_interface=None,
          ft_require_characterised=False, tap_window_ps=None, forwarded_clock_outputs=None,
-         landed_clock_inputs=None, edge_clock_latency_ps=None):
+         landed_clock_inputs=None, edge_clock_latency_ps=None, pad_clock_inputs=None, pad_clock_outputs=None):
     """lint an SDC.  inputs / outputs: non-clock port (bus) names; clock_ports: the tap ports.  io_floor_ps
     {port: (min_max_delay_ps)}: the declared IO budget per port (max delay must not be below it).  port_latency_ps
     {tap port: ps}: the plan's CP2 early core taps (source latency = -early on exactly those ports).
@@ -365,10 +366,25 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     clash = set(fwd_l) & set(list(inputs) + list(outputs) + list(clock_ports))
     if clash:
         err.append(f"landing: forwarded clock outputs also listed as data / clock ports {sorted(clash)}")
-    ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out, fwd_l)
+    pad_in, pad_out = dict(pad_clock_inputs or {}), dict(pad_clock_outputs or {})
+    if set(pad_in) - set(clock_ports) or set(pad_out) & set(list(inputs) + list(outputs) + list(clock_ports) + fwd_l):
+        err.append('pad_clock: clock pads conflict with declared data/clock roles')
+    if any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0 for v in pad_in.values()):
+        err.append('pad_clock: explicit positive finite input period required')
+    for name, spec in pad_out.items():
+        if not isinstance(spec, dict) or spec.get('source_clock_port') not in clock_ports:
+            err.append(f'pad_clock: {name} needs an actual source clock port')
+        per_ = spec.get('period_ps') if isinstance(spec, dict) else None
+        if isinstance(per_, bool) or not isinstance(per_, (int, float)) or not math.isfinite(per_) or per_ <= 0:
+            err.append(f'pad_clock: {name} needs an explicit positive finite output period')
+    if any(e.startswith('pad_clock:') for e in err):
+        return err
+    export_l = fwd_l + list(pad_out)
+    ctx = Ctx(inputs, outputs, clock_ports, ft_in, ft_out, export_l)
     gen_src = {}                      # forwarded output port -> generated clock
     land_ex = {}                      # (max|min, from, to) -> ps : landed-crossing delay exceptions
     land_window = float(period_ps) / 2 - float(unc_setup_ps)
+    pad_env = set()
     ft_env = set()                    # ft ports reached by set_load / set_driving_cell
     clk_src = {}                      # port -> clock
     latency = {}                      # clock -> source latency (ps)
@@ -427,7 +443,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     continue
                 strap_fp.update(ps)
                 continue
-            if c == "create_generated_clock" and fwd_l:
+            if c == "create_generated_clock" and export_l:
                 opts, objs, i = {}, [], 1
                 while i < len(w):
                     if w[i] in ("-name", "-master_clock", "-source", "-divide_by"):
@@ -444,24 +460,32 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                     raise SdcLintError(f"create_generated_clock needs exactly -name -master_clock -source "
                                        f"-divide_by and one target port: {cmd}")
                 nm, mc = opts["-name"], opts["-master_clock"]
+                kt, tp = _eval_obj(ctx, objs[0])
+                role = 'pad_clock' if any(p in pad_out for p in tp) else 'landing'
                 if abs(_num(opts["-divide_by"], "divide_by") - 1) > EPS:
-                    err.append(f"landing: generated clock {nm} -divide_by {opts['-divide_by']} (forwarded clock "
+                    err.append(f"{role}: generated clock {nm} -divide_by {opts['-divide_by']} (forwarded clock "
                                "must run at the core period)")
                 if nm in ctx.clocks or nm in ctx.gclocks:
                     err.append(f"clocks: {nm} created twice")
                 if mc not in ctx.clocks or not ctx.clocks[mc] or mc in {clk_src.get(p) for p in land_l}:
-                    err.append(f"landing: generated clock {nm} master {mc} is not a real tap clock defined before it")
+                    err.append(f"{role}: generated clock {nm} master {mc} is not a real tap clock defined before it")
                 ks, sp = _eval_obj(ctx, opts["-source"])
                 if ks != "ports" or len(sp) != 1 or clk_src.get(sp[0]) != mc:
-                    err.append(f"landing: generated clock {nm} -source {opts['-source']} is not one source port "
+                    err.append(f"{role}: generated clock {nm} -source {opts['-source']} is not one source port "
                                f"of master clock {mc}")
-                kt, tp = _eval_obj(ctx, objs[0])
-                if kt != "ports" or len(tp) != 1 or tp[0] not in fwd_l:
-                    err.append(f"landing: generated clock {nm} target {objs[0]} is not one declared forwarded "
+                if kt != "ports" or len(tp) != 1 or tp[0] not in export_l:
+                    err.append(f"{role}: generated clock {nm} target {objs[0]} is not one declared forwarded "
                                "clock output")
                 for p in tp:
+                    if p in pad_out:
+                        want = pad_out[p]
+                        if sp != [want.get('source_clock_port')]:
+                            err.append(f'pad_clock: {p} source {sp} differs from its explicit source port')
+                        src_period = pad_in.get(sp[0], period_ps * int((port_period_mult or {}).get(sp[0], 1))) if sp else None
+                        if src_period is None or abs(float(want.get('period_ps', -1)) - src_period) > EPS:
+                            err.append(f'pad_clock: {p} declared period differs from its generated source')
                     if p in gen_src:
-                        err.append(f"landing: forwarded clock output {p} carries two generated clocks")
+                        err.append(f"{role}: forwarded clock output {p} carries two generated clocks")
                     gen_src[p] = nm
                 ctx.gclocks[nm] = tp
                 continue
@@ -521,9 +545,10 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
                 mult = {int((port_period_mult or {}).get(p, 1)) for p in srcp} or {1}
                 if len(mult) > 1:
                     err.append(f"clocks: clock {nm} mixes ports of different plan periods")
-                if abs(per - period_ps * max(mult)) > EPS:
+                expected = {float(pad_in.get(p, period_ps * int((port_period_mult or {}).get(p, 1)))) for p in srcp} or {float(period_ps)}
+                if len(expected) != 1 or not math.isfinite(per) or abs(per - next(iter(expected))) > EPS:
                     err.append(f"units/relaxation: clock {nm} period {opts['-period']} x {u:g} ps = {per:g} ps, "
-                               f"plan period {period_ps * max(mult):g} ps")
+                               f"plan period {sorted(expected)} ps")
                 if nm in ctx.clocks:
                     err.append(f"clocks: {nm} created twice")
                 src = []
@@ -644,6 +669,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             # set_load / set_driving_cell: evaluate the object (it must resolve); never on a declared ft port
             _k, _ps = _eval_obj(ctx, w[-1])
             ft_env.update(x for x in _ps if x in ctx.ft_in or x in ctx.ft_out)
+            pad_env.update(x for x in _ps if x in pad_in or x in pad_out)
         except (SdcLintError, IndexError) as e:
             err.append(f"parse (fail-closed): {e} [{cmd}]")
     # ---- checks
@@ -654,11 +680,15 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
             err.append(f"ft: declared ft port {p} is a clock source in the core SDC")
     for p in sorted(ft_env):
         err.append(f"ft: set_load / set_driving_cell reaches declared ft port {p} (IO environment is die-owned)")
-    for p in fwd_l:
+    for p in sorted(pad_env):
+        err.append(f'pad_clock: data load/driving-cell environment on clock pad {p}')
+    for p in export_l:
         if p not in gen_src:
-            err.append(f"landing: forwarded clock output {p} has no create_generated_clock")
+            err.append(f"pad_clock: clock output {p} has no create_generated_clock" if p in pad_out else
+                       f"landing: forwarded clock output {p} has no create_generated_clock")
         if idly[p] or odly[p]:
-            err.append(f"landing: IO delay on forwarded clock output {p}")
+            err.append(f"pad_clock: IO delay on clock output {p}" if p in pad_out else
+                       f"landing: IO delay on forwarded clock output {p}")
     for n in ctx.gclocks:
         if n in refs or any(n in (a_, b_) for _k, a_, b_ in land_ex):
             err.append(f"landing: generated clock {n} times a path (IO delay / exception); not the landing form")
@@ -700,7 +730,7 @@ def lint(text, *, period_ps, insertion_ps, insertion_tol_ps, clock_ports, inputs
     for p_ in want:
         if p_ not in port_lat:
             err.append(f"clocks: plan early core tap {p_} has no source latency")
-    wports = [p_ for p_ in ctx.clock_ports if p_ not in want]
+    wports = [p_ for p_ in ctx.clock_ports if p_ not in want and p_ not in pad_in]
     for p_, d in port_win.items():
         if not tw:
             err.append(f"clocks: source -early/-late window on port {p_} without a plan clock.tap_window")
@@ -792,6 +822,11 @@ def kit_context(P, tn):
     cks = [n for n, _, _ in gen_phys.clock_pins(P, tn) + gen_phys.core_tap_pins(P, tn)]
     edge = {n: m for n, _x, _y, m in gen_phys.edge_clock_pins(P, tn)}
     cks += list(edge)
+    import pad_clock as PC
+    pad_pins = PC.pins(P, tn)
+    pad_in = {p['name']: p['period_ps'] for p in pad_pins if p['dir'] == 'in'}
+    pad_out = {p['name']: dict(source_clock_port=p['source_clock_port'], period_ps=p['period_ps']) for p in pad_pins if p['dir'] == 'out'}
+    cks += list(pad_in)
     plat = {n: -float(early) for n, _i, _p, early, _s in gen_phys.core_tap_rows(P, tn)}
     ins, outs, floor = ["arst_n"], [], {}
     per = float(P.die["period_ps"])
@@ -835,7 +870,8 @@ def kit_context(P, tn):
                 insertion_tol_ps=float(P.clock["insertion_tol_ps"]), clock_ports=cks, inputs=ins, outputs=outs,
                 unc_setup_ps=POLICY_SETUP_PS, unc_hold_ps=POLICY_HOLD_PS,
                 time_unit_ps=gen_phys.LIB_TIME_UNIT_PS, io_floor_ps=floor, port_latency_ps=plat,
-                port_period_mult=edge, **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
+                port_period_mult=edge,
+                **(dict(pad_clock_inputs=pad_in, pad_clock_outputs=pad_out) if pad_pins else {}), **_seam_ctx(P, tn), **_io_hold_ctx(P, tn),
                 **({"tap_window_ps": gen_phys.tap_window_ps(P)} if gen_phys.tap_window_ps(P) else {}),
                 **({"root_async_reset": True} if gen_phys.root_async_reset(P, tn) else {}),
                 **({"straps": ids} if ids else {}), **_landing_ctx(P, tn), **_edge_latency_ctx(P, tn))

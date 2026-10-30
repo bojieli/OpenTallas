@@ -28,6 +28,78 @@ import collections
 import pytest
 
 
+def _obstructed_repeated_plan(donor=True, internal=False):
+    mz = F.H.Maze((0, 0, 100, 80), [('wall', (30, 5, 65, 45), (30, 10))], G=1, halo=0)
+    c = lambda xy: mz.cell(xy)
+    nodes = [('root', None, c((0, 70)), 'BIG', 'entry'),
+             ('a', 'root', c((10, 20)), 'BIG', 'rep'),
+             ('b', 'root', c((80, 20)), 'BIG', 'rep'),
+             ('X_br', 'a', c((10, 21)), 'BIG', 'branch'),
+             ('X_r0', 'X_br', c((50, 60)), 'BIG', 'rep')]
+    endpoint=c((80,30)); chain=[c((10,21)),c((50,60)),endpoint]
+    w=dict(level=2,edge='X',segs=[mz.md(a,b) for a,b in zip(chain,chain[1:])],
+           cells=[mz.path(a,b) for a,b in zip(chain,chain[1:])])
+    nodes += [('Z' if internal else 'X','X_r0',endpoint,'BIG','leaf')]
+    wires=[w]
+    if donor:
+        nodes += [('Y_br','b',c((80,21)),'BIG','branch'),('Y_r0','Y_br',c((80,25)),'BIG','rep'),
+                  ('Y','Y_r0',c((80,40)),'BIG','leaf')]
+        wires += [dict(level=2,edge='Y',segs=[4,15],cells=[mz.path(c((80,21)),c((80,25))),mz.path(c((80,25)),c((80,40)))])]
+    return dict(mz=mz,nodes=nodes,wires=wires,land={'X_r0':(w['segs'][-1],'X')} if internal else {},
+                leafsinks={'Z' if internal else 'X':[(80.,30.,'ff','reg','CLK')]})
+
+
+@pytest.mark.parametrize('internal',[False,True])
+def test_macro_face_reparent_preserves_repeated_chain_and_sink_depth(internal):
+    P=_obstructed_repeated_plan(internal=internal)
+    old_nodes={n[0] for n in P['nodes']};sinks=dict(P['leafsinks'])
+    record=F.reparent_obstructed_edges(P,70)
+    fix=next(x for x in record if x['edge']=='X')
+    assert fix['fixed']=='reparent' and fix['driver']=='b' and fix['repeaters']==1
+    assert {n[0] for n in P['nodes']}==old_nodes and P['leafsinks']==sinks
+    w=next(w for w in P['wires'] if w['edge']=='X')
+    assert len(w['segs'])==2 and max(w['segs'])<=70
+    assert all(length <=1.1*sum(abs(a-b) for a,b in zip(path[0],path[-1]))+1e-9
+               for length,path in zip(w['segs'],w['cells']))
+    if internal: assert P['land']['X_r0']==(w['segs'][-1],'X')
+    seen=set()
+    for n in P['nodes']:
+        assert n[1] is None or n[1] in seen
+        seen.add(n[0])
+
+
+def test_macro_face_reparent_no_donor_retains_failed_edge():
+    import copy
+    P=_obstructed_repeated_plan(donor=False);before=copy.deepcopy(P['nodes']);wire=copy.deepcopy(P['wires'])
+    record=F.reparent_obstructed_edges(P,70)
+    assert record[0]['fixed'] is False and P['nodes']==before and P['wires']==wire
+
+
+def test_macro_face_reparent_rejects_reachable_donor_at_different_depth():
+    P=_obstructed_repeated_plan()
+    P['nodes']=[(n[0],'a' if n[0]=='b' else n[1],n[2],n[3],n[4]) for n in P['nodes']]
+    record=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in record if x['edge']=='X')['fixed'] is False
+    assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'
+
+
+def test_macro_face_reparent_rejects_occupied_repeater_site():
+    P=_obstructed_repeated_plan()
+    P['nodes'].append(('occupied','root',(80,26),'BIG','rep'))
+    record=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in record if x['edge']=='X')['fixed'] is False
+
+
+def test_macro_face_reparent_rejects_short_stub_across_macro_wall():
+    P=_obstructed_repeated_plan()
+    P['mz']=F.H.Maze((0,0,100,80), [('wall',(30,5,65,45),(30,10)),
+        ('thin',(75,20.5,85,21.5),(75,21))], G=1, halo=0)
+    # A nominal two-micron donor stub crosses the thin wall. The previous
+    # implementation accepted it and priced only its Manhattan length.
+    r=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in r if x['edge']=='X')['fixed'] is False
+
+
 class _Maze:
     """minimal maze: cells are (x, y) tuples on a 1 um grid."""
     G = 1.0
@@ -511,3 +583,24 @@ def test_island_assignment_cannot_be_silently_ignored_by_plain_plan(tmp_path):
     geo=tmp_path/'geo.txt';geo.write_text('SINK 1 1 FF r CLK\n')
     with pytest.raises(SystemExit,match='requires macro_leaves'):
         F.plan(geo,dict(island_assignment='nearest_subtree'),None,None,'refuse')
+
+
+@pytest.mark.parametrize('failure',['ff-window','input-slew'])
+def test_electrical_donor_rejects_full_tree_ff_or_input_slew_regression(monkeypatch,failure):
+    P=_obstructed_repeated_plan();calls=[]
+    def composed(tree,libs,r,c,wc):
+        nd={n[0]:n for n in tree['nodes']};changed=nd['X_br'][1]=='b';calls.append(changed)
+        tree['_int']={co:dict(arr={n:0. for n in nd},slew={n:0. for n in nd},
+            drv={'X':(1.,[('#sinks',0.)])}) for co in ('TT','FF')}
+        def corner(co):
+            window=30. if not changed else (45. if failure=='ff-window' and co=='FF' else 10.)
+            return dict(window=window,mean=window/2,leaf_mean_min=0.,leaf_mean_max=window,
+                leaf_out_slew_max=10.,leaf_slew_in_max=81. if changed and failure=='input-slew' else 10.)
+        return {co:corner(co) for co in ('TT','FF')},{}
+    monkeypatch.setattr(F.M7,'model_x',composed)
+    monkeypatch.setattr(F.H,'interp',lambda *args:0.)
+    libs={co:{'BIG':dict(rise=None,fall=None)} for co in ('TT','FF')}
+    record=F.reparent_obstructed_edges(P,70,model=(libs,.01,.1,{}),edges={'X'})
+    assert record[0]['fixed'] is False
+    assert calls[0] is False and any(calls[1:])  # whole candidate graph was actually priced
+    assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'

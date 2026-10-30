@@ -3606,5 +3606,26 @@
  },
  "whole_programme_executable": false,
  "full_programme_fits": null,
- "interpretation": "Actual source dynamic obligations counted without assuming historical emitter offsets are valid. Previous offset-derived census is rejected because emitter.json hashes do not match a122. Historical40layer original-schedule VM peaks motivate whole-programme phases, but cannot establish exact current perlayer fit or spill traffic. Need actual source map before quoting whole-token traffic."
+ "interpretation": "Actual source dynamic obligations counted without assuming historical emitter offsets are valid. Previous offset-derived census is rejected because emitter.json hashes do not match a122. Historical40layer original-schedule VM peaks motivate whole-programme phases, but cannot establish exact current perlayer fit or spill traffic. Need actual source map before quoting whole-token traffic.",
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ }
 }

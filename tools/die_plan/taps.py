@@ -72,19 +72,23 @@ def planned_sinks(P, tn, bit_sites=False):
     slot route (or at regs_um), as face_flops.tcl places them.  ft out pins carry no sink (the neighbour's station 0)."""
     import gen_phys
     t = P.types[tn]
+    from ft_full_stage import load, centre
+    full = load(P, tn)
     w, h = t["outline_um"]
     slots = {s["name"]: s for s in t.get("ft_slots", [])}
     pins = gen_phys.type_pins(P, tn)
     at = {(p[0], p[1]): (p[3], p[4], p[5]) for p in pins}
     exact_faces = {e["conn"][4:]: e for e in t.get("internal_stations", [])
                    if e.get("conn", "").startswith("bus:") and e.get("face_bit_sites_um")}
-    out = []
+    out = [centre(row) + (f"ft_s{stage}",) for rows in full.values() for (stage, bit), row in sorted(rows.items())]
     for name, bit, _ln, x, y, face in pins:
         base, sfx = (name[:-2], name[-2:]) if name[-2:] in ("_i", "_o") else (name, "")
         if base in slots and sfx:
             if sfx == "_o":
                 continue
             s = slots[base]
+            if base in full:
+                continue
             out.append(_inset(x, y, face, w, h) + ("ft_s0",))
             k = int(s.get("stations", 1))
             o = at.get((base + "_o", bit))
@@ -198,6 +202,15 @@ def sink_sites(P, tn, control=True):
     {"bin_um": b, "bins": [[x, y, n], ...]}, written by `taps.py bins <odb dump.json>`: the registers of a placed
     netlist binned to their bin centres."""
     ck = P.types[tn].get("clock", {})
+    if ck.get("native_domains") is not None:
+        import native_clock_domains as NCD
+        domain_sites=NCD.core_planning_sites(P,tn)
+        if domain_sites is not None:
+            if control and ck.get("control_sinks"):
+                domain_sites += [(x,y,1.0) for _,x,y in control_pin_sinks(P,tn)]
+            return domain_sites
+        if ck.get("sink_sites_um") or ck.get("sink_bins_file"):
+            raise ValueError("native-domain spatial planning requires explicit per-root sink sites; aggregate bins are unqualified")
     rows = list(ck.get("sink_sites_um", []))
     if ck.get("sink_bins_file"):
         # a placed netlist's inventory already holds the face / ft registers: the planned ones are not added again

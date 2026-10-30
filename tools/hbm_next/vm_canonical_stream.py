@@ -44,6 +44,21 @@ def static_group_end(records,first,last,IR):
     return end
 
 
+
+def source_scope(records):
+    """Report programme units from actual row/control evidence, never token rates."""
+    accept=[];tokx=[];positions=1
+    for index,(_,record,rowx,_) in enumerate(records):
+        if rowx:positions=max(positions,rowx.n)
+        if(record.unit,record.op)==('CTL','ACCEPT'):accept.append(index)
+        if(record.unit,record.op)==('CTL','TOKX'):
+            tokx.append(dict(record=index,A_n=record.desc['A'].n if'A'in record.desc else None))
+    return dict(kind='MTP_VERIFY' if accept and tokx else 'UNSPECIFIED',
+                row_positions=positions,rate_unit='programme_steps_per_second',
+                accepted_outputs_data_dependent=bool(accept),
+                evidence=dict(ACCEPT_records=accept,TOKX_records=tokx),
+                normalization='Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.')
+
 def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=False,retain_static=False):
     native_capacity(backing,4*(1<<19));ALL=(1<<len(RC.UNITS))-1
     blob=bytearray();manifest=[];phases=[];source=first
@@ -135,7 +150,7 @@ def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=F
             emit(RC.Rec('DMA','FENCE'),None,'retirement_drain')
             phases.append(dict(source_range=[source,end],kind='stream_pair'if any(d.space=='STREAM'for d in r.desc.values())else'static',source_slots=[start,start+count],high_water_words=p['high_water_words'],commands=len(manifest)-before,command_range=[before,len(manifest)]))
         source=end+1
-    packet=dict(schema='opentallas.hbm.vm_canonical_stream.v1',source_range=[first,last],backing_range=[backing,backing+4*(1<<19)],phases=phases,records=manifest,native_commands=len(manifest),transfer_bytes=sum(m['hbm_range'][1]-m['hbm_range'][0]for m in manifest if'hbm_range'in m),max_vm_words=max(p['high_water_words']for p in phases),source_order_preserved=not group_static,independent_row_grouping=group_static,resident_placement_preferences=retain_static,whole_programme_executable=False,full_programme_fits=None,scratch_reserved=False,backend_qualified=False,holds=['actual backend DMA stack/VM namespace must cover canonical backing loads and stores','scratch must be reserved and correct source entry epoch published','native source arithmetic/mutable HBM execution and full source calendar need qualification'])
+    packet=dict(schema='opentallas.hbm.vm_canonical_stream.v1',programme_scope=source_scope(records),source_range=[first,last],backing_range=[backing,backing+4*(1<<19)],phases=phases,records=manifest,native_commands=len(manifest),transfer_bytes=sum(m['hbm_range'][1]-m['hbm_range'][0]for m in manifest if'hbm_range'in m),max_vm_words=max(p['high_water_words']for p in phases),source_order_preserved=not group_static,independent_row_grouping=group_static,resident_placement_preferences=retain_static,whole_programme_executable=False,full_programme_fits=None,scratch_reserved=False,backend_qualified=False,holds=['actual backend DMA stack/VM namespace must cover canonical backing loads and stores','scratch must be reserved and correct source entry epoch published','native source arithmetic/mutable HBM execution and full source calendar need qualification'])
     return bytes(blob),packet
 
 

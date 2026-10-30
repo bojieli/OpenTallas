@@ -134,5 +134,6 @@ if __name__=='__main__':
  except AssertionError:controls.append('missing_release')
  else:raise AssertionError('missing release escaped')
  report['controls_caught']=controls
+ report['programme_scope']=packet.get('programme_scope',dict(kind='MTP_VERIFY',row_positions=6,rate_unit='programme_steps_per_second',accepted_outputs_data_dependent=True))
  if a.program_out:a.program_out.write_text(json.dumps(events,separators=(',',':'))+'\n')
  Path(__file__).with_suffix('.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps({k:v for k,v in report.items()if k!='sample_events'}))

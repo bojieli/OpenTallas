@@ -1,0 +1,77 @@
+{
+ "before_errors": 43,
+ "after_errors": 36,
+ "before_warnings": 2056,
+ "after_warnings": 2056,
+ "new_findings": [
+  {
+   "check": "complete",
+   "level": "WARN",
+   "msg": "missing-field counts: cells 36"
+  }
+ ],
+ "removed_findings": [
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_hroot: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_hroot"
+  },
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_hub_Ei: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_hub_Ei"
+  },
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_io_cor: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_io_cor"
+  },
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_io_cor_v1: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_io_cor_v1"
+  },
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_io_ft: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_io_ft"
+  },
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_io_ft_v1: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_io_ft_v1"
+  },
+  {
+   "check": "complete",
+   "field": "cells",
+   "g0c": true,
+   "level": "ERROR",
+   "msg": "[cells] type kv3_sys_c: no cell estimate (type.cells, contents[].cells or a cells.py evidence file)",
+   "type": "kv3_sys_c"
+  },
+  {
+   "check": "complete",
+   "level": "WARN",
+   "msg": "missing-field counts: cells 43"
+  }
+ ],
+ "unit_candidate": 472716
+}

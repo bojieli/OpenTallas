@@ -177,6 +177,9 @@ def plan_pin_records(P, tn, pins, bump_sites=()):
         add(f"{port}[{i}]", ln, cx, cy)
     for name, ln, x, y in strap_pin_sites(P, tn):
         add(name, ln, x, y)
+    import pad_clock as PC
+    for p in PC.pins(P, tn):
+        add(p['name'] + '[0]', p['layer'], *p['xy_um'])
     return list(recs.values())
 
 
@@ -257,6 +260,9 @@ def io_tcl(P, tn, pins):
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         lines.append(LC.io_tcl(P, tn).rstrip())
+    import pad_clock as PC
+    if t.get('clock', {}).get('pad_clock') is not None:
+        lines.append(PC.io_tcl(P, tn).rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -1370,7 +1376,8 @@ def sdc(P, tn, pins):
     if P.types[tn].get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         out = LC.sdc(P, tn, out)
-    return out
+    import pad_clock as PC
+    return PC.sdc(P, tn, out)
 
 
 
@@ -2247,6 +2254,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
               "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl"] if macros else [])]
     if macros:
         (kd / "macro_place.tcl").write_text("\n".join(mplace) + "\n")
+    # Explicit full fixed-macro contract: use the standard stage pre-hook,
+    # preserving the native placement deck and all following ORFS stages.
+    import fully_fixed_macros as FFM
+    cfg += FFM.install(t,kd,macros,kit_core_area(t),Path(root) if root else Path(__file__).resolve().parents[2])
     if skip_ir:
         # opt-in gen.py phys --skip-kit-ir (CODEX-LOG 10-24 root practice): ORFS 6_report's per-kit PDNSim (PSM) IR
         # analysis is skipped (station405: it pushed 6_report past 36 GB, exit 247); PG geometry is unchanged and IR
@@ -2280,6 +2291,8 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
         # FLOW-GEN-2 (opt-in clock.tap_passthrough): hard-core island ft clock pass-through inputs are followed, not
         # measured as tap sinks (tap_balance.tcl tb_passthru)
         cfg.append("export OT_TAP_PASSTHRU = 1")
+    import pad_clock as PC
+    PC.write_contract(P, tn, kd)
     (kd / "config.mk").write_text("\n".join(cfg) + "\n")
     for f in ("face_flops.tcl", "face_flops_release.tcl", "face_keep.tcl", "face_keep_release.tcl",
               "clock_taps.tcl", "tap_balance.tcl", "reset_taps.tcl", "vclk_corner.tcl", "postcts_gate.tcl", "grt_pre.tcl",
@@ -2510,6 +2523,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "infra_ports.json").write_text(json.dumps(infra, indent=1) + "\n")
         bud["native_infrastructure"] = dict(pins=len(infra), arcs=len(decl["arcs"]), data_cycles_added=0, timing="die-timed FT interfaces; actual characterisation required")
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
+    from ft_full_stage import install as install_ft_full_stage
+    install_ft_full_stage(t, getattr(P, "path", None) or str(Path.cwd()/"plan.json"), kd)
     from flat_clock_forest import install as install_flat_clock_forest
     install_flat_clock_forest(P, tn, kd)
     write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
@@ -2557,6 +2572,18 @@ fi
 LEC_SUPERSET_DEFAULT=0
 if [ -f "$K/lec_options.json" ]; then
   LEC_SUPERSET_DEFAULT=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); assert set(d)=={"superset_vec"} and type(d["superset_vec"]) is bool; print(int(d["superset_vec"]))' "$K/lec_options.json") || { echo 'FAIL_PREFLOOR lec_options' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
+fi
+# Explicit proof methods must be implemented by the copied driver, not silently ignored.
+LEC_REQUIRED=()
+[ "${OT_LEC_HINTS_PRESEED:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_HINTS_PRESEED)
+[ "${OT_LEC_EARLY_COMPARE:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_EARLY_COMPARE)
+[ "${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" = 1 ] && LEC_REQUIRED+=(OT_LEC_SUPERSET_VEC)
+if [ "${#LEC_REQUIRED[@]}" -gt 0 ]; then
+  if ! python3 -I "$K/lec.py" --require-options "${LEC_REQUIRED[@]}"; then
+    echo "LEC CONFIG ERROR: copied driver does not support requested options: ${LEC_REQUIRED[*]}" >&2
+    echo 'FAIL_PREFLOOR lec_options_unsupported' | tee -a "$K/FAIL_PREFLOOR"
+    exit 10
+  fi
 fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \

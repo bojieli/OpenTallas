@@ -1346,6 +1346,10 @@ def core_reset_targets(P, tn):
     import check
     import cores
     t = P.types[tn]
+    domain_contract=None
+    if t.get("clock",{}).get("native_domains") is not None:
+        import native_clock_domains as NCD
+        domain_contract=NCD.contract(P,tn)
     w, h = t["outline_um"]
     boxes = blockages(t)
     out = []
@@ -1403,8 +1407,17 @@ def core_reset_targets(P, tn):
                 raise ResetError(f"type {tn}: no legal reset relay site for {c['inst']}.{name}")
             if _man(pin, site) > relay_um(P) - MARGIN_UM:
                 raise ResetError(f"type {tn}: reset relay -> {c['inst']}.{name} exceeds reach ({_man(pin, site):g} um)")
+            if domain_contract is not None:
+                roots={root for (inst,module,_),root in domain_contract['macro_pins'].items()
+                       if inst==c['inst'] and module==c['module']}
+                if len(roots)!=1:raise ResetError(f"type {tn}: reset target {c['inst']} lacks one actual native clock root")
+                domain_root=next(iter(roots))
+            else:domain_root=None
             out.append(dict(inst=c["inst"], pin=name, pin_um=list(pin), xy=list(site),
                             internal_depth=int(c.get("reset", {}).get("depth", 1))))
+            if domain_root is not None:
+                out[-1]['native_clock_root']=domain_root
+                out[-1]['native_clock_status']='GEOMETRY PREP; period/reset phase qualification separate'
     return out
 
 
@@ -1476,8 +1489,22 @@ def wf_plan(P):
             ent, K = types[tn]["entry_stages"], types[tn]["depth_K"]
         row = dict(type=tn, parent=None if pr is None else pr[0], entry_stages=ent, depth_K=K, release=rel)
         if tn in types:
-            row["core_release"] = {c["inst"] + "." + c["pin"]: rel + c["internal_depth"]
-                                   for c in types[tn].get("core_resets", [])}
+            row["core_release"] = {}
+            for c in types[tn].get("core_resets", []):
+                target = c['inst'] + '.' + c['pin']
+                root = c.get('native_clock_root', 'clk')
+                if root == 'clk':
+                    row['core_release'][target] = rel + c['internal_depth']
+                else:
+                    # Keep the real pin/relay target in types[].core_resets and
+                    # its primary raw-pin arrival, but a native-domain internal
+                    # synchroniser has no core-cycle release without a proven
+                    # frequency/phase/reset relation. Never silently drop it.
+                    row['core_release'][target] = None
+                    row.setdefault('native_release', {})[target] = dict(
+                        status='PENDING', native_clock_root=root, core_cycle_release=None,
+                        raw_pin_arrival_core_cycles=rel, internal_depth_native_cycles=c['internal_depth'],
+                        qualification='PREP raw-pin geometry only; native period/phase/reset relation unqualified')
         if pr is None:
             row.update(source=f"die {die_reset_port(P)} (asynchronous: the ONE root synchroniser" +
                        (f" + PLL lock qualifier, +{lock_stages(P)} stages)" if lock_stages(P) else ")"))
@@ -1497,6 +1524,11 @@ def wf_plan(P):
                note="OWNER DECISION 13 (2026-10-24): one root 2-flop synchroniser; neighbour wavefront; release = "
                     "clocks after die rst_n deasserts at which the partition's taps (and its rst_o) release; the "
                     "static schedule starts with an explicit start broadcast after reset")
+    pending = [dict(part=part, target=target, native_clock_root=item['native_clock_root'])
+               for part, row in sorted(parts.items()) for target, item in row.get('native_release', {}).items()]
+    if pending:
+        out['release_qualification'] = dict(verdict='PENDING', native_targets=pending,
+            reason='FULL release qualification requires the actual native clock/reset relation; primary raw-pin geometry remains PREP')
     if start_broadcast(P):
         hard_parts = sorted(p for p in parts if p in sol["hard"])
         out["start"] = dict(
@@ -1515,6 +1547,12 @@ def wf_plan(P):
                  "boundary epochs, hard-core resets) releases at  max(release[p], S + release[p])  clocks, S = the "
                  "die start pin's rising edge relative to rst_n deassert; i.e. the START offsets ARE the published "
                  "release offsets.  Hard partitions (prebuilt, no start pin) see the raw reset only.")
+    if pending:
+        caution = ' Native-domain internal reset/START release remains PENDING; primary raw-pin arrival is PREP only.'
+        out['note'] += caution
+        if 'start' in out:
+            out['start']['note'] += caution
+            out['start']['roles_note'] += caution
     cache["wf_plan"] = out
     return out
 
@@ -2009,6 +2047,9 @@ def check(P):
                 T = for_type(P, tn)
                 errs += [f"type {tn}: reset tree: {e}" for e in verify(T)]
             W = wf_plan(P)
+            if W.get('release_qualification', {}).get('verdict') == 'PENDING':
+                errs.append('reset wavefront: FULL native release qualification PENDING: ' +
+                            str(W['release_qualification']['native_targets']))
             if W["long_hops"] or W["unreachable"]:
                 errs.append(f"reset wavefront: {len(W['long_hops'])} partitions have no neighbour rst_o within "
                             f"{hop_um(P):g} um of their reset IN pin (attached to the nearest, hop um): "

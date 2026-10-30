@@ -197,7 +197,21 @@
    "cycles_added": 0,
    "status": "PREP actual static strap sites; unchanged RTL source proof live; no placed/route approval",
    "receipt": "results/codex_kv_sysc_straps_1030/README.md"
+  },
+  {
+   "id": "MEASURED_NATIVE_CELLS_1030",
+   "types": {
+    "kv3_hroot": 80413,
+    "kv3_hub_Ei": 289525,
+    "kv3_io_cor": 116471,
+    "kv3_io_cor_v1": 119885,
+    "kv3_io_ft": 38472,
+    "kv3_io_ft_v1": 38398,
+    "kv3_sys_c": 147573
+   },
+   "scope": "complete actual native wrapper standard cells including landing infra; SYS_C excludes six explicit macros",
+   "receipt": "results/codex_kv_measured_1030/README.md"
   }
  ],
- "current_plan_sha256": "b3a46d423a3fe6da9e35611928a9c80db8ae7e0b3a5db0f5db9d7e62aa629496"
+ "current_plan_sha256": "6a8a04d0199c3ae274443666303ec6a56d1325a349f341d2371da32c460b0261"
 }

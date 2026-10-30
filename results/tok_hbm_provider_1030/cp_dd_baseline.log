@@ -1,0 +1,47 @@
+CP_CMD index=1 edge=277 nativecycle=242 issue_at=250 drain_at=326 n=512
+CP_CMD index=2 edge=369 nativecycle=334 issue_at=342 drain_at=418 n=512
+CP_CMD index=3 edge=461 nativecycle=426 issue_at=434 drain_at=510 n=512
+CP_CMD index=4 edge=553 nativecycle=518 issue_at=526 drain_at=602 n=512
+CP_CMD index=5 edge=645 nativecycle=610 issue_at=618 drain_at=694 n=512
+CP_CMD index=6 edge=737 nativecycle=702 issue_at=710 drain_at=786 n=512
+CP_CMD index=7 edge=829 nativecycle=794 issue_at=802 drain_at=878 n=512
+CP_CMD index=8 edge=921 nativecycle=886 issue_at=894 drain_at=970 n=512
+CP_CMD index=9 edge=1013 nativecycle=978 issue_at=986 drain_at=1062 n=512
+CP_CMD index=10 edge=1105 nativecycle=1070 issue_at=1078 drain_at=1154 n=512
+CP_CMD index=11 edge=1197 nativecycle=1162 issue_at=1170 drain_at=1246 n=512
+CP_CMD index=12 edge=1289 nativecycle=1254 issue_at=1262 drain_at=1338 n=512
+CP_CMD index=13 edge=1381 nativecycle=1346 issue_at=1354 drain_at=1430 n=512
+CP_CMD index=14 edge=1473 nativecycle=1438 issue_at=1446 drain_at=1522 n=512
+CP_CMD index=15 edge=1865 nativecycle=1830 issue_at=1838 drain_at=1914 n=512
+CP_CMD index=16 edge=1957 nativecycle=1922 issue_at=1930 drain_at=2006 n=512
+CP_CMD index=17 edge=2049 nativecycle=2014 issue_at=2022 drain_at=2098 n=512
+CP_CMD index=18 edge=2141 nativecycle=2106 issue_at=2114 drain_at=2190 n=512
+CP_CMD index=19 edge=2233 nativecycle=2198 issue_at=2206 drain_at=2282 n=512
+CP_CMD index=20 edge=2325 nativecycle=2290 issue_at=2298 drain_at=2374 n=512
+CP_CMD index=21 edge=2417 nativecycle=2382 issue_at=2390 drain_at=2466 n=512
+CP_CMD index=22 edge=2509 nativecycle=2474 issue_at=2482 drain_at=2558 n=512
+CP_CMD index=23 edge=2601 nativecycle=2566 issue_at=2574 drain_at=2650 n=512
+CP_CMD index=24 edge=2693 nativecycle=2658 issue_at=2666 drain_at=2742 n=512
+CP_CMD index=25 edge=2785 nativecycle=2750 issue_at=2758 drain_at=2834 n=512
+CP_CMD index=26 edge=2877 nativecycle=2842 issue_at=2850 drain_at=2926 n=512
+CP_CMD index=27 edge=2969 nativecycle=2934 issue_at=2942 drain_at=3018 n=512
+CP_CMD index=28 edge=3061 nativecycle=3026 issue_at=3034 drain_at=3110 n=512
+CP_CMD index=29 edge=3453 nativecycle=3418 issue_at=3426 drain_at=3502 n=512
+CP_CMD index=30 edge=3545 nativecycle=3510 issue_at=3518 drain_at=3594 n=512
+CP_CMD index=31 edge=3637 nativecycle=3602 issue_at=3610 drain_at=3686 n=512
+CP_CMD index=32 edge=3729 nativecycle=3694 issue_at=3702 drain_at=3778 n=512
+CP_CMD index=33 edge=3821 nativecycle=3786 issue_at=3794 drain_at=3870 n=512
+CP_CMD index=34 edge=3913 nativecycle=3878 issue_at=3886 drain_at=3962 n=512
+CP_CMD index=35 edge=4005 nativecycle=3970 issue_at=3978 drain_at=4054 n=512
+CP_CMD index=36 edge=4097 nativecycle=4062 issue_at=4070 drain_at=4146 n=512
+CP_CMD index=37 edge=4189 nativecycle=4154 issue_at=4162 drain_at=4238 n=512
+CP_CMD index=38 edge=4281 nativecycle=4246 issue_at=4254 drain_at=4330 n=512
+CP_CMD index=39 edge=4373 nativecycle=4338 issue_at=4346 drain_at=4422 n=512
+CP_CMD index=40 edge=4465 nativecycle=4430 issue_at=4438 drain_at=4514 n=512
+CP_CMD index=41 edge=4557 nativecycle=4522 issue_at=4530 drain_at=4606 n=512
+CP_CMD index=42 edge=4649 nativecycle=4614 issue_at=4622 drain_at=4698 n=512
+PASS NATIVE_CP_PROVIDER exact833ps descriptors=42 packets=2688 words=21504 epochs=3 latency=8 first_step=285 last_step=4720 first_packet=293 last_packet=4728
+- tb_cp_provider.sv:76: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 1.304 s; speed 3.073 us/s
+- Verilator: cpu 1.304 s on 1 threads; allocated 10 MB
