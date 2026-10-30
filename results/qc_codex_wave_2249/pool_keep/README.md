@@ -1,0 +1,7 @@
+# Preserve the two existing XH3 epoch pool-state bits
+
+Inherited slw_hc2__cl6bcaba89 actual LEC FAIL:109446/109455 points prove,9POOLc bits differ; the only gold unmatched live state is e_pool[0:1]. RTL writes these2unkept array bits and kept per-epoch replicated e_poolc0/c1 on the same selected write; native synthesis merges the unkept bits into replicas, while independent gold retains separate cutpoints. No failed result is relabelled.
+
+Candidate adds only keep=true to the existing2-bit state array in qfd_dv_s5_xhead3.sv. No statement, port, reset, clock, arithmetic or pipeline cycle changes. Expected physical cost2retained FF (~0.5832um2), to be measured on actual synthesis. This is a structural preservation candidate, not a LEC waiver or generic correlation relaxation.
+
+run_lockstep.py extracts the real3epoch-write statements, realforwarded pool selector and real9bitPOOLc update from baseline and candidate. Lockstep4096edges/12288checksPASS at833ps; a wrong-epochwrite mutant is caughtedge3. This qualifies the altered mechanism only. Actual full-size native synth + full LEC --jobs4 is live intel1:/srv/opentallas-scratch2/claude/codex-qc-wave-2249/hc2_pool_keep/slw_hc2__cl6bcaba89 (unit3640963, outputlec_pool_keep). At commit time synth in ABCtop; retention/fullLEC pending. OriginalLECFAIL remains in inherited kit and own copiedlec/lec.json. NoPLACE/ROUTE/SIGNED claim or source adoption until actual gates pass.

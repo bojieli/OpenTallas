@@ -305,7 +305,7 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     (* keep = "true" *) reg [3:0] e_poolc0, e_poolc1;         // per-epoch pool flag, copy per 4 rows (write control start);
                                                              // plain vectors (a dynamically indexed array becomes a memory
                                                              // and its copies merge: gate try 2, 98 loads)
-    reg              e_pool [0:1];
+    (* keep = "true" *) reg e_pool [0:1];  // retain the two epoch-state bits beside the kept physical copies
     reg  [5:0]       e_k6 [0:1];
     reg  [7:0]       e_k3 [0:1];
     always @(posedge ck) begin
