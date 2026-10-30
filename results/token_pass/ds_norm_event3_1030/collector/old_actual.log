@@ -1,0 +1,48 @@
+NX_VALUE actor0 sid0 index0 got00000000 want3fc9a62e
+NX_VALUE actor0 sid0 index2 got00000000 want4008c3b4
+NX_VALUE actor0 sid0 index3 got00000000 want3ffda672
+NX_VALUE actor0 sid0 index4 got00000000 want3fe23e58
+NX_VALUE actor0 sid0 index0 got3fc9a62e want3f84ed0e
+NX_VALUE actor0 sid0 index1 got3fd2b858 want3fe21e76
+NX_VALUE actor0 sid0 index2 got00000000 want3f9d60b6
+NX_VALUE actor0 sid0 index3 got00000000 want3fdb8674
+NX_VALUE actor0 sid0 index4 got00000000 want4007f696
+NX_VALUE actor0 sid0 index0 got3fc9a62e want3f9214b8
+NX_VALUE actor0 sid0 index0 got3fc9a62e want3ff9cabb
+NX_VALUE actor0 sid0 index1 got3fd2b858 want3fe43e44
+NX_VALUE actor0 sid0 index2 got4008c3b4 want3fbb7b5a
+NX_VALUE actor0 sid0 index3 got3ffda672 want3ffa73b3
+NX_VALUE actor0 sid0 index4 got00000000 want4001bf0a
+NX_VALUE actor0 sid0 index0 got3fc9a62e want3faf27f0
+NX_VALUE actor0 sid0 index1 got3fd2b858 want3fa4d47e
+NX_VALUE actor0 sid0 index2 got4008c3b4 want3fb36f3e
+NX_VALUE actor0 sid0 index3 got3ffda672 want3fb6824f
+NX_VALUE actor0 sid0 index4 got3fe23e58 want3fa885b2
+COLLECTOR_FAULT sid0 fault01 count21/5
+PDSK_REPAIR sid0 reference_first277 candidate_first232 captured21/5 faults01
+NX_VALUE actor0 sid5 index0 got3fc9a62e want3fa13474
+NX_VALUE actor0 sid5 index2 got4008c3b4 want4002125c
+NX_VALUE actor0 sid5 index3 got3ffda672 want3fb807a8
+NX_VALUE actor0 sid5 index4 got3fe23e58 want3f8162fe
+NX_VALUE actor0 sid5 index0 got3fa13474 want3f8a7710
+NX_VALUE actor0 sid5 index1 got3fee5339 want3fe53eb3
+NX_VALUE actor0 sid5 index2 got4008c3b4 want3fec29b0
+NX_VALUE actor0 sid5 index3 got3ffda672 want3fb07fb6
+NX_VALUE actor0 sid5 index4 got3fe23e58 want3fc58bf2
+NX_VALUE actor0 sid5 index0 got3fa13474 want3fe3aac7
+NX_VALUE actor0 sid5 index0 got3fa13474 want3f92092c
+NX_VALUE actor0 sid5 index1 got3fee5339 want3f9fa766
+NX_VALUE actor0 sid5 index2 got4002125c want3fb3eb10
+NX_VALUE actor0 sid5 index3 got3fb807a8 want3ffe6a85
+NX_VALUE actor0 sid5 index4 got3fe23e58 want3fbe263e
+NX_VALUE actor0 sid5 index0 got3fa13474 want3fc4309e
+NX_VALUE actor0 sid5 index1 got3fee5339 want3fbcec32
+NX_VALUE actor0 sid5 index2 got4002125c want3f9e76d8
+NX_VALUE actor0 sid5 index3 got3fb807a8 want3fbe96f6
+NX_VALUE actor0 sid5 index4 got3f8162fe want3fddce10
+COLLECTOR_FAULT sid5 fault01 count21/5
+PDSK_REPAIR sid5 reference_first641 candidate_first596 captured21/5 faults01
+PDSK_REPAIR_FAIL checks52 errors42 clock833 old_actual1 wrong_selector0 wrong_date0
+[606013000] %Fatal: tb_pdsk_repair.sv:61: Assertion failed in tb_pdsk_repair: current actual XR collector schedule/selector
+%Error: tb_pdsk_repair.sv:61: Verilog $stop
+Aborting...

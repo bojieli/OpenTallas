@@ -1,0 +1,18 @@
+NX_VALUE actor0 sid0 index0 got3fc9a62e want3fd2b858
+NX_VALUE actor0 sid0 index1 got3fd2b858 want4008c3b4
+NX_VALUE actor0 sid0 index2 got4008c3b4 want3ffda672
+NX_VALUE actor0 sid0 index3 got3ffda672 want3fe23e58
+NX_VALUE actor0 sid0 index4 got3fe23e58 want3f84ed0e
+COLLECTOR_FAULT sid0 fault01 count6/5
+PDSK_REPAIR sid0 reference_first232 candidate_first232 captured6/5 faults01
+NX_VALUE actor0 sid5 index0 got3fa13474 want3fee5339
+NX_VALUE actor0 sid5 index1 got3fee5339 want4002125c
+NX_VALUE actor0 sid5 index2 got4002125c want3fb807a8
+NX_VALUE actor0 sid5 index3 got3fb807a8 want3f8162fe
+NX_VALUE actor0 sid5 index4 got3f8162fe want3f8a7710
+COLLECTOR_FAULT sid5 fault01 count6/5
+PDSK_REPAIR sid5 reference_first596 candidate_first596 captured6/5 faults01
+PDSK_REPAIR_FAIL checks22 errors12 clock833 old_actual0 wrong_selector1 wrong_date0
+[606013000] %Fatal: tb_pdsk_repair.sv:61: Assertion failed in tb_pdsk_repair: current actual XR collector schedule/selector
+%Error: tb_pdsk_repair.sv:61: Verilog $stop
+Aborting...
