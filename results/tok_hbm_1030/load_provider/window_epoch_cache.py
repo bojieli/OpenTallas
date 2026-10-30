@@ -48,7 +48,9 @@ def price(ev,policy):
    else:victim=max(resident,key=lambda t:future[t][0]if future[t]else float('inf'))
    del resident[victim];evict+=1
   resident[token]=clock
- return dict(policy=policy,read_windows=miss+hit,fills=miss,hits=hit,invalidated_resident_windows=stale,capacity_evictions=evict,HBM_fill_bytes=miss*32768,release_broadcasts_at_least=stale+evict,buffers_per_landing_half=2)
+ terminal=sum(len(v) for v in cache.values())
+ assert stale+evict+terminal==miss, 'every acquired window must release exactly once'
+ return dict(policy=policy,read_windows=miss+hit,fills=miss,hits=hit,invalidated_resident_windows=stale,capacity_evictions=evict,HBM_fill_bytes=miss*32768,release_broadcasts_at_least=stale+evict,terminal_release_broadcasts=terminal,total_release_broadcasts_with_terminal_cleanup=stale+evict+terminal,buffers_per_landing_half=2)
 
 
 if __name__=='__main__':

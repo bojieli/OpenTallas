@@ -271,3 +271,18 @@ This is still a source-only candidate. Actual provider/stack/VM namespace,
 scratch authority, initial image publication, numeric RTL, physical calendar,
 cycle/rate composition and G5 remain open. Byte savings are not a token-rate
 measurement or permission to install the programme.
+
+Compact STATIC LOAD counter capacity budget:
+load_provider/target_capacity.json records why existing128-entry MODE1 loops
+and1024-entry ROLE literal calendars do not generate LOAD address progress.
+load_provider/effective227_contract.json supplies exact adapter fields, ordinary
+VM mapping and dated window handoff. load_provider/counter_budget.json prices
+actual full40-layer3916-record token source, inserted copies only:43117008 U32
+words +12528 setupedges under chosen one-global-counter serial implementation.
+At833ps the counter-only35.926903488ms ceiling is27.8343token/s; this is not
+qualified performance or an unavoidable floor for coalesced/parallel designs.
+No current programme/model includes this spill tax. Original dynamic LOADs,
+STORE/arithmetic, window service, physical commit, scratch/stack authority and
+full-calendar installation remain open. Window-policy release conservation now
+also counts2 terminal owned windows; all27907 acquisitions require one all8leaf
+release each. No RTL/P&R/target allocation is changed here.

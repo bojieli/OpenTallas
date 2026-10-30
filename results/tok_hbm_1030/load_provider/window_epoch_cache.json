@@ -12,6 +12,8 @@
   "capacity_evictions": 26740,
   "HBM_fill_bytes": 960593920,
   "release_broadcasts_at_least": 29313,
+  "terminal_release_broadcasts": 2,
+  "total_release_broadcasts_with_terminal_cleanup": 29315,
   "buffers_per_landing_half": 2
  },
  "static_farthest_future": {
@@ -23,6 +25,8 @@
   "capacity_evictions": 25499,
   "HBM_fill_bytes": 914456576,
   "release_broadcasts_at_least": 27905,
+  "terminal_release_broadcasts": 2,
+  "total_release_broadcasts_with_terminal_cleanup": 27907,
   "buffers_per_landing_half": 2
  },
  "actual_backing_store_events": 12155,

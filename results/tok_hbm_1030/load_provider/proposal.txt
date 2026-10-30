@@ -156,3 +156,32 @@ Current conservative policy costs, not selected-provider measurements:
   refutes a stale hit in the negative control. These include neither converter
   throughput/latency nor the96 original dynamic HGI LOADs. They demonstrate
   that buffer reuse helps but cannot be priced as free or hide window overfetch.
+
+Actual compact counter / programme capacity follow-up (CODEX):
+- Existing MODE1 loops replay literal payloads; only dates advance. RELF adds
+  absolute clock bases to low32 payload fields and is not an address counter.
+  ROLE1024 similarly repeats literal payloads. Explicit effective227 consumer
+  counters are needed; target_capacity.json prices unrolled literals only as
+  an upper budget, not a lower bound after legal recurrence compression.
+- effective227_contract.json gives adapter-authoritative fields, a real inserted
+  LOAD example, ordinary native VM mapping, dynamic-resolution boundary and
+  per-step owned-window handoff. No target/date or new ISA is introduced.
+- Binder confirms per-step buffer/epoch/owned-row/column ports; the caller
+  window controller is still open. Code0 uses full physical row arithmetic;
+  code1 explicitly selects row-striped stack with local arithmetic. Every
+  request must preserve physical capacity and no-cross-stack-run guards.
+- counter_budget.json covers actual3916-record full40-layer single-token+head
+  source candidate, inserted LOADs only. A single global one-word-per-cycle
+  counter needs43117008 issuecycles+12528 setupedges=43129536cycles,
+  35.926903488ms at833ps (conditional ceiling27.8343token/s before othercosts).
+  This floor belongs to that serial implementation, not every architecture.
+  Existing about1.8ktoken/s model excludes this spill/provider cost. All8leaf
+  landing does not create8parallelissuers. Eightcycle tentative counter-to-DQ
+  latency is not8cycles perword and excludes physical VM commit.
+- Stale-safe two-buffer static policy acquires27907 halfwindows914456576B;
+  2406 invalidations+25499evictions+2terminal cleanup require27907 all8leaf
+  release broadcasts (223256leafpulses). Actual calendar bandwidth/refills,
+  original96dynamicLOADs, STORE/arithmetic/drains/commit are excluded.
+- All inserted U32 copies are whole aligned sectors, so an explicitly proven
+  existing-count8 coalescing counter could reduce issue work to5389626 sector
+  commands. No such implementation is assumed in the current budget.
