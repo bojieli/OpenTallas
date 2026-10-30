@@ -48,21 +48,21 @@
   },
   "s81": {
    "enabled": true,
-   "event": "d33fc7e9b90",
+   "event": "3928a54d881",
    "gate": {
     "g0c": "PASS",
     "bind": "PASS",
     "clock": "PASS",
-    "evidence": "DIE-S81-34 00:45 event2 gates ALL CLEAN (G0C 20 = baseline set, strict bind 0/0/0 lint 0 clock_landing 0, die clock GRT0 TT/FF + CA PASS) + ROOT-MERGE ef8ce0054 COORD APPROVED 01:13 (event2 plan sha256 b144075b6b1c + SIGNED QB_N view attach, lib path only -> main plan 3742d58b1cf8)"
+    "evidence": "COORD 11:14 RULING: S81 FROZEN on event3 plan_h2_2249.json sha256 bcfcb4e1737e (claude/die-s81-35-event3-1030@3928a54d881): G0C 23 = 0 new vs event2, strict bind 0 + verify PASS 11:11 (intel1 codex-s81-bind-0336/out), die clock GRT50 0 ov TT/FF, CA 2306 PASS"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/codex-s81-wave-src2-1030/physical/die_plan/s81/plan_s13r2.json",
-   "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/codex-s81-wave-src2-1030",
-   "src_sha": "0428e13f7f3",
+   "plan": "/srv/opentallas-scratch2/claude/wt/s81-kits-g-1030/physical/die_plan/s81/plan_h2_2249.json",
+   "gen_host": "intel1",
+   "src": "/srv/opentallas-scratch2/claude/wt/s81-kits-g-1030",
+   "src_sha": "205c743e6ad",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/wt/codex-s81-wave-src2-1030/physical/die_plan/s81/kit_wave/kit_rtl.sh",
-    "note": "Safe exact bound class recipe ac6ec101953/bc990; no representative/default overrides. Native exports three listed classes PASS variants1 sources6 spare0."
+    "script": "/srv/opentallas-scratch2/claude/s81-kits-g/kit_rtl_event3.sh",
+    "note": "S81-KITS-G 10-30: wrapper = main-approved die-local physical/die_plan/s81/kit_wave/kit_rtl.sh (5a12d3ea06d) with S81_BIND_OUT=event3 strict bind of record intel1 codex-s81-bind-0336/out + S81_ASBUILT=its manifest die-s81-34/h2bind/asbuilt_h2_frozen_d34.json (COORD 11:14). Canaries kit_rtl PASS serdes__t2, slice_station__t8; seqhost__t1 FAIL PLAN (unit_o4 2 constant spare bits)."
    },
    "gen_args": [
     "--hold-ff-margin",
@@ -70,21 +70,30 @@
     "--max-wire-um",
     "100"
    ],
-   "owner_lane": "DIE-S81-34",
-   "lane": "KIT-WAVE-1",
-   "note": "Explicit FLOW retry of attempt1 only: old source02ac lacks FT order fix d87; new pinned main f5f7a27c289 + immutable-source/retry-output fixes0428. All three plan blocks byte-identical. Old jobs retained until terminal; source identity prevents promotion of old results, new attempt dirs preserve evidence.",
-   "enable_note": "Only exact listed corefree station classes; expand only after die owner supplies required hard views.",
+   "owner_lane": "DIE-S81-36",
+   "lane": "KIT-WAVE-1 / S81-KITS-G",
+   "note": "S81-KITS-G 10-30 11:3x: event3 plan of record (COORD 11:03 (5) + 11:14). src claude/s81-kits-g-1030@205c743e6ad = merge of the two COORD-approved READY branches 5a12d3ea06d + 3928a54d881 (repoint to main after ROOT-MERGE-AD). Event2 records stay as evidence.",
+   "enable_note": "only_items = event3 NEEDS-KIT types whose every hard core has a lib in the plan (16: serdes x11, slice_station t6/t7 x5). Excluded: kv_leaf t1..t5 (~1.9M cells, post-freeze type-internal cuts, DIE-S81-36), seqhost__t1 (PLAN: unit_o4 2 constant spare bits), col_* (ROM elem view), all hard-core-view-blocked types.",
    "only_items": [
+    "serdes__t1__clb45db5be",
+    "serdes__t1__clfe1f0815",
+    "serdes__t2",
+    "serdes__t3",
+    "serdes__t4",
+    "serdes__t12",
+    "serdes__t13",
+    "serdes__t14",
+    "serdes__t15__cla2127225",
+    "serdes__t15__cla3d02796",
+    "serdes__t16",
+    "slice_station__t6__cl0755c26e",
     "slice_station__t6__cl54a9ceeb",
     "slice_station__t7__cl362204c4",
+    "slice_station__t7__cl503f4913",
     "slice_station__t7__cl945bc067"
    ],
-   "die_max_inflight": 3,
-   "retry": [
-    "slice_station__t6__cl54a9ceeb@1",
-    "slice_station__t7__cl362204c4@1",
-    "slice_station__t7__cl945bc067@1"
-   ]
+   "die_max_inflight": 6,
+   "retry": []
   },
   "s81_head": {
    "enabled": false,
