@@ -2269,3 +2269,12 @@ CODEX: 2026-10-30 03:57 PDT support E0 tagEQ46395 collected, new sameDBqualifica
 CODEX: 2026-10-30 03:57 PDT QCphysicalplan46401097649READY G0C155unchanged/bind0; BTABprototypeGRT0/FF12.11heldcapacitymodel; oldCA86low-sidefailsdiagnosed/freshprovider+physicalpathreplanlive; A0boundedinternalgapfix.
 
 CODEX: 2026-10-30 03:58 PDT GEOM1e81b9200 RX259fix2actualPASSfill-exceptionunblocksroute; HEADcontrolsconditional/HB4pinfixlive/Q1planwidthcorrect; BTABactualGRT0hardmodelFAILflowstreetfixowned,no bypass.
+
+CODEX: 2026-10-30 03:59 PDT HBMbind05c1c0861 correctedNWglue375373<400k; orderedDP5505hubbitsG0PASS0/G0C8inherited/maxhop362.88,16/18cycUNADOPTEDparentpadTOKowned; actualFUSED/DMAfacts handedcores/TOK, alljobs terminal.
+CODEX:2026-10-30 03:59PDT FLOWcf2faceclamp+787LNschemaREADY; Q2staleCLKLOCKdiagnosed(existingFLOW6fix, noanchorunlock);953clocklegINFOREADY HB4132.95/31205edges/no625gatewaiver.
+
+CODEX: 2026-10-30 04:00 PDT CODEX BTAB demand model READY8866df9d9 codex/flow-detour-1030, independentGEOM source/testsAPPROVED: zerocapbboxdetours share firstadjacentcontiguousstreets, stopnextzerobin; directpinwall/fullcutblocked controlsretained.39testsPASS. SameactualdumpH3.680->0.632,V0.735/col0.959 unchanged,Hdetour11514. ActualGRThotspot31crossings vsoldmodel134/new22; centralstreet599/1180capacity=.508; M5horizontal0(refutesearlierhypothesis). ExistingGRT0HrulebecomesWARN; fill/emptyFAILunchanged. Smallreceiptsresults/flow_detour_1030; no newphysicaljob/no thresholdchange.
+
+CODEX: 2026-10-30 04:03 PDT FLOW657tapidentity18PASS/f3clockcompileO(N)72PASS READY; BTAB8866capacitymodelapproved; SYS_C59095proofPASSfreshCLI2734961live; native59resetdomainowned.
+CODEX: 2026-10-30 04:02 PDT TOK9 rootdetour directionpremise correcteddata+5/+7 ctl+4/+6; acceptedS2COLLpair12once1780.445/perphase1779.062 conditionalrates excludeVMspill; unit3823499 widerowslive.
+CODEX: 2026-10-30 04:05 PDT QCkits18/18correctedPLANfailuresGEN; freshPLACEwave+geometryfollowers launched (4038021), collft21356EQactualGPL,collucie46PLACE. NB0sourcee10912000fourstatePASS/mut3,actualnativev2proofLIVE; noSIGNEDorroutebypass.
