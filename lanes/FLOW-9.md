@@ -13,3 +13,4 @@
 - 2026-10-30 11:37 PDT FLOW-9 READY g2 probe_blockages dot-cut names claude/flow-9-g2cut-1030@7518687ff52 (DIE-HBM-36).
 - 2026-10-30 11:39 PDT FLOW-9 READY shared ECO DRT pre-hook claude/flow-9-ecodrt-1030@86eb52446d7 (KVHEAD-KITS-2 note).
 - 2026-10-30 12:02 PDT FLOW-9 READY late-DPL legality claude/flow-9-latedpl-1030@006f0586c77; kvboot guard 5192ec01347; forks: g2 split-core 7518687ff52, ECO DRT pre-hook 86eb52446d7 (both READY). KV fix 4928424922f MERGED d53209a64af.
+- 2026-10-30 12:15 PDT FLOW-9 READY lec scalar Q-alias pairing claude/flow-9-lecname-1030@d4863a83634: sle_stm_v1 LEC UNPROVEN 2 -> EQUIVALENT 82835/82835 (CHECKED intel2 copy, probe deleted).

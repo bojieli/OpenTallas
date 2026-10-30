@@ -73,22 +73,17 @@
    "owner_lane": "DIE-S81-36",
    "lane": "KIT-WAVE-1 / S81-KITS-G",
    "note": "S81-KITS-G 10-30 11:3x: event3 plan of record (COORD 11:03 (5) + 11:14). src claude/s81-kits-g-1030@205c743e6ad = merge of the two COORD-approved READY branches 5a12d3ea06d + 3928a54d881 (repoint to main after ROOT-MERGE-AD). Event2 records stay as evidence.",
-   "enable_note": "only_items = event3 NEEDS-KIT types whose every hard core has a lib in the plan (16: serdes x11, slice_station t6/t7 x5). Excluded: kv_leaf t1..t5 (~1.9M cells, post-freeze type-internal cuts, DIE-S81-36), seqhost__t1 (PLAN: unit_o4 2 constant spare bits), col_* (ROM elem view), all hard-core-view-blocked types. | S81-KITS-G 11:5x: serdes with content u_phy (ot_pdie_serdes, status rework, NO lef/lib) fail gen phy_pg_pdn KeyError 'u_phy' (5/5 launched; t14 also 'per-instance PHY PG domains differ') -> dropped the 5 unlaunched u_phy serdes (t1__clfe1f0815/t2/t3/t4/t13); serdes__t12 (no u_phy) kept.",
+   "enable_note": "only_items = event3 NEEDS-KIT types whose every hard core has a lib in the plan (16: serdes x11, slice_station t6/t7 x5). Excluded: kv_leaf t1..t5 (~1.9M cells, post-freeze type-internal cuts, DIE-S81-36), seqhost__t1 (PLAN: unit_o4 2 constant spare bits), col_* (ROM elem view), all hard-core-view-blocked types. | S81-KITS-G 11:5x: serdes with content u_phy (ot_pdie_serdes, status rework, NO lef/lib) fail gen phy_pg_pdn KeyError 'u_phy' (5/5 launched; t14 also 'per-instance PHY PG domains differ') -> dropped the 5 unlaunched u_phy serdes (t1__clfe1f0815/t2/t3/t4/t13); serdes__t12 (no u_phy) kept. | S81-KITS-H 12:2x: all 11 prior only_items done (serdes x6 FAIL gen CORE-view/PLAN; stations t6 x2/t7 cl503f4913 AUTO-GEOM FAIL PLAN = no station sites; t7 cl362204c4/cl945bc067 old-event attempts). Sited-station canary: only_items = the 2 station types whose plan ft_slots carry bit_sites_um/regs_um (t23, t46; OWNERS state FIX) + take_states NEEDS-KIT,FIX, to test the plan-site form on event3 (GEOM REQ s81_st_t7_503f_ev3 / s81_st_t6_ev3).",
    "only_items": [
-    "serdes__t1__clb45db5be",
-    "serdes__t12",
-    "serdes__t14",
-    "serdes__t15__cla2127225",
-    "serdes__t15__cla3d02796",
-    "serdes__t16",
-    "slice_station__t6__cl0755c26e",
-    "slice_station__t6__cl54a9ceeb",
-    "slice_station__t7__cl362204c4",
-    "slice_station__t7__cl503f4913",
-    "slice_station__t7__cl945bc067"
+    "slice_station__t23",
+    "slice_station__t46"
    ],
    "die_max_inflight": 6,
-   "retry": []
+   "retry": [],
+   "take_states": [
+    "NEEDS-KIT",
+    "FIX"
+   ]
   },
   "s81_head": {
    "enabled": false,
