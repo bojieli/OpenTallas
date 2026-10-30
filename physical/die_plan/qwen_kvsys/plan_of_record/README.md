@@ -9,3 +9,7 @@ Known core-view coverage: q0 and q3 exact plan pins match their signed views. E0
 AHUB M5 track correction (1030): the planned unsigned ahub ck[3]/ck[4] move -0.024 um in x and ck[5]/ck[6] +0.008 um, by the existing canonical on_track rule. The other 627 pins and every port identity, RTL cycle, outline and origin are unchanged. This removes four hard-core geometry errors; G0C remains FAIL on 43 missing cell-estimate entries. Core timing/physical gates remain pending.
 
 SYS_C static count-strap sites (1030 PREP): all 25 previously declared stable count straps now carry 140 explicit M7 sites along y=4.32um, x=21.600..324.064um, produced by the existing kv_count_strap_sites.py. All other fields and all other types are unchanged. These physical sites complete the declaration needed by GEN; current RTL proof and eventual actual tie-cell/placed geometry gates remain required. No physical qualification follows from this metadata alone.
+
+Measured current cell census (1030): seven complete native standardcell counts are now explicit type.cells values, including all wrapper/landing infra and excluding SYS_C six macros. Six source closures match existing actual synth; SYS_C is newly synthesized current TXDP. See results/codex_kv_measured_1030. Physical and equivalence gates remain independent.
+
+Latest G0C after measured census:36 missing-cell errors remain (43→36), warnings2056 unchanged; no new substantive findings. This is a completeness improvement, with independent physical/timing gates still pending.
