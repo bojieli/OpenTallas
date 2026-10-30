@@ -1,0 +1,7 @@
+path	size	newest_mtime	reason
+epyc2:/srv/opentallas-scratch2/claude/hbm-cores-rebal-9	8.1G(files>1MB)+~5G obj/ (verilator build)	2026-10-29_21:22	superseded: REBAL-9 RESULT 10-28 16:46 -> HBM-CORES-REBAL-10 (claude/hbm-cores-rebal-10-1028); files >1MB + tok_*/obj dirs deleted, small logs/json/rpt kept
+epyc2:/srv/opentallas-scratch2/claude/hbm-cores-kits-4	6.9G(files>1MB)	2026-10-29_11:31	failed: KITS-4 _k6/_k3fp4/_k2c24 FAIL logged in lanes/HBM-CORES-KITS-4.md 10-28 21:10/21:53; superseded by KITS-5..; files >1MB deleted, small logs kept
+epyc2:/srv/opentallas-scratch2/claude/hbm-cores-kits-18	5.3G(files>1MB)	2026-10-29_13:32	failed: AUTOPILOT eb1980785980 ot_hgi_qw_dec FAIL_POSTCTS logged 10-29 12:43 (lanes/HBM-CORES-KITS-18.md); files >1MB deleted, small logs kept
+epyc2:/srv/opentallas-scratch2/claude/die-s81-27	4.1G(files>1MB)	2026-10-29_15:38	superseded: S81 die owner rounds die-s81-28..36 newer; files >1MB deleted, small logs kept
+epyc2:/srv/opentallas-scratch2/claude/codex-head-tile-closure-1029	4.6G(files>1MB)	2026-10-29_03:54	superseded: CODEX log 'all owned jobs now terminal', next SOURCE7 in new WT; files >1MB deleted, small logs kept
+epyc2:/srv/opentallas-scratch2/claude/codex-ring-nearmiss-1029	5.0G(files>1MB)	2026-10-29_05:02	superseded: Codex ring near-miss probe 10-29, terminal, idle >24h; files >1MB deleted, small logs kept
