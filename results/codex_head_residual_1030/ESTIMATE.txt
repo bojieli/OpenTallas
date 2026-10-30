@@ -1,0 +1,12 @@
+HEAD residual plan feasibility estimate (2026-10-30; proposal only)
+
+Reviewed k5.png, turn.png, tile.png. K5/turn long paths arise from direct per-ring status fan-in, origin START fanout and shared monitor reset. The overlays use existing R1/R2/W1 forms, leave outlines/pins/macros unchanged and add 0 steady data cycles. All status sources within a target receive equal extra stages. Status and START centerline hops are <=225um, allowing the existing landing-band extent within the405um rule. Raw->same-cycle reset copy and copy->consumer are <=350um on the old exact wavefront graph; raw choices must be re-picked and verified against the new graph. The copy occupies the raw/consumer midpoint only for long reset legs. Planned stages add density sink sites through auto_sink_sites.
+
+hd_st_k5: reader boot +5, writer boot +5; status extras {'agg': 4, 'd_o': 7, 'tx_o': 7, 'u_o': 8}; statusFF +208, reset copies +114; max reset hop 349.192um.
+hd_st_turn: reader boot +4, writer boot +5; status extras {'agg': 4, 'd_o': 7}; statusFF +44, reset copies +31; max reset hop 298.058um.
+hd_spn: reader boot +6, writer boot +6; status extras {'agg': 5, 'ad_o': 10, 'b_o': 10, 'bd_o': 10, 'bu_o': 10, 'hd_o': 10, 'hu_o': 9, 'x_o': 10}; statusFF +1184, reset copies +607; max reset hop 349.337um.
+hd_spn_end: reader boot +6, writer boot +7; status extras {'agg': 5, 'ad_o': 10, 'b_o': 10, 'bd_o': 10, 'bu_o': 9, 'hd_o': 10, 'hu_o': 9}; statusFF +882, reset copies +455; max reset hop 349.154um.
+
+NOT BUILT: current raw-PICK solve, full G0C/bind/die clock, RTL exactness, actual placement+independent GEOM, timing and signoff remain. Existing failed reviews are retained. FT relay collapse is a separate first-fraction station-placement class; these overlays do not claim to fix it.
+
+Tile: five macros leave H channel y328..380 and V channel x337..372. Existing g_sk (19,712 FF) spans y349..1009 and A captures span y150..563. Constrain all four A input capture groups near the common cross x300..410,y334..374; place A skew tail there and spread earlier existing skew stages along source(200,600)->cross. Existing BST2 broadcast can capture ring near(80,780), then(200,600), then A capture cross at(354,354): nominal hops128/340/400um. This is a non-plan placement candidate; no cycle or macro move. Zero-skew lanes are the limiting direct path. head_collect owns execution/actual geometry.
