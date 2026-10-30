@@ -1,0 +1,166 @@
+{
+ "status": "PASS_GEOMETRY",
+ "physical_route": false,
+ "clock_width_um": 0.08,
+ "tree_spacing_um": 0.32,
+ "m6_width_um": 0.032,
+ "max_jog_um": 1.5,
+ "riser_max_um": 9.0,
+ "variant": "R7",
+ "r2_margin_um": null,
+ "window_census": {
+  "router_track_in_window": 89152,
+  "tracks_5+": 89180,
+  "router_track_outside": 28
+ },
+ "column_splits": 957,
+ "riser_island": "off",
+ "column_select": "track",
+ "note": "DIE-QC-37 R7 = R6 range windows; the 2 pins of each of the 18 R6 no_clock_track nets (driver-jog, template-replica class) keep the native default column window (E1 geometry, track stage PASS in E1)",
+ "default_window_pins": [
+  [
+   "ck_b10386",
+   "A"
+  ],
+  [
+   "ck_b10449",
+   "A"
+  ],
+  [
+   "ck_b13167",
+   "A"
+  ],
+  [
+   "ck_b13275",
+   "A"
+  ],
+  [
+   "ck_b13716",
+   "A"
+  ],
+  [
+   "ck_b13779",
+   "A"
+  ],
+  [
+   "ck_b13887",
+   "A"
+  ],
+  [
+   "ck_b14121",
+   "A"
+  ],
+  [
+   "ck_b14688",
+   "A"
+  ],
+  [
+   "ck_b14751",
+   "A"
+  ],
+  [
+   "ck_b17010",
+   "A"
+  ],
+  [
+   "ck_b17073",
+   "A"
+  ],
+  [
+   "ck_b17982",
+   "A"
+  ],
+  [
+   "ck_b18045",
+   "A"
+  ],
+  [
+   "ck_b7551",
+   "A"
+  ],
+  [
+   "ck_b8433",
+   "A"
+  ],
+  [
+   "ck_b9504",
+   "A"
+  ],
+  [
+   "ck_b9567",
+   "A"
+  ],
+  [
+   "ck_r10386_0",
+   "Y"
+  ],
+  [
+   "ck_r10449_0",
+   "Y"
+  ],
+  [
+   "ck_r13167_0",
+   "Y"
+  ],
+  [
+   "ck_r13275_0",
+   "Y"
+  ],
+  [
+   "ck_r13716_0",
+   "Y"
+  ],
+  [
+   "ck_r13779_0",
+   "Y"
+  ],
+  [
+   "ck_r13887_0",
+   "Y"
+  ],
+  [
+   "ck_r14121_0",
+   "Y"
+  ],
+  [
+   "ck_r14688_0",
+   "Y"
+  ],
+  [
+   "ck_r14751_0",
+   "Y"
+  ],
+  [
+   "ck_r17010_0",
+   "Y"
+  ],
+  [
+   "ck_r17073_0",
+   "Y"
+  ],
+  [
+   "ck_r17982_0",
+   "Y"
+  ],
+  [
+   "ck_r18045_0",
+   "Y"
+  ],
+  [
+   "ck_r7551_0",
+   "Y"
+  ],
+  [
+   "ck_r8433_0",
+   "Y"
+  ],
+  [
+   "ck_r9504_0",
+   "Y"
+  ],
+  [
+   "ck_r9567_0",
+   "Y"
+  ]
+ ]
+}

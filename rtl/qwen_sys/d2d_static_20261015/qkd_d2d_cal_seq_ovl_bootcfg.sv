@@ -86,11 +86,12 @@ module qkd_d2d_cal_seq_ovl_bc_core #(parameter integer AW = 11, parameter intege
             // admission run: from its start (layer 63) until adm_done; the token programme is the sequencer's `running`
             if (s_cs && s_seg && !s_adm) adm_act <= 1'b1;
             else if (s_adm || halt_q) adm_act <= 1'b0;
-            if (reload_q) begin btx_seen <= 1'b0; brx_seen <= 1'b0; end
-            else begin
-                if (b_base && b_tx_q) btx_seen <= 1'b1;
-                if (b_base && b_rx_q) brx_seen <= 1'b1;
-            end
+            // TOK-KV-DCAL-1 10-29 (as qkd_d2d_cal_seq_bootcfg.sv, TOK-KV-2): the boot base words stay seen across a reload
+            // (only reset clears them).  A reload restarts the inner sequencer, whose init writes never reach cfg_* here
+            // (after-init merge), so the link tables that boot target 11 loaded are untouched; on the KV die target 11
+            // precedes the ISA target 0 whose BEGIN is the reload, so the old clear made EARLY fire at the first cal_start.
+            if (b_base && b_tx_q) btx_seen <= 1'b1;
+            if (b_base && b_rx_q) brx_seen <= 1'b1;
             if (n_col) f_col <= 1'b1;
             if (n_run) f_run <= 1'b1;
             if (n_stale) f_stale <= 1'b1;

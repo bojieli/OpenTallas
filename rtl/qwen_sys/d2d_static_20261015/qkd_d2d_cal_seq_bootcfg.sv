@@ -25,7 +25,7 @@
 //   RUN   a boot write while a calendar runs (token programme running, or the admission run until adm_done)
 //   STALE a boot base word (addr 6'b100000, TX then RX) != this tile's SEG2 constants (stale boot image vs the image
 //         the sequencer's runtime base writes come from)
-//   EARLY a calendar start before both boot base words arrived (since reset / the last reload)
+//   EARLY a calendar start before both boot base words arrived (since reset; a reload keeps them: it never rewrites the link tables)
 //   (+ the sequencer's own faults)
 // Static schedule: no ready / credit / backpressure.  MUT (bench only, 0 = shipped): 1 = sequencer writes never reach
 // cfg_* (today's die: the base switch is lost).
@@ -99,11 +99,11 @@ module qkd_d2d_cal_seq_pin_bc #(parameter integer GO_OFS = 0, parameter [20*36-1
             // admission run: from its start (layer 63) until adm_done; the token programme is the sequencer's `running`
             if (s_cs && s_seg && s_layer == 6'h3f) adm_act <= 1'b1;
             else if (s_adm || halt_q) adm_act <= 1'b0;
-            if (reload_q) begin btx_seen <= 1'b0; brx_seen <= 1'b0; end
-            else begin
-                if (b_base && b_tx_q) btx_seen <= 1'b1;
-                if (b_base && b_rx_q) brx_seen <= 1'b1;
-            end
+            // TOK-KV-2 10-29: the boot base words stay seen across a reload (only reset clears them).  A reload restarts
+            // the inner sequencer, whose 66 init writes are suppressed here, so the link tables that boot target 11
+            // loaded are untouched; target 11 precedes the ISA target 0 whose BEGIN is the die's reload.
+            if (b_base && b_tx_q) btx_seen <= 1'b1;
+            if (b_base && b_rx_q) brx_seen <= 1'b1;
             if (n_col) f_col <= 1'b1;
             if (n_run) f_run <= 1'b1;
             if (n_stale) f_stale <= 1'b1;

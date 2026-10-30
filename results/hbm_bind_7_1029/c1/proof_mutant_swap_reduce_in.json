@@ -1,0 +1,94 @@
+{
+ "schema": "hbm.bind7.coll_proof.v1",
+ "ref": "../codex-hbm-bind-1355/probe_body/asbuilt.json",
+ "dut": "e1/spliced.json",
+ "mutant": "swap_reduce_in",
+ "hubs": {
+  "hb_coll_NE": {
+   "cells": 50,
+   "terminals": 52070,
+   "classes": {
+    "N": 38177,
+    "P": 13303,
+    "C": 590
+   },
+   "mismatches": 4,
+   "extra_terminals": 0,
+   "cells_identical": true,
+   "parent_params_equal": true,
+   "parent_params": {
+    "AR_ITER": "1",
+    "NLINK": "2",
+    "ROWS": "256",
+    "TP": "192",
+    "VM_RT": "3"
+   },
+   "parts_exact_partition": true,
+   "parts": 4,
+   "first_mismatches": [
+    {
+     "terminal": [
+      "hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out",
+      "dst_d",
+      448
+     ],
+     "ref": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 448), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 0)))",
+     "dut": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 448), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 1)))"
+    },
+    {
+     "terminal": [
+      "hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out",
+      "dst_d",
+      449
+     ],
+     "ref": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 449), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 1)))",
+     "dut": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 449), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 0)))"
+    },
+    {
+     "terminal": [
+      "hb_coll_NE.u_body.u_reduce",
+      "in_flit",
+      0
+     ],
+     "ref": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 448), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 0)))",
+     "dut": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 449), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 0)))"
+    },
+    {
+     "terminal": [
+      "hb_coll_NE.u_body.u_reduce",
+      "in_flit",
+      1
+     ],
+     "ref": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 449), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 1)))",
+     "dut": "('N', (('hb_coll_NE.u_body.g_qout[0].g2.w.o.u_out', 'dst_d', 448), ('hb_coll_NE.u_body.u_reduce', 'in_flit', 1)))"
+    }
+   ],
+   "verdict": "FAIL"
+  },
+  "hb_coll_NW": {
+   "cells": 54,
+   "terminals": 59472,
+   "classes": {
+    "N": 41584,
+    "P": 17869,
+    "C": 19
+   },
+   "mismatches": 0,
+   "extra_terminals": 0,
+   "cells_identical": true,
+   "parent_params_equal": true,
+   "parent_params": {
+    "AR_ITER": "1",
+    "NLINK": "3",
+    "ROWS": "256",
+    "TP": "192",
+    "VM_RT": "3"
+   },
+   "parts_exact_partition": true,
+   "parts": 5,
+   "first_mismatches": [],
+   "verdict": "PASS"
+  }
+ },
+ "verdict": "FAIL"
+}

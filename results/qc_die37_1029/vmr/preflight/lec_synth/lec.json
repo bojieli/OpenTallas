@@ -1,0 +1,140 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-29T22:33:43+0000",
+ "verdict": "EQUIVALENT",
+ "top": "qfd_dv_s8x_vmr",
+ "netlist": "/work/run/results/asap7/kq_qfd_dv_s8x_vmr_f4a_m1/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {
+  "ot_sram_1r1w_1024x256_m1b2_r2c2_ns": 12
+ },
+ "ports": {
+  "inputs": 1252,
+  "outputs": 257
+ },
+ "t_aig_s": 6.6,
+ "t_corr_s": 8.8,
+ "keypoints": {
+  "gold": {
+   "inputs": 1267,
+   "flops": 6226,
+   "outputs": 0,
+   "ands": 14277
+  },
+  "gate": {
+   "inputs": 1258,
+   "flops": 10533,
+   "outputs": 0,
+   "ands": 13497
+  },
+  "matched": 6071,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 122,
+   "first": [
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[0]=ff:u_dut.g_bank[0].g_rr.u_ra.q[0]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[1]=ff:u_dut.g_bank[0].g_rr.u_ra.q[1]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[2]=ff:u_dut.g_bank[0].g_rr.u_ra.q[2]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[3]=ff:u_dut.g_bank[0].g_rr.u_ra.q[3]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[4]=ff:u_dut.g_bank[0].g_rr.u_ra.q[4]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[5]=ff:u_dut.g_bank[0].g_rr.u_ra.q[5]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[6]=ff:u_dut.g_bank[0].g_rr.u_ra.q[6]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[7]=ff:u_dut.g_bank[0].g_rr.u_ra.q[7]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[8]=ff:u_dut.g_bank[0].g_rr.u_ra.q[8]",
+    "both:ff:u_dut.g_bank[1].g_rr.u_ra.q[9]=ff:u_dut.g_bank[0].g_rr.u_ra.q[9]",
+    "both:ff:u_dut.g_bk[10].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[11].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[12].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[13].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[14].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[15].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[1].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[2].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[3].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[4].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[5].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[6].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[7].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[8].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_bk[9].u.q=ff:u_dut.g_bk[0].u.q",
+    "both:ff:u_dut.g_l[0].u1.q[0]=ff:u_dut.g_l[0].u0.q[0]",
+    "both:ff:u_dut.g_l[0].u1.q[1]=ff:u_dut.g_l[0].u0.q[1]",
+    "both:ff:u_dut.g_l[0].u1.q[2]=ff:u_dut.g_l[0].u0.q[2]",
+    "both:ff:u_dut.g_l[0].u1.q[3]=ff:u_dut.g_l[0].u0.q[3]",
+    "both:ff:u_dut.g_l[0].u1.q[4]=ff:u_dut.g_l[0].u0.q[4]",
+    "both:ff:u_dut.g_l[0].u1.q[5]=ff:u_dut.g_l[0].u0.q[5]",
+    "both:ff:u_dut.g_l[0].u1.q[6]=ff:u_dut.g_l[0].u0.q[6]",
+    "both:ff:u_dut.g_l[0].u1.q[7]=ff:u_dut.g_l[0].u0.q[7]",
+    "both:ff:u_dut.g_l[1].u1.q[0]=ff:u_dut.g_l[1].u0.q[0]",
+    "both:ff:u_dut.g_l[1].u1.q[1]=ff:u_dut.g_l[1].u0.q[1]",
+    "both:ff:u_dut.g_l[1].u1.q[2]=ff:u_dut.g_l[1].u0.q[2]",
+    "both:ff:u_dut.g_l[1].u1.q[3]=ff:u_dut.g_l[1].u0.q[3]",
+    "both:ff:u_dut.g_l[1].u1.q[4]=ff:u_dut.g_l[1].u0.q[4]",
+    "both:ff:u_dut.g_l[1].u1.q[5]=ff:u_dut.g_l[1].u0.q[5]",
+    "both:ff:u_dut.g_l[1].u1.q[6]=ff:u_dut.g_l[1].u0.q[6]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 15,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 6,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.2,
+ "x_dont_care_points": {
+  "n": 1,
+  "first": [
+   "ff:u_dut.l_wbad"
+  ]
+ },
+ "kept_registers": {
+  "declared": 1427,
+  "in_netlist": 1427,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "counts": {
+  "compare_points": 5958,
+  "proved": 5958,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "5958 compare points proved; 6071 key points matched by name, 122 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 1 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 16.0,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

@@ -19,6 +19,8 @@ cp "$H/asbuilt_rtl6/kv_flags.env" "$H/asbuilt_rtl6/SOURCE_COMMIT" "$AS/"
 for f in "$H"/asbuilt_rtl6/*.json.gz; do zcat "$f" > "$AS/$(basename "${f%.gz}")"; done
 BG=$B/bus_groups.json; [ -f "$BG" ] || { zcat "$B/bus_groups.json.gz" > "$O/bus_groups.json"; BG=$O/bus_groups.json; }
 KST=${KST:-$(python3 "$H/kst.py" "$BG")}; echo "KST $KST"
+# TOK-KV-4 10-29: the HOST record relay of THIS bind (landed out + back) -> pair image TXD K[1] + WITNESS placements
+HRT=${HRT:-$(python3 "$H/kst.py" --host-rt "$BG")}; echo "HRT $HRT"
 T=physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py
 set -a; . "$AS/kv_flags.env"; set +a
 [ -z "$task_compute_record_txd" ] || export OT_KV_COMPUTE_RECORD_TXD=$task_compute_record_txd
@@ -28,7 +30,7 @@ python3 $T prep "${PV_ARGS[@]}" --rs "$AS/relay_stages.json" --model "$AS/static
 EMB=${OT_KV_EMB_WIN_REC:-1627}; HP=${task_head_prepare_edges:-${OT_KV_HEAD_PREP_EDGES:-12}}
 CST=${CST:-2,2,2,3,2,2}   # selected compute seam; one profile for image AND native compile
 pair_image() {   # $1 = attention-service pad
-  D2D_K_STAGES=$KST D2D_DIE_STAGES=$CST/$KST D2D_MU=1 D2D_EMB_WINDOW=$EMB D2D_ROPE=1 D2D_HEAD_PREPARE_EDGES=$HP \
+  D2D_K_STAGES=$KST D2D_DIE_STAGES=$CST/$KST D2D_HOST_STAGES=$HRT D2D_MU=1 D2D_EMB_WINDOW=$EMB D2D_ROPE=1 D2D_HEAD_PREPARE_EDGES=$HP \
     D2D_ATTN_SERVICE_PAD=$1 D2D_ATTN_TX_SHIFT=1 D2D_STATUS_DELAY=213 \
     bash tools/qwen_split/d2d_cal_image_production.sh "$O/img_bnd" > "$O/img.log" 2>&1
 }
@@ -50,5 +52,5 @@ export -p | grep -E " (OT_KV_|PYTHONDONTWRITEBYTECODE)" > "$O/compile.env"   # t
 /usr/bin/time -f "elapsed %e s maxrss %M KB" python3 $T compile --ages "$O/prep/die_ages_bound_padded.json" \
   --rs "$O/prep/relay_stages_bound.json" --mu $CONTRACT --out "$O/cmp_mu833" > "$O/compile.log" 2>&1
 ( cd "$O/cmp_mu833" && sha256sum target*.hex boot_bundle.json ../img_bnd/d2d_cal_image.svh > "$O/targets.sha256" )
-echo "RECIPE: commit $(git -C "$R" rev-parse --short=10 HEAD) BIND=$B KST=$KST F=$OT_KV_MU_FRAME_F SERVICE_PAD=$OT_KV_ATTN_SERVICE_PAD bash physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh BIND OUT" > "$O/RECIPE"
+echo "RECIPE: commit $(git -C "$R" rev-parse --short=10 HEAD) BIND=$B KST=$KST HRT=$HRT F=$OT_KV_MU_FRAME_F SERVICE_PAD=$OT_KV_ATTN_SERVICE_PAD bash physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh BIND OUT" > "$O/RECIPE"
 tail -3 "$O/compile.log"

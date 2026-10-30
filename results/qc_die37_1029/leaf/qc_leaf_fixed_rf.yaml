@@ -1,0 +1,34 @@
+# ot-clk config: QC leaf_drivers rule (KV-019 class, COORD 10-29: same subcommand, no QC fork). Variant: fixed (x5p33->x16),
+# identical leaf_drivers knobs to kv_e26a_leaf_fixed.yaml; inputs = the QC provider import inputs of qc-import-1
+# (receipt inventory_sha256 5f7989df.., placements_sha256 38651cf1..; bound constraints; bit->net map).
+schema: ot_clk_config/1
+die: qc
+event:
+  name: qc_leaf_fixed_reachfix
+  host: intel2
+  source: codex-qc-import-0824/reachfix provider import (current QC provider, receipt placements_sha256 b491955f..)
+inputs:
+  plan: /srv/opentallas-scratch2/claude/qc-import-1/plan/plan_qc_import1.json
+top:
+  form: link_htree   # unused by leaf-drivers (load_config requires the section); die tree = fixed-tree provider
+  leaf_um: 200
+  rep_um: 250
+stack:
+  cell: inv
+  clock_rc: ndr
+leaf_drivers:
+  inventory: /srv/opentallas-scratch2/claude/codex-qc-start-native-0251/reset_wave2/synth/provider_cells.json
+  mapped: /srv/opentallas-scratch2/claude/codex-qc-start-native-0251/reset_wave2/synth/provider_mapped.json
+  top: ot_die_start_stages
+  placements: /srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/placements.json
+  constraints: /srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/constraints/constraints.json
+  bit_nets: /srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/provider/bit_nets.json
+  lef: /srv/opentallas-scratch2/claude/codex-qc-physical-1029/inputs/cells.lef
+  odb_prefix: start_provider/
+  inst_prefix: ot_leaf_ck
+  search_um: 40
+  obs_halo_um: 0.1
+  sizing: fixed
+  trunk_cell: CKINVDCx5p33_ASAP7_75t_R
+  leaf_cell: CKINVDCx16_ASAP7_75t_R
+  merge_um: 30

@@ -196,10 +196,26 @@ def generate(a):
         br = dm["bumps"]["rect_um"]
         # --phy-box: PSM traces a net from one island only, so the other boxes' domains get their own nets (unsolved)
         oth = a.phy_box is not None and not inside((br[0] + br[2]) / 2, (br[1] + br[3]) / 2, dboxes[0])
-        for net, ph in (("VDDPHYO" if oth else "VDDPHY", VP / 2), ("VSSPHYO" if oth else "VSSPHY", 0.0)):
-            for jy in range(math.ceil((br[1] - ph) / VP), math.floor((br[3] - ph) / VP) + 1):
-                for ix in range(math.ceil((br[0] - ph) / VP), math.floor((br[2] - ph) / VP) + 1):
-                    x, y = ph + ix * VP, ph + jy * VP
+        bp = dm["bumps"].get("pitch_um", 45.0)
+        if dm["bumps"].get("anchor") == "rect":
+            # opt-in (DIE-S81-29 WS3IR): axis-aligned bp checkerboard anchored to bumps.rect_um, centred with an
+            # inset >= bp/4 on each side, so every edge row / column carries BOTH rails (the default lattice below
+            # is die-origin phased per rail: an edge can be up to one rail pitch (63.64 um) from that rail's bumps)
+            nxb = int((br[2] - br[0] - bp / 2) // bp) + 1
+            nyb = int((br[3] - br[1] - bp / 2) // bp) + 1
+            ex, ey = (br[2] - br[0] - (nxb - 1) * bp) / 2, (br[3] - br[1] - (nyb - 1) * bp) / 2
+            for jy in range(nyb):
+                for ix in range(nxb):
+                    x, y = br[0] + ex + ix * bp, br[1] + ey + jy * bp
+                    net = ("VDDPHY" if (ix + jy) % 2 else "VSSPHY") + ("O" if oth else "")
+                    if x0 + 1 < x < x1 - 1 and y0 + 1 < y < y1 - 1:
+                        bumps.append((net, x, y))
+            continue
+        vp = VP if bp == 45.0 else bp / math.sqrt(0.5)
+        for net, ph in (("VDDPHYO" if oth else "VDDPHY", vp / 2), ("VSSPHYO" if oth else "VSSPHY", 0.0)):
+            for jy in range(math.ceil((br[1] - ph) / vp), math.floor((br[3] - ph) / vp) + 1):
+                for ix in range(math.ceil((br[0] - ph) / vp), math.floor((br[2] - ph) / vp) + 1):
+                    x, y = ph + ix * vp, ph + jy * vp
                     if x0 + 1 < x < x1 - 1 and y0 + 1 < y < y1 - 1:
                         bumps.append((net, x, y))
     bumps = [(n, round(x - x0, 3), round(y - y0, 3)) for n, x, y in bumps]
@@ -237,7 +253,12 @@ def generate(a):
     if dboxes:
         dg = doms[0]["grid"]
         for k in range(len(dboxes)):
-            t += [f"define_pdn_grid -name phy{k} -voltage_domains PHY{k}"] + stripes(f"phy{k}", dg)
+            # opt-in per-domain grid (DIE-S81-29 WS3IR): the grid of the domain whose rect lies in box k; identical to
+            # doms[0]["grid"] whenever all domains share one grid (every plan before 10-29)
+            dgk = next((d["grid"] for d in doms if d.get("grid") and ok(clip(d["rect_um"]))
+                        and inside((clip(d["rect_um"])[0] + clip(d["rect_um"])[2]) / 2,
+                                   (clip(d["rect_um"])[1] + clip(d["rect_um"])[3]) / 2, dboxes[k])), dg)
+            t += [f"define_pdn_grid -name phy{k} -voltage_domains PHY{k}"] + stripes(f"phy{k}", dgk)
         if pm:     # one macro grid per region domain, by instance (a multi-domain -cells grid leaves the 2nd region bare)
             for k, rb in enumerate(dboxes):
                 ins = [t_["n"] for t_ in tiles if t_["kind"] == "phy" and inside((t_["r"][0] + t_["r"][2]) / 2, (t_["r"][1] + t_["r"][3]) / 2, rb)]
@@ -277,7 +298,10 @@ grep -E "OT_|Worstcase|Maximum resident|Elapsed|EXIT" $D/run.log | tail -30
                window_um=list(win), tile_um=a.tile, density_w_mm2=a.density, voltage_v=V, gate_mv=GATE_MV,
                core_grid=grid, domain_grid=doms[0]["grid"] if doms else None,
                domains=[dict(name=dm["name"], io=dm["io"], rect_um=dm["rect_um"], bumps_rect_um=dm["bumps"]["rect_um"],
-                             phy_macro_um=dm.get("phy_macro_um"), core_strip_um=dm.get("core_strip_um"))
+                             phy_macro_um=dm.get("phy_macro_um"), core_strip_um=dm.get("core_strip_um"),
+                             **({"grid": dm["grid"]} if dm.get("grid") != doms[0].get("grid") else {}),
+                             **({k: dm["bumps"][k] for k in ("pitch_um", "anchor") if k in dm["bumps"]}
+                                if dm["bumps"].get("anchor") or dm["bumps"].get("pitch_um", 45.0) != 45.0 else {}))
                         for dm in doms if ok(clip(dm["rect_um"]))],
                region_boxes=[list(r) for r in dboxes],
                phy=[dict(dom=p["dom"], rect_um=list(p["rect"]), w=round(p["w"], 4),

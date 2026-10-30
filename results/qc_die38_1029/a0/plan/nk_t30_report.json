@@ -1,0 +1,371 @@
+{
+ "T": 30,
+ "leg_um": 100.0,
+ "reg_domains": "planned",
+ "port": [
+  228.948,
+  578.64
+ ],
+ "reg_gates": 17,
+ "mac_gates": 19,
+ "root_registers": 1633,
+ "root_leaves": 78,
+ "gate_depth": {
+  "u_hop_lsl0": 15,
+  "u_hop_lsl1": 12,
+  "u_hop_lsl2": 11,
+  "u_hop_lsl3": 15,
+  "u_hop_lsl4": 10,
+  "u_hop_lsl5": 8,
+  "u_hop_lsl6": 8,
+  "u_hop_lsl7": 7,
+  "u_hop_node": 12,
+  "u_hop_rp0": 10,
+  "u_hop_rp1": 11,
+  "u_hop_rp2": 12,
+  "u_hop_rp3": 14,
+  "u_hop_rp4": 14,
+  "u_hop_rp5": 10,
+  "u_hop_rp6": 11,
+  "u_hop_rp7": 12,
+  "u_hop_rp8": 15,
+  "u_hop_rp9": 13,
+  "u_hop_ck": 24,
+  "u_hop_de": 26,
+  "u_hop_dw": 26,
+  "u_hop_fa2": 24,
+  "u_hop_fa3": 23,
+  "u_hop_rn": 26,
+  "u_hop_rnw": 26,
+  "u_hop_rs": 24,
+  "u_hop_rsw": 24,
+  "u_hop_tx0": 24,
+  "u_hop_tx1": 24,
+  "u_hop_tx2": 24,
+  "u_hop_tx3": 25,
+  "u_hop_tx4": 25,
+  "u_hop_tx5": 23,
+  "u_hop_tx6": 25,
+  "u_hop_tx7": 23
+ },
+ "early": [
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl0/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 2,
+   "gate_depth": 15,
+   "leaf_depth": 17,
+   "gate_pin_um": 139.5,
+   "corridor_um": 139.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl1/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 5,
+   "gate_depth": 12,
+   "leaf_depth": 17,
+   "gate_pin_um": 264.2,
+   "corridor_um": 400.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 6,
+   "gate_depth": 11,
+   "leaf_depth": 17,
+   "gate_pin_um": 410.2,
+   "corridor_um": 545.9
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl3/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 2,
+   "gate_depth": 15,
+   "leaf_depth": 17,
+   "gate_pin_um": 118.6,
+   "corridor_um": 118.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl4/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 7,
+   "gate_depth": 10,
+   "leaf_depth": 17,
+   "gate_pin_um": 160.0,
+   "corridor_um": 699.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl5/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 9,
+   "gate_depth": 8,
+   "leaf_depth": 17,
+   "gate_pin_um": 319.1,
+   "corridor_um": 856.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl6/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 9,
+   "gate_depth": 8,
+   "leaf_depth": 17,
+   "gate_pin_um": 93.5,
+   "corridor_um": 865.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_lsl7/u_icg",
+   "macro": "ot_qwen_tile_lsl_rawfault_m3",
+   "k": 13,
+   "r": 10,
+   "gate_depth": 7,
+   "leaf_depth": 17,
+   "gate_pin_um": 365.6,
+   "corridor_um": 954.1
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_node/u_icg",
+   "macro": "ot_qwen_tile_node",
+   "k": 12,
+   "r": 6,
+   "gate_depth": 12,
+   "leaf_depth": 18,
+   "gate_pin_um": 361.2,
+   "corridor_um": 566.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp0/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 6,
+   "gate_depth": 10,
+   "leaf_depth": 16,
+   "gate_pin_um": 522.9,
+   "corridor_um": 567.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp1/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 5,
+   "gate_depth": 11,
+   "leaf_depth": 16,
+   "gate_pin_um": 409.2,
+   "corridor_um": 452.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp2/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 4,
+   "gate_depth": 12,
+   "leaf_depth": 16,
+   "gate_pin_um": 270.8,
+   "corridor_um": 314.4
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp3/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 2,
+   "gate_depth": 14,
+   "leaf_depth": 16,
+   "gate_pin_um": 59.8,
+   "corridor_um": 104.6
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp4/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 2,
+   "gate_depth": 14,
+   "leaf_depth": 16,
+   "gate_pin_um": 117.8,
+   "corridor_um": 199.5
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp5/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 6,
+   "gate_depth": 10,
+   "leaf_depth": 16,
+   "gate_pin_um": 518.6,
+   "corridor_um": 565.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp6/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 5,
+   "gate_depth": 11,
+   "leaf_depth": 16,
+   "gate_pin_um": 409.9,
+   "corridor_um": 451.3
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp7/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 4,
+   "gate_depth": 12,
+   "leaf_depth": 16,
+   "gate_pin_um": 241.6,
+   "corridor_um": 341.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp8/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 1,
+   "gate_depth": 15,
+   "leaf_depth": 16,
+   "gate_pin_um": 22.8,
+   "corridor_um": 22.8
+  },
+  {
+   "gate": "g_icg.g_hop.u_hop_rp9/u_icg",
+   "macro": "ot_qwen_tile_romleaf",
+   "k": 14,
+   "r": 3,
+   "gate_depth": 13,
+   "leaf_depth": 16,
+   "gate_pin_um": 110.4,
+   "corridor_um": 207.9
+  }
+ ],
+ "geometry": {
+  "max_fanout": 4,
+  "max_node_leg_um": 200.0,
+  "node_legs_over": [
+   [
+    200.0,
+    "mp_a0_d1154",
+    "mp_a0_ldtx5_27"
+   ],
+   [
+    199.1,
+    "mp_a0_d1205",
+    "mp_a0_ldtx7_36"
+   ],
+   [
+    198.8,
+    "mp_a0_d1082",
+    "mp_a0_d1086"
+   ],
+   [
+    192.8,
+    "mp_a0_d1087",
+    "mp_a0_d1091"
+   ],
+   [
+    190.1,
+    "mp_a0_d1087",
+    "mp_a0_d1090"
+   ],
+   [
+    189.5,
+    "mp_a0_d1191",
+    "mp_a0_d1192"
+   ],
+   [
+    188.8,
+    "mp_a0_d1082",
+    "mp_a0_d1085"
+   ],
+   [
+    186.7,
+    "mp_a0_d1087",
+    "mp_a0_d1089"
+   ],
+   [
+    185.0,
+    "mp_a0_d1072",
+    "mp_a0_d1076"
+   ],
+   [
+    184.7,
+    "mp_a0_d1201",
+    "mp_a0_d1203"
+   ],
+   [
+    184.5,
+    "mp_a0_d1077",
+    "mp_a0_d1081"
+   ],
+   [
+    184.2,
+    "mp_a0_d1200",
+    "mp_a0_ldtx7_27"
+   ],
+   [
+    183.5,
+    "mp_a0_d1196",
+    "mp_a0_d1197"
+   ],
+   [
+    182.8,
+    "mp_a0_d1075",
+    "mp_a0_ldtx2_7"
+   ],
+   [
+    182.5,
+    "mp_a0_d911",
+    "mp_a0_d927"
+   ],
+   [
+    181.9,
+    "mp_a0_d1155",
+    "mp_a0_d1157"
+   ],
+   [
+    180.1,
+    "mp_a0_d1159",
+    "mp_a0_ldtx5_37"
+   ],
+   [
+    179.4,
+    "mp_a0_d1087",
+    "mp_a0_d1088"
+   ],
+   [
+    178.5,
+    "mp_a0_d1186",
+    "mp_a0_d1189"
+   ],
+   [
+    178.4,
+    "mp_a0_d1077",
+    "mp_a0_d1080"
+   ]
+  ],
+  "max_leaf_sink_leg_um": {
+   "register": 287.8,
+   "macro": 74.8
+  },
+  "total_stage_counts": {
+   "30": 761
+  },
+  "cells": 1947
+ },
+ "stage": {
+  "TT": 20.25,
+  "FF": 16.0,
+  "source": "DIE-QC-38 measured V2 register-path stage: median sink arrival / 22 cells (NL 358.3/453.3, NK 346.7/438.1 FF/TT ps), pooled"
+ },
+ "same_leaf": {
+  "cluster_too_big": 1,
+  "cluster_far": 1053,
+  "swaps": 1130,
+  "pairs_in_domain": 4638,
+  "pairs_same_leaf": 2455,
+  "cluster_unplaced": 35
+ },
+ "attempts": 1
+}

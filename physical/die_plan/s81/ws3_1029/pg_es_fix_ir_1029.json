@@ -1,0 +1,33 @@
+{
+ "phy_lk_ES0_es": {
+  "verdict": "PASS",
+  "psm": {
+   "VDD": "OK",
+   "VSS": "OK",
+   "VDDPHY": "OK",
+   "VSSPHY": "OK"
+  },
+  "worst_mv": {
+   "VDD": 17.59,
+   "VDDPHY": 9.82,
+   "VSS": 3.66,
+   "VSSPHY": 9.68
+  }
+ },
+ "phy_lk_ES1_es": {
+  "verdict": "PASS",
+  "psm": {
+   "VDD": "OK",
+   "VSS": "OK",
+   "VDDPHY": "OK",
+   "VSSPHY": "OK"
+  },
+  "worst_mv": {
+   "VDD": 17.49,
+   "VDDPHY": 9.82,
+   "VSS": 3.62,
+   "VSSPHY": 9.68
+  }
+ },
+ "plan_sha256_16": "9748fe3cb371a004"
+}

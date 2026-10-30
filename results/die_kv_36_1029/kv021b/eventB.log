@@ -1,0 +1,243 @@
+ECTL_EQ2 frames padded 29 sum pad 29 RT(krq+krs) 6
+{
+"ectl_eq2_rq_pads": {
+"L398_0": {
+"frame": "ES_1",
+"rt": 5,
+"pad": 1
+},
+"L386_0": {
+"frame": "EN_6",
+"rt": 5,
+"pad": 1
+},
+"L450_0": {
+"frame": "WN_6",
+"rt": 5,
+"pad": 1
+},
+"L382_0": {
+"frame": "EN_5",
+"rt": 5,
+"pad": 1
+},
+"L470_0": {
+"frame": "WS_3",
+"rt": 5,
+"pad": 1
+},
+"L418_0": {
+"frame": "ES_6",
+"rt": 5,
+"pad": 1
+},
+"L366_0": {
+"frame": "EN_1",
+"rt": 5,
+"pad": 1
+},
+"L466_0": {
+"frame": "WS_2",
+"rt": 5,
+"pad": 1
+},
+"L430_0": {
+"frame": "WN_1",
+"rt": 5,
+"pad": 1
+},
+"L438_0": {
+"frame": "WN_3",
+"rt": 5,
+"pad": 1
+},
+"L434_0": {
+"frame": "WN_2",
+"rt": 5,
+"pad": 1
+},
+"L442_0": {
+"frame": "WN_4",
+"rt": 5,
+"pad": 1
+},
+"L406_0": {
+"frame": "ES_3",
+"rt": 5,
+"pad": 1
+},
+"L378_0": {
+"frame": "EN_4",
+"rt": 5,
+"pad": 1
+},
+"L374_0": {
+"frame": "EN_3",
+"rt": 5,
+"pad": 1
+},
+"L370_0": {
+"frame": "EN_2",
+"rt": 5,
+"pad": 1
+},
+"L402_0": {
+"frame": "ES_2",
+"rt": 5,
+"pad": 1
+},
+"L486_0": {
+"frame": "WS_7",
+"rt": 5,
+"pad": 1
+},
+"L426_0": {
+"frame": "WN_0",
+"rt": 5,
+"pad": 1
+},
+"L478_0": {
+"frame": "WS_5",
+"rt": 5,
+"pad": 1
+},
+"L454_0": {
+"frame": "WN_7",
+"rt": 5,
+"pad": 1
+},
+"L414_0": {
+"frame": "ES_5",
+"rt": 5,
+"pad": 1
+},
+"L394_0": {
+"frame": "ES_0",
+"rt": 5,
+"pad": 1
+},
+"L474_0": {
+"frame": "WS_4",
+"rt": 5,
+"pad": 1
+},
+"L390_0": {
+"frame": "EN_7",
+"rt": 5,
+"pad": 1
+},
+"L458_0": {
+"frame": "WS_0",
+"rt": 5,
+"pad": 1
+},
+"L362_0": {
+"frame": "EN_0",
+"rt": 5,
+"pad": 1
+},
+"L422_0": {
+"frame": "ES_7",
+"rt": 5,
+"pad": 1
+},
+"L410_0": {
+"frame": "ES_4",
+"rt": 5,
+"pad": 1
+}
+},
+"ectl_rt_krq_krs": 6,
+"ectl_extra_new": {
+"L462_0": 1,
+"L398_0": 1,
+"L482_0": 1,
+"L386_0": 1,
+"L450_0": 1,
+"L382_0": 0,
+"L446_0": 1,
+"L470_0": 1,
+"L418_0": 1,
+"L366_0": 0,
+"L430_0": 1,
+"L438_0": 1,
+"L434_0": 0,
+"L442_0": 1
+},
+"ectl_extra_changed": {
+"L382_0": [
+1,
+0
+],
+"L366_0": [
+1,
+0
+],
+"L434_0": [
+1,
+0
+]
+},
+"ports_changed_vs_event26": 151,
+"sched_total": [
+9341,
+9492
+],
+"regions_changed": 0,
+"parts_changed": 0,
+"sidecar_ports_changed": 151,
+"verify": {
+"identity_and_loop_errors": [],
+"fundamental_cycles": 3595,
+"samples": 32,
+"sim_window_violations": 0,
+"sim_min_margin_low_ps": 109.5,
+"sim_min_margin_high_ps": 109.7,
+"sim_below_need": false,
+"note": "margins to the ring guards 0.5T / (DEPTH-0.5)T (COORD 20:35/20:48 gate >= 100 ps); MESO-INTEG-1 sync physics with metastable resolution both ways"
+},
+"strap_type_pin_changes": [],
+"strap_variant_changes": {
+"kv3_pc_v1__cl7f648944": [
+11,
+12
+]
+},
+"strap_instances_retied": 34,
+"strap_types_retied": [
+"kv3_hg_v1",
+"kv3_hg_v1p3",
+"kv3_hg_v1p6",
+"kv3_hroot",
+"kv3_hub_Wo",
+"kv3_pc__cl254f2e73",
+"kv3_pc__cl5a95b461",
+"kv3_pc_v1__cl23f6a148",
+"kv3_pc_v1__cl4ea58a5c",
+"kv3_pc_v1__cl7f648944",
+"kv3_pc_v3"
+],
+"straps_summary_old": {
+"types": 56,
+"instances": 160,
+"lec_variants": 131,
+"tied_strap_bits": 21888,
+"residual_split_types": 0,
+"types_after_straps": 56,
+"d8_type_buses": 0,
+"types_with_tsel": 0,
+"types_with_root_strap": 0
+},
+"straps_summary_new": {
+"types": 56,
+"instances": 160,
+"lec_variants": 132,
+"tied_strap_bits": 21888,
+"residual_split_types": 0,
+"types_after_straps": 56,
+"d8_type_buses": 0,
+"types_with_tsel": 0,
+"types_with_root_strap": 0
+}
+}
+2.74 s 348448 KB

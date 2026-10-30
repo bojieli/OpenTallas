@@ -1,0 +1,15 @@
+{'case': 'A est: ep_S1 +17 TX +17 RX per crossing (34 x cross)', 'cycles': 595125.3791551552, 'cost_pct': 3.195, 'tok_s_from_1906': 1847.0}
+{'case': 'A low: one way only (17 x cross)', 'cycles': 585532.5470047784, 'cost_pct': 1.531, 'tok_s_from_1906': 1877.3}
+{'case': 'A bound: 34 x 2 crossings every COLL', 'cycles': 612485.931155155, 'cost_pct': 6.205, 'tok_s_from_1906': 1794.6}
+{'case': 'B est: NW reduce15+body11+ring6 = 32 x cross', 'cycles': 593955.3791551552, 'cost_pct': 2.992, 'tok_s_from_1906': 1850.6}
+{'case': 'B NE: reduce12+body8+ring7 = 27 x cross', 'cycles': 591030.379155155, 'cost_pct': 2.484, 'tok_s_from_1906': 1859.8}
+{'case': 'B bound: 3 stages x 15 = 45 x 2 crossings every COLL', 'cycles': 624651.931155155, 'cost_pct': 8.314, 'tok_s_from_1906': 1759.7}
+{'case': 'A+B est: 66 x cross', 'cycles': 614019.9311551548, 'cost_pct': 6.471, 'tok_s_from_1906': 1790.2}
+{'case': 'B op-aware (ESTIMATE OF RECORD): merge/reduce ops reduce15+body11+ring6=32, gathers body11+ring6=17, x cross', 'cycles': 586882.5470047784, 'cost_pct': 1.765, 'tok_s_from_1906': 1872.9}
+{'case': 'A+B op-aware (ESTIMATE OF RECORD): 34 + B op-aware, x cross', 'cycles': 606474.9311551548, 'cost_pct': 5.163, 'tok_s_from_1906': 1812.4}
+{'case': 'A+B bound: 113 x 2 every COLL', 'cycles': 704146.2851551536, 'cost_pct': 22.099, 'tok_s_from_1906': 1561.0}
+check SU+10 1.702
+
+real	4m55.507s
+user	4m55.167s
+sys	0m0.305s

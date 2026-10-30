@@ -1,0 +1,299 @@
+{
+ "lane": "DIE-S81-30",
+ "ruling": "COORD 14:5x approved ASK: bumps.anchor=rect on all 14 PHY domains as ONE fix-only PG event, per-domain IR",
+ "plan_in": "plan_s13r2_ws3v2_pga45.json sha256_16 f2d1e1534c976fc9",
+ "plan_out_sha256_16": "1e00e6d0f13eb2df",
+ "tool": "tools/die_trial/s81_ir_domains.py @ claude/die-s81-29-ws3ir-1029 e547a6c144",
+ "window": "domain rect + 86.4 um (ES0/ES1: + bumps rect)",
+ "gate_mv": 35,
+ "domains": {
+  "phy_lk_WS0": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "FAIL",
+    "VSS": "FAIL",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDDPHY": 20.11,
+    "VSSPHY": 19.62
+   },
+   "window_um": [
+    5788.8,
+    17.28,
+    8847.36,
+    734.4000000000001
+   ]
+  },
+  "phy_lk_WS1": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 20.04,
+    "VDDPHY": 18.22,
+    "VSS": 3.5,
+    "VSSPHY": 17.38
+   },
+   "window_um": [
+    2903.04,
+    17.28,
+    5961.6,
+    734.4000000000001
+   ]
+  },
+  "phy_lk_WN0": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.55,
+    "VDDPHY": 12.24,
+    "VSS": 3.69,
+    "VSSPHY": 11.36
+   },
+   "window_um": [
+    5788.8,
+    23777.280000000002,
+    8700.480000000001,
+    24727.68
+   ]
+  },
+  "phy_lk_WN1": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.17,
+    "VDDPHY": 9.74,
+    "VSS": 3.3,
+    "VSSPHY": 9.43
+   },
+   "window_um": [
+    2903.04,
+    23569.920000000002,
+    5814.72,
+    24727.68
+   ]
+  },
+  "phy_lk_WN2": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.13,
+    "VDDPHY": 9.74,
+    "VSS": 3.45,
+    "VSSPHY": 9.43
+   },
+   "window_um": [
+    17.28,
+    23569.920000000002,
+    2928.96,
+    24727.68
+   ]
+  },
+  "phy_lk_WN3": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.05,
+    "VDDPHY": 11.36,
+    "VSS": 3.56,
+    "VSSPHY": 13.69
+   },
+   "window_um": [
+    9581.76,
+    23328.0,
+    11733.12,
+    24727.68
+   ]
+  },
+  "phy_lk_ES0": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "FAIL",
+    "VSSPHY": "FAIL"
+   },
+   "worst_mv": {
+    "VDD": 18.11,
+    "VSS": 5.96
+   },
+   "window_um": [
+    23103.36,
+    17.28,
+    26144.640000000003,
+    1416.96
+   ]
+  },
+  "phy_lk_ES1": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "FAIL",
+    "VSSPHY": "FAIL"
+   },
+   "worst_mv": {
+    "VDD": 17.5,
+    "VSS": 4.58
+   },
+   "window_um": [
+    26153.280000000002,
+    17.28,
+    29047.68,
+    1416.96
+   ]
+  },
+  "phy_lk_EN0": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.2,
+    "VDDPHY": 18.42,
+    "VSS": 3.47,
+    "VSSPHY": 16.92
+   },
+   "window_um": [
+    23103.36,
+    24010.56,
+    26161.920000000002,
+    24727.68
+   ]
+  },
+  "phy_lk_EN1": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.13,
+    "VDDPHY": 18.39,
+    "VSS": 3.47,
+    "VSSPHY": 16.92
+   },
+   "window_um": [
+    25989.120000000003,
+    24010.56,
+    29047.68,
+    24727.68
+   ]
+  },
+  "phy_lk_WS2": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 20.85,
+    "VDDPHY": 9.96,
+    "VSS": 3.33,
+    "VSSPHY": 10.7
+   },
+   "window_um": [
+    17.28,
+    17.28,
+    2928.96,
+    1175.04
+   ]
+  },
+  "phy_lk_WS3": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 21.33,
+    "VDDPHY": 33.7,
+    "VSS": 4.0,
+    "VSSPHY": 27.23
+   },
+   "window_um": [
+    8674.560000000001,
+    17.28,
+    11283.84,
+    578.88
+   ]
+  },
+  "phy_lk_EN2": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.26,
+    "VDDPHY": 11.9,
+    "VSS": 3.59,
+    "VSSPHY": 14.12
+   },
+   "window_um": [
+    20217.600000000002,
+    23328.0,
+    22187.52,
+    24727.68
+   ]
+  },
+  "phy_lk_EN3": {
+   "verdict": "PASS",
+   "psm": {
+    "VDD": "OK",
+    "VSS": "OK",
+    "VDDPHY": "OK",
+    "VSSPHY": "OK"
+   },
+   "worst_mv": {
+    "VDD": 3.13,
+    "VDDPHY": 9.82,
+    "VSS": 3.47,
+    "VSSPHY": 9.68
+   },
+   "window_um": [
+    29021.760000000002,
+    23569.920000000002,
+    31933.440000000002,
+    24727.68
+   ]
+  }
+ }
+}

@@ -28,6 +28,9 @@ proc htr_occupy {x0 y0 x1 y1} {
 # Reserved die-clock/reset island rows are placement blockages even where the
 # underlying dbRow is still present. A legal row/site alone is insufficient.
 foreach blockage [$htr_b getBlockages] {
+  # Partial density and soft blockages constrain movable placement, not the
+  # exact FIRM relay sites. Keep every hard reserved island excluded.
+  if {[$blockage isSoft] || [$blockage getMaxDensity] > 0} continue
   set b [$blockage getBBox]
   htr_occupy [$b xMin] [$b yMin] [$b xMax] [$b yMax]
 }

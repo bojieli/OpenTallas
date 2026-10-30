@@ -1,0 +1,16 @@
+density was treated hard
+    while executing
+"error "density was treated hard""
+    (procedure "partial" line 1)
+    invoked from within
+"$blockage getBBox"
+    ("foreach" body line 2)
+    invoked from within
+"foreach blockage [$htr_b getBlockages] {
+  set b [$blockage getBBox]
+  htr_occupy [$b xMin] [$b yMin] [$b xMax] [$b yMax]
+}"
+    ("eval" body line 1)
+    invoked from within
+"eval [string range $src $a [expr {$z-1}]]"
+    (file "/srv/opentallas-scratch2/claude/codex-head-1355/relay_fix/check.tcl" line 12)

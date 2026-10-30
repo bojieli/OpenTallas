@@ -1,0 +1,317 @@
+{
+ "schema": "opentallas.hbm.vmdel_s_drop.v1",
+ "source_plan_sha256": "c564e8942374ee3dca9c0fb2d0a268d4468b9a71af8a92f5391cc9e9a88c6715",
+ "hubs": {
+  "q_hub_ne": {
+   "hard_cores_removed": [
+    {
+     "inst": "u_vmdel_Q0__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      2730.24,
+      3317.76
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q1__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      3032.64,
+      3119.04
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q2__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      2168.64,
+      2747.52
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q3__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      2825.28,
+      3732.48
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q4__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      6894.72,
+      3136.32
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q5__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      7309.44,
+      2903.04
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q6__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      6635.52,
+      3205.44
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q7__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      7171.2,
+      3119.04
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    }
+   ],
+   "contents_removed": [
+    {
+     "inst": "u_vmdel_Q0__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q1__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q2__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q3__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q4__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q5__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q6__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q7__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    }
+   ],
+   "taps_removed": [
+    "u_vmdel_Q0__q0.clk",
+    "u_vmdel_Q1__q0.clk",
+    "u_vmdel_Q2__q0.clk",
+    "u_vmdel_Q3__q0.clk",
+    "u_vmdel_Q4__q0.clk",
+    "u_vmdel_Q5__q0.clk",
+    "u_vmdel_Q6__q0.clk",
+    "u_vmdel_Q7__q0.clk"
+   ],
+   "cells_old": 6054352,
+   "cells_new": 5974424,
+   "cells_removed": 79928
+  },
+  "q_hub_nw": {
+   "hard_cores_removed": [
+    {
+     "inst": "u_vmdel_Q0__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      2376.0,
+      3136.32
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q1__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      2799.36,
+      3309.12
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q2__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      2609.28,
+      3317.76
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q3__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      3006.72,
+      3144.96
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q4__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      6816.96,
+      3214.08
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q5__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      7335.36,
+      2868.48
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q6__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      6635.52,
+      3205.44
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    },
+    {
+     "inst": "u_vmdel_Q7__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "origin_um": [
+      7171.2,
+      3119.04
+     ],
+     "outline_um": [
+      142.56,
+      116.64
+     ]
+    }
+   ],
+   "contents_removed": [
+    {
+     "inst": "u_vmdel_Q0__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q1__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q2__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q3__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q4__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q5__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q6__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    },
+    {
+     "inst": "u_vmdel_Q7__q0",
+     "module": "ot_hbm_svc_vmdel_lane_n",
+     "cells": 9991
+    }
+   ],
+   "taps_removed": [
+    "u_vmdel_Q0__q0.clk",
+    "u_vmdel_Q1__q0.clk",
+    "u_vmdel_Q2__q0.clk",
+    "u_vmdel_Q3__q0.clk",
+    "u_vmdel_Q4__q0.clk",
+    "u_vmdel_Q5__q0.clk",
+    "u_vmdel_Q6__q0.clk",
+    "u_vmdel_Q7__q0.clk"
+   ],
+   "cells_old": 6472950,
+   "cells_new": 6393022,
+   "cells_removed": 79928
+  }
+ },
+ "plan_sha256": "4133ce1e4e0dae70be2ec25086d5e53457f20a40c7fd8e7441922071f2d24496"
+}

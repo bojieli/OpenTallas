@@ -1,0 +1,6 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/dqc37-a0/v2/qfd_tile_nk_a0c_a0nk14icg2rr1
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/dqc37-a0/v2/qfd_tile_nk_a0c_a0nk14icg2rr1
+ot-run: localhost      admits   735 GB (avail 844, reserve 0, fresh 34, peak 10.2, headroom 0, waiters 0/0 GB) load 49/112 running 18 disk 1222 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1744614-1793309577 after 1 s
+ot-run: RAN on localhost (unit oth-ubuntu-1744614-1793309577): exit 2

@@ -60,7 +60,11 @@ def main():
     ap.add_argument("--kit", required=True); ap.add_argument("--census", required=True)
     ap.add_argument("--out", required=True); ap.add_argument("--report")
     ap.add_argument("--dpl-max", type=float, default=60.0)
+    ap.add_argument("--spread", action="store_true")
+    ap.add_argument("--stages", type=int, default=11)
     a = ap.parse_args()
+    global T
+    T = a.stages
     kd = Path(a.kit)
     sl = json.loads((kd / "master_slice.json").read_text())
     port, root, dom, gates = None, [], {}, {}
@@ -150,6 +154,60 @@ def main():
         leaves.append(dict(node=leaf, sinks=[f"{s['inst']}/{s['pin']}"], load_class="macro", early_tap_ps=ins,
                            early_tap_view=v["view"]))
         early.append(dict(gate=g, macro=s["master"], k=k, leaf_depth=T - k))
+    if a.spread:
+        # Spread all clock loads, including early macro gates, from the port.
+        # Depth is preserved exactly; no clock/data/reset cycle is added.
+        fr = json.loads((kd / "freeze.json").read_text())
+        boxes=[]
+        for hc in fr.get("hard_children", []):
+            txt=(kd/"macros"/(hc["master"]+".lef")).read_text()
+            mm=re.search(r"SIZE\s+([0-9.]+)\s+BY\s+([0-9.]+)",txt)
+            x,y=hc["at"]; w,h=map(float,mm.groups()); boxes.append((x-5.8,y-4.6,x+w+5.8,y+h+4.6))
+        def legal(pt):
+            x=max(6.,min(451.9,pt[0]));y=max(4.8,min(1152.9,pt[1]))
+            pending=[(x,y)];seen=set();ok=[]
+            while pending:
+                x,y=pending.pop();key=(round(x,3),round(y,3))
+                if key in seen:continue
+                seen.add(key)
+                hit=next((b for b in boxes if b[0]<x<b[2] and b[1]<y<b[3]),None)
+                if hit:
+                    aa,bb,cc,dd=hit
+                    for q in ((aa,y),(cc,y),(x,bb),(x,dd)):
+                        if 6<=q[0]<=451.9 and 4.8<=q[1]<=1152.9:pending.append(q)
+                else:ok.append((x,y))
+            if not ok:raise ValueError("no legal planned buffer site")
+            return list(min(ok,key=lambda q:abs(q[0]-pt[0])+abs(q[1]-pt[1])))
+        olddepth={"port:ck":0}
+        for nd in nodes:
+            if nd["name"] in trunk:olddepth[nd["name"]]=olddepth[nd["parent"]]+1
+        targets=[]
+        for gg in glist:
+            targets.append(dict(record=gg,xy=gg["xy_um"],goal=olddepth[gg["parent"]],name=gg["inst"]))
+        for nd in nodes:
+            if nd["name"].startswith("mp_a0_p") and nd["parent"]==top:
+                targets.append(dict(record=nd,xy=nd["xy_um"],goal=T-4,name=nd["name"]))
+        rootnd=next(n for n in nodes if n["name"]==trunk[0]);rootnd["xy_um"]=legal(rootnd["xy_um"])
+        nodes=[n for n in nodes if n["name"] not in trunk[1:]]
+        serial=[0]
+        def feed(parent,xy,depth,items):
+            ready=[q for q in items if q["goal"]==depth];later=[q for q in items if q["goal"]>depth]
+            if len(ready)>4 or (len(ready)==4 and later):raise ValueError(f"depth {depth}: {len(ready)} fixed-depth loads cannot have fanout<=4")
+            for q in ready:q["record"]["parent"]=parent
+            if not later:return
+            branches=min(4-len(ready),len(later));pts=[(*q["xy"],q) for q in later]
+            for grp in split(pts,equal_counts(len(pts),branches)):
+                kids=[q for x,y,q in grp];cx,cy=centroid(grp);rem=min(q["goal"] for q in kids)-depth
+                pos=legal([xy[0]+(cx-xy[0])/rem,xy[1]+(cy-xy[1])/rem])
+                serial[0]+=1;name=f"mp_a0_sp{serial[0]}"
+                nodes.append(dict(name=name,master="BUFx24_ASAP7_75t_R",xy_um=[round(v,3) for v in pos],parent=parent))
+                feed(name,pos,depth+1,kids)
+        feed(rootnd["name"],rootnd["xy_um"],1,targets)
+        xy_by_name={"port:ck":port,**{n["name"]:n["xy_um"] for n in nodes},**{g["inst"]:g["xy_um"] for g in glist}}
+        arcs=[];fan={}
+        for nd in nodes+[{"name":g["inst"],"parent":g["parent"],"xy_um":g["xy_um"]} for g in glist]:
+            aa=xy_by_name[nd["parent"]];bb=nd["xy_um"];length=abs(aa[0]-bb[0])+abs(aa[1]-bb[1]);fan[nd["parent"]]=fan.get(nd["parent"],0)+1;arcs.append((length,nd["parent"],nd["name"]))
+        print("SPREAD_GEOMETRY",json.dumps(dict(max_fanout=max(fan.values()),max_leg_um=max(x[0] for x in arcs),long_legs=[x for x in arcs if x[0]>150],targets=len(targets))),flush=True)
     sl["core_tree"] = dict(clock_port=sl.get("core_clock_port", "ck"), stage_basis="total", install_stage="pre_cts",
                            late_dpl_max_um=a.dpl_max, early_tap_stage_ps=STAGE, nodes=nodes, gates=glist,
                            leaves=leaves,

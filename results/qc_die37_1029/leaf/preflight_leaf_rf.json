@@ -1,0 +1,28 @@
+{
+  "schema": "ot_provider_import_preflight/1",
+  "reset_source": {
+    "port": "rst_raw_n",
+    "part": "sl_E0_fw",
+    "pin": "rst_o_0",
+    "net": "rstw_sl_E0_fw_rst_o_0",
+    "xy_um": [
+      17003.04,
+      12295.776
+    ],
+    "source_part_release_cycles": 15,
+    "hop_to_root_um": 171.8040000000019,
+    "phase_qualified": false,
+    "scope": "existing whole-die synchronized neighbor-wavefront output; one local provider root input, not raw global star"
+  },
+  "verdict": "READY_FOR_REVIEW",
+  "source_odb_sha256": "978a3f01df4b750062b36ecadaf3f05df1fcedd81839a9d1cb6ddaa52ef8acf9",
+  "inventory_sha256": "59c06e14275c5c088a8f8bde4c1e64e585bce3b218cefa2aa74ac9277e65b9b3",
+  "mapped_sha256": "e048e21b6376d6eb6b926cebdccab49e0c8f280c0efcc98f14614324c47a2810",
+  "placements_sha256": "5d8a7489a3bdf9091392a43d4f6a46eff557633f3aaa4c9739ff4914b0c6c6d7",
+  "bindings_sha256": "fa95476b8c7911315053d0a8e7f473730c4449a1c86b293a0f6e171e119a8146",
+  "fresh_constraints_sha256": "f43a14b621d3429bcb529326471fd0cc303d27169342c6036c8139db087be1d5",
+  "allcells": 54791,
+  "issues": {},
+  "samples": [],
+  "scope": "Only explicit fresh OBS, all mapped cells and native boundaries; no timing/phase qualification"
+}

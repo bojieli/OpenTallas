@@ -1,0 +1,49 @@
+{
+"near_um": 1200.0,
+"moves": [
+{
+"path": "hb_idx__s_NE.scorer.ge[0].gc[3].leaf.$procdff$71551",
+"frm": "NE_b101",
+"to": "NE_b103",
+"far_before": 2,
+"far_after": 1,
+"conn": {
+"NE_b101": 1,
+"NE_b103": 2
+}
+},
+{
+"path": "hb_idx__s_NW.scorer.ge[0].gc[3].leaf.$procdff$71551",
+"frm": "NW_b101",
+"to": "NW_b103",
+"far_before": 2,
+"far_after": 1,
+"conn": {
+"NW_b101": 1,
+"NW_b103": 2
+}
+},
+{
+"path": "hcb_NW6.$procdff$71591",
+"frm": "NW_b011",
+"to": "NW_b010",
+"far_before": 1,
+"far_after": 0,
+"conn": {
+"NW_b010": 1,
+"NW_hub": 1
+}
+},
+{
+"path": "hcb_NE6.$procdff$71591",
+"frm": "NE_b011",
+"to": "NE_b010",
+"far_before": 1,
+"far_after": 0,
+"conn": {
+"NE_b010": 1,
+"NE_hub": 1
+}
+}
+]
+}

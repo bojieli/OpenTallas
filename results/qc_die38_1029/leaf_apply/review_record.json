@@ -1,0 +1,13 @@
+{
+  "schema": "ot_provider_import_visual_review/1",
+  "verdict": "PASS-COND",
+  "reviewer": "GEOM-64 + GEOM-65 (independent), lanes/GEOM-REVIEW.md 2026-10-29 16:08 PDT [DIE-QC-38 leaf]",
+  "image": "intel2:/srv/opentallas-scratch2/claude/die-qc38/leaf_review.png",
+  "findings": "ot_clk leaf-drivers (main 3670a2b6a) on reachfix provider: 3,266 clusters / 6,532 CKINVDC cells on row/site, 0 overlaps in 54,791 boxes (both reviewers CHECKED), leaf HPWL p99 6.75 um, 2 x 85.59 um = reachfix-moved reset FFs accepted as single leaves.",
+  "source_odb_sha256": "978a3f01df4b750062b36ecadaf3f05df1fcedd81839a9d1cb6ddaa52ef8acf9",
+  "conditions": [
+    "re-check 0 overlap + row/site + DPL legal on the applied ODB",
+    "2 x 85.59-um leaves judged on routed arrivals",
+    "leaf slew/MPW both edges from the fixed-tree prebuild with real loads (spice_edge)"
+  ]
+}

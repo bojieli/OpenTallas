@@ -1,0 +1,7 @@
+ERROR [schema] type q_b012 slot L54x2: in_face == out_face
+ERROR [schema] type q_b012 slot L127x2: in_face == out_face
+ERROR [schema] type q_hub_ne slot L206x1: in_face == out_face
+ERROR [schema] type q_b012__physical_v1 slot L54x2: in_face == out_face
+ERROR [schema] type q_b012__physical_v1 slot L127x2: in_face == out_face
+G0C per type: None/None types clean (G3-eligible: 0); die-level None; reported as WARN (run --completeness)
+G0 FAIL: 5 errors, 0 pending-view, 0 warnings; None types / None partitions (None in near-duplicate groups); worst cut None, worst partition segment None; report chk/VA_min_g0/g0_report.json

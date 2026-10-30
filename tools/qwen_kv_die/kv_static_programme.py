@@ -168,10 +168,25 @@ def _link_kv_codec():
     return str(_LC.kv_codec_edges((ROOT / 'rtl/qwen_sys/static_kv_die_20261017/qkd_kvs_tiles_hroot_ff_k.sv').read_text()))
 
 
+def image_host_stages(img=None, root=None):
+    """TOK-KV-4 10-29: the HOST record relay the image was compiled with (d2d_link_calendar --host-stages), read back from
+    its D2D_TXDP_K byte 1 = 2 + host_stages + PR 2, so target 11 is rebuilt with the SAME relay as the bound image."""
+    import re
+    txt = ((root or ROOT) / (img or LINK_IMAGE)).read_text()
+    m = re.search(r"D2D_TXDP_K = 32'h([0-9a-fA-F]+);", txt)
+    if not m:
+        return 0
+    k1 = (int(m.group(1), 16) >> 8) & 0xFF
+    if k1 < 4:
+        raise SystemExit(f'kv_static_programme: {img or LINK_IMAGE} D2D_TXDP_K port 1 = {k1} < 4 (2 + PR 2)')
+    return k1 - 4
+
+
 LINK_DIE_STAGES = image_die_stages()
+LINK_HOST_STAGES = image_host_stages()
 LINK_TOKEN_PATH = 'results/rtl/qwen_layer_tput_1018/compiled_L1/d2d/token_path_compiled.json.gz'
 LINK_ARGS = ['--txl', '6', '--phy', '5', '--profile', 'program', '--die-stages', LINK_DIE_STAGES, '--kv-codec', _link_kv_codec(),
-             '--host-stages', '0', '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
+             '--host-stages', str(LINK_HOST_STAGES), '--link-handoff', 'results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json',
              '--pinreg'] + (['--mu'] if LINK_MU else []) + (['--emb-window', str(int(LINK_EMB_WIN))] if LINK_EMB_WIN else []) + (['--rope'] if LINK_ROPE_OVL else []) \
     + (['--head-prepare-edges', LINK_HEAD_PREP] if LINK_HEAD_PREP else []) \
     + (['--compute-record-txd', LINK_COMPUTE_RECORD_TXD] if LINK_COMPUTE_RECORD_TXD else [])

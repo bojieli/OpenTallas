@@ -327,3 +327,51 @@ def test_vport_rt_over_capacity_is_error(tmp_path):
     record = after["constants"]["VPORT_RT"]
     assert record["value"]["vport_EN_0"] == RC.VPORT_RT_MAX + 1
     assert record["status"] == "ERROR"
+
+
+def _host_record_bind(src, dst, out=86, back=67, witness=None):
+    """kv39 + the KV HOST record port across the bind (TOK-KV-4 10-29): the b5 vehicle (DIE-KV-16 bind5 / DIE-KV-15
+    event plan) lands record_send_kind / record_witness_slot d2d_kv -> host at 86 stages and record_tx_observed_v /
+    record_tx host -> d2d_kv at 67 (veh5 bus_groups.json); kv39 has the HOST record port next to the end (no crossing)."""
+    shutil.copytree(src, dst)
+    p = dst / "bus_groups.json.gz"
+    bg = json.load(gzip.open(p, "rt"))
+    mem = lambda port, src_, n, st, lane: dict(sink_port=port, sink_bits=[[0, n - 1]], source=src_, source_bits=[[0, n - 1]],
+                                               asbuilt_stages=1 if src_.startswith("d2d_kv") else 0, bound_stages=st,
+                                               landed_stages=st, lane=lane)
+    bg["landing"] += [
+        dict(sink="host", sink_part="hub_Wi", src_part="sys_c", aligned_by_lanes=True, aligned_landed=True,
+             asbuilt_stage_set=[1], members=[mem("record_send_kind", "d2d_kv.record_send_kind", 2, out, "L354"),
+                                             mem("record_witness_slot", "d2d_kv.record_witness_slot", 1,
+                                                 out if witness is None else witness, "L354")]),
+        dict(sink="d2d_kv", sink_part="sys_c", src_part="hub_Wi", aligned_by_lanes=True, aligned_landed=True,
+             asbuilt_stage_set=[0], members=[mem("record_tx", "host.record_tx", 548, back, "L751"),
+                                             mem("record_tx_observed_v", "host.record_tx_observed_v", 1, back, "L751")])]
+    json.dump(bg, gzip.open(p, "wt"))
+    return dst
+
+
+def test_host_record_round_trip_sets_txdp_k1(tmp_path):
+    """TOK-KV-4 10-29 (KV token link abort, epoch_abort cyc 38406 new_fault bit 7): the KV end captures the HOST record
+    at TXD K[1] edges after its port-1 slot; with the HOST across the bind the record comes back 2 + out + back + PR 2 =
+    157 edges later (measured 153 edges after the bound capture at K[1] = 4).  The law must price the landed relay and
+    the bind gate must fail a bound top that still carries K[1] = 4."""
+    assert _v(RC.run("qwen_kvsys", FX / "kv39"), "D2D_HOST_REC_RT") == 0          # HOST next to the end: unchanged
+    b = _host_record_bind(FX / "kv39", tmp_path / "hr")
+    d = RC.run("qwen_kvsys", b)
+    assert _v(d, "D2D_HOST_REC_RT") == 153
+    assert _v(d, "D2D_TXDP_K") == [67, 157, 3, 3] and d["constants"]["D2D_TXDP_K"]["sv_literal"] == "32'h03039d43"
+    for txdp, want in (("32'h03030443", "MISMATCH"), ("32'h03039d43", "OK")):
+        r = tmp_path / txdp[-4:]
+        shutil.copytree(b, r)
+        (r / "rtl").mkdir()
+        (r / "rtl" / "kv3_sys_c_part.sv").write_text(
+            f"module kv3_sys_c_part; qkd_d2d_static_sfm #(.PR(1), .TXDP({txdp})) u_d2d_kv (.clk(clk)); endmodule\n")
+        assert RC.run("qwen_kvsys", r)["constants"]["D2D_TXDP_K"]["status"] == want
+    # the compute peer prices the same pair image
+    assert RC.run("qwen_compute", FX / "qc12", peer=b)["constants"]["D2D_TXDP_K"]["sv_literal"] == "32'h03039d43"
+    # a slot that lands apart from its send_kind cannot be priced by one age
+    bad = RC.run("qwen_kvsys", _host_record_bind(FX / "kv39", tmp_path / "bad", witness=85))
+    errs = [r["formula"] for r in bad["constants"].values() if r["status"] == "ERROR"]
+    assert any("HOST record out bundle lands unequal [85, 86]" in e for e in errs), errs
+    assert "D2D_TXDP_K" not in bad["constants"] or bad["constants"]["D2D_TXDP_K"]["status"] != "OK"

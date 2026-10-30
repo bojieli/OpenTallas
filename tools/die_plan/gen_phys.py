@@ -2062,6 +2062,10 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            *([f"export SYNTH_MEMORY_MAX_BITS = {rom_bits}"] if rom_bits > 4096 else []),
            # DIE-S81-26 10-29: declared clock-landing rings -> flip-flops per module (ot_keep_regs.tcl OT_LANDING_FF)
            *(["export OT_LANDING_FF = 1"] if landing_ff else []),
+           # DIE-KV-34 10-29 opt-in plan budgets.cland_fit_reserve: landing_placement fits each CLAND cell on its whole
+           # reserved footprint, so timing-driven GPL upsizing a FIRM ring cell in place cannot grow over a tapcell
+           # (KV io_ft kits_gen5 3_5 DPL-0033: INVx1 -> INVx3 over TAPCELL). Absent key = unchanged kit.
+           *(["export OT_CLAND_FIT_RESERVE = 1"] if P.budgets.get("cland_fit_reserve") else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
@@ -2218,7 +2222,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
-        (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn))
+        # kit-rtl wrappers declare bound-only one-bit pins as [0:0] vectors -> BTerm "<port>[0]" (KV-022)
+        bit0 = LC.bit0_ports((kd / "rtl" / f"{t['module']}.sv").read_text()) if plain_rings else frozenset()
+        (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn, bit0))
         hook = kd / "clock_taps.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
         import landing_place as LP

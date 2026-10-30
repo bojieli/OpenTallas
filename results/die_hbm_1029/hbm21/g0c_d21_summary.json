@@ -1,0 +1,70 @@
+{
+ "plan": "d21",
+ "errors": [
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_vmb_Q6_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q6: mean cos -0.53, 282 pins on the far side (re-pin to face N)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_nw core u_vmb_Q7_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q7: mean cos -0.98, 282 pins on the far side (re-pin to face W)",
+   "type": "q_hub_nw",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q0 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p0: mean cos -0.27, 281 pins on the far side (re-pin to face E)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q2 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p1: mean cos -0.79, 281 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q3 port rr0: 257 pins on face W face away from its partner(s) face N (L103_o), face N (L135_i), face N (L25_i) ...: mean cos -0.10, 257 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q4 port rq1: 17 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 17 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne core u_vmb_Q4 port rr1: 257 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 257 pins on the far side (re-pin to face N)",
+   "type": "q_hub_ne",
+   "g0c": true
+  },
+  {
+   "level": "ERROR",
+   "check": "core_faces",
+   "msg": "type q_hub_ne: 13 core ports face away from their partners (8 more not listed)",
+   "type": "q_hub_ne",
+   "g0c": true
+  }
+ ],
+ "summary": {
+  "schema": "opentallas.die_plan.g0.v1",
+  "plan": "/srv/opentallas-scratch2/claude/die-hbm-21/plan/d21/die_plan.json",
+  "verdict": "FAIL",
+  "pending_view": 132,
+  "mode": "G0C",
+  "errors": 8,
+  "warnings": 847
+ }
+}

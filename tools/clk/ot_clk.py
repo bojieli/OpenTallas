@@ -651,6 +651,11 @@ def main(argv=None):
     local = sub.add_parser("local-entry", help="place one native clock-load isolation buffer per emitted stage group")
     import local_entry
     local_entry.add_arguments(local)
+    leaf = sub.add_parser("leaf-drivers", help="no register sinks on trunk legs: planned leaf driver pair per register cluster "
+                          "(config section leaf_drivers; writes new provider import inputs)")
+    leaf.add_argument("config")
+    leaf.add_argument("--registry", default=str(REGISTRY))
+    leaf.add_argument("--out", required=True)
     duty = sub.add_parser("duty", help="measured both-edge duty with shared clock calibration")
     sys.path.insert(0, str(REPO / "tools" / "die_plan"))
     import clock_duty
@@ -660,6 +665,15 @@ def main(argv=None):
         return local_entry.run(a)
     if a.cmd == "duty":
         return clock_duty.run(a)
+    if a.cmd == "leaf-drivers":
+        import leaf_drivers
+        cfg = load_config(a.config)
+        lc = cfg.get("leaf_drivers")
+        if not lc:
+            raise ConfigError(f"{a.config}: leaf-drivers needs a leaf_drivers section")
+        entry = (cfg.get("stage_model") or {}).get("entry")
+        print(json.dumps(leaf_drivers.run(lc, a.out, load_registry(a.registry), entry), indent=1))
+        return 0
     if a.cmd == "register":
         print(json.dumps(register_entry(a.cal, a.id, a.cell, a.clock_rc, a.route, a.basis), indent=1))
         return 0

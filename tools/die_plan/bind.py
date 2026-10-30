@@ -166,6 +166,10 @@ class Rules:
         self.rules = [(re.compile(a), b) for a, b in mp.get("rules", [])]
         self.ignore_out = [re.compile(r) for r in ab.get("open_outputs", [])]
         self.keep_reducer = set()            # reducer instances the plan keeps as contents (stay leaves)
+        # DIE-S81-30 10-29 (COORD ruling S81 bind6 VERIFY FAIL (1)): source-rule instances that are as-built LEAVES the
+        # bind emitted (verify: the bind_names.json paths, e.g. the S81 frame synchronisers u_f_*.u_r0.u_xrl0..3).
+        # They stay leaves: inputs traced, outputs = their own pins, never replaced by the partition reset.
+        self.keep_source = set()
 
     @staticmethod
     def _first(lst, s):
@@ -255,6 +259,8 @@ class Graph:
             if r is not None and c.path in rules.keep_reducer and c.kind == "leaf":
                 r = None            # a plan content (status reuse): instantiated as a leaf in its partition
             s = rules.source_of(c.module) if t is None and r is None else None
+            if s is not None and c.path in rules.keep_source and c.kind == "leaf":
+                s = None
             if t is not None:
                 k, sp = "transport", t
             elif r is not None:

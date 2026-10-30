@@ -1,0 +1,96 @@
+{
+ "TT": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr_min": 739.6,
+  "tap_arr_max": 11591.2,
+  "regions": 128,
+  "spread_worst": [
+   [
+    408.0,
+    "hub_Eo"
+   ],
+   [
+    414.1,
+    "pv_S_0"
+   ],
+   [
+    457.2,
+    "pv_N_7"
+   ],
+   [
+    468.8,
+    "pv_N_6"
+   ],
+   [
+    490.7,
+    "pv_N_1"
+   ]
+  ],
+  "n_over_150": 112,
+  "clk_cell_out_slew_max": 173.8,
+  "tap_slew_max": 66.5,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   8.0,
+   11425.3
+  ],
+  "provider_ff_clk_slew_max": 489.3,
+  "drv_violations": 9908,
+  "drv_clock_pin_violations": 782,
+  "drv_clock_examples": [
+   "ck_r4599_0/A                          320.00  490.16 -170.16 (VIOLATED)",
+   "start_provider/$flattenu_rst_r37_0.$auto$ff.cc:337:slice$303/CLK  320.00  489.33 -169.33 (VIOLATED)",
+   "start_provider/$flattenu_rst_r37_0.$auto$ff.cc:337:slice$304/CLK  320.00  489.29 -169.29 (VIOLATED)",
+   "start_provider/$flattenu_rst_r33_0.$auto$ff.cc:337:slice$303/CLK  320.00  487.91 -167.91 (VIOLATED)",
+   "start_provider/$flattenu_rst_r33_0.$auto$ff.cc:337:slice$305/CLK  320.00  487.88 -167.88 (VIOLATED)"
+  ]
+ },
+ "FF": {
+  "taps": 1920,
+  "taps_missing": 0,
+  "tap_arr_min": 657.2,
+  "tap_arr_max": 10297.5,
+  "regions": 128,
+  "spread_worst": [
+   [
+    366.7,
+    "pv_S_0"
+   ],
+   [
+    369.9,
+    "hub_Eo"
+   ],
+   [
+    416.3,
+    "pv_N_7"
+   ],
+   [
+    428.0,
+    "pv_N_6"
+   ],
+   [
+    447.8,
+    "pv_N_1"
+   ]
+  ],
+  "n_over_150": 105,
+  "clk_cell_out_slew_max": 139.8,
+  "tap_slew_max": 61.4,
+  "provider_ff": 10530,
+  "provider_ff_clk_arr": [
+   6.8,
+   10150.6
+  ],
+  "provider_ff_clk_slew_max": 497.4,
+  "drv_violations": 8286,
+  "drv_clock_pin_violations": 788,
+  "drv_clock_examples": [
+   "start_provider/$flattenu_rst_r37_0.$auto$ff.cc:337:slice$303/CLK  320.00  497.44 -177.44 (VIOLATED)",
+   "start_provider/$flattenu_rst_r37_0.$auto$ff.cc:337:slice$304/CLK  320.00  497.39 -177.39 (VIOLATED)",
+   "start_provider/$flattenu_rst_r33_0.$auto$ff.cc:337:slice$303/CLK  320.00  495.96 -175.96 (VIOLATED)",
+   "start_provider/$flattenu_rst_r33_0.$auto$ff.cc:337:slice$305/CLK  320.00  495.93 -175.93 (VIOLATED)",
+   "ck_r4599_0/A                          320.00  492.85 -172.85 (VIOLATED)"
+  ]
+ }
+}

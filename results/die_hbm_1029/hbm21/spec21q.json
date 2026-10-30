@@ -1,0 +1,32 @@
+[
+ {
+  "module": "ot_hbm_su_static_qcore_r13",
+  "tag": "dh17v2",
+  "w": 267.84,
+  "h": 250.56,
+  "macros": [
+   {
+    "name": "u_fcore.u_red.ma",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "rect_um": [
+     15.12,
+     191.664,
+     109.944,
+     232.728
+    ],
+    "orient": "MY"
+   },
+   {
+    "name": "u_fcore.u_red.mb",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "rect_um": [
+     15.12,
+     40.668,
+     109.944,
+     81.732
+    ],
+    "orient": "MY"
+   }
+  ]
+ }
+]

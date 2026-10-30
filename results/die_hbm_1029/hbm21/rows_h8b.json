@@ -1,0 +1,70 @@
+{
+"rows": [
+{
+"src": "root",
+"dst": "vsN0",
+"unplanned_bits": 632,
+"cls": "far"
+},
+{
+"src": "vsN0",
+"dst": "root",
+"unplanned_bits": 615,
+"cls": "far"
+},
+{
+"src": "root",
+"dst": "NW_b000",
+"unplanned_bits": 180,
+"cls": "far"
+},
+{
+"src": "root",
+"dst": "NW_b100",
+"unplanned_bits": 180,
+"cls": "far"
+},
+{
+"src": "root",
+"dst": "NE_b100",
+"unplanned_bits": 178,
+"cls": "far"
+},
+{
+"src": "NE_b000",
+"dst": "NE_b002",
+"unplanned_bits": 1,
+"cls": "far"
+},
+{
+"src": "NE_b000",
+"dst": "NE_b011",
+"unplanned_bits": 1,
+"cls": "far"
+},
+{
+"src": "NE_su00",
+"dst": "NE_su11",
+"unplanned_bits": 1,
+"cls": "far"
+},
+{
+"src": "NW_b000",
+"dst": "NW_b002",
+"unplanned_bits": 1,
+"cls": "far"
+},
+{
+"src": "NW_b000",
+"dst": "NW_b011",
+"unplanned_bits": 1,
+"cls": "far"
+},
+{
+"src": "NW_su00",
+"dst": "NW_su11",
+"unplanned_bits": 1,
+"cls": "far"
+}
+]
+}

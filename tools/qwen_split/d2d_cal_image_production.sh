@@ -45,10 +45,15 @@ COMPUTE_RECORD_TXD=${D2D_COMPUTE_RECORD_TXD:-${OT_KV_COMPUTE_RECORD_TXD:-}}
 [ -n "${D2D_ATTN_SERVICE_PAD:-}" ] && MU_ARGS+=(--attn-service-pad "$D2D_ATTN_SERVICE_PAD")
 [ -n "${D2D_ATTN_TX_SHIFT:-}" ] && MU_ARGS+=(--attn-tx-shift "$D2D_ATTN_TX_SHIFT")
 [ -n "${D2D_STATUS_DELAY:-}" ] && MU_ARGS+=(--status-delay "$D2D_STATUS_DELAY")
+# TOK-KV-4 10-29: D2D_HOST_STAGES = the bind's LANDED HOST record relay (kst.py --host-rt: D(record_send_kind out) +
+# D(record_tx_observed_v back)); TXD K[1] = 2 + it + PR 2 and the compute WITNESS placements move with it.  Unset = 0 =
+# the HOST record port next to the d2d end (the historical images); a bind whose HOST sits across lanes needs the value
+# (regen_constants D2D_HOST_REC_RT / D2D_TXDP_K fail the bind gate on a mismatch).
+HOST_STAGES=${D2D_HOST_STAGES:-0}
 mkdir -p "$OUT"
 gunzip -c "$TP" > "$OUT/token_path_compiled.json"
 python3 tools/qwen_split/d2d_link_calendar.py --out "$OUT/program" --txl 6 --phy 5 --profile program --die-stages "$STAGES" --kv-codec "$KV_CODEC" \
-  "${MU_ARGS[@]}" --host-stages 0 --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
+  "${MU_ARGS[@]}" --host-stages "$HOST_STAGES" --link-handoff results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json --pinreg \
   --token-path "$OUT/token_path_compiled.json" > "$OUT/program.log"
 python3 tools/qwen_split/d2d_cal_seq_image.py "$OUT/program" "$OUT/d2d_cal_image.svh"
 echo "image: $OUT/d2d_cal_image.svh (die stages $STAGES, kv codec $KV_CODEC)"

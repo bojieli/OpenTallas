@@ -1,0 +1,9 @@
+| group | pairs | bits | driver bits glue/leaf | gap um | HBM-036 dup families |
+| SFU split3 ctl/lanes | 32 | 29,068 | 0/29,068 | 2920-13262 | sfup,sfus |
+| B-failed SU/hub windows | 13 | 27,787 | 798/26,989 | - | pgp |
+| IDX scorer rows | 28 | 17,643 | 15,702/1,941 | 1616-11940 | - |
+| hub<->hub over root | 2 | 5,505 | 0/5,505 | 1685-1685 | - |
+| EP endpoints (spb0/vsN0) | 6 | 3,741 | 0/3,741 | 2834-4562 | - |
+| SM front -> svg | 8 | 296 | 0/296 | 1555-1572 | - |
+| misc <=9 b | 14 | 36 | 8/28 | 2074-9884 | - |
+total 103 84076

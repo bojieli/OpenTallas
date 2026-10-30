@@ -215,6 +215,10 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     # token run: S->C kind 12 CONTEXT (token / position for the face) and C->S kind 14 beat 0 per-token WITNESS
     # (ready / digest or not-ready: always a record)
     ctx_k, r_host = context_slot(txl, phy, host_stages, host_req)
+    # TOK-KV-4 10-29: a K port-1 (HOST record) word reaches the KV end's capture edge host_stages later (TXD K[1] grows by
+    # host_stages in main), so it ARRIVES at the compute face host_stages later; every compute record that waits for one
+    # (token WITNESS after CONTEXT, admission WITNESS after AUTH + replay) moves by the same edges.  0 = images unchanged.
+    hrs = host_stages or 0
     hdr = e_last - 64 - rope_n
     ctx_budget = hdr - ctx_k     # edges from the CONTEXT slot to the row-header slot (EMB2 fill: fork + 2 + join last + 1)
     if emb_fill is not None and ctx_budget < emb_fill:
@@ -234,20 +238,20 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
             raise ValueError('head_prepare_edges requires RoPE and actual composed earliest safe SLOT >=5 (native prepare+held descriptor+actual transport)')
         # This is a source-provided safe slot bound, never a guessed zero-hop age.
         hs=head_prepare_edges
-        while hs in (2,ctx_k+txl+phy+12) or hs+3 in (3,ctx_k+txl+phy+15):hs+=1
+        while hs in (2,ctx_k+txl+phy+12+hrs) or hs+3 in (3,ctx_k+txl+phy+15+hrs):hs+=1
         if hs>=l0_start:
             raise ValueError('actual head descriptor is not available before L0; grow embedding/image from source law')
         m1.append(dict(seg=1,src='C',cyc=hs,tx_port=1,rx_port=1,kind=12,beat=0,role='recurring_head_O61'))
         head_descriptor=dict(source='actual CTLM c_emb token/position/user plus HEAD_PREP native epoch/gen and held per-user descriptor',
                              earliest_safe_slot=head_prepare_edges,send=hs,kind=12,port=1,
                              user0='actual HOST O61 matched against actual prepare token/position before held record emission',qualification='SOURCE_BOUND_SLOT; consumer bus/clock/phase deadline still required')
-    prec_w = ctx_k + txl + phy + 12
+    prec_w = ctx_k + txl + phy + 12 + hrs
     m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
     # ADMISSION run (segment 2; once per epoch, before the first token; Q-NETLIST 2026-10-16): S->C kind 13 beat 1
     # BEGIN, beat 2 AUTH; the compute face replays the 1,032-word program from one edge after AUTH and commits its
     # ledgers ~1,040 edges later, so the C->S kind 14 beat 1 admission WITNESS leaves AUTH arrival + ADM_REPLAY edges
     m2 = [dict(seg=2, src="K", cyc=PREC_K0 + i, tx_port=1, rx_port=1, kind=13, beat=1 + i) for i in range(2)]
-    adm_w = PREC_K0 + 1 + txl + phy + 4 + ADM_REPLAY
+    adm_w = PREC_K0 + 1 + txl + phy + 4 + ADM_REPLAY + hrs
     m2.append(dict(seg=2, src="C", cyc=adm_w, tx_port=1, rx_port=1, kind=14, beat=1))
     ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs, status_delay, attn_tx_shift, attn_service_pad)
     layout = dict(source=tp_path, layers=[dict(id=g["id"], start=(layer_starts[i] if rope else int(g["start"]) + i * tail + d_emb), cycles=((layer_starts[i+1] if i+1<len(groups) else cursor)-layer_starts[i] if rope else int(g["cycles"])+tail)) for i, g in enumerate(groups)],
@@ -272,7 +276,10 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                                        q_send_shift=int(win[lay[1]][1] - priced_qkv[lay[1]]),
                                        note="the shift is the VM result-face cost (Q-ATTN ledger), not a link cost")
                                   if "qkv" in hw else None),
-                  host_relay_stages=dict(value=host_stages, status="measured (KV die lead)" if host_stages is not None else
+                  host_relay_stages=dict(value=host_stages, witness_shift=hrs,
+                      law="landed D(d2d_kv.record_send_kind -> HOST) + D(HOST.record_tx_observed_v -> d2d_kv) "
+                          "(regen_constants D2D_HOST_REC_RT; TXD K[1] = 2 + this + PR 2)",
+                      status="measured (KV die lead)" if host_stages is not None else
                       "PENDING: KV die lead re-measure after the HOST core moves next to the D2D end (coordinator: the "
                       "54-57-stage HOST<->D2D relay figure is a floorplan defect, not a calendar input); compiled with 0"),
                   hbm_embedding_budget=dict(result_at_kv_host=2 + 1 + txl + phy + 2 + 1 + (host_stages or 0),
@@ -411,8 +418,10 @@ def main():
     ap.add_argument("--profile", default="bench", choices=["bench", "dies", "dies_token", "program"])
     ap.add_argument("--token-path", default="results/arch/token_path_20261009/qwen_rom.json")
     ap.add_argument("--host-stages", type=int, default=None,
-                    help="KV die HOST core <-> qkd_d2d_static relay stages (each way), from the KV die lead's measured "
-                         "die plan; added to the KV HOST-record TX codec latency (port 1) and the token-id budget")
+                    help="KV die HOST record relay stages = LANDED D(d2d_kv.record_send_kind -> HOST) + D(HOST."
+                         "record_tx_observed_v -> d2d_kv) of the bind (regen_constants D2D_HOST_REC_RT, kst.py --host-rt); "
+                         "added to the KV HOST-record TX capture age (port 1) and to the compute WITNESS placements that "
+                         "wait for a K port-1 record; the token-id budget uses it as a conservative bound (TOK-KV-4 10-29)")
     ap.add_argument("--pinreg", action="store_true",
                     help="pin-registered die masters (PR=1, d2d_pinreg_gen.py): PHY hop +2 (TX + far RX pin flops), producer "
                          "capture +2 (slot out + payload in), consumer outputs +1; production default for the r4 masters")

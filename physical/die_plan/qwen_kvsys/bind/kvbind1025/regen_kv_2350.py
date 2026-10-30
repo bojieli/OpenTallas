@@ -42,12 +42,60 @@ def _merge(params, more, rule):
             cur[k] = v
 
 
+SEAM_NAMES = ("KS_RXV", "KS_RXP", "KS_TXS", "KS_TXK", "KS_TXB", "SK_TXV", "SK_TXP")
+
+
+def bind_txdp(ctx):
+    """TOK-KV-4 10-29 (KV-024 + the HOST record abort): the pair-image KV half this bind needs, from ITS landed legs, by
+    the regen_constants laws (kv_seam / kv_host_rec_rt, same constants): XDIE_SEAM_K = as-built seam + Delta per
+    d2d_kv <-> kvs_attn bundle, HOST_REC_RT = landed record_send_kind/witness_slot out + record_tx(_observed_v) back,
+    D2D_TXDP_K = [KS_TXS + codec + SK_TXP, 2 + HOST_REC_RT, 1, 1] + PINREG_EXT.  One age per bundle, else ERROR."""
+    import re
+    rc = _load("regen_constants_laws", HERE.parents[4] / "tools" / "die_plan" / "regen_constants.py")
+    kr = _load("kv_regen_legs_t", HERE.parent / "kv_regen.py")
+    F = ctx.F
+    legs = kr._legs(ctx)
+
+    def cell(rx):
+        ix = [i for i, c in enumerate(F.cells) if re.fullmatch(rf"(.*\.)?{rx}", c.path)]
+        if len(ix) != 1:
+            raise ValueError(f"TXDP: expected one {rx} cell, found {[F.cells[i].path for i in ix]}")
+        return ix[0]
+    ci = {"d2d_kv": cell("d2d_kv"), "kvs_attn": cell("kvs_attn")}
+    st = {}
+    for s, (sl, sp, dl, dp) in rc.KV_SEAM.items():
+        v = kr._delta(legs, ci[dl], [dp], rf"(.*\.)?{sl}\.{sp}")
+        st[s] = rc.KV_ANCHOR["seam"][s] + kr._one(v, f"TXDP seam {s}")
+    out, back = set(), set()
+    for (c, pn, i), (sp, spn, ld, asb) in legs.items():
+        if re.fullmatch(r"(.*\.)?d2d_kv", sp) and spn in ("record_send_kind", "record_witness_slot") and pn == spn:
+            out.add(ld or 0)
+        elif c == ci["d2d_kv"] and pn in ("record_tx", "record_tx_observed_v"):
+            back.add(ld or 0)
+    for nm, v in (("out", out), ("back", back)):
+        if len(v) > 1:
+            raise ValueError(f"TXDP: HOST record {nm} bundle lands unequal {sorted(v)}")
+    hrt = (out.pop() if out else 0) + (back.pop() if back else 0)
+    k = [st["KS_TXS"] + rc.KV_CODEC_LANDED + st["SK_TXP"], 2 + hrt, 1, 1]
+    k = [x + p for x, p in zip(k, rc.PINREG_EXT["K"])]
+    return k, ",".join(str(st[n]) for n in SEAM_NAMES), hrt
+
+
 def txdp(ctx):
     rec = json.loads(PAIR.read_text())
     k = [int(x) for x in rec["D2D_TXDP_K"]]
     word = k[0] | (k[1] << 8) | (k[2] << 16) | (k[3] << 24)
     if rec.get("sv_literal") and int(rec["sv_literal"].split("'h")[1], 16) != word:
         raise ValueError(f"pair image {PAIR.name}: sv_literal {rec['sv_literal']} != packed {k}")
+    # KV-024 (DIE-KV-37-RC 10-29): the record was applied verbatim, so a bind whose seams moved (SK_TXP 78 -> 77) bound
+    # the stale K0 170.  The record must be the image compiled on THIS bind (run_mu833.sh derives KST/HRT from it):
+    # fail closed on any difference in K or in the seam stages the image was compiled with.
+    kb, seam, hrt = bind_txdp(ctx)
+    have = (k, str(rec.get("XDIE_SEAM_K")), int(rec.get("HOST_REC_RT", -1)))
+    if have != (kb, seam, hrt):
+        raise ValueError(f"pair image {PAIR.name} is stale for this bind: record K {k} XDIE_SEAM_K {have[1]} HOST_REC_RT "
+                         f"{have[2]} vs bind K {kb} XDIE_SEAM_K {seam} HOST_REC_RT {hrt}; recompile the pair image on this "
+                         "bind (physical/die_plan/qwen_kvsys/boot_v36/run_mu833.sh) and commit its D2D_TXDP_K + seams")
     hits = [c for c in ctx.F.cells if c.module.startswith(D2D_MODULE_PREFIX)
             and (c.path.endswith("d2d_kv") or "u_d2d" in c.path)]
     if len(hits) != 1:

@@ -1,0 +1,218 @@
+{
+ "status": "FAIL",
+ "physical_route": false,
+ "clock_width_um": 0.08,
+ "tree_spacing_um": 0.32,
+ "m6_width_um": 0.032,
+ "max_jog_um": 1.5,
+ "witness_modes": {
+  "router_track": 63597,
+  "fallback_nearest": 25204
+ },
+ "shifted_base_stacks": 8331,
+ "note": "DIE-QC-36: witness = router track; no physical route; prebuild with --backbone-plan is the check",
+ "records": 88801,
+ "unresolved": 379,
+ "sample_fail": [
+  {
+   "cell": "ck_b1889",
+   "pin": "A",
+   "net": "ck_rn1889_0",
+   "base_xy_um": [
+    17779.235,
+    14639.535
+   ],
+   "router_ty": 14637.8
+  },
+  {
+   "cell": "ck_b2001",
+   "pin": "Y",
+   "net": "ck_n2001",
+   "base_xy_um": [
+    18707.139,
+    10485.315
+   ],
+   "router_ty": 10482.04
+  },
+  {
+   "cell": "ck_b2016",
+   "pin": "Y",
+   "net": "ck_n2016",
+   "base_xy_um": [
+    18707.139,
+    11176.515
+   ],
+   "router_ty": 11173.24
+  },
+  {
+   "cell": "ck_b2023",
+   "pin": "Y",
+   "net": "ck_n2023",
+   "base_xy_um": [
+    18707.139,
+    11496.195
+   ],
+   "router_ty": 11492.92
+  },
+  {
+   "cell": "ck_b2028",
+   "pin": "Y",
+   "net": "ck_n2028",
+   "base_xy_um": [
+    16547.139,
+    10485.315
+   ],
+   "router_ty": 10482.04
+  },
+  {
+   "cell": "ck_b2043",
+   "pin": "Y",
+   "net": "ck_n2043",
+   "base_xy_um": [
+    16547.139,
+    11176.515
+   ],
+   "router_ty": 11173.24
+  },
+  {
+   "cell": "ck_b2050",
+   "pin": "Y",
+   "net": "ck_n2050",
+   "base_xy_um": [
+    16547.139,
+    11496.195
+   ],
+   "router_ty": 11492.92
+  },
+  {
+   "cell": "ck_b2321",
+   "pin": "A",
+   "net": "ck_rn2321_0",
+   "base_xy_um": [
+    20250.275,
+    14639.535
+   ],
+   "router_ty": 14637.8
+  },
+  {
+   "cell": "ck_b2433",
+   "pin": "Y",
+   "net": "ck_n2433",
+   "base_xy_um": [
+    21178.179,
+    10485.315
+   ],
+   "router_ty": 10482.04
+  },
+  {
+   "cell": "ck_b2448",
+   "pin": "Y",
+   "net": "ck_n2448",
+   "base_xy_um": [
+    21178.179,
+    11176.515
+   ],
+   "router_ty": 11173.24
+  },
+  {
+   "cell": "ck_b2455",
+   "pin": "Y",
+   "net": "ck_n2455",
+   "base_xy_um": [
+    21178.179,
+    11496.195
+   ],
+   "router_ty": 11492.92
+  },
+  {
+   "cell": "ck_b2460",
+   "pin": "Y",
+   "net": "ck_n2460",
+   "base_xy_um": [
+    19018.179,
+    10485.315
+   ],
+   "router_ty": 10482.04
+  },
+  {
+   "cell": "ck_b2475",
+   "pin": "Y",
+   "net": "ck_n2475",
+   "base_xy_um": [
+    19018.179,
+    11176.515
+   ],
+   "router_ty": 11173.24
+  },
+  {
+   "cell": "ck_b2482",
+   "pin": "Y",
+   "net": "ck_n2482",
+   "base_xy_um": [
+    19018.179,
+    11496.195
+   ],
+   "router_ty": 11492.92
+  },
+  {
+   "cell": "ck_b2753",
+   "pin": "A",
+   "net": "ck_rn2753_0",
+   "base_xy_um": [
+    22721.315,
+    14639.535
+   ],
+   "router_ty": 14637.8
+  },
+  {
+   "cell": "ck_b2865",
+   "pin": "Y",
+   "net": "ck_n2865",
+   "base_xy_um": [
+    23649.219,
+    10485.315
+   ],
+   "router_ty": 10482.04
+  },
+  {
+   "cell": "ck_b2880",
+   "pin": "Y",
+   "net": "ck_n2880",
+   "base_xy_um": [
+    23649.219,
+    11176.515
+   ],
+   "router_ty": 11173.24
+  },
+  {
+   "cell": "ck_b2887",
+   "pin": "Y",
+   "net": "ck_n2887",
+   "base_xy_um": [
+    23649.219,
+    11496.195
+   ],
+   "router_ty": 11492.92
+  },
+  {
+   "cell": "ck_b2892",
+   "pin": "Y",
+   "net": "ck_n2892",
+   "base_xy_um": [
+    21489.219,
+    10485.315
+   ],
+   "router_ty": 10482.04
+  },
+  {
+   "cell": "ck_b2907",
+   "pin": "Y",
+   "net": "ck_n2907",
+   "base_xy_um": [
+    21489.219,
+    11176.515
+   ],
+   "router_ty": 11173.24
+  }
+ ]
+}

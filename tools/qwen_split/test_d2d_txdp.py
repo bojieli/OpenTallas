@@ -68,8 +68,38 @@ def test_committed_image_is_the_compilers():
     assert "localparam [31:0] D2D_TXDP_C = 32'h0a010308;" in t and "localparam [31:0] D2D_TXDP_K = 32'h03030416;" in t
 
 
+
+def _prod(d, **env):
+    subprocess.run(['bash', 'tools/qwen_split/d2d_cal_image_production.sh', d], cwd=ROOT, check=True,
+                   stdout=subprocess.DEVNULL, env=dict(os.environ, **env))
+    return json.loads(Path(d, 'program', 'calendar.json').read_text())
+
+
+def test_host_record_relay_moves_capture_and_witness():
+    """TOK-KV-4 10-29: the KV whole-die token run aborted at its first port-1 (HOST record) capture (new_fault bit 7):
+    the HOST sits 86 + 67 landed stages from d2d_kv, the image was compiled with --host-stages 0 (TXD K[1] = 4, measured
+    record 153 edges later).  D2D_HOST_STAGES = the landed relay of the bind must (a) move TXD K[1] to 2 + H + PR 2 and
+    (b) move every compute WITNESS that waits for a K port-1 record by H, so the compute face never answers before the
+    record is out of its RX; H = 0 keeps the historical image (test_committed_image_is_the_compilers)."""
+    H = 153
+    with tempfile.TemporaryDirectory() as d0, tempfile.TemporaryDirectory() as d1:
+        c0, c1 = _prod(d0), _prod(d1, D2D_HOST_STAGES=str(H))
+    assert c0['txd']['K'] == [22, 4, 3, 3] and c1['txd']['K'] == [22, 4 + H, 3, 3]
+    p0, p1 = c0['program'], c1['program']
+    assert p1['program_records']['witness_send'] == p0['program_records']['witness_send'] + H
+    assert p1['admission']['witness_send'] == p0['admission']['witness_send'] + H
+
+    def slack(c, sg):   # compute WITNESS send - last K port-1 record out of the compute RX, per segment
+        ks = [t['rx_out'] for t in c['messages'] if t['seg'] == sg and t['src'] == 'K' and t['tx_port'] == 1]
+        cw = [t['cyc'] for t in c['messages'] if t['seg'] == sg and t['src'] == 'C' and t['kind'] == 14]
+        return min(cw) - max(ks)
+    for sg in (1, 2):
+        assert slack(c1, sg) == slack(c0, sg) >= 4, (sg, slack(c0, sg), slack(c1, sg))
+
+
 if __name__ == '__main__':
-    for f in (test_producer_law_matches_compiler, test_masters_take_txdp_parameter, test_committed_image_is_the_compilers):
+    for f in (test_producer_law_matches_compiler, test_masters_take_txdp_parameter, test_committed_image_is_the_compilers,
+              test_host_record_relay_moves_capture_and_witness):
         f()
         print('PASS', f.__name__)
     print('TEST_D2D_TXDP_PASS')

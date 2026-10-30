@@ -1,0 +1,73 @@
+{
+ "control": "main 35f82bf3f79 bind stage (same bind6 elab)",
+ "patched": "claude/die-s81-29-cst-1029@9b39beae2 bind stage",
+ "rtl_files": 208,
+ "identical": 153,
+ "differ": 54,
+ "types_with_nonseam_children": 54,
+ "differ_all_have_nonseam": true,
+ "non_face_diff_lines": 0,
+ "sha": {
+  "slice_station__t8": {
+   "control": "434542a68c08600a6945e2da95db5f2c33b389e4d46cdf5c3378b5b3ed09fafc",
+   "patched": "434542a68c08600a6945e2da95db5f2c33b389e4d46cdf5c3378b5b3ed09fafc"
+  },
+  "slice_station__t43": {
+   "control": "2b29d8bb6e9c21b962a22435b2bf17f471beb1b59a05b9cac018429de270023f",
+   "patched": "2b29d8bb6e9c21b962a22435b2bf17f471beb1b59a05b9cac018429de270023f"
+  },
+  "slice_station__t49": {
+   "control": "7bb3ea6213e2e61ecc21ce8b0eaa8d594800c6a5dacc18e4444fa8cfdf1ff28f",
+   "patched": "7bb3ea6213e2e61ecc21ce8b0eaa8d594800c6a5dacc18e4444fa8cfdf1ff28f"
+  },
+  "slice_station__t52": {
+   "control": "0d63c56b3ad25625af0ebf87d1f0fc6bbb3bbb490fc99eca7143f37c3eb760b4",
+   "patched": "0d63c56b3ad25625af0ebf87d1f0fc6bbb3bbb490fc99eca7143f37c3eb760b4"
+  },
+  "slice_station__t23": {
+   "control": "f7a1860947155d3e647b1229218636570e5cdc93908aa810d970fa90ab9bfdcc",
+   "patched": "e60154a218b49eab1efd1e923768f787addb15ea292c648e2c37d0487ff006c4"
+  },
+  "slice_station__t31": {
+   "control": "201650664ae45717e78f32dab1fae5e38595b676559df83e27d3ddb7e46245e0",
+   "patched": "612cb5a8cbf1d9cc1f4cbbd0d1765f5c5021ffb24e999d218c7ae3d306a1dfca"
+  },
+  "slice_station__t44": {
+   "control": "bfd4c00ca1efe3941a399526ad76c6f65e58fb1794b13d4bf05522a1b2bf1405",
+   "patched": "386a82dc448f6aea255776fd69e4e5b63134387d3d7c7b0b09a46a5863f99ba9"
+  }
+ },
+ "canary_face_guard": {
+  "slice_station__t23": {
+   "face_guard": "PASS",
+   "ok": 4117,
+   "fails": {},
+   "face_guard_odb": "PASS",
+   "before_DIE_S81_28": "FAIL_PREFLOOR unregistered 2"
+  },
+  "slice_station__t31": {
+   "face_guard": "PASS",
+   "ok": 6939,
+   "fails": {},
+   "face_guard_odb": "PASS",
+   "before_DIE_S81_28": "FAIL_PREFLOOR unregistered 2"
+  },
+  "slice_station__t44": {
+   "face_guard": "PASS",
+   "ok": 6939,
+   "fails": {},
+   "face_guard_odb": "PASS",
+   "before_DIE_S81_28": "FAIL_PREFLOOR unregistered 2"
+  }
+ },
+ "canary_kits": "/srv/opentallas-scratch2/claude/die-s81-29/st/gen/<type> (bind stage /srv/opentallas-scratch2/claude/die-s81-29/st/bind/out on the die-s81-27/bind6 elab, plan_s13r2 band copy 5796eef9ecf)",
+ "ring_sim": [
+  "handshake ready rise after face-branch ready edge=3 (expect 3)",
+  "handshake ready rise after direct ready edge=2 (expect 2)",
+  "face-branch fault edge=3 (expect 3)",
+  "direct-branch fault edge=2 (expect 2)",
+  "face-branch ready drop edge=3 (expect 3)",
+  "collector checks=576 errors=0"
+ ],
+ "ring_sim_cmd": "verilator/verilator:v5.032 docker --memory 4g: verilator --cc --exe --build rtl/common/ot_dp_clk_landing.sv rtl/test/meso/tb_landing_collect.sv rtl/test/meso/tb_landing_collect.cpp"
+}

@@ -1,0 +1,144 @@
+{
+ "schema": "opentallas.hbm.quant_ne_drop.v1",
+ "source_plan_sha256": "b6fc3ff23d549d1f29c712cdeedb8de22096439ac62b92f0635d53fc2e8b435d",
+ "plan_sha256": "c564e8942374ee3dca9c0fb2d0a268d4468b9a71af8a92f5391cc9e9a88c6715",
+ "hub": "q_hub_ne",
+ "hard_cores_removed": [
+  {
+   "inst": "u_hb_quant_Q__u_dec__q0",
+   "module": "ot_hgi_qw_dec",
+   "origin_um": [
+    34.56,
+    1520.64
+   ],
+   "outline_um": [
+    260.0,
+    260.0
+   ]
+  },
+  {
+   "inst": "u_hb_quant_Q__u_dec__q1",
+   "module": "ot_hgi_qw_dec",
+   "origin_um": [
+    3991.68,
+    2298.24
+   ],
+   "outline_um": [
+    260.0,
+    260.0
+   ]
+  }
+ ],
+ "contents_removed": [
+  {
+   "inst": "u_hb_quant_Q__u_dec",
+   "module": "ot_hgi_qw_dec",
+   "cells": 160001,
+   "note": "as-built hb_quant_NW__u_dec"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q0_lg",
+   "module": "ot_hgi_qdq_lg_port_group_r2",
+   "cells": 13219,
+   "note": "as-built hb_quant_NW__quant_NW0_lg"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q1_lg",
+   "module": "ot_hgi_qdq_lg_port_group_r2",
+   "cells": 13219,
+   "note": "as-built hb_quant_NW__quant_NW1_lg"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q2_lg",
+   "module": "ot_hgi_qdq_lg_port_group_r2",
+   "cells": 13219,
+   "note": "as-built hb_quant_NW__quant_NW2_lg"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q3_lg",
+   "module": "ot_hgi_qdq_lg_port_group_r2",
+   "cells": 13219,
+   "note": "as-built hb_quant_NW__quant_NW3_lg"
+  },
+  {
+   "inst": "u_hb_quant_Q__program_leaf",
+   "module": "ot_hgi_qdq_nw_program_leaf",
+   "cells": 19101,
+   "note": "as-built hb_quant_NW__program_leaf"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_ctl",
+   "module": "ot_hgi_qdq_transport_ctl_r4",
+   "cells": 6950,
+   "note": "as-built hb_quant_NW__quant_NW_xp_ctl"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_0__rslice",
+   "module": "ot_hgi_qdq_transport_rslice",
+   "cells": 8190,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_0__rslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_1__rslice",
+   "module": "ot_hgi_qdq_transport_rslice",
+   "cells": 8190,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_1__rslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_2__rslice",
+   "module": "ot_hgi_qdq_transport_rslice",
+   "cells": 8190,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_2__rslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_3__rslice",
+   "module": "ot_hgi_qdq_transport_rslice",
+   "cells": 8190,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_3__rslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_0__wslice",
+   "module": "ot_hgi_qdq_transport_wslice",
+   "cells": 4257,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_0__wslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_1__wslice",
+   "module": "ot_hgi_qdq_transport_wslice",
+   "cells": 4257,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_1__wslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_2__wslice",
+   "module": "ot_hgi_qdq_transport_wslice",
+   "cells": 4257,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_2__wslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__quant_Q_xp_slice_3__wslice",
+   "module": "ot_hgi_qdq_transport_wslice",
+   "cells": 4257,
+   "note": "as-built hb_quant_NW__quant_NW_xp_slice_3__wslice"
+  },
+  {
+   "inst": "u_hb_quant_Q__hbfd_qdq_split_and",
+   "module": "hbfd_qdq_split_and",
+   "cells": 1,
+   "note": "as-built hb_quant_NW__hbfd_qdq_split_and"
+  },
+  {
+   "inst": "u_hb_quant_Q__hbfd_qdq_split_or",
+   "module": "hbfd_qdq_split_or",
+   "cells": 1,
+   "note": "as-built hb_quant_NW__hbfd_qdq_split_or"
+  }
+ ],
+ "stations_removed": [],
+ "taps_removed": [
+  "u_hb_quant_Q__u_dec__q0",
+  "u_hb_quant_Q__u_dec__q1"
+ ],
+ "cells_old": 6343070,
+ "cells_new": 6054352,
+ "cells_removed": 288718
+}

@@ -46,6 +46,15 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
  set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
  if {$cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
+ # DIE-KV-33 opt-in OT_CLAND_FIT_RESERVE=1: the site must be free of other occupancy over the whole reserved footprint
+ # (rw, as cland_occupy reserves it), not just the body, so an in-place upsize by timing-driven GPL (FIRM cells are
+ # resized, not moved) cannot grow into a tapcell / foreign FIRM cell (KV io_ft kits_gen5 3_5 DPL-0033: 3 FIRM
+ # INVx1 -> INVx3 over TAPCELLs). Default (unset) unchanged.
+ set fw $w
+ if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "1"} {
+  set fsp $sp; if {$fsp eq {}} { set fsp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> fsp }
+  set fw [expr {max($w,int(ceil(double($w)/0.4*$fsp/$ff_sw))*$ff_sw)}]
+ }
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
   set x $startx
@@ -56,7 +65,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
     if {![dict exists $cland_occ $r]} continue
     foreach interval [dict get $cland_occ $r] {
      lassign $interval l u
-     if {$x<$u && $x+$w>$l} { set skip [expr {max($skip,$u)}] }
+     if {$x<$u && $x+$fw>$l} { set skip [expr {max($skip,$u)}] }
     }
    }
    if {$skip>$x} { set x [expr {$ff_x0+int(ceil(double($skip-$ff_x0)/$ff_sw))*$ff_sw}];continue }
@@ -132,8 +141,13 @@ foreach spec $cland_optional_groups {
 # (DIE-HEAD-12 probe B, hd_tile): ring FIRM in netlist order 676,805 GRT overflow, flops-only FIRM -97 %.
 set cland_ff_fill 0.90
 set cland_cursor {}
-proc cland_ffkey {nm} {
- if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} { return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t] }
+# DIE-HEAD-32 10-29: rev=1 (tag +ffr, an lsb_high bus) sorts the bit index DESCENDING (slots stay ascending), so the
+# band, filled from its low corner, holds the highest bit where the lsb_high pins put it; rev=0 is byte-identical.
+proc cland_ffkey {nm {rev 0}} {
+ if {[regexp {^([^\[]*)\[([0-9]+)\\?\]\\?\[([0-9]+)\\?\](.*)$} $nm -> b s i t]} {
+  if {$rev} { set i [expr {999999999-$i}] }
+  return [format {%s|%09d|%09d|%s} [string trimright $b \\] $i $s $t]
+ }
  return $nm
 }
 proc cland_place_ff {prefix rect tag} {
@@ -146,7 +160,7 @@ proc cland_place_ff {prefix rect tag} {
   set m [$i getMaster]
   if {[$m isBlock]} { error "OT_CLAND unexpected macro in landing $nm" }
   if {![regexp {DFF|DHL|DLL|SDF} [$m getName]]} { incr comb;continue }
-  lappend ffs [list [cland_ffkey $nm] $i]
+  lappend ffs [list [cland_ffkey $nm [string match {ring:*+ffr} $tag]] $i]
   set need [expr {$need+int(ceil(double([$m getWidth])/0.4/$ff_sw))*$ff_sw*double([$m getHeight])}]
  }
  if {![llength $ffs]} { return 0 }
@@ -161,7 +175,7 @@ proc cland_place_ff {prefix rect tag} {
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
  set hit 0
- if {[string match {ring:*+ff} $tag]} {
+ if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]} {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
   continue
  }

@@ -30,6 +30,8 @@ class PlanFromRecord:
             f = l.split()
             if f and f[0] == "SINK":
                 sxy["%s/%s" % (f[4], f[5])] = (float(f[1]), float(f[2]))
+            elif f and f[0] == "MACRO" and len(f) >= 10:   # DIE-S81-29: macro clock pin (core_family_slice macro_leaves geo)
+                sxy.setdefault("%s/%s" % (f[1], f[7]), (float(f[8]), float(f[9])))
         self.nodes, self.kids, self.nets = {}, {}, {}
         par = {}
         for name, p, xy, cell, kind in rec["nodes_xy"]:
@@ -38,6 +40,12 @@ class PlanFromRecord:
                 self.kids.setdefault(p, []).append(name); par[name] = p
         for leaf, sinks in rec["leaf_sinks"].items():
             self.nodes[leaf]["sinks"] = [sxy[s] for s in sinks]
+        # DIE-S81-29 (opt-in, records with macro_leaves only): macro leaves = kind "macro" with the record's exact
+        # liberty clock-pin caps per corner (core_family_slice sinkcap); flop-only records are unchanged
+        for leaf in rec.get("macro_leaves", []):
+            cap = rec["sinkcap"]
+            self.nodes[leaf]["kind"] = "macro"
+            self.nodes[leaf]["cpin"] = {c: sum(cap[c][s] for s in rec["leaf_sinks"][leaf]) / len(rec["leaf_sinks"][leaf]) for c in cap}
         seg, hub = {}, {}
         for w in rec["wire_paths"]:
             e = w["edge"]; k = len(w["segs"])

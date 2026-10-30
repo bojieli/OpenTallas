@@ -1,0 +1,286 @@
+{
+ "schema": "opentallas.hbm.drop_dup_copies.v1",
+ "source_plan_sha256": "53b6d7beccd373b9dede110855e6e56f0838fbb19faeb211f60281bbd5e0520a",
+ "families": [
+  "u_hb_coll_Q_reduce",
+  "u_hb_coll_Q_ring_ag",
+  "u_hb_coll_Q_body_n2",
+  "u_hb_coll_Q_body_core",
+  "u_hb_coll_Q_vm",
+  "u_hb_coll_Q_edge"
+ ],
+ "keep": "q0",
+ "hubs": {
+  "q_hub_ne": {
+   "u_hb_coll_Q_reduce": {
+    "kept": "u_hb_coll_Q_reduce__q0",
+    "dropped": "u_hb_coll_Q_reduce__q1",
+    "cost_um": {
+     "0": 301750.862,
+     "1": 283910.178
+    },
+    "stations_moved": 60,
+    "duplicates_removed": 0,
+    "regs_old": 375,
+    "regs_new": 844,
+    "latency_up": 60,
+    "latency_up_hist": {
+     "2": 3,
+     "3": 1,
+     "4": 3,
+     "6": 5,
+     "7": 30,
+     "10": 1,
+     "11": 6,
+     "12": 11
+    },
+    "failed": 0,
+    "length_old_um": 301750.862,
+    "length_new_um": 311707.514,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_ring_ag": {
+    "kept": "u_hb_coll_Q_ring_ag__q0",
+    "dropped": "u_hb_coll_Q_ring_ag__q1",
+    "cost_um": {
+     "0": 174549.203,
+     "1": 214040.554
+    },
+    "stations_moved": 71,
+    "duplicates_removed": 0,
+    "regs_old": 810,
+    "regs_new": 861,
+    "latency_up": 8,
+    "latency_up_hist": {
+     "6": 5,
+     "7": 3
+    },
+    "failed": 0,
+    "length_old_um": 174549.203,
+    "length_new_um": 175861.433,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_body_n2": {
+    "kept": "u_hb_coll_Q_body_n2__q0",
+    "dropped": "u_hb_coll_Q_body_n2__q1",
+    "cost_um": {
+     "0": 364712.568,
+     "1": 496806.189
+    },
+    "stations_moved": 85,
+    "duplicates_removed": 20,
+    "regs_old": 855,
+    "regs_new": 1174,
+    "latency_up": 59,
+    "latency_up_hist": {
+     "1": 3,
+     "2": 1,
+     "3": 1,
+     "4": 3,
+     "7": 1,
+     "8": 36,
+     "9": 6,
+     "10": 7,
+     "11": 1
+    },
+    "failed": 0,
+    "length_old_um": 364712.568,
+    "length_new_um": 393858.808,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_body_core": {
+    "skipped": "no __q0/__q1 pair"
+   },
+   "u_hb_coll_Q_vm": {
+    "kept": "u_hb_coll_Q_vm__q0",
+    "dropped": "u_hb_coll_Q_vm__q1",
+    "cost_um": {
+     "0": 20853.752,
+     "1": 39675.467
+    },
+    "stations_moved": 9,
+    "duplicates_removed": 0,
+    "regs_old": 121,
+    "regs_new": 121,
+    "latency_up": 0,
+    "latency_up_hist": {},
+    "failed": 0,
+    "length_old_um": 20853.752,
+    "length_new_um": 26572.254,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_edge": {
+    "skipped": "no __q0/__q1 pair"
+   }
+  },
+  "q_hub_nw": {
+   "u_hb_coll_Q_reduce": {
+    "kept": "u_hb_coll_Q_reduce__q0",
+    "dropped": "u_hb_coll_Q_reduce__q1",
+    "cost_um": {
+     "0": 377507.012,
+     "1": 301413.886
+    },
+    "stations_moved": 73,
+    "duplicates_removed": 0,
+    "regs_old": 360,
+    "regs_new": 1201,
+    "latency_up": 73,
+    "latency_up_hist": {
+     "5": 1,
+     "6": 2,
+     "9": 9,
+     "10": 7,
+     "11": 4,
+     "12": 26,
+     "13": 20,
+     "14": 3,
+     "15": 1
+    },
+    "failed": 0,
+    "length_old_um": 377507.012,
+    "length_new_um": 444785.038,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_ring_ag": {
+    "kept": "u_hb_coll_Q_ring_ag__q0",
+    "dropped": "u_hb_coll_Q_ring_ag__q1",
+    "cost_um": {
+     "0": 153885.529,
+     "1": 213531.946
+    },
+    "stations_moved": 71,
+    "duplicates_removed": 0,
+    "regs_old": 813,
+    "regs_new": 844,
+    "latency_up": 8,
+    "latency_up_hist": {
+     "5": 7,
+     "6": 1
+    },
+    "failed": 0,
+    "length_old_um": 153885.529,
+    "length_new_um": 155185.817,
+    "taps_removed": 0
+   },
+   "u_hb_coll_Q_body_n2": {
+    "skipped": "no __q0/__q1 pair"
+   },
+   "u_hb_coll_Q_body_core": {
+    "kept": "u_hb_coll_Q_body_core__q0",
+    "dropped": "u_hb_coll_Q_body_core__q1",
+    "cost_um": {
+     "0": 424816.551,
+     "1": 564838.596
+    },
+    "stations_moved": 103,
+    "duplicates_removed": 0,
+    "regs_old": 1147,
+    "regs_new": 1456,
+    "latency_up": 62,
+    "latency_up_hist": {
+     "1": 3,
+     "2": 1,
+     "3": 3,
+     "4": 3,
+     "5": 2,
+     "6": 1,
+     "7": 9,
+     "8": 3,
+     "9": 3,
+     "11": 30,
+     "12": 3,
+     "13": 1
+    },
+    "failed": 0,
+    "length_old_um": 424816.551,
+    "length_new_um": 474894.903,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_vm": {
+    "kept": "u_hb_coll_Q_vm__q0",
+    "dropped": "u_hb_coll_Q_vm__q1",
+    "cost_um": {
+     "0": 15597.307,
+     "1": 17005.001
+    },
+    "stations_moved": 6,
+    "duplicates_removed": 0,
+    "regs_old": 99,
+    "regs_new": 48,
+    "latency_up": 1,
+    "latency_up_hist": {
+     "1": 1
+    },
+    "failed": 0,
+    "length_old_um": 15597.307,
+    "length_new_um": 16848.771,
+    "taps_removed": 1
+   },
+   "u_hb_coll_Q_edge": {
+    "kept": "u_hb_coll_Q_edge__q0",
+    "dropped": "u_hb_coll_Q_edge__q1",
+    "cost_um": {
+     "0": 4791.499,
+     "1": 123672.632
+    },
+    "stations_moved": 11,
+    "duplicates_removed": 0,
+    "regs_old": 146,
+    "regs_new": 85,
+    "latency_up": 0,
+    "latency_up_hist": {},
+    "failed": 0,
+    "length_old_um": 4791.499,
+    "length_new_um": 4913.123,
+    "taps_removed": 1
+   }
+  }
+ },
+ "plan_sha256": "b6fc3ff23d549d1f29c712cdeedb8de22096439ac62b92f0635d53fc2e8b435d",
+ "hbm_bind_7": {
+  "q_hub_ne": {
+   "dropped": [
+    "u_hb_coll_Q_reduce__q1",
+    "u_hb_coll_Q_ring_ag__q1",
+    "u_hb_coll_Q_body_n2__q1",
+    "u_hb_coll_Q_vm__q1"
+   ],
+   "stations_removed": [
+    {
+     "conn": "r9tree:ot_hfd_coll_q2n2_body_core:0->1",
+     "launch": "u_hb_coll_Q_body_n2__q0.r9_tree_out",
+     "capture": "u_hb_coll_Q_body_n2__q1.r9_tree_in",
+     "bits": 824,
+     "regs": 11
+    }
+   ],
+   "taps_removed": [
+    "u_hb_coll_Q_ring_ag__q1.clk",
+    "u_hb_coll_Q_reduce__q1.clk"
+   ]
+  },
+  "q_hub_nw": {
+   "dropped": [
+    "u_hb_coll_Q_reduce__q1",
+    "u_hb_coll_Q_ring_ag__q1",
+    "u_hb_coll_Q_body_core__q1",
+    "u_hb_coll_Q_vm__q1",
+    "u_hb_coll_Q_edge__q1"
+   ],
+   "stations_removed": [
+    {
+     "conn": "r9tree:ot_hfd_coll_q3_body_core:0->1",
+     "launch": "u_hb_coll_Q_body_core__q0.r9_tree_out",
+     "capture": "u_hb_coll_Q_body_core__q1.r9_tree_in",
+     "bits": 824,
+     "regs": 12
+    }
+   ],
+   "taps_removed": [
+    "u_hb_coll_Q_ring_ag__q1.clk",
+    "u_hb_coll_Q_reduce__q1.clk"
+   ]
+  }
+ }
+}

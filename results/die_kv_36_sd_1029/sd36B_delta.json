@@ -1,0 +1,215 @@
+{
+ "types": {
+  "kv3_sys_SD": {
+   "old_taps": 17,
+   "new_taps": 15,
+   "old_relays": 68,
+   "new_relays": 69,
+   "old_relays_on_macro": [
+    "rst_n_t10",
+    "rst_n_t11",
+    "rst_n_t12",
+    "rst_n_t13",
+    "rst_n_t14",
+    "rst_n_t16",
+    "rst_n_t5",
+    "rst_n_t6",
+    "rst_n_t7",
+    "rst_n_t8",
+    "rst_n_t9",
+    "rst_rl_19",
+    "rst_rl_20",
+    "rst_rl_22",
+    "rst_rl_23",
+    "rst_rl_42",
+    "rst_rl_43",
+    "rst_rl_44",
+    "rst_rl_45",
+    "rst_rl_5",
+    "rst_rl_6",
+    "rst_rl_61",
+    "rst_rl_65",
+    "rst_rl_66",
+    "rst_rl_9"
+   ],
+   "new_relays_on_macro": [],
+   "old_depth": 5,
+   "new_depth": 5,
+   "new_max_hop_um": 376.2,
+   "sources": [
+    {
+     "source": "i_host_fdi",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 337.84
+    },
+    {
+     "source": "i_host_link_rst_n",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 124.22
+    }
+   ],
+   "collector_local_depth_old": 6,
+   "collector_local_depth_new": 6,
+   "collector_path": [
+    [
+     "rst_n_t5",
+     [
+      1879.2,
+      535.68
+     ]
+    ],
+    [
+     "rst_rl_12",
+     [
+      1879.2,
+      181.44
+     ]
+    ],
+    [
+     "rst_rl_11",
+     [
+      1684.8,
+      21.6
+     ]
+    ],
+    [
+     "rst_rl_7",
+     [
+      1330.56,
+      21.6
+     ]
+    ],
+    [
+     "rst_rl_6",
+     [
+      1330.56,
+      21.6
+     ]
+    ],
+    [
+     "rst_root_n",
+     [
+      1108.77,
+      8.61
+     ]
+    ]
+   ],
+   "collector_path_max_hop_um": 354.24,
+   "collector_path_on_macro": [],
+   "boot_local_depth_sidecar": 6
+  },
+  "kv3_sys_SD_v1": {
+   "old_taps": 17,
+   "new_taps": 15,
+   "old_relays": 68,
+   "new_relays": 69,
+   "old_relays_on_macro": [
+    "rst_n_t10",
+    "rst_n_t11",
+    "rst_n_t12",
+    "rst_n_t13",
+    "rst_n_t14",
+    "rst_n_t16",
+    "rst_n_t5",
+    "rst_n_t6",
+    "rst_n_t7",
+    "rst_n_t8",
+    "rst_n_t9",
+    "rst_rl_19",
+    "rst_rl_20",
+    "rst_rl_22",
+    "rst_rl_23",
+    "rst_rl_42",
+    "rst_rl_43",
+    "rst_rl_44",
+    "rst_rl_45",
+    "rst_rl_5",
+    "rst_rl_6",
+    "rst_rl_61",
+    "rst_rl_65",
+    "rst_rl_66",
+    "rst_rl_9"
+   ],
+   "new_relays_on_macro": [],
+   "old_depth": 5,
+   "new_depth": 5,
+   "new_max_hop_um": 376.2,
+   "sources": [
+    {
+     "source": "i_host_fdi",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 337.8
+    },
+    {
+     "source": "i_host_link_rst_n",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 124.16
+    }
+   ],
+   "collector_local_depth_old": 6,
+   "collector_local_depth_new": 6,
+   "collector_path": [
+    [
+     "rst_n_t5",
+     [
+      1879.2,
+      535.68
+     ]
+    ],
+    [
+     "rst_rl_12",
+     [
+      1879.2,
+      181.44
+     ]
+    ],
+    [
+     "rst_rl_11",
+     [
+      1684.8,
+      21.6
+     ]
+    ],
+    [
+     "rst_rl_7",
+     [
+      1330.56,
+      21.6
+     ]
+    ],
+    [
+     "rst_rl_6",
+     [
+      1330.56,
+      21.6
+     ]
+    ],
+    [
+     "rst_root_n",
+     [
+      1108.77,
+      8.61
+     ]
+    ]
+   ],
+   "collector_path_max_hop_um": 354.24,
+   "collector_path_on_macro": [],
+   "boot_local_depth_sidecar": 6
+  }
+ },
+ "sidecar_out_sha256": "4dbec3f11796782b692449b0ae1fd1ef24561dad4a88e126367f2286033ca880",
+ "plans": {
+  "planB/die_plan_sd36.json": {
+   "types_patched": 2,
+   "sha256": "6854f6972248b96014c1d135eb4bd2ab533ddc4ea32d36c68d55f94357f7067d"
+  },
+  "planB/b/bind_plan_sd36.json": {
+   "types_patched": 2,
+   "sha256": "726d189be5d45a4349c943b0b0e902833946fdb5f9fa4bd1a0f8a136d5e6d0e8"
+  }
+ }
+}
