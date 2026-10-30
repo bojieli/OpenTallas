@@ -501,6 +501,18 @@ proc ot_io_hold_pad {} {
   if {[ot_hold_stage] ne $want} { puts "OT_IO_HOLD_PAD skip: stage [ot_hold_stage] (pad stage $want)"; return }
   set hb_ps [ot_env_num OT_IO_HOLD_PAD_HB4_PS 37.0]
   set mg [ot_env_num OT_IO_HOLD_PAD_MARGIN_PS 5.0]
+  # Optional bootstrap only: enough HB4 delay to enter the unchanged structural
+  # guard, then the ordinary coupled setup/hold resizer chooses the remaining
+  # cells. This avoids a conservative full HB4 stack consuming the setup window.
+  # Final hold margin and every sign-off/structural threshold remain unchanged.
+  set target $mg
+  if {[info exists ::env(OT_IO_HOLD_PAD_PRE_TARGET_PS)]} {
+    set target [ot_env_num OT_IO_HOLD_PAD_PRE_TARGET_PS 0.0]
+    if {$target < -100.0 || $target > 0.0} {
+      error "OT_IO_HOLD_PAD: pre-target must lie in -100..0 ps; final hold target is unchanged"
+    }
+    puts "OT_IO_HOLD_PAD PREPASS target $target ps; final repair margin unchanged"
+  }
   set maxc [expr {int([ot_env_num OT_IO_HOLD_PAD_MAX_CELLS 4])}]
   set cells [get_lib_cells -quiet */HB4xp67_ASAP7_75t_R]
   if {![llength $cells]} { error "OT_IO_HOLD_PAD: HB4xp67_ASAP7_75t_R not in the libraries" }
@@ -516,7 +528,8 @@ proc ot_io_hold_pad {} {
     set sp [get_full_name [get_property $p startpoint]]; set ep [get_full_name [get_property $p endpoint]]
     if {[ot_pin_class $sp] ne "port" || [dict exists $ck $sp]} { continue }
     if {![dict exists $data $ep]} { continue }
-    set n [expr {int(ceil((-$s + $mg) / $hb_ps))}]
+    set n [expr {max(0, int(ceil((-$s + $target) / $hb_ps)))}]
+    if {$n == 0} continue
     if {$n > $maxc} { error "OT_IO_HOLD_PAD: $sp -> $ep slack [format %.1f $s] ps needs $n HB4 > $maxc (not contract demand; revise plan/boundary)" }
     dict set plan $ep [list $n [get_property $p endpoint]]
   }

@@ -107,6 +107,28 @@ class IoHoldPad(unittest.TestCase):
         self.assertIn('want cts or grt', out)
         self.assertIn('INSERTS 0', out)
 
+    def test_bootstrap_target_leaves_final_repair_to_coupled_resizer(self):
+        # -106 needs one HB4 to enter the unchanged -100 structural guard;
+        # -53 needs none. Final setup/hold repair still uses the kit margin10.
+        out = self.run_case(['-106 in r1/D', '-53 in r2/D'],
+                            {'OT_IO_HOLD_PAD': 1, 'OT_IO_HOLD_PAD_PRE_TARGET_PS': -80,
+                             'OT_HOLD_FF_MARGIN': 10})
+        self.assertIn('RESULT 0', out)
+        self.assertIn('INSERTS 1 r1/D', out)
+        self.assertIn('final repair margin unchanged', out)
+
+    def test_bootstrap_target_keeps_existing_cell_cap(self):
+        out = self.run_case(['-250 in r1/D'],
+                            {'OT_IO_HOLD_PAD': 1, 'OT_IO_HOLD_PAD_PRE_TARGET_PS': -80})
+        self.assertIn('needs 5 HB4 > 4', out)
+        self.assertIn('INSERTS 0', out)
+
+    def test_bootstrap_target_cannot_lower_structural_guard(self):
+        out = self.run_case(['-106 in r1/D'],
+                            {'OT_IO_HOLD_PAD': 1, 'OT_IO_HOLD_PAD_PRE_TARGET_PS': -120})
+        self.assertIn('pre-target must lie in -100..0', out)
+        self.assertIn('INSERTS 0', out)
+
 
 if __name__ == '__main__':
     unittest.main()
