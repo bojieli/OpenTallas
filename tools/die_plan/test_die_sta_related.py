@@ -731,3 +731,14 @@ def test_period_boundary_can_change_setup_sign():
     slower = R.time_class([("a", "b", "p")], taps, {"h0": 0.0}, REG,
                           20.0, 833.333, 60.0, 25.0)
     assert canonical["worst_setup_slack_ps"] < 0 <= slower["worst_setup_slack_ps"]
+
+
+def test_related_helpers_share_exact_period():
+    import hold_demand
+    import seam_landing
+    import die_ci
+    import die_trial
+    import inspect
+    assert hold_demand.PERIOD_PS == seam_landing.PERIOD == die_ci.POLICY["period_ps"] == 833.0
+    assert float(inspect.signature(die_trial.clock_edge_readout).parameters["period"].default) == 833.0
+    assert "833.0 - $smx" in "\n".join(die_trial.clock_edge_readout("module t(); endmodule", "/tmp/arr"))
