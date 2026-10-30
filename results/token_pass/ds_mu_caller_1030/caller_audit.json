@@ -1,0 +1,61 @@
+{
+  "status": "PASS_ACTUAL_PIPELINE_CALLER_REFUSES_UNBOUND_RESOURCE_MU_CALENDARS",
+  "actual_jobs": [
+    {
+      "programme": "A",
+      "die_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+      "KIT": [
+        789
+      ],
+      "END": 809,
+      "HOST_words": 33,
+      "sealed_programme_held": true,
+      "actual_boot_payload_sha256": "fe36e73e8da78ac4a7a4d1ccdc66edd445aa27777a8f12e02f91a4ebea209f71",
+      "all_stage_ops_lowered": false
+    },
+    {
+      "programme": "B",
+      "die_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+      "KIT": [
+        10750
+      ],
+      "END": 10770,
+      "HOST_words": 515,
+      "sealed_programme_held": true,
+      "actual_boot_payload_sha256": "79f1ba9e342ac06d4cc3f072fe0ddf27cee834c11f3e6d7bee5f6545c1952103",
+      "all_stage_ops_lowered": false
+    }
+  ],
+  "emitted": 2,
+  "pipeline_status": "PARTIAL",
+  "new_blockers": [
+    {
+      "job": 0,
+      "cause": "selected_native_MU_return_calendar_missing",
+      "resource": [
+        "R000",
+        "A",
+        0
+      ],
+      "native_KIT_issues": [
+        789
+      ]
+    },
+    {
+      "job": 1,
+      "cause": "selected_native_MU_return_calendar_missing",
+      "resource": [
+        "R001",
+        "A",
+        0
+      ],
+      "native_KIT_issues": [
+        10750
+      ]
+    }
+  ],
+  "no_blanket_conflict_across_R000_R001": true,
+  "existing_source_clock_lifetime_production_holds_preserved": true,
+  "scope": "real old native PWF/bytes and existing TEST-only packetbook; no new physical dates or math qualification",
+  "full_token": false
+}

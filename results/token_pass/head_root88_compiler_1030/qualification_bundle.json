@@ -1,0 +1,59 @@
+{
+ "verdict": "PASS_CURRENT_SOURCE_WITNESS_GUARD",
+ "actual_witness": {
+  "schema": "opentallas.head.root88_compiler_boot.v1",
+  "status": "SOURCE_WITNESS_ONLY",
+  "source_plan_sha256": "655784af46096873ba3235578fbc045d24a567ec614aedc4ad16b4cb11e12d2f",
+  "source_witness_sha256": {
+   "source_plan.json": "655784af46096873ba3235578fbc045d24a567ec614aedc4ad16b4cb11e12d2f",
+   "source_sidecar.json": "02dececead4ad7facaac03791bcdd63dcb593637ee23cfda73c52ab8925f2044",
+   "start_stages_src25q.json": "268dbd422ba708b36ff9eec33c47b76898b2ec3502eddafa1a0cb98fd8fd40b3",
+   "start_stages.sv": "47d93bb26b712a8a859d596fe273bc7f0af39d38a847993435b4971f7ec071da",
+   "root88_report.json": "6576ac58311ad8cc9550ab037f5fab8e6303a3232955060d2dddf55b7f18750d",
+   "boot88_account.json": "096ec946d40120485b9e12ed68ff664605fb273f278255162b2db355b24d335d"
+  },
+  "root": {
+   "id": "b0",
+   "region": "st:h",
+   "module": "ot_dp_landing_root",
+   "settle": 88,
+   "clock_port": "t_st_b0__clk",
+   "reset_port": "wrst_sp3__rst_start_raw_22"
+  },
+  "root_settle_cycles": 88,
+  "previous_settle_cycles": 74,
+  "delta_boot_cycles": 14,
+  "delta_from_original64_boot_cycles": 24,
+  "added_steady_cycles": 0,
+  "source_bounds": {
+   "root_start_upper_cycle": 110,
+   "part_start_max_cycle": 382,
+   "control_ready_or_fault_upper_cycle": 5861
+  },
+  "bounds_scope": "conditional generated START/CA/status network READY_OR_FAULT; native PMA/PHY/external HOST/mission excluded",
+  "physical_START_qualified": false,
+  "actual_physical_START_cycle": null,
+  "admission": "actual registered root ready && !actual sticky fault && actual host boot_done",
+  "global_booking_qualified": false
+ },
+ "production_gaps": [
+  {
+   "cause": "HEAD_physical_START_HOST_PMA_authority_missing",
+   "actual_physical_START_cycle": null,
+   "root_ready_or_fault_bound_is_not_mission": true
+  }
+ ],
+ "controls_caught": {
+  "missing_witness": "rejected",
+  "wrong_selected_source": "rejected",
+  "missing_or_timeout_derived_START": "all blocked; no physical event inferred",
+  "stale_settle_64": "rejected actual source identity mismatch",
+  "stale_settle_74": "rejected actual source identity mismatch"
+ },
+ "selected_source": {
+  "schema": "opentallas.head.root88_source_selection.v1",
+  "bundle_root": "/srv/opentallas-scratch2/claude/codex-head-event-1030/head_current_source_legal88"
+ },
+ "physical_START_qualified": false,
+ "full_token": false
+}

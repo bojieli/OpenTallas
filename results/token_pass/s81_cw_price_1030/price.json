@@ -1,0 +1,328 @@
+{
+  "scope": "ONE_FORWARD_GUNIT_CW_R25_SOURCE_PRICE_NOT_ADOPTED",
+  "S81_source_event": "117e37566c",
+  "canonical_plan_source": "b19b88c9a78",
+  "canonical_plan_sha256": "39aa595f5bd3e5006d7d6045103a7c145b8779ed8a2fb50cd125bfddd94338a2",
+  "lane": "unit__seqhost__gunit",
+  "current": {
+    "cycles": 72,
+    "stations": 52,
+    "boundary": 2,
+    "faces": 14,
+    "fixed": 0,
+    "clock_landing": 18,
+    "natural": 72,
+    "pad": 0,
+    "param": "LAT_UNIT__SEQHOST__GUNIT"
+  },
+  "candidate": {
+    "cycles": 73,
+    "stations": 52,
+    "boundary": 2,
+    "faces": 14,
+    "fixed": 1,
+    "clock_landing": 18,
+    "natural": 73,
+    "pad": 0,
+    "param": "LAT_UNIT__SEQHOST__GUNIT"
+  },
+  "changed_lanes": [
+    "unit__seqhost__gunit"
+  ],
+  "reverse_or_other_lanes_changed": [],
+  "actual_payload_bits": 265,
+  "epoch_bit_separate": true,
+  "actual_wrapper_bus_width": 266,
+  "declared_lane_capacity": 267,
+  "exact_CW_mapping": [
+    {
+      "sink_port": "cw_a",
+      "sink_bits": [
+        [
+          0,
+          7
+        ]
+      ],
+      "source": "u_seqhost.u_seqhost.cw_a",
+      "source_bits": [
+        [
+          0,
+          5
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "asbuilt_stages": 42,
+      "bound_stages": 72,
+      "landed_stages": 72,
+      "lane": "unit__seqhost__gunit"
+    },
+    {
+      "sink_port": "cw_d",
+      "sink_bits": [
+        [
+          0,
+          255
+        ]
+      ],
+      "source": "u_seqhost.u_seqhost.cw_d",
+      "source_bits": [
+        [
+          0,
+          255
+        ]
+      ],
+      "asbuilt_stages": 42,
+      "bound_stages": 72,
+      "landed_stages": 72,
+      "lane": "unit__seqhost__gunit"
+    },
+    {
+      "sink_port": "cw_v",
+      "sink_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "u_seqhost.u_seqhost.cw_v",
+      "source_bits": [
+        [
+          0,
+          0
+        ]
+      ],
+      "asbuilt_stages": 42,
+      "bound_stages": 72,
+      "landed_stages": 72,
+      "lane": "unit__seqhost__gunit"
+    }
+  ],
+  "current_bound_target": "u_gunit.u_l2.cw_*",
+  "current_target_age_from_seqhost_CW_output": 72,
+  "candidate_target_age_from_seqhost_CW_output": 73,
+  "selected_seqhost_command_to_CW_output_edges": 3,
+  "current_native_issue_to_GUNIT_CW_input_edges": 75,
+  "candidate_native_issue_to_GUNIT_CW_input_edges": 76,
+  "marginal_CW_admission_edges": 1,
+  "marginal_CW_admission_ps": 833,
+  "marginal_wire_II_edges": 0,
+  "physical_station": {
+    "kind": "one IN station",
+    "payload_W": 265,
+    "site_um": [
+      1440.08,
+      328.32
+    ]
+  },
+  "composer_source_sha256": "4d274f76e92f143c4fbb051f038d7df0523bad7f8eeb617f9ac646c6032dfa26",
+  "composer_terms_current": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)"
+    },
+    "field_round": {
+      "cycles": 152,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+    },
+    "leaf_hub_rt": {
+      "cycles": 39,
+      "lanes": [
+        "dn_s_1S_L4",
+        "up_s_6S_L4"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+    },
+    "svc_to_hub": {
+      "cycles": 30,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+    },
+    "link_end": {
+      "cycles": 70,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0S"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+    }
+  },
+  "composer_terms_candidate": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)"
+    },
+    "field_round": {
+      "cycles": 152,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+    },
+    "leaf_hub_rt": {
+      "cycles": 39,
+      "lanes": [
+        "dn_s_1S_L4",
+        "up_s_6S_L4"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+    },
+    "svc_to_hub": {
+      "cycles": 30,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+    },
+    "link_end": {
+      "cycles": 70,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0S"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+    }
+  },
+  "composer_CW_lane_consumed": false,
+  "composer_returned_delta_edges": 0,
+  "rate_marginal_qualified": false,
+  "rate_delta_reason": "CW is absent from this composer; unchanged terms are an omission, not proof of unchanged rate",
+  "carried_model_not_requalified": {
+    "MTP_tok_s": 3655.3,
+    "AR_tok_s": 1259.6
+  },
+  "caller_exposures": [
+    {
+      "programme": "A",
+      "scope": "actual historical native compiler bytes; not current source/date qualification",
+      "die_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+      "GUNIT_timed_rows": 0,
+      "GUNIT_issue_slots": [],
+      "HOST_CSR14_CW_configuration_words": 0,
+      "marginal_admission_per_affected_crossing_edges": 1,
+      "wire_II_change": 0
+    },
+    {
+      "programme": "B",
+      "scope": "actual historical native compiler bytes; not current source/date qualification",
+      "die_sha256": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+      "GUNIT_timed_rows": 2,
+      "GUNIT_issue_slots": [
+        7948,
+        9654
+      ],
+      "HOST_CSR14_CW_configuration_words": 63,
+      "marginal_admission_per_affected_crossing_edges": 1,
+      "wire_II_change": 0
+    }
+  ],
+  "current_entry_native_byte_counts": {
+    "scope": "PINNED_CURRENT_ENTRY_COHORT_CW_EXPOSURE",
+    "source_die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+    "pages": 40,
+    "engine_counts": {
+      "0": 2040,
+      "14": 40,
+      "15": 40,
+      "1": 2040
+    },
+    "HOST_words": 16715,
+    "HOST_CSR14_words": 0,
+    "GUNIT_timed_rows": 0,
+    "only_VN_VS_KIT_END": true,
+    "R25_source_adopted": false
+  },
+  "current_entry_PW_HLOAD_GAIN_CW_exposure": {
+    "GUNIT_engine_rows": 0,
+    "HOST_CSR14_words": 0,
+    "actual_commands": "3920TARGET5+80HLOAD+80GAIN use VN/VS only; KIT/END/MU use separate paths",
+    "admission_or_store_fence_delta_from_this_leg": 0,
+    "qualification": "component dependency exclusion only; entryboundc092 cohort not retagged to R25"
+  },
+  "bootstrap_effect": "every affected CW beat reaches Gunit1edge later; last-CW-ready may shift1 once per batch. No extra beat interval, no reverse/wholeS81/BOOT-span increment inferred.",
+  "timed_GUNIT_effect": "if issuer dates unchanged, job admission and receiver-relative consumers gain1edge per affected dependency. Rebook precise Gunit data/calendar consumers; postedACK remains local issue+5.",
+  "current_physical_START_or_global_programme_dates_qualified": false,
+  "old_BoundDie_cohort_preserved": true,
+  "pending": "S81 owner owns exact privateINsource/miter/bind/gates and approvedplan publication; no silent source/calendar adoption"
+}

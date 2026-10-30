@@ -1,0 +1,130 @@
+{
+  "status": "PASS_ACTUAL_PIPELINE_SELECTED_SOURCE_MU_REFUSAL_BRANCH",
+  "emitted": 2,
+  "pipeline_status": "PARTIAL",
+  "qualified_selected_MU_source_instantiated": true,
+  "native_old_jobs_retagged": false,
+  "actual_legacy_KITs": [
+    789,
+    10750
+  ],
+  "configured_current_entry_RL": 489,
+  "required_current_KIT": 482,
+  "per_resource_refusals": [
+    {
+      "cause": "native_KIT_disagrees_with_armed_MU_return",
+      "native_KIT": 789,
+      "required_KIT": 482,
+      "configured_RL": 489,
+      "job": 0
+    },
+    {
+      "cause": "native_MU_programme_source_mismatch",
+      "native_die": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+      "selected_die": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+      "job": 0
+    },
+    {
+      "cause": "native_MU_receiver_source_variant_mismatch",
+      "receiver_parameters": {},
+      "measured_parameters": {
+        "HOSTB_ENABLE": 0,
+        "STATIC_KS6": 0,
+        "STATIC_KS_SPAN": 0,
+        "STATIC_KS_GRAPH_TAG": 0,
+        "FMUT": 0
+      },
+      "job": 0
+    },
+    {
+      "cause": "native_MU_clock_reset_identity_mismatch",
+      "job": 0
+    },
+    {
+      "cause": "native_KS_off_selected_MU_slot",
+      "seq_KS": 10602,
+      "first_KS": 2424,
+      "slot_offsets": [
+        0,
+        2596
+      ],
+      "period": 5192,
+      "job": 0
+    },
+    {
+      "cause": "native_KIT_disagrees_with_armed_MU_return",
+      "native_KIT": 10750,
+      "required_KIT": 482,
+      "configured_RL": 489,
+      "job": 1
+    },
+    {
+      "cause": "native_MU_programme_source_mismatch",
+      "native_die": "86dd02b2269e8ff96789db513ad4f93b501891c1e029436a9fe8cafa7d2f1718",
+      "selected_die": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+      "job": 1
+    },
+    {
+      "cause": "native_MU_receiver_source_variant_mismatch",
+      "receiver_parameters": {},
+      "measured_parameters": {
+        "HOSTB_ENABLE": 0,
+        "STATIC_KS6": 0,
+        "STATIC_KS_SPAN": 0,
+        "STATIC_KS_GRAPH_TAG": 0,
+        "FMUT": 0
+      },
+      "job": 1
+    },
+    {
+      "cause": "native_MU_clock_reset_identity_mismatch",
+      "job": 1
+    },
+    {
+      "cause": "native_KS_off_selected_MU_slot",
+      "seq_KS": 38402,
+      "first_KS": 2424,
+      "slot_offsets": [
+        0,
+        2596
+      ],
+      "period": 5192,
+      "job": 1
+    },
+    {
+      "cause": "native_MU_initialization_not_emitted_in_first_resource_boot",
+      "resource": [
+        "R000",
+        "A",
+        0
+      ]
+    },
+    {
+      "cause": "native_MU_initialization_or_first_KS_booking_differs",
+      "resource": [
+        "R000",
+        "A",
+        0
+      ]
+    },
+    {
+      "cause": "native_MU_initialization_not_emitted_in_first_resource_boot",
+      "resource": [
+        "R001",
+        "A",
+        0
+      ]
+    },
+    {
+      "cause": "native_MU_initialization_or_first_KS_booking_differs",
+      "resource": [
+        "R001",
+        "A",
+        0
+      ]
+    }
+  ],
+  "no_cross_resource_conflict": true,
+  "scope": "source/return/slot compatibility branch on real prior native bytes with TEST-only transportbook; not global date authority",
+  "full_token": false
+}
