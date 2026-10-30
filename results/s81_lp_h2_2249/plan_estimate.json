@@ -1,0 +1,351 @@
+{
+ "types": {
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "lanes": 4,
+   "hard_cores": 8,
+   "parent_sram": 45,
+   "child_sram": 220,
+   "std_parent_estimate": 186027,
+   "child_clock_budget_ps": {
+    "TT": 250,
+    "FF": 202.5
+   },
+   "cycle_delta_hardening": 0,
+   "status": "CANDIDATE: landing/reset recomposition and physical gates required"
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "lanes": 4,
+   "hard_cores": 8,
+   "parent_sram": 45,
+   "child_sram": 220,
+   "std_parent_estimate": 148007,
+   "child_clock_budget_ps": {
+    "TT": 250,
+    "FF": 202.5
+   },
+   "cycle_delta_hardening": 0,
+   "status": "CANDIDATE: landing/reset recomposition and physical gates required"
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "lanes": 4,
+   "hard_cores": 8,
+   "parent_sram": 45,
+   "child_sram": 220,
+   "std_parent_estimate": 138723,
+   "child_clock_budget_ps": {
+    "TT": 250,
+    "FF": 202.5
+   },
+   "cycle_delta_hardening": 0,
+   "status": "CANDIDATE: landing/reset recomposition and physical gates required"
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "lanes": 2,
+   "hard_cores": 4,
+   "parent_sram": 25,
+   "child_sram": 110,
+   "std_parent_estimate": 117900,
+   "child_clock_budget_ps": {
+    "TT": 250,
+    "FF": 202.5
+   },
+   "cycle_delta_hardening": 0,
+   "status": "CANDIDATE: landing/reset recomposition and physical gates required"
+  }
+ },
+ "neighbours": {
+  "s_0N_x03": "slice_station__t41",
+  "s_0S_x05": "slice_station__t38",
+  "s_7S_x17": "slice_station__t28",
+  "s_7N_x13": "slice_station__t51",
+  "s_7N_x11": "slice_station__t30__cl6a190133",
+  "s_7S_x19": "slice_station__t29__cl2e5c855a",
+  "s_0S_x07": "slice_station__t6__cl54a9ceeb"
+ },
+ "ports": [
+  "coll__s_0N_LP__lk_WN0__0",
+  "coll__lk_WN2__s_0N_LP__7",
+  "coll__lk_WN0__s_0N_LP__5",
+  "coll__lk_WS1__s_0S_LP__8",
+  "coll__s_0N_LP__lk_WN2__0",
+  "coll__s_0S_LP__lk_WS1__0",
+  "coll__s_7S_LP__lk_ES0__0",
+  "coll__s_0S_LP__lk_WS0__0",
+  "coll__lk_ES0__s_7S_LP__8",
+  "coll__lk_ES1__s_7S_LP__9",
+  "coll__s_7S_LP__lk_ES1__0",
+  "coll__lk_WS0__s_0S_LP__7",
+  "coll__s_7N_LP__lk_EN0__0",
+  "coll__lk_EN0__s_7N_LP__5",
+  "coll__lk_EN1__s_7N_LP__6",
+  "coll__s_7N_LP__lk_EN1__0",
+  "unit__s_7N_LP__seqhost__0",
+  "unit__s_7N_LP__seqhost__5",
+  "unit__s_7N_LP__seqhost__6",
+  "coll__lk_WN3__s_0N_LP__4",
+  "coll__s_0N_LP__lk_WN3__0",
+  "coll__lk_WN1__s_0N_LP__6",
+  "coll__s_0N_LP__lk_WN1__0",
+  "unit__seqhost__s_0S_LP__6",
+  "unit__seqhost__s_7S_LP__7",
+  "unit__seqhost__s_7N_LP__7",
+  "unit__seqhost__s_7N_LP__8",
+  "unit__seqhost__s_7N_LP__13",
+  "unit__seqhost__s_0N_LP__6",
+  "unit__seqhost__s_0N_LP__7",
+  "ctrl__s_0N_LP__seqhost__5",
+  "ctrl__s_0N_LP__seqhost__6",
+  "coll__s_7N_LP__lk_EN2__0",
+  "coll__lk_EN2__s_7N_LP__4",
+  "coll__s_7N_LP__lk_EN3__0",
+  "coll__lk_EN3__s_7N_LP__7",
+  "coll__s_0S_LP__lk_WS2__0",
+  "coll__lk_WS2__s_0S_LP__9",
+  "coll__s_0S_LP__lk_WS3__0",
+  "coll__lk_WS3__s_0S_LP__6",
+  "tl__bk_sel__s_0N_LP__9",
+  "ca__s_0N_LP__bk_sel__0",
+  "cb__s_0N_LP__bk_sel__0",
+  "tp__bk_sel__s_7N_LP__6",
+  "tp__s_7N_LP__bk_sel__0",
+  "tp__bk_sel__s_7S_LP__6",
+  "tp__bk_sel__s_7S_LP__7",
+  "ql__s_0N_LP__iqf__5",
+  "ql__s_0N_LP__iqf__6",
+  "qc__iqf__s_0N_LP__7",
+  "qc__iqf__s_0N_LP__8"
+ ],
+ "station_changes": [
+  {
+   "type": "slice_station__t41",
+   "slot": "ft4",
+   "old": 4,
+   "new": 5,
+   "added_cycles": 1,
+   "max_bit_manhattan_um": 1836.972
+  },
+  {
+   "type": "slice_station__t41",
+   "slot": "ft5",
+   "old": 4,
+   "new": 6,
+   "added_cycles": 2,
+   "max_bit_manhattan_um": 2031.852
+  },
+  {
+   "type": "slice_station__t41",
+   "slot": "ft6",
+   "old": 4,
+   "new": 5,
+   "added_cycles": 1,
+   "max_bit_manhattan_um": 1639.94
+  },
+  {
+   "type": "slice_station__t41",
+   "slot": "ft10",
+   "old": 4,
+   "new": 5,
+   "added_cycles": 1,
+   "max_bit_manhattan_um": 1745.388
+  },
+  {
+   "type": "slice_station__t30__cl6a190133",
+   "slot": "ft1",
+   "old": 4,
+   "new": 5,
+   "added_cycles": 1,
+   "max_bit_manhattan_um": 1693.248
+  },
+  {
+   "type": "slice_station__t30__cl6a190133",
+   "slot": "ft2",
+   "old": 4,
+   "new": 5,
+   "added_cycles": 1,
+   "max_bit_manhattan_um": 1869.12
+  },
+  {
+   "type": "slice_station__t51",
+   "slot": "ft6",
+   "old": 4,
+   "new": 5,
+   "added_cycles": 1,
+   "max_bit_manhattan_um": 1857.288
+  }
+ ],
+ "lane_cycle_changes": [
+  {
+   "lane": "coll__lk_WN2__s_0N_LP",
+   "old": 51,
+   "new": 52,
+   "added_cycles": 1
+  },
+  {
+   "lane": "unit__s_7N_LP__seqhost",
+   "old": 82,
+   "new": 83,
+   "added_cycles": 1
+  },
+  {
+   "lane": "coll__lk_WN3__s_0N_LP",
+   "old": 24,
+   "new": 26,
+   "added_cycles": 2
+  },
+  {
+   "lane": "coll__s_0N_LP__lk_WN3",
+   "old": 24,
+   "new": 25,
+   "added_cycles": 1
+  },
+  {
+   "lane": "unit__seqhost__s_7N_LP",
+   "old": 83,
+   "new": 84,
+   "added_cycles": 1
+  },
+  {
+   "lane": "coll__lk_EN3__s_7N_LP",
+   "old": 53,
+   "new": 54,
+   "added_cycles": 1
+  },
+  {
+   "lane": "tl__bk_sel__s_0N_LP",
+   "old": 53,
+   "new": 54,
+   "added_cycles": 1
+  }
+ ],
+ "pending": [
+  "exact bitwise FT reach recheck",
+  "strict bind",
+  "die clock",
+  "measured hard-child views",
+  "built CA/START phase and release-offset checks"
+ ],
+ "local_contracts": {
+  "slice_station__t41": {
+   "old_depth": 7,
+   "new_depth": 7,
+   "reset_consumers": 16,
+   "physical_pins": 24,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "dsdv_slice_lepw_mu_LP__t2": {
+   "old_depth": 5,
+   "new_depth": 6,
+   "reset_consumers": 16,
+   "physical_pins": 7,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "slice_station__t38": {
+   "old_depth": 7,
+   "new_depth": 7,
+   "reset_consumers": 16,
+   "physical_pins": 16,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "slice_station__t6__cl54a9ceeb": {
+   "old_depth": 6,
+   "new_depth": 6,
+   "reset_consumers": 16,
+   "physical_pins": 18,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "slice_station__t28": {
+   "old_depth": 7,
+   "new_depth": 7,
+   "reset_consumers": 16,
+   "physical_pins": 10,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "slice_station__t29__cl2e5c855a": {
+   "old_depth": 6,
+   "new_depth": 6,
+   "reset_consumers": 16,
+   "physical_pins": 16,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "dsdv_slice_lepw_mus_LP__t2": {
+   "old_depth": 6,
+   "new_depth": 6,
+   "reset_consumers": 16,
+   "physical_pins": 18,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "dsdv_slice_lepe_mu_LP__t2": {
+   "old_depth": 5,
+   "new_depth": 6,
+   "reset_consumers": 16,
+   "physical_pins": 5,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "slice_station__t30__cl6a190133": {
+   "old_depth": 7,
+   "new_depth": 7,
+   "reset_consumers": 16,
+   "physical_pins": 8,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "slice_station__t51": {
+   "old_depth": 7,
+   "new_depth": 7,
+   "reset_consumers": 16,
+   "physical_pins": 24,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  },
+  "dsdv_slice_lepe_nh_mus_LP__t1": {
+   "old_depth": 6,
+   "new_depth": 6,
+   "reset_consumers": 16,
+   "physical_pins": 12,
+   "reset_nodes": "ALL_PRESERVED",
+   "source_namespace": "u_bound.<exact bound child name>",
+   "data_cycles_added": 0
+  }
+ },
+ "boot_price": {
+  "reset_max_old": 100,
+  "reset_max_new": 100,
+  "ready_max_old": 500,
+  "ready_max_new": 507,
+  "local_reset_K_changes": {
+   "dsdv_slice_lepw_mu_LP__t2": {
+    "old": 5,
+    "new": 6
+   },
+   "dsdv_slice_lepe_mu_LP__t2": {
+    "old": 5,
+    "new": 6
+   }
+  },
+  "basis": "exact reset_tree.wf_plan + compose graph-distance law; real ready still gates START"
+ },
+ "g0c": {
+  "errors": 19,
+  "baseline_errors": 20,
+  "new_errors": 0,
+  "removed": "LP>400k hard-core cap"
+ }
+}

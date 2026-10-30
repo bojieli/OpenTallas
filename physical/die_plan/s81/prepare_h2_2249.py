@@ -306,6 +306,42 @@ def recompose_local(old, new, sidecar, report, plan_path):
                        physical_pins=len(lc.get('pins',[])),reset_nodes='ALL_PRESERVED',
                        source_namespace='u_bound.<exact bound child name>',data_cycles_added=0)
     report['local_contracts']=audit
+    # The two longer local reset trees must be visible to boot scheduling.
+    # Reuse compose()'s graph-distance/deadline law, without regenerating any
+    # unrelated landing topology or inventing a fixed ready date.
+    from collections import defaultdict
+    W=RT.wf_plan(P);collector=sidecar['collector'];budget=collector['boot_budget']
+    before_max=collector['reset_max_release'];before_ready=budget['ready_at_glue_max_cycles']
+    depths=dict(budget['local_registered_depths'])
+    for pn,row in collector['parts'].items():
+        tn=P.parts[pn]['type']
+        if tn not in audit or not row['active']:continue
+        inf=collector['types'][tn];tree=inf['tree'];root=inf['collector_root_node']
+        adj=defaultdict(list)
+        for relay in tree['relays']:
+            adj[relay['q']].append(relay['d']);adj[relay['d']].append(relay['q'])
+        dist={root:0};todo=[root]
+        while todo:
+            v=todo.pop()
+            for z in adj[v]:
+                if z not in dist:dist[z]=dist[v]+1;todo.append(z)
+        wanted=[f"rst_n_t{s['tap']}" for s in inf['local_sources']]+[c['node'] for c in inf['children']]
+        depths[pn]=max([dist[n]+1 for n in wanted]or[0])
+    deadlines={}
+    def deadline(pn):
+        if pn in deadlines:return deadlines[pn]
+        inf=collector['types'][P.parts[pn]['type']]
+        kids=[deadline(c['part'])+(21 if c['seam'] else CLP.STATUS_FACE_CYCLES) for c in inf['children']]
+        deadlines[pn]=max([W['max_release']+21]+kids)+depths[pn]
+        return deadlines[pn]
+    collector['reset_max_release']=W['max_release']
+    budget.update(raw_reset_release_max_cycles=W['max_release'],local_registered_depths=depths,
+                  ready_at_glue_max_cycles=deadline(collector['root']),physical_clock_phase_qualified=False)
+    report['boot_price']=dict(reset_max_old=before_max,reset_max_new=W['max_release'],
+                              ready_max_old=before_ready,ready_max_new=budget['ready_at_glue_max_cycles'],
+                              local_reset_K_changes={tn:dict(old=r['old_depth'],new=r['new_depth'])
+                                                     for tn,r in audit.items()if r['old_depth']!=r['new_depth']},
+                              basis='exact reset_tree.wf_plan + compose graph-distance law; real ready still gates START')
     report['pending']=[x for x in report['pending'] if x!='landing/reset contracts and sidecar']
     report['pending'].append('built CA/START phase and release-offset checks')
     return new,sidecar,report
