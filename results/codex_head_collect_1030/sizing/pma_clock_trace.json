@@ -1,0 +1,43 @@
+{
+ "pma_rck[0]": {
+  "root_net": "pma_rck[0]",
+  "clock_loads": 13513,
+  "nonclock_loads": 0,
+  "nonclock_examples": [],
+  "pin_histogram": {
+   "CLK": 13509,
+   "clk": 2,
+   "wclk": 1,
+   "rclk": 1
+  },
+  "core_child_clock": [
+   {
+    "inst": "u_phy.u_link.u_dec.u_chn",
+    "pin": "clk",
+    "master": "ot_s81_kp4_dchn"
+   }
+  ],
+  "rate_matcher_clock_loads": 4112,
+  "input_clock_bterms": [
+   "pma_rck[0]"
+  ],
+  "driver_examples": []
+ },
+ "pma_tck[0]": {
+  "root_net": "pma_tck[0]",
+  "clock_loads": 0,
+  "nonclock_loads": 0,
+  "nonclock_examples": [],
+  "pin_histogram": {},
+  "core_child_clock": [],
+  "rate_matcher_clock_loads": 0,
+  "input_clock_bterms": [],
+  "driver_examples": [
+   {
+    "net": "pma_tck[0]",
+    "driver": "_403112_/Y",
+    "master": "BUFx2_ASAP7_75t_R"
+   }
+  ]
+ }
+}

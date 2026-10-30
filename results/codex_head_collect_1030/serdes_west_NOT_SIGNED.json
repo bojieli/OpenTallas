@@ -1,0 +1,695 @@
+{
+ "schema": "opentallas.signoff.v1",
+ "name": "hbc_ot_s81_kp4_dchn",
+ "generated": "2026-10-30T04:48:03-07:00",
+ "host": "tolerant-swine",
+ "inputs": {
+  "base": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base",
+  "orfs": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run",
+  "design": "hbc_ot_s81_kp4_dchn",
+  "kit": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest",
+  "odb": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base/6_final.odb",
+  "spef": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base/6_final.spef",
+  "sdc": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/constraint.sdc",
+  "sdc_source": "kit",
+  "synth": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base/1_synth.v",
+  "final_v": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base/6_final.v",
+  "metrics": {
+   "5_2_route.json": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/logs/asap7/hbc_ot_s81_kp4_dchn/base/5_2_route.json",
+   "6_report.json": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/logs/asap7/hbc_ot_s81_kp4_dchn/base/6_report.json"
+  },
+  "drc_rpt": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/reports/asap7/hbc_ot_s81_kp4_dchn/base/5_route_drc.rpt",
+  "pins": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/pins.json",
+  "sdc_lint_ctx": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/sdc_lint.json",
+  "record": null,
+  "library_config": null
+ },
+ "policy": {
+  "period_ps": 833.0,
+  "uncertainty_setup_ps": 60.0,
+  "uncertainty_hold_ps": 25.0,
+  "spread_max_ps": 80.0,
+  "spread_corners": [
+   "tt",
+   "ff"
+  ],
+  "insertion_tol_ps": 40.0,
+  "fanout_max": 64,
+  "ff_vclk": "rebind",
+  "ff_vclk_contract": "kit per-corner insertion binding /srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/sdc_lint.json",
+  "insertion_bound": {
+   "tt": 250.0,
+   "ff": 202.5,
+   "tol": 40.0,
+   "source": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/sdc_lint.json"
+  },
+  "ff_vclk_bound_ps": null,
+  "hold_overlay": "set_output_delay -min 0 / set_input_delay -min -40 vs the IO virtual clock",
+  "derate": "none in the verdict (60/25 ps uncertainty is the OCV+jitter margin); ocv5_* = flat late 1.05 / early 0.95, information only",
+  "engine": "OpenSTA in OpenROAD (openroad/orfs:latest), one process per corner",
+  "libs": "Exact routed-kit ORFS make TC/BC_LIB_FILES including macro views; hashed receipt",
+  "corner_rule": "setup TT / hold FF / 60-25 ps / related pair skew CPPR <= 80 TT+FF; spread INFO; SS information only (owner 2026-10-24, AGENTS.md c7ce2ed69a)"
+ },
+ "tool_commit": null,
+ "corners": {
+  "tt": {
+   "done": true,
+   "design": "ot_s81_kp4_dchn",
+   "cells": 386515.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk"
+   ],
+   "inputs": [
+    "k_L",
+    "k_any",
+    "k_lo",
+    "k_v",
+    "rst_n"
+   ],
+   "outputs": [
+    "apply",
+    "cw_q",
+    "fs",
+    "n_corr",
+    "n_unc",
+    "o_ne",
+    "o_unc"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 288.353918 samples 1253 missing 0 clocks 1",
+   "sdc_wns_max": -142.81,
+   "sdc_wns_min": -15.0,
+   "sdc_tns_max": -26073.36,
+   "sdc_tns_min": -87.91,
+   "sdc_nviol_max": 582.0,
+   "sdc_nviol_min": 13.0,
+   "std_wns_max": -142.81,
+   "std_wns_min": 23.35,
+   "std_tns_max": -26073.36,
+   "std_tns_min": 0.0,
+   "std_nviol_max": 582.0,
+   "std_nviol_min": 0.0,
+   "slew_viol": 1217.0,
+   "cap_viol": 0.0,
+   "fanout_max": 182.0,
+   "fanout_worst_net": "g_ch[13].u_iv/net35122",
+   "fanout_viol": 132.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "pg_terms": 773030.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
+   "insertion_all": {
+    "n": 3237,
+    "min": 264.22,
+    "mean": 285.73,
+    "max": 345.08,
+    "spread": 80.86
+   },
+   "insertion_pinflops": {
+    "n": 1253,
+    "min": 264.23,
+    "mean": 288.35,
+    "max": 341.22,
+    "spread": 76.99
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 105296.0,
+      "worst_abs_ps": 75.51,
+      "bounded": false,
+      "worst_signed_ps": -75.51,
+      "worst_launch": "Rl[20][3]$_DFF_P_",
+      "worst_capture": "e1_lz[32]$_DFF_P_",
+      "worst_crpr_ps": 3.21,
+      "p99_raw_ps": 44.36,
+      "searched": 61.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 105296.0,
+      "worst_abs_ps": 85.06,
+      "bounded": false,
+      "worst_signed_ps": 85.06,
+      "worst_launch": "Rl[5][6]$_DFF_P_",
+      "worst_capture": "e1_dv[23][3]$_DFF_P_",
+      "worst_crpr_ps": 1.98,
+      "p99_raw_ps": 68.35,
+      "searched": 18.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 3237.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 3237.0,
+     "pairs": 105296.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 33.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFHQNx1_ASAP7_75t_R",
+    "DFFHQNx2_ASAP7_75t_R"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": -193.73,
+   "ocv5_wns_min": -0.94,
+   "corner": "tt",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFHQNx1_ASAP7_75t_R",
+     "DFFHQNx2_ASAP7_75t_R"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/signoff/tt/libraries.json"
+   }
+  },
+  "ff": {
+   "done": true,
+   "design": "ot_s81_kp4_dchn",
+   "cells": 386515.0,
+   "parasitics": "spef",
+   "clocks": [
+    "clk",
+    "vclk"
+   ],
+   "vclks": [
+    "vclk"
+   ],
+   "periods": {
+    "clk": 833.0,
+    "vclk": 833.0
+   },
+   "clock_ports": [
+    "clk"
+   ],
+   "inputs": [
+    "k_L",
+    "k_any",
+    "k_lo",
+    "k_v",
+    "rst_n"
+   ],
+   "outputs": [
+    "apply",
+    "cw_q",
+    "fs",
+    "n_corr",
+    "n_unc",
+    "o_ne",
+    "o_unc"
+   ],
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 229.523481 samples 1253 missing 0 clocks 1",
+   "sdc_wns_max": 52.0,
+   "sdc_wns_min": 0.76,
+   "sdc_tns_max": 0.0,
+   "sdc_tns_min": 0.0,
+   "sdc_nviol_max": 0.0,
+   "sdc_nviol_min": 0.0,
+   "std_wns_max": 52.0,
+   "std_wns_min": -11.74,
+   "std_tns_max": 0.0,
+   "std_tns_min": -17.43,
+   "std_nviol_max": 0.0,
+   "std_nviol_min": 5.0,
+   "slew_viol": 1054.0,
+   "cap_viol": 0.0,
+   "fanout_max": 182.0,
+   "fanout_worst_net": "g_ch[13].u_iv/net35122",
+   "fanout_viol": 132.0,
+   "check_setup": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   },
+   "ck_errors": 0.0,
+   "pg_terms": 773030.0,
+   "pg_open": 0.0,
+   "pg_first_open": null,
+   "insertion_all": {
+    "n": 3237,
+    "min": 206.44,
+    "mean": 226.71,
+    "max": 282.48,
+    "spread": 76.04
+   },
+   "insertion_pinflops": {
+    "n": 1253,
+    "min": 206.69,
+    "mean": 229.52,
+    "max": 279.14,
+    "spread": 72.45
+   },
+   "pair_skew": {
+    "done": true,
+    "checks": {
+     "max": {
+      "n": 105296.0,
+      "worst_abs_ps": 70.88,
+      "bounded": false,
+      "worst_signed_ps": -70.88,
+      "worst_launch": "Rl[20][3]$_DFF_P_",
+      "worst_capture": "e1_lz[33]$_DFF_P_",
+      "worst_crpr_ps": 2.42,
+      "p99_raw_ps": 41.42,
+      "searched": 61.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     },
+     "min": {
+      "n": 105296.0,
+      "worst_abs_ps": 78.72,
+      "bounded": false,
+      "worst_signed_ps": 78.72,
+      "worst_launch": "Rl[5][6]$_DFF_P_",
+      "worst_capture": "e1_dv[23][3]$_DFF_P_",
+      "worst_crpr_ps": 1.38,
+      "p99_raw_ps": 63.56,
+      "searched": 11.0,
+      "nopath": 0.0,
+      "verify_ps": 0.0
+     }
+    },
+    "counts": {
+     "regs": 3237.0,
+     "no_clock_arrival": 0.0,
+     "data_pins": 3237.0,
+     "pairs": 105296.0,
+     "inter_clock": 0.0
+    },
+    "method": "tag",
+    "seconds": 38.0,
+    "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+    "tsv": "pair_skew.tsv"
+   },
+   "clock_endpoint_masters": [
+    "DFFHQNx1_ASAP7_75t_R",
+    "DFFHQNx2_ASAP7_75t_R"
+   ],
+   "clock_endpoint_mapping_errors": 0.0,
+   "ocv5_wns_max": 13.11,
+   "ocv5_wns_min": -30.89,
+   "corner": "ff",
+   "rc": 0,
+   "macro_libs": [],
+   "macro_missing": [],
+   "errors": [],
+   "clock_endpoint_coverage": {
+    "schema": "opentallas.clock_endpoint_coverage.v1",
+    "raw_pair_basis": "visible_clock_pins",
+    "models": [],
+    "instantiated_masters": [
+     "DFFHQNx1_ASAP7_75t_R",
+     "DFFHQNx2_ASAP7_75t_R"
+    ],
+    "status": "NO_UNEXPANDED_CHILD_ETM",
+    "verdict": "PASS",
+    "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+    "library_receipt": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/signoff/ff/libraries.json"
+   }
+  }
+ },
+ "sdc_lint": {
+  "verdict": "PASS",
+  "mode": "kit sdc_lint.json",
+  "errors": [],
+  "n_errors": 0,
+  "sdc": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/constraint.sdc",
+  "sdc_source": "kit"
+ },
+ "face_guard": {
+  "verdict": "FAIL",
+  "top": "ot_s81_kp4_dchn",
+  "checked": 943,
+  "ok": 545,
+  "fail_counts": {
+   "unregistered": 20,
+   "shared": 378
+  },
+  "fails": {
+   "unregistered": [
+    "k_any: loads AND2x2_ASAP7_75t_R _103922_",
+    "k_L[4]: loads OR2x2_ASAP7_75t_R _103919_",
+    "k_L[3]: loads AND2x2_ASAP7_75t_R _088180_",
+    "k_L[2]: loads AND2x2_ASAP7_75t_R _088182_",
+    "k_L[1]: loads AND2x2_ASAP7_75t_R _088184_"
+   ],
+   "shared": [
+    "o_unc: net _001272_ has 1 loads besides the port chain",
+    "apply[7]: net apply[7] has 1 loads besides the port chain",
+    "apply[6]: net apply[6] has 1 loads besides the port chain",
+    "apply[5]: net apply[5] has 1 loads besides the port chain",
+    "apply[4]: net apply[4] has 1 loads besides the port chain"
+   ]
+  },
+  "dead_declared": [],
+  "netlist": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base/1_synth.v",
+  "pins": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/pins.json",
+  "boundary_context": null,
+  "one_station_ft_slots": []
+ },
+ "route": {
+  "drc": 0,
+  "antenna_nets": 0,
+  "drc_source": "5_2_route.json",
+  "antenna_source": "5_2_route.json"
+ },
+ "checks": {
+  "setup_tt": {
+   "verdict": "FAIL",
+   "wns_ps": -142.81,
+   "tns_ps": -26073.36,
+   "violators": 582.0,
+   "sdc_wns_ps": -142.81,
+   "vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 288.353918 samples 1253 missing 0 clocks 1",
+   "reason": null
+  },
+  "hold_ff": {
+   "verdict": "FAIL",
+   "wns_ps": -11.74,
+   "tns_ps": -17.43,
+   "violators": 5.0,
+   "sdc_wns_ps": 0.76,
+   "overlay": "applied vclk in_min -40 out_min 0",
+   "ff_vclk_reference": "applied mode pin_flop_mean clock vclk latency_ps 229.523481 samples 1253 missing 0 clocks 1",
+   "reason": null
+  },
+  "drv": {
+   "verdict": "FAIL",
+   "by_corner": {
+    "tt": {
+     "slew": 1217.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1054.0,
+     "cap": 0.0
+    }
+   },
+   "failing": {
+    "tt": {
+     "slew": 1217.0,
+     "cap": 0.0
+    },
+    "ff": {
+     "slew": 1054.0,
+     "cap": 0.0
+    }
+   }
+  },
+  "fanout": {
+   "verdict": "WARN",
+   "limit": 64,
+   "violators": {
+    "tt": 132.0,
+    "ff": 132.0
+   },
+   "max_fanout": 182.0,
+   "worst_net": "g_ch[13].u_iv/net35122"
+  },
+  "unconstrained": {
+   "verdict": "PASS",
+   "counts": {
+    "unconstrained": 0,
+    "unclocked": 0,
+    "loops": 0,
+    "multiple_clock": 0,
+    "generated": 0
+   }
+  },
+  "clock": {
+   "verdict": "FAIL",
+   "endpoint_model_coverage": {
+    "tt": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFHQNx2_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/signoff/tt/libraries.json"
+    },
+    "ff": {
+     "schema": "opentallas.clock_endpoint_coverage.v1",
+     "raw_pair_basis": "visible_clock_pins",
+     "models": [],
+     "instantiated_masters": [
+      "DFFHQNx1_ASAP7_75t_R",
+      "DFFHQNx2_ASAP7_75t_R"
+     ],
+     "status": "NO_UNEXPANDED_CHILD_ETM",
+     "verdict": "PASS",
+     "expanded_child_flop_pairs": "NO_LUMPED_CHILD_CLOCKS",
+     "library_receipt": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/signoff/ff/libraries.json"
+    }
+   },
+   "raw_clock_verdict": "FAIL",
+   "raw_pair_basis": "visible_clock_pins",
+   "pair_skew_max_ps": 80.0,
+   "spread_info_only": true,
+   "by_corner": {
+    "tt": {
+     "pinflops": {
+      "n": 1253,
+      "min": 264.23,
+      "mean": 288.35,
+      "max": 341.22,
+      "spread": 76.99
+     },
+     "all": {
+      "n": 3237,
+      "min": 264.22,
+      "mean": 285.73,
+      "max": 345.08,
+      "spread": 80.86
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 105296.0,
+        "worst_abs_ps": 75.51,
+        "bounded": false,
+        "worst_signed_ps": -75.51,
+        "worst_launch": "Rl[20][3]$_DFF_P_",
+        "worst_capture": "e1_lz[32]$_DFF_P_",
+        "worst_crpr_ps": 3.21,
+        "p99_raw_ps": 44.36,
+        "searched": 61.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 105296.0,
+        "worst_abs_ps": 85.06,
+        "bounded": false,
+        "worst_signed_ps": 85.06,
+        "worst_launch": "Rl[5][6]$_DFF_P_",
+        "worst_capture": "e1_dv[23][3]$_DFF_P_",
+        "worst_crpr_ps": 1.98,
+        "p99_raw_ps": 68.35,
+        "searched": 18.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 3237.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 3237.0,
+       "pairs": 105296.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 33.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    },
+    "ff": {
+     "pinflops": {
+      "n": 1253,
+      "min": 206.69,
+      "mean": 229.52,
+      "max": 279.14,
+      "spread": 72.45
+     },
+     "all": {
+      "n": 3237,
+      "min": 206.44,
+      "mean": 226.71,
+      "max": 282.48,
+      "spread": 76.04
+     },
+     "ck_errors": 0.0,
+     "pair_skew": {
+      "done": true,
+      "checks": {
+       "max": {
+        "n": 105296.0,
+        "worst_abs_ps": 70.88,
+        "bounded": false,
+        "worst_signed_ps": -70.88,
+        "worst_launch": "Rl[20][3]$_DFF_P_",
+        "worst_capture": "e1_lz[33]$_DFF_P_",
+        "worst_crpr_ps": 2.42,
+        "p99_raw_ps": 41.42,
+        "searched": 61.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       },
+       "min": {
+        "n": 105296.0,
+        "worst_abs_ps": 78.72,
+        "bounded": false,
+        "worst_signed_ps": 78.72,
+        "worst_launch": "Rl[5][6]$_DFF_P_",
+        "worst_capture": "e1_dv[23][3]$_DFF_P_",
+        "worst_crpr_ps": 1.38,
+        "p99_raw_ps": 63.56,
+        "searched": 11.0,
+        "nopath": 0.0,
+        "verify_ps": 0.0
+       }
+      },
+      "counts": {
+       "regs": 3237.0,
+       "no_clock_arrival": 0.0,
+       "data_pins": 3237.0,
+       "pairs": 105296.0,
+       "inter_clock": 0.0
+      },
+      "method": "tag",
+      "seconds": 38.0,
+      "measurement": "every same-clock register pair with a timing fan-in relation (exhaustive); worst damage CPPR-credited from the pair's own path end (exact unless bounded); p99 uncredited",
+      "tsv": "pair_skew.tsv"
+     }
+    }
+   },
+   "problems": [
+    "TT hold related pair skew 85.1 ps > 80 (Rl[5][6]$_DFF_P_ -> e1_dv[23][3]$_DFF_P_)"
+   ],
+   "insertion_target_ps": 250.0,
+   "insertion_bound": {
+    "tt": 250.0,
+    "ff": 202.5,
+    "tol": 40.0,
+    "source": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/sdc_lint.json"
+   }
+  },
+  "sdc_lint": {
+   "verdict": "PASS",
+   "mode": "kit sdc_lint.json",
+   "errors": [],
+   "n_errors": 0,
+   "sdc": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/constraint.sdc",
+   "sdc_source": "kit"
+  },
+  "face_guard": {
+   "verdict": "FAIL",
+   "top": "ot_s81_kp4_dchn",
+   "checked": 943,
+   "ok": 545,
+   "fail_counts": {
+    "unregistered": 20,
+    "shared": 378
+   },
+   "fails": {
+    "unregistered": [
+     "k_any: loads AND2x2_ASAP7_75t_R _103922_",
+     "k_L[4]: loads OR2x2_ASAP7_75t_R _103919_",
+     "k_L[3]: loads AND2x2_ASAP7_75t_R _088180_",
+     "k_L[2]: loads AND2x2_ASAP7_75t_R _088182_",
+     "k_L[1]: loads AND2x2_ASAP7_75t_R _088184_"
+    ],
+    "shared": [
+     "o_unc: net _001272_ has 1 loads besides the port chain",
+     "apply[7]: net apply[7] has 1 loads besides the port chain",
+     "apply[6]: net apply[6] has 1 loads besides the port chain",
+     "apply[5]: net apply[5] has 1 loads besides the port chain",
+     "apply[4]: net apply[4] has 1 loads besides the port chain"
+    ]
+   },
+   "dead_declared": [],
+   "netlist": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/run/results/asap7/hbc_ot_s81_kp4_dchn/base/1_synth.v",
+   "pins": "/srv/opentallas-scratch2/claude/codex-head-lep-serdes-2249/serdes_rstwest/pins.json",
+   "boundary_context": null,
+   "one_station_ft_slots": []
+  },
+  "drc": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "antenna": {
+   "verdict": "PASS",
+   "count": 0,
+   "source": "5_2_route.json"
+  },
+  "pg": {
+   "verdict": "PASS",
+   "open_terms": 0,
+   "pg_terms": 773030,
+   "first": null
+  },
+  "timing_modes": {
+   "verdict": "PASS",
+   "applicable": true,
+   "step": "signoff",
+   "tt": 250.0,
+   "ff": 202.5,
+   "mm": true
+  }
+ },
+ "reasons": [
+  "setup_tt: FAIL WNS -142.81 ps, 582 endpoints",
+  "hold_ff: FAIL WNS -11.74 ps, 5 endpoints",
+  "drv: FAIL TT slew 1217.0 cap 0.0, FF slew 1054.0 cap 0.0",
+  "clock: FAIL TT hold related pair skew 85.1 ps > 80 (Rl[5][6]$_DFF_P_ -> e1_dv[23][3]$_DFF_P_)",
+  "face_guard: FAIL {'unregistered': 20, 'shared': 378}"
+ ],
+ "verdict": "NOT SIGNED"
+}

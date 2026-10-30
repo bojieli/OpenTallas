@@ -1,0 +1,55 @@
+{
+ "stage": "actual final1_synth ODB after ORFS dead-logic elimination, no PNR",
+ "top": "ot_s81hd_serdes",
+ "std_cells": 232594,
+ "hard_macro_count": 3,
+ "std_area_um2": 33078.652020022375,
+ "macro_area_um2": 70858.8,
+ "macros": [
+  {
+   "name": "u_phy.u_link.u_dec.u_chn",
+   "master": "ot_s81_kp4_dchn",
+   "origin_um": [
+    0.0,
+    0.0
+   ],
+   "outline_um": [
+    216.0,
+    194.4
+   ],
+   "area_um2": 41990.4,
+   "orient": "R0"
+  },
+  {
+   "name": "u_phy.u_link.u_dec.u_dly.u_dmem",
+   "master": "ot_sram_1r1w2c_64x546_m1",
+   "origin_um": [
+    0.0,
+    0.0
+   ],
+   "outline_um": [
+    178.632,
+    81.0
+   ],
+   "area_um2": 14469.192,
+   "orient": "R0"
+  },
+  {
+   "name": "u_phy.u_link.u_dec.u_out.u_cmem",
+   "master": "ot_sram_1r1w_32x546_m1",
+   "origin_um": [
+    0.0,
+    0.0
+   ],
+   "outline_um": [
+    177.768,
+    81.0
+   ],
+   "area_um2": 14399.208,
+   "orient": "R0"
+  }
+ ],
+ "ff_count": 25898,
+ "all_std_below_400k": true,
+ "shape_qualified": false
+}
