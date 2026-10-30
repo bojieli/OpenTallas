@@ -1,0 +1,2625 @@
+{
+  "schema": "opentallas.s81.current_publication_raw_inputs.v1",
+  "source_asbuilt_sha256": "c7be0a5cfd11d31e593cff0126946888e8d031fd370e8c997d7fdd00ee4c2c54",
+  "die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+  "sid_straps": {
+    "u_s_0N.u_sl.u_xg": 1,
+    "u_s_0S.u_sl.u_xg": 0,
+    "u_s_1N.u_lp.u_xg": 3,
+    "u_s_1S.u_lp.u_xg": 2,
+    "u_s_2N.u_lp.u_xg": 5,
+    "u_s_2S.u_lp.u_xg": 4,
+    "u_s_3N.u_slice.u_xg": 7,
+    "u_s_3S.u_sl.u_xg": 6,
+    "u_s_4N.u_lp.u_xg": 9,
+    "u_s_4S.u_lp.u_xg": 8,
+    "u_s_5N.u_lp.u_xg": 11,
+    "u_s_5S.u_lp.u_xg": 10,
+    "u_s_6N.u_lp.u_xg": 13,
+    "u_s_6S.u_lp.u_xg": 12,
+    "u_s_7N.u_sl.u_xg": 15,
+    "u_s_7S.u_sl.u_xg": 14
+  },
+  "ring_links": [
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_lep.ri",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xg.vo",
+      "age_edges": 31,
+      "bits": 276
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_hbc.to_local",
+      "age_edges": 3,
+      "bits": 1104
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xg.vo",
+      "age_edges": 36,
+      "bits": 276
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xg.ro_w",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xg.vo",
+      "age_edges": 31,
+      "bits": 276
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xg.ro_w",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xg.vo",
+      "age_edges": 34,
+      "bits": 276
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xg.ro_e",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xg.vo",
+      "age_edges": 36,
+      "bits": 276
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xg.ro_e",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xg.vo",
+      "age_edges": 36,
+      "bits": 276
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xg.ro_w",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_gunit.u_l3.vo_s",
+      "age_edges": 60,
+      "bits": 276
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xg.ro_w",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_gunit.u_l5.vo_n",
+      "age_edges": 24,
+      "bits": 276
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.u_xg.ro_e",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_bk_sel.vo_s",
+      "age_edges": 60,
+      "bits": 276
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.u_xg.ro_e",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_seqhost.u_seqhost.vo_n",
+      "age_edges": 60,
+      "bits": 276
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xg.ro_w",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xg.vo",
+      "age_edges": 31,
+      "bits": 276
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xg.ro_w",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xg.vo",
+      "age_edges": 36,
+      "bits": 276
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xg.ro_e",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_eng.u_e.vo_s",
+      "age_edges": 54,
+      "bits": 276
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xg.ro_e",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xg.ro_w",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_eng.u_e.vo_n",
+      "age_edges": 93,
+      "bits": 276
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_lep.ri",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xg.vo",
+      "age_edges": 36,
+      "bits": 276
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "port": "ri_w",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xg.ro_e",
+      "age_edges": 5,
+      "bits": 1104
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "port": "ri_e",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_lep.ri",
+      "age_edges": 2,
+      "bits": 1104
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "port": "vi",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xg.vo",
+      "age_edges": 36,
+      "bits": 276
+    }
+  ],
+  "xf_forward": [
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_0S.u_sl.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_0S.u_sl.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_lf2.u_vq.xf",
+      "age_edges": 10,
+      "bits": 278,
+      "vq": "u_s_0S.u_sl.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_lf3.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_0S.u_sl.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 0,
+      "xg": "u_s_0S.u_sl.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_lf4.u_vq.xf",
+      "age_edges": 17,
+      "bits": 278,
+      "vq": "u_s_0S.u_sl.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_0N.u_sl.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_0N.u_sl.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_lf2.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_0N.u_sl.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_lf3.u_vq.xf",
+      "age_edges": 14,
+      "bits": 278,
+      "vq": "u_s_0N.u_sl.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 1,
+      "xg": "u_s_0N.u_sl.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_0N.u_sl.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_1S.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_1S.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_1S.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_1S.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 2,
+      "xg": "u_s_1S.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 19,
+      "bits": 278,
+      "vq": "u_s_1S.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_1N.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_1N.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 10,
+      "bits": 278,
+      "vq": "u_s_1N.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 13,
+      "bits": 278,
+      "vq": "u_s_1N.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 3,
+      "xg": "u_s_1N.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 16,
+      "bits": 278,
+      "vq": "u_s_1N.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_2S.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_2S.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 10,
+      "bits": 278,
+      "vq": "u_s_2S.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_2S.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 4,
+      "xg": "u_s_2S.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_2S.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_2N.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_2N.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_2N.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_2N.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 5,
+      "xg": "u_s_2N.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_2N.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.lf[0].u_lf.u_vq.xf",
+      "age_edges": 5,
+      "bits": 278,
+      "vq": "u_s_3S.u_sl.lf[0].u_lf.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.lf[1].u_lf.u_vq.xf",
+      "age_edges": 2,
+      "bits": 278,
+      "vq": "u_s_3S.u_sl.lf[1].u_lf.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.lf[2].u_lf.u_vq.xf",
+      "age_edges": 10,
+      "bits": 278,
+      "vq": "u_s_3S.u_sl.lf[2].u_lf.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.lf[3].u_lf.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_3S.u_sl.lf[3].u_lf.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 6,
+      "xg": "u_s_3S.u_sl.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.lf[4].u_lf.u_vq.xf",
+      "age_edges": 17,
+      "bits": 278,
+      "vq": "u_s_3S.u_sl.lf[4].u_lf.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.lf[0].u_lf.u_vq.xf",
+      "age_edges": 5,
+      "bits": 278,
+      "vq": "u_s_3N.u_slice.lf[0].u_lf.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.lf[1].u_lf.u_vq.xf",
+      "age_edges": 2,
+      "bits": 278,
+      "vq": "u_s_3N.u_slice.lf[1].u_lf.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.lf[2].u_lf.u_vq.xf",
+      "age_edges": 9,
+      "bits": 278,
+      "vq": "u_s_3N.u_slice.lf[2].u_lf.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.lf[3].u_lf.u_vq.xf",
+      "age_edges": 9,
+      "bits": 278,
+      "vq": "u_s_3N.u_slice.lf[3].u_lf.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 7,
+      "xg": "u_s_3N.u_slice.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.lf[4].u_lf.u_vq.xf",
+      "age_edges": 13,
+      "bits": 278,
+      "vq": "u_s_3N.u_slice.lf[4].u_lf.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_4S.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_4S.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 10,
+      "bits": 278,
+      "vq": "u_s_4S.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_4S.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 8,
+      "xg": "u_s_4S.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 16,
+      "bits": 278,
+      "vq": "u_s_4S.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_4N.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_4N.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 10,
+      "bits": 278,
+      "vq": "u_s_4N.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 13,
+      "bits": 278,
+      "vq": "u_s_4N.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 9,
+      "xg": "u_s_4N.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_4N.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_5S.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_5S.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_5S.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 13,
+      "bits": 278,
+      "vq": "u_s_5S.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 10,
+      "xg": "u_s_5S.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_5S.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_5N.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_5N.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_5N.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_5N.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 11,
+      "xg": "u_s_5N.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 16,
+      "bits": 278,
+      "vq": "u_s_5N.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_6S.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_6S.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_6S.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_6S.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 12,
+      "xg": "u_s_6S.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 20,
+      "bits": 278,
+      "vq": "u_s_6S.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_6N.u_lp.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_6N.u_lp.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_lf2.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_6N.u_lp.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_lf3.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_6N.u_lp.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 13,
+      "xg": "u_s_6N.u_lp.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_6N.u_lp.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_7S.u_sl.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_7S.u_sl.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_lf2.u_vq.xf",
+      "age_edges": 12,
+      "bits": 278,
+      "vq": "u_s_7S.u_sl.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_lf3.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_7S.u_sl.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 14,
+      "xg": "u_s_7S.u_sl.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_7S.u_sl.u_lf4.u_vq",
+      "k_strap": 4
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "leaf_input": 0,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_lf0.u_vq.xf",
+      "age_edges": 6,
+      "bits": 278,
+      "vq": "u_s_7N.u_sl.u_lf0.u_vq",
+      "k_strap": 0
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "leaf_input": 1,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_lf1.u_vq.xf",
+      "age_edges": 3,
+      "bits": 278,
+      "vq": "u_s_7N.u_sl.u_lf1.u_vq",
+      "k_strap": 1
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "leaf_input": 2,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_lf2.u_vq.xf",
+      "age_edges": 11,
+      "bits": 278,
+      "vq": "u_s_7N.u_sl.u_lf2.u_vq",
+      "k_strap": 2
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "leaf_input": 3,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_lf3.u_vq.xf",
+      "age_edges": 14,
+      "bits": 278,
+      "vq": "u_s_7N.u_sl.u_lf3.u_vq",
+      "k_strap": 3
+    },
+    {
+      "sid": 15,
+      "xg": "u_s_7N.u_sl.u_xg",
+      "leaf_input": 4,
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_lf4.u_vq.xf",
+      "age_edges": 18,
+      "bits": 278,
+      "vq": "u_s_7N.u_sl.u_lf4.u_vq",
+      "k_strap": 4
+    }
+  ],
+  "rstd_broadcast": [
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_d",
+      "age_edges": 19,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0N.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0N.u_sl.u_xr.rb_v",
+      "age_edges": 19,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_d",
+      "age_edges": 11,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_v",
+      "age_edges": 11,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_d",
+      "age_edges": 18,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_0S.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_0S.u_sl.u_xr.rb_v",
+      "age_edges": 18,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_d",
+      "age_edges": 17,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1N.u_lp.u_xr.rb_v",
+      "age_edges": 17,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_d",
+      "age_edges": 11,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_v",
+      "age_edges": 11,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_d",
+      "age_edges": 20,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_1S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_1S.u_lp.u_xr.rb_v",
+      "age_edges": 20,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_d",
+      "age_edges": 17,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2N.u_lp.u_xr.rb_v",
+      "age_edges": 17,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_d",
+      "age_edges": 11,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_v",
+      "age_edges": 11,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_d",
+      "age_edges": 18,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_2S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_2S.u_lp.u_xr.rb_v",
+      "age_edges": 18,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[0].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[0].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[1].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[1].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[2].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_d",
+      "age_edges": 9,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[2].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_v",
+      "age_edges": 9,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[3].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_d",
+      "age_edges": 9,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[3].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_v",
+      "age_edges": 9,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[4].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3N.u_slice.lf[4].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3N.u_slice.g_c1.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[0].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[0].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[1].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[1].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[2].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_d",
+      "age_edges": 11,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[2].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_v",
+      "age_edges": 11,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[3].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[3].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[4].u_lf.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_d",
+      "age_edges": 17,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_3S.u_sl.lf[4].u_lf.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_3S.u_sl.g_c3.u_xr.rb_v",
+      "age_edges": 17,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_d",
+      "age_edges": 18,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4N.u_lp.u_xr.rb_v",
+      "age_edges": 18,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_d",
+      "age_edges": 11,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_v",
+      "age_edges": 11,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_d",
+      "age_edges": 16,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_4S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_4S.u_lp.u_xr.rb_v",
+      "age_edges": 16,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_d",
+      "age_edges": 16,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5N.u_lp.u_xr.rb_v",
+      "age_edges": 16,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_d",
+      "age_edges": 18,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_5S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_5S.u_lp.u_xr.rb_v",
+      "age_edges": 18,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_d",
+      "age_edges": 18,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6N.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6N.u_lp.u_xr.rb_v",
+      "age_edges": 18,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_d",
+      "age_edges": 11,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_v",
+      "age_edges": 11,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_d",
+      "age_edges": 19,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_6S.u_lp.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_6S.u_lp.u_xr.rb_v",
+      "age_edges": 19,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_d",
+      "age_edges": 12,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_v",
+      "age_edges": 12,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_d",
+      "age_edges": 19,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7N.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7N.u_sl.u_xr.rb_v",
+      "age_edges": 19,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_d",
+      "age_edges": 5,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf0.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_v",
+      "age_edges": 5,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_d",
+      "age_edges": 2,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf1.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_v",
+      "age_edges": 2,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_d",
+      "age_edges": 13,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf2.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_v",
+      "age_edges": 13,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_d",
+      "age_edges": 10,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf3.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_v",
+      "age_edges": 10,
+      "bits": 1
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_d",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_d",
+      "age_edges": 18,
+      "bits": 32
+    },
+    {
+      "vn_b": "u_s_7S.u_sl.u_lf4.u_vn.u_b",
+      "port": "rb_v",
+      "status": "PASS_RAW_WORD",
+      "source": "u_s_7S.u_sl.u_xr.rb_v",
+      "age_edges": 18,
+      "bits": 1
+    }
+  ],
+  "glue_aliases_inferred": false,
+  "full_bind_verification": "PENDING dieowner",
+  "full_token": false,
+  "physical_START_qualified": false
+}

@@ -1,0 +1,198 @@
+{
+  "scope": "REAL_NATIVE_XQ_BODY_TRANSPORT_COMPONENT_ONLY",
+  "repo_commit": "1abb3fcb1e1e778eace6f9954f35087277bfe227",
+  "selected_manifest": "physical/die_plan/s81/bind/asbuilt_b178_coll_s13pfunc.json",
+  "selected_manifest_sha256": "30f39fd447fac8d229207d8b5bfd9e7f901b159e90536d4dde3869afc4fa22ee",
+  "actual_parent": "physical/die_plan/s81/bind/generated/dsdv_eng_rr.sv:u_xq",
+  "params": {
+    "TXD": 8,
+    "MUT": 0
+  },
+  "input_mapping": "vi_s->vi_a;vi_n->vi_b",
+  "output_mapping": "vo_b->vo_n;vo_a->vo_s",
+  "defines": [
+    "SYNTHESIS",
+    "DSFD_PQ_STATIC_X2",
+    "S81CTRL_SRAM_FIFO",
+    "S81CTRL_SRAM_P192",
+    "S81CTRL_NATIVE32",
+    "OT_COLL_NATIVE32",
+    "OT_COLL_NATIVE32_OFF",
+    "OT_S81ENG_TAP_N32R2",
+    "OT_S81SL_KV_TRANSPORT",
+    "OT_SVC_ALLQ",
+    "SU_SMU_T",
+    "OT_ATTN_HCORE",
+    "OT_S81ENG_RR_N32",
+    "OT_S81C_HCORE_CTLA",
+    "OT_S81C_HCORE_RST_TIMED",
+    "S81_HOSTB_LAND_OBS"
+  ],
+  "files": [
+    {
+      "path": "rtl/dsrom_sys/s81_dv/ot_s81dv_fp_n32.sv",
+      "sha256": "c10cf98c23337972debe03a11f1713aa9062da97dbff5b57261182d9e8e6d4e5"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/ot_s81dv_finish_sram.sv",
+      "sha256": "039e3f488fc2bd8b2e6b72ed983cee825b49a5e842acc16811ff4466f59bc9c6"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+      "sha256": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+      "sha256": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv",
+      "sha256": "a27d0f5732efa152d4c867362f2a76e529d337834987355d21a72447429c07ee"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv",
+      "sha256": "018fcdb4fde663581e37476e885c21970ed7cd997849b4cc12dd0b0033fdd8e6"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv",
+      "sha256": "bc30e150abd42e0cf01768e1c0b91e3200b3b87fec5b11b39a7f4c4dda4ae763"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv",
+      "sha256": "49043c6a2e9143c696a8885519ff6f4af9dca609bbcd0110f8db34a7814e1f4e"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra512.sv",
+      "sha256": "160dac9913664feac9420c78040e22e8c97fe504a0687e902b0cfe0e614ef810"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra512.sv",
+      "sha256": "17516cbdbe9f2e97e610541399b1ab625a41c673125890f154f3dde338af7323"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32.sv",
+      "sha256": "bd2ac8f11778ee3f0c8d0e2c2f062475bd3d5ca059a5f9a36e4e2c0b335600da"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_ra640.sv",
+      "sha256": "e24e58a227dd5ac853d57554ceaf60ecd25ed8287c88058f19060bc36d23c70f"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640.sv",
+      "sha256": "50f8d310a58c16aa0325972d4bc3da06022c2029fb35adf6242f1a8a58324211"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_n32_layer.sv",
+      "sha256": "9845645041e27c70abc19c87abf58fa2af3096936a6ceff092fb029e679a07a8"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_ra640_hx.sv",
+      "sha256": "d5258bdaa21a7af03ae4cdc261db6cb4ba7cf45bb1c72e96f77e9aee5f492545"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "path": "rtl/lib/ot_rst_relay_bounded32.sv",
+      "sha256": "d3ba9c38d47d5868efdec0e81dbba096732613299aba3a2b4f2e4d4498204785"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_reset3n32.sv",
+      "sha256": "c135dfdbdddbeaee5d1120cf64cf54952e5d9b31c6cf9238fd7b414d19be03b6"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "path": "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv",
+      "sha256": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa"
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_engram_gather.sv",
+      "sha256": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_aq12x.sv",
+      "sha256": "ff6c5a9f2223fa8741c924d729d5a1838f0fbc8bf794c51b3f9e134a09d557e1"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "sha256": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110"
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204"
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "sha256": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_aq_n32.sv",
+      "sha256": "9920c2355dc91558bad2da3830d12bb36a7b966078f90d9a9a5d0784aa93c6d2"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/eng/dsdv_eng_rr.sv",
+      "sha256": "8dda28079555c4da81c64ac0388e8d5c91b6322d5b00d211cf6943c11b810990"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v",
+      "sha256": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+      "sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v",
+      "sha256": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59"
+    },
+    {
+      "path": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
+      "sha256": "d4533939f695944bebd6a63a086e3771846bc0c379af52720de8974fee504145"
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_dv/eng/ot_s81eng_rr_n32.sv",
+      "sha256": "818cf256834f35b205dc5440f0efbaa4e622e5c5784fc6a22659677a8d236628"
+    },
+    {
+      "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r0c0_pc/ot_sram_1r1w_64x512_m1_r0c0_pc.v",
+      "sha256": "5cf89dab7119135efddaec4cc2a94e5ac4597a701bb7a3eda5fb8cb91d1513a5"
+    }
+  ],
+  "source_note": "Real XQ/AQ body files explicitly supplied beyond hard-core bind abstract closure.",
+  "expected_component_latency_edges": 2,
+  "bound_wire_ages_qualified": false,
+  "physical_START_qualified": false,
+  "full_token": false
+}

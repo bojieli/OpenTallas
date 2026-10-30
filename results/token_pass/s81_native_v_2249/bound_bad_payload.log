@@ -1,0 +1,10 @@
+BAD_PATH path=0 cycle=455 expected_age=114
+BAD_PATH path=4 cycle=490 expected_age=149
+BAD_PATH path=2 cycle=576 expected_age=235
+BAD_PATH path=0 cycle=1063 expected_age=114
+BAD_PATH path=4 cycle=1098 expected_age=149
+BAD_PATH path=2 cycle=1184 expected_age=235
+BOUND_MIDDLE_NATIVE_V FAIL checks=3264 errors=6 G_N=114 G_S=96 BK_N=235 BK_S=229 E_N=149 E_S=151 guards=1001 clock_ps=833
+[1182445000] %Fatal: tb_bound_middle.sv:63: Assertion failed in tb_bound_middle: current bound middle-V mismatch
+%Error: tb_bound_middle.sv:63: Verilog $stop
+Aborting...
