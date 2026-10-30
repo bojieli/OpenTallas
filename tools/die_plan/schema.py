@@ -357,6 +357,9 @@ SCHEMA = {
                     # explicitly retain boundary rows without changing outline, macro origins or pin positions.
                     "kit_core_margins_um": {"type": "array", "minItems": 4, "maxItems": 4,
                                             "items": {"type": "number", "minimum": 0}},
+                    # Explicit complete fixed-macro stage: validate every actual BLOCK against the planned
+                    # exact LOCKED inventory; ordinary tapcell/PDN/placement follow unchanged.
+                    "fully_fixed_macros": {"type": "boolean"},
                     # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
                     # so its die.pg.domains region may hold no macro; the note states why
                     "phy_pg_offmodel": {"type": "string", "minLength": 1},
