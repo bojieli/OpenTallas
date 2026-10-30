@@ -294,12 +294,14 @@ def compile_slice(sl, kd=None):
                 raise InfraError(f"gate {g.get('inst')}: domain must be open or planned, got {g.get('domain')!r}")
         planned_names = {g.get("inst") for g in tree.get("gates", []) if g.get("domain", "open") == "planned"}
         deferred = []
+        deferred_names = set()
         for c in tree.get("nodes", []):
             c = dict(c)
             par = c.get("parent")
             if par not in depth:
-                if planned_names and (par in planned_names or par in {d.get("name") for d in deferred}):
+                if planned_names and (par in planned_names or par in deferred_names):
                     deferred.append(c)
+                    deferred_names.add(c.get("name"))
                     continue
                 raise InfraError(f"{c.get('name')}: parent must precede child; missing parent/cycle")
             n = add_cell(c, c.get("island_rect_um"))

@@ -31,6 +31,11 @@ foreach bk [$ff_blk getBlockages] {
  set bb [$bk getBBox]; set hr [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
  if {$hr in $cland_avoid_db} continue
  lappend cland_hard $hr
+ # DPL treats hard blockages as unavailable row sites even when getRows
+ # still returns a full-width row. Every cland_put caller and capacity bound
+ # must share this occupancy, including non-ring structural helper groups.
+ lassign $hr hx0 hy0 hx1 hy1
+ cland_occupy $hx0 $hy0 [expr {$hx1-$hx0}] [expr {$hy1-$hy0}]
 }
 foreach spec $cland_groups {
  lassign $spec prefix rect tag

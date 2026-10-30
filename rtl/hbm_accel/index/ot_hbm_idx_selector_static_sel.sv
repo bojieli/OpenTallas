@@ -89,8 +89,12 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0,LO
     else begin
      if(op==1)value<=0;
      if(op==5&&!found)begin
-      if(int'(rank_left)<=(int'(hist[0][addr[5:0]])+int'(hist[1][addr[5:0]])+int'(hist[2][addr[5:0]])+int'(hist[3][addr[5:0]])))
+      // Preserve procedural X semantics: the original > test takes its
+      // else branch on X. Replacing it with <= would incorrectly hold value.
+      if(int'(rank_left)>(int'(hist[0][addr[5:0]])+int'(hist[1][addr[5:0]])+int'(hist[2][addr[5:0]])+int'(hist[3][addr[5:0]])))begin
+      end else begin
        value<=(threshold & prior_mask) | (16'(addr[5:0]) << shift);
+      end
      end
     end
    end

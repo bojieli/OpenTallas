@@ -1,0 +1,18 @@
+{
+ "kind": "model_fix_diagnostic_not_physical_signoff",
+ "dump": "intel2:/srv/opentallas-scratch2/claude/codex-btab-0336/geomB50r1/geom.tsv",
+ "grt_segments": "intel1:/srv/opentallas-scratch2/claude/codex-btab-0336/grt_segments",
+ "scope": "Zero-capacity bounding-box spans only. Allocate first adjacent contiguous positive-capacity runs; stop at next zero-capacity bin. Direct pin spans and blocked whole cuts unchanged.",
+ "hotspot": {
+  "cut_x_um": 252.5,
+  "y_um": [
+   89,
+   90
+  ],
+  "old_estimated_crossings": 134.1527753620695,
+  "new_estimated_crossings": 22.120199604493017,
+  "actual_global_route_unique_net_layer_crossings": 31
+ },
+ "gates": "No threshold changes. Candidate full GEOM remains FAIL on fill 0.0865 and empty 0.7964; channel H now 0.632 WARN under existing GRT0 policy. GRT0 is corroboration, never input to the demand estimator.",
+ "tests": "39 focused tests PASS, including positive 36um street, insufficient 10um street, zero-capacity wall, direct pin wall and no jump over another blockage."
+}

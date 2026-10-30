@@ -923,6 +923,26 @@ def _net_boxes(D, skip_clock=True):
     return out
 
 
+def _detour_channel_spans(cap, starts, ends):
+    """Use the complete positive-capacity street immediately adjoining either side of a blocked span.
+
+    A cut crossing can occupy any track of the first reachable street, not just its first one-um bin. Stop at the
+    next zero-capacity bin: this never adds a farther street across another macro wall. Caller uses this only for
+    bounding-box spans with zero capacity; directly accessible pin/net spans stay unchanged.
+    """
+    import numpy as np
+    nb = len(cap)
+    idx = np.arange(nb)
+    free = cap > 1e-12
+    previous = np.maximum.accumulate(np.where(free, idx, -1))[starts]
+    following = np.minimum.accumulate(np.where(free, idx, nb)[::-1])[::-1][ends]
+    run_start = np.maximum.accumulate(np.where(free & ~np.r_[False, free[:-1]], idx, 0))
+    run_end = np.minimum.accumulate(np.where(free & ~np.r_[free[1:], False], idx, nb - 1)[::-1])[::-1]
+    left = np.where(previous >= 0, run_start[np.maximum(previous, 0)], starts)
+    right = np.where(following < nb, run_end[np.minimum(following, nb - 1)], ends)
+    return left, right
+
+
 def demand_metrics(D, max_layer="M5", min_layer="M2"):
     """macro-aware cut demand (GEOM-REVIEW-24 ep/pslice method, generalised): on cut lines every CUT_STEP um, every
     signal net whose bounding box straddles the cut crosses it at least once; that crossing is spread over the net's
@@ -930,7 +950,8 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
     the local macro master does not obstruct, x TRACK_DERATE).  Utilisation of a window = crossings / capacity.
       channel_*: windows on cuts that pass macros, outside macros (inter-macro channels, edge strips)
       col_v:     per-column vertical demand: every DEMAND_WIN-wide column on every horizontal cut
-      detour_*:  net-cut crossings with no capacity inside the net's span, moved to the nearest free tracks (INFO)
+      detour_*:  net-cut crossings with no capacity inside the net's span, allocated over the immediately adjacent
+                 contiguous positive-capacity street(s), ending at the next blocked bin (INFO)
       blocked_*: crossings on a cut line with zero capacity everywhere (no legal crossing at all)"""
     import numpy as np
     X0, Y0, X1, Y1 = D.die
@@ -960,6 +981,7 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
         ia1 = np.clip(((hi_a - a0) / step).astype(int), 0, nb - 1)
         win = max(1, int(round(DEMAND_WIN / step)))
         col_best, ch_best, blocked, detour = (0.0, None), (0.0, None), 0, 0
+        detour_extension, detour_extent = 0.0, None
         for c in np.arange(b0 + CUT_STEP / 2, b1, CUT_STEP):
             cap = np.full(nb, full * step)
             inm = np.zeros(nb, bool)
@@ -980,16 +1002,20 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
             T = cs[s1 + 1] - cs[s0]
             z = T <= 1e-9
             if z.any():
-                # no capacity inside the net's span (e.g. W band <-> E face across an SRAM column under an M5
-                # ceiling): the route detours to the nearest free track on either side; that detour demand lands there
-                fr = cap > 1e-12
-                idx = np.arange(nb)
-                prv = np.maximum.accumulate(np.where(fr, idx, -1))
-                nxt = np.minimum.accumulate(np.where(fr, idx, nb)[::-1])[::-1]
-                p0, p1 = prv[s0[z]], nxt[s1[z]]
+                # Only a zero-capacity span may detour. Allocate over its first reachable contiguous street(s),
+                # rather than stacking every crossing on the first free one-um bin at the macro edge.
+                left, right = _detour_channel_spans(cap, s0[z], s1[z])
+                extension = np.maximum(s0[z] - left, right - s1[z]) * step
+                if len(extension) and float(extension.max()) > detour_extension:
+                    k = int(extension.argmax())
+                    detour_extension = float(extension[k])
+                    detour_extent = dict(cut_um=round(float(c), 1),
+                                         original_um=[round(a0 + int(s0[z][k])*step, 1),
+                                                      round(a0 + (int(s1[z][k])+1)*step, 1)],
+                                         allocated_um=[round(a0 + int(left[k])*step, 1),
+                                                       round(a0 + (int(right[k])+1)*step, 1)])
                 s0 = s0.copy(); s1 = s1.copy()
-                s0[z] = np.where(p0 >= 0, p0, s0[z])
-                s1[z] = np.where(p1 < nb, p1, s1[z])
+                s0[z], s1[z] = left, right
                 detour += int(z.sum())
                 T = cs[s1 + 1] - cs[s0]
                 z = T <= 1e-9
@@ -1048,12 +1074,72 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
         res[f"channel_{key}_at"] = ch_best[1]
         res[f"blocked_{key}"] = blocked
         res[f"detour_{key}"] = detour
+        res[f"detour_{key}_extension_max_um"] = detour_extension
+        res[f"detour_{key}_extent_at"] = detour_extent
         if d == "V":
             res["col_v_max"] = round(col_best[0], 3)
             res["col_v_at"] = col_best[1]
         res[f"tracks_{key}_per_um"] = round(full, 2)
     res["demand_layers"] = f"{min_layer}-{max_layer}"
     return res
+
+
+def clock_tree_leg_metrics(D):
+    """INFO: every actual rooted clock leg, independent of placement status.
+
+    Trace each sequential/macro clock pin to its real input port through the
+    clock input of K cells or the sole input of a BUF/INV. Include the root leg,
+    all intermediate legs and the final leg; unrelated nearby cells never help.
+    Distances use dumped cell centres, as the existing leaf-reach diagnostic does.
+    """
+    memo={};rooted=set();clock_cells=set();invalid=set()
+    def clock_input(cid):
+        ins=D.cell_in.get(cid,[])
+        marked=[n for n,is_clock in ins if is_clock]
+        if len(marked)==1:return marked[0]
+        if D.kind(cid)=="B" and len(ins)==1:return ins[0][0]
+        return None
+    def root(net,ancestors):
+        if net in memo:return memo[net]
+        if net in ancestors:
+            invalid.add("clock cycle");return None
+        dr=D.nets[net][1]
+        answer=None
+        if dr and dr[0]=="p":
+            pin=D.pin_by_k.get(dr[1])
+            if pin and pin["io"]=="INPUT":answer=dr[1]
+        elif dr and D.kind(dr[1]) in ("B","K"):
+            upstream=clock_input(dr[1])
+            if upstream is not None:
+                answer=root(upstream,ancestors|{net})
+                if answer is not None:clock_cells.add(dr[1])
+            else:invalid.add("ambiguous clock-cell input")
+        memo[net]=answer
+        if answer is not None:rooted.add(net)
+        return answer
+    unrooted=0
+    for cid,cell in D.cells.items():
+        if cell[0] not in ("S","M"):continue
+        for net,is_clock in D.cell_in.get(cid,[]):
+            if is_clock and root(net,set()) is None:unrooted+=1
+    maximum=0.0;worst=None;edges=set()
+    for net in rooted:
+        dr=D.nets[net][1]
+        if dr[0]=="p":
+            pin=D.pin_by_k[dr[1]];xy=(pin["x"],pin["y"]);source=pin["name"]
+        else:xy=ctr(D.cells[dr[1]]);source=D.cells[dr[1]][6]
+        for sink in D.nets[net][2]:
+            if sink[0]!="i":continue
+            cid=sink[1];kind=D.kind(cid)
+            if not (kind in ("S","M") and sink[2] or kind in ("B","K") and clock_input(cid)==net):continue
+            edge=(net,cid)
+            if edge in edges:continue
+            edges.add(edge)
+            sx,sy=ctr(D.cells[cid]);distance=abs(sx-xy[0])+abs(sy-xy[1])
+            if distance>maximum:maximum=distance;worst=f"{source} -> {D.cells[cid][6]}"
+    return dict(clock_tree_leg_max=round(maximum,2) if edges else None,clock_tree_leg_worst=worst,
+                clock_tree_leg_edges=len(edges),clock_tree_clock_cells=len(clock_cells),
+                clock_tree_unrooted_sinks=unrooted,clock_tree_trace_errors=sorted(invalid))
 
 
 def clock_entry_metrics(D, ck):
@@ -1126,7 +1212,7 @@ def clock_entry_metrics(D, ck):
     return dict(clock_entry=root, clock_entry_xy=[round(p["x"], 3), round(p["y"], 3)], clock_entry_on_macro=len(on_macro),
                 clock_entry_macro=on_macro[:2], clock_islands_fixed=clk_fixed, clock_reach_max=round(reach, 2),
                 clock_reach_far=far, clock_leaf_reach_max=round(leaf[0], 2), clock_leaf_reach_far=leaf[1],
-                clock_leaf_reach_driver=leaf[2], clock_entry_sink_max=round(ent[0], 2), clock_entry_sink_far=ent[1])
+                clock_leaf_reach_driver=leaf[2], clock_entry_sink_max=round(ent[0], 2), clock_entry_sink_far=ent[1], **clock_tree_leg_metrics(D))
 
 
 def ck_net(D, n):
@@ -1388,6 +1474,11 @@ def judge(m, template=None, outline=None, all_kits=False):
             "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)",
             detail=f"sink farthest from its nearest entry {m.get('clock_reach_far')}, "
             f"{m.get('clock_islands_fixed')} pre-placed clock cells")
+        if m.get("clock_tree_leg_max") is not None:
+            add("clock_tree_leg", "INFO", m["clock_tree_leg_max"], "info",
+                "actual input-rooted clock graph: root, intermediate and sequential/macro clock legs (cell centres)",
+                f"{m.get('clock_tree_leg_worst')}; {m.get('clock_tree_leg_edges')} edges; "
+                f"unrooted sinks {m.get('clock_tree_unrooted_sinks')}; {m.get('clock_tree_trace_errors')}")
         if m.get("clock_leaf_reach_max") is not None:
             add("clock_leaf_reach", "INFO", m["clock_leaf_reach_max"], "info",
                 "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46",
