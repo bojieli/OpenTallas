@@ -759,6 +759,100 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 else:
                     _fwd(cj, seen, out)
 
+    onehot_memo = {}
+
+    def _registered_onehot(control, D, clock):
+        """Prove reset establishment and a D-cycle rotation from the mapped FF equations.
+
+        This is a reachable-state proof, not an assumption that FF outputs are
+        one-hot. The reset chain must lead to a real active-low reset input;
+        its measured register depth is reported for the core reset contract.
+        """
+        key = (tuple(control), D, clock)
+        if key in onehot_memo:
+            return onehot_memo[key]
+        onehot_memo[key] = None
+        if len(control) != D or not 2 <= D <= 8:
+            return None
+        regs, dn, inv = [], [], []
+        for net in control:
+            driver = _single_drv(net)
+            if driver is None:
+                return None
+            ci, pin = driver
+            m, path, pp = F.cells[ci]
+            if (not is_ff(m) or pin not in ("Q", "QN") or _ckpin(ci) != clock
+                    or {p for p, (dd, _) in pp.items() if dd == "in"} != {"CLK", "D"}):
+                return None
+            regs.append(ci); dn.append(F.find(pp["D"][1][0])); inv.append(pin == "QN")
+        parents = {_parent(F.cells[ci][1]) for ci in regs}
+        if len(set(regs)) != D or len(parents) != 1:
+            return None
+        parent = next(iter(parents))
+        if not _module_is(parent, "ot_pl_land_local_kw"):
+            return None
+        extra = set().union(*(_leaves(n) for n in dn)) - set(control)
+        extra = {n for n in extra if not n.startswith("CONST_")}
+        if len(extra) != 1:
+            return None
+        reset = next(iter(extra))
+
+        def reset_level(net, stack):
+            if net in stack:
+                raise KeyError("reset feedback")
+            stack = stack | {net}
+            if net in roots_ports:
+                ports = roots_ports[net]
+                if (len(ports) != 1 or T.dirs.get(re.sub(r"\[\d+\]$", "", ports[0])) != "input"
+                        or not re.fullmatch(r"(?:a?rst_n|reset_n|rsi|rs_[A-Za-z0-9_]+)(?:\[\d+\])?", ports[0])):
+                    raise KeyError("not a reset input")
+                return False, 0
+            d = _single_drv(net)
+            if d is None:
+                raise KeyError("ambiguous reset source")
+            ci, pin = d; m, _, pp = F.cells[ci]
+            ins = {p: F.find(v[0]) for p, (dd, v) in pp.items() if dd == "in" and len(v) == 1}
+            if is_ff(m):
+                if pin not in ("Q", "QN") or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
+                    raise KeyError("unsupported reset register")
+                val, depth = reset_level(ins["D"], stack)
+                return (not val if pin == "QN" else val), depth + 1
+            if not is_buf(m) or len(ins) != 1:
+                raise KeyError("reset chain is not buffers and registers")
+            p, upstream = next(iter(ins.items()))
+            val, depth = reset_level(upstream, stack)
+            return cell_fn(m, {p: val}, pin), depth
+
+        try:
+            reset_value, reset_depth = reset_level(reset, set())
+            if reset_depth >= 64:
+                return None
+            def step(state, rv):
+                assignment = dict(zip(control, state)); assignment[reset] = rv
+                return tuple(bool(_ev(n, assignment, {})) ^ flip for n, flip in zip(dn, inv))
+            def hot(state):
+                return sum(bool(value) ^ flip for value, flip in zip(state, inv)) == 1
+            all_states = list(itertools.product((False, True), repeat=D))
+            initial = {step(state, reset_value) for state in all_states}
+            if len(initial) != 1 or not hot(next(iter(initial))):
+                return None
+            valid = {state for state in all_states if hot(state)}
+            state = next(iter(initial)); visited = set()
+            for _ in range(D):
+                if state not in valid or state in visited:
+                    return None
+                visited.add(state); state = step(state, not reset_value)
+            if visited != valid or state != next(iter(initial)):
+                return None
+        except (KeyError, RecursionError):
+            return None
+        proof = dict(parent=parent, reset_chain_edges=reset_depth,
+                     reset_asserted_edges_required=reset_depth + 1,
+                     cycle=D, reset_vector=list(next(iter(initial))))
+        res.setdefault("registered_onehot", {})[parent] = proof
+        onehot_memo[key] = valid
+        return valid
+
     def land_mux(b, r, D):
         """(None, flops, depths) = OK, else (failure text, [], [])."""
         ld = loads[r]
@@ -838,6 +932,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         for vals in itertools.product((False, True), repeat=len(allc)):
             a = dict(zip(allc, vals))
             if sum(1 for c, Wk in per if tuple(a[x] for x in c) in Wk) > 1:
+                valid = _registered_onehot(allc, D, next(iter(clks)))
+                if valid is not None and vals not in valid:
+                    continue
                 return f"write conditions not mutually exclusive at {a}", [], []
         return None, ffs, depths
 

@@ -1,0 +1,38 @@
+{
+ "verdict": "PASS",
+ "checked": 2228,
+ "ok": 2228,
+ "fail_counts": {},
+ "controllers": 140,
+ "proof_examples": [
+  {
+   "parent": "u_kn.u_w.g_chunk[69].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  {
+   "parent": "u_kn.u_w.g_chunk[68].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  }
+ ],
+ "maximum_required_asserted_edges": 5,
+ "actual": "intel2:/srv/opentallas-scratch2/claude/codex-flow-2249/onehot/actual_all.json",
+ "netlist": "intel2:/srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/face_probe/1_2_yosys.v",
+ "unit": "oth-ubuntu-3734248-1793342717",
+ "scope": "Actual mapped LN NST core, unchanged RTL. Per-controller reset establishment plus full rotation proved from native FF equations; required reset assertion <=5 edges, source qualified 64-edge reset. No physical/timing/signoff claim."
+}
