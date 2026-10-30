@@ -1,0 +1,11 @@
+{
+ "verdict": "PASS-COND: diagnostic PSM coupon only",
+ "viewed": "n9_finite_review.png",
+ "findings": [
+  "Unchanged PHY/body and window boundaries, existing bump centers. Finite core pad footprints stay outside PHY body.",
+  "PHY remains explicit point-source assumption, not finite licensed PHY bump signoff.",
+  "Mesh illustration shows density; exact phase and contacts come from generated pg_regions geometry.",
+  "N9 .96um pitch/.432um width is DBU-exact, unlike failed N7. No die-plan adoption."
+ ],
+ "generation_failure": "First finite builder rejected zero-width per-bump pads; corrected by using established finite-core and point-PHY emitters separately with unique BTerm names."
+}

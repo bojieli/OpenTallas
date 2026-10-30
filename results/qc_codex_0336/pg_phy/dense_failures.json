@@ -1,0 +1,21 @@
+{
+ "n5": {
+  "pitch_um": 1.728,
+  "continuity": "PASS",
+  "seam_stitches": 268,
+  "combined_phy_drop_mv": 83.247,
+  "limit_mv": 35,
+  "verdict": "FAIL",
+  "phy_load_blocks": 486,
+  "scope": "point-source diagnostic; core point return proxy"
+ },
+ "n7": {
+  "ideal_pitch_um": 1.2342857142857144,
+  "native_pitch_um": 1.234,
+  "seam_stitches": 0,
+  "error": "PSM-0069 Check connectivity failed on VSS",
+  "verdict": "FAIL",
+  "cause": "Native DBU pitch rounding destroys exact shared-ground seam phase",
+  "source_fix": "0285339df"
+ }
+}
