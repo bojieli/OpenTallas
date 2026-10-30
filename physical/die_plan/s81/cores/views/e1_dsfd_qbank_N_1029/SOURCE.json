@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.s81.e1_native_view.v1",
+  "module": "dsfd_qbank_N",
+  "kit": "intel1:/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/dsfd_qbank_N_e1_cap100",
+  "source_event": "claude/die-s81-32-event-1029@1dfae74037a",
+  "verdict": "SIGNED",
+  "release_qualified": null,
+  "constraints": "833ps TT setup/FF hold 60/25ps",
+  "physical_change": "approvedGRTcap100; QB_S additionalFFrepairguard20ps",
+  "added_cycles": 0
+}
