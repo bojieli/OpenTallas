@@ -95,10 +95,18 @@ def epoch_plan(phases,raws,original,base,bank_bytes,IR):
         else:finals.append(item)
     return loads,publications,dict(dependencies=dependencies,producer_epoch_range=[epochbase,epochbase+32*len(unique)],final_output_sectors=finals)
 
+STACK_BYTES = 22_500_000_000  # actual ds_native / B2 front-back per-stack capacity
+
+def native_capacity(address,size):
+    local=address&((1<<35)-1)
+    if address<0 or address>>37 or size<0 or local+size>STACK_BYTES:
+        raise ValueError(f'native scratch exceeds actual stack capacity: address={address:#x},bytes={size},stack_bytes={STACK_BYTES}')
+
 def compile_phase(ph,raw,base,bank_bytes,phase_index,IR,RC,resolved_loads=None,publications=()):
     if base%32 or base<0 or base>>37 or (base+3*bank_bytes-1)>>37:
         raise ValueError('scratch must be aligned native LINEAR HBM (stripe code0)')
     if bank_bytes<4*(1<<19)or bank_bytes%32:raise ValueError('snapshot bank too small for source VM ABI')
+    native_capacity(base,3*bank_bytes)
     outbase=base+(phase_index+1)*bank_bytes
     all_wait=(1<<len(RC.UNITS))-1
     # Decode directly: each source fragment record is already pinned by offsets.
@@ -112,6 +120,7 @@ def compile_phase(ph,raw,base,bank_bytes,phase_index,IR,RC,resolved_loads=None,p
         vm=RC.MDesc(space='VM',fmt='U32',base=new_lo,n=words,m=1)
         hb=RC.MDesc(space='HBM',fmt='U32',base=hbm_override if hbm_override is not None else(base if kind=='load'else outbase)+4*old_lo,n=words,m=1)
         desc={'A':hb,'O':vm}if kind=='load'else{'A':vm,'O':hb}
+        native_capacity(hb.base,words*4)
         emit(RC.Rec('DMA','LOAD'if kind=='load'else'STORE',wait=all_wait,desc=desc),None,kind,
              source_words=[old_lo,old_hi],vm_words=[new_lo,new_lo+words],hbm_range=[hb.base,hb.base+words*4])
     for record_position,recmeta in enumerate(ph['records']):

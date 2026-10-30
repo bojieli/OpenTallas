@@ -81,3 +81,30 @@ its layer assignments are invalid. Historical emitter original six-row schedule
 peaks exceed262144 in all40 transformer layers (300038..452534 words); that is
 historical planning evidence, not current per-layer fit or an exact spill bound.
 Full current layer map/phase policy/traffic still needs composition.
+
+Physical scratch failure and capacity-valid alternative (later correction)
+
+The old0x1F00000000 logical scratch is INVALID for the release: stack3 local
+28GiB exceeds actual STACK_BYTES22500000000 (ds_native.py and DMA front/back).
+Its logical word-version proof remains historical and is not physical execution.
+The first moved candidate0x1D10000000 is also rejected: it is exactly COLB and
+overlaps13 MTP column slots at128KiB each. Neither candidate is adopted.
+
+vm_phase_shadow now refuses generated scratch/transfer extents beyond actual
+per-stack capacity, even when the40-bit linear address itself is legal. Two
+controls catch the old28GiB address and the first invalid physical sector.
+
+A source-disjoint capacity-valid candidate starts0x1D11000000 (COLB+16MiB).
+The final capacity_mtp_tail/link6 chain ends0x1D17600000:106954752bytes span,
+inside the existing MTP half of DATA_WIN and above the actual1703936byte column
+store. Weights skip DATA_WIN and HC uses its first256MiB. The source bounds are
+ds_native.py DATA_WIN/STACK_BYTES and ds_mtp_kernels.py COLB/PMAX/BLK/CSTR.
+This establishes capacity/disjointness against those declared occupants; the
+scratch allocation is still explicitly UNRESERVED and not source-adopted.
+HBM owner must reserve it against all active programme occupants before install.
+
+Capacity-tail source replay still passes2534778 canonical reads,172320 final
+boundarywords/5controls. link_expert.py now defaults to that capacity-valid chain
+and writes expert_tail/ loads, preserving prior artifacts; native33072word input
+transport and wrongepoch control pass. Use scratch-base0x1D11000000 in the
+pipeline regeneration above. No actual numeric/RTL/G5/rate claim changes.
