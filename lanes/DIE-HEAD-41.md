@@ -1,0 +1,2 @@
+# DIE-HEAD-41 (HEAD die owner, post-freeze l40; successor of DIE-HEAD-40)
+- 2026-10-30 12:48 PDT START [DIE-HEAD-41] read DIE-HEAD-40 RESULT + COORD RULING 12:47 (HEAD FROZEN l40 + head_l40a405.yaml). Goals: collect LEP ECO2 signoff+LEC (oth-ubuntu-2947294), SerDes ECO1B DRT+LEC (1106839), HOST 3166618 / CTL 3518028 proofs; regen l40-changed kits (wshim, turn_a/st_str, hd_tile); turn_b PLACE rerun; sp0 160.2 TT watch on routed clock; ROOT-MERGE-AD 598d2e4ef83 + die-head-39@0129806ca1d.
