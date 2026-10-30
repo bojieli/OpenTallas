@@ -63,3 +63,17 @@ def enabled_wrapper(src, module='qkd_hr_phy_adp'):
     wrapper+=impl+' #(.CREDIT_RETURN_CAPTURE(1)) u_credit_impl (\n'+',\n'.join('    .'+p+'('+p+')' for p in ports)+'\n);\nendmodule\n'
     receipt.update(enabled_by='explicit --hr-credit-return-capture',public_module=module)
     return wrapper+text,receipt
+
+def enabled_vehicle(src, module='qkd_hr_phy_adp'):
+    """Explicit kit-only parameter specialization; preserve the original flat face aliases.
+
+    A new hierarchy wrapper turns kept output-reg aliases into internal kept wires,
+    which Yosys buffers from the public output and face_guard correctly rejects.
+    The generator flag is the opt-in; transform() itself keeps parameter default0.
+    """
+    text,receipt=transform(src,module=module)
+    token='parameter integer CREDIT_RETURN_CAPTURE = 0'
+    if text.count(token)!=1:raise ValueError('capture parameter specialization is not unique')
+    text=text.replace(token,'parameter integer CREDIT_RETURN_CAPTURE = 1',1)
+    receipt.update(enabled_by='explicit --hr-credit-return-capture',public_module=module,vehicle_parameter=1,flat_faces_preserved=True)
+    return text,receipt

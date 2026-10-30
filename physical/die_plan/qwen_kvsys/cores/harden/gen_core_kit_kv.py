@@ -1162,8 +1162,8 @@ def main():
             continue
         shutil.copyfile(f, dst)
         if a.hr_credit_return_capture and dst.stem == mod:
-            from hr_credit_return_capture import enabled_wrapper
-            credit_rtl, credit_receipt = enabled_wrapper(dst.read_text(), mod)
+            from hr_credit_return_capture import enabled_vehicle
+            credit_rtl, credit_receipt = enabled_vehicle(dst.read_text(), mod)
             dst.write_text(credit_rtl)
             (kd / "credit_return_capture.json").write_text(json.dumps(credit_receipt, indent=1)+"\n")
         if a.astk_face_ports and dst.stem == mod:
