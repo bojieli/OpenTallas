@@ -481,11 +481,12 @@ def run_item(spec_path):
     rc, _ = run("gen_kit", remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
     if rc:
         return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
+    pfo = f"preflight.{int(time.time())}.json"            # kit_preflight --out receipts are write-once
     pf = (f"cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(os.path.dirname(plan))} "
-          f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/preflight.json")
+          f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/{pfo}")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
     if rc:
-        return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/preflight.json")
+        return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/{pfo}")
     # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one.
     # Fleet hosts do not resolve each other by name (intel1 -> intel2/epyc2 fails), so the hub (where this unit
     # runs) relays: gen host -> hub -> other hosts, and the placed kit comes back the same way.
