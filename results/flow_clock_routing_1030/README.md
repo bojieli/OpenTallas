@@ -66,7 +66,7 @@ If strict M4/M5 trunks are required, the current API cannot express that as
 per-net NDR layer bounds. It needs a separate structural routing mechanism;
 raising the signal-net minimum globally is outside this candidate.
 
-Controls:15 focused tests PASS (per-layer model consumption, wrong/missing
+Controls:16 focused tests PASS (per-layer model consumption, wrong/missing
 RC/PG/rule/source, nonfinite RC, measured timing, blocked/out-of-outline PG,
 legacy command identity, actual Tcl stale-rule refusal);2 relevant legacy
 infrastructure controls PASS. No EDA validation or threshold sweep.
@@ -78,3 +78,8 @@ Mutating the M3 width back to the technology default18DBU is rejected by the
 actual emitted helper. Full output is in actual_ndr_coupon.log. Initial empty
 chip construction needed the pinned API's required dbTech argument; that was
 a coupon setup error, corrected before the successful actual helper run.
+
+Direct late-emitter parity control also preserves the existing TT230..270 /
+FF182.5..222.5 band gate: a good window with an out-of-band mean is refused.
+The late emitter consumes the compiled model profile when checking its tree
+binding; it does not mistakenly recompile a compiled plan as a master slice.

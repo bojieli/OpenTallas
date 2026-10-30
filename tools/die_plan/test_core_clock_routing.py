@@ -97,7 +97,7 @@ def test_emission_needs_matching_actual_model_results():
     sl['core_tree']['model_qualification']=dict(model='effective_directional_envelope',
         source='synthetic model control', measured_timing_used=False,
         effective_clock_routing=copy.deepcopy(sl['effective_clock_routing']),
-        corners={corner:dict(leaf_min=10.,leaf_max=11.,leaf_window=1.,slew_max=40.) for corner in ('TT','FF')})
+        corners={corner:dict(leaf_min=(240. if corner=='TT' else 190.),leaf_max=(241. if corner=='TT' else 191.),leaf_window=1.,slew_max=40.) for corner in ('TT','FF')})
     sl['core_tree']['model_qualification']['tree_sha256']=CCR.tree_fingerprint(sl)
     assert 'ot_ci_clock_ndr {actual_2w2s} 2 2 {M3 M4 M5}' in CI.emit_tcl(sl)
     sl['effective_clock_routing']['layer_rc']['M3']['capacitance_ff_per_um']*=2
@@ -109,7 +109,7 @@ def test_stale_tree_and_invalid_policy_refused():
     sl=candidate();q=dict(model='effective_directional_envelope',source='control',measured_timing_used=False,
                          effective_clock_routing=sl['effective_clock_routing'],
                          tree_sha256=CCR.tree_fingerprint(sl),
-                         corners={c:dict(leaf_min=10.,leaf_max=11.,leaf_window=1.,slew_max=40.) for c in ('TT','FF')})
+                         corners={c:dict(leaf_min=(240. if c=='TT' else 190.),leaf_max=(241. if c=='TT' else 191.),leaf_window=1.,slew_max=40.) for c in ('TT','FF')})
     sl['core_tree']['model_qualification']=q
     CCR.check_qualification(sl)
     for key,value in [('band_policy','unknown'),('window_policy','unknown'),('window_policy','info')]:
@@ -124,3 +124,15 @@ def test_stale_tree_and_invalid_policy_refused():
     sl['core_tree']['nodes'][1]['xy_um'][0]+=1
     with pytest.raises(CCR.RoutingError,match='compiled tree'):
         CCR.check_qualification(sl)
+
+
+def test_direct_late_emitter_preserves_band_gate():
+    sl=candidate();sl['core_tree']['install_stage']='pre_cts'
+    sl['core_tree']['model_qualification']=dict(model='effective_directional_envelope',source='control',
+        measured_timing_used=False,effective_clock_routing=sl['effective_clock_routing'],
+        corners={c:dict(leaf_min=(240. if c=='TT' else 190.),leaf_max=(241. if c=='TT' else 191.),leaf_window=1.,slew_max=40.) for c in ('TT','FF')})
+    q=sl['core_tree']['model_qualification'];q['tree_sha256']=CCR.tree_fingerprint(sl)
+    assert 'ot_ci_clock_ndr' in CI.emit_late_tcl(CI.compile_slice(sl))
+    q['corners']['TT'].update(leaf_min=10.,leaf_max=11.)
+    with pytest.raises(CI.InfraError,match='model band'):
+        CI.emit_late_tcl(CI.compile_slice(sl))

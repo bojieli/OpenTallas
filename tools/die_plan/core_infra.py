@@ -654,6 +654,7 @@ def compile_slice(sl, kd=None):
         except CCR.RoutingError as error:
             raise InfraError(str(error)) from error
         result["effective_clock_routing"] = sl["effective_clock_routing"]
+        result["effective_clock_routing_profile"] = CCR.profile(sl)
     return result
 
 
@@ -907,7 +908,7 @@ def emit_late_tcl(plan):
     if plan.get("effective_clock_routing") is not None:
         import core_clock_routing as CCR
         try:
-            CCR.check_qualification(plan)
+            CCR.check_qualification(plan, compiled=True)
         except CCR.RoutingError as error:
             raise InfraError(str(error)) from error
     t = plan.get("core_tree") or {}

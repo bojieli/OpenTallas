@@ -93,22 +93,22 @@ def check_trunks(sl, plan):
             raise RoutingError(f"effective clock routing PG envelope: {error}") from error
 
 
-def tree_fingerprint(sl):
+def tree_fingerprint(sl, compiled=False):
     """Bind computed results to actual compiled tree masters and placements."""
     import copy
     import hashlib
     import json
     import core_infra as CI
-    plan = CI.compile_slice(sl)
+    plan = sl if compiled else CI.compile_slice(sl)
     tree = copy.deepcopy(plan["core_tree"])
     tree.pop("model_qualification", None)
     names = {node["name"] for node in tree["nodes"]}
-    identity = dict(tree=tree, routing_profile=profile(sl), clock_entry=plan.get("clock_entry"), outline_um=plan["outline_um"],
+    identity = dict(tree=tree, routing_profile=plan["effective_clock_routing_profile"], clock_entry=plan.get("clock_entry"), outline_um=plan["outline_um"],
                     cells=[cell for cell in plan["cells"] if cell["name"] in names])
     return hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
 
-def check_qualification(sl):
+def check_qualification(sl, compiled=False):
     """Building the RC model is allowed; emitting a physical plan needs results."""
     if sl.get("effective_clock_routing") is None:
         return
@@ -123,7 +123,7 @@ def check_qualification(sl):
     if (q.get("window_policy", "gate") not in ("gate", "info")
             or (q.get("window_policy") == "info" and q.get("band_policy", "gate") != "info")):
         raise RoutingError("effective clock routing: window_policy info requires band_policy info")
-    if q.get("tree_sha256") != tree_fingerprint(sl):
+    if q.get("tree_sha256") != tree_fingerprint(sl, compiled=compiled):
         raise RoutingError("effective clock routing requires matching compiled tree/masters/positions qualification")
     for corner in ("TT", "FF"):
         result = q.get("corners", {}).get(corner, {})
@@ -134,3 +134,6 @@ def check_qualification(sl):
                 or values["slew_max"] > 80
                 or (q.get("window_policy", "gate") != "info" and values["leaf_window"] > 20)):
             raise RoutingError(f"effective clock routing {corner} model target FAIL before emission")
+        low, high = (230., 270.) if corner == "TT" else (182.5, 222.5)
+        if q.get("band_policy", "gate") == "gate" and (values["leaf_min"] < low or values["leaf_max"] > high):
+            raise RoutingError(f"effective clock routing {corner} model band FAIL before emission")
