@@ -1,0 +1,5 @@
+RING_FACE_DIFF cycle0 qid3
+PORT u_ring_fault A=0 B=1
+FATAL: /srv/opentallas-scratch2/claude/codex-hbm-face-bridge-0336/tb_ring_face_diagnose.sv:72: current-native face candidate differs from actual physical shell
+       Time: 417500  Scope: tb_ring_face_bridge.g_q[1]
+RING_FACE_DIFF cycle0 qid2

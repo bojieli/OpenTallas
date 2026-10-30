@@ -1,0 +1,16 @@
+{
+  "returncode": 0,
+  "verdict": "PASS",
+  "scope": "exact actualold/new flit sourcefunctions, mappedcombinational, d0/1, symbolicALLruntimeinputs and32bitMUT_TAG; notwholemoduleformal",
+  "outputs": 560,
+  "source": {
+    "old": {
+      "function_sha256": "874044c13e3c5c15d01bcc9415c723edbba0c4987baba5bfca85b87b6ab28848",
+      "source_sha256": "a8f396ed04718a29a73d222d73c66c3f9b495a171066590dd2507e5bf7d44516"
+    },
+    "new": {
+      "function_sha256": "a234fed218e1c16bf5e18e8c7c126279b7f6b0b691e7022f9eb1a970bc219007",
+      "source_sha256": "770731e480fda4b12f9e7eb94ebaf20c250b3e144fd878233024aea1093ad630"
+    }
+  }
+}

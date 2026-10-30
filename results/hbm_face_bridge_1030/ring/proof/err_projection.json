@@ -1,0 +1,21 @@
+{
+  "scope": "Actual primitive err port is open in BOTHselected source profiles. No publiccut output projection/masking: all1345public outputs inclfault compared. Existing scoped parentprimitive y/valid source proof ad48deccc remains separate.",
+  "rows": [
+    {
+      "profile": "native",
+      "caller_module": "native_ot_hgi_coll_pring_static_add_lane",
+      "actual_instance": "native_ot_hdc_fp32_add_lat #(.LAT(LAT-1),.DRST(0)) u_add(\n        .clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),.y(y),.err(),.valid_out(valid_out));",
+      "err": "OPEN, no parent net; not a public-cut output",
+      "DRST": 0,
+      "LAT": 7
+    },
+    {
+      "profile": "physical",
+      "caller_module": "physical_ot_hgi_coll_pring_static_add_lane",
+      "actual_instance": "physical_ot_hdc_fp32_add_lat #(.LAT(LAT-1),.DRST(0)) u_add(\n        .clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),.y(y),.err(),.valid_out(valid_out));",
+      "err": "OPEN, no parent net; not a public-cut output",
+      "DRST": 0,
+      "LAT": 7
+    }
+  ]
+}

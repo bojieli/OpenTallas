@@ -1,0 +1,293 @@
+{
+  "scope": "exact inverse wire map from current g4 cut; fixed AG1/SPLIT_CLOCKS1/default otherparams",
+  "mapping": [
+    {
+      "native": "add_rhs_acc",
+      "cut": "ra_add_rhs_acc",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "add_src",
+      "cut": "ra_add_src",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "add_tag",
+      "cut": "ra_add_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "add_v",
+      "cut": "ra_add_v",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "ag_d",
+      "cut": "ag_d",
+      "width": 512,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "ag_src",
+      "cut": "ag_src",
+      "width": 4,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "ag_tag",
+      "cut": "ag_tag",
+      "width": 6,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "ag_v",
+      "cut": "ag_v",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "ccw_i",
+      "cut": "pr_ccw_i",
+      "width": 280,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "ccw_o",
+      "cut": "pr_ccw_o",
+      "width": 280,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "clk",
+      "cut": "clk",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "cw_i",
+      "cut": "pr_cw_i",
+      "width": 280,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "cw_o",
+      "cut": "pr_cw_o",
+      "width": 280,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "fault",
+      "cut": "u_ring_fault",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "lp_data",
+      "cut": "ra_lp_data",
+      "width": 256,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "lp_tag",
+      "cut": "ra_lp_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "lp_we",
+      "cut": "ra_lp_we",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "qid",
+      "cut": "strap_qid",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rr_d",
+      "cut": "rr_d",
+      "width": 256,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rr_local",
+      "cut": "ra_rr_local",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rr_local_tag",
+      "cut": "ra_rr_local_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rr_tag",
+      "cut": "rr_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rr_v",
+      "cut": "rr_v",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rst_n",
+      "cut": "rst_n",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rx_kind",
+      "cut": "ra_rx_kind",
+      "width": 4,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rx_slot",
+      "cut": "ra_rx_slot",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rx_src",
+      "cut": "ra_rx_src",
+      "width": 4,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "rx_tag",
+      "cut": "ra_rx_tag",
+      "width": 6,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_add_rhs_acc",
+      "cut": "ra_state_add_rhs_acc",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_add_src",
+      "cut": "ra_state_add_src",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_add_tag",
+      "cut": "ra_state_add_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_read_add",
+      "cut": "ra_state_read_add",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_read_rr",
+      "cut": "ra_state_read_rr",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_read_tx",
+      "cut": "ra_state_read_tx",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_rr_tag",
+      "cut": "ra_state_rr_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_tx_acc",
+      "cut": "ra_state_tx_acc",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "state_tx_tag",
+      "cut": "ra_state_tx_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_acc",
+      "cut": "ra_tx_acc",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_dst",
+      "cut": "ra_tx_dst",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_forward",
+      "cut": "ra_tx_forward",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_gather",
+      "cut": "ra_tx_gather",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_inject",
+      "cut": "ra_tx_inject",
+      "width": 2,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_result",
+      "cut": "ra_tx_result",
+      "width": 1,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_tag",
+      "cut": "ra_tx_tag",
+      "width": 3,
+      "bit_order": "descending full-vector exact"
+    },
+    {
+      "native": "tx_ttl",
+      "cut": "ra_tx_ttl",
+      "width": 4,
+      "bit_order": "descending full-vector exact"
+    }
+  ],
+  "clock_alias_precondition": [
+    {
+      "native_port": "clk_add",
+      "all_bits_alias": "clk",
+      "width": 8
+    },
+    {
+      "native_port": "clk_ctl",
+      "all_bits_alias": "clk",
+      "width": 1
+    },
+    {
+      "native_port": "clk_state",
+      "all_bits_alias": "clk",
+      "width": 8
+    }
+  ],
+  "assertion": "actual native parent binds all17clockbits to same pll_stream0; not valid for independently phased API clocks"
+}

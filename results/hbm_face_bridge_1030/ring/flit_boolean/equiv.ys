@@ -1,0 +1,23 @@
+read_verilog -sv /work/flit_boolean/old.sv
+prep -top fn_old
+techmap
+opt
+abc -g simple
+opt_clean
+write_json /work/flit_boolean/old_mapped.json
+design -stash old
+read_verilog -sv /work/flit_boolean/new.sv
+prep -top fn_new
+techmap
+opt
+abc -g simple
+opt_clean
+write_json /work/flit_boolean/new_mapped.json
+design -stash new
+design -reset
+design -copy-from old -as gold fn_old
+design -copy-from new -as gate fn_new
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_simple -undef
+equiv_status -assert

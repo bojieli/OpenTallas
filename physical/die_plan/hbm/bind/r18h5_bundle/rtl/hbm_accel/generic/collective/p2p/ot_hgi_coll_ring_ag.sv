@@ -93,9 +93,13 @@ module ot_hgi_coll_ring_ag_ctl #(
         ot_hgi_static_ring_requires_NT8_LAT4_to_8 invalid_configuration();
     end endgenerate
     wire gath = AG!=0 && tx_gather;
-    function automatic [279:0] flit(input integer d,input [2:0] tag,input [255:0] data);
-        flit={1'b1,gath?2'd3:(tx_result?2'd2:2'd1),qid,gath?qid:tx_dst,
-              gath?tx_ttl[d*2+:2]:(tx_result?2'd3:2'd0),MUT_TAG?(tag^3'd1):tag,1'b0,11'b0,data};
+    function automatic [279:0] flit(
+        input integer d,input [2:0] tag,input [255:0] data,
+        input gather_mode,result_mode,input [1:0] source_qid,target_qid,
+        input [3:0] ttl_by_direction,input integer tag_mutant
+    );
+        flit={1'b1,gather_mode?2'd3:(result_mode?2'd2:2'd1),source_qid,gather_mode?source_qid:target_qid,
+              gather_mode?ttl_by_direction[d*2+:2]:(result_mode?2'd3:2'd0),tag_mutant?(tag^3'd1):tag,1'b0,11'b0,data};
     endfunction
     // ring outputs (combinational next value; valid bit reset-registered, payload plain-registered)
     reg [279:0] nx_out [0:1];
@@ -108,7 +112,7 @@ module ot_hgi_coll_ring_ag_ctl #(
                 if(x[278:277]==2)nx_out[d][272:271]=x[272:271]-1'b1;
                 if(x[278:277]==3)nx_out[d][272:271]=x[272:271]-(MUT_TTL?2'd2:2'd1);
             end
-            if(tx_inject[d])nx_out[d]=flit(d,tx_tag,state_tx);
+            if(tx_inject[d])nx_out[d]=flit(d,tx_tag,state_tx,gath,tx_result,qid,tx_dst,tx_ttl,MUT_TAG);
         end
     end
     // data registers: no reset (loads of rst_n = control state only)

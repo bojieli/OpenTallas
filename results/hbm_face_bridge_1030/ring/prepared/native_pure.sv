@@ -1,0 +1,3474 @@
+module native_ot_hfd_coll_q2_hard_v8g__ring_ag (
+    output wire [511:0] ag_d,
+    output wire [3:0] ag_src,
+    output wire [5:0] ag_tag,
+    output wire [1:0] ag_v,
+    input wire [0:0] clk,
+    input wire [279:0] pr_ccw_i,
+    output wire [279:0] pr_ccw_o,
+    input wire [279:0] pr_cw_i,
+    output wire [279:0] pr_cw_o,
+    input wire [0:0] ra_add_rhs_acc,
+    input wire [1:0] ra_add_src,
+    input wire [2:0] ra_add_tag,
+    input wire [0:0] ra_add_v,
+    input wire [255:0] ra_lp_data,
+    input wire [2:0] ra_lp_tag,
+    input wire [0:0] ra_lp_we,
+    input wire [0:0] ra_rr_local,
+    input wire [2:0] ra_rr_local_tag,
+    input wire [3:0] ra_rx_kind,
+    input wire [1:0] ra_rx_slot,
+    input wire [3:0] ra_rx_src,
+    input wire [5:0] ra_rx_tag,
+    input wire [0:0] ra_state_add_rhs_acc,
+    input wire [1:0] ra_state_add_src,
+    input wire [2:0] ra_state_add_tag,
+    input wire [0:0] ra_state_read_add,
+    input wire [0:0] ra_state_read_rr,
+    input wire [0:0] ra_state_read_tx,
+    input wire [2:0] ra_state_rr_tag,
+    input wire [0:0] ra_state_tx_acc,
+    input wire [2:0] ra_state_tx_tag,
+    input wire [0:0] ra_tx_acc,
+    input wire [1:0] ra_tx_dst,
+    input wire [1:0] ra_tx_forward,
+    input wire [0:0] ra_tx_gather,
+    input wire [1:0] ra_tx_inject,
+    input wire [0:0] ra_tx_result,
+    input wire [2:0] ra_tx_tag,
+    input wire [3:0] ra_tx_ttl,
+    output wire [255:0] rr_d,
+    output wire [2:0] rr_tag,
+    output wire [0:0] rr_v,
+    input wire [0:0] rst_n,
+    output wire [0:0] u_ring_fault,
+    input wire [1:0] strap_qid
+);
+    wire n0;
+    wire n1;
+    wire n2;
+    wire n3;
+    wire n4;
+    wire n5;
+    wire n6;
+    wire n7;
+    wire n8;
+    wire n9;
+    wire n10;
+    wire n11;
+    wire n12;
+    wire n13;
+    wire n14;
+    wire n15;
+    wire n16;
+    wire n17;
+    wire n18;
+    wire n19;
+    wire n20;
+    wire n21;
+    wire n22;
+    wire n23;
+    wire n24;
+    wire n25;
+    wire n26;
+    wire n27;
+    wire n28;
+    wire n29;
+    wire n30;
+    wire n31;
+    wire n32;
+    wire n33;
+    wire n34;
+    wire n35;
+    wire n36;
+    wire n37;
+    wire n38;
+    wire n39;
+    wire n40;
+    wire n41;
+    wire n42;
+    wire n43;
+    wire n44;
+    wire n45;
+    wire n46;
+    wire n47;
+    wire n48;
+    wire n49;
+    wire n50;
+    wire n51;
+    wire n52;
+    wire n53;
+    wire n54;
+    wire n55;
+    wire n56;
+    wire n57;
+    wire n58;
+    wire n59;
+    wire n60;
+    wire n61;
+    wire n62;
+    wire n63;
+    wire n64;
+    wire n65;
+    wire n66;
+    wire n67;
+    wire n68;
+    wire n69;
+    wire n70;
+    wire n71;
+    wire n72;
+    wire n73;
+    wire n74;
+    wire n75;
+    wire n76;
+    wire n77;
+    wire n78;
+    wire n79;
+    wire n80;
+    wire n81;
+    wire n82;
+    wire n83;
+    wire n84;
+    wire n85;
+    wire n86;
+    wire n87;
+    wire n88;
+    wire n89;
+    wire n90;
+    wire n91;
+    wire n92;
+    wire n93;
+    wire n94;
+    wire n95;
+    wire n96;
+    wire n97;
+    wire n98;
+    wire n99;
+    wire n100;
+    wire n101;
+    wire n102;
+    wire n103;
+    wire n104;
+    wire n105;
+    wire n106;
+    wire n107;
+    wire n108;
+    wire n109;
+    wire n110;
+    wire n111;
+    wire n112;
+    wire n113;
+    wire n114;
+    wire n115;
+    wire n116;
+    wire n117;
+    wire n118;
+    wire n119;
+    wire n120;
+    wire n121;
+    wire n122;
+    wire n123;
+    wire n124;
+    wire n125;
+    wire n126;
+    wire n127;
+    wire n128;
+    wire n129;
+    wire n130;
+    wire n131;
+    wire n132;
+    wire n133;
+    wire n134;
+    wire n135;
+    wire n136;
+    wire n137;
+    wire n138;
+    wire n139;
+    wire n140;
+    wire n141;
+    wire n142;
+    wire n143;
+    wire n144;
+    wire n145;
+    wire n146;
+    wire n147;
+    wire n148;
+    wire n149;
+    wire n150;
+    wire n151;
+    wire n152;
+    wire n153;
+    wire n154;
+    wire n155;
+    wire n156;
+    wire n157;
+    wire n158;
+    wire n159;
+    wire n160;
+    wire n161;
+    wire n162;
+    wire n163;
+    wire n164;
+    wire n165;
+    wire n166;
+    wire n167;
+    wire n168;
+    wire n169;
+    wire n170;
+    wire n171;
+    wire n172;
+    wire n173;
+    wire n174;
+    wire n175;
+    wire n176;
+    wire n177;
+    wire n178;
+    wire n179;
+    wire n180;
+    wire n181;
+    wire n182;
+    wire n183;
+    wire n184;
+    wire n185;
+    wire n186;
+    wire n187;
+    wire n188;
+    wire n189;
+    wire n190;
+    wire n191;
+    wire n192;
+    wire n193;
+    wire n194;
+    wire n195;
+    wire n196;
+    wire n197;
+    wire n198;
+    wire n199;
+    wire n200;
+    wire n201;
+    wire n202;
+    wire n203;
+    wire n204;
+    wire n205;
+    wire n206;
+    wire n207;
+    wire n208;
+    wire n209;
+    wire n210;
+    wire n211;
+    wire n212;
+    wire n213;
+    wire n214;
+    wire n215;
+    wire n216;
+    wire n217;
+    wire n218;
+    wire n219;
+    wire n220;
+    wire n221;
+    wire n222;
+    wire n223;
+    wire n224;
+    wire n225;
+    wire n226;
+    wire n227;
+    wire n228;
+    wire n229;
+    wire n230;
+    wire n231;
+    wire n232;
+    wire n233;
+    wire n234;
+    wire n235;
+    wire n236;
+    wire n237;
+    wire n238;
+    wire n239;
+    wire n240;
+    wire n241;
+    wire n242;
+    wire n243;
+    wire n244;
+    wire n245;
+    wire n246;
+    wire n247;
+    wire n248;
+    wire n249;
+    wire n250;
+    wire n251;
+    wire n252;
+    wire n253;
+    wire n254;
+    wire n255;
+    wire n256;
+    wire n257;
+    wire n258;
+    wire n259;
+    wire n260;
+    wire n261;
+    wire n262;
+    wire n263;
+    wire n264;
+    wire n265;
+    wire n266;
+    wire n267;
+    wire n268;
+    wire n269;
+    wire n270;
+    wire n271;
+    wire n272;
+    wire n273;
+    wire n274;
+    wire n275;
+    wire n276;
+    wire n277;
+    wire n278;
+    wire n279;
+    wire n280;
+    wire n281;
+    wire n282;
+    wire n283;
+    wire n284;
+    wire n285;
+    wire n286;
+    wire n287;
+    wire n288;
+    wire n289;
+    wire n290;
+    wire n291;
+    wire n292;
+    wire n293;
+    wire n294;
+    wire n295;
+    wire n296;
+    wire n297;
+    wire n298;
+    wire n299;
+    wire n300;
+    wire n301;
+    wire n302;
+    wire n303;
+    wire n304;
+    wire n305;
+    wire n306;
+    wire n307;
+    wire n308;
+    wire n309;
+    wire n310;
+    wire n311;
+    wire n312;
+    wire n313;
+    wire n314;
+    wire n315;
+    wire n316;
+    wire n317;
+    wire n318;
+    wire n319;
+    wire n320;
+    wire n321;
+    wire n322;
+    wire n323;
+    wire n324;
+    wire n325;
+    wire n326;
+    wire n327;
+    wire n328;
+    wire n329;
+    wire n330;
+    wire n331;
+    wire n332;
+    wire n333;
+    wire n334;
+    wire n335;
+    wire n336;
+    wire n337;
+    wire n338;
+    wire n339;
+    wire n340;
+    wire n341;
+    wire n342;
+    wire n343;
+    wire n344;
+    wire n345;
+    wire n346;
+    wire n347;
+    wire n348;
+    wire n349;
+    wire n350;
+    wire n351;
+    wire n352;
+    wire n353;
+    wire n354;
+    wire n355;
+    wire n356;
+    wire n357;
+    wire n358;
+    wire n359;
+    wire n360;
+    wire n361;
+    wire n362;
+    wire n363;
+    wire n364;
+    wire n365;
+    wire n366;
+    wire n367;
+    wire n368;
+    wire n369;
+    wire n370;
+    wire n371;
+    wire n372;
+    wire n373;
+    wire n374;
+    wire n375;
+    wire n376;
+    wire n377;
+    wire n378;
+    wire n379;
+    wire n380;
+    wire n381;
+    wire n382;
+    wire n383;
+    wire n384;
+    wire n385;
+    wire n386;
+    wire n387;
+    wire n388;
+    wire n389;
+    wire n390;
+    wire n391;
+    wire n392;
+    wire n393;
+    wire n394;
+    wire n395;
+    wire n396;
+    wire n397;
+    wire n398;
+    wire n399;
+    wire n400;
+    wire n401;
+    wire n402;
+    wire n403;
+    wire n404;
+    wire n405;
+    wire n406;
+    wire n407;
+    wire n408;
+    wire n409;
+    wire n410;
+    wire n411;
+    wire n412;
+    wire n413;
+    wire n414;
+    wire n415;
+    wire n416;
+    wire n417;
+    wire n418;
+    wire n419;
+    wire n420;
+    wire n421;
+    wire n422;
+    wire n423;
+    wire n424;
+    wire n425;
+    wire n426;
+    wire n427;
+    wire n428;
+    wire n429;
+    wire n430;
+    wire n431;
+    wire n432;
+    wire n433;
+    wire n434;
+    wire n435;
+    wire n436;
+    wire n437;
+    wire n438;
+    wire n439;
+    wire n440;
+    wire n441;
+    wire n442;
+    wire n443;
+    wire n444;
+    wire n445;
+    wire n446;
+    wire n447;
+    wire n448;
+    wire n449;
+    wire n450;
+    wire n451;
+    wire n452;
+    wire n453;
+    wire n454;
+    wire n455;
+    wire n456;
+    wire n457;
+    wire n458;
+    wire n459;
+    wire n460;
+    wire n461;
+    wire n462;
+    wire n463;
+    wire n464;
+    wire n465;
+    wire n466;
+    wire n467;
+    wire n468;
+    wire n469;
+    wire n470;
+    wire n471;
+    wire n472;
+    wire n473;
+    wire n474;
+    wire n475;
+    wire n476;
+    wire n477;
+    wire n478;
+    wire n479;
+    wire n480;
+    wire n481;
+    wire n482;
+    wire n483;
+    wire n484;
+    wire n485;
+    wire n486;
+    wire n487;
+    wire n488;
+    wire n489;
+    wire n490;
+    wire n491;
+    wire n492;
+    wire n493;
+    wire n494;
+    wire n495;
+    wire n496;
+    wire n497;
+    wire n498;
+    wire n499;
+    wire n500;
+    wire n501;
+    wire n502;
+    wire n503;
+    wire n504;
+    wire n505;
+    wire n506;
+    wire n507;
+    wire n508;
+    wire n509;
+    wire n510;
+    wire n511;
+    wire n512;
+    wire n513;
+    wire n514;
+    wire n515;
+    wire n516;
+    wire n517;
+    wire n518;
+    wire n519;
+    wire n520;
+    wire n521;
+    wire n522;
+    wire n523;
+    wire n524;
+    wire n525;
+    wire n526;
+    wire n527;
+    wire n528;
+    wire n529;
+    wire n530;
+    wire n531;
+    wire n532;
+    wire n533;
+    wire n534;
+    wire n535;
+    wire n536;
+    wire n537;
+    wire n538;
+    wire n539;
+    wire n540;
+    wire n541;
+    wire n542;
+    wire n543;
+    wire n544;
+    wire n545;
+    wire n546;
+    wire n547;
+    wire n548;
+    wire n549;
+    wire n550;
+    wire n551;
+    wire n552;
+    wire n553;
+    wire n554;
+    wire n555;
+    wire n556;
+    wire n557;
+    wire n558;
+    wire n559;
+    wire n560;
+    wire n561;
+    wire n562;
+    wire n563;
+    wire n564;
+    wire n565;
+    wire n566;
+    wire n567;
+    wire n568;
+    wire n569;
+    wire n570;
+    wire n571;
+    wire n572;
+    wire n573;
+    wire n574;
+    wire n575;
+    wire n576;
+    wire n577;
+    wire n578;
+    wire n579;
+    wire n580;
+    wire n581;
+    wire n582;
+    wire n583;
+    wire n584;
+    wire n585;
+    wire n586;
+    wire n587;
+    wire n588;
+    wire n589;
+    wire n590;
+    wire n591;
+    wire n592;
+    wire n593;
+    wire n594;
+    wire n595;
+    wire n596;
+    wire n597;
+    wire n598;
+    wire n599;
+    wire n600;
+    wire n601;
+    wire n602;
+    wire n603;
+    wire n604;
+    wire n605;
+    wire n606;
+    wire n607;
+    wire n608;
+    wire n609;
+    wire n610;
+    wire n611;
+    wire n612;
+    wire n613;
+    wire n614;
+    wire n615;
+    wire n616;
+    wire n617;
+    wire n618;
+    wire n619;
+    wire n620;
+    wire n621;
+    wire n622;
+    wire n623;
+    wire n624;
+    wire n625;
+    wire n626;
+    wire n627;
+    wire n628;
+    wire n629;
+    wire n630;
+    wire n631;
+    wire n632;
+    wire n633;
+    wire n634;
+    wire n635;
+    wire n636;
+    wire n637;
+    wire n638;
+    wire n639;
+    wire n640;
+    wire n641;
+    wire n642;
+    wire n643;
+    wire n644;
+    wire n645;
+    wire n646;
+    wire n647;
+    wire n648;
+    wire n649;
+    wire n650;
+    wire n651;
+    wire n652;
+    wire n653;
+    wire n654;
+    wire n655;
+    wire n656;
+    wire n657;
+    wire n658;
+    wire n659;
+    wire n660;
+    wire n661;
+    wire n662;
+    wire n663;
+    wire n664;
+    wire n665;
+    wire n666;
+    wire n667;
+    wire n668;
+    wire n669;
+    wire n670;
+    wire n671;
+    wire n672;
+    wire n673;
+    wire n674;
+    wire n675;
+    wire n676;
+    wire n677;
+    wire n678;
+    wire n679;
+    wire n680;
+    wire n681;
+    wire n682;
+    wire n683;
+    wire n684;
+    wire n685;
+    wire n686;
+    wire n687;
+    wire n688;
+    wire n689;
+    wire n690;
+    wire n691;
+    wire n692;
+    wire n693;
+    wire n694;
+    wire n695;
+    wire n696;
+    wire n697;
+    wire n698;
+    wire n699;
+    wire n700;
+    wire n701;
+    wire n702;
+    wire n703;
+    wire n704;
+    wire n705;
+    wire n706;
+    wire n707;
+    wire n708;
+    wire n709;
+    wire n710;
+    wire n711;
+    wire n712;
+    wire n713;
+    wire n714;
+    wire n715;
+    wire n716;
+    wire n717;
+    wire n718;
+    wire n719;
+    wire n720;
+    wire n721;
+    wire n722;
+    wire n723;
+    wire n724;
+    wire n725;
+    wire n726;
+    wire n727;
+    wire n728;
+    wire n729;
+    wire n730;
+    wire n731;
+    wire n732;
+    wire n733;
+    wire n734;
+    wire n735;
+    wire n736;
+    wire n737;
+    wire n738;
+    wire n739;
+    wire n740;
+    wire n741;
+    wire n742;
+    wire n743;
+    wire n744;
+    wire n745;
+    wire n746;
+    wire n747;
+    wire n748;
+    wire n749;
+    wire n750;
+    wire n751;
+    wire n752;
+    wire n753;
+    wire n754;
+    wire n755;
+    wire n756;
+    wire n757;
+    wire n758;
+    wire n759;
+    wire n760;
+    wire n761;
+    wire n762;
+    wire n763;
+    wire n764;
+    wire n765;
+    wire n766;
+    wire n767;
+    wire n768;
+    wire n769;
+    wire n770;
+    wire n771;
+    wire n772;
+    wire n773;
+    wire n774;
+    wire n775;
+    wire n776;
+    wire n777;
+    wire n778;
+    wire n779;
+    wire n780;
+    wire n781;
+    wire n782;
+    wire n783;
+    wire n784;
+    wire n785;
+    wire n786;
+    wire n787;
+    wire n788;
+    wire n789;
+    wire n790;
+    wire n791;
+    wire n792;
+    wire n793;
+    wire n794;
+    wire n795;
+    wire n796;
+    wire n797;
+    wire n798;
+    wire n799;
+    wire n800;
+    wire n801;
+    wire n802;
+    wire n803;
+    wire n804;
+    wire n805;
+    wire n806;
+    wire n807;
+    wire n808;
+    wire n809;
+    wire n810;
+    wire n811;
+    wire n812;
+    wire n813;
+    wire n814;
+    wire n815;
+    wire n816;
+    wire n817;
+    wire n818;
+    wire n819;
+    wire n820;
+    wire n821;
+    wire n822;
+    wire n823;
+    wire n824;
+    wire n825;
+    wire n826;
+    wire n827;
+    wire n828;
+    wire n829;
+    wire n830;
+    wire n831;
+    wire n832;
+    wire n833;
+    wire n834;
+    wire n835;
+    wire n836;
+    wire n837;
+    wire n838;
+    wire n839;
+    wire n840;
+    wire n841;
+    wire n842;
+    wire n843;
+    wire n844;
+    wire n845;
+    wire n846;
+    wire n847;
+    wire n848;
+    wire n849;
+    wire n850;
+    wire n851;
+    wire n852;
+    wire n853;
+    wire n854;
+    wire n855;
+    wire n856;
+    wire n857;
+    wire n858;
+    wire n859;
+    wire n860;
+    wire n861;
+    wire n862;
+    wire n863;
+    wire n864;
+    wire n865;
+    wire n866;
+    wire n867;
+    wire n868;
+    wire n869;
+    wire n870;
+    wire n871;
+    wire n872;
+    wire n873;
+    wire n874;
+    wire n875;
+    wire n876;
+    wire n877;
+    wire n878;
+    wire n879;
+    wire n880;
+    wire n881;
+    wire n882;
+    wire n883;
+    wire n884;
+    wire n885;
+    wire n886;
+    wire n887;
+    wire n888;
+    wire n889;
+    wire n890;
+    wire n891;
+    wire n892;
+    wire n893;
+    wire n894;
+    wire n895;
+    wire n896;
+    wire n897;
+    wire n898;
+    wire n899;
+    wire n900;
+    wire n901;
+    wire n902;
+    wire n903;
+    wire n904;
+    wire n905;
+    wire n906;
+    wire n907;
+    wire n908;
+    wire n909;
+    wire n910;
+    wire n911;
+    wire n912;
+    wire n913;
+    wire n914;
+    wire n915;
+    wire n916;
+    wire n917;
+    wire n918;
+    wire n919;
+    wire n920;
+    wire n921;
+    wire n922;
+    wire n923;
+    wire n924;
+    wire n925;
+    wire n926;
+    wire n927;
+    wire n928;
+    wire n929;
+    wire n930;
+    wire n931;
+    wire n932;
+    wire n933;
+    wire n934;
+    wire n935;
+    wire n936;
+    wire n937;
+    wire n938;
+    wire n939;
+    wire n940;
+    wire n941;
+    wire n942;
+    wire n943;
+    wire n944;
+    wire n945;
+    wire n946;
+    wire n947;
+    wire n948;
+    wire n949;
+    wire n950;
+    wire n951;
+    wire n952;
+    wire n953;
+    wire n954;
+    wire n955;
+    wire n956;
+    wire n957;
+    wire n958;
+    wire n959;
+    wire n960;
+    wire n961;
+    wire n962;
+    wire n963;
+    wire n964;
+    wire n965;
+    wire n966;
+    wire n967;
+    wire n968;
+    wire n969;
+    wire n970;
+    wire n971;
+    wire n972;
+    wire n973;
+    wire n974;
+    wire n975;
+    wire n976;
+    wire n977;
+    wire n978;
+    wire n979;
+    wire n980;
+    wire n981;
+    wire n982;
+    wire n983;
+    wire n984;
+    wire n985;
+    wire n986;
+    wire n987;
+    wire n988;
+    wire n989;
+    wire n990;
+    wire n991;
+    wire n992;
+    wire n993;
+    wire n994;
+    wire n995;
+    wire n996;
+    wire n997;
+    wire n998;
+    wire n999;
+    wire n1000;
+    wire n1001;
+    wire n1002;
+    wire n1003;
+    wire n1004;
+    wire n1005;
+    wire n1006;
+    wire n1007;
+    wire n1008;
+    wire n1009;
+    wire n1010;
+    wire n1011;
+    wire n1012;
+    wire n1013;
+    wire n1014;
+    wire n1015;
+    wire n1016;
+    wire n1017;
+    wire n1018;
+    wire n1019;
+    wire n1020;
+    wire n1021;
+    wire n1022;
+    wire n1023;
+    wire n1024;
+    wire n1025;
+    wire n1026;
+    wire n1027;
+    wire n1028;
+    wire n1029;
+    wire n1030;
+    wire n1031;
+    wire n1032;
+    wire n1033;
+    wire n1034;
+    wire n1035;
+    wire n1036;
+    wire n1037;
+    wire n1038;
+    wire n1039;
+    wire n1040;
+    wire n1041;
+    wire n1042;
+    wire n1043;
+    wire n1044;
+    wire n1045;
+    wire n1046;
+    wire n1047;
+    wire n1048;
+    wire n1049;
+    wire n1050;
+    wire n1051;
+    wire n1052;
+    wire n1053;
+    wire n1054;
+    wire n1055;
+    wire n1056;
+    wire n1057;
+    wire n1058;
+    wire n1059;
+    wire n1060;
+    wire n1061;
+    wire n1062;
+    wire n1063;
+    wire n1064;
+    wire n1065;
+    wire n1066;
+    wire n1067;
+    wire n1068;
+    wire n1069;
+    wire n1070;
+    wire n1071;
+    wire n1072;
+    wire n1073;
+    wire n1074;
+    wire n1075;
+    wire n1076;
+    wire n1077;
+    wire n1078;
+    wire n1079;
+    wire n1080;
+    wire n1081;
+    wire n1082;
+    wire n1083;
+    wire n1084;
+    wire n1085;
+    wire n1086;
+    wire n1087;
+    wire n1088;
+    wire n1089;
+    wire n1090;
+    wire n1091;
+    wire n1092;
+    wire n1093;
+    wire n1094;
+    wire n1095;
+    wire n1096;
+    wire n1097;
+    wire n1098;
+    wire n1099;
+    wire n1100;
+    wire n1101;
+    wire n1102;
+    wire n1103;
+    wire n1104;
+    wire n1105;
+    wire n1106;
+    wire n1107;
+    wire n1108;
+    wire n1109;
+    wire n1110;
+    wire n1111;
+    wire n1112;
+    wire n1113;
+    wire n1114;
+    wire n1115;
+    wire n1116;
+    wire n1117;
+    wire n1118;
+    wire n1119;
+    wire n1120;
+    wire n1121;
+    wire n1122;
+    wire n1123;
+    wire n1124;
+    wire n1125;
+    wire n1126;
+    wire n1127;
+    wire n1128;
+    wire n1129;
+    wire n1130;
+    wire n1131;
+    wire n1132;
+    wire n1133;
+    wire n1134;
+    wire n1135;
+    wire n1136;
+    wire n1137;
+    wire n1138;
+    wire n1139;
+    wire n1140;
+    wire n1141;
+    wire n1142;
+    wire n1143;
+    wire n1144;
+    wire n1145;
+    wire n1146;
+    wire n1147;
+    wire n1148;
+    wire n1149;
+    wire n1150;
+    wire n1151;
+    wire n1152;
+    wire n1153;
+    wire n1154;
+    wire n1155;
+    wire n1156;
+    wire n1157;
+    wire n1158;
+    wire n1159;
+    wire n1160;
+    wire n1161;
+    wire n1162;
+    wire n1163;
+    wire n1164;
+    wire n1165;
+    wire n1166;
+    wire n1167;
+    wire n1168;
+    wire n1169;
+    wire n1170;
+    wire n1171;
+    wire n1172;
+    wire n1173;
+    wire n1174;
+    wire n1175;
+    wire n1176;
+    wire n1177;
+    wire n1178;
+    wire n1179;
+    wire n1180;
+    wire n1181;
+    wire n1182;
+    wire n1183;
+    wire n1184;
+    wire n1185;
+    wire n1186;
+    wire n1187;
+    wire n1188;
+    wire n1189;
+    wire n1190;
+    wire n1191;
+    wire n1192;
+    wire n1193;
+    wire n1194;
+    wire n1195;
+    wire n1196;
+    wire n1197;
+    wire n1198;
+    wire n1199;
+    wire n1200;
+    wire n1201;
+    wire n1202;
+    wire n1203;
+    wire n1204;
+    wire n1205;
+    wire n1206;
+    wire n1207;
+    wire n1208;
+    wire n1209;
+    wire n1210;
+    wire n1211;
+    wire n1212;
+    wire n1213;
+    wire n1214;
+    wire n1215;
+    wire n1216;
+    wire n1217;
+    wire n1218;
+    wire n1219;
+    wire n1220;
+    wire n1221;
+    wire n1222;
+    wire n1223;
+    wire n1224;
+    wire n1225;
+    wire n1226;
+    wire n1227;
+    wire n1228;
+    wire n1229;
+    wire n1230;
+    wire n1231;
+    wire n1232;
+    wire n1233;
+    wire n1234;
+    wire n1235;
+    wire n1236;
+    wire n1237;
+    wire n1238;
+    wire n1239;
+    wire n1240;
+    wire n1241;
+    wire n1242;
+    wire n1243;
+    wire n1244;
+    wire n1245;
+    wire n1246;
+    wire n1247;
+    wire n1248;
+    wire n1249;
+    wire n1250;
+    wire n1251;
+    wire n1252;
+    wire n1253;
+    wire n1254;
+    wire n1255;
+    wire n1256;
+    wire n1257;
+    wire n1258;
+    wire n1259;
+    wire n1260;
+    wire n1261;
+    wire n1262;
+    wire n1263;
+    wire n1264;
+    wire n1265;
+    wire n1266;
+    wire n1267;
+    wire n1268;
+    wire n1269;
+    wire n1270;
+    wire n1271;
+    wire n1272;
+    wire n1273;
+    wire n1274;
+    wire n1275;
+    wire n1276;
+    wire n1277;
+    wire n1278;
+    wire n1279;
+    wire n1280;
+    wire n1281;
+    wire n1282;
+    wire n1283;
+    wire n1284;
+    wire n1285;
+    wire n1286;
+    wire n1287;
+    wire n1288;
+    wire n1289;
+    wire n1290;
+    wire n1291;
+    wire n1292;
+    wire n1293;
+    wire n1294;
+    wire n1295;
+    wire n1296;
+    wire n1297;
+    wire n1298;
+    wire n1299;
+    wire n1300;
+    wire n1301;
+    wire n1302;
+    wire n1303;
+    wire n1304;
+    wire n1305;
+    wire n1306;
+    wire n1307;
+    wire n1308;
+    wire n1309;
+    wire n1310;
+    wire n1311;
+    wire n1312;
+    wire n1313;
+    wire n1314;
+    wire n1315;
+    wire n1316;
+    wire n1317;
+    wire n1318;
+    wire n1319;
+    wire n1320;
+    wire n1321;
+    wire n1322;
+    wire n1323;
+    wire n1324;
+    wire n1325;
+    wire n1326;
+    wire n1327;
+    wire n1328;
+    wire n1329;
+    wire n1330;
+    wire n1331;
+    wire n1332;
+    wire n1333;
+    wire n1334;
+    wire n1335;
+    wire n1336;
+    wire n1337;
+    wire n1338;
+    wire n1339;
+    wire n1340;
+    wire n1341;
+    wire n1342;
+    wire n1343;
+    wire n1344;
+    assign ag_d[0] = n0;
+    assign ag_d[1] = n1;
+    assign ag_d[2] = n2;
+    assign ag_d[3] = n3;
+    assign ag_d[4] = n4;
+    assign ag_d[5] = n5;
+    assign ag_d[6] = n6;
+    assign ag_d[7] = n7;
+    assign ag_d[8] = n8;
+    assign ag_d[9] = n9;
+    assign ag_d[10] = n10;
+    assign ag_d[11] = n11;
+    assign ag_d[12] = n12;
+    assign ag_d[13] = n13;
+    assign ag_d[14] = n14;
+    assign ag_d[15] = n15;
+    assign ag_d[16] = n16;
+    assign ag_d[17] = n17;
+    assign ag_d[18] = n18;
+    assign ag_d[19] = n19;
+    assign ag_d[20] = n20;
+    assign ag_d[21] = n21;
+    assign ag_d[22] = n22;
+    assign ag_d[23] = n23;
+    assign ag_d[24] = n24;
+    assign ag_d[25] = n25;
+    assign ag_d[26] = n26;
+    assign ag_d[27] = n27;
+    assign ag_d[28] = n28;
+    assign ag_d[29] = n29;
+    assign ag_d[30] = n30;
+    assign ag_d[31] = n31;
+    assign ag_d[32] = n32;
+    assign ag_d[33] = n33;
+    assign ag_d[34] = n34;
+    assign ag_d[35] = n35;
+    assign ag_d[36] = n36;
+    assign ag_d[37] = n37;
+    assign ag_d[38] = n38;
+    assign ag_d[39] = n39;
+    assign ag_d[40] = n40;
+    assign ag_d[41] = n41;
+    assign ag_d[42] = n42;
+    assign ag_d[43] = n43;
+    assign ag_d[44] = n44;
+    assign ag_d[45] = n45;
+    assign ag_d[46] = n46;
+    assign ag_d[47] = n47;
+    assign ag_d[48] = n48;
+    assign ag_d[49] = n49;
+    assign ag_d[50] = n50;
+    assign ag_d[51] = n51;
+    assign ag_d[52] = n52;
+    assign ag_d[53] = n53;
+    assign ag_d[54] = n54;
+    assign ag_d[55] = n55;
+    assign ag_d[56] = n56;
+    assign ag_d[57] = n57;
+    assign ag_d[58] = n58;
+    assign ag_d[59] = n59;
+    assign ag_d[60] = n60;
+    assign ag_d[61] = n61;
+    assign ag_d[62] = n62;
+    assign ag_d[63] = n63;
+    assign ag_d[64] = n64;
+    assign ag_d[65] = n65;
+    assign ag_d[66] = n66;
+    assign ag_d[67] = n67;
+    assign ag_d[68] = n68;
+    assign ag_d[69] = n69;
+    assign ag_d[70] = n70;
+    assign ag_d[71] = n71;
+    assign ag_d[72] = n72;
+    assign ag_d[73] = n73;
+    assign ag_d[74] = n74;
+    assign ag_d[75] = n75;
+    assign ag_d[76] = n76;
+    assign ag_d[77] = n77;
+    assign ag_d[78] = n78;
+    assign ag_d[79] = n79;
+    assign ag_d[80] = n80;
+    assign ag_d[81] = n81;
+    assign ag_d[82] = n82;
+    assign ag_d[83] = n83;
+    assign ag_d[84] = n84;
+    assign ag_d[85] = n85;
+    assign ag_d[86] = n86;
+    assign ag_d[87] = n87;
+    assign ag_d[88] = n88;
+    assign ag_d[89] = n89;
+    assign ag_d[90] = n90;
+    assign ag_d[91] = n91;
+    assign ag_d[92] = n92;
+    assign ag_d[93] = n93;
+    assign ag_d[94] = n94;
+    assign ag_d[95] = n95;
+    assign ag_d[96] = n96;
+    assign ag_d[97] = n97;
+    assign ag_d[98] = n98;
+    assign ag_d[99] = n99;
+    assign ag_d[100] = n100;
+    assign ag_d[101] = n101;
+    assign ag_d[102] = n102;
+    assign ag_d[103] = n103;
+    assign ag_d[104] = n104;
+    assign ag_d[105] = n105;
+    assign ag_d[106] = n106;
+    assign ag_d[107] = n107;
+    assign ag_d[108] = n108;
+    assign ag_d[109] = n109;
+    assign ag_d[110] = n110;
+    assign ag_d[111] = n111;
+    assign ag_d[112] = n112;
+    assign ag_d[113] = n113;
+    assign ag_d[114] = n114;
+    assign ag_d[115] = n115;
+    assign ag_d[116] = n116;
+    assign ag_d[117] = n117;
+    assign ag_d[118] = n118;
+    assign ag_d[119] = n119;
+    assign ag_d[120] = n120;
+    assign ag_d[121] = n121;
+    assign ag_d[122] = n122;
+    assign ag_d[123] = n123;
+    assign ag_d[124] = n124;
+    assign ag_d[125] = n125;
+    assign ag_d[126] = n126;
+    assign ag_d[127] = n127;
+    assign ag_d[128] = n128;
+    assign ag_d[129] = n129;
+    assign ag_d[130] = n130;
+    assign ag_d[131] = n131;
+    assign ag_d[132] = n132;
+    assign ag_d[133] = n133;
+    assign ag_d[134] = n134;
+    assign ag_d[135] = n135;
+    assign ag_d[136] = n136;
+    assign ag_d[137] = n137;
+    assign ag_d[138] = n138;
+    assign ag_d[139] = n139;
+    assign ag_d[140] = n140;
+    assign ag_d[141] = n141;
+    assign ag_d[142] = n142;
+    assign ag_d[143] = n143;
+    assign ag_d[144] = n144;
+    assign ag_d[145] = n145;
+    assign ag_d[146] = n146;
+    assign ag_d[147] = n147;
+    assign ag_d[148] = n148;
+    assign ag_d[149] = n149;
+    assign ag_d[150] = n150;
+    assign ag_d[151] = n151;
+    assign ag_d[152] = n152;
+    assign ag_d[153] = n153;
+    assign ag_d[154] = n154;
+    assign ag_d[155] = n155;
+    assign ag_d[156] = n156;
+    assign ag_d[157] = n157;
+    assign ag_d[158] = n158;
+    assign ag_d[159] = n159;
+    assign ag_d[160] = n160;
+    assign ag_d[161] = n161;
+    assign ag_d[162] = n162;
+    assign ag_d[163] = n163;
+    assign ag_d[164] = n164;
+    assign ag_d[165] = n165;
+    assign ag_d[166] = n166;
+    assign ag_d[167] = n167;
+    assign ag_d[168] = n168;
+    assign ag_d[169] = n169;
+    assign ag_d[170] = n170;
+    assign ag_d[171] = n171;
+    assign ag_d[172] = n172;
+    assign ag_d[173] = n173;
+    assign ag_d[174] = n174;
+    assign ag_d[175] = n175;
+    assign ag_d[176] = n176;
+    assign ag_d[177] = n177;
+    assign ag_d[178] = n178;
+    assign ag_d[179] = n179;
+    assign ag_d[180] = n180;
+    assign ag_d[181] = n181;
+    assign ag_d[182] = n182;
+    assign ag_d[183] = n183;
+    assign ag_d[184] = n184;
+    assign ag_d[185] = n185;
+    assign ag_d[186] = n186;
+    assign ag_d[187] = n187;
+    assign ag_d[188] = n188;
+    assign ag_d[189] = n189;
+    assign ag_d[190] = n190;
+    assign ag_d[191] = n191;
+    assign ag_d[192] = n192;
+    assign ag_d[193] = n193;
+    assign ag_d[194] = n194;
+    assign ag_d[195] = n195;
+    assign ag_d[196] = n196;
+    assign ag_d[197] = n197;
+    assign ag_d[198] = n198;
+    assign ag_d[199] = n199;
+    assign ag_d[200] = n200;
+    assign ag_d[201] = n201;
+    assign ag_d[202] = n202;
+    assign ag_d[203] = n203;
+    assign ag_d[204] = n204;
+    assign ag_d[205] = n205;
+    assign ag_d[206] = n206;
+    assign ag_d[207] = n207;
+    assign ag_d[208] = n208;
+    assign ag_d[209] = n209;
+    assign ag_d[210] = n210;
+    assign ag_d[211] = n211;
+    assign ag_d[212] = n212;
+    assign ag_d[213] = n213;
+    assign ag_d[214] = n214;
+    assign ag_d[215] = n215;
+    assign ag_d[216] = n216;
+    assign ag_d[217] = n217;
+    assign ag_d[218] = n218;
+    assign ag_d[219] = n219;
+    assign ag_d[220] = n220;
+    assign ag_d[221] = n221;
+    assign ag_d[222] = n222;
+    assign ag_d[223] = n223;
+    assign ag_d[224] = n224;
+    assign ag_d[225] = n225;
+    assign ag_d[226] = n226;
+    assign ag_d[227] = n227;
+    assign ag_d[228] = n228;
+    assign ag_d[229] = n229;
+    assign ag_d[230] = n230;
+    assign ag_d[231] = n231;
+    assign ag_d[232] = n232;
+    assign ag_d[233] = n233;
+    assign ag_d[234] = n234;
+    assign ag_d[235] = n235;
+    assign ag_d[236] = n236;
+    assign ag_d[237] = n237;
+    assign ag_d[238] = n238;
+    assign ag_d[239] = n239;
+    assign ag_d[240] = n240;
+    assign ag_d[241] = n241;
+    assign ag_d[242] = n242;
+    assign ag_d[243] = n243;
+    assign ag_d[244] = n244;
+    assign ag_d[245] = n245;
+    assign ag_d[246] = n246;
+    assign ag_d[247] = n247;
+    assign ag_d[248] = n248;
+    assign ag_d[249] = n249;
+    assign ag_d[250] = n250;
+    assign ag_d[251] = n251;
+    assign ag_d[252] = n252;
+    assign ag_d[253] = n253;
+    assign ag_d[254] = n254;
+    assign ag_d[255] = n255;
+    assign ag_d[256] = n256;
+    assign ag_d[257] = n257;
+    assign ag_d[258] = n258;
+    assign ag_d[259] = n259;
+    assign ag_d[260] = n260;
+    assign ag_d[261] = n261;
+    assign ag_d[262] = n262;
+    assign ag_d[263] = n263;
+    assign ag_d[264] = n264;
+    assign ag_d[265] = n265;
+    assign ag_d[266] = n266;
+    assign ag_d[267] = n267;
+    assign ag_d[268] = n268;
+    assign ag_d[269] = n269;
+    assign ag_d[270] = n270;
+    assign ag_d[271] = n271;
+    assign ag_d[272] = n272;
+    assign ag_d[273] = n273;
+    assign ag_d[274] = n274;
+    assign ag_d[275] = n275;
+    assign ag_d[276] = n276;
+    assign ag_d[277] = n277;
+    assign ag_d[278] = n278;
+    assign ag_d[279] = n279;
+    assign ag_d[280] = n280;
+    assign ag_d[281] = n281;
+    assign ag_d[282] = n282;
+    assign ag_d[283] = n283;
+    assign ag_d[284] = n284;
+    assign ag_d[285] = n285;
+    assign ag_d[286] = n286;
+    assign ag_d[287] = n287;
+    assign ag_d[288] = n288;
+    assign ag_d[289] = n289;
+    assign ag_d[290] = n290;
+    assign ag_d[291] = n291;
+    assign ag_d[292] = n292;
+    assign ag_d[293] = n293;
+    assign ag_d[294] = n294;
+    assign ag_d[295] = n295;
+    assign ag_d[296] = n296;
+    assign ag_d[297] = n297;
+    assign ag_d[298] = n298;
+    assign ag_d[299] = n299;
+    assign ag_d[300] = n300;
+    assign ag_d[301] = n301;
+    assign ag_d[302] = n302;
+    assign ag_d[303] = n303;
+    assign ag_d[304] = n304;
+    assign ag_d[305] = n305;
+    assign ag_d[306] = n306;
+    assign ag_d[307] = n307;
+    assign ag_d[308] = n308;
+    assign ag_d[309] = n309;
+    assign ag_d[310] = n310;
+    assign ag_d[311] = n311;
+    assign ag_d[312] = n312;
+    assign ag_d[313] = n313;
+    assign ag_d[314] = n314;
+    assign ag_d[315] = n315;
+    assign ag_d[316] = n316;
+    assign ag_d[317] = n317;
+    assign ag_d[318] = n318;
+    assign ag_d[319] = n319;
+    assign ag_d[320] = n320;
+    assign ag_d[321] = n321;
+    assign ag_d[322] = n322;
+    assign ag_d[323] = n323;
+    assign ag_d[324] = n324;
+    assign ag_d[325] = n325;
+    assign ag_d[326] = n326;
+    assign ag_d[327] = n327;
+    assign ag_d[328] = n328;
+    assign ag_d[329] = n329;
+    assign ag_d[330] = n330;
+    assign ag_d[331] = n331;
+    assign ag_d[332] = n332;
+    assign ag_d[333] = n333;
+    assign ag_d[334] = n334;
+    assign ag_d[335] = n335;
+    assign ag_d[336] = n336;
+    assign ag_d[337] = n337;
+    assign ag_d[338] = n338;
+    assign ag_d[339] = n339;
+    assign ag_d[340] = n340;
+    assign ag_d[341] = n341;
+    assign ag_d[342] = n342;
+    assign ag_d[343] = n343;
+    assign ag_d[344] = n344;
+    assign ag_d[345] = n345;
+    assign ag_d[346] = n346;
+    assign ag_d[347] = n347;
+    assign ag_d[348] = n348;
+    assign ag_d[349] = n349;
+    assign ag_d[350] = n350;
+    assign ag_d[351] = n351;
+    assign ag_d[352] = n352;
+    assign ag_d[353] = n353;
+    assign ag_d[354] = n354;
+    assign ag_d[355] = n355;
+    assign ag_d[356] = n356;
+    assign ag_d[357] = n357;
+    assign ag_d[358] = n358;
+    assign ag_d[359] = n359;
+    assign ag_d[360] = n360;
+    assign ag_d[361] = n361;
+    assign ag_d[362] = n362;
+    assign ag_d[363] = n363;
+    assign ag_d[364] = n364;
+    assign ag_d[365] = n365;
+    assign ag_d[366] = n366;
+    assign ag_d[367] = n367;
+    assign ag_d[368] = n368;
+    assign ag_d[369] = n369;
+    assign ag_d[370] = n370;
+    assign ag_d[371] = n371;
+    assign ag_d[372] = n372;
+    assign ag_d[373] = n373;
+    assign ag_d[374] = n374;
+    assign ag_d[375] = n375;
+    assign ag_d[376] = n376;
+    assign ag_d[377] = n377;
+    assign ag_d[378] = n378;
+    assign ag_d[379] = n379;
+    assign ag_d[380] = n380;
+    assign ag_d[381] = n381;
+    assign ag_d[382] = n382;
+    assign ag_d[383] = n383;
+    assign ag_d[384] = n384;
+    assign ag_d[385] = n385;
+    assign ag_d[386] = n386;
+    assign ag_d[387] = n387;
+    assign ag_d[388] = n388;
+    assign ag_d[389] = n389;
+    assign ag_d[390] = n390;
+    assign ag_d[391] = n391;
+    assign ag_d[392] = n392;
+    assign ag_d[393] = n393;
+    assign ag_d[394] = n394;
+    assign ag_d[395] = n395;
+    assign ag_d[396] = n396;
+    assign ag_d[397] = n397;
+    assign ag_d[398] = n398;
+    assign ag_d[399] = n399;
+    assign ag_d[400] = n400;
+    assign ag_d[401] = n401;
+    assign ag_d[402] = n402;
+    assign ag_d[403] = n403;
+    assign ag_d[404] = n404;
+    assign ag_d[405] = n405;
+    assign ag_d[406] = n406;
+    assign ag_d[407] = n407;
+    assign ag_d[408] = n408;
+    assign ag_d[409] = n409;
+    assign ag_d[410] = n410;
+    assign ag_d[411] = n411;
+    assign ag_d[412] = n412;
+    assign ag_d[413] = n413;
+    assign ag_d[414] = n414;
+    assign ag_d[415] = n415;
+    assign ag_d[416] = n416;
+    assign ag_d[417] = n417;
+    assign ag_d[418] = n418;
+    assign ag_d[419] = n419;
+    assign ag_d[420] = n420;
+    assign ag_d[421] = n421;
+    assign ag_d[422] = n422;
+    assign ag_d[423] = n423;
+    assign ag_d[424] = n424;
+    assign ag_d[425] = n425;
+    assign ag_d[426] = n426;
+    assign ag_d[427] = n427;
+    assign ag_d[428] = n428;
+    assign ag_d[429] = n429;
+    assign ag_d[430] = n430;
+    assign ag_d[431] = n431;
+    assign ag_d[432] = n432;
+    assign ag_d[433] = n433;
+    assign ag_d[434] = n434;
+    assign ag_d[435] = n435;
+    assign ag_d[436] = n436;
+    assign ag_d[437] = n437;
+    assign ag_d[438] = n438;
+    assign ag_d[439] = n439;
+    assign ag_d[440] = n440;
+    assign ag_d[441] = n441;
+    assign ag_d[442] = n442;
+    assign ag_d[443] = n443;
+    assign ag_d[444] = n444;
+    assign ag_d[445] = n445;
+    assign ag_d[446] = n446;
+    assign ag_d[447] = n447;
+    assign ag_d[448] = n448;
+    assign ag_d[449] = n449;
+    assign ag_d[450] = n450;
+    assign ag_d[451] = n451;
+    assign ag_d[452] = n452;
+    assign ag_d[453] = n453;
+    assign ag_d[454] = n454;
+    assign ag_d[455] = n455;
+    assign ag_d[456] = n456;
+    assign ag_d[457] = n457;
+    assign ag_d[458] = n458;
+    assign ag_d[459] = n459;
+    assign ag_d[460] = n460;
+    assign ag_d[461] = n461;
+    assign ag_d[462] = n462;
+    assign ag_d[463] = n463;
+    assign ag_d[464] = n464;
+    assign ag_d[465] = n465;
+    assign ag_d[466] = n466;
+    assign ag_d[467] = n467;
+    assign ag_d[468] = n468;
+    assign ag_d[469] = n469;
+    assign ag_d[470] = n470;
+    assign ag_d[471] = n471;
+    assign ag_d[472] = n472;
+    assign ag_d[473] = n473;
+    assign ag_d[474] = n474;
+    assign ag_d[475] = n475;
+    assign ag_d[476] = n476;
+    assign ag_d[477] = n477;
+    assign ag_d[478] = n478;
+    assign ag_d[479] = n479;
+    assign ag_d[480] = n480;
+    assign ag_d[481] = n481;
+    assign ag_d[482] = n482;
+    assign ag_d[483] = n483;
+    assign ag_d[484] = n484;
+    assign ag_d[485] = n485;
+    assign ag_d[486] = n486;
+    assign ag_d[487] = n487;
+    assign ag_d[488] = n488;
+    assign ag_d[489] = n489;
+    assign ag_d[490] = n490;
+    assign ag_d[491] = n491;
+    assign ag_d[492] = n492;
+    assign ag_d[493] = n493;
+    assign ag_d[494] = n494;
+    assign ag_d[495] = n495;
+    assign ag_d[496] = n496;
+    assign ag_d[497] = n497;
+    assign ag_d[498] = n498;
+    assign ag_d[499] = n499;
+    assign ag_d[500] = n500;
+    assign ag_d[501] = n501;
+    assign ag_d[502] = n502;
+    assign ag_d[503] = n503;
+    assign ag_d[504] = n504;
+    assign ag_d[505] = n505;
+    assign ag_d[506] = n506;
+    assign ag_d[507] = n507;
+    assign ag_d[508] = n508;
+    assign ag_d[509] = n509;
+    assign ag_d[510] = n510;
+    assign ag_d[511] = n511;
+    assign ag_src[0] = n512;
+    assign ag_src[1] = n513;
+    assign ag_src[2] = n514;
+    assign ag_src[3] = n515;
+    assign ag_tag[0] = n516;
+    assign ag_tag[1] = n517;
+    assign ag_tag[2] = n518;
+    assign ag_tag[3] = n519;
+    assign ag_tag[4] = n520;
+    assign ag_tag[5] = n521;
+    assign ag_v[0] = n522;
+    assign ag_v[1] = n523;
+    assign pr_ccw_o[0] = n524;
+    assign pr_ccw_o[1] = n525;
+    assign pr_ccw_o[2] = n526;
+    assign pr_ccw_o[3] = n527;
+    assign pr_ccw_o[4] = n528;
+    assign pr_ccw_o[5] = n529;
+    assign pr_ccw_o[6] = n530;
+    assign pr_ccw_o[7] = n531;
+    assign pr_ccw_o[8] = n532;
+    assign pr_ccw_o[9] = n533;
+    assign pr_ccw_o[10] = n534;
+    assign pr_ccw_o[11] = n535;
+    assign pr_ccw_o[12] = n536;
+    assign pr_ccw_o[13] = n537;
+    assign pr_ccw_o[14] = n538;
+    assign pr_ccw_o[15] = n539;
+    assign pr_ccw_o[16] = n540;
+    assign pr_ccw_o[17] = n541;
+    assign pr_ccw_o[18] = n542;
+    assign pr_ccw_o[19] = n543;
+    assign pr_ccw_o[20] = n544;
+    assign pr_ccw_o[21] = n545;
+    assign pr_ccw_o[22] = n546;
+    assign pr_ccw_o[23] = n547;
+    assign pr_ccw_o[24] = n548;
+    assign pr_ccw_o[25] = n549;
+    assign pr_ccw_o[26] = n550;
+    assign pr_ccw_o[27] = n551;
+    assign pr_ccw_o[28] = n552;
+    assign pr_ccw_o[29] = n553;
+    assign pr_ccw_o[30] = n554;
+    assign pr_ccw_o[31] = n555;
+    assign pr_ccw_o[32] = n556;
+    assign pr_ccw_o[33] = n557;
+    assign pr_ccw_o[34] = n558;
+    assign pr_ccw_o[35] = n559;
+    assign pr_ccw_o[36] = n560;
+    assign pr_ccw_o[37] = n561;
+    assign pr_ccw_o[38] = n562;
+    assign pr_ccw_o[39] = n563;
+    assign pr_ccw_o[40] = n564;
+    assign pr_ccw_o[41] = n565;
+    assign pr_ccw_o[42] = n566;
+    assign pr_ccw_o[43] = n567;
+    assign pr_ccw_o[44] = n568;
+    assign pr_ccw_o[45] = n569;
+    assign pr_ccw_o[46] = n570;
+    assign pr_ccw_o[47] = n571;
+    assign pr_ccw_o[48] = n572;
+    assign pr_ccw_o[49] = n573;
+    assign pr_ccw_o[50] = n574;
+    assign pr_ccw_o[51] = n575;
+    assign pr_ccw_o[52] = n576;
+    assign pr_ccw_o[53] = n577;
+    assign pr_ccw_o[54] = n578;
+    assign pr_ccw_o[55] = n579;
+    assign pr_ccw_o[56] = n580;
+    assign pr_ccw_o[57] = n581;
+    assign pr_ccw_o[58] = n582;
+    assign pr_ccw_o[59] = n583;
+    assign pr_ccw_o[60] = n584;
+    assign pr_ccw_o[61] = n585;
+    assign pr_ccw_o[62] = n586;
+    assign pr_ccw_o[63] = n587;
+    assign pr_ccw_o[64] = n588;
+    assign pr_ccw_o[65] = n589;
+    assign pr_ccw_o[66] = n590;
+    assign pr_ccw_o[67] = n591;
+    assign pr_ccw_o[68] = n592;
+    assign pr_ccw_o[69] = n593;
+    assign pr_ccw_o[70] = n594;
+    assign pr_ccw_o[71] = n595;
+    assign pr_ccw_o[72] = n596;
+    assign pr_ccw_o[73] = n597;
+    assign pr_ccw_o[74] = n598;
+    assign pr_ccw_o[75] = n599;
+    assign pr_ccw_o[76] = n600;
+    assign pr_ccw_o[77] = n601;
+    assign pr_ccw_o[78] = n602;
+    assign pr_ccw_o[79] = n603;
+    assign pr_ccw_o[80] = n604;
+    assign pr_ccw_o[81] = n605;
+    assign pr_ccw_o[82] = n606;
+    assign pr_ccw_o[83] = n607;
+    assign pr_ccw_o[84] = n608;
+    assign pr_ccw_o[85] = n609;
+    assign pr_ccw_o[86] = n610;
+    assign pr_ccw_o[87] = n611;
+    assign pr_ccw_o[88] = n612;
+    assign pr_ccw_o[89] = n613;
+    assign pr_ccw_o[90] = n614;
+    assign pr_ccw_o[91] = n615;
+    assign pr_ccw_o[92] = n616;
+    assign pr_ccw_o[93] = n617;
+    assign pr_ccw_o[94] = n618;
+    assign pr_ccw_o[95] = n619;
+    assign pr_ccw_o[96] = n620;
+    assign pr_ccw_o[97] = n621;
+    assign pr_ccw_o[98] = n622;
+    assign pr_ccw_o[99] = n623;
+    assign pr_ccw_o[100] = n624;
+    assign pr_ccw_o[101] = n625;
+    assign pr_ccw_o[102] = n626;
+    assign pr_ccw_o[103] = n627;
+    assign pr_ccw_o[104] = n628;
+    assign pr_ccw_o[105] = n629;
+    assign pr_ccw_o[106] = n630;
+    assign pr_ccw_o[107] = n631;
+    assign pr_ccw_o[108] = n632;
+    assign pr_ccw_o[109] = n633;
+    assign pr_ccw_o[110] = n634;
+    assign pr_ccw_o[111] = n635;
+    assign pr_ccw_o[112] = n636;
+    assign pr_ccw_o[113] = n637;
+    assign pr_ccw_o[114] = n638;
+    assign pr_ccw_o[115] = n639;
+    assign pr_ccw_o[116] = n640;
+    assign pr_ccw_o[117] = n641;
+    assign pr_ccw_o[118] = n642;
+    assign pr_ccw_o[119] = n643;
+    assign pr_ccw_o[120] = n644;
+    assign pr_ccw_o[121] = n645;
+    assign pr_ccw_o[122] = n646;
+    assign pr_ccw_o[123] = n647;
+    assign pr_ccw_o[124] = n648;
+    assign pr_ccw_o[125] = n649;
+    assign pr_ccw_o[126] = n650;
+    assign pr_ccw_o[127] = n651;
+    assign pr_ccw_o[128] = n652;
+    assign pr_ccw_o[129] = n653;
+    assign pr_ccw_o[130] = n654;
+    assign pr_ccw_o[131] = n655;
+    assign pr_ccw_o[132] = n656;
+    assign pr_ccw_o[133] = n657;
+    assign pr_ccw_o[134] = n658;
+    assign pr_ccw_o[135] = n659;
+    assign pr_ccw_o[136] = n660;
+    assign pr_ccw_o[137] = n661;
+    assign pr_ccw_o[138] = n662;
+    assign pr_ccw_o[139] = n663;
+    assign pr_ccw_o[140] = n664;
+    assign pr_ccw_o[141] = n665;
+    assign pr_ccw_o[142] = n666;
+    assign pr_ccw_o[143] = n667;
+    assign pr_ccw_o[144] = n668;
+    assign pr_ccw_o[145] = n669;
+    assign pr_ccw_o[146] = n670;
+    assign pr_ccw_o[147] = n671;
+    assign pr_ccw_o[148] = n672;
+    assign pr_ccw_o[149] = n673;
+    assign pr_ccw_o[150] = n674;
+    assign pr_ccw_o[151] = n675;
+    assign pr_ccw_o[152] = n676;
+    assign pr_ccw_o[153] = n677;
+    assign pr_ccw_o[154] = n678;
+    assign pr_ccw_o[155] = n679;
+    assign pr_ccw_o[156] = n680;
+    assign pr_ccw_o[157] = n681;
+    assign pr_ccw_o[158] = n682;
+    assign pr_ccw_o[159] = n683;
+    assign pr_ccw_o[160] = n684;
+    assign pr_ccw_o[161] = n685;
+    assign pr_ccw_o[162] = n686;
+    assign pr_ccw_o[163] = n687;
+    assign pr_ccw_o[164] = n688;
+    assign pr_ccw_o[165] = n689;
+    assign pr_ccw_o[166] = n690;
+    assign pr_ccw_o[167] = n691;
+    assign pr_ccw_o[168] = n692;
+    assign pr_ccw_o[169] = n693;
+    assign pr_ccw_o[170] = n694;
+    assign pr_ccw_o[171] = n695;
+    assign pr_ccw_o[172] = n696;
+    assign pr_ccw_o[173] = n697;
+    assign pr_ccw_o[174] = n698;
+    assign pr_ccw_o[175] = n699;
+    assign pr_ccw_o[176] = n700;
+    assign pr_ccw_o[177] = n701;
+    assign pr_ccw_o[178] = n702;
+    assign pr_ccw_o[179] = n703;
+    assign pr_ccw_o[180] = n704;
+    assign pr_ccw_o[181] = n705;
+    assign pr_ccw_o[182] = n706;
+    assign pr_ccw_o[183] = n707;
+    assign pr_ccw_o[184] = n708;
+    assign pr_ccw_o[185] = n709;
+    assign pr_ccw_o[186] = n710;
+    assign pr_ccw_o[187] = n711;
+    assign pr_ccw_o[188] = n712;
+    assign pr_ccw_o[189] = n713;
+    assign pr_ccw_o[190] = n714;
+    assign pr_ccw_o[191] = n715;
+    assign pr_ccw_o[192] = n716;
+    assign pr_ccw_o[193] = n717;
+    assign pr_ccw_o[194] = n718;
+    assign pr_ccw_o[195] = n719;
+    assign pr_ccw_o[196] = n720;
+    assign pr_ccw_o[197] = n721;
+    assign pr_ccw_o[198] = n722;
+    assign pr_ccw_o[199] = n723;
+    assign pr_ccw_o[200] = n724;
+    assign pr_ccw_o[201] = n725;
+    assign pr_ccw_o[202] = n726;
+    assign pr_ccw_o[203] = n727;
+    assign pr_ccw_o[204] = n728;
+    assign pr_ccw_o[205] = n729;
+    assign pr_ccw_o[206] = n730;
+    assign pr_ccw_o[207] = n731;
+    assign pr_ccw_o[208] = n732;
+    assign pr_ccw_o[209] = n733;
+    assign pr_ccw_o[210] = n734;
+    assign pr_ccw_o[211] = n735;
+    assign pr_ccw_o[212] = n736;
+    assign pr_ccw_o[213] = n737;
+    assign pr_ccw_o[214] = n738;
+    assign pr_ccw_o[215] = n739;
+    assign pr_ccw_o[216] = n740;
+    assign pr_ccw_o[217] = n741;
+    assign pr_ccw_o[218] = n742;
+    assign pr_ccw_o[219] = n743;
+    assign pr_ccw_o[220] = n744;
+    assign pr_ccw_o[221] = n745;
+    assign pr_ccw_o[222] = n746;
+    assign pr_ccw_o[223] = n747;
+    assign pr_ccw_o[224] = n748;
+    assign pr_ccw_o[225] = n749;
+    assign pr_ccw_o[226] = n750;
+    assign pr_ccw_o[227] = n751;
+    assign pr_ccw_o[228] = n752;
+    assign pr_ccw_o[229] = n753;
+    assign pr_ccw_o[230] = n754;
+    assign pr_ccw_o[231] = n755;
+    assign pr_ccw_o[232] = n756;
+    assign pr_ccw_o[233] = n757;
+    assign pr_ccw_o[234] = n758;
+    assign pr_ccw_o[235] = n759;
+    assign pr_ccw_o[236] = n760;
+    assign pr_ccw_o[237] = n761;
+    assign pr_ccw_o[238] = n762;
+    assign pr_ccw_o[239] = n763;
+    assign pr_ccw_o[240] = n764;
+    assign pr_ccw_o[241] = n765;
+    assign pr_ccw_o[242] = n766;
+    assign pr_ccw_o[243] = n767;
+    assign pr_ccw_o[244] = n768;
+    assign pr_ccw_o[245] = n769;
+    assign pr_ccw_o[246] = n770;
+    assign pr_ccw_o[247] = n771;
+    assign pr_ccw_o[248] = n772;
+    assign pr_ccw_o[249] = n773;
+    assign pr_ccw_o[250] = n774;
+    assign pr_ccw_o[251] = n775;
+    assign pr_ccw_o[252] = n776;
+    assign pr_ccw_o[253] = n777;
+    assign pr_ccw_o[254] = n778;
+    assign pr_ccw_o[255] = n779;
+    assign pr_ccw_o[256] = n780;
+    assign pr_ccw_o[257] = n781;
+    assign pr_ccw_o[258] = n782;
+    assign pr_ccw_o[259] = n783;
+    assign pr_ccw_o[260] = n784;
+    assign pr_ccw_o[261] = n785;
+    assign pr_ccw_o[262] = n786;
+    assign pr_ccw_o[263] = n787;
+    assign pr_ccw_o[264] = n788;
+    assign pr_ccw_o[265] = n789;
+    assign pr_ccw_o[266] = n790;
+    assign pr_ccw_o[267] = n791;
+    assign pr_ccw_o[268] = n792;
+    assign pr_ccw_o[269] = n793;
+    assign pr_ccw_o[270] = n794;
+    assign pr_ccw_o[271] = n795;
+    assign pr_ccw_o[272] = n796;
+    assign pr_ccw_o[273] = n797;
+    assign pr_ccw_o[274] = n798;
+    assign pr_ccw_o[275] = n799;
+    assign pr_ccw_o[276] = n800;
+    assign pr_ccw_o[277] = n801;
+    assign pr_ccw_o[278] = n802;
+    assign pr_ccw_o[279] = n803;
+    assign pr_cw_o[0] = n804;
+    assign pr_cw_o[1] = n805;
+    assign pr_cw_o[2] = n806;
+    assign pr_cw_o[3] = n807;
+    assign pr_cw_o[4] = n808;
+    assign pr_cw_o[5] = n809;
+    assign pr_cw_o[6] = n810;
+    assign pr_cw_o[7] = n811;
+    assign pr_cw_o[8] = n812;
+    assign pr_cw_o[9] = n813;
+    assign pr_cw_o[10] = n814;
+    assign pr_cw_o[11] = n815;
+    assign pr_cw_o[12] = n816;
+    assign pr_cw_o[13] = n817;
+    assign pr_cw_o[14] = n818;
+    assign pr_cw_o[15] = n819;
+    assign pr_cw_o[16] = n820;
+    assign pr_cw_o[17] = n821;
+    assign pr_cw_o[18] = n822;
+    assign pr_cw_o[19] = n823;
+    assign pr_cw_o[20] = n824;
+    assign pr_cw_o[21] = n825;
+    assign pr_cw_o[22] = n826;
+    assign pr_cw_o[23] = n827;
+    assign pr_cw_o[24] = n828;
+    assign pr_cw_o[25] = n829;
+    assign pr_cw_o[26] = n830;
+    assign pr_cw_o[27] = n831;
+    assign pr_cw_o[28] = n832;
+    assign pr_cw_o[29] = n833;
+    assign pr_cw_o[30] = n834;
+    assign pr_cw_o[31] = n835;
+    assign pr_cw_o[32] = n836;
+    assign pr_cw_o[33] = n837;
+    assign pr_cw_o[34] = n838;
+    assign pr_cw_o[35] = n839;
+    assign pr_cw_o[36] = n840;
+    assign pr_cw_o[37] = n841;
+    assign pr_cw_o[38] = n842;
+    assign pr_cw_o[39] = n843;
+    assign pr_cw_o[40] = n844;
+    assign pr_cw_o[41] = n845;
+    assign pr_cw_o[42] = n846;
+    assign pr_cw_o[43] = n847;
+    assign pr_cw_o[44] = n848;
+    assign pr_cw_o[45] = n849;
+    assign pr_cw_o[46] = n850;
+    assign pr_cw_o[47] = n851;
+    assign pr_cw_o[48] = n852;
+    assign pr_cw_o[49] = n853;
+    assign pr_cw_o[50] = n854;
+    assign pr_cw_o[51] = n855;
+    assign pr_cw_o[52] = n856;
+    assign pr_cw_o[53] = n857;
+    assign pr_cw_o[54] = n858;
+    assign pr_cw_o[55] = n859;
+    assign pr_cw_o[56] = n860;
+    assign pr_cw_o[57] = n861;
+    assign pr_cw_o[58] = n862;
+    assign pr_cw_o[59] = n863;
+    assign pr_cw_o[60] = n864;
+    assign pr_cw_o[61] = n865;
+    assign pr_cw_o[62] = n866;
+    assign pr_cw_o[63] = n867;
+    assign pr_cw_o[64] = n868;
+    assign pr_cw_o[65] = n869;
+    assign pr_cw_o[66] = n870;
+    assign pr_cw_o[67] = n871;
+    assign pr_cw_o[68] = n872;
+    assign pr_cw_o[69] = n873;
+    assign pr_cw_o[70] = n874;
+    assign pr_cw_o[71] = n875;
+    assign pr_cw_o[72] = n876;
+    assign pr_cw_o[73] = n877;
+    assign pr_cw_o[74] = n878;
+    assign pr_cw_o[75] = n879;
+    assign pr_cw_o[76] = n880;
+    assign pr_cw_o[77] = n881;
+    assign pr_cw_o[78] = n882;
+    assign pr_cw_o[79] = n883;
+    assign pr_cw_o[80] = n884;
+    assign pr_cw_o[81] = n885;
+    assign pr_cw_o[82] = n886;
+    assign pr_cw_o[83] = n887;
+    assign pr_cw_o[84] = n888;
+    assign pr_cw_o[85] = n889;
+    assign pr_cw_o[86] = n890;
+    assign pr_cw_o[87] = n891;
+    assign pr_cw_o[88] = n892;
+    assign pr_cw_o[89] = n893;
+    assign pr_cw_o[90] = n894;
+    assign pr_cw_o[91] = n895;
+    assign pr_cw_o[92] = n896;
+    assign pr_cw_o[93] = n897;
+    assign pr_cw_o[94] = n898;
+    assign pr_cw_o[95] = n899;
+    assign pr_cw_o[96] = n900;
+    assign pr_cw_o[97] = n901;
+    assign pr_cw_o[98] = n902;
+    assign pr_cw_o[99] = n903;
+    assign pr_cw_o[100] = n904;
+    assign pr_cw_o[101] = n905;
+    assign pr_cw_o[102] = n906;
+    assign pr_cw_o[103] = n907;
+    assign pr_cw_o[104] = n908;
+    assign pr_cw_o[105] = n909;
+    assign pr_cw_o[106] = n910;
+    assign pr_cw_o[107] = n911;
+    assign pr_cw_o[108] = n912;
+    assign pr_cw_o[109] = n913;
+    assign pr_cw_o[110] = n914;
+    assign pr_cw_o[111] = n915;
+    assign pr_cw_o[112] = n916;
+    assign pr_cw_o[113] = n917;
+    assign pr_cw_o[114] = n918;
+    assign pr_cw_o[115] = n919;
+    assign pr_cw_o[116] = n920;
+    assign pr_cw_o[117] = n921;
+    assign pr_cw_o[118] = n922;
+    assign pr_cw_o[119] = n923;
+    assign pr_cw_o[120] = n924;
+    assign pr_cw_o[121] = n925;
+    assign pr_cw_o[122] = n926;
+    assign pr_cw_o[123] = n927;
+    assign pr_cw_o[124] = n928;
+    assign pr_cw_o[125] = n929;
+    assign pr_cw_o[126] = n930;
+    assign pr_cw_o[127] = n931;
+    assign pr_cw_o[128] = n932;
+    assign pr_cw_o[129] = n933;
+    assign pr_cw_o[130] = n934;
+    assign pr_cw_o[131] = n935;
+    assign pr_cw_o[132] = n936;
+    assign pr_cw_o[133] = n937;
+    assign pr_cw_o[134] = n938;
+    assign pr_cw_o[135] = n939;
+    assign pr_cw_o[136] = n940;
+    assign pr_cw_o[137] = n941;
+    assign pr_cw_o[138] = n942;
+    assign pr_cw_o[139] = n943;
+    assign pr_cw_o[140] = n944;
+    assign pr_cw_o[141] = n945;
+    assign pr_cw_o[142] = n946;
+    assign pr_cw_o[143] = n947;
+    assign pr_cw_o[144] = n948;
+    assign pr_cw_o[145] = n949;
+    assign pr_cw_o[146] = n950;
+    assign pr_cw_o[147] = n951;
+    assign pr_cw_o[148] = n952;
+    assign pr_cw_o[149] = n953;
+    assign pr_cw_o[150] = n954;
+    assign pr_cw_o[151] = n955;
+    assign pr_cw_o[152] = n956;
+    assign pr_cw_o[153] = n957;
+    assign pr_cw_o[154] = n958;
+    assign pr_cw_o[155] = n959;
+    assign pr_cw_o[156] = n960;
+    assign pr_cw_o[157] = n961;
+    assign pr_cw_o[158] = n962;
+    assign pr_cw_o[159] = n963;
+    assign pr_cw_o[160] = n964;
+    assign pr_cw_o[161] = n965;
+    assign pr_cw_o[162] = n966;
+    assign pr_cw_o[163] = n967;
+    assign pr_cw_o[164] = n968;
+    assign pr_cw_o[165] = n969;
+    assign pr_cw_o[166] = n970;
+    assign pr_cw_o[167] = n971;
+    assign pr_cw_o[168] = n972;
+    assign pr_cw_o[169] = n973;
+    assign pr_cw_o[170] = n974;
+    assign pr_cw_o[171] = n975;
+    assign pr_cw_o[172] = n976;
+    assign pr_cw_o[173] = n977;
+    assign pr_cw_o[174] = n978;
+    assign pr_cw_o[175] = n979;
+    assign pr_cw_o[176] = n980;
+    assign pr_cw_o[177] = n981;
+    assign pr_cw_o[178] = n982;
+    assign pr_cw_o[179] = n983;
+    assign pr_cw_o[180] = n984;
+    assign pr_cw_o[181] = n985;
+    assign pr_cw_o[182] = n986;
+    assign pr_cw_o[183] = n987;
+    assign pr_cw_o[184] = n988;
+    assign pr_cw_o[185] = n989;
+    assign pr_cw_o[186] = n990;
+    assign pr_cw_o[187] = n991;
+    assign pr_cw_o[188] = n992;
+    assign pr_cw_o[189] = n993;
+    assign pr_cw_o[190] = n994;
+    assign pr_cw_o[191] = n995;
+    assign pr_cw_o[192] = n996;
+    assign pr_cw_o[193] = n997;
+    assign pr_cw_o[194] = n998;
+    assign pr_cw_o[195] = n999;
+    assign pr_cw_o[196] = n1000;
+    assign pr_cw_o[197] = n1001;
+    assign pr_cw_o[198] = n1002;
+    assign pr_cw_o[199] = n1003;
+    assign pr_cw_o[200] = n1004;
+    assign pr_cw_o[201] = n1005;
+    assign pr_cw_o[202] = n1006;
+    assign pr_cw_o[203] = n1007;
+    assign pr_cw_o[204] = n1008;
+    assign pr_cw_o[205] = n1009;
+    assign pr_cw_o[206] = n1010;
+    assign pr_cw_o[207] = n1011;
+    assign pr_cw_o[208] = n1012;
+    assign pr_cw_o[209] = n1013;
+    assign pr_cw_o[210] = n1014;
+    assign pr_cw_o[211] = n1015;
+    assign pr_cw_o[212] = n1016;
+    assign pr_cw_o[213] = n1017;
+    assign pr_cw_o[214] = n1018;
+    assign pr_cw_o[215] = n1019;
+    assign pr_cw_o[216] = n1020;
+    assign pr_cw_o[217] = n1021;
+    assign pr_cw_o[218] = n1022;
+    assign pr_cw_o[219] = n1023;
+    assign pr_cw_o[220] = n1024;
+    assign pr_cw_o[221] = n1025;
+    assign pr_cw_o[222] = n1026;
+    assign pr_cw_o[223] = n1027;
+    assign pr_cw_o[224] = n1028;
+    assign pr_cw_o[225] = n1029;
+    assign pr_cw_o[226] = n1030;
+    assign pr_cw_o[227] = n1031;
+    assign pr_cw_o[228] = n1032;
+    assign pr_cw_o[229] = n1033;
+    assign pr_cw_o[230] = n1034;
+    assign pr_cw_o[231] = n1035;
+    assign pr_cw_o[232] = n1036;
+    assign pr_cw_o[233] = n1037;
+    assign pr_cw_o[234] = n1038;
+    assign pr_cw_o[235] = n1039;
+    assign pr_cw_o[236] = n1040;
+    assign pr_cw_o[237] = n1041;
+    assign pr_cw_o[238] = n1042;
+    assign pr_cw_o[239] = n1043;
+    assign pr_cw_o[240] = n1044;
+    assign pr_cw_o[241] = n1045;
+    assign pr_cw_o[242] = n1046;
+    assign pr_cw_o[243] = n1047;
+    assign pr_cw_o[244] = n1048;
+    assign pr_cw_o[245] = n1049;
+    assign pr_cw_o[246] = n1050;
+    assign pr_cw_o[247] = n1051;
+    assign pr_cw_o[248] = n1052;
+    assign pr_cw_o[249] = n1053;
+    assign pr_cw_o[250] = n1054;
+    assign pr_cw_o[251] = n1055;
+    assign pr_cw_o[252] = n1056;
+    assign pr_cw_o[253] = n1057;
+    assign pr_cw_o[254] = n1058;
+    assign pr_cw_o[255] = n1059;
+    assign pr_cw_o[256] = n1060;
+    assign pr_cw_o[257] = n1061;
+    assign pr_cw_o[258] = n1062;
+    assign pr_cw_o[259] = n1063;
+    assign pr_cw_o[260] = n1064;
+    assign pr_cw_o[261] = n1065;
+    assign pr_cw_o[262] = n1066;
+    assign pr_cw_o[263] = n1067;
+    assign pr_cw_o[264] = n1068;
+    assign pr_cw_o[265] = n1069;
+    assign pr_cw_o[266] = n1070;
+    assign pr_cw_o[267] = n1071;
+    assign pr_cw_o[268] = n1072;
+    assign pr_cw_o[269] = n1073;
+    assign pr_cw_o[270] = n1074;
+    assign pr_cw_o[271] = n1075;
+    assign pr_cw_o[272] = n1076;
+    assign pr_cw_o[273] = n1077;
+    assign pr_cw_o[274] = n1078;
+    assign pr_cw_o[275] = n1079;
+    assign pr_cw_o[276] = n1080;
+    assign pr_cw_o[277] = n1081;
+    assign pr_cw_o[278] = n1082;
+    assign pr_cw_o[279] = n1083;
+    assign rr_d[0] = n1085;
+    assign rr_d[1] = n1086;
+    assign rr_d[2] = n1087;
+    assign rr_d[3] = n1088;
+    assign rr_d[4] = n1089;
+    assign rr_d[5] = n1090;
+    assign rr_d[6] = n1091;
+    assign rr_d[7] = n1092;
+    assign rr_d[8] = n1093;
+    assign rr_d[9] = n1094;
+    assign rr_d[10] = n1095;
+    assign rr_d[11] = n1096;
+    assign rr_d[12] = n1097;
+    assign rr_d[13] = n1098;
+    assign rr_d[14] = n1099;
+    assign rr_d[15] = n1100;
+    assign rr_d[16] = n1101;
+    assign rr_d[17] = n1102;
+    assign rr_d[18] = n1103;
+    assign rr_d[19] = n1104;
+    assign rr_d[20] = n1105;
+    assign rr_d[21] = n1106;
+    assign rr_d[22] = n1107;
+    assign rr_d[23] = n1108;
+    assign rr_d[24] = n1109;
+    assign rr_d[25] = n1110;
+    assign rr_d[26] = n1111;
+    assign rr_d[27] = n1112;
+    assign rr_d[28] = n1113;
+    assign rr_d[29] = n1114;
+    assign rr_d[30] = n1115;
+    assign rr_d[31] = n1116;
+    assign rr_d[32] = n1117;
+    assign rr_d[33] = n1118;
+    assign rr_d[34] = n1119;
+    assign rr_d[35] = n1120;
+    assign rr_d[36] = n1121;
+    assign rr_d[37] = n1122;
+    assign rr_d[38] = n1123;
+    assign rr_d[39] = n1124;
+    assign rr_d[40] = n1125;
+    assign rr_d[41] = n1126;
+    assign rr_d[42] = n1127;
+    assign rr_d[43] = n1128;
+    assign rr_d[44] = n1129;
+    assign rr_d[45] = n1130;
+    assign rr_d[46] = n1131;
+    assign rr_d[47] = n1132;
+    assign rr_d[48] = n1133;
+    assign rr_d[49] = n1134;
+    assign rr_d[50] = n1135;
+    assign rr_d[51] = n1136;
+    assign rr_d[52] = n1137;
+    assign rr_d[53] = n1138;
+    assign rr_d[54] = n1139;
+    assign rr_d[55] = n1140;
+    assign rr_d[56] = n1141;
+    assign rr_d[57] = n1142;
+    assign rr_d[58] = n1143;
+    assign rr_d[59] = n1144;
+    assign rr_d[60] = n1145;
+    assign rr_d[61] = n1146;
+    assign rr_d[62] = n1147;
+    assign rr_d[63] = n1148;
+    assign rr_d[64] = n1149;
+    assign rr_d[65] = n1150;
+    assign rr_d[66] = n1151;
+    assign rr_d[67] = n1152;
+    assign rr_d[68] = n1153;
+    assign rr_d[69] = n1154;
+    assign rr_d[70] = n1155;
+    assign rr_d[71] = n1156;
+    assign rr_d[72] = n1157;
+    assign rr_d[73] = n1158;
+    assign rr_d[74] = n1159;
+    assign rr_d[75] = n1160;
+    assign rr_d[76] = n1161;
+    assign rr_d[77] = n1162;
+    assign rr_d[78] = n1163;
+    assign rr_d[79] = n1164;
+    assign rr_d[80] = n1165;
+    assign rr_d[81] = n1166;
+    assign rr_d[82] = n1167;
+    assign rr_d[83] = n1168;
+    assign rr_d[84] = n1169;
+    assign rr_d[85] = n1170;
+    assign rr_d[86] = n1171;
+    assign rr_d[87] = n1172;
+    assign rr_d[88] = n1173;
+    assign rr_d[89] = n1174;
+    assign rr_d[90] = n1175;
+    assign rr_d[91] = n1176;
+    assign rr_d[92] = n1177;
+    assign rr_d[93] = n1178;
+    assign rr_d[94] = n1179;
+    assign rr_d[95] = n1180;
+    assign rr_d[96] = n1181;
+    assign rr_d[97] = n1182;
+    assign rr_d[98] = n1183;
+    assign rr_d[99] = n1184;
+    assign rr_d[100] = n1185;
+    assign rr_d[101] = n1186;
+    assign rr_d[102] = n1187;
+    assign rr_d[103] = n1188;
+    assign rr_d[104] = n1189;
+    assign rr_d[105] = n1190;
+    assign rr_d[106] = n1191;
+    assign rr_d[107] = n1192;
+    assign rr_d[108] = n1193;
+    assign rr_d[109] = n1194;
+    assign rr_d[110] = n1195;
+    assign rr_d[111] = n1196;
+    assign rr_d[112] = n1197;
+    assign rr_d[113] = n1198;
+    assign rr_d[114] = n1199;
+    assign rr_d[115] = n1200;
+    assign rr_d[116] = n1201;
+    assign rr_d[117] = n1202;
+    assign rr_d[118] = n1203;
+    assign rr_d[119] = n1204;
+    assign rr_d[120] = n1205;
+    assign rr_d[121] = n1206;
+    assign rr_d[122] = n1207;
+    assign rr_d[123] = n1208;
+    assign rr_d[124] = n1209;
+    assign rr_d[125] = n1210;
+    assign rr_d[126] = n1211;
+    assign rr_d[127] = n1212;
+    assign rr_d[128] = n1213;
+    assign rr_d[129] = n1214;
+    assign rr_d[130] = n1215;
+    assign rr_d[131] = n1216;
+    assign rr_d[132] = n1217;
+    assign rr_d[133] = n1218;
+    assign rr_d[134] = n1219;
+    assign rr_d[135] = n1220;
+    assign rr_d[136] = n1221;
+    assign rr_d[137] = n1222;
+    assign rr_d[138] = n1223;
+    assign rr_d[139] = n1224;
+    assign rr_d[140] = n1225;
+    assign rr_d[141] = n1226;
+    assign rr_d[142] = n1227;
+    assign rr_d[143] = n1228;
+    assign rr_d[144] = n1229;
+    assign rr_d[145] = n1230;
+    assign rr_d[146] = n1231;
+    assign rr_d[147] = n1232;
+    assign rr_d[148] = n1233;
+    assign rr_d[149] = n1234;
+    assign rr_d[150] = n1235;
+    assign rr_d[151] = n1236;
+    assign rr_d[152] = n1237;
+    assign rr_d[153] = n1238;
+    assign rr_d[154] = n1239;
+    assign rr_d[155] = n1240;
+    assign rr_d[156] = n1241;
+    assign rr_d[157] = n1242;
+    assign rr_d[158] = n1243;
+    assign rr_d[159] = n1244;
+    assign rr_d[160] = n1245;
+    assign rr_d[161] = n1246;
+    assign rr_d[162] = n1247;
+    assign rr_d[163] = n1248;
+    assign rr_d[164] = n1249;
+    assign rr_d[165] = n1250;
+    assign rr_d[166] = n1251;
+    assign rr_d[167] = n1252;
+    assign rr_d[168] = n1253;
+    assign rr_d[169] = n1254;
+    assign rr_d[170] = n1255;
+    assign rr_d[171] = n1256;
+    assign rr_d[172] = n1257;
+    assign rr_d[173] = n1258;
+    assign rr_d[174] = n1259;
+    assign rr_d[175] = n1260;
+    assign rr_d[176] = n1261;
+    assign rr_d[177] = n1262;
+    assign rr_d[178] = n1263;
+    assign rr_d[179] = n1264;
+    assign rr_d[180] = n1265;
+    assign rr_d[181] = n1266;
+    assign rr_d[182] = n1267;
+    assign rr_d[183] = n1268;
+    assign rr_d[184] = n1269;
+    assign rr_d[185] = n1270;
+    assign rr_d[186] = n1271;
+    assign rr_d[187] = n1272;
+    assign rr_d[188] = n1273;
+    assign rr_d[189] = n1274;
+    assign rr_d[190] = n1275;
+    assign rr_d[191] = n1276;
+    assign rr_d[192] = n1277;
+    assign rr_d[193] = n1278;
+    assign rr_d[194] = n1279;
+    assign rr_d[195] = n1280;
+    assign rr_d[196] = n1281;
+    assign rr_d[197] = n1282;
+    assign rr_d[198] = n1283;
+    assign rr_d[199] = n1284;
+    assign rr_d[200] = n1285;
+    assign rr_d[201] = n1286;
+    assign rr_d[202] = n1287;
+    assign rr_d[203] = n1288;
+    assign rr_d[204] = n1289;
+    assign rr_d[205] = n1290;
+    assign rr_d[206] = n1291;
+    assign rr_d[207] = n1292;
+    assign rr_d[208] = n1293;
+    assign rr_d[209] = n1294;
+    assign rr_d[210] = n1295;
+    assign rr_d[211] = n1296;
+    assign rr_d[212] = n1297;
+    assign rr_d[213] = n1298;
+    assign rr_d[214] = n1299;
+    assign rr_d[215] = n1300;
+    assign rr_d[216] = n1301;
+    assign rr_d[217] = n1302;
+    assign rr_d[218] = n1303;
+    assign rr_d[219] = n1304;
+    assign rr_d[220] = n1305;
+    assign rr_d[221] = n1306;
+    assign rr_d[222] = n1307;
+    assign rr_d[223] = n1308;
+    assign rr_d[224] = n1309;
+    assign rr_d[225] = n1310;
+    assign rr_d[226] = n1311;
+    assign rr_d[227] = n1312;
+    assign rr_d[228] = n1313;
+    assign rr_d[229] = n1314;
+    assign rr_d[230] = n1315;
+    assign rr_d[231] = n1316;
+    assign rr_d[232] = n1317;
+    assign rr_d[233] = n1318;
+    assign rr_d[234] = n1319;
+    assign rr_d[235] = n1320;
+    assign rr_d[236] = n1321;
+    assign rr_d[237] = n1322;
+    assign rr_d[238] = n1323;
+    assign rr_d[239] = n1324;
+    assign rr_d[240] = n1325;
+    assign rr_d[241] = n1326;
+    assign rr_d[242] = n1327;
+    assign rr_d[243] = n1328;
+    assign rr_d[244] = n1329;
+    assign rr_d[245] = n1330;
+    assign rr_d[246] = n1331;
+    assign rr_d[247] = n1332;
+    assign rr_d[248] = n1333;
+    assign rr_d[249] = n1334;
+    assign rr_d[250] = n1335;
+    assign rr_d[251] = n1336;
+    assign rr_d[252] = n1337;
+    assign rr_d[253] = n1338;
+    assign rr_d[254] = n1339;
+    assign rr_d[255] = n1340;
+    assign rr_tag[0] = n1341;
+    assign rr_tag[1] = n1342;
+    assign rr_tag[2] = n1343;
+    assign rr_v[0] = n1344;
+    assign u_ring_fault[0] = n1084;
+    native_ot_hgi_coll_ring_ag #(.AG(1), .SPLIT_CLOCKS(1)) m0 (.add_rhs_acc({ra_add_rhs_acc[0]}), .add_src({ra_add_src[1], ra_add_src[0]}), .add_tag({ra_add_tag[2], ra_add_tag[1], ra_add_tag[0]}), .add_v({ra_add_v[0]}), .ag_d({n511, n510, n509, n508, n507, n506, n505, n504, n503, n502, n501, n500, n499, n498, n497, n496, n495, n494, n493, n492, n491, n490, n489, n488, n487, n486, n485, n484, n483, n482, n481, n480, n479, n478, n477, n476, n475, n474, n473, n472, n471, n470, n469, n468, n467, n466, n465, n464, n463, n462, n461, n460, n459, n458, n457, n456, n455, n454, n453, n452, n451, n450, n449, n448, n447, n446, n445, n444, n443, n442, n441, n440, n439, n438, n437, n436, n435, n434, n433, n432, n431, n430, n429, n428, n427, n426, n425, n424, n423, n422, n421, n420, n419, n418, n417, n416, n415, n414, n413, n412, n411, n410, n409, n408, n407, n406, n405, n404, n403, n402, n401, n400, n399, n398, n397, n396, n395, n394, n393, n392, n391, n390, n389, n388, n387, n386, n385, n384, n383, n382, n381, n380, n379, n378, n377, n376, n375, n374, n373, n372, n371, n370, n369, n368, n367, n366, n365, n364, n363, n362, n361, n360, n359, n358, n357, n356, n355, n354, n353, n352, n351, n350, n349, n348, n347, n346, n345, n344, n343, n342, n341, n340, n339, n338, n337, n336, n335, n334, n333, n332, n331, n330, n329, n328, n327, n326, n325, n324, n323, n322, n321, n320, n319, n318, n317, n316, n315, n314, n313, n312, n311, n310, n309, n308, n307, n306, n305, n304, n303, n302, n301, n300, n299, n298, n297, n296, n295, n294, n293, n292, n291, n290, n289, n288, n287, n286, n285, n284, n283, n282, n281, n280, n279, n278, n277, n276, n275, n274, n273, n272, n271, n270, n269, n268, n267, n266, n265, n264, n263, n262, n261, n260, n259, n258, n257, n256, n255, n254, n253, n252, n251, n250, n249, n248, n247, n246, n245, n244, n243, n242, n241, n240, n239, n238, n237, n236, n235, n234, n233, n232, n231, n230, n229, n228, n227, n226, n225, n224, n223, n222, n221, n220, n219, n218, n217, n216, n215, n214, n213, n212, n211, n210, n209, n208, n207, n206, n205, n204, n203, n202, n201, n200, n199, n198, n197, n196, n195, n194, n193, n192, n191, n190, n189, n188, n187, n186, n185, n184, n183, n182, n181, n180, n179, n178, n177, n176, n175, n174, n173, n172, n171, n170, n169, n168, n167, n166, n165, n164, n163, n162, n161, n160, n159, n158, n157, n156, n155, n154, n153, n152, n151, n150, n149, n148, n147, n146, n145, n144, n143, n142, n141, n140, n139, n138, n137, n136, n135, n134, n133, n132, n131, n130, n129, n128, n127, n126, n125, n124, n123, n122, n121, n120, n119, n118, n117, n116, n115, n114, n113, n112, n111, n110, n109, n108, n107, n106, n105, n104, n103, n102, n101, n100, n99, n98, n97, n96, n95, n94, n93, n92, n91, n90, n89, n88, n87, n86, n85, n84, n83, n82, n81, n80, n79, n78, n77, n76, n75, n74, n73, n72, n71, n70, n69, n68, n67, n66, n65, n64, n63, n62, n61, n60, n59, n58, n57, n56, n55, n54, n53, n52, n51, n50, n49, n48, n47, n46, n45, n44, n43, n42, n41, n40, n39, n38, n37, n36, n35, n34, n33, n32, n31, n30, n29, n28, n27, n26, n25, n24, n23, n22, n21, n20, n19, n18, n17, n16, n15, n14, n13, n12, n11, n10, n9, n8, n7, n6, n5, n4, n3, n2, n1, n0}), .ag_src({n515, n514, n513, n512}), .ag_tag({n521, n520, n519, n518, n517, n516}), .ag_v({n523, n522}), .ccw_i({pr_ccw_i[279], pr_ccw_i[278], pr_ccw_i[277], pr_ccw_i[276], pr_ccw_i[275], pr_ccw_i[274], pr_ccw_i[273], pr_ccw_i[272], pr_ccw_i[271], pr_ccw_i[270], pr_ccw_i[269], pr_ccw_i[268], pr_ccw_i[267], pr_ccw_i[266], pr_ccw_i[265], pr_ccw_i[264], pr_ccw_i[263], pr_ccw_i[262], pr_ccw_i[261], pr_ccw_i[260], pr_ccw_i[259], pr_ccw_i[258], pr_ccw_i[257], pr_ccw_i[256], pr_ccw_i[255], pr_ccw_i[254], pr_ccw_i[253], pr_ccw_i[252], pr_ccw_i[251], pr_ccw_i[250], pr_ccw_i[249], pr_ccw_i[248], pr_ccw_i[247], pr_ccw_i[246], pr_ccw_i[245], pr_ccw_i[244], pr_ccw_i[243], pr_ccw_i[242], pr_ccw_i[241], pr_ccw_i[240], pr_ccw_i[239], pr_ccw_i[238], pr_ccw_i[237], pr_ccw_i[236], pr_ccw_i[235], pr_ccw_i[234], pr_ccw_i[233], pr_ccw_i[232], pr_ccw_i[231], pr_ccw_i[230], pr_ccw_i[229], pr_ccw_i[228], pr_ccw_i[227], pr_ccw_i[226], pr_ccw_i[225], pr_ccw_i[224], pr_ccw_i[223], pr_ccw_i[222], pr_ccw_i[221], pr_ccw_i[220], pr_ccw_i[219], pr_ccw_i[218], pr_ccw_i[217], pr_ccw_i[216], pr_ccw_i[215], pr_ccw_i[214], pr_ccw_i[213], pr_ccw_i[212], pr_ccw_i[211], pr_ccw_i[210], pr_ccw_i[209], pr_ccw_i[208], pr_ccw_i[207], pr_ccw_i[206], pr_ccw_i[205], pr_ccw_i[204], pr_ccw_i[203], pr_ccw_i[202], pr_ccw_i[201], pr_ccw_i[200], pr_ccw_i[199], pr_ccw_i[198], pr_ccw_i[197], pr_ccw_i[196], pr_ccw_i[195], pr_ccw_i[194], pr_ccw_i[193], pr_ccw_i[192], pr_ccw_i[191], pr_ccw_i[190], pr_ccw_i[189], pr_ccw_i[188], pr_ccw_i[187], pr_ccw_i[186], pr_ccw_i[185], pr_ccw_i[184], pr_ccw_i[183], pr_ccw_i[182], pr_ccw_i[181], pr_ccw_i[180], pr_ccw_i[179], pr_ccw_i[178], pr_ccw_i[177], pr_ccw_i[176], pr_ccw_i[175], pr_ccw_i[174], pr_ccw_i[173], pr_ccw_i[172], pr_ccw_i[171], pr_ccw_i[170], pr_ccw_i[169], pr_ccw_i[168], pr_ccw_i[167], pr_ccw_i[166], pr_ccw_i[165], pr_ccw_i[164], pr_ccw_i[163], pr_ccw_i[162], pr_ccw_i[161], pr_ccw_i[160], pr_ccw_i[159], pr_ccw_i[158], pr_ccw_i[157], pr_ccw_i[156], pr_ccw_i[155], pr_ccw_i[154], pr_ccw_i[153], pr_ccw_i[152], pr_ccw_i[151], pr_ccw_i[150], pr_ccw_i[149], pr_ccw_i[148], pr_ccw_i[147], pr_ccw_i[146], pr_ccw_i[145], pr_ccw_i[144], pr_ccw_i[143], pr_ccw_i[142], pr_ccw_i[141], pr_ccw_i[140], pr_ccw_i[139], pr_ccw_i[138], pr_ccw_i[137], pr_ccw_i[136], pr_ccw_i[135], pr_ccw_i[134], pr_ccw_i[133], pr_ccw_i[132], pr_ccw_i[131], pr_ccw_i[130], pr_ccw_i[129], pr_ccw_i[128], pr_ccw_i[127], pr_ccw_i[126], pr_ccw_i[125], pr_ccw_i[124], pr_ccw_i[123], pr_ccw_i[122], pr_ccw_i[121], pr_ccw_i[120], pr_ccw_i[119], pr_ccw_i[118], pr_ccw_i[117], pr_ccw_i[116], pr_ccw_i[115], pr_ccw_i[114], pr_ccw_i[113], pr_ccw_i[112], pr_ccw_i[111], pr_ccw_i[110], pr_ccw_i[109], pr_ccw_i[108], pr_ccw_i[107], pr_ccw_i[106], pr_ccw_i[105], pr_ccw_i[104], pr_ccw_i[103], pr_ccw_i[102], pr_ccw_i[101], pr_ccw_i[100], pr_ccw_i[99], pr_ccw_i[98], pr_ccw_i[97], pr_ccw_i[96], pr_ccw_i[95], pr_ccw_i[94], pr_ccw_i[93], pr_ccw_i[92], pr_ccw_i[91], pr_ccw_i[90], pr_ccw_i[89], pr_ccw_i[88], pr_ccw_i[87], pr_ccw_i[86], pr_ccw_i[85], pr_ccw_i[84], pr_ccw_i[83], pr_ccw_i[82], pr_ccw_i[81], pr_ccw_i[80], pr_ccw_i[79], pr_ccw_i[78], pr_ccw_i[77], pr_ccw_i[76], pr_ccw_i[75], pr_ccw_i[74], pr_ccw_i[73], pr_ccw_i[72], pr_ccw_i[71], pr_ccw_i[70], pr_ccw_i[69], pr_ccw_i[68], pr_ccw_i[67], pr_ccw_i[66], pr_ccw_i[65], pr_ccw_i[64], pr_ccw_i[63], pr_ccw_i[62], pr_ccw_i[61], pr_ccw_i[60], pr_ccw_i[59], pr_ccw_i[58], pr_ccw_i[57], pr_ccw_i[56], pr_ccw_i[55], pr_ccw_i[54], pr_ccw_i[53], pr_ccw_i[52], pr_ccw_i[51], pr_ccw_i[50], pr_ccw_i[49], pr_ccw_i[48], pr_ccw_i[47], pr_ccw_i[46], pr_ccw_i[45], pr_ccw_i[44], pr_ccw_i[43], pr_ccw_i[42], pr_ccw_i[41], pr_ccw_i[40], pr_ccw_i[39], pr_ccw_i[38], pr_ccw_i[37], pr_ccw_i[36], pr_ccw_i[35], pr_ccw_i[34], pr_ccw_i[33], pr_ccw_i[32], pr_ccw_i[31], pr_ccw_i[30], pr_ccw_i[29], pr_ccw_i[28], pr_ccw_i[27], pr_ccw_i[26], pr_ccw_i[25], pr_ccw_i[24], pr_ccw_i[23], pr_ccw_i[22], pr_ccw_i[21], pr_ccw_i[20], pr_ccw_i[19], pr_ccw_i[18], pr_ccw_i[17], pr_ccw_i[16], pr_ccw_i[15], pr_ccw_i[14], pr_ccw_i[13], pr_ccw_i[12], pr_ccw_i[11], pr_ccw_i[10], pr_ccw_i[9], pr_ccw_i[8], pr_ccw_i[7], pr_ccw_i[6], pr_ccw_i[5], pr_ccw_i[4], pr_ccw_i[3], pr_ccw_i[2], pr_ccw_i[1], pr_ccw_i[0]}), .ccw_o({n803, n802, n801, n800, n799, n798, n797, n796, n795, n794, n793, n792, n791, n790, n789, n788, n787, n786, n785, n784, n783, n782, n781, n780, n779, n778, n777, n776, n775, n774, n773, n772, n771, n770, n769, n768, n767, n766, n765, n764, n763, n762, n761, n760, n759, n758, n757, n756, n755, n754, n753, n752, n751, n750, n749, n748, n747, n746, n745, n744, n743, n742, n741, n740, n739, n738, n737, n736, n735, n734, n733, n732, n731, n730, n729, n728, n727, n726, n725, n724, n723, n722, n721, n720, n719, n718, n717, n716, n715, n714, n713, n712, n711, n710, n709, n708, n707, n706, n705, n704, n703, n702, n701, n700, n699, n698, n697, n696, n695, n694, n693, n692, n691, n690, n689, n688, n687, n686, n685, n684, n683, n682, n681, n680, n679, n678, n677, n676, n675, n674, n673, n672, n671, n670, n669, n668, n667, n666, n665, n664, n663, n662, n661, n660, n659, n658, n657, n656, n655, n654, n653, n652, n651, n650, n649, n648, n647, n646, n645, n644, n643, n642, n641, n640, n639, n638, n637, n636, n635, n634, n633, n632, n631, n630, n629, n628, n627, n626, n625, n624, n623, n622, n621, n620, n619, n618, n617, n616, n615, n614, n613, n612, n611, n610, n609, n608, n607, n606, n605, n604, n603, n602, n601, n600, n599, n598, n597, n596, n595, n594, n593, n592, n591, n590, n589, n588, n587, n586, n585, n584, n583, n582, n581, n580, n579, n578, n577, n576, n575, n574, n573, n572, n571, n570, n569, n568, n567, n566, n565, n564, n563, n562, n561, n560, n559, n558, n557, n556, n555, n554, n553, n552, n551, n550, n549, n548, n547, n546, n545, n544, n543, n542, n541, n540, n539, n538, n537, n536, n535, n534, n533, n532, n531, n530, n529, n528, n527, n526, n525, n524}), .clk({clk[0]}), .clk_add({clk[0], clk[0], clk[0], clk[0], clk[0], clk[0], clk[0], clk[0]}), .clk_ctl({clk[0]}), .clk_state({clk[0], clk[0], clk[0], clk[0], clk[0], clk[0], clk[0], clk[0]}), .cw_i({pr_cw_i[279], pr_cw_i[278], pr_cw_i[277], pr_cw_i[276], pr_cw_i[275], pr_cw_i[274], pr_cw_i[273], pr_cw_i[272], pr_cw_i[271], pr_cw_i[270], pr_cw_i[269], pr_cw_i[268], pr_cw_i[267], pr_cw_i[266], pr_cw_i[265], pr_cw_i[264], pr_cw_i[263], pr_cw_i[262], pr_cw_i[261], pr_cw_i[260], pr_cw_i[259], pr_cw_i[258], pr_cw_i[257], pr_cw_i[256], pr_cw_i[255], pr_cw_i[254], pr_cw_i[253], pr_cw_i[252], pr_cw_i[251], pr_cw_i[250], pr_cw_i[249], pr_cw_i[248], pr_cw_i[247], pr_cw_i[246], pr_cw_i[245], pr_cw_i[244], pr_cw_i[243], pr_cw_i[242], pr_cw_i[241], pr_cw_i[240], pr_cw_i[239], pr_cw_i[238], pr_cw_i[237], pr_cw_i[236], pr_cw_i[235], pr_cw_i[234], pr_cw_i[233], pr_cw_i[232], pr_cw_i[231], pr_cw_i[230], pr_cw_i[229], pr_cw_i[228], pr_cw_i[227], pr_cw_i[226], pr_cw_i[225], pr_cw_i[224], pr_cw_i[223], pr_cw_i[222], pr_cw_i[221], pr_cw_i[220], pr_cw_i[219], pr_cw_i[218], pr_cw_i[217], pr_cw_i[216], pr_cw_i[215], pr_cw_i[214], pr_cw_i[213], pr_cw_i[212], pr_cw_i[211], pr_cw_i[210], pr_cw_i[209], pr_cw_i[208], pr_cw_i[207], pr_cw_i[206], pr_cw_i[205], pr_cw_i[204], pr_cw_i[203], pr_cw_i[202], pr_cw_i[201], pr_cw_i[200], pr_cw_i[199], pr_cw_i[198], pr_cw_i[197], pr_cw_i[196], pr_cw_i[195], pr_cw_i[194], pr_cw_i[193], pr_cw_i[192], pr_cw_i[191], pr_cw_i[190], pr_cw_i[189], pr_cw_i[188], pr_cw_i[187], pr_cw_i[186], pr_cw_i[185], pr_cw_i[184], pr_cw_i[183], pr_cw_i[182], pr_cw_i[181], pr_cw_i[180], pr_cw_i[179], pr_cw_i[178], pr_cw_i[177], pr_cw_i[176], pr_cw_i[175], pr_cw_i[174], pr_cw_i[173], pr_cw_i[172], pr_cw_i[171], pr_cw_i[170], pr_cw_i[169], pr_cw_i[168], pr_cw_i[167], pr_cw_i[166], pr_cw_i[165], pr_cw_i[164], pr_cw_i[163], pr_cw_i[162], pr_cw_i[161], pr_cw_i[160], pr_cw_i[159], pr_cw_i[158], pr_cw_i[157], pr_cw_i[156], pr_cw_i[155], pr_cw_i[154], pr_cw_i[153], pr_cw_i[152], pr_cw_i[151], pr_cw_i[150], pr_cw_i[149], pr_cw_i[148], pr_cw_i[147], pr_cw_i[146], pr_cw_i[145], pr_cw_i[144], pr_cw_i[143], pr_cw_i[142], pr_cw_i[141], pr_cw_i[140], pr_cw_i[139], pr_cw_i[138], pr_cw_i[137], pr_cw_i[136], pr_cw_i[135], pr_cw_i[134], pr_cw_i[133], pr_cw_i[132], pr_cw_i[131], pr_cw_i[130], pr_cw_i[129], pr_cw_i[128], pr_cw_i[127], pr_cw_i[126], pr_cw_i[125], pr_cw_i[124], pr_cw_i[123], pr_cw_i[122], pr_cw_i[121], pr_cw_i[120], pr_cw_i[119], pr_cw_i[118], pr_cw_i[117], pr_cw_i[116], pr_cw_i[115], pr_cw_i[114], pr_cw_i[113], pr_cw_i[112], pr_cw_i[111], pr_cw_i[110], pr_cw_i[109], pr_cw_i[108], pr_cw_i[107], pr_cw_i[106], pr_cw_i[105], pr_cw_i[104], pr_cw_i[103], pr_cw_i[102], pr_cw_i[101], pr_cw_i[100], pr_cw_i[99], pr_cw_i[98], pr_cw_i[97], pr_cw_i[96], pr_cw_i[95], pr_cw_i[94], pr_cw_i[93], pr_cw_i[92], pr_cw_i[91], pr_cw_i[90], pr_cw_i[89], pr_cw_i[88], pr_cw_i[87], pr_cw_i[86], pr_cw_i[85], pr_cw_i[84], pr_cw_i[83], pr_cw_i[82], pr_cw_i[81], pr_cw_i[80], pr_cw_i[79], pr_cw_i[78], pr_cw_i[77], pr_cw_i[76], pr_cw_i[75], pr_cw_i[74], pr_cw_i[73], pr_cw_i[72], pr_cw_i[71], pr_cw_i[70], pr_cw_i[69], pr_cw_i[68], pr_cw_i[67], pr_cw_i[66], pr_cw_i[65], pr_cw_i[64], pr_cw_i[63], pr_cw_i[62], pr_cw_i[61], pr_cw_i[60], pr_cw_i[59], pr_cw_i[58], pr_cw_i[57], pr_cw_i[56], pr_cw_i[55], pr_cw_i[54], pr_cw_i[53], pr_cw_i[52], pr_cw_i[51], pr_cw_i[50], pr_cw_i[49], pr_cw_i[48], pr_cw_i[47], pr_cw_i[46], pr_cw_i[45], pr_cw_i[44], pr_cw_i[43], pr_cw_i[42], pr_cw_i[41], pr_cw_i[40], pr_cw_i[39], pr_cw_i[38], pr_cw_i[37], pr_cw_i[36], pr_cw_i[35], pr_cw_i[34], pr_cw_i[33], pr_cw_i[32], pr_cw_i[31], pr_cw_i[30], pr_cw_i[29], pr_cw_i[28], pr_cw_i[27], pr_cw_i[26], pr_cw_i[25], pr_cw_i[24], pr_cw_i[23], pr_cw_i[22], pr_cw_i[21], pr_cw_i[20], pr_cw_i[19], pr_cw_i[18], pr_cw_i[17], pr_cw_i[16], pr_cw_i[15], pr_cw_i[14], pr_cw_i[13], pr_cw_i[12], pr_cw_i[11], pr_cw_i[10], pr_cw_i[9], pr_cw_i[8], pr_cw_i[7], pr_cw_i[6], pr_cw_i[5], pr_cw_i[4], pr_cw_i[3], pr_cw_i[2], pr_cw_i[1], pr_cw_i[0]}), .cw_o({n1083, n1082, n1081, n1080, n1079, n1078, n1077, n1076, n1075, n1074, n1073, n1072, n1071, n1070, n1069, n1068, n1067, n1066, n1065, n1064, n1063, n1062, n1061, n1060, n1059, n1058, n1057, n1056, n1055, n1054, n1053, n1052, n1051, n1050, n1049, n1048, n1047, n1046, n1045, n1044, n1043, n1042, n1041, n1040, n1039, n1038, n1037, n1036, n1035, n1034, n1033, n1032, n1031, n1030, n1029, n1028, n1027, n1026, n1025, n1024, n1023, n1022, n1021, n1020, n1019, n1018, n1017, n1016, n1015, n1014, n1013, n1012, n1011, n1010, n1009, n1008, n1007, n1006, n1005, n1004, n1003, n1002, n1001, n1000, n999, n998, n997, n996, n995, n994, n993, n992, n991, n990, n989, n988, n987, n986, n985, n984, n983, n982, n981, n980, n979, n978, n977, n976, n975, n974, n973, n972, n971, n970, n969, n968, n967, n966, n965, n964, n963, n962, n961, n960, n959, n958, n957, n956, n955, n954, n953, n952, n951, n950, n949, n948, n947, n946, n945, n944, n943, n942, n941, n940, n939, n938, n937, n936, n935, n934, n933, n932, n931, n930, n929, n928, n927, n926, n925, n924, n923, n922, n921, n920, n919, n918, n917, n916, n915, n914, n913, n912, n911, n910, n909, n908, n907, n906, n905, n904, n903, n902, n901, n900, n899, n898, n897, n896, n895, n894, n893, n892, n891, n890, n889, n888, n887, n886, n885, n884, n883, n882, n881, n880, n879, n878, n877, n876, n875, n874, n873, n872, n871, n870, n869, n868, n867, n866, n865, n864, n863, n862, n861, n860, n859, n858, n857, n856, n855, n854, n853, n852, n851, n850, n849, n848, n847, n846, n845, n844, n843, n842, n841, n840, n839, n838, n837, n836, n835, n834, n833, n832, n831, n830, n829, n828, n827, n826, n825, n824, n823, n822, n821, n820, n819, n818, n817, n816, n815, n814, n813, n812, n811, n810, n809, n808, n807, n806, n805, n804}), .fault({n1084}), .lp_data({ra_lp_data[255], ra_lp_data[254], ra_lp_data[253], ra_lp_data[252], ra_lp_data[251], ra_lp_data[250], ra_lp_data[249], ra_lp_data[248], ra_lp_data[247], ra_lp_data[246], ra_lp_data[245], ra_lp_data[244], ra_lp_data[243], ra_lp_data[242], ra_lp_data[241], ra_lp_data[240], ra_lp_data[239], ra_lp_data[238], ra_lp_data[237], ra_lp_data[236], ra_lp_data[235], ra_lp_data[234], ra_lp_data[233], ra_lp_data[232], ra_lp_data[231], ra_lp_data[230], ra_lp_data[229], ra_lp_data[228], ra_lp_data[227], ra_lp_data[226], ra_lp_data[225], ra_lp_data[224], ra_lp_data[223], ra_lp_data[222], ra_lp_data[221], ra_lp_data[220], ra_lp_data[219], ra_lp_data[218], ra_lp_data[217], ra_lp_data[216], ra_lp_data[215], ra_lp_data[214], ra_lp_data[213], ra_lp_data[212], ra_lp_data[211], ra_lp_data[210], ra_lp_data[209], ra_lp_data[208], ra_lp_data[207], ra_lp_data[206], ra_lp_data[205], ra_lp_data[204], ra_lp_data[203], ra_lp_data[202], ra_lp_data[201], ra_lp_data[200], ra_lp_data[199], ra_lp_data[198], ra_lp_data[197], ra_lp_data[196], ra_lp_data[195], ra_lp_data[194], ra_lp_data[193], ra_lp_data[192], ra_lp_data[191], ra_lp_data[190], ra_lp_data[189], ra_lp_data[188], ra_lp_data[187], ra_lp_data[186], ra_lp_data[185], ra_lp_data[184], ra_lp_data[183], ra_lp_data[182], ra_lp_data[181], ra_lp_data[180], ra_lp_data[179], ra_lp_data[178], ra_lp_data[177], ra_lp_data[176], ra_lp_data[175], ra_lp_data[174], ra_lp_data[173], ra_lp_data[172], ra_lp_data[171], ra_lp_data[170], ra_lp_data[169], ra_lp_data[168], ra_lp_data[167], ra_lp_data[166], ra_lp_data[165], ra_lp_data[164], ra_lp_data[163], ra_lp_data[162], ra_lp_data[161], ra_lp_data[160], ra_lp_data[159], ra_lp_data[158], ra_lp_data[157], ra_lp_data[156], ra_lp_data[155], ra_lp_data[154], ra_lp_data[153], ra_lp_data[152], ra_lp_data[151], ra_lp_data[150], ra_lp_data[149], ra_lp_data[148], ra_lp_data[147], ra_lp_data[146], ra_lp_data[145], ra_lp_data[144], ra_lp_data[143], ra_lp_data[142], ra_lp_data[141], ra_lp_data[140], ra_lp_data[139], ra_lp_data[138], ra_lp_data[137], ra_lp_data[136], ra_lp_data[135], ra_lp_data[134], ra_lp_data[133], ra_lp_data[132], ra_lp_data[131], ra_lp_data[130], ra_lp_data[129], ra_lp_data[128], ra_lp_data[127], ra_lp_data[126], ra_lp_data[125], ra_lp_data[124], ra_lp_data[123], ra_lp_data[122], ra_lp_data[121], ra_lp_data[120], ra_lp_data[119], ra_lp_data[118], ra_lp_data[117], ra_lp_data[116], ra_lp_data[115], ra_lp_data[114], ra_lp_data[113], ra_lp_data[112], ra_lp_data[111], ra_lp_data[110], ra_lp_data[109], ra_lp_data[108], ra_lp_data[107], ra_lp_data[106], ra_lp_data[105], ra_lp_data[104], ra_lp_data[103], ra_lp_data[102], ra_lp_data[101], ra_lp_data[100], ra_lp_data[99], ra_lp_data[98], ra_lp_data[97], ra_lp_data[96], ra_lp_data[95], ra_lp_data[94], ra_lp_data[93], ra_lp_data[92], ra_lp_data[91], ra_lp_data[90], ra_lp_data[89], ra_lp_data[88], ra_lp_data[87], ra_lp_data[86], ra_lp_data[85], ra_lp_data[84], ra_lp_data[83], ra_lp_data[82], ra_lp_data[81], ra_lp_data[80], ra_lp_data[79], ra_lp_data[78], ra_lp_data[77], ra_lp_data[76], ra_lp_data[75], ra_lp_data[74], ra_lp_data[73], ra_lp_data[72], ra_lp_data[71], ra_lp_data[70], ra_lp_data[69], ra_lp_data[68], ra_lp_data[67], ra_lp_data[66], ra_lp_data[65], ra_lp_data[64], ra_lp_data[63], ra_lp_data[62], ra_lp_data[61], ra_lp_data[60], ra_lp_data[59], ra_lp_data[58], ra_lp_data[57], ra_lp_data[56], ra_lp_data[55], ra_lp_data[54], ra_lp_data[53], ra_lp_data[52], ra_lp_data[51], ra_lp_data[50], ra_lp_data[49], ra_lp_data[48], ra_lp_data[47], ra_lp_data[46], ra_lp_data[45], ra_lp_data[44], ra_lp_data[43], ra_lp_data[42], ra_lp_data[41], ra_lp_data[40], ra_lp_data[39], ra_lp_data[38], ra_lp_data[37], ra_lp_data[36], ra_lp_data[35], ra_lp_data[34], ra_lp_data[33], ra_lp_data[32], ra_lp_data[31], ra_lp_data[30], ra_lp_data[29], ra_lp_data[28], ra_lp_data[27], ra_lp_data[26], ra_lp_data[25], ra_lp_data[24], ra_lp_data[23], ra_lp_data[22], ra_lp_data[21], ra_lp_data[20], ra_lp_data[19], ra_lp_data[18], ra_lp_data[17], ra_lp_data[16], ra_lp_data[15], ra_lp_data[14], ra_lp_data[13], ra_lp_data[12], ra_lp_data[11], ra_lp_data[10], ra_lp_data[9], ra_lp_data[8], ra_lp_data[7], ra_lp_data[6], ra_lp_data[5], ra_lp_data[4], ra_lp_data[3], ra_lp_data[2], ra_lp_data[1], ra_lp_data[0]}), .lp_tag({ra_lp_tag[2], ra_lp_tag[1], ra_lp_tag[0]}), .lp_we({ra_lp_we[0]}), .qid({strap_qid[1], strap_qid[0]}), .rr_d({n1340, n1339, n1338, n1337, n1336, n1335, n1334, n1333, n1332, n1331, n1330, n1329, n1328, n1327, n1326, n1325, n1324, n1323, n1322, n1321, n1320, n1319, n1318, n1317, n1316, n1315, n1314, n1313, n1312, n1311, n1310, n1309, n1308, n1307, n1306, n1305, n1304, n1303, n1302, n1301, n1300, n1299, n1298, n1297, n1296, n1295, n1294, n1293, n1292, n1291, n1290, n1289, n1288, n1287, n1286, n1285, n1284, n1283, n1282, n1281, n1280, n1279, n1278, n1277, n1276, n1275, n1274, n1273, n1272, n1271, n1270, n1269, n1268, n1267, n1266, n1265, n1264, n1263, n1262, n1261, n1260, n1259, n1258, n1257, n1256, n1255, n1254, n1253, n1252, n1251, n1250, n1249, n1248, n1247, n1246, n1245, n1244, n1243, n1242, n1241, n1240, n1239, n1238, n1237, n1236, n1235, n1234, n1233, n1232, n1231, n1230, n1229, n1228, n1227, n1226, n1225, n1224, n1223, n1222, n1221, n1220, n1219, n1218, n1217, n1216, n1215, n1214, n1213, n1212, n1211, n1210, n1209, n1208, n1207, n1206, n1205, n1204, n1203, n1202, n1201, n1200, n1199, n1198, n1197, n1196, n1195, n1194, n1193, n1192, n1191, n1190, n1189, n1188, n1187, n1186, n1185, n1184, n1183, n1182, n1181, n1180, n1179, n1178, n1177, n1176, n1175, n1174, n1173, n1172, n1171, n1170, n1169, n1168, n1167, n1166, n1165, n1164, n1163, n1162, n1161, n1160, n1159, n1158, n1157, n1156, n1155, n1154, n1153, n1152, n1151, n1150, n1149, n1148, n1147, n1146, n1145, n1144, n1143, n1142, n1141, n1140, n1139, n1138, n1137, n1136, n1135, n1134, n1133, n1132, n1131, n1130, n1129, n1128, n1127, n1126, n1125, n1124, n1123, n1122, n1121, n1120, n1119, n1118, n1117, n1116, n1115, n1114, n1113, n1112, n1111, n1110, n1109, n1108, n1107, n1106, n1105, n1104, n1103, n1102, n1101, n1100, n1099, n1098, n1097, n1096, n1095, n1094, n1093, n1092, n1091, n1090, n1089, n1088, n1087, n1086, n1085}), .rr_local({ra_rr_local[0]}), .rr_local_tag({ra_rr_local_tag[2], ra_rr_local_tag[1], ra_rr_local_tag[0]}), .rr_tag({n1343, n1342, n1341}), .rr_v({n1344}), .rst_n({rst_n[0]}), .rx_kind({ra_rx_kind[3], ra_rx_kind[2], ra_rx_kind[1], ra_rx_kind[0]}), .rx_slot({ra_rx_slot[1], ra_rx_slot[0]}), .rx_src({ra_rx_src[3], ra_rx_src[2], ra_rx_src[1], ra_rx_src[0]}), .rx_tag({ra_rx_tag[5], ra_rx_tag[4], ra_rx_tag[3], ra_rx_tag[2], ra_rx_tag[1], ra_rx_tag[0]}), .state_add_rhs_acc({ra_state_add_rhs_acc[0]}), .state_add_src({ra_state_add_src[1], ra_state_add_src[0]}), .state_add_tag({ra_state_add_tag[2], ra_state_add_tag[1], ra_state_add_tag[0]}), .state_read_add({ra_state_read_add[0]}), .state_read_rr({ra_state_read_rr[0]}), .state_read_tx({ra_state_read_tx[0]}), .state_rr_tag({ra_state_rr_tag[2], ra_state_rr_tag[1], ra_state_rr_tag[0]}), .state_tx_acc({ra_state_tx_acc[0]}), .state_tx_tag({ra_state_tx_tag[2], ra_state_tx_tag[1], ra_state_tx_tag[0]}), .tx_acc({ra_tx_acc[0]}), .tx_dst({ra_tx_dst[1], ra_tx_dst[0]}), .tx_forward({ra_tx_forward[1], ra_tx_forward[0]}), .tx_gather({ra_tx_gather[0]}), .tx_inject({ra_tx_inject[1], ra_tx_inject[0]}), .tx_result({ra_tx_result[0]}), .tx_tag({ra_tx_tag[2], ra_tx_tag[1], ra_tx_tag[0]}), .tx_ttl({ra_tx_ttl[3], ra_tx_ttl[2], ra_tx_ttl[1], ra_tx_ttl[0]}));
+endmodule
+module native_ot_hgi_coll_ring_ag #(
+    parameter integer NT=8, LAT=8, SPLIT_CLOCKS=0, AG=1,
+    parameter integer MUT_CARRY=0, MUT_TAG=0, MUT_TTL=0, MUT_SRC=0
+)(
+    input wire clk, rst_n, clk_ctl,
+    input wire [7:0] clk_state, clk_add,
+    input wire [1:0] qid,
+    input wire [279:0] cw_i, ccw_i,
+    output wire [279:0] cw_o, ccw_o,
+    input wire lp_we,
+    input wire [2:0] lp_tag,
+    input wire [255:0] lp_data,
+    input wire state_read_add, state_read_tx, state_read_rr,
+    input wire [2:0] state_add_tag, state_tx_tag, state_rr_tag,
+    input wire [1:0] state_add_src,
+    input wire state_add_rhs_acc, state_tx_acc,
+    input wire add_v,
+    input wire [2:0] add_tag,
+    input wire [1:0] add_src,
+    input wire add_rhs_acc,
+    input wire [1:0] tx_inject, tx_forward,
+    input wire [2:0] tx_tag,
+    input wire [1:0] tx_dst,
+    input wire tx_result, tx_acc,
+    input wire tx_gather,
+    input wire [3:0] tx_ttl,
+    input wire [1:0] rx_slot,
+    input wire [3:0] rx_kind, rx_src,
+    input wire [5:0] rx_tag,
+    input wire rr_local,
+    input wire [2:0] rr_local_tag,
+    output wire rr_v,
+    output wire [2:0] rr_tag,
+    output wire [255:0] rr_d,
+    output wire [1:0] ag_v,
+    output wire [3:0] ag_src,
+    output wire [5:0] ag_tag,
+    output wire [511:0] ag_d,
+    output wire fault
+);
+    wire [279:0] pin0,pin1;wire [1:0] carry_write;wire acc_we;wire [2:0] acc_tag;
+    wire [255:0] rhs_add,carry_add,state_tx,acc_rr,ay;wire [7:0] av;
+    wire [255:0] aa = MUT_CARRY ? 256'b0 : carry_add;
+    native_ot_hgi_coll_ring_ag_ctl #(.NT(NT),.LAT(LAT),.AG(AG),.MUT_TAG(MUT_TAG),.MUT_TTL(MUT_TTL),.MUT_SRC(MUT_SRC)) u_ctl(
+        .clk(SPLIT_CLOCKS?clk_ctl:clk),.rst_n(rst_n),.qid(qid),.cw_i(cw_i),.ccw_i(ccw_i),.cw_o(cw_o),.ccw_o(ccw_o),
+        .lp_we(lp_we),.lp_tag(lp_tag),
+        .state_read_add(state_read_add),.state_read_tx(state_read_tx),.state_read_rr(state_read_rr),
+        .state_add_tag(state_add_tag),.state_tx_tag(state_tx_tag),.state_rr_tag(state_rr_tag),
+        .state_add_src(state_add_src),.state_add_rhs_acc(state_add_rhs_acc),.state_tx_acc(state_tx_acc),
+        .add_v(add_v),.add_tag(add_tag),.add_src(add_src),.add_rhs_acc(add_rhs_acc),
+        .tx_inject(tx_inject),.tx_forward(tx_forward),.tx_tag(tx_tag),.tx_dst(tx_dst),.tx_result(tx_result),.tx_acc(tx_acc),
+        .tx_gather(tx_gather),.tx_ttl(tx_ttl),.rx_slot(rx_slot),.rx_kind(rx_kind),.rx_src(rx_src),.rx_tag(rx_tag),
+        .rr_local(rr_local),.rr_local_tag(rr_local_tag),
+        .pin0_q(pin0),.pin1_q(pin1),.carry_write(carry_write),.acc_we(acc_we),.acc_tag(acc_tag),
+        .state_tx(state_tx),.acc_rr(acc_rr),.av(av),
+        .rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.ag_v(ag_v),.ag_src(ag_src),.ag_tag(ag_tag),.ag_d(ag_d),.fault(fault));
+    for(genvar l=0;l<8;l=l+1)begin:g_lane
+        native_ot_hgi_coll_pring_static_state_capture_lane u_state(
+            .clk(SPLIT_CLOCKS?clk_state[l]:clk),
+            .lp_we(lp_we),.lp_tag(lp_tag),.lp_data(lp_data[l*32+:32]),
+            .acc_we(acc_we),.acc_tag(acc_tag),.acc_data(ay[l*32+:32]),
+            .carry_we(carry_write),.carry0_tag(pin0[270:268]),.carry0_src(pin0[276:275]),
+            .carry1_tag(pin1[270:268]),.carry1_src(pin1[276:275]),
+            .carry0_data(pin0[l*32+:32]),.carry1_data(pin1[l*32+:32]),
+            .read_add(state_read_add),.read_tx(state_read_tx),.read_rr(state_read_rr),
+            .read_rhs_acc(state_add_rhs_acc),.read_tx_acc(state_tx_acc),
+            .add_tag(state_add_tag),.add_src(state_add_src),.tx_tag(state_tx_tag),.rr_tag(state_rr_tag),
+            .rhs_add(rhs_add[l*32+:32]),.carry_add(carry_add[l*32+:32]),
+            .tx_data(state_tx[l*32+:32]),.acc_rr(acc_rr[l*32+:32]));
+        native_ot_hgi_coll_pring_static_add_lane #(.LAT(LAT)) u_add(
+            .clk(SPLIT_CLOCKS?clk_add[l]:clk),.rst_n(rst_n),.valid_in(add_v),
+            .a(aa[l*32+:32]),.b(rhs_add[l*32+:32]),.y(ay[l*32+:32]),.valid_out(av[l]));
+    end
+endmodule
+module native_ot_hgi_coll_ring_ag_ctl #(
+    parameter integer NT=8, LAT=8, AG=1,
+    parameter integer MUT_TAG=0, MUT_TTL=0, MUT_SRC=0
+)(
+    input wire clk, rst_n,
+    input wire [1:0] qid,
+    input wire [279:0] cw_i, ccw_i,
+    output wire [279:0] cw_o, ccw_o,
+    input wire lp_we,
+    input wire [2:0] lp_tag,
+    input wire state_read_add, state_read_tx, state_read_rr,
+    input wire [2:0] state_add_tag, state_tx_tag, state_rr_tag,
+    input wire [1:0] state_add_src,
+    input wire state_add_rhs_acc, state_tx_acc,
+    input wire add_v,
+    input wire [2:0] add_tag,
+    input wire [1:0] add_src,
+    input wire add_rhs_acc,
+    input wire [1:0] tx_inject, tx_forward,
+    input wire [2:0] tx_tag,
+    input wire [1:0] tx_dst,
+    input wire tx_result, tx_acc,
+    input wire tx_gather,
+    input wire [3:0] tx_ttl,
+    input wire [1:0] rx_slot,
+    input wire [3:0] rx_kind, rx_src,
+    input wire [5:0] rx_tag,
+    input wire rr_local,
+    input wire [2:0] rr_local_tag,
+    // lane faces (state-capture lanes + add lanes)
+    output wire [279:0] pin0_q, pin1_q,
+    output wire [1:0] carry_write,
+    output wire acc_we,
+    output wire [2:0] acc_tag,
+    input wire [255:0] state_tx, acc_rr,
+    input wire [7:0] av,
+    output reg rr_v,
+    output reg [2:0] rr_tag,
+    output reg [255:0] rr_d,
+    output reg [1:0] ag_v,
+    output reg [3:0] ag_src,
+    output reg [5:0] ag_tag,
+    output reg [511:0] ag_d,
+    output reg fault
+);
+    // RTL3c (review 10-17): async reset only on CONTROL state. Data registers (ring pin / output
+    // payloads, rr_d/rr_tag, ag_d/ag_src/ag_tag) are plain flops in a separate block; every one is
+    // qualified by a reset valid bit (pin/cw_o/ccw_o bit 279, rr_v, ag_v), so behaviour is unchanged.
+    reg [1:0] pin_v, out_v;
+    reg [278:0] pin_p [0:1];
+    reg [278:0] out_p [0:1];
+    wire [279:0] pin [0:1];
+    assign pin[0]={pin_v[0],pin_p[0]};assign pin[1]={pin_v[1],pin_p[1]};
+    assign cw_o={out_v[0],out_p[0]};assign ccw_o={out_v[1],out_p[1]};
+    assign pin0_q=pin[0];assign pin1_q=pin[1];
+    for(genvar d=0;d<2;d=d+1)begin:g_carry_write
+        assign carry_write[d]=rx_slot[d] && pin[d][278:277]==1 && pin[d][274:273]==qid;
+    end
+    reg [NT-1:0] local_v, acc_v, pending, active;
+    reg [3:0] carry_v[0:NT-1];
+    reg read_add_v,read_tx_v,read_rr_v;
+    reg [2:0] read_add_tag,read_tx_tag,read_rr_tag;
+    reg [1:0] read_add_src;
+    reg read_add_rhs,read_tx_acc;
+    reg prep_add_v,prep_tx_v,prep_rr_v;
+    reg [2:0] prep_add_tag,prep_tx_tag,prep_rr_tag;
+    reg [1:0] prep_add_src;
+    reg prep_add_rhs,prep_tx_acc;
+    reg [LAT-1:0] pv;
+    reg [2:0] pt[0:LAT-1];
+    assign acc_we=pv[LAT-1];assign acc_tag=pt[LAT-1];
+    generate if (NT!=8 || LAT<4 || LAT>8) begin:g_bad
+        ot_hgi_static_ring_requires_NT8_LAT4_to_8 invalid_configuration();
+    end endgenerate
+    wire gath = AG!=0 && tx_gather;
+    function automatic [279:0] flit(
+        input integer d,input [2:0] tag,input [255:0] data,
+        input gather_mode,result_mode,input [1:0] source_qid,target_qid,
+        input [3:0] ttl_by_direction,input integer tag_mutant
+    );
+        flit={1'b1,gather_mode?2'd3:(result_mode?2'd2:2'd1),source_qid,gather_mode?source_qid:target_qid,
+              gather_mode?ttl_by_direction[d*2+:2]:(result_mode?2'd3:2'd0),tag_mutant?(tag^3'd1):tag,1'b0,11'b0,data};
+    endfunction
+    // ring outputs (combinational next value; valid bit reset-registered, payload plain-registered)
+    reg [279:0] nx_out [0:1];
+    always @* begin:outs
+        reg [279:0] x;
+        for(integer d=0;d<2;d=d+1)begin
+            x=pin[d];nx_out[d]=0;
+            if(tx_forward[d])begin
+                nx_out[d]=x;
+                if(x[278:277]==2)nx_out[d][272:271]=x[272:271]-1'b1;
+                if(x[278:277]==3)nx_out[d][272:271]=x[272:271]-(MUT_TTL?2'd2:2'd1);
+            end
+            if(tx_inject[d])nx_out[d]=flit(d,tx_tag,state_tx,gath,tx_result,qid,tx_dst,tx_ttl,MUT_TAG);
+        end
+    end
+    // data registers: no reset (loads of rst_n = control state only)
+    always @(posedge clk) begin:data
+        reg [279:0] x;
+        pin_p[0]<=cw_i[278:0];pin_p[1]<=ccw_i[278:0];
+        out_p[0]<=nx_out[0][278:0];out_p[1]<=nx_out[1][278:0];
+        if(rr_local)begin rr_tag<=rr_local_tag;rr_d<=acc_rr;end
+        for(integer d=0;d<2;d=d+1)begin
+            x=pin[d];
+            if(rx_slot[d] && x[278:277]==2)begin rr_tag<=x[270:268];rr_d<=x[255:0];end
+            if(AG!=0 && rx_slot[d] && x[278:277]==3)begin
+                ag_src[d*2+:2]<=MUT_SRC?qid:x[276:275];ag_tag[d*3+:3]<=x[270:268];ag_d[d*256+:256]<=x[255:0];
+            end
+        end
+    end
+    always @(posedge clk or negedge rst_n) begin:step
+        reg [279:0] x;
+        reg [2:0] tag;
+        reg [1:0] src,dst,kind,ttl;
+        reg [1:0] result_slots;
+        if(!rst_n)begin
+            pin_v<=0;out_v<=0;
+            local_v<=0;acc_v<=0;pending<=0;active<=0;pv<=0;
+            rr_v<=0;fault<=0;ag_v<=0;
+            read_add_v<=0;read_tx_v<=0;read_rr_v<=0;
+            prep_add_v<=0;prep_tx_v<=0;prep_rr_v<=0;
+            for(integer t=0;t<NT;t=t+1)carry_v[t]<=0;
+        end else begin
+            pin_v<={ccw_i[279],cw_i[279]};out_v<={nx_out[1][279],nx_out[0][279]};
+            // Read reservations precede their consuming operation by exactly
+            // two edges. These checks report faults, never gate issue or wait.
+            prep_add_v<=state_read_add;prep_tx_v<=state_read_tx;prep_rr_v<=state_read_rr;
+            prep_add_tag<=state_add_tag;prep_add_src<=state_add_src;prep_add_rhs<=state_add_rhs_acc;
+            prep_tx_tag<=state_tx_tag;prep_tx_acc<=state_tx_acc;prep_rr_tag<=state_rr_tag;
+            read_add_v<=prep_add_v;read_tx_v<=prep_tx_v;read_rr_v<=prep_rr_v;
+            read_add_tag<=prep_add_tag;read_add_src<=prep_add_src;read_add_rhs<=prep_add_rhs;
+            read_tx_tag<=prep_tx_tag;read_tx_acc<=prep_tx_acc;read_rr_tag<=prep_rr_tag;
+            if(add_v!=read_add_v || (|tx_inject)!=read_tx_v || rr_local!=read_rr_v)fault<=1;
+            if(add_v && (add_tag!=read_add_tag || add_src!=read_add_src || add_rhs_acc!=read_add_rhs))fault<=1;
+            if((|tx_inject) && (tx_tag!=read_tx_tag || tx_acc!=read_tx_acc))fault<=1;
+            if(rr_local && rr_local_tag!=read_rr_tag)fault<=1;
+            if(state_read_add && (!carry_v[state_add_tag][state_add_src] || pending[state_add_tag] ||
+               (state_add_rhs_acc ? !acc_v[state_add_tag] : !local_v[state_add_tag])))fault<=1;
+            if(state_read_tx && (state_tx_acc ? (!acc_v[state_tx_tag] || pending[state_tx_tag]) : !local_v[state_tx_tag]))fault<=1;
+            if(state_read_rr && (!acc_v[state_rr_tag] || pending[state_rr_tag]))fault<=1;
+            if(state_read_add && !state_add_rhs_acc && lp_we && lp_tag==state_add_tag)fault<=1;
+            if(state_read_tx && !state_tx_acc && lp_we && lp_tag==state_tx_tag)fault<=1;
+            pv<={pv[LAT-2:0],add_v};pt[0]<=add_tag;
+            for(integer i=1;i<LAT;i=i+1)pt[i]<=pt[i-1];
+            rr_v<=rr_local;
+            ag_v<=0;
+            result_slots=0;
+            if(rr_local)begin
+                if(!acc_v[rr_local_tag] || pending[rr_local_tag])fault<=1;
+                acc_v[rr_local_tag]<=0;active[rr_local_tag]<=0;
+            end
+            if(lp_we)begin
+                if(local_v[lp_tag] || active[lp_tag])fault<=1;
+                active[lp_tag]<=1;
+                local_v[lp_tag]<=1;
+            end
+            if(add_v)begin
+                if(!carry_v[add_tag][add_src] || pending[add_tag] ||
+                   (add_rhs_acc ? !acc_v[add_tag] : !local_v[add_tag]))fault<=1;
+                if(lp_we && lp_tag==add_tag && !add_rhs_acc)fault<=1;
+                carry_v[add_tag][add_src]<=0;pending[add_tag]<=1;
+                if(add_rhs_acc)acc_v[add_tag]<=0;else local_v[add_tag]<=0;
+            end
+            if(av!={8{pv[LAT-1]}})fault<=1;
+            if(pv[LAT-1])begin
+                if(acc_v[pt[LAT-1]])fault<=1;
+                if(add_v && add_tag==pt[LAT-1])fault<=1;
+                acc_v[pt[LAT-1]]<=1;pending[pt[LAT-1]]<=0;
+            end
+            // Every physical arrival, including transit, must match a reservation.
+            // A reservation with missing input also faults at this exact edge.
+            for(integer d=0;d<2;d=d+1)begin
+                x=pin[d];
+                tag=x[270:268];src=x[276:275];dst=x[274:273];
+                kind=x[278:277];ttl=x[272:271];
+                if(x[279]!=rx_slot[d])fault<=1;
+                if(rx_slot[d])begin
+                    if(kind!=rx_kind[d*2+:2] || src!=rx_src[d*2+:2] ||
+                       tag!=rx_tag[d*3+:3] || (kind!=1 && kind!=2 && !(AG!=0 && kind==3)) ||
+                       x[267:256]!=0)fault<=1;
+                    if(kind!=3 && !active[tag])fault<=1;
+                    if(d==1 && rx_slot[0] && pin[0][279] &&
+                       pin[0][270:268]==tag && pin[0][276:275]==src &&
+                       pin[0][278:277]==1 && kind==1 &&
+                       pin[0][274:273]==qid && dst==qid)fault<=1;
+                    if(kind==1 && dst==qid)begin
+                        if(carry_v[tag][src] || tx_forward[d])fault<=1;
+                        if(add_v && add_tag==tag && add_src==src)fault<=1;
+                        carry_v[tag][src]<=1;
+                    end
+                    if(kind==2)begin
+                        if(ttl==0)fault<=1;
+                        result_slots[d]=1;active[tag]<=0;
+                        rr_v<=1;
+                        if(rr_local || |(result_slots & ~(2'b1<<d)))fault<=1;
+                    end
+                    if(AG!=0 && kind==3)begin
+                        // GATHER arrival: publish on this direction's port; no tag state.
+                        if(ttl==0 || src==qid)fault<=1;
+                        ag_v[d]<=1;
+                    end
+                    if((kind==1 && dst!=qid) || ((kind==2 || kind==3) && ttl>1))begin
+                        if(!tx_forward[d])fault<=1;
+                    end else if(tx_forward[d])fault<=1;
+                end
+                if(tx_forward[d])begin
+                    if(!rx_slot[d] || !x[279])fault<=1;
+                end
+                if(tx_inject[d])begin
+                    if(tx_forward[d])fault<=1;
+                    if(tx_acc ? (!acc_v[tx_tag] || pending[tx_tag]) : !local_v[tx_tag])fault<=1;
+                    if(tx_result && (!tx_acc || tx_dst!=qid))fault<=1;
+                    if(gath && (tx_result || tx_ttl[d*2+:2]==0))fault<=1;
+                end
+            end
+            if(|tx_inject)begin
+                // Copies sent simultaneously in both directions are compiler-
+                // reserved, with the same payload. No runtime multicast arbiter.
+                // A GATHER from local state ends the tag's lifetime; one from acc keeps
+                // acc_v so the local publication (rr_local) can follow, as a RESULT does.
+                if(!tx_acc)begin local_v[tx_tag]<=0;if(gath)active[tx_tag]<=0;end
+                else if(!tx_result && !gath)acc_v[tx_tag]<=0;
+            end
+        end
+    end
+endmodule
+module native_ot_hgi_coll_pring_static_state_capture_lane(
+    input wire  clk,
+    input wire  lp_we,
+    input wire [2:0] lp_tag,
+    input wire [31:0] lp_data,
+    input wire  acc_we,
+    input wire [2:0] acc_tag,
+    input wire [31:0] acc_data,
+    input wire [1:0] carry_we,
+    input wire [2:0] carry0_tag,
+    input wire [2:0] carry1_tag,
+    input wire [1:0] carry0_src,
+    input wire [1:0] carry1_src,
+    input wire [31:0] carry0_data,
+    input wire [31:0] carry1_data,
+    input wire  read_add,
+    input wire  read_tx,
+    input wire  read_rr,
+    input wire  read_rhs_acc,
+    input wire  read_tx_acc,
+    input wire [2:0] add_tag,
+    input wire [2:0] tx_tag,
+    input wire [2:0] rr_tag,
+    input wire [1:0] add_src,
+    output wire [31:0] rhs_add,
+    output wire [31:0] carry_add,
+    output wire [31:0] tx_data,
+    output wire [31:0] acc_rr
+);
+    (* keep=1, dont_touch=1 *) reg  cap_lp_we;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_lp_tag;
+    (* keep=1, dont_touch=1 *) reg [31:0] cap_lp_data;
+    (* keep=1, dont_touch=1 *) reg  cap_acc_we;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_acc_tag;
+    (* keep=1, dont_touch=1 *) reg [31:0] cap_acc_data;
+    (* keep=1, dont_touch=1 *) reg [1:0] cap_carry_we;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_carry0_tag;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_carry1_tag;
+    (* keep=1, dont_touch=1 *) reg [1:0] cap_carry0_src;
+    (* keep=1, dont_touch=1 *) reg [1:0] cap_carry1_src;
+    (* keep=1, dont_touch=1 *) reg [31:0] cap_carry0_data;
+    (* keep=1, dont_touch=1 *) reg [31:0] cap_carry1_data;
+    (* keep=1, dont_touch=1 *) reg  cap_read_add;
+    (* keep=1, dont_touch=1 *) reg  cap_read_tx;
+    (* keep=1, dont_touch=1 *) reg  cap_read_rr;
+    (* keep=1, dont_touch=1 *) reg  cap_read_rhs_acc;
+    (* keep=1, dont_touch=1 *) reg  cap_read_tx_acc;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_add_tag;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_tx_tag;
+    (* keep=1, dont_touch=1 *) reg [2:0] cap_rr_tag;
+    (* keep=1, dont_touch=1 *) reg [1:0] cap_add_src;
+    always @(posedge clk) begin
+        cap_lp_we <= lp_we;
+        cap_lp_tag <= lp_tag;
+        cap_lp_data <= lp_data;
+        cap_acc_we <= acc_we;
+        cap_acc_tag <= acc_tag;
+        cap_acc_data <= acc_data;
+        cap_carry_we <= carry_we;
+        cap_carry0_tag <= carry0_tag;
+        cap_carry1_tag <= carry1_tag;
+        cap_carry0_src <= carry0_src;
+        cap_carry1_src <= carry1_src;
+        cap_carry0_data <= carry0_data;
+        cap_carry1_data <= carry1_data;
+        cap_read_add <= read_add;
+        cap_read_tx <= read_tx;
+        cap_read_rr <= read_rr;
+        cap_read_rhs_acc <= read_rhs_acc;
+        cap_read_tx_acc <= read_tx_acc;
+        cap_add_tag <= add_tag;
+        cap_tx_tag <= tx_tag;
+        cap_rr_tag <= rr_tag;
+        cap_add_src <= add_src;
+    end
+    native_ot_hgi_coll_pring_static_state_lane u_state(
+        .clk(clk),
+        .lp_we(cap_lp_we),
+        .lp_tag(cap_lp_tag),
+        .lp_data(cap_lp_data),
+        .acc_we(cap_acc_we),
+        .acc_tag(cap_acc_tag),
+        .acc_data(cap_acc_data),
+        .carry_we(cap_carry_we),
+        .carry0_tag(cap_carry0_tag),
+        .carry1_tag(cap_carry1_tag),
+        .carry0_src(cap_carry0_src),
+        .carry1_src(cap_carry1_src),
+        .carry0_data(cap_carry0_data),
+        .carry1_data(cap_carry1_data),
+        .read_add(cap_read_add),
+        .read_tx(cap_read_tx),
+        .read_rr(cap_read_rr),
+        .read_rhs_acc(cap_read_rhs_acc),
+        .read_tx_acc(cap_read_tx_acc),
+        .add_tag(cap_add_tag),
+        .tx_tag(cap_tx_tag),
+        .rr_tag(cap_rr_tag),
+        .add_src(cap_add_src),
+        .rhs_add(rhs_add),
+        .carry_add(carry_add),
+        .tx_data(tx_data),
+        .acc_rr(acc_rr)
+    );
+endmodule
+module native_ot_hgi_coll_pring_static_state_lane(
+    input wire clk,
+    input wire lp_we,
+    input wire [2:0] lp_tag,
+    input wire [31:0] lp_data,
+    input wire acc_we,
+    input wire [2:0] acc_tag,
+    input wire [31:0] acc_data,
+    input wire [1:0] carry_we,
+    input wire [2:0] carry0_tag,carry1_tag,
+    input wire [1:0] carry0_src,carry1_src,
+    input wire [31:0] carry0_data,carry1_data,
+    input wire read_add,read_tx,read_rr,read_rhs_acc,read_tx_acc,
+    input wire [2:0] add_tag,tx_tag,rr_tag,
+    input wire [1:0] add_src,
+    output reg [31:0] rhs_add,carry_add,tx_data,acc_rr
+);
+    reg [31:0] lp[0:7],acc[0:7],carry[0:7][0:3];
+    always @(posedge clk)begin
+        if(lp_we)lp[lp_tag]<=lp_data;
+        if(acc_we)acc[acc_tag]<=acc_data;
+        if(carry_we[0])carry[carry0_tag][carry0_src]<=carry0_data;
+        if(carry_we[1])carry[carry1_tag][carry1_src]<=carry1_data;
+        // All data outputs are flop Qs at the hardened face. The tag muxes
+        // remain inside this leaf, before the reserved read capture edge.
+        if(read_add)begin rhs_add<=read_rhs_acc?acc[add_tag]:lp[add_tag];carry_add<=carry[add_tag][add_src];end
+        if(read_tx)tx_data<=read_tx_acc?acc[tx_tag]:lp[tx_tag];
+        if(read_rr)acc_rr<=acc[rr_tag];
+    end
+endmodule
+module native_ot_hgi_coll_pring_static_add_lane #(parameter integer LAT=8)(
+    input wire clk,rst_n,valid_in,
+    input wire [31:0] a,b,
+    output wire [31:0] y,
+    output wire valid_out
+);
+    reg [31:0] ap,bp;reg vp;
+    always @(posedge clk)begin ap<=a;bp<=b;end
+    always @(posedge clk or negedge rst_n)if(!rst_n)vp<=0;else vp<=valid_in;
+    native_ot_hdc_fp32_add_lat #(.LAT(LAT-1),.DRST(0)) u_add(
+        .clk(clk),.rst_n(rst_n),.valid_in(vp),.a(ap),.b(bp),.y(y),.err(),.valid_out(valid_out));
+endmodule
+module native_ot_hdc_fp32_add_lat #(
+    parameter integer LAT = 3,
+    // CUTS >= 0 picks the extra cuts explicitly, bits {D, C, B, A} (LAT must be 3 + their count); -1: by LAT.
+    // W11 serial domain: CUTS = 4'b0001 (C_A, LAT 4) cuts the INPUT side, so an operand multiplexer in front of
+    // the unit shares stage 1 with the decode / compare instead of the alignment
+    parameter integer CUTS = -1,
+    // DRST 0 (fe-push-hphys-1010, opt-in via OT_FP_DATA_NORST): only the valid bits are reset (cuts VB, valid_out);
+    // y / err / data cuts are plain flops (consumers qualify them with valid_out).  1: legacy, every stage bit reset.
+    parameter integer DRST =  0 
+) (
+    input  wire        clk,
+    input  wire        rst_n,
+    input  wire        valid_in,
+    input  wire [31:0] a,
+    input  wire [31:0] b,
+    output reg  [31:0] y,
+    output reg  [1:0]  err,
+    output reg         valid_out
+);
+    localparam integer CUT_A = (CUTS >= 0) ? CUTS % 2       : (LAT >= 5) ? 1 : 0;
+    localparam integer CUT_B = (CUTS >= 0) ? (CUTS / 2) % 2 : (LAT >= 4) ? 1 : 0;
+    localparam integer CUT_C = (CUTS >= 0) ? (CUTS / 4) % 2 : (LAT >= 6) ? 1 : 0;
+    localparam integer CUT_D = (CUTS >= 0) ? (CUTS / 8) % 2 : (LAT >= 7) ? 1 : 0;     // inside B2: after the sentinel LZC
+    generate if (CUTS >= 0 && CUT_A + CUT_B + CUT_C + CUT_D + 3 != LAT) begin : g_bad_cuts
+        ot_hdc_fp32_add_lat_CUTS_must_match_LAT u_trap ();
+    end endgenerate
+    localparam [1:0] E_NONE = 2'd0, E_NONFINITE = 2'd1, E_OVERFLOW = 2'd2;
+
+    // ---- A1 ----------------------------------------------------------------------------------------
+    wire [7:0]  a_field = a[30:23];
+    wire [7:0]  b_field = b[30:23];
+    wire [7:0]  a_exp = (a_field == 8'd0) ? 8'd1 : a_field;
+    wire [7:0]  b_exp = (b_field == 8'd0) ? 8'd1 : b_field;
+    wire [23:0] a_man = {(a_field != 8'd0), a[22:0]};
+    wire [23:0] b_man = {(b_field != 8'd0), b[22:0]};
+    wire nonfinite = (a_field == 8'hff) || (b_field == 8'hff);
+    wire a_zero = (a[30:0] == 31'd0);
+    wire b_zero = (b[30:0] == 31'd0);
+    wire bypass = nonfinite || a_zero || b_zero;
+    wire [31:0] bypass_code = nonfinite ? 32'd0 : (a_zero ? (b_zero ? 32'd0 : b) : a);
+    wire cmp_c;
+    wire [30:0] cmp_s;
+    native_ot_hdc_ksadd_k__u1 #(.W(31)) u_cmp (.a(a[30:0]), .b(~b[30:0]), .cin(1'b1), .s(cmp_s), .cout(cmp_c));
+    wire [7:0] dab, dba;
+    wire dab_c, dba_c;
+    native_ot_hdc_ksadd_k__u1 #(.W(8)) u_dab (.a(a_exp), .b(~b_exp), .cin(1'b1), .s(dab), .cout(dab_c));
+    native_ot_hdc_ksadd_k__u1 #(.W(8)) u_dba (.a(b_exp), .b(~a_exp), .cin(1'b1), .s(dba), .cout(dba_c));
+    // A1 -> A2 boundary bundle
+    localparam integer WA = 1 + 1 + 2 + 32 + 1 + 1 + 1 + 8 + 8 + 24 + 24 + 8 + 8;
+    wire [WA-1:0] a1 = {valid_in, bypass, (nonfinite ? E_NONFINITE : E_NONE), bypass_code, a[31] ^ b[31], a[31], b[31],
+                        a_exp, b_exp, a_man, b_man, dab, dba} ;
+    wire          a1_swap = !cmp_c;
+    wire [WA:0]   a2_in;
+    native_ot_hdc_w11_cut #(.W(WA + 1), .CUT(CUT_A), .VB(DRST ? -1 : WA - 1)) u_ca (.clk(clk), .rst_n(rst_n), .d({a1_swap, a1}), .q(a2_in));
+    // ---- A2 ----------------------------------------------------------------------------------------
+    wire        x_v, x_byp, x_sub, x_as, x_bs, x_swap;
+    wire [1:0]  x_err;
+    wire [31:0] x_code;
+    wire [7:0]  x_aexp, x_bexp, x_dab, x_dba;
+    wire [23:0] x_aman, x_bman;
+    assign {x_swap, x_v, x_byp, x_err, x_code, x_sub, x_as, x_bs, x_aexp, x_bexp, x_aman, x_bman, x_dab, x_dba} = a2_in;
+    function automatic [27:0] jam28;
+        input [23:0] man;
+        input [7:0]  d;
+        reg [27:0] val, lost;
+        begin
+            val = {1'b0, man, 3'b000};
+            if (d >= 8'd28) jam28 = {27'd0, |val};
+            else begin
+                lost = val & ~({28{1'b1}} << d[4:0]);
+                jam28 = (val >> d[4:0]) | {27'd0, |lost};
+            end
+        end
+    endfunction
+    wire [27:0] small_a = jam28(x_aman, x_dba);
+    wire [27:0] small_b = jam28(x_bman, x_dab);
+
+    reg        s1_v, s1_byp, s1_sub, s1_sign;
+    reg [1:0]  s1_err;
+    reg [31:0] s1_code;
+    reg [7:0]  s1_exp;
+    reg [23:0] s1_big;
+    reg [27:0] s1_small;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s1_v <= 1'b0;
+        else s1_v <= x_v;
+    end
+    always @(posedge clk) begin
+        s1_byp <= x_byp;
+        s1_err <= x_err;
+        s1_code <= x_code;
+        s1_sub <= x_sub;
+        s1_sign <= x_swap ? x_bs : x_as;
+        s1_exp <= x_swap ? x_bexp : x_aexp;
+        s1_big <= x_swap ? x_bman : x_aman;
+        s1_small <= x_swap ? small_a : small_b;
+    end
+
+    // ---- B1 ----------------------------------------------------------------------------------------
+    wire [27:0] big28 = {1'b0, s1_big, 3'b000};
+    wire [27:0] sum_w, dif_w;
+    wire sum_c, dif_c;
+    native_ot_hdc_ksadd_k__u1 #(.W(28)) u_sum (.a(big28), .b(s1_small), .cin(1'b0), .s(sum_w), .cout(sum_c));
+    native_ot_hdc_ksadd_k__u1 #(.W(28)) u_dif (.a(big28), .b(~s1_small), .cin(1'b1), .s(dif_w), .cout(dif_c));
+    localparam integer WB = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 28 + 28;
+    wire [WB-1:0] b2_in;
+    native_ot_hdc_w11_cut #(.W(WB), .CUT(CUT_B), .VB(DRST ? -1 : WB - 1)) u_cb (.clk(clk), .rst_n(rst_n),
+        .d({s1_v, s1_byp, s1_sub, s1_sign, s1_err, s1_code, s1_exp, sum_w, dif_w}), .q(b2_in));
+    // ---- B2 ----------------------------------------------------------------------------------------
+    wire        t_v, t_byp, t_sub, t_sign;
+    wire [1:0]  t_err;
+    wire [31:0] t_code;
+    wire [7:0]  t_exp;
+    wire [27:0] sum, dif;
+    assign {t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, sum, dif} = b2_in;
+    wire carry = sum[27];
+    wire [26:0] add_val = carry ? {sum[27:2], sum[1] | sum[0]} : sum[26:0];
+    wire [7:0]  room = t_exp - 8'd1;
+    wire [26:0] sentinel = (room <= 8'd26) ? (27'd1 << (5'd26 - room[4:0])) : 27'd0;
+    wire [5:0]  lz_w;
+    native_ot_hdc_lzc32 u_lzc (.x({dif[26:0] | sentinel, 5'b11111}), .n(lz_w));
+    // B2a -> B2b boundary (LAT >= 7)
+    localparam integer WD = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 27 + 28 + 6 + 1;
+    wire [WD-1:0] d2_in;
+    native_ot_hdc_w11_cut #(.W(WD), .CUT(CUT_D), .VB(DRST ? -1 : WD - 1)) u_cd (.clk(clk), .rst_n(rst_n),
+        .d({t_v, t_byp, t_sub, t_sign, t_err, t_code, t_exp, add_val, dif, lz_w, carry}), .q(d2_in));
+    wire        w_v, w_byp, w_sub, w_sign, w_carry;
+    wire [1:0]  w_err;
+    wire [31:0] w_code;
+    wire [7:0]  w_exp;
+    wire [26:0] w_add;
+    wire [27:0] w_dif;
+    wire [5:0]  lz;
+    assign {w_v, w_byp, w_sub, w_sign, w_err, w_code, w_exp, w_add, w_dif, lz, w_carry} = d2_in;
+    wire [26:0] sub_val = w_dif[26:0] << lz[4:0];
+    wire [7:0]  exp_sub, exp_add;
+    wire exp_sub_c, exp_add_c;
+    native_ot_hdc_ksadd_k__u1 #(.W(8)) u_esub (.a(w_exp), .b(~{3'd0, lz[4:0]}), .cin(1'b1), .s(exp_sub), .cout(exp_sub_c));
+    native_ot_hdc_ksadd_k__u1 #(.W(8)) u_eadd (.a(w_exp), .b(8'd0), .cin(w_carry), .s(exp_add), .cout(exp_add_c));
+
+    reg        s2_v, s2_byp, s2_sign, s2_zero;
+    reg [1:0]  s2_err;
+    reg [31:0] s2_code;
+    reg [7:0]  s2_exp;
+    reg [26:0] s2_val;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) s2_v <= 1'b0;
+        else s2_v <= w_v;
+    end
+    always @(posedge clk) begin
+        s2_byp <= w_byp; s2_err <= w_err; s2_code <= w_code; s2_sign <= w_sign;
+        s2_zero <= w_sub && (w_dif == 28'd0);
+        s2_exp <= w_sub ? exp_sub : exp_add;
+        s2_val <= w_sub ? sub_val : w_add;
+    end
+
+    // ---- C1 ----------------------------------------------------------------------------------------
+    wire inc = s2_val[2] && ((|s2_val[1:0]) || s2_val[3]);
+    wire [23:0] rnd_w;
+    wire rnd_cw;
+    native_ot_hdc_ksadd_k__u1 #(.W(24)) u_rnd (.a(s2_val[26:3]), .b(24'd0), .cin(inc), .s(rnd_w), .cout(rnd_cw));
+    localparam integer WC = 1 + 1 + 1 + 1 + 2 + 32 + 8 + 24 + 1;
+    wire [WC-1:0] c2_in;
+    native_ot_hdc_w11_cut #(.W(WC), .CUT(CUT_C), .VB(DRST ? -1 : WC - 1)) u_cc (.clk(clk), .rst_n(rst_n),
+        .d({s2_v, s2_byp, s2_zero, s2_sign, s2_err, s2_code, s2_exp, rnd_w, rnd_cw}), .q(c2_in));
+    // ---- C2 ----------------------------------------------------------------------------------------
+    wire        u_v, u_byp, u_zero, u_sign, rnd_c;
+    wire [1:0]  u_err;
+    wire [31:0] u_code;
+    wire [7:0]  u_exp;
+    wire [23:0] rnd;
+    assign {u_v, u_byp, u_zero, u_sign, u_err, u_code, u_exp, rnd, rnd_c} = c2_in;
+    wire [23:0] man = rnd_c ? {1'b1, rnd[23:1]} : rnd;
+    wire [8:0]  e = {1'b0, u_exp} + {8'd0, rnd_c};
+    wire subnormal = (e == 9'd1) && !man[23];
+    wire [31:0] code = {u_sign, subnormal ? 8'd0 : e[7:0], man[22:0]};
+    wire over = (u_exp == 8'hff) || (e >= 9'd255);
+    generate if (DRST != 0) begin : g_yr
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) begin y <= 32'd0; err <= E_NONE; valid_out <= 1'b0; end
+            else begin
+                valid_out <= u_v;
+                if (u_byp) begin y <= u_code; err <= u_err; end
+                else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+                else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+                else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+            end
+        end
+    end else begin : g_yn
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) valid_out <= 1'b0;
+            else valid_out <= u_v;
+        end
+        always @(posedge clk) begin
+            if (u_byp) begin y <= u_code; err <= u_err; end
+            else if (u_zero) begin y <= 32'd0; err <= E_NONE; end
+            else if (over) begin y <= 32'd0; err <= E_OVERFLOW; end
+            else begin y <= (code[30:0] == 31'd0) ? 32'd0 : code; err <= E_NONE; end
+        end
+    end endgenerate
+endmodule
+module native_ot_hdc_ksadd_k__u1 #(
+    parameter integer W = 28
+) (
+    input  wire [W-1:0] a,
+    input  wire [W-1:0] b,
+    input  wire         cin,
+    output wire [W-1:0] s,
+    output wire         cout
+);
+    localparam integer L = $clog2(W + 1);
+    // position 0 is the carry-in; bit i of the operands is position i + 1
+    (* keep *) wire [W:0] g [0:L];
+    (* keep *) wire [W:0] p [0:L];
+    assign g[0] = {a & b, cin};
+    assign p[0] = {a ^ b, 1'b0};
+    genvar l, i;
+    generate
+        for (l = 0; l < L; l = l + 1) begin : g_lv
+            for (i = 0; i <= W; i = i + 1) begin : g_b
+                if (i >= (1 << l)) begin : g_c
+                    assign g[l + 1][i] = g[l][i] | (p[l][i] & g[l][i - (1 << l)]);
+                    assign p[l + 1][i] = p[l][i] & p[l][i - (1 << l)];
+                end else begin : g_p
+                    assign g[l + 1][i] = g[l][i];
+                    assign p[l + 1][i] = p[l][i];
+                end
+            end
+        end
+    endgenerate
+    // carry into operand bit i = the group generate of positions [0, i]
+    assign s = (a ^ b) ^ g[L][W-1:0];
+    assign cout = g[L][W];
+endmodule
+module native_ot_hdc_w11_cut #(parameter integer W = 1, parameter integer CUT = 0, parameter integer VB = -1) (
+    input  wire clk, input wire rst_n, input wire [W-1:0] d, output wire [W-1:0] q
+);
+    generate if (CUT && VB < 0) begin : g_r
+        reg [W-1:0] r;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) r <= {W{1'b0}};
+            else r <= d;
+        end
+        assign q = r;
+    end else if (CUT) begin : g_rv
+        reg rv;
+        reg [W-1:0] rd;
+        always @(posedge clk or negedge rst_n) begin
+            if (!rst_n) rv <= 1'b0;
+            else rv <= d[VB];
+        end
+        always @(posedge clk) rd <= d;
+        genvar i;
+        for (i = 0; i < W; i = i + 1) begin : g_b
+            assign q[i] = (i == VB) ? rv : rd[i];
+        end
+    end else begin : g_w
+        assign q = d;
+    end endgenerate
+endmodule
+module native_ot_hdc_lzc32 (
+    input  wire [31:0] x,
+    output wire [5:0]  n
+);
+    // Level L holds 32 >> L groups; group k covers bits [(k+1)*2^L-1 : k*2^L],
+    // with a valid bit (any one) and the count of leading zeros below 2^L.
+    reg [31:0]     v, vn;
+    reg [32*5-1:0] c, cn;
+    integer L, k;
+    always @* begin
+        v = x;
+        c = {(32*5){1'b0}};
+        vn = 32'd0;
+        cn = {(32*5){1'b0}};
+        for (L = 0; L < 5; L = L + 1) begin
+            vn = 32'd0;
+            cn = {(32*5){1'b0}};
+            for (k = 0; k < (16 >> L); k = k + 1) begin
+                vn[k] = v[2*k+1] | v[2*k];
+                cn[5*k +: 5] = v[2*k+1] ? c[5*(2*k+1) +: 5] : (c[5*(2*k) +: 5] | (5'd1 << L));
+            end
+            v = vn;
+            c = cn;
+        end
+    end
+    assign n = v[0] ? {1'b0, c[4:0]} : 6'd32;
+endmodule
