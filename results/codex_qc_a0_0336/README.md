@@ -37,8 +37,12 @@ an8track clock reserve: worstNL0.552, worstNK0.549. The capacity estimate/render
 is a planning result, not a GRT PASS; real routing and actual routed reach/timing
 remain required. Actual placement, anchor and corridor images were viewed.
 
-Legacy guard correction: oldB cts_B.log readWC(modeSS)/BC(modeFF), despite its
-TCsetup config. The inherited -188.18ps setup label was SS, never TT closure.
+Legacy diagnostic correction: oldB cts_B.log prints WC(modeSS)/BC(modeFF),
+but that is hardcoded scene/mode label text. Both retained and current helper
+honor OT_MM_SETUP_CORNER=tc, and oldB config requests tc/BC. It does NOT prove
+canonical old CTS used SS libraries. The -188.18ps earlier diagnostic and the
+explicit TT-only diagnostic -65.68ps setup differ in probe library choice;
+canonical CTS setup corner must be identified from actual loaded libraries.
 Explicit TT-only diagnostic on the old checkpoint is stillFAIL(-65.68ps setup),
 worst rawleaf5->parent fault_q[4]. Old FFhold remainsFAIL(-129.25), FF->rawleaf.
 The opposite-direction failures share the macro/parent clock imbalance. Refresh
