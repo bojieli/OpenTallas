@@ -655,7 +655,11 @@ def lane_geometry(P, lid):
         seg = zroute(pa, pb, fin, fout)
         L = plen(seg)
         k = int(s.get("stations", 1))
-        if s.get("regs_um"):
+        from ft_full_stage import load, centre
+        full = load(P, P.parts[part]["type"])
+        if slot in full:
+            st = [P.to_die(part, centre(full[slot][j,0])) for j in range(k)]
+        elif s.get("regs_um"):
             st = [P.to_die(part, tuple(r)) for r in s["regs_um"]]
         else:
             st = [point_at(seg, L * j / k) for j in range(k)]
@@ -664,6 +668,38 @@ def lane_geometry(P, lid):
         pts.extend(seg[1:])
     regs.append(P.port_point(ln["ports"][-1]))
     return pts, regs, xs
+
+
+
+def lane_pin_hops(P, lid, regs):
+    """FF-to-FF reach through mandatory slot pins, including inter-partition seams.
+
+    Manhattan distance between FF centres can shortcut a required output/input
+    pin detour. Each intervening declared pin is part of the actual net route.
+    This remains a geometric lower bound; routed wire may be longer.
+    """
+    if not regs:
+        return []
+    hops = []
+    previous = regs[0]
+    length = 0.0
+    index = 1
+    for part, slot, a, b in P.lane_crossings(lid):
+        pa, pb = P.port_point(a), P.port_point(b)
+        length += abs(previous[0] - pa[0]) + abs(previous[1] - pa[1])
+        previous = pa
+        count = int((P.slot(part, slot) or {}).get("stations", 1))
+        for point in regs[index:index + count]:
+            length += abs(previous[0] - point[0]) + abs(previous[1] - point[1])
+            hops.append(length)
+            previous, length = point, 0.0
+        index += count
+        length += abs(previous[0] - pb[0]) + abs(previous[1] - pb[1])
+        previous = pb
+    endpoint = regs[-1]
+    length += abs(previous[0] - endpoint[0]) + abs(previous[1] - endpoint[1])
+    hops.append(length)
+    return hops
 
 
 def station_max(P, R=None):
@@ -735,12 +771,14 @@ def check_hops(P, R, geo):
     worst = []
     for lid, (pts, regs, xs) in geo.items():
         reach = min(float(P.lanes[lid].get("reach_um", P.reach)), P.reach)
-        hops = [abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])]
+        from ft_full_stage import lane_hops
+        has_full = any(P.types[P.parts[x["part"]]["type"]].get("ft_full_stage_placement_file") for x in xs)
+        hops = lane_hops(P, lid) if has_full else lane_pin_hops(P, lid, regs)
         h = max(hops) if hops else 0.0
         worst.append((h / reach, lid, h, reach))
         if h > reach + EPS:
             i = hops.index(h)
-            R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
+            R.err("hops", f"lane {lid}: hop {i} via mandatory slot pins is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
     # R3 (ruling 9.4): ft stations at most budgets.ft_station_max_um (<= 405) apart inside every crossed partition
     smax = station_max(P, R)
@@ -751,12 +789,27 @@ def check_hops(P, R, geo):
             if key in seen:
                 continue
             seen.add(key)
-            sp = x["len_um"] / max(1, x["stations"])
+            from ft_full_stage import load, centre
+            full = load(P, key[0])
+            if key[1] in full:
+                rows = full[key[1]]
+                k = x["stations"]
+                width = next(s["width"]+1 for s in P.types[key[0]]["ft_slots"] if s["name"]==key[1])
+                sp = max((sum(abs(a-b) for a,b in zip(centre(rows[j,b]),centre(rows[j+1,b]))) for b in range(width) for j in range(k-1)), default=0)
+            else:
+                sp = x["len_um"] / max(1, x["stations"])
             if sp > smax + EPS:
                 R.err("stations", f"type {key[0]} slot {key[1]}: {x['len_um']:.0f} um route / {x['stations']} "
                       f"station(s) = {sp:.0f} um > ft_station_max_um {smax:.0f} (R3: add stations)", type=key[0])
     worst.sort(reverse=True)
-    return [dict(lane=l, hop_um=round(h, 1), reach_um=r) for _, l, h, r in worst[:10]]
+    result = []
+    for _, lid, h, reach in worst[:10]:
+        regs = geo[lid][1]
+        direct = max((abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])), default=0.0)
+        result.append(dict(lane=lid, hop_um=round(h, 1), reach_um=reach,
+                           direct_ff_hop_um=round(direct, 1),
+                           via_pin_role="mandatory seam pin lower bound"))
+    return result
 
 
 # ------------------------------------------------------------------------------------------------------- cuts
@@ -987,9 +1040,11 @@ def check_clock_branch_buffers(P, R):
     """PATH-HBM 10-25 (COORD ruling (1) 14:44): clock.branch_buffers are real std-cell clock buffers: none inside a
     hard core, every driven tap exists and names the buffer as its parent (and every taps[].parent is a buffer),
     and every leg (buffer -> driven tap, Manhattan) is <= CLOCK_LEG_MAX_UM."""
+    from ft_full_stage import load
     out = dict(buffers=0, worst_leg_um=0.0, types=[])
     reach = CLOCK_LEG_MAX_UM
     for tn, t in P.types.items():
+        full = load(P, tn)
         ck = t.get("clock") or {}
         bufs = ck.get("branch_buffers") or []
         taps = {tp["name"]: tp for tp in ck.get("taps", []) or []}
@@ -1016,7 +1071,7 @@ def check_clock_branch_buffers(P, R):
             if hit:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
                 bad = True
-            near = _buf_near_station(t, q, full=__import__("ft_full_stage").load(P, tn))
+            near = _buf_near_station(t, q, full=full)
             if near:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} within {CLOCK_BUF_HALO_UM} um halo of "
                                f"{near}", type=tn)
@@ -1062,7 +1117,7 @@ def check_clock_branch_buffers(P, R):
                             R.err("clock", f"type {tn}: leg repeater {r['name']} cell at {ll} overlaps hard core {hit}",
                                   type=tn)
                             bad = True
-                        near = _buf_near_station(t, r["xy"], full=__import__("ft_full_stage").load(P, tn))
+                        near = _buf_near_station(t, r["xy"], full=full)
                         if near:
                             R.err("clock", f"type {tn}: leg repeater {r['name']} within {CLOCK_BUF_HALO_UM} um halo of "
                                            f"{near}", type=tn)

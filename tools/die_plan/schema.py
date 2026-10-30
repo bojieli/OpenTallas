@@ -351,6 +351,9 @@ SCHEMA = {
                 "properties": {
                     "module": _name,                 # generated wrapper module name
                     "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
+                    # Proof-layout matching opt-in; ordinary full proof and its guarded receipt remain mandatory.
+                    "lec": {"type": "object", "additionalProperties": False,
+                            "properties": {"superset_vec": {"type": "boolean"}}},
                     # Per-type placement-core inset [W,S,E,N], default 4.32 um each. PHYs at the die edge may
                     # explicitly retain boundary rows without changing outline, macro origins or pin positions.
                     "kit_core_margins_um": {"type": "array", "minItems": 4, "maxItems": 4,
@@ -645,6 +648,12 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Type-local control reset copies: emitted old net, equal published depth and core clock.
+                        "consumer_localization": {"type": "array", "items": {
+                            "type": "object", "additionalProperties": False,
+                            "required": ["instance", "pin", "old_reset", "new_reset", "clock_net"],
+                            "properties": {k: {"type": "string", "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"}
+                                           for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)

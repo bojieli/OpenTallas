@@ -1,0 +1,155 @@
+{
+ "status": "ADDRESS_ONLY_PROPOSAL_NO_INSTALL_OR_SELECTED_TARGET",
+ "cases": [
+  {
+   "format": 0,
+   "n": 65,
+   "m": 2,
+   "source_stride": 1,
+   "vm_stride": 1,
+   "commands": 18,
+   "source_elements": 130
+  },
+  {
+   "format": 0,
+   "n": 13,
+   "m": 2,
+   "source_stride": 2,
+   "vm_stride": 2,
+   "commands": 26,
+   "source_elements": 26
+  },
+  {
+   "format": 1,
+   "n": 65,
+   "m": 2,
+   "source_stride": 1,
+   "vm_stride": 1,
+   "commands": 18,
+   "source_elements": 130
+  },
+  {
+   "format": 1,
+   "n": 13,
+   "m": 2,
+   "source_stride": 2,
+   "vm_stride": 2,
+   "commands": 26,
+   "source_elements": 26
+  },
+  {
+   "format": 2,
+   "n": 65,
+   "m": 2,
+   "source_stride": 1,
+   "vm_stride": 1,
+   "commands": 18,
+   "source_elements": 130
+  },
+  {
+   "format": 2,
+   "n": 13,
+   "m": 2,
+   "source_stride": 2,
+   "vm_stride": 2,
+   "commands": 26,
+   "source_elements": 26
+  },
+  {
+   "format": 4,
+   "n": 65,
+   "m": 2,
+   "source_stride": 1,
+   "vm_stride": 1,
+   "commands": 18,
+   "source_elements": 130
+  },
+  {
+   "format": 4,
+   "n": 13,
+   "m": 2,
+   "source_stride": 2,
+   "vm_stride": 2,
+   "commands": 26,
+   "source_elements": 26
+  },
+  {
+   "format": 5,
+   "n": 65,
+   "m": 2,
+   "source_stride": 1,
+   "vm_stride": 1,
+   "commands": 18,
+   "source_elements": 130
+  },
+  {
+   "format": 5,
+   "n": 13,
+   "m": 2,
+   "source_stride": 2,
+   "vm_stride": 2,
+   "commands": 26,
+   "source_elements": 26
+  },
+  {
+   "format": 6,
+   "n": 65,
+   "m": 2,
+   "source_stride": 1,
+   "vm_stride": 1,
+   "commands": 18,
+   "source_elements": 130
+  },
+  {
+   "format": 6,
+   "n": 13,
+   "m": 2,
+   "source_stride": 2,
+   "vm_stride": 2,
+   "commands": 26,
+   "source_elements": 26
+  }
+ ],
+ "element_address_checks": 936,
+ "controls": [
+  "wrong_PC_lane_caught"
+ ],
+ "sample_commands": [
+  {
+   "source_stack": 3,
+   "source_window": {
+    "row": 20752,
+    "col": 0
+   },
+   "landing_quad": "NW",
+   "landing_bank": 0,
+   "command": "0080000140000002",
+   "elements": 8,
+   "source_first_byte": 124839264256,
+   "vm_first_word": 0,
+   "release": false,
+   "current_stack2_reachable": false
+  },
+  {
+   "source_stack": 3,
+   "source_window": {
+    "row": 20752,
+    "col": 0
+   },
+   "landing_quad": "NW",
+   "landing_bank": 0,
+   "command": "0280000340080002",
+   "elements": 8,
+   "source_first_byte": 124839264288,
+   "vm_first_word": 8,
+   "release": false,
+   "current_stack2_reachable": false
+  }
+ ],
+ "holds": [
+  "stack3 example has no current source provider",
+  "actual fixed calendar/PHYwindow/epoch reservation andrelease-onlybroadcast required",
+  "no command issue/drain dates orphysicalcycleprice assigned",
+  "runtime I-list anddynamicdescriptors notsilentlyresolved"
+ ]
+}

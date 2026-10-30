@@ -793,6 +793,15 @@
       "type": "string",
       "minLength": 1
      },
+     "lec": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+       "superset_vec": {
+        "type": "boolean"
+       }
+      }
+     },
      "kit_core_margins_um": {
       "type": "array",
       "minItems": 4,
@@ -2099,6 +2108,7 @@
          },
          "branches": {
           "type": "object",
+          "minProperties": 1,
           "additionalProperties": {
            "type": "object",
            "additionalProperties": false,
@@ -2133,11 +2143,10 @@
              }
             }
            }
-          },
-          "minProperties": 1
           }
          }
-        },
+        }
+       },
        "landing_status_input_stages": {
         "type": "object",
         "minProperties": 1,
@@ -2853,6 +2862,42 @@
         },
         "minItems": 2,
         "maxItems": 2
+       },
+       "consumer_localization": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "additionalProperties": false,
+         "required": [
+          "instance",
+          "pin",
+          "old_reset",
+          "new_reset",
+          "clock_net"
+         ],
+         "properties": {
+          "instance": {
+           "type": "string",
+           "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"
+          },
+          "pin": {
+           "type": "string",
+           "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"
+          },
+          "old_reset": {
+           "type": "string",
+           "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"
+          },
+          "new_reset": {
+           "type": "string",
+           "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"
+          },
+          "clock_net": {
+           "type": "string",
+           "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"
+          }
+         }
+        }
        },
        "local_taps_um": {
         "type": "array",

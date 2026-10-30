@@ -94,3 +94,45 @@ def load(P, tn):
 
 def centre(row):
     return tuple(row['xy'][i]+row['size'][i]/2 for i in (0,1))
+
+
+def lane_hops(P, lid):
+    """Every bit, actual plan pin positions and exact full-stage centres.
+
+    Unselected slots retain their documented legacy analytic estimates. This is
+    a geometric lower bound, never a placed/route qualification receipt.
+    """
+    from die_hop_scan import type_tables, md
+    import schema as S
+    tabs = {}
+    def table(part):
+        tn = P.parts[part]['type']
+        if tn not in tabs:
+            tabs[tn] = type_tables(P, tn)
+        return tabs[tn]
+    def pin(pid, side, bit):
+        endpoint = P.ports[pid][side]
+        part = endpoint['part']
+        if part == S.DIE_PART:
+            return P.port_point(pid)
+        return P.to_die(part, table(part)[0][endpoint['bus']][bit][:2])
+    ports = P.lanes[lid]['ports']
+    hops = []
+    for bit in range(S.port_pins_count(P.ports[ports[0]])):
+        previous = pin(ports[0], 'src', bit)
+        distance = 0
+        for part, slot, a, b in P.lane_crossings(lid):
+            pa, pb = pin(a, 'dst', bit), pin(b, 'src', bit)
+            distance += md(previous, pa)
+            previous = pa
+            for xy in table(part)[1][slot][bit]:
+                point = P.to_die(part, xy)
+                distance += md(previous, point)
+                hops.append(distance)
+                distance = 0
+                previous = point
+            distance += md(previous, pb)
+            previous = pb
+        distance += md(previous, pin(ports[-1], 'dst', bit))
+        hops.append(distance)
+    return hops
