@@ -7,14 +7,10 @@
    "note": "as-built die census (FT-TOOL, r50 die; inputs/qc_census.json.gz), kind relabels only"
   },
   {
-   "rows": "census/slice_rows.tsv.gz",
-   "map": "census/slice_map.json",
-   "note": "slice landed-region census (inputs/s8_lp_record.json) x 12 slices"
-  },
-  {
-   "rows": "census/coll_rows.tsv.gz",
-   "map": "census/coll_map.json",
-   "note": "io_collective internals from the RTL (face cores, share, UCIe, PHY flits)"
+   "rows": "census/native_current2_rows.tsv.gz",
+   "map": "census/native_current4_map.json",
+   "bitcon": "census/native_current4_bit_witness.json.gz",
+   "note": "Native leaf/glue source graph before plan lane/bus matching; exact bit unions and bit witness archive."
   },
   {
    "rows": "census/cb_rows.tsv.gz",

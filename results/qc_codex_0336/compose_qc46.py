@@ -26,4 +26,6 @@ for content in plan["partition_types"]["coll_ucie"]["contents"]:
 measured = json.loads((Path(__file__).parent / "synth_cells_imported.json").read_text())
 for row in measured["rows"]:
     plan["partition_types"][row["type"]]["cells"] = row["stdcells"]
+# Replace stale slice/manual collective census with actual current native CE graph.
+plan["census"] = json.loads((Path(__file__).parent / "native_census_spec.json").read_text())
 (PD / "plan_qc46.json").write_text(json.dumps(plan, indent=1) + "\n")
