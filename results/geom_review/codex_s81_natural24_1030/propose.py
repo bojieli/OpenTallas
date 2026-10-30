@@ -35,6 +35,18 @@ def main():
     for v in A[:24]:
         b=dict(v);b['xy']=[v['xy'][0],round(H-v['xy'][1]-v['wh'][1]+.024,6)];b['orient']=mirror[v['orient']];B.append(b)
     B+=parent_macros(1088.64)
+    C=[]
+    cp={'ve_u_s':(546.624,200.064),'ve_u_m':(721.728,200.064),'vn_u_b':(500.16,774.144),'vn_u_a':(867.36,900.096),'vs':(683.52,973.44),'vsw':(928.8,660.096),'rxsf':(930.816,25.92),'rxsb':(1082.112,25.92)}
+    for v in A[:24]:
+        z=dict(v);k=short(z['inst'])
+        if k.startswith('vp_g_ln_'):
+            i=int(re.search(r'ln_(\d+)',k).group(1))
+            if i>=12:z['xy']=[[500.16,625.44,750.72,1194.048][i-12],613.44]
+        else:z['xy']=list(cp[k])
+        if k in ['vn_u_a','vn_u_b']:z['orient']='R0'
+        C.append(z)
+    C+=parent_macros(34.56)
+    C[-3]['xy'][0]=500.16;C[-2]['xy'][0]=690.24;C[-1]['xy']=[500.16,80.064]
     def rect(v):x,y=v['xy'];w,h=v['wh'];return x,y,x+w,y+h
     def overlap(a,b):return min(a[2],b[2])>max(a[0],b[0])+1e-8 and min(a[3],b[3])>max(a[1],b[1])+1e-8
     def pin(v,name):
@@ -48,7 +60,7 @@ def main():
     for name,b in buses.items():
         q=dict(b,id=name,src={'part':'leaf'},dst={'part':'parent'});external[name]={i:(x,H) for i,ln,x in schema.pin_positions(q,layers)}
     reports={}
-    for label,layout in [('A',A),('B',B)]:
+    for label,layout in [('A',A),('B',B),('C',C)]:
         M={short(v['inst']):v for v in layout if v['kind']=='hard'};bad=[];tap_hits=[]
         for i,v in enumerate(layout):
             rr=rect(v)
@@ -93,7 +105,7 @@ def main():
     (out/'input_refs.json').write_text(json.dumps(dict(dataset_commit='8e3341c88ce',plan_sha256=hashlib.sha256(Path(a.plan).read_bytes()).hexdigest(),pin_file_sha256=pin_sources,source_ABI_gap='inherited kv_bound has594data+epoch595; current plan has597data+epoch598, +3 k bits remain SOURCE/PLAN FAIL owned by S81'),indent=2)+'\n')
     import matplotlib;matplotlib.use('Agg');import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
-    fig,axs=plt.subplots(1,2,figsize=(18,9),dpi=150)
+    fig,axs=plt.subplots(1,3,figsize=(25,9),dpi=150)
     colors={'ve':'#6baed6','vn':'#fd8d3c','vp':'#74c476','vsw':'#9e9ac8','vs':'#c7b9e2','rx':'#fdae6b'}
     for ax,(label,rep) in zip(axs,reports.items()):
         ax.add_patch(Rectangle((0,0),W,H,fill=False,lw=1.5));ax.add_patch(Rectangle((0,0),499.2,H,color='#e6e6e6',alpha=.8));ax.add_patch(Rectangle((0,1152),W,H-1152,color='#fff2b2',alpha=.7))
@@ -104,7 +116,10 @@ def main():
         M={short(v['inst']):v for v in rep['layout'] if v['kind']=='hard'}
         for q in rep['direct_N_boundary_links']:
             _,bit,p,e=q['worst'];ax.plot([p[0],e[0]],[p[1],e[1]],color='crimson',lw=1,ls='--');ax.text((p[0]+e[0])/2,(p[1]+e[1])/2,f"{q['port']} {q['max_manhattan_um']:.0f}",fontsize=5,color='crimson')
-        ax.set(xlim=(-20,W+20),ylim=(-20,H+35),aspect='equal',title=f"{label}:24 real child footprints,3 parent SRAMs\nBody/clock-site fit only; red = unresolved direct N-boundary reach")
+        for q in rep['direct_internal_pin_links']:
+            if q['name']=='VN_a -> VN_b':
+                _,sp,dp,pa,pb=q['worst'];ax.plot([pa[0],pb[0]],[pa[1],pb[1]],color='darkorange',lw=1.2,ls=':')
+        ax.set(xlim=(-20,W+20),ylim=(-20,H+35),aspect='equal',title=f"{label}:24 real child footprints,3 parent SRAMs\nBody/clock-site fit only; red=N-boundary lower bounds; orange=VN link")
     fig.suptitle('S81 KVleaf natural24 analytic proposals — no release-plan edit, no fabricated views, no P&R',fontsize=12);fig.tight_layout();fig.savefig(out/'variants.png')
     print(json.dumps({k:dict(body_errors=len(v['geometry_body_findings']),tap_hits=len(v['clock_reset_keepout_10p8_hits']),hard_area=v['hard_footprint_um2'],clock_feed_max=v['max_clock_feed_um'],direct_N_max=max(q['max_manhattan_um'] for q in v['direct_N_boundary_links']),internal=[(q['name'],q['max_manhattan_um'],q['over405']) for q in v['direct_internal_pin_links']]) for k,v in reports.items()},indent=2))
 if __name__=='__main__':main()
