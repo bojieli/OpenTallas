@@ -1,0 +1,97 @@
+{
+ "name": "ot_s81_mu72_lnland",
+ "top": "ot_s81_mu72_lnland",
+ "kind": "tile",
+ "sources": [
+  "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81_mu72_lnland.sv",
+  "rtl/dsrom_sys/s81_dv/slice/mu72/ot_s81_mu72_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_reset_forest.sv",
+  "rtl/common/landed_parent/ot_pl_land.sv",
+  "rtl/common/landed_parent/ot_pl_land_field_copies.sv",
+  "rtl/common/landed_parent/ot_pl_land_kept_enable.sv"
+ ],
+ "params": {
+  "MUT": 0
+ },
+ "clock_port": "ck_k",
+ "reset_ports": [
+  "rs_k",
+  "rs_n"
+ ],
+ "outline": {
+  "w": 112.32,
+  "h": 112.32
+ },
+ "macros": [],
+ "clock_ports": [
+  "ck_k",
+  "ck_n"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "K": {
+   "ports": [
+    "ck_k"
+   ],
+   "inputs": [
+    "rs_k",
+    "k_lo_v",
+    "k_lo_d",
+    "k_li_r",
+    "k_rxv"
+   ],
+   "outputs": [
+    "k_lo_r",
+    "k_li_v",
+    "k_li_d",
+    "k_flt",
+    "k_st"
+   ]
+  },
+  "N": {
+   "ports": [
+    "ck_n"
+   ],
+   "inputs": [
+    "rs_n",
+    "n_lo_r",
+    "n_li_v",
+    "n_li_d",
+    "n_flt",
+    "n_st"
+   ],
+   "outputs": [
+    "n_lo_v",
+    "n_lo_d",
+    "n_li_r",
+    "n_rxv"
+   ]
+  }
+ },
+ "defines": [
+  "DSFD_PQ_STATIC_X2",
+  "S81CTRL_SRAM_FIFO",
+  "S81CTRL_SRAM_P192",
+  "S81CTRL_NATIVE32",
+  "OT_COLL_NATIVE32",
+  "OT_COLL_NATIVE32_OFF",
+  "OT_S81ENG_TAP_N32R2",
+  "OT_S81SL_KV_TRANSPORT",
+  "OT_SVC_ALLQ",
+  "SU_SMU_T",
+  "OT_ATTN_HCORE",
+  "OT_S81ENG_RR_N32",
+  "OT_S81C_HCORE_CTLA",
+  "OT_S81C_HCORE_RST_TIMED",
+  "S81_HOSTB_LAND_OBS"
+ ],
+ "note": "H2 existing plain module, two physical related clock roots, original independent resets; no wrapper or added cycles."
+}
