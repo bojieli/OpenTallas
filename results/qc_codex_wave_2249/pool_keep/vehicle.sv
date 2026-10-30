@@ -6,13 +6,13 @@ wire          pool_x = fwd ? b_poolm : e_pool[REP_k];
 always @(posedge ck) begin         if (b_vk[0]) e_pool[b_epk[0]] <= b_poolm;        if (b_vk[0] && !b_epk[0]) e_poolc0 <= {4{b_poolm}};        if (b_vk[0] && b_epk[0]) e_poolc1 <= {4{b_poolm}}; POOLc <= {9{pool_x}}; end
 endmodule
 module cand(input ck,input [2:0] b_vk,input [2:0] b_epk,input b_poolm,input b_v,input b_ep,input REP_k,output reg [8:0] POOLc,output reg[3:0] e_poolc0,e_poolc1);
-(* keep="true" *) reg e_pool[0:1];
+(* keep="true" *) reg [1:0] e_pool;
 wire fwd=b_v && (b_ep==REP_k);
 wire          pool_x = fwd ? b_poolm : e_pool[REP_k];
 always @(posedge ck) begin         if (b_vk[0]) e_pool[b_epk[0]] <= b_poolm;        if (b_vk[0] && !b_epk[0]) e_poolc0 <= {4{b_poolm}};        if (b_vk[0] && b_epk[0]) e_poolc1 <= {4{b_poolm}}; POOLc <= {9{pool_x}}; end
 endmodule
 module mut(input ck,input [2:0] b_vk,input [2:0] b_epk,input b_poolm,input b_v,input b_ep,input REP_k,output reg [8:0] POOLc,output reg[3:0] e_poolc0,e_poolc1);
-(* keep="true" *) reg e_pool[0:1];
+(* keep="true" *) reg [1:0] e_pool;
 wire fwd=b_v && (b_ep==REP_k);
 wire          pool_x = fwd ? b_poolm : e_pool[REP_k];
 always @(posedge ck) begin         if (b_vk[0]) e_pool[!b_epk[0]] <= b_poolm;        if (b_vk[0] && !b_epk[0]) e_poolc0 <= {4{b_poolm}};        if (b_vk[0] && b_epk[0]) e_poolc1 <= {4{b_poolm}}; POOLc <= {9{pool_x}}; end

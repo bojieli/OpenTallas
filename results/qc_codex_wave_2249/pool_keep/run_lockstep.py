@@ -2,7 +2,7 @@ from pathlib import Path
 import re,subprocess,json
 D=Path(__file__).resolve().parent;repo=D.parents[2]
 src=repo/'rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv';candidate=src.read_text()
-baseline=subprocess.run(['git','show','HEAD:rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv'],cwd=repo,text=True,capture_output=True,check=True).stdout
+baseline=subprocess.run(['git','show','6bf628315abb2a245ae0e7aecb721cf213fef15e:rtl/qwen_dv/s5/qfd_dv_s5_xhead3.sv'],cwd=repo,text=True,capture_output=True,check=True).stdout
 # Extract the real three coupled epoch writes and the real forwarded pool consumer.
 def mech(s,attr,mut=False):
  stm=[]
@@ -10,14 +10,15 @@ def mech(s,attr,mut=False):
   m=re.search(pat,s,re.M);assert m,pat;stm.append(m[0])
  px=re.search(r'wire\s+pool_x\s*=.*?;',s)[0];pc=re.search(r'POOLc <=.*?;',s)[0]
  if mut:stm[0]=stm[0].replace('e_pool[b_epk[0]]','e_pool[!b_epk[0]]')
+ decl='reg [1:0] e_pool;' if re.search(r'reg\s+\[1:0\]\s+e_pool\s*;',s) else 'reg e_pool[0:1];'
  return f'''module MNAME(input ck,input [2:0] b_vk,input [2:0] b_epk,input b_poolm,input b_v,input b_ep,input REP_k,output reg [8:0] POOLc,output reg[3:0] e_poolc0,e_poolc1);
-{attr} reg e_pool[0:1];
+{attr} {decl}
 wire fwd=b_v && (b_ep==REP_k);
 {px}
 always @(posedge ck) begin {''.join(stm)} {pc} end
 endmodule\n'''
 g=mech(baseline,'').replace('MNAME','gold');c=mech(candidate,'(* keep="true" *)').replace('MNAME','cand');m=mech(candidate,'(* keep="true" *)',True).replace('MNAME','mut')
-assert mech(baseline,'')==mech(candidate,'')
+assert mech(baseline,'').replace('reg e_pool[0:1];','REG_POOL')==mech(candidate,'').replace('reg [1:0] e_pool;','REG_POOL')
 tb='''module tb;
 reg ck=0;always begin #416;ck=1;#417;ck=0;end
 reg[2:0] b_vk=0,b_epk=0;reg b_poolm=0,b_v=0,b_ep=0,REP_k=0;wire[8:0] a,b,m;wire[3:0] ac0,ac1,bc0,bc1,mc0,mc1;
