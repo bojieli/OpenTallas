@@ -56,6 +56,9 @@ def epoch_plan(phases,raws,original,base,bank_bytes,IR):
         if found is None:raise ValueError('producer epoch has no actual native output')
         addr=epochbase+32*number;locations[(provider,index,slot,sector)]=addr
         publications.append(dict(provider_phase=provider,after_source_record=index,producer_slot=slot,source_words=[sector,sector+8],vm_words=[found,found+8],hbm_range=[addr,addr+32]))
+    for d in dependencies:
+        addr=locations[(d['provider_phase'],d['producer_record'],d['producer_slot'],d['source_sector'])]
+        d['hbm_range']=[addr,addr+32]
     loads={}
     for ph in phases:
         resolved=[]

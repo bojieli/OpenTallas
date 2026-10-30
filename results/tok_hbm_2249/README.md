@@ -135,3 +135,23 @@ PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_phase_shadow.
  --scratch-base 0x1F00000000 --out-dir /tmp/hbm-shadow
 PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 results/tok_hbm_2249/check_shadow.py
 ```
+
+## Middle chain through the attention inputs
+
+The same allocator now supports shared plain DMA loads and timing NOPs without
+dropping them. Actual records1474–1527 (HC/FUSED/projections/query/index/selection
+preparation between the producer and KVUNION attention stage) fit two NL3 phases
+at140904/167832 words. All shared-weight SM rows remain grouped. Their native
+boundary wrapper has264 commands,10 conservative producer epochs and1321024
+added transfer bytes. Canonical all-six-row VM word-version comparison checks
+647280 reads and129176 final boundary words;10 controls are caught. Source
+HC/SM/FUSED arithmetic and mutable-HBM side effects are unchanged; this proof
+checks address/value versions and real boundary DMA, not their numerical RTL
+execution. The remaining dynamic programme obligations after1527 number1014.
+
+To link the first and middle regions,55 additional preserved sectors are needed
+at the first-region exit (partial-sector neighbours are part of the contract).
+The augmented first_link variant retains those440 words without increasing its
+238592/220160 high-water. Its native wrapper merges adjacent transfers into116
+commands, adds1955616 bytes, and checks995472 canonical reads plus191600 final
+boundary words. Both the original and augmented variants remain recorded.

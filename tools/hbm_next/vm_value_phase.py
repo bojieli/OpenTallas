@@ -8,7 +8,7 @@ Boundary loads/retirements are explicit obligations, not assumed resident data.
 import argparse,copy,hashlib,json,sys
 from pathlib import Path
 import numpy as np
-from vm_phase_region import merge_intervals
+from vm_phase_region import merge_intervals,uncovered
 
 
 def engine_span(record,operand):
@@ -22,6 +22,29 @@ def engine_span(record,operand):
     end=d.base+(max(1,d.m)-1)*d.stride+max(0,n-1)*step+1
     if end<=d.base:raise ValueError('negative or empty engine extent')
     return d.base,end
+
+
+def infer_static_boundary(records,after,IR):
+    written=[];needed=[];unresolved=[]
+    for index in range(after+1,len(records)):
+        _,r,x,_=records[index]
+        if x and x.rsel and r.unit!='ATT':
+            unresolved.append(dict(record=index,reason='runtime expert row table'));continue
+        implicit=[]
+        if x and x.rsel and r.unit=='ATT':implicit.append([x.rtab,x.rtab+32*IR.PLAN_WORDS])
+        if(r.unit,r.op)==('CTL','LOOP')and r.param&(1<<17):implicit.append([r.imm_a,r.imm_a+1])
+        for a,b in implicit:needed+=uncovered(a,b,written)
+        for slot,row in IR.expand(r,x):
+            wo=IR.written_operands(row);updates=[]
+            for k,d in row.desc.items():
+                if d.space!='VM':continue
+                try:a,b=engine_span(row,k)
+                except ValueError:
+                    unresolved.append(dict(record=index,slot=slot,operand=k,reason='runtime descriptor'));continue
+                if k in wo:updates.append([a,b])
+                else:needed+=uncovered(a,b,written)
+            written=merge_intervals(written+updates)
+    return dict(after=after,known_boundary_intervals=merge_intervals(needed),unresolved_dynamic_count=len(unresolved),unresolved_examples=unresolved[:8],whole_programme_fit=None)
 
 
 class UF:
@@ -55,8 +78,13 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
     for index in range(first,last+1):
         t=index-first
         _,source,x,_=records[index]
-        if x is None or x.rsel or start+count>x.n:raise ValueError('requires aligned explicit row records')
-        for slot,r in IR.expand(source,x)[start:start+count]:
+        if x is None:
+            if(source.unit,source.op)not in(('DMA','LOAD'),('CTL','NOP')):raise ValueError('unbounded shared control operation')
+            expanded=IR.expand(source,x)
+        else:
+            if x.rsel or start+count>x.n:raise ValueError('requires aligned explicit row records')
+            expanded=IR.expand(source,x)[start:start+count]
+        for slot,r in expanded:
             ports={};readivs=[];writeivs=[];writes=IR.written_operands(r)
             # Reads see the original value before this instruction writes.
             for k,d in r.desc.items():
@@ -113,6 +141,10 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
     for index in range(first,last+1):
         rows=[(op,q)for op,q in relocated if op['source_record']==index]
         source=records[index][1];original_x=records[index][2]
+        if original_x is None:
+            for op,q in rows:
+                encoded=IR.encode(q,None);manifest.append(dict(source_record=index,slots=[op['slot']],offset=len(blob),bytes=len(encoded),folded_rows=False,operand_objects=[{k:uf.find(i)for k,i in op['ports'].items()}]));blob.extend(encoded)
+            continue
         q=copy.deepcopy(rows[0][1]);qx=copy.deepcopy(original_x);qx.n=count;qx.slot0=start+original_x.slot0;q.slot=qx.slot0&7
         if q.unit=='SM':q.param=(q.param&3)|((count-1)<<2)
         folded=True
@@ -170,16 +202,21 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','live-out','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    ap.add_argument('--live-out');ap.add_argument('--infer-live-out',action='store_true')
     ap.add_argument('--first',type=int,default=1458);ap.add_argument('--last',type=int,default=1473);ap.add_argument('--rows',type=int,default=3)
     a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
     import isa_rows as IR,image_check as IC
-    raw=Path(a.image).read_bytes();rr=IC.decode_all(raw);live=json.loads(Path(a.live_out).read_text())['known_boundary_intervals'];out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);phases=[]
+    raw=Path(a.image).read_bytes();rr=IC.decode_all(raw)
+    if a.infer_live_out:boundary=infer_static_boundary(rr,a.last,IR)
+    elif a.live_out:boundary=json.loads(Path(a.live_out).read_text())
+    else:raise ValueError('provide declared live-out or request static inference (dynamic obligations remain unresolved)')
+    live=boundary['known_boundary_intervals'];out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);phases=[]
     n=rr[a.first][2].n
     for start in range(0,n,a.rows):
         blob,info=build(rr,a.first,a.last,start,min(a.rows,n-start),IR,live)
         name=f'value_{start}.hgi1r';(out/name).write_bytes(blob);info['fragment']=name;phases.append(info)
-    packet=dict(schema='opentallas.hbm.vm_value_phase.v1',source_sha256=hashlib.sha256(raw).hexdigest(),phases=phases)
+    packet=dict(schema='opentallas.hbm.vm_value_phase.v1',source_sha256=hashlib.sha256(raw).hexdigest(),source_record_range=[a.first,a.last],boundary=boundary,phases=phases)
     (out/'values.json').write_text(json.dumps(packet,indent=1)+'\n');print(json.dumps(dict(high_water=[p['high_water_words']for p in phases],instructions=[p['instruction_count']for p in phases])))
 
 if __name__=='__main__':main()
