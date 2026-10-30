@@ -199,5 +199,28 @@
     "ot_s81sl_vq.sv": "e10f5dcbf08f914bff340ce7a13652e115c89fd892a4678f49a8d2641599b943",
     "ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
     "ot_s81sl_rstop_xo.sv": "a427eca7d19c85ab50570d5aa75c6cd97c8ab900446deadab00ea920d000740a"
+  },
+  "inherited_release_comparison": {
+    "scope": "EXPLICIT_SUPERSEDED_RELATIVE_DATE_DIAGNOSTIC_NOT_CURRENT_SCHEDULE",
+    "old_source_asbuilt_sha256": "062ef0c41db92b2c3b89369cdffd96f2cb2dbdee2ec0f4c3050f4652123f3dec",
+    "current_transport_source_asbuilt_sha256": "c7be0a5cfd11d31e593cff0126946888e8d031fd370e8c997d7fdd00ee4c2c54",
+    "same_source": false,
+    "candidate_temporal_profile": [
+      2,
+      0,
+      1,
+      3,
+      4
+    ],
+    "verdict": "FAIL",
+    "egress": 65,
+    "unique": 51,
+    "gather_checks": 1148,
+    "errors": 145,
+    "stopfault": "3ffe",
+    "middlefault": 0,
+    "source_commit": "e8c8c2945",
+    "diagnosis": "temporal remap removes within-slice overlaps but old relative RSTD dates do not prevent cross-slice own/V/forward conflicts in current-age transport; this obsolete source book cannot qualify current publication",
+    "scope_implication": "VQ-only temporal mapping is necessary under uniform-release premise, not sufficient for an executable current norm/publication schedule; current XFIN dated source and coupled calendar still required"
   }
 }

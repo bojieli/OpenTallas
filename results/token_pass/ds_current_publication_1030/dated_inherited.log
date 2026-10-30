@@ -1,0 +1,4 @@
+CURRENT_PUBLICATION FAIL got=65 unique=51 gather_checks=1148 errors=145 stopfault=3ffe middlefault=0 legacy=0 mutant=0
+[5717712000] %Fatal: tb_current_dated.sv:191: Assertion failed in tb_current_publication: publication transport failed
+%Error: tb_current_dated.sv:191: Verilog $stop
+Aborting...
