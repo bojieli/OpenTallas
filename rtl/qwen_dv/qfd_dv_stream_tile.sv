@@ -276,7 +276,10 @@ module qfd_dv_stream_tile #(
     // P2 leaves: complete is only ever 1 on a write edge (op = 1 holds a not-complete mask), so no write-any term
     // The held-word enables cm_e / cm_b carry no reset: like the reference eword (captured on the completion edge
     // itself, never reset), a word completed just before reset is still taken; complete is 0 under reset (op = 0).
-    (* keep = "true" *) reg [NL2-1:0] p2l;
+    // cm_x (leaf L2X) is its own named flop, not a bit of p2l: a scalar alias of p2l[L2X] made Yosys name the gate
+    // flop cm_x while the reference elaboration keeps p2l[234], so LEC could not pair it (QC-KITS-Y 10-30, rename only).
+    (* keep = "true" *) reg [NL2-2:0] p2l;
+    (* keep = "true" *) reg          cm_x;
     localparam integer L2E0 = 2 * (NGR + 1);           // first cm_e leaf
     localparam integer L2X  = NL2 - 1;                 // cm_x (x-tap emit valid, reset)
     function automatic p2d(input integer i, input [NK-1:0] c, input [NK-1:0] de, input [NK-1:0] dw);
@@ -284,10 +287,10 @@ module qfd_dv_stream_tile #(
               c[i / LPT] && (i <= NGR ? de[i / LPT] : i < L2E0 ? dw[i / LPT] : 1'b1);
     endfunction
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin p2l[L2E0-1:0] <= 0; p2l[L2X] <= 1'b0; end
+        if (!rst_n) begin p2l[L2E0-1:0] <= 0; cm_x <= 1'b0; end
         else begin
             for (integer gi = 0; gi < L2E0; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
-            p2l[L2X] <= p2d(L2X, complete_k, de_k, dw_k);
+            cm_x <= p2d(L2X, complete_k, de_k, dw_k);
         end
     always @(posedge ck)
         for (integer gi = L2E0; gi < L2X; gi = gi + 1) p2l[gi] <= p2d(gi, complete_k, de_k, dw_k);
@@ -295,7 +298,6 @@ module qfd_dv_stream_tile #(
     wire [NGR:0] ie_w = p2l[2*NGR+1:NGR+1];
     wire [NGB-1:0] cm_e = p2l[2*NGR+1+NGB:2*NGR+2];
     wire [1:0]   cm_b = p2l[2*NGR+3+NGB:2*NGR+2+NGB];
-    wire         cm_x = p2l[2*NGR+4+NGB];
     // ---------------------------------------------------------------------------------------------- P3: held x-tap word
     reg [1023:0] eword;
     reg [15:0]   ebeat;
