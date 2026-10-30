@@ -1,0 +1,7 @@
+PHASEOBS cyc 43 Kstart1 Cstart1 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 44 Kstart1 Cstart1 Ktx0 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 209 Kstart0 Cstart0 Ktx1 phyRx0 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 215 Kstart0 Cstart0 Ktx0 phyRx1 pinRx0 Cexpect0 Cnf00
+PHASEOBS cyc 216 Kstart0 Cstart0 Ktx0 phyRx0 pinRx1 Cexpect1 Cnf00
+HOST_RX_PHASE_PASS phase=0 rxdt=172 exact548=1
+/srv/opentallas-scratch2/claude/codex-kvtok-2249/tb_host_rx_phase.sv:87: $finish called at 203496 (1ps)
