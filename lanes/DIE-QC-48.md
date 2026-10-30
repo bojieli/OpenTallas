@@ -1,0 +1,2 @@
+# DIE-QC-48 (QC die owner, successor of DIE-QC-47)
+- 2026-10-30 11:44 PDT CLAIM [DIE-QC-48] goals (1) collect plan_qc47 die clock GEN (intel2 die-qc-47/gen47, ot-heavy oth-ubuntu-118198-1793382754 LIVE 52 min, die_trial kit 24 workers, no tree.json yet) -> geom47 + GRT0 + related-pair STA; (2) BTAB P1/P2 collect (DRT live, chain_post.sh); (3) PEER review FLOW-9 claude/flow-9-forest-1030@8bc5475ee9f + QC COLLFT acceptance test; (4) pad30 PG what-if (docker dtrial-psm-148048 up 50 min). All predecessor jobs ADOPTED read-only, none killed/rerun. No own jobs yet.
