@@ -1,0 +1,27 @@
+{
+  "schema": "codex.qc_collft.token_price.v1",
+  "status": "CONDITIONAL_COLD_ADMISSION_PRICE_NOT_ADOPTED",
+  "source_commit": "6c1992ffa8857e847bb4031023be525f0d16b316",
+  "source_path": "results/geom_review/collft_nf40low_0336/boot_proposal/phase_delta_proposal.json",
+  "source_sha256": "fd8924c48e50a421c23e631cf8c5d7362ed6db16c78a0f665c67a1bf98ea0934",
+  "affected_edges": 8,
+  "clock_ps": 833,
+  "region_origin_delta": 0,
+  "steady_token_cycles_delta": 0,
+  "per_port_forwarded_start_delta": 1,
+  "corrected_receiver_K": 15,
+  "old_K": 14,
+  "preserved_effective_K_minus_phase": 14,
+  "cold_training_reserved_delta_cycles": 1,
+  "cold_training_reserved_delta_ps": 833,
+  "actual_guard_extension_formula": "max(0, old_required_cold_admission + 1 - existing_admission_guard)",
+  "actual_guard_extension_bound_cycles": [
+    0,
+    1
+  ],
+  "absorption_in_existing_guard_proven": false,
+  "cumulative_region_plus2_claim": false,
+  "actual_ready_timeout_collector_impact": "UNMEASURED; requires exact full-mechanism cold-training proof and selected bound provider",
+  "production_unchanged_condition": "actual per-port phase metadata, regenerated K/count straps, full CA nominal and missing-K/wrong-phase mutants all pass",
+  "physical_start_provider_qualified": false
+}
