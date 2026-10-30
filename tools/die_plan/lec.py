@@ -4415,6 +4415,9 @@ def correspond(L, work, conflicts, log, rounds=24, sim_iters=12, words=16):
     register_alias_proposals(L, log)
     json_bit_alias_proposals(L, log, work=work)
     matched_d_copy_closure(L, log, collections.Counter())
+    if getattr(L, "preseed_hints", None):
+        seed = apply_hints(L, L.preseed_hints, work, conflicts, log, propose_only=True)
+        log.append(f"explicit untrusted hints preseeded before discovery: {seed['applied']} applied")
     if getattr(L, "fsm_hints", None):
         seed = apply_hints(L, L.fsm_hints, work, conflicts, log, propose_only=True)
         log.append(f"fsm: explicit untrusted hints seeded before discovery: {seed['applied']} applied")
@@ -5522,6 +5525,9 @@ def check(kit, netlist=None, out=None, gold_frontend=None, conflicts=1000, port_
         hf = Path(hints) if hints else Path(kit) / "lec_hints.json"
         if hf.is_file():
             supplied = json.loads(hf.read_text())
+            if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
+                L.preseed_hints = supplied
+                rec["hints_preseed_enabled"] = True
             L.fsm_hints = [e for e in supplied if isinstance(e, (list, tuple)) and e and
                            (e[0] == "cons" or (len(e) == 3 and isinstance(e[2], (list, tuple)) and
                                                e[2] and e[2][0] == "cube"))]
@@ -5674,6 +5680,8 @@ def via_docker(args, image, mem):
     # optional XOR-aware SAT backend: OT_LEC_SOLVER = a host dir holding pycryptosat for the image's python (cp310)
     if os.environ.get("OT_LEC_SUPERSET_VEC") == "1":
         cmd += ["-e", "OT_LEC_SUPERSET_VEC=1"]
+    if os.environ.get("OT_LEC_HINTS_PRESEED") == "1":
+        cmd += ["-e", "OT_LEC_HINTS_PRESEED=1"]
     if "OT_LEC_RAW_BASE_STEPS" in os.environ:
         cmd += ["-e", f"OT_LEC_RAW_BASE_STEPS={os.environ['OT_LEC_RAW_BASE_STEPS']}"]
     for k in ("OT_LEC_LATCH", "OT_LEC_RESET_CYCLES"):      # model switches (the reset contract is KIT/reset_contract.json)
