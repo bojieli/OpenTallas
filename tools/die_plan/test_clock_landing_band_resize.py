@@ -90,6 +90,14 @@ class BandResetSites(unittest.TestCase):
         t["_cland_geom"] = GEOM
         return t
 
+    def test_reset_sites_require_selected_type_or_base_type(self):
+        tree = dict(root=[10.0, 20.0], relays=[])
+        self.assertEqual(CP._reset_sites_for_type({}, "a", tree), [])
+        p = dict(budgets=dict(cland_avoid_reset_types=["a"]))
+        self.assertEqual(CP._reset_sites_for_type(p, "a", tree), CP.reset_site_rects(tree))
+        self.assertEqual(CP._reset_sites_for_type(p, "b", tree), [])
+        self.assertEqual(CP._reset_sites_for_type(p, "a__variant", tree, "a"), CP.reset_site_rects(tree))
+
     def test_reset_site_rects_are_the_collector_boxes(self):
         tree = dict(root=[10.0, 20.0], relays=[dict(q="rst_rl_39", d="x", xy=[1750.0, 30.24]),
                                                  dict(q="rst_n_t0", d="x", xy=[1750.0, 30.24])])
@@ -123,6 +131,11 @@ class BandResetSites(unittest.TestCase):
             p["partition_types"][tn]["clock"]["landing_contract"]["bands"]["wide_i"] = dict(big, instance="u_cland_wide_i")
         x0, y0, x1, y1 = big["rect_um"];cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
         side["collector"]["types"]["a"]["tree"] = dict(root=[390.0, 290.0], relays=[dict(q="rst_rl_39", d="rst_root_n", xy=[cx, cy])])
+        # Without the explicit plan opt-in even a sized band over a relay is unchanged.
+        old, rep = CP.resize_undersized_bands(p, side, ["a", "b"])
+        self.assertEqual(old, p)
+        self.assertEqual(rep, [])
+        p["budgets"] = dict(cland_avoid_reset_types=["a"])
         new, rep = CP.resize_undersized_bands(p, side, ["a", "b"])
         b = new["partition_types"]["a"]["clock"]["landing_contract"]["bands"]["wide_i"]
         self.assertFalse(_ov(b["rect_um"], [cx - 2.16, cy - 2.16, cx + 2.16, cy + 2.16]))

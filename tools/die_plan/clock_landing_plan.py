@@ -274,6 +274,12 @@ def reset_site_rects(tree):
     return out
 
 
+def _reset_sites_for_type(plan,tn,tree,base_type=None):
+    """Explicit type opt-in: frozen unrelated bands keep their previous geometry."""
+    selected=plan.get("budgets",{}).get("cland_avoid_reset_types",[])
+    return reset_site_rects(tree) if tn in selected or base_type in selected else []
+
+
 def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()):
     if resets:
         try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,phy=phy)
@@ -828,7 +834,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         else:tree=RT.for_type(P,tn) if pn in active else None
         info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=monitor_parent[pn] if pn in active else None,
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
-        used=[];phy=phy_supply_rects(P,tn);resets=reset_site_rects(tree)
+        used=[];phy=phy_supply_rects(P,tn);resets=_reset_sites_for_type(raw,tn,tree,base_type[pn])
         landings=sorted(ins[pn].items())
         band_order=(band_order_by_type or {}).get(base_type[pn],"name")
         if band_order=="largest_first":
@@ -1049,7 +1055,7 @@ def resize_undersized_bands(plan,sidecar,types):
         for tn in types:
             t=out["partition_types"][tn];bands=t["clock"]["landing_contract"]["bands"]
             phy=phy_supply_rects(P,tn) if P is not None else []
-            resets=reset_site_rects(geoms[tn].get("tree"))   # FLOW-7: the type's reset relay / collector sites
+            resets=_reset_sites_for_type(out,tn,geoms[tn].get("tree"),t["clock"]["landing_contract"].get("base_type"))
             tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
             for bus in sorted(bands):
                 b=bands[bus]
