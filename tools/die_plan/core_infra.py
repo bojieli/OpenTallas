@@ -722,9 +722,17 @@ def emit_tcl(sl, kd=None):
     if plan["clock_entry"]:
         x, y = plan["clock_entry"]["xy_um"]
         lines.append(f"ot_ci_clock_entry {word(plan['core_clock_port'])} {x:g} {y:g}")
+    # Use the same typed arc declaration that drives FT timing/ownership; a
+    # port spelling alone cannot grant clock pin geometry.
+    import ft_ports
+    clock_ft = set()
+    if plan["arcs"]:
+        declaration = ft_ports.from_core_infra_plan(plan)
+        clock_ft = {a[k] for a in declaration["arcs"] if a["kind"] == "clock" for k in ("source", "sink")}
     for p in plan["ports"]:
         x, y = p["xy_um"]
-        lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}")
+        shape = " {0.048 0.48}" if p["name"] in clock_ft else ""
+        lines.append(f"ot_ci_port {word(p['name'])} {p['direction']} {x:g} {y:g}{shape}")
     for c in plan["cells"]:
         if c["name"] in late_cells:
             continue

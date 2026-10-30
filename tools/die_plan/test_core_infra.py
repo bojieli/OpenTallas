@@ -366,3 +366,19 @@ def test_planned_domain_mutants_refused(mut, frag):
     s = icg_planned_tree(); mut(s["core_tree"])
     with pytest.raises(CI.InfraError, match=frag):
         CI.emit_tcl(s)
+
+
+def test_typed_clock_feedthroughs_use_via_access_shape():
+    sl = sample()
+    tcl = CI.emit_tcl(sl)
+    for name in ("mp_isl0_ck_i", "mp_isl0_ck_o"):
+        line = next(v for v in tcl.splitlines() if v.startswith("ot_ci_port {" + name + "}"))
+        assert line.endswith("{0.048 0.48}")
+    for name in ("mp_isl0_rst_i", "mp_isl0_rst_o"):
+        line = next(v for v in tcl.splitlines() if v.startswith("ot_ci_port {" + name + "}"))
+        assert not line.endswith("{0.048 0.48}")
+    # An unconnected misleading port name cannot acquire clock access geometry.
+    island = sl["pushdown"]["islands"][0]
+    island["ft_ports"].append(dict(name="unused_clk", dir="in", xy_um=[400, 400]))
+    with pytest.raises(CI.InfraError, match="every feedthrough port"):
+        CI.emit_tcl(sl)

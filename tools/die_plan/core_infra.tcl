@@ -56,13 +56,13 @@ proc ot_ci_clock_entry {name x y} {
   if {$bt eq "NULL" || [$bt getIoType] ne "INPUT"} {error "OT_CORE_INFRA_CLOCK_ENTRY_PORT $name"}
   place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.048 0.48}
 }
-proc ot_ci_port {name direction x y} {
+proc ot_ci_port {name direction x y {shape {0.032 0.192}}} {
   set bt [$::ot_ci_b findBTerm $name]
   if {$bt eq "NULL"} {
     set bt [odb::dbBTerm_create [ot_ci_net $name] $name]
     $bt setIoType $direction
   } elseif {[$bt getIoType] ne $direction} {error "OT_CORE_INFRA_PORT_DIRECTION $name"}
-  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size {0.032 0.192}
+  place_pin -pin_name $name -layer M5 -location [list $x $y] -pin_size $shape
   lappend ::ot_ci_ports $name
 }
 # Coordinates are core-local centres; only deterministic technology row/site
@@ -348,7 +348,7 @@ proc ot_ci_clock_ndr {name width_mult space_mult} {
 }
 proc ot_ci_entry {name x y} {
   if {[$::ot_ci_b findBTerm $name] eq "NULL"} {error "OT_CORE_INFRA_ENTRY_PIN $name"}
-  place_pin -pin_name $name -layer M7 -location [list $x $y] -pin_size {0.032 0.192}
+  place_pin -pin_name $name -layer M7 -location [list $x $y] -pin_size $shape
 }
 proc ot_ci_finish {} {
   # Dedicated FT pins have ONLY their declared buffer terminals. Parent links
