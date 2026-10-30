@@ -60,7 +60,13 @@ exports native rows, master sizes, **all placed occupants**, and hard blockages.
 Load it with `core_infra_plan.read_technology`. Call
 `flat_clock_forest.legalize_drivers(candidate, technology)` to find actual empty
 sites within2um of the planned centres. It moves no existing cell and refuses an
-occupied neighborhood. After rendering and looking at the legal design,
+occupied neighborhood. If the planned centre lies in a dense native band,
+`plan_empty_driver_sites(..., search_radius_um=explicit_radius)` can revise the
+planned centres into actual empty regions. It re-models all four waveform states
+at both corners, preserves the complete native cohort, and returns a new
+unqualified candidate. Review that new geometry; final freeze still allows
+only2um quantization from the revised plan. Actual driver-to-sink reach remains
+limited to220um. After rendering and looking at the legal design,
 `freeze_candidate(candidate, module, placements, library_dir, geometry_review,
 type_spec=actual_type_spec)`
 reopens and hashes the native geometry/SDC, recomputes complete actual structural

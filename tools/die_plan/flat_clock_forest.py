@@ -85,6 +85,8 @@ def validate(t, packet):
                 raise ValueError('flat clock forest: forwarded root stealing')
             if roots[root]['kind']=='primary' and not PRIMARY.fullmatch(s['source_root']):
                 raise ValueError('flat clock forest: primary root stealing')
+            if sum(abs(a-b) for a,b in zip(p['centre_um'],s['xy_um']))>220:
+                raise ValueError('flat clock forest: planned driver-to-sink reach exceeds220um')
             sinks[s['name']]=(root,s);counts[root]+=1
     if not sinks:raise ValueError('flat clock forest: no native FF inventory')
     used_parents={c['parent'] for c in cells}
@@ -322,3 +324,29 @@ def legalize_drivers(candidate, technology, max_displacement_um=2.):
         for yy in ys[bisect.bisect_right(ys,y-maximum_h):bisect.bisect_left(ys,y+h)]:obstacles[yy].append((x,y,x+w,y+h))
         moves.append(key[0]/u)
     return result,dict(cells=len(result),max_displacement_um=max(moves,default=0),overlaps=0,basis='native rows/masters; all placed instances and hard blockages immutable')
+
+
+def plan_empty_driver_sites(candidate, technology, library_dir, *, search_radius_um):
+    """Revise planned clock centres before build, then reprice the whole forest.
+
+    The search never moves an existing cell. This is a new candidate, not a
+    relaxation of freeze_candidate's2um final quantization bound. It remains
+    unqualified until exact geometry/electrical review and freeze succeed.
+    """
+    import copy
+    import flat_clock_plan as MODEL
+    if not finite(search_radius_um) or search_radius_um<=0:
+        raise ValueError('explicit finite planned-site search radius required')
+    out=copy.deepcopy(candidate);inv,pairs=MODEL.actual_relations(out)
+    MODEL.validate_topology(inv,out['nodes'],out['root_nodes'],out['groups'])
+    places,report=legalize_drivers(out,technology,search_radius_um)
+    moves=[]
+    for n in out['nodes']:
+        old=n['xy'];new=places[n['name']]['centre_um']
+        moves.append(dict(name=n['name'],from_um=old,to_um=new,manhattan_um=sum(abs(a-b) for a,b in zip(old,new))))
+        n['xy']=new
+    out['model']=MODEL.model(inv,out['nodes'],out['root_nodes'],library_dir,out['input_slew_ps'])
+    out['related_pair_model']=MODEL.related_pair_bounds(inv,out['nodes'],out['groups'],out['model'],pairs)
+    out['planned_site_revision']=dict(report,search_radius_um=search_radius_um,moves=moves)
+    out['build_allowed']=False;out['verdict']='UNQUALIFIED_REVISED_PLANNED_SITES_REVIEW_REQUIRED'
+    return out,places
