@@ -70,8 +70,14 @@ plan=CI.compile_slice(sl);pg=CI.trunk_pg_clearance(sl,plan)
 checks=dict(geometry_unchanged=True,sized_masters_frozen=True,native_pg=pg,TT_window20=result['TT']['window']<=20,FF_window20=result['FF']['window']<=20,both_slews80=all(result[c][key]<=80 for c in ('TT','FF') for key in ('leaf_slew_in_max','leaf_out_slew_max')))
 checks['window_policy']='info';checks['band_policy']='info'
 checks['all_buffers_80']=all(result[c][key]<=80 for c in ['TT','FF']for key in ['all_buffer_slew_in_max','all_buffer_slew_out_max'])
-checks['local_related_model_bound80']=all(result[c]['sink_max']-result[c]['sink_min']<=80 for c in ['TT','FF'])
-checks['related_basis']='Global like-edge sink arrival envelope bounds local related differences before CPPR; realG2 exhaustive pairSTA still required'
+envelopes={}
+for co in ['TT','FF']:
+ values=[value for tag,run in traces.items()if tag.startswith(co+'_')for leaf in run['leaf_detail'].values()for value in leaf['sinks']]
+ offset=arrival[co]
+ envelopes[co]=dict(min=min(values)+offset,max=max(values)+offset,span=max(values)-min(values))
+checks['related_model_envelope']=envelopes
+checks['local_related_model_bound80']=all(q['span']<=80 for q in envelopes.values())
+checks['related_basis']='Conservative union of ALL saved corner/polarity sink arrivals; realG2 exhaustive pairSTA stillrequired'
 checks['verdict']='MODEL_ADMISSION_PASS'if checks['all_buffers_80']and checks['local_related_model_bound80']and pg['verdict']=='PASS'else'HOLD'
 checks['historical_window_failures_preserved']=True
 (O/'checks.json').write_text(json.dumps(checks,indent=2)+'\n');(O/'slice_model.json').write_text(json.dumps(sl,indent=1)+'\n')

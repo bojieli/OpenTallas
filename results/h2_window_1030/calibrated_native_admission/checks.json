@@ -18,7 +18,21 @@
   "band_policy": "info",
   "all_buffers_80": true,
   "local_related_model_bound80": true,
-  "related_basis": "Global like-edge sink arrival envelope bounds local related differences before CPPR; realG2 exhaustive pairSTA still required",
+  "related_basis": "Conservative union of ALL saved corner/polarity sink arrivals bounds local related model differences; actualG2 exhaustive pairSTA stillrequired",
   "verdict": "MODEL_ADMISSION_PASS",
-  "historical_window_failures_preserved": true
+  "historical_window_failures_preserved": true,
+  "related_model_envelope": {
+    "TT": {
+      "min": 334.11474887903813,
+      "max": 378.61312283161396,
+      "span": 44.49837395257583,
+      "basis": "Union of every saved rise/fall run at this corner; no extra predictor"
+    },
+    "FF": {
+      "min": 247.3928361514713,
+      "max": 292.50311110542475,
+      "span": 45.11027495395342,
+      "basis": "Union of every saved rise/fall run at this corner; no extra predictor"
+    }
+  }
 }

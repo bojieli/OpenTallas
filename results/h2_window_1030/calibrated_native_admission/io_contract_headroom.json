@@ -52,25 +52,39 @@
     }
   },
   "internal_input_setup_DATAmax_ps_minus_native_setup": [
-    720.515142,
-    765.015142
+    720.514748879038,
+    765.0131228316139
   ],
   "output_CQ_and_DATAmax_ps": [
-    507.784858,
-    552.284858
+    507.786877168386,
+    552.2852511209619
   ],
   "ordinary_input_DATAmin_ps_plus_native_hold": [
-    97.395702,
-    132.94570199999998
+    97.3928361514713,
+    142.50311110542475
   ],
   "registered_input_DATAmin_ps_plus_native_hold": [
-    44.895702,
-    80.44570199999998
+    44.8928361514713,
+    90.00311110542475
   ],
   "output_hold_headroom_ps_plus_CQ_DATAmin": [
-    32.395702,
-    67.94570199999998
+    32.3928361514713,
+    77.50311110542475
   ],
-  "conservative_TT_FF_delay_ratio_budget_before_Lib_terms": 5.419619673000034,
-  "assessment": "Input hold repair required under fixed refs, but not obviously unclosable: approximately133ps FFmin vs720ps TTmax leaves broad internal DATA budget. No IO budget/reference rewrite, clock fit/padding, RTL cycle change or actual timing PASS claimed. Actualnative G2 setup/STDFFhold/exhaustive relatedpairs decides."
+  "conservative_TT_FF_delay_ratio_budget_before_Lib_terms": 5.056133464665178,
+  "assessment": "Conservative latestFFcapture uses UNION of savedrise/fall, not fastest-edge canonical summary maximum. Input hold repair required, approximately143ps FFmin vs720ps TTmax beforeLibterms. No fixedIOreference/budget/clock/pipeline rewrite; actualG2 decides.",
+  "model_all_saved_edge_clock_envelope": {
+    "TT": {
+      "min": 334.11474887903813,
+      "max": 378.61312283161396,
+      "span": 44.49837395257583,
+      "basis": "Union of every saved rise/fall run at this corner; no extra predictor"
+    },
+    "FF": {
+      "min": 247.3928361514713,
+      "max": 292.50311110542475,
+      "span": 45.11027495395342,
+      "basis": "Union of every saved rise/fall run at this corner; no extra predictor"
+    }
+  }
 }
