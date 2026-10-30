@@ -785,8 +785,21 @@ def _pin_freeze_hashes(kd, plan_pins_file, outline, declared_pins=None):
     sys.path.insert(0, str(TOOL))
     import kit_contract
     declared = declared_pins if declared_pins is not None else json.loads(Path(plan_pins_file).read_text())
+    source = Path(plan_pins_file)
+    payload = source.read_bytes()
+    staged = Path(kd) / source.name
+    if staged.name == 'freeze.json':
+        raise ValueError('declared pin contract collides with owned freeze.json')
+    if staged.exists() and staged.read_bytes() != payload:
+        raise ValueError('declared pin contract basename collision: ' + staged.name)
+    if not staged.exists():
+        staged.write_bytes(payload)
+    digest = hashlib.sha256(payload).hexdigest()
+    if hashlib.sha256(staged.read_bytes()).hexdigest() != digest:
+        raise ValueError('staged declared pin contract differs from its source')
     return dict(pins_canon_sha256=kit_contract._canon(declared, outline),
-                pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), outline))
+                pins_placed_canon_sha256=kit_contract._canon(kit_contract.placed_pins(kd), outline),
+                pins_staged_file=staged.name, pins_staged_sha256=digest)
 
 
 def git_show(spec):

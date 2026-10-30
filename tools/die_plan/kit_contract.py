@@ -720,6 +720,11 @@ def pins_canonical(kd, plan_dir=None):
     recorded_miss = bool(want) and not sliced and kit_c != want
     pf = F.get("pins_file")
     cands = []
+    staged = F.get('pins_staged_file')
+    if staged:
+        if Path(staged).name != staged or F.get('pins_staged_sha256') != F.get('pins_sha256'):
+            raise ValueError('invalid staged declared pin contract manifest')
+        cands.append(kd / staged)
     if pf:
         cands += [kd / "plan_pins.json", kd / Path(pf).name]
         if plan_dir:
@@ -727,7 +732,7 @@ def pins_canonical(kd, plan_dir=None):
         if Path(pf).is_absolute():
             cands.append(Path(pf))
     for c in cands:
-        if c.is_file() and c.name != "pins.json":
+        if c.is_file() and (c.name != "pins.json" or c.name == staged):
             b = c.read_bytes()
             if F.get("pins_sha256") and hashlib.sha256(b).hexdigest() != F["pins_sha256"]:
                 continue
