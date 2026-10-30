@@ -144,7 +144,7 @@ def place_stage(xy, n_flops, rows, site=None, W=None, H=None):
     raise StageError(f"no free legal row segment ({n_flops} flops) within {MAX_ROW_TRIES} rows of {xy}")
 
 
-def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False):
+def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_settle=None, path_encoding="unicode", reset_wave=False, data_manifest=None):
     """-> (stages json dict, start_stages.sv text, patched ctree.v, patched ctree.tcl)"""
     settle = int(root_settle if root_settle is not None else bind.get("root_settle_cycles", ROOT_SETTLE))
     if settle < 1:
@@ -357,7 +357,11 @@ def emit(bind, meta, ctree_v, ctree_tcl, site=None, die_wh=(None, None), root_se
                            die_outputs=len(outs), direct_ports=len(direct),
                            max_cell_to_stage_um=max(abs(s["rect_um"][0] - cxy[s["node_cell"]][0]) +
                                                     abs(s["rect_um"][1] - cxy[s["node_cell"]][1]) for s in stages)))
-    return doc, "\n".join(sv) + "\n", v, t
+    rendered = "\n".join(sv) + "\n"
+    if data_manifest is not None:
+        import start_data_emit as SD
+        doc, rendered = SD.apply(doc, rendered, data_manifest, site)
+    return doc, rendered, v, t
 
 
 def proof_with_stages(proof, stages_doc, arrs, out, clock_netlist=None):
@@ -440,6 +444,7 @@ def main(argv=None):
     e.add_argument("--reset-wave", action="store_true", help="bounded ordinary synchronous reset relay stream along START graph; real root/local reset inputs required")
     e.add_argument("--path-encoding", choices=("unicode", "base36"), default="unicode",
                    help="declared tree path alphabet; die_trial/trial_tap_arrivals use base36")
+    e.add_argument("--data-manifest", help="opt-in literal START/RAW BUF8 homes and routes; complete graph required")
     e.add_argument("--out", required=True)
     e.add_argument("--root-settle", type=int, help="root counter SETTLE cycles (default: bind root_settle_cycles, else 64)")
     p = sub.add_parser("proof")
@@ -460,11 +465,17 @@ def main(argv=None):
             P = S.Plan(S.load(a.plan))
             site, wh = DT.SiteMap(P), (P.W, P.H)
         doc, sv, v, t = emit(bind, meta, (cd / "ctree.v").read_text(), (cd / "ctree.tcl").read_text(), site, wh,
-                            a.root_settle, a.path_encoding, a.reset_wave)
+                            a.root_settle, a.path_encoding, a.reset_wave,
+                            json.loads(Path(a.data_manifest).read_text()) if a.data_manifest else None)
         o = Path(a.out)
         o.mkdir(parents=True, exist_ok=True)
         (o / "start_stages.json").write_text(json.dumps(doc, indent=1))
         (o / "start_stages.sv").write_text(sv)
+        if a.data_manifest:
+            import start_data_emit as SD
+            dm = json.loads(Path(a.data_manifest).read_text())
+            (o / "start_data.tcl").write_text(SD.placement_tcl(dm))
+            (o / "start_data_manifest.json").write_text(json.dumps(dm, indent=2)+"\n")
         (o / "ctree.v").write_text(v)
         (o / "ctree.tcl").write_text(t)
         print(json.dumps(doc["counts"]))
