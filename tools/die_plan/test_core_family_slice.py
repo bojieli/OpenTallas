@@ -83,6 +83,13 @@ def test_macro_face_reparent_rejects_reachable_donor_at_different_depth():
     assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'
 
 
+def test_macro_face_reparent_rejects_occupied_repeater_site():
+    P=_obstructed_repeated_plan()
+    P['nodes'].append(('occupied','root',(80,26),'BIG','rep'))
+    record=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in record if x['edge']=='X')['fixed'] is False
+
+
 class _Maze:
     """minimal maze: cells are (x, y) tuples on a 1 um grid."""
     G = 1.0

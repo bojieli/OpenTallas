@@ -256,7 +256,8 @@ def reparent_obstructed_edges(P, smax):
         u = w['edge']; br = u + '_br'; k = len(w['segs'])
         nodes = {n[0]: n for n in P['nodes']}; dep = depths()
         own = nodes[br][1]; endpoint = w['cells'][-1][-1]; best = None
-        occupied = {n[2] for n in P['nodes'] if n[0] != br}
+        owned = {br} | {u + '_r%d' % i for i in range(k-1)}
+        occupied = {n[2] for n in P['nodes'] if n[0] not in owned}
         for donor in sorted(P['wires'], key=lambda z: z['edge']):
             vb = donor['edge'] + '_br'
             if donor['level'] != w['level'] or vb == br: continue
@@ -269,8 +270,11 @@ def reparent_obstructed_edges(P, smax):
             length = mz.md(b, endpoint)
             if length < 0 or length > k * smax + 1e-9: continue
             if man(b, endpoint) > 1.0 and length > tol * man(b, endpoint): continue
+            # A segmented shortest path cannot beat its whole-path lower bound.
+            if best is not None and (length, drv, donor['edge']) >= best[0]: continue
             # Preserve the chain count; verify each resulting leg independently.
             pts = H.exact_points(mz, b, endpoint, length, k)
+            if len(set([b] + pts)) != k or any(p in occupied for p in pts): continue
             chain = [b] + pts + [endpoint]
             segs = [mz.md(a, z) for a, z in zip(chain, chain[1:])]
             paths = [mz.path(a, z) for a, z in zip(chain, chain[1:])]
