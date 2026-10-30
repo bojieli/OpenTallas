@@ -45,9 +45,23 @@ def _reader_start_groups(t):
     return groups
 
 
+def _writer_start_groups(t):
+    """W1 writer START relays at declared sites (DIE-HEAD-38), same FIRM packing; [] when absent."""
+    cfg = (t or {}).get('clock', {}).get('landing_writer_start')
+    if cfg is None:
+        return []
+    groups = []
+    for bus, branch in sorted(cfg['branches'].items()):
+        for i, stage in enumerate(branch['stages']):
+            x, y = stage['xy_um']
+            groups.append((f'u_cland_writer_start_{safe(bus)}_{i}',
+                           [x-2.16, y-2.16, x+2.16, y+2.16], 'writer-start:'+bus))
+    return groups
+
+
 def tcl(P,tn):
     c=P.types[tn].get('clock',{}).get('landing_contract',{})
-    groups=_reader_start_groups(P.types[tn]);status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
+    groups=_reader_start_groups(P.types[tn])+_writer_start_groups(P.types[tn]);status=[];tree=c.get('collector_tree');root=c.get('collector_root_node')
     def near(xy):
         x,y=xy;return [x-2.16,y-2.16,x+2.16,y+2.16]
     if c.get('monitor')=='dataflow' or (root and tree is None):
@@ -95,7 +109,7 @@ def tcl(P,tn):
 def _dataflow_tcl(tn,c,t=None):
     """monitor="dataflow" (opt-in, FALLBACK-HEAD-2): ring storage bands plus the dedicated registered status
     output at each sender pin. No reset-tree collector exists, so nothing else is placed by this hook."""
-    groups=_reader_start_groups(t);status=[]
+    groups=_reader_start_groups(t)+_writer_start_groups(t);status=[]
     for name,band in sorted(c.get('bands',{}).items()):
         if band.get('placement')=='FAIL' or not band.get('rect_um'):raise ValueError(f'{tn}.{name}: landing band absent')
         groups.append((band.get('instance','u_cland_'+name),band['rect_um'],'ring:'+name+_spread(band,_bus_order(t or {},name))))

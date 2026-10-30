@@ -379,12 +379,17 @@ class Landings:
                     raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16")
                 import count_align_bind as CAB
                 reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
+                writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
-                           ring_offset=None, ring_k=int(c["K"]) - reader_depth, start_tree_port=bool(c["tree"]))
+                           ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth,
+                           start_tree_port=bool(c["tree"]))
                 if reader_depth:
                     row.update(reader_start_depth=reader_depth, logical_ring_k=int(c["K"]),
                                boot_extra_cycles=reader_depth, steady_data_cycles_added=0)
+                if writer_depth:
+                    row.update(writer_start_depth=writer_depth, logical_ring_k=int(c["K"]),
+                               boot_extra_cycles=reader_depth + writer_depth, steady_data_cycles_added=0)
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
@@ -717,6 +722,52 @@ class Landings:
             qualification="local raw-reset release and actual placed hops require plan timing")
         return prev
 
+    def _writer_start_rtl(self, tn, bus, head, body, logic, type_key=None):
+        """W1 (DIE-HEAD-38): transport the sender's SAFE start_d (second sampler, never the first synchroniser
+        stage) through W kept relays to the FSTART face flop of one output bus. Returns the face flop's D net."""
+        key = type_key or tn
+        cfg = self.types[key].get("clock", {}).get("landing_writer_start")
+        if cfg is None or bus not in cfg.get("branches", {}):
+            return "cland_start_d"
+        import count_align_bind as CAB
+        depth = CAB.writer_start_depth(self.plan, key)
+        branch = cfg["branches"][bus]
+        stages = branch.get("stages", []) if isinstance(branch, dict) else []
+        if len(stages) != depth:
+            raise LandingError(f"{tn}.{bus}: writer START needs exactly {depth} physical stages")
+        outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
+        records = []
+        prev = "cland_start_d"
+        for i, stage in enumerate(stages):
+            xy, raw = stage.get("xy_um"), stage.get("raw_reset")
+            if (not isinstance(xy, list) or len(xy) != 2 or
+                    any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
+                raise LandingError(f"{tn}.{bus}: writer START stage {i} needs finite xy_um")
+            if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
+                raise LandingError(f"{tn}.{bus}: writer START stage {i} needs a local registered raw reset")
+            registered = re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+                                   re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
+            if not registered:
+                raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} has no registered wavefront driver")
+            # a port flop must feed only its port (face_guard 'shared'): the plan picks a non-port relay
+            if raw in outputs or any(o in outputs for o in
+                                     re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body)):
+                raise LandingError(f"{tn}.{bus}: writer START raw reset {raw} drives an output port; "
+                                   f"plan a non-port registered relay")
+            name = f"u_cland_writer_start_{ident(bus)}_{i}"
+            net = f"cland_writer_start_{ident(bus)}_{i}"
+            logic += [f"    wire {net};",
+                      f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
+                      f".d({prev}), .q({net}));"]
+            records.append(dict(instance=name, net=net, d=prev, xy_um=list(xy), raw_reset=raw,
+                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0))
+            prev = net
+        self.reset_placements.setdefault(tn, {}).setdefault(bus, {})["writer_start"] = dict(
+            depth=depth, stages=records, fstart_d=prev, K_adjustment_at_receiver=depth,
+            boot_extra_cycles=depth, steady_data_cycles_added=0,
+            qualification="local raw-reset release and actual placed hops require plan timing")
+        return prev
+
     def type_rtl(self, tn, text, base=None, inst=None, depth=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
@@ -733,6 +784,12 @@ class Landings:
                 raise LandingError(f"{tn}: landing_reader_start requires count-aligned rings")
             if set(reader_cfg.get("branches", {})) != set(mask["inputs"]):
                 raise LandingError(f"{tn}: landing_reader_start branches must cover exactly every input ring")
+        writer_cfg = self.types[key].get("clock", {}).get("landing_writer_start")
+        if writer_cfg is not None:
+            if not self.ca or not self.strap:
+                raise LandingError(f"{tn}: landing_writer_start requires strap-form count-aligned rings")
+            if not writer_cfg.get("branches") or not set(writer_cfg["branches"]) <= set(mask["outputs"]):
+                raise LandingError(f"{tn}: landing_writer_start branches must name output rings of the type")
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
         if not mask["inputs"] and not mask["outputs"] and not active_collector:
@@ -807,8 +864,11 @@ class Landings:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
+                    fstart_d = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
                     logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n(cland_start_raw), "
-                                 f".d(cland_start_d), .q(cland_fstart_out_{b}));")
+                                 f".d({fstart_d}), .q(cland_fstart_out_{b}));")
+                elif (self.types[key].get("clock", {}).get("landing_writer_start") or {}).get("branches", {}).get(b):
+                    raise LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)")
                 else:
                     logic.append(f"    assign cland_fstart_out_{b} = cland_start;")
         part = next(p for p, v in self.parts.items() if v["type"] == key)
