@@ -1,0 +1,48 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/codex-hbm-1030/d34e3",
+ "plan_sha256": "82ed3ca4c3776bf66867fa0c544fe15ab09217e95bd10b2f018247ee1e4fbc10",
+ "pins_sha256": "ae70500553b29bb6dea6614c97cc7655a3be636705df342ccc5c37862a88bacb",
+ "old_clk": {
+  "bus": "clk",
+  "bit": null,
+  "layer": "M5",
+  "x": 88.872,
+  "y": 44.424,
+  "face": "C",
+  "track_note": "M5 track 0.024+k*0.048 (k=900); was half-track 43.2"
+ },
+ "new_clk": {
+  "bus": "clk",
+  "bit": null,
+  "layer": "M5",
+  "x": 43.224,
+  "y": 43.2,
+  "face": "C",
+  "track_note": "Actual centre-entry M5 track0.024+900*0.048",
+  "w": 0.048,
+  "h": 0.48
+ },
+ "old_clk_in": {
+  "bus": "clk_in",
+  "bit": null,
+  "layer": "M4",
+  "x": 0.096,
+  "y": 52.584,
+  "face": "W"
+ },
+ "new_clk_in": {
+  "bus": "clk_in",
+  "bit": null,
+  "layer": "M5",
+  "x": 44.664,
+  "y": 43.2,
+  "face": "C",
+  "w": 0.048,
+  "h": 0.48
+ },
+ "unchanged_pins": 1557,
+ "pin_names_unchanged": true,
+ "clock_entries_unchanged": true,
+ "rtl_cycles_added": 0,
+ "view_adopted": false
+}
