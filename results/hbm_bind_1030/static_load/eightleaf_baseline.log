@@ -1,0 +1,5 @@
+PASS EIGHTLEAF_LOAD phases=3 commands=144 writes=144 checked_words=1026 fixed_latency=7 cells=8 NPC=2 full-window-bytes=32768 formats=6
+- tb_static_load_eightleaf.sv:85: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.187 s; speed 6.737 us/s
+- Verilator: cpu 0.187 s on 1 threads; allocated 9 MB
