@@ -1,0 +1,20 @@
+instance	master	orient	x0	y0	x1	y1	obs_layers
+u_g.u_tile.u_tile.u_logic.g_ndh.u_node	ot_qwen_tile_node	MY	15120	688656	62640	1120656	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_single.g_col\[0\].u_leaf	ot_qwen_tile_romleaf	MY	16200	22176	189000	132336	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_single.g_col\[1\].u_leaf	ot_qwen_tile_romleaf	R0	268320	22176	441120	132336	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_single.g_col\[0\].u_leaf	ot_qwen_tile_romleaf	MY	16200	152352	189000	262512	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[1\].g_single.g_col\[1\].u_leaf	ot_qwen_tile_romleaf	R0	268320	152352	441120	262512	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_single.g_col\[0\].u_leaf	ot_qwen_tile_romleaf	MY	16200	282528	189000	392688	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[2\].g_single.g_col\[1\].u_leaf	ot_qwen_tile_romleaf	R0	268320	282528	441120	392688	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_single.g_col\[0\].u_leaf	ot_qwen_tile_romleaf	MY	16200	542880	189000	653040	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_single.g_col\[1\].u_leaf	ot_qwen_tile_romleaf	R0	268320	542880	441120	653040	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_single.g_col\[0\].u_leaf	ot_qwen_tile_romleaf	MY	16200	412704	189000	522864	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_single.g_col\[1\].u_leaf	ot_qwen_tile_romleaf	R0	268320	412704	441120	522864	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[0\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	R0	330260	673920	445604	814320	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[1\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	R0	330260	834432	445604	974832	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	R0	330260	994944	445604	1135344	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	R0	73440	673920	188784	814320	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[4\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	MY	201960	834432	317304	974832	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[5\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	MY	201960	994944	317304	1135344	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[6\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	R0	73440	834432	188784	974832	M1 M2 M3 M4 M5 RVTN RVTP
+u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[7\].g_hd.u_lh.u_native_rawleaf	ot_qwen_tile_lsl_rawfault_m3	R0	73440	994944	188784	1135344	M1 M2 M3 M4 M5 RVTN RVTP
