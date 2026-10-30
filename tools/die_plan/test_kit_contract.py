@@ -328,3 +328,37 @@ def test_partition_landing_name_alone_or_wrong_contract_never_waives_geometry(ki
         if mutate == 'layer': pin['layer'] = 'M5'
         p.write_text(json.dumps(contract))
     assert KC.clock_pin_geometry(kit)[0]
+
+
+def test_pushdown_island_macro_clear(kit):
+    (kit / "island_ft.json").unlink()
+    def stage(rect):
+        (kit / "master_slice.json").write_text(json.dumps(dict(
+            schema="opentallas.master_plan_slice.v1", pushdown=dict(islands=[
+                dict(name="isl0", role="tree_leaf", rect_um=rect)]))))
+        (kit / "core_infra_plan.json").write_text(json.dumps(dict(cells=[
+            dict(name="mp_isl0_ck0", rect_um=rect), dict(name="mp_isl0_rst0", rect_um=rect)])))
+    stage([5, 60, 25, 80])
+    errors, info = KC.island_macro_clear(kit)
+    assert not errors and info["islands"] == 1
+    stage([55, 25, 70, 40])
+    assert KC.island_macro_clear(kit)[0]
+    stage([61, 10, 70, 30])
+    _sub(kit / "config.mk", "export MACRO_PLACEMENT_TCL = /work/macro_place.tcl\n",
+         "export MACRO_PLACE_HALO = 2 2\n")
+    assert "no island_macro_guard" in KC.island_macro_clear(kit)[0][0]
+
+
+def test_pushdown_reservation_fail_closed_and_generic_tree_not_island(kit):
+    (kit / "island_ft.json").unlink()
+    (kit / "core_infra_plan.json").write_text(json.dumps(dict(cells=[dict(rect_um=[0,0,100,100])])))
+    assert KC.island_macro_clear(kit)[1]["applies"] is False
+    ms = dict(schema="opentallas.master_plan_slice.v1", pushdown=dict(islands=[
+        dict(name="isl0", rect_um=[5,60,25,80])]))
+    (kit / "master_slice.json").write_text(json.dumps(ms))
+    with pytest.raises(ValueError, match="no matching compiled"):
+        KC.island_macro_clear(kit)
+    ms["pushdown"]["islands"][0]["rect_um"] = [0,0,float("nan"),80]
+    (kit / "master_slice.json").write_text(json.dumps(ms))
+    (kit / "core_infra_plan.json").write_text(json.dumps(dict(cells=[dict(rect_um=[0,0,float("nan"),80])])))
+    assert verdicts(kit)["island_macro_clear"] == "FAIL"
