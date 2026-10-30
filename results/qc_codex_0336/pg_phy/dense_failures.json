@@ -17,5 +17,15 @@
   "verdict": "FAIL",
   "cause": "Native DBU pitch rounding destroys exact shared-ground seam phase",
   "source_fix": "0285339df"
+ },
+ "n9_first_mixed_source": {
+  "verdict": "FAIL generation/source attachment, no IR result",
+  "unit": 887704,
+  "exit": 1,
+  "error": "psm.tcl line610 invalid command name NULL",
+  "cause": "core finite and PHY point emitter BTerm names collided at VSS_b1",
+  "corrected_source": "e300859b8: dynamic core ${net}_core_b$k namespace",
+  "geometry": "mesh/body/source footprints unchanged; finite core pads attached510 M9 contacts,0fallback,12852um2; shared ground seam268stitches",
+  "next": "distinct phy_pg_n9_finite2 PSM coupon submitted only after original terminal"
  }
 }
