@@ -25,13 +25,13 @@ base,_=M.model_x(P,libs,rr,cc,wc)
 for co in base:
  for k in ['mean','window']:
   assert abs(base[co][k]-r[co][k])<=.03,(co,k,base[co][k],r[co][k])
-entry=[.06,100.236]; root=r['nodes_xy'][0][2]
+entry=[.06,100.236]; ideal_root=r['nodes_xy'][0][2]; sl=json.load(open(O/'l0r_ndr/dsdv_gunit_l0r/slice/dsdv_gunit_l0r.json')); root=sl['cell_placements']['mp_ck_root']['centre_um']
 length=sum(abs(a-b) for a,b in zip(entry,root))
 arrival={co:rr*M.NDR_R*length*(cc*M.NDR_C*length/2+libs[co][r['nodes_xy'][0][3]]['cin']) for co in libs}
 P['entry_arrival']=arrival; P['entry_slew']={co:2.2*v for co,v in arrival.items()}
 src=inspect.getsource(M.model_x).replace("arr = {'root': 0.0}; slew = {'root': 0.0}","arr = {'root': P['entry_arrival'][corner]}; slew = {'root': P['entry_slew'][corner]}")
 ns=dict(M.__dict__);exec(src,ns)
 full,_=ns['model_x'](P,libs,rr,cc,wc)
-out=dict(scope='PLAN MODEL ONLY UNCHECKED; native input trunk plus original sized NLDM tree, no RTL or pins changed',native_entry_um=entry,root_um=root,trunk_um=length,wire='ndr2w',r_kohm_um=rr*M.NDR_R,c_ff_um=cc*M.NDR_C,root_arrival_ps=arrival,root_slew_ps=P['entry_slew'],baseline=base,full_input=full,baseline_reproduces_frozen_model=True)
+out=dict(scope='PLAN MODEL ONLY UNCHECKED; native input trunk plus original sized NLDM tree, no RTL or pins changed',native_entry_um=entry,root_um=root,ideal_root_um=ideal_root,trunk_um=length,wire='ndr2w',r_kohm_um=rr*M.NDR_R,c_ff_um=cc*M.NDR_C,root_arrival_ps=arrival,root_slew_ps=P['entry_slew'],baseline=base,full_input=full,baseline_reproduces_frozen_model=True)
 json.dump(out,open(O/'l0r_entry_priced.json','w'),indent=2)
 print(json.dumps(out,indent=2))
