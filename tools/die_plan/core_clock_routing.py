@@ -93,6 +93,21 @@ def check_trunks(sl, plan):
             raise RoutingError(f"effective clock routing PG envelope: {error}") from error
 
 
+def tree_fingerprint(sl):
+    """Bind computed results to actual compiled tree masters and placements."""
+    import copy
+    import hashlib
+    import json
+    import core_infra as CI
+    plan = CI.compile_slice(sl)
+    tree = copy.deepcopy(plan["core_tree"])
+    tree.pop("model_qualification", None)
+    names = {node["name"] for node in tree["nodes"]}
+    identity = dict(tree=tree, clock_entry=plan.get("clock_entry"), outline_um=plan["outline_um"],
+                    cells=[cell for cell in plan["cells"] if cell["name"] in names])
+    return hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
 def check_qualification(sl):
     """Building the RC model is allowed; emitting a physical plan needs results."""
     if sl.get("effective_clock_routing") is None:
@@ -103,6 +118,13 @@ def check_qualification(sl):
             or q.get("effective_clock_routing") != sl["effective_clock_routing"]
             or not isinstance(q.get("source"), str) or not q["source"].strip()):
         raise RoutingError("effective clock routing requires matching two-corner envelope model qualification before emission")
+    if q.get("band_policy", "gate") not in ("gate", "info"):
+        raise RoutingError("effective clock routing: invalid band_policy")
+    if (q.get("window_policy", "gate") not in ("gate", "info")
+            or (q.get("window_policy") == "info" and q.get("band_policy", "gate") != "info")):
+        raise RoutingError("effective clock routing: window_policy info requires band_policy info")
+    if q.get("tree_sha256") != tree_fingerprint(sl):
+        raise RoutingError("effective clock routing requires matching compiled tree/masters/positions qualification")
     for corner in ("TT", "FF"):
         result = q.get("corners", {}).get(corner, {})
         values = {key: _number(result.get(key), f"{corner} model {key}")

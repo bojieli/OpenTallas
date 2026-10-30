@@ -32,7 +32,9 @@ obstacles (empty arrays are a deliberate declaration), and clearance_um.
 No actual L0 RC inputs or authority are supplied here. Physical emission also
 requires a matching explicit two-corner envelope model result. The search
 records that result against the exact effective contract; changing RC inputs
-invalidates it. Existing slew/window policies are retained.
+invalidates it. A fingerprint of the actual compiled tree, masters and
+placements also rejects stale corners after a tree edit. Existing slew/window
+policy enums and their INFO dependency are checked in both emitters.
 
 The actual search model consumes max(R),max(C) across M3/M5 for its vertical
 wire model, M4 RC horizontally, and the union of vertical PG obstacles. These
@@ -64,7 +66,15 @@ If strict M4/M5 trunks are required, the current API cannot express that as
 per-net NDR layer bounds. It needs a separate structural routing mechanism;
 raising the signal-net minimum globally is outside this candidate.
 
-Controls:14 focused tests PASS (per-layer model consumption, wrong/missing
+Controls:15 focused tests PASS (per-layer model consumption, wrong/missing
 RC/PG/rule/source, nonfinite RC, measured timing, blocked/out-of-outline PG,
 legacy command identity, actual Tcl stale-rule refusal);2 relevant legacy
 infrastructure controls PASS. No EDA validation or threshold sweep.
+
+Actual pinned native Tcl helper coupon PASS (tech only, empty dbBlock; no
+design/STA/P&R): M3 WIDTH36/SPACING36, M4/M5 WIDTH48/SPACING48 DBU at1000DBU/um.
+The actual `$nd getLayerRule $layer` SWIG API exists and reads those rules.
+Mutating the M3 width back to the technology default18DBU is rejected by the
+actual emitted helper. Full output is in actual_ndr_coupon.log. Initial empty
+chip construction needed the pinned API's required dbTech argument; that was
+a coupon setup error, corrected before the successful actual helper run.
