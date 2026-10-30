@@ -127,3 +127,20 @@ Routing/target cost to carry into the plan estimate:
   latency, and real DQ-done. W89 fill target uses all existing fields; an
   appended LOAD command or new issuer type requires explicit target/interface
   ownership and one coherent plan event. No target ID is guessed here.
+
+Resolved-address command construction (proposal artifact, not installed):
+  load_command_plan.py emits exact existing62-bit load commands for an explicitly
+  resolved linear LOAD, grouping at most8 consecutive source elements from one
+  captured HBM sector into consecutive lanes of one VM sector. Non-unit element
+  strides split into count1 commands rather than silently changing addresses.
+  Format0/1/2/4/5/6 address reconstruction passes936 elements over12 cases;
+  a wrong source-PC landing lane control is caught. Example deliberately retains
+  stack3 and reports current_stack2_reachable=false, never relabels its address.
+  Actual buffer/epoch are mandatory caller inputs; no dates or target selected.
+
+  Ownership warning: load_static release56 affects only leaves with load_v.
+  A fixed window begins/fills all8 landing leaves. Releasing only the final
+  read's leaf leaves the others owned and the next broadcast begin faults.
+  After all reads, use existing legal release-only(count0,bit56) broadcast to
+  all8 leaves for the matching buffer/epoch, or eight scheduled per-leaf
+  releases. This control must be included in the full provider calendar.
