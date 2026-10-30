@@ -1,0 +1,118 @@
+{
+ "TT": {
+  "DFFHQNx1_ASAP7_75t_R": {
+   "area_um2": 0.2916,
+   "pins": {
+    "QN": {
+     "dir": "output",
+     "function": "IQN"
+    },
+    "CLK": {
+     "dir": "input",
+     "capacitance": "0.474736",
+     "rise_capacitance": "0.474467",
+     "fall_capacitance": "0.474736",
+     "clock": "true"
+    },
+    "D": {
+     "dir": "input",
+     "capacitance": "0.558822",
+     "rise_capacitance": "0.558822",
+     "fall_capacitance": "0.555706"
+    }
+   }
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+   "area_um2": 0.37908,
+   "pins": {
+    "QN": {
+     "dir": "output",
+     "function": "IQN"
+    },
+    "CLK": {
+     "dir": "input",
+     "capacitance": "0.462899",
+     "rise_capacitance": "0.462899",
+     "fall_capacitance": "0.461096",
+     "clock": "true"
+    },
+    "D": {
+     "dir": "input",
+     "capacitance": "0.561679",
+     "rise_capacitance": "0.561679",
+     "fall_capacitance": "0.558755"
+    },
+    "RESETN": {
+     "dir": "input",
+     "capacitance": "0.73979",
+     "rise_capacitance": "0.73979",
+     "fall_capacitance": "0.737324"
+    },
+    "SETN": {
+     "dir": "input",
+     "capacitance": "1.07945",
+     "rise_capacitance": "1.07724",
+     "fall_capacitance": "1.07945"
+    }
+   }
+  }
+ },
+ "FF": {
+  "DFFHQNx1_ASAP7_75t_R": {
+   "area_um2": 0.2916,
+   "pins": {
+    "QN": {
+     "dir": "output",
+     "function": "IQN"
+    },
+    "CLK": {
+     "dir": "input",
+     "capacitance": "0.52201",
+     "rise_capacitance": "0.517449",
+     "fall_capacitance": "0.52201",
+     "clock": "true"
+    },
+    "D": {
+     "dir": "input",
+     "capacitance": "0.62135",
+     "rise_capacitance": "0.62135",
+     "fall_capacitance": "0.619256"
+    }
+   }
+  },
+  "DFFASRHQNx1_ASAP7_75t_R": {
+   "area_um2": 0.37908,
+   "pins": {
+    "QN": {
+     "dir": "output",
+     "function": "IQN"
+    },
+    "CLK": {
+     "dir": "input",
+     "capacitance": "0.503152",
+     "rise_capacitance": "0.503152",
+     "fall_capacitance": "0.502958",
+     "clock": "true"
+    },
+    "D": {
+     "dir": "input",
+     "capacitance": "0.623429",
+     "rise_capacitance": "0.623429",
+     "fall_capacitance": "0.620511"
+    },
+    "RESETN": {
+     "dir": "input",
+     "capacitance": "0.802909",
+     "rise_capacitance": "0.802909",
+     "fall_capacitance": "0.800303"
+    },
+    "SETN": {
+     "dir": "input",
+     "capacitance": "1.16446",
+     "rise_capacitance": "1.16211",
+     "fall_capacitance": "1.16446"
+    }
+   }
+  }
+ }
+}

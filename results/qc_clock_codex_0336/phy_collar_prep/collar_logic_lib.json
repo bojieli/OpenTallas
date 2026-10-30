@@ -1,0 +1,258 @@
+{
+ "TT": {
+  "INVx1_ASAP7_75t_R": {
+   "area_um2": 0.04374,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "!A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.619928",
+     "rise_capacitance": "0.619928",
+     "fall_capacitance": "0.619647"
+    }
+   }
+  },
+  "BUFx4f_ASAP7_75t_R": {
+   "area_um2": 0.11664,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "1.00419",
+     "rise_capacitance": "1.00419",
+     "fall_capacitance": "1.00375"
+    }
+   }
+  },
+  "BUFx8_ASAP7_75t_R": {
+   "area_um2": 0.17496,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.852045",
+     "rise_capacitance": "0.852045",
+     "fall_capacitance": "0.850973"
+    }
+   }
+  },
+  "BUFx16f_ASAP7_75t_R": {
+   "area_um2": 0.32076,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "2.34187",
+     "rise_capacitance": "2.34154",
+     "fall_capacitance": "2.34187"
+    }
+   }
+  },
+  "BUFx24_ASAP7_75t_R": {
+   "area_um2": 0.4374,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "2.35026",
+     "rise_capacitance": "2.34978",
+     "fall_capacitance": "2.35026"
+    }
+   }
+  },
+  "NAND2x1_ASAP7_75t_R": {
+   "area_um2": 0.08748,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "(!A) + (!B)"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.990183",
+     "rise_capacitance": "0.990183",
+     "fall_capacitance": "0.953971"
+    },
+    "B": {
+     "dir": "input",
+     "capacitance": "0.990331",
+     "rise_capacitance": "0.988843",
+     "fall_capacitance": "0.990331"
+    }
+   }
+  },
+  "AND2x2_ASAP7_75t_R": {
+   "area_um2": 0.08748,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "(A * B)"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.483326",
+     "rise_capacitance": "0.483326",
+     "fall_capacitance": "0.470103"
+    },
+    "B": {
+     "dir": "input",
+     "capacitance": "0.526322",
+     "rise_capacitance": "0.526025",
+     "fall_capacitance": "0.526322"
+    }
+   }
+  },
+  "TIEHIx1_ASAP7_75t_R": {
+   "area_um2": 0.04374,
+   "pins": {
+    "H": {
+     "dir": "output",
+     "function": "1"
+    }
+   }
+  }
+ },
+ "FF": {
+  "INVx1_ASAP7_75t_R": {
+   "area_um2": 0.04374,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "!A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.683716",
+     "rise_capacitance": "0.683678",
+     "fall_capacitance": "0.683716"
+    }
+   }
+  },
+  "BUFx4f_ASAP7_75t_R": {
+   "area_um2": 0.11664,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "1.08995",
+     "rise_capacitance": "1.08995",
+     "fall_capacitance": "1.08939"
+    }
+   }
+  },
+  "BUFx8_ASAP7_75t_R": {
+   "area_um2": 0.17496,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.938203",
+     "rise_capacitance": "0.938203",
+     "fall_capacitance": "0.937541"
+    }
+   }
+  },
+  "BUFx16f_ASAP7_75t_R": {
+   "area_um2": 0.32076,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "2.5975",
+     "rise_capacitance": "2.59713",
+     "fall_capacitance": "2.5975"
+    }
+   }
+  },
+  "BUFx24_ASAP7_75t_R": {
+   "area_um2": 0.4374,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "A"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "2.60735",
+     "rise_capacitance": "2.60735",
+     "fall_capacitance": "2.60404"
+    }
+   }
+  },
+  "NAND2x1_ASAP7_75t_R": {
+   "area_um2": 0.08748,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "(!A) + (!B)"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "1.07898",
+     "rise_capacitance": "1.07898",
+     "fall_capacitance": "1.04531"
+    },
+    "B": {
+     "dir": "input",
+     "capacitance": "1.08055",
+     "rise_capacitance": "1.07894",
+     "fall_capacitance": "1.08055"
+    }
+   }
+  },
+  "AND2x2_ASAP7_75t_R": {
+   "area_um2": 0.08748,
+   "pins": {
+    "Y": {
+     "dir": "output",
+     "function": "(A * B)"
+    },
+    "A": {
+     "dir": "input",
+     "capacitance": "0.565527",
+     "rise_capacitance": "0.565527",
+     "fall_capacitance": "0.554236"
+    },
+    "B": {
+     "dir": "input",
+     "capacitance": "0.577011",
+     "rise_capacitance": "0.576139",
+     "fall_capacitance": "0.577011"
+    }
+   }
+  },
+  "TIEHIx1_ASAP7_75t_R": {
+   "area_um2": 0.04374,
+   "pins": {
+    "H": {
+     "dir": "output",
+     "function": "1"
+    }
+   }
+  }
+ }
+}

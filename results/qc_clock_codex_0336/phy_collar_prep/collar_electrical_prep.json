@@ -1,0 +1,626 @@
+{
+  "scope": "PREP only. No RTL adoption, no native arrival or routed extraction. Proposed tree failure is preserved.",
+  "wire_model": {
+    "r_kohm_um": 0.014812,
+    "c_ff_um": 0.154233,
+    "coupling_guard": 1.7,
+    "effective_c_ff_um": 0.2621961
+  },
+  "data_segment_trials_input80ps": {
+    "BUFx8_ASAP7_75t_R": {
+      "25": {
+        "TT": {
+          "delay_ps": 52.01876745330208,
+          "slew_ps": 18.43785509768534,
+          "load_ff": 7.4069475,
+          "lib_domain_load_ff": 368.64
+        },
+        "FF": {
+          "delay_ps": 40.37516345945209,
+          "slew_ps": 14.250672664081417,
+          "load_ff": 7.4931054999999995,
+          "lib_domain_load_ff": 368.64
+        }
+      },
+      "50": {
+        "TT": {
+          "delay_ps": 59.992631809385415,
+          "slew_ps": 27.774468828313257,
+          "load_ff": 13.96185,
+          "lib_domain_load_ff": 368.64
+        },
+        "FF": {
+          "delay_ps": 47.35443042496667,
+          "slew_ps": 22.344700432442426,
+          "load_ff": 14.048008,
+          "lib_domain_load_ff": 368.64
+        }
+      },
+      "75": {
+        "TT": {
+          "delay_ps": 69.86404253394011,
+          "slew_ps": 41.34196368312906,
+          "load_ff": 20.5167525,
+          "lib_domain_load_ff": 368.64
+        },
+        "FF": {
+          "delay_ps": 56.35786886805416,
+          "slew_ps": 35.36131765784873,
+          "load_ff": 20.6029105,
+          "lib_domain_load_ff": 368.64
+        }
+      },
+      "100": {
+        "TT": {
+          "delay_ps": 81.84469836941406,
+          "slew_ps": 60.071265487796204,
+          "load_ff": 27.071655,
+          "lib_domain_load_ff": 368.64
+        },
+        "FF": {
+          "delay_ps": 67.54559384600626,
+          "slew_ps": 54.00133916394961,
+          "load_ff": 27.157813,
+          "lib_domain_load_ff": 368.64
+        }
+      },
+      "120": {
+        "TT": {
+          "delay_ps": 93.01762873067594,
+          "slew_ps": 78.95151959584888,
+          "load_ff": 32.315577,
+          "lib_domain_load_ff": 368.64
+        },
+        "FF": {
+          "delay_ps": 78.12836477982876,
+          "slew_ps": 72.9445505981617,
+          "load_ff": 32.401734999999995,
+          "lib_domain_load_ff": 368.64
+        }
+      }
+    },
+    "BUFx16f_ASAP7_75t_R": {
+      "25": {
+        "TT": {
+          "delay_ps": 43.55408778296528,
+          "slew_ps": 14.653111953892346,
+          "load_ff": 8.8964425,
+          "lib_domain_load_ff": 737.28
+        },
+        "FF": {
+          "delay_ps": 34.25876273472656,
+          "slew_ps": 12.04040303218154,
+          "load_ff": 9.1520325,
+          "lib_domain_load_ff": 737.28
+        }
+      },
+      "50": {
+        "TT": {
+          "delay_ps": 50.19834157140278,
+          "slew_ps": 22.99803142779074,
+          "load_ff": 15.451345,
+          "lib_domain_load_ff": 737.28
+        },
+        "FF": {
+          "delay_ps": 40.490168658171875,
+          "slew_ps": 20.467612574508355,
+          "load_ff": 15.706935,
+          "lib_domain_load_ff": 737.28
+        }
+      },
+      "75": {
+        "TT": {
+          "delay_ps": 59.26987575559028,
+          "slew_ps": 36.878702023832645,
+          "load_ff": 22.0062475,
+          "lib_domain_load_ff": 737.28
+        },
+        "FF": {
+          "delay_ps": 49.148854977367186,
+          "slew_ps": 34.806873687388006,
+          "load_ff": 22.2618375,
+          "lib_domain_load_ff": 737.28
+        }
+      },
+      "100": {
+        "TT": {
+          "delay_ps": 70.43437799329688,
+          "slew_ps": 56.63198833191042,
+          "load_ff": 28.561149999999998,
+          "lib_domain_load_ff": 737.28
+        },
+        "FF": {
+          "delay_ps": 59.976673623562505,
+          "slew_ps": 54.97677678219933,
+          "load_ff": 28.81674,
+          "lib_domain_load_ff": 737.28
+        }
+      },
+      "120": {
+        "TT": {
+          "delay_ps": 81.063545692265,
+          "slew_ps": 76.49076356528217,
+          "load_ff": 33.805071999999996,
+          "lib_domain_load_ff": 737.28
+        },
+        "FF": {
+          "delay_ps": 70.35875111608375,
+          "slew_ps": 75.1333575227231,
+          "load_ff": 34.060661999999994,
+          "lib_domain_load_ff": 737.28
+        }
+      }
+    },
+    "BUFx24_ASAP7_75t_R": {
+      "25": {
+        "TT": {
+          "delay_ps": 50.732700279466144,
+          "slew_ps": 15.56333543506589,
+          "load_ff": 8.9046825,
+          "lib_domain_load_ff": 1474.56
+        },
+        "FF": {
+          "delay_ps": 39.87076730870183,
+          "slew_ps": 13.091165062384547,
+          "load_ff": 9.1622525,
+          "lib_domain_load_ff": 1474.56
+        }
+      },
+      "50": {
+        "TT": {
+          "delay_ps": 56.77327855728646,
+          "slew_ps": 23.22366138118434,
+          "load_ff": 15.459585,
+          "lib_domain_load_ff": 1474.56
+        },
+        "FF": {
+          "delay_ps": 45.68634720781511,
+          "slew_ps": 20.95727528927658,
+          "load_ff": 15.717155,
+          "lib_domain_load_ff": 1474.56
+        }
+      },
+      "75": {
+        "TT": {
+          "delay_ps": 65.24113723085676,
+          "slew_ps": 36.67929906220015,
+          "load_ff": 22.014487499999998,
+          "lib_domain_load_ff": 1474.56
+        },
+        "FF": {
+          "delay_ps": 53.929207502678395,
+          "slew_ps": 34.99297070980964,
+          "load_ff": 22.2720575,
+          "lib_domain_load_ff": 1474.56
+        }
+      },
+      "100": {
+        "TT": {
+          "delay_ps": 76.13627630017709,
+          "slew_ps": 56.1119676591145,
+          "load_ff": 28.56939,
+          "lib_domain_load_ff": 1474.56
+        },
+        "FF": {
+          "delay_ps": 64.59934819329166,
+          "slew_ps": 54.96259419363192,
+          "load_ff": 28.82696,
+          "lib_domain_load_ff": 1474.56
+        }
+      },
+      "120": {
+        "TT": {
+          "delay_ps": 86.60002944057334,
+          "slew_ps": 75.80849574702158,
+          "load_ff": 33.813311999999996,
+          "lib_domain_load_ff": 1474.56
+        },
+        "FF": {
+          "delay_ps": 74.88310263072229,
+          "slew_ps": 75.02243606787863,
+          "load_ff": 34.070882,
+          "lib_domain_load_ff": 1474.56
+        }
+      }
+    }
+  },
+  "clock_proposed_tree": {
+    "0": {
+      "TT": {
+        "sinks": 1208,
+        "leaf_BUF8": 38,
+        "mid_BUF16": 5,
+        "root_BUF24": 1,
+        "root": {
+          "delay_ps": 647.7524099154298,
+          "slew_ps": 1261.595075262823,
+          "load_ff": 142.80575,
+          "lib_domain_load_ff": 1474.56
+        },
+        "mid": {
+          "delay_ps": 1564.5628248934117,
+          "slew_ps": 2916.17608149083,
+          "load_ff": 216.57324,
+          "lib_domain_load_ff": 737.28
+        },
+        "leaf": {
+          "delay_ps": 488.00368301297436,
+          "slew_ps": 130.67232846662634,
+          "load_ff": 25.679395999999997,
+          "lib_domain_load_ff": 368.64
+        },
+        "verdict": "FAIL_PROPOSED_TREE"
+      },
+      "FF": {
+        "sinks": 1208,
+        "leaf_BUF8": 38,
+        "mid_BUF16": 5,
+        "root_BUF24": 1,
+        "root": {
+          "delay_ps": 641.2766399503906,
+          "slew_ps": 1281.401642275026,
+          "load_ff": 144.0837,
+          "lib_domain_load_ff": 1474.56
+        },
+        "mid": {
+          "delay_ps": 1521.989982082554,
+          "slew_ps": 2932.135346744722,
+          "load_ff": 217.262504,
+          "lib_domain_load_ff": 737.28
+        },
+        "leaf": {
+          "delay_ps": 381.09791470673844,
+          "slew_ps": 104.82281442091669,
+          "load_ff": 27.192164,
+          "lib_domain_load_ff": 368.64
+        },
+        "verdict": "FAIL_PROPOSED_TREE"
+      }
+    },
+    "255": {
+      "TT": {
+        "sinks": 1463,
+        "leaf_BUF8": 46,
+        "mid_BUF16": 6,
+        "root_BUF24": 1,
+        "root": {
+          "delay_ps": 904.6726051825156,
+          "slew_ps": 1815.3619833745133,
+          "load_ff": 171.3669,
+          "lib_domain_load_ff": 1474.56
+        },
+        "mid": {
+          "delay_ps": 1632.7098056176824,
+          "slew_ps": 2916.428878973937,
+          "load_ff": 216.57324,
+          "lib_domain_load_ff": 737.28
+        },
+        "leaf": {
+          "delay_ps": 488.0402201586736,
+          "slew_ps": 130.6806189176092,
+          "load_ff": 25.679395999999997,
+          "lib_domain_load_ff": 368.64
+        },
+        "verdict": "FAIL_PROPOSED_TREE"
+      },
+      "FF": {
+        "sinks": 1463,
+        "leaf_BUF8": 46,
+        "mid_BUF16": 6,
+        "root_BUF24": 1,
+        "root": {
+          "delay_ps": 901.4704206724687,
+          "slew_ps": 1844.3579430658149,
+          "load_ff": 172.90044,
+          "lib_domain_load_ff": 1474.56
+        },
+        "mid": {
+          "delay_ps": 1576.8897879683159,
+          "slew_ps": 2932.2009163007315,
+          "load_ff": 217.262504,
+          "lib_domain_load_ff": 737.28
+        },
+        "leaf": {
+          "delay_ps": 381.1052128638292,
+          "slew_ps": 104.8244666711981,
+          "load_ff": 27.192164,
+          "lib_domain_load_ff": 368.64
+        },
+        "verdict": "FAIL_PROPOSED_TREE"
+      }
+    },
+    "note": "Historical pessimistic series-chain diagnostic: totalbranchwire used as one serieswire, not a topology prediction. Correct spoke Elmore follows separately."
+  },
+  "per_full_serdes_bank_area": {
+    "0": {
+      "master_counts": {
+        "DFFHQN": 1203,
+        "DFFASRHQN": 5,
+        "INVx1": 1205,
+        "NAND2x1": 4,
+        "TIEHI": 5
+      },
+      "raw_um2": 405.96552,
+      "reserved_at_40pct_um2": 1014.9138,
+      "excludes": "clock/reset trees, datarepeaters, PG, halos, routing; PAD255 is reserve bound only"
+    },
+    "255": {
+      "master_counts": {
+        "DFFHQN": 1458,
+        "DFFASRHQN": 5,
+        "INVx1": 1205,
+        "NAND2x1": 259,
+        "TIEHI": 5
+      },
+      "raw_um2": 502.63092000000006,
+      "reserved_at_40pct_um2": 1256.5773000000002,
+      "excludes": "clock/reset trees, datarepeaters, PG, halos, routing; PAD255 is reserve bound only"
+    }
+  },
+  "current_gap_R2_30um_reachable_reserved_area_um2": 424.28966399999996,
+  "current_geometry_verdict": "FAIL: fullbank reserved area exceeds R2 accessible area before clocks/reset",
+  "required_followup": "Construct geometry-based branching, sized and placed leaf/repeater cells. Lumped multi-spoke trial deliberately detects unsafe single-driver proposals. Do not use it as qualified clock model.",
+  "clock_correct_spoke_elmore_tree": {
+    "0": {
+      "counts": {
+        "BUF8_leaf": 38,
+        "BUF24_mid": 10,
+        "BUF24_top": 3,
+        "BUF24_root": 1
+      },
+      "corners": {
+        "TT": {
+          "root": {
+            "delay_ps": 63.977312620339845,
+            "slew_ps": 36.64757540540177,
+            "total_driver_load_ff": 46.378755,
+            "max_spoke_um": 50,
+            "spokes": 3
+          },
+          "top": {
+            "delay_ps": 44.07159583416351,
+            "slew_ps": 27.019791096160674,
+            "total_driver_load_ff": 35.61873,
+            "max_spoke_um": 25,
+            "spokes": 4
+          },
+          "mid": {
+            "delay_ps": 35.38986369685145,
+            "slew_ps": 17.92351651312887,
+            "total_driver_load_ff": 19.139946,
+            "max_spoke_um": 15,
+            "spokes": 4
+          },
+          "leaf": {
+            "delay_ps": 52.497726702571505,
+            "slew_ps": 44.85138758909746,
+            "load_ff": 25.679395999999997,
+            "lib_domain_load_ff": 368.64
+          },
+          "sum_delay_ps": 195.9364988539263,
+          "max_slew_ps": 44.85138758909746,
+          "verdict": "PASS_MODEL_ONLY"
+        },
+        "FF": {
+          "root": {
+            "delay_ps": 51.460251853713544,
+            "slew_ps": 31.098557521045876,
+            "total_driver_load_ff": 47.151465,
+            "max_spoke_um": 50,
+            "spokes": 3
+          },
+          "top": {
+            "delay_ps": 33.507239152000004,
+            "slew_ps": 22.109813966073588,
+            "total_driver_load_ff": 36.64901,
+            "max_spoke_um": 25,
+            "spokes": 4
+          },
+          "mid": {
+            "delay_ps": 26.22470620982672,
+            "slew_ps": 14.263831033973519,
+            "total_driver_load_ff": 19.484578,
+            "max_spoke_um": 15,
+            "spokes": 4
+          },
+          "leaf": {
+            "delay_ps": 42.49280545233715,
+            "slew_ps": 39.3871321765765,
+            "load_ff": 27.192164,
+            "lib_domain_load_ff": 368.64
+          },
+          "sum_delay_ps": 153.68500266787743,
+          "max_slew_ps": 39.3871321765765,
+          "verdict": "PASS_MODEL_ONLY"
+        }
+      },
+      "raw_area_um2": 12.772079999999999
+    },
+    "255": {
+      "counts": {
+        "BUF8_leaf": 46,
+        "BUF24_mid": 12,
+        "BUF24_top": 3,
+        "BUF24_root": 1
+      },
+      "corners": {
+        "TT": {
+          "root": {
+            "delay_ps": 63.977312620339845,
+            "slew_ps": 36.64757540540177,
+            "total_driver_load_ff": 46.378755,
+            "max_spoke_um": 50,
+            "spokes": 3
+          },
+          "top": {
+            "delay_ps": 44.07159583416351,
+            "slew_ps": 27.019791096160674,
+            "total_driver_load_ff": 35.61873,
+            "max_spoke_um": 25,
+            "spokes": 4
+          },
+          "mid": {
+            "delay_ps": 35.38986369685145,
+            "slew_ps": 17.92351651312887,
+            "total_driver_load_ff": 19.139946,
+            "max_spoke_um": 15,
+            "spokes": 4
+          },
+          "leaf": {
+            "delay_ps": 52.497726702571505,
+            "slew_ps": 44.85138758909746,
+            "load_ff": 25.679395999999997,
+            "lib_domain_load_ff": 368.64
+          },
+          "sum_delay_ps": 195.9364988539263,
+          "max_slew_ps": 44.85138758909746,
+          "verdict": "PASS_MODEL_ONLY"
+        },
+        "FF": {
+          "root": {
+            "delay_ps": 51.460251853713544,
+            "slew_ps": 31.098557521045876,
+            "total_driver_load_ff": 47.151465,
+            "max_spoke_um": 50,
+            "spokes": 3
+          },
+          "top": {
+            "delay_ps": 33.507239152000004,
+            "slew_ps": 22.109813966073588,
+            "total_driver_load_ff": 36.64901,
+            "max_spoke_um": 25,
+            "spokes": 4
+          },
+          "mid": {
+            "delay_ps": 26.22470620982672,
+            "slew_ps": 14.263831033973519,
+            "total_driver_load_ff": 19.484578,
+            "max_spoke_um": 15,
+            "spokes": 4
+          },
+          "leaf": {
+            "delay_ps": 42.49280545233715,
+            "slew_ps": 39.3871321765765,
+            "load_ff": 27.192164,
+            "lib_domain_load_ff": 368.64
+          },
+          "sum_delay_ps": 153.68500266787743,
+          "max_slew_ps": 39.3871321765765,
+          "verdict": "PASS_MODEL_ONLY"
+        }
+      },
+      "raw_area_um2": 15.04656
+    }
+  },
+  "outerfield_254um_clock_spatial_envelope": {
+    "scope": "Planning envelope only, each of3 rootspokes has aBUF24 at100um then<=27.1um continuation. Must place full nonoverlapping graph before qualified. Alloldclocknodes excluded.",
+    "extra_BUF24": 3,
+    "raw_extra_area_um2": 1.3122,
+    "corners": {
+      "TT": {
+        "root": {
+          "delay_ps": 88.04888687563282,
+          "slew_ps": 73.87554667551771,
+          "total_driver_load_ff": 85.70817,
+          "max_spoke_um": 100,
+          "spokes": 3
+        },
+        "spoke_repeater": {
+          "delay_ps": 49.393519820552285,
+          "slew_ps": 15.715242172483201,
+          "load_ff": 9.45529431,
+          "lib_domain_load_ff": 1474.56
+        },
+        "top": {
+          "delay_ps": 36.44849769116239,
+          "slew_ps": 26.688151891769905,
+          "total_driver_load_ff": 35.61873,
+          "max_spoke_um": 25,
+          "spokes": 4
+        },
+        "mid": {
+          "delay_ps": 35.268699167073166,
+          "slew_ps": 17.915395440311887,
+          "total_driver_load_ff": 19.139946,
+          "max_spoke_um": 15,
+          "spokes": 4
+        },
+        "leaf": {
+          "delay_ps": 52.49464797847546,
+          "slew_ps": 44.85138437397865,
+          "load_ff": 25.679395999999997,
+          "lib_domain_load_ff": 368.64
+        },
+        "sum_delay_ps": 261.6542515328962,
+        "max_slew_ps": 73.87554667551771
+      },
+      "FF": {
+        "root": {
+          "delay_ps": 74.30465803391667,
+          "slew_ps": 67.35420256395781,
+          "total_driver_load_ff": 86.48088,
+          "max_spoke_um": 100,
+          "spokes": 3
+        },
+        "spoke_repeater": {
+          "delay_ps": 37.55900388191706,
+          "slew_ps": 13.033057033351197,
+          "load_ff": 9.71286431,
+          "lib_domain_load_ff": 1474.56
+        },
+        "top": {
+          "delay_ps": 27.847325830960788,
+          "slew_ps": 21.75286074220305,
+          "total_driver_load_ff": 36.64901,
+          "max_spoke_um": 25,
+          "spokes": 4
+        },
+        "mid": {
+          "delay_ps": 26.117199530929526,
+          "slew_ps": 14.251347730754604,
+          "total_driver_load_ff": 19.484578,
+          "max_spoke_um": 15,
+          "spokes": 4
+        },
+        "leaf": {
+          "delay_ps": 42.48845512301281,
+          "slew_ps": 39.38708372986033,
+          "load_ff": 27.192164,
+          "lib_domain_load_ff": 368.64
+        },
+        "sum_delay_ps": 208.31664240073684,
+        "max_slew_ps": 67.35420256395781
+      }
+    }
+  },
+  "local_reset_PAD0": {
+    "TT": {
+      "local_load_ff": 9.357982,
+      "local_buffer_BUF8": 1,
+      "max_local_wire_um": 40,
+      "electrical": {
+        "delay_ps": 66.2890970599582,
+        "slew_ps": 36.65930178766862,
+        "load_ff": 19.845826,
+        "lib_domain_load_ff": 368.64
+      },
+      "data_flops_reset": false,
+      "ties": "5 local TIEHI for ASR RESETN; async clear via SETN and positive-data INV mapping",
+      "scope": "PAD0 local bank only; PAD reset NANDfanout requires sizing usingactualPAD count. Rawreset propagation and nativePHYrst_n arrival/sourcecap remainunbound."
+    },
+    "FF": {
+      "local_load_ff": 10.13822,
+      "local_buffer_BUF8": 1,
+      "max_local_wire_um": 40,
+      "electrical": {
+        "delay_ps": 53.51560967549334,
+        "slew_ps": 30.989331009985886,
+        "load_ff": 20.626064,
+        "lib_domain_load_ff": 368.64
+      },
+      "data_flops_reset": false,
+      "ties": "5 local TIEHI for ASR RESETN; async clear via SETN and positive-data INV mapping",
+      "scope": "PAD0 local bank only; PAD reset NANDfanout requires sizing usingactualPAD count. Rawreset propagation and nativePHYrst_n arrival/sourcecap remainunbound."
+    }
+  }
+}
