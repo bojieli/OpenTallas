@@ -195,6 +195,12 @@ module ot_s81sl_cap_rt #(
                      - ((do_rel && r_slot == s_slot) ? 6'd1 : 6'd0);
         cnt_r = fb_cn - 6'd1;                             // cnt[r_slot], r_slot = fb_sl
     end
+`ifdef OT_S81_CAP_RT_FACE_REGS
+    // reg_fanout (S81-KITS-E 10-30): cnt_r[0] = ~fb_cn[0] loaded 71 pins (8 slot groups x 8 cnt_g + lookups) > 64.
+    // fb_cn_g is a kept, identical copy of fb_cn that feeds slot groups 4..7 only; function and timing edges unchanged.
+    (* keep = "true" *) reg [5:0] fb_cn_g;
+    wire [5:0]  cnt_r_g = fb_cn_g - 6'd1;
+`endif
     // ---- look-ahead lookups (S81U-CAP3): the slot state the NEXT decision sees = this edge's update forwarded over
     //      the array read, for the word now entering F1 on each side (A from the n6 output flop, B from the re-entry)
     // top copies of the incoming words' slot / h (= slotof / hof of n6_t / re_t, registered with them)
@@ -218,6 +224,9 @@ module ot_s81sl_cap_rt #(
     always @(posedge clk) begin
         fa_cn <= (upd && a_ss) ? cnt_s : (do_rel && r_slot == na_sl) ? cnt_r : ga_cn[la_gs];
         fb_cn <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
+`ifdef OT_S81_CAP_RT_FACE_REGS
+        fb_cn_g <= (upd && b_ss) ? cnt_s : (do_rel && r_slot == nb_sl) ? cnt_r : gb_cn[lb_gs];
+`endif
         fa_kh <= (kwr && a_ss) ? (s_key == na_key) : (ga_key[la_gs] == na_key);
         fb_kh <= (kwr && b_ss) ? (s_key == nb_key) : (gb_key[lb_gs] == nb_key);
         fa_ev <= (upd && a_ss && s_h == na_h) ? do_ins : ga_ev[la_gs];
@@ -233,7 +242,11 @@ module ot_s81sl_cap_rt #(
             .la_d(na_sln[2:0]), .ha_d(na_hn), .lb_d(nb_sln[2:0]), .hb_d(nb_hn),
             .s_in(s_slot[5:3] == gs), .r_in(r_slot[5:3] == gs), .do_ins(do_ins), .do_mrg(do_mrg), .do_rel(do_rel),
             .rs_same(rs_same), .s_sl(s_slot[2:0]), .r_sl(r_slot[2:0]), .s_h(s_h), .s_side(s_side), .s_key(s_key),
+`ifdef OT_S81_CAP_RT_FACE_REGS
+            .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r((gs < 4) ? cnt_r : cnt_r_g),
+`else
             .slot_busy(slot_busy), .cnt_s(cnt_s), .cnt_r(cnt_r),
+`endif
             .a_cn(ga_cn[gs]), .a_key(ga_key[gs]), .a_ev(ga_ev[gs]), .a_es(ga_es[gs]),
             .b_cn(gb_cn[gs]), .b_key(gb_key[gs]), .b_ev(gb_ev[gs]), .b_es(gb_es[gs]), .any_o(any_g[gs]));
     end endgenerate
