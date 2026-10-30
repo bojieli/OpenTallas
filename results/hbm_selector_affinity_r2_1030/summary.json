@@ -1,0 +1,87 @@
+{
+  "status": "PLACEMENT MODEL ONLY; no PNR/STA/SIGNED claim",
+  "added_ff_vs_existing_candidate": 0,
+  "added_cycles": 0,
+  "old_quarter_capture_hard_failure_um": 517.464,
+  "quarter_ribbons": [
+    [
+      246.24,
+      4.32,
+      293.76,
+      225.18
+    ],
+    [
+      246.24,
+      225.18,
+      293.76,
+      446.04
+    ],
+    [
+      306.72,
+      4.32,
+      349.92,
+      225.18
+    ],
+    [
+      306.72,
+      225.18,
+      349.92,
+      446.04
+    ]
+  ],
+  "buffer_ribbons": [
+    [
+      246.24,
+      8.64,
+      293.76,
+      224.64000000000001
+    ],
+    [
+      246.24,
+      228.96,
+      293.76,
+      401.76000000000005
+    ],
+    [
+      306.72,
+      8.64,
+      349.92,
+      224.64000000000001
+    ],
+    [
+      306.72,
+      228.96,
+      349.92,
+      406.08000000000004
+    ]
+  ],
+  "root_controller": [
+    259.2,
+    190.08,
+    336.96,
+    259.2
+  ],
+  "groups": 1074,
+  "max_station_bay_ff": 16,
+  "station_counts": {
+    "global_command": 24,
+    "native_fault_output": 1,
+    "native_ingest": 2368,
+    "native_output": 2368,
+    "native_valid_output": 4,
+    "quarter_control": 56,
+    "reset_global": 1,
+    "reset_quarter": 4
+  },
+  "max_station_box_leg_bound_um": 403.512,
+  "station_box_bound_gt405": 0,
+  "hist_to_threshold_copy_worst_um": 316.44,
+  "macro_rd_to_any_quarter_ff_bound_um": 261.414,
+  "buffer_to_any_meaningful_macro_wd_bound_um": 395,
+  "limitations": [
+    "existing outer face FF offset/name survival must be checked on actual placement",
+    "source-register endpoint bounds do not prove combinational logic RC/clock/PG/STA",
+    "all mapped FF role coverage and capacity must be checked before place",
+    "native wrapper face stages are inherited, not new free stages"
+  ]
+}
