@@ -15,7 +15,16 @@ KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
 # HEAD-BIND-4 10-27 (COORD ruling on HEAD-CORE-R13 ASK4): s81_head hd_tile position straps (row0 = the bundle's first
 # local vocab row, ten = 1 used / 0 dark tile), per-instance partition straps tied at the die top (plan id_straps)
 S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
-PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS}
+# OWNER DECISION 2026-10-30 00:1x (HBM SU lane_exp0_id, option B): the SU lane ID of the exact master
+# ot_hbm_su_static_pgslice_lg__lane_exp0_id is a PHYSICAL strap_* pin (strap_lane_lane_id[10:0]) whose plan/binder
+# alias is the native RTL input lane_lane_id. METHODOLOGY 1.8 / sdc_lint unchanged: no native-name exception.
+# Values are the bound source IDs of its only two uses (u_su_Q0_lane_exp0 = 0, u_su_Q1_lane_exp0 = 16).
+SU_LANE_ID_ALIAS = dict(module='ot_hbm_su_static_pgslice_lg__lane_exp0_id', port='strap_lane_lane_id',
+                        native='lane_lane_id', width=11, values=frozenset({0, 16}))
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS,
+                      SU_LANE_ID_ALIAS['port']: SU_LANE_ID_ALIAS['width']}
+# physical strap pin -> native bound input it aliases (binder side); physical names everywhere else (pins, kit SDC)
+NATIVE_ALIAS = {SU_LANE_ID_ALIAS['port']: SU_LANE_ID_ALIAS['native']}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
@@ -67,6 +76,14 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             raise ValueError('KEYBUF_LANE_ID requires pbase 0/4 and lane 0..3')
         if raw['strap_lane_id'] != {'width': 3, 'value': base + lane}:
             raise ValueError('KEYBUF_LANE_ID requires exact 3-bit pbase+lane value')
+    if SU_LANE_ID_ALIAS['port'] in raw:
+        su = SU_LANE_ID_ALIAS
+        if descriptor.get('module') != su['module']:
+            raise ValueError(f"{su['port']} is authorized only for the exact HBM SU master {su['module']}")
+        if su['native'] in raw:
+            raise ValueError(f"{su['port']} and its native alias {su['native']} declared together")
+        if raw[su['port']].get('value') not in su['values']:
+            raise ValueError(f"{su['port']} requires a bound SU lane ID in {sorted(su['values'])}")
     result = {}
     for port, contract in raw.items():
         if port not in ID_PORTS:
@@ -82,8 +99,10 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             raise ValueError(f'parent_id_straps {port}: identity width must be exactly {PHYSICAL_ID_WIDTHS[port]} bits')
         if type(value) is not int or value < 0 or value >= 1 << width:
             raise ValueError(f'parent_id_straps {port}: value does not fit width {width}')
-        if inputs is not None and inputs.get(port) != width:
-            raise ValueError(f'parent_id_straps {port}: no actual input of width {width}')
+        # inputs = the bound (native) cell inventory: an aliased physical strap is checked on its native input
+        if inputs is not None and inputs.get(NATIVE_ALIAS.get(port, port)) != width:
+            raise ValueError(f'parent_id_straps {port}: no actual input '
+                             f'{NATIVE_ALIAS.get(port, port)} of width {width}')
         result[port] = dict(width=width, value=value)
     if pins is not None:
         import re
@@ -98,7 +117,8 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
 
 
 def type_parent_id_straps(partition_type):
-    """Declarations keyed by exact bound local leaf name.
+    """Declarations keyed by exact bound local leaf name, then by the BOUND input port name
+    (a physical alias strap such as strap_lane_lane_id is keyed by its native input, NATIVE_ALIAS).
 
     The descriptor's inst is the default. parent_id_leaf may explicitly map a
     physical name such as u_t00 to its bound local name u_t[0][0]. No guessing.
@@ -110,6 +130,7 @@ def type_parent_id_straps(partition_type):
         ids = validate_parent_id_straps(d)
         if not ids:
             continue
+        ids = {NATIVE_ALIAS.get(p, p): v for p, v in ids.items()}
         inst = d.get('parent_id_leaf', d.get('inst'))
         if not isinstance(inst, str) or not inst:
             raise ValueError('parent_id_straps requires an explicit bound local leaf name')

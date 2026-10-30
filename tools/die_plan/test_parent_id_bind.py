@@ -70,3 +70,35 @@ def test_full_width_partial_literal_id_preserves_internal_connections(tmp_path):
     old=".strap_u_b_tile_id(16'b0100010101100000)";assert old in text
     top.write_text(text.replace(old,".strap_u_b_tile_id(16'b0100010101110000)"))
     assert bind.main(['verify',str(plan),'--out',str(out),'--mem','4'])!=0
+
+
+def test_physical_strap_alias_binds_native_input(tmp_path, monkeypatch):
+    """OWNER 10-30 (B) form: the plan declares the PHYSICAL strap_* pin of an exact master; the binder ties the
+    aliased native input (here a 4-bit stand-in for the HBM SU strap_lane_lane_id -> lane_lane_id contract)."""
+    import parent_id_straps as PIS
+    monkeypatch.setattr(PIS, 'SU_LANE_ID_ALIAS', dict(module='lf_b', port='strap_tile_id', native='tile_id', width=4,
+                                                      values=frozenset({5, 6})))
+    monkeypatch.setitem(PIS.PHYSICAL_ID_WIDTHS, 'strap_tile_id', 4)
+    monkeypatch.setattr(PIS, 'NATIVE_ALIAS', {'strap_tile_id': 'tile_id'})
+    monkeypatch.setattr(PIS, 'ID_PORTS', PIS.ID_PORTS | {'strap_tile_id'})
+    src=tmp_path/'source';src.mkdir()
+    ex=HERE/'examples'/'bind_tiny'
+    for name in ['leaves.sv','par.sv','die.v']:
+        (src/name).write_text(re.sub(r'\bid\b','tile_id',(ex/name).read_text()))
+    p=json.loads((ex/'die_plan.json').read_text())
+    p['asbuilt']['base']=str(src)
+    p['asbuilt']['straps']=[r'p\d\.u_b\.tile_id']
+    p['partition_types']['ta']['contents']=[dict(inst='u_b',module='lf_b',status='reuse',
+        straps=[dict(port='strap_tile_id',width=4,value=5)])]
+    plan=src/'plan.json';plan.write_text(json.dumps(p))
+    out=tmp_path/'bound'
+    for cmd in ['elab','bind','verify']:
+        assert bind.main([cmd,str(plan),'--out',str(out),'--mem','4'])==0
+    mod=(out/'rtl'/'bt_ta.sv').read_text()
+    assert 'input wire [3:0] strap_u_b_tile_id' in mod
+    manifest=json.loads((out/'bind_parent_id_straps.json').read_text())
+    assert manifest['instances']['A0']['strap_u_b_tile_id']==dict(width=4,value=5)
+    # a native-named declaration on the same leaf is refused (no double / native-name form)
+    p['partition_types']['ta']['contents'][0]['parent_id_straps']={'tile_id':dict(width=4,value=5)}
+    plan.write_text(json.dumps(p))
+    assert bind.main(['bind',str(plan),'--out',str(out),'--mem','4','--strict'])!=0

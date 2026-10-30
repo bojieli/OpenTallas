@@ -69,3 +69,43 @@ def test_exact_keybuf_lane_identity(base,lane):
     with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, actual_module='ot_other')
     with pytest.raises(ValueError): validate_parent_id_straps(d, {})
     with pytest.raises(ValueError): validate_parent_id_straps(d, {'strap_lane_id':3}, ['strap_lane_id[0]'])
+
+
+# OWNER 2026-10-30 (B): HBM SU lane_exp0_id = physical strap_lane_lane_id pins aliasing native lane_lane_id
+SU = 'ot_hbm_su_static_pgslice_lg__lane_exp0_id'
+
+def _su(value=16, module=SU, inst='u_su_Q1_lane_exp0'):
+    return {'inst': inst, 'module': module,
+            'straps': [{'port': 'strap_lane_lane_id', 'width': 11, 'value': value}]}
+
+def test_su_alias_physical_pins_and_native_bound_input():
+    d = _su()
+    pins = [f'strap_lane_lane_id[{i}]' for i in range(11)]
+    assert validate_parent_id_straps(d, pins=pins) == {'strap_lane_lane_id': {'width': 11, 'value': 16}}
+    # bound native cell inventory: checked on lane_lane_id, never on a strap_* native port
+    assert validate_parent_id_straps(d, {'lane_lane_id': 11}) == {'strap_lane_lane_id': {'width': 11, 'value': 16}}
+    with pytest.raises(ValueError):
+        validate_parent_id_straps(d, {'strap_lane_lane_id': 11})
+    # binder keys the declaration by the native input name
+    assert type_parent_id_straps({'hard_cores': [d]}) == {'u_su_Q1_lane_exp0': {'lane_lane_id': {'width': 11, 'value': 16}}}
+
+def test_su_alias_native_named_physical_pins_rejected():
+    with pytest.raises(ValueError):
+        validate_parent_id_straps(_su(), pins=[f'lane_lane_id[{i}]' for i in range(11)])
+
+@pytest.mark.parametrize('kw', [dict(module='ot_hbm_su_static_pgslice_lg__lane_exp0'),
+                                dict(module='ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691'),
+                                dict(value=2), dict(value=2047)])
+def test_su_alias_exact_master_and_ids_only(kw):
+    with pytest.raises(ValueError):
+        validate_parent_id_straps(_su(**kw))
+
+def test_su_alias_and_native_together_rejected():
+    d = _su(); d['parent_id_straps'] = {'lane_lane_id': {'width': 11, 'value': 16}}
+    with pytest.raises(ValueError):
+        validate_parent_id_straps(d)
+
+def test_su_alias_wrong_width_rejected():
+    d = _su(); d['straps'][0]['width'] = 10
+    with pytest.raises(ValueError):
+        validate_parent_id_straps(d)
