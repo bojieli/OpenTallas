@@ -975,7 +975,8 @@ def _finish(raw,P,bytype,pports,side):
         side["collector"]["boot_budget"]["source_causal_bound_qualified"]=False
         side["collector"]["boot_budget"]["emitted_RTL_requalification_required"]=True
         side["source_boot_readiness_contract"]["emitted_RTL_requalification_required"]=True
-    else:
+    elif isinstance(side.get("collector",{}).get("boot_budget"),dict):
+        # sidecars without a boot budget (every non-KV die) are left untouched
         side["collector"]["boot_budget"]["source_causal_bound_qualified"]=False
     # These are clock/reset-adjacent infrastructure pins, like existing tap
     # and wavefront pins. They are NOT ordinary aligned functional bus ports

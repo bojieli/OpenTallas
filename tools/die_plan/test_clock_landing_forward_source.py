@@ -47,6 +47,15 @@ class ForwardSource(unittest.TestCase):
         pin = self._pin()
         self.assertEqual((pin["source_clock_port"], pin["source_clock_tap"]), ("clk", "clk_t4"))
 
+    def test_boot_budget_flag_only_when_the_sidecar_has_one(self):
+        # ROOT-MERGE-AD HOLD 10-30 11:23: sidecars without collector.boot_budget must not KeyError
+        side = dict(collector=dict(observer={}))
+        CP._finish(_raw(), self.P, _bytype(), set(), side)
+        self.assertNotIn("boot_budget", side["collector"])
+        side = dict(collector=dict(observer={}, boot_budget=dict(source_causal_bound_qualified=True)))
+        CP._finish(_raw(), self.P, _bytype(), set(), side)
+        self.assertIs(side["collector"]["boot_budget"]["source_causal_bound_qualified"], False)
+
     def test_compose_rejects_unknown_mode(self):
         with self.assertRaises(ValueError):
             CP.compose({}, {}, forward_source="nearest")
