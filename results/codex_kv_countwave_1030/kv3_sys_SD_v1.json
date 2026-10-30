@@ -1,0 +1,22 @@
+{
+ "type": "kv3_sys_SD_v1",
+ "complete_native": true,
+ "stdcells": 57219,
+ "std_ff": 14079,
+ "source_total_mapped_leaves": 57220,
+ "external_macro_instances": {
+  "$paramod\\ot_qfd_serdes_112g_x6_phy\\W=s32'00000000000000000000001000001001": 1
+ },
+ "unknown": {},
+ "ignored_metadata": {},
+ "opaque_declared_hardcores": [],
+ "declared_hard_children": {},
+ "hard_child_std_counts": {},
+ "parent_physical_residual_std": 57219,
+ "residual_status": "exact actual scope attribution",
+ "native_json_sha256": "306aafca956ee2ee6efb6c52c0489b2d2ac6f3c879817168e8963948b55ac870",
+ "native_json_path": "kits2/kv3_sys_SD_v1/kv3_sys_SD_v1/run/results/asap7/dp_kv3_sys_SD_v1/base/1_2_yosys_native_metadata.json",
+ "top": "kv3_sys_SD_v1_part",
+ "defines": "actual GEN VERILOG_DEFINES from config.mk",
+ "physical_gates": "NOT RUN: SYNTH/count only"
+}
