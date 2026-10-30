@@ -221,6 +221,89 @@ def fix_keepout_strays(P, mode, limit_um, smax):
     return out
 
 
+def reparent_obstructed_edges(P, smax):
+    """Opt-in macro-face repair, including repeated and internal edges.
+
+    Rehang only an obstructed edge on a reachable driver at the SAME parent
+    depth. Keep every edge's repeater count, endpoint, sinks and sink depth.
+    Every replacement segment must itself be shortest, <=smax and <=1.10x
+    Manhattan. An edge without a legal donor stays failed, never gets padding
+    or an added stage. Driver sizing and the usual model gates run afterwards.
+    """
+    mz = P['mz']; tol = GATES['leg_detour_max'] + 1e-9
+    man = lambda a, b: sum(abs(x-y) for x, y in zip(a, b)) * mz.G
+
+    def depths():
+        nd = {n[0]: n for n in P['nodes']}; out = {}
+        def visit(u, seen):
+            if u in out: return out[u]
+            if u in seen: raise ValueError('macro-face repair: cycle at ' + u)
+            par = nd[u][1]
+            out[u] = 0 if par is None else visit(par, seen | {u}) + 1
+            return out[u]
+        for u in nd: visit(u, set())
+        return out
+
+    before = {u: d for u, d in depths().items() if u in P['leafsinks']}
+    result = []
+    for w in sorted(P['wires'], key=lambda w: (w['level'], w['edge'])):
+        def legal(segments, paths):
+            return all(0 <= length <= smax + 1e-9
+                       and (man(path[0], path[-1]) <= 1.0
+                            or length <= tol * man(path[0], path[-1]))
+                       for length, path in zip(segments, paths))
+        if legal(w['segs'], w['cells']): continue
+        u = w['edge']; br = u + '_br'; k = len(w['segs'])
+        nodes = {n[0]: n for n in P['nodes']}; dep = depths()
+        own = nodes[br][1]; endpoint = w['cells'][-1][-1]; best = None
+        occupied = {n[2] for n in P['nodes'] if n[0] != br}
+        for donor in sorted(P['wires'], key=lambda z: z['edge']):
+            vb = donor['edge'] + '_br'
+            if donor['level'] != w['level'] or vb == br: continue
+            drv = nodes[vb][1]
+            if drv == own or dep[drv] != dep[own]: continue
+            hub = nodes[vb][2]
+            nsib = sum(n[4] == 'branch' and n[1] == drv for n in P['nodes'])
+            b = mz.cell((mz.xy(hub)[0], mz.xy(hub)[1] + nsib * 1.08))
+            if b in occupied: continue
+            length = mz.md(b, endpoint)
+            if length < 0 or length > k * smax + 1e-9: continue
+            if man(b, endpoint) > 1.0 and length > tol * man(b, endpoint): continue
+            # Preserve the chain count; verify each resulting leg independently.
+            pts = H.exact_points(mz, b, endpoint, length, k)
+            chain = [b] + pts + [endpoint]
+            segs = [mz.md(a, z) for a, z in zip(chain, chain[1:])]
+            paths = [mz.path(a, z) for a, z in zip(chain, chain[1:])]
+            if not legal(segs, paths): continue
+            score = (sum(segs), drv, donor['edge'])
+            if best is None or score < best[0]: best = (score, drv, b, pts, segs, paths)
+        if best is None:
+            result.append(dict(edge=u, level=w['level'], fixed=False,
+                               why='no reachable same-depth donor preserving edge stages'))
+            continue
+        score, drv, b, pts, segs, paths = best
+        positions = {br: b, **{u + '_r%d' % i: p for i, p in enumerate(pts)}}
+        P['nodes'] = [(n[0], drv if n[0] == br else n[1], positions.get(n[0], n[2]), n[3], n[4])
+                      for n in P['nodes']]
+        w['segs'], w['cells'] = segs, paths
+        last = u + '_r%d' % (k-2) if k > 1 else br
+        if last in P['land']: P['land'][last] = (segs[-1], u)
+        result.append(dict(edge=u, level=w['level'], fixed='reparent', old_driver=own,
+                           driver=drv, parent_depth=dep[drv], repeaters=k-1,
+                           branch_xy=mz.xy(b), segment_um=segs))
+    after = depths()
+    if any(after[u] != d for u, d in before.items()):
+        raise ValueError('macro-face repair changed a sink path stage count')
+    order, seen, rest = [], set(), list(P['nodes'])
+    while rest:
+        ready = [n for n in rest if n[1] is None or n[1] in seen]
+        if not ready: raise ValueError('macro-face repair cycle')
+        order.extend(ready); seen.update(n[0] for n in ready)
+        rest = [n for n in rest if n[0] not in seen]
+    P['nodes'] = order
+    return result
+
+
 def reassign_nearest(P, cap):
     """structure, no wire: every sink goes to the NEAREST leaf driver (Manhattan, deterministic, capacity cap sinks per
     leaf, farthest-first), so isolated face/pin/reset registers join the closest leaf instead of stretching the
@@ -463,6 +546,8 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
     stray = fix_keepout_strays(P, fam["keepout_stray"], fam.get("leaf_limit", 35.0), fam.get("smax", 70.0)) \
         if macro_mode and fam.get("keepout_stray") else None
+    face_repair = reparent_obstructed_edges(P, fam.get("smax", 70.0)) \
+        if macro_mode and fam.get("macro_face_reparent") else None
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
     r = 0.5 * (1.80365e-2 + 1.89935e-2) * kr; c = 0.5 * (1.78475e-1 + 1.64264e-1) * kc
     cells = sorted(set(ENV + [H.REP, H.BIG]))
@@ -512,6 +597,8 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
         rec["macro_leaves"] = sorted(u for u, v in P["leafsinks"].items() if all(q[4].startswith("MACRO:") for q in v))
         if stray is not None:
             rec["keepout_stray"] = stray
+        if face_repair is not None:
+            rec["macro_face_reparent"] = face_repair
     return rec
 
 

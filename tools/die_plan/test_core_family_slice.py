@@ -28,6 +28,61 @@ import collections
 import pytest
 
 
+def _obstructed_repeated_plan(donor=True, internal=False):
+    mz = F.H.Maze((0, 0, 100, 80), [('wall', (30, 5, 65, 45), (30, 10))], G=1, halo=0)
+    c = lambda xy: mz.cell(xy)
+    nodes = [('root', None, c((0, 70)), 'BIG', 'entry'),
+             ('a', 'root', c((10, 20)), 'BIG', 'rep'),
+             ('b', 'root', c((80, 20)), 'BIG', 'rep'),
+             ('X_br', 'a', c((10, 21)), 'BIG', 'branch'),
+             ('X_r0', 'X_br', c((50, 60)), 'BIG', 'rep')]
+    endpoint=c((80,30)); chain=[c((10,21)),c((50,60)),endpoint]
+    w=dict(level=2,edge='X',segs=[mz.md(a,b) for a,b in zip(chain,chain[1:])],
+           cells=[mz.path(a,b) for a,b in zip(chain,chain[1:])])
+    nodes += [('Z' if internal else 'X','X_r0',endpoint,'BIG','leaf')]
+    wires=[w]
+    if donor:
+        nodes += [('Y_br','b',c((80,21)),'BIG','branch'),('Y_r0','Y_br',c((80,25)),'BIG','rep'),
+                  ('Y','Y_r0',c((80,40)),'BIG','leaf')]
+        wires += [dict(level=2,edge='Y',segs=[4,15],cells=[mz.path(c((80,21)),c((80,25))),mz.path(c((80,25)),c((80,40)))])]
+    return dict(mz=mz,nodes=nodes,wires=wires,land={'X_r0':(w['segs'][-1],'X')} if internal else {},
+                leafsinks={'Z' if internal else 'X':[(80.,30.,'ff','reg','CLK')]})
+
+
+@pytest.mark.parametrize('internal',[False,True])
+def test_macro_face_reparent_preserves_repeated_chain_and_sink_depth(internal):
+    P=_obstructed_repeated_plan(internal=internal)
+    old_nodes={n[0] for n in P['nodes']};sinks=dict(P['leafsinks'])
+    record=F.reparent_obstructed_edges(P,70)
+    fix=next(x for x in record if x['edge']=='X')
+    assert fix['fixed']=='reparent' and fix['driver']=='b' and fix['repeaters']==1
+    assert {n[0] for n in P['nodes']}==old_nodes and P['leafsinks']==sinks
+    w=next(w for w in P['wires'] if w['edge']=='X')
+    assert len(w['segs'])==2 and max(w['segs'])<=70
+    assert all(length <=1.1*sum(abs(a-b) for a,b in zip(path[0],path[-1]))+1e-9
+               for length,path in zip(w['segs'],w['cells']))
+    if internal: assert P['land']['X_r0']==(w['segs'][-1],'X')
+    seen=set()
+    for n in P['nodes']:
+        assert n[1] is None or n[1] in seen
+        seen.add(n[0])
+
+
+def test_macro_face_reparent_no_donor_retains_failed_edge():
+    import copy
+    P=_obstructed_repeated_plan(donor=False);before=copy.deepcopy(P['nodes']);wire=copy.deepcopy(P['wires'])
+    record=F.reparent_obstructed_edges(P,70)
+    assert record[0]['fixed'] is False and P['nodes']==before and P['wires']==wire
+
+
+def test_macro_face_reparent_rejects_reachable_donor_at_different_depth():
+    P=_obstructed_repeated_plan()
+    P['nodes']=[(n[0],'a' if n[0]=='b' else n[1],n[2],n[3],n[4]) for n in P['nodes']]
+    record=F.reparent_obstructed_edges(P,70)
+    assert next(x for x in record if x['edge']=='X')['fixed'] is False
+    assert next(n for n in P['nodes'] if n[0]=='X_br')[1]=='a'
+
+
 class _Maze:
     """minimal maze: cells are (x, y) tuples on a 1 um grid."""
     G = 1.0
