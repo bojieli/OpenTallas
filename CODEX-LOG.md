@@ -6946,3 +6946,14 @@ Final parent branches/packets:
 OWNER? only KVq0 sparsefixed-slot question remains live; no waiver/noCTS. S81pinexception superseded by faithfultoolfix. All other failures diagnosed/owned or explicitnextstep in packets. No after-reset engineering, no newSIGNED/die/tokenrelease claim.
 
 Final HBM child drain: cores74f0d6c47; EP finish terminal CLOCK FAIL FF306.187 vs202.5+/-40 (not live/notSIGNED); qcore3396787 remainsCTS LIVE. HBM039 qualified commit c79088880 ONLY; branchHEAD4e1bc8cbc is unqualified HUB WIP, DO NOT MERGE HEAD as qualified. Pre-reset hubNC0/1/2 proof unit3349133 LIVE intel1codex-hbm-glue039-1852/hub.log. All5HBMchildren parked, no afterresetengineering.
+
+## Takeover 2026-10-29 22:50 PDT
+Newuserrequest2249; previousparkrevoked. Readrole/newhandoff+rules; assignedallfivecurrentdieowners+FLOW+ROOTMERGE+coverage. Approvedconcretereview TOKKV5fa STARTjoinedbench, QCfb430 YC1valueidenticalconcat, QCshield126e truthfulendpadextentfix; KVb64real-planbyteidentityconditionretained. Fullnewhandoff/alllane inventory delegatedcoverage; eachdieownerreadsitsfullcurrentsection.
+
+OWNER?
+No newquestionatstartup; existinglatestownerdecisions/defaults remaininforce.
+
+CODEX:2026-10-29 22:55 PDT ROOTMERGE2249 main0d836d178f0:KF3d762/QCshield126/TOKSTART5fa/QCYC1fb430 integrated;37focusedPASS+2subtests/16sidEQ; mainbindguard preserved/no deletions. KVb64heldrealKV+HEADbyteidentity; BF/ROMresetmirrorHOLD preserved.
+
+## OWNER? 2026-10-29 22:54 PDT S81 kv_leaf__t2 macrofit
+Latest22:43estimate shows approvedonebank(B) cannot preserve16parallelwriteenables and other39macros stillplaceonly16/39withoutg_store. Largerlocal slot(C) or provenu_bankdepth/RTLreduction requiresownerchoice. Noimpossible(B)buildlaunched; LP H2/stationgates/otherkitscontinue.

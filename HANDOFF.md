@@ -2062,3 +2062,7 @@ CODEX: 2026-10-29 19:05 PDT explicitreset finalROOT main=e4b3808d5c7 intel2/orig
 2026-10-29 20:22 PDT COORD hourly: delta 0 (21 h), burn-down 151/31; epyc2 scratch 86->81% (39 GB idle>24h pruned); approved 37f68b5eecf (cond), f847ebbfb7c, 1efaf95ac43; successors KV-KITS-V, S81-KITS-B, ROOT-MERGE-Z, DIE-HBM-26; QC-KITS-U waits on DIE-QC-40 strap sites.
 2026-10-29 21:23 PDT COORD hourly: 22 h with no new type signed off; shared GRT clock lock + leaf_affinity fix approved; KV event28w_c adopted; HBM V-R1 event approved; HEAD fault paths (A); OWNER? KV q1/q2 fill; epyc2 scratch pruned 86->68% (manifest epyc2 /srv/opentallas-scratch2/claude/wt-deleted-epyc2-1029-2125).
 2026-10-29 22:20 PDT COORD hourly: 23 h, no new type signed off; KV clock check PASS; QC pin-access gate PASS; S81 BFroots RTL revert after HOLD; lanes restarted: ROOT-MERGE-AA, HEAD-KITS-V, DIE-KV-42, DIE-QC-42; OWNER? kv_leaf__t2 (B) + LP H2 (A) default 22:40.
+
+CODEX: 2026-10-29 22:50 PDT takeoverall5dies+sharedFLOW/merge/coverageactive; currentmain1abb3fcb1, collectbeforeduplicate, currentfreeze/rulesretained. KF3merge+QCshield/YC1/STARTbenchsourceunblocks underway.
+
+CODEX:2026-10-29 22:55 PDT ROOTMERGE2249 main0d836d178f0:KF3d762/QCshield126/TOKSTART5fa/QCYC1fb430 integrated;37focusedPASS+2subtests/16sidEQ; mainbindguard preserved/no deletions. KVb64heldrealKV+HEADbyteidentity; BF/ROMresetmirrorHOLD preserved.
