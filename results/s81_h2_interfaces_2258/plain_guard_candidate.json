@@ -1,0 +1,1722 @@
+{
+ "top": "ot_s81_mu72_lnland",
+ "checked": 2232,
+ "ok": 2232,
+ "fails": {},
+ "flops": {
+  "k_lo_v": "u_kn.u_w.g_chunk[69].u_local/data[2][1]$_DFFE_PP_",
+  "k_lo_d[552]": "u_kn.u_w.g_chunk[69].u_local/data[3][0]$_DFFE_PP_",
+  "k_lo_d[551]": "u_kn.u_w.g_chunk[68].u_local/data[3][7]$_DFFE_PP_",
+  "k_lo_d[550]": "u_kn.u_w.g_chunk[68].u_local/data[3][6]$_DFFE_PP_",
+  "k_lo_d[549]": "u_kn.u_w.g_chunk[68].u_local/data[2][5]$_DFFE_PP_",
+  "k_lo_d[548]": "u_kn.u_w.g_chunk[68].u_local/data[3][4]$_DFFE_PP_",
+  "k_lo_d[547]": "u_kn.u_w.g_chunk[68].u_local/data[3][3]$_DFFE_PP_",
+  "k_lo_d[546]": "u_kn.u_w.g_chunk[68].u_local/data[3][2]$_DFFE_PP_",
+  "k_lo_d[545]": "u_kn.u_w.g_chunk[68].u_local/data[3][1]$_DFFE_PP_",
+  "k_lo_d[544]": "u_kn.u_w.g_chunk[68].u_local/data[3][0]$_DFFE_PP_",
+  "k_lo_d[543]": "u_kn.u_w.g_chunk[67].u_local/data[3][7]$_DFFE_PP_",
+  "k_lo_d[542]": "u_kn.u_w.g_chunk[67].u_local/data[3][6]$_DFFE_PP_",
+  "k_lo_d[541]": "u_kn.u_w.g_chunk[67].u_local/data[2][5]$_DFFE_PP_",
+  "k_lo_d[540]": "u_kn.u_w.g_chunk[67].u_local/data[3][4]$_DFFE_PP_",
+  "k_lo_d[539]": "u_kn.u_w.g_chunk[67].u_local/data[3][3]$_DFFE_PP_",
+  "k_lo_d[538]": "u_kn.u_w.g_chunk[67].u_local/data[3][2]$_DFFE_PP_",
+  "k_lo_d[537]": "u_kn.u_w.g_chunk[67].u_local/data[3][1]$_DFFE_PP_",
+  "k_lo_d[536]": "u_kn.u_w.g_chunk[67].u_local/data[3][0]$_DFFE_PP_",
+  "k_lo_d[535]": "u_kn.u_w.g_chunk[66].u_local/data[3][7]$_DFFE_PP_",
+  "k_lo_d[534]": "u_kn.u_w.g_chunk[66].u_local/data[3][6]$_DFFE_PP_"
+ },
+ "straps_exempt": [],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {},
+ "registered_onehot": {
+  "u_kn.u_w.g_chunk[69].u_local": {
+   "parent": "u_kn.u_w.g_chunk[69].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[68].u_local": {
+   "parent": "u_kn.u_w.g_chunk[68].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[67].u_local": {
+   "parent": "u_kn.u_w.g_chunk[67].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[66].u_local": {
+   "parent": "u_kn.u_w.g_chunk[66].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[65].u_local": {
+   "parent": "u_kn.u_w.g_chunk[65].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[64].u_local": {
+   "parent": "u_kn.u_w.g_chunk[64].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[63].u_local": {
+   "parent": "u_kn.u_w.g_chunk[63].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[62].u_local": {
+   "parent": "u_kn.u_w.g_chunk[62].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[61].u_local": {
+   "parent": "u_kn.u_w.g_chunk[61].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[60].u_local": {
+   "parent": "u_kn.u_w.g_chunk[60].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[59].u_local": {
+   "parent": "u_kn.u_w.g_chunk[59].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[58].u_local": {
+   "parent": "u_kn.u_w.g_chunk[58].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[57].u_local": {
+   "parent": "u_kn.u_w.g_chunk[57].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[56].u_local": {
+   "parent": "u_kn.u_w.g_chunk[56].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[55].u_local": {
+   "parent": "u_kn.u_w.g_chunk[55].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[54].u_local": {
+   "parent": "u_kn.u_w.g_chunk[54].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[53].u_local": {
+   "parent": "u_kn.u_w.g_chunk[53].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[52].u_local": {
+   "parent": "u_kn.u_w.g_chunk[52].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[51].u_local": {
+   "parent": "u_kn.u_w.g_chunk[51].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[50].u_local": {
+   "parent": "u_kn.u_w.g_chunk[50].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[49].u_local": {
+   "parent": "u_kn.u_w.g_chunk[49].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[48].u_local": {
+   "parent": "u_kn.u_w.g_chunk[48].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[47].u_local": {
+   "parent": "u_kn.u_w.g_chunk[47].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[46].u_local": {
+   "parent": "u_kn.u_w.g_chunk[46].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[45].u_local": {
+   "parent": "u_kn.u_w.g_chunk[45].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[44].u_local": {
+   "parent": "u_kn.u_w.g_chunk[44].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[43].u_local": {
+   "parent": "u_kn.u_w.g_chunk[43].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[42].u_local": {
+   "parent": "u_kn.u_w.g_chunk[42].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[41].u_local": {
+   "parent": "u_kn.u_w.g_chunk[41].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[40].u_local": {
+   "parent": "u_kn.u_w.g_chunk[40].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[39].u_local": {
+   "parent": "u_kn.u_w.g_chunk[39].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[38].u_local": {
+   "parent": "u_kn.u_w.g_chunk[38].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[37].u_local": {
+   "parent": "u_kn.u_w.g_chunk[37].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[36].u_local": {
+   "parent": "u_kn.u_w.g_chunk[36].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[35].u_local": {
+   "parent": "u_kn.u_w.g_chunk[35].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[34].u_local": {
+   "parent": "u_kn.u_w.g_chunk[34].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[33].u_local": {
+   "parent": "u_kn.u_w.g_chunk[33].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[32].u_local": {
+   "parent": "u_kn.u_w.g_chunk[32].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[31].u_local": {
+   "parent": "u_kn.u_w.g_chunk[31].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[30].u_local": {
+   "parent": "u_kn.u_w.g_chunk[30].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[29].u_local": {
+   "parent": "u_kn.u_w.g_chunk[29].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[28].u_local": {
+   "parent": "u_kn.u_w.g_chunk[28].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[27].u_local": {
+   "parent": "u_kn.u_w.g_chunk[27].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[26].u_local": {
+   "parent": "u_kn.u_w.g_chunk[26].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[25].u_local": {
+   "parent": "u_kn.u_w.g_chunk[25].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[24].u_local": {
+   "parent": "u_kn.u_w.g_chunk[24].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[23].u_local": {
+   "parent": "u_kn.u_w.g_chunk[23].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[22].u_local": {
+   "parent": "u_kn.u_w.g_chunk[22].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[21].u_local": {
+   "parent": "u_kn.u_w.g_chunk[21].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[20].u_local": {
+   "parent": "u_kn.u_w.g_chunk[20].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[19].u_local": {
+   "parent": "u_kn.u_w.g_chunk[19].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[18].u_local": {
+   "parent": "u_kn.u_w.g_chunk[18].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[17].u_local": {
+   "parent": "u_kn.u_w.g_chunk[17].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[16].u_local": {
+   "parent": "u_kn.u_w.g_chunk[16].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[15].u_local": {
+   "parent": "u_kn.u_w.g_chunk[15].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[14].u_local": {
+   "parent": "u_kn.u_w.g_chunk[14].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[13].u_local": {
+   "parent": "u_kn.u_w.g_chunk[13].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[12].u_local": {
+   "parent": "u_kn.u_w.g_chunk[12].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[11].u_local": {
+   "parent": "u_kn.u_w.g_chunk[11].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[10].u_local": {
+   "parent": "u_kn.u_w.g_chunk[10].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[9].u_local": {
+   "parent": "u_kn.u_w.g_chunk[9].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[8].u_local": {
+   "parent": "u_kn.u_w.g_chunk[8].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[7].u_local": {
+   "parent": "u_kn.u_w.g_chunk[7].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[6].u_local": {
+   "parent": "u_kn.u_w.g_chunk[6].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[5].u_local": {
+   "parent": "u_kn.u_w.g_chunk[5].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[4].u_local": {
+   "parent": "u_kn.u_w.g_chunk[4].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[3].u_local": {
+   "parent": "u_kn.u_w.g_chunk[3].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[2].u_local": {
+   "parent": "u_kn.u_w.g_chunk[2].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[1].u_local": {
+   "parent": "u_kn.u_w.g_chunk[1].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_kn.u_w.g_chunk[0].u_local": {
+   "parent": "u_kn.u_w.g_chunk[0].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[69].u_local": {
+   "parent": "u_nk.u_w.g_chunk[69].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[68].u_local": {
+   "parent": "u_nk.u_w.g_chunk[68].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[67].u_local": {
+   "parent": "u_nk.u_w.g_chunk[67].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[66].u_local": {
+   "parent": "u_nk.u_w.g_chunk[66].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[65].u_local": {
+   "parent": "u_nk.u_w.g_chunk[65].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[64].u_local": {
+   "parent": "u_nk.u_w.g_chunk[64].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[63].u_local": {
+   "parent": "u_nk.u_w.g_chunk[63].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[62].u_local": {
+   "parent": "u_nk.u_w.g_chunk[62].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[61].u_local": {
+   "parent": "u_nk.u_w.g_chunk[61].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[60].u_local": {
+   "parent": "u_nk.u_w.g_chunk[60].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[59].u_local": {
+   "parent": "u_nk.u_w.g_chunk[59].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[58].u_local": {
+   "parent": "u_nk.u_w.g_chunk[58].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[57].u_local": {
+   "parent": "u_nk.u_w.g_chunk[57].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[56].u_local": {
+   "parent": "u_nk.u_w.g_chunk[56].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[55].u_local": {
+   "parent": "u_nk.u_w.g_chunk[55].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[54].u_local": {
+   "parent": "u_nk.u_w.g_chunk[54].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[53].u_local": {
+   "parent": "u_nk.u_w.g_chunk[53].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[52].u_local": {
+   "parent": "u_nk.u_w.g_chunk[52].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[51].u_local": {
+   "parent": "u_nk.u_w.g_chunk[51].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[50].u_local": {
+   "parent": "u_nk.u_w.g_chunk[50].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[49].u_local": {
+   "parent": "u_nk.u_w.g_chunk[49].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[48].u_local": {
+   "parent": "u_nk.u_w.g_chunk[48].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[47].u_local": {
+   "parent": "u_nk.u_w.g_chunk[47].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[46].u_local": {
+   "parent": "u_nk.u_w.g_chunk[46].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[45].u_local": {
+   "parent": "u_nk.u_w.g_chunk[45].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[44].u_local": {
+   "parent": "u_nk.u_w.g_chunk[44].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[43].u_local": {
+   "parent": "u_nk.u_w.g_chunk[43].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[42].u_local": {
+   "parent": "u_nk.u_w.g_chunk[42].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[41].u_local": {
+   "parent": "u_nk.u_w.g_chunk[41].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[40].u_local": {
+   "parent": "u_nk.u_w.g_chunk[40].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[39].u_local": {
+   "parent": "u_nk.u_w.g_chunk[39].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[38].u_local": {
+   "parent": "u_nk.u_w.g_chunk[38].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[37].u_local": {
+   "parent": "u_nk.u_w.g_chunk[37].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[36].u_local": {
+   "parent": "u_nk.u_w.g_chunk[36].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[35].u_local": {
+   "parent": "u_nk.u_w.g_chunk[35].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[34].u_local": {
+   "parent": "u_nk.u_w.g_chunk[34].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[33].u_local": {
+   "parent": "u_nk.u_w.g_chunk[33].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[32].u_local": {
+   "parent": "u_nk.u_w.g_chunk[32].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[31].u_local": {
+   "parent": "u_nk.u_w.g_chunk[31].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[30].u_local": {
+   "parent": "u_nk.u_w.g_chunk[30].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[29].u_local": {
+   "parent": "u_nk.u_w.g_chunk[29].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[28].u_local": {
+   "parent": "u_nk.u_w.g_chunk[28].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[27].u_local": {
+   "parent": "u_nk.u_w.g_chunk[27].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[26].u_local": {
+   "parent": "u_nk.u_w.g_chunk[26].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[25].u_local": {
+   "parent": "u_nk.u_w.g_chunk[25].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[24].u_local": {
+   "parent": "u_nk.u_w.g_chunk[24].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[23].u_local": {
+   "parent": "u_nk.u_w.g_chunk[23].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[22].u_local": {
+   "parent": "u_nk.u_w.g_chunk[22].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[21].u_local": {
+   "parent": "u_nk.u_w.g_chunk[21].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[20].u_local": {
+   "parent": "u_nk.u_w.g_chunk[20].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[19].u_local": {
+   "parent": "u_nk.u_w.g_chunk[19].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[18].u_local": {
+   "parent": "u_nk.u_w.g_chunk[18].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[17].u_local": {
+   "parent": "u_nk.u_w.g_chunk[17].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[16].u_local": {
+   "parent": "u_nk.u_w.g_chunk[16].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[15].u_local": {
+   "parent": "u_nk.u_w.g_chunk[15].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[14].u_local": {
+   "parent": "u_nk.u_w.g_chunk[14].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[13].u_local": {
+   "parent": "u_nk.u_w.g_chunk[13].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[12].u_local": {
+   "parent": "u_nk.u_w.g_chunk[12].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[11].u_local": {
+   "parent": "u_nk.u_w.g_chunk[11].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[10].u_local": {
+   "parent": "u_nk.u_w.g_chunk[10].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[9].u_local": {
+   "parent": "u_nk.u_w.g_chunk[9].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[8].u_local": {
+   "parent": "u_nk.u_w.g_chunk[8].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[7].u_local": {
+   "parent": "u_nk.u_w.g_chunk[7].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[6].u_local": {
+   "parent": "u_nk.u_w.g_chunk[6].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[5].u_local": {
+   "parent": "u_nk.u_w.g_chunk[5].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[4].u_local": {
+   "parent": "u_nk.u_w.g_chunk[4].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[3].u_local": {
+   "parent": "u_nk.u_w.g_chunk[3].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[2].u_local": {
+   "parent": "u_nk.u_w.g_chunk[2].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[1].u_local": {
+   "parent": "u_nk.u_w.g_chunk[1].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  },
+  "u_nk.u_w.g_chunk[0].u_local": {
+   "parent": "u_nk.u_w.g_chunk[0].u_local",
+   "reset_chain_edges": 4,
+   "reset_asserted_edges_required": 5,
+   "cycle": 4,
+   "reset_vector": [
+    true,
+    false,
+    true,
+    true
+   ]
+  }
+ },
+ "land_mux_depth": {
+  "1": 4464
+ },
+ "land_slot_bits": 1116,
+ "land_mux_bits": 1116,
+ "pairs_declared": [],
+ "fail_counts": {},
+ "verdict": "PASS"
+}

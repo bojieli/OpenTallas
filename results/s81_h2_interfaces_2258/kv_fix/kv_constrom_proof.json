@@ -1,0 +1,105 @@
+{
+ "verdict": "PASS",
+ "types": [
+  {
+   "type": "ot_s81sl_kv_leaf__t1",
+   "canonical_sha256": "ddcbd237727a727d26029224836d244cd7f9205e8a038660276b168fea877d32",
+   "optimized_largest_bits": 15616,
+   "oversized_memories": [
+    {
+     "module": "$paramod$fc25d42f82bd7030f802628490e48b478565fb09\\ot_hdc_v41x_exp_s",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38437",
+     "width": 50,
+     "rows": 128,
+     "constant_bits": 6400,
+     "runtime_write_ports": 0
+    },
+    {
+     "module": "$paramod$6149e7abdb02c88f21d3c1dc42d681ee49abd752\\ot_dsrom_exp_f12",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38433",
+     "width": 64,
+     "rows": 256,
+     "constant_bits": 16384,
+     "runtime_write_ports": 0
+    }
+   ],
+   "retry": "/srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/kv_fix/ot_s81sl_kv_leaf__t1",
+   "scope": "Only constant read-only arithmetic truth tables exceed previous6272; no runtime RAM added. Goal synth only; collect flat cell count before P&R."
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t3",
+   "canonical_sha256": "38f8ac05dc38298416c20b916ceaa5ba328759bdc336d1412df48eea83ea7669",
+   "optimized_largest_bits": 15616,
+   "oversized_memories": [
+    {
+     "module": "$paramod$fc25d42f82bd7030f802628490e48b478565fb09\\ot_hdc_v41x_exp_s",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38834",
+     "width": 50,
+     "rows": 128,
+     "constant_bits": 6400,
+     "runtime_write_ports": 0
+    },
+    {
+     "module": "$paramod$6149e7abdb02c88f21d3c1dc42d681ee49abd752\\ot_dsrom_exp_f12",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38830",
+     "width": 64,
+     "rows": 256,
+     "constant_bits": 16384,
+     "runtime_write_ports": 0
+    }
+   ],
+   "retry": "/srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/kv_fix/ot_s81sl_kv_leaf__t3",
+   "scope": "Only constant read-only arithmetic truth tables exceed previous6272; no runtime RAM added. Goal synth only; collect flat cell count before P&R."
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t4",
+   "canonical_sha256": "f0024d3be6ef1ef5b25156767396c7ef91c70887d937d629cbcce8ac61fe117b",
+   "optimized_largest_bits": 15616,
+   "oversized_memories": [
+    {
+     "module": "$paramod$fc25d42f82bd7030f802628490e48b478565fb09\\ot_hdc_v41x_exp_s",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38839",
+     "width": 50,
+     "rows": 128,
+     "constant_bits": 6400,
+     "runtime_write_ports": 0
+    },
+    {
+     "module": "$paramod$6149e7abdb02c88f21d3c1dc42d681ee49abd752\\ot_dsrom_exp_f12",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38835",
+     "width": 64,
+     "rows": 256,
+     "constant_bits": 16384,
+     "runtime_write_ports": 0
+    }
+   ],
+   "retry": "/srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/kv_fix/ot_s81sl_kv_leaf__t4",
+   "scope": "Only constant read-only arithmetic truth tables exceed previous6272; no runtime RAM added. Goal synth only; collect flat cell count before P&R."
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t5",
+   "canonical_sha256": "9ed875292191ee9b82754587daa7a21f44f6b03151218815aad9e5325f90df1d",
+   "optimized_largest_bits": 15616,
+   "oversized_memories": [
+    {
+     "module": "$paramod$fc25d42f82bd7030f802628490e48b478565fb09\\ot_hdc_v41x_exp_s",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38548",
+     "width": 50,
+     "rows": 128,
+     "constant_bits": 6400,
+     "runtime_write_ports": 0
+    },
+    {
+     "module": "$paramod$6149e7abdb02c88f21d3c1dc42d681ee49abd752\\ot_dsrom_exp_f12",
+     "memory": "$auto$proc_rom.cc:155:do_switch$38544",
+     "width": 64,
+     "rows": 256,
+     "constant_bits": 16384,
+     "runtime_write_ports": 0
+    }
+   ],
+   "retry": "/srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/kv_fix/ot_s81sl_kv_leaf__t5",
+   "scope": "Only constant read-only arithmetic truth tables exceed previous6272; no runtime RAM added. Goal synth only; collect flat cell count before P&R."
+  }
+ ]
+}
