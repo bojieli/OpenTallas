@@ -1,0 +1,145 @@
+{
+ "status": "LEGACY_TABLE_IDENTITY_TO_PUBLISHED_EIGHT_HOME_SUCCESSOR_NO_PROGRAMME_ADOPTION",
+ "checkpoint_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+ "checkpoint_snapshot": "/home/ubuntu/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4.1-Flash/snapshots/dba1be0a40aa45a94ad051997016db3960a90277",
+ "source_contract_commit": "a9d1fad2835d96e4c0585a150b6a9d484b9791cc",
+ "header_catalogue_commit": "25631b8754f4ec295d5d6415ca85e75f38564664",
+ "tables": [
+  {
+   "tensor": "layers.1.engram.embed.weight",
+   "legacy_dense_manifest_base": 75713806336,
+   "legacy_encoded_code": 0,
+   "released_dtype": "F8_E4M3",
+   "released_shape": [
+    384006168,
+    256
+   ],
+   "shard": "model-00047-of-00048.safetensors",
+   "absolute_file_offsets": [
+    664,
+    98305579672
+   ],
+   "actual_row_file_offset_formula": "664+global_row*256",
+   "bytes_per_row": 256,
+   "reference_image_coverage": "unbound",
+   "physical_encoding": null,
+   "resident_owner": null
+  },
+  {
+   "tensor": "layers.1.engram.embed.scale",
+   "legacy_dense_manifest_base": 174019391488,
+   "legacy_encoded_code": 1,
+   "released_dtype": "F8_E8M0",
+   "released_shape": [
+    384006168,
+    8
+   ],
+   "shard": "model-00047-of-00048.safetensors",
+   "absolute_file_offsets": [
+    98305579672,
+    101377629016
+   ],
+   "actual_row_file_offset_formula": "98305579672+global_row*8",
+   "bytes_per_row": 8,
+   "reference_image_coverage": "unbound",
+   "physical_encoding": null,
+   "resident_owner": null
+  },
+  {
+   "tensor": "layers.14.engram.embed.weight",
+   "legacy_dense_manifest_base": 277692022784,
+   "legacy_encoded_code": 2,
+   "released_dtype": "F8_E4M3",
+   "released_shape": [
+    384016682,
+    256
+   ],
+   "shard": "model-00048-of-00048.safetensors",
+   "absolute_file_offsets": [
+    672,
+    98308271264
+   ],
+   "actual_row_file_offset_formula": "672+global_row*256",
+   "bytes_per_row": 256,
+   "reference_image_coverage": "unbound",
+   "physical_encoding": null,
+   "resident_owner": null
+  },
+  {
+   "tensor": "layers.14.engram.embed.scale",
+   "legacy_dense_manifest_base": 376000299008,
+   "legacy_encoded_code": 2,
+   "released_dtype": "F8_E8M0",
+   "released_shape": [
+    384016682,
+    8
+   ],
+   "shard": "model-00048-of-00048.safetensors",
+   "absolute_file_offsets": [
+    98308271264,
+    101380404720
+   ],
+   "actual_row_file_offset_formula": "98308271264+global_row*8",
+   "bytes_per_row": 8,
+   "reference_image_coverage": "unbound",
+   "physical_encoding": null,
+   "resident_owner": null
+  }
+ ],
+ "logical_source_chain": [
+  "frozen hbm_next/emitter.py main\u2192hgi_sim/hbm_plane_model.ds_compile",
+  "hbm_plane_model.ds_compile\u2192ds_relay_latency._ctx\u2192ds_mtp_verify.load",
+  "ds_mtp_verify.PROGRAM=results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
+  "that actualrank0JSON engram.codes0/scales0 alreadycontainsallfourexactlegacybases",
+  "MTP emitter relocates VM and preserves HBM weights/tables for MTP; no code2translation enum or physical manifest resolution found"
+ ],
+ "native_enum": "docs/HBM_GENERIC_INTERFACE.md6.4: code0linear,code1STRIPE4,codes2..7reserved E_RANGE; no code2meaning invented",
+ "published_successor": {
+  "source": "tools/hbm_engram_partition.py",
+  "manifest": "results/arch/hbm_engram_partition_1015/allocation_manifest.json",
+  "homes_per_layer": 8,
+  "ranks": [
+   [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ]
+  ],
+  "table_base": 103079215104,
+  "stack": 3,
+  "row_bytes": 288,
+  "released_rows": [
+   384006168,
+   384016682
+  ],
+  "host_table_words": 232,
+  "home_formula": "rph=ceil(N/8), home=floor(global_row/rph), local=global_row%rph; rank=8*layer_index+home; address=(96GiB)+local*288",
+  "source_bytes": "weight row256B +scale row8B +24zero padding",
+  "extraction": "tools/hbm_engram_checkpoint_rows.py:prepare uses exactreleased header guard and os.pread offsets above; originalbytes enter onlyexternalHBM",
+  "compiler": "tools/hgi_sim/ds_native.py:Compiler.engram_fetch currentEHOME hosttable232\u2192homeindexedrowstream\u2192STORE/FENCE\u2192ROW_GATHER\u2192two stridedunindexedcodes/scalesLOADs",
+  "native_mechanism": "rtl/hbm_accel/engram_static_20261015 hash_home_native/home_fetch/fetch_program +tools/hbm_engram_home_fetch_gate.py; separateexistingimplementation, no implicit lookup behindlegacy227"
+ },
+ "limits": [
+  "a122 legacylogical programme not migrated to EHOME successor",
+  "No physicalmeaning inferred from highlegacybase bits or man.find simulator callback",
+  "No proof all logicalsourceinvalid: diagnosed missing selectedphysical lowering/epoch boundary foractuallegacy tables",
+  "ActualcurrentEHOME stack3 coverage/controller/calendar and wholeprogrammejoins stillmustbe selected/priced",
+  "Docs older4home prose superseded by actual8home source/manifest; no fourhome capacity claim"
+ ],
+ "checkpoint_payload_read": 0
+}

@@ -1,0 +1,5596 @@
+{
+ "status": "ACTUAL_RETAINED_INDEXED_OPERAND_ADDRESSES_NO_STATIC_RESOLVER_ADOPTION",
+ "source_records": 96,
+ "emitted_records": 192,
+ "expanded_scalar_row_index_reads": 576,
+ "min_Iword": 768,
+ "max_Iword": 223765,
+ "format_counts": {
+  "FP8E4M3": 96,
+  "UE8M0": 96
+ },
+ "source_code_counts": {
+  "0": 48,
+  "1": 48,
+  "2": 96
+ },
+ "all_ordinary_VM": true,
+ "all_L0_outside_loops": true,
+ "aperture_or_mirror_used": false,
+ "records": [
+  {
+   "stream_record": 879,
+   "source_record": 91,
+   "source_original_Iword": 506112,
+   "lowered_Iword": 223744,
+   "I_effective_plus_L": [
+    223744,
+    223744,
+    223744
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 885,
+   "source_record": 91,
+   "source_original_Iword": 506112,
+   "lowered_Iword": 223744,
+   "I_effective_plus_L": [
+    223744,
+    223744,
+    223744
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 891,
+   "source_record": 92,
+   "source_original_Iword": 506112,
+   "lowered_Iword": 223744,
+   "I_effective_plus_L": [
+    223744,
+    223744,
+    223744
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 897,
+   "source_record": 92,
+   "source_original_Iword": 506112,
+   "lowered_Iword": 223744,
+   "I_effective_plus_L": [
+    223744,
+    223744,
+    223744
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 903,
+   "source_record": 93,
+   "source_original_Iword": 506113,
+   "lowered_Iword": 223745,
+   "I_effective_plus_L": [
+    223745,
+    223745,
+    223745
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 909,
+   "source_record": 93,
+   "source_original_Iword": 506113,
+   "lowered_Iword": 223745,
+   "I_effective_plus_L": [
+    223745,
+    223745,
+    223745
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 915,
+   "source_record": 94,
+   "source_original_Iword": 506113,
+   "lowered_Iword": 223745,
+   "I_effective_plus_L": [
+    223745,
+    223745,
+    223745
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 921,
+   "source_record": 94,
+   "source_original_Iword": 506113,
+   "lowered_Iword": 223745,
+   "I_effective_plus_L": [
+    223745,
+    223745,
+    223745
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 927,
+   "source_record": 95,
+   "source_original_Iword": 506114,
+   "lowered_Iword": 223746,
+   "I_effective_plus_L": [
+    223746,
+    223746,
+    223746
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 933,
+   "source_record": 95,
+   "source_original_Iword": 506114,
+   "lowered_Iword": 223746,
+   "I_effective_plus_L": [
+    223746,
+    223746,
+    223746
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 939,
+   "source_record": 96,
+   "source_original_Iword": 506114,
+   "lowered_Iword": 223746,
+   "I_effective_plus_L": [
+    223746,
+    223746,
+    223746
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 945,
+   "source_record": 96,
+   "source_original_Iword": 506114,
+   "lowered_Iword": 223746,
+   "I_effective_plus_L": [
+    223746,
+    223746,
+    223746
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 951,
+   "source_record": 97,
+   "source_original_Iword": 506115,
+   "lowered_Iword": 223747,
+   "I_effective_plus_L": [
+    223747,
+    223747,
+    223747
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 957,
+   "source_record": 97,
+   "source_original_Iword": 506115,
+   "lowered_Iword": 223747,
+   "I_effective_plus_L": [
+    223747,
+    223747,
+    223747
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 963,
+   "source_record": 98,
+   "source_original_Iword": 506115,
+   "lowered_Iword": 223747,
+   "I_effective_plus_L": [
+    223747,
+    223747,
+    223747
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 969,
+   "source_record": 98,
+   "source_original_Iword": 506115,
+   "lowered_Iword": 223747,
+   "I_effective_plus_L": [
+    223747,
+    223747,
+    223747
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 975,
+   "source_record": 99,
+   "source_original_Iword": 506116,
+   "lowered_Iword": 223748,
+   "I_effective_plus_L": [
+    223748,
+    223748,
+    223748
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 981,
+   "source_record": 99,
+   "source_original_Iword": 506116,
+   "lowered_Iword": 223748,
+   "I_effective_plus_L": [
+    223748,
+    223748,
+    223748
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 987,
+   "source_record": 100,
+   "source_original_Iword": 506116,
+   "lowered_Iword": 223748,
+   "I_effective_plus_L": [
+    223748,
+    223748,
+    223748
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 993,
+   "source_record": 100,
+   "source_original_Iword": 506116,
+   "lowered_Iword": 223748,
+   "I_effective_plus_L": [
+    223748,
+    223748,
+    223748
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 999,
+   "source_record": 101,
+   "source_original_Iword": 506117,
+   "lowered_Iword": 223749,
+   "I_effective_plus_L": [
+    223749,
+    223749,
+    223749
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1005,
+   "source_record": 101,
+   "source_original_Iword": 506117,
+   "lowered_Iword": 223749,
+   "I_effective_plus_L": [
+    223749,
+    223749,
+    223749
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1011,
+   "source_record": 102,
+   "source_original_Iword": 506117,
+   "lowered_Iword": 223749,
+   "I_effective_plus_L": [
+    223749,
+    223749,
+    223749
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1017,
+   "source_record": 102,
+   "source_original_Iword": 506117,
+   "lowered_Iword": 223749,
+   "I_effective_plus_L": [
+    223749,
+    223749,
+    223749
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 0,
+    "sector": 27968,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1024,
+   "source_record": 103,
+   "source_original_Iword": 147510,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1030,
+   "source_record": 103,
+   "source_original_Iword": 147510,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1036,
+   "source_record": 104,
+   "source_original_Iword": 147510,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1042,
+   "source_record": 104,
+   "source_original_Iword": 147510,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1048,
+   "source_record": 105,
+   "source_original_Iword": 147511,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1054,
+   "source_record": 105,
+   "source_original_Iword": 147511,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1060,
+   "source_record": 106,
+   "source_original_Iword": 147511,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1066,
+   "source_record": 106,
+   "source_original_Iword": 147511,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1072,
+   "source_record": 107,
+   "source_original_Iword": 506120,
+   "lowered_Iword": 223752,
+   "I_effective_plus_L": [
+    223752,
+    223752,
+    223752
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1078,
+   "source_record": 107,
+   "source_original_Iword": 506120,
+   "lowered_Iword": 223752,
+   "I_effective_plus_L": [
+    223752,
+    223752,
+    223752
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1084,
+   "source_record": 108,
+   "source_original_Iword": 506120,
+   "lowered_Iword": 223752,
+   "I_effective_plus_L": [
+    223752,
+    223752,
+    223752
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1090,
+   "source_record": 108,
+   "source_original_Iword": 506120,
+   "lowered_Iword": 223752,
+   "I_effective_plus_L": [
+    223752,
+    223752,
+    223752
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1096,
+   "source_record": 109,
+   "source_original_Iword": 506121,
+   "lowered_Iword": 223753,
+   "I_effective_plus_L": [
+    223753,
+    223753,
+    223753
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1102,
+   "source_record": 109,
+   "source_original_Iword": 506121,
+   "lowered_Iword": 223753,
+   "I_effective_plus_L": [
+    223753,
+    223753,
+    223753
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1108,
+   "source_record": 110,
+   "source_original_Iword": 506121,
+   "lowered_Iword": 223753,
+   "I_effective_plus_L": [
+    223753,
+    223753,
+    223753
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1114,
+   "source_record": 110,
+   "source_original_Iword": 506121,
+   "lowered_Iword": 223753,
+   "I_effective_plus_L": [
+    223753,
+    223753,
+    223753
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1120,
+   "source_record": 111,
+   "source_original_Iword": 506122,
+   "lowered_Iword": 223754,
+   "I_effective_plus_L": [
+    223754,
+    223754,
+    223754
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1126,
+   "source_record": 111,
+   "source_original_Iword": 506122,
+   "lowered_Iword": 223754,
+   "I_effective_plus_L": [
+    223754,
+    223754,
+    223754
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1132,
+   "source_record": 112,
+   "source_original_Iword": 506122,
+   "lowered_Iword": 223754,
+   "I_effective_plus_L": [
+    223754,
+    223754,
+    223754
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1138,
+   "source_record": 112,
+   "source_original_Iword": 506122,
+   "lowered_Iword": 223754,
+   "I_effective_plus_L": [
+    223754,
+    223754,
+    223754
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1144,
+   "source_record": 113,
+   "source_original_Iword": 506123,
+   "lowered_Iword": 223755,
+   "I_effective_plus_L": [
+    223755,
+    223755,
+    223755
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1150,
+   "source_record": 113,
+   "source_original_Iword": 506123,
+   "lowered_Iword": 223755,
+   "I_effective_plus_L": [
+    223755,
+    223755,
+    223755
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1156,
+   "source_record": 114,
+   "source_original_Iword": 506123,
+   "lowered_Iword": 223755,
+   "I_effective_plus_L": [
+    223755,
+    223755,
+    223755
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1162,
+   "source_record": 114,
+   "source_original_Iword": 506123,
+   "lowered_Iword": 223755,
+   "I_effective_plus_L": [
+    223755,
+    223755,
+    223755
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1168,
+   "source_record": 115,
+   "source_original_Iword": 506124,
+   "lowered_Iword": 223756,
+   "I_effective_plus_L": [
+    223756,
+    223756,
+    223756
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1174,
+   "source_record": 115,
+   "source_original_Iword": 506124,
+   "lowered_Iword": 223756,
+   "I_effective_plus_L": [
+    223756,
+    223756,
+    223756
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1180,
+   "source_record": 116,
+   "source_original_Iword": 506124,
+   "lowered_Iword": 223756,
+   "I_effective_plus_L": [
+    223756,
+    223756,
+    223756
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1186,
+   "source_record": 116,
+   "source_original_Iword": 506124,
+   "lowered_Iword": 223756,
+   "I_effective_plus_L": [
+    223756,
+    223756,
+    223756
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1192,
+   "source_record": 117,
+   "source_original_Iword": 506125,
+   "lowered_Iword": 223757,
+   "I_effective_plus_L": [
+    223757,
+    223757,
+    223757
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1198,
+   "source_record": 117,
+   "source_original_Iword": 506125,
+   "lowered_Iword": 223757,
+   "I_effective_plus_L": [
+    223757,
+    223757,
+    223757
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1204,
+   "source_record": 118,
+   "source_original_Iword": 506125,
+   "lowered_Iword": 223757,
+   "I_effective_plus_L": [
+    223757,
+    223757,
+    223757
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1210,
+   "source_record": 118,
+   "source_original_Iword": 506125,
+   "lowered_Iword": 223757,
+   "I_effective_plus_L": [
+    223757,
+    223757,
+    223757
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 1,
+    "sector": 27969,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1217,
+   "source_record": 119,
+   "source_original_Iword": 147518,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1223,
+   "source_record": 119,
+   "source_original_Iword": 147518,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1229,
+   "source_record": 120,
+   "source_original_Iword": 147518,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1235,
+   "source_record": 120,
+   "source_original_Iword": 147518,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1241,
+   "source_record": 121,
+   "source_original_Iword": 147519,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1247,
+   "source_record": 121,
+   "source_original_Iword": 147519,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1253,
+   "source_record": 122,
+   "source_original_Iword": 147519,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1259,
+   "source_record": 122,
+   "source_original_Iword": 147519,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1265,
+   "source_record": 123,
+   "source_original_Iword": 506128,
+   "lowered_Iword": 223760,
+   "I_effective_plus_L": [
+    223760,
+    223760,
+    223760
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1271,
+   "source_record": 123,
+   "source_original_Iword": 506128,
+   "lowered_Iword": 223760,
+   "I_effective_plus_L": [
+    223760,
+    223760,
+    223760
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1277,
+   "source_record": 124,
+   "source_original_Iword": 506128,
+   "lowered_Iword": 223760,
+   "I_effective_plus_L": [
+    223760,
+    223760,
+    223760
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1283,
+   "source_record": 124,
+   "source_original_Iword": 506128,
+   "lowered_Iword": 223760,
+   "I_effective_plus_L": [
+    223760,
+    223760,
+    223760
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1289,
+   "source_record": 125,
+   "source_original_Iword": 506129,
+   "lowered_Iword": 223761,
+   "I_effective_plus_L": [
+    223761,
+    223761,
+    223761
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1295,
+   "source_record": 125,
+   "source_original_Iword": 506129,
+   "lowered_Iword": 223761,
+   "I_effective_plus_L": [
+    223761,
+    223761,
+    223761
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1301,
+   "source_record": 126,
+   "source_original_Iword": 506129,
+   "lowered_Iword": 223761,
+   "I_effective_plus_L": [
+    223761,
+    223761,
+    223761
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1307,
+   "source_record": 126,
+   "source_original_Iword": 506129,
+   "lowered_Iword": 223761,
+   "I_effective_plus_L": [
+    223761,
+    223761,
+    223761
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1313,
+   "source_record": 127,
+   "source_original_Iword": 506130,
+   "lowered_Iword": 223762,
+   "I_effective_plus_L": [
+    223762,
+    223762,
+    223762
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1319,
+   "source_record": 127,
+   "source_original_Iword": 506130,
+   "lowered_Iword": 223762,
+   "I_effective_plus_L": [
+    223762,
+    223762,
+    223762
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1325,
+   "source_record": 128,
+   "source_original_Iword": 506130,
+   "lowered_Iword": 223762,
+   "I_effective_plus_L": [
+    223762,
+    223762,
+    223762
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1331,
+   "source_record": 128,
+   "source_original_Iword": 506130,
+   "lowered_Iword": 223762,
+   "I_effective_plus_L": [
+    223762,
+    223762,
+    223762
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1337,
+   "source_record": 129,
+   "source_original_Iword": 506131,
+   "lowered_Iword": 223763,
+   "I_effective_plus_L": [
+    223763,
+    223763,
+    223763
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1343,
+   "source_record": 129,
+   "source_original_Iword": 506131,
+   "lowered_Iword": 223763,
+   "I_effective_plus_L": [
+    223763,
+    223763,
+    223763
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1349,
+   "source_record": 130,
+   "source_original_Iword": 506131,
+   "lowered_Iword": 223763,
+   "I_effective_plus_L": [
+    223763,
+    223763,
+    223763
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1355,
+   "source_record": 130,
+   "source_original_Iword": 506131,
+   "lowered_Iword": 223763,
+   "I_effective_plus_L": [
+    223763,
+    223763,
+    223763
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1361,
+   "source_record": 131,
+   "source_original_Iword": 506132,
+   "lowered_Iword": 223764,
+   "I_effective_plus_L": [
+    223764,
+    223764,
+    223764
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1367,
+   "source_record": 131,
+   "source_original_Iword": 506132,
+   "lowered_Iword": 223764,
+   "I_effective_plus_L": [
+    223764,
+    223764,
+    223764
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1373,
+   "source_record": 132,
+   "source_original_Iword": 506132,
+   "lowered_Iword": 223764,
+   "I_effective_plus_L": [
+    223764,
+    223764,
+    223764
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1379,
+   "source_record": 132,
+   "source_original_Iword": 506132,
+   "lowered_Iword": 223764,
+   "I_effective_plus_L": [
+    223764,
+    223764,
+    223764
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1385,
+   "source_record": 133,
+   "source_original_Iword": 506133,
+   "lowered_Iword": 223765,
+   "I_effective_plus_L": [
+    223765,
+    223765,
+    223765
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1391,
+   "source_record": 133,
+   "source_original_Iword": 506133,
+   "lowered_Iword": 223765,
+   "I_effective_plus_L": [
+    223765,
+    223765,
+    223765
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1397,
+   "source_record": 134,
+   "source_original_Iword": 506133,
+   "lowered_Iword": 223765,
+   "I_effective_plus_L": [
+    223765,
+    223765,
+    223765
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1403,
+   "source_record": 134,
+   "source_original_Iword": 506133,
+   "lowered_Iword": 223765,
+   "I_effective_plus_L": [
+    223765,
+    223765,
+    223765
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 3,
+    "bank": 2,
+    "sector": 27970,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1410,
+   "source_record": 135,
+   "source_original_Iword": 147526,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1416,
+   "source_record": 135,
+   "source_original_Iword": 147526,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1422,
+   "source_record": 136,
+   "source_original_Iword": 147526,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1428,
+   "source_record": 136,
+   "source_original_Iword": 147526,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1434,
+   "source_record": 137,
+   "source_original_Iword": 147527,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1440,
+   "source_record": 137,
+   "source_original_Iword": 147527,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 75713806336,
+   "source_code": 0,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1446,
+   "source_record": 138,
+   "source_original_Iword": 147527,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 1452,
+   "source_record": 138,
+   "source_original_Iword": 147527,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 174019391488,
+   "source_code": 1,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13231,
+   "source_record": 1404,
+   "source_original_Iword": 184416,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13237,
+   "source_record": 1404,
+   "source_original_Iword": 184416,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13243,
+   "source_record": 1405,
+   "source_original_Iword": 184416,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13249,
+   "source_record": 1405,
+   "source_original_Iword": 184416,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13255,
+   "source_record": 1406,
+   "source_original_Iword": 184417,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13261,
+   "source_record": 1406,
+   "source_original_Iword": 184417,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13271,
+   "source_record": 1411,
+   "source_original_Iword": 184417,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13277,
+   "source_record": 1411,
+   "source_original_Iword": 184417,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13304,
+   "source_record": 1413,
+   "source_original_Iword": 184418,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13310,
+   "source_record": 1413,
+   "source_original_Iword": 184418,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13316,
+   "source_record": 1414,
+   "source_original_Iword": 184418,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13322,
+   "source_record": 1414,
+   "source_original_Iword": 184418,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13328,
+   "source_record": 1415,
+   "source_original_Iword": 184419,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13334,
+   "source_record": 1415,
+   "source_original_Iword": 184419,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13340,
+   "source_record": 1416,
+   "source_original_Iword": 184419,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13346,
+   "source_record": 1416,
+   "source_original_Iword": 184419,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13352,
+   "source_record": 1417,
+   "source_original_Iword": 184420,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13358,
+   "source_record": 1417,
+   "source_original_Iword": 184420,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13364,
+   "source_record": 1418,
+   "source_original_Iword": 184420,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13370,
+   "source_record": 1418,
+   "source_original_Iword": 184420,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13376,
+   "source_record": 1419,
+   "source_original_Iword": 184421,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13382,
+   "source_record": 1419,
+   "source_original_Iword": 184421,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13388,
+   "source_record": 1420,
+   "source_original_Iword": 184421,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13394,
+   "source_record": 1420,
+   "source_original_Iword": 184421,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13400,
+   "source_record": 1421,
+   "source_original_Iword": 184422,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13406,
+   "source_record": 1421,
+   "source_original_Iword": 184422,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13412,
+   "source_record": 1422,
+   "source_original_Iword": 184422,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13418,
+   "source_record": 1422,
+   "source_original_Iword": 184422,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13424,
+   "source_record": 1423,
+   "source_original_Iword": 184423,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13430,
+   "source_record": 1423,
+   "source_original_Iword": 184423,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13436,
+   "source_record": 1424,
+   "source_original_Iword": 184423,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13442,
+   "source_record": 1424,
+   "source_original_Iword": 184423,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13449,
+   "source_record": 1425,
+   "source_original_Iword": 184424,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13455,
+   "source_record": 1425,
+   "source_original_Iword": 184424,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13461,
+   "source_record": 1426,
+   "source_original_Iword": 184424,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13467,
+   "source_record": 1426,
+   "source_original_Iword": 184424,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13473,
+   "source_record": 1427,
+   "source_original_Iword": 184425,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13479,
+   "source_record": 1427,
+   "source_original_Iword": 184425,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13485,
+   "source_record": 1428,
+   "source_original_Iword": 184425,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13491,
+   "source_record": 1428,
+   "source_original_Iword": 184425,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13497,
+   "source_record": 1429,
+   "source_original_Iword": 184426,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13503,
+   "source_record": 1429,
+   "source_original_Iword": 184426,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13509,
+   "source_record": 1430,
+   "source_original_Iword": 184426,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13515,
+   "source_record": 1430,
+   "source_original_Iword": 184426,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13521,
+   "source_record": 1431,
+   "source_original_Iword": 184427,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13527,
+   "source_record": 1431,
+   "source_original_Iword": 184427,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13533,
+   "source_record": 1432,
+   "source_original_Iword": 184427,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13539,
+   "source_record": 1432,
+   "source_original_Iword": 184427,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13545,
+   "source_record": 1433,
+   "source_original_Iword": 184428,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13551,
+   "source_record": 1433,
+   "source_original_Iword": 184428,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13557,
+   "source_record": 1434,
+   "source_original_Iword": 184428,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13563,
+   "source_record": 1434,
+   "source_original_Iword": 184428,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13569,
+   "source_record": 1435,
+   "source_original_Iword": 184429,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13575,
+   "source_record": 1435,
+   "source_original_Iword": 184429,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13581,
+   "source_record": 1436,
+   "source_original_Iword": 184429,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13587,
+   "source_record": 1436,
+   "source_original_Iword": 184429,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13593,
+   "source_record": 1437,
+   "source_original_Iword": 184430,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13599,
+   "source_record": 1437,
+   "source_original_Iword": 184430,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13605,
+   "source_record": 1438,
+   "source_original_Iword": 184430,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13611,
+   "source_record": 1438,
+   "source_original_Iword": 184430,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13617,
+   "source_record": 1439,
+   "source_original_Iword": 184431,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13623,
+   "source_record": 1439,
+   "source_original_Iword": 184431,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13629,
+   "source_record": 1440,
+   "source_original_Iword": 184431,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13635,
+   "source_record": 1440,
+   "source_original_Iword": 184431,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13642,
+   "source_record": 1441,
+   "source_original_Iword": 184432,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13648,
+   "source_record": 1441,
+   "source_original_Iword": 184432,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13654,
+   "source_record": 1442,
+   "source_original_Iword": 184432,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13660,
+   "source_record": 1442,
+   "source_original_Iword": 184432,
+   "lowered_Iword": 768,
+   "I_effective_plus_L": [
+    768,
+    768,
+    768
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 0
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13666,
+   "source_record": 1443,
+   "source_original_Iword": 184433,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13672,
+   "source_record": 1443,
+   "source_original_Iword": 184433,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13678,
+   "source_record": 1444,
+   "source_original_Iword": 184433,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13684,
+   "source_record": 1444,
+   "source_original_Iword": 184433,
+   "lowered_Iword": 769,
+   "I_effective_plus_L": [
+    769,
+    769,
+    769
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 1
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13690,
+   "source_record": 1445,
+   "source_original_Iword": 184434,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13696,
+   "source_record": 1445,
+   "source_original_Iword": 184434,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13702,
+   "source_record": 1446,
+   "source_original_Iword": 184434,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13708,
+   "source_record": 1446,
+   "source_original_Iword": 184434,
+   "lowered_Iword": 770,
+   "I_effective_plus_L": [
+    770,
+    770,
+    770
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 2
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13714,
+   "source_record": 1447,
+   "source_original_Iword": 184435,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13720,
+   "source_record": 1447,
+   "source_original_Iword": 184435,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13726,
+   "source_record": 1448,
+   "source_original_Iword": 184435,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13732,
+   "source_record": 1448,
+   "source_original_Iword": 184435,
+   "lowered_Iword": 771,
+   "I_effective_plus_L": [
+    771,
+    771,
+    771
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 3
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13738,
+   "source_record": 1449,
+   "source_original_Iword": 184436,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13744,
+   "source_record": 1449,
+   "source_original_Iword": 184436,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13750,
+   "source_record": 1450,
+   "source_original_Iword": 184436,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13756,
+   "source_record": 1450,
+   "source_original_Iword": 184436,
+   "lowered_Iword": 772,
+   "I_effective_plus_L": [
+    772,
+    772,
+    772
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 4
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13762,
+   "source_record": 1451,
+   "source_original_Iword": 184437,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13768,
+   "source_record": 1451,
+   "source_original_Iword": 184437,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13774,
+   "source_record": 1452,
+   "source_original_Iword": 184437,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13780,
+   "source_record": 1452,
+   "source_original_Iword": 184437,
+   "lowered_Iword": 773,
+   "I_effective_plus_L": [
+    773,
+    773,
+    773
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 5
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13786,
+   "source_record": 1453,
+   "source_original_Iword": 184438,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13792,
+   "source_record": 1453,
+   "source_original_Iword": 184438,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13798,
+   "source_record": 1454,
+   "source_original_Iword": 184438,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13804,
+   "source_record": 1454,
+   "source_original_Iword": 184438,
+   "lowered_Iword": 774,
+   "I_effective_plus_L": [
+    774,
+    774,
+    774
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 6
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13810,
+   "source_record": 1455,
+   "source_original_Iword": 184439,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13816,
+   "source_record": 1455,
+   "source_original_Iword": 184439,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "FP8E4M3",
+   "source_n": 256,
+   "source_dyn_mul": 256,
+   "source_encoded_HBMbase": 277692022784,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13822,
+   "source_record": 1456,
+   "source_original_Iword": 184439,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    0,
+    1,
+    2
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  },
+  {
+   "stream_record": 13828,
+   "source_record": 1456,
+   "source_original_Iword": 184439,
+   "lowered_Iword": 775,
+   "I_effective_plus_L": [
+    775,
+    775,
+    775
+   ],
+   "L": 0,
+   "source_slots": [
+    3,
+    4,
+    5
+   ],
+   "source_format": "UE8M0",
+   "source_n": 8,
+   "source_dyn_mul": 32,
+   "source_encoded_HBMbase": 376000299008,
+   "source_code": 2,
+   "ordinary_VM": {
+    "quad": 0,
+    "bank": 0,
+    "sector": 96,
+    "wordlane": 7
+   },
+   "I_raw_MDesc_hex": null
+  }
+ ],
+ "holds": [
+  "runtime U32 Iword values remain actual VMread data; no ROM IDs or assumed cache",
+  "identical address can represent different value epochs; compiler anchors/writes must invalidate any index reuse",
+  "sharing existing STATIC BACK read client requires explicit fixed-date mux/ownership and pipeline return identity",
+  "source original I506112 is symbolic source namespace, lowered actual I addresses are ordinary18bitwords"
+ ]
+}

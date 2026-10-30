@@ -79,7 +79,7 @@ def compile_programme(packet):
   for run in runs:
    sector=(run['source_byte']&((1<<35)-1))>>5;w=run['destination_word']
    route=dict(source_sector_start=sector,sector_count=run['n']//8,first_source_PC=((sector>>2)^(sector>>7)^(sector>>12))&31,first_destination_bank=(w>>3)&7,first_destination_quad=(w>>16)&3,source_PC_formula='((s>>2)^(s>>7)^(s>>12))&31 where s=source_sector_start+j',destination_bank_formula='((destination_word+8*j)>>3)&7',destination_quad_formula='(destination_word+8*j)>>16; j=0..sector_count-1')
-   emit('load227',stack=key[0],half=key[3],buffer=slot,epoch=epoch,row=key[1],col=key[2],route=route,**run)
+   emit('load227',window_bundle=pos,stack=key[0],half=key[3],buffer=slot,epoch=epoch,row=key[1],col=key[2],route=route,**run)
  for half,resident in cache.items():
   for token in list(resident):release(half,token,'terminal_cleanup')
  assert counts['begin_fill_all8']==counts['release_all8']
@@ -134,5 +134,10 @@ if __name__=='__main__':
  except AssertionError:controls.append('missing_release')
  else:raise AssertionError('missing release escaped')
  report['controls_caught']=controls
+ c=report['serial_wordcounter_issue_plus_setup_cycles'];report['serial_wordcounter_issue_setup_at833ps_ms']=c*833e-9
+ report['existing_count8_sector_commands_if_proven_coalescing']=report['VMwords']//8
+ report['conditional_coalesced_issue_setup_cycles']=report['VMwords']//8+report['window_safe_descriptors']
+ report['conditional_coalesced_issue_setup_at833ps_ms']=report['conditional_coalesced_issue_setup_cycles']*833e-9
+ report['coalescing_qualification']='Not current counter. Requires proved existing count8 producer coalescing and real source PC/VM bank calendars; no parallel output assumed.'
  if a.program_out:a.program_out.write_text(json.dumps(events,separators=(',',':'))+'\n')
  Path(__file__).with_suffix('.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps({k:v for k,v in report.items()if k!='sample_events'}))
