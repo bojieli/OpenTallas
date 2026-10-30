@@ -125,3 +125,13 @@ def test_phy_path_uses_layer_grids_when_opted_in():
         assert "u_phy" not in "\n".join(l for l in on.splitlines() if "core_pg_" in l)     # PHY macro keeps its grid
         assert gen_phys.core_pg_unconnected(on, mac, exclude={"u_phy"}) == []
         assert len(gen_phys.core_pg_unconnected(off, mac, exclude={"u_phy"})) == 1          # the M5 core: M4 M5 only
+
+
+def test_phy_domain_content_without_macro_view_fails_closed():
+    # S81-KITS-G 10-30: a PG domain powering content with no lef/lib (u_phy 'rework') was a raw KeyError 'u_phy'
+    with tempfile.TemporaryDirectory() as d:
+        P = _P(d)
+        mac = gen_phys.type_macros(P, "hd")
+        doms = [("phy_pg", "VDDPHY", "VSS", (0.0, 0.0, 20.0, 10.0), ["u_phy"])]
+        with pytest.raises(ValueError, match=r"PG domain phy_pg \(hd\): powered content \['u_phy'\] has no macro view"):
+            gen_phys.phy_pg_pdn(P, "hd", doms, mac, root=d)
