@@ -35,7 +35,13 @@ p = Path(sys.argv[1])
 f = [Path(x) for x in (p / "kit_rtl.f").read_text().splitlines() if x.strip()]
 assert f and all(x.is_file() for x in f), "S81_KIT_RTL: missing source closure"
 r = json.loads((p / "kit_rtl.json").read_text())
-assert not r.get("spare_out_bits"), "S81_KIT_RTL: constant spare outputs require a plan fix"
+# DIE-S81-36 / COORD ruling 10-30 (seqhost ASK option b): declared constant spare outputs, exact match only.  seqhost__t1
+# unit_o4: lane unit__seqhost__gunit is 267 on all 14 plan records; the as-built seqhost drives 265 bits and gunit reads
+# 265, so the 2 top bits stay registered constants (pins unchanged).  Any other / different spare set still fails.
+DECLARED_SPARE_OUT = {"seqhost__t1": [{"port": "unit_o4", "bits": 2}]}
+spare = sorted((x["port"], x["bits"]) for x in r.get("spare_out_bits") or [])
+assert spare == sorted((x["port"], x["bits"]) for x in DECLARED_SPARE_OUT.get(r["plan_type"], [])), \
+    "S81_KIT_RTL: constant spare outputs require a plan fix (or a COORD-declared exception)"
 im = json.loads((p / "image_params.json").read_text())
 r["s81_image_params"] = im
 (p / "kit_rtl.json").write_text(json.dumps(r, indent=1))
