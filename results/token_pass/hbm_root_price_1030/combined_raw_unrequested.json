@@ -1,0 +1,32 @@
+{
+  "scope": "COMBINED_ASSUMED_EXPOSURE_S2_SENSITIVITY_NOT_BOUND_CURRENT_SOUTHERN_RECORD_MAP",
+  "source_commit": "78e3a3d43",
+  "reference_cycles": 610734.931155155,
+  "native_counts": {
+    "HC_PRE_NORM/N1": 81,
+    "HC_POST/N1": 80
+  },
+  "rows": [
+    {
+      "case": "N1_tnode_plus_COLL_pair12_perphase",
+      "cycles": 624084.379155155,
+      "added_cycles": 13349.448000000091,
+      "tok_s": 1761.2919743558055,
+      "loss_vs_record_pct": 2.1390453672421206,
+      "loss_vs_1812_4_pct": 2.819908720160813
+    },
+    {
+      "case": "N1_tnode_plus_wide_VM_onepair12_COLLtwelve_perphase",
+      "cycles": 642168.3791551552,
+      "added_cycles": 31433.448000000208,
+      "tok_s": 1711.6925155563013,
+      "loss_vs_record_pct": 4.894891903795462,
+      "loss_vs_1812_4_pct": 5.556581573808151
+    }
+  ],
+  "rate_excludes_native_VM_spill_DMAS_fences_drains": true,
+  "multiuser_ROWX_programme_priced": false,
+  "Northern_paths_actually_unchanged": true,
+  "all_COLLandVM_exposure_only_assumed": true,
+  "usage": "ARCHIVED_RAW_ONLY: second wide-VM row was queued before scope steering; speculative row not promoted or used as current pricing; no current Southern-only per-record exposure authority"
+}

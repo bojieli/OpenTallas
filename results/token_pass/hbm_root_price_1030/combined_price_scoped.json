@@ -1,0 +1,26 @@
+{
+  "scope": "REQUESTED_SCOPED_COLL_PAIR12_PERPHASE_PLUS_NATIVE_N1_TNODE_S2_SENSITIVITY",
+  "source_commit": "78e3a3d43",
+  "reference_cycles": 610734.931155155,
+  "native_counts": {
+    "HC_PRE_NORM/N1": 81,
+    "HC_POST/N1": 80
+  },
+  "rows": [
+    {
+      "case": "N1_tnode_plus_COLL_pair12_perphase",
+      "cycles": 624084.379155155,
+      "added_cycles": 13349.448000000091,
+      "tok_s": 1761.2919743558055,
+      "loss_vs_record_pct": 2.1390453672421206,
+      "loss_vs_1812_4_pct": 2.819908720160813
+    }
+  ],
+  "rate_excludes_native_VM_spill_DMAS_fences_drains": true,
+  "multiuser_ROWX_programme_priced": false,
+  "Northern_paths_actually_unchanged": true,
+  "all_COLLandVM_exposure_only_assumed": true,
+  "usage": "only requested scoped row; not a universal bound or current exact Southern-only record charge",
+  "operations": "ot-run actualintel2 schedulerlocalhost unit145888 exit0,4GB1thread",
+  "source_assumptions": "same single-position primitive N1 FUSED records as tnode_price.json; all-COLL pair exposure is explicit assumed subset over-exposure, unchanged Northern paths not claimed to move"
+}

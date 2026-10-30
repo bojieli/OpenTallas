@@ -91,3 +91,16 @@ But the price cases charging allCOLL/allVM records are over-exposure
 sensitivities, not proof that unchanged Northern traffic acquires a delay.
 Exact Southern per-record crossing identity still needs bound current
 source/compiler mapping. No adoption or combined full-token rate follows.
+
+Requested combined scope, source78e3a3d43:
+ScheduleCOLLpair12perphase and nativeN1tnodePRE48/POST32 TOGETHER, not by
+adding isolated loss percentages. Result624084.379155cycles, +13349.448token
+cycles,1761.291974tok/s; lossvsrecord1799.7902.139045%, vs1812.42.819909%.
+This is still an assumed all-COLL exposure sensitivity, not exact current
+Southern-only routing incidence; all spill/DMA/drains are excluded.
+Scoped receipt combined_price_scoped.json is the requested publishable row.
+The job was already pinned/running with a second wide-VM row before parent
+scope steering arrived. Raw second-row output is retained only as unrequested,
+unqualified history in combined_raw_unrequested.json; it is not promoted to
+current pricing, a universal VM bound, or an adoption/owner-policy verdict.
+No further wide cases launched. All own model jobs terminal.
