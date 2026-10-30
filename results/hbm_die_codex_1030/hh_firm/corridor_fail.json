@@ -1,0 +1,249 @@
+{
+ "scope": "Private unchanged-count HH per-bit allocation diagnostic, never route authority.",
+ "counts_changed": false,
+ "existing_unallocated_slots_not_qualified": true,
+ "slots": [
+  {
+   "type": "q_b112",
+   "slot": "L700x3",
+   "payload_bits": 2807,
+   "bits_including_epoch": 2808,
+   "stations": 6,
+   "worst_um": 302.94000000000005,
+   "bad_hops": 0,
+   "bad_sample": [],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 61.27000235244114
+  },
+  {
+   "type": "q_b112",
+   "slot": "L701x1",
+   "payload_bits": 2762,
+   "bits_including_epoch": 2763,
+   "stations": 6,
+   "worst_um": 293.49000000000007,
+   "bad_hops": 0,
+   "bad_sample": [],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 173.03446845212432
+  },
+  {
+   "type": "root",
+   "slot": "L700x2",
+   "payload_bits": 2807,
+   "bits_including_epoch": 2808,
+   "stations": 6,
+   "worst_um": 316.9800000000005,
+   "bad_hops": 0,
+   "bad_sample": [],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 4.3910000000290665
+  },
+  {
+   "type": "root",
+   "slot": "L701x2",
+   "payload_bits": 2762,
+   "bits_including_epoch": 2763,
+   "stations": 6,
+   "worst_um": 313.4700000000001,
+   "bad_hops": 0,
+   "bad_sample": [],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 4.110898419592331
+  },
+  {
+   "type": "q_b112__physical_v1",
+   "slot": "L700x1",
+   "payload_bits": 2807,
+   "bits_including_epoch": 2808,
+   "stations": 4,
+   "worst_um": 421.74,
+   "bad_hops": 679,
+   "bad_sample": [
+    {
+     "bit": 2039,
+     "max_hop_um": 364.5000000000001,
+     "stage": 2
+    },
+    {
+     "bit": 2042,
+     "max_hop_um": 364.7700000000001,
+     "stage": 2
+    },
+    {
+     "bit": 2044,
+     "max_hop_um": 365.0400000000001,
+     "stage": 2
+    },
+    {
+     "bit": 2059,
+     "max_hop_um": 364.7699999999999,
+     "stage": 1
+    },
+    {
+     "bit": 2061,
+     "max_hop_um": 364.77000000000015,
+     "stage": 1
+    },
+    {
+     "bit": 2065,
+     "max_hop_um": 366.92999999999995,
+     "stage": 2
+    },
+    {
+     "bit": 2068,
+     "max_hop_um": 367.20000000000005,
+     "stage": 2
+    },
+    {
+     "bit": 2069,
+     "max_hop_um": 367.20000000000016,
+     "stage": 2
+    },
+    {
+     "bit": 2070,
+     "max_hop_um": 364.5000000000001,
+     "stage": 2
+    },
+    {
+     "bit": 2071,
+     "max_hop_um": 367.4700000000001,
+     "stage": 2
+    },
+    {
+     "bit": 2072,
+     "max_hop_um": 367.47000000000025,
+     "stage": 2
+    },
+    {
+     "bit": 2073,
+     "max_hop_um": 364.7700000000002,
+     "stage": 2
+    }
+   ],
+   "allocation_failures": 239,
+   "failure_sample": [
+    {
+     "bit": 2543,
+     "stage": 2,
+     "error": "only0 legal sites for1 at(1196.6399999999999, 239.30000000000007) within32um"
+    },
+    {
+     "bit": 2544,
+     "stage": 2,
+     "error": "only0 legal sites for1 at(1196.6399999999999, 239.31600000000003) within32um"
+    },
+    {
+     "bit": 2546,
+     "stage": 2,
+     "error": "only0 legal sites for1 at(1196.6399999999999, 239.31600000000003) within32um"
+    },
+    {
+     "bit": 2547,
+     "stage": 2,
+     "error": "only0 legal sites for1 at(1196.6399999999999, 239.25200000000007) within32um"
+    }
+   ],
+   "max_target_displacement_um": 31.99899999999991
+  },
+  {
+   "type": "q_b112__physical_v1",
+   "slot": "L701x3",
+   "payload_bits": 2762,
+   "bits_including_epoch": 2763,
+   "stations": 7,
+   "worst_um": 418.50000000000017,
+   "bad_hops": 752,
+   "bad_sample": [
+    {
+     "bit": 1844,
+     "max_hop_um": 364.50000000000006,
+     "stage": 3
+    },
+    {
+     "bit": 1845,
+     "max_hop_um": 364.50000000000017,
+     "stage": 3
+    },
+    {
+     "bit": 1846,
+     "max_hop_um": 364.5000000000002,
+     "stage": 3
+    },
+    {
+     "bit": 1847,
+     "max_hop_um": 364.7699999999999,
+     "stage": 3
+    },
+    {
+     "bit": 1848,
+     "max_hop_um": 364.77,
+     "stage": 3
+    },
+    {
+     "bit": 1849,
+     "max_hop_um": 364.77000000000015,
+     "stage": 3
+    },
+    {
+     "bit": 1850,
+     "max_hop_um": 364.77000000000015,
+     "stage": 3
+    },
+    {
+     "bit": 1853,
+     "max_hop_um": 365.03999999999996,
+     "stage": 3
+    },
+    {
+     "bit": 1854,
+     "max_hop_um": 365.04,
+     "stage": 3
+    },
+    {
+     "bit": 1855,
+     "max_hop_um": 365.04000000000013,
+     "stage": 3
+    },
+    {
+     "bit": 1856,
+     "max_hop_um": 365.0400000000002,
+     "stage": 3
+    },
+    {
+     "bit": 1858,
+     "max_hop_um": 365.3099999999999,
+     "stage": 3
+    }
+   ],
+   "allocation_failures": 508,
+   "failure_sample": [
+    {
+     "bit": 2224,
+     "stage": 4,
+     "error": "only0 legal sites for1 at(1195.6399999999999, 15.80342857142864) within32um"
+    },
+    {
+     "bit": 2226,
+     "stage": 4,
+     "error": "only0 legal sites for1 at(1195.6399999999999, 15.794285714285934) within32um"
+    },
+    {
+     "bit": 2227,
+     "stage": 4,
+     "error": "only0 legal sites for1 at(1195.6399999999999, 15.804571428571535) within32um"
+    },
+    {
+     "bit": 2229,
+     "stage": 4,
+     "error": "only0 legal sites for1 at(1195.6399999999999, 15.75657142857176) within32um"
+    }
+   ],
+   "max_target_displacement_um": 31.999285714285868
+  }
+ ]
+}

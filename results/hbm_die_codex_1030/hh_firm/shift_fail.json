@@ -1,0 +1,451 @@
+{
+ "scope": "Private unchanged-count HH per-bit allocation diagnostic, never route authority.",
+ "counts_changed": false,
+ "existing_unallocated_slots_not_qualified": true,
+ "slots": [
+  {
+   "type": "q_b112",
+   "slot": "L700x3",
+   "payload_bits": 2807,
+   "bits_including_epoch": 2808,
+   "stations": 6,
+   "worst_um": 422.0669999999999,
+   "bad_hops": 2808,
+   "bad_sample": [
+    {
+     "bit": 0,
+     "max_hop_um": 388.79999999999995,
+     "stage": 4
+    },
+    {
+     "bit": 1,
+     "max_hop_um": 388.79999999999995,
+     "stage": 4
+    },
+    {
+     "bit": 2,
+     "max_hop_um": 387.81899999999985,
+     "stage": 0
+    },
+    {
+     "bit": 3,
+     "max_hop_um": 387.5569999999999,
+     "stage": 0
+    },
+    {
+     "bit": 4,
+     "max_hop_um": 387.71999999999997,
+     "stage": 4
+    },
+    {
+     "bit": 5,
+     "max_hop_um": 387.71999999999997,
+     "stage": 4
+    },
+    {
+     "bit": 6,
+     "max_hop_um": 389.61,
+     "stage": 4
+    },
+    {
+     "bit": 7,
+     "max_hop_um": 389.61,
+     "stage": 4
+    },
+    {
+     "bit": 8,
+     "max_hop_um": 389.34000000000003,
+     "stage": 4
+    },
+    {
+     "bit": 9,
+     "max_hop_um": 389.34000000000003,
+     "stage": 4
+    },
+    {
+     "bit": 10,
+     "max_hop_um": 390.69,
+     "stage": 4
+    },
+    {
+     "bit": 11,
+     "max_hop_um": 390.69,
+     "stage": 4
+    }
+   ],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 68.75096923074548
+  },
+  {
+   "type": "q_b112",
+   "slot": "L701x1",
+   "payload_bits": 2762,
+   "bits_including_epoch": 2763,
+   "stations": 6,
+   "worst_um": 414.99,
+   "bad_hops": 1719,
+   "bad_sample": [
+    {
+     "bit": 9,
+     "max_hop_um": 364.77,
+     "stage": 4
+    },
+    {
+     "bit": 12,
+     "max_hop_um": 365.0400000000001,
+     "stage": 4
+    },
+    {
+     "bit": 17,
+     "max_hop_um": 365.30999999999995,
+     "stage": 4
+    },
+    {
+     "bit": 19,
+     "max_hop_um": 364.76999999999987,
+     "stage": 2
+    },
+    {
+     "bit": 21,
+     "max_hop_um": 365.04,
+     "stage": 3
+    },
+    {
+     "bit": 23,
+     "max_hop_um": 365.8499999999999,
+     "stage": 2
+    },
+    {
+     "bit": 25,
+     "max_hop_um": 365.85,
+     "stage": 4
+    },
+    {
+     "bit": 33,
+     "max_hop_um": 366.12,
+     "stage": 4
+    },
+    {
+     "bit": 37,
+     "max_hop_um": 365.04000000000013,
+     "stage": 2
+    },
+    {
+     "bit": 41,
+     "max_hop_um": 366.3900000000001,
+     "stage": 4
+    },
+    {
+     "bit": 46,
+     "max_hop_um": 367.47000000000014,
+     "stage": 2
+    },
+    {
+     "bit": 57,
+     "max_hop_um": 365.30999999999995,
+     "stage": 2
+    }
+   ],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 183.68394201953174
+  },
+  {
+   "type": "root",
+   "slot": "L700x2",
+   "payload_bits": 2807,
+   "bits_including_epoch": 2808,
+   "stations": 6,
+   "worst_um": 392.8669999999995,
+   "bad_hops": 2808,
+   "bad_sample": [
+    {
+     "bit": 0,
+     "max_hop_um": 389.38899999999944,
+     "stage": 0
+    },
+    {
+     "bit": 1,
+     "max_hop_um": 389.405,
+     "stage": 0
+    },
+    {
+     "bit": 2,
+     "max_hop_um": 389.3470000000009,
+     "stage": 0
+    },
+    {
+     "bit": 3,
+     "max_hop_um": 389.6090000000006,
+     "stage": 0
+    },
+    {
+     "bit": 4,
+     "max_hop_um": 389.56700000000114,
+     "stage": 0
+    },
+    {
+     "bit": 5,
+     "max_hop_um": 389.81300000000033,
+     "stage": 0
+    },
+    {
+     "bit": 6,
+     "max_hop_um": 389.7870000000005,
+     "stage": 0
+    },
+    {
+     "bit": 7,
+     "max_hop_um": 390.01700000000005,
+     "stage": 0
+    },
+    {
+     "bit": 8,
+     "max_hop_um": 389.94300000000044,
+     "stage": 0
+    },
+    {
+     "bit": 9,
+     "max_hop_um": 387.21500000000015,
+     "stage": 0
+    },
+    {
+     "bit": 10,
+     "max_hop_um": 389.89300000000026,
+     "stage": 0
+    },
+    {
+     "bit": 11,
+     "max_hop_um": 390.1550000000009,
+     "stage": 0
+    }
+   ],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 8.55699999993567
+  },
+  {
+   "type": "root",
+   "slot": "L701x2",
+   "payload_bits": 2762,
+   "bits_including_epoch": 2763,
+   "stations": 6,
+   "worst_um": 394.8910000000005,
+   "bad_hops": 2763,
+   "bad_sample": [
+    {
+     "bit": 0,
+     "max_hop_um": 392.62899999999973,
+     "stage": 0
+    },
+    {
+     "bit": 1,
+     "max_hop_um": 392.3509999999995,
+     "stage": 0
+    },
+    {
+     "bit": 2,
+     "max_hop_um": 392.4090000000004,
+     "stage": 0
+    },
+    {
+     "bit": 3,
+     "max_hop_um": 392.14699999999976,
+     "stage": 0
+    },
+    {
+     "bit": 4,
+     "max_hop_um": 392.18900000000014,
+     "stage": 0
+    },
+    {
+     "bit": 5,
+     "max_hop_um": 391.94299999999913,
+     "stage": 0
+    },
+    {
+     "bit": 6,
+     "max_hop_um": 391.9689999999999,
+     "stage": 0
+    },
+    {
+     "bit": 7,
+     "max_hop_um": 391.69099999999963,
+     "stage": 0
+    },
+    {
+     "bit": 8,
+     "max_hop_um": 391.7489999999996,
+     "stage": 0
+    },
+    {
+     "bit": 9,
+     "max_hop_um": 391.4869999999999,
+     "stage": 0
+    },
+    {
+     "bit": 10,
+     "max_hop_um": 391.59299999999877,
+     "stage": 0
+    },
+    {
+     "bit": 11,
+     "max_hop_um": 391.2829999999993,
+     "stage": 0
+    }
+   ],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 2.8913047413086588
+  },
+  {
+   "type": "q_b112__physical_v1",
+   "slot": "L700x1",
+   "payload_bits": 2807,
+   "bits_including_epoch": 2808,
+   "stations": 4,
+   "worst_um": 526.049,
+   "bad_hops": 1462,
+   "bad_sample": [
+    {
+     "bit": 1159,
+     "max_hop_um": 365.85000000000014,
+     "stage": 1
+    },
+    {
+     "bit": 1222,
+     "max_hop_um": 366.39000000000004,
+     "stage": 1
+    },
+    {
+     "bit": 1238,
+     "max_hop_um": 364.77,
+     "stage": 1
+    },
+    {
+     "bit": 1246,
+     "max_hop_um": 365.31,
+     "stage": 1
+    },
+    {
+     "bit": 1254,
+     "max_hop_um": 368.8200000000001,
+     "stage": 1
+    },
+    {
+     "bit": 1262,
+     "max_hop_um": 366.65999999999997,
+     "stage": 1
+    },
+    {
+     "bit": 1268,
+     "max_hop_um": 365.5799999999999,
+     "stage": 1
+    },
+    {
+     "bit": 1270,
+     "max_hop_um": 367.2,
+     "stage": 1
+    },
+    {
+     "bit": 1283,
+     "max_hop_um": 366.65999999999997,
+     "stage": 1
+    },
+    {
+     "bit": 1290,
+     "max_hop_um": 367.19999999999993,
+     "stage": 1
+    },
+    {
+     "bit": 1297,
+     "max_hop_um": 367.73999999999995,
+     "stage": 1
+    },
+    {
+     "bit": 1304,
+     "max_hop_um": 365.3099999999999,
+     "stage": 1
+    }
+   ],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 207.78725641023772
+  },
+  {
+   "type": "q_b112__physical_v1",
+   "slot": "L701x3",
+   "payload_bits": 2762,
+   "bits_including_epoch": 2763,
+   "stations": 7,
+   "worst_um": 469.82299999999987,
+   "bad_hops": 2490,
+   "bad_sample": [
+    {
+     "bit": 113,
+     "max_hop_um": 364.52899999999977,
+     "stage": 0
+    },
+    {
+     "bit": 118,
+     "max_hop_um": 364.70299999999963,
+     "stage": 0
+    },
+    {
+     "bit": 121,
+     "max_hop_um": 364.7449999999998,
+     "stage": 0
+    },
+    {
+     "bit": 123,
+     "max_hop_um": 364.8109999999998,
+     "stage": 0
+    },
+    {
+     "bit": 129,
+     "max_hop_um": 365.0089999999998,
+     "stage": 0
+    },
+    {
+     "bit": 133,
+     "max_hop_um": 365.1409999999996,
+     "stage": 0
+    },
+    {
+     "bit": 135,
+     "max_hop_um": 365.20699999999965,
+     "stage": 0
+    },
+    {
+     "bit": 139,
+     "max_hop_um": 365.3389999999997,
+     "stage": 0
+    },
+    {
+     "bit": 143,
+     "max_hop_um": 365.47099999999966,
+     "stage": 0
+    },
+    {
+     "bit": 147,
+     "max_hop_um": 365.33299999999974,
+     "stage": 0
+    },
+    {
+     "bit": 149,
+     "max_hop_um": 365.3989999999998,
+     "stage": 0
+    },
+    {
+     "bit": 153,
+     "max_hop_um": 365.5309999999997,
+     "stage": 0
+    }
+   ],
+   "allocation_failures": 0,
+   "failure_sample": [],
+   "max_target_displacement_um": 135.94810170102195
+  }
+ ]
+}
