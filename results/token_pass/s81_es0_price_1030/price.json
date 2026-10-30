@@ -1,0 +1,215 @@
+{
+  "scope": "ONE_DIRECTED_S81_ES0_REPAIR_PRICE_NOT_ADOPTED",
+  "source_plan_commit": "b19b88c9a78",
+  "source_plan_sha256": "39aa595f5bd3e5006d7d6045103a7c145b8779ed8a2fb50cd125bfddd94338a2",
+  "forward_lane": "coll__s_7S_LP__lk_ES1",
+  "reverse_lane": "coll__lk_ES1__s_7S_LP",
+  "current_forward": {
+    "cycles": 57,
+    "stations": 40,
+    "boundary": 2,
+    "faces": 10,
+    "fixed": 0,
+    "clock_landing": 15,
+    "natural": 57,
+    "pad": 0,
+    "param": "LAT_COLL__S_7S_LP__LK_ES1"
+  },
+  "candidate_forward": {
+    "cycles": 58,
+    "stations": 41,
+    "boundary": 2,
+    "faces": 10,
+    "fixed": 0,
+    "clock_landing": 15,
+    "natural": 58,
+    "pad": 0,
+    "param": "LAT_COLL__S_7S_LP__LK_ES1"
+  },
+  "current_reverse": {
+    "cycles": 57,
+    "stations": 40,
+    "boundary": 2,
+    "faces": 10,
+    "fixed": 0,
+    "clock_landing": 15,
+    "natural": 57,
+    "pad": 0,
+    "param": "LAT_COLL__LK_ES1__S_7S_LP"
+  },
+  "candidate_reverse": {
+    "cycles": 57,
+    "stations": 40,
+    "boundary": 2,
+    "faces": 10,
+    "fixed": 0,
+    "clock_landing": 15,
+    "natural": 57,
+    "pad": 0,
+    "param": "LAT_COLL__LK_ES1__S_7S_LP"
+  },
+  "changed_lane_count": 1,
+  "exact_forward_calendar_added_cycles": 1,
+  "exact_reverse_calendar_added_cycles": 0,
+  "wire_initiation_interval_changed": false,
+  "per_occurrence_forward_added_ps": 833,
+  "current_circuit_max_coll_lane": "coll__s_0S_LP__lk_WS2",
+  "current_circuit_max_coll_cycles": 68,
+  "candidate_circuit_max_coll_cycles": 68,
+  "composer_terms_current": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)"
+    },
+    "field_round": {
+      "cycles": 152,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+    },
+    "leaf_hub_rt": {
+      "cycles": 39,
+      "lanes": [
+        "dn_s_1S_L4",
+        "up_s_6S_L4"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+    },
+    "svc_to_hub": {
+      "cycles": 30,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+    },
+    "link_end": {
+      "cycles": 70,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0S"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+    }
+  },
+  "composer_terms_candidate": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)"
+    },
+    "field_round": {
+      "cycles": 152,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+    },
+    "leaf_hub_rt": {
+      "cycles": 39,
+      "lanes": [
+        "dn_s_1S_L4",
+        "up_s_6S_L4"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+    },
+    "svc_to_hub": {
+      "cycles": 30,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+    },
+    "link_end": {
+      "cycles": 70,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0S"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+    }
+  },
+  "composer_marginal_added_cycles": 0,
+  "composer_marginal_tok_s_change": 0,
+  "model_rows_carried_not_requalified": {
+    "MTP_tok_s": 3655.3,
+    "AR_tok_s": 1259.6
+  },
+  "physical_START_or_token_qualified": false,
+  "source_rationale": "ES0 eightflops leave seven r2r intervals min411um>405; candidate nineflops/eight intervals max399.251um with existing190um PHYshore detour",
+  "compiler_action": "regenerate exact lane forward latency parameter and dependent TX/RX/calendar dates once in approved plan event; do not add1 to all S81 lanes or reverse direction",
+  "scope_limit": "max-based composer does not prove exact ES1-specific schedule unchanged; every dependent directed crossing accrues1edge, actual occurrence count/critical-path binding must come from programme"
+}
