@@ -1,0 +1,23 @@
+{
+  "scope": "Root-authorized ONE canonicalreadonly query on exacthistoricalcurrent5_1; originalHISTORICAL_DIAGNOSTIC live DRTuntouched",
+  "source": "/srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/ot_s81sl_ve_s_s40h35b",
+  "hashes": {
+    "3_place.odb": "b0ba3d87674e857fd260fd865beea0df8da85b32cb7ae5652751f7d358ee20f3",
+    "3_place.sdc": "878a24afb8579ed41c5f23c617c42c46799a126bd0f5099b6661593fb68250c6",
+    "4_cts.sdc": "ae0293882c2645cb40be3bd23681ee6a6a0ce314b7d9bea420eee24bba952f21",
+    "5_1_grt.odb": "f7d3d9512b607d38b98d3bba2f1dc0ccd6722d4d2966497e5a25dc923551988f",
+    "5_1_grt.sdc": "6d9a4ce2bd417d95e4cf76e37e6806233f91db57e38052a03bf1826f850988a2"
+  },
+  "bundle": {
+    "legacy_gate.py": "8cb29c244d882f2c11f68447776e32e26c9dcec03ede4c7e619480252924e965",
+    "signoff.py": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+    "sdc_lint.py": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+    "face_guard.py": "b78bbda6de89b1d9a927d6c0380302f08f00e554cc6f4e39e21f7882c3e74176",
+    "io_hold_qualification.py": "ba3442341213d0975eb141f69c8149ccbe28cbcfba534fcd08bc12c138156067",
+    "pair_skew.tcl": "638baba6f3ebb53bd74eb5030c0d0b59afa7d8ca83269e0b130a542699fc8646",
+    "clock_family.tcl": "4d035237e7a3b21187387463d91034f019e312e82c4cfaf135ec6830dd2d7c71",
+    "kit_modes.py": "13d68ccd62bfd3dc64657ef20cf662b0e14129197927b652133488eb7bc25331",
+    "data_droop.py": "9a25159779ddf11799beb7ef6b36df7076d58c06c4365820b03a338f8cd260c7",
+    "core_io_reference.py": "927b0c1d0ee73cfa3f17969d6d00017ee318918c435ebdb6d33310d6ec1641b3"
+  }
+}

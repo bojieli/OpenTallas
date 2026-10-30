@@ -1,0 +1,1574 @@
+{
+  "scope": "READONLY analytic +8.64width estimate only; no plan/source adoption or physical launch. Parent externalpins/outlines/neighbors untouched; internalchildpin worldXY changes need completeG0C.",
+  "plan_sha256": "bcfcb4e1737e8140fab9c94aec6128c4a086ab5fa953e07159813abb11819d10",
+  "old_outline": [
+    164.16,
+    345.6
+  ],
+  "candidate_outline": [
+    172.8,
+    345.6
+  ],
+  "aspect": 2.0,
+  "rows": [
+    {
+      "type": "ot_s81sl_leaf__t1",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        34.668,
+        838.092,
+        198.828,
+        1183.692
+      ],
+      "candidate_box": [
+        34.668,
+        838.092,
+        207.46800000000002,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t2",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        553.092,
+        829.452,
+        717.252,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        553.092,
+        829.452,
+        725.8919999999999,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vs",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t3",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        345.732,
+        77.796,
+        509.89200000000005,
+        423.396
+      ],
+      "candidate_box": [
+        345.732,
+        77.796,
+        518.532,
+        423.396
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 8.639999999999873,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t4",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        1036.932,
+        34.596000000000004,
+        1201.092,
+        380.196
+      ],
+      "candidate_box": [
+        1036.932,
+        34.596000000000004,
+        1209.7320000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t5",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        682.6679999999999,
+        43.236000000000004,
+        846.8279999999999,
+        388.836
+      ],
+      "candidate_box": [
+        682.6679999999999,
+        43.236000000000004,
+        855.4679999999998,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t6",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        682.6679999999999,
+        829.452,
+        846.8279999999999,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        682.6679999999999,
+        829.452,
+        855.4679999999998,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t7",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        1036.932,
+        838.092,
+        1201.092,
+        1183.692
+      ],
+      "candidate_box": [
+        1036.932,
+        838.092,
+        1209.7320000000002,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.280000000000086,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t8",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        604.9319999999999,
+        43.236000000000004,
+        769.0919999999999,
+        388.836
+      ],
+      "candidate_box": [
+        604.9319999999999,
+        43.236000000000004,
+        777.7319999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_a",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t9",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        553.092,
+        43.236000000000004,
+        717.252,
+        388.836
+      ],
+      "candidate_box": [
+        553.092,
+        43.236000000000004,
+        725.8919999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vs",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t10",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        250.692,
+        51.876000000000005,
+        414.852,
+        397.476
+      ],
+      "candidate_box": [
+        250.692,
+        51.876000000000005,
+        423.49199999999996,
+        397.476
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 8.640000000000043,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t11",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        682.6679999999999,
+        829.452,
+        846.8279999999999,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        682.6679999999999,
+        829.452,
+        855.4679999999998,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t12",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        1088.7720000000002,
+        838.092,
+        1252.9320000000002,
+        1183.692
+      ],
+      "candidate_box": [
+        1088.7720000000002,
+        838.092,
+        1261.5720000000003,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.280000000000086,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t13",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        233.412,
+        838.092,
+        397.572,
+        1183.692
+      ],
+      "candidate_box": [
+        233.412,
+        838.092,
+        406.212,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 8.640000000000043,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t14",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        34.668,
+        34.596000000000004,
+        198.828,
+        380.196
+      ],
+      "candidate_box": [
+        34.668,
+        34.596000000000004,
+        207.46800000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t15",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t16",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        924.588,
+        838.092,
+        1088.748,
+        1183.692
+      ],
+      "candidate_box": [
+        924.588,
+        838.092,
+        1097.3880000000001,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999873,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t17",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        371.652,
+        838.092,
+        535.812,
+        1183.692
+      ],
+      "candidate_box": [
+        371.652,
+        838.092,
+        544.452,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t75",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        233.412,
+        34.596000000000004,
+        397.572,
+        380.196
+      ],
+      "candidate_box": [
+        233.412,
+        34.596000000000004,
+        406.212,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 8.640000000000043,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t21",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        363.012,
+        812.1719999999999,
+        527.172,
+        1157.772
+      ],
+      "candidate_box": [
+        363.012,
+        812.1719999999999,
+        535.812,
+        1157.772
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t22",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        553.092,
+        829.452,
+        717.252,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        553.092,
+        829.452,
+        725.8919999999999,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vs",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t23",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        371.652,
+        34.596000000000004,
+        535.812,
+        380.196
+      ],
+      "candidate_box": [
+        371.652,
+        34.596000000000004,
+        544.452,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t26",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        682.6679999999999,
+        829.452,
+        846.8279999999999,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        682.6679999999999,
+        829.452,
+        855.4679999999998,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t27",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        311.172,
+        829.452,
+        475.332,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        311.172,
+        829.452,
+        483.972,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_a",
+      "min_bbox_separation_um": 51.83999999999992,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t28",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        34.596000000000004,
+        864.108,
+        380.196
+      ],
+      "candidate_box": [
+        699.948,
+        34.596000000000004,
+        872.7479999999999,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t29",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        1157.892,
+        34.596000000000004,
+        1322.0520000000001,
+        380.196
+      ],
+      "candidate_box": [
+        1157.892,
+        34.596000000000004,
+        1330.6920000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t30",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t31",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        250.692,
+        829.452,
+        414.852,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        250.692,
+        829.452,
+        423.49199999999996,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vs",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t32",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        553.092,
+        829.452,
+        717.252,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        553.092,
+        829.452,
+        725.8919999999999,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vs",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t33",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        596.2919999999999,
+        34.596000000000004,
+        760.4519999999999,
+        380.196
+      ],
+      "candidate_box": [
+        596.2919999999999,
+        34.596000000000004,
+        769.0919999999999,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t34",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        224.772,
+        34.596000000000004,
+        388.932,
+        380.196
+      ],
+      "candidate_box": [
+        224.772,
+        34.596000000000004,
+        397.572,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t35",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t36",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        682.6679999999999,
+        829.452,
+        846.8279999999999,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        682.6679999999999,
+        829.452,
+        855.4679999999998,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t37",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        1036.932,
+        838.092,
+        1201.092,
+        1183.692
+      ],
+      "candidate_box": [
+        1036.932,
+        838.092,
+        1209.7320000000002,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.280000000000086,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t38",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        371.652,
+        838.092,
+        535.812,
+        1183.692
+      ],
+      "candidate_box": [
+        371.652,
+        838.092,
+        544.452,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t39",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        302.532,
+        60.516,
+        466.692,
+        406.11600000000004
+      ],
+      "candidate_box": [
+        302.532,
+        60.516,
+        475.332,
+        406.11600000000004
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t41",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        924.588,
+        838.092,
+        1088.748,
+        1183.692
+      ],
+      "candidate_box": [
+        924.588,
+        838.092,
+        1097.3880000000001,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999873,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t42",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        371.652,
+        838.092,
+        535.812,
+        1183.692
+      ],
+      "candidate_box": [
+        371.652,
+        838.092,
+        544.452,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t43",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        69.22800000000001,
+        69.156,
+        233.388,
+        414.75600000000003
+      ],
+      "candidate_box": [
+        69.22800000000001,
+        69.156,
+        242.02800000000002,
+        414.75600000000003
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t45",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        259.332,
+        838.092,
+        423.49199999999996,
+        1183.692
+      ],
+      "candidate_box": [
+        259.332,
+        838.092,
+        432.13199999999995,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t46",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        596.2919999999999,
+        838.092,
+        760.4519999999999,
+        1183.692
+      ],
+      "candidate_box": [
+        596.2919999999999,
+        838.092,
+        769.0919999999999,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t47",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        69.22800000000001,
+        69.156,
+        233.388,
+        414.75600000000003
+      ],
+      "candidate_box": [
+        69.22800000000001,
+        69.156,
+        242.02800000000002,
+        414.75600000000003
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t50",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        699.948,
+        829.452,
+        864.108,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        699.948,
+        829.452,
+        872.7479999999999,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t51",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        1036.932,
+        838.092,
+        1201.092,
+        1183.692
+      ],
+      "candidate_box": [
+        1036.932,
+        838.092,
+        1209.7320000000002,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.280000000000086,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t52",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        596.2919999999999,
+        34.596000000000004,
+        760.4519999999999,
+        380.196
+      ],
+      "candidate_box": [
+        596.2919999999999,
+        34.596000000000004,
+        769.0919999999999,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t55",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        924.588,
+        838.092,
+        1088.748,
+        1183.692
+      ],
+      "candidate_box": [
+        924.588,
+        838.092,
+        1097.3880000000001,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999873,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t56",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        414.85200000000003,
+        812.1719999999999,
+        579.0120000000001,
+        1157.772
+      ],
+      "candidate_box": [
+        414.85200000000003,
+        812.1719999999999,
+        587.652,
+        1157.772
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.28000000000003,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t57",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        596.2919999999999,
+        838.092,
+        760.4519999999999,
+        1183.692
+      ],
+      "candidate_box": [
+        596.2919999999999,
+        838.092,
+        769.0919999999999,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t58",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        527.1719999999999,
+        60.516,
+        691.3319999999999,
+        406.11600000000004
+      ],
+      "candidate_box": [
+        527.1719999999999,
+        60.516,
+        699.9719999999999,
+        406.11600000000004
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.279999999999916,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t59",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t60",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        363.012,
+        786.252,
+        527.172,
+        1131.8519999999999
+      ],
+      "candidate_box": [
+        363.012,
+        786.252,
+        535.812,
+        1131.8519999999999
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t61",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        181.548,
+        786.252,
+        345.70799999999997,
+        1131.8519999999999
+      ],
+      "candidate_box": [
+        181.548,
+        786.252,
+        354.34799999999996,
+        1131.8519999999999
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.640000000000043,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t62",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        371.652,
+        34.596000000000004,
+        535.812,
+        380.196
+      ],
+      "candidate_box": [
+        371.652,
+        34.596000000000004,
+        544.452,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t65",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        414.85200000000003,
+        812.1719999999999,
+        579.0120000000001,
+        1157.772
+      ],
+      "candidate_box": [
+        414.85200000000003,
+        812.1719999999999,
+        587.652,
+        1157.772
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.28000000000003,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t66",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        596.2919999999999,
+        838.092,
+        760.4519999999999,
+        1183.692
+      ],
+      "candidate_box": [
+        596.2919999999999,
+        838.092,
+        769.0919999999999,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_b",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t67",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        371.652,
+        34.596000000000004,
+        535.812,
+        380.196
+      ],
+      "candidate_box": [
+        371.652,
+        34.596000000000004,
+        544.452,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t68",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        112.428,
+        69.156,
+        276.58799999999997,
+        414.75600000000003
+      ],
+      "candidate_box": [
+        112.428,
+        69.156,
+        285.22799999999995,
+        414.75600000000003
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.28000000000003,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t69",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t70",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R0",
+      "old_box": [
+        717.228,
+        838.092,
+        881.3879999999999,
+        1183.692
+      ],
+      "candidate_box": [
+        717.228,
+        838.092,
+        890.0279999999999,
+        1183.692
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t71",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MY",
+      "old_box": [
+        311.172,
+        829.452,
+        475.332,
+        1175.0520000000001
+      ],
+      "candidate_box": [
+        311.172,
+        829.452,
+        483.972,
+        1175.0520000000001
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_a",
+      "min_bbox_separation_um": 51.83999999999992,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t72",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        604.9319999999999,
+        43.236000000000004,
+        769.0919999999999,
+        388.836
+      ],
+      "candidate_box": [
+        604.9319999999999,
+        43.236000000000004,
+        777.7319999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vn.u_a",
+      "min_bbox_separation_um": 8.6400000000001,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t73",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        553.092,
+        43.236000000000004,
+        717.252,
+        388.836
+      ],
+      "candidate_box": [
+        553.092,
+        43.236000000000004,
+        725.8919999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vs",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t74",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        250.692,
+        51.876000000000005,
+        414.852,
+        397.476
+      ],
+      "candidate_box": [
+        250.692,
+        51.876000000000005,
+        423.49199999999996,
+        397.476
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vq",
+      "min_bbox_separation_um": 8.640000000000043,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t53__clb66fa5cb",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        1097.412,
+        34.596000000000004,
+        1261.5720000000001,
+        380.196
+      ],
+      "candidate_box": [
+        1097.412,
+        34.596000000000004,
+        1270.2120000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t53__cl958451dd",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        1097.412,
+        34.596000000000004,
+        1261.5720000000001,
+        380.196
+      ],
+      "candidate_box": [
+        1097.412,
+        34.596000000000004,
+        1270.2120000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t54__cl706d9749",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t54__cl501e5681",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t24__cl2456157b",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        112.428,
+        69.156,
+        276.58799999999997,
+        414.75600000000003
+      ],
+      "candidate_box": [
+        112.428,
+        69.156,
+        285.22799999999995,
+        414.75600000000003
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.28000000000003,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t24__cl81374cd8",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        112.428,
+        69.156,
+        276.58799999999997,
+        414.75600000000003
+      ],
+      "candidate_box": [
+        112.428,
+        69.156,
+        285.22799999999995,
+        414.75600000000003
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 17.28000000000003,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t25__cl55642d17",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t25__cl431c660f",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t40__clf8bbdae1",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t40__cl86ea32b3",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "MX",
+      "old_box": [
+        699.948,
+        43.236000000000004,
+        864.108,
+        388.836
+      ],
+      "candidate_box": [
+        699.948,
+        43.236000000000004,
+        872.7479999999999,
+        388.836
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_ve.u_m",
+      "min_bbox_separation_um": 8.639999999999986,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t44__clf6cf8492",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        1036.932,
+        34.596000000000004,
+        1201.092,
+        380.196
+      ],
+      "candidate_box": [
+        1036.932,
+        34.596000000000004,
+        1209.7320000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    },
+    {
+      "type": "ot_s81sl_leaf__t44__clf4ea6d4b",
+      "inst": "u_lf.u_ve.u_s",
+      "orient": "R180",
+      "old_box": [
+        1036.932,
+        34.596000000000004,
+        1201.092,
+        380.196
+      ],
+      "candidate_box": [
+        1036.932,
+        34.596000000000004,
+        1209.7320000000002,
+        380.196
+      ],
+      "contained": true,
+      "nearest_neighbor": "u_lf.u_vsw",
+      "min_bbox_separation_um": 17.279999999999973,
+      "overlaps": []
+    }
+  ],
+  "types": 74,
+  "outside": 0,
+  "overlap_types": 0,
+  "min_neighbor_separation_um": 8.639999999999873,
+  "added_cycles": 0
+}

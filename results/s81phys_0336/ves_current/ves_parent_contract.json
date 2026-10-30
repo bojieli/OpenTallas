@@ -1,0 +1,1633 @@
+{
+  "plan_sha256": "bcfcb4e1737e8140fab9c94aec6128c4a086ab5fa953e07159813abb11819d10",
+  "rows": [
+    {
+      "type": "ot_s81sl_leaf__t1",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        34.56,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t2",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        552.96,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t3",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        345.6,
+        77.76
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t4",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1036.8,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t5",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        682.56,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t6",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        682.56,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t7",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1036.8,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t8",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        604.8,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t9",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        552.96,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t10",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        250.56,
+        51.84
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t11",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        682.56,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t12",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1088.64,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t13",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        233.28,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t14",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        34.56,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t15",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t16",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        924.48,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t17",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        371.52,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t75",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        233.28,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t21",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        362.88,
+        812.16
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t22",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        552.96,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t23",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        371.52,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t26",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        682.56,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t27",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        311.04,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t28",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t29",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1157.76,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t30",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t31",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        250.56,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t32",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        552.96,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t33",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        596.16,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t34",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        224.64,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t35",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t36",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        682.56,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t37",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1036.8,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t38",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        371.52,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t39",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        302.4,
+        60.48
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t41",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        924.48,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t42",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        371.52,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t43",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        69.12,
+        69.12
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t45",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        259.2,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t46",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        596.16,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t47",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        69.12,
+        69.12
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t50",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t51",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1036.8,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t52",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        596.16,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t55",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        924.48,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t56",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        414.72,
+        812.16
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t57",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        596.16,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t58",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        527.04,
+        60.48
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t59",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t60",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        362.88,
+        786.24
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t61",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        181.44,
+        786.24
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t62",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        371.52,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t65",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        414.72,
+        812.16
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t66",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        596.16,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t67",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        371.52,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t68",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        112.32,
+        69.12
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t69",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t70",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        717.12,
+        838.08
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R0",
+      "track_offset_um": [
+        0.108,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->R0)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t71",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        311.04,
+        829.44
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MY",
+      "track_offset_um": [
+        0.132,
+        0.012
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient R0->MY)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t72",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        604.8,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t73",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        552.96,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t74",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        250.56,
+        51.84
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t53__clb66fa5cb",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1097.28,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t53__cl958451dd",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1097.28,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t54__cl706d9749",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t54__cl501e5681",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t24__cl2456157b",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        112.32,
+        69.12
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t24__cl81374cd8",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        112.32,
+        69.12
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t25__cl55642d17",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t25__cl431c660f",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t40__clf8bbdae1",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t40__cl86ea32b3",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        699.84,
+        43.2
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "track_offset_um": [
+        0.108,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "obs_max": "M7",
+      "note": "TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->MX)"
+    },
+    {
+      "type": "ot_s81sl_leaf__t44__clf6cf8492",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1036.8,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    },
+    {
+      "type": "ot_s81sl_leaf__t44__clf4ea6d4b",
+      "inst": "u_lf.u_ve.u_s",
+      "module": "ot_s81sl_ve_s",
+      "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+      "origin_um": [
+        1036.8,
+        34.56
+      ],
+      "outline_um": [
+        164.16,
+        345.6
+      ],
+      "orient": "R180",
+      "track_offset_um": [
+        0.132,
+        0.036
+      ],
+      "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+      "note": "view xm: x-mirrored pin variant of inputs/core_pins/ot_s81sl_ve_s.json (cores/leaf/xmirror.py) | TYPE-REDUCE-2: template table inputs/core_pins/ot_s81sl_ve_s_tpl.json (orient MX->R180)",
+      "obs_max": "M7"
+    }
+  ]
+}
