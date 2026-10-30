@@ -249,7 +249,21 @@ def sdc(P,tn,text):
     return text
 
 
-def export_tcl(P,tn):
+_VEC1=re.compile(r"^\s*(?:input|output|inout)\s+(?:wire\s+|logic\s+)?\[0:0\]\s+(\w+)",re.M)
+
+
+def bit0_ports(wrapper_text):
+    """Ports a kit wrapper declares as a one-bit VECTOR [0:0] (bind.py kit-rtl bound-only pins, e.g. kv3_sys_SD
+    fclk_out_o_serdes_W_rx_flit): OpenROAD names their BTerm "<port>[0]", not "<port>" (KV-022 CTS 'clock landing
+    export endpoint missing').  Scalar ports are not listed, so their findBTerm text stays byte-identical."""
+    return frozenset(_VEC1.findall(wrapper_text))
+
+
+def _bterm(n,bit0):
+    return f"{n}[0]" if n in bit0 else n
+
+
+def export_tcl(P,tn,bit0=frozenset()):
     """Attach a forwarded output to its declared real tap BEFORE CTS.
 
     The receiver builds the same local clock-latency contract under this
@@ -257,12 +271,12 @@ def export_tcl(P,tn):
     physical gate. No fictional wire latency is added to STA.
     """
     pins=P.types[tn].get("clock",{}).get("landing_contract",{}).get("pins",[])
-    if export_form(P,tn)=="fwd_buffer":return export_tcl_fwd(P,tn)
+    if export_form(P,tn)=="fwd_buffer":return export_tcl_fwd(P,tn,bit0)
     out=["set cland_block [ord::get_db_block]"]
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
-        out += [f"set cland_dst [$cland_block findBTerm {{{p['name']}}}]",
-                f"set cland_src [$cland_block findBTerm {{{p['source_clock_port']}}}]",
+        out += [f"set cland_dst [$cland_block findBTerm {{{_bterm(p['name'],bit0)}}}]",
+                f"set cland_src [$cland_block findBTerm {{{_bterm(p['source_clock_port'],bit0)}}}]",
                 'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
                 "set cland_net [$cland_src getNet]",
                 'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
@@ -282,7 +296,7 @@ def export_form(P,tn):
     return form
 
 
-def export_tcl_fwd(P,tn):
+def export_tcl_fwd(P,tn,bit0=frozenset()):
     """FLOW-GEN-2 CTS-0114 (opt-in clock.landing_export_form = "fwd_buffer").
 
     The legacy form ties the forwarded output BTerm onto the source tap net. TritonCTS then sees the port's divide_by 1
@@ -314,8 +328,8 @@ def export_tcl_fwd(P,tn):
     for p in pins:
         if p["kind"]!="clock" or p["dir"]!="out":continue
         n,s=p["name"],p["source_clock_port"];fw="cland_fwd_"+n
-        out += [f"set cland_dst [$cland_block findBTerm {{{n}}}]",
-                f"set cland_src [$cland_block findBTerm {{{s}}}]",
+        out += [f"set cland_dst [$cland_block findBTerm {{{_bterm(n,bit0)}}}]",
+                f"set cland_src [$cland_block findBTerm {{{_bterm(s,bit0)}}}]",
                 'if {$cland_dst eq "NULL" || $cland_src eq "NULL"} { error "clock landing export endpoint missing" }',
                 "set cland_net [$cland_src getNet]",
                 'if {$cland_net eq "NULL"} { error "clock landing source tap has no physical net" }',
