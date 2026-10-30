@@ -33,7 +33,7 @@ for f in 1_2_yosys.v 1_synth.v clock_period.txt mem.json ot_face_flops.txt ot_un
   test -f $RS/$f && cp $RS/$f $B/; done
 rsync -a $KIT/run/objects/asap7/$NICK/base/ $OUT/run/objects/asap7/$NICK/base/ 2>/dev/null || true
 { cat $OUT/constraint.sdc; echo 'set_propagated_clock [all_clocks]'; } > $B/4_cts.sdc
-for f in prd_hook.tcl prd_count.tcl; do cp $HERE/$f $OUT/; done
+for f in prd_hook.tcl prd_count.tcl eco_drt_pre.tcl; do cp $HERE/$f $OUT/; done
 for f in clk_freeze.tcl clk_dump_db.tcl clk_geom_diff.py clk_freeze_check.sh kit_modes_eco.tcl; do cp "$SO/tools/die_plan/$f" $OUT/; done
 MM=$(sed -n 's/^override export OT_HOLD_MM = //p; s/^export OT_HOLD_MM = //p' $OUT/config.mk | tail -n 1)
 if [ "${MM:-0}" = 1 ]; then
@@ -52,6 +52,13 @@ if ! grep -q '^# OT_PRD post-route drive repair' $OUT/config.mk; then
 cat >> $OUT/config.mk <<CFG
 # OT_PRD post-route drive repair (tools/die_plan/post_route_drv, variant $V)
 override export POST_GLOBAL_ROUTE_TCL = /work/eco_post.tcl
+CFG
+# FLOW-9 10-30: DRT of the ECO'd GRT DB clears stale special-net guides / a mixed pin-access catalog (no-op otherwise);
+# a kit's own PRE_DETAIL_ROUTE hook still runs after it (OT_ECO_DRT_PRE_CHAIN).
+KPRE=$(sed -n 's/^\(override \)\{0,1\}export PRE_DETAIL_ROUTE_TCL *?\{0,1\}= *//p' $OUT/config.mk | tail -n 1)
+test -z "$KPRE" || echo "override export OT_ECO_DRT_PRE_CHAIN = $KPRE" >> $OUT/config.mk
+cat >> $OUT/config.mk <<CFG
+override export PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl
 export TC_LIB_FILES = \$(TC_NLDM_LIB_FILES) $ML_TT
 export BC_LIB_FILES = \$(BC_NLDM_LIB_FILES) $ML_FF
 override export PWR_NETS_VOLTAGES =

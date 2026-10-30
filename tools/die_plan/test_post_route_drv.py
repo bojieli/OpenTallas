@@ -270,3 +270,30 @@ def test_prd_preserves_original_cts_stage_identity_and_refuses_missing_checkpoin
     result=mk(kit,missing)
     assert result.returncode==2 and "lacks original 4_1_cts.odb" in result.stdout
     assert not missing.exists()  # never fake a checkpoint or create an invalid vehicle
+
+
+def test_mk_stages_eco_drt_pre_hook_and_chains_kit_hook(tmp_path):
+    """FLOW-9 10-30 (KVHEAD-KITS-2 rx259 eco8 SIGSEGVs): DRT of the ECO'd GRT DB runs eco_drt_pre.tcl; a kit's own
+    PRE_DETAIL_ROUTE hook still runs after it; the pass-dir guard (OT_PRD header) keeps it single."""
+    kit = make_kit(tmp_path)
+    assert mk(kit, tmp_path / "p1").returncode == 0
+    cfg = (tmp_path / "p1" / "config.mk").read_text()
+    assert "override export PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl" in cfg and "OT_ECO_DRT_PRE_CHAIN" not in cfg
+    assert (tmp_path / "p1" / "eco_drt_pre.tcl").read_text() == (PRD / "eco_drt_pre.tcl").read_text()
+    with open(kit / "config.mk", "a") as f:
+        f.write("export PRE_DETAIL_ROUTE_TCL = /work/kit_drt_pre.tcl\n")
+    assert mk(kit, tmp_path / "p2").returncode == 0
+    cfg2 = (tmp_path / "p2" / "config.mk").read_text()
+    assert "override export OT_ECO_DRT_PRE_CHAIN = /work/kit_drt_pre.tcl" in cfg2
+    assert cfg2.rstrip().count("PRE_DETAIL_ROUTE_TCL = /work/eco_drt_pre.tcl") == 1
+
+
+def test_eco_drt_pre_hook_contract():
+    t = (PRD / "eco_drt_pre.tcl").read_text()
+    # no-op on ordinary DBs: guides only on special SIGNAL nets that have guides; AP wipe only for a mixed catalog
+    assert "[$n isSpecial] || [$n getSigType] in {POWER GROUND}" in t and "if {[llength [$n getGuides]]}" in t
+    assert "if {!$nneg || (!$npos && ![llength $aps])}" in t
+    assert 'error "OT_ECO_DRT_PRE FAIL: pin_access_idx' in t       # fail closed beyond the cleared slots
+    code = "\n".join(ln for ln in t.splitlines() if not ln.lstrip().startswith("#"))
+    for forbidden in ("setLocation", "setPlacementStatus", "destroy $n", "swapMaster", "write_db", "dbWire"):
+        assert forbidden not in code
