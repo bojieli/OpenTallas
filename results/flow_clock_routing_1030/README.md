@@ -29,7 +29,10 @@ supported. It requires the same existing2w2s NDR on all declared layers,
 explicit per-layer prebuild RC pricing that exact width/spacing, a named
 prebuild RC source, measured_timing_used=false, explicit per-layer PG
 obstacles (empty arrays are a deliberate declaration), and clearance_um.
-No actual L0 RC inputs or authority are supplied here.
+No actual L0 RC inputs or authority are supplied here. Physical emission also
+requires a matching explicit two-corner envelope model result. The search
+records that result against the exact effective contract; changing RC inputs
+invalidates it. Existing slew/window policies are retained.
 
 The actual search model consumes max(R),max(C) across M3/M5 for its vertical
 wire model, M4 RC horizontally, and the union of vertical PG obstacles. These
@@ -61,7 +64,7 @@ If strict M4/M5 trunks are required, the current API cannot express that as
 per-net NDR layer bounds. It needs a separate structural routing mechanism;
 raising the signal-net minimum globally is outside this candidate.
 
-Controls:13 focused tests PASS (per-layer model consumption, wrong/missing
+Controls:14 focused tests PASS (per-layer model consumption, wrong/missing
 RC/PG/rule/source, nonfinite RC, measured timing, blocked/out-of-outline PG,
 legacy command identity, actual Tcl stale-rule refusal);2 relevant legacy
 infrastructure controls PASS. No EDA validation or threshold sweep.

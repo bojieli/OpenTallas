@@ -87,3 +87,18 @@ if {![catch {ot_ci_clock_ndr actual 2 2 {M2 M4 M5}} msg]} {error "unsupported la
 '''.replace('SOURCE','{'+str(source)+'}')
     result=subprocess.run(['tclsh'],input='if {[catch {\n'+script+'\n} msg]} {puts stderr $msg; exit 1}\n',text=True,capture_output=True)
     assert result.returncode == 0,result.stderr
+
+
+def test_emission_needs_matching_actual_model_results():
+    import copy
+    sl=candidate()
+    with pytest.raises(CI.InfraError,match='qualification'):
+        CI.emit_tcl(sl)
+    sl['core_tree']['model_qualification']=dict(model='effective_directional_envelope',
+        source='synthetic model control', measured_timing_used=False,
+        effective_clock_routing=copy.deepcopy(sl['effective_clock_routing']),
+        corners={corner:dict(leaf_min=10.,leaf_max=11.,leaf_window=1.,slew_max=40.) for corner in ('TT','FF')})
+    assert 'ot_ci_clock_ndr {actual_2w2s} 2 2 {M3 M4 M5}' in CI.emit_tcl(sl)
+    sl['effective_clock_routing']['layer_rc']['M3']['capacitance_ff_per_um']*=2
+    with pytest.raises(CI.InfraError,match='qualification'):
+        CI.emit_tcl(sl)

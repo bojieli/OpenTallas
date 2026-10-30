@@ -91,3 +91,24 @@ def check_trunks(sl, plan):
                 raise ValueError("conservative PG envelope leaves the physical outline")
         except ValueError as error:
             raise RoutingError(f"effective clock routing PG envelope: {error}") from error
+
+
+def check_qualification(sl):
+    """Building the RC model is allowed; emitting a physical plan needs results."""
+    if sl.get("effective_clock_routing") is None:
+        return
+    q = (sl.get("core_tree") or {}).get("model_qualification", {})
+    if (q.get("model") != "effective_directional_envelope"
+            or q.get("measured_timing_used") is not False
+            or q.get("effective_clock_routing") != sl["effective_clock_routing"]
+            or not isinstance(q.get("source"), str) or not q["source"].strip()):
+        raise RoutingError("effective clock routing requires matching two-corner envelope model qualification before emission")
+    for corner in ("TT", "FF"):
+        result = q.get("corners", {}).get(corner, {})
+        values = {key: _number(result.get(key), f"{corner} model {key}")
+                  for key in ("leaf_min", "leaf_max", "leaf_window", "slew_max")}
+        if (values["leaf_max"] < values["leaf_min"]
+                or abs(values["leaf_max"] - values["leaf_min"] - values["leaf_window"]) > .001
+                or values["slew_max"] > 80
+                or (q.get("window_policy", "gate") != "info" and values["leaf_window"] > 20)):
+            raise RoutingError(f"effective clock routing {corner} model target FAIL before emission")

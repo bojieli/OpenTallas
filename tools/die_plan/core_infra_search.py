@@ -129,6 +129,10 @@ def design(sl, libraries, points, caps, r, c, slew_limit=80., passes=10, input_s
     frozen={x['name']:x for x in CI.compile_slice(sl)['cells']}
     out.pop('cell_placements',None)
     for i,n in enumerate(out['core_tree']['nodes']):n['master']=choices[i];n['xy_um']=frozen[n['name']]['xy_um']
+    if sl.get('effective_clock_routing') is not None:
+        q=out['core_tree'].setdefault('model_qualification',{})
+        q.update(model='effective_directional_envelope',source='core_infra_search.py prebuild NLDM/RC envelope',
+                 measured_timing_used=False,effective_clock_routing=copy.deepcopy(sl['effective_clock_routing']),corners=best)
     return out,dict(baseline=baseline,result=best,score=bestscore,steps=steps,
                    driver_counts={n:choices.count(n) for n in options if choices.count(n)},slew_limit_ps=slew_limit,input_slew_ps=input_slew_ps,wire_model=('effective_directional_envelope' if sl.get('effective_clock_routing') is not None else ('rooted_directional' if routing_model is not None else 'historical_direct')),wire_geometry=model.wire_summary)
 

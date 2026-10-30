@@ -797,6 +797,12 @@ def _tree_lines(t, late=False):
 
 
 def emit_tcl(sl, kd=None):
+    if sl.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(sl)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
     plan = compile_slice(sl, kd)
     tree = plan.get("core_tree")
     pgc = trunk_pg_clearance(sl, plan)
@@ -898,6 +904,12 @@ def emit_late_tcl(plan):
     the PRE_CTS hook (before core_infra_cts.tcl), not by the pre-GPL master_core_infra.tcl. Planned tree cells are
     created at their plan xy and legalized by an incremental DPL that moves ONLY them (every other instance held
     FIRM, restored after); clock gates keep their placed xy (the plan xy is reported, never applied)."""
+    if plan.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(plan)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
     t = plan.get("core_tree") or {}
     if t.get("install_stage", "pre_gpl") != "pre_cts":
         raise InfraError("emit_late_tcl needs core_tree.install_stage pre_cts")
