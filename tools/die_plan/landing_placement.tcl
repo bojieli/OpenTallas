@@ -172,6 +172,58 @@ proc cland_place_ff {prefix rect tag} {
  puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement"
  return [llength $ffs]
 }
+# FLOW-KITFAIL-3 10-29 (S81-KITS-B iqf__t1, plan_s13r2 band_ring=all): an all-cells ring whose reserved footprints
+# cannot fit its band still ran the first-fit cland_put cell by cell (each call rescans from the band corner, O(n^2):
+# 5,154 of 30,520 ft1_i cells in 40 min) before the certain "no legal nonoverlapping row/site" error.  The same error is
+# raised up front when the group's reserved area (w/0.4*spread per cell, as cland_put reserves it) exceeds an upper
+# bound of what the band can hold: per band row, every free segment (length >= the narrowest body) plus one widest
+# reservation of overhang at its end (a last body fits, its reservation may run past the segment).  Bands that fit,
+# multi-row cells and bands not inside the core skip it: their placement is unchanged.
+proc cland_band_fit {prefix rect tag} {
+ global ff_blk ff_x0 ff_y0 ff_x1 ff_y1 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done
+ set sp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> sp
+ set need 0.0; set maxrw 0; set minw {}; set n 0
+ foreach i [$ff_blk getInsts] {
+  set nm [$i getName]
+  if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue
+  if {[dict exists $cland_done $nm]} continue
+  set m [$i getMaster]
+  if {[$m isBlock]} return
+  set w [$m getWidth]; set h [$m getHeight]
+  if {$h > $ff_rh} return
+  set rw [expr {int(ceil(double($w)/0.4*$sp/$ff_sw))*$ff_sw}]
+  set need [expr {$need + double($rw)*$ff_rh}]
+  if {$rw > $maxrw} { set maxrw $rw }
+  if {$minw eq {} || $w < $minw} { set minw $w }
+  incr n
+ }
+ if {!$n} return
+ lassign $rect ax ay bx by
+ set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
+ set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
+ if {$ax < $ff_x0 || $ay < $ff_y0 || $bx > $ff_x1 || $by > $ff_y1} return
+ set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
+ set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ set cap 0.0
+ for {set y $starty} {$y+$ff_rh<=$by} {incr y $ff_rh} {
+  if {![dict exists $ff_orient $y]} continue
+  set r [expr {int(($y-$ff_y0)/$ff_rh)}]
+  set occ {}
+  if {[dict exists $cland_occ $r]} { set occ [lsort -integer -index 0 [dict get $cland_occ $r]] }
+  set x $startx
+  foreach iv [concat $occ [list [list $bx $bx]]] {
+   lassign $iv l u
+   set e [expr {min($l,$bx)}]
+   if {$e - $x >= $minw} { set cap [expr {$cap + double($e - $x + $maxrw)*$ff_rh}] }
+   if {$u > $x} { set x $u }
+   if {$x >= $bx} break
+  }
+ }
+ if {$need > $cap} {
+  set a2 [expr {double($ff_dbu)*$ff_dbu}]
+  error [format "OT_CLAND no legal nonoverlapping row/site in reserved band for %s (%s): %d cells reserve %.1f um2 > band upper bound %.1f um2 (ratio %.2f), checked before placement" $prefix $tag $n [expr {$need/$a2}] [expr {$cap/$a2}] [expr {$cap > 0 ? $need/$cap : 0}]]
+ }
+}
 foreach spec $cland_groups {
  lassign $spec prefix rect tag
  set hit 0
@@ -179,6 +231,7 @@ foreach spec $cland_groups {
   if {![cland_place_ff $prefix $rect $tag]} { error "OT_CLAND no mapped ring flops found under $prefix" }
   continue
  }
+ cland_band_fit $prefix $rect $tag
  foreach i [$ff_blk getInsts] {
   set nm [$i getName]
   if {![regexp [format {(^|[/.])%s[/.]} $prefix] $nm]} continue

@@ -33,6 +33,20 @@ class ClockBinding(unittest.TestCase):
         with self.assertRaises(ValueError):
             bind_clocks(self.TOP.replace('input wire clk_region_h000;', 'input wire [1:0] clk_region_h000;'), self.TB)
 
+    def test_start_stage_clocks_driven_by_core(self):
+        # TOK-KV-7: an integrated START provider exposes stage clock inputs on the public top (fails on the old tool:
+        # left unconnected, every stage holds and START never propagates); the private top in the same file keeps
+        # the pst_* inputs the provider now drives, and they are not bench pins
+        top = ('module qwen_kvsys_bound_top__without_start_provider(clk_core, clk_region_h000, pst_a); '
+               'input wire clk_region_h000; input wire pst_a; '
+               'endmodule\nmodule qwen_kvsys_bound_top(\n clk_core, clk_region_h000, t_st_b5__clk, t_st_r1_1__clk);\n'
+               'input wire clk_region_h000;\n input wire  t_st_b5__clk;\n input wire  t_st_r1_1__clk;\nendmodule')
+        patched, names = bind_clocks(top, self.TB)
+        self.assertEqual(names, ['clk_region_h000', 't_st_b5__clk', 't_st_r1_1__clk'])
+        for n in names:
+            self.assertEqual(patched.count('.' + n + '(ck_core)'), 1)
+        self.assertEqual(bind_clocks(top, patched)[0], patched)
+
 
 if __name__ == '__main__':
     unittest.main()
