@@ -63,6 +63,7 @@ def budget(chain_path, decode, stack_bytes=22_500_000_000):
     return dict(schema='opentallas.hbm.vm_boundary_dma_budget.v1',
                 status='OPTIMISTIC_SOURCE_SERVICE_BOUND_NOT_RTL_MEASUREMENT',
                 source_range=chain['source_range'], by_op=by_op,
+                scratch_reserved=chain.get('scratch_reserved', False),
                 total_boundary_bytes=sum(x['bytes'] for x in rows),
                 single_issuing_mover_source_cycles=sum(x['optimistic_source_cycles'] for x in rows),
                 hbm_stack_records=dict(sorted(Counter(str(x['stack']) for x in rows).items())),
