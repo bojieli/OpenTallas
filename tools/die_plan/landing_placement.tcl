@@ -322,6 +322,28 @@ proc cland_ffkey {nm {rev 0} {wch 0} {nbits 0}} {
  return $nm
 }
 # chunk width WCH of a band's chunked ring read registers (max y index + 1; every chunk has WCH bits), 0 when none
+proc cland_kbit {kf rev} { scan $kf %d v; return [expr {$rev ? 999999999-$v : $v}] }
+# DIE-HEAD-43 c3 (FLOW-11 shared): bus bit (index) whose pin centre is nearest the START pin {x y}; bxy = {{bit x y} ..}
+proc cland_nearest_bit {sx bxy} {
+ lassign $sx px py; set best {}; set bd 0
+ foreach e $bxy { lassign $e bi cx cy; set d [expr {abs($cx-$px)+abs($cy-$py)}]; if {$best eq {} || $d < $bd} { set best $bi; set bd $d } }
+ return [list $best $bd]
+}
+# ring CONTROL registers (raw-name keys = not storage/read bits) and status/s_tag keys (bits >= bus width, other storage
+# base, or the 99999999x tag slots) move right after bus bit kb; returns {n_moved ffs}
+proc cland_ctl_rekey {ffs base kb nbb rev} {
+ set nc 0
+ set out [lmap pr $ffs {
+  set k [lindex $pr 0]
+  set f [split $k |]
+  if {$k eq [lindex $f 0]} {
+   incr nc; list [format {%s|%09d|%09d|%s} $base $kb 999999997 $k] [lindex $pr 1]
+  } elseif {[llength $f] >= 3 && ([lindex $f 0] ne $base || [cland_kbit [lindex $f 1] $rev] >= $nbb || ([scan [lindex $f 2] %d] >= 999999990 && [scan [lindex $f 2] %d] < 999999998))} {
+   incr nc; list [format {%s|%09d|%09d|%s} $base $kb 999999996 $k] [lindex $pr 1]
+  } else { set pr }
+ }]
+ return [list $nc $out]
+}
 proc cland_dsel_wch {names} {
  set w 0
  foreach nm $names {
@@ -386,6 +408,28 @@ proc cland_place_ff {prefix rect tag} {
   foreach bt [$ff_blk getBTerms] { if {[regexp {^(.*)\[([0-9]+)\]$} [$bt getName] -> bn bi] && $bn eq $bus} { set nbits [expr {max($nbits,$bi+1)}] } }
  }
  set ffs [lmap pr $ffs {list [cland_ffkey [lindex $pr 0] $rev $wch $nbits] [lindex $pr 1]}]
+ # DIE-HEAD-43 c3 (FLOW-11 shared): ring CONTROL registers (raw-name key: counters/ctl/oh/rp/tmo/ready/fault) and
+ # status/s_tag keys are keyed right after the bus bit whose pin is nearest the ring's START pin (cland_fstart_in_<bus>)
+ # instead of packing first at the band's low corner (HEAD wshim_rx origin->arm_cnt r2r 488 -> 378).  Bands without a
+ # START pin or without a storage bus keep the old keys.
+ if {[regexp {^ring:([^@+]+)} $tag -> cbus]} {
+  set sx {}; set bxy {}
+  foreach bt [$ff_blk getBTerms] {
+   set bn [$bt getName]; set bb [$bt getBBox]
+   set cx [expr {([$bb xMin]+[$bb xMax])/2}]; set cy [expr {([$bb yMin]+[$bb yMax])/2}]
+   if {$bn eq "cland_fstart_in_$cbus"} { set sx [list $cx $cy] }
+   if {[regexp {^(.*)\[([0-9]+)\]$} $bn -> bbn bbi] && $bbn eq $cbus} { lappend bxy [list $bbi $cx $cy] }
+  }
+  set base {}
+  foreach pr $ffs { set k [lindex $pr 0]; if {[regexp {^([^|]+s_d)\|} $k -> b0]} { set base $b0; break } }
+  if {[llength $sx] && [llength $bxy] && $base ne {}} {
+   lassign [cland_nearest_bit $sx $bxy] best bd
+   set kb [expr {$rev ? 999999999-$best : $best}]
+   set nbb 0; foreach e $bxy { set nbb [expr {max($nbb,[lindex $e 0]+1)}] }
+   lassign [cland_ctl_rekey $ffs $base $kb $nbb $rev] nc ffs
+   puts "OT_CLAND ctlkey $prefix: $nc control registers keyed at bit $best (START pin nearest, [format %.1f [expr {$bd/double($ff_dbu)}]] um)"
+  }
+ }
  if {$wch} { puts "OT_CLAND ring_place=ff $prefix: chunked read registers keyed to their word bits (chunk width $wch, bus $bus width $nbits)" }
  lassign $rect ax ay bx by
  set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
