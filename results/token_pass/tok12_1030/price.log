@@ -1,0 +1,27 @@
+{"case": "unit_SM_plus1", "extra": {"IDX": 31, "SU": 3, "SM": 1}, "coll_once": 0, "coll_percross": 0, "cycles": 610944.93, "tok_s": 1799.17, "pct_vs_record": -0.034, "pct_vs_1812_4": -0.73}
+{"case": "unit_SU_plus1", "extra": {"IDX": 31, "SU": 4}, "coll_once": 0, "coll_percross": 0, "cycles": 611658.93, "tok_s": 1797.07, "pct_vs_record": -0.151, "pct_vs_1812_4": -0.846}
+{"case": "unit_FUSED_plus1", "extra": {"IDX": 31, "SU": 3, "FUSED": 1}, "coll_once": 0, "coll_percross": 0, "cycles": 610917.93, "tok_s": 1799.25, "pct_vs_record": -0.03, "pct_vs_1812_4": -0.726}
+{"case": "unit_IDX_plus1", "extra": {"IDX": 32, "SU": 3}, "coll_once": 0, "coll_percross": 0, "cycles": 610782.93, "tok_s": 1799.65, "pct_vs_record": -0.008, "pct_vs_1812_4": -0.703}
+{"case": "unit_DMA_plus1", "extra": {"IDX": 31, "SU": 3, "DMA": 1}, "coll_once": 0, "coll_percross": 0, "cycles": 610784.93, "tok_s": 1799.64, "pct_vs_record": -0.008, "pct_vs_1812_4": -0.704}
+{"case": "unit_HC_plus1", "extra": {"IDX": 31, "SU": 3, "HC": 1}, "coll_once": 0, "coll_percross": 0, "cycles": 610734.93, "tok_s": 1799.79, "pct_vs_record": 0.0, "pct_vs_1812_4": -0.696}
+{"case": "coll_plus1_once", "extra": {"IDX": 31, "SU": 3}, "coll_once": 1, "coll_percross": 0, "cycles": 611287.93, "tok_s": 1798.16, "pct_vs_record": -0.09, "pct_vs_1812_4": -0.786}
+{"case": "L28_SMplus1", "extra": {"IDX": 31, "SU": 3, "SM": 1}, "coll_once": 0, "coll_percross": 0, "cycles": 610944.93, "tok_s": 1799.17, "pct_vs_record": -0.034, "pct_vs_1812_4": -0.73}
+{"case": "L28_alt_SUplus1", "extra": {"IDX": 31, "SU": 4}, "coll_once": 0, "coll_percross": 0, "cycles": 611658.93, "tok_s": 1797.07, "pct_vs_record": -0.151, "pct_vs_1812_4": -0.846}
+{"case": "d38a_L36_SUplus1_with_L28", "extra": {"IDX": 31, "SU": 4, "SM": 1}, "coll_once": 0, "coll_percross": 0, "cycles": 611868.93, "tok_s": 1796.45, "pct_vs_record": -0.185, "pct_vs_1812_4": -0.88}
+{"case": "d40h_south_ne2nw_plus7_once", "extra": {"IDX": 31, "SU": 3}, "coll_once": 7, "coll_percross": 0, "cycles": 614605.93, "tok_s": 1788.45, "pct_vs_record": -0.63, "pct_vs_1812_4": -1.321}
+{"case": "d40h_south_nw2ne_plus10_once", "extra": {"IDX": 31, "SU": 3}, "coll_once": 10, "coll_percross": 0, "cycles": 616264.93, "tok_s": 1783.64, "pct_vs_record": -0.897, "pct_vs_1812_4": -1.587}
+{"case": "d40h_south_pair17_percross", "extra": {"IDX": 31, "SU": 3}, "coll_once": 0, "coll_percross": 17, "cycles": 620815.93, "tok_s": 1770.56, "pct_vs_record": -1.624, "pct_vs_1812_4": -2.309}
+{"case": "VA_S0_core", "extra": {"IDX": 80, "SU": 3, "FUSED": 122}, "coll_once": 0, "coll_percross": 0, "cycles": 636415.94, "tok_s": 1727.16, "pct_vs_record": -4.035, "pct_vs_1812_4": -4.703}
+{"case": "VA_S0_wide", "extra": {"IDX": 80, "SU": 19, "FUSED": 122, "DMA": 13}, "coll_once": 0, "coll_percross": 0, "cycles": 652383.93, "tok_s": 1684.89, "pct_vs_record": -6.384, "pct_vs_1812_4": -7.035}
+{"case": "L1_core", "extra": {"IDX": 9, "SU": 3, "FUSED": 74}, "coll_once": 0, "coll_percross": 0, "cycles": 623791.94, "tok_s": 1762.12, "pct_vs_record": -2.093, "pct_vs_1812_4": -2.774}
+{"case": "L1_bound", "extra": {"IDX": 9, "SU": 5, "FUSED": 84}, "coll_once": 0, "coll_percross": 0, "cycles": 627559.94, "tok_s": 1751.54, "pct_vs_record": -2.681, "pct_vs_1812_4": -3.358}
+{"case": "C2_only", "extra": {"IDX": 9, "SU": 3, "FUSED": 134}, "coll_once": 0, "coll_percross": 0, "cycles": 635311.94, "tok_s": 1730.17, "pct_vs_record": -3.868, "pct_vs_1812_4": -4.537}
+{"case": "POR_d40h_VA_core_pair17", "extra": {"IDX": 80, "SU": 3, "SM": 1, "FUSED": 122}, "coll_once": 0, "coll_percross": 17, "cycles": 646574.94, "tok_s": 1700.03, "pct_vs_record": -5.543, "pct_vs_1812_4": -6.2}
+{"case": "POR_d40h_VA_wide_pair17", "extra": {"IDX": 80, "SU": 19, "SM": 1, "FUSED": 122, "DMA": 13}, "coll_once": 0, "coll_percross": 17, "cycles": 661998.93, "tok_s": 1660.42, "pct_vs_record": -7.744, "pct_vs_1812_4": -8.386}
+{"case": "POR_d40h_L1_core_pair17", "extra": {"IDX": 9, "SU": 3, "SM": 1, "FUSED": 74}, "coll_once": 0, "coll_percross": 17, "cycles": 633950.94, "tok_s": 1733.88, "pct_vs_record": -3.662, "pct_vs_1812_4": -4.332}
+{"case": "POR_d40h_L1_bound_pair17", "extra": {"IDX": 9, "SU": 5, "SM": 1, "FUSED": 84}, "coll_once": 0, "coll_percross": 17, "cycles": 637718.94, "tok_s": 1723.64, "pct_vs_record": -4.231, "pct_vs_1812_4": -4.897}
+{"case": "POR_d40h_L1_core_ne7once", "extra": {"IDX": 9, "SU": 3, "SM": 1, "FUSED": 74}, "coll_once": 7, "coll_percross": 0, "cycles": 627820.94, "tok_s": 1750.81, "pct_vs_record": -2.721, "pct_vs_1812_4": -3.398}
+
+real	14m55.215s
+user	14m54.351s
+sys	0m0.749s
