@@ -2065,7 +2065,9 @@ module ot_v41_bf_front_core_roots #(
             if (qx_n_end && n_more) begin n_coh <= qn_ohl; n_cgt <= qx_gt(qn_ohl); n_ca_r <= ca_f(qn_a_rs, c_live, 3'd0); n_ca_r2 <= ca_f(qn_a_rs, c_live, 3'd0); end
             else begin n_coh <= qn_nxoh; n_cgt <= qx_gt(qn_nxoh); n_ca_r <= qn_ca_nx; n_ca_r2 <= qn_ca_nx; end
         end
-    end
+    end else begin n_coh <= '0; n_cgt <= '0; end
+    // reset-state clear (S81-CORES-KITS-2 10-29, COORD approved): mirror bit 0 is constant 0 once loaded; without a reset
+    // value it stayed X until the first load, synthesis tied it 0 and LEC saw gold X vs gate 0 (367 points)
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 3 && rst_n && qy_seen) begin
         if (n_coh !== NSEG'(1) << n_c || n_cgt !== qx_gt(NSEG'(1) << n_c) || (n_run && n_ca_r !== |(n_coh & qn_cmpA))) begin
@@ -2082,7 +2084,7 @@ module ot_v41_bf_front_core_roots #(
             if (w_restart) begin w_coh <= qx_ohl; w_cgt <= qx_gt(qx_ohl); end
             else begin w_coh <= qx_nxoh; w_cgt <= qx_nxgt; end
         end
-    end
+    end else begin w_coh <= '0; w_cgt <= '0; end   // reset-state clear, as n_coh / n_cgt above
 `ifdef QP_CHECK
     // the mirrors equal the one-hot / mask of w_c, and every QX consequence equals the encoded walker's
     always @(negedge clk) if (QX != 0 && FAST != 0 && rst_n && qy_seen) begin
