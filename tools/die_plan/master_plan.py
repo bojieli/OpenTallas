@@ -219,7 +219,7 @@ def signed_face_entry_check(P, sfe, band_ps=SIGNED_FACE_BAND_PS):
     return not issues, rec, issues
 
 
-def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
+def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5, tn=None):
     """Check one real native clock pin and its declared tap against the proposed entry.
 
     A proposed centre is not evidence of a native pin. Do not choose among two
@@ -274,7 +274,15 @@ def core_clock_entry_check(P, h, taps, proposed, tolerance=0.5):
             # CLOCK-KV-R19: a landed (forwarded-clock) entry is the core's own non-die clock pin; the die-clock entry
             # proposal does not apply.  It must name its clock domain = the native pin and be forwarded.
             row.update(landed=True, clock_domain=tp.get("clock_domain"))
-            if tp.get("clock_domain") != name or not tp.get("forwarded"):
+            native_domain=name
+            if tn is not None and P.types[tn].get("clock",{}).get("native_domains") is not None:
+                import native_clock_domains as NCD
+                try:
+                    native_domain=NCD.macro_root(P,tn,inst,h["module"],name)
+                    row["native_net_root"]=native_domain
+                except (KeyError,ValueError,OSError) as ex:
+                    row["issues"].append("invalid native clock net binding: "+str(ex));native_domain=None
+            if tp.get("clock_domain") != native_domain or native_domain is None or not tp.get("forwarded"):
                 row["issues"].append("landed entry must be forwarded on its native clock pin domain")
         face_ok = False
         if tp and not landed and tp.get("signed_face_entry") is not None and d > tolerance:
@@ -2039,7 +2047,7 @@ def run(P, out, mesh_dir=None, tracks_file=None, pg_file=None, ir_files=(), entr
             e = entry[h["module"]]
             if not rect_inside(e["island"], (0, 0) + tuple(h["outline_um"])):
                 lot_fail.append(dict(type=tn, inst=h["inst"], issue="entry island outside core"))
-            checked = core_clock_entry_check(P, h, (t.get("clock") or {}).get("taps", []), e["xy"], entry_tol)
+            checked = core_clock_entry_check(P, h, (t.get("clock") or {}).get("taps", []), e["xy"], entry_tol,tn=tn)
             if checked["verdict"] != "PASS":
                 entry_fail.append(dict(type=tn, **checked))
         for tp in (t.get("clock") or {}).get("taps", []):
@@ -2493,6 +2501,9 @@ def write_slices(P, d, bays, pins, roads, islands, entry, core_types, in_core, g
                   bays=list(seen.values()), entry_pins=ep, hard_cores=hcs, latency=lat, corridors=cor, gates=gv)
         if pe:
             sl["phy_clock_entry"] = pe
+        if t.get("clock",{}).get("native_domains") is not None:
+            import native_clock_domains as NCD
+            sl["native_clock_domains"]=NCD.summary(P,tn)
         # 12.2a1 + COORD 06:53: the partition's infra island and the H-tree leg repeaters on it are PUSHDOWN cells of
         # the partition netlist (fixed, dont_touch, dedicated ft ports); the island blockage is dropped by the kit
         pdi = []
