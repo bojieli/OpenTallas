@@ -196,13 +196,27 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
                 **({"local_root_reset":{k:v for k,v in reset_summary.items() if k!="errors"}} if reset_summary is not None else {})),opened
 
 
+def on_track(P,layer,x,y):
+    """FLOW-KITFAIL-2 10-29 (DIE-HEAD-34: hd_mesh_e rst_start_raw_0/1 DRT-0255 twice at x 558.72 = half an M7 pitch
+    off the plan track 558.752): a landing pin is drawn as a narrow rectangle on its layer, so its crossing coordinate
+    (x of a vertical layer, y of a horizontal one) must sit on a plan track (offset + k * pitch, make_tracks.tcl).
+    Snap it to the nearest track; a pin already on a track keeps its exact coordinate (byte-identical io.tcl)."""
+    L=getattr(P,"layers",{}).get(layer)
+    if not L or not L.get("pitch_um"):return x,y
+    def snap(v):
+        k=round((v-L["offset_um"])/L["pitch_um"])
+        q=round(L["offset_um"]+k*L["pitch_um"],4)
+        return v if abs(q-v)<5e-5 else q
+    return (snap(x),y) if L.get("dir")=="V" else (x,snap(y))
+
+
 def io_tcl(P,tn):
     t=P.types[tn];c=t.get("clock",{}).get("landing_contract",{})
     input_clocks={e["port"] for e in t.get("clock",{}).get("edge_clocks",[])}
     out=[]
     for p in c.get("pins",[]):
         if p["name"] in input_clocks:continue # existing edge_clock_pins handles these
-        x,y=p["xy_um"]
+        x,y=on_track(P,p["layer"],*p["xy_um"])
         out.append(f"place_pin -pin_name {{{p['name']}}} -layer {p['layer']} -location {{{x:.4f} {y:.4f}}} "
                    "-pin_size {0.0800 0.4320} ;# real scalar landing infrastructure pin")
     return "\n".join(out)+("\n" if out else "")
