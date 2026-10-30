@@ -274,6 +274,29 @@ def test_installed_clock_entry_uses_same_track_and_access_as_kit_io(tmp_path):
     assert json.loads((tmp_path / "core_infra_plan.json").read_text())["clock_entry"]["xy_um"] == [432.02, 432.0]
 
 
+def test_installed_ft_ports_snap_to_m5_track(tmp_path):
+    # HBM-CORES-KITS-28: HCOL island ft pins at x 106.896 sat half a pitch off the kit M5 grid (0.024 + k*0.048):
+    # DRT-0255 on mp_isl0_ck_i.  The kit view snaps them like the clock entry; on-track ports stay put.
+    sl = sample()
+    isl = sl["pushdown"]["islands"][0]
+    isl["ft_ports"][0]["xy_um"] = [429.84, 434.16]    # off-track by half a pitch -> ties go up
+    isl["ft_ports"][1]["xy_um"] = [434.184, 434.16]    # already on track -> unchanged
+    original = copy.deepcopy(sl)
+    (tmp_path / "make_tracks.tcl").write_text(
+        "make_tracks M5 -x_offset 0.024 -x_pitch 0.048 -y_offset 0.024 -y_pitch 0.048\n")
+    CI.install(tmp_path, sl)
+    ports = {p["name"]: p for p in json.loads((tmp_path / "core_infra_plan.json").read_text())["ports"]}
+    assert ports["mp_isl0_ck_i"]["xy_um"] == [429.864, 434.16]
+    assert ports["mp_isl0_ck_i"]["plan_xy_um"] == [429.84, 434.16]
+    assert ports["mp_isl0_ck_o"]["xy_um"] == [434.184, 434.16] and "plan_xy_um" not in ports["mp_isl0_ck_o"]
+    tcl = (tmp_path / "master_core_infra.tcl").read_text()
+    assert "ot_ci_port {mp_isl0_ck_i} INPUT 429.864 434.16 {0.048 0.48}" in tcl
+    for p in ports.values():
+        assert MS.on_track(tmp_path, "M5", *p["xy_um"])
+    assert sl == original
+    assert all("plan_xy_um" not in p for p in CI.compile_slice(sl)["ports"])  # no kit = plan coordinates
+
+
 @pytest.mark.parametrize("cell,n,pitch", [("BUFx24_ASAP7_75t_R", 3, 1.674), ("BUFx16f_ASAP7_75t_R", 2, 1.242),
                                           ("BUFx12f_ASAP7_75t_R", 3, 1.08), ("BUFx4_ASAP7_75t_R", 4, 1.08)])
 def test_parallel_island_drivers_never_overlap(cell, n, pitch):
