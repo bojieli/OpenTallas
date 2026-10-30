@@ -1,0 +1,50 @@
+{
+  "partition_types": {
+    "gunit__t1": {
+      "outline_um": [
+        2885.76,
+        1226.88
+      ],
+      "buses": [
+        {
+          "name": "unit_i0",
+          "dir": "in",
+          "width": 265,
+          "kind": "data",
+          "face": "S",
+          "window_um": [
+            1449.024,
+            1506.972
+          ],
+          "layers": [
+            "M7",
+            "M5"
+          ],
+          "order": "lsb_low"
+        }
+      ],
+      "internal_stations": [
+        {
+          "conn": "bus:unit_i0",
+          "from_um": [
+            1477.998,
+            0.0
+          ],
+          "to_um": [
+            1342.3,
+            613.44
+          ],
+          "regs_um": [
+            [
+              1440.08,
+              328.32
+            ]
+          ],
+          "launch": "face bus unit_i0",
+          "capture": "u_gunit.u_l2.cw_d",
+          "note": "S81-CORES-R25 gunit re-layout 10-27: NEW FIRM station in the 17.28 strip between L5 and L4, +1 cycle on unit_i0 (seqhost -> gunit cw); L2 is the U top (>= 613 um from the S face); ledger TOK"
+        }
+      ]
+    }
+  }
+}

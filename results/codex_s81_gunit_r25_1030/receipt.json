@@ -1,0 +1,43 @@
+{
+  "scope": "PRIVATE_CANDIDATE_NOT_ADOPTED",
+  "r25_event": "117e37566c",
+  "source_plan_sha256": "bcfcb4e1737e8140fab9c94aec6128c4a086ab5fa953e07159813abb11819d10",
+  "bound_wrapper_sha256": "3542eb98bbef2be3fc8f217703da963817da8562cf4a7cb3e2cc9ba6e7e59a70",
+  "candidate_sha256": "c242f9eeb80bc47aa551c01b2ed6ed1df10d3eab1e76eb2d47b7a3d9a1a43be3",
+  "lane": "unit__seqhost__gunit",
+  "old": {
+    "cycles": 72,
+    "stations": 52,
+    "boundary": 2,
+    "faces": 14,
+    "fixed": 0,
+    "clock_landing": 18,
+    "natural": 72,
+    "pad": 0
+  },
+  "candidate": {
+    "cycles": 73,
+    "stations": 52,
+    "boundary": 2,
+    "faces": 14,
+    "fixed": 1,
+    "clock_landing": 18,
+    "natural": 73,
+    "pad": 0
+  },
+  "changed_lanes": [
+    "unit__seqhost__gunit"
+  ],
+  "canonical_payload_capacity": 267,
+  "actual_payload": 265,
+  "epoch_bits": 1,
+  "logical_added_flops": 266,
+  "full_mapped_count": "NOT RUN",
+  "canonical_other_plan_values_unchanged": true,
+  "unresolved": [
+    "current parent2spareinput ABI reconciliation",
+    "actualCW perbit placement and reset/clock admission",
+    "complete programme/calendar exposure",
+    "full parent/BoundDie proof and eventfreeze approval"
+  ]
+}
