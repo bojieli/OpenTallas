@@ -1,0 +1,394 @@
+[
+ {
+  "name": "VL3d",
+  "cost": 571192,
+  "far_rows": 79,
+  "far_sfu": 16,
+  "far_bits": 54498,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 129890,
+  "nonadj_bits": 69431,
+  "over_bits": 5959,
+  "moved_nw": 3
+ },
+ {
+  "name": "V1a b111<->spu1",
+  "cost": 587720,
+  "far_rows": 75,
+  "far_sfu": 14,
+  "far_bits": 53358,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 131030,
+  "nonadj_bits": 68291,
+  "over_bits": 5959,
+  "moved_nw": 5
+ },
+ {
+  "name": "V1b b113<->spu0",
+  "cost": 485936,
+  "far_rows": 75,
+  "far_sfu": 14,
+  "far_bits": 48558,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 133466,
+  "nonadj_bits": 65855,
+  "over_bits": 5959,
+  "moved_nw": 5
+ },
+ {
+  "name": "V1ab",
+  "cost": 460191,
+  "far_rows": 71,
+  "far_sfu": 12,
+  "far_bits": 47418,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 134606,
+  "nonadj_bits": 64715,
+  "over_bits": 5959,
+  "moved_nw": 7
+ },
+ {
+  "name": "V1c b113->hub",
+  "cost": 332635,
+  "far_rows": 55,
+  "far_sfu": 4,
+  "far_bits": 31894,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 147906,
+  "nonadj_bits": 51415,
+  "over_bits": 5959,
+  "moved_nw": 4
+ },
+ {
+  "name": "V1ac b111<->spu1 + b113->hub",
+  "cost": 294966,
+  "far_rows": 47,
+  "far_sfu": 0,
+  "far_bits": 25430,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 154370,
+  "nonadj_bits": 44951,
+  "over_bits": 5959,
+  "moved_nw": 6
+ },
+ {
+  "name": "V1d b113<->spu1 xrow",
+  "cost": 468516,
+  "far_rows": 71,
+  "far_sfu": 12,
+  "far_bits": 43890,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 133466,
+  "nonadj_bits": 65855,
+  "over_bits": 5959,
+  "moved_nw": 5
+ },
+ {
+  "name": "V1e b111<->spu0 xrow",
+  "cost": 563571,
+  "far_rows": 75,
+  "far_sfu": 14,
+  "far_bits": 53358,
+  "over": [
+   [
+    "NW_hub",
+    "NW_su01",
+    4734,
+    4562
+   ],
+   [
+    "NE_hub",
+    "NE_su01",
+    4734,
+    4562
+   ],
+   [
+    "NW_b110",
+    "NW_hub",
+    4678,
+    2488
+   ],
+   [
+    "NE_b110",
+    "NE_hub",
+    4678,
+    2488
+   ],
+   [
+    "NW_b100",
+    "NW_hub",
+    5024,
+    4406
+   ],
+   [
+    "NE_b100",
+    "NE_hub",
+    5024,
+    4406
+   ]
+  ],
+  "adj_bits": 131030,
+  "nonadj_bits": 68291,
+  "over_bits": 5959,
+  "moved_nw": 5
+ }
+]

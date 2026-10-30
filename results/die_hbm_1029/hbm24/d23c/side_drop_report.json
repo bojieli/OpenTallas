@@ -1,0 +1,196 @@
+{
+ "schema": "opentallas.hbm.side_drop.v1",
+ "source_plan_sha256": "4133ce1e4e0dae70be2ec25086d5e53457f20a40c7fd8e7441922071f2d24496",
+ "types": {
+  "q_su00": {
+   "used_by": [
+    "NE_su00"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q0_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+     "origin_um": [
+      1650.24,
+      449.28
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_softplus of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 223122 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q0_side_softplus.clk_side"
+   ]
+  },
+  "q_su01": {
+   "used_by": [
+    "NW_su01"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q0_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+     "origin_um": [
+      1235.52,
+      449.28
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_rest of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 189664 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q0_side_rest.clk_side"
+   ]
+  },
+  "q_su10": {
+   "used_by": [
+    "NW_su10"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q1_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_softplus of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 223122 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q1_side_softplus.clk_side"
+   ]
+  },
+  "q_su11": {
+   "used_by": [
+    "NE_su11"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q1_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+     "origin_um": [
+      1909.44,
+      449.28
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_rest of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 189664 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q1_side_rest.clk_side"
+   ]
+  },
+  "q_su00__physical_v1": {
+   "used_by": [
+    "NW_su00"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q0_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+     "origin_um": [
+      1650.24,
+      449.28
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_softplus of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 223122 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q0_side_softplus.clk_side"
+   ]
+  },
+  "q_su01__physical_v1": {
+   "used_by": [
+    "NE_su01"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q0_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+     "origin_um": [
+      1235.52,
+      449.28
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_rest of ot_hbm_su_static_pgslice_lg__pv2 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 189664 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q0_side_rest.clk_side"
+   ]
+  },
+  "q_su10__physical_v1": {
+   "used_by": [
+    "NE_su10"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q1_side_softplus",
+     "module": "ot_hbm_su_static_pgslice_lg__side_softplus",
+     "origin_um": [
+      34.56,
+      34.56
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_softplus of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 223122 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q1_side_softplus.clk_side"
+   ]
+  },
+  "q_su11__physical_v1": {
+   "used_by": [
+    "NW_su11"
+   ],
+   "hard_cores_removed": [
+    {
+     "inst": "u_su_Q1_side_rest",
+     "module": "ot_hbm_su_static_pgslice_lg__side_rest",
+     "origin_um": [
+      1909.44,
+      449.28
+     ],
+     "outline_um": [
+      440.64,
+      457.92
+     ],
+     "note": "split piece side_rest of ot_hbm_su_static_pgslice_lg__pv6 (ot_hbm_su_static_pgslice_lg__pv0.split.json); 189664 cells"
+    }
+   ],
+   "taps_removed": [
+    "u_su_Q1_side_rest.clk_side"
+   ]
+  }
+ },
+ "sidecars": {
+  "core_conns_removed": 8,
+  "clock_entries_removed": 8,
+  "clock_taps_die_removed": 8
+ },
+ "plan_sha256": "77d613ccd6003946e6d497198890d3550251cd6a9ea1354356f052b4459651ae"
+}
