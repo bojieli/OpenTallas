@@ -49,3 +49,20 @@ become abut or short planned lanes), and a die clock rerun, because the moved pa
 - If COORD wants the smallest step, C2 alone is clean (no face risk) and fixes IDX fully plus b110.
 - Kits: no hard core changes outline or pins (partitions move whole), so hard-core kits are unaffected. The partition-level
   FT/stations of the 16 moved NW (+16 NE) row partitions and 2+2 streets are re-planned.
+
+## Addendum (14:4x): prior art and Sa2
+- Prior art (main results/die_hbm_1029/hbm22 + hbm23 replan) [read]:
+  - VB2 was a 36-partition row permutation. It was REJECTED because it moved hub-heavy partitions from under the hub (41-46 lanes lost).
+  - VL3 local re-orders kept about 77-79 far pairs. The hub S face is near full.
+  - DIE-HBM-23's conclusion was that the rest needs "SFU core move vs ft slots" (COORD 3).
+  - L1/L2 differ from VB2: SU pairs stay paired and stay under the hub (except su21's 25.9-um corner gap). Only 7 lanes leave the hub face: L5/L23/L81 (b110, 458 bound b of 4,678 planned), L184/L185 (b112, 570 b) and L26/L112 (su21, via spu1).
+  - C2 frees about 2.9k b of hub-S-face windows: b110's 4,678 planned b leave, and L26 + L112 (1,735 b) move to the hub|spu1 window.
+  - The build can reuse DIE-HBM-23 replan_event10.py (street reuse, mirror-by-NW, keep unmoved segments), adapted to these moves.
+- Correction to Sa: su00 overlaps the hub by only 34.56 um, so its L36/L55 -3 is NOT real (it stays as today, via su01/b000).
+- **Sa2 replaces Sa** to remove the spu0|spt0 face risk:
+  - Re-pack su01 345.6 narrower (1935.36 -> 1589.76; its hard cores span 1356.5 um, so they shift left inside the outline; no kit change).
+  - Widen su10 by 345.6 (2203.2 -> 2548.8).
+  - Result: spu0 at 6765.12, and the spu0|spt0 overlap is 820.8 um for 8,279 b = 10.1/um (<= 12).
+  - N row = b112 0, b113 1209.6, su00 3067.2, su01' 5175.36, spu0 6765.12, su10' 8449.92, su11 10998.72.
+  - L2 = Sa2 + C2 has the same split-pair numbers as L1 (est_out.txt).
+- Recommendation unchanged in substance: **L2 (= Sa2 + C2)**, with C2 alone as the minimal step.

@@ -6,10 +6,11 @@ P={p["name"]:dict(p) for p in d["partitions"]}
 for n,p in P.items():
     p["w"],p["h"]=pt[p["type"]]["outline_um"]
 REACH=405.0
+CURW={}
 def rect(p,ov):
-    x,y=p["origin_um"]
-    if p["name"] in ov: x=ov[p["name"]]
-    return (x,y,x+p["w"],y+p["h"])
+    x,y=p["origin_um"]; w=p["w"]
+    if p["name"] in ov: x=ov[p["name"]]; w=CURW.get(p["name"],w)
+    return (x,y,x+w,y+p["h"])
 def gap(a,b,ov):
     A=rect(P[a],ov);B=rect(P[b],ov)
     dx=max(0,B[0]-A[2],A[0]-B[2]); dy=max(0,B[1]-A[3],A[1]-B[3])
@@ -35,10 +36,14 @@ OPT={
 OPT["Sa"]={"NW_b112":0.0,"NW_b113":1209.6,"NW_su00":3067.2,"NW_su01":5175.36,"NW_spu0":7110.72,"NW_su10":8795.52,"NW_su11":10998.72}
 OPT["C2"]={"NW_b110":0.0,"NW_b111":414.72,"NW_su20":1218.24,"NW_su21":3222.72,"NW_spu1":5114.88,"NW_su30":6583.68,"NW_su31":8648.64,"NW_b103":10480.32,"NW_b102":11188.8}
 OPT["L1"]=dict(OPT["Sa"],**OPT["C2"])
+# Sa2: as Sa but su01 re-packed 345.6 narrower and su10 345.6 wider -> spu0|spt0 overlap 820.8 um (8,279 b at 10.1/um)
+OPT["Sa2"]={"NW_b112":0.0,"NW_b113":1209.6,"NW_su00":3067.2,"NW_su01":5175.36,"NW_spu0":6765.12,"NW_su10":8449.92,"NW_su11":10998.72}
+OPT["L2"]=dict(OPT["Sa2"],**OPT["C2"])
+WIDTH={"Sa2":{"NW_su01":1589.76,"NW_su10":2548.8},"L2":{"NW_su01":1589.76,"NW_su10":2548.8}}
 sel=sys.argv[3].split(",") if len(sys.argv)>3 else list(OPT)
 SU=[n for n in P if n.startswith("NW_su")]
 for o in sel:
-    ov=OPT[o]
+    ov=OPT[o]; CURW.clear(); CURW.update(WIDTH.get(o,{}))
     print("=== option",o,ov)
     tot=collections.Counter()
     for a,b,w in pairs:
