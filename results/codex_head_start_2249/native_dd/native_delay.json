@@ -1,0 +1,156 @@
+{
+ "schema": "head_native_start_pin_delay/1",
+ "type": "hd_mesh_e",
+ "source": "die-head-34 mesh_e r3 actual6_final.odb+SPEF",
+ "source_signed": false,
+ "scope": "actual native first-sync port-to-D component; no die phase or sign-off claim",
+ "constraints": "existing signoff_r3fwd clock/IO; reported edges separately",
+ "rows": [
+  {
+   "corner": "TT",
+   "mode": "min",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 170.228485,
+   "capture_clock_insertion_ps": 445.388824
+  },
+  {
+   "corner": "TT",
+   "mode": "min",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 41.913453,
+   "capture_clock_insertion_ps": 460.877991
+  },
+  {
+   "corner": "TT",
+   "mode": "min",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 187.021026,
+   "capture_clock_insertion_ps": 445.388824
+  },
+  {
+   "corner": "TT",
+   "mode": "min",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 38.076416,
+   "capture_clock_insertion_ps": 460.877991
+  },
+  {
+   "corner": "TT",
+   "mode": "max",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 42.2901,
+   "capture_clock_insertion_ps": 449.916504
+  },
+  {
+   "corner": "TT",
+   "mode": "max",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 173.799072,
+   "capture_clock_insertion_ps": 436.008057
+  },
+  {
+   "corner": "TT",
+   "mode": "max",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 38.400818,
+   "capture_clock_insertion_ps": 449.916504
+  },
+  {
+   "corner": "TT",
+   "mode": "max",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 191.245178,
+   "capture_clock_insertion_ps": 436.008057
+  },
+  {
+   "corner": "FF",
+   "mode": "min",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 132.208465,
+   "capture_clock_insertion_ps": 337.395538
+  },
+  {
+   "corner": "FF",
+   "mode": "min",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 27.499268,
+   "capture_clock_insertion_ps": 335.619751
+  },
+  {
+   "corner": "FF",
+   "mode": "min",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 150.839325,
+   "capture_clock_insertion_ps": 337.395538
+  },
+  {
+   "corner": "FF",
+   "mode": "min",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 26.312012,
+   "capture_clock_insertion_ps": 335.619751
+  },
+  {
+   "corner": "FF",
+   "mode": "max",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 27.733093,
+   "capture_clock_insertion_ps": 326.950562
+  },
+  {
+   "corner": "FF",
+   "mode": "max",
+   "signal_edge": "rise",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 134.925965,
+   "capture_clock_insertion_ps": 330.030884
+  },
+  {
+   "corner": "FF",
+   "mode": "max",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/sf$_DFF_N_/D",
+   "port_to_D_ps": 26.551147,
+   "capture_clock_insertion_ps": 326.950562
+  },
+  {
+   "corner": "FF",
+   "mode": "max",
+   "signal_edge": "fall",
+   "endpoint": "u_cland_origin/s0$_SDFF_PN0_/D",
+   "port_to_D_ps": 154.248047,
+   "capture_clock_insertion_ps": 330.030884
+  }
+ ],
+ "summary": {
+  "TT:u_cland_origin/s0$_SDFF_PN0_/D": {
+   "min_ps": 170.228485,
+   "max_ps": 191.245178
+  },
+  "TT:u_cland_origin/sf$_DFF_N_/D": {
+   "min_ps": 38.076416,
+   "max_ps": 42.2901
+  },
+  "FF:u_cland_origin/s0$_SDFF_PN0_/D": {
+   "min_ps": 132.208465,
+   "max_ps": 154.248047
+  },
+  "FF:u_cland_origin/sf$_DFF_N_/D": {
+   "min_ps": 26.312012,
+   "max_ps": 27.733093
+  }
+ }
+}
