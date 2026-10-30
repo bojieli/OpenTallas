@@ -1319,6 +1319,17 @@ def run_face_guard(disc, clock_ports=(), library_receipt=None):
     except Exception as e:
         return dict(verdict="FAIL", reason=f"invalid boundary control context: {e}", fail_counts={"context": 1})
     skip = sorted(set(clock_ports) | set(typed_controls) | {"arst_n", "rst_n"})
+    # HBM-CORES-KITS-28 10-30: the guard matches PORT names (bus roots), while STA reports a clock bus by its bits
+    # (clk_pair[0], clk_pair[1]); exempt the root only when every bit of that bus is a clock port (never a data bit).
+    clock_bits = {}
+    for c in clock_ports:
+        m = re.fullmatch(r"(.+)\[(\d+)\]", c)
+        if m:
+            clock_bits.setdefault(m.group(1), set()).add(int(m.group(2)))
+    for root, bits in clock_bits.items():
+        bus_bits = {x.get("bit") for x in (pins or []) if x.get("bus") == root}
+        if bus_bits and bus_bits <= bits:
+            skip = sorted(set(skip) | {root})
     # 12.2a1 (COORD 10-26 12:55): declared die-timed ft ports (kit ft_ports.json) are not core IO, so not face registers;
     # their structure (port -> fixed BUF -> port) is checked by the kit's own ft gate (KV core_preflight island_ft)
     ftp = Path(disc["kit"]) / "ft_ports.json" if disc.get("kit") else None
