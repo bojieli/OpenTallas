@@ -1,0 +1,21 @@
+KV47_SWAP hold8251 BUFx2_ASAP7_75t_R -> HB2xp67_ASAP7_75t_R at 211788 82620 orient R0
+KV47_FF u_ref.u_leaf.u_a.u.u.rsd_o\[180\]$_DFF_P_ DFFHQNx1_ASAP7_75t_R
+KV47_OLDNET u_ref.u_leaf.u_a.u.u.rsp_data_p\[692\] iterms 2 wire 1
+KV47_OLDNET_GUIDES {M1 M2 209760 65550 210330 66120 1} {M2 M2 209760 65550 210900 66120 0} {M2 M3 210330 65550 210900 66120 0} {M3 M3 210330 64980 210900 66120 0} {M2 M3 210330 64980 210900 65550 0} {M1 M2 210330 64980 210900 65550 1}
+KV47_INS kv47_hold180 HB1xp67 at 210492 65610 (FF at 210492 65340)
+KV47_UNROUTED_NETS 2 {u_ref.u_leaf.u_a.u.u.rsp_data_p\[692\]} kv47_hold180_n
+KV47_GUIDES u_ref.u_leaf.u_a.u.u.rsp_data_p\[692\] 6
+KV47_GUIDES kv47_hold180_n 0
+KV47_GUIDE_CREATED u_ref.u_leaf.u_a.u.u.rsp_data_p\[692\] box 207780 63330 212988 68160 now 9
+KV47_GUIDE_CREATED kv47_hold180_n box 208212 63060 213852 68160 now 7
+KV47_ECO_NETS 4 _03786_ net8250 {u_ref.u_leaf.u_a.u.u.rsp_data_p\[692\]} kv47_hold180_n
+KV47_ECO_NET _03786_ iterms 2 guides 5
+KV47_ECO_NET net8250 iterms 2 guides 5
+KV47_ECO_NET u_ref.u_leaf.u_a.u.u.rsp_data_p\[692\] iterms 2 guides 9
+KV47_ECO_NET kv47_hold180_n iterms 2 guides 7
+KV47_FROZEN_NETS 28174 reencoded_FIXED 28174
+[INFO DRT-0199]   Number of violations = 0.
+KV47_FROZEN_VERIFY nets 28174 changed 0
+KV47_POST_UNROUTED 0 
+KV47_ECO_DONE v2 insts 30824 (was 30823) touched hold8251 kv47_hold180
+rc=0
