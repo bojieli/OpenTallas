@@ -348,7 +348,7 @@ proc ot_ci_clock_ndr {name width_mult space_mult} {
 }
 proc ot_ci_entry {name x y} {
   if {[$::ot_ci_b findBTerm $name] eq "NULL"} {error "OT_CORE_INFRA_ENTRY_PIN $name"}
-  place_pin -pin_name $name -layer M7 -location [list $x $y] -pin_size $shape
+  place_pin -pin_name $name -layer M7 -location [list $x $y] -pin_size {0.032 0.192}
 }
 proc ot_ci_finish {} {
   # Dedicated FT pins have ONLY their declared buffer terminals. Parent links

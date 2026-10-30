@@ -382,3 +382,23 @@ def test_typed_clock_feedthroughs_use_via_access_shape():
     island["ft_ports"].append(dict(name="unused_clk", dir="in", xy_um=[400, 400]))
     with pytest.raises(CI.InfraError, match="every feedthrough port"):
         CI.emit_tcl(sl)
+
+
+def test_tcl_clock_ft_generic_ft_and_m7_entry_shapes_execute():
+    impl = Path(CI.__file__).with_suffix(".tcl")
+    script = "source {%s}\n" % impl + r"""
+proc block {cmd name} {return bt}
+proc bt {cmd} {return INPUT}
+proc place_pin {args} {puts $args}
+set ::ot_ci_b block
+set ::ot_ci_ports {}
+ot_ci_port ck INPUT 1 2 {0.048 0.48}
+ot_ci_port rst INPUT 1 2
+ot_ci_entry entry 1 2
+"""
+    run = subprocess.run(["tclsh"], input=script, text=True, capture_output=True, check=True)
+    assert not run.stderr
+    lines = run.stdout.splitlines()
+    assert "-layer M5" in lines[0] and "-pin_size {0.048 0.48}" in lines[0]
+    assert "-layer M5" in lines[1] and "-pin_size {0.032 0.192}" in lines[1]
+    assert "-layer M7" in lines[2] and "-pin_size {0.032 0.192}" in lines[2]
