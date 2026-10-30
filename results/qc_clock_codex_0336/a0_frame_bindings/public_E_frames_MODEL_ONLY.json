@@ -3,10 +3,10 @@
   "external_input_slew_ps": 20,
   "types": {
     "NK": {
-      "model": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/natural_model/nk_public_centres_model.json",
-      "plan": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/plans/nk_public_centres.json",
+      "model": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/natural_model/nk_flex_centres_model.json",
+      "plan": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/plans/nk_flex_centres.json",
       "cores": 720,
-      "clock_cells": 9208,
+      "clock_cells": 9557,
       "public_ck": {
         "layer": "M4",
         "xy_um": [
@@ -16,16 +16,16 @@
       },
       "entry_feed_included": true,
       "actual_clock_geometry_installed": false,
-      "related_pair_qualified": false,
+      "related_pair_qualified": true,
       "corners": {
         "TT": {
-          "effective_min_ps": 1080.5851469124443,
-          "effective_max_ps": 1188.5092107658145,
-          "weighted_mean_ps": 1140.878652930192,
+          "effective_min_ps": 997.4023645656066,
+          "effective_max_ps": 1089.617018910195,
+          "weighted_mean_ps": 1053.928926486823,
           "old_percore_insertion_ps": 665.8,
-          "delta_from_old_percore_ps": 475.078652930192,
-          "slew_max_ps": 51.316652986550274,
-          "related_worst_ps": 76.11524387204145,
+          "delta_from_old_percore_ps": 388.12892648682305,
+          "slew_max_ps": 51.31739511417152,
+          "related_worst_ps": 77.66987683329126,
           "related_over80": 0,
           "entry_wire_model": {
             "public_pin": {
@@ -49,14 +49,14 @@
           }
         },
         "FF": {
-          "effective_min_ps": 848.732409401296,
-          "effective_max_ps": 943.9956524542571,
-          "weighted_mean_ps": 888.8577097578236,
+          "effective_min_ps": 784.640357662861,
+          "effective_max_ps": 870.6928365638696,
+          "weighted_mean_ps": 823.1126899462051,
           "old_percore_insertion_ps": 576.5,
-          "delta_from_old_percore_ps": 312.3577097578236,
-          "slew_max_ps": 47.65698242563233,
-          "related_worst_ps": 80.07410281837133,
-          "related_over80": 2,
+          "delta_from_old_percore_ps": 246.61268994620514,
+          "slew_max_ps": 47.65759868620769,
+          "related_worst_ps": 60.50554397119481,
+          "related_over80": 0,
           "entry_wire_model": {
             "public_pin": {
               "name": "ck",

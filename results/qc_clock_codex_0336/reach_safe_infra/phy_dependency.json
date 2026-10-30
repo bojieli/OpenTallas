@@ -1,0 +1,536 @@
+{
+ "scope": "Clock-graph dependency of the89 already-reviewed PHY interior cells; no timing or new PHY contract analysis.",
+ "bad_cells": 89,
+ "affected_taps": 38,
+ "affected_parts": 10,
+ "affected_A0_containing_part_taps": 0,
+ "affected_A0_core_taps": 0,
+ "affected_A0_parts": [],
+ "records": [
+  {
+   "port": "t_coll_n__clk",
+   "part": "coll_n",
+   "bad_clock_cells": [
+    "b983",
+    "r1488_0",
+    "r1488_1",
+    "r1488_2",
+    "r983_4",
+    "r983_5",
+    "r983_6"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_n__clk_t2",
+   "part": "coll_n",
+   "bad_clock_cells": [
+    "b983",
+    "r1488_0",
+    "r1488_1",
+    "r1488_2",
+    "r983_4",
+    "r983_5",
+    "r983_6"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_n__clk_t1",
+   "part": "coll_n",
+   "bad_clock_cells": [
+    "b983",
+    "r1488_0",
+    "r1488_1",
+    "r1488_2",
+    "r983_4",
+    "r983_5",
+    "r983_6"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_n__clk_t3",
+   "part": "coll_n",
+   "bad_clock_cells": [
+    "b983",
+    "r1488_0",
+    "r1488_1",
+    "r1488_2",
+    "r983_4",
+    "r983_5",
+    "r983_6"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_io_serdes__clk",
+   "part": "io_serdes",
+   "bad_clock_cells": [
+    "b1505",
+    "b1506",
+    "b1507",
+    "b1508",
+    "b1509",
+    "b1510",
+    "b1511",
+    "b983",
+    "r1505_0",
+    "r1505_1",
+    "r1505_2",
+    "r1506_0",
+    "r1507_0",
+    "r1508_0",
+    "r1509_0",
+    "r1510_0",
+    "r1511_0",
+    "r983_4",
+    "r983_5",
+    "r983_6"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_io_serdes_1__clk",
+   "part": "io_serdes_1",
+   "bad_clock_cells": [
+    "b1110",
+    "b1512",
+    "b1513",
+    "b1514",
+    "b1515",
+    "b1516",
+    "b1517",
+    "b1518",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1512_0",
+    "r1512_1",
+    "r1512_2",
+    "r1513_0",
+    "r1514_0",
+    "r1515_0",
+    "r1516_0",
+    "r1517_0",
+    "r1518_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_s__clk",
+   "part": "coll_s",
+   "bad_clock_cells": [
+    "b1110",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1519_0",
+    "r1519_1",
+    "r1519_2"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_s__clk_t2",
+   "part": "coll_s",
+   "bad_clock_cells": [
+    "b1110",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1519_0",
+    "r1519_1",
+    "r1519_2"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_s__clk_t4",
+   "part": "coll_s",
+   "bad_clock_cells": [
+    "b1110",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1519_0",
+    "r1519_1",
+    "r1519_2"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_s__clk_t1",
+   "part": "coll_s",
+   "bad_clock_cells": [
+    "b1110",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1519_0",
+    "r1519_1",
+    "r1519_2"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_s__clk_t3",
+   "part": "coll_s",
+   "bad_clock_cells": [
+    "b1110",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1519_0",
+    "r1519_1",
+    "r1519_2"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_s__clk_t5",
+   "part": "coll_s",
+   "bad_clock_cells": [
+    "b1110",
+    "r1110_4",
+    "r1110_5",
+    "r1110_6",
+    "r1519_0",
+    "r1519_1",
+    "r1519_2"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_ucie__clk",
+   "part": "coll_ucie",
+   "bad_clock_cells": [
+    "b1538",
+    "b1539",
+    "b1540",
+    "b1541",
+    "b1542",
+    "b1543",
+    "r1538_0",
+    "r1539_0",
+    "r1540_0",
+    "r1541_0",
+    "r1542_0",
+    "r1543_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_ucie__clk_t2",
+   "part": "coll_ucie",
+   "bad_clock_cells": [
+    "b1538",
+    "b1539",
+    "b1540",
+    "b1541",
+    "b1542",
+    "b1543",
+    "r1538_0",
+    "r1539_0",
+    "r1540_0",
+    "r1541_0",
+    "r1542_0",
+    "r1543_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_ucie__clk_t4",
+   "part": "coll_ucie",
+   "bad_clock_cells": [
+    "b1538",
+    "b1539",
+    "b1540",
+    "b1541",
+    "b1542",
+    "b1543",
+    "r1538_0",
+    "r1539_0",
+    "r1540_0",
+    "r1541_0",
+    "r1542_0",
+    "r1543_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_ucie__clk_t3",
+   "part": "coll_ucie",
+   "bad_clock_cells": [
+    "b1538",
+    "b1539",
+    "b1544",
+    "b1545",
+    "b1546",
+    "b1547",
+    "r1538_0",
+    "r1539_0",
+    "r1544_0",
+    "r1545_0",
+    "r1546_0",
+    "r1547_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_ucie__clk_t1",
+   "part": "coll_ucie",
+   "bad_clock_cells": [
+    "b1538",
+    "b1539",
+    "b1544",
+    "b1545",
+    "b1548",
+    "b1549",
+    "r1538_0",
+    "r1539_0",
+    "r1544_0",
+    "r1545_0",
+    "r1548_0",
+    "r1549_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_coll_ucie__clk_t5",
+   "part": "coll_ucie",
+   "bad_clock_cells": [
+    "b1538",
+    "b1539",
+    "b1544",
+    "b1545",
+    "b1548",
+    "b1549",
+    "r1538_0",
+    "r1539_0",
+    "r1544_0",
+    "r1545_0",
+    "r1548_0",
+    "r1549_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_ucie_kv__clk",
+   "part": "ucie_kv",
+   "bad_clock_cells": [
+    "b1569",
+    "b1570",
+    "b1571",
+    "b1572",
+    "b1573",
+    "b1574",
+    "r1569_2",
+    "r1570_0",
+    "r1571_0",
+    "r1572_0",
+    "r1573_0",
+    "r1574_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_glue__clk",
+   "part": "glue",
+   "bad_clock_cells": [
+    "b1569",
+    "r1569_2",
+    "r1575_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_glue__clk_t1",
+   "part": "glue",
+   "bad_clock_cells": [
+    "b1569",
+    "r1569_2",
+    "r1575_0"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t1",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t2",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t3",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t4",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t5",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t6",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_st_a__clk_t7",
+   "part": "sl_W5_st_a",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t1",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t2",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t3",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t4",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t5",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t6",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_sl_W5_hc0__clk_t7",
+   "part": "sl_W5_hc0",
+   "bad_clock_cells": [
+    "b1251"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  },
+  {
+   "port": "t_io_serdes_2__clk",
+   "part": "io_serdes_2",
+   "bad_clock_cells": [
+    "b19422",
+    "r19422_5",
+    "r19422_6",
+    "r19422_7",
+    "r19422_8"
+   ],
+   "a0_part": false,
+   "a0_core": false
+  }
+ ]
+}
