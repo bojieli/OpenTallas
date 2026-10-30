@@ -1,0 +1,160 @@
+{
+ "status": "ACTUAL_PLACE_GRT50_PASS_COND_CTS_RUNNING_NOT_SIGNED",
+ "partition_type": "hd_serdes",
+ "cells": 422104,
+ "census": {
+  "parent_shell_std": 232594,
+  "kp4_native_synth_std": 189510,
+  "component_synth_sum": 422104,
+  "macro_count": 3,
+  "sram_macros": 2,
+  "logic_macros": 1,
+  "not_a_new_flattened_synthesis": true
+ },
+ "hard_cores": [
+  {
+   "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+   "module": "ot_sram_1r1w2c_64x546_m1",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+   "origin_um": [
+    1486.08,
+    34.56
+   ],
+   "outline_um": [
+    178.632,
+    81.0
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.108,
+    0.012
+   ],
+   "pins_file": "core_pins/ot_sram_1r1w2c_64x546_m1.json",
+   "obs_max": "M4",
+   "note": "DIE-HEAD-21 HK2: SRAM macro (was a behavioural model)"
+  },
+  {
+   "inst": "u_phy.u_link.u_dec.u_out.u_cmem",
+   "module": "ot_sram_1r1w_32x546_m1",
+   "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1.lef",
+   "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_32x546_m1/ot_sram_1r1w_32x546_m1_tt.lib",
+   "origin_um": [
+    1252.8,
+    17.28
+   ],
+   "outline_um": [
+    177.768,
+    81.0
+   ],
+   "orient": "R0",
+   "track_offset_um": [
+    0.108,
+    0.012
+   ],
+   "pins_file": "core_pins/ot_sram_1r1w_32x546_m1.json",
+   "obs_max": "M4",
+   "note": "DIE-HEAD-21 HK2: SRAM macro (was a behavioural model)"
+  },
+  {
+   "inst": "u_phy.u_link.u_dec.u_chn",
+   "module": "ot_s81_kp4_dchn",
+   "origin_um": [
+    967.68,
+    0.0
+   ],
+   "track_offset_um": [
+    0,
+    4.32
+   ],
+   "outline_um": [
+    276.48,
+    138.24
+   ],
+   "orient": "R0",
+   "pins_file": "core_pins/kp4_276x138_pins.json",
+   "cells": 189510,
+   "obs_max": "M5",
+   "note": "PROPOSED NOT SIGNED: actual189510stdcells21631.646um2;945sameRTLports0cycles; recenteredpinprofile within150um digitalstrip. Parent origin967.68,0 + trackoffset0,4.32; noLEF/lib until matching actualview."
+  }
+ ],
+ "clock_domains": {
+  "core": {
+   "root": "clk",
+   "tap_um": [
+    1442.88,
+    77.76
+   ],
+   "loads": "core shell and rate-matcher read side"
+  },
+  "recovered": {
+   "root": "pma_rck",
+   "period_ps": null,
+   "period_status": "ROOT reviewed source required; digital child model833 is not adopted as PHY clock contract",
+   "proposed_pad": {
+    "layer": "M7",
+    "xy_um": [
+     1106.04,
+     149.904
+    ]
+   },
+   "macro_clock_pins": [
+    {
+     "inst": "u_phy.u_link.u_dec.u_chn",
+     "pin": "clk"
+    },
+    {
+     "inst": "u_phy.u_link.u_dec.u_out.u_cmem",
+     "pin": "clk"
+    },
+    {
+     "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+     "pin": "wclk"
+    },
+    {
+     "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+     "pin": "rclk"
+    }
+   ],
+   "cdc": "existing rate_matcher wclk=pma_rck,rclk=clk plus own reset synchronization"
+  },
+  "export": {
+   "root": "pma_tck",
+   "source_root": "clk",
+   "divide_by": 1,
+   "proposed_pad": {
+    "layer": "M7",
+    "xy_um": [
+     1442.88,
+     149.904
+    ]
+   },
+   "actual_driver": "_403112_/Y",
+   "master": "BUFx2_ASAP7_75t_R"
+  }
+ },
+ "phy": {
+  "reserved_rect_type_um": [
+   0,
+   150,
+   2885.76,
+   1226.88
+  ],
+  "digital_strip_um": [
+   0,
+   0,
+   2885.76,
+   150
+  ],
+  "digital_logic_macros_in_phy": [],
+  "note": "All three logic/memory macros below y150 on core VDD; no KP4 VDDPHY membership. Leave existing analog PHY reserved zone and neighbours unchanged."
+ },
+ "parent_obligations": {
+  "kp4_real_lef_and_tt_ff_lib": "pending actual matching routed reshape view; no old194.4-high view substitution",
+  "internal_ports_timed": 320,
+  "unconstrained_k_endpoints_required": 0,
+  "child_internal_max_um": 285.585,
+  "parent_launch_to_W_pin_bound_um": 119.415,
+  "combined_reach_limit_um": 405
+ }
+}
