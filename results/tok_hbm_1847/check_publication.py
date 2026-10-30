@@ -18,6 +18,10 @@ for name,change in [('wrong_hbm_word',lambda r,x:setattr(r.desc['A'],'base',r.de
     try:PUB.replay(q,prep,IR)
     except (KeyError,ValueError):caught.append(name)
     else:raise AssertionError(name+' escaped')
+q=copy.deepcopy(p);raw=bytes.fromhex(q['phases'][0]['consumer_hex']);r,x,_=IR.decode_one(raw,0);r.wait &= ~(1<<RC.UNITS.index('DMA'));q['phases'][0]['consumer_hex']=IR.encode(r,x).hex()
+try:PUB.replay(q,prep,IR)
+except ValueError:caught.append('consumer_outruns_dma')
+else:raise AssertionError('consumer without DMA dependency escaped')
 rr=IC.decode_all(Path('/srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r').read_bytes())
 for name,base,size in [('scratch_underflow',0xF000000000,983008),('scratch_unaligned',0xF000000001,983040)]:
     try:PUB.build(rr,1470,prep,base,size,IR,RC)

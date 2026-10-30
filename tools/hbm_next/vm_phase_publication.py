@@ -110,6 +110,15 @@ def replay(packet, preparation, IR):
         raw=bytes.fromhex(rec_hex);r,x,end=IR.decode_one(raw,0)
         if end!=len(raw):raise ValueError('trailing encoded data')
         return IR.expand(r,x)
+    def check_fence(value):
+        r,x,end=IR.decode_one(bytes.fromhex(value),0)
+        if (r.unit,r.op)!=('DMA','FENCE')or not r.wait&(1<<IR.RC.UNITS.index('DMA')):
+            raise ValueError('missing real DMA publication fence')
+    check_fence(packet['publication_fence_hex'])
+    for phase in packet['phases']:
+        check_fence(phase['reload_fence_hex'])
+        consumer,_,_=IR.decode_one(bytes.fromhex(phase['consumer_hex']),0)
+        if not consumer.wait&(1<<IR.RC.UNITS.index('DMA')):raise ValueError('consumer may outrun DMA reload')
     # The candidate work interval overlaps source rows from OTHER phases too.
     # Complete the entire producer publication epoch before workspace reuse.
     for phase in packet['phases']:
