@@ -1,5 +1,5 @@
 {
-  "scope": "Actual native synth complete; cap and independent public-clock ABI failures remain. Natural RED child is an unadopted source cut, no area/face/physical/proof claim.",
+  "scope": "Actual native synthesis complete: CAP_FAIL and public-clock ABI failure remain. Native prefix ownership is a lower bound only: global anonymous ABC cells cross RED internals. Standalone exact source count and regenerated parent required; no sealed child/remainder cap claim.",
   "counts": [
     {
       "type": "sle_su_c",
@@ -16,13 +16,16 @@
       "physical": "NOT_RUN",
       "natural_cut": {
         "instance": "u_bound.u_u_red",
-        "child_std": 173100,
-        "child_seq": 34216,
-        "remainder_std": 300344,
         "source_module": "qfd_dv_s5_red2_leaf",
         "implementation": "qfd_dv_s5_red2_k79",
         "interface_bits": 354,
-        "adopted": false
+        "adopted": false,
+        "named_prefix_std_lower_bound": 173100,
+        "named_prefix_seq": 34216,
+        "remaining_named_prefix_complement_std": 300344,
+        "actual_crossing_nets_with_global_anonymous_logic": 45711,
+        "prefix_area_um2_lower_bound": 23465.81016,
+        "required_next": "Isolate exact full RED source with all anonymous mapped logic, count freshly; regenerate parent before capacity claim."
       }
     },
     {
@@ -40,13 +43,16 @@
       "physical": "NOT_RUN",
       "natural_cut": {
         "instance": "u_bound.u_u_red",
-        "child_std": 173100,
-        "child_seq": 34216,
-        "remainder_std": 291886,
         "source_module": "qfd_dv_s5_red2_leaf",
         "implementation": "qfd_dv_s5_red2_k79",
         "interface_bits": 354,
-        "adopted": false
+        "adopted": false,
+        "named_prefix_std_lower_bound": 173100,
+        "named_prefix_seq": 34216,
+        "remaining_named_prefix_complement_std": 291886,
+        "actual_crossing_nets_with_global_anonymous_logic": 45711,
+        "prefix_area_um2_lower_bound": 23465.81016,
+        "required_next": "Isolate exact full RED source with all anonymous mapped logic, count freshly; regenerate parent before capacity claim."
       }
     },
     {
@@ -64,13 +70,16 @@
       "physical": "NOT_RUN",
       "natural_cut": {
         "instance": "u_bound.u_u_red",
-        "child_std": 173100,
-        "child_seq": 34216,
-        "remainder_std": 290967,
         "source_module": "qfd_dv_s5_red2_leaf",
         "implementation": "qfd_dv_s5_red2_k79",
         "interface_bits": 354,
-        "adopted": false
+        "adopted": false,
+        "named_prefix_std_lower_bound": 173100,
+        "named_prefix_seq": 34216,
+        "remaining_named_prefix_complement_std": 290967,
+        "actual_crossing_nets_with_global_anonymous_logic": 45711,
+        "prefix_area_um2_lower_bound": 23465.81016,
+        "required_next": "Isolate exact full RED source with all anonymous mapped logic, count freshly; regenerate parent before capacity claim."
       }
     }
   ]
