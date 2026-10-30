@@ -33,6 +33,8 @@ Run data: intel2:/srv/opentallas-scratch2/claude/die-qc39/ (leaf_geom, leaf_load
 | **L4** | leaf A | all | nearest M9 track outside M9 PG band (+-0.32), <=2.0 um | **413** | **18 / 6** | PASS |
 | L5 | leaf A | all | same, <=4.32 um | 413 | 18 / 6 | PASS |
 | L6 | leaf A | all | outside wide-spacing band (+-0.5, PG straps 0.672 wide), <=4.32 | 665 | 18 / 6 | PASS |
+| L7/L8 | leaf A | all | router-index-aware column (incl. jog-vs-jog index), <=2.0 / 4.32 | 848 | 18 / 6 | PASS: 304/304 no clear column (own-net drop/landing counted as a hit = check bug) |
+| L9/L10 | leaf A | all | same, own-net joints excluded (0.40 um), <=2.0 / 4.32 | 560 | 18 / 6 | PASS: 292 clear / 12 none; shields/tree cleared, but 329 M9-vs-PG at the excluded jog ends |
 Best = L4: top 2,903 -> 413 (-86 %), census 542/88 -> 18/6 (-96 %). Prebuild still FAIL.
 
 L4 residual (runs/prov_R7L4/classify.json): 123 clock-cell VIA78 M8 patch vs adjacent tree segment end (e.g. ck_rn39_0 patch 0.309 um
@@ -40,8 +42,9 @@ from ck_n38 end, < 0.32); 108 provider riser M8 pads vs trunk VSS shields (84 sp
 (jog column clear of the 0.32 band, not of the 0.5 wide row); ~70 M9 jog vs other shields/tree; census 24 = native M7 port vs
 re-sited cell stacks. L6 shows the jog column must be chosen against the full router index (PG wide row + shields + tree), not a PG band.
 
-Next (successor): (a) jog column via router.place('M9', ..., dry) on the actual jog span (shield/tree/wide-PG aware) for the 304
-blocked landings; (b) provider near-riser M8 pad keep the shield spacing (move pad along the riser or take the far PG-clear drop);
+Next (successor): (a) jog column for the 304 blocked landings: L9 shows a full-index check clears shields/tree but the jog END
+vias (VIA89 pads at drop row / landing) sit within PG M9 spacing -> check the end via pads too (net-aware: pass the net into the join),
+or give these 304 a PG-clear landing row in endpoint_access (choose the VIA78 landing so that the M8 landing track is shield-legal); (b) provider near-riser M8 pad keep the shield spacing (move pad along the riser or take the far PG-clear drop);
 (c) clock-cell VIA78 patch vs tree segment end: extend/trim the tree segment end to the patch (same-net merge) or shift patch;
 (d) 24 native census rows. Then PG access -> materialize -> mesh qc_mesh_p2 -> GRT0 >=50 it -> probe3 -> clock check.
 
