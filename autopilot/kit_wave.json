@@ -55,13 +55,13 @@
     "clock": "PASS",
     "evidence": "DIE-S81-34 00:45 event2 gates ALL CLEAN (G0C 20 = baseline set, strict bind 0/0/0 lint 0 clock_landing 0, die clock GRT0 TT/FF + CA PASS) + ROOT-MERGE ef8ce0054 COORD APPROVED 01:13 (event2 plan sha256 b144075b6b1c + SIGNED QB_N view attach, lib path only -> main plan 3742d58b1cf8)"
    },
-   "plan": "/srv/opentallas-scratch2/claude/wt/codex-signoff-wave-1030/physical/die_plan/s81/plan_s13r2.json",
+   "plan": "/srv/opentallas-scratch2/claude/wt/codex-s81-wave-src2-1030/physical/die_plan/s81/plan_s13r2.json",
    "gen_host": "intel2",
-   "src": "/srv/opentallas-scratch2/claude/wt/codex-signoff-wave-1030",
-   "src_sha": "02ac86649d1",
+   "src": "/srv/opentallas-scratch2/claude/wt/codex-s81-wave-src2-1030",
+   "src_sha": "0428e13f7f3",
    "kit_rtl": {
     "mode": "script",
-    "script": "/srv/opentallas-scratch2/claude/wt/codex-signoff-wave-1030/physical/die_plan/s81/kit_wave/kit_rtl.sh",
+    "script": "/srv/opentallas-scratch2/claude/wt/codex-s81-wave-src2-1030/physical/die_plan/s81/kit_wave/kit_rtl.sh",
     "note": "Safe exact bound class recipe ac6ec101953/bc990; no representative/default overrides. Native exports three listed classes PASS variants1 sources6 spare0."
    },
    "gen_args": [
@@ -72,14 +72,19 @@
    ],
    "owner_lane": "DIE-S81-34",
    "lane": "KIT-WAVE-1",
-   "note": "CODEX safe corefree subset only; missing-hard-view col/leaf classes stay outside only_items. Existing event2 plan + clean strict bind; GEN/render before route.",
+   "note": "Explicit FLOW retry of attempt1 only: old source02ac lacks FT order fix d87; new pinned main f5f7a27c289 + immutable-source/retry-output fixes0428. All three plan blocks byte-identical. Old jobs retained until terminal; source identity prevents promotion of old results, new attempt dirs preserve evidence.",
    "enable_note": "Only exact listed corefree station classes; expand only after die owner supplies required hard views.",
    "only_items": [
     "slice_station__t6__cl54a9ceeb",
     "slice_station__t7__cl362204c4",
     "slice_station__t7__cl945bc067"
    ],
-   "die_max_inflight": 3
+   "die_max_inflight": 3,
+   "retry": [
+    "slice_station__t6__cl54a9ceeb@1",
+    "slice_station__t7__cl362204c4@1",
+    "slice_station__t7__cl945bc067@1"
+   ]
   },
   "s81_head": {
    "enabled": false,
