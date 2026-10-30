@@ -1,0 +1,9474 @@
+[
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   50,
+   79
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 50,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 51,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 52,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 53,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 54,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 55,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 56,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 57,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 58,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 59,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 60,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 61,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 62,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 63,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 64,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 65,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 66,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 67,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 68,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 69,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 70,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 71,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 72,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 73,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 74,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 75,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 76,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 77,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 78,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 79,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_50.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   203,
+   232
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147552,
+     278528
+    ],
+    "vm_words": [
+     122880,
+     253856
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     253856,
+     255104
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     255104,
+     255168
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 255168,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 203,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 204,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 205,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 206,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 207,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 208,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 209,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 210,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 211,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 212,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 213,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 214,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 215,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 216,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 217,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 218,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 219,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 220,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 221,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 222,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 223,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 224,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 225,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 226,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 227,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 228,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 229,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 230,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 231,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 232,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_203.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   338,
+   363
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     369664
+    ],
+    "vm_words": [
+     32,
+     99104
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99104,
+     100352
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     100352,
+     100416
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 100416,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 338,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 339,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 340,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 341,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 342,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 343,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 344,
+    "offset": 704,
+    "bytes": 176
+   },
+   {
+    "source_record": 345,
+    "offset": 880,
+    "bytes": 176
+   },
+   {
+    "source_record": 346,
+    "offset": 1056,
+    "bytes": 176
+   },
+   {
+    "source_record": 347,
+    "offset": 1232,
+    "bytes": 176
+   },
+   {
+    "source_record": 348,
+    "offset": 1408,
+    "bytes": 176
+   },
+   {
+    "source_record": 349,
+    "offset": 1584,
+    "bytes": 144
+   },
+   {
+    "source_record": 350,
+    "offset": 1728,
+    "bytes": 144
+   },
+   {
+    "source_record": 351,
+    "offset": 1872,
+    "bytes": 176
+   },
+   {
+    "source_record": 352,
+    "offset": 2048,
+    "bytes": 208
+   },
+   {
+    "source_record": 353,
+    "offset": 2256,
+    "bytes": 112
+   },
+   {
+    "source_record": 354,
+    "offset": 2368,
+    "bytes": 112
+   },
+   {
+    "source_record": 355,
+    "offset": 2480,
+    "bytes": 112
+   },
+   {
+    "source_record": 356,
+    "offset": 2592,
+    "bytes": 112
+   },
+   {
+    "source_record": 357,
+    "offset": 2704,
+    "bytes": 112
+   },
+   {
+    "source_record": 358,
+    "offset": 2816,
+    "bytes": 112
+   },
+   {
+    "source_record": 359,
+    "offset": 2928,
+    "bytes": 16
+   },
+   {
+    "source_record": 360,
+    "offset": 2944,
+    "bytes": 176
+   },
+   {
+    "source_record": 361,
+    "offset": 3120,
+    "bytes": 16
+   },
+   {
+    "source_record": 362,
+    "offset": 3136,
+    "bytes": 16
+   },
+   {
+    "source_record": 363,
+    "offset": 3152,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_338.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   422,
+   451
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 422,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 423,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 424,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 425,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 426,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 427,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 428,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 429,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 430,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 431,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 432,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 433,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 434,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 435,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 436,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 437,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 438,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 439,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 440,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 441,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 442,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 443,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 444,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 445,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 446,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 447,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 448,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 449,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 450,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 451,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_422.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   512,
+   541
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 512,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 513,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 514,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 515,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 516,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 517,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 518,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 519,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 520,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 521,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 522,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 523,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 524,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 525,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 526,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 527,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 528,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 529,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 530,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 531,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 532,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 533,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 534,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 535,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 536,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 537,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 538,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 539,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 540,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 541,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_512.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   602,
+   631
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 602,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 603,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 604,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 605,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 606,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 607,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 608,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 609,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 610,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 611,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 612,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 613,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 614,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 615,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 616,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 617,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 618,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 619,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 620,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 621,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 622,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 623,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 624,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 625,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 626,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 627,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 628,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 629,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 630,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 631,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_602.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   692,
+   721
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 692,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 693,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 694,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 695,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 696,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 697,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 698,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 699,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 700,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 701,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 702,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 703,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 704,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 705,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 706,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 707,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 708,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 709,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 710,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 711,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 712,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 713,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 714,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 715,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 716,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 717,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 718,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 719,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 720,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 721,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_692.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   782,
+   811
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 782,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 783,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 784,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 785,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 786,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 787,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 788,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 789,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 790,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 791,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 792,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 793,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 794,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 795,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 796,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 797,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 798,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 799,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 800,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 801,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 802,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 803,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 804,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 805,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 806,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 807,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 808,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 809,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 810,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 811,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_782.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   917,
+   942
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     369664
+    ],
+    "vm_words": [
+     32,
+     99104
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99104,
+     100352
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     100352,
+     100416
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 100416,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 917,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 918,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 919,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 920,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 921,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 922,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 923,
+    "offset": 704,
+    "bytes": 176
+   },
+   {
+    "source_record": 924,
+    "offset": 880,
+    "bytes": 176
+   },
+   {
+    "source_record": 925,
+    "offset": 1056,
+    "bytes": 176
+   },
+   {
+    "source_record": 926,
+    "offset": 1232,
+    "bytes": 176
+   },
+   {
+    "source_record": 927,
+    "offset": 1408,
+    "bytes": 176
+   },
+   {
+    "source_record": 928,
+    "offset": 1584,
+    "bytes": 144
+   },
+   {
+    "source_record": 929,
+    "offset": 1728,
+    "bytes": 144
+   },
+   {
+    "source_record": 930,
+    "offset": 1872,
+    "bytes": 176
+   },
+   {
+    "source_record": 931,
+    "offset": 2048,
+    "bytes": 208
+   },
+   {
+    "source_record": 932,
+    "offset": 2256,
+    "bytes": 112
+   },
+   {
+    "source_record": 933,
+    "offset": 2368,
+    "bytes": 112
+   },
+   {
+    "source_record": 934,
+    "offset": 2480,
+    "bytes": 112
+   },
+   {
+    "source_record": 935,
+    "offset": 2592,
+    "bytes": 112
+   },
+   {
+    "source_record": 936,
+    "offset": 2704,
+    "bytes": 112
+   },
+   {
+    "source_record": 937,
+    "offset": 2816,
+    "bytes": 112
+   },
+   {
+    "source_record": 938,
+    "offset": 2928,
+    "bytes": 16
+   },
+   {
+    "source_record": 939,
+    "offset": 2944,
+    "bytes": 176
+   },
+   {
+    "source_record": 940,
+    "offset": 3120,
+    "bytes": 16
+   },
+   {
+    "source_record": 941,
+    "offset": 3136,
+    "bytes": 16
+   },
+   {
+    "source_record": 942,
+    "offset": 3152,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_917.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1001,
+   1030
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1001,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1002,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1003,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1004,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1005,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1006,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1007,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1008,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1009,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1010,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1011,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1012,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1013,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1014,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1015,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1016,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1017,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1018,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1019,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1020,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1021,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1022,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1023,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1024,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1025,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1026,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1027,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1028,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1029,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1030,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1001.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1091,
+   1120
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1091,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1092,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1093,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1094,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1095,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1096,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1097,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1098,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1099,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1100,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1101,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1102,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1103,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1104,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1105,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1106,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1107,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1108,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1109,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1110,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1111,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1112,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1113,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1114,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1115,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1116,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1117,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1118,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1119,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1120,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1091.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1181,
+   1210
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1181,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1182,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1183,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1184,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1185,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1186,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1187,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1188,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1189,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1190,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1191,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1192,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1193,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1194,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1195,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1196,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1197,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1198,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1199,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1200,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1201,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1202,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1203,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1204,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1205,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1206,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1207,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1208,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1209,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1210,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1181.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1271,
+   1300
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1271,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1272,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1273,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1274,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1275,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1276,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1277,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1278,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1279,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1280,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1281,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1282,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1283,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1284,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1285,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1286,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1287,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1288,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1289,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1290,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1291,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1292,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1293,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1294,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1295,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1296,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1297,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1298,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1299,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1300,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1271.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1361,
+   1390
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1361,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1362,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1363,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1364,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1365,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1366,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1367,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1368,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1369,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1370,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1371,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1372,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1373,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1374,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1375,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1376,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1377,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1378,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1379,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1380,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1381,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1382,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1383,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1384,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1385,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1386,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1387,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1388,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1389,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1390,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1361.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1559,
+   1590
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     370400
+    ],
+    "vm_words": [
+     32,
+     99840
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99840,
+     101088
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     101088,
+     101152
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 101152,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1559,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1560,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1561,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 1562,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 1563,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 1564,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 1565,
+    "offset": 704,
+    "bytes": 16
+   },
+   {
+    "source_record": 1566,
+    "offset": 720,
+    "bytes": 176
+   },
+   {
+    "source_record": 1567,
+    "offset": 896,
+    "bytes": 176
+   },
+   {
+    "source_record": 1568,
+    "offset": 1072,
+    "bytes": 176
+   },
+   {
+    "source_record": 1569,
+    "offset": 1248,
+    "bytes": 176
+   },
+   {
+    "source_record": 1570,
+    "offset": 1424,
+    "bytes": 176
+   },
+   {
+    "source_record": 1571,
+    "offset": 1600,
+    "bytes": 144
+   },
+   {
+    "source_record": 1572,
+    "offset": 1744,
+    "bytes": 144
+   },
+   {
+    "source_record": 1573,
+    "offset": 1888,
+    "bytes": 176
+   },
+   {
+    "source_record": 1574,
+    "offset": 2064,
+    "bytes": 208
+   },
+   {
+    "source_record": 1575,
+    "offset": 2272,
+    "bytes": 112
+   },
+   {
+    "source_record": 1576,
+    "offset": 2384,
+    "bytes": 112
+   },
+   {
+    "source_record": 1577,
+    "offset": 2496,
+    "bytes": 112
+   },
+   {
+    "source_record": 1578,
+    "offset": 2608,
+    "bytes": 112
+   },
+   {
+    "source_record": 1579,
+    "offset": 2720,
+    "bytes": 112
+   },
+   {
+    "source_record": 1580,
+    "offset": 2832,
+    "bytes": 112
+   },
+   {
+    "source_record": 1581,
+    "offset": 2944,
+    "bytes": 144
+   },
+   {
+    "source_record": 1582,
+    "offset": 3088,
+    "bytes": 176
+   },
+   {
+    "source_record": 1583,
+    "offset": 3264,
+    "bytes": 208
+   },
+   {
+    "source_record": 1584,
+    "offset": 3472,
+    "bytes": 112
+   },
+   {
+    "source_record": 1585,
+    "offset": 3584,
+    "bytes": 16
+   },
+   {
+    "source_record": 1586,
+    "offset": 3600,
+    "bytes": 176
+   },
+   {
+    "source_record": 1587,
+    "offset": 3776,
+    "bytes": 16
+   },
+   {
+    "source_record": 1588,
+    "offset": 3792,
+    "bytes": 208
+   },
+   {
+    "source_record": 1589,
+    "offset": 4000,
+    "bytes": 176
+   },
+   {
+    "source_record": 1590,
+    "offset": 4176,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1559.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1643,
+   1672
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1643,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1644,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1645,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1646,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1647,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1648,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1649,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1650,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1651,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1652,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1653,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1654,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1655,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1656,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1657,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1658,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1659,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1660,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1661,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1662,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1663,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1664,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1665,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1666,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1667,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1668,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1669,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1670,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1671,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1672,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1643.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1733,
+   1762
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1733,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1734,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1735,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1736,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1737,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1738,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1739,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1740,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1741,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1742,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1743,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1744,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1745,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1746,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1747,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1748,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1749,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1750,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1751,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1752,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1753,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1754,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1755,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1756,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1757,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1758,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1759,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1760,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1761,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1762,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1733.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1823,
+   1852
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1823,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1824,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1825,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1826,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1827,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1828,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1829,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1830,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1831,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1832,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1833,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1834,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1835,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1836,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1837,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1838,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1839,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1840,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1841,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1842,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1843,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1844,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1845,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1846,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1847,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1848,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1849,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1850,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1851,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1852,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1823.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   1913,
+   1942
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 1913,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 1914,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 1915,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 1916,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 1917,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 1918,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 1919,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 1920,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 1921,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 1922,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 1923,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 1924,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 1925,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 1926,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 1927,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 1928,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 1929,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 1930,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 1931,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 1932,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 1933,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 1934,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 1935,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 1936,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 1937,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 1938,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 1939,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 1940,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 1941,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 1942,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_1913.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2003,
+   2032
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2003,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2004,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2005,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2006,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2007,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2008,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2009,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2010,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2011,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2012,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2013,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2014,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2015,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2016,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2017,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2018,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2019,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2020,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2021,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2022,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2023,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2024,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2025,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2026,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2027,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2028,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2029,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2030,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2031,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2032,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2003.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2128,
+   2153
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     369664
+    ],
+    "vm_words": [
+     32,
+     99104
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99104,
+     100352
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     100352,
+     100416
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 100416,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2128,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2129,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2130,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 2131,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 2132,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 2133,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 2134,
+    "offset": 704,
+    "bytes": 176
+   },
+   {
+    "source_record": 2135,
+    "offset": 880,
+    "bytes": 176
+   },
+   {
+    "source_record": 2136,
+    "offset": 1056,
+    "bytes": 176
+   },
+   {
+    "source_record": 2137,
+    "offset": 1232,
+    "bytes": 176
+   },
+   {
+    "source_record": 2138,
+    "offset": 1408,
+    "bytes": 176
+   },
+   {
+    "source_record": 2139,
+    "offset": 1584,
+    "bytes": 144
+   },
+   {
+    "source_record": 2140,
+    "offset": 1728,
+    "bytes": 144
+   },
+   {
+    "source_record": 2141,
+    "offset": 1872,
+    "bytes": 176
+   },
+   {
+    "source_record": 2142,
+    "offset": 2048,
+    "bytes": 208
+   },
+   {
+    "source_record": 2143,
+    "offset": 2256,
+    "bytes": 112
+   },
+   {
+    "source_record": 2144,
+    "offset": 2368,
+    "bytes": 112
+   },
+   {
+    "source_record": 2145,
+    "offset": 2480,
+    "bytes": 112
+   },
+   {
+    "source_record": 2146,
+    "offset": 2592,
+    "bytes": 112
+   },
+   {
+    "source_record": 2147,
+    "offset": 2704,
+    "bytes": 112
+   },
+   {
+    "source_record": 2148,
+    "offset": 2816,
+    "bytes": 112
+   },
+   {
+    "source_record": 2149,
+    "offset": 2928,
+    "bytes": 16
+   },
+   {
+    "source_record": 2150,
+    "offset": 2944,
+    "bytes": 176
+   },
+   {
+    "source_record": 2151,
+    "offset": 3120,
+    "bytes": 16
+   },
+   {
+    "source_record": 2152,
+    "offset": 3136,
+    "bytes": 16
+   },
+   {
+    "source_record": 2153,
+    "offset": 3152,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2128.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2212,
+   2241
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2212,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2213,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2214,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2215,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2216,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2217,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2218,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2219,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2220,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2221,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2222,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2223,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2224,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2225,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2226,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2227,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2228,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2229,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2230,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2231,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2232,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2233,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2234,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2235,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2236,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2237,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2238,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2239,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2240,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2241,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2212.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2302,
+   2331
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2302,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2303,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2304,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2305,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2306,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2307,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2308,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2309,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2310,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2311,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2312,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2313,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2314,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2315,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2316,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2317,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2318,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2319,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2320,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2321,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2322,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2323,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2324,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2325,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2326,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2327,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2328,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2329,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2330,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2331,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2302.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2392,
+   2421
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2392,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2393,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2394,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2395,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2396,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2397,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2398,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2399,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2400,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2401,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2402,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2403,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2404,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2405,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2406,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2407,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2408,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2409,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2410,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2411,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2412,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2413,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2414,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2415,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2416,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2417,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2418,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2419,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2420,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2421,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2392.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2497,
+   2528
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     370400
+    ],
+    "vm_words": [
+     32,
+     99840
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99840,
+     101088
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     101088,
+     101152
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 101152,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2497,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2498,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2499,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 2500,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 2501,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 2502,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 2503,
+    "offset": 704,
+    "bytes": 16
+   },
+   {
+    "source_record": 2504,
+    "offset": 720,
+    "bytes": 176
+   },
+   {
+    "source_record": 2505,
+    "offset": 896,
+    "bytes": 176
+   },
+   {
+    "source_record": 2506,
+    "offset": 1072,
+    "bytes": 176
+   },
+   {
+    "source_record": 2507,
+    "offset": 1248,
+    "bytes": 176
+   },
+   {
+    "source_record": 2508,
+    "offset": 1424,
+    "bytes": 176
+   },
+   {
+    "source_record": 2509,
+    "offset": 1600,
+    "bytes": 144
+   },
+   {
+    "source_record": 2510,
+    "offset": 1744,
+    "bytes": 144
+   },
+   {
+    "source_record": 2511,
+    "offset": 1888,
+    "bytes": 176
+   },
+   {
+    "source_record": 2512,
+    "offset": 2064,
+    "bytes": 208
+   },
+   {
+    "source_record": 2513,
+    "offset": 2272,
+    "bytes": 112
+   },
+   {
+    "source_record": 2514,
+    "offset": 2384,
+    "bytes": 112
+   },
+   {
+    "source_record": 2515,
+    "offset": 2496,
+    "bytes": 112
+   },
+   {
+    "source_record": 2516,
+    "offset": 2608,
+    "bytes": 112
+   },
+   {
+    "source_record": 2517,
+    "offset": 2720,
+    "bytes": 112
+   },
+   {
+    "source_record": 2518,
+    "offset": 2832,
+    "bytes": 112
+   },
+   {
+    "source_record": 2519,
+    "offset": 2944,
+    "bytes": 144
+   },
+   {
+    "source_record": 2520,
+    "offset": 3088,
+    "bytes": 176
+   },
+   {
+    "source_record": 2521,
+    "offset": 3264,
+    "bytes": 208
+   },
+   {
+    "source_record": 2522,
+    "offset": 3472,
+    "bytes": 112
+   },
+   {
+    "source_record": 2523,
+    "offset": 3584,
+    "bytes": 16
+   },
+   {
+    "source_record": 2524,
+    "offset": 3600,
+    "bytes": 176
+   },
+   {
+    "source_record": 2525,
+    "offset": 3776,
+    "bytes": 16
+   },
+   {
+    "source_record": 2526,
+    "offset": 3792,
+    "bytes": 208
+   },
+   {
+    "source_record": 2527,
+    "offset": 4000,
+    "bytes": 176
+   },
+   {
+    "source_record": 2528,
+    "offset": 4176,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2497.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2581,
+   2610
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2581,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2582,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2583,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2584,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2585,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2586,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2587,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2588,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2589,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2590,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2591,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2592,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2593,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2594,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2595,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2596,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2597,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2598,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2599,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2600,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2601,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2602,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2603,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2604,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2605,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2606,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2607,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2608,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2609,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2610,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2581.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2671,
+   2700
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2671,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2672,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2673,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2674,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2675,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2676,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2677,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2678,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2679,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2680,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2681,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2682,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2683,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2684,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2685,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2686,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2687,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2688,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2689,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2690,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2691,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2692,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2693,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2694,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2695,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2696,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2697,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2698,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2699,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2700,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2671.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2761,
+   2790
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2761,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2762,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2763,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2764,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2765,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2766,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2767,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2768,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2769,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2770,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2771,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2772,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2773,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2774,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2775,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2776,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2777,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2778,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2779,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2780,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2781,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2782,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2783,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2784,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2785,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2786,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2787,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2788,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2789,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2790,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2761.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2866,
+   2897
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     370400
+    ],
+    "vm_words": [
+     32,
+     99840
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99840,
+     101088
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     101088,
+     101152
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 101152,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2866,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2867,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2868,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 2869,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 2870,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 2871,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 2872,
+    "offset": 704,
+    "bytes": 16
+   },
+   {
+    "source_record": 2873,
+    "offset": 720,
+    "bytes": 176
+   },
+   {
+    "source_record": 2874,
+    "offset": 896,
+    "bytes": 176
+   },
+   {
+    "source_record": 2875,
+    "offset": 1072,
+    "bytes": 176
+   },
+   {
+    "source_record": 2876,
+    "offset": 1248,
+    "bytes": 176
+   },
+   {
+    "source_record": 2877,
+    "offset": 1424,
+    "bytes": 176
+   },
+   {
+    "source_record": 2878,
+    "offset": 1600,
+    "bytes": 144
+   },
+   {
+    "source_record": 2879,
+    "offset": 1744,
+    "bytes": 144
+   },
+   {
+    "source_record": 2880,
+    "offset": 1888,
+    "bytes": 176
+   },
+   {
+    "source_record": 2881,
+    "offset": 2064,
+    "bytes": 208
+   },
+   {
+    "source_record": 2882,
+    "offset": 2272,
+    "bytes": 112
+   },
+   {
+    "source_record": 2883,
+    "offset": 2384,
+    "bytes": 112
+   },
+   {
+    "source_record": 2884,
+    "offset": 2496,
+    "bytes": 112
+   },
+   {
+    "source_record": 2885,
+    "offset": 2608,
+    "bytes": 112
+   },
+   {
+    "source_record": 2886,
+    "offset": 2720,
+    "bytes": 112
+   },
+   {
+    "source_record": 2887,
+    "offset": 2832,
+    "bytes": 112
+   },
+   {
+    "source_record": 2888,
+    "offset": 2944,
+    "bytes": 144
+   },
+   {
+    "source_record": 2889,
+    "offset": 3088,
+    "bytes": 176
+   },
+   {
+    "source_record": 2890,
+    "offset": 3264,
+    "bytes": 208
+   },
+   {
+    "source_record": 2891,
+    "offset": 3472,
+    "bytes": 112
+   },
+   {
+    "source_record": 2892,
+    "offset": 3584,
+    "bytes": 16
+   },
+   {
+    "source_record": 2893,
+    "offset": 3600,
+    "bytes": 176
+   },
+   {
+    "source_record": 2894,
+    "offset": 3776,
+    "bytes": 16
+   },
+   {
+    "source_record": 2895,
+    "offset": 3792,
+    "bytes": 208
+   },
+   {
+    "source_record": 2896,
+    "offset": 4000,
+    "bytes": 176
+   },
+   {
+    "source_record": 2897,
+    "offset": 4176,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2866.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   2950,
+   2979
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 2950,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 2951,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 2952,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 2953,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 2954,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 2955,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 2956,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 2957,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 2958,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 2959,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 2960,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 2961,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 2962,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 2963,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 2964,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 2965,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 2966,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 2967,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 2968,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 2969,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 2970,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 2971,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 2972,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 2973,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 2974,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 2975,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 2976,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 2977,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 2978,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 2979,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_2950.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3040,
+   3069
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3040,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3041,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3042,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3043,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3044,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3045,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3046,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3047,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3048,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3049,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3050,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3051,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3052,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3053,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3054,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3055,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3056,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3057,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3058,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3059,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3060,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3061,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3062,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3063,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3064,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3065,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3066,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3067,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3068,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3069,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3040.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3130,
+   3159
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3130,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3131,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3132,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3133,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3134,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3135,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3136,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3137,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3138,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3139,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3140,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3141,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3142,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3143,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3144,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3145,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3146,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3147,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3148,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3149,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3150,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3151,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3152,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3153,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3154,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3155,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3156,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3157,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3158,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3159,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3130.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3235,
+   3266
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     370400
+    ],
+    "vm_words": [
+     32,
+     99840
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99840,
+     101088
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     101088,
+     101152
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 101152,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3235,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3236,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3237,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 3238,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 3239,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 3240,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 3241,
+    "offset": 704,
+    "bytes": 16
+   },
+   {
+    "source_record": 3242,
+    "offset": 720,
+    "bytes": 176
+   },
+   {
+    "source_record": 3243,
+    "offset": 896,
+    "bytes": 176
+   },
+   {
+    "source_record": 3244,
+    "offset": 1072,
+    "bytes": 176
+   },
+   {
+    "source_record": 3245,
+    "offset": 1248,
+    "bytes": 176
+   },
+   {
+    "source_record": 3246,
+    "offset": 1424,
+    "bytes": 176
+   },
+   {
+    "source_record": 3247,
+    "offset": 1600,
+    "bytes": 144
+   },
+   {
+    "source_record": 3248,
+    "offset": 1744,
+    "bytes": 144
+   },
+   {
+    "source_record": 3249,
+    "offset": 1888,
+    "bytes": 176
+   },
+   {
+    "source_record": 3250,
+    "offset": 2064,
+    "bytes": 208
+   },
+   {
+    "source_record": 3251,
+    "offset": 2272,
+    "bytes": 112
+   },
+   {
+    "source_record": 3252,
+    "offset": 2384,
+    "bytes": 112
+   },
+   {
+    "source_record": 3253,
+    "offset": 2496,
+    "bytes": 112
+   },
+   {
+    "source_record": 3254,
+    "offset": 2608,
+    "bytes": 112
+   },
+   {
+    "source_record": 3255,
+    "offset": 2720,
+    "bytes": 112
+   },
+   {
+    "source_record": 3256,
+    "offset": 2832,
+    "bytes": 112
+   },
+   {
+    "source_record": 3257,
+    "offset": 2944,
+    "bytes": 144
+   },
+   {
+    "source_record": 3258,
+    "offset": 3088,
+    "bytes": 176
+   },
+   {
+    "source_record": 3259,
+    "offset": 3264,
+    "bytes": 208
+   },
+   {
+    "source_record": 3260,
+    "offset": 3472,
+    "bytes": 112
+   },
+   {
+    "source_record": 3261,
+    "offset": 3584,
+    "bytes": 16
+   },
+   {
+    "source_record": 3262,
+    "offset": 3600,
+    "bytes": 176
+   },
+   {
+    "source_record": 3263,
+    "offset": 3776,
+    "bytes": 16
+   },
+   {
+    "source_record": 3264,
+    "offset": 3792,
+    "bytes": 208
+   },
+   {
+    "source_record": 3265,
+    "offset": 4000,
+    "bytes": 176
+   },
+   {
+    "source_record": 3266,
+    "offset": 4176,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3235.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3319,
+   3348
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3319,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3320,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3321,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3322,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3323,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3324,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3325,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3326,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3327,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3328,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3329,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3330,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3331,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3332,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3333,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3334,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3335,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3336,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3337,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3338,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3339,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3340,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3341,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3342,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3343,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3344,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3345,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3346,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3347,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3348,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3319.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3409,
+   3438
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3409,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3410,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3411,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3412,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3413,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3414,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3415,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3416,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3417,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3418,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3419,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3420,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3421,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3422,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3423,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3424,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3425,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3426,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3427,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3428,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3429,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3430,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3431,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3432,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3433,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3434,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3435,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3436,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3437,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3438,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3409.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3499,
+   3528
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3499,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3500,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3501,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3502,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3503,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3504,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3505,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3506,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3507,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3508,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3509,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3510,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3511,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3512,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3513,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3514,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3515,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3516,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3517,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3518,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3519,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3520,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3521,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3522,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3523,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3524,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3525,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3526,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3527,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3528,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3499.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3604,
+   3635
+  ],
+  "segments": [
+   {
+    "source_words": [
+     147680,
+     147712
+    ],
+    "vm_words": [
+     0,
+     32
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     270592,
+     370400
+    ],
+    "vm_words": [
+     32,
+     99840
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     99840,
+     101088
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     101088,
+     101152
+    ],
+    "name": "actual_region_3"
+   }
+  ],
+  "high_water_words": 101152,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3604,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3605,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3606,
+    "offset": 320,
+    "bytes": 16
+   },
+   {
+    "source_record": 3607,
+    "offset": 336,
+    "bytes": 176
+   },
+   {
+    "source_record": 3608,
+    "offset": 512,
+    "bytes": 176
+   },
+   {
+    "source_record": 3609,
+    "offset": 688,
+    "bytes": 16
+   },
+   {
+    "source_record": 3610,
+    "offset": 704,
+    "bytes": 16
+   },
+   {
+    "source_record": 3611,
+    "offset": 720,
+    "bytes": 176
+   },
+   {
+    "source_record": 3612,
+    "offset": 896,
+    "bytes": 176
+   },
+   {
+    "source_record": 3613,
+    "offset": 1072,
+    "bytes": 176
+   },
+   {
+    "source_record": 3614,
+    "offset": 1248,
+    "bytes": 176
+   },
+   {
+    "source_record": 3615,
+    "offset": 1424,
+    "bytes": 176
+   },
+   {
+    "source_record": 3616,
+    "offset": 1600,
+    "bytes": 144
+   },
+   {
+    "source_record": 3617,
+    "offset": 1744,
+    "bytes": 144
+   },
+   {
+    "source_record": 3618,
+    "offset": 1888,
+    "bytes": 176
+   },
+   {
+    "source_record": 3619,
+    "offset": 2064,
+    "bytes": 208
+   },
+   {
+    "source_record": 3620,
+    "offset": 2272,
+    "bytes": 112
+   },
+   {
+    "source_record": 3621,
+    "offset": 2384,
+    "bytes": 112
+   },
+   {
+    "source_record": 3622,
+    "offset": 2496,
+    "bytes": 112
+   },
+   {
+    "source_record": 3623,
+    "offset": 2608,
+    "bytes": 112
+   },
+   {
+    "source_record": 3624,
+    "offset": 2720,
+    "bytes": 112
+   },
+   {
+    "source_record": 3625,
+    "offset": 2832,
+    "bytes": 112
+   },
+   {
+    "source_record": 3626,
+    "offset": 2944,
+    "bytes": 144
+   },
+   {
+    "source_record": 3627,
+    "offset": 3088,
+    "bytes": 176
+   },
+   {
+    "source_record": 3628,
+    "offset": 3264,
+    "bytes": 208
+   },
+   {
+    "source_record": 3629,
+    "offset": 3472,
+    "bytes": 112
+   },
+   {
+    "source_record": 3630,
+    "offset": 3584,
+    "bytes": 16
+   },
+   {
+    "source_record": 3631,
+    "offset": 3600,
+    "bytes": 176
+   },
+   {
+    "source_record": 3632,
+    "offset": 3776,
+    "bytes": 16
+   },
+   {
+    "source_record": 3633,
+    "offset": 3792,
+    "bytes": 208
+   },
+   {
+    "source_record": 3634,
+    "offset": 4000,
+    "bytes": 176
+   },
+   {
+    "source_record": 3635,
+    "offset": 4176,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3604.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3688,
+   3717
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3688,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3689,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3690,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3691,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3692,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3693,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3694,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3695,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3696,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3697,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3698,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3699,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3700,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3701,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3702,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3703,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3704,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3705,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3706,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3707,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3708,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3709,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3710,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3711,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3712,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3713,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3714,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3715,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3716,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3717,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3688.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3778,
+   3807
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3778,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3779,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3780,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3781,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3782,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3783,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3784,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3785,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3786,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3787,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3788,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3789,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3790,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3791,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3792,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3793,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3794,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3795,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3796,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3797,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3798,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3799,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3800,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3801,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3802,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3803,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3804,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3805,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3806,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3807,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3778.hgi1r"
+ },
+ {
+  "schema": "opentallas.hbm.vm_expert_entry.v1",
+  "source_range": [
+   3868,
+   3897
+  ],
+  "segments": [
+   {
+    "source_words": [
+     0,
+     122880
+    ],
+    "vm_words": [
+     0,
+     122880
+    ],
+    "name": "actual_region_0"
+   },
+   {
+    "source_words": [
+     147488,
+     246592
+    ],
+    "vm_words": [
+     122880,
+     221984
+    ],
+    "name": "actual_region_1"
+   },
+   {
+    "source_words": [
+     246624,
+     246976
+    ],
+    "vm_words": [
+     221984,
+     222336
+    ],
+    "name": "actual_region_2"
+   },
+   {
+    "source_words": [
+     301312,
+     301472
+    ],
+    "vm_words": [
+     222336,
+     222496
+    ],
+    "name": "actual_region_3"
+   },
+   {
+    "source_words": [
+     483552,
+     484800
+    ],
+    "vm_words": [
+     222496,
+     223744
+    ],
+    "name": "actual_region_4"
+   },
+   {
+    "source_words": [
+     506112,
+     506176
+    ],
+    "vm_words": [
+     223744,
+     223808
+    ],
+    "name": "actual_region_5"
+   }
+  ],
+  "high_water_words": 223808,
+  "capacity_words": 262144,
+  "records": [
+   {
+    "source_record": 3868,
+    "offset": 0,
+    "bytes": 144
+   },
+   {
+    "source_record": 3869,
+    "offset": 144,
+    "bytes": 176
+   },
+   {
+    "source_record": 3870,
+    "offset": 320,
+    "bytes": 112
+   },
+   {
+    "source_record": 3871,
+    "offset": 432,
+    "bytes": 16
+   },
+   {
+    "source_record": 3872,
+    "offset": 448,
+    "bytes": 176
+   },
+   {
+    "source_record": 3873,
+    "offset": 624,
+    "bytes": 176
+   },
+   {
+    "source_record": 3874,
+    "offset": 800,
+    "bytes": 16
+   },
+   {
+    "source_record": 3875,
+    "offset": 816,
+    "bytes": 176
+   },
+   {
+    "source_record": 3876,
+    "offset": 992,
+    "bytes": 176
+   },
+   {
+    "source_record": 3877,
+    "offset": 1168,
+    "bytes": 176
+   },
+   {
+    "source_record": 3878,
+    "offset": 1344,
+    "bytes": 176
+   },
+   {
+    "source_record": 3879,
+    "offset": 1520,
+    "bytes": 176
+   },
+   {
+    "source_record": 3880,
+    "offset": 1696,
+    "bytes": 144
+   },
+   {
+    "source_record": 3881,
+    "offset": 1840,
+    "bytes": 144
+   },
+   {
+    "source_record": 3882,
+    "offset": 1984,
+    "bytes": 144
+   },
+   {
+    "source_record": 3883,
+    "offset": 2128,
+    "bytes": 144
+   },
+   {
+    "source_record": 3884,
+    "offset": 2272,
+    "bytes": 176
+   },
+   {
+    "source_record": 3885,
+    "offset": 2448,
+    "bytes": 208
+   },
+   {
+    "source_record": 3886,
+    "offset": 2656,
+    "bytes": 112
+   },
+   {
+    "source_record": 3887,
+    "offset": 2768,
+    "bytes": 112
+   },
+   {
+    "source_record": 3888,
+    "offset": 2880,
+    "bytes": 112
+   },
+   {
+    "source_record": 3889,
+    "offset": 2992,
+    "bytes": 112
+   },
+   {
+    "source_record": 3890,
+    "offset": 3104,
+    "bytes": 144
+   },
+   {
+    "source_record": 3891,
+    "offset": 3248,
+    "bytes": 112
+   },
+   {
+    "source_record": 3892,
+    "offset": 3360,
+    "bytes": 112
+   },
+   {
+    "source_record": 3893,
+    "offset": 3472,
+    "bytes": 16
+   },
+   {
+    "source_record": 3894,
+    "offset": 3488,
+    "bytes": 176
+   },
+   {
+    "source_record": 3895,
+    "offset": 3664,
+    "bytes": 16
+   },
+   {
+    "source_record": 3896,
+    "offset": 3680,
+    "bytes": 176
+   },
+   {
+    "source_record": 3897,
+    "offset": 3856,
+    "bytes": 112
+   }
+  ],
+  "index_bound": 384,
+  "rows": 6,
+  "topk": 6,
+  "combine_pitch": 7,
+  "union_capacity": 36,
+  "table_stride": 32,
+  "whole_programme_executable": false,
+  "scratch_reserved": false,
+  "holds": [
+   "publish actual source input epochs and retire expert output before workspace reuse",
+   "whole-programme dynamic data, numerical RTL and calendar composition remain open"
+  ],
+  "fragment": "expert_3868.hgi1r"
+ }
+]

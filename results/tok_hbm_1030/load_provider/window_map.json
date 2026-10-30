@@ -1,0 +1,13 @@
+{
+ "status": "SOURCE_ADDRESS_PROPOSAL_NOT_SELECTED_PROVIDER",
+ "inverse_checks": 131100,
+ "full_window_bytes": 65536,
+ "quadrant_window_bytes": 32768,
+ "source_landing": "current stack2:PC0..15\u2192NW,PC16..31\u2192NE; destination independent via load_static dest_q/bank",
+ "pre_swizzle_required": false,
+ "holds": [
+  "current source stack2 only; stack3 candidate unselected",
+  "new load_static type/interface + static DQ destination routing needs plan event",
+  "fixed fill deadline/epoch/readiness and actual transports still required"
+ ]
+}

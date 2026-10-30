@@ -1,0 +1,52 @@
+{
+ "status": "CURRENT_COMPONENT_AND_NAMESPACE_SENSITIVITY_NO_NEW_ARCHITECTURE",
+ "rows": [
+  {
+   "VMbytes": 262144,
+   "VMwords": 65536,
+   "ordinary_namespace_valid": true,
+   "current_expert_lowerer_failing_components": 40,
+   "first_failure_source_range": [
+    50,
+    79
+   ],
+   "first_failure_required_words": 223808,
+   "status": "current_expert_placement_fails",
+   "boundary_bytes": null
+  },
+  {
+   "VMbytes": 524288,
+   "VMwords": 131072,
+   "ordinary_namespace_valid": true,
+   "current_expert_lowerer_failing_components": 32,
+   "first_failure_source_range": [
+    50,
+    79
+   ],
+   "first_failure_required_words": 223808,
+   "status": "current_expert_placement_fails",
+   "boundary_bytes": null
+  },
+  {
+   "VMbytes": 1048576,
+   "VMwords": 262144,
+   "ordinary_namespace_valid": true,
+   "current_expert_lowerer_failing_components": 0,
+   "first_failure_source_range": null,
+   "first_failure_required_words": null,
+   "status": "current_baseline",
+   "boundary_bytes": 319227648
+  },
+  {
+   "VMbytes": 2097152,
+   "VMwords": 524288,
+   "ordinary_namespace_valid": false,
+   "current_expert_lowerer_failing_components": 0,
+   "first_failure_source_range": null,
+   "first_failure_required_words": null,
+   "status": "outside_current_ordinary_VM_namespace",
+   "boundary_bytes": null
+  }
+ ],
+ "qualification": "Smaller-capacity failure is this actual expert placement strategy, not a proof no alternative exists. No larger-VM native programme emitted; 2MiB needs explicit namespace/backend architecture. Current selected capacity is262144 U32words=1MiB, not256KiB."
+}
