@@ -6944,3 +6944,5 @@ Final parent branches/packets:
 - ROOTMERGE codex/root-merge-1847@d6e524985; handoff/codex_root_merge_20261029_1903.md. Finalmain e4b3808d5c7, noownjobs/unfinishedmerge.
 
 OWNER? only KVq0 sparsefixed-slot question remains live; no waiver/noCTS. S81pinexception superseded by faithfultoolfix. All other failures diagnosed/owned or explicitnextstep in packets. No after-reset engineering, no newSIGNED/die/tokenrelease claim.
+
+Final HBM child drain: cores74f0d6c47; EP finish terminal CLOCK FAIL FF306.187 vs202.5+/-40 (not live/notSIGNED); qcore3396787 remainsCTS LIVE. HBM039 qualified commit c79088880 ONLY; branchHEAD4e1bc8cbc is unqualified HUB WIP, DO NOT MERGE HEAD as qualified. Pre-reset hubNC0/1/2 proof unit3349133 LIVE intel1codex-hbm-glue039-1852/hub.log. All5HBMchildren parked, no afterresetengineering.
