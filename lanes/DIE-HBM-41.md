@@ -1,0 +1,2 @@
+# DIE-HBM-41 (HBM die owner, track A lane capacity) -- successor of DIE-HBM-40 (claude/die-hbm-40-1030@0ef0fa7dca2, on main c06a1608875)
+- 2026-10-30 14:10 PDT START. Base d40h (3702cfb3f678). Run dir intel1 /srv/opentallas-scratch2/claude/die-hbm-41; sparse wt intel1 wt/die-hbm-41 branch claude/die-hbm-41-1030. Doing: face-capacity estimate for the 33 D/E/F pairs (16,365 b) before any event; lane_add dry run on all 33 = 0 built (24 FAR, 9 failed: no free window / no macro-free chain / cycle mismatch). Not touching epyc2 g50 jobs (collect only).
