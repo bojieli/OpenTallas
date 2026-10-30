@@ -1,0 +1,76 @@
+DIE-S81-36/CKENTRY Fri Oct 30 02:39:17 PM PDT 2026 -- one-block clock-entry fix (COORD 13:49 path b), branch claude/die-s81-36-ckentry-1030
+delta physical/die_plan/s81/delta_ckentry_1030.py on veskv c80a508c89f (plan 15d15bdf0bde -> 318c8c13c6c2)
+  ot_s81sl_vs        clk (85.164,0.24)  -> (86.412,86.4)    no die taps
+  ot_s81sl_ve_m      clk (86.316,0.24)  -> (86.412,172.8)   78 core taps moved (type-internal)
+  ot_s81sl_vn_a      clk (0.06,81.9)    -> (177.132,82.08)  78 core taps moved
+  ot_s81sl_vn_b      clk (0.06,86.316)  -> (177.132,86.4)   74 core taps moved
+  ot_s81c_attn_hcore clk (78.828,0.24)  -> (77.772,129.6)   no die taps (obs_max M5; M5 OBS notch moved to the pin)
+  entry = master_plan.core_entry centre (4.32 lattice) + master_slice M5 on-track snap; island +-2.16; leaf M6/M7 OBS opened
+G0C (intel2 die-s81-36-ck/g0c): 19 errors = vk base 19, 0 new / 0 gone; 8 new WARN = PG-pin-geometry path-string artefacts
+die clock (epyc2 die-s81-36/ckclk, run.status below): GRT TT/FF overflow 0; taps 8555 missing 0; proof TT setup 466.81 /
+  FF 522.87 (= base); view TT -26.90 neg 7 (= base); CA 2306 crossings PASS TT lo/hi 112.1/120.7, FF 127.0/284.6.
+  The die tree lands on partition feed points (tree.json tap xy != core pin), so it is unchanged by the core-tap move;
+  the extra entry leg (<=~177 um to the centre) is in the partition/kit clock scope.
+render ckentry_render.png VIEWED: pins at the core centres, vn_a tap at its MY instance centre in leaf__t1.
+START Fri Oct 30 14:03:02 PDT 2026 host dear-crayfish DIE-S81-36/CKENTRY 6d498b9ec7b (tools = die-s81-34-ev3clk wt, same as ev3 base) plan 318c8c13c6c2 cal a23d9ff85ff9
+KIT_RC 0 Fri Oct 30 14:11:07 PDT 2026
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 8:05.11
+	Maximum resident set size (kbytes): 785044
+IDENT ctree.v DIFF
+IDENT tree.json DIFF
+IDENT actual_reach.json DIFF
+GRT_DONE Fri Oct 30 14:14:33 PDT 2026
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           244683014       7613832            3.11%             0 /  0 /  0
+M5           246090769       10573588            4.30%             0 /  0 /  0
+M6           205564045       10206580            4.97%             0 /  0 /  0
+M7           207377874       17561886            8.47%             0 /  0 /  0
+M8           914635584       8150514            0.89%             0 /  0 /  0
+M9           914589360       9657340            1.06%             0 /  0 /  0
+Total        -1562026650       63763740           -4.08%             0 /  0 /  0
+	Exit status: 0
+EXIT 0
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           244683014       7613832            3.11%             0 /  0 /  0
+M5           246090769       10573588            4.30%             0 /  0 /  0
+M6           205564045       10206580            4.97%             0 /  0 /  0
+M7           207377874       17561886            8.47%             0 /  0 /  0
+M8           914635584       8150514            0.89%             0 /  0 /  0
+M9           914589360       9657340            1.06%             0 /  0 /  0
+Total        -1562026650       63763740           -4.08%             0 /  0 /  0
+	Exit status: 0
+EXIT 0
+DUTY_RC 0 Fri Oct 30 14:14:34 PDT 2026
+REFIT_RC 0
+TT: legs 16712 coef d0/k1/k2/kf [13.188622, 0.151181, 0.00029, 10.466995] rms 7.68 ps (built model 7.82) |resid| p50/p90/p99 [4.45, 11.65, 22.85]
+FF: legs 16712 coef d0/k1/k2/kf [11.078655, 0.137658, 0.000271, 7.59428] rms 6.93 ps (built model 7.05) |resid| p50/p90/p99 [3.98, 10.38, 20.88]
+TT taps 8555 missing 0 regions 398 nodes 42033 fall taps 8555 fall nodes 42033
+FF taps 8555 missing 0 regions 398 nodes 42033 fall taps 8555 fall nodes 42033
+sta declared+per-region spice_edge rc 0
+proof TT intra              pairs  181072 setup   466.81 (neg 0) hold  -183.07 (neg 170480) skew  137.64
+proof FF intra              pairs  181072 setup   522.87 (neg 0) hold  -174.70 (neg 176737) skew  125.95 kit-contract hold 54.05 (W 180, need 125.95, neg 0) | MEASURED-HOLD 0 measured / 181072 unmeasured margin None BLOCKED(kits)
+PER-REGION TT: regions 397, hold<0 in 397; worst 10:
+PER-REGION FF: regions 397, hold<0 in 397; worst 10:
+sta view rc 0
+proof TT intra              pairs  181072 setup   -26.90 (neg 7) hold  -676.78 (neg 152223) skew  137.64
+proof FF intra              pairs  181072 setup    90.27 (neg 0) hold  -607.30 (neg 152491) skew  125.95 kit-contract hold 54.05 (W 180, need 125.95, neg 0) | MEASURED-HOLD 0 measured / 181072 unmeasured margin None BLOCKED(kits)
+SUMMARY {"intra": {"tt_setup_ps": -26.9, "ff_hold_margin_ps": null, "hold_pairs_measured": 0, "hold_pairs_unmeasured": 181072, "missing_views": ["core:dsdv_bk_g", "core:dsdv_bksel_c", "core:dsdv_bksel_q", "core:dsdv_gunit_l0", "core:dsdv_gunit_l1", "core:dsdv_gunit_l2", "core:dsdv_gunit_l4", "core:d
+RENDER_RC 0
+LPO_RC 0
+CA plan width rc 0
+CA bind width rc 0
+CA sta width rc 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -1186.3 hi -580.7 fail 346 slot_read fail 209 guard fail 9 start-skew fail 758/758 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 112.1 hi 120.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/758 <100 0 ocv table max lo/hi 626.4/626.4 PASS
+COUNT-ALIGN FF crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 127.0 hi 284.6 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/758 <100 0 ocv table max lo/hi 542.0/542.0 PASS
+CA plan phase rc 0
+CA bind phase rc 0
+CA sta phase rc 0
+COUNT-ALIGN SS-INFO (TT x 1.27) worst lo -1186.3 hi -580.7 fail 346 slot_read fail 209 guard fail 9 start-skew fail 518/518 FAIL (INFO, never gates)
+COUNT-ALIGN TT crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 112.1 hi 120.7 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/518 <100 0 ocv table max lo/hi 626.4/626.4 PASS
+COUNT-ALIGN FF crossings 2306 (sta 2306, tree 0, no taps 0, key region unbound 0) worst lo 127.0 hi 284.6 fail 0 slot_read fail 0 guard fail 0 start-skew fail 0/518 <100 0 ocv table max lo/hi 542.0/542.0 PASS
+DONE Fri Oct 30 14:38:52 PDT 2026
