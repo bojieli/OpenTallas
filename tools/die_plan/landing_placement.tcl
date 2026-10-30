@@ -46,6 +46,24 @@ foreach spec $cland_groups {
  }
 }
 set cland_fh [open $::env(RESULTS_DIR)/ot_face_flops.txt a]
+# FLOW-6 10-30: widest master of a cell's drive family (OT_CLAND_FIT_RESERVE=resize), cached per master name.
+set cland_famw {}
+proc cland_family_w {m} {
+ global cland_famw
+ set nm [$m getName];set w [$m getWidth];set h [$m getHeight]
+ if {[dict exists $cland_famw $nm]} { return [dict get $cland_famw $nm] }
+ set fw $w
+ if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} $nm -> pre suf]} {
+  foreach lib [[ord::get_db] getLibs] {
+   foreach mm [$lib getMasters] {
+    if {[regexp {^(.*x)p?[0-9]+[a-z]*(_.*)$} [$mm getName] -> p2 s2] && $p2 eq $pre && $s2 eq $suf
+        && [$mm getHeight] == $h && [$mm getWidth] > $fw} { set fw [$mm getWidth] }
+   }
+  }
+ }
+ dict set cland_famw $nm $fw
+ return $fw
+}
 # DIE-HEAD-13 opt-in: sp = reserve spread given by the caller (else from the tag), cur = resume the row scan at the last
 # site this band placed (ordered fill: O(n) instead of the O(n^2) rescan from the band corner). Defaults unchanged.
 proc cland_put {i rect tag {sp {}} {cur 0}} {
@@ -75,11 +93,6 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
  if {$ov < $h && $by-$ay >= $h && $slide_y} {
   if {$ay < $ff_y0} { set by [expr {$by+$ff_y0-$ay}];set ay $ff_y0 } elseif {$by > $ff_y1} { set ay [expr {$ay-($by-$ff_y1)}];set by $ff_y1 }
  }
- set ax [expr {max($ff_x0,$ax)}];set ay [expr {max($ff_y0,$ay)}]
- set bx [expr {min($ff_x1,$bx)}];set by [expr {min($ff_y1,$by)}]
- set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
- set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
- if {$cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
  # DIE-KV-33 opt-in OT_CLAND_FIT_RESERVE=1: the site must be free of other occupancy over the whole reserved footprint
  # (rw, as cland_occupy reserves it), not just the body, so an in-place upsize by timing-driven GPL (FIRM cells are
  # resized, not moved) cannot grow into a tapcell / foreign FIRM cell (KV io_ft kits_gen5 3_5 DPL-0033: 3 FIRM
@@ -89,6 +102,35 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
   set fsp $sp; if {$fsp eq {}} { set fsp 1.0; regexp {^ring:[^@]*@([0-9.]+)$} $tag -> fsp }
   set fw [expr {max($w,int(ceil(double($w)/0.4*$fsp/$ff_sw))*$ff_sw)}]
  }
+ # FLOW-6 10-30 opt-in OT_CLAND_FIT_RESERVE=resize: the site must be free of other occupancy over the widest drive
+ # variant of the cell's own family (same name stem/suffix and height, e.g. DFFHQNx1 -> DFFHQNx3), not the w/0.4*spread
+ # reserve of "=1": timing-driven GPL resizes FIRM cells in place (HEAD n3_turn v3nofr 3_5 DPL-0033: FIRM ring
+ # DFFHQNx1 abutting a TAPCELL resized to DFFHQNx2, +54 dbu over it) and the "=1" reserve overfills ring bands
+ # (HEAD st_m v3). Default (unset) and "=1" unchanged.
+ if {[info exists ::env(OT_CLAND_FIT_RESERVE)] && $::env(OT_CLAND_FIT_RESERVE) eq "resize"} { set fw [cland_family_w $m] }
+ # FLOW-6 10-30 (HEAD n3_turn / turn_a v3 status d1_o/t_o): a status window centred in the core margin can overlap the
+ # core by more than one cell height and still hold ONE row only (pin y 602.144, window 599.984..604.304, core top
+ # 600.48 -> row 600.21); when that row has no fitting site, the window (same size) slides inside the core and is
+ # scanned once more. A window placed on the first scan is unchanged; a window that is not slide-eligible, already
+ # inside the core, or still without a site fails closed as before.
+ set cland_win [list $ax $ay $bx $by]
+ foreach cland_pass {0 1} {
+ if {$cland_pass} {
+  lassign $cland_win ax ay bx by
+  set moved 0
+  if {$slide_x && $bx-$ax <= $ff_x1-$ff_x0} {
+   if {$ax < $ff_x0} { set bx [expr {$bx+$ff_x0-$ax}];set ax $ff_x0;set moved 1 } elseif {$bx > $ff_x1} { set ax [expr {$ax-($bx-$ff_x1)}];set bx $ff_x1;set moved 1 }
+  }
+  if {$slide_y && $by-$ay <= $ff_y1-$ff_y0} {
+   if {$ay < $ff_y0} { set by [expr {$by+$ff_y0-$ay}];set ay $ff_y0;set moved 1 } elseif {$by > $ff_y1} { set ay [expr {$ay-($by-$ff_y1)}];set by $ff_y1;set moved 1 }
+  }
+  if {!$moved} break
+ }
+ set ax [expr {max($ff_x0,$ax)}];set ay [expr {max($ff_y0,$ay)}]
+ set bx [expr {min($ff_x1,$bx)}];set by [expr {min($ff_y1,$by)}]
+ set startx [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
+ set starty [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
+ if {!$cland_pass && $cur && [llength $cland_cursor]==2} { lassign $cland_cursor cy cx; if {$cy>$starty} { set starty $cy } } else { set cy {} }
  for {set y $starty} {$y+$h<=$by} {incr y $ff_rh} {
   if {![dict exists $ff_orient $y]} continue
   set x $startx
@@ -116,6 +158,7 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
    puts $cland_fh "$name\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
    return
   }
+ }
  }
  error "OT_CLAND no legal nonoverlapping row/site in reserved band for $name ($tag)"
 }
