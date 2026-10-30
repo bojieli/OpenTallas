@@ -1,0 +1,101 @@
+{
+ "status": "ANALYTIC CANDIDATE ONLY; owner contract decision pending; no plan/RTL change",
+ "new_receiver_relays": 2,
+ "existing_u_bin_relocated": true,
+ "logical_path": "CA readout ->newrelay1 ->newrelay2 ->existing u_bin ->RX",
+ "points_parent_um": [
+  [
+   1157.76,
+   1141.08
+  ],
+  [
+   1157.76,
+   829.44
+  ],
+  [
+   1036.8,
+   648
+  ],
+  [
+   725.76,
+   648
+  ],
+  [
+   587.616,
+   483.624
+  ]
+ ],
+ "paths_parent_um": [
+  [
+   [
+    1157.76,
+    1141.08
+   ],
+   [
+    1157.76,
+    829.44
+   ]
+  ],
+  [
+   [
+    1157.76,
+    829.44
+   ],
+   [
+    1157.76,
+    648
+   ],
+   [
+    1036.8,
+    648
+   ]
+  ],
+  [
+   [
+    1036.8,
+    648
+   ],
+   [
+    725.76,
+    648
+   ]
+  ],
+  [
+   [
+    725.76,
+    648
+   ],
+   [
+    570.24,
+    648
+   ],
+   [
+    570.24,
+    483.624
+   ],
+   [
+    587.616,
+    483.624
+   ]
+  ]
+ ],
+ "hop_lengths_um": [
+  311.6399999999999,
+  302.4000000000001,
+  311.03999999999996,
+  337.27199999999993
+ ],
+ "first_hop_worst_band_corner_um": 346.20000000000005,
+ "reach_limit_um": 405,
+ "macro_halo_um": 4.32,
+ "macro_halo_intersections_except_own_final_pin": 0,
+ "new_cycles": 2,
+ "area_estimate": "4FF per 2-bit data+epoch bundle; paired qualification signals may require coherent relays too, under token/guard analysis",
+ "not_checked": [
+  "actual standard-cell occupancy/row sites",
+  "reset and local clock feed",
+  "fault/close and R8 paired-qualification behavior",
+  "routed timing and PG"
+ ],
+ "steady_rate": "not claimed; TOK source price pending"
+}
