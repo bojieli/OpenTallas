@@ -1,0 +1,25 @@
+OT_CLAND column capacity u_cland_cws1_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_cws1_i: 2684 ring flops FIRM bit-major at spread 3.7968, 9008 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_l9_eo_l9_wi_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_l9_eo_l9_wi_i: 2674 ring flops FIRM bit-major at spread 3.8394, 8970 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_ctl_fw_p1_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_ctl_fw_p1_i: 3263 ring flops FIRM bit-major at spread 3.4855, 10930 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_fe_fw_i: vertical padding reduced by 1 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_fe_fw_i: 2869 ring flops FIRM bit-major at spread 3.6032, 9618 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_fe_fw_p1_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_fe_fw_p1_i: 2864 ring flops FIRM bit-major at spread 3.5984, 9603 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_fe_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_fe_i: 2824 ring flops FIRM bit-major at spread 3.5968, 9467 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_fe_p1_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_fe_p1_i: 2824 ring flops FIRM bit-major at spread 3.5962, 9467 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_su_l0_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_su_l0_i: 1224 ring flops FIRM bit-major at spread 3.9919, 4131 ring logic cells left to global placement
+OT_CLAND column capacity u_cland_x_su_l1_i: vertical padding reduced by 0 native rows; horizontal reserve unchanged
+OT_CLAND ring_place=ff u_cland_x_su_l1_i: 1224 ring flops FIRM bit-major at spread 3.9887, 4131 ring logic cells left to global placement
+OT_CLAND placed 28255 actual mapped cells FIRM in nonoverlapping reserved bands/relay sites
+P49 FIRM 49242
+Layer     Direction    Resources     Resources    Reduction (%)
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+Total        119008967       18051731           15.17%            232 / 409 / 62706
+[INFO GRT-0018] Total wirelength: 10699925 um
+P49 done
