@@ -1,0 +1,35 @@
+{
+  "scope": "parent multicast qualification only; no parent P&R or view adoption",
+  "signed_child_revision": "65902f47b3a",
+  "child_matches_signed_revision": true,
+  "prefix_matches_signed_revision": true,
+  "child_sha256": "91c226aff96e3d1b717b504a715004cc26f835c9efcb43f24988665681805d97",
+  "parent_source": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_parts.sv",
+  "parent_sha256": "2b0df4d60fe6e8913230deba8003715cb2bfc96e9d3396c4076a5ead5b89253d",
+  "fixed_child_parameters": {
+    "W": 16,
+    "CB": 11,
+    "BANK": 0,
+    "NB": 32,
+    "HPIPE": 1
+  },
+  "multicast": {
+    "clr": "17 equal copies per bank",
+    "gsel": "16 equal 4-bit copies per bank"
+  },
+  "added_cycles": 0,
+  "status": "PARENT_HIST_MULTICAST_PASS_CHILD_VIEW_UNCHANGED",
+  "cycles": 12000,
+  "checks": 11671,
+  "reset_edges": 320,
+  "mismatches": 0,
+  "mutant_mismatch_cycles": 3754,
+  "signed_view_recovered_from": "35cd6d73460",
+  "signed_view": "physical/die_plan/s81/cores/views/hist_bank_signed_1029/ot_s81ph_native_sel_hist_bank",
+  "signoff_TT_ps": 155.96,
+  "signoff_FF_ps": 5.87,
+  "routed_lec_compare_points": 1866,
+  "parent_physical_status": "BLOCKED: frozen parent M3 clock; no adoption or P&R",
+  "reset_helper_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "prefix_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587"
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "parent multicast qualification only; no parent P&R or view adoption",
+  "signed_child_revision": "65902f47b3a",
+  "child_matches_signed_revision": true,
+  "prefix_matches_signed_revision": true,
+  "child_sha256": "91c226aff96e3d1b717b504a715004cc26f835c9efcb43f24988665681805d97",
+  "parent_source": "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_hq_parts.sv",
+  "parent_sha256": "2b0df4d60fe6e8913230deba8003715cb2bfc96e9d3396c4076a5ead5b89253d",
+  "fixed_child_parameters": {
+    "W": 16,
+    "CB": 11,
+    "BANK": 0,
+    "NB": 32,
+    "HPIPE": 1
+  },
+  "multicast": {
+    "clr": "17 equal copies per bank",
+    "gsel": "16 equal 4-bit copies per bank"
+  },
+  "added_cycles": 0
+}

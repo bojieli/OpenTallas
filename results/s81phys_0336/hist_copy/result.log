@@ -1,0 +1,5 @@
+HIST_COPY PASS cycles=12000 checks=11671 reset_edges=320 mismatches=0 mutant_mismatches=3754
+- tb.sv:40: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 1.745 s; speed 5.730 us/s
+- Verilator: cpu 1.744 s on 1 threads; allocated 9 MB
