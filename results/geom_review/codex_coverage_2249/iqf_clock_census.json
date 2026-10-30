@@ -1,0 +1,173 @@
+{
+  "root_counts": {
+    "clk": 24525,
+    "fclk_in_ft1_i[0]": 5493,
+    "fclk_in_idx_i0[0]": 2073,
+    "fclk_in_ql_i0[0]": 2073
+  },
+  "clock_grid": {
+    "3": {
+      "k": 3,
+      "name": "clk",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 180.384,
+      "y": 152.864
+    },
+    "4": {
+      "k": 4,
+      "name": "clk_t1",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 541.088,
+      "y": 152.864
+    },
+    "5": {
+      "k": 5,
+      "name": "clk_t10",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 901.792,
+      "y": 766.304
+    },
+    "6": {
+      "k": 6,
+      "name": "clk_t11",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 1262.496,
+      "y": 766.304
+    },
+    "7": {
+      "k": 7,
+      "name": "clk_t12",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 180.384,
+      "y": 1074.016
+    },
+    "8": {
+      "k": 8,
+      "name": "clk_t13",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 541.088,
+      "y": 1074.016
+    },
+    "9": {
+      "k": 9,
+      "name": "clk_t14",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 901.792,
+      "y": 1074.016
+    },
+    "10": {
+      "k": 10,
+      "name": "clk_t15",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 1262.496,
+      "y": 1074.016
+    },
+    "11": {
+      "k": 11,
+      "name": "clk_t2",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 901.792,
+      "y": 152.864
+    },
+    "12": {
+      "k": 12,
+      "name": "clk_t3",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 1262.496,
+      "y": 152.864
+    },
+    "13": {
+      "k": 13,
+      "name": "clk_t4",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 180.384,
+      "y": 460.576
+    },
+    "14": {
+      "k": 14,
+      "name": "clk_t5",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 541.088,
+      "y": 460.576
+    },
+    "15": {
+      "k": 15,
+      "name": "clk_t6",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 901.792,
+      "y": 460.576
+    },
+    "16": {
+      "k": 16,
+      "name": "clk_t7",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 1262.496,
+      "y": 460.576
+    },
+    "17": {
+      "k": 17,
+      "name": "clk_t8",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 180.384,
+      "y": 766.304
+    },
+    "18": {
+      "k": 18,
+      "name": "clk_t9",
+      "io": "INPUT",
+      "sig": "SIGNAL",
+      "layer": "M7",
+      "x": 541.088,
+      "y": 766.304
+    }
+  },
+  "grid_max": [
+    333.02699999999993,
+    "u_bound.u_ft_ft1_o_1/q\\[771\\]$_DFF_P_",
+    "clk",
+    "clk_t9",
+    721.386,
+    613.575
+  ],
+  "grid_gt220": 14608,
+  "grid_gt405": 0,
+  "forwarded_max": [
+    190.76899999999995,
+    "u_bound.u_cland_ft1_i/u_ring.s_d\\[1\\]\\[5\\]$_DFFE_PP_",
+    "fclk_in_ft1_i[0]",
+    "fclk_in_ft1_i[0]",
+    313.578,
+    1192.185
+  ],
+  "forwarded_gt220": 0
+}

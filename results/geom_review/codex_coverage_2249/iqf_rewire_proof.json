@@ -1,0 +1,51 @@
+{
+  "source": "/home/ubuntu/coord/tmp/codex-geom-2249/iqf/s81p_iqf__t1_bound.sv",
+  "source_sha256": "a54b42d9cf3703370e88a9e98fd9717d3d3cd3da98e474b652516540780d219e",
+  "out_sha256": "d461b47740f0634abc7c6149b8c0ac7f881e3df1db31ac0cbb8fcbce2574c555",
+  "substitutions": [
+    {
+      "bus": "ft1_i",
+      "old": "rst_n_t0",
+      "new": "rst_n_t12",
+      "source_depth": 6,
+      "start": 2099,
+      "end": 2107,
+      "plan_tap": 12,
+      "width": 1369
+    },
+    {
+      "bus": "idx_i0",
+      "old": "rst_n_t0",
+      "new": "rst_n_t13",
+      "source_depth": 6,
+      "start": 2388,
+      "end": 2396,
+      "plan_tap": 13,
+      "width": 514
+    },
+    {
+      "bus": "ql_i0",
+      "old": "rst_n_t0",
+      "new": "rst_n_t14",
+      "source_depth": 6,
+      "start": 2676,
+      "end": 2684,
+      "plan_tap": 14,
+      "width": 514
+    }
+  ],
+  "unchanged_other_bytes": true,
+  "added_data_cycles": 0,
+  "added_reset_cycles": 0,
+  "proof": {
+    "log": "LOCKSTEP checks=360 errors=0 wrong_depth_mutant=5",
+    "wrong_depth_parent": "rst_rl_11",
+    "scope": "actual relay network input equivalence; identical child source by substitution"
+  },
+  "remaining": "full bind authority, fresh PLACE and all physical gates remain open",
+  "fail_closed_controls": [
+    "wrong_contract",
+    "already_rewired",
+    "wrong_parent_depth"
+  ]
+}
