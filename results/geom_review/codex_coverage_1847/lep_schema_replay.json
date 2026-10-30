@@ -1,0 +1,31 @@
+{
+  "before": {
+    "errors": [
+      "land_slots: want {schema: land_slots/N, buses: {...}}"
+    ],
+    "rejected": [],
+    "capture_pins": 0,
+    "pin_unreg": 556,
+    "pin_reg_p90": 7.1,
+    "pin_reg_max": 324.4,
+    "unregistered_sample": [
+      "k_li_r",
+      "k_lo_d[0]",
+      "k_lo_d[100]",
+      "k_lo_d[101]",
+      "k_lo_d[102]",
+      "k_lo_d[103]",
+      "k_lo_d[104]",
+      "k_lo_d[105]"
+    ]
+  },
+  "after": {
+    "errors": [],
+    "rejected": [],
+    "capture_pins": 556,
+    "pin_unreg": 0,
+    "pin_reg_p90": 28.04,
+    "pin_reg_max": 337.98,
+    "unregistered_sample": []
+  }
+}

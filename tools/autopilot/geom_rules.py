@@ -406,9 +406,10 @@ def land_ring_captures(D, land, guard):
     -divide_by 1 forwarded clock outputs) are returned as kit-declared clock pins.  Missing / invalid metadata grants
     no exemption and is recorded in errors."""
     res = dict(caps={}, clock_exports=[], errors=[], rejected=[], buses=[])
-    if not isinstance(land, dict) or not str(land.get("schema", "")).startswith("land_slots/") \
+    if not isinstance(land, dict) or not (str(land.get("schema", "")).startswith("land_slots/")
+                                         or land.get("schema") == "opentallas.land_slots.v1") \
             or not isinstance(land.get("buses"), dict):
-        res["errors"].append("land_slots: want {schema: land_slots/N, buses: {...}}")
+        res["errors"].append("land_slots: want {schema: land_slots/N or opentallas.land_slots.v1, buses: {...}}")
         return res
     if not isinstance(guard, dict) or guard.get("verdict") != "PASS" or not isinstance(guard.get("flops", {}), dict):
         res["errors"].append(f"face_guard verdict {guard.get('verdict') if isinstance(guard, dict) else None} (want PASS)")

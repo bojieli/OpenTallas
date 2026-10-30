@@ -48,6 +48,17 @@ def test_declared_ring_via_mux_registers_at_farthest_slot(tmp_path):
     assert m['pin_reg_max'] == 400 and m['pin_reg_max'] > G.PINREG_HARD  # distance still judged
 
 
+def test_core_kit_v1_declaration_uses_the_same_capture_checks(tmp_path):
+    # Native HEAD LEP core kits publish this spelling with the same D/form buses.
+    land = dict(LAND, schema="opentallas.land_slots.v1")
+    D = dump(tmp_path, far=400)
+    assert reg(D, land=land) == reg(D)  # includes the farthest-slot distance gate
+    rejected, m = reg(D, land=land, guard=dict(GUARD, verdict="FAIL"))
+    assert rejected["errors"] and not rejected["caps"] and m["pins_unregistered"] == 3
+    rejected, _ = reg(D, land=dict(land, schema="opentallas.land_slots.v2"))
+    assert rejected["errors"] and not rejected["caps"]
+
+
 def test_undeclared_mux_input_and_ring_start_stay_unregistered(tmp_path):
     D = dump(tmp_path)
     _, m = reg(D, land={"schema": "land_slots/3", "buses": {}}, guard=GUARD)
