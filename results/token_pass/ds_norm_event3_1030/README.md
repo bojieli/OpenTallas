@@ -59,3 +59,19 @@ Selected emitted leaf boundary composition follow-up:
   failed on actual forwarded-clock cland_* input receivers, then on genuine c3
   leaf hierarchy. Fixed by reading actual landing connections and selecting the
   unique actual VN_b producer on each leaf's bound source-bit list; no aliases.
+
+Selected current issuer CTL transport follow-up:
+ControlView traces actual emitted seqhost/BK/C wrappers, their selected atomic
+ports, boundary receiver/delay/landing wires and all207 live CTL bits against
+actual bound source-bit order. Local components reuse the exact passing receipt
+b87bb91a only after all53 receipt source hashes match the current frozen emit
+source, selected defines match, and native seqhost SELR1/STATIC0/HOSTB0 agree.
+No legacy physical lane age or public-port-to-primitive alias is substituted.
+All16 paths pass: actual VO output to XR command65..201edges; current command
+register to XR command72..209edges (north egress7/south8 included). Wrong CTL
+source bit, wrong lane cycle/header and missing local receipt all fail closed.
+The initial parser expected dsdv_seq_host but actual retained native master is
+dsdv_seq_host_mux; it was corrected from emitted source,not aliased by name.
+control_routes.json records every component/transport and its current source.
+These are source-relative local transport facts only,no HOST/KS/reset/START,
+global producer/RSTD/Q-profile or final norm/GO schedule is adopted.

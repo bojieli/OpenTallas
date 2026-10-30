@@ -1,0 +1,1081 @@
+{
+ "schema": "opentallas.s81.selected_emitted_CTL_routes.v1",
+ "status": "PASS_SELECTED_EMITTED_CTL_TO_XR",
+ "source_top_sha256": "845befa157f712fb3f1b1ed755d439a0be1d0608f2bc5ddea6f3410613191a40",
+ "source_view_sha256": "9ecdd5d275448e364cf324ec6ea8a7a4341d8a623ec3c9b502849e0a4a2e2aac",
+ "source_parts": {
+  "s_0S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+   "sha256": "8eb0be035ae9bdcf953732e40152bcd426a603b9b30ac5e8bc538f268a74390d"
+  },
+  "s_0N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+   "sha256": "56bf22645decb515042b01e47ed69e3ea6ce2f0a22819533eadc509eaa9fada1"
+  },
+  "s_1S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv",
+   "sha256": "a43ad670339ef7e8b8c55fc79fa1616abb4af4d781a4cdce196d1732e5218e63"
+  },
+  "s_1N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv",
+   "sha256": "b06e5c5749e317980f70475d9fb97f7e5ba347925fd9ea8549884a50520c65d0"
+  },
+  "s_2S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+   "sha256": "9dc0ff1dac8bbb96578c57d0cc6cd99b90c42f9124d0f264b13154ed90555a71"
+  },
+  "s_2N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+   "sha256": "389a2861d1f78c1defad57d16a407412778920aa04b870332f2c8ae16ab662e9"
+  },
+  "s_3S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_iq_C__t1.sv",
+   "sha256": "91dc71245a5ab44565201e4ae1d9e6cbc34783c89068d9677f673f386b4aa6ab"
+  },
+  "s_3N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv",
+   "sha256": "36419d42e2e607658cc64e6cf2edef12d27ce4f442b97f2c74e08fc525baafd3"
+  },
+  "s_4S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv",
+   "sha256": "2aa3704e60469dfc03ade11ce42fbae35e20c541e4d488a66999ef7682248820"
+  },
+  "s_4N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv",
+   "sha256": "a440f5de896e973221bc24d47277d44849dba3cce0768edede93b2eac14cfe71"
+  },
+  "s_5S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+   "sha256": "450f9b82fb2de1fce1dcf94a980d29507fc00ead1eb99219b8d556213783e404"
+  },
+  "s_5N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+   "sha256": "ca727f502bbc83e9c5d2491a923b8579e8c18307d660f90b63a061c644b05947"
+  },
+  "s_6S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv",
+   "sha256": "9eed99b44c2f10f7a8b8da69342ac29a2d3f0be476176cb590bc7531c47aaf06"
+  },
+  "s_6N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv",
+   "sha256": "c5f6d2ece89ff2d5acaf473a63f029deb25e9b2f4df9185d80c01f27d13a1a32"
+  },
+  "s_7S_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+   "sha256": "e08b86f24cb0300d51ec2bcb69524567420d725347929a0b733329e2f2c7aca7"
+  },
+  "s_7N_C": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+   "sha256": "cdebf083ff918032998b510de1153c5b1d52cc39baa8e4c2737621ed6f2949b6"
+  },
+  "seqhost": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_seqhost__t1.sv",
+   "sha256": "9a28afde7353fa626a4c4c1a315a93d0fec53a38cc59a30db98582345f47c0bf"
+  },
+  "bk_sel": {
+   "file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_bk_sel__t2.sv",
+   "sha256": "424be597b48c8e649aee6894efc491d4274f88279dc3a942614fa3f3e41479c7"
+  }
+ },
+ "local_receipt_sha256": "b87bb91ae912e22c62c2112734a93ba63749c39e4ea8b93744e58ef3da073ecb",
+ "local_source_sha256": {
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstop.sv": "8b885d8021621ae9196b9dbd09a39ec265ce827a5d905db7c36a2f94c74b3dea",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+  "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9",
+  "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xg.sv": "140f9a5508b4fb44a4755f2b8add34efc5d839a088e9064e406ed34453afb5b6",
+  "physical/die_plan/s81/bind/source_modules/portfix178/ot_s81sl_xgt_xo.sv": "6a0f8b10b86647104f42dce6b861840a00c041e5677ae633a883491300ba910b",
+  "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv": "a7c2353f0e23a595bc79b4179fe0089cbe9033c4c42be6c0b25dcf7669e62479",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv": "758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv": "9fa7ee0971842e66d799cd1b0582ac35fa8fde1b1610ea28716779a58506999e",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "6bdcd4970e2b7c2ee8e28ea4e10edc6a74d096ed80f6aa0a663751a6f96b23c4",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "5ef19b8bf58472be345bce5e2a6edda0f3bb2514acf1c39defbc9cd0d5524e11",
+  "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "7a1ec9b22780ab7df4ad6144c2604ae9cf933f8ecdce75d1c7ac6d3ee7876a1e",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv": "62690ce62ff6db01c9fd353b3dca4945c4460ce542602c47c43ffffd47ec7549",
+  "rtl/link/ot_link_afifo.sv": "4f9c395577c94e477ef77a4cda39a752daa2e644f4a670b0b535bfbc1c51ea89",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "cc507efd4ca7ab486f9b9e34307551aee3d8b938a6819cfcf9950f0ff8b1bafa",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+  "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv": "30c0f16a6c90807cc99b6e0e3eb11b5b722844ddbccc89bd6dea659cb7e95f11",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+  "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv": "792f588ad90d481cd70edbc91a0a18b486194d5e4e63e4d08f6d2840bc50d200",
+  "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "ab2345cfab6981548fc6fdd6b70ff21bd7d6c91005beb04f90fe2e024e1c1140",
+  "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_l20s.sv": "47dfc9031ac3f2d0ec0fd176ea1d72e4c1fb4ad42e4c913b62ea0e75903dbedc",
+  "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_idx_tree.sv": "4b9717536bceab7bd2299c45206e276b04130dc049afc4f303bc07b8d61e2337",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_sel.sv": "fe4b7a7af42f9dcf57a49cddf68d59c97b2f3339698bb21c2d0d9056434fa2da",
+  "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv": "314a915a8d067fbc4103cf9b7188f1ba7d96270ee25f21d6d8d40769f76106fc",
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "57f568bf0cde9d0dfcf8ce9c2ffb18818471fd7a6e5ee7a30b806fcb03f905ea",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bksel_c.sv": "0d31c083eb7256c2b48364550351ef4c98d8041c02aae12c920f514e814c11fb",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "be1dd94cba0a80f39f1b82637ca925845ae85adc507f0a635026529ce78bc6c9",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv": "c3fd0c31291fc694200c2ec146cfb294c4bf3a042e7bfc73327e071e087ded7a",
+  "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "aa0cf52b30c907d061064c0653da384edb4d1f475e35e0c3e1526d5511c636cf",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv": "9aa2031ad6365b055e1befd12188b474e8f72f8a9934b3dbb255cab922810b82",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv": "8b95ede44bf070b8c1c47f03952b69d4c77763b6f433573c922302ef863f62b0",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_pp.sv": "ff63f419d7a2d7bbe20f254261a1fa554e6013eb86b66f57ccf7a48fdf05d029",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_pipeline.sv": "da2becfa97afb74a5d2c4767958d174a11865b2ba00ff1b25531e1329056ab29",
+  "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_ctl_half.sv": "62c40e5e1221e71291f3baaa4fb4c4c914fb7735d952888646fbe5b3a9462706",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv": "08b22f64bc851aa681eeb0717c501b9fd82ab69b21c3fe2953dbaea3cfe3c99d",
+  "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_g.sv": "f342ea07a3b8cae1d96efcef5bc785e16dc388ccb018c6778011135959d4fc54",
+  "rtl/dsrom_sys/s81_dv/unit/bk/dsdv_bk_v.sv": "d59aec7b71488764cb347cc1945894fd28bd0992db8d1603c148116343273b32",
+  "rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_guarded_mux.sv": "229d341255bfeeab33ee6205336f9448c66afc1361712799ff3fa7dfdd6c8ea8"
+ },
+ "paths": [
+  {
+   "sid": 0,
+   "slice": "u_s_0S",
+   "seqhost_vo_output_to_XR_command_edges": 201,
+   "calendar_command_to_XR_command_edges": 209,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    5,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 1,
+   "slice": "u_s_0N",
+   "seqhost_vo_output_to_XR_command_edges": 92,
+   "calendar_command_to_XR_command_edges": 99,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    5,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 2,
+   "slice": "u_s_1S",
+   "seqhost_vo_output_to_XR_command_edges": 194,
+   "calendar_command_to_XR_command_edges": 202,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    5,
+    2,
+    2,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 3,
+   "slice": "u_s_1N",
+   "seqhost_vo_output_to_XR_command_edges": 85,
+   "calendar_command_to_XR_command_edges": 92,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    5,
+    2,
+    2,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 4,
+   "slice": "u_s_2S",
+   "seqhost_vo_output_to_XR_command_edges": 190,
+   "calendar_command_to_XR_command_edges": 198,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 5,
+   "slice": "u_s_2N",
+   "seqhost_vo_output_to_XR_command_edges": 81,
+   "calendar_command_to_XR_command_edges": 88,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 6,
+   "slice": "u_s_3S",
+   "seqhost_vo_output_to_XR_command_edges": 183,
+   "calendar_command_to_XR_command_edges": 191,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 7,
+   "slice": "u_s_3N",
+   "seqhost_vo_output_to_XR_command_edges": 74,
+   "calendar_command_to_XR_command_edges": 81,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    2,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 8,
+   "slice": "u_s_4S",
+   "seqhost_vo_output_to_XR_command_edges": 174,
+   "calendar_command_to_XR_command_edges": 182,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 9,
+   "slice": "u_s_4N",
+   "seqhost_vo_output_to_XR_command_edges": 65,
+   "calendar_command_to_XR_command_edges": 72,
+   "parts": [
+    60,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 10,
+   "slice": "u_s_5S",
+   "seqhost_vo_output_to_XR_command_edges": 186,
+   "calendar_command_to_XR_command_edges": 194,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 11,
+   "slice": "u_s_5N",
+   "seqhost_vo_output_to_XR_command_edges": 77,
+   "calendar_command_to_XR_command_edges": 84,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 12,
+   "slice": "u_s_6S",
+   "seqhost_vo_output_to_XR_command_edges": 190,
+   "calendar_command_to_XR_command_edges": 198,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    5,
+    2,
+    2,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 13,
+   "slice": "u_s_6N",
+   "seqhost_vo_output_to_XR_command_edges": 81,
+   "calendar_command_to_XR_command_edges": 88,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    5,
+    2,
+    2,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 14,
+   "slice": "u_s_7S",
+   "seqhost_vo_output_to_XR_command_edges": 197,
+   "calendar_command_to_XR_command_edges": 205,
+   "parts": [
+    106,
+    3,
+    60,
+    2,
+    3,
+    0,
+    2,
+    5,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  },
+  {
+   "sid": 15,
+   "slice": "u_s_7N",
+   "seqhost_vo_output_to_XR_command_edges": 88,
+   "calendar_command_to_XR_command_edges": 95,
+   "parts": [
+    60,
+    2,
+    3,
+    0,
+    2,
+    5,
+    2,
+    2,
+    2,
+    5,
+    2,
+    3
+   ],
+   "scope": "relative to actual command register edge; no HOST/KS/reset/physical START date"
+  }
+ ],
+ "checked_transport_fields": [
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4S_C__s_3S_C"
+   ]
+  },
+  {
+   "source": "u_s_3S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_2S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_3S_C__s_2S_C"
+   ]
+  },
+  {
+   "source": "u_s_2S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_1S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_2S_C__s_1S_C"
+   ]
+  },
+  {
+   "source": "u_s_1S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_0S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_1S_C__s_0S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4N_C__s_3N_C"
+   ]
+  },
+  {
+   "source": "u_s_3N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_2N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_3N_C__s_2N_C"
+   ]
+  },
+  {
+   "source": "u_s_2N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_1N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_2N_C__s_1N_C"
+   ]
+  },
+  {
+   "source": "u_s_1N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_0N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_1N_C__s_0N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4S_C__s_3S_C"
+   ]
+  },
+  {
+   "source": "u_s_3S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_2S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_3S_C__s_2S_C"
+   ]
+  },
+  {
+   "source": "u_s_2S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_1S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_2S_C__s_1S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4N_C__s_3N_C"
+   ]
+  },
+  {
+   "source": "u_s_3N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_2N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_3N_C__s_2N_C"
+   ]
+  },
+  {
+   "source": "u_s_2N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_1N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_2N_C__s_1N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4S_C__s_3S_C"
+   ]
+  },
+  {
+   "source": "u_s_3S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_2S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_3S_C__s_2S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4N_C__s_3N_C"
+   ]
+  },
+  {
+   "source": "u_s_3N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_2N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_3N_C__s_2N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3S.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4S_C__s_3S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_w",
+   "target": "u_s_3N.xg",
+   "target_port": "ri_e",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_4N_C__s_3N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_e",
+   "target": "u_s_5S.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_4S_C__s_5S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_e",
+   "target": "u_s_5N.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_4N_C__s_5N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_e",
+   "target": "u_s_5S.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_4S_C__s_5S_C"
+   ]
+  },
+  {
+   "source": "u_s_5S.xg",
+   "source_port": "ro_e",
+   "target": "u_s_6S.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_5S_C__s_6S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_e",
+   "target": "u_s_5N.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_4N_C__s_5N_C"
+   ]
+  },
+  {
+   "source": "u_s_5N.xg",
+   "source_port": "ro_e",
+   "target": "u_s_6N.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_5N_C__s_6N_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_s",
+   "target": "bk",
+   "target_port": "vi_n",
+   "bits": 207,
+   "edges": 106,
+   "lanes": [
+    "xtier__seqhost__bk_sel"
+   ]
+  },
+  {
+   "source": "bk",
+   "source_port": "vo_s",
+   "target": "u_s_4S.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__bk_sel__s_4S_C"
+   ]
+  },
+  {
+   "source": "u_s_4S.xg",
+   "source_port": "ro_e",
+   "target": "u_s_5S.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_4S_C__s_5S_C"
+   ]
+  },
+  {
+   "source": "u_s_5S.xg",
+   "source_port": "ro_e",
+   "target": "u_s_6S.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_5S_C__s_6S_C"
+   ]
+  },
+  {
+   "source": "u_s_6S.xg",
+   "source_port": "ro_e",
+   "target": "u_s_7S.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_6S_C__s_7S_C"
+   ]
+  },
+  {
+   "source": "seqhost",
+   "source_port": "vo_n",
+   "target": "u_s_4N.xg",
+   "target_port": "vi",
+   "bits": 207,
+   "edges": 60,
+   "lanes": [
+    "xtier__seqhost__s_4N_C"
+   ]
+  },
+  {
+   "source": "u_s_4N.xg",
+   "source_port": "ro_e",
+   "target": "u_s_5N.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_4N_C__s_5N_C"
+   ]
+  },
+  {
+   "source": "u_s_5N.xg",
+   "source_port": "ro_e",
+   "target": "u_s_6N.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 2,
+   "lanes": [
+    "xring__s_5N_C__s_6N_C"
+   ]
+  },
+  {
+   "source": "u_s_6N.xg",
+   "source_port": "ro_e",
+   "target": "u_s_7N.xg",
+   "target_port": "ri_w",
+   "bits": 207,
+   "edges": 5,
+   "lanes": [
+    "xring__s_6N_C__s_7N_C"
+   ]
+  }
+ ],
+ "controls_caught": {
+  "wrong_CTL_payload_bit": "actual CTL source bit differs: (['leaf', 'u_seqhost.u_seqhost', 'vo_n', 1], ['leaf', 'u_seqhost.u_seqhost', 'vo_n', 0])",
+  "wrong_CTL_lane_age": "selected native CTL lane/header identity differs",
+  "missing_selected_local_receipt": "selected local control source/receipt identity required before composing ages"
+ },
+ "physical_START_qualified": false,
+ "global_exchange_qualified": false,
+ "full_token": false,
+ "source_adopted": false,
+ "added_rtl_cycles": 0
+}
