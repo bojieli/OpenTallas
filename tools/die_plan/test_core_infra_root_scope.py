@@ -224,14 +224,15 @@ foreach {name val} {
 } {dict set ::attrs $name $val;interp alias {} $name {} dbobj $name}
 dict set ::links na nleaf;dict set ::links ny nnew;dict set ::links pc nnew
 '''
-    script+='proc clock_tree_synthesis {args} {set ::cts_args $args;'+change+';return CTS_OK}\n'
+    script+='proc clock_tree_synthesis {args} {lappend ::cts_calls $args;set ::cts_args $args;if {[lsearch -exact [lindex $args end] phy_leaf]>=0} {'+change+'};return CTS_OK}\n'
     script+=CI.emit_cts_tcl(dict(core_tree=tree))
-    script+='if {[catch {clock_tree_synthesis} msg]} {puts $msg} else {puts "RESULT $msg TARGETS $::cts_args"}\n'
+    script+='if {[catch {clock_tree_synthesis} msg]} {puts $msg} else {puts "RESULT $msg TARGETS $::cts_args CALLS $::cts_calls"}\n'
     out=_tcl(script)
     if cross_root:
         assert 'OT_CORE_SCOPE_CTS_DOMAIN' in out
     else:
-        assert 'RESULT CTS_OK TARGETS -clk_nets {core_in phy_leaf}' in out
+        assert 'RESULT CTS_OK TARGETS -clk_nets core_in' in out
+        assert '{-clk_nets phy_leaf} {-clk_nets core_in}' in out
 
 
 def test_master_slice_accepts_only_explicit_complete_scoped_form():
@@ -299,3 +300,26 @@ if {[catch {clock_tree_synthesis} msg]} {puts $msg} else {puts BAD_OMISSION_ACCE
     out=_tcl(script)
     assert 'OT_CORE_SCOPE_UNDECLARED_ROOT' in out
     assert 'BAD_OMISSION_ACCEPTED' not in out
+
+
+@pytest.mark.skipif(shutil.which('tclsh') is None, reason='tclsh required')
+def test_late_plan_flags_do_not_change_ordinary_root_cts_method():
+    tree=dict(clock_port='clk_phy',root_scope=dict(ordinary_roots=['clk'],ordinary_cts_roots=['clk']),cts_open=['planned_buf'])
+    script=DB_FIXTURE+CI.emit_root_scope_tcl(tree)
+    script+='''
+dict set ::attrs nleaf dt 0
+proc ::ot_ci_late_tritoncts {args} {lappend ::base_calls $args;return CTS_OK}
+proc ::clock_tree_synthesis {args} {
+ # Stand-in for the existing late plan wrapper's mandatory flag changes.
+ set k [lsearch -exact $args -repair_clock_nets]
+ if {$k>=0} {set args [lreplace $args $k $k]}
+ lappend args -no_insertion_delay
+ return [::ot_ci_late_tritoncts {*}$args]
+}
+'''
+    script+=CI.emit_cts_tcl(dict(core_tree=tree))
+    script+='clock_tree_synthesis -repair_clock_nets\nforeach call $::base_calls {puts "BASE $call"}\n'
+    out=_tcl(script)
+    assert 'BASE -clk_nets phy_leaf -no_insertion_delay' in out
+    assert 'BASE -repair_clock_nets -clk_nets core_in' in out
+    assert 'BASE -clk_nets {core_in phy_leaf}' not in out
