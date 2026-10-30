@@ -1,0 +1,17 @@
+22c22
+<   {u_cland_collect_rst_rl_1 {457.92000 834.84000 462.24000 839.16000} collector:rst_rl_1}
+---
+>   {u_cland_collect_rst_rl_1 {455.22000 824.76000 464.94000 834.48000} collector:rst_rl_1}
+28c28
+<   {u_cland_collect_rst_rl_2 {457.92000 834.84000 462.24000 839.16000} collector:rst_rl_2}
+---
+>   {u_cland_collect_rst_rl_2 {455.22000 824.76000 464.94000 834.48000} collector:rst_rl_2}
+94a95,102
+> foreach cland_override_prefix {u_cland_collect_rst_rl_1 u_cland_collect_rst_rl_2} {
+>  set cland_override_found 0
+>  foreach cland_override_i [$ff_blk getInsts] {
+>   if {[regexp [format {(^|[/.])%s[/.]} $cland_override_prefix] [$cland_override_i getName]]} {set cland_override_found 1; break}
+>  }
+>  if {!$cland_override_found} {error "OT_CLAND unused group rectangle override $cland_override_prefix"}
+> }
+> unset cland_override_prefix cland_override_found
