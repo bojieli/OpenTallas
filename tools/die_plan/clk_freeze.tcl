@@ -320,3 +320,32 @@ proc ot_clk_freeze_assert {tag} {
   }
   puts "OT_CLK_FREEZE $tag OK: all [llength $::ot_clk_frozen_nets] clock nets carry their pre-ECO FIXED wire (restored [llength $restored] destroyed by GRT updateDirtyNets: [lrange $restored 0 19][expr {[llength $restored] > 20 ? { ...} : {}}])"
 }
+
+# Restore ORIGINAL frozen-clock parasitics after native estimate_parasitics, retaining its DATA RC in memory.
+# Opt-in: callers supply a dict of exact scene/corner names to prequalified CLOCK-ONLY SPEFs, e.g.
+#   ot_clk_restore_parasitics [dict create tc original_clock_only.spef BC original_clock_only.spef]
+# Names are case-sensitive and must be the scenes populated by the native estimator. Clock wires/cells/masters
+# must still match the original SPEF (use the existing freeze/geometry audit). This does not qualify a changed clock.
+#
+# Installed OpenROAD 6cb3f2b704 / OpenSTA 509913b: native global-route estimation creates one dataset per scene name.
+# read_spef -corner alone REPLACES that dataset, silently losing the native DATA annotations. Explicit -name reuses
+# it and replaces only the SPEF's clock nets. -increment is parsed but unused; do not substitute it for -name.
+# No SPEF unit conversion, native DATA export, terminal-cap reconstruction, or coupling projection is needed.
+proc ot_clk_restore_parasitics {spef_by_corner} {
+  if {![dict size $spef_by_corner]} {
+    error "ot_clk_restore_parasitics needs at least one exact corner/SPEF pair"
+  }
+  # Validate every input before any annotation changes. In particular, do not let -name silently CREATE a new
+  # unbound dataset: the annotation report raises STA-1560 when the existing native dataset is absent.
+  foreach {corner spef} $spef_by_corner {
+    if {$corner eq "" || ![file isfile $spef] || ![file readable $spef]} {
+      error "ot_clk_restore_parasitics: unreadable clock SPEF '$spef' for corner '$corner'"
+    }
+    report_parasitic_annotation -name $corner
+  }
+  foreach {corner spef} $spef_by_corner {
+    read_spef -name $corner -corner $corner $spef
+    puts "OT_CLK_RC_RESTORE corner $corner dataset $corner clock_spef $spef"
+  }
+  return [dict keys $spef_by_corner]
+}
