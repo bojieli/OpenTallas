@@ -1,14 +1,14 @@
 {
 "module": "dsdv_bk_g",
-"lef": "physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 528 constant pins dropped (inputs/const_pins_dropped.json)",
-"pinhash": "144195efc3c7",
+"lef": "physical/die_plan/s81/cores/legacy/lef/dsdv_bk_g.lef",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 528 constant pins dropped (inputs/const_pins_dropped.json); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): clock clk[0] M3(104.985,0.0685) -> M5(104.988,0.24) 0.048x0.480 edge rectangle on the M5 track (GEOM-21); plan LEF = plan-owned copy of physical/ref_tile/s81dvbk_g2/views/dsdv_bk_g/dsdv_bk_g.lef (only PIN clk[0] differs)",
+"pinhash": "682a80364473",
 "pins": [
 {
 "name": "clk[0]",
-"layer": "M3",
-"x": 104.985,
-"y": 0.0685
+"layer": "M5",
+"x": 104.988,
+"y": 0.24
 },
 {
 "name": "eg_n[0]",

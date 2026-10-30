@@ -1,0 +1,6 @@
+DIE-S81-33 kv_leaf__t2 macro instance census (10-29). Method: verilator 5.032 --json-only on the S81-KITS-A gen2 kit RTL
+(intel2 s81-kits-a/gen2/ot_s81sl_kv_leaf__t2, as-built defines = DIE-S81-32/MACRO hier.sh), vhier.py walks MODULE/CELL/BEGIN.
+Method check: kv_leaf__t1 gives the same 7 instance paths as the yosys hierarchy+flatten list (CHECKED).
+kv_leaf__t2: 183 macros = 144x ot_sram_1r1w2c_32x64_m1 + 32x ot_sram_1r1w_64x512_m1_r2c2 + 5x 128x256_r2c2 + 2x 512x128_m4_r0c0;
+macro area 535,415 um2 = 0.302 of the 1442.88x1226.88 outline. DIE-S81-32 place_sites.py (ft-corridor/band keepouts +10.8)
+places 16/183 (sites_try.png): does NOT fit under the site rule -> COORD ASK, not in the fix-only event.
