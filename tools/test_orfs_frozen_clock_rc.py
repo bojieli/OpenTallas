@@ -147,7 +147,7 @@ def test_unloaded_port_alias_retains_full_identity(tmp_path):
     guard=ROOT/'die_plan/frozen_clock_rc.tcl'
     env=dict(os.environ,GUARD=str(guard),OUT=str(tmp_path),CHECKER=str(CHECKER))
     script=r'''source $::env(GUARD)
-set ::ot_clk_frozen 1;set ::ot_clk_frozen_nets {clk clk_in};set ::restored 0
+set ::ot_clk_frozen 1;set ::ot_clk_frozen_nets {clk};set ::restored 0
 set ::original "#CLKDUMP pre\nNET\tclk\tCLOCK\t3\t64\t0:M1 4:10 4:20\nPIN\tclk\tbuf/Y ff/CLK\nNET\tclk_in\tCLOCK\t0\t\t\nPIN\tclk_in\tPORT:clk_in\nINST\tbuf\tBUF_A\t10\t20\tR0\tLOCKED\nINST\tff\tDFF\t20\t20\tR0\tLOCKED"
 set ::current $::original
 proc ::ot_clk_freeze_assert {tag} {}
