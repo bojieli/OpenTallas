@@ -108,3 +108,27 @@ boundarywords/5controls. link_expert.py now defaults to that capacity-valid chai
 and writes expert_tail/ loads, preserving prior artifacts; native33072word input
 transport and wrongepoch control pass. Use scratch-base0x1D11000000 in the
 pipeline regeneration above. No actual numeric/RTL/G5/rate claim changes.
+
+All40 dynamic expert regions bounded (next source milestone)
+
+vm_expert_entry.py now derives the footprint from each actual native block,
+rather than hard-coded L14 intervals. It preserves original aliases and native
+rsel semantics, includes implicit full36-ID I+L streams and table rows, bounds
+indexed VM score reads by the actual384-expert UNION contract, and accounts for
+e-based A AND O on the final w2 record (emask17; the first two use emask16).
+Unknown union shape, row-table pointer and indexed extent fail closed.
+
+All40 actual IDX.UNION entries through the third rsel SM and final collective
+lower to bounded source components (expert_all/components.json + bytecode).
+VM requirements are100416..255168 words, all below262144. The largest component
+has6976words left; no other live values or numerical engine state are assumed
+resident there. Inputs/outputs still require native publication around each
+component before installation. New generic layouts coexist with the previously
+qualified fixed L14 layout; prior artifacts are not overwritten.
+
+check_expert_all.py compares33564 actual expanded record/slot/descriptor and
+indexed payload cases across3 profiles per component, retaining all source
+arithmetic fields. It also refuses3 unqualified dynamic mutants. The existing
+64-profile representative check still passes on the new derived layout101152.
+This closes the expert-address/selection footprint obstacle for ALL40 regions,
+not full numerical replay, whole-token liveness, mutable-HBM execution or G5.
