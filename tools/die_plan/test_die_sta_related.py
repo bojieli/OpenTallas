@@ -702,3 +702,32 @@ def test_source_root_is_not_an_implicit_droop_region(monkeypatch):
     assert partial('a', 'b', 'hold') == base('a', 'b', 'hold')
     # A separately provided physical PDN-region binding may legitimately establish shared droop.
     assert explicit('a', 'b', 'hold') < base('a', 'b', 'hold')
+
+
+def test_exact_canonical_period_and_noncanonical_policy():
+    import die_sta
+    assert R.PERIOD_PS == die_sta.PERIOD_PS == 833.0
+    assert R.period_policy(833.0)["verdict"] == "PASS"
+    for period in (833.333, 833.0000001, 832.9999999, float("inf"), float("nan")):
+        gate = {"intra": {"verdict": "PASS"}, "seam": {"verdict": "FAIL"},
+                "landed": {"verdict": "N/A"}}
+        R.apply_period_policy(gate, period)
+        assert gate["period_policy"]["verdict"] == "FAIL"
+        assert gate["intra"]["verdict"] == "DIAGNOSTIC"
+        assert gate["intra"]["timing_verdict"] == "PASS"
+        assert gate["seam"]["verdict"] == "FAIL"
+        assert gate["landed"]["verdict"] == "N/A"
+    gate = {"intra": {"verdict": "PASS"}}
+    R.apply_period_policy(gate, 833.0)
+    assert gate["intra"] == {"verdict": "PASS"}
+
+
+def test_period_boundary_can_change_setup_sign():
+    # An override 0.333ps slower must not hide a failing canonical setup edge.
+    taps = {"a": dict(late_ps=1000.0, early_ps=1000.0, cppr_node="h0"),
+            "b": dict(late_ps=300.4, early_ps=300.4, cppr_node="h0")}
+    canonical = R.time_class([("a", "b", "p")], taps, {"h0": 0.0}, REG,
+                             20.0, R.PERIOD_PS, 60.0, 25.0)
+    slower = R.time_class([("a", "b", "p")], taps, {"h0": 0.0}, REG,
+                          20.0, 833.333, 60.0, 25.0)
+    assert canonical["worst_setup_slack_ps"] < 0 <= slower["worst_setup_slack_ps"]
