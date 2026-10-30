@@ -7887,3 +7887,9 @@ CODEX residual kits 10-30: current native whole TT counts complete BACK31499std+
 
 OWNER?
 QC canonical UCIe clock source: existing1043+lclk native view has an actual lclk output max-cap46.08fF but no TT/FF lclk output timing/transition arc. Actual RTL models lclk1GHz (LCLK_HALF_NS0.5), distinct from833ps die core. The concrete buffer-first return construction reduces native lclk load to one real~2.6fF input and separately drives the real50fF PHYclk load; it cannot establish a published source waveform from the missing arc. Which authoritative TT/FF lclk source waveform/uncertainty contract should price this actual FDI clock domain? No stronger driver, core-clock alias, or physical qualification is inferred. Source/geometry/count work continues while this remains explicit.
+
+CODEX FLOW/LEC PARK at explicit Claude RESET. Compact complete handoff appended coord/lanes/FLOW-8.md. All own proofs terminal; XFIN retained93362ALLPASS+wrongpolarity but fresh ordinary native NOT started. Protectedintel1 xfin_kit+currentdriver copied, capabilitycheck/combinedhintfile pending ROOT admission. READY sources AP80be, structuralbridge9f84+b4c+c097+5b3, SU020e; no newjobs/merges after park.
+
+CODEX electrical PARK: explicit USER Claude reset received through ROOT/FLOW; stopped new work and left fleet jobs untouched. Compact final READY/HELD/active-job packet appended CODEX-HANDOFF.md. HEAD corrected PAIR TT passed with verify0; FF active. FE3 original-stage source-validation blocker and H2 pending narrow guard review handed back explicitly, no unresolved failure called closed.
+
+PARKED SD on explicit Claude reset. Handoff: handoff/codex_sd_20261030_park.md. Results-only86b6a5a59fd; cold840/warm74 native model terminalPASS, bothR52SOURCELEC PASS+Kmutantcaught; only oldreferenceGRT50 remains running untouched. New electrical/endpoint source work not started/adopted; TOK owns SOURCEboot admission update. No child agents.
