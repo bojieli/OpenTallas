@@ -70,7 +70,7 @@ module ot_vms_slice_static #(
     wire [265:0] ri0,ri1;
     wire [2:0] wk01,wk10;
     wire ack01,ack10;
-    ot_vms_hub_static #(.NC(NC),.CW(CW)) u_hub(
+    ot_vms_hub_static #(.NC(NC),.CW(CW),.LOCAL_RETURN_REGIONS(LOCAL_CTRL_REPLICAS)) u_hub(
         .clk(clk_hub),.rst_n(rst_n),.sid(sid),.cq(hcq),.cr(hcr),
         .client_seq(client_seq),.response_enable(response_enable),.response_seq(response_seq),
         .bank_enable(bank_enable),.bank_client(bank_client),

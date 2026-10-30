@@ -20,6 +20,7 @@
 module ot_vms_hub_static #(
     parameter integer NC=4,
     parameter integer PHYSICAL_RING=1,
+    parameter integer LOCAL_RETURN_REGIONS=0,
     parameter integer CW=(NC<1)?1:$clog2(NC+1),
     parameter integer MUT=0 // 1 wrong bank; 2 wrong tag; 3 ignores select; 4 waits for missing ack
 )(
@@ -60,6 +61,20 @@ module ot_vms_hub_static #(
     reg [2:0] expected[0:N-1][0:3], seen[0:N-1][0:3];
     reg [2:0] arrivals[0:N-1][0:3];
     reg [255:0] returned_data[0:N-1][0:3];
+    wire [N*4*256-1:0] local_return_data;
+    generate if(LOCAL_RETURN_REGIONS != 0) begin : local_returns
+        for(genvar chunk=0;chunk<4;chunk=chunk+1) begin : region
+            wire [N*4*64-1:0] words;
+            (* keep=1, keep_hierarchy=1, dont_touch=1 *)
+            ot_vms_hub_return_region #(.N(N),.CHUNK(chunk)) u_return(
+                .clk(clk),.rst_n(rst_n),.pr(pr),.cco0(cco0),.cco1(cco1),.words(words));
+            for(genvar slot=0;slot<N*4;slot=slot+1) begin : slot_data
+                assign local_return_data[slot*256+chunk*64+:64]=words[slot*64+:64];
+            end
+        end
+    end else begin : no_local_returns
+        assign local_return_data='0;
+    end endgenerate
     reg [N*274-1:0] cr_next;
     reg [8*285-1:0] pq_next;
     reg [289:0] cw_next,ccw_next;
@@ -173,7 +188,10 @@ module ot_vms_hub_static #(
             if(q[335:325]!=0||q[308:304]!=0||(q[324]&&q[323:322]!=0)||(c==NC&&!q[324]&&q[323:322]!=me)) fault[2]=1;
             for(integer w=0;w<8;w=w+1) if(q[336]&&q[16+4*w+:4]!={4{wm[w]}}) fault[1]=1;
         end
-        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) begin arrivals[c][k]=0; returned_data[c][k]=0; end
+        for(c=0;c<N;c=c+1) for(k=0;k<4;k=k+1) begin
+            arrivals[c][k]=0;
+            returned_data[c][k]=(LOCAL_RETURN_REGIONS!=0) ? local_return_data[(c*4+k)*256+:256] : 256'd0;
+        end
         // Tag-decode demultiplex only; no response priority or ready signals.
         for(b=0;b<10;b=b+1) begin
             if(b<8) begin
@@ -189,7 +207,7 @@ module ot_vms_hub_static #(
                 else begin
                     if(!active[rc][rs]||writes[rc][rs]!=rp[256]) fault[0]=1;
                     arrivals[rc][rs]=arrivals[rc][rs]+3'd1;
-                    returned_data[rc][rs]=returned_data[rc][rs]|rp[255:0];
+                    if(LOCAL_RETURN_REGIONS==0) returned_data[rc][rs]=returned_data[rc][rs]|rp[255:0];
                 end
             end
         end
@@ -239,6 +257,43 @@ module ot_vms_hub_static #(
             tags[c][sq[c*2+:2]]<=qr[c*338+:16];
             response_data[c][sq[c*2+:2]]<=0;
         end
+    end
+endmodule
+// Per64-bit region: capture exactly the original return input edge, then
+// decode only local payload bits. Preserved hierarchy prevents re-merging tag
+// registers across regions (keep on net names alone is insufficient).
+(* keep_hierarchy=1 *)
+module ot_vms_hub_return_region #(parameter integer N=1, CHUNK=0)(
+    input wire clk,rst_n,
+    input wire [8*266-1:0] pr,
+    input wire [263:0] cco0,cco1,
+    output reg [N*4*64-1:0] words
+);
+    reg [63:0] data_q[0:9];
+    reg [3:0] client_q[0:9];
+    reg [1:0] seq_q[0:9];
+    reg [9:0] valid_q;
+    always @(posedge clk) begin
+        for(integer b=0;b<8;b=b+1) begin
+            data_q[b]<=pr[b*266+CHUNK*64+:64];
+            client_q[b]<=pr[b*266+260+:4];seq_q[b]<=pr[b*266+256+:2];
+        end
+        data_q[8]<=cco0[CHUNK*64+:64];data_q[9]<=cco1[CHUNK*64+:64];
+        client_q[8]<=cco0[262:259];client_q[9]<=cco1[262:259];
+        seq_q[8]<=cco0[258:257];seq_q[9]<=cco1[258:257];
+    end
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)valid_q<=0;
+        else begin
+            for(integer b=0;b<8;b=b+1)valid_q[b]<=pr[b*266+265];
+            valid_q[8]<=cco0[263];valid_q[9]<=cco1[263];
+        end
+    always @* begin
+        words=0;
+        for(integer b=0;b<10;b=b+1)
+            if(valid_q[b] && int'(client_q[b])<N)
+                words[(int'(client_q[b])*4+int'(seq_q[b]))*64+:64]=
+                    words[(int'(client_q[b])*4+int'(seq_q[b]))*64+:64]|data_q[b];
     end
 endmodule
 `default_nettype wire
