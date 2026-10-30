@@ -123,3 +123,32 @@ def test_standalone_die_sta_bundle_ships_component_helper(tmp_path):
     import signoff
     signoff.copy_signoff_bundle(tmp_path, extra=("die_sta_related.py",))
     assert (tmp_path/"clock_components.py").is_file()
+
+
+def test_start_stages_retain_measured_components_and_source_wire(tmp_path):
+    import start_stage_emit as E
+    p, net, arr = vehicle(tmp_path)
+    net.write_text(net.read_text().replace('endmodule', 'assign st_root = root;\nassign st_buf = t;\nendmodule'))
+    arr.write_text(arr.read_text()+'T st_root 3 2\nF st_root 4 3\nT st_buf 125 112\nF st_buf 141 123\n')
+    p = C.annotate(p, net, arr)
+    p['node_stages']={'h':1,'h0':2}
+    d=tmp_path/'proof';d.mkdir()
+    (d/'tap_arrivals_TT.json').write_text(json.dumps(p))
+    manifest={'stages':[
+        dict(region='st:h',clock_source_path='__source__',clock_source_root=True,clock_source_stages=0,
+             clock_port='st_root',clock_pin_xy_um=[1,1],node_cell='i0',id='root'),
+        dict(region='st:h0',clock_source_path='h0',clock_source_cell='p0',clock_port='st_buf',
+             clock_pin_xy_um=[2,2],node_cell='p0',id='buf')]}
+    with pytest.raises(E.StageError,match='requires --clock-netlist'):
+        E.proof_with_stages(d,manifest,{'TT':arr},tmp_path/'missing_net')
+    result=E.proof_with_stages(d,manifest,{'TT':arr},tmp_path/'complete',net)
+    proof=json.loads((result/'tap_arrivals_TT.json').read_text())
+    m,t=C.apply(proof,{v['port']:v for v in proof['taps']},'TT','spice_cell')
+    assert t['__st__h']['late_ps']==3  # measured root-input wire, no cell calibration
+    assert m['node_late_ps']['__source__']==0
+    assert t['__st__h0']['late_ps']==pytest.approx(t['t']['late_ps'])
+    assert [v['master'] for v in t['__st__h0']['clock_components']]==[B,C.INV]
+    # A stale stage alias or missing actual edge must fail rather than inherit node delay.
+    arr.write_text(arr.read_text().replace('F st_buf 141 123\n',''))
+    with pytest.raises(ValueError,match='missing driven both-edge tap'):
+        E.proof_with_stages(d,manifest,{'TT':arr},tmp_path/'mutant',net)
