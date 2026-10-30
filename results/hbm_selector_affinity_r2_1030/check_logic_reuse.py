@@ -25,8 +25,9 @@ f=json.loads((k/'freeze.json').read_text())
 assert f['design']==r['new_top']==r['old_top']
 assert (f.get('params') or {})==r['new_params']==r['old_params']
 c=(k/'config.mk').read_text()
+assert re.search(r'^export DESIGN_NAME = (.*)$',c,re.M).group(1).strip()==r['formal_top'], 'formal top changed'
 assert re.search(r'^export VERILOG_FILES = (.*)$',c,re.M).group(1).split()==r['verilog_files'], 'RTL_FILES changed'
 defines=re.search(r'^export VERILOG_DEFINES = (.*)$',c,re.M).group(1).split()
 assert defines==['-D'+d for d in r['new_defines']]
 assert r['new_defines']==r['old_defines']
-print('LEC_REUSE_EQ: complete RTL/top/params/defines and original formal gold/gate proof unchanged')
+print('LEC_REUSE_EQ: complete RTL/top/params/defines and original formal gold/gate proof unchanged; gold_frontend='+str(r['gold_frontend']))

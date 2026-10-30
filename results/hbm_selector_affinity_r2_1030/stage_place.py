@@ -3,7 +3,9 @@
 import sys,subprocess,importlib.util,json
 from pathlib import Path
 repo,A,K=map(Path,sys.argv[1:4]);here=Path(__file__).resolve().parent
-subprocess.run([sys.executable,str(here/'qualify_logic_reuse.py'),str(A),str(K)],check=True)
+cmd=[sys.executable,str(here/'qualify_logic_reuse.py'),str(A),str(K)]
+if len(sys.argv)>4:cmd.append(sys.argv[4])
+subprocess.run(cmd,check=True)
 H=repo/'physical/die_plan/hbm_arch_cores';sys.path.insert(0,str(H))
 sp=importlib.util.spec_from_file_location('role_gen',H/'gen_core_kit_hbm.py');G=importlib.util.module_from_spec(sp);sp.loader.exec_module(G)
 src=(H/'run_kit_hbm.sh').read_text();needle='python3 -I /work/lec.py /work --netlist'

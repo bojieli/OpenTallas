@@ -5,7 +5,7 @@ from pathlib import Path
 repo,R=map(Path,sys.argv[1:3]);H=repo/'physical/die_plan/hbm_arch_cores';sys.path.insert(0,str(H))
 sp=importlib.util.spec_from_file_location('role_gen',H/'gen_core_kit_hbm.py');G=importlib.util.module_from_spec(sp);sp.loader.exec_module(G)
 ks=sorted((R/'kits').glob('*-roles6_*'));assert len(ks)==2
-model=Path(sys.argv[3]) if len(sys.argv)>3 else R/'model6_updated';revision=sys.argv[4] if len(sys.argv)>4 else 'v2';s=json.load(open(model/'summary.json'))
+model=Path(sys.argv[3]) if len(sys.argv)>3 else R/'model6_disjoint';revision=sys.argv[4] if len(sys.argv)>4 else 'v3';s=json.load(open(model/'summary.json'))
 assert not s['macro_halo_island_collisions'] and s['min_same_column_macro_channel_um']>=10.8
 assert s['station_box_bound_gt405']==0 and s['direct_same_quarter_sram_rd_to_wd_bound_um']<=405
 assert not s.get('region_overlap_pairs',[])
