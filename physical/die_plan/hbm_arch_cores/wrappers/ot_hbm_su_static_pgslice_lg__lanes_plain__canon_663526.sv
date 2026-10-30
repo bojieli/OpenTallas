@@ -72,7 +72,7 @@ module ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526(
  input wire [3:0] rst_lane_n,
  input wire rst_bcast_n
 );
- ot_hnx_su_plain4__lid9_rst3 u_native(
+ ot_hnx_su_plain4__lid9_rst3__static_id #(.STATIC_LANE_ID(1)) u_native(
   .bank_clk(bank_clk),
   .bank_read_data(bank_read_data),
   .bank_read_v(bank_read_v),

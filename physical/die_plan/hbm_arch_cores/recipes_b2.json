@@ -1599,11 +1599,11 @@
   "source": "Current native instance-specific VM_RT_EXTRA=173; direct wrapper, zero added registers/cycles; generic be0b530febe5 physical view HOLD pending role-specific plan/native compose adoption."
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
-  "top": "ot_hnx_su_exp__rst3",
+  "top": "ot_hnx_su_exp__rst3__static_id",
   "files": [
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
    "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
@@ -1633,7 +1633,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
-   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_exp__rst3__synth.sv"
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_exp__rst3__static_id.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -1644,11 +1644,13 @@
    "OT_SMH_RSTRELAY",
    "OT_SM_QSPLIT"
   ],
-  "params": {},
+  "params": {
+   "STATIC_LANE_ID": 1
+  },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
   "synth_memory_max_bits": 15616,
   "macro_placement": [
    {
@@ -1708,11 +1710,11 @@
   ]
  },
  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
-  "top": "ot_hnx_su_plain4__lid9_rst3",
+  "top": "ot_hnx_su_plain4__lid9_rst3__static_id",
   "files": [
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
    "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
@@ -1742,7 +1744,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
-   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__lid9_rst3__synth.sv"
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -1753,11 +1755,13 @@
    "OT_SMH_RSTRELAY",
    "OT_SM_QSPLIT"
   ],
-  "params": {},
+  "params": {
+   "STATIC_LANE_ID": 1
+  },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
   "synth_memory_max_bits": 4096,
   "macro_placement": [
    {
@@ -1979,11 +1983,11 @@
   ]
  },
  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
-  "top": "ot_hnx_su_plain4__lid9_rst3",
+  "top": "ot_hnx_su_plain4__lid9_rst3__static_id",
   "files": [
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
    "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
@@ -2013,7 +2017,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
-   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__lid9_rst3__synth.sv"
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -2024,11 +2028,13 @@
    "OT_SMH_RSTRELAY",
    "OT_SM_QSPLIT"
   ],
-  "params": {},
+  "params": {
+   "STATIC_LANE_ID": 1
+  },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
   "synth_memory_max_bits": 4096,
   "macro_placement": [
    {
@@ -2315,11 +2321,11 @@
   "read_at_commit": true
  },
  "ot_hbm_su_static_pgslice_lg__lane_exp0_id": {
-  "top": "ot_hnx_su_exp__rst3",
+  "top": "ot_hnx_su_exp__rst3__static_id",
   "files": [
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
    "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
@@ -2349,7 +2355,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
-   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_exp__rst3__synth.sv"
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_exp__rst3__static_id.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -2360,11 +2366,13 @@
    "OT_SMH_RSTRELAY",
    "OT_SM_QSPLIT"
   ],
-  "params": {},
+  "params": {
+   "STATIC_LANE_ID": 1
+  },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json.",
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_exp__rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
   "synth_memory_max_bits": 15616,
   "macro_placement": [
    {
@@ -2424,11 +2432,11 @@
   ]
  },
  "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44": {
-  "top": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+  "top": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__static_id",
   "files": [
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
-   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
    "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
@@ -2458,7 +2466,7 @@
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
    "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
-   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__synth.sv"
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv"
   ],
   "defines": [
    "OT_SMH_FC_HIER",
@@ -2469,11 +2477,13 @@
    "OT_SMH_RSTRELAY",
    "OT_SM_QSPLIT"
   ],
-  "params": {},
+  "params": {
+   "STATIC_LANE_ID": 1
+  },
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification.",
+  "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
   "synth_memory_max_bits": 4096
  }
 }

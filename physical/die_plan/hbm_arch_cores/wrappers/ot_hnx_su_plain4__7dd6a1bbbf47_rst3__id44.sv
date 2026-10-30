@@ -72,7 +72,7 @@ module ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44(
  input wire [3:0] rst_lane_n,
  input wire rst_bcast_n
 );
- ot_hnx_su_plain4__7dd6a1bbbf47_rst3 u_native(
+ ot_hnx_su_plain4__7dd6a1bbbf47_rst3__static_id #(.STATIC_LANE_ID(1)) u_native(
   .bank_clk(bank_clk),
   .bank_read_data(bank_read_data),
   .bank_read_v(bank_read_v),

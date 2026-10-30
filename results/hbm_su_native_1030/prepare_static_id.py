@@ -5,9 +5,10 @@ s=(PACK/'ot_hbm_su_static_lane_pinreg.sv').read_text();s=s.replace('module ot_hb
 s=s.replace('d_in = {lane_id,','d_in = {(STATIC_LANE_ID != 0) ? 11\'d0 : lane_id,')
 s=s.replace('assign {q_lane_id, q_ld_c,','wire [10:0] q_captured_id;\n    assign q_lane_id = (STATIC_LANE_ID != 0) ? lane_id : q_captured_id;\n    assign {q_captured_id, q_ld_c,')
 (OUT/'ot_hbm_su_static_lane_pinreg__static_id.sv').write_text(s)
-for top in ['ot_hnx_su_exp__rst3','ot_hnx_su_plain4__lid9_rst3']:
+for top in ['ot_hnx_su_exp__rst3','ot_hnx_su_plain4__lid9_rst3','ot_hnx_su_plain4__7dd6a1bbbf47_rst3']:
  s=(PACK/(top+'.sv')).read_text().replace('module '+top+' (','module '+top+'__static_id #(parameter integer STATIC_LANE_ID=0) (')
  s=s.replace('ot_hbm_su_static_lane_pinreg #(', 'ot_hbm_su_static_lane_pinreg__static_id #(.STATIC_LANE_ID(STATIC_LANE_ID), ')
+ s=s.replace('.read_return({})','.read_return()')
  (OUT/(top+'__static_id.sv')).write_text(s)
 # Minimum mechanism vehicle: complete native pinreg boundary, actual KIND/LN/LAT.
 s=(PACK/'ot_hbm_su_static_lane_pinreg.sv').read_text().split(') (',1)[1].split(');',1)[0]

@@ -14,6 +14,15 @@ for bank in range(4):
  id_graph.append(dict(member='m'+str(2*bank+1),port='lane_id',native_top_bits_lsb_first=bits))
 facts=[r for r in json.load(open(HERE/'native_cut_abi.json'))if r['module']==top];assert len(facts)==4
 sys.path.insert(0,str(ROOT/'tools/die_plan'));from parent_id_straps import validate_parent_id_straps
+sys.path.insert(0,str(BASE));import static_id_contracts as static
+widths={('strap_lane_lane_id'if n=='lane_lane_id'else n):w for d,n,w in P};dirs={('strap_lane_lane_id'if n=='lane_lane_id'else n):d for d,n,w in P}
+assert static.static_inputs(physical,widths,dirs)==['strap_lane_lane_id']
+assert static.contract(physical,['strap_lane_lane_id'])['width']==44
+assert static.static_inputs('unapproved_similar_master',widths,dirs)==[]
+for bad_width,bad_direction in [(9,'input'),(44,'output')]:
+ try:static.static_inputs(physical,dict(widths,strap_lane_lane_id=bad_width),dict(dirs,strap_lane_lane_id=bad_direction))
+ except ValueError:pass
+ else:raise AssertionError('static schema mutant escaped')
 rows=[];mutants=0
 for r in facts:
  v=r['ids']['lane_lane_id']['value'];lanes=[(v>>(11*i))&2047for i in range(4)];assert lanes in([40,41,42,43],[56,57,58,59])

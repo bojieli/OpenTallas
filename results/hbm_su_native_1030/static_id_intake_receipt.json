@@ -1,0 +1,61 @@
+{
+ "status": "SOURCE_VARIANT_PREP_PROVEN_MECHANISM_NO_PLAN_ADOPTION",
+ "native_default_STATIC_LANE_ID": 0,
+ "canonical_bound_IDs": 240,
+ "special_bound_IDs": 16,
+ "unique_cases": 128,
+ "all315outputs_no_masks": true,
+ "pinreg_identity_delta": "Mode1 places literal zero in only11 packed ID bits and drives q_lane_id directly; no source ID capture remains. All other input/output registers and native lane body unchanged.",
+ "native_cut_and_outer_adapter_reversible_source_proof": [
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "native": "ot_hnx_su_exp__rst3",
+   "variant": "ot_hnx_su_exp__rst3__static_id",
+   "STATIC_LANE_ID": 1,
+   "wrapper_port_wiring_unchanged": true,
+   "native_cut_other_logic_byteidentical": true,
+   "native_raw_sha256": "a50af07f503284fb11b9b42e7d475682c271700cd987d760cd6483cf3455c6b6"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+   "native": "ot_hnx_su_exp__rst3",
+   "variant": "ot_hnx_su_exp__rst3__static_id",
+   "STATIC_LANE_ID": 1,
+   "wrapper_port_wiring_unchanged": true,
+   "native_cut_other_logic_byteidentical": true,
+   "native_raw_sha256": "a50af07f503284fb11b9b42e7d475682c271700cd987d760cd6483cf3455c6b6"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+   "native": "ot_hnx_su_plain4__lid9_rst3",
+   "variant": "ot_hnx_su_plain4__lid9_rst3__static_id",
+   "STATIC_LANE_ID": 1,
+   "wrapper_port_wiring_unchanged": true,
+   "native_cut_other_logic_byteidentical": true,
+   "native_raw_sha256": "51879f786b303f7310076f0c7169578fdff2265a5e367f6679076800433df37c"
+  },
+  {
+   "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "native": "ot_hnx_su_plain4__lid9_rst3",
+   "variant": "ot_hnx_su_plain4__lid9_rst3__static_id",
+   "STATIC_LANE_ID": 1,
+   "wrapper_port_wiring_unchanged": true,
+   "native_cut_other_logic_byteidentical": true,
+   "native_raw_sha256": "51879f786b303f7310076f0c7169578fdff2265a5e367f6679076800433df37c"
+  },
+  {
+   "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+   "native": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+   "variant": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__static_id",
+   "STATIC_LANE_ID": 1,
+   "wrapper_port_wiring_unchanged": true,
+   "native_cut_other_logic_byteidentical": true,
+   "native_raw_sha256": "52c305776963505dc8f696dd4034feba907eced55cc322561ddcb53bef6d9de6"
+  }
+ ],
+ "holds": [
+  "Full actual-native core synthesis LEC at bound IDs before PNR",
+  "Parent pinplan/stations/clock/IDTIE and batched root review",
+  "Physical face-shell cycles separately priced before adoption"
+ ]
+}

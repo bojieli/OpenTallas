@@ -1,0 +1,13 @@
+{
+ "parent_strap_tests": {
+  "PASS": 29,
+  "command": "python3 -m pytest -q tools/die_plan/test_parent_id_straps.py"
+ },
+ "existing_static_tests": {
+  "PASS": 12,
+  "host": "intel1 Python3.14",
+  "command": "python3 -m unittest discover -s physical/die_plan/hbm_arch_cores -p test_hbm_static_ids.py -q"
+ },
+ "special_exact_contract_negative_controls": 25,
+ "local_interpreter_limitation": "Python3.10 cannot parse preexisting generator modern f-string; fleetPython3.14 tests pass"
+}

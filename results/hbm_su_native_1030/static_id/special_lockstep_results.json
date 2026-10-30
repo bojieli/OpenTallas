@@ -1,0 +1,128 @@
+{
+ "status": "PASS",
+ "scope": "Same actualnative KIND0 full315output typed-ID bypass mechanism, eight extra special IDs; no recompile/new masks",
+ "bindings": [
+  {
+   "path": "su_NW2.__cut_lanes8_11",
+   "lane": 0,
+   "id": 40
+  },
+  {
+   "path": "su_NW2.__cut_lanes8_11",
+   "lane": 1,
+   "id": 41
+  },
+  {
+   "path": "su_NW2.__cut_lanes8_11",
+   "lane": 2,
+   "id": 42
+  },
+  {
+   "path": "su_NW2.__cut_lanes8_11",
+   "lane": 3,
+   "id": 43
+  },
+  {
+   "path": "su_NW3.__cut_lanes8_11",
+   "lane": 0,
+   "id": 56
+  },
+  {
+   "path": "su_NW3.__cut_lanes8_11",
+   "lane": 1,
+   "id": 57
+  },
+  {
+   "path": "su_NW3.__cut_lanes8_11",
+   "lane": 2,
+   "id": 58
+  },
+  {
+   "path": "su_NW3.__cut_lanes8_11",
+   "lane": 3,
+   "id": 59
+  },
+  {
+   "path": "su_NE2.__cut_lanes8_11",
+   "lane": 0,
+   "id": 40
+  },
+  {
+   "path": "su_NE2.__cut_lanes8_11",
+   "lane": 1,
+   "id": 41
+  },
+  {
+   "path": "su_NE2.__cut_lanes8_11",
+   "lane": 2,
+   "id": 42
+  },
+  {
+   "path": "su_NE2.__cut_lanes8_11",
+   "lane": 3,
+   "id": 43
+  },
+  {
+   "path": "su_NE3.__cut_lanes8_11",
+   "lane": 0,
+   "id": 56
+  },
+  {
+   "path": "su_NE3.__cut_lanes8_11",
+   "lane": 1,
+   "id": 57
+  },
+  {
+   "path": "su_NE3.__cut_lanes8_11",
+   "lane": 2,
+   "id": 58
+  },
+  {
+   "path": "su_NE3.__cut_lanes8_11",
+   "lane": 3,
+   "id": 59
+  }
+ ],
+ "results": [
+  {
+   "id": 40,
+   "rc": 0,
+   "output": "RESULT KIND0 ID40 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 41,
+   "rc": 0,
+   "output": "RESULT KIND0 ID41 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 42,
+   "rc": 0,
+   "output": "RESULT KIND0 ID42 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 43,
+   "rc": 0,
+   "output": "RESULT KIND0 ID43 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 56,
+   "rc": 0,
+   "output": "RESULT KIND0 ID56 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 57,
+   "rc": 0,
+   "output": "RESULT KIND0 ID57 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 58,
+   "rc": 0,
+   "output": "RESULT KIND0 ID58 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "id": 59,
+   "rc": 0,
+   "output": "RESULT KIND0 ID59 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  }
+ ]
+}

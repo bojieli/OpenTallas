@@ -20,6 +20,8 @@ def topology(top):
 
 def adapter(module,top,mutant=False):
  s=(ROOT/'physical/die_plan/hbm_arch_cores/wrappers'/(module+'.sv')).read_text();P=ports(top)
+ variant=top+'__static_id #(.STATIC_LANE_ID(1)) u_native('
+ if variant in s:s=s.replace(variant,top+' u_native(')
  if mutant:s=s.replace('.lane_lane_id(strap_lane_lane_id)', '.lane_lane_id(~strap_lane_lane_id)')
  head=s.split(');',1)[0];decl={n:(d,int(w)+1 if w else 1)for d,w,n in re.findall(r'(input|output) wire (?:\[(\d+):0\] )?(\w+)',head)}
  assert decl=={('strap_lane_lane_id'if n=='lane_lane_id'else n):(d,w)for d,n,w in P}
