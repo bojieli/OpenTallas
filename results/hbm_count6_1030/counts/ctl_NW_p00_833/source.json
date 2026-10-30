@@ -1,0 +1,182 @@
+{
+ "instance": "ctl_NW_p00_833",
+ "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "top": "current_native_count_ctl_NW_p00_833",
+ "params": {
+  "KREG": 1,
+  "KRREG": 1,
+  "OREG": 1,
+  "QREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "TIMING_833": 1,
+  "RMUT": 0
+ },
+ "ports": {
+  "clk": {
+   "direction": "input",
+   "width": 1
+  },
+  "col_bank": {
+   "direction": "output",
+   "width": 5
+  },
+  "col_col": {
+   "direction": "output",
+   "width": 5
+  },
+  "col_data": {
+   "direction": "output",
+   "width": 256
+  },
+  "col_strb": {
+   "direction": "output",
+   "width": 32
+  },
+  "col_v": {
+   "direction": "output",
+   "width": 1
+  },
+  "col_we": {
+   "direction": "output",
+   "width": 1
+  },
+  "dram_rdata": {
+   "direction": "input",
+   "width": 256
+  },
+  "dram_rvalid": {
+   "direction": "input",
+   "width": 1
+  },
+  "k_addr": {
+   "direction": "input",
+   "width": 30
+  },
+  "k_len": {
+   "direction": "input",
+   "width": 4
+  },
+  "k_rdy": {
+   "direction": "output",
+   "width": 1
+  },
+  "k_tag": {
+   "direction": "input",
+   "width": 17
+  },
+  "k_v": {
+   "direction": "input",
+   "width": 1
+  },
+  "k_wdata": {
+   "direction": "input",
+   "width": 256
+  },
+  "k_we": {
+   "direction": "input",
+   "width": 1
+  },
+  "k_wr_done": {
+   "direction": "output",
+   "width": 1
+  },
+  "k_wstrb": {
+   "direction": "input",
+   "width": 32
+  },
+  "kr_beat": {
+   "direction": "output",
+   "width": 4
+  },
+  "kr_data": {
+   "direction": "output",
+   "width": 256
+  },
+  "kr_rdy": {
+   "direction": "input",
+   "width": 1
+  },
+  "kr_tag": {
+   "direction": "output",
+   "width": 17
+  },
+  "kr_v": {
+   "direction": "output",
+   "width": 1
+  },
+  "owner_fault_split": {
+   "direction": "output",
+   "width": 6
+  },
+  "pc_fault": {
+   "direction": "output",
+   "width": 1
+  },
+  "pc_id": {
+   "direction": "input",
+   "width": 5
+  },
+  "refresh_reload": {
+   "direction": "input",
+   "width": 8
+  },
+  "row_bank": {
+   "direction": "output",
+   "width": 5
+  },
+  "row_op": {
+   "direction": "output",
+   "width": 3
+  },
+  "row_row": {
+   "direction": "output",
+   "width": 19
+  },
+  "row_v": {
+   "direction": "output",
+   "width": 1
+  },
+  "rst_n": {
+   "direction": "input",
+   "width": 1
+  }
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "actual_plan": [
+  "NW_hub",
+  "u_ctl_Q_p00"
+ ],
+ "whole_native_no_face_shell": true,
+ "qualified_providers": [
+  {
+   "module": "ot_sram_1r1w_128x256_m1_r2c2",
+   "files": {
+    "ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+    "ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94",
+    "ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84"
+   },
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-su-native-1030/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  }
+ ],
+ "source_hashes": {
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "0ae89a986c25f9e4b33e4054aa3ab93cea285ad4e1d66113d22214994e18c8d0",
+  "ot_sram_1r1w_128x256_m1_r2c2": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac",
+  "ot_rst_relay": "d41f207e1b7aefa92b1084a7a66283d7824e5ea4fc8525d75170e3048b704b80",
+  "ot_hbm_svc_ring_h9b": "46648f3b56aebfd462010f94f960c2c45d4c6c05b352874421989257cd536f36",
+  "ot_hbm_svc_pin_skid2_h9": "d9324f02c1a4e8b777d89027048d5040f0ad79933da74738b8ca04c5818ab45c",
+  "ot_hbm_r14_stream_pc_strap_h9": "5b93d1909c000b3cc7c022313f92b57447bd3d53c45e5827a3903b4b06d78911"
+ },
+ "macro_allowlist": [
+  "ot_sram_1r1w_128x256_m1_r2c2"
+ ]
+}

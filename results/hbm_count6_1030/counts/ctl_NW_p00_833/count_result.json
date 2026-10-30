@@ -1,0 +1,48 @@
+{
+ "instance": "ctl_NW_p00_833",
+ "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+ "params": {
+  "KREG": 1,
+  "KRREG": 1,
+  "OREG": 1,
+  "QREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "TIMING_833": 1,
+  "RMUT": 0
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": "0ae89a986c25f9e4b33e4054aa3ab93cea285ad4e1d66113d22214994e18c8d0",
+  "ot_sram_1r1w_128x256_m1_r2c2": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac",
+  "ot_rst_relay": "d41f207e1b7aefa92b1084a7a66283d7824e5ea4fc8525d75170e3048b704b80",
+  "ot_hbm_svc_ring_h9b": "46648f3b56aebfd462010f94f960c2c45d4c6c05b352874421989257cd536f36",
+  "ot_hbm_svc_pin_skid2_h9": "d9324f02c1a4e8b777d89027048d5040f0ad79933da74738b8ca04c5818ab45c",
+  "ot_hbm_r14_stream_pc_strap_h9": "5b93d1909c000b3cc7c022313f92b57447bd3d53c45e5827a3903b4b06d78911"
+ },
+ "native_inferred_memory_bits": 5919,
+ "actual_pre_macro_instances": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 2
+ },
+ "mapped_std_cells": 55997,
+ "mapped_macro_cells": 2,
+ "mapped_total_cells": 55999,
+ "std_area_um2": 7218.72,
+ "macro_area_um2": 7783.15,
+ "mapped_netlist_sha256": "fa93544407514a5af1b93331bf573e9131fc36eb7973efdeff24fc257d3faa1c",
+ "mapped_macro_types": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 2
+ },
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}
