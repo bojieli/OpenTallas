@@ -2201,3 +2201,7 @@ CODEX: KV takeover1030 full ownership split; q0/q3 fresh EQ collected27583/9742,
 CODEX: 2026-10-30 03:41 PDT KV-SD declaration repair READY bc32cb591c5 (wave ORD2013 diagnosed; existing PHY views only); try6 unit2012423 LIVE preserved, no duplicate, no gate claim.
 
 CODEX: 2026-10-30 03:41 PDT SUPPORT all261 lane inventory a9dbbbafb; shared AUTO-GEOM live clock-entry fix88a9ac71675 READY/17testsPASS; HEADturn/eshimfalse reach removed,wshim337stillFAIL; explicitFF380parent contract mismatch diagnosed/HEADowned.
+
+CODEX: 2026-10-30 03:41 PDT HBM token nativechain0594379e8 extends1458–1558,684cmd/2534778canonicalreadsPASS/5mutants; reversephase+HCrowoverwritefixed,max238592VM;6.137MBbytes/drainsunpriced/noG5,scratchunreserved.
+
+CODEX: 2026-10-30 03:49 PDT tokens QC currentbind45 prepare9/desc4/HOST5 confirmed; sourcef3ee23e25 fixes parameterized-child age export,19testsPASS,0cycles. KV correctedWc build2272171 LIVE, HBM/DS compiler workers advancing.
