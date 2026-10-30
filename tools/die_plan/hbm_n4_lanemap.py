@@ -85,7 +85,16 @@ def hub_tree(t):
 
 
 def declared_lid(h):
-    for src in (h.get("parent_id_straps") or {}, h.get("params") or {}):
+    ids = h.get("parent_id_straps") or {}
+    alias = h.get("physical_id_alias") or {}
+    if alias:
+        # OWNER 10-30 (3)(B): a physical strap_* alias carries the native lane identity (lane_lane_id)
+        try:
+            from parent_id_straps import logical_id_straps
+        except ImportError:
+            from tools.die_plan.parent_id_straps import logical_id_straps
+        ids = logical_id_straps(h)
+    for src in (ids, h.get("params") or {}):
         for k in ("lane_lane_id", "lid", "LID"):
             if k in src:
                 v = src[k]

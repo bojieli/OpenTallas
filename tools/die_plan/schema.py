@@ -131,6 +131,9 @@ _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", 
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
 _physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
+# OWNER 2026-10-30 (3)(B): exact physical strap_* aliases over a native ID port (parent_id_straps.PHYSICAL_ID_ALIASES;
+# the semantic validator checks master + explicit hard core physical_id_alias mapping)
+_alias_id_widths = {"strap_lane_lane_id": 11}
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
            "properties": {"width": ({"type": "integer", "const": _physical_id_widths[name]} if name in _physical_id_widths
@@ -138,6 +141,13 @@ _parent_id_straps = {"type": "object", "additionalProperties": False, "propertie
                           "value": {"type": "integer", "minimum": 0,
                                     **({"maximum": (1 << _physical_id_widths[name])-1} if name in _physical_id_widths else {})}}}
     for name in ("tile_id", "tile_tid", "map_lane_j", "lane_lane_id", "sidx", "strap_lane_id", *_physical_id_widths)}}
+_parent_id_straps["properties"].update({
+    name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
+           "properties": {"width": {"type": "integer", "const": w},
+                          "value": {"type": "integer", "minimum": 0, "maximum": (1 << w) - 1}}}
+    for name, w in _alias_id_widths.items()})
+_physical_id_alias = {"type": "object", "minProperties": 1, "additionalProperties": False,
+                      "properties": {name: {"type": "string"} for name in _alias_id_widths}}
 
 _position_id_contract = {"type": "object", "required": ["kind", "pbase", "lane"],
                          "additionalProperties": False, "properties": {
@@ -148,14 +158,23 @@ _position_id_contract = {"type": "object", "required": ["kind", "pbase", "lane"]
 # allOf gives full JSON-Schema consumers the same cross-field restriction.
 _core_id_straps = {"type": "array", "items": {
     "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
-    "properties": {"port": {"enum": list(_physical_id_widths)},
-                   "width": {"enum": [2, 6]},
-                   "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 63,
-                             "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"},
+    "properties": {"port": {"enum": list(_physical_id_widths) + list(_alias_id_widths)},
+                   "width": {"enum": [2, 6, *_alias_id_widths.values()]},
+                   "value": {"type": ["integer", "string"], "minimum": 0,
+                             "maximum": max(63, *((1 << w) - 1 for w in _alias_id_widths.values())),
+                             "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6}"
+                                        + "".join(f"|{w}'[bB][01]{{{w}}}" for w in _alias_id_widths.values()) + ")$"},
                    "note": {"type": "string"}},
     "allOf": [{"if": {"properties": {"port": {"const": "strap_tile_tid"}}},
                "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
-               "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
+               "else": {"if": {"properties": {"port": {"enum": list(_alias_id_widths)}}},
+                        "then": {},   # per-alias exact width: the if/then rows below
+                        "else": {"properties": {"width": {"const": 2},
+                                                "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}}]
+              + [{"if": {"properties": {"port": {"const": n}}},
+                  "then": {"properties": {"width": {"const": w}, "value": {"maximum": (1 << w) - 1,
+                                                                           "pattern": f"^{w}'[bB][01]{{{w}}}$"}}}}
+                 for n, w in _alias_id_widths.items()]}}
 
 _clock_mesh_region = {
     "type": "object", "additionalProperties": False,
@@ -586,6 +605,7 @@ SCHEMA = {
                         "properties": {"inst": _name, "module": _name, "origin_um": _xy, "outline_um": _xy,
                                        "straps": _core_id_straps,
                                        "parent_id_straps": _parent_id_straps, "parent_id_leaf": {"type": "string"},
+                                       "physical_id_alias": _physical_id_alias,
                                        "position_id_contract": _position_id_contract,
                                        "bump_ports": _bump_ports,
                                        "orient": {"enum": list(ORIENTS)},
