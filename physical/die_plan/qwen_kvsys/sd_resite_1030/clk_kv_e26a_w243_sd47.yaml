@@ -1,0 +1,35 @@
+# ot-clk config: KV die clock = tree c (COORD ruling A 10-29: early core taps dropped) on plan event26a (= Codex event26/bind26b with
+# clock.core_taps early->internal on 45 types). Tree form = DIE-KV-21 tree c (link_htree + region DME on pv_S_6/pv_S_7, KV inverter
+# stage model fitted on routed tree-b legs). 1920 taps / 15296 cells; ctree.v byte-identical to tree c (kit_repc).
+schema: ot_clk_config/1
+die: kv
+event:
+  name: event26a_c_w243_sd47
+  host: intel1
+  source: results/die_kv_26_1029 (DIE-KV-26 kit.sh e26a = die_trial kit, main 2b90210bd)
+  reference_clock_dir: /srv/opentallas-scratch2/claude/die-kv-40-1029/clk_w243/kit/clock
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-kv-47-sd/clk/plan.json
+  region_map: /srv/opentallas-scratch2/claude/wt/kit-wave-1030/results/locality_1027/kv_land128_regions.json
+  feed: /srv/opentallas-scratch2/claude/die-kv-15-1028/feed_fishbone.json
+stack:
+  cell: inv
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 150
+  site_legal: true
+  site_slide: true
+region:
+  form: dme
+  dme_mode: delay
+  only:
+    - pv_S_6
+    - pv_S_7
+stage_model:
+  entry: inv_ndr_kv21_treeb
+  corners: [TT, FF]
+  edge: rise
+residual:
+  tap_pad: /srv/opentallas-scratch2/claude/die-kv-20-1028/pad_kv20_pad.json

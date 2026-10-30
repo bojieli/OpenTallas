@@ -1,0 +1,404 @@
+{
+ "source_plan": "/srv/opentallas-scratch2/claude/die-kv-47-sd/b0plan/plan_c.json",
+ "source_plan_sha256": "09d9235ee1e3d8485a45a09eec4fb70b87074d98bbc5aa64a663a2966e54de80",
+ "source_sidecar": "/srv/opentallas-scratch2/claude/die-kv-47-sd/b0plan/eW_sidecar.json",
+ "source_sidecar_sha256": "65dc1f0f3984535211316a513e09dd3c90e847334407e0aec4e69696de125226",
+ "types": {
+  "kv3_sys_SD": {
+   "old_local_taps": [
+    [
+     388.8,
+     596.16
+    ],
+    [
+     1149.12,
+     596.16
+    ],
+    [
+     1632.96,
+     717.12
+    ],
+    [
+     768.96,
+     959.04
+    ],
+    [
+     112.32,
+     717.12
+    ],
+    [
+     1702.08,
+     406.08
+    ],
+    [
+     768.96,
+     233.28
+    ],
+    [
+     1529.28,
+     959.04
+    ],
+    [
+     216.0,
+     907.2
+    ],
+    [
+     77.76,
+     164.16
+    ],
+    [
+     1874.88,
+     699.84
+    ],
+    [
+     1149.12,
+     734.4
+    ]
+   ],
+   "old_local_taps_on_macro": 11,
+   "old_relays_on_macro": [
+    "u_rrl_10",
+    "u_rrl_18",
+    "u_rrl_19",
+    "u_rrl_20",
+    "u_rrl_21",
+    "u_rrl_22",
+    "u_rrl_23",
+    "u_rrl_24",
+    "u_rrl_31",
+    "u_rrl_36",
+    "u_rrl_42",
+    "u_rrl_43",
+    "u_rrl_44",
+    "u_rrl_45",
+    "u_rrl_46",
+    "u_rrl_47",
+    "u_rrl_5",
+    "u_rrl_6",
+    "u_rrl_61",
+    "u_rrl_62",
+    "u_rrl_65",
+    "u_rrl_66",
+    "u_rrl_67",
+    "u_rrl_7",
+    "u_rrl_9"
+   ],
+   "old_bands": {
+    "i_host_fdi": [
+     1853.28,
+     175.7662,
+     1883.52,
+     263.1102
+    ],
+    "i_host_link_rst_n": [
+     1857.6,
+     428.7404,
+     1883.52,
+     437.3804
+    ]
+   },
+   "phy_supply_rects": [
+    [
+     17.28,
+     54.0,
+     1866.24,
+     1026.0
+    ]
+   ],
+   "iterations": 2,
+   "new_local_taps": [
+    [
+     1879.2,
+     324.0
+    ],
+    [
+     1874.88,
+     747.36
+    ],
+    [
+     4.32,
+     332.64
+    ],
+    [
+     4.32,
+     734.4
+    ],
+    [
+     1036.8,
+     34.56
+    ],
+    [
+     479.52,
+     17.28
+    ],
+    [
+     1602.72,
+     17.28
+    ],
+    [
+     4.32,
+     4.32
+    ],
+    [
+     1045.44,
+     34.56
+    ],
+    [
+     1611.36,
+     17.28
+    ]
+   ],
+   "cover_worst_um": 298.08,
+   "cover_pts": 6634,
+   "new_bands": {
+    "i_host_fdi": {
+     "rect_um": [
+      1721.52,
+      17.28,
+      1883.52,
+      45.36
+     ],
+     "area_um2": 4549.0,
+     "reserve_um2": 4521.621,
+     "hop_um": 381.438
+    },
+    "i_host_link_rst_n": {
+     "rect_um": [
+      1874.88,
+      390.9404,
+      1883.52,
+      475.1804
+     ],
+     "area_um2": 727.8,
+     "reserve_um2": 713.94,
+     "hop_um": 68.04
+    }
+   },
+   "depth": 5,
+   "own_depth": 5,
+   "max_hop_um": 376.2,
+   "reach_um": 405.0,
+   "relays": [
+    68,
+    57
+   ],
+   "new_relays_on_macro": 0,
+   "sources": [
+    {
+     "source": "i_host_fdi",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 126.16
+    },
+    {
+     "source": "i_host_link_rst_n",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 130.66
+    }
+   ],
+   "collector_local_depth": 6,
+   "boot_local_depth_budget": 6,
+   "old_sites_on_macro_total": 36
+  },
+  "kv3_sys_SD_v1": {
+   "old_local_taps": [
+    [
+     388.8,
+     596.16
+    ],
+    [
+     1149.12,
+     596.16
+    ],
+    [
+     1632.96,
+     717.12
+    ],
+    [
+     768.96,
+     959.04
+    ],
+    [
+     112.32,
+     717.12
+    ],
+    [
+     1702.08,
+     406.08
+    ],
+    [
+     768.96,
+     233.28
+    ],
+    [
+     1529.28,
+     959.04
+    ],
+    [
+     216.0,
+     907.2
+    ],
+    [
+     77.76,
+     164.16
+    ],
+    [
+     1874.88,
+     699.84
+    ],
+    [
+     1149.12,
+     734.4
+    ]
+   ],
+   "old_local_taps_on_macro": 11,
+   "old_relays_on_macro": [
+    "u_rrl_10",
+    "u_rrl_18",
+    "u_rrl_19",
+    "u_rrl_20",
+    "u_rrl_21",
+    "u_rrl_22",
+    "u_rrl_23",
+    "u_rrl_24",
+    "u_rrl_31",
+    "u_rrl_36",
+    "u_rrl_42",
+    "u_rrl_43",
+    "u_rrl_44",
+    "u_rrl_45",
+    "u_rrl_46",
+    "u_rrl_47",
+    "u_rrl_5",
+    "u_rrl_6",
+    "u_rrl_61",
+    "u_rrl_62",
+    "u_rrl_65",
+    "u_rrl_66",
+    "u_rrl_67",
+    "u_rrl_7",
+    "u_rrl_9"
+   ],
+   "old_bands": {
+    "i_host_fdi": [
+     1853.28,
+     175.8913,
+     1883.52,
+     263.0593
+    ],
+    "i_host_link_rst_n": [
+     1857.6,
+     428.7986,
+     1883.52,
+     437.4386
+    ]
+   },
+   "phy_supply_rects": [
+    [
+     17.28,
+     54.0,
+     1866.24,
+     1026.0
+    ]
+   ],
+   "iterations": 2,
+   "new_local_taps": [
+    [
+     1879.2,
+     324.0
+    ],
+    [
+     1874.88,
+     747.36
+    ],
+    [
+     4.32,
+     332.64
+    ],
+    [
+     4.32,
+     734.4
+    ],
+    [
+     1036.8,
+     34.56
+    ],
+    [
+     479.52,
+     17.28
+    ],
+    [
+     1602.72,
+     17.28
+    ],
+    [
+     4.32,
+     4.32
+    ],
+    [
+     1045.44,
+     34.56
+    ],
+    [
+     1611.36,
+     17.28
+    ]
+   ],
+   "cover_worst_um": 298.08,
+   "cover_pts": 6634,
+   "new_bands": {
+    "i_host_fdi": {
+     "rect_um": [
+      1721.52,
+      17.28,
+      1883.52,
+      45.36
+     ],
+     "area_um2": 4549.0,
+     "reserve_um2": 4521.621,
+     "hop_um": 381.475
+    },
+    "i_host_link_rst_n": {
+     "rect_um": [
+      1874.88,
+      390.9986,
+      1883.52,
+      475.2386
+     ],
+     "area_um2": 727.8,
+     "reserve_um2": 713.94,
+     "hop_um": 68.04
+    }
+   },
+   "depth": 5,
+   "own_depth": 5,
+   "max_hop_um": 376.2,
+   "reach_um": 405.0,
+   "relays": [
+    68,
+    57
+   ],
+   "new_relays_on_macro": 0,
+   "sources": [
+    {
+     "source": "i_host_fdi",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 126.12
+    },
+    {
+     "source": "i_host_link_rst_n",
+     "old_tap": 10,
+     "new_tap": 5,
+     "hop_um": 130.72
+    }
+   ],
+   "collector_local_depth": 6,
+   "boot_local_depth_budget": 6,
+   "old_sites_on_macro_total": 36
+  }
+ },
+ "plan_sha256": "773deac7e121c71c373e01f759e21c37103b6e2a6c181a36d2c103828252be69",
+ "sidecar_sha256": "cbcb1167b4f3fd1adb0d1272b6c6b20b492f4b66e374e6b17d278ff7369a461e"
+}

@@ -1,0 +1,99 @@
+{
+ "clock": {
+  "ctl_replay": "IDENTICAL",
+  "sd47_replay": "DIFFERENT",
+  "repeaters": [
+   5997,
+   6051
+  ],
+  "wire_um": [
+   1706894.9,
+   1713262.1
+  ],
+  "illegal": [
+   {},
+   {}
+  ],
+  "cells_on_sd_phy_body": [
+   92,
+   0
+  ],
+  "taps_changed": [
+   "t_sys_SE__clk",
+   "t_sys_SE__clk_t1",
+   "t_sys_SE__clk_t2",
+   "t_sys_SE__clk_t3",
+   "t_sys_SE__clk_t4",
+   "t_sys_SW__clk",
+   "t_sys_SW__clk_t1",
+   "t_sys_SW__clk_t2",
+   "t_sys_SW__clk_t3",
+   "t_sys_SW__clk_t4"
+  ],
+  "sd_tap_stages": {
+   "t_sys_SE__clk_t4": [
+    172,
+    185
+   ],
+   "t_sys_SE__clk_t3": [
+    172,
+    186
+   ],
+   "t_sys_SE__clk_t2": [
+    172,
+    186
+   ],
+   "t_sys_SE__clk_t1": [
+    172,
+    186
+   ],
+   "t_sys_SE__clk": [
+    172,
+    186
+   ],
+   "t_sys_SW__clk": [
+    174,
+    188
+   ],
+   "t_sys_SW__clk_t1": [
+    174,
+    188
+   ],
+   "t_sys_SW__clk_t2": [
+    174,
+    188
+   ],
+   "t_sys_SW__clk_t3": [
+    174,
+    188
+   ],
+   "t_sys_SW__clk_t4": [
+    174,
+    187
+   ]
+  },
+  "note": "routed arrivals/spread NOT measured (GRT not run; brief: no route)"
+ },
+ "g0c": {
+  "b0_errors": 28,
+  "b1_errors": 28,
+  "new_errors": 0,
+  "gone_findings": [
+   "serdes window io_sys_SE_serdes: no separate PHY supply / bump rows (OWNER decision 7)",
+   "serdes window io_sys_SW_serdes: no separate PHY supply / bump rows (OWNER decision 7)"
+  ],
+  "new_findings": []
+ },
+ "bind": {
+  "b0_errors": [],
+  "b1_errors": [],
+  "rtl_files_changed": [
+   "rtl/kv3_sys_SD_part.sv",
+   "rtl/kv3_sys_SD_v1_part.sv"
+  ]
+ },
+ "preflight": {
+  "kv3_sys_SD": "PASS",
+  "kv3_sys_SD_v1": "PASS"
+ }
+}
