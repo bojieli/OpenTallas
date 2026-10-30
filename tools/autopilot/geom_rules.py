@@ -361,9 +361,14 @@ def declared_infra_arcs(D, interface, declaration):
             start = D.pin_net.get(src["k"])
             if start is None or D.nets[start][1] != ("p",src["k"],False):
                 raise ValueError("source is not the actual input driver")
-            todo, seen, hits, buffers = [(start,0)], {}, [], set()
+            todo, seen, hits, buffers = [(start,0,frozenset())], {}, [], set()
             while todo:
-                net,parity = todo.pop()
+                net,parity,ancestors = todo.pop()
+                # Parallel drivers may reconverge after distinct acyclic paths;
+                # returning to a net on THIS path is always feedback, even when
+                # the net has ND drivers and the accumulated parity agrees.
+                if net in ancestors:
+                    raise ValueError("cycle in infrastructure cone")
                 if net in seen:
                     # A pure single-input BUF/INV network cannot reconverge to
                     # itself without a cycle; never bless an ambiguous graph.
@@ -387,7 +392,7 @@ def declared_infra_arcs(D, interface, declaration):
                         if not master.startswith(("BUF","INV","HB")):
                             raise ValueError("untyped buffer function")
                         buffers.add(cid)
-                        todo.append((outputs[0],parity ^ int(master.startswith("INV"))))
+                        todo.append((outputs[0],parity ^ int(master.startswith("INV")),ancestors | {net}))
                     else:
                         raise ValueError("ordinary data/sequential/logic fanout")
             for net in seen:
