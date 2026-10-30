@@ -1,0 +1,153 @@
+{
+ "schema": "HEAD_ROOT88_BOOT_ACCOUNT_1",
+ "root_settle_cycles": 88,
+ "previous_settle_cycles": 74,
+ "delta_boot_cycles": 14,
+ "added_steady_cycles": 0,
+ "root_raw_release_cycle": 21,
+ "root_start_upper_cycle": 110,
+ "raw_relative_span": 84,
+ "raw_guard_cycles": 4,
+ "all_part_raw_release_max_cycles": 107,
+ "start_transport_max_cycles": 272,
+ "part_start_max_cycle": 382,
+ "local_reset_start_stage_max": 7,
+ "strap_ready_or_fault_timeout_cycles": 171,
+ "status_ready_or_fault_at_glue_upper_cycle": 5861,
+ "observer_capture_cycles": 1,
+ "per_type_start_stages": {
+  "hd_tile": 3,
+  "hd_turn_a": 2,
+  "hd_turn_b": 0,
+  "hd_spn": 6,
+  "hd_spn_end": 7,
+  "hd_serdes": 0,
+  "hd_st_turn": 5,
+  "hd_st_str": 2,
+  "hd_st_n4": 2,
+  "hd_st_m": 2,
+  "hd_st_k5": 5,
+  "hd_mesh": 0,
+  "hd_lep0N": 0,
+  "hd_ctl": 2,
+  "hd_host": 0,
+  "hd_st_n3_transit": 2,
+  "hd_st_n3_turn": 0,
+  "hd_spn_wshim_rx": 0,
+  "hd_spn_wshim_tx": 0,
+  "hd_spn_eshim_rx": 0,
+  "hd_spn_eshim_tx": 0,
+  "hd_ctl_n": 0,
+  "hd_ctl_e": 0,
+  "hd_host_n": 0,
+  "hd_mesh_e": 0
+ },
+ "per_type_status_depths": {
+  "hd_tile": {
+   "aggregate": 4,
+   "local": 1
+  },
+  "hd_turn_a": {
+   "aggregate": 4,
+   "local": 1
+  },
+  "hd_turn_b": {
+   "aggregate": 2,
+   "local": 1
+  },
+  "hd_spn": {
+   "aggregate": 12,
+   "local": 11
+  },
+  "hd_spn_end": {
+   "aggregate": 12,
+   "local": 11
+  },
+  "hd_serdes": {
+   "aggregate": 2,
+   "local": 1
+  },
+  "hd_st_turn": {
+   "aggregate": 11,
+   "local": 8
+  },
+  "hd_st_str": {
+   "aggregate": 7,
+   "local": 6
+  },
+  "hd_st_n4": {
+   "aggregate": 8,
+   "local": 5
+  },
+  "hd_st_m": {
+   "aggregate": 6,
+   "local": 5
+  },
+  "hd_st_k5": {
+   "aggregate": 10,
+   "local": 9
+  },
+  "hd_mesh": {
+   "aggregate": 4,
+   "local": 1
+  },
+  "hd_lep0N": {
+   "aggregate": 7,
+   "local": 1
+  },
+  "hd_ctl": {
+   "aggregate": 3,
+   "local": 1
+  },
+  "hd_host": {
+   "aggregate": 5,
+   "local": 1
+  },
+  "hd_st_n3_transit": {
+   "aggregate": 7,
+   "local": 6
+  },
+  "hd_st_n3_turn": {
+   "aggregate": 6,
+   "local": 1
+  },
+  "hd_spn_wshim_rx": {
+   "aggregate": 3,
+   "local": 1
+  },
+  "hd_spn_wshim_tx": {
+   "aggregate": 1,
+   "local": 1
+  },
+  "hd_spn_eshim_rx": {
+   "aggregate": 2,
+   "local": 1
+  },
+  "hd_spn_eshim_tx": {
+   "aggregate": 1,
+   "local": 1
+  },
+  "hd_ctl_n": {
+   "aggregate": 6,
+   "local": 1
+  },
+  "hd_ctl_e": {
+   "aggregate": 4,
+   "local": 1
+  },
+  "hd_host_n": {
+   "aggregate": 5,
+   "local": 1
+  },
+  "hd_mesh_e": {
+   "aggregate": 4,
+   "local": 1
+  }
+ },
+ "mission_admission": "actual registered root ready && !actual sticky fault && actual host boot_done; a numeric bound never asserts mission",
+ "cold_and_warm": "same accounting after each asserted reset; all START/CA/statusstate must reset; 84-edge ROOT88 coupon coverscold1/warm3",
+ "physical_clock_phase_qualified": false,
+ "actual_external_host_event_cycle": null,
+ "actual_physical_full_array_boot_receipt": null,
+ "qualification": "conditional analytical upper bound assuming continuously running clocks, proven CA window/static straps and no fault; timeout establishes ready OR fault, never promised success"
+}
