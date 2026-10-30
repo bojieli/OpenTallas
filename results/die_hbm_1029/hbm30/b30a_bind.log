@@ -1,0 +1,55 @@
+{"partitions": 90, "types": 81, "crossings": 961, "crossing_bits": 382723, "errors": 81, "unbound": 57316, "tied": 0, "undriven": 0, "multiply_bound": 0, "straps": 9945, "plan_driven": 0}
+   UNPLANNED NE_b002 -> NE_hub: 4 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b002 -> root: 297 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b011 -> NE_hub: 3 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b013 -> NE_hub: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b100 -> NE_b102: 2777 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b100 -> NE_b103: 1 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b101 -> NE_b103: 9 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b101 -> NE_hub: 2 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b103 -> NE_b101: 101 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b110 -> NE_b113: 798 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b111 -> NE_b113: 1000 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b111 -> NE_hub: 410 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b112 -> NE_b113: 1000 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_b110: 1534 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_b111: 1662 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_b112: 1662 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_hub: 693 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_su11: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_su20: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_b113 -> NE_su31: 596 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_hub -> NE_b111: 160 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_hub -> NE_b113: 2277 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_hub -> NE_spb0: 632 as-built crossing bits with no plan lane path (0 b planned on direct lanes)
+   UNPLANNED NE_hub -> NE_su00: 1198 as-built crossing bits with no plan lane path (1350 b planned on direct lanes)
+   UNPLANNED NE_hub -> NE_su20: 2126 as-built crossing bits with no plan lane path (1350 b planned on direct lanes)
+   UNPLANNED NE_hub -> NW_hub: 2775 as-built crossing bits with no plan lane path (2838 b planned on direct lanes)
+   UNPLANNED NE_sm0 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)
+   UNPLANNED NE_sm1 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)
+   UNPLANNED NE_sm2 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)
+   UNPLANNED NE_sm3 -> NE_hub: 37 as-built crossing bits with no plan lane path (277 b planned on direct lanes)
+Command exited with non-zero status 1
+	Command being timed: "python3 /srv/opentallas-scratch2/claude/wt/die-hbm-27/tools/die_plan/bind.py bind /srv/opentallas-scratch2/claude/die-hbm-29/plan/d29d/die_plan.json --asbuilt /srv/opentallas-scratch2/claude/die-hbm-30/b30a/asbuilt.json --out /srv/opentallas-scratch2/claude/die-hbm-30/b30a/out --strict --all-gaps --mem 24"
+	User time (seconds): 203.18
+	System time (seconds): 12.12
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:40.02
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7210932
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3913380
+	Voluntary context switches: 9127
+	Involuntary context switches: 447
+	Swaps: 0
+	File system inputs: 128
+	File system outputs: 1889968
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

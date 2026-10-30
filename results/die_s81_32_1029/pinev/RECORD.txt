@@ -1,0 +1,50 @@
+DIE-S81-32/PINEV 2026-10-29 20:11 PDT -- S81 fix-only pin-contract event (COORD ruling loop-gap 19:4x on ASK [S81-CORES-KITS] 19:29)
+Base origin/main 94b1643dc5b. Delta physical/die_plan/s81/delta_pinev_1029.py (asserts exact old forms; 2nd run refuses).
+Scope: each core OWN data only (pin table, plan LEF, legacy recipe macro sites). No outline, partition, neighbour, die datum change.
+
+(a) GEOM-21 clock pins, same face, EDGE M5 rect on the M5 track (S81-028 form; no face C -> no die tree ask):
+  dsfd_qbank_N  ck[0] M4 (0.042,4.332)    -> M5 (0.06,4.332)     0.120x0.48   [104 plan rows / 864 reps]
+  dsfd_qbank_S  ck[0] M4 (0.042,17.292)   -> M5 (0.06,17.292)    0.120x0.48   [104 rows]
+  dsdv_gunit_l4 clk   M4 (0.042,35.292)   -> M5 (0.06,35.292)    0.120x0.48   (early die tap, tap kept)
+  dsdv_gunit_l1c clk  M4 (86.358,184.284) -> M5 (86.364,184.284) 0.072x0.48 E (track 1799)
+  dsdv_gunit_l0r clk  M4 (0.042,100.236)  -> M5 (0.06,100.236)   0.120x0.48
+  dsdv_gunit_l0 clk   M4 (0.042,94.62)    -> M5 (0.06,94.62)     0.120x0.48   (early die tap, tap kept)
+  ot_s81_sstn_base566 ck M4 multiPORT (0.096,15.132) -> M5 (0.06,15.132) 0.120x0.48 [81 rows] (= the missing static placement)
+  dsdv_bk_g clk[0] M3 multiPORT S (104.985,0.0685) -> M5 (104.988,0.24) 0.048x0.48 (early die tap, tap kept)
+  ot_v41_bf_col clk M5 multiPORT 0.024w N (227.148,198.6265) -> M5 (227.148,198.48) 0.048x0.48 [56 rows] (early die tap, kept)
+  ot_s81c_attn_hcore clk M5 S 0.024x0.192 (78.828,0.0) -> M5 (78.828,0.24) 0.048x0.48 (found once (c) let GEN pass; not early)
+  Plan LEFs: the 9 non-hcore cores pointed at closed ref_tile views / shared s81_die_views (also read by legacy frame
+  ref_tiles) -> plan-owned copies physical/die_plan/s81/cores/legacy/lef/<module>.lef (only the clock PIN differs),
+  hard_cores rows repointed by textual lef-path swap in plan_s13r2.json (352 rows) and die_plan.json (165 rows); the pin
+  tables follow (lef field + pinhash). hcore stub LEF (plan-owned) edited in place; its full-outline M5 OBS notched at
+  0.024 um around the new clk. ws3_1029/ plan variants are NOT touched (they still point at the old LEF paths).
+(b) pins_canonical: after (a) the remaining kit != plan rows were native multiPORT signal pins (gunit_l0 hp_av; bk_g
+  fault[0], rst_n[0]; sstn cc[2], nf, rs, so[0], so[1]) -- kit io.tcl carried exactly the plan pins as dbBPin/dbBox
+  blocks that kit_contract.placed_pins did not read. H0-style checker fix: placed_pins reads those blocks (centre = the
+  rect centred on the kit pins.json row, else the first rect -> mismatch FAILs). Default unchanged for place_pin kits.
+  New test test_pins_canonical_native_multiport_pins: FAILS on main kit_contract, PASSES here (CHECKED).
+(c) ot_s81c_attn_hcore: GEN refusal "ld_v 0.042 um off its declared W edge rectangle" is table-wide: all 1214 plan pins
+  sat ON the boundary at the outer midpoint of their 0.192-deep LEF edge rect (590 W/580 N/42 E/2 S). All -> rect centre
+  (0.096 um inward, parallel coordinate unchanged); ld_v (0.0,4.524) -> (0.096,4.524). LEF pin rects unchanged.
+(d) macro channels >= 10.8 um (legacy recipes.json macro_sites, whole M4-track y moves, same x/orient/outline):
+  dsdv_bk_g 2x ot_sram_1r1w_128x256_m1_r2c2 y 45.36/86.448 (gap 0.024) -> 39.984/91.872 (gap 10.824), top 132.936<=172.8
+  ot_v41_bf_col 2x ot_rom_4096x274_m8 y 32.064 R180/103.68 MY (gap 8.664) -> 31.008/104.784 (gap 10.824), top 167.736<=198.72
+
+EVIDENCE (CHECKED unless marked):
+  KIT_PREFLIGHT 10/10 PASS 0 issues (was FAIL on all 10): kits regenerated with the S81-CORES-KITS recipe
+    (gen_core_kit_legacy --plan plan_s13r2.json, suffix pv1) intel2:/srv/opentallas-scratch2/claude/die-s81-32/pinev/kits,
+    preflight_pv1.json here. All 10 GEN_RC 0.
+  Tests (docker python:3.12, tip vs main-file overlay): s81 cores/legacy 43 pass / 2 fail on both (same 2 pre-existing:
+    test_hard_child_master_kit, test_natural_core_publishes_latency_contract); tools/die_plan test_pin_audit + test_kit_contract*
+    + test_kit_preflight*: tip 65 pass / main 64 pass, same 2 pre-existing fails (test_slice_kit_pins_canonical,
+    test_stage_only_clock_estimate_keeps_golden_and_core_contract); +1 = the new multiport test.
+  G0C (tools/die_plan/check.py plan_s13r2.json --completeness): branch FAIL 20 errors = main 20 errors, identical
+    error set (the frozen-plan baseline); warnings 1563 vs 1591 differ only in core_pg LEF-reachability lines (the main run
+    read a git-archive copy without ref_tile views) = run-setup artefact, not this event. intel2 die-s81-32/pinev/g0c.
+  Die clock check (GRT0 incl clock, ot_clk s81_g03c2): NOT RUN (UNCHECKED). Estimate: unchanged -- the die tree taps
+    partitions + early core taps at fixed boundary-register-mean xy; no outline/SIZE/tap datum changes; core clock pins
+    stay on their faces. Recipe: epyc2 die-s81-28/ws3v2 run.sh with this plan_s13r2.json AND real copies of
+    tools/main_e256/physical carrying the new LEFs/pin tables (the tools resolve REPO via __file__; symlinks to g03route
+    would read the old LEFs).
+  Strict bind: NOT RERUN (UNCHECKED). The event changes no RTL, port list or manifest; bind.py reads plan hard_cores for
+    inst/module/straps/bound groups, never pins_file / lef / legacy recipes (git grep). Live verify256 job untouched.

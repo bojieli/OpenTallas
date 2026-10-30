@@ -350,6 +350,10 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    # Per-type placement-core inset [W,S,E,N], default 4.32 um each. PHYs at the die edge may
+                    # explicitly retain boundary rows without changing outline, macro origins or pin positions.
+                    "kit_core_margins_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                                            "items": {"type": "number", "minimum": 0}},
                     # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
                     # so its die.pg.domains region may hold no macro; the note states why
                     "phy_pg_offmodel": {"type": "string", "minLength": 1},
@@ -926,7 +930,11 @@ SCHEMA = {
             core_internal_reach_um=_pos,
             # DIE-KV-34 10-29 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=1 (landing_placement fits CLAND cells on
             # their reserved footprint); unset = unchanged kits
-            cland_fit_reserve={"type": "boolean"})},
+            cland_fit_reserve={"type": "boolean"},
+            # FLOW-6 10-30 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=resize (landing_placement fits CLAND cells on
+            # the widest drive variant of their own family, the in-place GPL upsize; not the w/0.4 reserve of the
+            # boolean above, which overfills ring bands); unset = unchanged kits; both keys set = gen error
+            cland_fit_resize={"type": "boolean"})},
     },
 }
 
@@ -1007,6 +1015,17 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["l
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_islands"] = {
     "type": "array", "items": {"type": "object", "required": ["name", "port", "rect_um", "cells", "owner", "demand"]}}
 
+
+# DIE-S81-34/KVT2-SITE 10-30 (OWNER 12.20a form ii): declared PER-TYPE exception to the S81 MACRO site rule
+# (no macro under an ft corridor): macros whose LEF OBS stops at obs_max may sit under the named slots, whose corridor
+# layers all lie above it; ft stations j >= 1 (station_bands, +halo), landing bands and pins stay macro-free.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["macro_under_ft"] = {
+    "type": "object", "required": ["rule", "obs_max", "corridor_layers", "slots", "halo_um", "station_bands"],
+    "properties": {"rule": {"type": "string", "minLength": 1}, "obs_max": {"type": "string"},
+                   "corridor_layers": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+                   "slots": {"type": "array", "minItems": 1, "uniqueItems": True, "items": {"type": "string"}},
+                   "halo_um": {"type": "number", "minimum": 0},
+                   "station_bands": {"type": "array", "items": {"type": "object", "required": ["slot", "j", "rect_um"]}}}}
 
 # QC event: exact opt-in schema fields carried from native100 af589e572a.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]['clock']["properties"]['out_hold_check_ps'] = {'minimum': 0, 'type': 'number'}

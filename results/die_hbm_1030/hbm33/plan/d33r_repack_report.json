@@ -1,0 +1,709 @@
+{
+ "schema": "opentallas.hbm.die_hbm_33.repack_edge.v1",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-32/plan/d32q",
+ "moves": [
+  {
+   "port": "L43_1",
+   "part": "NW_b000",
+   "bus": "L43x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1470.528,
+    1614.144
+   ],
+   "type_new": [
+    1547.584,
+    1679.088
+   ]
+  },
+  {
+   "port": "L43_1",
+   "part": "NW_b010",
+   "bus": "L43x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1470.528,
+    1614.144
+   ],
+   "type_new": [
+    1547.584,
+    1679.088
+   ]
+  },
+  {
+   "port": "L42_1",
+   "part": "NW_b000",
+   "bus": "L42x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1326.336,
+    1469.952
+   ],
+   "type_new": [
+    1415.488,
+    1547.004
+   ]
+  },
+  {
+   "port": "L42_1",
+   "part": "NW_b010",
+   "bus": "L42x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1326.336,
+    1469.952
+   ],
+   "type_new": [
+    1415.488,
+    1547.004
+   ]
+  },
+  {
+   "port": "L126_7",
+   "part": "NW_b010",
+   "bus": "L126x7_o",
+   "key": "out_window_um",
+   "type_old": [
+    1289.472,
+    1298.112
+   ],
+   "type_new": [
+    1413.904,
+    1414.908
+   ]
+  },
+  {
+   "port": "L126_7",
+   "part": "NW_b000",
+   "bus": "L126x8_i",
+   "key": "in_window_um",
+   "type_old": [
+    1289.472,
+    1298.112
+   ],
+   "type_new": [
+    1413.904,
+    1414.908
+   ]
+  },
+  {
+   "port": "L101_1",
+   "part": "NW_b000",
+   "bus": "L101x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1252.608,
+    1261.248
+   ],
+   "type_new": [
+    1409.648,
+    1413.324
+   ]
+  },
+  {
+   "port": "L101_1",
+   "part": "NW_b010",
+   "bus": "L101x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1252.608,
+    1261.248
+   ],
+   "type_new": [
+    1409.648,
+    1413.324
+   ]
+  },
+  {
+   "port": "L73_1",
+   "part": "NW_b000",
+   "bus": "L73x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1201.92,
+    1252.032
+   ],
+   "type_new": [
+    1363.232,
+    1409.068
+   ]
+  },
+  {
+   "port": "L73_1",
+   "part": "NW_b010",
+   "bus": "L73x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1201.92,
+    1252.032
+   ],
+   "type_new": [
+    1363.232,
+    1409.068
+   ]
+  },
+  {
+   "port": "L52_7",
+   "part": "NW_b010",
+   "bus": "L52x7_o",
+   "key": "out_window_um",
+   "type_old": [
+    1089.792,
+    1201.344
+   ],
+   "type_new": [
+    1260.48,
+    1362.652
+   ]
+  },
+  {
+   "port": "L52_7",
+   "part": "NW_b000",
+   "bus": "L52x8_i",
+   "key": "in_window_um",
+   "type_old": [
+    1089.792,
+    1201.344
+   ],
+   "type_new": [
+    1260.48,
+    1362.652
+   ]
+  },
+  {
+   "port": "L51_1",
+   "part": "NW_b000",
+   "bus": "L51x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    977.664,
+    1089.216
+   ],
+   "type_new": [
+    1157.728,
+    1259.9
+   ]
+  },
+  {
+   "port": "L51_1",
+   "part": "NW_b010",
+   "bus": "L51x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    977.664,
+    1089.216
+   ],
+   "type_new": [
+    1157.728,
+    1259.9
+   ]
+  },
+  {
+   "port": "L20_0",
+   "part": "NW_b010",
+   "bus": "L20_o",
+   "key": "window_um",
+   "type_old": [
+    222.72,
+    967.872
+   ],
+   "type_new": [
+    474.144,
+    1157.148
+   ]
+  },
+  {
+   "port": "L20_0",
+   "part": "NW_b000",
+   "bus": "L20_i",
+   "key": "window_um",
+   "type_old": [
+    222.72,
+    967.872
+   ],
+   "type_new": [
+    474.144,
+    1157.148
+   ]
+  },
+  {
+   "port": "L43m_1",
+   "part": "NE_b000",
+   "bus": "L43x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1470.528,
+    1614.144
+   ],
+   "type_new": [
+    1547.584,
+    1679.088
+   ]
+  },
+  {
+   "port": "L43m_1",
+   "part": "NE_b010",
+   "bus": "L43x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1470.528,
+    1614.144
+   ],
+   "type_new": [
+    1547.584,
+    1679.088
+   ]
+  },
+  {
+   "port": "L42m_1",
+   "part": "NE_b000",
+   "bus": "L42x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1326.336,
+    1469.952
+   ],
+   "type_new": [
+    1415.488,
+    1547.004
+   ]
+  },
+  {
+   "port": "L42m_1",
+   "part": "NE_b010",
+   "bus": "L42x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1326.336,
+    1469.952
+   ],
+   "type_new": [
+    1415.488,
+    1547.004
+   ]
+  },
+  {
+   "port": "L126m_7",
+   "part": "NE_b010",
+   "bus": "L126x7_o",
+   "key": "out_window_um",
+   "type_old": [
+    1289.472,
+    1298.112
+   ],
+   "type_new": [
+    1413.904,
+    1414.908
+   ]
+  },
+  {
+   "port": "L126m_7",
+   "part": "NE_b000",
+   "bus": "L126x8_i",
+   "key": "in_window_um",
+   "type_old": [
+    1289.472,
+    1298.112
+   ],
+   "type_new": [
+    1413.904,
+    1414.908
+   ]
+  },
+  {
+   "port": "L101m_1",
+   "part": "NE_b000",
+   "bus": "L101x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1252.608,
+    1261.248
+   ],
+   "type_new": [
+    1409.648,
+    1413.324
+   ]
+  },
+  {
+   "port": "L101m_1",
+   "part": "NE_b010",
+   "bus": "L101x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1252.608,
+    1261.248
+   ],
+   "type_new": [
+    1409.648,
+    1413.324
+   ]
+  },
+  {
+   "port": "L73m_1",
+   "part": "NE_b000",
+   "bus": "L73x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    1201.92,
+    1252.032
+   ],
+   "type_new": [
+    1363.232,
+    1409.068
+   ]
+  },
+  {
+   "port": "L73m_1",
+   "part": "NE_b010",
+   "bus": "L73x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    1201.92,
+    1252.032
+   ],
+   "type_new": [
+    1363.232,
+    1409.068
+   ]
+  },
+  {
+   "port": "L52m_7",
+   "part": "NE_b010",
+   "bus": "L52x7_o",
+   "key": "out_window_um",
+   "type_old": [
+    1089.792,
+    1201.344
+   ],
+   "type_new": [
+    1260.48,
+    1362.652
+   ]
+  },
+  {
+   "port": "L52m_7",
+   "part": "NE_b000",
+   "bus": "L52x8_i",
+   "key": "in_window_um",
+   "type_old": [
+    1089.792,
+    1201.344
+   ],
+   "type_new": [
+    1260.48,
+    1362.652
+   ]
+  },
+  {
+   "port": "L51m_1",
+   "part": "NE_b000",
+   "bus": "L51x1_o",
+   "key": "out_window_um",
+   "type_old": [
+    977.664,
+    1089.216
+   ],
+   "type_new": [
+    1157.728,
+    1259.9
+   ]
+  },
+  {
+   "port": "L51m_1",
+   "part": "NE_b010",
+   "bus": "L51x2_i",
+   "key": "in_window_um",
+   "type_old": [
+    977.664,
+    1089.216
+   ],
+   "type_new": [
+    1157.728,
+    1259.9
+   ]
+  },
+  {
+   "port": "L20m_0",
+   "part": "NE_b010",
+   "bus": "L20_o",
+   "key": "window_um",
+   "type_old": [
+    222.72,
+    967.872
+   ],
+   "type_new": [
+    474.144,
+    1157.148
+   ]
+  },
+  {
+   "port": "L20m_0",
+   "part": "NE_b000",
+   "bus": "L20_i",
+   "key": "window_um",
+   "type_old": [
+    222.72,
+    967.872
+   ],
+   "type_new": [
+    474.144,
+    1157.148
+   ]
+  }
+ ],
+ "ports": [
+  {
+   "port": "L43_1",
+   "pins": 789,
+   "die_old": [
+    7535.808,
+    7679.424
+   ],
+   "die_new": [
+    7612.864,
+    7744.368
+   ],
+   "dens_old": 5.494,
+   "dens_new": 6.0,
+   "shift_centre": 71.0
+  },
+  {
+   "port": "L42_1",
+   "pins": 789,
+   "die_old": [
+    7391.616,
+    7535.232
+   ],
+   "die_new": [
+    7480.768,
+    7612.284
+   ],
+   "dens_old": 5.494,
+   "dens_new": 5.999,
+   "shift_centre": 83.1
+  },
+  {
+   "port": "L126_7",
+   "pins": 6,
+   "die_old": [
+    7354.752,
+    7363.392
+   ],
+   "die_new": [
+    7479.184,
+    7480.188
+   ],
+   "dens_old": 0.694,
+   "dens_new": 5.976,
+   "shift_centre": 120.61
+  },
+  {
+   "port": "L101_1",
+   "pins": 22,
+   "die_old": [
+    7317.888,
+    7326.528
+   ],
+   "die_new": [
+    7474.928,
+    7478.604
+   ],
+   "dens_old": 2.546,
+   "dens_new": 5.985,
+   "shift_centre": 154.56
+  },
+  {
+   "port": "L73_1",
+   "pins": 275,
+   "die_old": [
+    7267.2,
+    7317.312
+   ],
+   "die_new": [
+    7428.512,
+    7474.348
+   ],
+   "dens_old": 5.488,
+   "dens_new": 6.0,
+   "shift_centre": 159.17
+  },
+  {
+   "port": "L52_7",
+   "pins": 613,
+   "die_old": [
+    7155.072,
+    7266.624
+   ],
+   "die_new": [
+    7325.76,
+    7427.932
+   ],
+   "dens_old": 5.495,
+   "dens_new": 6.0,
+   "shift_centre": 166.0
+  },
+  {
+   "port": "L51_1",
+   "pins": 613,
+   "die_old": [
+    7042.944,
+    7154.496
+   ],
+   "die_new": [
+    7223.008,
+    7325.18
+   ],
+   "dens_old": 5.495,
+   "dens_new": 6.0,
+   "shift_centre": 175.37
+  },
+  {
+   "port": "L20_0",
+   "pins": 4098,
+   "die_old": [
+    6288.0,
+    7033.152
+   ],
+   "die_new": [
+    6539.424,
+    7222.428
+   ],
+   "dens_old": 5.5,
+   "dens_new": 6.0,
+   "shift_centre": 220.35
+  },
+  {
+   "port": "L43m_1",
+   "pins": 789,
+   "die_old": [
+    7535.808,
+    7679.424
+   ],
+   "die_new": [
+    7612.864,
+    7744.368
+   ],
+   "dens_old": 5.494,
+   "dens_new": 6.0,
+   "shift_centre": 71.0
+  },
+  {
+   "port": "L42m_1",
+   "pins": 789,
+   "die_old": [
+    7391.616,
+    7535.232
+   ],
+   "die_new": [
+    7480.768,
+    7612.284
+   ],
+   "dens_old": 5.494,
+   "dens_new": 5.999,
+   "shift_centre": 83.1
+  },
+  {
+   "port": "L126m_7",
+   "pins": 6,
+   "die_old": [
+    7354.752,
+    7363.392
+   ],
+   "die_new": [
+    7479.184,
+    7480.188
+   ],
+   "dens_old": 0.694,
+   "dens_new": 5.976,
+   "shift_centre": 120.61
+  },
+  {
+   "port": "L101m_1",
+   "pins": 22,
+   "die_old": [
+    7317.888,
+    7326.528
+   ],
+   "die_new": [
+    7474.928,
+    7478.604
+   ],
+   "dens_old": 2.546,
+   "dens_new": 5.985,
+   "shift_centre": 154.56
+  },
+  {
+   "port": "L73m_1",
+   "pins": 275,
+   "die_old": [
+    7267.2,
+    7317.312
+   ],
+   "die_new": [
+    7428.512,
+    7474.348
+   ],
+   "dens_old": 5.488,
+   "dens_new": 6.0,
+   "shift_centre": 159.17
+  },
+  {
+   "port": "L52m_7",
+   "pins": 613,
+   "die_old": [
+    7155.072,
+    7266.624
+   ],
+   "die_new": [
+    7325.76,
+    7427.932
+   ],
+   "dens_old": 5.495,
+   "dens_new": 6.0,
+   "shift_centre": 166.0
+  },
+  {
+   "port": "L51m_1",
+   "pins": 613,
+   "die_old": [
+    7042.944,
+    7154.496
+   ],
+   "die_new": [
+    7223.008,
+    7325.18
+   ],
+   "dens_old": 5.495,
+   "dens_new": 6.0,
+   "shift_centre": 175.37
+  },
+  {
+   "port": "L20m_0",
+   "pins": 4098,
+   "die_old": [
+    6288.0,
+    7033.152
+   ],
+   "die_new": [
+    6539.424,
+    7222.428
+   ],
+   "dens_old": 5.5,
+   "dens_new": 6.0,
+   "shift_centre": 220.35
+  }
+ ],
+ "free_bottom": {
+  "NW": [
+   6065.28,
+   6539.424,
+   474.14
+  ],
+  "NE": [
+   6065.28,
+   6539.424,
+   474.14
+  ]
+ },
+ "out_sha": "ae0cb76356b1"
+}

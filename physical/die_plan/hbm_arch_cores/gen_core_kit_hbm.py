@@ -706,6 +706,21 @@ def build_wrapper(module, pb, top, params, tports, cmap=None, straps=None, ties=
 
 
 
+def density_cts_lines(derate, shallow=False):
+    """config.mk lines of the density-tap CTS (HBM-CLKSTRUCT 10-25).  shallow (DIE-HBM-32 10-30, opt-in): the clock
+    insertion of the default form is ~1.9x the 250-ps TT core target (tkm tile0 canary, TT: port->root 147 + binary
+    H-tree over 37 taps 6 x BUFx24 152 + iso/align BUFx4 55 + tap/leaf 125 ps); shallow drops the per-tap iso cell and
+    builds longer H-tree segments and larger leaf clusters (measured 475 -> 419 ps at CTS)."""
+    if shallow:
+        return ["export OT_DTAP_ISO = 0",
+                "override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
+                f"{derate} -sink_clustering_max_diameter 60 -sink_clustering_size 30 "
+                "-distance_between_buffers 100 -balance_levels"]
+    return ["override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
+            f"{derate} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "
+            "-distance_between_buffers 40 -balance_levels"]
+
+
 def prects_phase_hooks(kd, cfg, clocks, insertion_ps):
     """Opt-in ideal LOCAL network estimate, removed before any CTS builder.
 
@@ -911,6 +926,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     ap.add_argument("--prects-estimate", action="store_true",
                     help="stage-only planned local clock NETWORK insertion before placement; explicitly cleared before CTS; SDC unchanged")
     ap.add_argument("--clock-tap-sinks", type=int, default=1250)
+    ap.add_argument("--clock-taps-shallow", action="store_true",
+                    help="DIE-HBM-32 10-30 (opt-in, needs --clock-taps density): shallow density-tap form = no iso cell on every "
+                         "tap (OT_DTAP_ISO=0), CTS -distance_between_buffers 100, leaf clusters 30 sinks / 60 um. Measured on the "
+                         "tkm tile0 canary CTS (TT, placement RC): tap mean 475 -> 419 ps (-56). Default off = unchanged")
     # HBM-KITS 2026-10-25: the FLOW 10-25 shared defaults (main tools/die_plan/gen_phys.py) for HBM core kits:
     # F2 = ASAP7 per-layer RC calibrated to routed RCX (tools/die_plan/setRC_rcx_asap7.tcl as LAYER_PARASITICS_FILE /
     # SET_RC_TCL; --stock-rc = old platform setRC basis); F1 = per-corner IO clock basis for the in-flow FF hold repair
@@ -976,7 +995,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     # The exp-lane descriptor table is 256 x 61 bits in the proven
     # split wrapper (Yosys inventory: 15616 bits). Keep that full table;
     # the ORFS default 4096-bit inference guard rejects it before mapping.
-    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)", module):
+    # HBM-CORES-KITS-26 10-30: the free-ID master lane_exp0_id (OWNER (B) strap alias wrapper) is the same lane.
+    if re.fullmatch(r"ot_hbm_su_static_pgslice_lg__lane_exp(?:[0-9]+|_l)(?:_id)?", module):
         rec["synth_memory_max_bits"] = max(256 * 61, rec.get("synth_memory_max_bits", 0))
         # Every exp view uses the plan's family placement.  A bulk kit
         # regeneration must not silently return to unconstrained SRAM packing.
@@ -1284,6 +1304,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     tb = (TOOL / "tap_balance.tcl").read_text()
     tb = tb.replace("set tb_port_re {^clk(_t[0-9]+|_c[0-9]+)?$}", "set tb_port_re {^(" + "|".join(re.escape(c) for c in sorted(set(clks))) + ")$}")
     (kd / "tap_balance.tcl").write_text(tb)
+    if a.clock_taps_shallow and a.clock_taps != "density":
+        raise SystemExit("--clock-taps-shallow needs --clock-taps density")
     if a.clock_taps == "density":
         for f in ("core_density_taps.tcl", "core_tap_align.tcl"):
             shutil.copyfile(HERE / f, kd / f)
@@ -1498,9 +1520,7 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                 # (pgslice pretree clk_ctl) died in CTS with invalid command name NULL (findBTerm clk -> NULL)
                 f"export OT_DTAP_PORT = {clks[0]}" if len(clks) == 1 else "# OT_DTAP_PORT default clk",
                 "override export POST_CTS_TCL = /work/core_tap_align.tcl",
-                "override export CTS_ARGS = -sink_clustering_enable -repair_clock_nets -delay_buffer_derate "
-                f"{rec.get('cts_delay_buffer_derate', 0.5)} -sink_clustering_max_diameter 30 -sink_clustering_size 20 "
-                "-distance_between_buffers 40 -balance_levels"]
+                ] + density_cts_lines(rec.get("cts_delay_buffer_derate", 0.5), a.clock_taps_shallow)
     flow = dict(rc_cal=not a.stock_rc, f1=None, f4=not a.no_f4)
     if not a.stock_rc:
         cfg += ["export LAYER_PARASITICS_FILE = /work/setRC_rcx.tcl", "export SET_RC_TCL = /work/setRC_rcx.tcl"]
@@ -1593,6 +1613,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                                    phase="post GRT optimization/legalization", clock="frozen + strict diff")
     if a.clock_taps != "off":
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
+        if a.clock_taps_shallow:
+            fz["clock_taps"]["shallow"] = True
     if ms is not None:
         fz["master_plan"] = ms
     if reset_contract is not None:

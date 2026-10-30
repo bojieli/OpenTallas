@@ -305,7 +305,6 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
     (* keep = "true" *) reg [3:0] e_poolc0, e_poolc1;         // per-epoch pool flag, copy per 4 rows (write control start);
                                                              // plain vectors (a dynamically indexed array becomes a memory
                                                              // and its copies merge: gate try 2, 98 loads)
-    reg              e_pool [0:1];
     reg  [5:0]       e_k6 [0:1];
     reg  [7:0]       e_k3 [0:1];
     always @(posedge ck) begin
@@ -317,7 +316,6 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
                     e_lo[e][r] <= b_emin[r][5:0];
                 end
             end
-        if (b_vk[0]) e_pool[b_epk[0]] <= b_poolm;
         if (b_vk[0] && !b_epk[0]) e_poolc0 <= {4{b_poolm}};
         if (b_vk[0] && b_epk[0]) e_poolc1 <= {4{b_poolm}};
         if (b_vk[1]) e_k6[b_epk[1]] <= b_k;
@@ -495,7 +493,9 @@ module qfd_dv_s5_xhead3 #(parameter integer HEAD_MUT = 0) (
 `endif
     wire [5:0]    k6_x   = fwd ? b_k : e_k6[REP_k];
     wire [7:0]    k3_x   = fwd ? b_k3 : e_k3[REP_k];
-    wire          pool_x = fwd ? b_poolm : e_pool[REP_k];
+    // QC-KITS-W 10-30: the epoch pool flag is read from its kept copy (bit 0); the former unkept e_pool[0:1] held the
+    // same value under the same write enable, was merged into the copies by synthesis and broke LEC correlation (POOLc)
+    wire          pool_x = fwd ? b_poolm : (REP_k ? e_poolc1[0] : e_poolc0[0]);
     always @(posedge ck or negedge rr[6])
         if (!rr[6]) begin
             st[0] <= 2'd0; st[1] <= 2'd0; ep_rd_c <= 10'd0; busy <= 1'b0; flt <= 1'b0; ph <= 3'd0; rep_c <= 4'b0;

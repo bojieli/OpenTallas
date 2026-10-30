@@ -1,0 +1,66 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-29/plan/d29d",
+ "base_sha": "1aefc6184b2a",
+ "out_sha": "3ffa9c9521fe",
+ "near_um": 13000.0,
+ "totals": {
+  "built": 0,
+  "built_bits": 0,
+  "far": 0,
+  "far_bits": 0,
+  "failed": 2,
+  "by_kind": {
+   "adj": 0,
+   "same": 0,
+   "reverse": 0,
+   "path": 0
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [],
+ "far": [],
+ "failed": [
+  {
+   "src": "NW_b100",
+   "dst": "NW_b102",
+   "bits": 2777,
+   "why": "no free window NW_su21|NW_su20",
+   "chains": [
+    [
+     "NW_b100",
+     "NW_b110",
+     "NW_su31",
+     "NW_su30",
+     "NW_spu1",
+     "NW_su21",
+     "NW_su20",
+     "NW_b111",
+     "NW_b103",
+     "NW_b102"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b102",
+   "bits": 2777,
+   "why": "no free window NE_su21|NE_su20",
+   "chains": [
+    [
+     "NE_b100",
+     "NE_b110",
+     "NE_su31",
+     "NE_su30",
+     "NE_spu1",
+     "NE_su21",
+     "NE_su20",
+     "NE_b111",
+     "NE_b103",
+     "NE_b102"
+    ]
+   ]
+  }
+ ]
+}

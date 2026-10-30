@@ -682,12 +682,19 @@ class Landings:
                                   ports=dict(ready=spec["ready_port"],fault=spec["fault_port"]),gating="ready AND, fault OR",
                                   added_data_cycles=0,added_external_ports=0,check="native leaf header (gen_rtl)")
 
-    def _reader_start_rtl(self, tn, bus, body, logic, type_key=None):
-        """Transport the mature origin to one reader; mission/writer START stay unchanged."""
+    def _reader_start_rtl(self, tn, bus, body, logic, type_key=None, head=""):
+        """Transport the mature origin to one reader; mission/writer START stay unchanged. Returns (ring reset, body)."""
         key = type_key or tn
         cfg = self.types[key].get("clock", {}).get("landing_reader_start")
         if cfg is None:
-            return "cland_start"
+            return "cland_start", body
+        # FLOW-6 10-30 (DIE-HEAD-37 R2 attempt 1, st_str u_rrl_42 / n3_transit u_rrl_38 / st_m u_rrl_18): a plan raw
+        # reset whose relay Q also drives an output port (assign rst_o_0 = rr_t7) makes that port flop feed internal
+        # logic, which face_guard FAILs as 'shared' at kit synth. Such a relay becomes the existing private-RAW cell
+        # ot_dp_head_raw_export_pair (same clk/D/Q, export_q <= D: same cycle, +1 flop, same site) and the reader
+        # stage takes export_q; relays that drive no port are unchanged.
+        outputs = set(re.findall(r"\boutput\s+(?:wire\s+|reg\s+)?(?:\[[^\]]*\]\s*)?(\w+)", head))
+        private = {}
         import count_align_bind as CAB
         depth = CAB.reader_start_depth(self.plan, key)
         branch = cfg["branches"][bus]
@@ -704,10 +711,29 @@ class Landings:
             if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
                 raise LandingError(f"{tn}.{bus}: reader START stage {i} needs a local registered raw reset")
             # Existing wavefront relays, not an invented/resetless control net.
-            registered = re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+            prior = re.search(r"\bot_dp_head_raw_export_pair\s+(\w+)\s*\([^;]*?\.q\(\s*" + re.escape(raw) +
+                              r"\s*\)[^;]*?\.export_q\(\s*(" + re.escape(raw) + r"_reader_raw)\s*\)\s*\);", body, re.S)
+            done = None if prior is None else dict(net=prior.group(2), instance=prior.group(1), port_net=raw,
+                                                    added_flops=1, added_cycles=0)
+            registered = done is not None or re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
                                    re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
             if not registered:
                 raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} has no registered wavefront driver")
+            if done is None and (raw in outputs or any(
+                    o in outputs for o in re.findall(r"\bassign\s+(\w+)\s*=\s*" + re.escape(raw) + r"\s*;", body))):
+                rel = list(re.finditer(r"\bot_dp_rrelay\s+(\w+)\s*\(([^;]*?\.q\(\s*" + re.escape(raw) +
+                                       r"\s*\)[^;]*?)\);", body, re.S))
+                if len(rel) != 1:
+                    raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} drives an output port and its relay "
+                                       f"is not one native body ot_dp_rrelay (private copy impossible)")
+                m = rel[0]
+                done = dict(net=f"{raw}_reader_raw", instance=m.group(1), port_net=raw, added_flops=1, added_cycles=0)
+                body = (body[:m.start()] + f"ot_dp_head_raw_export_pair {m.group(1)} ({m.group(2).rstrip()}, "
+                        f".export_q({done['net']}));" + body[m.end():])
+                logic += [f"    wire {done['net']};  // FLOW-6 private reader START raw copy ({raw} drives an output port)"]
+            if done is not None:
+                private[raw] = done
+                raw = done["net"]
             name = f"u_cland_reader_start_{ident(bus)}_{i}"
             net = f"cland_reader_start_{ident(bus)}_{i}"
             logic += [f"    wire {net};",
@@ -719,8 +745,9 @@ class Landings:
         self.reset_placements.setdefault(tn, {})[bus]["reader_start"] = dict(
             depth=depth, stages=records, ring_reset=prev, K_adjustment=-depth,
             boot_extra_cycles=depth, steady_data_cycles_added=0,
-            qualification="local raw-reset release and actual placed hops require plan timing")
-        return prev
+            qualification="local raw-reset release and actual placed hops require plan timing",
+            **({"private_raw_copies": private} if private else {}))
+        return prev, body
 
     def _writer_start_rtl(self, tn, bus, head, body, logic, type_key=None):
         """W1 (DIE-HEAD-38): transport the sender's SAFE start_d (second sampler, never the first synchroniser
@@ -938,7 +965,7 @@ class Landings:
             if cat:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
-                reader_start = self._reader_start_rtl(tn, b, body, logic, type_key=key)
+                reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head)
                 if cat.get("straps"):
                     kw = cat["rings"][b]["kw"]
                     extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]

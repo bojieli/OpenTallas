@@ -1,0 +1,3 @@
+#!/bin/bash
+docker run --rm --name dhbm30s_hubnw -m 48g -v /srv/opentallas-scratch2:/srv/opentallas-scratch2 -v /srv/opentallas-scratch:/srv/opentallas-scratch openroad/orfs:asap7lock bash -c "/usr/bin/time -v yosys -q -l /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/yosys.log -s /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/hub_synth.ys" > /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/run.out 2>&1
+echo $? > /srv/opentallas-scratch2/claude/wt/die-hbm-27/results/die_hbm_1029/hbm30/synth/nw/rc

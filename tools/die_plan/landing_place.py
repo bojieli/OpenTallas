@@ -8,12 +8,15 @@ def safe(s):return re.sub(r'\W','_',s)
 
 
 def _bus_order(t,bus):
-    """bit order of the band's bus on the type (buses[].order, or ft_slots in_order/out_order for <slot>_i/_o)."""
+    """bit order of the band's bus on the type (buses[].order, or ft_slots in_order/out_order for <slot>_i/_o).
+    FLOW-8 10-30 (DIE-HEAD-38 02:24 item 1): a slot with only 'order' (no in_order/out_order) uses it for both sides,
+    the same fallback the schema pin layout uses (s_.get(stem + '_order', s_.get('order'))); before, the band read
+    lsb_low and filled an lsb_high slot's ring reversed (+ff instead of +ffr: HEAD wshim_rx r2r 629 x343)."""
     for b in t.get('buses',[]):
         if b.get('name')==bus:return b.get('order','lsb_low')
     for s in t.get('ft_slots',[]):
         for suffix,key in (('_i','in_order'),('_o','out_order')):
-            if s.get('name','')+suffix==bus:return s.get(key,'lsb_low')
+            if s.get('name','')+suffix==bus:return s.get(key,s.get('order','lsb_low'))
     return 'lsb_low'
 
 

@@ -35,7 +35,9 @@
  },
  "dsdv_bk_g": {
   "ref_tile": "physical/ref_tile/s81dvbk_g2",
-  "rtl_dirs": true
+  "rtl_dirs": true,
+  "macro_sites": {"ot_sram_1r1w_128x256_m1_r2c2": [[60.48, 39.984, "R0"], [60.48, 91.872, "R0"]]},
+  "_pinev": "S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): spec.json at 45.36/86.448 left a 0.024-um stack gap; sites split -5.376/+5.424 um (whole M4 tracks) for a 10.824-um interior channel (kit_contract macro_channels >= 10.8) inside the 216x172.8 outline"
  },
  "dsdv_bksel_c": {
   "ref_tile": "physical/ref_tile/s81dvbk_selc2"
@@ -225,22 +227,26 @@
   "_gb": "S81-QX-GB 2026-10-26 (COORD 06:38 (a) _gb ADOPTED, 13:18 S81-CORE-LAT-R5 (a)): kit top = ot_v41_rom_elem_q_qxpq_w10_gb (go/go_tag pin capture +1 go edge, xs_sv[1:0] removed: 737 pins, other pins at plan positions) with CGR 8 = one ICG per in-core region (spec params); the legacy top fails raw face_guard (go shared, xs_sv dropped)."
  },
  "ot_v41_bf_col": {
+  "params": {"KEEP_XPOS": 1},
+  "lec_hints": "results/die_s81_25_bf_1029/lec_hints.json",
+  "why_lec_hints": "Native complete kit proof 61723/61723 EQ; five aliases proved inductively. KEEP_XPOS preserves the register correspondence through memory_dff, zero cycles.",
   "ref_tile": "physical/die_plan/s81/cores/legacy/specs/ot_v41_bf_col",
   "util": 0.6,
   "macro_sites": {
    "ot_rom_4096x274_m8": [
     [
      42.12,
-     32.064,
+     31.008,
      "R180"
     ],
     [
      42.12,
-     103.68,
+     104.784,
      "MY"
     ]
    ]
   },
+  "_pinev": "S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): ROM pair y 32.064/103.68 -> 31.008/104.784 (-1.056/+1.104 um, whole M4 tracks): interior channel 8.664 -> 10.824 um (kit_contract macro_channels >= 10.8), same x, orients, outline",
   "suffix": "r4",
   "_why": "S81-CORE-LAT r4 2026-10-26 (COORD 11:47 (1), 12.8a centre entry): the PP ROM pair stays on the W side 40 um in (closed bfh_compact199 place_col.tcl x) but mirrored about the core centre row: lower u_rom0 R180 / upper u_rom1 MY (closed view had MY/R180) so both ROM clk/addr pin bands (R0 W edge y 0.78) land on the ROM E edge at the core centre y (99.36 -4.34 / +4.32 um gap), facing the logic and 57 um from the plan centre clock entry (224.64, 99.36); 4.32 um gap to the centre row (qxpq_w10 convention). 144 read bits face the W capture strip as before.",
   "_lat": "Clock: centre entry + ICG-aware internal tree come from the master-plan slice (--master-slice, core_infra core_tree.gates for the 40 RCG ICGs, physical/die_plan/s81/core_lat/bf_col_gates.json); without a slice this recipe only gives the macro/pin/RTL frame (plan N-face clk pin) for synth+place / GEOM."

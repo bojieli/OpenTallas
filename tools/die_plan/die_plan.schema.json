@@ -789,6 +789,15 @@
       "type": "string",
       "minLength": 1
      },
+     "kit_core_margins_um": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+       "type": "number",
+       "minimum": 0
+      }
+     },
      "phy_pg_offmodel": {
       "type": "string",
       "minLength": 1
@@ -3617,6 +3626,56 @@
         "demand"
        ]
       }
+     },
+     "macro_under_ft": {
+      "type": "object",
+      "required": [
+       "rule",
+       "obs_max",
+       "corridor_layers",
+       "slots",
+       "halo_um",
+       "station_bands"
+      ],
+      "properties": {
+       "rule": {
+        "type": "string",
+        "minLength": 1
+       },
+       "obs_max": {
+        "type": "string"
+       },
+       "corridor_layers": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+         "type": "string"
+        }
+       },
+       "slots": {
+        "type": "array",
+        "minItems": 1,
+        "uniqueItems": true,
+        "items": {
+         "type": "string"
+        }
+       },
+       "halo_um": {
+        "type": "number",
+        "minimum": 0
+       },
+       "station_bands": {
+        "type": "array",
+        "items": {
+         "type": "object",
+         "required": [
+          "slot",
+          "j",
+          "rect_um"
+         ]
+        }
+       }
+      }
      }
     }
    }
@@ -4639,6 +4698,9 @@
      "exclusiveMinimum": 0
     },
     "cland_fit_reserve": {
+     "type": "boolean"
+    },
+    "cland_fit_resize": {
      "type": "boolean"
     }
    }
