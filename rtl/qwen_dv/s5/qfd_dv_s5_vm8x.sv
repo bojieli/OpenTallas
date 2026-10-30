@@ -484,7 +484,13 @@ endmodule
 // (u_twp* becomes the shared relay stage in front of the per-SRAM landings) so that MIF=1 is exactly MIF=0 delayed by one
 // cycle on bs_q (bs_q(t+1) = bs_q_MIF0(t); write/read ordering unchanged); fault is unchanged (0 cycles).
 // PRICE vs MIF=0: BTAB read +1, table write +1.  The parent must schedule the +1 (static schedule).
-module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
+// Distinct kept modules prevent merging the private sticky state with the dedicated face FF.
+(* keep_hierarchy = "yes" *) module qfd_dv_s8x_btab_fault_ff #(parameter integer ID = 0) (
+    input wire ck, input wire rst_n, input wire d, output reg q);
+    always @(posedge ck or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
+module qfd_dv_s8x_btab #(parameter integer MIF = 0, parameter integer FAULT_OUTPUT_CLONE = 0) (
     input  wire            ck,
     input  wire            rst_n,
     input  wire            bs_re,
@@ -494,7 +500,7 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
     input  wire [1:0]      tw_kind,
     input  wire [8:2]      tw_addr,
     input  wire [1023:0]   tw_data,
-    output reg             fault
+    output wire            fault
 );
     genvar gk, bk;
     reg rl0, rl1;
@@ -552,9 +558,19 @@ module qfd_dv_s8x_btab #(parameter integer MIF = 0) (
     always @(posedge ck) bs_q <= bs_n;
     reg bs_bad_q;
     always @(posedge ck) bs_bad_q <= pbs_re && pbs_addr[23:9] != 0;
-    always @(posedge ck or negedge rl1)
-        if (!rl1) fault <= 1'b0;
-        else fault <= fault | bs_bad_q;
+    // Default-off physical face repair: identical state equation and reset depth, no extra cycle.
+    generate if (FAULT_OUTPUT_CLONE != 0) begin : g_fault_clone
+        wire sticky;
+        wire next_fault = sticky | bs_bad_q;
+        qfd_dv_s8x_btab_fault_ff #(.ID(0)) u_state (.ck(ck), .rst_n(rl1), .d(next_fault), .q(sticky));
+        qfd_dv_s8x_btab_fault_ff #(.ID(1)) u_output (.ck(ck), .rst_n(rl1), .d(next_fault), .q(fault));
+    end else begin : g_fault_legacy
+        reg state;
+        always @(posedge ck or negedge rl1)
+            if (!rl1) state <= 1'b0;
+            else state <= state | bs_bad_q;
+        assign fault = state;
+    end endgenerate
 endmodule
 
 // ===================================================================================================== PROG leaf
