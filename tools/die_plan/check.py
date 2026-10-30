@@ -151,12 +151,18 @@ def check_ft_macro_sites(P, R):
     """Reject station cells inside placed SRAM/ROM/core footprints at actual bit sites."""
     import gen_phys
     import ft_bit_sites
+    from ft_full_stage import load
     count = 0
     for tn, t in P.types.items():
         try:
             boxes = S.placed_macro_boxes(t)
         except ValueError as exc:
             R.err('geometry', f'type {tn}: {exc}', type=tn)
+            continue
+        try:
+            full = load(P, tn)
+        except (ValueError, KeyError, OSError) as exc:
+            R.err('geometry', f'type {tn}: invalid full-stage FT packet: {exc}', type=tn)
             continue
         if not boxes or not t.get('ft_slots'):
             continue
@@ -178,7 +184,10 @@ def check_ft_macro_sites(P, R):
                     return {'E': (x-1,y), 'W': (x+1,y), 'N': (x,y-1), 'S': (x,y+1)}[face]
                 a, b = inset(ap), inset(bp); route = zroute(a, b, ap[2], bp[2]); length = plen(route)
                 for j in range(stages):
-                    if slot.get('bit_sites_um') and j > 0:
+                    if name in full:
+                        row = full[name][j,bit]; x,y = row['xy']; w,h = row['size']
+                        rect = (x,y,x+w,y+h)
+                    elif slot.get('bit_sites_um') and j > 0:
                         x, y = slot['bit_sites_um'][j-1][bit]; w, h = slot['bit_site_cell_um']
                         rect = (x, y, x+w, y+h)
                     else:
@@ -945,7 +954,7 @@ CLOCK_LEG_MAX_UM = 405.0   # OWNER 10-17 planned reach; GEOM-REVIEW-2 11:35 R1 (
 CLOCK_BUF_HALO_UM = 2.0   # GEOM-REVIEW 15:24 [PATH-HBM-TKMCLKBUF] (1): halo to any FT bit site / station register
 
 
-def _buf_near_station(t, q, cell=(1.404, 0.27)):
+def _buf_near_station(t, q, cell=(1.404, 0.27), full=None):
     """First FT bit site / ft station / internal station register whose cell box (bit_site_cell_um, LL at the point)
     comes within CLOCK_BUF_HALO_UM of the buffer point q, else None."""
     h = CLOCK_BUF_HALO_UM
@@ -953,7 +962,13 @@ def _buf_near_station(t, q, cell=(1.404, 0.27)):
     def hit(p, wh):
         return (p[0] - h - EPS < q[0] < p[0] + wh[0] + h + EPS) and (p[1] - h - EPS < q[1] < p[1] + wh[1] + h + EPS)
 
+    for slot, rows in (full or {}).items():
+        for row in rows.values():
+            if hit(row["xy"], row["size"]):
+                return f"ft {slot} full-stage {row['stage']}/{row['bit']}"
     for f in t.get("ft_slots", []) or []:
+        if f["name"] in (full or {}):
+            continue
         wh = f.get("bit_site_cell_um") or cell
         for p in f.get("regs_um", []) or []:
             if hit(p, wh):
@@ -1001,7 +1016,7 @@ def check_clock_branch_buffers(P, R):
             if hit:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} is inside hard core {hit}", type=tn)
                 bad = True
-            near = _buf_near_station(t, q)
+            near = _buf_near_station(t, q, full=__import__("ft_full_stage").load(P, tn))
             if near:
                 R.err("clock", f"type {tn}: branch buffer {b['name']} at {q} within {CLOCK_BUF_HALO_UM} um halo of "
                                f"{near}", type=tn)
@@ -1047,7 +1062,7 @@ def check_clock_branch_buffers(P, R):
                             R.err("clock", f"type {tn}: leg repeater {r['name']} cell at {ll} overlaps hard core {hit}",
                                   type=tn)
                             bad = True
-                        near = _buf_near_station(t, r["xy"])
+                        near = _buf_near_station(t, r["xy"], full=__import__("ft_full_stage").load(P, tn))
                         if near:
                             R.err("clock", f"type {tn}: leg repeater {r['name']} within {CLOCK_BUF_HALO_UM} um halo of "
                                            f"{near}", type=tn)

@@ -350,6 +350,7 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
                     # Per-type placement-core inset [W,S,E,N], default 4.32 um each. PHYs at the die edge may
                     # explicitly retain boundary rows without changing outline, macro origins or pin positions.
                     "kit_core_margins_um": {"type": "array", "minItems": 4, "maxItems": 4,

@@ -72,6 +72,8 @@ def planned_sinks(P, tn, bit_sites=False):
     slot route (or at regs_um), as face_flops.tcl places them.  ft out pins carry no sink (the neighbour's station 0)."""
     import gen_phys
     t = P.types[tn]
+    from ft_full_stage import load, centre
+    full = load(P, tn)
     w, h = t["outline_um"]
     slots = {s["name"]: s for s in t.get("ft_slots", [])}
     pins = gen_phys.type_pins(P, tn)
@@ -85,6 +87,10 @@ def planned_sinks(P, tn, bit_sites=False):
             if sfx == "_o":
                 continue
             s = slots[base]
+            if base in full:
+                for j in range(s["stations"]):
+                    out.append(centre(full[base][j,bit]) + (f"ft_s{j}",))
+                continue
             out.append(_inset(x, y, face, w, h) + ("ft_s0",))
             k = int(s.get("stations", 1))
             o = at.get((base + "_o", bit))
