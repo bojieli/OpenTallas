@@ -228,6 +228,9 @@ def parse_leaf_ports(text, module):
         if depth == 0:
             break
     body = re.sub(r"//[^\n]*|/\*.*?\*/", "", text[j + 1:k - 1], flags=re.S)
+    # Verilog attributes on a port declaration, e.g. '(* keep *) output reg q' (ot_dp_head_raw_export_pair), are not
+    # part of the port (DIE-HEAD-39 10-30: such ports were dropped -> nested port-bind 'unknown').
+    body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)
     ports, cur_dir, cur_w = {}, None, ""
     for tok in body.split(","):
         tok = tok.strip()
