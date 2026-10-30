@@ -235,11 +235,14 @@ proc ot_ps_add_clock {pin rf} {
   if {[dict exists $::ot_ps_R $ref]} {error "ot_ps_add_clock: clock reference collision $ref"}
   dict set ::ot_ps_R $ref [list $full $cn $a $b $rf]
   dict set ::ot_ps_by_clock $key $ref
-  if {[info exists ::ot_ps_tpin] && [dict exists $::ot_ps_tpin $full]} {dict set ::ot_ps_toff $ref [dict get $::ot_ps_tpin $full]}
+  if {[info exists ::ot_ps_tpin] && [dict exists $::ot_ps_tpin $full]} {
+    dict set ::ot_ps_toff $ref [dict get $::ot_ps_tpin $full]
+    dict set ::ot_ps_tmatched $full 1
+  }
   return $ref
 }
 proc ot_ps_regs {} {
-  set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_noarr 0
+  set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_tmatched {};set ::ot_ps_noarr 0
   foreach p [all_registers -clock_pins] {ot_ps_add_clock $p [ot_ps_edge $p]}
   return $::ot_ps_R
 }
@@ -390,8 +393,8 @@ proc ot_ps_measure {{credit_max 5000}} {
   if {[info exists ::ot_ps_tpin]} {
     foreach dly {max min} { dict set out tgt_$dly [ot_ps_check $P $dly $credit_max 1] }
     dict set out target_file $::ot_ps_tfile
-    dict set out target_pins [dict size $::ot_ps_toff]
-    dict set out target_unmatched [expr {[dict size $::ot_ps_tpin] - [dict size $::ot_ps_toff]}]
+    dict set out target_pins [dict size $::ot_ps_tmatched]
+    dict set out target_unmatched [expr {[dict size $::ot_ps_tpin] - [dict size $::ot_ps_tmatched]}]
   }
   unset ::ot_ps_pc
   return $out

@@ -81,4 +81,8 @@ set r [ot_ps_add_clock {*}[ot_ps_clock_role mem/rd clkq]]
 puts [list [dict size $::ot_ps_R] [lindex [dict get $::ot_ps_R $w] 0] [ot_ps_off $w] [ot_ps_off $r]]
 set raw [expr {469.864314123-[lindex [dict get $::ot_ps_R $w] 3]}]
 puts [format %.6f [expr {$raw-1.030053}]]
-''') == ['2 mem/WCLK 20 10', '22.633518']
+# A second active edge of the same physical pin retains its offset without
+# counting that target-file pin twice.
+set wf [ot_ps_add_clock mem/WCLK fall]
+puts [list [ot_ps_off $wf] [dict size $::ot_ps_tmatched]]
+''') == ['2 mem/WCLK 20 10', '22.633518', '20 2']
