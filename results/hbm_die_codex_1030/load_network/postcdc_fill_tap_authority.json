@@ -1,0 +1,557 @@
+{
+  "scope": "Source-authoritative earlier branch candidates, not source-matched physical pins or certified existing station reuse",
+  "authority": "Binder actual ntop_load_provider_graph.json; native VMKS splitstrap post-GraySPSC/streamregistered output",
+  "bundle": "{data256,epoch16,slot6,buffer1,valid1}",
+  "all_fields_same_age_required": true,
+  "rows": [
+    {
+      "part": "NW_hub",
+      "leaf_index": 0,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 0,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            1883.52,
+            3551.04
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 2,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 1,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 0,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            1883.52,
+            3551.04
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 2,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 2,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 0,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            1883.52,
+            3551.04
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 2,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 3,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 0,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            1883.52,
+            3551.04
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 2,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 4,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 1,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 3,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 5,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 1,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 3,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 6,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 1,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 3,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NW_hub",
+      "leaf_index": 7,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 1,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 3,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 0,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 4,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            3965.76,
+            3067.2
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 6,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 1,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 4,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            3965.76,
+            3067.2
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 6,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 2,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 4,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            3965.76,
+            3067.2
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 6,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 3,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 4,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q0",
+          "physical_origin_um": [
+            3965.76,
+            3067.2
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 6,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q2",
+          "physical_origin_um": [
+            328.32,
+            3188.16
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 4,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 5,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 7,
+          "PC": 0,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 5,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 5,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 7,
+          "PC": 1,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 6,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 5,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 7,
+          "PC": 2,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    },
+    {
+      "part": "NE_hub",
+      "leaf_index": 7,
+      "coherent_taps": [
+        {
+          "native_vmks_index": 5,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q1",
+          "physical_origin_um": [
+            7162.56,
+            3551.04
+          ],
+          "outline_um": [
+            445.824,
+            506.304
+          ],
+          "width_bits": 280
+        },
+        {
+          "native_vmks_index": 7,
+          "PC": 3,
+          "physical_inst": "u_vmks_Q3",
+          "physical_origin_um": [
+            4510.08,
+            2998.08
+          ],
+          "outline_um": [
+            354.24,
+            453.6
+          ],
+          "width_bits": 280
+        }
+      ]
+    }
+  ],
+  "legacy_station_records_per_hub": 130,
+  "legacy_alignment_proof": false,
+  "current_b31t_transport": [],
+  "RAW_valid_mask": "Tap before mask. Mask only old RAW branch matching active COPY context; inactive context passes all malformed valid tags exactly. Do not gate shared VMKS valid.",
+  "open": "Actual physical VMKS pin tables/source profile, simultaneous branch transport/control classification timing and per-bank arrival calendar remain unqualified."
+}
