@@ -13,7 +13,7 @@ spec = importlib.util.spec_from_file_location('lec', Path(__file__).with_name('l
 lec = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(lec)
 root = Path('/work')
-inp, out = root / 'input', root / 'proof_v2'
+inp, out = root / 'input', root / 'proof_v3'
 out.mkdir(exist_ok=True)
 log = []
 L = lec.Lec(lec.read_aig(inp/'gold.aig'), lec.read_map(inp/'gold.map'),
@@ -39,6 +39,13 @@ pairs = [
  ('u.u_gb.g_pc[11].g_b[280].a2', 'u.u_gb.g_pc[11].ps[3]'),
  ('u.u_gb.g_pc[5].g_b[140].a1', 'u.u_gb.g_pc[5].ps[4]')]
 hints = [['gate', 'ff:u_dut.'+g, ['eq','gold','ff:u_dut.'+r,0]] for g,r in pairs]
+# These are same-edge p_take copies in the actual endpoint RTL. Different
+# delivered reset copies are already among the saved, jointly proved profile.
+# Their current-state equality is needed after synthesis selects different
+# copies as the s2v representative. They remain untrusted proposals.
+for key in ('g_fcopy.u_k_ok_f3.q','u_k_ok_f2.q'):
+    hints.append(['both','ff:u_dut.u.u_ep.'+key,
+                  ['eq','gold','ff:u_dut.u.u_ep.ok_f',0]])
 (root/'hints.json').write_text(json.dumps(hints,indent=2)+'\n')
 report['hints'] = lec.apply_hints(L,hints,out,1000,log,propose_only=True)
 report['joint'] = lec.prove_profile(L,out,1000,log)
@@ -49,6 +56,13 @@ report['failed'] = {k:v for k,v in status.items() if v != 'proved'}
 decl,missing,const = lec.kept_registers(L,inp/'gold.keep')
 report['keep'] = {'declared':len(decl),'missing':missing,'constant':const}
 report['verdict'] = 'PASS' if not missing and not report['failed'] else 'FAIL'
+# Wrong-polarity copy control must be rejected by the same induction.
+bad=[['both','ff:u_dut.u.u_ep.g_fcopy.u_k_ok_f3.q',
+      ['eq','gold','ff:u_dut.u.u_ep.ok_f',1]]]
+lec.apply_hints(L,bad,out,1000,log,propose_only=True)
+neg=lec.prove_profile(L,out,1000,log)
+report['copy_mutant']={'dropped':neg['dropped'],
+                       'caught':any('g_fcopy.u_k_ok_f3.q' in x for x in neg['dropped'])}
 (out/'result.json').write_text(json.dumps(report,indent=2)+'\n')
 (out/'proof.log').write_text('\n'.join(log))
 print(json.dumps({'counts':report['counts'],'failed_count':len(report['failed']),

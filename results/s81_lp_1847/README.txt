@@ -22,3 +22,11 @@ the exact runtime helper snapshot. The repository tool gained packed-vector
 relayout protection during takeover; the snapshot includes that merged fix.
 No LP PLACE/CTS/route is authorized by this diagnostic. An exactness PASS still
 needs the official fresh kit gate before physical adoption.
+
+18:59 result: corrected replay all3509+4 rename proposals jointly inductive,
+zero dropped. KEEP3742/3742, zero missing. Compare34012/34024 remains12diff
+(all endpoint fault/pv/pnak/ok copies). This closes the physical rename cause
+but does not establish full exactness. The actual source uses same-edge p_take
+copies ok_f,ok_f3,ok_f2; golden s2v was paired to f3 while gate retained another
+copy. Successor proof_v3 adds two untrusted both-side copy relations and an
+inverted-copy negative control. No RTL or cycle changes; current job running.
