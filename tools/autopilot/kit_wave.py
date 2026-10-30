@@ -234,6 +234,15 @@ def select(rows, cfg, die, state, plan_types=None):
             continue
         picked.append(dict(r, block_sha=blk(r["item"])) if blk(r["item"]) else r)
 
+    # Optional exact plan-class allowlist: enable safe canaries while other
+    # classes await their die-owned hard views.  Never infer parameter variants.
+    if d.get("only_items") is not None:
+        allowed = set(d["only_items"])
+        for r in picked:
+            if r["item"] not in allowed:
+                skip.setdefault("outside configured only_items", []).append(r["item"])
+        picked = [r for r in picked if r["item"] in allowed]
+
     def rep(r):
         try:
             return int(r["replicas"])
