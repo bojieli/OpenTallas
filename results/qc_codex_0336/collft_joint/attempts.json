@@ -1,0 +1,30 @@
+[
+ {
+  "attempt": 1,
+  "unit": 1538645,
+  "exit": 1,
+  "stage": "load_plan before binding",
+  "cause": "New remote sparse worktree omitted results/qc_codex_0336 containing the committed manifest",
+  "fix": "Restore that committed directory with sparse-checkout add; source unchanged"
+ },
+ {
+  "attempt": 2,
+  "unit": 1564883,
+  "exit": 1,
+  "stage": "full bind emitted metadata",
+  "crossing_bits": 790393,
+  "errors": [
+   "PARAM_REGEN coll_regen.py No module named lane_groups",
+   "EMIT registered_pins SerDes TT lib missing"
+  ],
+  "cause": "Fresh sparse worktree omitted required tools/qwen_split and declared PHY source directories",
+  "fix": "Restored committed tools and PHY libraries; no source/width/check relaxation"
+ },
+ {
+  "attempt": 3,
+  "unit": 1872450,
+  "exit": 0,
+  "errors": 0,
+  "remaining": "PREP only; native wrapper retention/proof, physical anchors and cold guard qualification held"
+ }
+]

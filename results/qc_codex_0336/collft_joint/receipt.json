@@ -1,0 +1,132 @@
+{
+ "verdict": "STRICT JOINT BIND PASS; PREP ONLY",
+ "unit": 1872450,
+ "partitions": 377,
+ "types": 119,
+ "crossings": 1921,
+ "crossing_bits": 790393,
+ "errors": 0,
+ "ring_K_changes": [
+  {
+   "port": "coll_s__crec_rx_s1__2",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__crec_rx_s1__3",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__crec_rx_s2__2",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__crec_rx_s2__3",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__fltk__2",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__fltk__3",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__fltv__2",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "port": "coll_s__fltv__3",
+   "old": 14,
+   "new": 15
+  }
+ ],
+ "parent_tie_changes": [
+  {
+   "instance": "coll_core",
+   "pin": "strap_ca_k_flt_s_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_core",
+   "pin": "strap_ca_k_fltv_s_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_core",
+   "pin": "strap_ca_k_rec_rx_s1_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_core",
+   "pin": "strap_ca_k_rec_rx_s2_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_f2",
+   "pin": "strap_ca_k_crec_rx_s1_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_f2",
+   "pin": "strap_ca_k_crec_rx_s2_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_f2",
+   "pin": "strap_ca_k_fltk_i",
+   "old": 14,
+   "new": 15
+  },
+  {
+   "instance": "coll_f2",
+   "pin": "strap_ca_k_fltv_i",
+   "old": 14,
+   "new": 15
+  }
+ ],
+ "branch_instances_per_type": 1,
+ "origin_export_enabled": 1,
+ "actual_helper_source": [
+  "/srv/opentallas-scratch2/claude/wt/codex-qc-collft-bind-1030/rtl/common/ot_dp_clk_landing_ca.sv"
+ ],
+ "phase": {
+  "kind": "padw1_north_copy",
+  "instance": "u_cland_boot_north",
+  "raw_parent": "rst_rl_9",
+  "forwarded_outputs": [
+   "crec_rx_s1_o",
+   "crec_rx_s2_o",
+   "fltk_o",
+   "fltv_o"
+  ],
+  "reader_inputs": [
+   "crec_tx_s1_i",
+   "crec_tx_s2_i"
+  ],
+  "boot_extra_cycles": 1,
+  "steady_data_cycles_added": 0,
+  "K_adjustment_at_receivers": 1,
+  "region_origin_cycles_added": 0,
+  "qualification": "candidate only: exact kept state anchors, native retention and physical timing required"
+ },
+ "remaining": [
+  "Native retention/full wrapper proof",
+  "Exact physical state anchors/review/actualG1",
+  "Current source-specific cold ready/timeout/collector guard qualification",
+  "Shared source review before adoption"
+ ]
+}
