@@ -1,5 +1,10 @@
 # Exact flat-forest ownership. Every sequential clock pin is named; every
 # planned driver is a native buffer with a frozen origin and root identity.
+proc ot_flat_no_macros {} {
+  foreach inst [[ord::get_db_block] getInsts] {
+    if {[[$inst getMaster] isBlock]} {error "OT_FLAT actual native macro is unsupported [$inst getName]"}
+  }
+}
 proc ot_flat_clock_sources {} {
   set b [ord::get_db_block];set found {};set primary ""
   foreach clock [all_clocks] {
@@ -28,6 +33,7 @@ proc ot_flat_input_nets {} {
   }
 }
 proc ot_flat_native_guard {} {
+  ot_flat_no_macros
   ot_flat_clock_sources
   set b [ord::get_db_block];set u [[ord::get_db_tech] getDbUnitsPerMicron]
   set rootnets {};set existing 0
@@ -114,6 +120,7 @@ proc ot_flat_native_guard {} {
   puts "OT_FLAT native_inventory=[dict size $seen] declared_roots=[dict size $::ot_flat_roots]"
 }
 proc ot_flat_graph_guard {} {
+  ot_flat_no_macros
   ot_flat_clock_sources
   set b [ord::get_db_block];set u [[ord::get_db_tech] getDbUnitsPerMicron]
   set expected {};set nets {}

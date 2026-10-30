@@ -24,6 +24,8 @@ def inventory(path):
             rect=list(map(float,r[4:8]));cells[r[1]]=dict(id=r[1],name=r[8],master=r[3],kind=r[2],xy=[(rect[0]+rect[2])/2,(rect[1]+rect[3])/2],rect=rect)
         elif r[0]=='P':ports[r[1]]=dict(name=r[2],io=r[3],signal=r[4],xy=list(map(float,r[6:8])))
         elif r[0]=='N' and r[1]=='CLOCK':nets.append(r[2:])
+    macros=[c['name'] for c in cells.values() if c['kind']=='M']
+    if macros:raise ValueError('flat forest does not model actual native macros: '+', '.join(macros[:5]))
     roots={}; owned={}
     for net in nets:
         source=net[0]

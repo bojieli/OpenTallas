@@ -64,10 +64,10 @@ def graph_fixture():
     import tkinter
     tc=tkinter.Tcl()
     objects={
-        'B':{'findBTerm':{'clk':'BT'},'findInst':{'ot_flat_clk_0':'I0','ot_flat_clk_1':'I1','ot_flat_clk_2':'I2','q0':'Q0','q1':'Q1'}},
+        'B':{'getInsts':['I0','I1','I2','Q0','Q1'],'findBTerm':{'clk':'BT'},'findInst':{'ot_flat_clk_0':'I0','ot_flat_clk_1':'I1','ot_flat_clk_2':'I2','q0':'Q0','q1':'Q1'}},
         'T':{'getDbUnitsPerMicron':1000},'BT':{'getIoType':'INPUT','getBBox':'BP','getNet':'R'},
         'BP':{'xMin':50000,'xMax':50000,'yMin':50000,'yMax':50000},
-        'M':{'getName':'BUFx24_ASAP7_75t_R'},'MF':{'getName':'DFFHQNx1_ASAP7_75t_R'},
+        'M':{'getName':'BUFx24_ASAP7_75t_R','isBlock':0},'MF':{'getName':'DFFHQNx1_ASAP7_75t_R','isBlock':0},
         'MA':{'getIoType':'INPUT','getName':'A'},'MY':{'getIoType':'OUTPUT','getName':'Y'},'MC':{'getIoType':'INPUT','getName':'CLK'},
     }
     for j in range(3):
@@ -232,3 +232,12 @@ def test_robust_forwarded_envelope_is_charged_once_without_fake_correlation():
     with pytest.raises(ValueError,match='robust external'):F.validate(t,p)
     t,p=robust_landing_fixture(local=236.6)
     with pytest.raises(ValueError,match='robust forwarded'):F.validate(t,p)
+
+
+def test_actual_native_macro_is_rejected_without_trusting_type_metadata(tmp_path):
+    import flat_clock_plan as P
+    import tkinter
+    p=tmp_path/'actual.tsv';p.write_text('D\t0\t0\t100\t100\nC\t1\tM\tactual_sram\t5\t5\t20\t20\tu_mem\n')
+    with pytest.raises(ValueError,match='actual native macros'):P.inventory(p)
+    t=graph_fixture();t.eval('dict set ::objects MF isBlock 1')
+    with pytest.raises(tkinter.TclError,match='native macro is unsupported'):t.call('ot_flat_graph_guard')

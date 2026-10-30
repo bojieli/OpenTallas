@@ -88,3 +88,8 @@ leaf membership, driver/clock-net ownership, native FF coordinates and frozen
 input pins are checked again after the clock stage. Existing reset-pair checks
 and PG audits remain active. Native G1 and review-before-route still apply.
 No packet/source gate by itself authorizes a physical trial.
+
+Actual native block-master instances are rejected by both geometry intake and
+pre/post clock runtime guards, including data-only macros absent from plan
+metadata. This forest has no macro electrical model; a type label alone never
+qualifies an actual macro/root/cap contract.
