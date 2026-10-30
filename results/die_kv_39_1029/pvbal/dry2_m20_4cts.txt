@@ -1,0 +1,14 @@
+OT_ISLBAL before isl0 mean 232.95 min 222.46 max 269.84 ps sinks 7442
+OT_ISLBAL before isl1 mean 260.59 min 243.40 max 303.07 ps sinks 7443
+OT_ISLBAL before isl2 mean 248.82 min 238.20 max 273.93 ps sinks 7443
+OT_ISLBAL before isl3 mean 285.68 min 275.62 max 303.57 ps sinks 7442
+OT_ISLBAL quadrant 0 chain 2 {BUFx4_ASAP7_75t_R BUFx4_ASAP7_75t_R}
+OT_ISLBAL quadrant 1 chain 1 {BUFx4_ASAP7_75t_R}
+OT_ISLBAL quadrant 2 chain 2 {BUFx4_ASAP7_75t_R BUFx2_ASAP7_75t_R}
+OT_ISLBAL quadrant 3 chain 0 {}
+OT_ISLBAL after isl0 mean 280.41 min 269.93 max 317.31 ps sinks 7442
+OT_ISLBAL after isl1 mean 285.91 min 268.72 max 328.39 ps sinks 7443
+OT_ISLBAL after isl2 mean 293.62 min 283.00 max 318.73 ps sinks 7443
+OT_ISLBAL after isl3 mean 285.50 min 275.44 max 303.39 ps sinks 7442
+OT_ISLBAL spread of island means 13.21 ps (target <= 8.0) added 5 cells
+DRY elapsed 297 s
