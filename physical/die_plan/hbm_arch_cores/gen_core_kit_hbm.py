@@ -898,6 +898,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                     help="HBM-CORES3 10-25: plan family macro placement JSON (e.g. B2n_inputs/exp_lane.json): "
                          "macro_placement[k] = {macro, origin_um, orient} for macro instance k (fixed, place_macro -exact); "
                          "--macro-inst-fmt gives the instance path of k")
+    ap.add_argument("--register-guide", default=None, metavar="JSON",
+                    help="opt-in literal register prefix GPL guide boxes, released before DPL; no RTL or cycles change")
     ap.add_argument("--macro-reg-guide", default=None, metavar="SCOPE",
                     help="opt-in (HBM-CORES-REBAL-10): GPL guide box per static macro <P>.u_m for the registers under "
                          "<P>.SCOPE (e.g. g_wcopy), released before DPL; default off = kit unchanged")
@@ -1483,14 +1485,22 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                  ["} {", "  place_macro -macro_name $inst -location [list $x $y] -orientation $orient -exact", "}"])
         (kd / "macro_placement.tcl").write_text("\n".join(lines) + "\n")
         cfg.append("export MACRO_PLACEMENT_TCL = /work/macro_placement.tcl")
-    if a.macro_reg_guide:
+    if a.macro_reg_guide or a.register_guide:
         # HBM-CORES-REBAL-10: registers that feed one macro only (WCOPY per-column write copies) are guided beside
         # that macro during GPL (INCLUSIVE regions, macro_reg_guide.tcl), released before DPL (macro_reg_guide_release).
-        if not rec.get("macro_placement"):
+        if a.macro_reg_guide and not rec.get("macro_placement"):
             raise SystemExit("--macro-reg-guide needs a static macro placement")
         mrg = macro_reg_guide_spec(
             rec["macro_placement"], lambda m_: lef_signal_pins((kd / "macros" / f"{m_}.lef").read_text(), m_)[:2],
-            a.macro_reg_guide, a.macro_reg_guide_um, (m, m, w - m, h - m))
+            a.macro_reg_guide, a.macro_reg_guide_um, (m, m, w - m, h - m)) if a.macro_reg_guide else []
+        if a.register_guide:
+            for g in json.load(open(a.register_guide))["guides"]:
+                box = list(map(float, g["box_um"]))
+                prefixes = g["prefixes"]
+                if (len(box) != 4 or not (m <= box[0] < box[2] <= w-m and m <= box[1] < box[3] <= h-m)
+                        or not prefixes or any(not p or any(c in p for c in "{}\n\r") for p in prefixes)):
+                    raise SystemExit(f"invalid literal register guide {g!r}")
+                mrg.append(dict(name=g["name"], prefixes=prefixes, box_um=box))
         rly = []
         if a.relay_reg_guide:
             rly = relay_reg_guide_spec(json.load(open(a.relay_reg_guide))["relays"],
@@ -1508,12 +1518,15 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         (kd / "macro_reg_guide.json").write_text(json.dumps(dict(source="gen_core_kit_hbm.macro_reg_guide_spec",
                                                                  scope=a.macro_reg_guide, grow_um=a.macro_reg_guide_um,
                                                                  guides=mrg, relays=rly,
+                                                                 register_src=(dict(file=a.register_guide, sha256=sha(a.register_guide))
+                                                                               if a.register_guide else None),
                                                                  relay_src=(dict(file=a.relay_reg_guide,
                                                                                  sha256=sha(a.relay_reg_guide))
                                                                             if a.relay_reg_guide else None)),
                                                             indent=1) + "\n")
         rec["macro_reg_guide"] = dict(scope=a.macro_reg_guide, grow_um=a.macro_reg_guide_um, guides=len(mrg),
-                                      relays=len(rly))
+                                      relays=len(rly), register_src=(dict(file=a.register_guide, sha256=sha(a.register_guide))
+                                                                    if a.register_guide else None))
     if rec.get("synth_memory_max_bits"):
         cfg.append(f"export SYNTH_MEMORY_MAX_BITS = {int(rec['synth_memory_max_bits'])}")
     # HBM-CORES3 10-25: --orfs-var overrides go LAST (a later make export wins; they used to precede the macro block,
