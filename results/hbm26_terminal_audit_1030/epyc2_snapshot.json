@@ -1,0 +1,347 @@
+{
+  "collected_utc": "2026-10-30T15:43:13.047300+00:00",
+  "rows": [
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/hcol/ot_hbm_idx_score_hcol_h0_65cb388395c0-_k26q",
+      "host": "dear-crayfish",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "postcts_gate_tt.json": {
+        "verdict": "FAIL",
+        "corner": "TT",
+        "pinreg_n": 1186,
+        "pinreg_mean_ps": 270.06,
+        "bound_ps": 250.0,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": -3.32,
+        "hold_wns_est_ps": 15.98
+      },
+      "postcts_gate_ff.json": {
+        "verdict": "PASS",
+        "corner": "FF",
+        "pinreg_n": 1186,
+        "pinreg_mean_ps": 213.97,
+        "bound_ps": 202.5,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 206.93,
+        "hold_wns_est_ps": -2.64
+      },
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "lec/lec.json": {
+        "verdict": "EQUIVALENT",
+        "ports": {
+          "inputs": 1148,
+          "outputs": 35
+        },
+        "black_boxes": {},
+        "top": "ot_hbm_idx_score_hcol_h0",
+        "generated": "2026-10-30T10:33:43+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": null,
+          "used": 4,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_finish.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/hcol/ot_hbm_idx_score_hcol_h0_65cb388395c0-_k26q/run_finish.log",
+          "mtime_utc": "2026-10-30T13:51:50.550001+00:00",
+          "tail": [
+            "OT_HOLD_CENSUS [INFO RSZ-0046] Found 8404 endpoints with hold violations. [INFO RSZ-0032] Inserted 2001 hold buffers. [INFO RSZ-0046] Found 7024 endpoints with hold violations. [INFO RSZ-0032] Inserted 2001 hold buffers. [INFO RSZ-0046] Found 5030 endpoints with hold violations. [INFO RSZ-0032] Inserted 2001 hold buffers. [INFO RSZ-0046] Found 3032 endpoints with hold violations. [INFO RSZ-0032] Inserted 2001 hold buffers. [INFO RSZ-0046] Found 1038 endpoints with hold violations. [INFO RSZ-0032] Inserted 1038 hold buffers. ",
+            "FAIL_POSTCTS per-corner insertion gate TT",
+            "FF_PRE_ROUTE_HOLD -2.64"
+          ],
+          "last_errors": [
+            "[ERROR RSZ-0060] Max buffer count reached.",
+            "[ERROR RSZ-0060] Max buffer count reached.",
+            "FAIL_POSTCTS per-corner insertion gate TT"
+          ]
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/hcol/ot_hbm_idx_score_hcol_h0_65cb388395c0-_k26q/lec_run.log",
+          "mtime_utc": "2026-10-30T11:53:25.237304+00:00",
+          "tail": [
+            "LEC EQUIVALENT: ot_hbm_idx_score_hcol_h0 cp=30885 proved=30885 differs=0 undecided=0 30885 compare points proved; 26143 key points matched by name, 3276 register pairs / merges and 717 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 1022 of them reach an RTL X (don't care: equal wherever the RTL is not X) (4781.1 s)"
+          ],
+          "last_errors": []
+        }
+      },
+      "checkpoints": [
+        "run/results/asap7/hbc_ot_hbm_idx_score_hcol_h0/base/3_place.odb",
+        "run/results/asap7/hbc_ot_hbm_idx_score_hcol_h0/base/5_1_grt.odb",
+        "run/results/asap7/hbc_ot_hbm_idx_score_hcol_h0/base/4_cts.odb"
+      ]
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/qcore/qcore_lvt_top4_k26q",
+      "host": "dear-crayfish",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "postcts_gate_tt.json": {
+        "verdict": "PASS",
+        "corner": "TT",
+        "pinreg_n": 1850,
+        "pinreg_mean_ps": 256.47,
+        "bound_ps": 250.0,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": -30.16,
+        "hold_wns_est_ps": 19.43
+      },
+      "postcts_gate_ff.json": {
+        "verdict": "PASS",
+        "corner": "FF",
+        "pinreg_n": 1850,
+        "pinreg_mean_ps": 213.05,
+        "bound_ps": 202.5,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 199.1,
+        "hold_wns_est_ps": -4.83
+      },
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "rev/auto_geom.json": {
+        "verdict": "PASS",
+        "failing_checks": []
+      },
+      "lec/lec.json": {
+        "verdict": "EQUIVALENT",
+        "ports": {
+          "inputs": 985,
+          "outputs": 487
+        },
+        "black_boxes": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 12
+        },
+        "top": "ot_hbm_su_static_qcore_r13",
+        "generated": "2026-10-30T10:34:59+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": null,
+          "used": 4,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_finish.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/qcore/qcore_lvt_top4_k26q/run_finish.log",
+          "mtime_utc": "2026-10-30T11:58:30.677266+00:00",
+          "tail": [
+            "5_1_grt                   .sdc                             fcb67dda20f277a7c4ae",
+            "OT_HOLD_CENSUS [INFO RSZ-0046] Found 2708 endpoints with hold violations. [INFO RSZ-0032] Inserted 2001 hold buffers. [INFO RSZ-0046] Found 1495 endpoints with hold violations. [INFO RSZ-0032] Inserted 1644 hold buffers. ",
+            "FF_PRE_ROUTE_HOLD -4.83"
+          ],
+          "last_errors": [
+            "[ERROR RSZ-0060] Max buffer count reached."
+          ]
+        },
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/qcore/qcore_lvt_top4_k26q/run_place.log",
+          "mtime_utc": "2026-10-30T01:46:37.214336+00:00",
+          "tail": [
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb          208           1645 09614b32d822d9e6842a",
+            "cp /work/run/results/asap7/hbc_ot_hbm_su_static_qcore_r13/base/3_5_place_dp.odb /work/run/results/asap7/hbc_ot_hbm_su_static_qcore_r13/base/3_place.odb"
+          ],
+          "last_errors": []
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/qcore/qcore_lvt_top4_k26q/lec_run.log",
+          "mtime_utc": "2026-10-30T10:42:50.431954+00:00",
+          "tail": [
+            "LEC EQUIVALENT: ot_hbm_su_static_qcore_r13 cp=39179 proved=39179 differs=0 undecided=0 39179 compare points proved; 26087 key points matched by name, 8228 register pairs / merges and 16 constant registers proved inductively; 1 RTL and 6 gate registers unmatched and unobservable (proved as free inputs); 274 of them reach an RTL X (don't care: equal wherever the RTL is not X) (471.1 s)"
+          ],
+          "last_errors": []
+        }
+      },
+      "checkpoints": [
+        "run/results/asap7/hbc_ot_hbm_su_static_qcore_r13/base/3_place.odb",
+        "run/results/asap7/hbc_ot_hbm_su_static_qcore_r13/base/5_1_grt.odb",
+        "run/results/asap7/hbc_ot_hbm_su_static_qcore_r13/base/4_cts.odb"
+      ]
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hbm_su_static_pgslice_lg__lanes8_11_b9339253674f-_k26c",
+      "host": "dear-crayfish",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "lec/lec.json": {
+        "verdict": "EQUIVALENT",
+        "ports": {
+          "inputs": 2169,
+          "outputs": 1620
+        },
+        "black_boxes": {
+          "ot_sram_1r1w_128x256_m1_r2c2": 12
+        },
+        "top": "ot_hbm_su_static_pgslice_lg__lanes8_11",
+        "generated": "2026-10-30T08:56:42+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": {
+            "file": "/work/reset_contract.json",
+            "die": "hbm",
+            "edges": 64,
+            "assert_edges": 66,
+            "receipt": "/work/reset_contract/receipt.txt"
+          },
+          "used": 64,
+          "debug_overrides": {}
+        },
+        "hints": {
+          "sha256": "b841175602e705bc1bb158a94e5244e329a1675159c2fc3dba293321e3ecdb99",
+          "given": 1080,
+          "applied": 1080,
+          "skipped": 0
+        }
+      },
+      "logs": {
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hbm_su_static_pgslice_lg__lanes8_11_b9339253674f-_k26c/run_place.log",
+          "mtime_utc": "2026-10-30T10:27:34.157578+00:00",
+          "tail": [
+            "Elapsed time: 0:07.97[h:]min:sec. CPU time: user 7.11 sys 0.86 (99%). Peak memory: 967476KB.",
+            "make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1",
+            "make: *** [Makefile:499: /work/run/results/asap7/hbc_ot_hbm_su_static_pgslice_lg__lanes8_11/base/3_3_place_gp.odb] Error 2"
+          ],
+          "last_errors": [
+            "Error: global_place.tcl, 5 OT_CORE_INFRA_CLOCK_ENTRY_PORT clk_bank"
+          ]
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hbm_su_static_pgslice_lg__lanes8_11_b9339253674f-_k26c/lec_run.log",
+          "mtime_utc": "2026-10-30T10:06:38.083241+00:00",
+          "tail": [
+            "LEC EQUIVALENT: ot_hbm_su_static_pgslice_lg__lanes8_11 cp=101444 proved=101444 differs=0 undecided=0 101444 compare points proved; 47247 key points matched by name, 38840 register pairs / merges and 3548 constant registers proved inductively; 361 RTL and 5927 gate registers unmatched and unobservable (proved as free inputs); 952 of them reach an RTL X (don't care: equal wherever the RTL is not X) (4195.0 s)"
+          ],
+          "last_errors": []
+        }
+      },
+      "checkpoints": []
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26cra",
+      "host": "dear-crayfish",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "lec/lec.json": {
+        "verdict": "UNPROVEN",
+        "reason": "yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers",
+        "top": "ot_hgi_sfu_core_split3__opstore_a",
+        "generated": "2026-10-30T09:13:22+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": {
+            "file": "/work/reset_contract.json",
+            "die": "hbm",
+            "edges": 64,
+            "assert_edges": 66,
+            "receipt": "/work/reset_contract/receipt.txt"
+          },
+          "used": 64,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26cra/run_place.log",
+          "mtime_utc": "2026-10-30T09:56:12.003578+00:00",
+          "tail": [
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb          367           3354 e23103d9683d92a51cf8",
+            "cp /work/run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_a/base/3_5_place_dp.odb /work/run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_a/base/3_place.odb"
+          ],
+          "last_errors": [
+            "LEC UNPROVEN: ot_hgi_sfu_core_split3__opstore_a cp=None proved=None differs=None undecided=None yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers (1.1 s)"
+          ]
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26cra/lec_run.log",
+          "mtime_utc": "2026-10-30T09:13:23.280120+00:00",
+          "tail": [
+            "LEC UNPROVEN: ot_hgi_sfu_core_split3__opstore_a cp=None proved=None differs=None undecided=None yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers (1.1 s)"
+          ],
+          "last_errors": [
+            "LEC UNPROVEN: ot_hgi_sfu_core_split3__opstore_a cp=None proved=None differs=None undecided=None yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers (1.1 s)"
+          ]
+        }
+      },
+      "checkpoints": [
+        "run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_a/base/3_place.odb"
+      ]
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26crb",
+      "host": "dear-crayfish",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "lec/lec.json": {
+        "verdict": "UNPROVEN",
+        "reason": "yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers",
+        "top": "ot_hgi_sfu_core_split3__opstore_a",
+        "generated": "2026-10-30T09:13:17+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": {
+            "file": "/work/reset_contract.json",
+            "die": "hbm",
+            "edges": 64,
+            "assert_edges": 66,
+            "receipt": "/work/reset_contract/receipt.txt"
+          },
+          "used": 64,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26crb/run_place.log",
+          "mtime_utc": "2026-10-30T10:42:47.220890+00:00",
+          "tail": [
+            "Elapsed time: 0:14.31[h:]min:sec. CPU time: user 12.14 sys 2.17 (99%). Peak memory: 2018204KB.",
+            "make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1",
+            "make: *** [Makefile:511: /work/run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_a/base/3_5_place_dp.odb] Error 2"
+          ],
+          "last_errors": [
+            "LEC UNPROVEN: ot_hgi_sfu_core_split3__opstore_a cp=None proved=None differs=None undecided=None yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers (1.1 s)",
+            "[ERROR DPL-0038] Utilization greater than 100%, impossible to legalize",
+            "Error: detail_place.tcl, 42 DPL-0038"
+          ]
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26crb/lec_run.log",
+          "mtime_utc": "2026-10-30T09:13:18.905032+00:00",
+          "tail": [
+            "LEC UNPROVEN: ot_hgi_sfu_core_split3__opstore_a cp=None proved=None differs=None undecided=None yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers (1.1 s)"
+          ],
+          "last_errors": [
+            "LEC UNPROVEN: ot_hgi_sfu_core_split3__opstore_a cp=None proved=None differs=None undecided=None yosys lint.ys failed: ERROR: Found control character or space (0x20) in string '\\ot_hgi_su_lgroup2$ot_hgi_sfu_core_split3__opstore_a.u_fcore.u_core.u_x.\\u_core.u_engine.u_memory.g_operand[0].u_group ' which is not allowed in RTLIL identifiers (1.1 s)"
+          ]
+        }
+      },
+      "checkpoints": []
+    }
+  ]
+}

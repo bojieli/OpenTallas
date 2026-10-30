@@ -1,0 +1,21 @@
+# Old HBM lane26 collection and current-native audit
+
+Read-only collection of existing kits, logs, receipts, checkpoints and active container mounts. No P&R/proof jobs launched, no running jobs killed, no kit or failed result modified. Current-native scope comes from BIND's final66428-row after-substitution/compose cache for d32q/b31t and its exact preferred sources; this is not inferred from kit names.
+
+| Item | Existing physical result | Current-native disposition / next owner |
+|---|---|---|
+| GQL068dba | Self-LEC EQ; TT/FF means254.12/202.96, setup75.68/hold5.88; GRT checkpoint. DRT still running. Last saved iteration25 report5228 violations; live progress counts are transient. | Same public ABI, but old gold has explicit outer face FF stages,2248 clone outputs and19 reset releases. Current-native bridge/authorized source event required; HBM/BIND. Existing collection remains with coverage. |
+| GQL7e7e2a | Self-LEC EQ; means254.69/203.39, setup77.02/hold7.20. DRT still running. Last saved iteration25 report4597 violations. | Same qualification hold as068; no signoff/final checkpoint. Jobs preserved. |
+| HCOL0k26q | LEC30885EQ; preDRT TTmean270.06 exceeds250±20, TTsetup−3.32, FFhold−2.64. Saved5_1_grt, noDRT. | Old face-shell adds input/output stages and omits DELIVERED_RESET1; actual128 native instances are a thin wrapper with delivered reset. Current native successor needed, not another old-shell retry; HBM/cores+BIND. |
+| QCOREtop4k26q | LEC39179EQ/GEOMPASS; means256.47/213.05 in band, TTsetup−30.16/FFhold−4.83. SavedGRT, noDRT. | Actual whole_r13_w2 widths differ: rf_wv2/wa16/wd64/slice_t268 versusold4/32/128/267. LVT/top4 is a physical label, not itself evidence of a logical cut. Exact current-native kit/bridge required; HBM/BIND. |
+| HBM1080k26c | Loaded hints1080applied/0skipped, native old-cohort LEC101444EQ. PRE_GPL fails scalar clk_bank entry lookup; noPLACE. | Old top actually has4-bit clk_bank plus16insert/24macro/32lane clock buses. Do not guessbit0. Current ALAT4/KIND1/exp__rst3 cut differs from old full lane form; residual helper owns current-source/alias path. |
+| OPSTORE_A ra | PLACE saved; LEC UNPROVEN before Boolean proof because Yosys rejects a space in escaped hierarchical RTLIL identifier. | Oldmodule absent current composed recipe; historical source/frontend candidate only. Current outputdrain/split contract with HBM/BIND. |
+| OPSTORE_A rb | Same frontend LEC failure; DPL0038 at141.3% utilization: core357198.34um²/movable276841.56/fixed227726.19. | Real overcapacity, not a legalization waiver. Oldmodule absent current recipe. |
+| OPSTORE_Bk26 | Old36-SRAM self-LEC34853EQ andPLACE; AUTO-GEOM GRT probe still running extraiteration16/50. NoCTS/route/signoff. | Exact oldmodule absent current66428 facts. Native current memory/source/cut map required; HBM/BIND. Running probe preserved. |
+| TOPKk23 | Prefloor LEC125diff/610undecided; output FT folding and removed nonconstant tx registers. NoPLACE. | Currentfullmodule still has8clk_mem ports. New oneclk/WP2 proposal is explicitly held source candidate with bounded alias/write component proofs, not old125diff closure or current physical qualification. HBM parent owns source/clock-model/adoption next. |
+
+The two GQL routers and OPSTORE_B probe are the three live jobs in this requested cohort. Container-mount census includes child checkpoint/review mounts so the GRT probe is not falsely labeled dead. GQL last-saved DRC report counts and live router progress counts describe different moments; neither is a final verdict.
+
+All old formal/physical results remain useful for their stated source cohort. Existing physical self-LEC compares that kit's generated physical gold to its mapped implementation; it does not by itself prove equivalence to a different current native wrapper, reset contract, interface width or added face stage. Raw primary-file hash differences were followed to generated `__fcore`/`__fshell` definitions before interpreting changes.
+
+Files: `intel1_snapshot.json`, `epyc2_snapshot.json` contain exact paths/checkpoints/log failures and active containers; `native_source_scope.json` records current bindings, ABI/source differences and limited newer TOPK proof scope; `collect.py` is the read-only collector. No current SIGNED/adoption credit is asserted.

@@ -1,0 +1,47 @@
+{
+  "scope": "Read-only old HBM lane26 collection and current-native source/ABI audit; no new jobs or edits to any kit",
+  "current_native_basis": "intel1 codex-hbm-bind-1030/current_composed_all_abi_facts.json: 66428 rows after substitute_inst+compose, d32q b31t; BIND owner confirmed mappings",
+  "defines": ["OT_SMH_FC_HIER", "OT_SMH_HIER", "OT_SMH_XLK", "OT_FP_DATA_NORST", "OT_SMH_DRST0", "OT_SMH_RSTRELAY", "OT_SM_QSPLIT"],
+  "GQL": {
+    "current": "2 ot_hgi_coll_gq_land params{} at NE_hub/u_hcollgl_Q__q1 and NW_hub/u_hcollgl_Q__q1; qid3/2",
+    "primary_current_source": "codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
+    "current_primary_sha256": "d4990b482a26674449f61722eb44c246bce525c41d7682704e7d94bd5abcd0fa",
+    "old_physical_adaptations": ["__fshell has explicit extra input and output face-register stages", "__fcore redirects vm_kq outputs through2248 face state clones", "19 regional reset releases replace one native relay", "equivalent width concat syntax also differs"],
+    "admission": "Same public ABI does not prove cycle/source equivalence. Old LEC is old physical gold versus its mapped implementation. Need exact current-native bridge/authorized latency event before current reuse. Existing DRT preserved."
+  },
+  "HCOL0": {
+    "current": "128 ot_hbm_idx_score_hcol_h0, MUT0 DELIVERED_RESET1; current thin wrapper passes DELIVERED_RESET to ot_hidx_score_hcol and has no outer face FF shell",
+    "current_primary_source": "codex-hbm-sourcefull-0310/rtl/hbm_next/bind/ot_hnx_idx_hcol_plan.sv",
+    "current_primary_sha256": "540e71ea886d372537a7c95c97b11ae73ed774e81c00fbb1e6224495bd44c4f8",
+    "old": "k26q generated __fshell adds one input and one output face stage around __fcore calling ot_hidx_score_hcol(HALF0,MUT0) without DELIVERED_RESET",
+    "admission": "Old30885-point self-LEC and preDRT failure are historical. Exact current-source/cohort physical successor needed; no retry on old shell inferred."
+  },
+  "QCORE": {
+    "current": "2 whole ot_hbm_su_static_qcore_r13_w2, COLLPORT1 MUT0 PRETREE1 RF_LOCAL1 ROW_EN2 WDEC1",
+    "old": "qcore_lvt_top4_k26q public module ot_hbm_su_static_qcore_r13 plus outer face shell; physical LVT top4 label alone is not a logical cut",
+    "old_widths": {"rf_wv":4,"rf_wa":32,"rf_wd":128,"slice_t":267},
+    "current_widths": {"rf_wv":2,"rf_wa":16,"rf_wd":64,"slice_t":268},
+    "admission": "Actual width/module/cohort mismatch, no current native bridge inferred from39179-point old physical self-LEC."
+  },
+  "HBM1080": {
+    "old": "lanes8_11 k26c old full SU lane form. Existing loaded1080 hints applied1080/skipped0 and LEC101444/101444; unchanged original failures retained",
+    "physical_failure": "master_slice core_clock_port='clk_bank' treats a4-bit input as scalar. Synthesized old top has clk_bank[3:0],clk_insert[15:0],clk_bank_macro[23:0],clk_lane[31:0]; PRE_GPL cannot find scalar clk_bank",
+    "current": "BIND112 current SU cuts; old fullcore ALAT3/KIND2/default/21-clock versus actual exp__rst3 ALAT4/KIND1/bank_clk/cmd0_D1382 broader cut mismatch",
+    "admission": "Do not guess clk_bank[0] or collapse real domains. Old formal proof not current new-cut qualification. Current source/aliases owned HBM residual helper."
+  },
+  "OPSTORE_A_B": {
+    "current": "Exact old module names ot_hgi_sfu_core_split3__opstore_a and __opstore_b absent all66428 composed facts; BIND confirmed. Current two split3__ctl and native outputdrain at sfucore_Q/...u_store.u_output in NE/NW_b113 have separate contracts",
+    "A_ra": "Old PLACE exists but LEC UNPROVEN before proof: Yosys lint rejects space in escaped hierarchical RTLIL identifier ot_hgi_su_lgroup2$...g_operand[0].u_group . Not a Boolean counterexample",
+    "A_rb": "Same LEC frontend failure; DPL0038 core357198.34um2, movable276841.56, fixed227726.19, utilization141.3%: impossible actual legalization; no retry/adoption inferred",
+    "B": "Old36-SRAM physical wrapper LEC34853EQ, PLACE; existing AUTO-GEOM GRT probe remains running at extraiteration16/50. No CTS/route/signoff checkpoint",
+    "admission": "Historical unbound cut candidates; cannot promote by name/current parent slot. Need actual current split/source map before any new physical job."
+  },
+  "TOPK": {
+    "current": "root/u_hb_idx__link, ot_hbm_idx_topk_link_static params{}, clk scalar plus clk_mem[7:0], no WRITE_PIPE_STAGES parameter in preferred native public module",
+    "current_primary_source": "codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_topk_link_static.sv",
+    "current_primary_sha256": "36d3a6a7fbe301f48d390378e58dc72f8b04ca9f790edd9332b48d7c083479d0",
+    "old_k23": "Prefloor LEC NOT EQUIVALENT:125diff/610undecided, output FT folding/removed nonconstant u_fcore.tx registers; noPLACE",
+    "new_oneclk": "codex-topk-physical-1029/oneclk_packet status CANDIDATE_SOURCE_ONLY_ENABLE_HELD, view9ca71a03635e650.16x500.04 removes8clk_mem pins, WRITE_PIPE_STAGES2. Public oneclk miter reference alreadyWP2; nominal2048records/1243miter/256writevectors errors0, MUT1errors2368, wrongphase caught. Separate native_coupon serial-reference component exists",
+    "admission": "Do not turn component proof into current full-native/physical qualification. Actual clock alias/current dependency/source bridge, native sink+SRAM clock model/islands and parent adoption remain required. Parent HBM owns current followup."
+  }
+}

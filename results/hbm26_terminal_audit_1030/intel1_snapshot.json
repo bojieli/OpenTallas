@@ -1,0 +1,367 @@
+{
+  "collected_utc": "2026-10-30T15:43:44.924996+00:00",
+  "rows": [
+    {
+      "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_068dba88be63-_codex2315d26_068dba",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [
+        {
+          "id": "dc7d41802384",
+          "name": "/hbmcore-ot_hgi_coll_gq_land_068dba88be63-_codex2315d26_068dba_-79574",
+          "state": "running",
+          "mounts": [
+            "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_068dba88be63-_codex2315d26_068dba"
+          ]
+        }
+      ],
+      "postcts_gate_tt.json": {
+        "verdict": "PASS",
+        "corner": "TT",
+        "pinreg_n": 3899,
+        "pinreg_mean_ps": 254.12,
+        "bound_ps": 250.0,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 75.68,
+        "hold_wns_est_ps": 23.85
+      },
+      "postcts_gate_ff.json": {
+        "verdict": "PASS",
+        "corner": "FF",
+        "pinreg_n": 3899,
+        "pinreg_mean_ps": 202.96,
+        "bound_ps": 202.5,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 227.1,
+        "hold_wns_est_ps": 5.88
+      },
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "rev/auto_geom.json": {
+        "verdict": "FAIL",
+        "failing_checks": []
+      },
+      "lec/lec.json": {
+        "verdict": "EQUIVALENT",
+        "ports": {
+          "inputs": 1631,
+          "outputs": 2249
+        },
+        "black_boxes": {},
+        "top": "ot_hgi_coll_gq_land",
+        "generated": "2026-10-30T00:35:45+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": null,
+          "used": 4,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_finish.log": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_068dba88be63-_codex2315d26_068dba/run_finish.log",
+          "mtime_utc": "2026-10-30T15:37:05.871417+00:00",
+          "tail": [
+            "    elapsed time = 00:32:11, memory = 11727.89 (MB).",
+            "    Completing 50% with 935 violations.",
+            "    elapsed time = 00:32:11, memory = 11727.89 (MB)."
+          ],
+          "last_errors": [
+            "[ERROR RSZ-0060] Max buffer count reached.",
+            "[ERROR RSZ-0060] Max buffer count reached.",
+            "[ERROR RSZ-0060] Max buffer count reached."
+          ]
+        },
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_068dba88be63-_codex2315d26_068dba/run_place.log",
+          "mtime_utc": "2026-10-30T06:41:04.472768+00:00",
+          "tail": [
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb           91            813 89917b439b114b684200",
+            "cp /work/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/3_5_place_dp.odb /work/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/3_place.odb"
+          ],
+          "last_errors": []
+        }
+      },
+      "checkpoints": [
+        "run/results/asap7/hbc_ot_hgi_coll_gq_land/base/5_1_grt.odb",
+        "run/results/asap7/hbc_ot_hgi_coll_gq_land/base/4_cts.odb",
+        "run/results/asap7/hbc_ot_hgi_coll_gq_land/base/3_place.odb"
+      ],
+      "last_complete_DRC_report": {
+        "path": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_068dba88be63-_codex2315d26_068dba/run/reports/asap7/hbc_ot_hgi_coll_gq_land/base/5_route_drc.rpt-25.rpt",
+        "iteration": 25,
+        "violation_records": 5228,
+        "mtime_utc": "2026-10-30T14:00:32.775974+00:00"
+      }
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_7e7e2aef40e2-_codex2315d26_7e7e2a",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [
+        {
+          "id": "4ae8a008ba05",
+          "name": "/hbmcore-ot_hgi_coll_gq_land_7e7e2aef40e2-_codex2315d26_7e7e2a_-78670",
+          "state": "running",
+          "mounts": [
+            "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_7e7e2aef40e2-_codex2315d26_7e7e2a"
+          ]
+        }
+      ],
+      "postcts_gate_tt.json": {
+        "verdict": "PASS",
+        "corner": "TT",
+        "pinreg_n": 3899,
+        "pinreg_mean_ps": 254.69,
+        "bound_ps": 250.0,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 77.02,
+        "hold_wns_est_ps": 27.12
+      },
+      "postcts_gate_ff.json": {
+        "verdict": "PASS",
+        "corner": "FF",
+        "pinreg_n": 3899,
+        "pinreg_mean_ps": 203.39,
+        "bound_ps": 202.5,
+        "tol_ps": 20.0,
+        "setup_wns_est_ps": 227.55,
+        "hold_wns_est_ps": 7.2
+      },
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "rev/auto_geom.json": {
+        "verdict": "FAIL",
+        "failing_checks": []
+      },
+      "lec/lec.json": {
+        "verdict": "EQUIVALENT",
+        "ports": {
+          "inputs": 1631,
+          "outputs": 2249
+        },
+        "black_boxes": {},
+        "top": "ot_hgi_coll_gq_land",
+        "generated": "2026-10-30T00:35:45+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": null,
+          "used": 4,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_finish.log": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_7e7e2aef40e2-_codex2315d26_7e7e2a/run_finish.log",
+          "mtime_utc": "2026-10-30T15:34:42.499635+00:00",
+          "tail": [
+            "    elapsed time = 00:00:00, memory = 12298.49 (MB).",
+            "    Completing 20% with 4597 violations.",
+            "    elapsed time = 00:00:00, memory = 12298.49 (MB)."
+          ],
+          "last_errors": [
+            "[ERROR RSZ-0060] Max buffer count reached.",
+            "[ERROR RSZ-0060] Max buffer count reached.",
+            "[ERROR RSZ-0060] Max buffer count reached."
+          ]
+        },
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_7e7e2aef40e2-_codex2315d26_7e7e2a/run_place.log",
+          "mtime_utc": "2026-10-30T06:40:59.635774+00:00",
+          "tail": [
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb           92            817 e14dff0aea59295edd2c",
+            "cp /work/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/3_5_place_dp.odb /work/run/results/asap7/hbc_ot_hgi_coll_gq_land/base/3_place.odb"
+          ],
+          "last_errors": []
+        }
+      },
+      "checkpoints": [
+        "run/results/asap7/hbc_ot_hgi_coll_gq_land/base/5_1_grt.odb",
+        "run/results/asap7/hbc_ot_hgi_coll_gq_land/base/4_cts.odb",
+        "run/results/asap7/hbc_ot_hgi_coll_gq_land/base/3_place.odb"
+      ],
+      "last_complete_DRC_report": {
+        "path": "/srv/opentallas-scratch2/claude/codex-hbm-cores-2249/gql_d26/kits/ot_hgi_coll_gq_land_7e7e2aef40e2-_codex2315d26_7e7e2a/run/reports/asap7/hbc_ot_hgi_coll_gq_land/base/5_route_drc.rpt-25.rpt",
+        "iteration": 25,
+        "violation_records": 4597,
+        "mtime_utc": "2026-10-30T15:34:42.276635+00:00"
+      }
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hbm_su_static_pgslice_lg__lanes8_11_b9339253674f-_k26c",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "logs": {},
+      "checkpoints": []
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26cra",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "logs": {},
+      "checkpoints": []
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-26/k31/kits/ot_hgi_sfu_core_split3__opstore_a_edaf6c837898-_k26crb",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "logs": {},
+      "checkpoints": []
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-24/k2/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [
+        {
+          "id": "cd151772d1ac",
+          "name": "/ap-ageom-ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26-grt-3064055",
+          "state": "running",
+          "mounts": [
+            "/srv/opentallas-scratch2/claude/hbm-cores-kits-24/k2/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26/run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_b/base",
+            "/srv/opentallas-scratch2/claude/hbm-cores-kits-24/k2/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26/rev"
+          ]
+        }
+      ],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "lec/lec.json": {
+        "verdict": "EQUIVALENT",
+        "ports": {
+          "inputs": 3967,
+          "outputs": 1541
+        },
+        "black_boxes": {
+          "ot_sram_1r1w_1024x256_m2_r2c2": 12,
+          "ot_sram_1r1w_128x256_m1_r2c2": 12,
+          "ot_sram_1r1w_256x256_m2_r2c2": 12
+        },
+        "top": "ot_hgi_sfu_core_split3__opstore_b",
+        "generated": "2026-10-30T03:51:28+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": {
+            "file": "/work/reset_contract.json",
+            "die": "hbm",
+            "edges": 64,
+            "assert_edges": 66,
+            "receipt": "/work/reset_contract/receipt.txt"
+          },
+          "used": 64,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-24/k2/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26/run_place.log",
+          "mtime_utc": "2026-10-30T06:09:11.117445+00:00",
+          "tail": [
+            "Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)",
+            "3_5_place_dp              .odb          770           4224 209c1f71dbd16d96409a",
+            "cp /work/run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_b/base/3_5_place_dp.odb /work/run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_b/base/3_place.odb"
+          ],
+          "last_errors": []
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-24/k2/kits/ot_hgi_sfu_core_split3__opstore_b_de3ef0436950-_k26/lec_run.log",
+          "mtime_utc": "2026-10-30T04:39:35.982795+00:00",
+          "tail": [
+            "LEC EQUIVALENT: ot_hgi_sfu_core_split3__opstore_b cp=34853 proved=34853 differs=0 undecided=0 34853 compare points proved; 21691 key points matched by name, 720 register pairs / merges and 36 constant registers proved inductively; 11 RTL and 405 gate registers unmatched and unobservable (proved as free inputs); 25780 of them reach an RTL X (don't care: equal wherever the RTL is not X) (2886.6 s)"
+          ],
+          "last_errors": []
+        }
+      },
+      "checkpoints": [
+        "run/results/asap7/hbc_ot_hgi_sfu_core_split3__opstore_b/base/3_place.odb"
+      ]
+    },
+    {
+      "kit": "/srv/opentallas-scratch2/claude/hbm-cores-kits-23/k2/kits/ot_hbm_idx_topk_link_static_b9b8c72b4dc6-_k23",
+      "host": "key-cardinal",
+      "historical_only": true,
+      "current_native_admission": "UNQUALIFIED; see native_source_scope.json",
+      "active_containers": [],
+      "preflight.json": {
+        "verdict": "PASS"
+      },
+      "lec/lec.json": {
+        "verdict": "NOT EQUIVALENT",
+        "reason": "125 compare points differ (first: ff:u_dut.u_bout_tx.q[1057], ff:u_dut.u_bout_tx.q[1059], ff:u_dut.u_bout_tx.q[1060], ff:u_dut.u_bout_tx.q[1061], ff:u_dut.u_bout_tx.q[1062], ff:u_dut.u_bout_tx.q[1063], ff:u_dut.u_bout_tx.q[1064], ff:u_dut.u_bout_tx.q[1065]); RTL registers removed by synthesis although not constant: ff:u_dut.u_fcore.tx[1059], ff:u_dut.u_fcore.tx[1060], ff:u_dut.u_fcore.tx[1061], ff:u_dut.u_fcore.tx[1062], ff:u_dut.u_fcore.tx[1063], ff:u_dut.u_fcore.tx[1064], ff:u_dut.u_fcore.tx[1065], ff:u_dut.u_fcore.tx[1066]",
+        "ports": {
+          "inputs": 2402,
+          "outputs": 2195
+        },
+        "black_boxes": {
+          "ot_sram_1r1w_64x512_m1_r2c2": 12
+        },
+        "top": "ot_hbm_idx_topk_link_static",
+        "generated": "2026-10-30T02:51:10+0000",
+        "reset_contract": {
+          "default": 4,
+          "requested": null,
+          "contract": {
+            "file": "/work/reset_contract.json",
+            "die": "hbm",
+            "edges": 64,
+            "assert_edges": 66,
+            "receipt": "/work/reset_contract/receipt.txt"
+          },
+          "used": 64,
+          "debug_overrides": {}
+        }
+      },
+      "logs": {
+        "run_place.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-23/k2/kits/ot_hbm_idx_topk_link_static_b9b8c72b4dc6-_k23/run_place.log",
+          "mtime_utc": "2026-10-30T11:31:31.499738+00:00",
+          "tail": [
+            "LEC NOT EQUIVALENT: ot_hbm_idx_topk_link_static cp=22695 proved=21960 differs=125 undecided=610 125 compare points differ (first: ff:u_dut.u_bout_tx.q[1057], ff:u_dut.u_bout_tx.q[1059], ff:u_dut.u_bout_tx.q[1060], ff:u_dut.u_bout_tx.q[1061], ff:u_dut.u_bout_tx.q[1062], ff:u_dut.u_bout_tx.q[1063], ff:u_dut.u_bout_tx.q[1064], ff:u_dut.u_bout_tx.q[1065]); RTL registers removed by synthesis although not constant: ff:u_dut.u_fcore.tx[1059], ff:u_dut.u_fcore.tx[1060], ff:u_dut.u_fcore.tx[1061], ff:u_dut.u_fcore.tx[1062], ff:u_dut.u_fcore.tx[1063], ff:u_dut.u_fcore.tx[1064], ff:u_dut.u_fcore.tx[1065], ff:u_dut.u_fcore.tx[1066] (31220.5 s)",
+            "FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)",
+            "selrange rc 0"
+          ],
+          "last_errors": [
+            "LEC NOT EQUIVALENT: ot_hbm_idx_topk_link_static cp=22695 proved=21960 differs=125 undecided=610 125 compare points differ (first: ff:u_dut.u_bout_tx.q[1057], ff:u_dut.u_bout_tx.q[1059], ff:u_dut.u_bout_tx.q[1060], ff:u_dut.u_bout_tx.q[1061], ff:u_dut.u_bout_tx.q[1062], ff:u_dut.u_bout_tx.q[1063], ff:u_dut.u_bout_tx.q[1064], ff:u_dut.u_bout_tx.q[1065]); RTL registers removed by synthesis although not constant: ff:u_dut.u_fcore.tx[1059], ff:u_dut.u_fcore.tx[1060], ff:u_dut.u_fcore.tx[1061], ff:u_dut.u_fcore.tx[1062], ff:u_dut.u_fcore.tx[1063], ff:u_dut.u_fcore.tx[1064], ff:u_dut.u_fcore.tx[1065], ff:u_dut.u_fcore.tx[1066] (31220.5 s)",
+            "FAIL_PREFLOOR LEC NOT EQUIVALENT (lec/lec.json)"
+          ]
+        },
+        "lec_run.log": {
+          "path": "/srv/opentallas-scratch2/claude/hbm-cores-kits-23/k2/kits/ot_hbm_idx_topk_link_static_b9b8c72b4dc6-_k23/lec_run.log",
+          "mtime_utc": "2026-10-30T11:31:31.419738+00:00",
+          "tail": [
+            "LEC NOT EQUIVALENT: ot_hbm_idx_topk_link_static cp=22695 proved=21960 differs=125 undecided=610 125 compare points differ (first: ff:u_dut.u_bout_tx.q[1057], ff:u_dut.u_bout_tx.q[1059], ff:u_dut.u_bout_tx.q[1060], ff:u_dut.u_bout_tx.q[1061], ff:u_dut.u_bout_tx.q[1062], ff:u_dut.u_bout_tx.q[1063], ff:u_dut.u_bout_tx.q[1064], ff:u_dut.u_bout_tx.q[1065]); RTL registers removed by synthesis although not constant: ff:u_dut.u_fcore.tx[1059], ff:u_dut.u_fcore.tx[1060], ff:u_dut.u_fcore.tx[1061], ff:u_dut.u_fcore.tx[1062], ff:u_dut.u_fcore.tx[1063], ff:u_dut.u_fcore.tx[1064], ff:u_dut.u_fcore.tx[1065], ff:u_dut.u_fcore.tx[1066] (31220.5 s)"
+          ],
+          "last_errors": [
+            "LEC NOT EQUIVALENT: ot_hbm_idx_topk_link_static cp=22695 proved=21960 differs=125 undecided=610 125 compare points differ (first: ff:u_dut.u_bout_tx.q[1057], ff:u_dut.u_bout_tx.q[1059], ff:u_dut.u_bout_tx.q[1060], ff:u_dut.u_bout_tx.q[1061], ff:u_dut.u_bout_tx.q[1062], ff:u_dut.u_bout_tx.q[1063], ff:u_dut.u_bout_tx.q[1064], ff:u_dut.u_bout_tx.q[1065]); RTL registers removed by synthesis although not constant: ff:u_dut.u_fcore.tx[1059], ff:u_dut.u_fcore.tx[1060], ff:u_dut.u_fcore.tx[1061], ff:u_dut.u_fcore.tx[1062], ff:u_dut.u_fcore.tx[1063], ff:u_dut.u_fcore.tx[1064], ff:u_dut.u_fcore.tx[1065], ff:u_dut.u_fcore.tx[1066] (31220.5 s)"
+          ]
+        }
+      },
+      "checkpoints": []
+    }
+  ]
+}
