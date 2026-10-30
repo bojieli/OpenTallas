@@ -1,0 +1,163 @@
+{
+  "scope": "complete preserved public E/M4 entry, feed included once; pureNLDM insertion design estimate, not signed STA",
+  "external_input_slew_ps": 20,
+  "types": {
+    "NK": {
+      "model": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/natural_model/nk_public_centres_model.json",
+      "plan": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/plans/nk_public_centres.json",
+      "cores": 720,
+      "clock_cells": 9208,
+      "public_ck": {
+        "layer": "M4",
+        "xy_um": [
+          457.824,
+          668.076
+        ]
+      },
+      "entry_feed_included": true,
+      "actual_clock_geometry_installed": false,
+      "related_pair_qualified": false,
+      "corners": {
+        "TT": {
+          "effective_min_ps": 1080.5851469124443,
+          "effective_max_ps": 1188.5092107658145,
+          "weighted_mean_ps": 1140.878652930192,
+          "old_percore_insertion_ps": 665.8,
+          "delta_from_old_percore_ps": 475.078652930192,
+          "slew_max_ps": 51.316652986550274,
+          "related_worst_ps": 76.11524387204145,
+          "related_over80": 0,
+          "entry_wire_model": {
+            "public_pin": {
+              "name": "ck",
+              "layer": "M4",
+              "x": 457.824,
+              "y": 668.076
+            },
+            "first_buffer": "mp_public_e_feed_0",
+            "first_xy_um": [
+              452.196,
+              669.195
+            ],
+            "wire_um": 6.747000000000014,
+            "wire_r_kohm_um": 0.014812,
+            "wire_c_ff_um": 0.154233,
+            "input_cap_ff": 2.34978,
+            "elmore_ps": 0.2868264358363231,
+            "input_slew_ps": 20.009952121801433,
+            "scope": "passive source-to-first-buffer wire included; planned M4 access stack is not routed signoff"
+          }
+        },
+        "FF": {
+          "effective_min_ps": 848.732409401296,
+          "effective_max_ps": 943.9956524542571,
+          "weighted_mean_ps": 888.8577097578236,
+          "old_percore_insertion_ps": 576.5,
+          "delta_from_old_percore_ps": 312.3577097578236,
+          "slew_max_ps": 47.65698242563233,
+          "related_worst_ps": 80.07410281837133,
+          "related_over80": 2,
+          "entry_wire_model": {
+            "public_pin": {
+              "name": "ck",
+              "layer": "M4",
+              "x": 457.824,
+              "y": 668.076
+            },
+            "first_buffer": "mp_public_e_feed_0",
+            "first_xy_um": [
+              452.196,
+              669.195
+            ],
+            "wire_um": 6.747000000000014,
+            "wire_r_kohm_um": 0.014812,
+            "wire_c_ff_um": 0.154233,
+            "input_cap_ff": 2.60735,
+            "elmore_ps": 0.3125670966258032,
+            "input_slew_ps": 20.011817989355254,
+            "scope": "passive source-to-first-buffer wire included; planned M4 access stack is not routed signoff"
+          }
+        }
+      }
+    },
+    "NL": {
+      "model": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/natural_model/nl_public_centres_model.json",
+      "plan": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/plans/nl_public_centres.json",
+      "cores": 48,
+      "clock_cells": 8108,
+      "public_ck": {
+        "layer": "M4",
+        "xy_um": [
+          457.824,
+          668.076
+        ]
+      },
+      "entry_feed_included": true,
+      "actual_clock_geometry_installed": true,
+      "related_pair_qualified": true,
+      "corners": {
+        "TT": {
+          "effective_min_ps": 975.2929843764718,
+          "effective_max_ps": 1076.3075470918998,
+          "weighted_mean_ps": 1031.0777615577833,
+          "old_percore_insertion_ps": 692.6,
+          "delta_from_old_percore_ps": 338.4777615577833,
+          "slew_max_ps": 53.53669804071969,
+          "related_worst_ps": 71.35277074699388,
+          "related_over80": 0,
+          "entry_wire_model": {
+            "public_pin": {
+              "name": "ck",
+              "layer": "M4",
+              "x": 457.824,
+              "y": 668.076
+            },
+            "first_buffer": "mp_public_e_feed_0",
+            "first_xy_um": [
+              452.628,
+              669.735
+            ],
+            "wire_um": 6.855000000000018,
+            "wire_r_kohm_um": 0.014812,
+            "wire_c_ff_um": 0.154233,
+            "input_cap_ff": 2.34978,
+            "elmore_ps": 0.29226335243865886,
+            "input_slew_ps": 20.010332892711826,
+            "scope": "passive source-to-first-buffer wire included; planned M4 access stack is not routed signoff"
+          }
+        },
+        "FF": {
+          "effective_min_ps": 772.193189988777,
+          "effective_max_ps": 856.5503996658173,
+          "weighted_mean_ps": 804.8014583451753,
+          "old_percore_insertion_ps": 601.9,
+          "delta_from_old_percore_ps": 202.90145834517534,
+          "slew_max_ps": 52.46223147831639,
+          "related_worst_ps": 62.80887450006037,
+          "related_over80": 0,
+          "entry_wire_model": {
+            "public_pin": {
+              "name": "ck",
+              "layer": "M4",
+              "x": 457.824,
+              "y": 668.076
+            },
+            "first_buffer": "mp_public_e_feed_0",
+            "first_xy_um": [
+              452.628,
+              669.735
+            ],
+            "wire_um": 6.855000000000018,
+            "wire_r_kohm_um": 0.014812,
+            "wire_c_ff_um": 0.154233,
+            "input_cap_ff": 2.60735,
+            "elmore_ps": 0.31841604692685893,
+            "input_slew_ps": 20.01226428193652,
+            "scope": "passive source-to-first-buffer wire included; planned M4 access stack is not routed signoff"
+          }
+        }
+      }
+    }
+  },
+  "public_pin_audit": "impact/public_pin_table_audit.json"
+}

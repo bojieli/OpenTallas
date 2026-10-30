@@ -1,0 +1,29 @@
+{
+ "scope": "SOURCE-ONLY exact safe-graph core binding to full public-E input models. No clock arrival/slew readout, die-pair price, SDC or adoption. Physical graph FAIL89 PHY interior sites. NL model qualified locally; NK not qualified/installed.",
+ "cores": 768,
+ "cohorts": {
+  "NK": {
+   "cores": 720,
+   "local_model_qualified": false
+  },
+  "NL": {
+   "cores": 48,
+   "local_model_qualified": true
+  }
+ },
+ "frame_sha256": "b4d31092808650438be553ceda1438c34314155b9b6025bb5f6bfc14b7d37471",
+ "safe_tree_sha256": "8f728d099737550fa19c5cdfe819f6e30a4ede814ebfe335a7a7456621c69886",
+ "mean_delta_from_current_core_ps": {
+  "NK": {
+   "TT": 475.078652930192,
+   "FF": 312.3577097578236
+  },
+  "NL": {
+   "TT": 338.4777615577833,
+   "FF": 202.90145834517534
+  }
+ },
+ "input_slew_assumption_ps": 20,
+ "entry_feed_included_once": true,
+ "source_arrivals_available": false
+}
