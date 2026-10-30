@@ -1,0 +1,32 @@
+{
+ "kind": "PHYSICAL_DIAGNOSTIC_NOT_SIGNOFF",
+ "tile1": {
+  "status": "CANCELLED_SUPERSEDED_IN_PREFLIGHT",
+  "source_unchanged": true,
+  "reason": "analytic shared xo_q output path rejected; prototype did not reach PLACE; no two-variant gate claim"
+ },
+ "tile2": {
+  "status": "FULL_PLACE_RUNNING",
+  "host": "intel2",
+  "unit": "oth-ubuntu-3939977-1793358105",
+  "directory": "/srv/opentallas-scratch2/claude/codex-head-residual-1030/tile2",
+  "no_route": true
+ },
+ "tile3_dpl": {
+  "trial1": "RUNNER_FAIL cland_up_fault output tracing on postbuffered placedDB; replaced with geometry-only helper, old log retained",
+  "trial2": "FAIL315 Placed in rows check",
+  "trial3": "FAIL315 unchanged after reserving5872rowfragmentholes; holes hypothesis disproved",
+  "trial4": {
+   "DPL_rc": 0,
+   "check_placement_rc": 1,
+   "bad_cells": 315,
+   "host": "intel1 auto stage spilled from intel2",
+   "unit": "oth-ubuntu-3316530-1793359326",
+   "after_dpl_odb": "intel2:/srv/opentallas-scratch2/claude/codex-head-residual-1030/tile3_dpl/diag_out4/after_dpl.odb",
+   "anchored_odb": "intel2:same-directory/anchored.odb"
+  },
+  "diagnosis_owner": "/root/flow/core_margin",
+  "latest_fact": "All24397anchoredFF boxes fitactualrowBBox/siteXphase54DBU including315bad; exactorient/masterrowtype rootcause still OPEN; no global rowcheck patch approved"
+ },
+ "RTL_latency_cycles_added": 0
+}
