@@ -777,6 +777,7 @@ def test_explicit_typed_relay_start_and_hardware_mutants():
         (text, RS),
         (_relay_start_net(typ="unrelated_relay"), spec),
         (_relay_start_net(gate="XOR2x2"), spec),
+        (text.replace(".B(rq)", ".B(q)"), spec),
         (_relay_start_net(extra=f"DFFHQNx1{_X} sf2 (.CLK(clk), .D(st), .QN(q2));"), spec),
         (text.replace(".B(rq)", ".B(efall)"), dict(spec)),
         (text.replace("sf (.CLK(clk)", "sf (.CLK(st)"), spec),
@@ -795,3 +796,68 @@ def test_flat_relay_requires_actual_original_module_type():
     got = face_guard.guard(flat, "top", clocks=["fclk"], land=spec, straps=["strap_efall"],
                            types=face_guard.hier_module_types(text, "top"))
     assert got["verdict"] == "PASS", got["fails"]
+
+
+def _relay_copy_vehicle():
+    relay = f"""module ot_dp_landing_relay(clk, st, rq, q);
+input clk; input st; input rq; output q;
+AND2x2{_X} gate (.A(st), .B(rq), .Y(d));
+DFFHQNx1{_X} ff (.CLK(clk), .D(d), .QN(nq));
+INVx1{_X} out_inv (.A(nq), .Y(q));
+endmodule
+"""
+    top = f"""module top(clk, rst_n, st, mission, o0, o1);
+input clk; input rst_n; input st; output mission; output o0; output o1;
+DFFHQNx1{_X} reset_ff (.CLK(clk), .D(rst_n), .QN(rq));
+ot_dp_landing_relay origin (.clk(clk), .st(st), .rq(rq), .q(mission));
+ot_dp_landing_relay copy0 (.clk(clk), .st(st), .rq(rq), .q(o0));
+ot_dp_landing_relay copy1 (.clk(clk), .st(st), .rq(rq), .q(o1));
+endmodule
+"""
+    spec = {"st": {"form": "origin_start", "origin": "origin", "copies": ["copy0", "copy1"]}}
+    return relay + top, spec
+
+
+def test_declared_relay_copies_are_same_state_private_face_registers():
+    text, spec = _relay_copy_vehicle()
+    got = face_guard.guard(text, "top", land=spec)
+    assert got["verdict"] == "PASS", got["fails"]
+    assert got["ring_start"]["st"]["face_copies"] == {"copy0": "o0", "copy1": "o1"}
+    # No declared copy can be omitted or added silently.
+    for copies in (["copy0"], ["copy0", "copy1", "wrong"]):
+        bad = {"st": dict(spec["st"], copies=copies)}
+        assert face_guard.guard(text, "top", land=bad)["verdict"] == "FAIL"
+
+
+@pytest.mark.parametrize("mutant", ["wrong_type", "wrong_reset", "inverted_reset", "wrong_data", "wrong_clock",
+                                    "shared_output", "two_outputs", "extra_ff", "extra_cycle"])
+def test_declared_relay_copy_mutants_fail_closed(mutant):
+    text, spec = _relay_copy_vehicle()
+    if mutant == "wrong_type":
+        other = text[:text.index("module top")].replace("module ot_dp_landing_relay", "module unrelated_relay")
+        text = other + text.replace("ot_dp_landing_relay copy0", "unrelated_relay copy0")
+    elif mutant == "wrong_reset":
+        text = text.replace("copy0 (.clk(clk), .st(st), .rq(rq)", "copy0 (.clk(clk), .st(st), .rq(1'b1)")
+    elif mutant == "inverted_reset":
+        text = text.replace("ot_dp_landing_relay copy0", f"INVx1{_X} ir (.A(rq), .Y(nrq)); ot_dp_landing_relay copy0")
+        text = text.replace("copy0 (.clk(clk), .st(st), .rq(rq)", "copy0 (.clk(clk), .st(st), .rq(nrq)")
+    elif mutant == "wrong_data":
+        text = text.replace("copy0 (.clk(clk), .st(st)", "copy0 (.clk(clk), .st(rq)")
+    elif mutant == "wrong_clock":
+        text = text.replace("copy0 (.clk(clk)", "copy0 (.clk(st)")
+    elif mutant == "shared_output":
+        text = text.replace(".q(o0));", ".q(o0)); " + f"DFFHQNx1{_X} leak (.CLK(clk), .D(o0), .QN(lq));")
+    elif mutant == "two_outputs":
+        text = text.replace(".q(o1));", ".q(o0)); assign o1 = o0;")
+    elif mutant == "extra_ff":
+        text = text.replace("INVx1" + _X + " out_inv", f"DFFHQNx1{_X} extra (.CLK(clk), .D(st), .QN(extra_q)); INVx1{_X} out_inv")
+    else:
+        text = text.replace("copy0 (.clk(clk), .st(st)", "copy0 (.clk(clk), .st(mission)")
+    got = face_guard.guard(text, "top", land=spec)
+    assert got["verdict"] == "FAIL", (mutant, got)
+
+
+def test_origin_copy_spec_refuses_ambiguous_declarations():
+    for copies in ([], "copy", ["copy", "copy"], ["origin"], [""], [1]):
+        with pytest.raises(ValueError):
+            face_guard.origin_spec({"form": "origin_start", "origin": "origin", "copies": copies})

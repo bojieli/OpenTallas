@@ -82,3 +82,12 @@ def test_explicit_relay_start_path_and_wrong_type_fail_closed():
     assert got["buses"]["cland_start_in"]["origin"] == "u_bound.u_cland_origin"
     assert refused(spec(), text.replace("ot_dp_landing_relay", "ot_dp_landing_relay_fake"))
     assert refused(spec(), text.replace("ot_dp_landing_relay", "ot_dp_landing_origin_wrong"))
+
+
+def test_relay_copy_instance_paths_are_declared_and_qualified():
+    text = RTL.replace("ot_dp_landing_origin_s #(.PADW(1))", "ot_dp_landing_relay")
+    text = text.replace("ot_dp_clk_landing #(.W(3))", "ot_dp_landing_relay u_copy (.clk(clk));\n    ot_dp_clk_landing #(.W(3))")
+    ls = spec(); ls["buses"]["cland_start_in"]["copies"] = ["u_copy"]
+    got = run(ls, text)
+    assert got["buses"]["cland_start_in"]["copies"] == ["u_bound.u_copy"]
+    assert refused(ls, text.replace("ot_dp_landing_relay u_copy", "unrelated_relay u_copy"))
