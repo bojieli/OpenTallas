@@ -1,0 +1,80 @@
+{
+  "status": "STRUCTURAL_ESTIMATE_ONLY_NOT_LEGAL_PLACEMENT",
+  "source": "intel1 s81ck/geom/s81ck2_bkg/geom.tsv",
+  "source_sha256": "1593c198eb0bdfdbad1553509e7ce8aece0e7a8b39ee2f8a4b64a9f4333fc727",
+  "source_kit_rev": "976208271a0",
+  "outline_um": [
+    216,
+    172.8
+  ],
+  "old_macros": [
+    {
+      "kind": "M",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "box": [
+        60.48,
+        39.984,
+        155.304,
+        81.048
+      ],
+      "name": "u_vout.u_hi"
+    },
+    {
+      "kind": "M",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "box": [
+        60.48,
+        91.872,
+        155.304,
+        132.936
+      ],
+      "name": "u_vout.u_lo"
+    }
+  ],
+  "candidate_macros": [
+    {
+      "kind": "M",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "box": [
+        60.48,
+        28.656000000000002,
+        155.304,
+        69.72
+      ],
+      "name": "u_vout.u_hi",
+      "shift_y_um": -11.328
+    },
+    {
+      "kind": "M",
+      "master": "ot_sram_1r1w_128x256_m1_r2c2",
+      "box": [
+        60.48,
+        103.2,
+        155.304,
+        144.264
+      ],
+      "name": "u_vout.u_lo",
+      "shift_y_um": 11.328
+    }
+  ],
+  "old_gap_um": 10.823999999999998,
+  "candidate_gap_um": 33.480000000000004,
+  "shift_is_integer_0p192_um": 59,
+  "old_horizontal_channel_ratio": 1.85,
+  "same_demand_inverse_gap_ratio_estimate": 0.5981003584229388,
+  "old_cells_newly_on_macros": 430,
+  "affected_dff": 68,
+  "changes": {
+    "external_pins": 0,
+    "outline": 0,
+    "RTL": 0,
+    "cycles": 0
+  },
+  "limitations": [
+    "430+ existing cell locations need fresh legalization/GPL; no current placed fit claim",
+    "Channel ratio is a first-order capacity estimate; exact new routing census required",
+    "Current source/typed-memory ABI must be reconciled before fresh GEN",
+    "Full native clock with actual two SRAM clock pins required",
+    "Old GRT0 used8iterations and does not meet current50 gate"
+  ]
+}
