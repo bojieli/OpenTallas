@@ -294,6 +294,29 @@ proc ff_put_near {f x y} {
   }
   return ""
 }
+# plan stage j (1..k-1) of slot bit nm: the plan-audited explicit site of the slot when it has them, else the station
+# grid cell nearest xy.  FLOW-KITFAIL-3: shared by the unlanded path (station j) and the landed path (station j-1).
+proc ff_put_stage {f slot j nm xy} {
+  global ff_bit_sites ff_bit_site_cells ff_dbu ff_orient ff_x0 ff_y0 ff_x1 ff_y1 ff_sw
+  if {[info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot]} {
+    if {![regexp {\[([0-9]+)\]$} $nm -> ff_bit]} { error "FT bit index missing: $nm" }
+    set key "$slot,$j,$ff_bit"
+    if {![dict exists $ff_bit_sites $key]} { error "explicit FT site missing: $key" }
+    lassign [dict get $ff_bit_sites $key] xx yy
+    lassign [dict get $ff_bit_site_cells $slot] fw fh
+    set cx [expr {round($xx*$ff_dbu)}]; set cy [expr {round($yy*$ff_dbu)}]
+    if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw != 0} { error "explicit FT site is not on a row/site: $key $xx $yy" }
+    set fm [$f getMaster]
+    if {[$fm getWidth] > $fw*$ff_dbu+1 || [$fm getHeight] > $fh*$ff_dbu+1} { error "FT cell exceeds allocated footprint: [$f getName]" }
+    if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$fm getWidth] > $ff_x1 || $cy+[$fm getHeight] > $ff_y1} { error "explicit FT site outside core: $key" }
+    if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
+    $f setOrient [dict get $ff_orient $cy]
+    $f setLocation $cx $cy
+    $f setPlacementStatus FIRM
+    return [list $cx $cy]
+  }
+  return [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+}
 set ff_st 0; set ff_st_miss 0; set ff_lst 0
 foreach bt [$ff_blk getBTerms] {
   if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne "INPUT"} continue
@@ -304,10 +327,12 @@ foreach bt [$ff_blk getBTerms] {
   set onm [string map [list "${slot}_i" "${slot}_o"] $nm]
   set ob [$ff_blk findBTerm $onm]
   if {$ob ne "NULL" && $ob ne "" && [ff_lands_ring [$bt getNet]]} {
-    # landed slot (see ff_lands_ring): k stations after the ring; plan-audited explicit sites assume the unlanded
-    # station 0 at the in face, so a landed slot with explicit sites stays missing (fail closed, as before this fix)
+    # landed slot (see ff_lands_ring): k stations after the ring.  FLOW-KITFAIL-3 (KV kv3_io_ft landed: 1052 missing):
+    # the plan's stages j=1..k-1 (explicit bit sites or regs_um, both at L*j/k with the unlanded station 0 at the in
+    # face) are exactly the landed targets L*(i+1)/k of stations i=0..k-2, so station i takes plan stage i+1; the last
+    # station is the out-face register (route end).  Without plan sites this is the route point, as before.
     set fs [ff_landed_stations [$ob getNet] $k]
-    set clash [expr {[llength $regs] >= 2 * $k || ([info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot])}]
+    set clash 0
     foreach f $fs { if {[dict exists $ff_done [$f getName]]} { set clash 1 } }
     if {$fs eq "" || $clash} { incr ff_st_miss; continue }
     set bb [$bt getBBox]; set ab [$ob getBBox]
@@ -317,8 +342,12 @@ foreach bt [$ff_blk getBTerms] {
     for {set j 0} {$j < $k} {incr j} {
       set f [lindex $fs $j]
       dict set ff_done [$f getName] 1
-      set xy [ff_point_at $pts [expr {$L * double($j + 1) / $k}]]
-      set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
+      if {$j + 1 < $k && [llength $regs] >= 2 * $k} {
+        set xy [list [expr {round([lindex $regs [expr {2*($j+1)}]] * $ff_dbu)}] [expr {round([lindex $regs [expr {2*($j+1)+1}]] * $ff_dbu)}]]
+      } else {
+        set xy [ff_point_at $pts [expr {$L * double($j + 1) / $k}]]
+      }
+      if {$j + 1 < $k} { set got [ff_put_stage $f $slot [expr {$j + 1}] $nm $xy] } else { set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]] }
       if {$got eq ""} { incr ff_st_miss; continue }
       puts $ff_out "[$f getName]\tlst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
       incr ff_lst
@@ -344,25 +373,7 @@ foreach bt [$ff_blk getBTerms] {
     } else {
       set xy [ff_point_at $pts [expr {$L * double($j) / $k}]]
     }
-    if {[info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot]} {
-      if {![regexp {\[([0-9]+)\]$} $nm -> ff_bit]} { error "FT bit index missing: $nm" }
-      set key "$slot,$j,$ff_bit"
-      if {![dict exists $ff_bit_sites $key]} { error "explicit FT site missing: $key" }
-      lassign [dict get $ff_bit_sites $key] xx yy
-      lassign [dict get $ff_bit_site_cells $slot] fw fh
-      set cx [expr {round($xx*$ff_dbu)}]; set cy [expr {round($yy*$ff_dbu)}]
-      if {![dict exists $ff_orient $cy] || ($cx-$ff_x0)%$ff_sw != 0} { error "explicit FT site is not on a row/site: $key $xx $yy" }
-      set fm [$f getMaster]
-      if {[$fm getWidth] > $fw*$ff_dbu+1 || [$fm getHeight] > $fh*$ff_dbu+1} { error "FT cell exceeds allocated footprint: [$f getName]" }
-      if {$cx < $ff_x0 || $cy < $ff_y0 || $cx+[$fm getWidth] > $ff_x1 || $cy+[$fm getHeight] > $ff_y1} { error "explicit FT site outside core: $key" }
-      if {[$f getPlacementStatus] eq "FIRM"} { $f setPlacementStatus PLACED }
-      $f setOrient [dict get $ff_orient $cy]
-      $f setLocation $cx $cy
-      $f setPlacementStatus FIRM
-      set got [list $cx $cy]
-    } else {
-      set got [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
-    }
+    set got [ff_put_stage $f $slot $j $nm $xy]
     if {$got eq ""} { incr ff_st_miss; continue }
     puts $ff_out "[$f getName]\tst$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
     incr ff_st
