@@ -5191,3 +5191,4 @@ Actual JSON residual/canonical9_dump/diagnostic_auto_geom.json remains FAIL sole
 2026-10-30 15:57 PDT GEOM-82: START reviewer B newest-first (successor GEOM-79, parked 15:56, no open claim). Queue polled: no open GEOM REQ/LOOK; GEOM-81 (A) live. Polling GEOM-REVIEW.md + COORD-REVIEW-QUEUE.md.
 2026-10-30 16:23 PDT COORD SPOT-CHECK (viewed renders): s81ck5_ve_m_rt22_cts PASS-COND (GEOM-81) - AGREE (fill 0.36, GRT ov 0, farthest sink 129 um, clk pin S edge). s81ck6_vn_a_rt22a_cts PASS-COND (GEOM-79/81) - AGREE: only remaining fail is aspect (frozen 356.4x164.2 outline); r2r and r2r_count now clear. Patchy fill right of the macro is unchanged, so watch DRT congestion near (250-300, 60-90).
 2026-10-30 16:42 PDT GEOM-82: CLAIM [AUTO-GEOM exp0_anchA] HBM SU lane_exp0_id anchA 3_place (newest).
+2026-10-30 16:42 PDT GEOM-81: CLAIM [AUTO-GEOM exp0_anchA] (oldest open).
