@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 2026-10-30 11:21 PDT by COORD hourly: counted S81 18/52, HEAD 2/3, QC 5/9 (vmrV1 on plan_qc45 + FT sidecar), KV 7/31, HBM 0/210 (delta 0 since 10:20). S81 event3 FROZEN (bcfcb4e1737e); HBM plan of record d35a. Pending: KV Q2/Q1/CDC319 DRT+sign-off (DIE-KV-45), KV q1s3 PRD2 (SPRINT-2), HEAD freeze on legal88 (OWNER? wshim pin_reg, default a), HBM V-A/V-B bind-gap event (DIE-HBM-36), S81 kit wave ON (S81-KITS-G), S81 one-block fixes KVleaf/H2/VES (DIE-S81-36), QC core_forest contract (FLOW-9), FE3 chain on peer. OWNER 12.20/12.20a in force.
+Updated 2026-10-30 12:25 PDT by COORD hourly: counted S81 18/52, HEAD 2/3, QC 5/9, KV 7/31, HBM 0/210 (flat since 10:20; cache refreshed 12:23 after OOM fix). S81 event3 FROZEN; HBM plan of record d35a. Pending: HBM collar count (pin-only d35b + RE-SIGN), KV Q1/PHY103 slew PRD -> count, KV Q2 LVT-lib sign-off fix, PV7 DRT, QC BTAB P1/P2 + plan_qc47 die clock, HEAD last event (wshim stations 3 + hd_tile clock entry), S81 station-form fix (5-point S->N + taps follow ft), HBM V-A probe / d37a with NW hub cuts. OWNER 12.20/12.20a in force.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
