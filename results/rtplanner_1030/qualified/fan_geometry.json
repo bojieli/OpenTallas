@@ -1,0 +1,168 @@
+{
+  "source": "64a20848e8afe4324aae5a94fc5596ba20561776",
+  "scope": "Independent final-record full-maze effectivehub->branch check and relocated centre collision check",
+  "stubs": [
+    {
+      "edge": "Tqpq",
+      "driver": "Tqp_br",
+      "hub_um": [
+        217.62,
+        77.76
+      ],
+      "branch_um": [
+        219.24,
+        77.76
+      ],
+      "shortest_um": 1.62,
+      "direct_um": 1.6200000000000045,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tppuu",
+      "driver": "Tpqv_r1",
+      "hub_um": [
+        101.52,
+        93.42
+      ],
+      "branch_um": [
+        101.52,
+        89.64
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.780000000000001,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tppwv",
+      "driver": "Tqpv_r1",
+      "hub_um": [
+        139.86,
+        90.18
+      ],
+      "branch_um": [
+        136.08,
+        90.18
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.780000000000001,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqput",
+      "driver": "Tqpv_r1",
+      "hub_um": [
+        139.86,
+        90.18
+      ],
+      "branch_um": [
+        139.86,
+        86.4
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.780000000000001,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqpuu",
+      "driver": "Tqqq_r1",
+      "hub_um": [
+        180.9,
+        99.36
+      ],
+      "branch_um": [
+        177.12,
+        99.36
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.780000000000001,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqpuv",
+      "driver": "Tqqq_r1",
+      "hub_um": [
+        180.9,
+        99.36
+      ],
+      "branch_um": [
+        177.66,
+        98.82
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.7800000000000153,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqpux",
+      "driver": "Tqpv_r1",
+      "hub_um": [
+        139.86,
+        90.18
+      ],
+      "branch_um": [
+        140.4,
+        86.94
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.780000000000001,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqpvw",
+      "driver": "Tqps_r1",
+      "hub_um": [
+        145.26,
+        32.4
+      ],
+      "branch_um": [
+        141.48,
+        32.4
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.780000000000001,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqpvx",
+      "driver": "Tqpr_r1",
+      "hub_um": [
+        190.62,
+        21.6
+      ],
+      "branch_um": [
+        190.62,
+        25.38
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.7799999999999976,
+      "bound_um": 4,
+      "verdict": "PASS"
+    },
+    {
+      "edge": "Tqpvy",
+      "driver": "Tqps_r1",
+      "hub_um": [
+        145.26,
+        32.4
+      ],
+      "branch_um": [
+        142.02,
+        32.94
+      ],
+      "shortest_um": 3.7800000000000002,
+      "direct_um": 3.77999999999998,
+      "bound_um": 4,
+      "verdict": "PASS"
+    }
+  ],
+  "collisions": [],
+  "verdict": "PASS"
+}

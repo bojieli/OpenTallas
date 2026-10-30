@@ -1,0 +1,82 @@
+{
+  "verdict": "PASS",
+  "scope": "Current generated candidate exact RTL+defines+SDC+macro/native synthesis hook material compared to prior proved compiled RTL vehicle; no fresh LEC claim",
+  "checks": {
+    "rtl/ot_rst_relay.sv": {
+      "actual": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "expected": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "match": true
+    },
+    "rtl/ot_hdc_delay.sv": {
+      "actual": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "expected": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+      "match": true
+    },
+    "rtl/ot_fp32_add_rne_pipe.sv": {
+      "actual": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "expected": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+      "match": true
+    },
+    "rtl/ot_sram_1r1w_512x128_m4_r2c2_bb.v": {
+      "actual": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+      "expected": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+      "match": true
+    },
+    "rtl/ot_s81sl_cap_rt.sv": {
+      "actual": "e70ee45f88370fe58b95dd2f9569d6725afcd84ff4e8e4d8bec6ab25984a186a",
+      "expected": "e70ee45f88370fe58b95dd2f9569d6725afcd84ff4e8e4d8bec6ab25984a186a",
+      "match": true
+    },
+    "constraint.sdc": {
+      "actual": "2509d11f0c14b1111cf9e4e664ef9ff3f2d86639a9338e07af2860f7c828b6bf",
+      "expected": "2509d11f0c14b1111cf9e4e664ef9ff3f2d86639a9338e07af2860f7c828b6bf",
+      "match": true
+    },
+    "core.json": {
+      "actual": "57409aec7b97cf320b34722e58869b090058b0ac4e6a94d9e60e0f88710aa1a6",
+      "expected": "57409aec7b97cf320b34722e58869b090058b0ac4e6a94d9e60e0f88710aa1a6",
+      "match": true
+    },
+    "ot_keep_regs.tcl": {
+      "actual": "78df5dbb486a068fdddfe80e3951ced97ebfb199f4e6affbe37ff931afd8da8f",
+      "expected": "78df5dbb486a068fdddfe80e3951ced97ebfb199f4e6affbe37ff931afd8da8f",
+      "match": true
+    },
+    "core_face_post_synth.tcl": {
+      "actual": "fc6fdfadc985aed211d66b0618d99bf71a179d02d1da8317e366f6ab45e5138f",
+      "expected": "fc6fdfadc985aed211d66b0618d99bf71a179d02d1da8317e366f6ab45e5138f",
+      "match": true
+    },
+    "macros/ot_sram_1r1w_512x128_m4_r2c2_tt.lib": {
+      "actual": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1",
+      "expected": "559775f07579bf289f40ca98841b0f3b1f39019ad7e4af4769dd863652d1d8b1",
+      "match": true
+    },
+    "macros/ot_sram_1r1w_512x128_m4_r2c2.lef": {
+      "actual": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
+      "expected": "bf018f2d8886b98a4a9644a788c8d26231d2d10eeb333c2b732cc5556233eca1",
+      "match": true
+    },
+    "macros/ot_sram_1r1w_512x128_m4_r2c2_ff.lib": {
+      "actual": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063",
+      "expected": "74e4679510e68dc0d8bf27956decf2c3da8357349da6649d7a885a3c60108063",
+      "match": true
+    },
+    "VERILOG_DEFINES": {
+      "actual": "-DSYNTHESIS -DOT_S81_CAP_RT_FACE_REGS",
+      "expected": "-DSYNTHESIS -DOT_S81_CAP_RT_FACE_REGS",
+      "match": true
+    }
+  },
+  "prior_native_equivalence": "13119/13119 EQUIVALENT default4/nooverride",
+  "compiled_source_kit": "/srv/opentallas-scratch2/claude/s81-kits-e/kits/ot_s81sl_cap_rt_face1f",
+  "material": {
+    "1_2_yosys.v": "1429ef64e64810ce1baa36474da77a1641dc3861addd251a0e98b50f2c5fadf5",
+    "1_synth.sdc": "60f4c66436258e4599999abfff2bea1153582d42bf08a4060d5c2c285c9cc6c7",
+    "1_2_yosys.sdc": "2509d11f0c14b1111cf9e4e664ef9ff3f2d86639a9338e07af2860f7c828b6bf",
+    "1_synth.v": "79c3bb6e1b64a7c3626285d81db5ae98b5237545600f27663c69d5f7b47ab45d",
+    "1_synth.odb": "08f073af8750c718847d4100b6d7048b360faed771fba9e0dbe05ec525433eb7",
+    "1_1_yosys_canonicalize.rtlil": "6deb67c9eff0ad15906558fbe43477b003438780878b9e6e5ce75e3fee49cc36"
+  },
+  "functional_cycles_added": 0
+}

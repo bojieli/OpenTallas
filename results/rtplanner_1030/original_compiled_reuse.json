@@ -1,0 +1,25 @@
+{
+  "verdict": "PASS",
+  "scope": "exact compiled source reused; no fresh native LEC claim",
+  "source_kit": "/srv/opentallas-scratch2/claude/s81-kits-e/kits/ot_s81sl_cap_rt_face1f",
+  "source_files": {
+    "rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/ot_sram_1r1w_512x128_m4_r2c2_bb.v": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128",
+    "rtl/ot_s81sl_cap_rt.sv": "e70ee45f88370fe58b95dd2f9569d6725afcd84ff4e8e4d8bec6ab25984a186a"
+  },
+  "material": {
+    "1_2_yosys.v": "1429ef64e64810ce1baa36474da77a1641dc3861addd251a0e98b50f2c5fadf5",
+    "1_synth.sdc": "60f4c66436258e4599999abfff2bea1153582d42bf08a4060d5c2c285c9cc6c7",
+    "1_2_yosys.sdc": "2509d11f0c14b1111cf9e4e664ef9ff3f2d86639a9338e07af2860f7c828b6bf",
+    "1_synth.v": "79c3bb6e1b64a7c3626285d81db5ae98b5237545600f27663c69d5f7b47ab45d",
+    "1_synth.odb": "08f073af8750c718847d4100b6d7048b360faed771fba9e0dbe05ec525433eb7",
+    "1_1_yosys_canonicalize.rtlil": "6deb67c9eff0ad15906558fbe43477b003438780878b9e6e5ce75e3fee49cc36"
+  },
+  "native_lec": "13119/13119 EQUIVALENT default4/nooverride",
+  "faces": "raw/post746PASS",
+  "fanout": "10636/0over64PASS",
+  "new_geometry": "259.2x129.6, north+12.96um, M5 clock; NEW do-floorplan and do-place required",
+  "functional_cycles_added": 0
+}

@@ -1,0 +1,75 @@
+{
+  "verdict": "PRIVATE_MODEL_PASS_PHYSICAL_UNMEASURED",
+  "source_model": "64a20848e8afe4324aae5a94fc5596ba20561776",
+  "reviewed_source": "6ce6d46fdd5d2bd4aaf465587784a3990ca06c87",
+  "source_review": "FLOW geometric/electrical review APPROVE including both leaf IN/OUT slew guard; exact concrete model reused per reviewer",
+  "kit_source": "main65cecaea + independent LEF pin parser e376a5a71a0e539be3fe6f6fd92082903ce3e520",
+  "kit": "/srv/opentallas-scratch/claude/codex-rtplanner-1030/kits/ot_s81sl_cap_rt_m5tall_balanced3",
+  "default_preflight": "PASS 0 issues, no plan-dir override, exact declared LEF self-contained",
+  "model": {
+    "calibrated": "uf_phys3 v1 GRT standard-width canonical R9 master descent, 17 changes; PLAN MODEL UNCHECKED until physical",
+    "TT": {
+      "mean_ps": 298.683,
+      "window_ps": 17.9,
+      "input_slew_ps": 26.11,
+      "output_slew_ps": 48.83
+    },
+    "FF": {
+      "mean_ps": 223.821,
+      "window_ps": 16.19,
+      "input_slew_ps": 19.76,
+      "output_slew_ps": 36.48
+    },
+    "native_nldm_info_windows_ps": [
+      22.08,
+      30.67
+    ],
+    "band_policy": "INFO unchanged; actual G2 TT/STDFF/80ps CPPR pair gates required"
+  },
+  "geometry": {
+    "look": "Personally viewed final qualified/clock_review.png showing actual converted root, unchanged SRAM and native north entry; no opposite-face detours",
+    "outline_um": [
+      259.2,
+      129.6
+    ],
+    "native_pin_um": [
+      129.612,
+      129.36
+    ],
+    "converted_root_um": [
+      129.978,
+      125.145
+    ],
+    "input_wire_um": 4.581,
+    "source_stub_checks": "10 independent final-record full-maze effectivehub stubs PASS; no relocated centre collisions",
+    "tree_legs": 572,
+    "detours": 0,
+    "worst_ratio": 1.045,
+    "max_leaf_spread_um": 27.11,
+    "displacement_max_um": 0.513,
+    "pg": "PASS",
+    "sinks": 10723,
+    "cells": 807,
+    "stages": [
+      10
+    ]
+  },
+  "native_logic": "Prior13119/13119 EQ eligible exact compiled-material reuse; all fiveRTL/defines/SDC/macros/nativehooks bytehashmatch; no fresh LEC claim",
+  "functional_cycles_added": 0,
+  "controls": "Original std/NDR failures at codex/rtclock-1030@26c9a77e2 preserved; controls/native and controls/uf3 first repaired/master plateau fail; original helper localfan review blocker explicitly superseded by64a, no physical launched on them",
+  "physical_next": "Root authorizes parent-owned private PLACE+G2 after concrete gates; no DRT until actual G2. Parent own rt_reuse_place.sh verifies source and creates NEW floorplan/place from prior compilednative material. Copy dump_placed.py before use.",
+  "failures_diagnosed": [
+    "Initial GEN sparse missing svc/pin_audit_core.py: add canonical sparse source, fresh KITv2",
+    "Current preflight found older core_infra_impl vs main: regenerate fresh KITv3 on65cecaea",
+    "Declared LEF parse-as-JSON: independent shared parser e376; exact source LEF self-contained, default preflight passes",
+    "First UF3 pricing Path vs str argument: preserved failed log and fixed v2, final pricing passes"
+  ],
+  "fleet": {
+    "host": "epyc2",
+    "root": "/srv/opentallas-scratch2/claude/codex-rtplanner-1030",
+    "native_unit": "oth-ubuntu-3392161-1793362609",
+    "uf3_unit": "oth-ubuntu-3439568-1793362931",
+    "balanced_unit": "oth-ubuntu-3535822-1793363488",
+    "balanced_uf3_unit": "oth-ubuntu-3567337-1793363645"
+  }
+}

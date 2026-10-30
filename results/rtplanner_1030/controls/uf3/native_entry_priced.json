@@ -1,0 +1,150 @@
+{
+  "scope": "PLAN MODEL ONLY UNCHECKED; preserved native north clock input; no RTL/pin movement",
+  "native_entry_um": [
+    129.612,
+    129.36
+  ],
+  "root_um": [
+    129.6,
+    125.28
+  ],
+  "trunk_um": 4.092000000000013,
+  "wire": "std",
+  "r_kohm_um": 0.014812,
+  "c_ff_um": 0.15423255000000002,
+  "root_arrival_ps": {
+    "TT": 0.16157721465149089,
+    "FF": 0.17715962054285092
+  },
+  "root_slew_ps": {
+    "TT": 0.35546987223327997,
+    "FF": 0.38975116519427205
+  },
+  "baseline": {
+    "TT": {
+      "mean": 316.97,
+      "leaf_mean_min": 284.3,
+      "leaf_mean_max": 325.48,
+      "window": 41.17,
+      "sink_min": 284.3,
+      "sink_max": 327.04,
+      "leaf_slew_in_max": 20.6,
+      "leaf_ct_ff": [
+        0.5,
+        38.3
+      ],
+      "leaf_out_slew_max": 45.8
+    },
+    "FF": {
+      "mean": 246.2,
+      "leaf_mean_min": 214.75,
+      "leaf_mean_max": 263.71,
+      "window": 48.97,
+      "sink_min": 214.75,
+      "sink_max": 264.96,
+      "leaf_slew_in_max": 17.1,
+      "leaf_ct_ff": [
+        0.6,
+        40.5
+      ],
+      "leaf_out_slew_max": 35.0
+    }
+  },
+  "full_input": {
+    "TT": {
+      "mean": 317.26,
+      "leaf_mean_min": 284.6,
+      "leaf_mean_max": 325.77,
+      "window": 41.17,
+      "sink_min": 284.6,
+      "sink_max": 327.33,
+      "leaf_slew_in_max": 20.6,
+      "leaf_ct_ff": [
+        0.5,
+        38.3
+      ],
+      "leaf_out_slew_max": 45.8
+    },
+    "FF": {
+      "mean": 246.51,
+      "leaf_mean_min": 215.05,
+      "leaf_mean_max": 264.02,
+      "window": 48.97,
+      "sink_min": 215.05,
+      "sink_max": 265.26,
+      "leaf_slew_in_max": 17.1,
+      "leaf_ct_ff": [
+        0.6,
+        40.5
+      ],
+      "leaf_out_slew_max": 35.0
+    }
+  },
+  "macro_sinkcap": {
+    "TT": {
+      "u_st/clk": 9.3458
+    },
+    "FF": {
+      "u_st/clk": 10.3732
+    }
+  },
+  "baseline_reproduces_frozen_model": true,
+  "converted_root": "NOT RUN: timing model prevents conversion; stub currently to frozen model root",
+  "uf3_baseline": {
+    "TT": {
+      "mean": 312.84,
+      "leaf_mean_min": 282.37,
+      "leaf_mean_max": 318.7,
+      "window": 36.32,
+      "sink_min": 282.37,
+      "sink_max": 319.4,
+      "leaf_slew_in_max": 26.11,
+      "leaf_out_slew_max": 48.83,
+      "analysis": "max_rise",
+      "basis": "GRT",
+      "model": "uf_phys3 v1"
+    },
+    "FF": {
+      "mean": 234.19,
+      "leaf_mean_min": 209.63,
+      "leaf_mean_max": 241.04,
+      "window": 31.42,
+      "sink_min": 209.63,
+      "sink_max": 241.71,
+      "leaf_slew_in_max": 19.76,
+      "leaf_out_slew_max": 36.48,
+      "analysis": "min_rise_fall",
+      "basis": "GRT",
+      "model": "uf_phys3 v1"
+    }
+  },
+  "uf3_full_input": {
+    "TT": {
+      "mean": 313.132,
+      "leaf_mean_min": 282.662,
+      "leaf_mean_max": 318.982,
+      "window": 36.32,
+      "sink_min": 282.662,
+      "sink_max": 319.692,
+      "leaf_slew_in_max": 26.11,
+      "leaf_out_slew_max": 48.83,
+      "analysis": "max_rise",
+      "basis": "GRT",
+      "model": "uf_phys3 v1"
+    },
+    "FF": {
+      "mean": 234.487,
+      "leaf_mean_min": 209.927,
+      "leaf_mean_max": 241.347,
+      "window": 31.42,
+      "sink_min": 209.927,
+      "sink_max": 242.017,
+      "leaf_slew_in_max": 19.76,
+      "leaf_out_slew_max": 36.48,
+      "analysis": "min_rise_fall",
+      "basis": "GRT",
+      "model": "uf_phys3 v1"
+    }
+  },
+  "input_boundary_condition": "Same calibrated kernel with root slew from native wire Elmore, plus common native wire arrival; no predictor term refit"
+}
