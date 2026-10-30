@@ -1,0 +1,30 @@
+{
+  "scope": "Real published FLOW Binder constructor with actual3bridge fragments and exact native ABIs in a minimal composition-order vehicle; not fullnativeBIND",
+  "flow_commit": "5b3fbcc7c",
+  "cases": [
+    {
+      "fragment": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll__native_bridge",
+      "postcompose_native_path": "su_NW2.__cut_lanes0_3",
+      "actual_Binder_constructor": true,
+      "loaded_constant_bits": 4,
+      "default_keeps_original_pin": true,
+      "extra_cycles": 0
+    },
+    {
+      "fragment": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll__native_bridge",
+      "postcompose_native_path": "su_NW0.__cut_lanes_plain0_3",
+      "actual_Binder_constructor": true,
+      "loaded_constant_bits": 4,
+      "default_keeps_original_pin": true,
+      "extra_cycles": 0
+    },
+    {
+      "fragment": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge",
+      "postcompose_native_path": "su_NW2.__cut_lanes8_11",
+      "actual_Binder_constructor": true,
+      "loaded_constant_bits": 4,
+      "default_keeps_original_pin": true,
+      "extra_cycles": 0
+    }
+  ]
+}
