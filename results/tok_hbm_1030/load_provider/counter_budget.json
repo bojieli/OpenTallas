@@ -36,9 +36,11 @@
   "source arithmetic, STORE and all other engines"
  ],
  "qualification": "43,129,536 cycles is full-token serialized counter-only issue+setup arithmetic floor for12528 original effective descriptors under chosen singleword serial implementation. Window-safe segmentation adds setups; a future coalescing/parallel implementation can lower this floor. No installed provider, token-rate qualification, or current stack coverage.",
- "programme_scope": "a122 actual3916-record source range0..3915: full40-layer single token programme including head, not perlayer",
+ "programme_scope": "actuala1223916records0..3915: full40-layer N=6 MTPVERIFY programme includinghead/ACCEPT/TOKX, not perlayer and not oneARtoken",
  "issuer_scope": "One serial global227counter producing one datedword microop/cycle, routed to one sourceleaf/destinationquad perstep. Eightlanding leaves do not imply8parallelissuers. Replicated counter/calendar/VMslot support is not installed or priced.",
  "counter_floor_at_833ps_ms": 35.926903488,
- "serial_counter_only_ceiling_tokens_per_second": 27.834294161588726,
- "model_relation": "Existing about1.8ktoken/s model excludes this source-only VMspill/selectedserialcounter capacity cost. This conditional ceiling is not qualified hardware/token performance."
+ "model_relation": "Existing about1.8kacceptedtoken/s MTPmodel excludes this source-onlyspill/provider cost. Compare only after properacceptedcount normalization andcalendarcomposition.",
+ "serial_counter_only_ceiling_programmes_per_second": 27.834294161588726,
+ "accepted_token_rate": "UNPRICED: data-dependent acceptedoutputs perN6verify step; must include actualdraft/seed costs andacceptedcount normalization. Never label programme/second as token/second.",
+ "supersedes_prior_rate_label": "Prior 27.8343token/s label incorrectly treated sixrowMTPverify as oneARtoken. Same35.926903488ms counter floor is perprogramme/step."
 }

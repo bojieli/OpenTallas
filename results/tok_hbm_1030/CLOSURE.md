@@ -47,3 +47,5 @@ f8c0aa07f HBM VM: group only commuting source rows and honor prefetch lifetimes
 ```
 
 Source descendants carrying current results/proposals:0594379e8,b9fb6a3d3,e1c36f4a7,a0cdb68a0,6b2d8b60c,bc8e04ee5. The narrow closure replaces the need to cherry-pick these old-ancestry commits. Validation here is Python syntax only; existing address/value/component receipts are retained unchanged and no physical qualification is asserted.
+
+Rate-scope correction: actuala122 is N=6 MTP VERIFY across40layers/head with CTL.ACCEPT and TOKX, not oneARtoken. All traffic/cyclebudgets are perverifyprogramme. A27.8343programme/s serialcounter ceiling must not be called acceptedtoken/s; acceptedcount anddraft/seed costs require actual model normalization. Earlier singletoken/rate labels are superseded; no byte/cycle counts change.

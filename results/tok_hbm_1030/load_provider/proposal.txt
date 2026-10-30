@@ -170,10 +170,10 @@ Actual compact counter / programme capacity follow-up (CODEX):
   window controller is still open. Code0 uses full physical row arithmetic;
   code1 explicitly selects row-striped stack with local arithmetic. Every
   request must preserve physical capacity and no-cross-stack-run guards.
-- counter_budget.json covers actual3916-record full40-layer single-token+head
+- counter_budget.json covers actual3916-record full40-layer N6-MTP-verify+head
   source candidate, inserted LOADs only. A single global one-word-per-cycle
   counter needs43117008 issuecycles+12528 setupedges=43129536cycles,
-  35.926903488ms at833ps (conditional ceiling27.8343token/s before othercosts).
+  35.926903488ms at833ps (conditional ceiling27.8343programmes/s before othercosts).
   This floor belongs to that serial implementation, not every architecture.
   Existing about1.8ktoken/s model excludes this spill/provider cost. All8leaf
   landing does not create8parallelissuers. Eightcycle tentative counter-to-DQ
@@ -185,3 +185,5 @@ Actual compact counter / programme capacity follow-up (CODEX):
 - All inserted U32 copies are whole aligned sectors, so an explicitly proven
   existing-count8 coalescing counter could reduce issue work to5389626 sector
   commands. No such implementation is assumed in the current budget.
+
+Rate-scope correction: actuala122 is N=6 MTP VERIFY across40layers/head with CTL.ACCEPT and TOKX, not oneARtoken. All traffic/cyclebudgets are perverifyprogramme. A27.8343programme/s serialcounter ceiling must not be called acceptedtoken/s; acceptedcount anddraft/seed costs require actual model normalization. Earlier singletoken/rate labels are superseded; no byte/cycle counts change.
