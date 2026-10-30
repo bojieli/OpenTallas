@@ -1,0 +1,7248 @@
+{
+ "source_plan_sha256": "77d613ccd6003946e6d497198890d3550251cd6a9ea1354356f052b4459651ae",
+ "plan_sha256": "128ad3093cb45b1e7dc9d0cbfbf44aa0ad01f67cddd1b6881a44693bcdf97823",
+ "changed_descriptors": 52,
+ "changed_cores": 52,
+ "changes": [
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp1",
+   "source": "su_NW1.__cut_lane_exp1",
+   "before": 1,
+   "after": 17,
+   "width": 11,
+   "literal_lsb": "10001000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp2",
+   "source": "su_NW1.__cut_lane_exp2",
+   "before": 2,
+   "after": 18,
+   "width": 11,
+   "literal_lsb": "01001000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp3",
+   "source": "su_NW1.__cut_lane_exp3",
+   "before": 3,
+   "after": 19,
+   "width": 11,
+   "literal_lsb": "11001000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp4",
+   "source": "su_NW1.__cut_lane_exp4",
+   "before": 4,
+   "after": 20,
+   "width": 11,
+   "literal_lsb": "00101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp5",
+   "source": "su_NW1.__cut_lane_exp5",
+   "before": 5,
+   "after": 21,
+   "width": 11,
+   "literal_lsb": "10101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp6",
+   "source": "su_NW1.__cut_lane_exp6",
+   "before": 6,
+   "after": 22,
+   "width": 11,
+   "literal_lsb": "01101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp7",
+   "source": "su_NW1.__cut_lane_exp7",
+   "before": 7,
+   "after": 23,
+   "width": 11,
+   "literal_lsb": "11101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp8",
+   "source": "su_NW1.__cut_lane_exp8",
+   "before": 8,
+   "after": 24,
+   "width": 11,
+   "literal_lsb": "00011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp9",
+   "source": "su_NW1.__cut_lane_exp9",
+   "before": 9,
+   "after": 25,
+   "width": 11,
+   "literal_lsb": "10011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp10",
+   "source": "su_NW1.__cut_lane_exp10",
+   "before": 10,
+   "after": 26,
+   "width": 11,
+   "literal_lsb": "01011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp11",
+   "source": "su_NW1.__cut_lane_exp11",
+   "before": 11,
+   "after": 27,
+   "width": 11,
+   "literal_lsb": "11011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp12",
+   "source": "su_NW1.__cut_lane_exp12",
+   "before": 12,
+   "after": 28,
+   "width": 11,
+   "literal_lsb": "00111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp13",
+   "source": "su_NW1.__cut_lane_exp13",
+   "before": 13,
+   "after": 29,
+   "width": 11,
+   "literal_lsb": "10111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp14",
+   "source": "su_NW1.__cut_lane_exp14",
+   "before": 14,
+   "after": 30,
+   "width": 11,
+   "literal_lsb": "01111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lane_exp_l",
+   "source": "su_NW1.__cut_lane_exp_l",
+   "before": 15,
+   "after": 31,
+   "width": 11,
+   "literal_lsb": "11111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lanes_plain0_3",
+   "source": "su_NW1.__cut_lanes_plain0_3",
+   "before": 16,
+   "after": 20,
+   "width": 9,
+   "literal_lsb": "001010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lanes_plain4_7",
+   "source": "su_NW1.__cut_lanes_plain4_7",
+   "before": 17,
+   "after": 21,
+   "width": 9,
+   "literal_lsb": "101010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lanes_plain8_11",
+   "source": "su_NW1.__cut_lanes_plain8_11",
+   "before": 18,
+   "after": 22,
+   "width": 9,
+   "literal_lsb": "011010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11__physical_v1",
+   "inst": "u_su_Q1_lanes_plain12_15",
+   "source": "su_NW1.__cut_lanes_plain12_15",
+   "before": 19,
+   "after": 23,
+   "width": 9,
+   "literal_lsb": "111010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes0_3",
+   "source": "su_NW3.__cut_lanes0_3",
+   "before": 8,
+   "after": 12,
+   "width": 9,
+   "literal_lsb": "001100000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31__physical_v1",
+   "inst": "u_su_Q3_lanes4_7",
+   "source": "su_NW3.__cut_lanes4_7",
+   "before": 9,
+   "after": 13,
+   "width": 9,
+   "literal_lsb": "101100000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31__physical_v1",
+   "inst": "u_su_Q3_lanes12_15",
+   "source": "su_NW3.__cut_lanes12_15",
+   "before": 11,
+   "after": 15,
+   "width": 9,
+   "literal_lsb": "111100000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes16_19",
+   "source": "su_NW3.__cut_lanes16_19",
+   "before": 24,
+   "after": 28,
+   "width": 9,
+   "literal_lsb": "001110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31__physical_v1",
+   "inst": "u_su_Q3_lanes20_23",
+   "source": "su_NW3.__cut_lanes20_23",
+   "before": 25,
+   "after": 29,
+   "width": 9,
+   "literal_lsb": "101110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su30",
+   "inst": "u_su_Q3_lanes24_27",
+   "source": "su_NW3.__cut_lanes24_27",
+   "before": 26,
+   "after": 30,
+   "width": 9,
+   "literal_lsb": "011110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31__physical_v1",
+   "inst": "u_su_Q3_lanes28_31",
+   "source": "su_NW3.__cut_lanes28_31",
+   "before": 27,
+   "after": 31,
+   "width": 9,
+   "literal_lsb": "111110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NW3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NW3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp1",
+   "source": "su_NE1.__cut_lane_exp1",
+   "before": 1,
+   "after": 17,
+   "width": 11,
+   "literal_lsb": "10001000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp2",
+   "source": "su_NE1.__cut_lane_exp2",
+   "before": 2,
+   "after": 18,
+   "width": 11,
+   "literal_lsb": "01001000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp3",
+   "source": "su_NE1.__cut_lane_exp3",
+   "before": 3,
+   "after": 19,
+   "width": 11,
+   "literal_lsb": "11001000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp4",
+   "source": "su_NE1.__cut_lane_exp4",
+   "before": 4,
+   "after": 20,
+   "width": 11,
+   "literal_lsb": "00101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp5",
+   "source": "su_NE1.__cut_lane_exp5",
+   "before": 5,
+   "after": 21,
+   "width": 11,
+   "literal_lsb": "10101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp6",
+   "source": "su_NE1.__cut_lane_exp6",
+   "before": 6,
+   "after": 22,
+   "width": 11,
+   "literal_lsb": "01101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp7",
+   "source": "su_NE1.__cut_lane_exp7",
+   "before": 7,
+   "after": 23,
+   "width": 11,
+   "literal_lsb": "11101000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp8",
+   "source": "su_NE1.__cut_lane_exp8",
+   "before": 8,
+   "after": 24,
+   "width": 11,
+   "literal_lsb": "00011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[8].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp9",
+   "source": "su_NE1.__cut_lane_exp9",
+   "before": 9,
+   "after": 25,
+   "width": 11,
+   "literal_lsb": "10011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[9].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp10",
+   "source": "su_NE1.__cut_lane_exp10",
+   "before": 10,
+   "after": 26,
+   "width": 11,
+   "literal_lsb": "01011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[10].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp11",
+   "source": "su_NE1.__cut_lane_exp11",
+   "before": 11,
+   "after": 27,
+   "width": 11,
+   "literal_lsb": "11011000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[11].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp12",
+   "source": "su_NE1.__cut_lane_exp12",
+   "before": 12,
+   "after": 28,
+   "width": 11,
+   "literal_lsb": "00111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp13",
+   "source": "su_NE1.__cut_lane_exp13",
+   "before": 13,
+   "after": 29,
+   "width": 11,
+   "literal_lsb": "10111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp14",
+   "source": "su_NE1.__cut_lane_exp14",
+   "before": 14,
+   "after": 30,
+   "width": 11,
+   "literal_lsb": "01111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lane_exp_l",
+   "source": "su_NE1.__cut_lane_exp_l",
+   "before": 15,
+   "after": 31,
+   "width": 11,
+   "literal_lsb": "11111000000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 0
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 1
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lanes_plain0_3",
+   "source": "su_NE1.__cut_lanes_plain0_3",
+   "before": 16,
+   "after": 20,
+   "width": 9,
+   "literal_lsb": "001010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lanes_plain4_7",
+   "source": "su_NE1.__cut_lanes_plain4_7",
+   "before": 17,
+   "after": 21,
+   "width": 9,
+   "literal_lsb": "101010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lanes_plain8_11",
+   "source": "su_NE1.__cut_lanes_plain8_11",
+   "before": 18,
+   "after": 22,
+   "width": 9,
+   "literal_lsb": "011010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su11",
+   "inst": "u_su_Q1_lanes_plain12_15",
+   "source": "su_NE1.__cut_lanes_plain12_15",
+   "before": 19,
+   "after": 23,
+   "width": 9,
+   "literal_lsb": "111010000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE1.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE1.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su30__physical_v1",
+   "inst": "u_su_Q3_lanes0_3",
+   "source": "su_NE3.__cut_lanes0_3",
+   "before": 8,
+   "after": 12,
+   "width": 9,
+   "literal_lsb": "001100000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[0].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[1].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[2].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[3].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes4_7",
+   "source": "su_NE3.__cut_lanes4_7",
+   "before": 9,
+   "after": 13,
+   "width": 9,
+   "literal_lsb": "101100000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[4].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[5].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[6].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[7].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes12_15",
+   "source": "su_NE3.__cut_lanes12_15",
+   "before": 11,
+   "after": 15,
+   "width": 9,
+   "literal_lsb": "111100000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[12].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[13].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[14].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[15].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su30__physical_v1",
+   "inst": "u_su_Q3_lanes16_19",
+   "source": "su_NE3.__cut_lanes16_19",
+   "before": 24,
+   "after": 28,
+   "width": 9,
+   "literal_lsb": "001110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[16].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[17].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[18].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[19].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes20_23",
+   "source": "su_NE3.__cut_lanes20_23",
+   "before": 25,
+   "after": 29,
+   "width": 9,
+   "literal_lsb": "101110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[20].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[21].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[22].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[23].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su30__physical_v1",
+   "inst": "u_su_Q3_lanes24_27",
+   "source": "su_NE3.__cut_lanes24_27",
+   "before": 26,
+   "after": 30,
+   "width": 9,
+   "literal_lsb": "011110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[24].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[25].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[26].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[27].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  },
+  {
+   "type": "q_su31",
+   "inst": "u_su_Q3_lanes28_31",
+   "source": "su_NE3.__cut_lanes28_31",
+   "before": 27,
+   "after": 31,
+   "width": 9,
+   "literal_lsb": "111110000",
+   "terminals": [
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 2
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 3
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 4
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 5
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 6
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 7
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 8
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 9
+     }
+    ],
+    [
+     {
+      "member": "su_NE3.u_slice.g_lane[28].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[29].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[30].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     },
+     {
+      "member": "su_NE3.u_slice.g_lane[31].g_pr.u_lane",
+      "port": "lane_id",
+      "bit": 10
+     }
+    ]
+   ]
+  }
+ ],
+ "cycles_added": 0,
+ "rtl_changed": false
+}
