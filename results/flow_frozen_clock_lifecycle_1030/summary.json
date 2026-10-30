@@ -1,0 +1,33 @@
+{
+  "source_sha": "d1bfc33e1d0",
+  "verdict": "PASS_READONLY_LIFECYCLE_CONTROL",
+  "source_scope": "Explicit opt-in frozen-clock RC lifecycle; no physical retry/adoption authorization",
+  "native_data_nets": 145605,
+  "unchanged_fields": [
+    "total_capacitance",
+    "wire_capacitance"
+  ],
+  "analyses": [
+    "tc/min",
+    "tc/max",
+    "BC/min",
+    "BC/max"
+  ],
+  "changed_values": 0,
+  "max_delta_SI": 0,
+  "clock_wire_count": 1359,
+  "clock_instances": 26394,
+  "clock_wire_reencoded": 0,
+  "clock_instances_moved": 0,
+  "first_consumer_boundary_pins": 2384,
+  "first_consumer_means_ps": {
+    "tc": 255.23890387131922,
+    "BC": 206.79921847862656
+  },
+  "identity": "Existing clock freeze, original immutable clk_dump plus existing clk_geom_diff before approved named restore",
+  "physical_build": false,
+  "route": false,
+  "placement": false,
+  "write_db": false,
+  "post_global_route_hook_sourced": false
+}
