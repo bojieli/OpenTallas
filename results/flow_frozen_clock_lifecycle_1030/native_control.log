@@ -1,0 +1,8 @@
+OT_CLK_FREEZE ON clock nets 1359 (with wire 1359, re-encoded FIXED 0) instances 26394 (placement -> LOCKED: 0 were movable) dont_touch nets + 1355 clock-tree cells
+OT_CLK_RC_RESTORE corner tc dataset tc clock_spef /qualified/original_clock_only.spef
+OT_CLK_RC_RESTORE corner BC dataset BC clock_spef /qualified/original_clock_only.spef
+LIFECYCLE_DATA_GUARD native_nets 145605 changed_values 0 maxdeltaSI 0
+OT_MM_FROZEN_CLOCK_RC after_native_global restored exact datasets tc BC; native DATA retained
+LIFECYCLE_FIRST_CONSUMER tc n 2384 mean_ps 255.23890387131922 expected_original_RCX 255.239
+LIFECYCLE_FIRST_CONSUMER BC n 2384 mean_ps 206.79921847862656 expected_original_RCX 206.799
+RING_LIFECYCLE_CONTROL PASS original-clock/native-DATA after automatic GLOBAL callback; noPOST_GRT/noP&R/noSIGNED/write_db

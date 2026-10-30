@@ -24,6 +24,85 @@ proc ot_mm_libs {c} {
   return $::env($k)
 }
 proc ot_mm_sc {} { expr {[info exists ::env(OT_MM_SETUP_CORNER)] && $::env(OT_MM_SETUP_CORNER) ne "" ? $::env(OT_MM_SETUP_CORNER) : "WC"} }
+# FROZEN-CLOCK-RC: default-off original CLOCK RC after every native GLOBAL estimate.
+# Caller supplies a prequalified CLOCK-ONLY SPEF per exact native dataset name,
+# and the immutable clk_dump identity of that SPEF's original clock graph. It
+# must arm the existing clock freeze BEFORE routing/estimation. No old DATA RC
+# is replayed, no coupling is transformed, and a changed clock is never qualified.
+# OT_MM_FROZEN_CLOCK_SPEFS = Tcl dict, e.g. {tc /work/clock_only.spef BC /work/clock_only.spef}
+# OT_MM_FROZEN_CLOCK_IDENTITY = original clk_dump TSV; OT_MM_FROZEN_CLOCK_DIFF
+# optionally names the existing clk_geom_diff.py when it is not beside tools/.
+set ::ot_mm_frozen_clock_dir [file dirname [file normalize [info script]]]
+proc ::ot_mm_frozen_clock_rc_on {} {
+  expr {[info exists ::env(OT_MM_FROZEN_CLOCK_SPEFS)] && $::env(OT_MM_FROZEN_CLOCK_SPEFS) ne ""}
+}
+proc ::ot_mm_frozen_clock_rc_restore {tag} {
+  if {![::ot_mm_frozen_clock_rc_on]} { return }
+  if {![info exists ::ot_mm_stage] || $::ot_mm_stage ne "4_cts.sdc"} {
+    error "OT_MM_FROZEN_CLOCK_RC: explicit restore requires the native global-route stage"
+  }
+  set maps $::env(OT_MM_FROZEN_CLOCK_SPEFS)
+  if {[catch {dict size $maps}]} { error "OT_MM_FROZEN_CLOCK_RC: malformed exact-corner SPEF map" }
+  if {[lsort [dict keys $maps]] ne [lsort [list [::ot_mm_sc] BC]]} {
+    error "OT_MM_FROZEN_CLOCK_RC: SPEF map must name exactly [::ot_mm_sc] and BC (case-sensitive)"
+  }
+  foreach command {::ot_clk_freeze_assert ::ot_clk_dump ::ot_clk_restore_parasitics} {
+    if {![llength [info commands $command]]} { error "OT_MM_FROZEN_CLOCK_RC: caller must stage the approved clock helper ($command absent)" }
+  }
+  if {![info exists ::ot_clk_frozen] || !$::ot_clk_frozen ||
+      ![info exists ::ot_clk_frozen_nets] || ![llength $::ot_clk_frozen_nets]} {
+    error "OT_MM_FROZEN_CLOCK_RC: original routed clock must already have a nonempty active freeze"
+  }
+  if {![info exists ::env(OT_MM_FROZEN_CLOCK_IDENTITY)] ||
+      ![file readable $::env(OT_MM_FROZEN_CLOCK_IDENTITY)]} {
+    error "OT_MM_FROZEN_CLOCK_RC: immutable original clock graph identity is required"
+  }
+  set baseline $::env(OT_MM_FROZEN_CLOCK_IDENTITY)
+  set checker [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_DIFF)] ?
+    $::env(OT_MM_FROZEN_CLOCK_DIFF) : [file join $::ot_mm_frozen_clock_dir die_plan clk_geom_diff.py]}]
+  if {![file readable $checker]} { error "OT_MM_FROZEN_CLOCK_RC: existing clock geometry checker absent: $checker" }
+  set expected {};set f [open $baseline r]
+  while {[gets $f line] >= 0} {
+    set fields [split $line \t]
+    if {[lindex $fields 0] ne "NET"} continue
+    if {[lindex $fields 3] <= 0} {close $f;error "OT_MM_FROZEN_CLOCK_RC: original clock has no routed wire: [lindex $fields 1]"}
+    lappend expected [lindex $fields 1]
+  }
+  close $f
+  if {![llength $expected] || [lsort $expected] ne [lsort $::ot_clk_frozen_nets]} {
+    error "OT_MM_FROZEN_CLOCK_RC: original identity and active frozen clock net sets differ"
+  }
+  # Existing freeze restores any destroyed clock wire byte-identically; the
+  # existing graph checker also guards connectivity, masters and physical homes.
+  ::ot_clk_freeze_assert "mm_clock_rc_$tag"
+  set stem [file join $::env(RESULTS_DIR) ot_mm_frozen_clock]
+  set f [open ${stem}.nets w];puts $f [join $expected \n];close $f
+  ::ot_clk_dump ${stem}.tsv "mm_clock_rc_$tag" ${stem}.nets
+  if {[catch {exec python3 -I $checker $baseline ${stem}.tsv} result]} {
+    error "OT_MM_FROZEN_CLOCK_RC: original clock graph/wire identity failed: $result"
+  }
+  # Approved -name helper reuses the EXISTING native datasets, replacing only
+  # clock-net annotations. Its preflight refuses an absent/misspelled dataset.
+  ::ot_clk_restore_parasitics $maps
+  puts "OT_MM_FROZEN_CLOCK_RC $tag restored exact datasets [dict keys $maps]; native DATA retained"
+}
+# Install only for explicit opt-in: default native command and placement RC are
+# byte-identical. Central interception also covers the initial native GRT call,
+# both MM refreshes and both calibrated-hold refreshes before any timing gate.
+if {[::ot_mm_frozen_clock_rc_on] && ![llength [info commands ::ot_mm_frozen_native_estimate]]} {
+  if {![llength [info commands ::estimate_parasitics]]} {error "OT_MM_FROZEN_CLOCK_RC: native estimator absent"}
+  rename ::estimate_parasitics ::ot_mm_frozen_native_estimate
+  proc ::estimate_parasitics {args} {
+    set result [uplevel 1 [list ::ot_mm_frozen_native_estimate {*}$args]]
+    if {"-global_routing" in $args && ![info exists ::ot_mm_stage]} {error "OT_MM_FROZEN_CLOCK_RC: global estimator has no selected stage context"}
+    if {"-global_routing" in $args && $::ot_mm_stage eq "4_cts.sdc"} {
+      ::ot_mm_frozen_clock_rc_restore after_native_global
+    }
+    return $result
+  }
+}
+# END FROZEN-CLOCK-RC
+
 proc ot_mm_read_libs {} {
   foreach c [list [ot_mm_sc] BC] { foreach l [ot_mm_libs $c] { log_cmd read_liberty $l } }
 }
