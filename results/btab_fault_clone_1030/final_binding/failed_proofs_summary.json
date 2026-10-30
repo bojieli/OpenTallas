@@ -1,0 +1,28 @@
+{
+  "preserved_originals": [
+    "epyc2:native/gen/qfd_dv_s8x_btab_faultclone_native1030/lec_Cfinal_source",
+    "epyc2:native/gen/qfd_dv_s8x_btab_faultclone_native1030/lec_Cfinal_own_hints"
+  ],
+  "first": {
+    "verdict": "KEEP FAIL",
+    "functional_proved": 7252,
+    "missing_keep": 1
+  },
+  "stale_raw_hint": {
+    "verdict": "KEEP FAIL",
+    "functional_proved": 11660,
+    "given": 2,
+    "applied": 1,
+    "skipped": 1,
+    "why": "json_alias_keys rekeyed oldfault beforePRESEED"
+  },
+  "corrected": {
+    "verdict": "EQUIVALENT",
+    "functional_proved": 11660,
+    "keepers": 2188,
+    "given": 1,
+    "applied": 1,
+    "skipped": 0,
+    "dropped": 0
+  }
+}
