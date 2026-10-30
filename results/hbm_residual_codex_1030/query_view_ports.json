@@ -1,0 +1,66 @@
+{
+  "clk": [
+    "input",
+    1
+  ],
+  "rst_n": [
+    "input",
+    1
+  ],
+  "sid": [
+    "input",
+    2
+  ],
+  "weight_slot": [
+    "input",
+    1
+  ],
+  "query_slot": [
+    "input",
+    1
+  ],
+  "query_index": [
+    "input",
+    7
+  ],
+  "weight_sector": [
+    "input",
+    16
+  ],
+  "query_sector": [
+    "input",
+    16
+  ],
+  "vm_rq": [
+    "output",
+    136
+  ],
+  "vm_rr": [
+    "input",
+    2056
+  ],
+  "block_v": [
+    "output",
+    1
+  ],
+  "block_head": [
+    "output",
+    5
+  ],
+  "block_number": [
+    "output",
+    2
+  ],
+  "block_data": [
+    "output",
+    1024
+  ],
+  "head_weight": [
+    "output",
+    16
+  ],
+  "fault": [
+    "output",
+    1
+  ]
+}

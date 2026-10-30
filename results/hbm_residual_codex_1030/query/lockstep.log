@@ -1,0 +1,3 @@
+PASS RT171 cycles650 full-output lockstep blocks3 requests14 returns14 wrong-RT mutant killed
+PASS RT173 cycles650 full-output lockstep blocks3 requests14 returns14 wrong-RT mutant killed
+/srv/opentallas-scratch2/claude/codex-hbm-residual-1030/lockstep.sv:47: $finish called at 6506000000000000 (1ps)

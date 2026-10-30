@@ -1,0 +1,40 @@
+{
+  "status": "SOURCE_PREPARATION_ONLY_UNADOPTED",
+  "generic_view": "be0b530febe5 HOLD",
+  "roles": [
+    {
+      "native_instance": "hb_idx__op_NE",
+      "part": "NE_hub",
+      "plan_instance": "u_hb_idx__op_Q__q1",
+      "master": "ot_hbm_idx_vm_query_static_n12__rt171",
+      "VM_RT_EXTRA": 171,
+      "added_cycles": 0
+    },
+    {
+      "native_instance": "hb_idx__op_NW",
+      "part": "NW_hub",
+      "plan_instance": "u_hb_idx__op_Q__q1",
+      "master": "ot_hbm_idx_vm_query_static_n12__rt173",
+      "VM_RT_EXTRA": 173,
+      "added_cycles": 0
+    },
+    {
+      "native_instance": "hb_idx__op_SE",
+      "part": "NE_hub",
+      "plan_instance": "u_hb_idx__op_Q__q0",
+      "master": "ot_hbm_idx_vm_query_static_n12__rt171",
+      "VM_RT_EXTRA": 171,
+      "added_cycles": 0
+    },
+    {
+      "native_instance": "hb_idx__op_SW",
+      "part": "NW_hub",
+      "plan_instance": "u_hb_idx__op_Q__q0",
+      "master": "ot_hbm_idx_vm_query_static_n12__rt171",
+      "VM_RT_EXTRA": 171,
+      "added_cycles": 0
+    }
+  ],
+  "exact_reversible_mutation": true,
+  "wrong_rt_mutants_rejected": 4
+}
