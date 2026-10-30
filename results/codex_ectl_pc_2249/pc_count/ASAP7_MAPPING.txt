@@ -1,0 +1,8 @@
+2026-10-29 23:51 PDT: actual source-extracted3bit staticcount coupon only.
+Yosys+ABC using merged ASAP7 RVT TT AO/OA/INVBUF/SIMPLE standardlibraries.
+Original12cells, latepop(s_go) maxcelllevels to3nextcountbits:3/3/3.
+Optinparallel14cells, latepopmaxcelllevels:3/4/4.
+No physical timing benefit demonstrated. Candidate default0, HOLD adoption; no newphysical candidate launched.
+GenericABC result18cells depth6 vs24cells depth5 was misleading relative to realcellmapping.
+First mapper attempt concatenatedmultipleLiberty libraryblocks ABCfailed8B; receipt retained remotely mapfailoriginalnotproof. Propermergedsinglelibrary map outputs separate mapped0/1.json.
+Functional actualsourceextractedfullstate64transitionsPASS, decrement->incrementmutantcaught24. No added cycle/state/FF.

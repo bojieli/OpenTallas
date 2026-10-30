@@ -1,0 +1,344 @@
+{
+  "creator": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+  "modules": {
+    "count1": {
+      "attributes": {
+        "top": "00000000000000000000000000000001",
+        "src": "count1.v:1.1-14.14"
+      },
+      "parameter_default_values": {
+        "SQ_COUNT_PARALLEL": "00000000000000000000000000000001"
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": [ 2 ]
+        },
+        "q": {
+          "direction": "input",
+          "bits": [ 3, 4, 5 ]
+        },
+        "s_v": {
+          "direction": "input",
+          "bits": [ 6 ]
+        },
+        "s_r": {
+          "direction": "input",
+          "bits": [ 7 ]
+        },
+        "s_go": {
+          "direction": "input",
+          "bits": [ 8 ]
+        },
+        "sq_n": {
+          "direction": "output",
+          "bits": [ 9, 10, 11 ]
+        }
+      },
+      "cells": {
+        "$abc$184$auto$blifparse.cc:397:parse_blif$185": {
+          "hide_name": 1,
+          "type": "INVx1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 8 ],
+            "Y": [ 12 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$186": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 6 ],
+            "B": [ 7 ],
+            "Y": [ 13 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$187": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 8 ],
+            "B": [ 13 ],
+            "Y": [ 14 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$188": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 12 ],
+            "B": [ 13 ],
+            "Y": [ 15 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$189": {
+          "hide_name": 1,
+          "type": "NAND3xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 4 ],
+            "B": [ 8 ],
+            "C": [ 13 ],
+            "Y": [ 16 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$190": {
+          "hide_name": 1,
+          "type": "AO21x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 8 ],
+            "A2": [ 13 ],
+            "B": [ 4 ],
+            "Y": [ 17 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$191": {
+          "hide_name": 1,
+          "type": "AND3x1_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 16 ],
+            "C": [ 17 ],
+            "Y": [ 18 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$192": {
+          "hide_name": 1,
+          "type": "AOI21xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 16 ],
+            "A2": [ 17 ],
+            "B": [ 3 ],
+            "Y": [ 19 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$193": {
+          "hide_name": 1,
+          "type": "NAND2xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 4 ],
+            "B": [ 15 ],
+            "Y": [ 20 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$194": {
+          "hide_name": 1,
+          "type": "OAI31xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 15 ],
+            "A2": [ 18 ],
+            "A3": [ 19 ],
+            "B": [ 20 ],
+            "Y": [ 10 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$195": {
+          "hide_name": 1,
+          "type": "XNOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 3 ],
+            "B": [ 15 ],
+            "Y": [ 9 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$196": {
+          "hide_name": 1,
+          "type": "NAND5xp2_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 4 ],
+            "B": [ 3 ],
+            "C": [ 12 ],
+            "D": [ 6 ],
+            "E": [ 7 ],
+            "Y": [ 21 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$197": {
+          "hide_name": 1,
+          "type": "OAI31xp33_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A1": [ 4 ],
+            "A2": [ 3 ],
+            "A3": [ 14 ],
+            "B": [ 21 ],
+            "Y": [ 22 ]
+          }
+        },
+        "$abc$184$auto$blifparse.cc:397:parse_blif$198": {
+          "hide_name": 1,
+          "type": "XOR2xp5_ASAP7_75t_R",
+          "parameters": {
+          },
+          "attributes": {
+          },
+          "connections": {
+            "A": [ 5 ],
+            "B": [ 22 ],
+            "Y": [ 11 ]
+          }
+        }
+      },
+      "netnames": {
+        "$abc$184$new_n10": {
+          "hide_name": 1,
+          "bits": [ 12 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n11": {
+          "hide_name": 1,
+          "bits": [ 13 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n12": {
+          "hide_name": 1,
+          "bits": [ 14 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n13": {
+          "hide_name": 1,
+          "bits": [ 15 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n14": {
+          "hide_name": 1,
+          "bits": [ 16 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n15": {
+          "hide_name": 1,
+          "bits": [ 17 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n16": {
+          "hide_name": 1,
+          "bits": [ 18 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n17": {
+          "hide_name": 1,
+          "bits": [ 19 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n18": {
+          "hide_name": 1,
+          "bits": [ 20 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n21": {
+          "hide_name": 1,
+          "bits": [ 21 ],
+          "attributes": {
+          }
+        },
+        "$abc$184$new_n22": {
+          "hide_name": 1,
+          "bits": [ 22 ],
+          "attributes": {
+          }
+        },
+        "clk": {
+          "hide_name": 0,
+          "bits": [ 2 ],
+          "attributes": {
+            "src": "count1.v:1.21-1.24"
+          }
+        },
+        "q": {
+          "hide_name": 0,
+          "bits": [ 3, 4, 5 ],
+          "attributes": {
+            "src": "count1.v:1.37-1.38"
+          }
+        },
+        "s_go": {
+          "hide_name": 0,
+          "bits": [ 8 ],
+          "attributes": {
+            "src": "count1.v:1.53-1.57"
+          }
+        },
+        "s_r": {
+          "hide_name": 0,
+          "bits": [ 7 ],
+          "attributes": {
+            "src": "count1.v:1.49-1.52"
+          }
+        },
+        "s_v": {
+          "hide_name": 0,
+          "bits": [ 6 ],
+          "attributes": {
+            "src": "count1.v:1.45-1.48"
+          }
+        },
+        "sq_n": {
+          "hide_name": 0,
+          "bits": [ 9, 10, 11 ],
+          "attributes": {
+            "src": "count1.v:1.74-1.78"
+          }
+        }
+      }
+    }
+  }
+}
