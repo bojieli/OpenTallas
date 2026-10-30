@@ -46,8 +46,14 @@ fi
   test -f $OUT/grt_post_core.tcl && echo 'source /work/grt_post_core.tcl'; } > $OUT/eco_post.tcl
 python3 -I "$SO/tools/die_plan/signoff.py" bundle "$OUT" || exit 1
 ML_TT=$(sed -n 's/^export ADDITIONAL_LIBS = //p' $OUT/config.mk | tail -n 1)
-ML_FF=$(echo "$ML_TT" | sed 's/_tt\.lib/_ff.lib/g')
-for f in $ML_FF; do test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }; done
+# macro libs: *_tt.lib -> *_ff.lib; explicit ASAP7 standard-cell libs (e.g. INVBUF_LVT of an LVT clock context, platform
+# path or a /work copy): <group>_<VT>_TT_nldm_ -> _FF_nldm_ (same release dates in the PDK); platform paths live in the
+# image, not in the kit (DIE-KV-46 10-30: the TT LVT lib was taken as a missing FF macro lib)
+ML_FF=$(echo "$ML_TT" | sed -E 's/_tt\.lib/_ff.lib/g; s/(asap7sc7p5t_[A-Z]+_(RVT|LVT|SLVT))_TT_nldm_/\1_FF_nldm_/g')
+for f in $ML_FF; do
+  case "$f" in /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_*_FF_nldm_*) continue;; esac
+  test -f "$OUT/${f#/work/}" || { echo "prd_mk: missing FF macro lib $f"; exit 2; }
+done
 if ! grep -q '^# OT_PRD post-route drive repair' $OUT/config.mk; then
 cat >> $OUT/config.mk <<CFG
 # OT_PRD post-route drive repair (tools/die_plan/post_route_drv, variant $V)
