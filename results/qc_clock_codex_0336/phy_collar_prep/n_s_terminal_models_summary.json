@@ -1,0 +1,162 @@
+{
+  "status": "N/S terminal construction MODEL PREP only; nativeportshapespreserved",
+  "N": {
+    "status": "N/S existing-neighbour comb construction PREP, no dataFF added, no physical/source adoption",
+    "BUF24_data": 4562,
+    "BUF24_nativeclk": 1,
+    "BUF8_native_reset": 1,
+    "data_BUF_master_raw_area_um2": 1995.4188000000001,
+    "data_BUF_reserved_40pct_um2": 4988.5470000000005,
+    "existing_boundaryFF_reserve_rect_um": [
+      781.92,
+      0,
+      1036.512,
+      17.28
+    ],
+    "reservedFFband_scope": "Candidate footprint for existing1197boundaryFF+polarity/epoch; actualmappedFFXY unavailable, no claim existing placement already matches.",
+    "required_free_soft_band": "coll_sS86.4um / mirroredcoll_nN86.4um after explicitnativeSRAM/codec/CA/FTrepack; no reservedbumps/decap logicborrowed",
+    "max_packed_buffered_section_um": 94.85500000000005,
+    "sections_over120": 0,
+    "max_anchor_shift_um": 41.54379999999994,
+    "nativeclk_BUF_body": {
+      "id": "native_clk50fF_BUF24",
+      "origin_um": [
+        779.76,
+        2.16
+      ],
+      "kind": "BUF24",
+      "A_um": [
+        779.808,
+        2.295
+      ],
+      "Y_um": [
+        780.716,
+        2.394
+      ],
+      "reserved_bbox_um": [
+        779.76,
+        2.16,
+        781.812,
+        2.7
+      ],
+      "anchor_L1shift_um": 0.0
+    },
+    "native_reset_BUF_body": {
+      "id": "native_rst_BUF8",
+      "origin_um": [
+        779.76,
+        2.7
+      ],
+      "kind": "BUF8",
+      "A_um": [
+        779.818,
+        2.835
+      ],
+      "Y_um": [
+        780.176,
+        2.934
+      ],
+      "reserved_bbox_um": [
+        779.76,
+        2.7,
+        780.5699999999999,
+        3.24
+      ],
+      "anchor_L1shift_um": 0.009999999999990905
+    },
+    "actual_repeater_wire_total_max_um": 329.2859999999999,
+    "actual_with_existingFF30_max_um": 359.2859999999999,
+    "actual_total_paths_over405_withFF30": 0,
+    "native_to_face_path_max_um": 321.9119999999999,
+    "native_to_existingFF_path_with30bound_max_um": 351.9119999999999,
+    "HOLD": [
+      "actualFF/CA/FT/body/TAPCELL/PGledger",
+      "actualnativeTT/FFandexistingFFCQ/transition; TXusesreverseBUForderwithactualA/Ypins",
+      "negative/control/reset/globalclockprice",
+      "realnativeM5accessVIAsandparentcoupledgeometryreview"
+    ]
+  },
+  "S_MX_R0": {
+    "dataFF_added": 0,
+    "cells": 4564,
+    "x_off54nm": 0,
+    "y_offR0_540nm": 0,
+    "max_segment_um": 94.65799999999996,
+    "max_total_with_FF30_um": 361.3379999999999,
+    "paths_over405": 0,
+    "placement_rule": "BodyoriginS=-originN-.54 onactualR0rows; no mirroredcellorientation orhalfrow."
+  },
+  "native_terminal_electrical": {
+    "TT": {
+      "clk": {
+        "master": "BUFx24_ASAP7_75t_R",
+        "model_input_slew_ps": 80,
+        "native_pin_load_ff": 50.0,
+        "actual_M5_target_um": [
+          753.288,
+          -0.096
+        ],
+        "M6_H_track_um": 2.208,
+        "wire_um": 29.918,
+        "wireC_with1p7_ff": 9.4341477526,
+        "total_driver_load_ff": 59.4341477526,
+        "delay_model_ps": 84.78087608228489,
+        "native_pin_transition_model_ps": 67.93569058905808,
+        "scope": "LumpedconservativewireElmore + actualviaR; terminalM5stubunshielded1p7guard. Physicalsource/clocknativeinternalframeandresetwavearrivalnotknown."
+      },
+      "rst_n": {
+        "master": "BUFx8_ASAP7_75t_R",
+        "model_input_slew_ps": 80,
+        "native_pin_load_ff": 1.2399,
+        "actual_M5_target_um": [
+          753.336,
+          -0.096
+        ],
+        "M6_H_track_um": 2.4,
+        "wire_um": 29.87000000000003,
+        "wireC_with1p7_ff": 9.396830869000011,
+        "total_driver_load_ff": 10.636730869000012,
+        "delay_model_ps": 55.63857158889206,
+        "native_pin_transition_model_ps": 22.4789157615465,
+        "scope": "LumpedconservativewireElmore + actualviaR; terminalM5stubunshielded1p7guard. Physicalsource/clocknativeinternalframeandresetwavearrivalnotknown."
+      }
+    },
+    "FF": {
+      "clk": {
+        "master": "BUFx24_ASAP7_75t_R",
+        "model_input_slew_ps": 80,
+        "native_pin_load_ff": 50.0,
+        "actual_M5_target_um": [
+          753.288,
+          -0.096
+        ],
+        "M6_H_track_um": 2.208,
+        "wire_um": 29.918,
+        "wireC_with1p7_ff": 9.4341477526,
+        "total_driver_load_ff": 59.4341477526,
+        "delay_model_ps": 71.47762543859145,
+        "native_pin_transition_model_ps": 63.50417978516395,
+        "scope": "LumpedconservativewireElmore + actualviaR; terminalM5stubunshielded1p7guard. Physicalsource/clocknativeinternalframeandresetwavearrivalnotknown."
+      },
+      "rst_n": {
+        "master": "BUFx8_ASAP7_75t_R",
+        "model_input_slew_ps": 80,
+        "native_pin_load_ff": 1.3674,
+        "actual_M5_target_um": [
+          753.336,
+          -0.096
+        ],
+        "M6_H_track_um": 2.4,
+        "wire_um": 29.87000000000003,
+        "wireC_with1p7_ff": 9.396830869000011,
+        "total_driver_load_ff": 10.764230869000011,
+        "delay_model_ps": 43.50460633485042,
+        "native_pin_transition_model_ps": 17.611701921622032,
+        "scope": "LumpedconservativewireElmore + actualviaR; terminalM5stubunshielded1p7guard. Physicalsource/clocknativeinternalframeandresetwavearrivalnotknown."
+      }
+    }
+  },
+  "clock_reset_track_separation": "M6clock2.208/reset2.400,192nmseparation leavesroomforclockshieldtracks; actualnativeM5clock/resetadjacent48nm preserved, final~2.3umM5stubhasnoclaim ofdouble-sidedshield.",
+  "native_missionreset": "Dataunreset/epochs remainexistingwrappersemantics; onlytransparentcombresetdriverproposed. NoextraSTART/controlFFassumedinsidebarePHY. Actualreset/STARTcountsalignmentmustberebound.",
+  "no_cycles_added": true
+}

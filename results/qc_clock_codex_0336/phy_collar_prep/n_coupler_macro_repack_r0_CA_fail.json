@@ -1,0 +1,710 @@
+{
+  "status": "PAIRED GEOMETRY PREP ONLY; nativeSRAM/CA/reservedband nonoverlap witness, not codec/data/PG closure",
+  "types": {
+    "coll_s": {
+      "outline_candidate_um": [
+        786.24,
+        734.4
+      ],
+      "native_memories": [
+        {
+          "inst": "u_bound.u_g_face_3_u_face.u_rx.u_mem",
+          "module": "ot_sram_1r1w2c_64x546_m1",
+          "origin_um": [
+            60.48,
+            43.2
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            41.472,
+            103.68
+          ],
+          "original_origin_um": [
+            60.48,
+            43.2
+          ],
+          "logical_face": "3"
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.u_tx.u_mem",
+          "module": "ot_sram_1r1w2c_64x546_m1",
+          "origin_um": [
+            259.2,
+            51.84
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            228.744,
+            103.68
+          ],
+          "original_origin_um": [
+            259.2,
+            51.84
+          ],
+          "logical_face": "3"
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            60.48,
+            146.88
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            41.472,
+            207.36
+          ],
+          "original_origin_um": [
+            60.48,
+            146.88
+          ],
+          "logical_face": "3"
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            276.48,
+            146.88
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            228.744,
+            207.36
+          ],
+          "original_origin_um": [
+            276.48,
+            146.88
+          ],
+          "logical_face": "3"
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            60.48,
+            250.56
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            41.472,
+            311.04
+          ],
+          "original_origin_um": [
+            60.48,
+            250.56
+          ],
+          "logical_face": "3"
+        },
+        {
+          "inst": "u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            259.2,
+            250.56
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            228.744,
+            311.04
+          ],
+          "original_origin_um": [
+            259.2,
+            250.56
+          ],
+          "logical_face": "3"
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.u_rx.u_mem",
+          "module": "ot_sram_1r1w2c_64x546_m1",
+          "origin_um": [
+            328.32,
+            449.28
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            416.01599999999996,
+            103.68
+          ],
+          "original_origin_um": [
+            328.32,
+            449.28
+          ],
+          "logical_face": "4"
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.u_tx.u_mem",
+          "module": "ot_sram_1r1w2c_64x546_m1",
+          "origin_um": [
+            518.4,
+            449.28
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            603.288,
+            155.52
+          ],
+          "original_origin_um": [
+            518.4,
+            449.28
+          ],
+          "logical_face": "4"
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            328.32,
+            544.32
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            416.01599999999996,
+            207.36
+          ],
+          "original_origin_um": [
+            328.32,
+            544.32
+          ],
+          "logical_face": "4"
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            535.68,
+            544.32
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            603.288,
+            345.6
+          ],
+          "original_origin_um": [
+            535.68,
+            544.32
+          ],
+          "logical_face": "4"
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            328.32,
+            639.36
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            416.01599999999996,
+            311.04
+          ],
+          "original_origin_um": [
+            328.32,
+            639.36
+          ],
+          "logical_face": "4"
+        },
+        {
+          "inst": "u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            518.4,
+            691.2
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            603.288,
+            449.28
+          ],
+          "original_origin_um": [
+            518.4,
+            691.2
+          ],
+          "logical_face": "4"
+        }
+      ],
+      "existing_CA_bands_rebased": [
+        {
+          "name": "io_collective__serdes_rx__from_io_serdes_2",
+          "rect_um": [
+            745.2,
+            17.28,
+            768.96,
+            142.208
+          ],
+          "reserve_um2": 2916.0,
+          "scope": "ExistingplanPROPOSEDcollector band. Live/padded counts unchanged; actualclockandpinarrival mustreprice."
+        },
+        {
+          "name": "io_collective__serdes_rx_valid__from_io_serdes_2",
+          "rect_um": [
+            697.68,
+            126.088,
+            745.2,
+            134.728
+          ],
+          "reserve_um2": 396.576,
+          "scope": "ExistingplanPROPOSEDcollector band. Live/padded counts unchanged; actualclockandpinarrival mustreprice."
+        },
+        {
+          "name": "io_collective__serdes_up__from_io_serdes_2",
+          "rect_um": [
+            721.44,
+            258.888,
+            768.96,
+            267.528
+          ],
+          "reserve_um2": 396.576,
+          "scope": "ExistingplanPROPOSEDcollector band. Live/padded counts unchanged; actualclockandpinarrival mustreprice."
+        },
+        {
+          "name": "rec_tx_s1_i",
+          "rect_um": [
+            234.928,
+            693.36,
+            349.68,
+            717.12
+          ],
+          "reserve_um2": 2636.064,
+          "scope": "ExistingplanPROPOSEDcollector band. Live/padded counts unchanged; actualclockandpinarrival mustreprice."
+        },
+        {
+          "name": "rec_tx_s2_i",
+          "rect_um": [
+            350.64,
+            693.36,
+            464.816,
+            717.12
+          ],
+          "reserve_um2": 2636.064,
+          "scope": "ExistingplanPROPOSEDcollector band. Live/padded counts unchanged; actualclockandpinarrival mustreprice."
+        }
+      ],
+      "macro_or_CA_or_coupler_overlap_failures": [],
+      "macro_only_verdict": "PASS",
+      "CA_area_reserve_sum_um2": 8981.28,
+      "coupler_macrofree_rect_um": [
+        0,
+        0,
+        786.24,
+        86.4
+      ],
+      "HOLD": [
+        "fullactualcodec+datapath<=405",
+        "realstandardcellandtap/endcap/PGbodyreserve",
+        "allCA/START/nativeclockandforwardedclocktiming",
+        "hardcorepin-to-registerandnativeITermclockgraph",
+        "FT/portcapacity/rootreview"
+      ],
+      "planned_contents_envelopes": "Reworkcontents518x388 rectangles do NOTremain sealed; allactualmemoryviews/trackoffsets preserved. Codec/sourceconnectiongraphs unchangedpendingphysicalplanadoption."
+    },
+    "coll_n": {
+      "outline_candidate_um": [
+        786.24,
+        786.24
+      ],
+      "native_memories": [
+        {
+          "inst": "u_bound.u_core.u_rx.u_mem",
+          "module": "ot_sram_1r1w2c_64x546_m1",
+          "origin_um": [
+            60.48,
+            432.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            41.472,
+            43.2
+          ],
+          "original_origin_um": [
+            60.48,
+            432.0
+          ],
+          "logical_face": "2"
+        },
+        {
+          "inst": "u_bound.u_core.u_tx.u_mem",
+          "module": "ot_sram_1r1w2c_64x546_m1",
+          "origin_um": [
+            259.2,
+            432.0
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w2c_64x546_m1.json",
+          "outline_um": [
+            178.632,
+            81.0
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_64x546_m1/ot_sram_1r1w2c_64x546_m1_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            228.744,
+            43.2
+          ],
+          "original_origin_um": [
+            259.2,
+            432.0
+          ],
+          "logical_face": "2"
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[0].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            17.28,
+            527.04
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            41.472,
+            146.88
+          ],
+          "original_origin_um": [
+            17.28,
+            527.04
+          ],
+          "logical_face": "2"
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[1].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            276.48,
+            527.04
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            228.744,
+            146.88
+          ],
+          "original_origin_um": [
+            276.48,
+            527.04
+          ],
+          "logical_face": "2"
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[2].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            60.48,
+            622.08
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            41.472,
+            250.56
+          ],
+          "original_origin_um": [
+            60.48,
+            622.08
+          ],
+          "logical_face": "2"
+        },
+        {
+          "inst": "u_bound.u_core.g_codec.u_codec.g_bank[3].u_store.u_sram",
+          "module": "ot_sram_1r1w_64x512_m1_r2c2",
+          "origin_um": [
+            259.2,
+            622.08
+          ],
+          "track_offset_um": [
+            0.0,
+            0.012
+          ],
+          "pins_file": "macro_pins/ot_sram_1r1w_64x512_m1_r2c2.json",
+          "outline_um": [
+            171.288,
+            77.784
+          ],
+          "orient": "R0",
+          "halo_um": 4.32,
+          "lef": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
+          "lib": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_tt.lib",
+          "obs_max": "M4",
+          "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added.",
+          "candidate_origin_um": [
+            228.744,
+            250.56
+          ],
+          "original_origin_um": [
+            259.2,
+            622.08
+          ],
+          "logical_face": "2"
+        }
+      ],
+      "existing_CA_bands_rebased": [
+        {
+          "name": "rec_tx_s0_i",
+          "rect_um": [
+            119.616,
+            17.28,
+            233.552,
+            41.04
+          ],
+          "reserve_um2": 2636.064,
+          "scope": "ExistingplanPROPOSEDcollector band. Live/padded counts unchanged; actualclockandpinarrival mustreprice."
+        }
+      ],
+      "macro_or_CA_or_coupler_overlap_failures": [
+        [
+          "u_bound.u_core.u_rx.u_mem",
+          "CA:rec_tx_s0_i"
+        ],
+        [
+          "u_bound.u_core.u_tx.u_mem",
+          "CA:rec_tx_s0_i"
+        ]
+      ],
+      "macro_only_verdict": "FAIL",
+      "CA_area_reserve_sum_um2": 2636.064,
+      "coupler_macrofree_rect_um": [
+        0,
+        699.84,
+        786.24,
+        786.24
+      ],
+      "HOLD": [
+        "fullactualcodec+datapath<=405",
+        "realstandardcellandtap/endcap/PGbodyreserve",
+        "allCA/START/nativeclockandforwardedclocktiming",
+        "hardcorepin-to-registerandnativeITermclockgraph",
+        "FT/portcapacity/rootreview"
+      ],
+      "planned_contents_envelopes": "Reworkcontents518x388 rectangles do NOTremain sealed; allactualmemoryviews/trackoffsets preserved. Codec/sourceconnectiongraphs unchangedpendingphysicalplanadoption."
+    }
+  }
+}
