@@ -21,6 +21,8 @@ Input 3 (--service): measured root service cycles per (op, n) from a component b
   OR (TOK-HBM-2) a composed segments file (schema opentallas.hbm.fused_service_segments.v1, results/tok_hbm_2_1028/
   service_segments.json): measured root/lane/tnode segment constants; service = composed_service() per record from wsc
   and the bound station round trip (the bound file must say legs_exclude_tree_nodes: true; wsc then adds node edges).
+  A selected physical shell is opt-in service.tnode.external_face_shell = {levels, input_cycles, output_cycles, source};
+  levels counts serial external n1..n4 nodes, never total instance count or internal root t5.
 Optional (--ready): per-record operand-ready edges from the layer calendar {image_offset: cycle}; without it the
   scope is FUSED-only (records back-to-back) and the receipt says so.
 
@@ -51,6 +53,28 @@ FETCH, START_EDGES, STATUS = 2, 1, 2   # actual provider contract (fused_job217_
 SEG_SCHEMA = 'opentallas.hbm.fused_service_segments.v1'
 
 
+
+def tnode_roundtrips(tnode):
+    """Measured bare node edges plus explicitly selected physical face shells.
+
+    Four external n1..n4 levels get the new shell; t5 is inside the root core.
+    The selected level count is required, never inferred from instance count.
+    No optional field preserves the component-only measurement byte for byte.
+    """
+    extra = tnode.get('external_face_shell')
+    delta = 0
+    if extra is not None:
+        if (not isinstance(extra, dict) or not extra.get('source') or
+                any(type(extra.get(k)) is not int or extra[k] < 0
+                    for k in ('levels', 'input_cycles', 'output_cycles')) or
+                extra['levels'] > tnode['levels']):
+            raise ValueError('explicit selected tnode face-shell levels/ages/source required')
+        # A path crosses the input and output face once down and once up.
+        delta = 2 * extra['levels'] * (extra['input_cycles'] + extra['output_cycles'])
+    return (tnode['levels'] * (tnode['down'] + tnode['up_scalar']) + delta,
+            tnode['levels'] * (tnode['down'] + tnode['up_chunk']) + delta)
+
+
 def composed_service(seg, op, n, rgap, wsc, rt_max):
     """TOK-HBM-2: root capture -> root done COMPOSED from measured component segments (root wrapper bench + one-lane /
     one-tnode bench, results/tok_hbm_2_1028) and the bound station round trip rt_max = max_r(down_r + up_r) (station /
@@ -66,8 +90,9 @@ def composed_service(seg, op, n, rgap, wsc, rt_max):
         return None, f'{op}/{n}: rgap {rgap} outside the 8-bit job field'
     post = op == 'HC_POST'; nbt = 5 if post else 1; nsc = 3 * n if post else n
     go = wsc + nsc + r['go_const'] + min(n, 2) * nbt
-    rt_s = t['levels'] * (t['down'] + t['up_scalar']) + rt_max
-    rt_c = t['levels'] * (t['down'] + t['up_chunk']) + rt_max
+    node_s, node_c = tnode_roundtrips(t)
+    rt_s = node_s + rt_max
+    rt_c = node_c + rt_max
     if post:
         return (go + rt_s + l['post_go_to_fin_const'] + l['post_go_to_fin_per_row'] * n + rgap * (n - 1)
                 + r['fin_to_done']), None
@@ -119,7 +144,8 @@ def compile_calendar(jobs, bound, service, ready=None, schedule_rgap=False):
     boot = {r: L['reset_release_edges'] + L['reset_' + r] + L['reset_sync_stages'] for r in ('SW', 'SE', 'NW', 'NE', 'root')}
     rt = {r: L['down_' + r] + L['up_' + r] for r in ('NW', 'NE')}
     tn = service['tnode'] if seg else None
-    wsc = max(rt.values()) + (tn['levels'] * (tn['down'] + tn['up_scalar']) if seg else 0) + L['rr'] + 8
+    node_s, node_c = tnode_roundtrips(tn) if seg else (0, 0)
+    wsc = max(rt.values()) + node_s + L['rr'] + 8
     pk5 = abs(rt['NW'] - rt['NE']); pb5 = int(rt['NE'] < rt['NW'])
     if wsc > 255: missing.append(f'wsc {wsc} > 255 (8-bit strap): the tree round trip does not fit')
     if pk5 > 32: missing.append(f'pk5 {pk5} > 32 (pad depth): NW/NE round trips differ by more than the t5 pad')
@@ -139,8 +165,7 @@ def compile_calendar(jobs, bound, service, ready=None, schedule_rgap=False):
         if schedule_rgap and seg and j['op'] != 'HC_POST' and j['fields']['nm1'] + 1 > service['lane']['kx']:
             # The lane retains KX rows until the root's r return. Raise spacing only;
             # addresses, arithmetic and row order stay byte-for-byte from the image.
-            rd = (tn['levels'] * (tn['down'] + tn['up_chunk']) + max(rt.values())
-                  + service['root']['pre_sum_to_r'])
+            rd = node_c + max(rt.values()) + service['root']['pre_sum_to_r']
             needed = max(0, -(-(rd - service['lane']['pre_r_return_max']) // service['lane']['kx']))
             rgap = max(rgap, needed)
         if seg:
@@ -174,6 +199,8 @@ def compile_calendar(jobs, bound, service, ready=None, schedule_rgap=False):
                scope='LAYER_CALENDAR_READY' if ready else 'FUSED_ONLY_BACK_TO_BACK (no layer operand-ready edges)',
                derivation=dict(legs={k: L[k] for k in LEGS}, rtl={k: L[k] for k in RTL},
                                bound_sources={k: legs[k]['source'] for k in LEGS}, service_source=service['source']))
+    if seg and 'external_face_shell' in tn:
+        cal['derivation']['tnode_external_face_shell'] = dict(tn['external_face_shell'])
     return cal, []
 
 

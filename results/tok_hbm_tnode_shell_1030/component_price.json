@@ -1,0 +1,130 @@
+{
+  "status": "SELECTED_SHELL_COMPONENT_ANALYTIC_PRICE_NOT_FULL_TOKEN",
+  "physical_view": "ot_hnx_fused_tnode_50055cbac918",
+  "instances": 30,
+  "serial_external_levels": 4,
+  "face_flops_per_instance": 1339,
+  "total_face_flops": 40170,
+  "data_input_cycles": 1,
+  "data_output_cycles": 1,
+  "node_roundtrip_before": [
+    30,
+    55
+  ],
+  "node_roundtrip_after": [
+    46,
+    71
+  ],
+  "wsc_delta": 16,
+  "rows": [
+    {
+      "op": "HC_PRE",
+      "n": 1,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 773,
+      "new_service": 821,
+      "delta": 48
+    },
+    {
+      "op": "HC_POST",
+      "n": 1,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 438,
+      "new_service": 470,
+      "delta": 32
+    },
+    {
+      "op": "HC_PRE",
+      "n": 2,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 855,
+      "new_service": 903,
+      "delta": 48
+    },
+    {
+      "op": "HC_POST",
+      "n": 2,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 546,
+      "new_service": 578,
+      "delta": 32
+    },
+    {
+      "op": "HC_PRE",
+      "n": 3,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 936,
+      "new_service": 984,
+      "delta": 48
+    },
+    {
+      "op": "HC_POST",
+      "n": 3,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 649,
+      "new_service": 681,
+      "delta": 32
+    },
+    {
+      "op": "HC_PRE",
+      "n": 4,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 1017,
+      "new_service": 1065,
+      "delta": 48
+    },
+    {
+      "op": "HC_POST",
+      "n": 4,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 752,
+      "new_service": 784,
+      "delta": 32
+    },
+    {
+      "op": "HC_PRE",
+      "n": 5,
+      "old_rgap": 24,
+      "new_rgap": 28,
+      "old_service": 1194,
+      "new_service": 1258,
+      "delta": 64
+    },
+    {
+      "op": "HC_POST",
+      "n": 5,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 855,
+      "new_service": 887,
+      "delta": 32
+    },
+    {
+      "op": "HC_PRE",
+      "n": 6,
+      "old_rgap": 24,
+      "new_rgap": 28,
+      "old_service": 1299,
+      "new_service": 1367,
+      "delta": 68
+    },
+    {
+      "op": "HC_POST",
+      "n": 6,
+      "old_rgap": 0,
+      "new_rgap": 0,
+      "old_service": 958,
+      "new_service": 990,
+      "delta": 32
+    }
+  ],
+  "scope": "sample rt_max98 matches existing compiler control; exact sameRGap POST32/PRE48; N>4 minimumRGap comes from currentbound, chosen +4pacecase64/68. Existingbaremeasuredsegmentsunchanged. No currentwholecalendar/physicaladoption/rateclaim."
+}

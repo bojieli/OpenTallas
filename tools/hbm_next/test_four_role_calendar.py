@@ -189,3 +189,55 @@ def test_rgap_override_rejects_bad_binding(tmp_path, damage):
                         '--calendar', str(path), '--calendar-rgap', '--out', str(out)],
                        capture_output=True, text=True)
     assert r.returncode == 2 and not (out / 'programme.mem').exists()
+
+
+def test_selected_four_level_face_shell_is_not_five_or_thirty():
+    import copy
+    shell = copy.deepcopy(SEG)
+    shell['tnode']['external_face_shell'] = dict(levels=4, input_cycles=1, output_cycles=1,
+                                                source='selected30-node-kit:fourseriallevels,n1..n4')
+    assert FRC.tnode_roundtrips(SEG['tnode']) == (30, 55)
+    assert FRC.tnode_roundtrips(shell['tnode']) == (46, 71)
+    for n in (1, 2, 3, 4):
+        for op, delta in [('HC_POST', 32), ('HC_PRE', 48)]:
+            old, why = FRC.composed_service(SEG, op, n, 0, 60, 0)
+            new, nwhy = FRC.composed_service(shell, op, n, 0, 76, 0)
+            assert why is None and nwhy is None and new-old == delta
+    # New return is too late to reuse row0's x slot for row4 at oldRGap0.
+    assert FRC.composed_service(SEG, 'HC_PRE', 5, 0, 60, 0)[1] is None
+    assert FRC.composed_service(shell, 'HC_PRE', 5, 0, 76, 0)[0] is None
+    for n in (5, 6):
+        old, why = FRC.composed_service(SEG, 'HC_PRE', n, 0, 60, 0)
+        new, nwhy = FRC.composed_service(shell, 'HC_PRE', n, 4, 76, 0)
+        assert why is None and nwhy is None and new-old == 48+4*(n-1)
+
+
+def test_selected_shell_requires_explicit_level_count_and_source():
+    import copy
+    for key, value in [('levels', 30), ('levels', True), ('source', '')]:
+        node = copy.deepcopy(SEG['tnode'])
+        node['external_face_shell'] = dict(levels=4, input_cycles=1, output_cycles=1, source='selected')
+        node['external_face_shell'][key] = value
+        with pytest.raises(ValueError, match='selected tnode'):
+            FRC.tnode_roundtrips(node)
+
+
+def test_selected_shell_reaches_actual_calendar_wsc_and_rgap(tmp_path):
+    import copy
+    ct, img = setup(tmp_path)
+    img.write_bytes(bytes([0, 6]))
+    assert emit(EMITTER, ct, img, tmp_path/'jobs').returncode == 2
+    jobs = json.loads((tmp_path/'jobs/jobs.json').read_text())
+    b = seg_bound(69)
+    b['legs']['down_NE']['cycles'] += 69
+    old, miss = FRC.compile_calendar(jobs, b, SEG, schedule_rgap=True)
+    assert not miss
+    shell = copy.deepcopy(SEG)
+    shell['tnode']['external_face_shell'] = dict(levels=4, input_cycles=1, output_cycles=1, source='selected-kit')
+    new, miss = FRC.compile_calendar(jobs, b, shell, schedule_rgap=True)
+    assert not miss
+    assert new['root_config']['wsc'] - old['root_config']['wsc'] == 16
+    assert old['records'][0]['rgap_override']['value'] == 24
+    assert new['records'][0]['rgap_override']['value'] == 28
+    assert new['records'][0]['root_done_cycle'] - old['records'][0]['root_done_cycle'] == 68
+    assert new['derivation']['tnode_external_face_shell'] == shell['tnode']['external_face_shell']
