@@ -297,10 +297,10 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------------
 // VE4: q2 = a kept copy of q (the ring's output register duplicated; D = 0: q2 = d2, the caller's own copy; D = 1, 2:
 // a kept register chain from d2).  Consumers that need no copy leave q2 open (synthesis drops it).
-module ot_s81sl_ve_dly #(parameter integer W = 32, D = 1, MUT = 0) (
+module ot_s81sl_ve_dly #(parameter integer W = 32, D = 1, MUT = 0, ZERO_LOW = 0) (
     input wire clk, input wire [W-1:0] d, input wire [W-1:0] d2, output wire [W-1:0] q, output wire [W-1:0] q2);
     generate if (D >= 3) begin : g_ring
-        ot_s81sl_ve_ring #(.W(W), .D(D), .MUT(MUT)) u (clk, d, q, q2);
+        ot_s81sl_ve_ring #(.W(W), .D(D), .MUT(MUT), .ZERO_LOW(ZERO_LOW)) u (clk, d, q, q2);
     end else if (D == 0) begin : g_w
         assign q = d;
         assign q2 = d2;
@@ -319,12 +319,16 @@ module ot_s81sl_ve_dly #(parameter integer W = 32, D = 1, MUT = 0) (
     end endgenerate
 endmodule
 
-module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0) (
+module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0, ZERO_LOW = 0) (
     input wire clk, input wire [W-1:0] d, output wire [W-1:0] q, output wire [W-1:0] q2);
     localparam integer N = D - 2;
     localparam integer K = (N <= 2) ? 1 : $clog2(N);
     localparam [K-1:0] LAST = N - 1;
     localparam integer S = (W + 7) / 8;
+    // Opt-in, caller-declared constant BF16 lanes. The selected ve_m input
+    // expands BF16 with literal low16 zeroes; physical synthesis already
+    // folds these lanes. Keep their RTL startup meaning explicit.
+    localparam [W-1:0] DATA_MASK = {W{1'b1}} << ZERO_LOW;
     reg [W-1:0] din;
     (* keep *) reg [W-1:0] dout;                 // r4b: kept like dout2
     (* keep *) reg [W-1:0] dout2;                // VE4: kept copy of the output register (same D)
@@ -336,7 +340,7 @@ module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0) (
         oh_d[r] = (wnext == r[K-1:0]);
         oh_late[r] = (wptr == r[K-1:0]);
     end
-    always @(posedge clk) begin din <= d; wptr <= wnext; end
+    always @(posedge clk) begin din <= d & DATA_MASK; wptr <= wnext; end
     genvar sl, i;
     generate for (sl = 0; sl < S; sl = sl + 1) begin : g_s
         localparam integer LO = 8 * sl;
@@ -356,8 +360,8 @@ module ot_s81sl_ve_ring #(parameter integer W = 32, D = 3, MUT = 0) (
         reg [SW-1:0] rd;
         integer j;
         always @* begin rd = {SW{1'b0}}; for (j = 0; j < N; j = j + 1) rd = rd | sel[SW*j +: SW]; end
-        always @(posedge clk) dout[LO +: SW] <= rd;
-        always @(posedge clk) dout2[LO +: SW] <= rd;
+        always @(posedge clk) dout[LO +: SW] <= rd & DATA_MASK[LO +: SW];
+        always @(posedge clk) dout2[LO +: SW] <= rd & DATA_MASK[LO +: SW];
     end endgenerate
     assign q = dout;
     assign q2 = dout2;
@@ -431,7 +435,7 @@ module ot_s81sl_ve_chunk8 #(parameter integer LA=4,MUT=0)(
  always @(posedge clk or negedge rn)if(!rn)fault<=0;else if(raw_fault)fault<=1;
 endmodule
 
-module ot_s81sl_ve_add8 #(parameter integer LM=5,LA=4)(
+module ot_s81sl_ve_add8 #(parameter integer LM=5,LA=4,H_ZERO_LOW=0)(
  input wire clk,input wire [3:0] rq,input wire v,phase,input wire [255:0] h,value,input wire [31:0] gate,input wire [1:0] copy,
  output reg vo,output reg [255:0] y,output reg fault,output wire [1:0] copy_out);
  wire rn=rq[0];
@@ -447,7 +451,7 @@ module ot_s81sl_ve_add8 #(parameter integer LM=5,LA=4)(
   always @(posedge clk)begin gl<=gate;gl2<=gate;vl1<=value[32*l+:32];vl2<=value[32*l+:32];end
   wire [31:0] prod,prod2,hd,hd2,ys,nc;wire mvo;
   ot_s81sl_ve_qmul #(LM) mul(clk,rq[l/2],vr,vl1,vl2,gl,gl2,prod,prod2,mvo,f[2*l]);
-  ot_s81sl_ve_dly #(.W(32),.D(LM)) hline(clk,hr[32*l+:32],hr[32*l+:32],hd,hd2);
+  ot_s81sl_ve_dly #(.W(32),.D(LM),.ZERO_LOW(H_ZERO_LOW)) hline(clk,hr[32*l+:32],hr[32*l+:32],hd,hd2);
   ot_s81sl_ve_qadd #(.LAT(LA)) add(clk,rq[l/2],mvo,hd,hd2,prod,prod2,ys,nc,av[l],f[2*l+1]);
   wire [31:0] rounded=ys+32'h7fff+ys[16];
   always @(posedge clk)y[32*l+:32]<={rounded[31:16],16'd0};
@@ -540,7 +544,13 @@ module ot_s81sl_ve_m #(parameter integer LM = 5, LA = 4, MUT = 0) (
     wire [255:0] yd;
     wire         yf;
     wire [1:0]   yc;
-    ot_s81sl_ve_add8 #(.LM(LM), .LA(LA)) add (clk, rq[8:5], av_q, 1'b1, ah_q, aval_q, ag_q, ac_q, yv, yd, yf, yc);
+`ifdef OT_S81_VE_BF16_RING_ZERO
+    localparam integer ADD_H_ZERO_LOW = 16;
+`else
+    localparam integer ADD_H_ZERO_LOW = 0;
+`endif
+    ot_s81sl_ve_add8 #(.LM(LM), .LA(LA), .H_ZERO_LOW(ADD_H_ZERO_LOW)) add
+        (clk, rq[8:5], av_q, 1'b1, ah_q, aval_q, ag_q, ac_q, yv, yd, yf, yc);
     always @(posedge clk or negedge rn)
         if (!rn) o_v <= 1'b0;
         else o_v <= yv;

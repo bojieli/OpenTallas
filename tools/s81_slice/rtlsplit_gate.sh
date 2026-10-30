@@ -5,7 +5,11 @@ D5=-DOT_S81_VE_LOADSAFE5
 case $N in
   vnmit0)   bash tools/s81_slice/vn_spmiter.sh $O base > $O/out.log 2>&1; r=$?;;
   vnmitc1)  bash tools/s81_slice/vn_spmiter.sh $O c1 > $O/out.log 2>&1; r=$?;;
+  vnmitz)   OT_VN_DEFS=+define+OT_S81_VN_CONST_ZERO bash tools/s81_slice/vn_spmiter.sh $O base > $O/out.log 2>&1; r=$?;;
+  vnmitzc1) OT_VN_DEFS=+define+OT_S81_VN_CONST_ZERO bash tools/s81_slice/vn_spmiter.sh $O c1 > $O/out.log 2>&1; r=$?;;
   vnmithq)  bash tools/s81_slice/vn_spmiter.sh $O hq > $O/out.log 2>&1; r=$?;;
+  vemitz)   OT_VE_DEFS="$D5 -DOT_S81_VE_BF16_RING_ZERO" bash tools/s81_slice/ve_spmiter.sh $O 0 > $O/out.log 2>&1; r=$?;;
+  vemitz1)  OT_VE_DEFS="$D5 -DOT_S81_VE_BF16_RING_ZERO" bash tools/s81_slice/ve_spmiter.sh $O 1 > $O/out.log 2>&1; grep -q REJECTED $O/out.log; r=$?;;
   vemit0)   OT_VE_DEFS=$D5 bash tools/s81_slice/ve_spmiter.sh $O 0 > $O/out.log 2>&1; r=$?;;
   vemit1|vemit2|vemit3) OT_VE_DEFS=$D5 bash tools/s81_slice/ve_spmiter.sh $O ${N#vemit} > $O/out.log 2>&1; grep -q REJECTED $O/out.log; r=$?;;
   vemitmv)  OT_VE_DEFS="$D5 -DOT_S81SL_SPMUT_MV" bash tools/s81_slice/ve_spmiter.sh $O 0 > $O/out.log 2>&1; grep -q "REJECTED\|FAIL golden" $O/out.log; r=$?;;

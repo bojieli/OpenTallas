@@ -264,7 +264,11 @@ endmodule
 // Four lanes of ot_hbm_norm_grp (G = 8, D = 64, N = 8): group pin flops, control (replicated per half), mix / square /
 // scale lanes, x / w stores.  The chunk chain lives in the core tops (vn_a: adders 1..3, vn_b: 4..7).
 module ot_s81sl_vn_ng4 #(
-    parameter integer D = 64, N = 8, LM = 5, LA = 6, SXC = 1
+    parameter integer D = 64, N = 8, LM = 5, LA = 6, SXC = 1,
+    // DIE-S81-31/VEZ 10-29 (opt-in, default 0 = unchanged): the caller declares the low XO_ZERO_LOW bits of the x store
+    // constant 0 (x = bf16(mix): low16 always 0).  Synthesis already folds them; masking the store output register
+    // makes the RTL startup meaning explicit (the store words are unreset), so the gate is unchanged.
+    parameter integer XO_ZERO_LOW = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -290,6 +294,7 @@ module ot_s81sl_vn_ng4 #(
     localparam integer DM  = LM + 3 * LA + 1;
     localparam integer LMS = LM + SXC;
     localparam integer DY  = 2 * LMS + 1;
+    localparam [31:0]  XO_MASK = {32{1'b1}} << XO_ZERO_LOW;
     function automatic [31:0] bf16(input [31:0] x);
         reg [32:0] t;
         begin
@@ -357,7 +362,7 @@ module ot_s81sl_vn_ng4 #(
             .h2(x_c[(2 * 4 + l) * 32 +: 32]), .h3(x_c[(3 * 4 + l) * 32 +: 32]), .pre(pre_c), .x(xl), .fault(f[0]));
         assign xl_all[l * 32 +: 32] = xl;
         reg [31:0] xo, wo;                       // store output registers (the macro output registers in the group)
-        always @(posedge clk) begin xo <= xmq[l * 32 +: 32]; wo <= wmq[l * 32 +: 32]; end
+        always @(posedge clk) begin xo <= xmq[l * 32 +: 32] & XO_MASK; wo <= wmq[l * 32 +: 32]; end
         ot_hdc_qmul_lat #(LM) u_sq (clk, rs[1 + 2 * l], x_v, xl, xl, sq[l * 32 +: 32], f[1]);
         wire [31:0] p, q;
         ot_hdc_qmul_lat #(LMS) u_xr (clk, rs[2 + 2 * l], sc_go, xo, rh, p, f[2]);
@@ -397,6 +402,12 @@ module ot_s81sl_vn_a #(
     (* keep *) output reg fault
 );
     localparam integer DC = LM + 3 * LA;     // acc3 valid on the x-valid line
+`ifdef OT_S81_VN_CONST_ZERO
+    // DIE-S81-31/VEZ 10-29 (opt-in define, off by default): constant-zero lanes declared to the RTL (ng4 XO_ZERO_LOW)
+    localparam integer VN_XO_ZERO_LOW = 16;
+`else
+    localparam integer VN_XO_ZERO_LOW = 0;
+`endif
     wire [2:0] rsv;
     ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_g = rsv[1], rs_o = rsv[2];
@@ -450,7 +461,7 @@ module ot_s81sl_vn_a #(
                 g_x[(4 * k + i) * 32 +: 32] <= {hm0[(4 * k + i) * 16 +: 16], 16'd0};
 
     wire gq, x_v, gy_v; wire [7:0] xi, gy_i; wire [127:0] sq, gy; wire [3:0] lf;
-    ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
+    ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA), .XO_ZERO_LOW(VN_XO_ZERO_LOW)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
         .pre(pre_c), .wl_v(wl_v_c), .wl_i(wl_i_c), .wl_d(wl_d_c), .rb_v(rb_v_c), .rb_d(rb_d_c), .go_q(gq), .x_v(x_v),
         .xi(xi), .sq(sq), .y(gy), .y_v(gy_v), .y_i(gy_i), .lf(lf));
 
@@ -525,6 +536,15 @@ module ot_s81sl_vn_b #(
 );
     localparam integer DC = LM + 3 * LA + 2;     // acc3 at vn_b's chain (2 partition flops)
     localparam integer DS = LM + 7 * LA + 2;     // chain sum (group DS + 2)
+`ifdef OT_S81_VN_CONST_ZERO
+    // DIE-S81-31/VEZ 10-29 (opt-in define, off by default): constant-zero lanes declared to the RTL (ng4 XO_ZERO_LOW);
+    // the chunk sums are sums of squares (sign constant 0), so the unreset tree operand store lv is read sign-masked
+    localparam integer VN_XO_ZERO_LOW = 16;
+    localparam [31:0]  LV_MASK = 32'h7fffffff;
+`else
+    localparam integer VN_XO_ZERO_LOW = 0;
+    localparam [31:0]  LV_MASK = 32'hffffffff;
+`endif
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
     wire rs_c = rsv[0], rs_g = rsv[1], rs_t = rsv[2], rs_o = rsv[3];
@@ -591,7 +611,7 @@ module ot_s81sl_vn_b #(
     end
 
     wire gq, x_v, gy_v; wire [7:0] xi, gy_i; wire [127:0] sq, gy; wire [3:0] lf;
-    ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
+    ot_s81sl_vn_ng4 #(.D(64), .N(8), .LM(LM), .LA(LA), .XO_ZERO_LOW(VN_XO_ZERO_LOW)) u_g (.clk(clk), .rst_n(rs_g), .go(g_go), .in_v(g_inv), .in_x(g_x),
         .pre(pre_c), .wl_v(wl_v_c), .wl_i(wl_i_c), .wl_d(wl_d_c), .rb_v(rb_v_c), .rb_d(rb_d_c), .go_q(gq), .x_v(x_v),
         .xi(xi), .sq(sq), .y(gy), .y_v(gy_v), .y_i(gy_i), .lf(lf));
 
@@ -636,6 +656,11 @@ module ot_s81sl_vn_b #(
     wire go_t = go_d[1];
     reg [31:0] lv [0:7];  reg [7:0] lp;
     reg [31:0] nv [0:6];  reg [6:0] np, ni;
+    wire [31:0] lvm [0:7];                  // lv as the tree reads it (LV_MASK all ones unless OT_S81_VN_CONST_ZERO)
+    genvar gv;
+    generate for (gv = 0; gv < 8; gv = gv + 1) begin : g_lvm
+        assign lvm[gv] = lv[gv] & LV_MASK;
+    end endgenerate
     wire [6:0] rdy;
 `ifdef OT_S81SL_MUT_TREE
     assign rdy[0] = &lp[3:0] & !ni[0];
@@ -659,14 +684,14 @@ module ot_s81sl_vn_b #(
     always @(*) begin
         case (sel)
 `ifdef OT_S81SL_MUT_TREE
-            3'd0: begin ta = lv[0]; tb = lv[2]; end
-            3'd1: begin ta = lv[1]; tb = lv[3]; end
+            3'd0: begin ta = lvm[0]; tb = lvm[2]; end
+            3'd1: begin ta = lvm[1]; tb = lvm[3]; end
 `else
-            3'd0: begin ta = lv[0]; tb = lv[1]; end
-            3'd1: begin ta = lv[2]; tb = lv[3]; end
+            3'd0: begin ta = lvm[0]; tb = lvm[1]; end
+            3'd1: begin ta = lvm[2]; tb = lvm[3]; end
 `endif
-            3'd2: begin ta = lv[4]; tb = lv[5]; end
-            3'd3: begin ta = lv[6]; tb = lv[7]; end
+            3'd2: begin ta = lvm[4]; tb = lvm[5]; end
+            3'd3: begin ta = lvm[6]; tb = lvm[7]; end
             3'd4: begin ta = nv[0]; tb = nv[1]; end
             3'd5: begin ta = nv[2]; tb = nv[3]; end
             default: begin ta = nv[4]; tb = nv[5]; end
