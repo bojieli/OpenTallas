@@ -12,6 +12,7 @@ import shutil
 from collections import Counter
 from pathlib import Path
 import core_infra as CI
+from die_sta import PERIOD_PS
 def tq(value):
     """A Tcl quoted word; preserve literal synthesized identifiers."""
     return '"' + str(value).replace('\\', '\\\\').replace('"', '\\"').replace('$', '\\$').replace('[', '\\[').replace(']', '\\]') + '"'
@@ -20,6 +21,16 @@ def tq(value):
 PRIMARY = re.compile(r'clk(?:_t[0-9]+)?\Z')
 ENV = {'BUFx8_ASAP7_75t_R','BUFx10_ASAP7_75t_R','BUFx12_ASAP7_75t_R',
        'BUFx12f_ASAP7_75t_R','BUFx16f_ASAP7_75t_R','BUFx24_ASAP7_75t_R'}
+
+
+def check_forwarded_roles(t, roots):
+    inputs={p['name'] for p in t.get('clock',{}).get('landing_contract',{}).get('pins',[]) if p.get('kind')=='clock' and p.get('dir')=='in'}
+    edges={p['port']:p for p in t.get('clock',{}).get('edge_clocks',[])}
+    for root in roots:
+        if PRIMARY.fullmatch(root):continue
+        name=re.sub(r'\[0\]$','',root);edge=edges.get(name)
+        if name not in inputs or edge is None or edge.get('period_mult',1)!=1 or edge.get('source_latency_ps') is not None:
+            raise ValueError('flat clock forest: nonprimary root is not a declared833ps source-forwarded landing clock')
 
 
 def finite(x):
@@ -97,16 +108,28 @@ def validate(t, packet):
             q=r['qualification'][corner];arr=q['sink_latency_ps']
             if set(arr)!=names or not all(finite(x) for x in arr.values()):
                 raise ValueError('flat clock forest: incomplete per-corner sink model')
-            window=max(arr.values())-min(arr.values())
+            cases=q.get('calibrated_sink_latency_ps',{})
+            if set(cases)!= {'late','early'} or any(set(v)!=names or not all(finite(x) for x in v.values()) for v in cases.values()):
+                raise ValueError('flat clock forest: consistent per-master calibration states required')
+            window=max(max(v.values())-min(v.values()) for v in cases.values())
             if not finite(q['slew_max_ps']) or q['slew_max_ps']>80 or window>20:
-                raise ValueError('flat clock forest: TT/FF window or slew FAIL')
+                raise ValueError('flat clock forest: TT/FF calibrated window or slew FAIL')
     if any(r['kind']=='forwarded' for r in roots.values()) and not re.fullmatch(r'[0-9a-f]{64}',packet.get('native_sdc_sha256') or ''):
         raise ValueError('flat clock forest: frozen native forwarded-clock SDC required')
+    check_forwarded_roles(t,roots)
+    if set(packet.get('clock_periods',{}))!=set(roots) or any(abs(v-PERIOD_PS)>1e-9 for v in packet['clock_periods'].values()):
+        raise ValueError('flat clock forest: actual833ps root clock contract required')
     for corner in ('TT','FF'):
         for category in ('primary','same_forwarded'):
             q=packet['related_pair_model'][corner][category]
             if not finite(q['max_ps']) or q['max_ps']>80 or q['over80']!=0:
                 raise ValueError('flat clock forest: related-pair clock model FAIL')
+    if any(v.get('forwarded_landing_window',{}).get('pairs',0) for v in packet['related_pair_model'].values()):
+        policy=packet.get('landing_clock_contract',{})
+        if policy.get('kind')!='canonical_landed_forwarded_default' or policy.get('window_ps')!=PERIOD_PS/2:
+            raise ValueError('flat clock forest: explicit existing landed clock-damage contract required')
+        if any(v.get('forwarded_landing_window',{}).get('max_ps',0)>policy['window_ps'] for v in packet['related_pair_model'].values()):
+            raise ValueError('flat clock forest: forwarded landing clock-damage window FAIL')
     if not packet.get('model_source') or packet.get('measured_timing_used') is not False:
         raise ValueError('flat clock forest: plan model source required')
     return sinks
@@ -187,7 +210,7 @@ ot_pg_require_bound flat_forest_post
     return True
 
 
-def freeze_candidate(candidate, module, placements, library_dir, geometry_review):
+def freeze_candidate(candidate, module, placements, library_dir, geometry_review, type_spec=None):
     """Recompute both corners at exact legal sites, then compile the packet.
 
     `placements` comes from the plan's actual technology/obstacle legalization;
@@ -200,12 +223,14 @@ def freeze_candidate(candidate, module, placements, library_dir, geometry_review
         raise ValueError('flat clock forest: stale/optimistic root input-slew model')
     if candidate.get('wire_rc',{}).get('r_kohm_um')!=MODEL.R or candidate.get('wire_rc',{}).get('c_ff_um')!=MODEL.C:
         raise ValueError('flat clock forest: candidate must use native clock class RC')
-    inv=candidate['inventory']
+    inv,pairs=MODEL.actual_relations(candidate)
     if any(r.get('other_loads') for r in inv['roots'].values()):
         raise ValueError('flat clock forest: nonsequential native root loads require explicit ownership/modeling')
-    if inv.get('endpoint_overlay'):
+    if candidate['inventory'].get('endpoint_overlay'):
         raise ValueError('flat clock forest: proposed endpoint overlay is not a complete legal successor census')
     nodes=copy.deepcopy(candidate['nodes']);roots=candidate['root_nodes']
+    check_forwarded_roles(type_spec or {},roots)
+    MODEL.validate_topology(inv,nodes,roots,candidate['groups'])
     if set(placements)!={n['name'] for n in nodes}:
         raise ValueError('flat clock forest: incomplete legal driver placement')
     for n in nodes:
@@ -214,11 +239,6 @@ def freeze_candidate(candidate, module, placements, library_dir, geometry_review
         if sum(abs(p['centre_um'][i]-n['xy'][i]) for i in (0,1))>2.000001:
             raise ValueError('flat clock forest: driver displacement exceeds2um; revise the plan')
         n['xy']=p['centre_um']
-    geometry=candidate.get('geometry_path')
-    pairs=candidate.get('structural_pairs')
-    if pairs is None:
-        if not geometry:raise ValueError('flat clock forest: complete native pair inventory required')
-        pairs=MODEL.structural_pairs(geometry,inv)
     metrics=MODEL.model(inv,nodes,roots,library_dir,candidate['input_slew_ps'])
     bounds=MODEL.related_pair_bounds(inv,nodes,candidate['groups'],metrics,pairs)
     for corner in bounds:
@@ -230,7 +250,7 @@ def freeze_candidate(candidate, module, placements, library_dir, geometry_review
     source_root={q:r for r,record in inv['roots'].items() for q in record['sinks']}
     root_records={};cells=[]
     for root,index in roots.items():
-        qualification={corner:dict(slew_max_ps=m['max_slew_ps'],sink_latency_ps={q:m['sink_arrival_ps'][q] for q in candidate['groups'][root]}) for corner,m in metrics.items()}
+        qualification={corner:dict(slew_max_ps=m['max_slew_ps'],sink_latency_ps={q:m['sink_arrival_ps'][q] for q in candidate['groups'][root]},calibrated_sink_latency_ps={case:{q:v[q] for q in candidate['groups'][root]} for case,v in m['calibrated_sink_latency_ps'].items()}) for corner,m in metrics.items()}
         root_records[root]=dict(kind='primary' if PRIMARY.fullmatch(root) else 'forwarded',node=nodes[index]['name'],xy_um=port_xy[root],qualification=qualification)
         def visit(i,parent):
             n=nodes[i];ss=[]
@@ -240,18 +260,21 @@ def freeze_candidate(candidate, module, placements, library_dir, geometry_review
             # Model and source packets use actual instance names, never transient ODB ids.
             for corner in qualification:
                 a=qualification[corner]['sink_latency_ps']
-                for q in n['sinks']:a[inv['cells'][q]['name']]=a.pop(q)
+                for q in n['sinks']:
+                    a[inv['cells'][q]['name']]=a.pop(q)
+                    for values in qualification[corner]['calibrated_sink_latency_ps'].values():values[inv['cells'][q]['name']]=values.pop(q)
             cells.append(dict(name=n['name'],parent=parent,root=root,master=n['master'],placement=placements[n['name']],sinks=ss))
             for kid in n['children']:visit(kid,n['name'])
         visit(index,'port:'+root)
     outline=[inv['outline'][2]-inv['outline'][0],inv['outline'][3]-inv['outline'][1]]
     packet=dict(schema='opentallas.flat_clock_forest.v1',module=module,outline_um=outline,
-        roots=root_records,cells=cells,related_pair_model=bounds,build_allowed=True,input_slew_ps=candidate['input_slew_ps'],wire_rc=candidate['wire_rc'],
+        roots=root_records,cells=cells,clock_periods={r:inv.get('clock_periods',{}).get(r) for r in roots},related_pair_model=bounds,build_allowed=True,input_slew_ps=candidate['input_slew_ps'],wire_rc=candidate['wire_rc'],
         install_stage='post_place_pre_cts',geometry_review=geometry_review,measured_timing_used=False,
         geometry_sha256=inv['geometry_sha256'],native_sdc_sha256=candidate.get('native_sdc_sha256'),model_source='native legal geometry + TT/FF RVT NLDM; per-master spice_cell/g021; actual planned-cell CPPR; one CORE-PDN shared droop region',
         band_policy='info: existing12.3a design target; actual TT/FF timing/signoff mandatory',
-        landing_policy='existing declared forwarded landing window; no clock/SDC exception added')
-    validate(dict(module=module,outline_um=outline),packet)
+        landing_policy='existing declared forwarded landing window; no clock/SDC exception added',
+        landing_clock_contract=dict(kind='canonical_landed_forwarded_default',window_ps=PERIOD_PS/2,source='die_sta_related.py time_class landed / default period/2; DATA-only SDC budget is separate'))
+    validate(type_spec or dict(module=module,outline_um=outline),packet)
     return packet
 
 

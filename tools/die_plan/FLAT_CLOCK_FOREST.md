@@ -17,16 +17,25 @@ Final models use the native calibrated clock-class RC from `setRC_rcx.tcl`,
 R=.0214161kΩ/um and C=.113298fF/um, without an NDR discount, and an explicit80ps
 root-input slew. `flat_clock_size.py` sizes only the calibrated R9 BUF8..24 pool
 jointly at TT/FF, with a hard80ps output-slew constraint and a strict clock-window
-objective. It uses no measured timing, pads or useful-skew offsets. Per-master
+objective. Both rise/fall NLDM tables and min/max pin-capacitance states are
+modeled. The native clock pin to actual root-driver wire, including branches to
+declared tie exports, contributes RC before the first driver. Actual positive
+and negative edge registers retain their Liberty sampling edge. It uses no measured timing, pads or useful-skew offsets. Per-master
 `spice_cell` factors and approved g021 AOCV charge actual noncommon tree paths;
-CPPR credits only actual shared planned cells. Shared supply droop assumes this
+CPPR credits only actual shared planned cells. Opposite-edge pairs retain
+common-path rise/fall duty distortion and use the smaller actual common-path
+rise/fall uncertainty range. Ideal half-cycle phase remains in the unchanged
+native SDC/library contract and is excluded from insertion damage. Shared supply droop assumes this
 flat native cohort is in one CORE PDN domain. Root latency-band numbers remain
 INFO under the existing12.3a policy; native setup/hold signoff remains mandatory.
 
 Actual forwarded↔primary relations remain separately visible under the existing
 native landing-clock timing contract. They are never reported as80ps ordinary
 related-pair PASS. The exact native SDC hash is frozen and checked at installation;
-no SDC command is added or relaxed. Unknown cross-forwarded relationships or
+no SDC command is added or relaxed. Every nonprimary root must individually
+match an input clock in the existing landing contract and an833ps edge clock;
+PMA or other clock roles are rejected. The canonical landed clock-damage window
+is416.5ps, distinct from the356.5ps DATA-only SDC limit. Unknown cross-forwarded relationships or
 unmodeled native root loads fail closed. Existing non-tie export buffers require
 explicit modeling and are currently rejected.
 
@@ -52,8 +61,11 @@ Load it with `core_infra_plan.read_technology`. Call
 `flat_clock_forest.legalize_drivers(candidate, technology)` to find actual empty
 sites within2um of the planned centres. It moves no existing cell and refuses an
 occupied neighborhood. After rendering and looking at the legal design,
-`freeze_candidate(candidate, module, placements, library_dir, geometry_review)`
-recomputes both corners at the exact sites and checks every root's≤20ps window,
+`freeze_candidate(candidate, module, placements, library_dir, geometry_review,
+type_spec=actual_type_spec)`
+reopens and hashes the native geometry/SDC, recomputes complete actual structural
+relations (rejecting empty/stale supplied subsets), and recomputes both corners
+at the exact sites. It checks every root's≤20ps consistent calibration-state window,
 ≤80ps slew and ordinary related-pair bounds. It produces the explicit v1 forest
 packet consumed by the per-type field.
 

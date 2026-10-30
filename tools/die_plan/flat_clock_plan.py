@@ -15,10 +15,11 @@ C=.113298
 
 
 def inventory(path):
-    cells={}; ports={}; nets=[]; outline=None
+    cells={}; ports={}; nets=[]; outline=None;core=None
     for line in Path(path).read_text().splitlines():
         r=line.split('\t')
         if r[0]=='D':outline=list(map(float,r[1:]))
+        elif r[0]=='R':core=list(map(float,r[1:]))
         elif r[0]=='C':
             rect=list(map(float,r[4:8]));cells[r[1]]=dict(id=r[1],name=r[8],master=r[3],kind=r[2],xy=[(rect[0]+rect[2])/2,(rect[1]+rect[3])/2],rect=rect)
         elif r[0]=='P':ports[r[1]]=dict(name=r[2],io=r[3],signal=r[4],xy=list(map(float,r[6:8])))
@@ -36,7 +37,7 @@ def inventory(path):
             owned[q]=root
     seq={k for k,v in cells.items() if v['kind']=='S'}
     if set(owned)!=seq:raise ValueError(f'incomplete native sequential clock inventory: missing{len(seq-set(owned))}')
-    return dict(schema='opentallas.flat_clock_inventory.v1',geometry_sha256=hashlib.sha256(Path(path).read_bytes()).hexdigest(),outline=outline,cells=cells,ports=ports,roots=roots)
+    return dict(schema='opentallas.flat_clock_inventory.v1',geometry_sha256=hashlib.sha256(Path(path).read_bytes()).hexdigest(),outline=outline,core=core or outline,cells=cells,ports=ports,roots=roots)
 
 
 def overlay_endpoints(inv, path, module):
@@ -203,11 +204,20 @@ def topology_h(inv,groups):
     for root,ids in groups.items():
         if not ids:continue
         if root not in taps:
-            # Retain the separately owned forwarded clock's geometry/load tree.
-            other,rr=topology(inv,{root:ids});offset=len(nodes)
-            for n in other:
-                n['name']=f'ot_flat_clk_{len(nodes)}';n['children']=[j+offset for j in n['children']];nodes.append(n)
-            roots[root]=rr[root]+offset
+            core=inv.get('core',die);points=[inv['cells'][q]['xy'] for q in ids]
+            rect=[max(core[0],min(p[0] for p in points)-1.08),max(core[1],min(p[1] for p in points)-.27),
+                  min(core[2],max(p[0] for p in points)+1.08),min(core[3],max(p[1] for p in points)+.27)]
+            dimensions=[rect[2]-rect[0],rect[3]-rect[1]];axes=[]
+            levels=max(0,math.ceil(math.log2(max(1,len(ids)/32))))
+            while len(axes)<levels or max(dimensions)>50:
+                axis=max((0,1),key=lambda a:dimensions[a]);axes.append(axis);dimensions[axis]/=2
+            if not axes and len(chunks(ids))==1:
+                xy,qq=chunks(ids)[0];tree=add(root,xy,sinks=qq)
+            else:tree=build(root,ids,rect,axes)
+            # Plan the physical entry driver inside the native core. The real
+            # port coordinate is retained and its feed RC is modeled separately.
+            xy=[min(max(ports[root][0],core[0]+.81),core[2]-.81),min(max(ports[root][1],core[1]+.135),core[3]-.135)]
+            roots[root]=add(root,xy,[tree])
             continue
         x,y=taps[root];xi=xs.index(x);yi=ys.index(y)
         rect=[die[0] if xi==0 else (xs[xi-1]+x)/2,die[1] if yi==0 else (ys[yi-1]+y)/2,
@@ -219,77 +229,183 @@ def topology_h(inv,groups):
     return nodes,roots
 
 
+def attach_native_sdc(inv,path):
+    """Existing generated-clock export fanout belongs to the input-root RC."""
+    text=Path(path).read_text();byname={p['name']:p for p in inv['ports'].values()};exports=defaultdict(list)
+    def actual(name):
+        names=[n for n in (name,name+'[0]') if n in byname]
+        if len(names)!=1:raise ValueError('native clock export endpoint missing/ambiguous: '+name)
+        return names[0]
+    periods={}
+    for line in text.splitlines():
+        if line.startswith('create_clock '):
+            period=re.search(r'-period\s+([0-9.eE+-]+)',line);targets=re.search(r'\[get_ports\s+([^\]]+)\]',line)
+            if period and targets:
+                for name in targets[1].strip('{} ').split():periods[actual(name)]=float(period[1])
+    inv['clock_periods']=periods
+    for line in text.splitlines():
+        if not line.startswith('create_generated_clock '):continue
+        fields=re.findall(r'\[get_ports\s+([^\]]+)\]',line)
+        if len(fields)!=2:raise ValueError('unsupported native generated-clock source form')
+        root,out=[actual(v.strip('{} ')) for v in fields]
+        if byname[root]['io']!='INPUT' or byname[out]['io']!='OUTPUT':raise ValueError('generated-clock export direction')
+        exports[root].append(out)
+    inv['clock_exports']=dict(exports)
+    return inv
+
+
+def validate_topology(inv,nodes,roots,groups):
+    actual={q:r for r,record in inv['roots'].items() for q in record['sinks']}
+    expected={p['name'] for p in inv['ports'].values() if p['io']=='INPUT' and re.fullmatch(r'clk(?:_t[0-9]+)?',p['name'])}|{r for r in inv['roots'] if r!='clk'}
+    if set(roots)!=expected or set(groups)!=expected:raise ValueError('complete native input-root inventory required')
+    visited=set();seen={};planned=defaultdict(list)
+    for root,entry in roots.items():
+        todo=[entry]
+        while todo:
+            i=todo.pop()
+            if not isinstance(i,int) or not 0<=i<len(nodes) or i in visited:raise ValueError('planned clock graph cycle/sharing/index')
+            visited.add(i);n=nodes[i]
+            if n['root']!=root:raise ValueError('planned clock node crosses declared root')
+            if not n['children'] and not n['sinks']:raise ValueError('unused clock driver')
+            for q in n['sinks']:
+                if q not in actual or q in seen:raise ValueError('missing/aliased native clock sink')
+                original=actual[q]
+                if root.startswith('clk') and not original.startswith('clk'):raise ValueError('primary root stealing')
+                if not root.startswith('clk') and original!=root:raise ValueError('forwarded root stealing')
+                seen[q]=root;planned[root].append(q)
+            todo+=n['children']
+    if visited!=set(range(len(nodes))) or set(seen)!=set(actual):raise ValueError('incomplete native forest')
+    if any(sorted(groups[r])!=sorted(planned[r]) for r in roots):raise ValueError('leaf ownership differs from group inventory')
+    return True
+
+
+def actual_relations(candidate,geometry_path=None,sdc_path=None):
+    """Reparse the immutable native source; a supplied pair list grants no trust."""
+    geometry=Path(geometry_path or candidate['geometry_path']);native=inventory(geometry)
+    original=candidate['inventory']
+    if native['geometry_sha256']!=original['geometry_sha256']:raise ValueError('native geometry hash changed')
+    sdc=sdc_path or candidate.get('native_sdc_path')
+    if sdc:
+        if hashlib.sha256(Path(sdc).read_bytes()).hexdigest()!=candidate.get('native_sdc_sha256'):raise ValueError('native SDC hash changed')
+        attach_native_sdc(native,sdc)
+    for key in ('cells','ports','roots','outline','core','clock_exports','clock_periods'):
+        if native.get(key)!=original.get(key):raise ValueError('candidate native inventory differs from source: '+key)
+    pairs=structural_pairs(geometry,native)
+    if 'structural_pairs' in candidate:
+        supplied=[tuple(x) for x in candidate['structural_pairs']]
+        if len(supplied)!=len(pairs) or set(supplied)!=set(pairs):raise ValueError('supplied structural pair inventory incomplete/stale')
+    return native,pairs
+
+
+def buffer_models(corner,libdir,names):
+    text=gzip.open(Path(libdir)/f'asap7sc7p5t_INVBUF_RVT_{corner}_nldm_220122.lib.gz','rt').read();result={}
+    for master in names:
+        start=text.index('cell ('+master+')');end=text.find('\n  cell (',start+10);block=text[start:end if end>0 else None]
+        if set(re.findall(r'timing_sense\s*:\s*(\w+)',block))!={'positive_unate'}:raise ValueError('only native noninverting buffer forests supported')
+        result[master]={}
+        for edge in ('rise','fall'):
+            match=re.search(edge+r'_capacitance_range\s*\(\s*([0-9.eE+-]+)\s*,\s*([0-9.eE+-]+)\s*\)',block)
+            scalar=float(re.search(edge+r'_capacitance\s*:\s*([0-9.eE+-]+)',block)[1]);lo,hi=map(float,match.groups()) if match else (scalar,scalar)
+            for state,cap in [('late',hi),('early',lo)]:
+                result[master][edge+'_'+state]=dict(delay=LIB._table(block,'cell_'+edge),trans=LIB._table(block,edge+'_transition'),cap=cap)
+    return result
+
+
+def clock_caps(inv,libdir,corner):
+    text=(Path(libdir)/f'asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib').read_text();caps={state:{} for state in ('rise_late','rise_early','fall_late','fall_early')};edges={}
+    for master in {c['master'] for c in inv['cells'].values() if c['kind']=='S'}:
+        start=text.index('cell ('+master+')');end=text.find('\n  cell (',start+10);block=text[start:end if end>0 else None]
+        clocks=re.findall(r'clocked_on\s*:\s*"([^"]+)"',block)
+        if clocks not in (['CLK'],['!CLK']):raise ValueError(f'{corner} {master}: unsupported compound clock edge')
+        edges[master]='rise' if clocks==['CLK'] else 'fall';pin=block.index('pin (CLK)');pin_block=block[pin:]
+        for edge in ('rise','fall'):
+            match=re.search(edge+r'_capacitance_range\s*\(\s*([0-9.eE+-]+)\s*,\s*([0-9.eE+-]+)\s*\)',pin_block)
+            scalar=float(re.search(edge+r'_capacitance\s*:\s*([0-9.eE+-]+)',pin_block)[1]);lo,hi=map(float,match.groups()) if match else (scalar,scalar)
+            caps[edge+'_late'][master]=hi;caps[edge+'_early'][master]=lo
+    return {state:{q:values[c['master']] for q,c in inv['cells'].items() if c['kind']=='S'} for state,values in caps.items()},edges
+
+
+def root_feed(inv,nodes,root,index,cap,input_slew_ps):
+    from core_infra_wire import rooted_rc
+    ports={p['name']:p['xy'] for p in inv['ports'].values()};exports=inv.get('clock_exports',{}).get(root,[])
+    points=[ports[root],nodes[index]['xy']]+[ports[p] for p in exports]
+    rc=rooted_rc(points,[cap]+[0.]*len(exports),(R,C),(R,C),merge_collinear=True)
+    delay=rc['target_elmore_ps'][0]
+    return delay,math.hypot(input_slew_ps,2.2*delay),dict(port_xy=ports[root],driver_xy=nodes[index]['xy'],direct_um=sum(abs(a-b) for a,b in zip(points[0],points[1])),shared_root_wire_um=rc['wire_um'],clock_exports=exports,input_cap_ff=rc['total_load_ff'],wire_delay_ps=delay)
+
+
 def model(inv,nodes,roots,libdir,input_slew_ps=80.):
+    import die_sta_related as CAL
     if not math.isfinite(input_slew_ps) or input_slew_ps<0:raise ValueError('invalid root input slew')
-    result={};masters={v['master'] for v in inv['cells'].values() if v['kind']=='S'}
+    result={}
     for corner in ('TT','FF'):
-        libraries=LIB.lib_cells(corner,libdir,sorted({n['master'] for n in nodes}))
-        text=(Path(libdir)/f'asap7sc7p5t_SEQ_RVT_{corner}_nldm_220123.lib').read_text();caps={}
-        for master in masters:
-            start=text.index('cell ('+master+')');end=text.find('\n  cell (',start+10);block=text[start:end if end>0 else None];pin=block.index('pin (CLK)')
-            caps[master]=float(re.search(r'\b(?:rise_)?capacitance\s*:\s*([0-9.eE+-]+)',block[pin:])[1])
-        arrivals={};perroot={};maxslew=0;depths={};edges=[];cell_delays={};net_delays={};owners={}
-        for root,entry in roots.items():
-            todo=[(entry,0.,input_slew_ps,0)]
-            while todo:
-                index,arrival,slew,depth=todo.pop();n=nodes[index];lib=libraries[n['master']]
-                targets=[(str(k),nodes[k]['xy'],libraries[nodes[k]['master']]['cap'],k) for k in n['children']]+[(q,inv['cells'][q]['xy'],caps[inv['cells'][q]['master']],None) for q in n['sinks']]
-                wire=RC._mst_length([n['xy']]+[t[1] for t in targets]);load=wire*C+sum(t[2] for t in targets)
-                delay=LIB._bilin(lib['delay'],slew,load);transition=LIB._bilin(lib['trans'],slew,load);cell_delays[str(index)]=delay
-                for name,xy,cap,kid in targets:
-                    distance=sum(abs(a-b) for a,b in zip(n['xy'],xy));elmore=distance*R*(distance*C/2+cap);a=arrival+delay+elmore;tr=math.hypot(transition,2.2*elmore)
-                    maxslew=max(maxslew,tr);edges.append(distance)
-                    if kid is None:arrivals[name]=a;depths[name]=depth+1;owners[name]=index;net_delays["sink:"+name]=elmore
-                    else:todo.append((kid,a,tr,depth+1));net_delays["node:"+str(kid)]=elmore
-            values=[arrivals[q] for n in nodes if n['root']==root for q in n['sinks']]
-            perroot[root]=dict(count=len(values),min_ps=min(values),max_ps=max(values),mean_ps=sum(values)/len(values),min_stages=min(depths[q] for n in nodes if n['root']==root for q in n['sinks']),max_stages=max(depths[q] for n in nodes if n['root']==root for q in n['sinks']))
-        result[corner]=dict(per_root=perroot,max_slew_ps=maxslew,max_buffer_or_sink_leg_um=max(edges),global_range_ps=max(arrivals.values())-min(arrivals.values()),sink_arrival_ps=arrivals,clock_components=dict(cell_ps=cell_delays,net_ps=net_delays,sink_owner=owners))
+        libraries=buffer_models(corner,libdir,sorted({n['master'] for n in nodes}));caps,edges_inventory=clock_caps(inv,libdir,corner)
+        active={q:edges_inventory[c['master']] for q,c in inv['cells'].items() if c['kind']=='S'}
+        factors={m:CAL.cell_cal_factors(corner,[m]) for m in libraries};waves={};maxslew=0;all_legs=[]
+        for state in ('rise_late','rise_early','fall_late','fall_early'):
+            arrivals={};cal={};outcal={};perroot={};feeds={};depths={};cell_delays={};net_delays={};owners={}
+            for root,entry in roots.items():
+                feed,slew,record=root_feed(inv,nodes,root,entry,libraries[nodes[entry]['master']][state]['cap'],input_slew_ps);feeds[root]=record;net_delays['node:'+str(entry)]=feed
+                todo=[(entry,feed,feed,slew,0)]
+                while todo:
+                    index,arrival,calarr,slew,depth=todo.pop();n=nodes[index];lib=libraries[n['master']][state];factor=factors[n['master']][state]
+                    targets=[(str(k),nodes[k]['xy'],libraries[nodes[k]['master']][state]['cap'],k) for k in n['children']]+[(q,inv['cells'][q]['xy'],caps[state][q],None) for q in n['sinks']]
+                    wire=RC._mst_length([n['xy']]+[t[1] for t in targets]);load=wire*C+sum(t[2] for t in targets)
+                    delay=LIB._bilin(lib['delay'],slew,load);transition=LIB._bilin(lib['trans'],slew,load);cell_delays[str(index)]=delay;outcal[str(index)]=calarr+delay*factor
+                    for name,xy,cap,kid in targets:
+                        distance=sum(abs(a-b) for a,b in zip(n['xy'],xy));elmore=distance*R*(distance*C/2+cap);a=arrival+delay+elmore;ca=calarr+delay*factor+elmore;tr=math.hypot(transition,2.2*elmore)
+                        maxslew=max(maxslew,tr);all_legs.append(distance)
+                        if kid is None:arrivals[name]=a;cal[name]=ca;depths[name]=depth+1;owners[name]=index;net_delays['sink:'+name]=elmore
+                        else:todo.append((kid,a,ca,tr,depth+1));net_delays['node:'+str(kid)]=elmore
+            waves[state]=dict(sink_arrival_ps=arrivals,calibrated_arrival_ps=cal,node_out_calibrated_ps=outcal,root_feed=feeds,depths=depths,clock_components=dict(cell_ps=cell_delays,net_ps=net_delays,sink_owner=owners))
+        selected={q:waves[edge+'_late']['sink_arrival_ps'][q] for q,edge in active.items()}
+        cases={case:{q:waves[edge+'_'+case]['calibrated_arrival_ps'][q] for q,edge in active.items()} for case in ('late','early')}
+        perroot={}
+        for root in roots:
+            ids=[q for n in nodes if n['root']==root for q in n['sinks']];values=[selected[q] for q in ids];windows={case:max(table[q] for q in ids)-min(table[q] for q in ids) for case,table in cases.items()};depths=waves['rise_late']['depths']
+            perroot[root]=dict(count=len(values),min_ps=min(values),max_ps=max(values),mean_ps=sum(values)/len(values),raw_window_ps=max(values)-min(values),calibrated_windows_ps=windows,window_ps=max(windows.values()),min_stages=min(depths[q] for q in ids),max_stages=max(depths[q] for q in ids))
+        result[corner]=dict(per_root=perroot,root_feed={state:w['root_feed'] for state,w in waves.items()},clock_edge_inventory=edges_inventory,active_edge=active,max_slew_ps=maxslew,max_buffer_or_sink_leg_um=max(all_legs),global_range_ps=max(selected.values())-min(selected.values()),sink_arrival_ps=selected,calibrated_sink_latency_ps=cases,waveforms=waves,window_basis='same-corner consistent late/early state; actual active edge; ideal half-cycle phase excluded')
     return result
 
 
 def related_pair_bounds(inv,nodes,groups,metrics,pairs):
     import clk_aocv as AO
     import die_sta_related as CAL
-    table=AO.load(Path(__file__).with_name('clk_aocv_table_g021.json'))
-    parent={kid:i for i,n in enumerate(nodes) for kid in n['children']}
-    root_of={q:root for root,ids in groups.items() for q in ids}
-    result={}
+    table=AO.load(Path(__file__).with_name('clk_aocv_table_g021.json'));parent={kid:i for i,n in enumerate(nodes) for kid in n['children']};root_of={q:root for root,ids in groups.items() for q in ids};result={}
     for corner,m in metrics.items():
-        comp=m['clock_components'];owners=comp['sink_owner'];paths={};cache={}
+        waves=m['waveforms'];active=m['active_edge'];owners=waves['rise_late']['clock_components']['sink_owner'];paths={};cache={};categories=defaultdict(list);phases=Counter()
         for q,owner in owners.items():
             path=[owner]
             while path[-1] in parent:path.append(parent[path[-1]])
             paths[q]=path[::-1]
-        categories=defaultdict(list)
         for a,b in pairs:
-            ra,rb=root_of[a],root_of[b]
+            ra,rb=root_of[a],root_of[b];ea,eb=active[a],active[b];phases[ea+'->'+eb]+=1
             category='primary' if ra.startswith('clk') and rb.startswith('clk') else 'same_forwarded' if ra==rb else 'forwarded_landing_window' if ra.startswith('clk')!=rb.startswith('clk') else 'unqualified_cross_forwarded'
-            key=(owners[a],owners[b])
+            key=(owners[a],owners[b],ea,eb)
             if key not in cache:
                 aa,bb=paths[a],paths[b];common=0
                 while common<min(len(aa),len(bb)) and aa[common]==bb[common]:common+=1
-                x,y=aa[common:],bb[common:]
-                def side(path):
-                    late=early=0.
-                    for k in path:
-                        factor=CAL.cell_cal_factors(corner,[nodes[k]['master']])
-                        late+=comp['cell_ps'][str(k)]*factor['rise_late']
-                        early+=comp['cell_ps'][str(k)]*factor['rise_early']
-                    net=sum(comp['net_ps'].get('node:'+str(k),0) for k in path)
-                    return late+net,early+net,dict(cell_ps=max(late,early),net_ps=net,stages={'A':len(path)})
-                left,right=side(x),side(y)
-                pts=[nodes[k]['xy'] for k in x+y]+[inv['cells'][q]['xy'] for q in nodes[owners[a]]['sinks']+nodes[owners[b]]['sinks']]
-                distance=sum(max(p[i] for p in pts)-min(p[i] for p in pts) for i in (0,1)) if pts else 0
-                cache[key]=(left,right,distance)
-            left,right,distance=cache[key]
-            na=comp['net_ps']['sink:'+a];nb=comp['net_ps']['sink:'+b]
-            ac=dict(left[2],net_ps=left[2]['net_ps']+na);bc=dict(right[2],net_ps=right[2]['net_ps']+nb)
-            # One flat CORE PDN domain: shared supply droop, but CPPR only actual
-            # planned common tree cells. No mesh/common-node fiction.
-            pessimism=max(AO.branch_pessimism(table,corner,ac,bc,distance,True,check) for check in ('setup','hold'))
-            bound=max(left[0]+na-right[1]-nb,right[0]+nb-left[1]-na)+pessimism
-            categories[category].append((bound,a,b))
+                x,y=aa[common:],bb[common:];node='__source__' if not common else 'n'+str(aa[common-1]);ranges={}
+                if common:
+                    k=str(aa[common-1]);values=[]
+                    for edge in ({ea,eb}):values.append(abs(waves[edge+'_late']['node_out_calibrated_ps'][k]-waves[edge+'_early']['node_out_calibrated_ps'][k]))
+                    ranges[node]=min(values)
+                def side(path,edge):
+                    cells=[];nets=[]
+                    for case in ('late','early'):
+                        state=edge+'_'+case;comp=waves[state]['clock_components'];cell=sum(comp['cell_ps'][str(k)]*CAL.cell_cal_factors(corner,[nodes[k]['master']])[state] for k in path);net=sum(comp['net_ps'].get('node:'+str(k),0) for k in path);cells.append(cell);nets.append(net)
+                    return dict(cell_ps=max(cells),net_ps=max(nets),stages={'A':len(path)})
+                left,right=side(x,ea),side(y,eb);pts=[nodes[k]['xy'] for k in x+y]+[inv['cells'][q]['xy'] for q in nodes[owners[a]]['sinks']+nodes[owners[b]]['sinks']];distance=sum(max(p[i] for p in pts)-min(p[i] for p in pts) for i in (0,1));cache[key]=(left,right,distance,node,ranges)
+            left,right,distance,node,ranges=cache[key]
+            def tap(q,edge):
+                v=[waves[edge+'_'+case]['calibrated_arrival_ps'][q] for case in ('late','early')]
+                return dict(late_ps=max(v),early_ps=min(v),cppr_node=node,port=q)
+            ac=dict(left,net_ps=left['net_ps']+max(waves[ea+'_'+case]['clock_components']['net_ps']['sink:'+a] for case in ('late','early')));bc=dict(right,net_ps=right['net_ps']+max(waves[eb+'_'+case]['clock_components']['net_ps']['sink:'+b] for case in ('late','early')))
+            ocv=lambda _a,_b,check:AO.branch_pessimism(table,corner,ac,bc,distance,True,check)
+            lo,hi,_,_=CAL.ca_pair_interval(tap(a,ea),tap(b,eb),a,b,cppr_range=ranges,ocv=ocv,edge='rise')
+            categories[category].append((max(abs(lo),abs(hi)),a,b))
         result[corner]={cat:dict(pairs=len(values),max_ps=max(v[0] for v in values),over80=sum(v[0]>80 for v in values),worst=sorted(values,reverse=True)[:5]) for cat,values in categories.items()}
+        result[corner]['edge_phase_info']=dict(pairs=dict(phases),opposite_edge_ideal_phase_ps=CAL.PERIOD_PS/2,basis='active-edge insertion normalized; ideal phase retained by native library/SDC, excluded from clock damage')
     return result
 
 
@@ -297,15 +413,16 @@ def main():
     a=argparse.ArgumentParser(description=__doc__);a.add_argument('geometry',type=Path);a.add_argument('--libdir',type=Path,required=True);a.add_argument('--out',type=Path,required=True);a.add_argument('--native-sdc',type=Path);a.add_argument('--input-slew-ps',type=float,default=80.);a.add_argument('--endpoint-packet',type=Path);a.add_argument('--module');a.add_argument('--fixed-h',action='store_true');a.add_argument('--max-leg',type=float,default=150);a.add_argument('--leaf-cap',type=int,default=32);args=a.parse_args()
     if args.out.exists():raise FileExistsError('preserve previous verdict; use new output')
     inv=inventory(args.geometry)
+    if args.native_sdc:attach_native_sdc(inv,args.native_sdc)
     if args.endpoint_packet:
         if not args.module:raise ValueError("--module required for exact endpoint overlay")
         overlay_endpoints(inv,args.endpoint_packet,args.module)
-    groups=assign(inv);nodes,roots=topology_h(inv,groups) if args.fixed_h else topology(inv,groups,args.max_leg,args.leaf_cap);metrics=model(inv,nodes,roots,args.libdir,args.input_slew_ps);pairs=structural_pairs(args.geometry,inv)
+    groups=assign(inv);nodes,roots=topology_h(inv,groups) if args.fixed_h else topology(inv,groups,args.max_leg,args.leaf_cap);validate_topology(inv,nodes,roots,groups);metrics=model(inv,nodes,roots,args.libdir,args.input_slew_ps);pairs=structural_pairs(args.geometry,inv)
     for corner,m in metrics.items():
         arrivals=m["sink_arrival_ps"];worst=sorted(((abs(arrivals[a]-arrivals[b]),a,b) for a,b in pairs),reverse=True)
         m["structural_pair_raw"]=dict(pairs=len(pairs),max_ps=worst[0][0] if worst else 0,over80=sum(v[0]>80 for v in worst),worst=worst[:5],basis="actual data/reset connectivity; asynchronous reset conservatively included; OCV not yet charged")
-    report=dict(schema='opentallas.flat_clock_candidate.v1',native_sdc_sha256=hashlib.sha256(args.native_sdc.read_bytes()).hexdigest() if args.native_sdc else None,wire_rc=dict(r_kohm_um=R,c_ff_um=C,basis='native calibrated set_wire_rc -clock'),input_slew_ps=args.input_slew_ps,geometry_path=str(args.geometry.resolve()),structural_pairs=pairs,related_pair_model=related_pair_bounds(inv,nodes,groups,metrics,pairs),inventory=inv,groups=groups,nodes=nodes,root_nodes=roots,model=metrics,verdict='UNQUALIFIED_MODEL_ONLY',build_allowed=False,data_cycles_added=0,notes=['supplied native geometry; endpoint/placement completeness requires owner review','no row/legal-site qualification','no actual related-pair OCV/CPPR signoff yet','no measured CTS/STA delays consumed'])
+    report=dict(schema='opentallas.flat_clock_candidate.v1',native_sdc_path=str(args.native_sdc.resolve()) if args.native_sdc else None,native_sdc_sha256=hashlib.sha256(args.native_sdc.read_bytes()).hexdigest() if args.native_sdc else None,wire_rc=dict(r_kohm_um=R,c_ff_um=C,basis='native calibrated set_wire_rc -clock'),input_slew_ps=args.input_slew_ps,geometry_path=str(args.geometry.resolve()),structural_pairs=pairs,related_pair_model=related_pair_bounds(inv,nodes,groups,metrics,pairs),inventory=inv,groups=groups,nodes=nodes,root_nodes=roots,model=metrics,verdict='UNQUALIFIED_MODEL_ONLY',build_allowed=False,data_cycles_added=0,notes=['supplied native geometry; endpoint/placement completeness requires owner review','no row/legal-site qualification','no actual related-pair OCV/CPPR signoff yet','no measured CTS/STA delays consumed'])
     with gzip.open(args.out,'wt') as f:json.dump(report,f)
-    print(json.dumps(dict(sinks=sum(len(q) for q in groups.values()),roots=len(roots),drivers=len(nodes),primary_max=max(len(q) for n,q in groups.items() if n.startswith('clk')),corners={c:{k:v for k,v in m.items() if k not in ('sink_arrival_ps','clock_components')} for c,m in metrics.items()})))
+    print(json.dumps(dict(sinks=sum(len(q) for q in groups.values()),roots=len(roots),drivers=len(nodes),primary_max=max(len(q) for n,q in groups.items() if n.startswith('clk')),corners={c:{k:v for k,v in m.items() if k not in ('sink_arrival_ps','clock_components','waveforms','calibrated_sink_latency_ps','active_edge')} for c,m in metrics.items()})))
 
 if __name__=='__main__':main()

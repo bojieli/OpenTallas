@@ -10,9 +10,9 @@ def fixture():
     t=dict(module='m',outline_um=[100,100])
     sink=dict(name='u/q',master='DFFHQNx1_ASAP7_75t_R',clock_pin='CLK',source_root='clk',xy_um=[52,50])
     p=dict(schema='opentallas.flat_clock_forest.v1',module='m',outline_um=[100,100],build_allowed=True,
-        install_stage='post_place_pre_cts',input_slew_ps=80,wire_rc=dict(r_kohm_um=.0214161,c_ff_um=.113298),geometry_review='review.png; LOOK; actual legal cohort',
+        install_stage='post_place_pre_cts',input_slew_ps=80,clock_periods={'clk':833},wire_rc=dict(r_kohm_um=.0214161,c_ff_um=.113298),geometry_review='review.png; LOOK; actual legal cohort',
         model_source='native geometry + TT/FF NLDM + per-master spice_cell/g021; no measured timing',measured_timing_used=False,
-        roots={'clk':dict(kind='primary',xy_um=[50,50],node='ot_flat_clk_0',qualification={c:dict(slew_max_ps=20,sink_latency_ps={'u/q':250}) for c in ['TT','FF']})},
+        roots={'clk':dict(kind='primary',xy_um=[50,50],node='ot_flat_clk_0',qualification={c:dict(slew_max_ps=20,sink_latency_ps={'u/q':250},calibrated_sink_latency_ps={case:{'u/q':250} for case in ['late','early']}) for c in ['TT','FF']})},
         cells=[dict(name='ot_flat_clk_0',root='clk',parent='port:clk',master='BUFx24_ASAP7_75t_R',
             placement=dict(origin_um=[49.194,49.95],centre_um=[50.004,50.085],size_um=[1.62,.27],orient='R0'),sinks=[sink])],
         related_pair_model={c:{k:dict(max_ps=0,over80=0) for k in ['primary','same_forwarded']} for c in ['TT','FF']})
@@ -153,3 +153,60 @@ def test_legalizer_uses_actual_occupied_rows_without_moving_cells():
     assert placed['ot_flat_clk_0']['origin_um']!=placed['ot_flat_clk_1']['origin_um']
     tech['obstacles']=[dict(name='full',kind='placed',rect=[0,0,10000,10000])]
     with pytest.raises(ValueError,match='no empty legal clock site'):F.legalize_drivers(candidate,tech)
+
+
+def test_native_pair_inventory_cannot_be_supplied_as_empty_or_stale(tmp_path):
+    import flat_clock_plan as P
+    geom=tmp_path/'native.tsv'
+    geom.write_text('D\t0\t0\t100\t100\nC\t1\tS\tDFFHQNx1_ASAP7_75t_R\t20\t40\t21.08\t40.27\tq1\nC\t2\tS\tDFFHQNx1_ASAP7_75t_R\t25\t45\t26.08\t45.27\tq2\nP\t0\tclk\tINPUT\tCLOCK\tM5\t25\t50\nN\tCLOCK\tp0\ti1c\ti2c\nN\tSIGNAL\ti1\ti2\n')
+    c=dict(geometry_path=str(geom),inventory=P.inventory(geom),structural_pairs=[['1','2']])
+    assert P.actual_relations(c)[1]==[('1','2')]
+    for supplied in ([],[['2','1']]):
+        c['structural_pairs']=supplied
+        with pytest.raises(ValueError,match='incomplete/stale'):P.actual_relations(c)
+
+
+def test_root_input_wire_and_export_branch_are_charged():
+    import flat_clock_plan as P
+    inv=dict(ports={'0':dict(name='clk',xy=[0,0]),'1':dict(name='fwd_o',xy=[100,100])})
+    nodes=[dict(xy=[100,0])]
+    direct=P.root_feed(inv,nodes,'clk',0,1,80)
+    inv['clock_exports']={'clk':['fwd_o']}
+    branch=P.root_feed(inv,nodes,'clk',0,1,80)
+    assert direct[0]>0 and direct[1]>80 and branch[0]>=direct[0]
+    assert branch[2]['shared_root_wire_um']>direct[2]['shared_root_wire_um']
+
+
+def test_actual_active_edge_preserves_common_path_duty_distortion(monkeypatch):
+    import flat_clock_plan as P
+    import die_sta_related as CAL
+    master='BUFx24_ASAP7_75t_R'
+    monkeypatch.setattr(P,'buffer_models',lambda *_:{master:{s:dict(cap=1,delay=10 if s.startswith('rise') else 40,trans=5) for s in ('rise_late','rise_early','fall_late','fall_early')}})
+    monkeypatch.setattr(P.LIB,'_bilin',lambda table,*_:table)
+    monkeypatch.setattr(P,'clock_caps',lambda *_:({s:{'1':1,'2':1} for s in ('rise_late','rise_early','fall_late','fall_early')},{'pos':'rise','neg':'fall'}))
+    monkeypatch.setattr(CAL,'cell_cal_factors',lambda *_:{s:1 for s in ('rise_late','rise_early','fall_late','fall_early')})
+    inv=dict(ports={'0':dict(name='clk',xy=[0,0])},cells={'1':dict(master='pos',kind='S',xy=[2,0]),'2':dict(master='neg',kind='S',xy=[2,0])})
+    nodes=[dict(master=master,xy=[1,0],children=[],sinks=['1','2'],root='clk')]
+    metrics=P.model(inv,nodes,{'clk':0},None)
+    for m in metrics.values():
+        assert m['active_edge']=={'1':'rise','2':'fall'}
+        assert m['per_root']['clk']['window_ps']==pytest.approx(30)
+    bounds=P.related_pair_bounds(inv,nodes,{'clk':['1','2']},metrics,[('1','2')])
+    for b in bounds.values():
+        assert b['primary']['max_ps']>=30
+        assert b['edge_phase_info']['pairs']=={'rise->fall':1}
+
+
+def test_each_nonprimary_root_requires_its_own_native_landing_role():
+    t=dict(clock=dict(landing_contract=dict(pins=[dict(name='fclk_i',kind='clock',dir='in')]),edge_clocks=[dict(port='fclk_i',period_mult=1),dict(port='pma_i',period_mult=8)]))
+    F.check_forwarded_roles(t,{'clk':{},'fclk_i[0]':{}})
+    with pytest.raises(ValueError,match='not a declared833ps'):F.check_forwarded_roles(t,{'clk':{},'fclk_i[0]':{},'pma_i':{}})
+    t['clock']['edge_clocks'][0]['period_mult']=2
+    with pytest.raises(ValueError,match='not a declared833ps'):F.check_forwarded_roles(t,{'fclk_i[0]':{}})
+
+
+def test_consistent_calibration_window_does_not_double_common_uncertainty():
+    t,p=fixture();q=p['roots']['clk']['qualification']
+    for c in q:
+        q[c]['calibrated_sink_latency_ps']={'late':{'u/q':300},'early':{'u/q':200}}
+    F.validate(t,p)  # one common path: zero spatial spread, despite100ps insertion range
