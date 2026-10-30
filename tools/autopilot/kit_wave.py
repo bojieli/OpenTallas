@@ -294,6 +294,7 @@ RULES = [
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
     ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
+    ("FLOW", r"^kit_rtl$", r"carry different parameters", "generic kit-rtl cannot kit a per-instance parameterised type (die kit recipe needed)"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
