@@ -47,7 +47,7 @@ case "$cmd" in
     s=$(w ${E[SPEF]}); test -f $s || echo "*SPEF rcx of $(cat $(w ${E[ODB]}))" > $s
     echo "$t odb=$(w ${E[ODB]})" >> $FAKE_LOG.count
     echo "OT_PRD_COUNT $t slew ${n:-0} cap 0 placement ok"; exit 0 ;;
-  *do-finish*) echo fin > $B/6_final.odb; echo "$W" >> $FAKE_LOG.finish; exit 0 ;;
+  *do-finish*) echo fin > $B/6_final.odb; echo "$W" >> $FAKE_LOG.finish; echo "$cmd" > $W/finish_cmd.txt; exit 0 ;;
   *) exit 0 ;;
 esac
 '''
@@ -64,7 +64,7 @@ def make_kit(tmp, mm=True):
     if mm:
         cfg += "override export OT_HOLD_MM = 1\n"
     (k / "config.mk").write_text(cfg)
-    (k / "run_kit_hbm.sh").write_text('#!/bin/bash\n# GOAL=post\necho "post $1 $2" >> "$FAKE_LOG.post"\n')
+    (k / "run_kit_hbm.sh").write_text('#!/bin/bash\n# GOAL=post: sign-off only\necho "post $1 $2" >> "$FAKE_LOG.post"\n')
     return k
 
 
@@ -151,6 +151,32 @@ def test_loop_stops_after_one_clean_pass(tmp_path):
     assert res["final"]["dir"] == str(tmp_path / "p1") and res["final"]["post_runner"] == "run_kit_hbm.sh"
     assert log("route") == [str(tmp_path / "p1")] and log("finish") == [str(tmp_path / "p1")]
     assert log("post") == ["post", str(tmp_path / "p1"), "post"]
+    # finish runs in the variant's corners as ONE make word list (R7 canary: unquoted expansion broke 'CORNERS="tc bc"')
+    assert 'do-finish CORNER=TC CORNERS="tc bc"' in (tmp_path / "p1" / "finish_cmd.txt").read_text()
+
+
+def test_final_only_resume_keeps_pass_record(tmp_path):
+    r, res, log = run_loop(tmp_path, "p1_tc=0,p1_bc=0")
+    p1 = tmp_path / "p1"
+    env = env_with_fake(tmp_path, OT_PRD_FINAL_ONLY=p1)
+    r2 = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(p1), "2", "4"], capture_output=True, text=True, env=env)
+    assert r2.returncode == 0, r2.stdout + r2.stderr
+    assert json.loads((p1 / "prd_result.json").read_text())["passes"][0]["tc_slew"] == "0"   # pass record kept
+    fin = json.loads((p1 / "prd_result_final.json").read_text())
+    assert fin["passes"] == [] and fin["final"]["dir"] == str(p1)
+    assert log("route") == [str(p1)] and log("finish") == [str(p1), str(p1)]
+
+
+def test_post_only_with_signoff_goal(tmp_path):
+    kit = make_kit(tmp_path)
+    (kit / "run_kit_hbm.sh").unlink()
+    (kit / "run_kit.sh").write_text('#!/bin/bash\n# post-synth face_guard; run_kit.sh KITDIR [GOAL=finish]\necho "x" >> "$FAKE_LOG.post"\n')
+    p1 = tmp_path / "p1"
+    env = env_with_fake(tmp_path, FAKE_COUNTS="p1_tc=0,p1_bc=0")
+    assert mk(kit, p1, env=env).returncode == 0
+    r = subprocess.run(["bash", str(PRD / "prd_run.sh"), str(p1), "2", "4"], capture_output=True, text=True, env=env)
+    res = json.loads((p1 / "prd_result.json").read_text())
+    assert r.returncode == 0 and res["final"]["post_runner"] == "-" and not (tmp_path / "log.post").exists()
 
 
 def test_loop_second_pass_reads_pass1_rcx_and_stops_at_two(tmp_path):

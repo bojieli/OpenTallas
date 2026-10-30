@@ -14,7 +14,8 @@ IMAGE=${OT_ORFS_IMAGE:-openroad/orfs:asap7lock}
 DK=docker; docker ps >/dev/null 2>&1 || DK="sudo docker"
 SO=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["signoff_tools"])' $D0/PRD.json)
 V=$(python3 -I -c 'import json,sys; print(json.load(open(sys.argv[1]))["variant"])' $D0/PRD.json)
-RES=$D0/prd_result.json; echo '{"passes": []}' > $RES
+RES=$D0/prd_result.json; [ -n "${OT_PRD_FINAL_ONLY:-}" ] && RES=$D0/prd_result_final.json
+echo '{"passes": []}' > $RES
 addres() { python3 -I - "$RES" "$@" <<'PY'
 import json, sys
 p, kv = sys.argv[1], sys.argv[2:]
@@ -36,7 +37,12 @@ count() {  # D TAG CORNER(TC|BC) SPEF CHKPL
   grep -h '^OT_PRD_COUNT' $D/prd_count_$2.log | tail -n 1
 }
 D=$D0; P=1; FINAL=; rc=0
-while :; do
+# OT_PRD_FINAL_ONLY=<pass dir>: that pass already measured clean (prd_result.json); run only its finish + sign-off
+if [ -n "${OT_PRD_FINAL_ONLY:-}" ]; then
+  FINAL=$(cd "$OT_PRD_FINAL_ONLY" && pwd); . $FINAL/variant.env
+  PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
+fi
+while [ -z "${OT_PRD_FINAL_ONLY:-}" ]; do
   . $D/variant.env
   NAME=prd-$(basename $(dirname $D) | cut -c1-30)-$(basename $D)-$$
   PATCH=true; [ "${OT_HOLD_MM_KIT:-0}" = 1 ] && PATCH="python3 -I /work/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts /work/orfs_hold_mm.tcl > /work/orfs_hold_mm.log 2>&1 || exit 9"
@@ -69,14 +75,15 @@ while :; do
 done
 if [ -n "$FINAL" ] && [ "${OT_PRD_FINISH:-1}" = 1 ]; then
   $DK run --rm --name prd-fin-$$ --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$FINAL":/work -w /OpenROAD-flow-scripts/flow \
-    "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; . /work/variant.env; $PATCH; \
-    make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-finish \$ROUTE_CORNERS" > $FINAL/run_prd_finish.log 2>&1
+    "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; $PATCH; \
+    make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS do-finish $ROUTE_CORNERS" > $FINAL/run_prd_finish.log 2>&1
   rc=$?
   $DK run --rm -v "$FINAL":/work "$IMAGE" chown -R $(id -u):$(id -g) /work >/dev/null 2>&1
   POST=-
   if [ $rc = 0 ]; then
     for r in run_kit_hbm.sh run_kit_kv.sh run_kit.sh; do
-      if [ -f $FINAL/$r ] && grep -q 'post' $FINAL/$r; then POST=$r; bash $FINAL/$r $FINAL post $MEM $CPUS > $FINAL/run_prd_post.log 2>&1; rc=$?; break; fi
+      # only runners with a sign-off-only GOAL=post (KV / HBM); others: the die owner signs off FINAL
+      if [ -f $FINAL/$r ] && grep -qE 'GOAL ?!= ?post|GOAL=post' $FINAL/$r; then POST=$r; bash $FINAL/$r $FINAL post $MEM $CPUS > $FINAL/run_prd_post.log 2>&1; rc=$?; break; fi
     done
   fi
   addres final=1 dir=$FINAL finish_post_rc=$rc post_runner=$POST
