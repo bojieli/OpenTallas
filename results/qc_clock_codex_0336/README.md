@@ -7,3 +7,5 @@ Fresh native target exported from exact-origin main die_trial preamble on plan_q
 Retained actual clock CA diagnostic now reports2525/2525crossings timed,0unbound/0missing:86TT/56FF failures, unique86. Worst low margin-106.5TT/+50.4FF. See actual_retained_ca.json. Existing low-side K price is stale relative to real R7clock. Fresh shared planner running on QC46 exact endpoint map; no counter change adopted.
 
 Native builder/provider rebuild owned by coverage_support; old3266stage mapping invalid for fresh tree and must not be reused. New tree50812cells vs old44590. Sources/scripts preserved here; bulk graphs/proof remain scratch.
+
+Exact-abutment follow-up:1,280,479/1,280,479 physical portbits abutted,0unplannedcontacts. Prior2972extra contacts are expected reset-epoch bit index=payloadwidth, previously omitted from old scanner. Own scanner uses canonical schema.port_pins_count; original2972verdict preserved in abut_payload_oldscan.json. Fullphysicalpaths reduces START421->44reach failures; all3443edges phaseclean,2525data margins unchanged106.4/468.5. Remaining finalorigin hops~605..676um under diagnosis. No fresh bind emitted while44remain.
