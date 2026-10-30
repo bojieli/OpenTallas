@@ -8,6 +8,8 @@ CHECKER=ROOT/'die_plan/clk_geom_diff.py'
 
 def block_file(tmp_path):
     text=SOURCE.read_text();start=text.index('# FROZEN-CLOCK-RC:');end=text.index('# END FROZEN-CLOCK-RC',start)
+    (tmp_path/'die_plan').mkdir(exist_ok=True)
+    (tmp_path/'die_plan/frozen_clock_rc.tcl').write_text((ROOT/'die_plan/frozen_clock_rc.tcl').read_text())
     p=tmp_path/'helper.tcl';p.write_text(text[start:end]);return p
 
 
@@ -51,8 +53,12 @@ set ::env(OT_MM_FROZEN_CLOCK_SPEFS) {tc clock_only.spef BC clock_only.spef}
 set ::env(OT_MM_FROZEN_CLOCK_IDENTITY) $::env(OUT)/original.tsv
 set ::baseline "#CLKDUMP tag pre nets 1 block top\nNET\tclk\tCLOCK\t3\t64\t0:M1 4:10 4:20 9:ff/CLK\nPIN\tclk\tbuf/Y ff/CLK\nINST\tbuf\tBUF_A\t10\t20\tR0\tLOCKED\nINST\tff\tDFF\t20\t20\tR0\tLOCKED"
 set f [open $::env(OT_MM_FROZEN_CLOCK_IDENTITY) w];puts $f $::baseline;close $f
+# Copied /work/orfs_hold_mm.tcl has no adjacent die_plan/ directory.
+# Explicit staged helper must resolve independently of that copied location.
+set ::env(OT_MM_FROZEN_CLOCK_GUARD) $::env(OUT)/die_plan/frozen_clock_rc.tcl
 set ::ot_mm_stage 4_cts.sdc;set ::ot_clk_frozen 1;set ::ot_clk_frozen_nets clk
 namespace eval ::ot_mm [list source $::env(HELPER)]
+set ::ot_mm_frozen_clock_dir $::env(OUT)/copied_work
 if {[estimate_parasitics -placement]!=17 || [llength $::log]!=1} {error "placement path changed"}
 set ::log {}
 foreach phase {first_native ff_reference ss_refresh calibrated_hold restored_hold} {
@@ -103,3 +109,35 @@ puts PRD_ENTRY_PASS
     result=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
     assert result.returncode==0 and not result.stderr,result.stdout+result.stderr
     assert result.stdout.strip()=='PRD_ENTRY_PASS'
+
+
+def test_standalone_gate_estimate_restore_measure_order(tmp_path):
+    source=(ROOT/'die_plan/postcts_gate.tcl').read_text()
+    block=source[source.index('set ot_pg_frozen_rc '):source.index('\nset per ')]
+    gate=tmp_path/'gate.tcl';gate.write_text(block)
+    helper=tmp_path/'clk.tcl';helper.write_text('proc ot_clk_freeze {} {lappend ::log freeze}\n')
+    guard=tmp_path/'guard.tcl';guard.write_text('proc ::ot_clock_rc_restore_checked {args} {lappend ::log "restore:[lindex $args 0]"}\n')
+    script=r'''
+set ::log {};set ot_pg_c tt
+proc estimate_parasitics {args} {lappend ::log "estimate:$args";if {$::fail} {error bad_native}}
+set ::fail 0;set ::env(OT_POSTCTS_GRT) 1
+# Legacy behavior still uses its placement fallback.
+source $::env(GATE)
+if {$::log ne {estimate:-global_routing}} {error legacy}
+set ::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS) {actual_native clock_only.spef}
+foreach key {IDENTITY HELPER CHECKER GUARD} value [list $::env(HELPER) $::env(HELPER) $::env(HELPER) $::env(GUARD)] {
+ set ::env(OT_POSTCTS_FROZEN_CLOCK_$key) $value
+}
+set ::log {};source $::env(GATE);lappend ::log measure
+if {$::log ne {freeze estimate:-global_routing {restore:actual_native clock_only.spef} measure}} {error "bad consumer order $::log"}
+set ::fail 1;set ::log {}
+if {![catch {source $::env(GATE)}]} {error "native failure swallowed"}
+if {$::log ne {freeze estimate:-global_routing}} {error "fallback or restore after failed native estimate"}
+set ::fail 0;set ::env(OT_POSTCTS_FROZEN_CLOCK_SPEFS) {tc a BC b}
+if {![catch {source $::env(GATE)}]} {error "multi dataset map accepted"}
+puts SINGLE_CONSUMER_PASS
+'''
+    env=dict(os.environ,GATE=str(gate),HELPER=str(helper),GUARD=str(guard))
+    result=subprocess.run(['tclsh'],input=script,text=True,capture_output=True,env=env)
+    assert result.returncode==0 and not result.stderr,result.stdout+result.stderr
+    assert result.stdout.strip()=='SINGLE_CONSUMER_PASS'
