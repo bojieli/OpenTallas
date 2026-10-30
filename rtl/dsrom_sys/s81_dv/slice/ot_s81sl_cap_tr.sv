@@ -30,16 +30,40 @@ module ot_s81sl_cap_tr #(
     output wire [31:0]   o_t,
     output wire [31:0]   o_d,
     output wire          o_e,
+`ifdef OT_S81_CAP_TR_FACE_REGS
+    output wire          fault
+`else
     output reg           fault
+`endif
 );
     integer i;
     wire [3:0] rsv;
     ot_rst_relay #(.REGIONS(4), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rsv));
 
     // lane pin flops: only the valid bits are reset flops
-    reg [279:0] rt_q; reg [3:0] rv_q;
+    reg [279:0] rt_q;
+`ifdef OT_S81_CAP_TR_FACE_REGS
+    // Capture raw epoch/valid before the AND, at the same edge as the old
+    // registered AND. Resetting both raw bits preserves the old zero valid.
+    wire [3:0] rv_q;
+    genvar fp;
+    generate for (fp = 0; fp < 4; fp = fp + 1) begin : g_face
+        wire [1:0] rv_raw;
+        wire [1:0] reserved_q;
+        ot_s81sl_cap_tr_face_reset #(.W(2)) u_rv (
+            .clk(clk), .rst_n(rsv[0]), .d(rt[70*fp +: 2]), .q(rv_raw));
+        assign rv_q[fp] = rv_raw[0] && rv_raw[1];
+        // These reserved transport bits remain genuine raw pin captures.
+        // The kept hierarchy prevents legal dead-code removal from dropping
+        // the physical face registers, without making the bits functional.
+        ot_s81sl_cap_tr_face_raw #(.W(2)) u_reserved (
+            .clk(clk), .d({rt[70*fp+68],rt[70*fp+2]}), .q(reserved_q));
+    end endgenerate
+`else
+    reg [3:0] rv_q;
     always @(posedge clk or negedge rsv[0]) if (!rsv[0]) rv_q <= 4'd0;
         else for (i = 0; i < 4; i = i + 1) rv_q[i] <= rt[70 * i + 1] && rt[70 * i];
+`endif
     always @(posedge clk) rt_q <= rt;
     wire [3:0] l_v, l_e, l_f; wire [31:0] l_t [0:3], l_d [0:3];
     wire [3:0] drop;
@@ -78,8 +102,33 @@ module ot_s81sl_cap_tr #(
         .b_v(n_v[1]), .b_t(n_t[1]), .b_d(n_d[1]), .b_e(n_e[1]),
         .o_v(o_v), .o_t(o_t), .o_d(o_d), .o_e(o_e), .fault(n_f[2]));
 
+`ifdef OT_S81_CAP_TR_FACE_REGS
+    // The private sticky state and the face flop sample the same next value.
+    // Kept leaf hierarchy preserves the duplicate face flop, with no new edge.
+    reg fault_state;
+    wire fault_next = fault_state | (|n_f) | (|(l_v & l_e)) | (|l_f);
+    always @(posedge clk or negedge rsv[0])
+        if (!rsv[0]) fault_state <= 1'b0; else fault_state <= fault_next;
+    ot_s81sl_cap_tr_face_reset #(.W(1)) u_fault_face (
+        .clk(clk), .rst_n(rsv[0]), .d(fault_next), .q(fault));
+`else
     always @(posedge clk or negedge rsv[0])
         if (!rsv[0]) fault <= 1'b0;
         else if ((|n_f) || (|(l_v & l_e)) || (|l_f)) fault <= 1'b1;
+`endif
 endmodule
+
+`ifdef OT_S81_CAP_TR_FACE_REGS
+(* keep_hierarchy, keep *)
+module ot_s81sl_cap_tr_face_reset #(parameter integer W=1)(
+    input wire clk, rst_n, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) q <= {W{1'b0}}; else q <= d;
+endmodule
+(* keep_hierarchy, keep *)
+module ot_s81sl_cap_tr_face_raw #(parameter integer W=1)(
+    input wire clk, input wire [W-1:0] d, output reg [W-1:0] q);
+    always @(posedge clk) q <= d;
+endmodule
+`endif
 `default_nettype wire
