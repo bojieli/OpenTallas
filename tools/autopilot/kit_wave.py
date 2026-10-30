@@ -478,7 +478,7 @@ def run_item(spec_path):
     rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
     if rc:
         return fail("gen", txt)
-    rc, _ = run("gen_kit", remote(gh, f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
+    rc, _ = run("gen_kit", remote(f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
     if rc:
         return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
     pf = (f"cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(os.path.dirname(plan))} "
