@@ -1,5 +1,5 @@
 `default_nettype none
-// SOURCE-ONLY combinational adapter to the actual62bit NPC2 LOAD command.
+// SOURCE-ONLY combinational adapter to the actual62bit NPC2 LOAD command, directcount1..8 (not count-minus-one).
 // The scheduler supplies already-owned fixed-window row/column, buffer and epoch.
 // A mismatch faults immediately; no request, ready, refill or wait is fabricated.
 module ot_hbm_static_load_addr_map #(parameter integer MUT_PC=0)(

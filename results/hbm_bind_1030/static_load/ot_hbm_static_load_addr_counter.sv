@@ -1,7 +1,7 @@
 `default_nettype none
 // SOURCE-ONLY component: resolved native227 LOAD descriptor, no indexed resolver,
 // calendar producer, window ownership, PHY or destination router is invented here.
-// step_i is a dated command, never a ready/credit. II1 scalar=one4B VM word/step.
+// step_i is a dated command, never a ready/credit. II1 count1..8; unit-stride batching, other strides/broadcast scalar4B/step.
 module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT_STRIPE=0,COALESCE=1,MUT_BATCH=0,MUT_UE_SIZE=0)(
  input wire clk,rst_n,desc_v_i,input wire[226:0]desc_i,input wire step_i,
  output reg active_o,fault_o,addr_v_o,last_o,

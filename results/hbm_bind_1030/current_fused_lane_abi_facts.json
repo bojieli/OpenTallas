@@ -1,0 +1,2370 @@
+[
+ {
+  "path": "u_mu_fused_0_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_0",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 0
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_1_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_1",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 1
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_2_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_2",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 2
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_3_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_3",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 3
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_4_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_4",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 4
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_5_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_5",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 5
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_6_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_6",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 6
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_7_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_7",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 7
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_8_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_8",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 8
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_9_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_9",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 9
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_10_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_10",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 10
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_11_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_11",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 11
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_12_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_12",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 12
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_13_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_13",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 13
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_14_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_14",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 14
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_15_nw",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NW_hub",
+  "local": "u_mu_fused_15",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 15
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_0_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_0",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 16
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_1_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_1",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 17
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_2_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_2",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 18
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_3_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_3",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 19
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_4_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_4",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 20
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_5_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_5",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 21
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_6_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_6",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 22
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_7_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_7",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 23
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_8_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_8",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 24
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_9_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_9",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 25
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_10_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_10",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 26
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_11_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_11",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 27
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_12_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_12",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 28
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_13_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_13",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 29
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_14_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_14",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "0",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 30
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ },
+ {
+  "path": "u_mu_fused_15_ne",
+  "module": "ot_hnx_fused_lane",
+  "params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10"
+  },
+  "default_params": {
+   "D": "5120",
+   "KX": "4",
+   "RR": "10",
+   "MUT": "0"
+  },
+  "part": "NE_hub",
+  "local": "u_mu_fused_15",
+  "ids": {
+   "lid": {
+    "sources": [
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ],
+     [
+      "const",
+      "1",
+      "literal"
+     ]
+    ],
+    "width": 5,
+    "value": 31
+   }
+  },
+  "ports": {
+   "clk": 1,
+   "rst_n": 1,
+   "lid": 5,
+   "rr_v": 1,
+   "rr_d": 256,
+   "dn_v": 1,
+   "dn_op": 3,
+   "dn_x": 8,
+   "dn_d": 128,
+   "r_v": 1,
+   "r_d": 32,
+   "rq_v": 1,
+   "rq_s": 16,
+   "wq_v": 1,
+   "wq_s": 16,
+   "wq_d": 256,
+   "up_v": 1,
+   "up_t": 1,
+   "up_x": 10,
+   "up_d": 256,
+   "fin": 1,
+   "flt": 1
+  }
+ }
+]

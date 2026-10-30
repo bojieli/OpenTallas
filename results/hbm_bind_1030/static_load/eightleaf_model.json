@@ -43,5 +43,12 @@
   "baseline": "PASS 3 phases,144 commands/writes,1026 checked words",
   "release_mutant": "caught missing7 leaf releases at next begin leaf_fault7f",
   "boundaries": "logical source8 leaves + registered fixedslot merge, no physical route/dates"
+ },
+ "coalesced_qualification": {
+  "baseline": "PASS3bank/epochphases8388commands8388writes9234numericcheckedwords6formats",
+  "fixed_command_to_VMpacket_cycles": 7,
+  "release_mutant": "caughtleaf_fault7f onnextbegin",
+  "comparison": "actual62b commands fromTOKexpansionqualifiedcounter batches; fixture payloads checked independentformattruth",
+  "scope": "one scheduled packet/datedstep; no vector throughput claim"
  }
 }
