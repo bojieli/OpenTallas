@@ -1,0 +1,176 @@
+=== option S0 {}
+  UNPL NW_b100 ->NW_b102   2777 b gap  11188.8 ->  11188.8  cyc  30 ->  30
+  UNPL NE_hub  ->NW_hub    2775 b gap   1684.8 ->   1684.8  cyc   7 ->   7
+  UNPL NW_hub  ->NE_hub    2730 b gap   1684.8 ->   1684.8  cyc   7 ->   7
+  UNPL NW_hub  ->NW_b113   2277 b gap   3283.2 ->   3283.2  cyc  11 ->  11
+  UNPL NW_hub  ->NW_su20   2126 b gap    915.8 ->    915.8  cyc   5 ->   5
+  UNPL NW_hub  ->root      2065 b gap      0.0 ->      0.0  cyc   2 ->   2
+  UNPL NW_b113 ->NW_b111   1662 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b113 ->NW_b112   1662 b gap  10290.2 ->  10290.2  cyc  28 ->  28
+  UNPL NW_b113 ->NW_b110   1534 b gap  13945.0 ->  13945.0  cyc  37 ->  37
+  UNPL NW_su00 ->NW_hub    1207 b gap   1175.0 ->   1175.0  cyc   5 ->   5
+  UNPL NW_su20 ->NW_hub    1207 b gap    915.8 ->    915.8  cyc   5 ->   5
+  UNPL NW_hub  ->NW_su00   1198 b gap   1175.0 ->   1175.0  cyc   5 ->   5
+  UNPL NW_b111 ->NW_b113   1000 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b112 ->NW_b113   1000 b gap  10290.2 ->  10290.2  cyc  28 ->  28
+  UNPL NW_b110 ->NW_b113    798 b gap  13945.0 ->  13945.0  cyc  37 ->  37
+  UNPL NW_b113 ->NW_hub     693 b gap   3283.2 ->   3283.2  cyc  11 ->  11
+  UNPL NW_hub  ->NW_spb0    632 b gap   4561.9 ->   4561.9  cyc  14 ->  14
+  UNPL NW_spb0 ->NW_hub     615 b gap   4561.9 ->   4561.9  cyc  14 ->  14
+  UNPL NW_b113 ->NW_su11    596 b gap   7931.5 ->   7931.5  cyc  22 ->  22
+  UNPL NW_b113 ->NW_su20    596 b gap   4682.9 ->   4682.9  cyc  14 ->  14
+  UNPL NW_b113 ->NW_su31    596 b gap  12113.3 ->  12113.3  cyc  32 ->  32
+  UNPL NW_su11 ->NW_b113    516 b gap   7931.5 ->   7931.5  cyc  22 ->  22
+  UNPL NW_su20 ->NW_b113    516 b gap   4682.9 ->   4682.9  cyc  14 ->  14
+  UNPL NW_su31 ->NW_b113    516 b gap  12113.3 ->  12113.3  cyc  32 ->  32
+  UNPL NW_b111 ->NW_hub     410 b gap   2920.3 ->   2920.3  cyc  10 ->  10
+  UNPL NW_b002 ->root       297 b gap  10670.4 ->  10670.4  cyc  29 ->  29
+  UNPL NW_hub  ->NW_b111    160 b gap   2920.3 ->   2920.3  cyc  10 ->  10
+  UNPL NW_b103 ->NW_b101    102 b gap  11214.7 ->  11214.7  cyc  30 ->  30
+  UNPL NW_sm0  ->NW_hub      37 b gap   1572.5 ->   1572.5  cyc   6 ->   6
+  UNPL NW_sm1  ->NW_hub      37 b gap   1572.5 ->   1572.5  cyc   6 ->   6
+  UNPL NW_sm2  ->NW_hub      37 b gap   1555.2 ->   1555.2  cyc   6 ->   6
+  UNPL NW_sm3  ->NW_hub      37 b gap   1555.2 ->   1555.2  cyc   6 ->   6
+  UNPL NW_spt0 ->root         9 b gap   5771.5 ->   5771.5  cyc  17 ->  17
+  UNPL NW_b101 ->NW_b103      6 b gap  11214.7 ->  11214.7  cyc  30 ->  30
+  UNPL NW_b002 ->NW_hub       4 b gap   2453.8 ->   2453.8  cyc   9 ->   9
+  UNPL NW_b011 ->NW_hub       3 b gap   2073.6 ->   2073.6  cyc   8 ->   8
+  UNPL NE_spb2 ->NW_hub       2 b gap   9046.1 ->   9046.1  cyc  25 ->  25
+  UNPL NE_spt0 ->NW_hub       2 b gap   9028.8 ->   9028.8  cyc  25 ->  25
+  UNPL NW_b101 ->NW_hub       2 b gap      0.0 ->      0.0  cyc   2 ->   2
+  UNPL NW_b013 ->NW_hub       1 b gap   3939.8 ->   3939.8  cyc  12 ->  12
+  UNPL NW_b100 ->NW_b103      1 b gap  10480.3 ->  10480.3  cyc  28 ->  28
+  UNPL NW_su11 ->NW_su20      1 b gap   9884.2 ->   9884.2  cyc  27 ->  27
+  UNPL NW_su20 ->NW_su31      1 b gap   5425.9 ->   5425.9  cyc  16 ->  16
+  THROUGH-moved lanes: 0 lanes / 0 b: 
+=== option Sa {'NW_b112': 0.0, 'NW_b113': 1209.6, 'NW_su00': 3067.2, 'NW_su01': 5175.36, 'NW_spu0': 7110.72, 'NW_su10': 8795.52, 'NW_su11': 10998.72}
+  UNPL NW_hub  ->NW_b113   2277 b gap   3283.2 ->   2073.6  cyc  11 ->   8
+  UNPL NW_b113 ->NW_b111   1662 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b113 ->NW_b112   1662 b gap  10290.2 ->      0.0  cyc  28 ->   2
+  UNPL NW_b113 ->NW_b110   1534 b gap  13945.0 ->  12735.4  cyc  37 ->  34
+  UNPL NW_su00 ->NW_hub    1207 b gap   1175.0 ->      0.0  cyc   5 ->   2
+  UNPL NW_hub  ->NW_su00   1198 b gap   1175.0 ->      0.0  cyc   5 ->   2
+  UNPL NW_b111 ->NW_b113   1000 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b112 ->NW_b113   1000 b gap  10290.2 ->      0.0  cyc  28 ->   2
+  UNPL NW_b110 ->NW_b113    798 b gap  13945.0 ->  12735.4  cyc  37 ->  34
+  UNPL NW_b113 ->NW_hub     693 b gap   3283.2 ->   2073.6  cyc  11 ->   8
+  UNPL NW_b113 ->NW_su11    596 b gap   7931.5 ->   7931.5  cyc  22 ->  22
+  UNPL NW_b113 ->NW_su20    596 b gap   4682.9 ->   4320.0  cyc  14 ->  13
+  UNPL NW_b113 ->NW_su31    596 b gap  12113.3 ->  10903.7  cyc  32 ->  29
+  UNPL NW_su11 ->NW_b113    516 b gap   7931.5 ->   7931.5  cyc  22 ->  22
+  UNPL NW_su20 ->NW_b113    516 b gap   4682.9 ->   4320.0  cyc  14 ->  13
+  UNPL NW_su31 ->NW_b113    516 b gap  12113.3 ->  10903.7  cyc  32 ->  29
+  UNPL NW_su11 ->NW_su20      1 b gap   9884.2 ->  11093.8  cyc  27 ->  30
+  LANE L36    NW_hub  ->NW_su00   1329 b plan 14 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L55    NW_su00 ->NW_hub     514 b plan 8 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L102   NW_hub  ->NW_su00     21 b plan 7 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L134   NW_su00 ->NW_hub       3 b plan 8 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L184   NW_b112 ->NW_hub     410 b plan 2 cyc gap      0.0 ->   3931.2 dcyc +10 <<
+  LANE L185   NW_hub  ->NW_b112    160 b plan 2 cyc gap      0.0 ->   3931.2 dcyc +10 <<
+  THROUGH-moved lanes: 29 lanes / 18908 b: L0(2999) L8(3070) L21(2560) L28(1615) L29(1615) L30(1615) L31(1615) L41(1064) L50(618) L55(514) L66(268) L67(268) L68(268) L79(172) L82(140) L84(99) L88(68) L97(22) L98(22) L102(21) L106(20) L114(6) L120(9) L121(9) L125(7) L134(3) L63w(210) L114w(10) L206(1)
+  ABUT NW_b112  lost ['NW_hub', 'NW_sm1', 'NW_su11', 'root'] gained ['NW_b003', 'NW_b013', 'NW_b113', 'NW_io', 'NW_sm0']
+  ABUT NW_b113  lost ['NW_b013', 'NW_io'] gained ['NW_b001', 'NW_b002', 'NW_b011', 'NW_b112']
+  ABUT NW_su00  lost ['NW_b002', 'NW_b012'] gained ['NW_b000', 'NW_hub']
+  ABUT NW_su01  lost ['NW_b000', 'NW_b010'] gained []
+  ABUT NW_spu0  lost [] gained []
+  ABUT NW_su10  lost ['NW_spt0'] gained []
+  ABUT NW_su11  lost ['NW_b112'] gained ['root']
+=== option C2 {'NW_b110': 0.0, 'NW_b111': 414.72, 'NW_su20': 1218.24, 'NW_su21': 3222.72, 'NW_spu1': 5114.88, 'NW_su30': 6583.68, 'NW_su31': 8648.64, 'NW_b103': 10480.32, 'NW_b102': 11188.8}
+  UNPL NW_b100 ->NW_b102   2777 b gap  11188.8 ->      0.0  cyc  30 ->   2
+  UNPL NW_hub  ->NW_su20   2126 b gap    915.8 ->   1918.1  cyc   5 ->   7
+  UNPL NW_b113 ->NW_b111   1662 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b113 ->NW_b110   1534 b gap  13945.0 ->   4320.0  cyc  37 ->  13
+  UNPL NW_su20 ->NW_hub    1207 b gap    915.8 ->   1918.1  cyc   5 ->   7
+  UNPL NW_b111 ->NW_b113   1000 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b110 ->NW_b113    798 b gap  13945.0 ->   4320.0  cyc  37 ->  13
+  UNPL NW_b113 ->NW_su20    596 b gap   4682.9 ->   4320.0  cyc  14 ->  13
+  UNPL NW_b113 ->NW_su31    596 b gap  12113.3 ->  11111.0  cyc  32 ->  30
+  UNPL NW_su20 ->NW_b113    516 b gap   4682.9 ->   4320.0  cyc  14 ->  13
+  UNPL NW_su31 ->NW_b113    516 b gap  12113.3 ->  11111.0  cyc  32 ->  30
+  UNPL NW_b111 ->NW_hub     410 b gap   2920.3 ->   3922.6  cyc  10 ->  12
+  UNPL NW_hub  ->NW_b111    160 b gap   2920.3 ->   3922.6  cyc  10 ->  12
+  UNPL NW_b103 ->NW_b101    102 b gap  11214.7 ->   1442.9  cyc  30 ->   6
+  UNPL NW_b101 ->NW_b103      6 b gap  11214.7 ->   1442.9  cyc  30 ->   6
+  UNPL NW_b100 ->NW_b103      1 b gap  10480.3 ->    708.5  cyc  28 ->   4
+  UNPL NW_su11 ->NW_su20      1 b gap   9884.2 ->  10886.4  cyc  27 ->  29
+  UNPL NW_su20 ->NW_su31      1 b gap   5425.9 ->   5425.9  cyc  16 ->  16
+  LANE L2     NW_hub  ->NW_su21   2999 b plan 6 cyc gap      0.0 ->     25.9 dcyc +1 <<
+  LANE L5     NW_hub  ->NW_b110   2725 b plan 9 cyc gap      0.0 ->   4726.1 dcyc +12 <<
+  LANE L23    NW_b110 ->NW_hub    1792 b plan 2 cyc gap      0.0 ->   4726.1 dcyc +12 <<
+  LANE L26    NW_su21 ->NW_hub    1719 b plan 2 cyc gap      0.0 ->     25.9 dcyc +1 <<
+  LANE L38    NW_hub  ->NW_su20   1329 b plan 9 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L59    NW_su20 ->NW_hub     514 b plan 8 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L81    NW_b110 ->NW_hub     161 b plan 2 cyc gap      0.0 ->   4726.1 dcyc +12 <<
+  LANE L104   NW_hub  ->NW_su20     21 b plan 8 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L112   NW_hub  ->NW_su21     16 b plan 2 cyc gap      0.0 ->     25.9 dcyc +1 <<
+  LANE L136   NW_su20 ->NW_hub       3 b plan 8 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  THROUGH-moved lanes: 23 lanes / 19394 b: L2(2999) L5(2725) L32(1615) L33(1615) L34(1615) L35(1615) L38(1329) L40(1064) L48(634) L49(618) L53(612) L59(514) L69(268) L83(99) L87(68) L99(22) L104(21) L117(11) L122(9) L136(3) L138(2) L181(1108) L6b(828)
+  ABUT NW_b110  lost ['NW_b100', 'NW_hub', 'NW_sm3', 'NW_su31'] gained ['NW_b111', 'NW_io', 'NW_sm2']
+  ABUT NW_b111  lost ['NW_b012', 'NW_b103'] gained ['NW_b013', 'NW_b110', 'NW_io']
+  ABUT NW_su20  lost ['NW_b010'] gained ['NW_b003']
+  ABUT NW_su21  lost ['NW_hub', 'NW_spb2'] gained ['NW_b001']
+  ABUT NW_spu1  lost ['NW_sm3'] gained ['NW_b000', 'NW_sm2']
+  ABUT NW_su30  lost [] gained ['NW_spb2']
+  ABUT NW_su31  lost ['NW_b110'] gained ['NW_b103']
+  ABUT NW_b103  lost ['NW_b003', 'NW_b013', 'NW_b111', 'NW_sm2'] gained ['NW_hub', 'NW_sm3', 'NW_su31']
+  ABUT NW_b102  lost ['NW_b013', 'NW_io', 'NW_sm2'] gained ['NW_b100', 'NW_hub', 'NW_sm3']
+=== option L1 {'NW_b112': 0.0, 'NW_b113': 1209.6, 'NW_su00': 3067.2, 'NW_su01': 5175.36, 'NW_spu0': 7110.72, 'NW_su10': 8795.52, 'NW_su11': 10998.72, 'NW_b110': 0.0, 'NW_b111': 414.72, 'NW_su20': 1218.24, 'NW_su21': 3222.72, 'NW_spu1': 5114.88, 'NW_su30': 6583.68, 'NW_su31': 8648.64, 'NW_b103': 10480.32, 'NW_b102': 11188.8}
+  UNPL NW_b100 ->NW_b102   2777 b gap  11188.8 ->      0.0  cyc  30 ->   2
+  UNPL NW_hub  ->NW_b113   2277 b gap   3283.2 ->   2073.6  cyc  11 ->   8
+  UNPL NW_hub  ->NW_su20   2126 b gap    915.8 ->   1918.1  cyc   5 ->   7
+  UNPL NW_b113 ->NW_b111   1662 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b113 ->NW_b112   1662 b gap  10290.2 ->      0.0  cyc  28 ->   2
+  UNPL NW_b113 ->NW_b110   1534 b gap  13945.0 ->   5114.9  cyc  37 ->  15
+  UNPL NW_su00 ->NW_hub    1207 b gap   1175.0 ->      0.0  cyc   5 ->   2
+  UNPL NW_su20 ->NW_hub    1207 b gap    915.8 ->   1918.1  cyc   5 ->   7
+  UNPL NW_hub  ->NW_su00   1198 b gap   1175.0 ->      0.0  cyc   5 ->   2
+  UNPL NW_b111 ->NW_b113   1000 b gap   4320.0 ->   4320.0  cyc  13 ->  13
+  UNPL NW_b112 ->NW_b113   1000 b gap  10290.2 ->      0.0  cyc  28 ->   2
+  UNPL NW_b110 ->NW_b113    798 b gap  13945.0 ->   5114.9  cyc  37 ->  15
+  UNPL NW_b113 ->NW_hub     693 b gap   3283.2 ->   2073.6  cyc  11 ->   8
+  UNPL NW_b113 ->NW_su11    596 b gap   7931.5 ->   7931.5  cyc  22 ->  22
+  UNPL NW_b113 ->NW_su20    596 b gap   4682.9 ->   4320.0  cyc  14 ->  13
+  UNPL NW_b113 ->NW_su31    596 b gap  12113.3 ->   9901.4  cyc  32 ->  27
+  UNPL NW_su11 ->NW_b113    516 b gap   7931.5 ->   7931.5  cyc  22 ->  22
+  UNPL NW_su20 ->NW_b113    516 b gap   4682.9 ->   4320.0  cyc  14 ->  13
+  UNPL NW_su31 ->NW_b113    516 b gap  12113.3 ->   9901.4  cyc  32 ->  27
+  UNPL NW_b111 ->NW_hub     410 b gap   2920.3 ->   3922.6  cyc  10 ->  12
+  UNPL NW_hub  ->NW_b111    160 b gap   2920.3 ->   3922.6  cyc  10 ->  12
+  UNPL NW_b103 ->NW_b101    102 b gap  11214.7 ->   1442.9  cyc  30 ->   6
+  UNPL NW_b101 ->NW_b103      6 b gap  11214.7 ->   1442.9  cyc  30 ->   6
+  UNPL NW_b100 ->NW_b103      1 b gap  10480.3 ->    708.5  cyc  28 ->   4
+  UNPL NW_su11 ->NW_su20      1 b gap   9884.2 ->  12096.0  cyc  27 ->  32
+  UNPL NW_su20 ->NW_su31      1 b gap   5425.9 ->   5425.9  cyc  16 ->  16
+  LANE L2     NW_hub  ->NW_su21   2999 b plan 6 cyc gap      0.0 ->     25.9 dcyc +1 <<
+  LANE L5     NW_hub  ->NW_b110   2725 b plan 9 cyc gap      0.0 ->   4726.1 dcyc +12 <<
+  LANE L23    NW_b110 ->NW_hub    1792 b plan 2 cyc gap      0.0 ->   4726.1 dcyc +12 <<
+  LANE L26    NW_su21 ->NW_hub    1719 b plan 2 cyc gap      0.0 ->     25.9 dcyc +1 <<
+  LANE L36    NW_hub  ->NW_su00   1329 b plan 14 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L38    NW_hub  ->NW_su20   1329 b plan 9 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L55    NW_su00 ->NW_hub     514 b plan 8 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L59    NW_su20 ->NW_hub     514 b plan 8 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L81    NW_b110 ->NW_hub     161 b plan 2 cyc gap      0.0 ->   4726.1 dcyc +12 <<
+  LANE L102   NW_hub  ->NW_su00     21 b plan 7 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L104   NW_hub  ->NW_su20     21 b plan 8 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L112   NW_hub  ->NW_su21     16 b plan 2 cyc gap      0.0 ->     25.9 dcyc +1 <<
+  LANE L134   NW_su00 ->NW_hub       3 b plan 8 cyc gap   1175.0 ->      0.0 dcyc -3 <<
+  LANE L136   NW_su20 ->NW_hub       3 b plan 8 cyc gap    915.8 ->   1918.1 dcyc +2 <<
+  LANE L184   NW_b112 ->NW_hub     410 b plan 2 cyc gap      0.0 ->   3931.2 dcyc +10 <<
+  LANE L185   NW_hub  ->NW_b112    160 b plan 2 cyc gap      0.0 ->   3931.2 dcyc +10 <<
+  THROUGH-moved lanes: 52 lanes / 38302 b: L0(2999) L2(2999) L5(2725) L8(3070) L21(2560) L28(1615) L29(1615) L30(1615) L31(1615) L32(1615) L33(1615) L34(1615) L35(1615) L38(1329) L40(1064) L41(1064) L48(634) L49(618) L50(618) L53(612) L55(514) L59(514) L66(268) L67(268) L68(268) L69(268) L79(172) L82(140) L83(99) L84(99) L87(68) L88(68) L97(22) L98(22) L99(22) L102(21) L104(21) L106(20) L114(6) L117(11) L120(9) L121(9) L122(9) L125(7) L134(3) L136(3) L138(2) L63w(210) L114w(10) L181(1108) L206(1) L6b(828)
+  ABUT NW_b112  lost ['NW_hub', 'NW_sm1', 'NW_su11', 'root'] gained ['NW_b003', 'NW_b013', 'NW_b113', 'NW_io', 'NW_sm0']
+  ABUT NW_b113  lost ['NW_b013', 'NW_io'] gained ['NW_b001', 'NW_b002', 'NW_b011', 'NW_b112']
+  ABUT NW_su00  lost ['NW_b002', 'NW_b012'] gained ['NW_b000', 'NW_hub']
+  ABUT NW_su01  lost ['NW_b000', 'NW_b010'] gained []
+  ABUT NW_spu0  lost [] gained []
+  ABUT NW_su10  lost ['NW_spt0'] gained []
+  ABUT NW_su11  lost ['NW_b112'] gained ['root']
+  ABUT NW_b110  lost ['NW_b100', 'NW_hub', 'NW_sm3', 'NW_su31'] gained ['NW_b111', 'NW_io', 'NW_sm2']
+  ABUT NW_b111  lost ['NW_b012', 'NW_b103'] gained ['NW_b013', 'NW_b110', 'NW_io']
+  ABUT NW_su20  lost ['NW_b010'] gained ['NW_b003']
+  ABUT NW_su21  lost ['NW_hub', 'NW_spb2'] gained ['NW_b001']
+  ABUT NW_spu1  lost ['NW_sm3'] gained ['NW_b000', 'NW_sm2']
+  ABUT NW_su30  lost [] gained ['NW_spb2']
+  ABUT NW_su31  lost ['NW_b110'] gained ['NW_b103']
+  ABUT NW_b103  lost ['NW_b003', 'NW_b013', 'NW_b111', 'NW_sm2'] gained ['NW_hub', 'NW_sm3', 'NW_su31']
+  ABUT NW_b102  lost ['NW_b013', 'NW_io', 'NW_sm2'] gained ['NW_b100', 'NW_hub', 'NW_sm3']
