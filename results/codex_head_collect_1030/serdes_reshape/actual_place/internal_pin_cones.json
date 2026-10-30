@@ -1,0 +1,4500 @@
+{
+ "pins": 320,
+ "max_farthest": {
+  "port": "k_v[1]",
+  "captures": 161,
+  "comb_cells": 341,
+  "levels": 6,
+  "nearest_um": [
+   26.601,
+   "Rl\\[16\\]\\[8\\]$_DFFE_PP_"
+  ],
+  "farthest_um": [
+   285.585,
+   "pl\\[0\\]$_SDFF_PN0_"
+  ]
+ },
+ "ports": [
+  {
+   "port": "k_L[0]",
+   "captures": 1,
+   "comb_cells": 3,
+   "levels": 3,
+   "nearest_um": [
+    45.85500000000001,
+    "cL\\[0\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    45.85500000000001,
+    "cL\\[0\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_L[1]",
+   "captures": 1,
+   "comb_cells": 3,
+   "levels": 3,
+   "nearest_um": [
+    52.353,
+    "cL\\[1\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    52.353,
+    "cL\\[1\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_L[2]",
+   "captures": 1,
+   "comb_cells": 3,
+   "levels": 3,
+   "nearest_um": [
+    46.269000000000005,
+    "cL\\[2\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    46.269000000000005,
+    "cL\\[2\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_L[3]",
+   "captures": 1,
+   "comb_cells": 3,
+   "levels": 3,
+   "nearest_um": [
+    46.93500000000001,
+    "cL\\[3\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    46.93500000000001,
+    "cL\\[3\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_L[4]",
+   "captures": 2,
+   "comb_cells": 4,
+   "levels": 3,
+   "nearest_um": [
+    133.569,
+    "c_bad$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    134.757,
+    "cL\\[4\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_any",
+   "captures": 1,
+   "comb_cells": 3,
+   "levels": 3,
+   "nearest_um": [
+    47.187,
+    "c_any$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    47.187,
+    "c_any$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[0]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    27.141000000000002,
+    "Rl\\[16\\]\\[0\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    169.053,
+    "Rl\\[0\\]\\[0\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[100]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 7,
+   "nearest_um": [
+    23.985,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    179.34299999999996,
+    "Rl\\[10\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[101]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    26.163,
+    "Rl\\[26\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    179.63099999999997,
+    "Rl\\[10\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[102]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    24.561,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    185.805,
+    "Rl\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[103]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    24.849000000000004,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    186.09300000000002,
+    "Rl\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[104]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 7,
+   "nearest_um": [
+    25.137,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    186.381,
+    "Rl\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[105]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    27.315,
+    "Rl\\[26\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.783,
+    "Rl\\[10\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[106]",
+   "captures": 16,
+   "comb_cells": 47,
+   "levels": 8,
+   "nearest_um": [
+    25.874999999999996,
+    "Rl\\[26\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    186.957,
+    "Rl\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[107]",
+   "captures": 14,
+   "comb_cells": 43,
+   "levels": 8,
+   "nearest_um": [
+    26.001000000000005,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    187.245,
+    "Rl\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[108]",
+   "captures": 14,
+   "comb_cells": 43,
+   "levels": 7,
+   "nearest_um": [
+    26.289,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    187.53300000000002,
+    "Rl\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[109]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 7,
+   "nearest_um": [
+    26.577000000000005,
+    "Rl\\[26\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    181.93499999999997,
+    "Rl\\[10\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[10]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    77.76899999999999,
+    "Rl\\[17\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    176.973,
+    "Rl\\[1\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[110]",
+   "captures": 8,
+   "comb_cells": 21,
+   "levels": 6,
+   "nearest_um": [
+    73.221,
+    "Rl\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.541,
+    "Rl\\[11\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[111]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    71.36699999999999,
+    "Rl\\[27\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.38699999999997,
+    "Rl\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[112]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 6,
+   "nearest_um": [
+    72.64500000000001,
+    "Rl\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.66099999999997,
+    "Rl\\[11\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[113]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    72.357,
+    "Rl\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.81099999999998,
+    "Rl\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[114]",
+   "captures": 10,
+   "comb_cells": 26,
+   "levels": 5,
+   "nearest_um": [
+    73.64699999999999,
+    "Rl\\[27\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.23699999999997,
+    "Rl\\[11\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[115]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    72.48299999999998,
+    "Rl\\[27\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.363,
+    "Rl\\[11\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[116]",
+   "captures": 12,
+   "comb_cells": 32,
+   "levels": 6,
+   "nearest_um": [
+    70.713,
+    "Rl\\[27\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.813,
+    "Rl\\[11\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[117]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    72.72899999999998,
+    "Rl\\[27\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.939,
+    "Rl\\[11\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[118]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    71.28899999999999,
+    "Rl\\[27\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    160.38899999999998,
+    "Rl\\[11\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[119]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    71.577,
+    "Rl\\[27\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    160.67699999999996,
+    "Rl\\[11\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[11]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    81.45899999999999,
+    "Rl\\[17\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    176.631,
+    "Rl\\[1\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[120]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 6,
+   "nearest_um": [
+    31.311000000000003,
+    "Rl\\[28\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    179.649,
+    "Rl\\[12\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[121]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    32.462999999999994,
+    "Rl\\[28\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    179.505,
+    "Rl\\[12\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[122]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    36.585,
+    "Rl\\[28\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.225,
+    "Rl\\[12\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[123]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    37.845,
+    "Rl\\[28\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.081,
+    "Rl\\[12\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[124]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    32.46300000000001,
+    "Rl\\[28\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.369,
+    "Rl\\[12\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[125]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 6,
+   "nearest_um": [
+    33.614999999999995,
+    "Rl\\[28\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    179.41500000000002,
+    "Rl\\[12\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[126]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    37.737,
+    "Rl\\[28\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    181.377,
+    "Rl\\[12\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[127]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    38.997,
+    "Rl\\[28\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.36899999999997,
+    "Rl\\[12\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[128]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    33.614999999999995,
+    "Rl\\[28\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.81900000000002,
+    "Rl\\[12\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[129]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    34.766999999999996,
+    "Rl\\[28\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.945,
+    "Rl\\[12\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[12]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    79.85700000000001,
+    "Rl\\[17\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    176.397,
+    "Rl\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[130]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    78.957,
+    "Rl\\[29\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    162.92699999999996,
+    "Rl\\[13\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[131]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    91.611,
+    "Rl\\[29\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    163.941,
+    "Rl\\[13\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[132]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    79.53299999999999,
+    "Rl\\[29\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    163.503,
+    "Rl\\[13\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[133]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    82.79100000000001,
+    "Rl\\[29\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    163.46699999999998,
+    "Rl\\[13\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[134]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    80.109,
+    "Rl\\[29\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    164.07899999999998,
+    "Rl\\[13\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[135]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 5,
+   "nearest_um": [
+    80.39699999999999,
+    "Rl\\[29\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    164.36699999999996,
+    "Rl\\[13\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[136]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 6,
+   "nearest_um": [
+    83.65499999999999,
+    "Rl\\[29\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    163.035,
+    "Rl\\[13\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[137]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    80.973,
+    "Rl\\[29\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    164.94299999999998,
+    "Rl\\[13\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[138]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 6,
+   "nearest_um": [
+    84.23100000000001,
+    "Rl\\[29\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    164.90699999999998,
+    "Rl\\[13\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[139]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    81.54899999999999,
+    "Rl\\[29\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    165.51899999999998,
+    "Rl\\[13\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[13]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    80.14500000000001,
+    "Rl\\[17\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    176.109,
+    "Rl\\[1\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[140]",
+   "captures": 12,
+   "comb_cells": 38,
+   "levels": 7,
+   "nearest_um": [
+    35.289,
+    "Rl\\[30\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    189.08100000000002,
+    "Rl\\[14\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[141]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 7,
+   "nearest_um": [
+    35.46900000000001,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    192.879,
+    "Rl\\[14\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[142]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 6,
+   "nearest_um": [
+    35.757000000000005,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    199.97099999999998,
+    "Rl\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[143]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 6,
+   "nearest_um": [
+    36.15299999999999,
+    "Rl\\[30\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    200.259,
+    "Rl\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[144]",
+   "captures": 10,
+   "comb_cells": 32,
+   "levels": 7,
+   "nearest_um": [
+    36.333,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    190.233,
+    "Rl\\[14\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[145]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 6,
+   "nearest_um": [
+    36.62100000000001,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    200.83499999999998,
+    "Rl\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[146]",
+   "captures": 12,
+   "comb_cells": 32,
+   "levels": 6,
+   "nearest_um": [
+    36.909000000000006,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    201.123,
+    "Rl\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[147]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 7,
+   "nearest_um": [
+    37.30499999999999,
+    "Rl\\[30\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    201.41099999999997,
+    "Rl\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[148]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    37.485,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    185.391,
+    "Rl\\[14\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[149]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    37.77300000000001,
+    "Rl\\[30\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    201.987,
+    "Rl\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[14]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    80.433,
+    "Rl\\[17\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    178.089,
+    "Rl\\[1\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[150]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 5,
+   "nearest_um": [
+    75.375,
+    "Rl\\[31\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.331,
+    "Rl\\[15\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[151]",
+   "captures": 6,
+   "comb_cells": 19,
+   "levels": 5,
+   "nearest_um": [
+    93.96900000000001,
+    "Rl\\[31\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.619,
+    "Rl\\[15\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[152]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    83.565,
+    "Rl\\[31\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.155,
+    "Rl\\[15\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[153]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    76.239,
+    "Rl\\[31\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    174.195,
+    "Rl\\[15\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[154]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    82.79100000000001,
+    "Rl\\[31\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.731,
+    "Rl\\[15\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[155]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    76.815,
+    "Rl\\[31\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    168.88500000000002,
+    "Rl\\[15\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[156]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    94.113,
+    "Rl\\[31\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.30700000000002,
+    "Rl\\[15\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[157]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    77.39099999999999,
+    "Rl\\[31\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.461,
+    "Rl\\[15\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[158]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 5,
+   "nearest_um": [
+    88.641,
+    "Rl\\[31\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    175.635,
+    "Rl\\[15\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[159]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    84.23100000000001,
+    "Rl\\[31\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.03700000000003,
+    "Rl\\[15\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[15]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    79.209,
+    "Rl\\[17\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    175.53300000000002,
+    "Rl\\[1\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[160]",
+   "captures": 4,
+   "comb_cells": 10,
+   "levels": 4,
+   "nearest_um": [
+    57.471,
+    "Ro\\[15\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    156.939,
+    "Ro\\[0\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[161]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 5,
+   "nearest_um": [
+    57.183,
+    "Ro\\[15\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    154.113,
+    "Ro\\[0\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[162]",
+   "captures": 4,
+   "comb_cells": 12,
+   "levels": 5,
+   "nearest_um": [
+    57.489,
+    "Ro\\[15\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    153.825,
+    "Ro\\[0\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[163]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    85.49099999999999,
+    "Ro\\[15\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    151.32299999999998,
+    "Ro\\[0\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[164]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    55.26899999999999,
+    "Ro\\[15\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.54699999999997,
+    "Ro\\[0\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[165]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    55.55699999999999,
+    "Ro\\[15\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.259,
+    "Ro\\[0\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[166]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    50.451,
+    "Ro\\[15\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.51099999999997,
+    "Ro\\[0\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[167]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    49.677,
+    "Ro\\[15\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.22299999999996,
+    "Ro\\[0\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[168]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    49.389,
+    "Ro\\[15\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.097,
+    "Ro\\[0\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[169]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    55.473000000000006,
+    "Ro\\[15\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    154.34699999999998,
+    "Ro\\[0\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[16]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    81.00900000000001,
+    "Rl\\[17\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    175.245,
+    "Rl\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[170]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    53.433,
+    "Ro\\[16\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.257,
+    "Ro\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[171]",
+   "captures": 8,
+   "comb_cells": 27,
+   "levels": 6,
+   "nearest_um": [
+    57.867000000000004,
+    "Ro\\[16\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    162.14099999999996,
+    "Ro\\[1\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[172]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    61.737,
+    "Ro\\[16\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    161.85299999999995,
+    "Ro\\[1\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[173]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 6,
+   "nearest_um": [
+    57.29100000000001,
+    "Ro\\[16\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.39299999999997,
+    "Ro\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[174]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    54.585,
+    "Ro\\[16\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.105,
+    "Ro\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[175]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    54.87300000000001,
+    "Ro\\[16\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.81699999999998,
+    "Ro\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[176]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    56.42700000000001,
+    "Ro\\[16\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.703,
+    "Ro\\[1\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[177]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    55.449000000000005,
+    "Ro\\[16\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    160.41299999999995,
+    "Ro\\[1\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[178]",
+   "captures": 8,
+   "comb_cells": 27,
+   "levels": 6,
+   "nearest_um": [
+    55.85100000000001,
+    "Ro\\[16\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.95299999999997,
+    "Ro\\[1\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[179]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    72.465,
+    "Ro\\[16\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.83699999999996,
+    "Ro\\[1\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[17]",
+   "captures": 8,
+   "comb_cells": 26,
+   "levels": 6,
+   "nearest_um": [
+    81.40499999999999,
+    "Rl\\[17\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    177.22500000000002,
+    "Rl\\[1\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[180]",
+   "captures": 4,
+   "comb_cells": 12,
+   "levels": 5,
+   "nearest_um": [
+    88.659,
+    "Ro\\[17\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.221,
+    "Ro\\[2\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[181]",
+   "captures": 4,
+   "comb_cells": 12,
+   "levels": 5,
+   "nearest_um": [
+    57.03300000000001,
+    "Ro\\[17\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.923,
+    "Ro\\[2\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[182]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    50.67900000000001,
+    "Ro\\[17\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.85500000000002,
+    "Ro\\[2\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[183]",
+   "captures": 6,
+   "comb_cells": 16,
+   "levels": 4,
+   "nearest_um": [
+    60.68699999999998,
+    "Ro\\[17\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.08499999999998,
+    "Ro\\[2\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[184]",
+   "captures": 6,
+   "comb_cells": 16,
+   "levels": 4,
+   "nearest_um": [
+    55.143000000000015,
+    "Ro\\[17\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.593,
+    "Ro\\[2\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[185]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    51.54300000000001,
+    "Ro\\[17\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.909,
+    "Ro\\[2\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[186]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    61.55099999999999,
+    "Ro\\[17\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.65300000000002,
+    "Ro\\[2\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[187]",
+   "captures": 4,
+   "comb_cells": 12,
+   "levels": 5,
+   "nearest_um": [
+    56.007000000000005,
+    "Ro\\[17\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    150.237,
+    "Ro\\[2\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[188]",
+   "captures": 4,
+   "comb_cells": 12,
+   "levels": 5,
+   "nearest_um": [
+    59.049000000000014,
+    "Ro\\[17\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.745,
+    "Ro\\[2\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[189]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    52.695000000000014,
+    "Ro\\[17\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.06099999999998,
+    "Ro\\[2\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[18]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    80.073,
+    "Rl\\[17\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    176.937,
+    "Rl\\[1\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[190]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 7,
+   "nearest_um": [
+    39.705000000000005,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.411,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[191]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 8,
+   "nearest_um": [
+    39.66299999999999,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    141.639,
+    "Ro\\[3\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[192]",
+   "captures": 16,
+   "comb_cells": 43,
+   "levels": 8,
+   "nearest_um": [
+    40.59900000000001,
+    "Ro\\[18\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.83499999999998,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[193]",
+   "captures": 16,
+   "comb_cells": 45,
+   "levels": 7,
+   "nearest_um": [
+    40.239,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.547,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[194]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 8,
+   "nearest_um": [
+    41.877,
+    "Ro\\[18\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.25900000000001,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[195]",
+   "captures": 16,
+   "comb_cells": 46,
+   "levels": 8,
+   "nearest_um": [
+    40.81499999999999,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.971,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[196]",
+   "captures": 16,
+   "comb_cells": 44,
+   "levels": 8,
+   "nearest_um": [
+    41.103,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.683,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[197]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 7,
+   "nearest_um": [
+    41.391,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    140.82899999999998,
+    "Ro\\[3\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[198]",
+   "captures": 18,
+   "comb_cells": 49,
+   "levels": 8,
+   "nearest_um": [
+    41.019000000000005,
+    "Ro\\[3\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.107,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[199]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 6,
+   "nearest_um": [
+    41.96699999999999,
+    "Ro\\[18\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    141.81900000000002,
+    "Ro\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[19]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    80.36099999999999,
+    "Rl\\[17\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    176.649,
+    "Rl\\[1\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[1]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    31.065,
+    "Rl\\[16\\]\\[1\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    161.14499999999998,
+    "Rl\\[0\\]\\[1\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[200]",
+   "captures": 14,
+   "comb_cells": 42,
+   "levels": 6,
+   "nearest_um": [
+    44.52300000000001,
+    "Ro\\[19\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.933,
+    "Ro\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[201]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    44.81100000000002,
+    "Ro\\[19\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.64499999999998,
+    "Ro\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[202]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 7,
+   "nearest_um": [
+    39.969,
+    "Ro\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.945,
+    "Ro\\[4\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[203]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    45.603,
+    "Ro\\[19\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.233,
+    "Ro\\[4\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[204]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    45.67500000000001,
+    "Ro\\[19\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.521,
+    "Ro\\[4\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[205]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    40.833000000000006,
+    "Ro\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.51299999999998,
+    "Ro\\[4\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[206]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 7,
+   "nearest_um": [
+    41.121,
+    "Ro\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.99099999999999,
+    "Ro\\[4\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[207]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    41.409,
+    "Ro\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.279,
+    "Ro\\[4\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[208]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    41.696999999999996,
+    "Ro\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.673,
+    "Ro\\[4\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[209]",
+   "captures": 12,
+   "comb_cells": 37,
+   "levels": 6,
+   "nearest_um": [
+    41.98500000000001,
+    "Ro\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.665,
+    "Ro\\[4\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[20]",
+   "captures": 6,
+   "comb_cells": 16,
+   "levels": 5,
+   "nearest_um": [
+    48.19500000000001,
+    "Rl\\[18\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    167.751,
+    "Rl\\[2\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[210]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    44.217000000000006,
+    "Ro\\[20\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.41500000000002,
+    "Ro\\[5\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[211]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 6,
+   "nearest_um": [
+    44.505,
+    "Ro\\[20\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.733,
+    "Ro\\[5\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[212]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    44.793,
+    "Ro\\[20\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.445,
+    "Ro\\[5\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[213]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    42.63900000000002,
+    "Ro\\[20\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.64299999999997,
+    "Ro\\[5\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[214]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    42.351000000000006,
+    "Ro\\[20\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.35499999999996,
+    "Ro\\[5\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[215]",
+   "captures": 12,
+   "comb_cells": 37,
+   "levels": 7,
+   "nearest_um": [
+    42.633,
+    "Ro\\[20\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.06699999999998,
+    "Ro\\[5\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[216]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 7,
+   "nearest_um": [
+    42.921,
+    "Ro\\[20\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.779,
+    "Ro\\[5\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[217]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 7,
+   "nearest_um": [
+    43.208999999999996,
+    "Ro\\[20\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.49099999999999,
+    "Ro\\[5\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[218]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 7,
+   "nearest_um": [
+    45.71100000000001,
+    "Ro\\[20\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.719,
+    "Ro\\[5\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[219]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    45.933000000000014,
+    "Ro\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.007,
+    "Ro\\[5\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[21]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 6,
+   "nearest_um": [
+    48.483000000000004,
+    "Rl\\[18\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.253,
+    "Rl\\[2\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[220]",
+   "captures": 12,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    39.64499999999999,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.437,
+    "Ro\\[6\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[221]",
+   "captures": 14,
+   "comb_cells": 34,
+   "levels": 7,
+   "nearest_um": [
+    43.443,
+    "Ro\\[21\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.149,
+    "Ro\\[6\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[222]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 8,
+   "nearest_um": [
+    40.221,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.305,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[223]",
+   "captures": 16,
+   "comb_cells": 42,
+   "levels": 8,
+   "nearest_um": [
+    40.50899999999999,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.593,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[224]",
+   "captures": 16,
+   "comb_cells": 44,
+   "levels": 8,
+   "nearest_um": [
+    40.79699999999999,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.88099999999997,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[225]",
+   "captures": 16,
+   "comb_cells": 42,
+   "levels": 7,
+   "nearest_um": [
+    41.08499999999999,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.007,
+    "Ro\\[6\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[226]",
+   "captures": 14,
+   "comb_cells": 38,
+   "levels": 7,
+   "nearest_um": [
+    44.882999999999996,
+    "Ro\\[21\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.457,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[227]",
+   "captures": 16,
+   "comb_cells": 46,
+   "levels": 8,
+   "nearest_um": [
+    41.660999999999994,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.745,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[228]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 8,
+   "nearest_um": [
+    41.94899999999999,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.033,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[229]",
+   "captures": 18,
+   "comb_cells": 52,
+   "levels": 8,
+   "nearest_um": [
+    42.23699999999999,
+    "Ro\\[21\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.32099999999997,
+    "Ro\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[22]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 6,
+   "nearest_um": [
+    47.20500000000001,
+    "Rl\\[18\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.541,
+    "Rl\\[2\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[230]",
+   "captures": 10,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    41.091,
+    "Ro\\[22\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.33499999999998,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[231]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    41.721000000000004,
+    "Ro\\[22\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.103,
+    "Ro\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[232]",
+   "captures": 10,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    41.43300000000001,
+    "Ro\\[22\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.75899999999996,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[233]",
+   "captures": 10,
+   "comb_cells": 27,
+   "levels": 6,
+   "nearest_um": [
+    41.14500000000001,
+    "Ro\\[22\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.47099999999998,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[234]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 6,
+   "nearest_um": [
+    40.11300000000001,
+    "Ro\\[22\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.183,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[235]",
+   "captures": 12,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    40.569,
+    "Ro\\[22\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.951,
+    "Ro\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[236]",
+   "captures": 14,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    40.281000000000006,
+    "Ro\\[22\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.60699999999997,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[237]",
+   "captures": 12,
+   "comb_cells": 32,
+   "levels": 6,
+   "nearest_um": [
+    40.964999999999996,
+    "Ro\\[22\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.31899999999996,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[238]",
+   "captures": 14,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    39.70500000000001,
+    "Ro\\[22\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.655,
+    "Ro\\[7\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[239]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 6,
+   "nearest_um": [
+    40.389,
+    "Ro\\[22\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    145.743,
+    "Ro\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[23]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    47.49300000000001,
+    "Rl\\[18\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.829,
+    "Rl\\[2\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[240]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 6,
+   "nearest_um": [
+    47.121,
+    "Ro\\[23\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.68100000000004,
+    "Ro\\[8\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[241]",
+   "captures": 8,
+   "comb_cells": 26,
+   "levels": 6,
+   "nearest_um": [
+    44.775000000000006,
+    "Ro\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    146.889,
+    "Ro\\[8\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[242]",
+   "captures": 8,
+   "comb_cells": 21,
+   "levels": 5,
+   "nearest_um": [
+    47.46300000000001,
+    "Ro\\[23\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    151.683,
+    "Ro\\[8\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[243]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    45.555000000000014,
+    "Ro\\[23\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.519,
+    "Ro\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[244]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    45.63900000000001,
+    "Ro\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.83300000000003,
+    "Ro\\[8\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[245]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 5,
+   "nearest_um": [
+    45.711000000000006,
+    "Ro\\[23\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    150.81899999999996,
+    "Ro\\[8\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[246]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    44.69100000000001,
+    "Ro\\[23\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.383,
+    "Ro\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[247]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    46.02300000000001,
+    "Ro\\[23\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    150.243,
+    "Ro\\[8\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[248]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    44.25300000000001,
+    "Ro\\[23\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.95499999999998,
+    "Ro\\[8\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[249]",
+   "captures": 10,
+   "comb_cells": 27,
+   "levels": 5,
+   "nearest_um": [
+    44.541000000000004,
+    "Ro\\[23\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    150.27300000000002,
+    "Ro\\[8\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[24]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    32.498999999999995,
+    "Rl\\[18\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.685,
+    "Rl\\[2\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[250]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    106.01099999999998,
+    "Ro\\[24\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.235,
+    "Ro\\[9\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[251]",
+   "captures": 6,
+   "comb_cells": 17,
+   "levels": 5,
+   "nearest_um": [
+    58.293,
+    "Ro\\[24\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.801,
+    "Ro\\[9\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[252]",
+   "captures": 4,
+   "comb_cells": 13,
+   "levels": 6,
+   "nearest_um": [
+    58.20300000000002,
+    "Ro\\[24\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.497,
+    "Ro\\[9\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[253]",
+   "captures": 4,
+   "comb_cells": 10,
+   "levels": 4,
+   "nearest_um": [
+    106.87499999999999,
+    "Ro\\[24\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    153.099,
+    "Ro\\[9\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[254]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    88.34100000000001,
+    "Ro\\[24\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.801,
+    "Ro\\[9\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[255]",
+   "captures": 4,
+   "comb_cells": 10,
+   "levels": 4,
+   "nearest_um": [
+    52.04700000000001,
+    "Ro\\[24\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.32300000000004,
+    "Ro\\[9\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[256]",
+   "captures": 4,
+   "comb_cells": 12,
+   "levels": 5,
+   "nearest_um": [
+    79.227,
+    "Ro\\[24\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    152.289,
+    "Ro\\[9\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[257]",
+   "captures": 4,
+   "comb_cells": 11,
+   "levels": 4,
+   "nearest_um": [
+    60.02100000000001,
+    "Ro\\[24\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    154.251,
+    "Ro\\[9\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[258]",
+   "captures": 6,
+   "comb_cells": 16,
+   "levels": 5,
+   "nearest_um": [
+    59.93100000000001,
+    "Ro\\[24\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.06300000000002,
+    "Ro\\[9\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[259]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 6,
+   "nearest_um": [
+    53.19900000000001,
+    "Ro\\[24\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    154.827,
+    "Ro\\[9\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[25]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 7,
+   "nearest_um": [
+    32.78699999999999,
+    "Rl\\[18\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.27100000000002,
+    "Rl\\[2\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[260]",
+   "captures": 14,
+   "comb_cells": 34,
+   "levels": 8,
+   "nearest_um": [
+    40.28100000000001,
+    "Ro\\[25\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.503,
+    "Ro\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[261]",
+   "captures": 12,
+   "comb_cells": 28,
+   "levels": 7,
+   "nearest_um": [
+    41.19300000000001,
+    "Ro\\[25\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.07899999999995,
+    "Ro\\[10\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[262]",
+   "captures": 10,
+   "comb_cells": 23,
+   "levels": 7,
+   "nearest_um": [
+    40.347,
+    "Ro\\[25\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.191,
+    "Ro\\[10\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[263]",
+   "captures": 10,
+   "comb_cells": 24,
+   "levels": 7,
+   "nearest_um": [
+    41.769000000000005,
+    "Ro\\[25\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.55900000000003,
+    "Ro\\[10\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[264]",
+   "captures": 10,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    40.76099999999999,
+    "Ro\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.14499999999998,
+    "Ro\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[265]",
+   "captures": 8,
+   "comb_cells": 18,
+   "levels": 6,
+   "nearest_um": [
+    41.211000000000006,
+    "Ro\\[25\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.67700000000002,
+    "Ro\\[10\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[266]",
+   "captures": 8,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    41.336999999999996,
+    "Ro\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.423,
+    "Ro\\[10\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[267]",
+   "captures": 10,
+   "comb_cells": 22,
+   "levels": 6,
+   "nearest_um": [
+    42.92100000000001,
+    "Ro\\[25\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.711,
+    "Ro\\[10\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[268]",
+   "captures": 10,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    42.992999999999995,
+    "Ro\\[25\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.29699999999997,
+    "Ro\\[10\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[269]",
+   "captures": 12,
+   "comb_cells": 31,
+   "levels": 8,
+   "nearest_um": [
+    42.200999999999986,
+    "Ro\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.829,
+    "Ro\\[10\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[26]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 7,
+   "nearest_um": [
+    33.074999999999996,
+    "Rl\\[18\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.18099999999998,
+    "Rl\\[2\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[270]",
+   "captures": 12,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    42.74699999999999,
+    "Ro\\[26\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.80699999999996,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[271]",
+   "captures": 12,
+   "comb_cells": 30,
+   "levels": 5,
+   "nearest_um": [
+    42.88500000000001,
+    "Ro\\[26\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    144.51899999999998,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[272]",
+   "captures": 14,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    43.17300000000001,
+    "Ro\\[26\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    141.26100000000002,
+    "Ro\\[11\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[273]",
+   "captures": 16,
+   "comb_cells": 44,
+   "levels": 8,
+   "nearest_um": [
+    43.461000000000006,
+    "Ro\\[26\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.94299999999998,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[274]",
+   "captures": 18,
+   "comb_cells": 45,
+   "levels": 8,
+   "nearest_um": [
+    43.74900000000002,
+    "Ro\\[26\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.65499999999997,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[275]",
+   "captures": 18,
+   "comb_cells": 45,
+   "levels": 7,
+   "nearest_um": [
+    44.03700000000001,
+    "Ro\\[26\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.36699999999996,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[276]",
+   "captures": 18,
+   "comb_cells": 42,
+   "levels": 7,
+   "nearest_um": [
+    43.773,
+    "Ro\\[26\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    143.07899999999998,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[277]",
+   "captures": 18,
+   "comb_cells": 47,
+   "levels": 7,
+   "nearest_um": [
+    43.48500000000001,
+    "Ro\\[26\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.791,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[278]",
+   "captures": 16,
+   "comb_cells": 43,
+   "levels": 7,
+   "nearest_um": [
+    43.196999999999996,
+    "Ro\\[26\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.503,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[279]",
+   "captures": 14,
+   "comb_cells": 39,
+   "levels": 7,
+   "nearest_um": [
+    43.083000000000006,
+    "Ro\\[26\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    142.335,
+    "Ro\\[11\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[27]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 7,
+   "nearest_um": [
+    33.363,
+    "Rl\\[18\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.767,
+    "Rl\\[2\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[280]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 7,
+   "nearest_um": [
+    47.852999999999994,
+    "Ro\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.769,
+    "Ro\\[12\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[281]",
+   "captures": 14,
+   "comb_cells": 40,
+   "levels": 7,
+   "nearest_um": [
+    50.949000000000005,
+    "Ro\\[27\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.89499999999998,
+    "Ro\\[12\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[282]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    52.749,
+    "Ro\\[27\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.507,
+    "Ro\\[12\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[283]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 7,
+   "nearest_um": [
+    48.717,
+    "Ro\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.79500000000002,
+    "Ro\\[12\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[284]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    49.004999999999995,
+    "Ro\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    159.921,
+    "Ro\\[12\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[285]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 7,
+   "nearest_um": [
+    52.101000000000006,
+    "Ro\\[27\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    160.047,
+    "Ro\\[12\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[286]",
+   "captures": 14,
+   "comb_cells": 42,
+   "levels": 7,
+   "nearest_um": [
+    52.389,
+    "Ro\\[27\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    160.659,
+    "Ro\\[12\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[287]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    49.869,
+    "Ro\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    160.947,
+    "Ro\\[12\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[288]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 7,
+   "nearest_um": [
+    50.157,
+    "Ro\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    161.235,
+    "Ro\\[12\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[289]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 6,
+   "nearest_um": [
+    50.44499999999999,
+    "Ro\\[27\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    161.361,
+    "Ro\\[12\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[28]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    33.650999999999996,
+    "Rl\\[18\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.269,
+    "Rl\\[2\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[290]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 8,
+   "nearest_um": [
+    18.494999999999994,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.60899999999998,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[291]",
+   "captures": 12,
+   "comb_cells": 30,
+   "levels": 7,
+   "nearest_um": [
+    18.783000000000005,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.897,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[292]",
+   "captures": 14,
+   "comb_cells": 36,
+   "levels": 7,
+   "nearest_um": [
+    19.071,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.185,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[293]",
+   "captures": 16,
+   "comb_cells": 44,
+   "levels": 8,
+   "nearest_um": [
+    19.358999999999998,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.47299999999998,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[294]",
+   "captures": 18,
+   "comb_cells": 51,
+   "levels": 8,
+   "nearest_um": [
+    47.56500000000001,
+    "Ro\\[28\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.76099999999997,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[295]",
+   "captures": 16,
+   "comb_cells": 48,
+   "levels": 8,
+   "nearest_um": [
+    19.93499999999999,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    147.969,
+    "Ro\\[13\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[296]",
+   "captures": 16,
+   "comb_cells": 46,
+   "levels": 8,
+   "nearest_um": [
+    20.223000000000003,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.337,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[297]",
+   "captures": 18,
+   "comb_cells": 48,
+   "levels": 8,
+   "nearest_um": [
+    20.511,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.625,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[298]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    20.798999999999996,
+    "Ro\\[13\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.91299999999998,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[299]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 7,
+   "nearest_um": [
+    53.75699999999999,
+    "Ro\\[28\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    150.20099999999996,
+    "Ro\\[13\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[29]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    33.939,
+    "Rl\\[18\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.557,
+    "Rl\\[2\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[2]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    50.05500000000001,
+    "Rl\\[16\\]\\[2\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    159.48899999999998,
+    "Rl\\[0\\]\\[2\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[300]",
+   "captures": 12,
+   "comb_cells": 37,
+   "levels": 6,
+   "nearest_um": [
+    47.565000000000005,
+    "Ro\\[29\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    156.32099999999997,
+    "Ro\\[14\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[301]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    47.853,
+    "Ro\\[29\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    156.60899999999998,
+    "Ro\\[14\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[302]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    50.300999999999995,
+    "Ro\\[29\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    148.41899999999998,
+    "Ro\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[303]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    50.48099999999999,
+    "Ro\\[29\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    157.18499999999997,
+    "Ro\\[14\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[304]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    48.717000000000006,
+    "Ro\\[29\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.373,
+    "Ro\\[14\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[305]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    49.005,
+    "Ro\\[29\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.01300000000003,
+    "Ro\\[14\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[306]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    49.617000000000004,
+    "Ro\\[29\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.04899999999998,
+    "Ro\\[14\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[307]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    49.580999999999996,
+    "Ro\\[29\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    149.85899999999998,
+    "Ro\\[14\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[308]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    51.920999999999985,
+    "Ro\\[29\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    158.62499999999997,
+    "Ro\\[14\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[309]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    50.48100000000001,
+    "Ro\\[29\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    150.813,
+    "Ro\\[14\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[30]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 6,
+   "nearest_um": [
+    64.467,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    174.34499999999997,
+    "Rl\\[3\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[31]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    64.755,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.949,
+    "Rl\\[3\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[32]",
+   "captures": 12,
+   "comb_cells": 38,
+   "levels": 6,
+   "nearest_um": [
+    65.043,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.76899999999998,
+    "Rl\\[3\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[33]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    65.33099999999999,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.373,
+    "Rl\\[3\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[34]",
+   "captures": 10,
+   "comb_cells": 27,
+   "levels": 6,
+   "nearest_um": [
+    66.91499999999999,
+    "Rl\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.19299999999998,
+    "Rl\\[3\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[35]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    65.907,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.339,
+    "Rl\\[3\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[36]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    78.99300000000001,
+    "Rl\\[19\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.50900000000001,
+    "Rl\\[3\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[37]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    67.779,
+    "Rl\\[19\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.32899999999998,
+    "Rl\\[3\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[38]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 6,
+   "nearest_um": [
+    66.771,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.367,
+    "Rl\\[3\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[39]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 6,
+   "nearest_um": [
+    67.059,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.645,
+    "Rl\\[3\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[3]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    52.521,
+    "Rl\\[16\\]\\[3\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    138.273,
+    "Rl\\[0\\]\\[3\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[40]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    35.649,
+    "Rl\\[20\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.02900000000002,
+    "Rl\\[4\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[41]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 6,
+   "nearest_um": [
+    34.911,
+    "Rl\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.34099999999998,
+    "Rl\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[42]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    35.577000000000005,
+    "Rl\\[20\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.981,
+    "Rl\\[4\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[43]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    36.56699999999999,
+    "Rl\\[20\\]\\[3\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.91699999999997,
+    "Rl\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[44]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 7,
+   "nearest_um": [
+    35.775,
+    "Rl\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.20499999999998,
+    "Rl\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[45]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 7,
+   "nearest_um": [
+    36.441,
+    "Rl\\[20\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.493,
+    "Rl\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[46]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    36.351,
+    "Rl\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.78099999999998,
+    "Rl\\[4\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[47]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 6,
+   "nearest_um": [
+    36.639,
+    "Rl\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.421,
+    "Rl\\[4\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[48]",
+   "captures": 10,
+   "comb_cells": 32,
+   "levels": 6,
+   "nearest_um": [
+    36.927,
+    "Rl\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.953,
+    "Rl\\[4\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[49]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    37.215,
+    "Rl\\[20\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.621,
+    "Rl\\[4\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[4]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    52.287000000000006,
+    "Rl\\[16\\]\\[4\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    138.687,
+    "Rl\\[0\\]\\[4\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[50]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 6,
+   "nearest_um": [
+    59.427,
+    "Rl\\[21\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    175.011,
+    "Rl\\[5\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[51]",
+   "captures": 12,
+   "comb_cells": 40,
+   "levels": 7,
+   "nearest_um": [
+    58.839,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    174.72299999999998,
+    "Rl\\[5\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[52]",
+   "captures": 12,
+   "comb_cells": 37,
+   "levels": 8,
+   "nearest_um": [
+    66.27300000000001,
+    "Rl\\[21\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.301,
+    "Rl\\[5\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[53]",
+   "captures": 12,
+   "comb_cells": 39,
+   "levels": 8,
+   "nearest_um": [
+    58.263,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.013,
+    "Rl\\[5\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[54]",
+   "captures": 14,
+   "comb_cells": 40,
+   "levels": 7,
+   "nearest_um": [
+    57.975,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.725,
+    "Rl\\[5\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[55]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 7,
+   "nearest_um": [
+    57.687,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.57099999999997,
+    "Rl\\[5\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[56]",
+   "captures": 16,
+   "comb_cells": 47,
+   "levels": 8,
+   "nearest_um": [
+    57.399,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.149,
+    "Rl\\[5\\]\\[5\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[57]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 7,
+   "nearest_um": [
+    57.111,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.99499999999998,
+    "Rl\\[5\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[58]",
+   "captures": 16,
+   "comb_cells": 48,
+   "levels": 8,
+   "nearest_um": [
+    56.823,
+    "Rl\\[21\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.707,
+    "Rl\\[5\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[59]",
+   "captures": 18,
+   "comb_cells": 55,
+   "levels": 8,
+   "nearest_um": [
+    62.019,
+    "Rl\\[21\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.41899999999998,
+    "Rl\\[5\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[5]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    26.511,
+    "Rl\\[16\\]\\[5\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    160.863,
+    "Rl\\[0\\]\\[5\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[60]",
+   "captures": 12,
+   "comb_cells": 32,
+   "levels": 6,
+   "nearest_um": [
+    32.607,
+    "Rl\\[22\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    177.705,
+    "Rl\\[6\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[61]",
+   "captures": 12,
+   "comb_cells": 32,
+   "levels": 6,
+   "nearest_um": [
+    32.894999999999996,
+    "Rl\\[22\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    177.99300000000002,
+    "Rl\\[6\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[62]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    33.18300000000001,
+    "Rl\\[22\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    179.847,
+    "Rl\\[6\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[63]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 7,
+   "nearest_um": [
+    34.821,
+    "Rl\\[22\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.135,
+    "Rl\\[6\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[64]",
+   "captures": 12,
+   "comb_cells": 36,
+   "levels": 7,
+   "nearest_um": [
+    38.133,
+    "Rl\\[22\\]\\[0\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    178.85700000000003,
+    "Rl\\[6\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[65]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 6,
+   "nearest_um": [
+    34.047,
+    "Rl\\[22\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.711,
+    "Rl\\[6\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[66]",
+   "captures": 10,
+   "comb_cells": 30,
+   "levels": 7,
+   "nearest_um": [
+    34.33500000000001,
+    "Rl\\[22\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    175.59900000000002,
+    "Rl\\[6\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[67]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 7,
+   "nearest_um": [
+    40.346999999999994,
+    "Rl\\[22\\]\\[6\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    181.287,
+    "Rl\\[6\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[68]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 7,
+   "nearest_um": [
+    34.911,
+    "Rl\\[22\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    181.575,
+    "Rl\\[6\\]\\[9\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[69]",
+   "captures": 10,
+   "comb_cells": 27,
+   "levels": 6,
+   "nearest_um": [
+    38.979,
+    "Rl\\[22\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    180.29700000000003,
+    "Rl\\[6\\]\\[1\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[6]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    34.551,
+    "Rl\\[16\\]\\[6\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    163.395,
+    "Rl\\[0\\]\\[6\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[70]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 7,
+   "nearest_um": [
+    62.817,
+    "Rl\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.277,
+    "Rl\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[71]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    62.529,
+    "Rl\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.47499999999997,
+    "Rl\\[7\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[72]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    62.24100000000001,
+    "Rl\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.807,
+    "Rl\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[73]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 6,
+   "nearest_um": [
+    64.38300000000001,
+    "Rl\\[23\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.89899999999997,
+    "Rl\\[7\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[74]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 6,
+   "nearest_um": [
+    64.311,
+    "Rl\\[23\\]\\[1\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    171.231,
+    "Rl\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[75]",
+   "captures": 12,
+   "comb_cells": 34,
+   "levels": 6,
+   "nearest_um": [
+    61.377,
+    "Rl\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.94299999999998,
+    "Rl\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[76]",
+   "captures": 12,
+   "comb_cells": 33,
+   "levels": 6,
+   "nearest_um": [
+    63.51900000000001,
+    "Rl\\[23\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.03499999999997,
+    "Rl\\[7\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[77]",
+   "captures": 12,
+   "comb_cells": 37,
+   "levels": 6,
+   "nearest_um": [
+    60.801,
+    "Rl\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.36699999999996,
+    "Rl\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[78]",
+   "captures": 10,
+   "comb_cells": 31,
+   "levels": 6,
+   "nearest_um": [
+    60.513000000000005,
+    "Rl\\[23\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.07899999999998,
+    "Rl\\[7\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[79]",
+   "captures": 10,
+   "comb_cells": 28,
+   "levels": 7,
+   "nearest_um": [
+    62.65500000000001,
+    "Rl\\[23\\]\\[5\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    167.68499999999997,
+    "Rl\\[7\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[7]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    30.843,
+    "Rl\\[16\\]\\[7\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    160.065,
+    "Rl\\[0\\]\\[7\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[80]",
+   "captures": 6,
+   "comb_cells": 19,
+   "levels": 6,
+   "nearest_um": [
+    21.897000000000002,
+    "Rl\\[24\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.259,
+    "Rl\\[8\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[81]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    24.441,
+    "Rl\\[24\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    173.547,
+    "Rl\\[8\\]\\[4\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[82]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    24.153000000000002,
+    "Rl\\[24\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    188.19899999999998,
+    "Rl\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[83]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    24.16500000000001,
+    "Rl\\[24\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    188.487,
+    "Rl\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[84]",
+   "captures": 8,
+   "comb_cells": 27,
+   "levels": 6,
+   "nearest_um": [
+    26.883,
+    "Rl\\[24\\]\\[7\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    188.77499999999998,
+    "Rl\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[85]",
+   "captures": 8,
+   "comb_cells": 25,
+   "levels": 6,
+   "nearest_um": [
+    23.337000000000007,
+    "Rl\\[24\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    184.68900000000002,
+    "Rl\\[8\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[86]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 6,
+   "nearest_um": [
+    23.625000000000004,
+    "Rl\\[24\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.34099999999998,
+    "Rl\\[8\\]\\[8\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[87]",
+   "captures": 12,
+   "comb_cells": 35,
+   "levels": 6,
+   "nearest_um": [
+    23.913,
+    "Rl\\[24\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    189.63899999999998,
+    "Rl\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[88]",
+   "captures": 14,
+   "comb_cells": 41,
+   "levels": 6,
+   "nearest_um": [
+    24.902999999999995,
+    "Rl\\[24\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    189.33300000000003,
+    "Rl\\[8\\]\\[2\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[89]",
+   "captures": 14,
+   "comb_cells": 44,
+   "levels": 6,
+   "nearest_um": [
+    25.190999999999992,
+    "Rl\\[24\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    190.21499999999997,
+    "Rl\\[8\\]\\[6\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[8]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    24.651,
+    "Rl\\[16\\]\\[8\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    162.459,
+    "Rl\\[0\\]\\[8\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_lo[90]",
+   "captures": 10,
+   "comb_cells": 29,
+   "levels": 5,
+   "nearest_um": [
+    59.013,
+    "Rl\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    172.401,
+    "Rl\\[9\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[91]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    59.300999999999995,
+    "Rl\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    165.309,
+    "Rl\\[9\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[92]",
+   "captures": 6,
+   "comb_cells": 18,
+   "levels": 5,
+   "nearest_um": [
+    59.589,
+    "Rl\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    165.021,
+    "Rl\\[9\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[93]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    63.171,
+    "Rl\\[25\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    164.733,
+    "Rl\\[9\\]\\[0\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[94]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    63.459,
+    "Rl\\[25\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    164.175,
+    "Rl\\[9\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[95]",
+   "captures": 8,
+   "comb_cells": 24,
+   "levels": 6,
+   "nearest_um": [
+    63.747,
+    "Rl\\[25\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    163.887,
+    "Rl\\[9\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[96]",
+   "captures": 8,
+   "comb_cells": 22,
+   "levels": 5,
+   "nearest_um": [
+    67.16699999999999,
+    "Rl\\[25\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    163.59900000000002,
+    "Rl\\[9\\]\\[3\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[97]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    67.45499999999998,
+    "Rl\\[25\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.385,
+    "Rl\\[9\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[98]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    69.363,
+    "Rl\\[25\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    170.097,
+    "Rl\\[9\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[99]",
+   "captures": 8,
+   "comb_cells": 23,
+   "levels": 5,
+   "nearest_um": [
+    61.605,
+    "Rl\\[25\\]\\[9\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    169.809,
+    "Rl\\[9\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_lo[9]",
+   "captures": 2,
+   "comb_cells": 3,
+   "levels": 2,
+   "nearest_um": [
+    28.827,
+    "Rl\\[16\\]\\[9\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    163.39499999999998,
+    "Rl\\[0\\]\\[9\\]$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_v[0]",
+   "captures": 158,
+   "comb_cells": 346,
+   "levels": 7,
+   "nearest_um": [
+    34.584,
+    "Rl\\[10\\]\\[4\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    212.919,
+    "c_bad$_DFFE_PP_"
+   ]
+  },
+  {
+   "port": "k_v[1]",
+   "captures": 161,
+   "comb_cells": 341,
+   "levels": 6,
+   "nearest_um": [
+    26.601,
+    "Rl\\[16\\]\\[8\\]$_DFFE_PP_"
+   ],
+   "farthest_um": [
+    285.585,
+    "pl\\[0\\]$_SDFF_PN0_"
+   ]
+  },
+  {
+   "port": "k_v[2]",
+   "captures": 160,
+   "comb_cells": 340,
+   "levels": 6,
+   "nearest_um": [
+    91.653,
+    "Ro\\[21\\]\\[8\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    202.245,
+    "Rl\\[13\\]\\[7\\]$_DFF_P_"
+   ]
+  },
+  {
+   "port": "k_v[3]",
+   "captures": 150,
+   "comb_cells": 326,
+   "levels": 6,
+   "nearest_um": [
+    61.125,
+    "Rl\\[19\\]\\[2\\]$_DFF_P_"
+   ],
+   "farthest_um": [
+    222.85499999999996,
+    "Ro\\[11\\]\\[7\\]$_DFF_P_"
+   ]
+  }
+ ],
+ "basis": "actual3place connectivity all comb paths to first sequential capture, diagnostic parent405budget"
+}
