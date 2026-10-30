@@ -9,7 +9,7 @@ uf_phys3_v1.json), basis (GRT, rc_cal 0.8/0.9) unchanged.  The fit builds used s
 is reported as an extrapolation variant (R45 x0.5, C45 x1.25), never as the gate number.
 usage: l0r_r8_uf3.py R8.json GEO(.gz) LIBDIR(with invbuf_tt.lib/invbuf_ff.lib) FIT.json OUT.json
 PLAN MODEL, UNCHECKED."""
-import gzip, json, statistics as st, sys
+import gzip, json, math, statistics as st, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -73,6 +73,43 @@ def summ(v):
     return dict(mean=round(st.mean(v), 2), min=round(min(v), 2), max=round(max(v), 2), window=round(max(v) - min(v), 2))
 
 
+def calibration_slew_limit(value=80.0):
+    """The calibrated domain is at most 80 ps; a caller may request stricter."""
+    value = float(value)
+    if not math.isfinite(value) or value <= 0:
+        raise ValueError("calibrated slew limit must be positive and finite")
+    return min(value, 80.0)
+
+
+def all_buffer_slew_max(summary):
+    """Require complete current coverage, never silently fall back to leaf-only."""
+    values = []
+    for corner in ("TT", "FF"):
+        try:
+            value = float(summary[corner]["all_buffer_slew_max"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("missing all-buffer calibrated slew coverage at " + corner) from error
+        if not math.isfinite(value) or value < 0:
+            raise ValueError("invalid all-buffer calibrated slew at " + corner)
+        values.append(value)
+    return max(values)
+
+
+def _all_input_slew(plan, arrivals):
+    if not isinstance(arrivals, dict) or not plan.nodes or set(arrivals) != set(plan.nodes):
+        raise ValueError("predict3 must return input slew for every planned buffer")
+    values = []
+    for node, state in arrivals.items():
+        try:
+            value = float(state[1])
+        except (IndexError, KeyError, TypeError, ValueError) as error:
+            raise ValueError("missing planned buffer input slew: " + node) from error
+        if not math.isfinite(value) or value < 0:
+            raise ValueError("invalid planned buffer input slew: " + node)
+        values.append(value)
+    return max(values)
+
+
 def calibrated_summary(plan, L, pmax, pmin):
     """Frozen plan through the SAME calibrated kernel/analyses used by d1.
     Preserve individual sink extrema and output slew; no R7 number is substituted.
@@ -82,14 +119,28 @@ def calibrated_summary(plan, L, pmax, pmin):
         runs = []
         for edge in edges:
             detail = {}
-            means, _ = V3.predict3(plan, L, corner, edge=edge, detail=detail, **params)
-            runs.append((means, detail))
+            means, arrivals = V3.predict3(plan, L, corner, edge=edge, detail=detail, **params)
+            all_input = _all_input_slew(plan, arrivals)
+            if set(detail) != set(means):
+                raise ValueError("predict3 terminal transition coverage differs from its leaf predictions")
+            for node, record in detail.items():
+                for key in ("slew_in", "slew_out"):
+                    value = float(record[key])
+                    if not math.isfinite(value) or value < 0:
+                        raise ValueError("invalid terminal buffer slew: " + node + "/" + key)
+            runs.append((means, detail, all_input))
         leaves = runs[0][0]
         leafmeans = {n: min(run[0][n] for run in runs) for n in leaves}
         sinks = []
         for n in leaves:
             for k in range(len(runs[0][1][n]["sinks"])):
                 sinks.append(min(run[1][n]["sinks"][k] for run in runs))
+        # Every internal output is bounded by each child's input, because
+        # s_child=sqrt(s_output**2 + (gslew*Elmore)**2). Thus the maximum of
+        # ALL inputs and terminal outputs is exactly the maximum over every
+        # buffer's input/output. Keep it unrounded at the 80 ps boundary.
+        all_input = max(run[2] for run in runs)
+        terminal_output = max(run[1][n]["slew_out"] for run in runs for n in leaves)
         out[corner] = dict(mean=round(sum(sinks) / len(sinks), 2),
                            leaf_mean_min=round(min(leafmeans.values()), 2),
                            leaf_mean_max=round(max(leafmeans.values()), 2),
@@ -97,6 +148,9 @@ def calibrated_summary(plan, L, pmax, pmin):
                            sink_min=round(min(sinks), 2), sink_max=round(max(sinks), 2),
                            leaf_slew_in_max=round(max(run[1][n]["slew_in"] for run in runs for n in leaves), 2),
                            leaf_out_slew_max=round(max(run[1][n]["slew_out"] for run in runs for n in leaves), 2),
+                           all_buffer_slew_in_max=all_input,
+                           all_buffer_slew_max=max(all_input, terminal_output),
+                           all_buffer_input_coverage=len(plan.nodes),
                            analysis="max_rise" if corner == "TT" else "min_rise_fall",
                            basis="GRT", model="uf_phys3 v1")
     return out

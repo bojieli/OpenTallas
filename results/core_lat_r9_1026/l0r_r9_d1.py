@@ -6,9 +6,9 @@ per-leaf mean arrivals (guard window <= 14); tie-break = fewer stages changed, t
 earliest and the latest leaf, try every envelope master on each driver of its root path that is NOT shared with the
 other extreme leaf, keep the single change that lowers the objective most; stop when no change helps.
 Slew guard (DIE-S81-27 10-29, ve_s: three leaf downsizes BUFx24->BUFx10 pushed TT leaf out slew 60.0 -> 81.5 > the 80-ps
-slice gate and the converter refused the tree): a change is kept only if the calibrated leaf out/in slew at TT and FF stays
-<= --slew (default 80 = core_family_slice GATES slew_ps; a plan already above it may not get worse); the next-best change
-is tried instead.  Plans whose descent never crossed the limit are unchanged.
+slice gate and the converter refused the tree): a change is kept only if ALL calibrated buffer inputs/outputs at TT and FF stay
+<= --slew (default/hard maximum 80 = calibrated domain); missing coverage fails closed. Leaf metrics remain reported.
+The next-best change is tried instead.  Plans whose descent never crossed the limit are unchanged.
 usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80]   PLAN MODEL, UNCHECKED."""
 import gzip, json, sys, time, multiprocessing as MP
 from pathlib import Path
@@ -45,6 +45,7 @@ def main():
     rj, geo, libdir, fit, out = sys.argv[1:6]
     steps = int(sys.argv[sys.argv.index('--steps') + 1]) if '--steps' in sys.argv else 300
     slew_lim = float(sys.argv[sys.argv.index('--slew') + 1]) if '--slew' in sys.argv else 80.0
+    slew_lim = A.calibration_slew_limit(slew_lim)
     op = gzip.open if rj.endswith(".gz") else open
     rec = json.load(op(rj, "rt"))[0]
     F = json.load(open(fit)); pmax, pmin = dict(F["PMAX"]), dict(F["PMIN"])
@@ -61,8 +62,8 @@ def main():
     tt, ff = evalp(P, L, pmax, pmin); o0 = obj(tt, ff); cur = o0; log = []
     def slew_max():
         q = A.calibrated_summary(P, L, pmax, pmin)
-        return max(q[c][k] for c in ("TT", "FF") for k in ("leaf_out_slew_max", "leaf_slew_in_max"))
-    cap = max(slew_lim, slew_max()); rejected = 0
+        return A.all_buffer_slew_max(q)
+    cap = slew_lim; rejected = 0
     t0 = time.time(); tried = set()
     for s in range(steps):
         best = None
