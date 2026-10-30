@@ -1,0 +1,185 @@
+{
+  "source_netlist": "/srv/opentallas-scratch2/claude/codex-head-collect-1030/host_current_proof/gen/hd_host/run/results/asap7/dp_hd_host/base/1_2_yosys.v",
+  "given": 8,
+  "distinct_actual_ffs": 8,
+  "all_normalized_inversion_zero": true,
+  "rows": [
+    {
+      "gold": "ff:u_dut.u_core.u_lane0.u_ln.u.u_ep.rdy_k[3]",
+      "gate": "ff:u_dut.u_core.u_lane0.u_ln.u.u_ep.in_ready",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane0.u_ln.u.u_ep.rdy_k[3]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_180566_",
+          "pin": "Y"
+        },
+        {
+          "net": "_033733_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane0.u_ln.u.u_ep.in_ready$_DFF_PN1_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane0.u_ln.u.u_gb.g_pc[0].ps[5]",
+      "gate": "ff:u_dut.u_core.u_lane0.u_ln.u.u_gb.g_pc[0].g_b[0].a0",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane0.u_ln.u.u_gb.g_pc[0].ps[5]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_187711_",
+          "pin": "Y"
+        },
+        {
+          "net": "_092834_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "instance": "_187710_",
+          "pin": "Y"
+        },
+        {
+          "net": "_092833_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "instance": "_187709_",
+          "pin": "Y"
+        },
+        {
+          "net": "_036032_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane0.u_ln.u.u_gb.g_pc[0].g_b[0].a0$_DFF_PN0_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane0.u_ln.u.u_gb.g_pc[11].ps[3]",
+      "gate": "ff:u_dut.u_core.u_lane0.u_ln.u.u_gb.g_pc[11].g_b[280].a2",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane0.u_ln.u.u_gb.g_pc[11].ps[3]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_187791_",
+          "pin": "Y"
+        },
+        {
+          "net": "_035964_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane0.u_ln.u.u_gb.g_pc[11].g_b[280].a2$_DFF_PN0_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane0.u_ln.u.u_gb.g_pc[5].ps[4]",
+      "gate": "ff:u_dut.u_core.u_lane0.u_ln.u.u_gb.g_pc[5].g_b[140].a1",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane0.u_ln.u.u_gb.g_pc[5].ps[4]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_187762_",
+          "pin": "Y"
+        },
+        {
+          "net": "_036001_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane0.u_ln.u.u_gb.g_pc[5].g_b[140].a1$_DFF_PN0_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane1.u_ln.u.u_ep.rdy_k[3]",
+      "gate": "ff:u_dut.u_core.u_lane1.u_ln.u.u_ep.in_ready",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane1.u_ln.u.u_ep.rdy_k[3]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_193250_",
+          "pin": "Y"
+        },
+        {
+          "net": "_038282_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane1.u_ln.u.u_ep.in_ready$_DFF_PN1_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane1.u_ln.u.u_gb.g_pc[0].ps[5]",
+      "gate": "ff:u_dut.u_core.u_lane1.u_ln.u.u_gb.g_pc[0].g_b[0].a0",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane1.u_ln.u.u_gb.g_pc[0].ps[5]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_200420_",
+          "pin": "Y"
+        },
+        {
+          "net": "_101956_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "instance": "_200419_",
+          "pin": "Y"
+        },
+        {
+          "net": "_101955_",
+          "master": "BUFx2_ASAP7_75t_R",
+          "instance": "_200418_",
+          "pin": "Y"
+        },
+        {
+          "net": "_040599_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane1.u_ln.u.u_gb.g_pc[0].g_b[0].a0$_DFF_PN0_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane1.u_ln.u.u_gb.g_pc[11].ps[3]",
+      "gate": "ff:u_dut.u_core.u_lane1.u_ln.u.u_gb.g_pc[11].g_b[280].a2",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane1.u_ln.u.u_gb.g_pc[11].ps[3]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_200502_",
+          "pin": "Y"
+        },
+        {
+          "net": "_040531_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane1.u_ln.u.u_gb.g_pc[11].g_b[280].a2$_DFF_PN0_",
+          "pin": "QN"
+        }
+      ]
+    },
+    {
+      "gold": "ff:u_dut.u_core.u_lane1.u_ln.u.u_gb.g_pc[5].ps[4]",
+      "gate": "ff:u_dut.u_core.u_lane1.u_ln.u.u_gb.g_pc[5].g_b[140].a1",
+      "normalized_inversion": 0,
+      "trace": [
+        {
+          "net": "u_core.u_lane1.u_ln.u.u_gb.g_pc[5].ps[4]",
+          "master": "INVx1_ASAP7_75t_R",
+          "instance": "_200473_",
+          "pin": "Y"
+        },
+        {
+          "net": "_040568_",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "instance": "u_core.u_lane1.u_ln.u.u_gb.g_pc[5].g_b[140].a1$_DFF_PN0_",
+          "pin": "QN"
+        }
+      ]
+    }
+  ],
+  "status": "UNTRUSTED_HINT_IDENTITIES_ONLY_NOT_D_OR_KEEP_PROOF"
+}
