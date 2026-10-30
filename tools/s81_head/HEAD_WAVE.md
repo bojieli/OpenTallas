@@ -35,6 +35,8 @@ whitespace are ignored; attributes, names, widths, literals and every other
 token remain significant. Drift fails closed and retains the unmatched wrapper.
 The export then supplies the complete bootstrap `VERILOG_FILES` and defines to
 the external GEN through `kit_rtl.f` and `kit_rtl.json`.
+The exact partition wrapper is first in the list, as required by `--kit-rtl`;
+all other files retain their bootstrap order and unchanged bytes.
 
 An eventual reviewed wave configuration must use the same prepared plan and
 `gen_args: ["--clock-landing", "/immutable/prepared/source_sidecar.json",

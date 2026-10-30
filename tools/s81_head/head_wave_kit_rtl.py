@@ -126,6 +126,13 @@ def export(args):
         if not p.is_file():
             raise ValueError('missing exact source closure: ' + str(p))
         files.append(p.resolve())
+    # gen.py --kit-rtl identifies the partition from the first source. ORFS's
+    # VERILOG_FILES order puts common cells first, so preserve that closure but
+    # explicitly lead with this exact generated partition wrapper.
+    wrapper_file = (kit / 'rtl' / wrapper.name).resolve()
+    if files.count(wrapper_file) != 1:
+        raise ValueError('exact partition wrapper absent/duplicated in source closure')
+    files = [wrapper_file] + [f for f in files if f != wrapper_file]
     (out / 'kit_rtl.f').write_text(''.join(str(p) + '\n' for p in files))
     write(out / 'kit_rtl.json', dict(schema='opentallas.head_wave_kit_rtl.v1', plan_type=args.type,
           defines=value('VERILOG_DEFINES'), added_cycles=0, private_raw=private,
