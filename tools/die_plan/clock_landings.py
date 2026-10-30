@@ -1081,7 +1081,8 @@ class Landings:
         """Registered dataflow monitor: local = AND(landing_ready) / OR(landing_fault), aggregate = AND(in_ok) /
         OR(in_bad) over every landed input (in_ok includes the local ring ready), registered
         local_registered_depth times. Every output pin gets its OWN dedicated output register (the last stage):
-        the tree bus carries the aggregate, every other landed output the local status. The observer type keeps
+        the tree bus carries the aggregate, every other landed output the local status (registered
+        local_status_depth times: int or {bus: int}, default 1). The observer type keeps
         the aggregate on cland_up_ready/fault for gate_observer (never new IO)."""
         ins = list(mask["inputs"]); n = len(ins)
         depth = int(info["local_registered_depth"])
@@ -1120,6 +1121,15 @@ class Landings:
                           f"        .fault_i({{{flt}}}), .ready_o({ro}), .fault_o({fo}));"])
             stages.append(name)
         tree_bus = info["mask"].get("tree_bus")
+        lsd = info.get("local_status_depth", 1)
+        def local_depth(b):
+            d = lsd.get(b, 1) if isinstance(lsd, dict) else lsd
+            if isinstance(d, bool) or not isinstance(d, int) or d < 1:
+                raise LandingError(f"{tn}: local_status_depth {b}={d!r} is not an integer >= 1")
+            return d
+        if isinstance(lsd, dict):
+            bad = sorted(set(lsd) - (set(mask["outputs"]) | set(intra_out)) | ({tree_bus} & set(lsd)))
+            if bad:raise LandingError(f"{tn}: local_status_depth names {bad}, not a local status output")
         prev = None
         for k in range(1, depth):
             ro, fo = f"cland_agg_r{k}", f"cland_agg_f{k}"
@@ -1136,8 +1146,19 @@ class Landings:
                 collect(f"u_cland_up_{b}", final_n, final_in[0], final_in[1], f"cland_up_ready_{b}", f"cland_up_fault_{b}")
                 outputs.append(dict(bus=b, carries="aggregate", registered_depth=depth))
             else:
-                collect(f"u_cland_up_{b}", max(1, len(ins)), ready_l, fault_l, f"cland_up_ready_{b}", f"cland_up_fault_{b}")
-                outputs.append(dict(bus=b, carries="local", registered_depth=1))
+                # local status: local_status_depth (plan field, default 1) registered stages on THIS output only
+                # (DIE-HEAD-36, OWNER (A) 10-29): d-1 status relays u_cland_loc_<b>_<k> before the dedicated output
+                # register, so a long source-band -> status-pin path is cut into hops <= the plan reach. Status only
+                # (level ready / sticky fault, observed d-1 cycles later), 0 data cycles; d=1 is the original form.
+                ldep = local_depth(b)
+                lin, ln = (ready_l, fault_l), max(1, len(ins))
+                for k in range(1, ldep):
+                    ro, fo = f"cland_loc_r_{b}_{k}", f"cland_loc_f_{b}_{k}"
+                    logic.append(f"    wire {ro}, {fo};")
+                    collect(f"u_cland_loc_{b}_{k}", ln, lin[0], lin[1], ro, fo)
+                    lin, ln = (ro, fo), 1
+                collect(f"u_cland_up_{b}", ln, lin[0], lin[1], f"cland_up_ready_{b}", f"cland_up_fault_{b}")
+                outputs.append(dict(bus=b, carries="local", registered_depth=ldep))
         if tree_bus is None:
             spec = self.collector.get("observer") or {}
             if "OPEN" in (spec.get("module"), spec.get("instance_suffix"), spec.get("fault_port"), spec.get("ready_port")):

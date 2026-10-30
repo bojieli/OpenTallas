@@ -1,0 +1,282 @@
+{
+ "moves": [
+  {
+   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21.json",
+   "orient": "",
+   "port": "ql_codes",
+   "to_face": "N",
+   "insts": 4,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    -0.09,
+    0.51,
+    0.11,
+    0.6
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21.json",
+   "orient": "",
+   "port": "ql_head",
+   "to_face": "N",
+   "insts": 4,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    -0.09,
+    0.51,
+    0.11,
+    0.6
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21.json",
+   "orient": "",
+   "port": "ql_sc",
+   "to_face": "N",
+   "insts": 4,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    -0.09,
+    0.51,
+    0.11,
+    0.6
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21.json",
+   "orient": "",
+   "port": "ql_v",
+   "to_face": "N",
+   "insts": 4,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    -0.09,
+    0.51,
+    0.11,
+    0.6
+   ]
+  },
+  {
+   "pins_file": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21.json",
+   "orient": "",
+   "port": "ql_w",
+   "to_face": "N",
+   "insts": 4,
+   "fails": [
+    2,
+    0
+   ],
+   "scores_after": [
+    -0.09,
+    0.51,
+    0.11,
+    0.6
+   ]
+  }
+ ],
+ "skipped": [
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "orient": "",
+   "port": "dq",
+   "why": "no face lowers the FAIL count 4",
+   "insts": [
+    "q_hub_nw/u_vmb_Q0_mu1",
+    "q_hub_nw/u_vmb_Q1_mu1",
+    "q_hub_nw/u_vmb_Q4_mu1",
+    "q_hub_nw/u_vmb_Q5_mu1",
+    "q_hub_nw/u_vmb_Q6_mu1",
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q0_mu1",
+    "q_hub_ne/u_vmb_Q1_mu1",
+    "q_hub_ne/u_vmb_Q4_mu1",
+    "q_hub_ne/u_vmb_Q5_mu1",
+    "q_hub_ne/u_vmb_Q6_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "orient": "",
+   "port": "rq2",
+   "why": "no face lowers the FAIL count 3",
+   "insts": [
+    "q_hub_nw/u_vmb_Q0_mu1",
+    "q_hub_nw/u_vmb_Q1_mu1",
+    "q_hub_nw/u_vmb_Q4_mu1",
+    "q_hub_nw/u_vmb_Q5_mu1",
+    "q_hub_nw/u_vmb_Q6_mu1",
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q0_mu1",
+    "q_hub_ne/u_vmb_Q1_mu1",
+    "q_hub_ne/u_vmb_Q4_mu1",
+    "q_hub_ne/u_vmb_Q5_mu1",
+    "q_hub_ne/u_vmb_Q6_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vec6293__270x403.92__canon__codex_g21.json",
+   "orient": "",
+   "port": "rr2",
+   "why": "no face lowers the FAIL count 3",
+   "insts": [
+    "q_hub_nw/u_vmb_Q0_mu1",
+    "q_hub_nw/u_vmb_Q1_mu1",
+    "q_hub_nw/u_vmb_Q4_mu1",
+    "q_hub_nw/u_vmb_Q5_mu1",
+    "q_hub_nw/u_vmb_Q6_mu1",
+    "q_hub_nw/u_vmb_Q7_mu1",
+    "q_hub_ne/u_vmb_Q0_mu1",
+    "q_hub_ne/u_vmb_Q1_mu1",
+    "q_hub_ne/u_vmb_Q4_mu1",
+    "q_hub_ne/u_vmb_Q5_mu1",
+    "q_hub_ne/u_vmb_Q6_mu1",
+    "q_hub_ne/u_vmb_Q7_mu1"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "orient": "",
+   "port": "kq",
+   "why": "no face lowers the FAIL count 2",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "orient": "",
+   "port": "rq1",
+   "why": "no face lowers the FAIL count 1",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "orient": "",
+   "port": "rr0",
+   "why": "no face lowers the FAIL count 1",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  },
+  {
+   "pins_file": "cores/hnx_vms_bank_q0_faces__vecd4ae__270x403.92__canon__fr15__o_R0__codex_g21.json",
+   "orient": "",
+   "port": "rr1",
+   "why": "no face lowers the FAIL count 1",
+   "insts": [
+    "q_hub_nw/u_vmb_Q1",
+    "q_hub_nw/u_vmb_Q3",
+    "q_hub_nw/u_vmb_Q5",
+    "q_hub_ne/u_vmb_Q0",
+    "q_hub_ne/u_vmb_Q1",
+    "q_hub_ne/u_vmb_Q2",
+    "q_hub_ne/u_vmb_Q3",
+    "q_hub_ne/u_vmb_Q4",
+    "q_hub_ne/u_vmb_Q5"
+   ]
+  }
+ ],
+ "tables": {
+  "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21__fr28.json": {
+   "old": "cores/ot_hbm_idx_query_static__170.64x164.16__canon__d16f__codex_g21.json",
+   "cores": [
+    "q_hub_nw/u_hb_idx__q_Q__q0",
+    "q_hub_nw/u_hb_idx__q_Q__q1",
+    "q_hub_ne/u_hb_idx__q_Q__q0",
+    "q_hub_ne/u_hb_idx__q_Q__q1"
+   ],
+   "ports": {
+    "ql_codes": {
+     "pins": 512,
+     "from_faces": {
+      "W": 512
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1708
+    },
+    "ql_sc": {
+     "pins": 32,
+     "from_faces": {
+      "W": 32
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1196
+    },
+    "ql_w": {
+     "pins": 16,
+     "from_faces": {
+      "W": 16
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1164
+    },
+    "ql_head": {
+     "pins": 8,
+     "from_faces": {
+      "W": 8
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1148
+    },
+    "ql_v": {
+     "pins": 1,
+     "from_faces": {
+      "W": 1
+     },
+     "to_face": "N",
+     "layer": "M5",
+     "track_step": 2,
+     "free_tracks": 1140
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,78 @@
+{
+ "basis": "DIE-HBM-28-C: price the HBM scorer row-1 feed hop chain (b100 -> b102, 2,777 b, ~11.2 mm after V-R1, ~28 stations\n-> ~30 added cycles) + row-1 result return b103 -> b101 (~73 b, adjacent, ~1-2 cycles) on the IDX (index scorer)\nrecords, ON TOP OF the TOK-HBM-11 estimate of record (A+B op-aware: EP_S1 34 x cross + coll q0 drop 32/17 x cross =\n5.163 % -> 1812.4 tok/s).  SAME ds S2 schedule model as tok_hbm11.py / DIE-HBM-10 tok_rerun_c22.py (accepted_cost\ng25 rank0, NativeCost, T.schedule); IDX cycles added serially per IDX record (the way DIE-HBM-10 added IDX +17).\nRun at repo root: PYTHONPATH=src python3 tok_hbm28c.py OUT.json",
+ "idx_ops": {
+  "TOPK": 40,
+  "INDEX": 8
+ },
+ "records_per_unit": {
+  "FUSED": 201,
+  "SM": 1095,
+  "COLL": 642,
+  "DMA": 420,
+  "SU": 1356,
+  "CTL": 197,
+  "ATT": 80,
+  "HC": 80,
+  "IDX": 48,
+  "ARGMAX": 1
+ },
+ "base_cycles": 576702.4178468838,
+ "ab_cycles": 606474.9311551548,
+ "ab_cost_pct": 5.163,
+ "rows": [
+  {
+   "case": "IDX +17 alone (DIE-HBM-10 check)",
+   "idx_add": 17,
+   "cycles": 577518.4178468838,
+   "cost_pct_vs_1906": 0.141,
+   "tok_s": 1903.3
+  },
+  {
+   "case": "IDX +30 alone",
+   "idx_add": 30,
+   "cycles": 578142.4178468838,
+   "cost_pct_vs_1906": 0.25,
+   "tok_s": 1901.3
+  },
+  {
+   "case": "A+B + IDX +22",
+   "idx_add": 22,
+   "cycles": 607530.9311551548,
+   "cost_pct_vs_1906": 5.346,
+   "tok_s": 1809.3,
+   "delta_pct_vs_1812": 0.174
+  },
+  {
+   "case": "A+B + IDX +30 (feed chain, ESTIMATE OF RECORD)",
+   "idx_add": 30,
+   "cycles": 607914.9311551548,
+   "cost_pct_vs_1906": 5.412,
+   "tok_s": 1808.1,
+   "delta_pct_vs_1812": 0.237
+  },
+  {
+   "case": "A+B + IDX +32 (feed 30 + result return 2)",
+   "idx_add": 32,
+   "cycles": 608010.9311551548,
+   "cost_pct_vs_1906": 5.429,
+   "tok_s": 1807.9,
+   "delta_pct_vs_1812": 0.253
+  },
+  {
+   "case": "A+B + IDX +34",
+   "idx_add": 34,
+   "cycles": 608106.9311551548,
+   "cost_pct_vs_1906": 5.446,
+   "tok_s": 1807.6,
+   "delta_pct_vs_1812": 0.269
+  },
+  {
+   "case": "A+B + IDX +60 (bound: feed + return each a full 30-cyc chain)",
+   "idx_add": 60,
+   "cycles": 609354.931155155,
+   "cost_pct_vs_1906": 5.662,
+   "tok_s": 1803.9,
+   "delta_pct_vs_1812": 0.475
+  }
+ ]
+}

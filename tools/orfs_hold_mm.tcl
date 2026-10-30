@@ -687,6 +687,46 @@ proc ot_repair_hold_guarded {rt_args} {
   if {$capped} { puts "OT_HOLD_MM after repair: OT_HOLD_GUARD chunk buffer caps reached (RSZ-0060); continuing" }
 }
 
+# BEGIN GRT-CLK-LOCK
+# GRT-CLK-LOCK (FLOW-CLOCK-R8 2026-10-29).  After the GRT-stage repair (hold buffers placed on top of the cells at the
+# D pins) ORFS global_route.tcl legalizes (detailed_placement) and re-routes every net with a moved pin
+# (global_route -end_incremental), and no hold check follows.  On HBM qwdec_k22pad_m10 the legalization moved 636
+# clock-net instances (max 4 um), 333 / 1788 clock nets were re-routed in the hold-buffer congestion, and the FF hold the
+# repair measured (+4.39) read -6.16 in the pre-route gate on the written 5_1_grt.odb; the same two-mode session
+# rebuilt on that odb also reads -6.16 (so corner, RC, CPPR and vclk frames agree; the design changed after repair).
+# The clock tree is final at GRT: in the GRT stage of a two-mode session, every clock-net instance (buffers + sinks)
+# is FIRM during detailed_placement, so the clock routes stay the ones the repair timed.  OT_GRT_CLK_LOCK=0 disables.
+proc ot_grt_clk_lock_on {} {
+  expr {[info exists ::ot_mm_stage] && $::ot_mm_stage eq "4_cts.sdc" &&
+        (![info exists ::env(OT_GRT_CLK_LOCK)] || $::env(OT_GRT_CLK_LOCK) ne "0")}
+}
+proc ot_grt_clk_insts {} {
+  set out [dict create]
+  foreach n [[ord::get_db_block] getNets] {
+    if {[$n getSigType] ne "CLOCK"} continue
+    foreach it [$n getITerms] {
+      set i [$it getInst]
+      if {[$i getPlacementStatus] eq "PLACED"} { dict set out [$i getName] $i }
+    }
+  }
+  return [dict values $out]
+}
+if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} {
+  rename ::detailed_placement ::ot_grt_dpl_orig
+  proc ::detailed_placement {args} {
+    if {![ot_grt_clk_lock_on]} { return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]] }
+    set locked [ot_grt_clk_insts]
+    foreach i $locked { $i setPlacementStatus FIRM }
+    puts "OT_GRT_CLK_LOCK: [llength $locked] clock-net instances FIRM during detailed_placement"
+    try {
+      return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]]
+    } finally {
+      foreach i $locked { $i setPlacementStatus PLACED }
+    }
+  }
+}
+# END GRT-CLK-LOCK
+
 # MACRO-CLK (2026-10-10): this helper is sourced in every ORFS stage of every run_abi3_physical / hbm_accel_smh route, so
 # it carries the flow-default macro clock clustering (clock_tree_synthesis wrapper; physical/common_flow/
 # macro_cts_cluster.tcl, which the closure loop ships into older snapshots next to this file).

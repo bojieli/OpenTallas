@@ -1,0 +1,54 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/die-head-34/src25p",
+ "base_sidecar_sha256": "d898b3856c3731e7eaa1ea8d6dc594b1a02d4507a1abff554b64fabbddc8e570",
+ "reach_um": 450.0,
+ "types": {
+  "hd_st_str": {
+   "d_o": {
+    "path_um": 1442.88,
+    "depth": 4,
+    "hop_um": 360.72
+   }
+  },
+  "hd_st_n3_transit": {
+   "d2_o": {
+    "path_um": 1442.88,
+    "depth": 4,
+    "hop_um": 360.72
+   }
+  },
+  "hd_st_m": {
+   "tx_o": {
+    "path_um": 1442.88,
+    "depth": 4,
+    "hop_um": 360.72
+   }
+  },
+  "ot_s81hd_st_m.sv": {
+   "rtl": {
+    "src_sha256": "24bced7a3940b1d19fa8294b20f67fe617db115423ea82ddd018b9afb0d03c88",
+    "out_sha256": "c8811603ce7927ab807b38d79f1e01bdfb7bf1cba79a2f484e006dd96246871b",
+    "lines_added": 14,
+    "lines_removed": 2
+   }
+  },
+  "ot_s81hd_st_n3_transit.sv": {
+   "rtl": {
+    "src_sha256": "dab3165419cc9540026257dfb133ec6638e40cc1246dff9f721d060dccbb3751",
+    "out_sha256": "aec97ca812ed0facac1edee006021bd81c3f6648ca809dc9b15eadf3bd6581c9",
+    "lines_added": 14,
+    "lines_removed": 2
+   }
+  },
+  "ot_s81hd_st_str.sv": {
+   "rtl": {
+    "src_sha256": "1f91c509642c8352c4706a931acae9637a4fe0e037e2959917f4731a508dcb82",
+    "out_sha256": "269dcf834ca4a8eace64a185daf76dd846c4848b42ee3f5d722788f2136445f0",
+    "lines_added": 14,
+    "lines_removed": 2
+   }
+  }
+ },
+ "sidecar_sha256": "9ac3b03d0caab9dde0410074a4359be7694c925d1b9747d0bdd12df0500727cc",
+ "plan_sha256": "dfc1826f91e0059650b82897ae062bdbf82313c418db809a2eaebecf081f4b99"
+}

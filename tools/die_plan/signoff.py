@@ -788,7 +788,7 @@ def ft_fill_model(decl, model, corners):
 
 def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FANOUT_MAX, odb="6_final.odb",
                 ff_vclk="sdc", ff_bound_ps=None, hold_in_min=None, hold_out_min=None, hold_in_min_ports=None, core_taps_ff=False, hold_out_min_ports=None,
-                ft_decl=None, tap_window=None, droop=None, pair_targets=False):
+                ft_decl=None, tap_window=None, droop=None, pair_targets=False, fwd_ring=None):
     """pair_targets: True = the corner's planned core clock-pin earliness file is mounted at /sdc/pair_targets.txt
     (pair_target_file): the related pair skew is then also measured target-relative (pair_skew.tcl ot_ps_load_targets)
     and the gate reads that; False = no target lines (session byte-identical).  tap_window: the plan's per-tap latency window (sdc_lint.json tap_window_ps, gen_phys.tap_window_ps): the
@@ -834,6 +834,10 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                           "so FT_DIE_TIMED in $so_ft_in out $so_ft_out\n")
         t = t.replace(b_, "  if {[llength $so_dout]} { set_output_delay -min @OUT_MIN@ -clock [lindex $so_vclk 0] $so_dout }\n")
         t = t.replace("so DONE 1\n", ft_char_tcl(ft_decl) + "so DONE 1\n")
+    if fwd_ring:
+        t = _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports)
+        hold_in_min_ports = {k: v for k, v in (hold_in_min_ports or {}).items()
+                             if k not in {sel.split("[")[0] for _ck, sels in fwd_ring for sel in sels}}
     t = t.replace("@DROOP665@", "" if not droop else (
         "# ---- 12.4a b2 0.665 V data droop re-time (INFORMATION only, never a reason) ----\n" + droop +
         "so DROOP665_WNS_MAX [so_ps [sta::worst_slack_cmd max]]\n"
@@ -856,6 +860,53 @@ def session_tcl(corner, mlibs_ctr, spef, ins_tol=INSERTION_TOL_PS, fanout_max=FA
                  ("@PAIR_CREDIT_MAX@", str(int(PAIR_CREDIT_MAX)))):
         t = t.replace(k, v)
     return t
+
+
+FWD_RING_TAG = "# OT_FWD_RING_INPUTS"
+
+
+def fwd_ring_inputs(sdc_text):
+    """[(forwarded clock, [port selectors])] from the golden SDC's landing_contract.ring_input_sdc tags; [] = none."""
+    out = []
+    for ln in sdc_text.splitlines():
+        if ln.startswith(FWD_RING_TAG + " "):
+            w = ln.split()[2:]
+            if len(w) < 2:
+                raise ValueError(f"signoff: malformed {FWD_RING_TAG} line: {ln}")
+            out.append((w[0], w[1:]))
+    return out
+
+
+def _fwd_ring_tcl(t, fwd_ring, hin, hold_in_min_ports):
+    """DIE-HEAD-36 (COORD 10-29 21:11 (3)): source-synchronous ring inputs are timed against their forwarded write
+    clock (golden SDC).  (a) The clock insertion measure uses the pinreg_measure.tcl flop set: the forwarded ring
+    writers (registers clocked only by a forwarded ring clock) are not local-clock pin flops.  (b) Those inputs leave
+    $so_din (the vclk boundary-hold overlay would replace their forwarded-clock input delays, OpenSTA drops a port's
+    other-clock delays) and get the same overlay min re-referenced to their own forwarded clock."""
+    regs_ff = "foreach p [all_registers -clock_pins] { dict set so_ff_regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }\n"
+    regs = "foreach p [all_registers -clock_pins] { dict set so_regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }\n"
+    inputs = "so INPUTS {*}[lsort -unique [lmap p $so_din {regsub {\\[[0-9]+\\]$} [get_full_name $p] {}}]]\n"
+    ov = "@IN_MIN_PORTS@\n"
+    for a in (regs, inputs, ov):
+        if t.count(a) != 1:
+            raise ValueError("signoff: session template anchors for the forwarded-ring scope changed")
+    if t.count(regs_ff) > 1:
+        raise ValueError("signoff: session template anchors for the forwarded-ring scope changed")
+    clocks = " ".join(sorted({ck for ck, _ in fwd_ring}))
+    sel = " ".join(s for _ck, sels in fwd_ring for s in sels)
+    keep = "if {[llength [get_property $p clocks]] == 1 && [get_full_name [lindex [get_property $p clocks] 0]] in $::so_fwd_clks} continue; "
+    t = t.replace(regs_ff, regs_ff.replace("{ dict set", "{ " + keep + "dict set"))
+    t = t.replace(regs, regs.replace("{ dict set", "{ " + keep + "dict set"))
+    t = t.replace(inputs, inputs + f"set so_fwd_clks {{{clocks}}}\n"
+                  f"set so_fwd_in [lmap p [get_ports {{{sel}}}] {{get_full_name $p}}]\n"
+                  "set so_din [lmap p $so_din {if {[get_full_name $p] in $so_fwd_in} continue; set p}]\n"
+                  "so FWD_RING_INPUTS clocks $so_fwd_clks ports [llength $so_fwd_in]\n")
+    lines = []
+    for ck, sels in fwd_ring:
+        for s in sels:
+            v = float((hold_in_min_ports or {}).get(s.split("[")[0], hin))
+            lines.append(f"  set_input_delay -min {v:g} -clock {ck} [get_ports {{{s}}}]\n")
+    return t.replace(ov, ov + "".join(lines))
 
 
 def _port_hold_overlay(direction, values, ft_decl, shift=0.0):
@@ -1110,7 +1161,8 @@ def run_corner(corner, disc, out, image=IMAGE, docker="sudo docker", dry=False, 
                                                 hold_out_min_ports=lctx.get("hold_out_min_ports_ps"),
                                                 tap_window=lctx.get("tap_window_ps"),
                                                 droop=droop if corner == "tt" else None,
-                                                pair_targets=ptf is not None))
+                                                pair_targets=ptf is not None,
+                                                fwd_ring=fwd_ring_inputs(Path(disc["sdc"]).read_text())))
     vol = " ".join(f"-v {shlex.quote(h)}:/{c}" + ("" if c == "out" or c == "sdc" else ":ro") for c, h in mounts)
     cmd = (f"{docker} run --rm --name so_{os.getpid()}_{corner}_{abs(hash(disc['base'])) % 100000} {vol} {image} "
            f"{OPENROAD} -no_init -exit /out/session.tcl")

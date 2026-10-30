@@ -1,0 +1,313 @@
+{
+ "schema": "opentallas.hbm.plan_delta.v1",
+ "lane": "DIE-HBM-28-K",
+ "item": "xq_pegress outline",
+ "status": "PROPOSED, NOT APPLIED; option B needs a COORD/owner ruling on 2 pin layers per hard-core face",
+ "std_area_um2": {
+  "std": 1371.9,
+  "buf": 944.6,
+  "ff": 3716.5,
+  "tap": 351.0,
+  "fill_basis": 6032.9
+ },
+ "pins_total": 5184,
+ "face_pins": 5179,
+ "pins_now": {
+  "outline": [
+   362.88,
+   276.48
+  ],
+  "fill": 0.0601,
+  "faces": {
+   "W": {
+    "pins": 1298,
+    "per_um": 5.01
+   },
+   "E": {
+    "pins": 1081,
+    "per_um": 4.17
+   },
+   "S": {
+    "pins": 752,
+    "per_um": 2.18
+   },
+   "N": {
+    "pins": 2048,
+    "per_um": 5.93
+   }
+  }
+ },
+ "buses_now": {
+  "I": {
+   "clk": 1,
+   "clk_w": 1,
+   "clk_s": 1,
+   "clk_e": 1,
+   "clk_c": 1
+  },
+  "W": {
+   "xw_data": 1296,
+   "x_done": 1,
+   "xw_last": 1
+  },
+  "E": {
+   "rwq": 1024,
+   "ede": 17,
+   "ed5": 8,
+   "bq_addr": 7,
+   "bq_b": 7,
+   "xw_addr": 7,
+   "xw_grp": 7,
+   "rn": 1,
+   "bq_v": 1,
+   "bq_last": 1,
+   "xw_en": 1
+  },
+  "S": {
+   "xw_data": 752
+  },
+  "N": {
+   "bq_d": 2048
+  }
+ },
+ "old_kit_outline": {
+  "outline": [
+   369.36,
+   369.36
+  ],
+  "fill": 0.0442
+ },
+ "core_macros_now": {
+  "outline_um": [
+   369.36,
+   369.36
+  ],
+  "status": "NONE"
+ },
+ "option_A": {
+  "rule": "1 layer/face, 6 pins/um",
+  "min_span_um": 863.2,
+  "square_min": 233.22,
+  "outline": [
+   233.28000000000003,
+   233.28000000000003
+  ],
+  "fill": 0.1109,
+  "aspect2_best": {
+   "outline": [
+    311.0,
+    155.5
+   ],
+   "fill": 0.1248
+  },
+  "verdict": "fill gate 0.20 (and 0.15) unreachable at aspect <= 2 with 1 pin layer/face"
+ },
+ "option_B": {
+  "rule": "2 layers/face (N/S M5+M7, E/W M4+M6), 6 pins/um per layer",
+  "outline": [
+   190.08,
+   146.88
+  ],
+  "fill": 0.2161,
+  "aspect": 1.294,
+  "faces": {
+   "N": {
+    "pins": 2048,
+    "per_um": 11.86,
+    "per_um_per_layer": 5.93
+   },
+   "S": {
+    "pins": 752,
+    "per_um": 4.36,
+    "per_um_per_layer": 2.18
+   },
+   "W": {
+    "pins": 1298,
+    "per_um": 10.03,
+    "per_um_per_layer": 5.01
+   },
+   "E": {
+    "pins": 1081,
+    "per_um": 8.35,
+    "per_um_per_layer": 4.18
+   }
+  },
+  "note": "face assignment unchanged (N bq_d 2048, S xw_data 752, W xw_data 1296+2, E rwq 1024+57)"
+ },
+ "core_macros": {
+  "ot_hgi_sm_xload_xq_pegress": {
+   "status": "NONE",
+   "outline_um": [
+    190.08,
+    146.88
+   ],
+   "basis": "DIE-HBM-28-K outline proposal (option B); no macros; kit rebuild required",
+   "macros": [],
+   "sources": [],
+   "recipe_macros": []
+  }
+ },
+ "die_plan_hard_cores": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_eg",
+   "outline_um_old": [
+    362.88,
+    276.48
+   ],
+   "outline_um_new": [
+    190.08,
+    146.88
+   ],
+   "origin_um": [
+    2263.68,
+    3931.2
+   ]
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_eg",
+   "outline_um_old": [
+    362.88,
+    276.48
+   ],
+   "outline_um_new": [
+    190.08,
+    146.88
+   ],
+   "origin_um": [
+    1252.8,
+    1460.16
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_eg",
+   "outline_um_old": [
+    362.88,
+    276.48
+   ],
+   "outline_um_new": [
+    190.08,
+    146.88
+   ],
+   "origin_um": [
+    2263.68,
+    3922.56
+   ]
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_eg",
+   "outline_um_old": [
+    362.88,
+    276.48
+   ],
+   "outline_um_new": [
+    190.08,
+    146.88
+   ],
+   "origin_um": [
+    1252.8,
+    1460.16
+   ]
+  }
+ ],
+ "slots": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p0_eg",
+   "orient": "MX",
+   "origin": [
+    2263.68,
+    3931.2
+   ],
+   "old": [
+    362.88,
+    276.48
+   ],
+   "new": [
+    190.08,
+    146.88
+   ],
+   "inside_old": true,
+   "overlaps_new": [],
+   "overlaps_old": [],
+   "partitions_of_type": 1
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_xq_Q_p1_eg",
+   "orient": null,
+   "origin": [
+    1252.8,
+    1460.16
+   ],
+   "old": [
+    362.88,
+    276.48
+   ],
+   "new": [
+    190.08,
+    146.88
+   ],
+   "inside_old": true,
+   "overlaps_new": [],
+   "overlaps_old": [],
+   "partitions_of_type": 1
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p0_eg",
+   "orient": "MX",
+   "origin": [
+    2263.68,
+    3922.56
+   ],
+   "old": [
+    362.88,
+    276.48
+   ],
+   "new": [
+    190.08,
+    146.88
+   ],
+   "inside_old": true,
+   "overlaps_new": [],
+   "overlaps_old": [],
+   "partitions_of_type": 1
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_xq_Q_p1_eg",
+   "orient": null,
+   "origin": [
+    1252.8,
+    1460.16
+   ],
+   "old": [
+    362.88,
+    276.48
+   ],
+   "new": [
+    190.08,
+    146.88
+   ],
+   "inside_old": true,
+   "overlaps_new": [],
+   "overlaps_old": [],
+   "partitions_of_type": 1
+  }
+ ],
+ "opstore_a_q_b113_slot": {
+  "type": "q_b113",
+  "outline": [
+   1857.6,
+   1572.48
+  ],
+  "free_slots_for_760x484": 0,
+  "first": [],
+  "right_column_width": 423.36,
+  "note": "obstacles = other hard cores + die_ft_bands (EW y 8.64-207.36, NS x 310-656)"
+ }
+}
