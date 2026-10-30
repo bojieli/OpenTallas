@@ -26,6 +26,7 @@ def main():
     ap.add_argument("--restore-native-profile", action="store_true")
     ap.add_argument("--fresh-correspond", action="store_true")
     ap.add_argument("--restore-keymaps", action="store_true")
+    ap.add_argument("--metadata-keymaps-only", action="store_true")
     a = ap.parse_args()
     sys.path.insert(0, str(a.tool.parent))
     import lec
@@ -57,7 +58,8 @@ def main():
         lec.json_alias_keys(L, log, work=a.out)
         lec.slang_element_keys(L, log, work=a.out)
         lec.alias_arrays(L, log, work=a.out)
-        lec.relayout(L, log, packed=lec.slang_packed_vectors(a.out / "gold.aliases.json"))
+        if not a.metadata_keymaps_only:
+            lec.relayout(L, log, packed=lec.slang_packed_vectors(a.out / "gold.aliases.json"))
         lec.renamed(L, log)
     if a.fresh_correspond:
         # Correspondence also rekeys frontend array aliases; hyp.json alone
