@@ -1,0 +1,30 @@
+{
+ "source_sha256": "1aefc6184b2a390f1599599878b65245b208778fe6f97f6607ee9f246fbccce3",
+ "swapped_parts": [
+  "NW_b102",
+  "NW_b103",
+  "NE_b102",
+  "NE_b103"
+ ],
+ "width_um": 708.48,
+ "old_b102_B013_shared_um": 60.48,
+ "new_b102_B013_shared_um": 492.48,
+ "required_payload_bits": 2746,
+ "face_pin_layers": 2,
+ "approx_pin_capacity": 2954,
+ "required_window_um": 457.8333333333333,
+ "affected_lanes": [
+  "L48",
+  "L48m",
+  "L53",
+  "L53m",
+  "L164",
+  "L179",
+  "L164m",
+  "L179m"
+ ],
+ "outline_changes": 0,
+ "core_local_coordinates_changed": false,
+ "clock_contract_changed": false,
+ "physical_verdict": "ESTIMATE ONLY; legal routes/clock sidecars/G0 pending"
+}

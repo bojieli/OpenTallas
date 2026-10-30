@@ -1,0 +1,13 @@
+{
+ "incident": "inherited replan_event11 hardlinked replan_report then wrote through alias",
+ "base_report": "/srv/opentallas-scratch2/claude/die-hbm-29/plan/d29d/replan_report.json",
+ "candidate_report": "/srv/opentallas-scratch2/claude/codex-hbm-bind-2249/swap102/replan_report.json",
+ "shared_before": true,
+ "own_alias_broken": true,
+ "base_report_restored": false,
+ "old_authoritative_report_sha": "UNKNOWN",
+ "base_plan_sha256": "1aefc6184b2a390f1599599878b65245b208778fe6f97f6607ee9f246fbccce3",
+ "own_g0_report_unlinked_before_check": true,
+ "canonical_g0_report_restored": false,
+ "no_source_core_writes": true
+}

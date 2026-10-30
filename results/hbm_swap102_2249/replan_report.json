@@ -1,0 +1,306 @@
+{
+ "schema": "die_hbm_22.replan_event.v1",
+ "variant": {
+  "name": "CODEX_SWAP_B102_B103",
+  "rowh": {
+   "A": 1555.2,
+   "C": 1572.48
+  },
+  "A": [
+   "NW_b103",
+   "NW_b102",
+   "NW_b111",
+   "NW_su20",
+   "NW_su21",
+   "NW_spu1",
+   "NW_su30",
+   "NW_su31",
+   "NW_b110",
+   "NW_b100",
+   "NW_b101"
+  ],
+  "C": [
+   "NW_b113",
+   "NW_su00",
+   "NW_su01",
+   "NW_spu0",
+   "NW_su10",
+   "NW_su11",
+   "NW_b112"
+  ]
+ },
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-29/plan/d29d",
+ "base_sha": "1aefc6184b2a",
+ "out_sha": "81812ecaac39",
+ "moved": [
+  "NE_b102",
+  "NE_b103",
+  "NW_b102",
+  "NW_b103"
+ ],
+ "outline_changes": [],
+ "dropped": 8,
+ "phase1": {
+  "rebuilt": [
+   {
+    "id": "L164",
+    "src": "NW_b102",
+    "dst": "NW_b103",
+    "bits": 3367,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b102",
+     "NW_b103"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b102",
+      "NW_b103"
+     ]
+    ]
+   },
+   {
+    "id": "L179",
+    "src": "NW_b103",
+    "dst": "NW_b102",
+    "bits": 1146,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b103",
+     "NW_b102"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b103",
+      "NW_b102"
+     ]
+    ]
+   },
+   {
+    "id": "L48",
+    "src": "NW_io",
+    "dst": "root",
+    "bits": 634,
+    "cycles": 69,
+    "old_cycles": 64,
+    "old_chain": [
+     "NW_io",
+     "NW_b102",
+     "NW_b103",
+     "NW_b111",
+     "NW_su20",
+     "NW_su21",
+     "NW_spu1",
+     "NW_su30",
+     "NW_su31",
+     "NW_b110",
+     "NW_b100",
+     "NW_b101",
+     "root"
+    ],
+    "runs": [
+     [
+      0,
+      3
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_b003",
+      "NW_b111"
+     ]
+    ]
+   },
+   {
+    "id": "L53",
+    "src": "root",
+    "dst": "NW_io",
+    "bits": 612,
+    "cycles": 54,
+    "old_cycles": 56,
+    "old_chain": [
+     "root",
+     "NW_b101",
+     "NW_b100",
+     "NW_b110",
+     "NW_su31",
+     "NW_su30",
+     "NW_spu1",
+     "NW_su21",
+     "NW_su20",
+     "NW_b111",
+     "NW_b103",
+     "NW_b102",
+     "NW_io"
+    ],
+    "runs": [
+     [
+      9,
+      12
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b111",
+      "NW_b102",
+      "NW_b103",
+      "NW_io"
+     ]
+    ]
+   },
+   {
+    "id": "L164m",
+    "src": "NE_b102",
+    "dst": "NE_b103",
+    "bits": 3367,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b102",
+     "NE_b103"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b102",
+      "NE_b103"
+     ]
+    ]
+   },
+   {
+    "id": "L179m",
+    "src": "NE_b103",
+    "dst": "NE_b102",
+    "bits": 1146,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b103",
+     "NE_b102"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b103",
+      "NE_b102"
+     ]
+    ]
+   },
+   {
+    "id": "L48m",
+    "src": "NE_io",
+    "dst": "root",
+    "bits": 634,
+    "cycles": 69,
+    "old_cycles": 64,
+    "old_chain": [
+     "NE_io",
+     "NE_b102",
+     "NE_b103",
+     "NE_b111",
+     "NE_su20",
+     "NE_su21",
+     "NE_spu1",
+     "NE_su30",
+     "NE_su31",
+     "NE_b110",
+     "NE_b100",
+     "NE_b101",
+     "root"
+    ],
+    "runs": [
+     [
+      0,
+      3
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_b003",
+      "NE_b111"
+     ]
+    ]
+   },
+   {
+    "id": "L53m",
+    "src": "root",
+    "dst": "NE_io",
+    "bits": 612,
+    "cycles": 54,
+    "old_cycles": 56,
+    "old_chain": [
+     "root",
+     "NE_b101",
+     "NE_b100",
+     "NE_b110",
+     "NE_su31",
+     "NE_su30",
+     "NE_spu1",
+     "NE_su21",
+     "NE_su20",
+     "NE_b111",
+     "NE_b103",
+     "NE_b102",
+     "NE_io"
+    ],
+    "runs": [
+     [
+      9,
+      12
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b111",
+      "NE_b102",
+      "NE_b103",
+      "NE_io"
+     ]
+    ]
+   }
+  ],
+  "failed": [],
+  "decl_conflicts": [],
+  "street_reuse": []
+ },
+ "cycle_changes": {
+  "n": 4,
+  "up": 2,
+  "max_up": 5,
+  "max_down": -2
+ },
+ "phase2": null,
+ "not_updated": [
+  "clock sidecars (clock_taps_die.json, clock_htree.json, entries.json, clock_entries.json)",
+  "pg_bumps.json",
+  "type internal_stations / die_ft_bands of moved types"
+ ]
+}
