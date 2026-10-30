@@ -528,7 +528,7 @@ def _std_cell(master):
 def sdc_clock_ports(text):
     """port names of every `create_clock ... [get_ports NAME]` in a kit SDC (virtual clocks have no port)."""
     out = []
-    for m in re.finditer(r"^\s*create_clock\b[^\n]*\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]", text, re.M):
+    for m in re.finditer(r"^\s*create_clock\b[^\n]*\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)(?:\[0\])?\}?\s*\]", text, re.M):
         if m.group(1) not in out:
             out.append(m.group(1))
     return out
@@ -540,15 +540,15 @@ def sdc_clock_exports(text):
     out = []
     for m in re.finditer(r"^\s*create_generated_clock\b([^\n]*)$", text, re.M):
         ln = m.group(1)
-        src = re.search(r"-source\s+\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]", ln)
-        tgt = re.search(r"\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)\}?\s*\]\s*$", ln)
+        src = re.search(r"-source\s+\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)(?:\[0\])?\}?\s*\]", ln)
+        tgt = re.search(r"\[get_ports\s+\{?([A-Za-z_][A-Za-z0-9_]*)(?:\[0\])?\}?\s*\]\s*$", ln)
         if src and tgt and re.search(r"-divide_by\s+1\b", ln) and (tgt.group(1), src.group(1)) not in out:
             out.append((tgt.group(1), src.group(1)))
     return out
 
 
 def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(), clocks=(), land=None, dead=(),
-          exports=(), types=None):
+          exports=(), types=None, pad_clocks=()):
     """types: (top, {path: module}) from hier_module_types of the hierarchical netlist this flat netlist was written
     from (kit ODB write_verilog pass); fills only paths the netlist itself does not type; its top must match.
     straps: declared ID strap ports (OWNER 10-25 option B, straps.py): quasi-static strap_* inputs tied at the
@@ -1185,6 +1185,51 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             return f"slot ICGs gated from {len(roots)} clock nets (want one forwarded clock)"
         return None
 
+    # Explicit PHY clock pads are proved clock-only through the actual netlist,
+    # not exempted by their spelling. Opaque native endpoints require typed pins.
+    res_pad = {}
+    for pad in pad_clocks or ():
+        if pad.get('dir') != 'in':
+            continue
+        name = pad['name']
+        if T.dirs.get(name) != 'input' or len(_bits_of(T, name)) != 1 or not re.match(skip_re, name):
+            fail('pad_clock', name, 'want one input bit with an actual SDC create_clock')
+            continue
+        allowed = {(x['module'], x['pin']) for x in pad.get('sink_pins', [])}
+        root = port_root[_bits_of(T, name)[0]]
+        stack, visited, terminals, why = [(root, None)], set(), 0, None
+        while stack and why is None:
+            net, parent = stack.pop()
+            if net in visited:
+                continue
+            visited.add(net)
+            if len(drv[net]) != (0 if parent is None else 1):
+                why = 'clock net has an unexpected driver'; break
+            for ci, pin in loads[net]:
+                master, path, pp = F.cells[ci]
+                if (is_ff(master) and pin in ('CLK', 'C', 'CK')) or (master, pin) in allowed:
+                    terminals += 1; continue
+                if is_buf(master) or (master.upper().startswith('ICG') and pin == 'CLK'):
+                    ins = [(p, v) for p, (d, v) in pp.items() if d == 'in']
+                    outs = [v for p, (d, v) in pp.items() if d == 'out']
+                    if is_buf(master) and (len(ins) != 1 or len(ins[0][1]) != 1):
+                        why = f'non-scalar clock buffer {path}'; break
+                    if len(outs) != 1 or len(outs[0]) != 1:
+                        why = f'non-scalar clock output {path}'; break
+                    child = F.find(outs[0][0])
+                    if child in visited:
+                        why = f'clock buffer cycle at {path}'; break
+                    stack.append((child, ci)); continue
+                why = f'data/untyped load {master} {path}/{pin}'; break
+        if why is None and not terminals:
+            why = 'no sequential or typed native clock load'
+        if why:
+            fail('pad_clock', name, why)
+        else:
+            res_pad[name] = dict(clock_loads=terminals, nets=len(visited))
+    if pad_clocks:
+        res['pad_clock_inputs'] = res_pad
+
     res["clock_exports"] = {}
     exp_names = set()
     for t_, s_ in (exports or ()):               # a declared forwarded clock output: buffers only from its source port
@@ -1454,7 +1499,9 @@ def main(argv=None):
     lf = a.land or (str(Path(a.pins).with_name("land_slots.json")) if a.pins else None)
     land = kit_land(lf) if lf and Path(lf).exists() else None
     dl = kit_dead_list(Path(a.pins).parent) if a.pins else []
-    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex,
+    pcf = Path(bd) / 'pad_clock.json' if bd else None
+    pad_clocks = json.loads(pcf.read_text()).get('pins', []) if pcf and pcf.exists() else []
+    r = guard(Path(a.netlist).read_text(), a.top, pins=pins, ft1=ft1, straps=sl, bumps=bl, clocks=ck, land=land, dead=dl, exports=ex, pad_clocks=pad_clocks,
               types=hier_module_types(Path(a.types_from).read_text(), a.top) if a.types_from else None)
     r["netlist"] = a.netlist
     if a.types_from:

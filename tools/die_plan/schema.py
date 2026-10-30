@@ -952,6 +952,18 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# Existing PHY pad clocks have an explicit period/source and physical role.
+# They are distinct from registered landing clocks and imply no CDC exception.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"] = {
+    "type": "object", "additionalProperties": False, "required": ["pins"], "properties": {
+        "pins": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False,
+            "required": ["name", "dir", "period_ps", "source", "layer", "xy_um"],
+            "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
+                "period_ps": {"type": "number", "exclusiveMinimum": 0}, "source": _name,
+                "layer": _name, "xy_um": _xy, "source_clock_port": _name,
+                "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                    "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
 # FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15, opt-in): a forwarded clock output leaves through ONE dedicated buffer at its
 # source tap (landing_contract.export_tcl "fwd_buffer"), not tied onto the clk root net; default "tie" = legacy text.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_export_form"] = {
@@ -2029,6 +2041,12 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
+        if t.get('clock', {}).get('pad_clock') is not None:
+            import pad_clock as PC
+            try:
+                PC.pins(P, tn)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f'type {tn}: {exc}')
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")
