@@ -1,0 +1,8 @@
+BAD_FRAGMENT vec=0 frag=0 age_delta=8 want=8
+BAD_FRAGMENT vec=0 frag=1 age_delta=8 want=8
+BAD_FRAGMENT vec=0 frag=2 age_delta=8 want=8
+BAD_FRAGMENT vec=0 frag=3 age_delta=8 want=8
+VQ_TEMPORAL FAIL vectors=40 fragments=320 errors=320 source_fault=00 clock_ps=833 mapping20134
+[3831800000] %Fatal: tb_vq_temporal.sv:25: Assertion failed in tb_vq_temporal: temporal payload/date control
+%Error: tb_vq_temporal.sv:25: Verilog $stop
+Aborting...

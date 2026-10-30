@@ -177,5 +177,27 @@
   "physical_START_qualified": false,
   "whole_producer_math": false,
   "full_token": false,
-  "adoption": false
+  "adoption": false,
+  "followup_source_commit": "d09f362c3",
+  "native_safe_rstop_variant": "ot_s81sl_rstopt_xo",
+  "safe_stop_gate_status": "BUILD_RC=0\nCANDIDATE_RC=0\nLEGACY_RC=1\nMUTANT_RC=1\nGATE_PASS\n",
+  "minimum_vq_lockstep": {
+    "source": "canonical ot_s81sl_vq AQ_XMEM2, shared unchanged body; only candidate VQ k port temporal mapping, m_i unchanged",
+    "source_commit": "d09f362c3",
+    "vectors": 40,
+    "complete_XQ_XB_fragments": 320,
+    "payload_and_expected_edge_errors": 0,
+    "source_faults": 0,
+    "clock_ps": 833,
+    "candidate_input_payload_mutant_errors": 180,
+    "candidate_k_slot_mutant_errors": 320,
+    "rtl_edited": false,
+    "original_control_scope": "b05db1e67 controls altered oracle; successor controls alter actual candidate stimulus",
+    "initial_mutant_staging_failure": "vq2 compile rejected unspaced sized decimal literal preceding ternary; logs preserved; source d09 fixes whitespace"
+  },
+  "canonical_functional_sources": {
+    "ot_s81sl_vq.sv": "e10f5dcbf08f914bff340ce7a13652e115c89fd892a4678f49a8d2641599b943",
+    "ot_s81sl_rstopt_xo.sv": "93f98d8911a2a1cf6d63886ce7cd6bd1d0c112d7334841e3f5e1d7905aacd0fe",
+    "ot_s81sl_rstop_xo.sv": "a427eca7d19c85ab50570d5aa75c6cd97c8ab900446deadab00ea920d000740a"
+  }
 }

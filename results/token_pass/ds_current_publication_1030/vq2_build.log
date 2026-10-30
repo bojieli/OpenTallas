@@ -1,0 +1,8 @@
+%Error: tb_vq_temporal.sv:8:173: Mixing X/Z/? with digits not legal in decimal constant: 4?3
+    8 |  ot_s81sl_vq #(.AQ_XMEM(2))q(.clk(ck),.rst_n(rs),.y_v(yv),.y_i(yi),.y((g==1&&bad_payload)?(y^128'd1):y),.u_v(1'b0),.u_i(3'd0),.u(256'd0),.sid(4'd9),.k(g==0?k:(bad_age?(kp==3'd4?3'd0:kp+3'd1):kp)),.m_v(mv),.m_q(1'b1),.m_b(1'b1),.m_i(idx),.um_v(1'b0),.um_q(1'b0),.um_b(1'b0),.um_i(8'd0),.xf_v(v[g]),.xf_s(s[g]),.xf(d[g]),.fault(f[g]));
+      |                                                                                                                                                                             ^~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: tb_vq_temporal.sv:8:179: syntax error, unexpected INTEGER NUMBER
+    8 |  ot_s81sl_vq #(.AQ_XMEM(2))q(.clk(ck),.rst_n(rs),.y_v(yv),.y_i(yi),.y((g==1&&bad_payload)?(y^128'd1):y),.u_v(1'b0),.u_i(3'd0),.u(256'd0),.sid(4'd9),.k(g==0?k:(bad_age?(kp==3'd4?3'd0:kp+3'd1):kp)),.m_v(mv),.m_q(1'b1),.m_b(1'b1),.m_i(idx),.um_v(1'b0),.um_q(1'b0),.um_b(1'b0),.um_i(8'd0),.xf_v(v[g]),.xf_s(s[g]),.xf(d[g]),.fault(f[g]));
+      |                                                                                                                                                                                   ^~~
+%Error: Exiting due to 2 error(s)

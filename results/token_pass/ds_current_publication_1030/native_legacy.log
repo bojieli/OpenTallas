@@ -1,0 +1,5 @@
+BAD_EGRESS cyc=153 idx=1
+CURRENT_PUBLICATION FAIL got=51 unique=38 gather_checks=832 errors=253 stopfault=ffff middlefault=0 legacy=1 mutant=0
+[5717712000] %Fatal: tb_current_native.sv:189: Assertion failed in tb_current_publication: publication transport failed
+%Error: tb_current_native.sv:189: Verilog $stop
+Aborting...
