@@ -31,7 +31,38 @@ proc ot_vmh_pinreg_mean {} {
   set din {}
   foreach p [all_inputs] { if {[get_full_name $p] ni $ck_ports} { lappend din $p } }
   set regs {}
-  foreach p [all_registers -clock_pins] { dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p }
+  # The golden SDC declares the source-forwarded ring families explicitly.
+  # Their writer flops have their own input-delay/window contract and cannot
+  # contribute to the local IO virtual-clock insertion reference (HEAD-36).
+  # Without those declarations the legacy census is unchanged. Keep every
+  # declared core root in multi-root kits; never infer ownership from names.
+  set fwd_roots {}
+  set sdcp [file join $::ot_vmh_dir constraint.sdc]
+  if {[file isfile $sdcp]} {
+    set fh [open $sdcp]; set sdct [read $fh]; close $fh
+    foreach line [split $sdct "\n"] {
+      if {![string match {# OT_FWD_RING_INPUTS *} $line]} continue
+      if {![regexp {^# OT_FWD_RING_INPUTS\s+(\S+)\s+\S+} $line -> name]} {
+        error "OT_VCLK_MEASURED_HOLD: malformed forwarded-ring declaration"
+      }
+      set clock [get_clocks -quiet $name]
+      if {[llength $clock] != 1} { error "OT_VCLK_MEASURED_HOLD: missing unique forwarded clock $name" }
+      if {[llength [info commands ot_cf_refresh]]} { ot_cf_refresh }
+      set root [expr {[llength [info commands ot_cf_root]] ? [ot_cf_root $name] : $name}]
+      dict set fwd_roots $root 1
+    }
+  }
+  foreach p [all_registers -clock_pins] {
+    if {[dict size $fwd_roots]} {
+      set owners [get_property $p clocks]
+      if {[llength $owners] == 1} {
+        set name [get_full_name [lindex $owners 0]]
+        set root [expr {[llength [info commands ot_cf_root]] ? [ot_cf_root $name] : $name}]
+        if {[dict exists $fwd_roots $root]} continue
+      }
+    }
+    dict set regs [regsub {/[^/]+$} [get_full_name $p] {}] $p
+  }
   set async {}
   foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }
   set data {}
@@ -58,7 +89,9 @@ proc ot_vmh_pinreg_mean {} {
     set cl [get_property $p clocks]
     set a ""
     if {[llength $cl] == 1} {
-      dict set clocks [get_full_name [lindex $cl 0]] 1
+      set name [get_full_name [lindex $cl 0]]
+      if {[dict size $fwd_roots] && [llength [info commands ot_cf_root]]} { set name [ot_cf_root $name] }
+      dict set clocks $name 1
       if {[llength [info commands ot_cf_wire]]} { catch {set a [ot_cf_wire $p [lindex $cl 0] [expr {[info exists ::ot_ioref_scene] ? $::ot_ioref_scene : ""}]]} }
       if {$a eq ""} { catch {set a [get_property $p arrival_max_rise]} }
     }
