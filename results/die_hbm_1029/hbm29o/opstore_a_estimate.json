@@ -1,0 +1,325 @@
+{
+ "lane": "DIE-HBM-29-O",
+ "plan": "/srv/opentallas-scratch2/claude/die-hbm-28/plan/d28c",
+ "partition": "q_b113 (+ q_b113__physical_v1, same frame)",
+ "partition_outline": [
+  1857.6,
+  1572.48
+ ],
+ "bands": [
+  {
+   "dir": "EW",
+   "layers": [
+    "M4",
+    "M6"
+   ],
+   "rect": [
+    0,
+    8.64,
+    1857.6,
+    207.36
+   ]
+  },
+  {
+   "dir": "NS",
+   "layers": [
+    "M5",
+    "M7"
+   ],
+   "rect": [
+    310.0,
+    0,
+    656.0,
+    1572.48
+   ]
+  }
+ ],
+ "area": {
+  "partition_um2": 2921038.8,
+  "east_of_NS_band_um2": 1629946.4,
+  "east_rect": [
+   656.0,
+   216.0,
+   1857.6,
+   1572.48
+  ],
+  "west_strip_um2": 420508.8,
+  "west_strip_rect": [
+   0,
+   216.0,
+   310.0,
+   1572.48
+  ],
+  "ns_band_um2": 544078.1,
+  "hard_cores_um2": {
+   "lane14": 134369.3,
+   "lane15": 134369.3,
+   "opstore_b": 525533.2,
+   "ctl": 419437.4,
+   "opstore_a_V1": 367873.2
+  },
+  "hard_core_sum_um2": 1581582.4,
+  "east_packing_pct": 97.0,
+  "macro_area_um2": 227099.0,
+  "k_fit": {
+   "macros": 32,
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "macro_area_um2": 227099.0,
+   "core_macros_outline": [
+    388.8,
+    345.6
+   ],
+   "core_macros_outline_area": 134369.3,
+   "die_plan_outline": [
+    390.528,
+    436.32
+   ],
+   "die_plan_outline_area": 170395.2,
+   "die_plan_core_area": 163325.9,
+   "proposed_outline": [
+    760.32,
+    483.84
+   ],
+   "proposed_area": 367873.2,
+   "proposed_macro_pct": 61.73,
+   "band_channel_um": 48.848,
+   "floor_10p8_outline": [
+    760.32,
+    371.52
+   ]
+  },
+  "logic_yardstick": {
+   "lane_cells_per_um2": 2.284,
+   "opstore_a_logic_um2_at_lane_density": 105493.9
+  }
+ },
+ "row2_without_band": {
+  "width_um": 1184.32,
+  "ctl_w": 669.6,
+  "max_opstore_a_w": 497.44,
+  "two_col_w_min": 378.048,
+  "three_col_w_min": 561.672,
+  "two_col_16row_h_min": 689.808,
+  "row2_h": 630.72
+ },
+ "current": {
+  "cores": {
+   "lane14": [
+    1434.24,
+    216.0,
+    1823.04,
+    561.6
+   ],
+   "lane15": [
+    1434.24,
+    578.88,
+    1823.04,
+    924.48
+   ],
+   "opstore_a": [
+    1434.24,
+    941.76,
+    1824.768,
+    1378.08
+   ],
+   "opstore_b": [
+    656.64,
+    216.0,
+    1416.96,
+    907.2
+   ],
+   "ctl": [
+    656.64,
+    924.48,
+    1326.24,
+    1550.88
+   ]
+  },
+  "errors": [],
+  "station_bits_inside_new_bodies": {},
+  "core_area_um2": 1384104.4,
+  "verdict": "FITS"
+ },
+ "V1": {
+  "cores": {
+   "lane14": [
+    1434.24,
+    216.0,
+    1823.04,
+    561.6
+   ],
+   "lane15": [
+    1434.24,
+    578.88,
+    1823.04,
+    924.48
+   ],
+   "opstore_b": [
+    656.64,
+    216.0,
+    1416.96,
+    907.2
+   ],
+   "ctl": [
+    388.8,
+    924.48,
+    1058.4,
+    1550.88
+   ],
+   "opstore_a": [
+    1080.0,
+    941.76,
+    1840.32,
+    1425.6
+   ]
+  },
+  "errors": [],
+  "band_overlap": [
+   {
+    "core": "ctl",
+    "band": "NS",
+    "layers": [
+     "M5",
+     "M7"
+    ],
+    "rect": [
+     388.8,
+     924.48,
+     656.0,
+     1550.88
+    ],
+    "area_um2": 167374.1,
+    "band_width_covered_um": 267.2
+   }
+  ],
+  "station_bits_inside_new_bodies": {
+   "opstore_a": 16289
+  },
+  "core_area_um2": 1581582.4,
+  "verdict": "FITS"
+ },
+ "V2": {
+  "cores": {
+   "lane14": [
+    1434.24,
+    216.0,
+    1823.04,
+    561.6
+   ],
+   "lane15": [
+    1434.24,
+    578.88,
+    1823.04,
+    924.48
+   ],
+   "opstore_b": [
+    656.64,
+    216.0,
+    1416.96,
+    907.2
+   ],
+   "ctl": [
+    336.96,
+    924.48,
+    1006.56,
+    1550.88
+   ],
+   "opstore_a0": [
+    1434.24,
+    941.76,
+    1824.768,
+    1378.08
+   ],
+   "opstore_a1": [
+    1026.432,
+    941.76,
+    1416.96,
+    1378.08
+   ]
+  },
+  "errors": [],
+  "band_overlap": [
+   {
+    "core": "ctl",
+    "band": "NS",
+    "layers": [
+     "M5",
+     "M7"
+    ],
+    "rect": [
+     336.96,
+     924.48,
+     656.0,
+     1550.88
+    ],
+    "area_um2": 199846.7,
+    "band_width_covered_um": 319.04
+   }
+  ],
+  "station_bits_inside_new_bodies": {
+   "opstore_a1": 11334
+  },
+  "core_area_um2": 1554499.5,
+  "verdict": "FITS",
+  "half_core": {
+   "K_grid_w": 390.576,
+   "K_grid_h": 434.976,
+   "outline": [
+    390.528,
+    436.32
+   ],
+   "note": "2 col x 8 row with K's col channel 12.096 needs 390.576 wide; 390.528 needs col channel 12.048 or edge 16.392",
+   "macro_pct": 66.6,
+   "logic_um2_per_half": 56845.7
+  },
+  "pins": {
+   "opstore_a_total": 7534,
+   "by_bus": {
+    "clk": 1,
+    "g_operand_0_u_group_sw_d": 2048,
+    "g_operand_0_u_group_sw_mask": 64,
+    "glue": 4,
+    "glue_1": 1,
+    "x_u_core_u_engine_u_arithmetic_rd_addr": 1536,
+    "x_u_core_u_engine_u_arithmetic_rd_q": 2048,
+    "x_u_core_u_engine_u_arithmetic_rd_re": 64,
+    "x_u_core_u_engine_u_arithmetic_rd_src": 128,
+    "x_u_core_u_engine_u_arithmetic_rst_control_n": 1,
+    "x_u_core_u_engine_u_arithmetic_vm_waddr": 144,
+    "x_u_core_u_engine_u_arithmetic_vm_we": 16,
+    "x_u_core_u_engine_u_memory_g_operand_2_u_group_flt": 1,
+    "x_u_core_u_engine_u_memory_g_operand_2_u_group_rd": 512,
+    "x_u_core_u_engine_u_memory_g_operand_2_u_group_rq": 16,
+    "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr": 120,
+    "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v": 8,
+    "x_u_core_u_engine_u_memory_g_operand_3_u_group_flt": 1,
+    "x_u_core_u_engine_u_memory_g_operand_3_u_group_rd": 512,
+    "x_u_core_u_engine_u_memory_g_operand_3_u_group_rq": 16,
+    "x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v": 8,
+    "x_u_core_u_engine_u_memory_u_output_flt": 1,
+    "x_u_core_u_engine_u_memory_u_output_sr_addr": 30,
+    "x_u_core_u_engine_u_memory_u_output_sr_v": 2,
+    "x_u_core_u_vm_scalar_data": 128,
+    "x_u_core_u_vm_scalar_load": 4,
+    "x_u_core_u_vm_scalar_load_addr": 96,
+    "x_u_core_u_vm_stage_group": 16,
+    "x_u_core_u_vm_stage_v": 8
+   },
+   "duplicated_broadcast": {
+    "g_operand_0_u_group_sw_d": 2048,
+    "g_operand_0_u_group_sw_mask": 64,
+    "x_u_core_u_vm_stage_group": 16,
+    "x_u_core_u_vm_stage_v": 8,
+    "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr": 120,
+    "clk": 1,
+    "x_u_core_u_engine_u_arithmetic_rst_control_n": 1,
+    "glue": 4,
+    "glue_1": 1
+   },
+   "duplicated_total": 2263,
+   "cross_half_bits": 1,
+   "split_total": 9799,
+   "note": "split by operand group: group g lane ports rd_addr/rd_re/rd_src/rd_q[4l+g], scalar[g], relay group g+2 (rd 512, rq 16, flt 1, sw_v 8) go to half g; stage sector data/mask/addr/group/v are broadcast to both groups (RTL ot_hgi_sfu_static_operand_store.sv g_operand loop) -> duplicated; the one sticky fault becomes 2 (half a0 fault -> a1 OR, 1 crossing bit, or both to ctl)"
+  }
+ }
+}
