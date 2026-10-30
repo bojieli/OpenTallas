@@ -1,10 +1,53 @@
 """Fail-closed FIRM placement of actual mapped landing/collector cells."""
 from pathlib import Path
 from collections import defaultdict
+from math import isfinite
 import re
 
 
 def safe(s):return re.sub(r'\W','_',s)
+
+
+def _group_rect_overrides(t, groups):
+    """Explicit physical collector/raw-copy sites; absent plans keep identical output."""
+    c = t.get('clock', {}).get('landing_contract', {})
+    if 'group_rects_um' not in c:
+        return groups, ''
+    overrides = c['group_rects_um']
+    if not isinstance(overrides, dict):
+        raise ValueError('landing group_rects_um must be an object')
+    known = defaultdict(list)
+    for prefix, rect, tag in groups:
+        known[prefix].append(tag)
+    width, height = t['outline_um']
+    for prefix, rect in overrides.items():
+        if not isinstance(prefix, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', prefix):
+            raise ValueError(f'invalid landing group prefix {prefix!r}')
+        tags = known.get(prefix, [])
+        if len(tags) != 1 or not (tags[0].startswith('collector:') or tags[0] == 'raw-copy-optional'):
+            raise ValueError(f'unknown, ambiguous or unsupported landing group override {prefix!r}')
+        if not isinstance(rect, (list, tuple)) or len(rect) != 4 or any(
+                type(v) not in (int, float) or not isfinite(v) for v in rect):
+            raise ValueError(f'{prefix}: rectangle needs four finite numeric coordinates')
+        x0, y0, x1, y1 = rect
+        if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):
+            raise ValueError(f'{prefix}: rectangle must be ordered and inside the type outline')
+    if not overrides:
+        return groups, ''
+    groups = [(p, overrides.get(p, r), tag) for p, r, tag in groups]
+    # Optional copies can disappear during synthesis. An explicitly moved group
+    # must exist in the actual mapped design, rather than silently consuming no site.
+    names = ' '.join(sorted(overrides))
+    check = '''foreach cland_override_prefix {%s} {
+ set cland_override_found 0
+ foreach cland_override_i [$ff_blk getInsts] {
+  if {[regexp [format {(^|[/.])%%s[/.]} $cland_override_prefix] [$cland_override_i getName]]} {set cland_override_found 1; break}
+ }
+ if {!$cland_override_found} {error "OT_CLAND unused group rectangle override $cland_override_prefix"}
+}
+unset cland_override_prefix cland_override_found
+''' % names
+    return groups, check
 
 
 def _bus_order(t,bus):
@@ -116,6 +159,7 @@ def tcl(P,tn):
             if s['seam']:
                 x,y=s['xy_um'];i=s['index']
                 status.extend([(f'cland_dn_trained_{i}',x,y),(f'cland_dn_guard_{i}',x,y)])
+    groups, override_check = _group_rect_overrides(P.types[tn], groups)
     out=['set cland_groups {']
     for p,r,tag in groups:
         # Optional raw copies only exist when the original START tap is gated.
@@ -127,7 +171,7 @@ def tcl(P,tn):
     out+=['}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
-    return '\n'.join(out)+'\n'+Path(__file__).with_name('landing_placement.tcl').read_text()
+    return '\n'.join(out)+'\n'+override_check+Path(__file__).with_name('landing_placement.tcl').read_text()
 
 
 def _dataflow_tcl(tn,c,t=None):
@@ -140,9 +184,10 @@ def _dataflow_tcl(tn,c,t=None):
     for pin in sorted(c.get('pins',[]),key=lambda q:q['name']):
         if pin['dir']=='out' and pin['name'].startswith(('cland_up_ready_','cland_up_fault_')):
             x,y=pin['xy_um'];status.append((pin['name'],x,y))
+    groups, override_check = _group_rect_overrides(t or {}, groups)
     out=['set cland_groups {']
     out+=['  {'+p+' {'+' '.join(f'{v:.5f}' for v in r)+'} '+tag+'}' for p,r,tag in groups]
     out+=['}','set cland_optional_groups {','}','set cland_status {']
     out+=['  {'+n+f' {x:.5f} {y:.5f}'+'}' for n,x,y in status]
     out+=['}']
-    return '\n'.join(out)+'\n'+Path(__file__).with_name('landing_placement.tcl').read_text()
+    return '\n'.join(out)+'\n'+override_check+Path(__file__).with_name('landing_placement.tcl').read_text()
