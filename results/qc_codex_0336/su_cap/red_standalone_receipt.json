@@ -1,0 +1,22 @@
+{
+  "scope": "Exact existing source RED standalone native full synthesis count; raw-source budget only, not physical kit/signoff/face/EQ. Parent SDC/face/pins do not describe this raw source and are not claimed qualified. Whole-parent preserve-hierarchy experiment pending complete actual ownership.",
+  "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+  "top": "qfd_dv_s5_red2_leaf",
+  "sources": [
+    "qfd_dv_s5_red2_leaf.sv",
+    "qfd_dv_s5_red2_k79.sv",
+    "qfd_dv_s5_red2_k79_helpers.sv"
+  ],
+  "stdcell": 207508,
+  "macros": 0,
+  "cell_area_um2": 27067.1,
+  "reserve40pct_um2": 67667.75,
+  "unit": "oth-ubuntu-3475012-1793378746",
+  "host": "intel1",
+  "exit": 0,
+  "rtl_lint": "PASS",
+  "dont_use": "PASS",
+  "period_ps": 833,
+  "lec": "NOT_RUN",
+  "physical": "NOT_RUN"
+}
