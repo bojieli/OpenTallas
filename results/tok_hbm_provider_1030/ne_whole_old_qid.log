@@ -1,0 +1,34 @@
+VMFC_BEGIN edge=168 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=184 epoch=7 buffer=0 row=20752 col=0
+NATIVE_PHY_FILL phase=0 first=160 ready=1787 edges=1627 RD=1024 fills=1024 REF=208
+CP_CMD index=1 edge=1939 nativecycle=1901 issue_at=1909 drain_at=1993 n=512
+VM_LOAD_DONE index=1 edge=2031 cycle_post=1994 drain_at=1993
+CP_CMD index=2 edge=2039 nativecycle=2001 issue_at=2009 drain_at=2093 n=512
+VM_LOAD_DONE index=2 edge=2131 cycle_post=2094 drain_at=2093
+CP_CMD index=3 edge=2139 nativecycle=2101 issue_at=2109 drain_at=2193 n=512
+VM_LOAD_DONE index=3 edge=2231 cycle_post=2194 drain_at=2193
+CP_CMD index=4 edge=2239 nativecycle=2201 issue_at=2209 drain_at=2293 n=512
+VM_LOAD_DONE index=4 edge=2331 cycle_post=2294 drain_at=2293
+CP_CMD index=5 edge=2339 nativecycle=2301 issue_at=2309 drain_at=2393 n=512
+VM_LOAD_DONE index=5 edge=2431 cycle_post=2394 drain_at=2393
+CP_CMD index=6 edge=2439 nativecycle=2401 issue_at=2409 drain_at=2493 n=512
+VM_LOAD_DONE index=6 edge=2531 cycle_post=2494 drain_at=2493
+CP_CMD index=7 edge=2539 nativecycle=2501 issue_at=2509 drain_at=2593 n=512
+VM_LOAD_DONE index=7 edge=2631 cycle_post=2594 drain_at=2593
+CP_CMD index=8 edge=2639 nativecycle=2601 issue_at=2609 drain_at=2693 n=512
+VM_LOAD_DONE index=8 edge=2731 cycle_post=2694 drain_at=2693
+CP_CMD index=9 edge=2739 nativecycle=2701 issue_at=2709 drain_at=2793 n=512
+VM_LOAD_DONE index=9 edge=2831 cycle_post=2794 drain_at=2793
+CP_CMD index=10 edge=2839 nativecycle=2801 issue_at=2809 drain_at=2893 n=512
+VM_LOAD_DONE index=10 edge=2931 cycle_post=2894 drain_at=2893
+CP_CMD index=11 edge=2939 nativecycle=2901 issue_at=2909 drain_at=2993 n=512
+VM_LOAD_DONE index=11 edge=3031 cycle_post=2994 drain_at=2993
+CP_CMD index=12 edge=3039 nativecycle=3001 issue_at=3009 drain_at=3093 n=512
+VM_LOAD_DONE index=12 edge=3131 cycle_post=3094 drain_at=3093
+CP_CMD index=13 edge=3139 nativecycle=3101 issue_at=3109 drain_at=3193 n=512
+VM_LOAD_DONE index=13 edge=3231 cycle_post=3194 drain_at=3193
+CP_CMD index=14 edge=3239 nativecycle=3201 issue_at=3209 drain_at=3293 n=512
+VM_LOAD_DONE index=14 edge=3331 cycle_post=3294 drain_at=3293
+[2799000000] %Fatal: tb_ne_whole_provider.sv:191: Assertion failed in tb_ne_whole_provider: VM_PROVIDER_FAULT first=3352 edge=3360 slot=0 bank=0 late=0 actual_native_acks=896 load_done=14 vm_fault=ff000000
+%Error: tb_ne_whole_provider.sv:191: Verilog $stop
+Aborting...
