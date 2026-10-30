@@ -1,0 +1,115 @@
+{
+  "status": "PASS_SOURCE_MECHANISM_ONLY",
+  "scope": "Actual native stack2 NW sourcehalf service, same833ps logicalclock, opaque U32 payload; threeownershipepochs ofactualbundle990, no fullprogramme/rebase/adoption/physicalcalendar claim.",
+  "baseline_unit": "intel1:oth-ubuntu-1669456-1793370926",
+  "wrong_bank_unit": "intel1:oth-ubuntu-1761189-1793371354",
+  "core_and_service_clock_ps": 833,
+  "phase_ps": 0,
+  "refresh": {
+    "actual_module": "ot_hbm_pc_refresh_cfg",
+    "NPC": 16,
+    "target": 127,
+    "cfg_row": "0x800",
+    "REL_HOLD": 64,
+    "reloads": [
+      118,
+      121,
+      126,
+      129,
+      132,
+      137,
+      140,
+      143,
+      148,
+      151,
+      154,
+      159,
+      162,
+      165,
+      170,
+      173
+    ]
+  },
+  "DRAM_return_edges": 16,
+  "DRAM_return_ps": 13328,
+  "DRAM_scope": "External legalrow/column responsefixture; nativecontroller edge timing ACT/PRE/RD/REF guards checked. Controller timings are source edge counts, not physical DRAM nanosecond signoff.",
+  "source": {
+    "stack": 2,
+    "quad": "NW",
+    "SOURCE_QUAD": 2,
+    "PCs": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "VMKS_groups": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "KRL1": 1,
+    "h9b_flags": {
+      "OREG": 1,
+      "KREG": 1,
+      "KRREG": 1,
+      "RREG": 1,
+      "WPAY": 1,
+      "QREG": 1
+    }
+  },
+  "destination_SID_geography": [
+    "SW",
+    "SE",
+    "NW",
+    "NE"
+  ],
+  "prep_fill_edges": [
+    1643,
+    1228,
+    1228
+  ],
+  "read_sectors": 3072,
+  "delivery_fill_sectors": 3072,
+  "refresh_commands_at_final_ready": 1232,
+  "descriptors": 42,
+  "VM_packets": 2688,
+  "U32_words": 21504,
+  "native_DQdone": 2688,
+  "LOADdone": 42,
+  "SRAM_readbacks": 2688,
+  "step_to_packet_edges": 8,
+  "DQcapture_to_ACK_edges": 4,
+  "rq_capture_to_rr_edges": 7,
+  "first_step": 1883,
+  "last_step": 10798,
+  "first_packet": 1891,
+  "last_packet": 10806,
+  "wrong_bank": {
+    "first_fault": 1896,
+    "real_ACKs_at_abort": 8,
+    "LOADdone": 0,
+    "status_fault": "0xff"
+  },
+  "current_source_manifest": "phy_source_dependencies.json",
+  "holds": [
+    "hostpreparation observes actual owned block_ready before nativecfg/desclaunch; no onchip wait added",
+    "vmfill command is driven at existingVMKS port; selectedVMFCtarget58 upstream calendar wiring next",
+    "singlefixturecollartarget106 isnot newproductionallocation; sharedcollardispatch8c5 separatePREP",
+    "729 originalbodyLOADs notincludedin95313insertedboundarycaller;192indexedloweredLOADs needphysicalEngramresolver",
+    "scratchreservation/fullstackcoverage/fullnumericprogramme/routedpaths/deadlines open"
+  ]
+}

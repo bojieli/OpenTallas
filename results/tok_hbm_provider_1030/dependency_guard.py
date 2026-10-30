@@ -4,8 +4,8 @@ from pathlib import Path
 HERE=Path(__file__).resolve().parent
 
 
-def require_sources(repo,provider_dir,names):
-    manifest=json.loads((HERE/'source_dependencies.json').read_text())
+def require_sources(repo,provider_dir,names,manifest_name='source_dependencies.json'):
+    manifest=json.loads((HERE/manifest_name).read_text())
     for name in names:
         path=provider_dir/name
         if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest()!=manifest['provider_files'][name]:

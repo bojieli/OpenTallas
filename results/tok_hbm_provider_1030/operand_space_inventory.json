@@ -1,0 +1,33 @@
+{
+  "raw": {
+    "image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+    "records": 3916,
+    "LOAD_descriptor_records": {
+      "HBM->VM": 421
+    },
+    "ROWX_scalar_records": {
+      "HBM->VM": 2121
+    },
+    "VM_source_samples": []
+  },
+  "resident": {
+    "image_sha256": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
+    "records": 37226,
+    "LOAD_descriptor_records": {
+      "HBM->VM": 13257
+    },
+    "ROWX_scalar_records": {
+      "HBM->VM": 14649
+    },
+    "VM_source_samples": []
+  },
+  "scope": "Actual N=6 MTP VERIFY programme STEP; no accepted-token normalization. Dispatcher handles HBM0->VM1 LOAD and VM1->HBM0 STORE only.",
+  "window_caller": {
+    "inserted_backing_LOAD_records": 12528,
+    "effective227_runs": 95313,
+    "srcspace": 0,
+    "dstspace": 1,
+    "not_yet_windowized_original_body_LOAD_records": 729,
+    "original_body_scalar_rows": 2121
+  }
+}

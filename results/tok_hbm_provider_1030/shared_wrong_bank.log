@@ -1,0 +1,5 @@
+NATIVE_PHY_FILL phase=0 first=84 ready=1727 edges=1643 RD=1024 fills=1024 REF=208
+CP_CMD index=1 edge=1879 nativecycle=1844 issue_at=1852 drain_at=1936 n=512
+[1589000000] %Fatal: tb_shared_provider.sv:173: Assertion failed in tb_shared_provider: VM_PROVIDER_FAULT first=1900 edge=1908 slot=0 bank=1 late=0 actual_native_acks=8 load_done=0 vm_fault=000000ff
+%Error: tb_shared_provider.sv:173: Verilog $stop
+Aborting...

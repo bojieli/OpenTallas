@@ -46,44 +46,12 @@ proc ::ot_mm_frozen_clock_rc_restore {tag} {
   if {[lsort [dict keys $maps]] ne [lsort [list [::ot_mm_sc] BC]]} {
     error "OT_MM_FROZEN_CLOCK_RC: SPEF map must name exactly [::ot_mm_sc] and BC (case-sensitive)"
   }
-  foreach command {::ot_clk_freeze_assert ::ot_clk_dump ::ot_clk_restore_parasitics} {
-    if {![llength [info commands $command]]} { error "OT_MM_FROZEN_CLOCK_RC: caller must stage the approved clock helper ($command absent)" }
-  }
-  if {![info exists ::ot_clk_frozen] || !$::ot_clk_frozen ||
-      ![info exists ::ot_clk_frozen_nets] || ![llength $::ot_clk_frozen_nets]} {
-    error "OT_MM_FROZEN_CLOCK_RC: original routed clock must already have a nonempty active freeze"
-  }
-  if {![info exists ::env(OT_MM_FROZEN_CLOCK_IDENTITY)] ||
-      ![file readable $::env(OT_MM_FROZEN_CLOCK_IDENTITY)]} {
-    error "OT_MM_FROZEN_CLOCK_RC: immutable original clock graph identity is required"
-  }
-  set baseline $::env(OT_MM_FROZEN_CLOCK_IDENTITY)
-  set checker [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_DIFF)] ?
-    $::env(OT_MM_FROZEN_CLOCK_DIFF) : [file join $::ot_mm_frozen_clock_dir die_plan clk_geom_diff.py]}]
-  if {![file readable $checker]} { error "OT_MM_FROZEN_CLOCK_RC: existing clock geometry checker absent: $checker" }
-  set expected {};set f [open $baseline r]
-  while {[gets $f line] >= 0} {
-    set fields [split $line \t]
-    if {[lindex $fields 0] ne "NET"} continue
-    if {[lindex $fields 3] <= 0} {close $f;error "OT_MM_FROZEN_CLOCK_RC: original clock has no routed wire: [lindex $fields 1]"}
-    lappend expected [lindex $fields 1]
-  }
-  close $f
-  if {![llength $expected] || [lsort $expected] ne [lsort $::ot_clk_frozen_nets]} {
-    error "OT_MM_FROZEN_CLOCK_RC: original identity and active frozen clock net sets differ"
-  }
-  # Existing freeze restores any destroyed clock wire byte-identically; the
-  # existing graph checker also guards connectivity, masters and physical homes.
-  ::ot_clk_freeze_assert "mm_clock_rc_$tag"
-  set stem [file join $::env(RESULTS_DIR) ot_mm_frozen_clock]
-  set f [open ${stem}.nets w];puts $f [join $expected \n];close $f
-  ::ot_clk_dump ${stem}.tsv "mm_clock_rc_$tag" ${stem}.nets
-  if {[catch {exec python3 -I $checker $baseline ${stem}.tsv} result]} {
-    error "OT_MM_FROZEN_CLOCK_RC: original clock graph/wire identity failed: $result"
-  }
-  # Approved -name helper reuses the EXISTING native datasets, replacing only
-  # clock-net annotations. Its preflight refuses an absent/misspelled dataset.
-  ::ot_clk_restore_parasitics $maps
+  set guard [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_GUARD)] ? $::env(OT_MM_FROZEN_CLOCK_GUARD) : [file join $::ot_mm_frozen_clock_dir die_plan frozen_clock_rc.tcl]}]
+  if {![file readable $guard]} {error "OT_MM_FROZEN_CLOCK_RC: stage shared guard or set OT_MM_FROZEN_CLOCK_GUARD: $guard"}
+  source $guard
+  set baseline [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_IDENTITY)] ? $::env(OT_MM_FROZEN_CLOCK_IDENTITY) : ""}]
+  set checker [expr {[info exists ::env(OT_MM_FROZEN_CLOCK_DIFF)] ? $::env(OT_MM_FROZEN_CLOCK_DIFF) : [file join $::ot_mm_frozen_clock_dir die_plan clk_geom_diff.py]}]
+  ::ot_clock_rc_restore_checked $maps $baseline $checker [file join $::env(RESULTS_DIR) ot_mm_frozen_clock] $tag
   puts "OT_MM_FROZEN_CLOCK_RC $tag restored exact datasets [dict keys $maps]; native DATA retained"
 }
 # Install only for explicit opt-in: default native command and placement RC are

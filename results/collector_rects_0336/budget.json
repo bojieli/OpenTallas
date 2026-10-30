@@ -1,0 +1,125 @@
+{
+ "type": "sle_fw_v3",
+ "groups": {
+  "u_cland_collect_rst_n_t2": {
+   "cells": 9,
+   "actual_um2": 1.3559400000000001,
+   "reserved_um2": 3.4263000000000003
+  },
+  "u_cland_collect_rst_rl_3": {
+   "cells": 6,
+   "actual_um2": 0.8748,
+   "reserved_um2": 2.21616
+  },
+  "u_cland_reset_rst_n_t2": {
+   "cells": 2,
+   "actual_um2": 0.36450000000000005,
+   "reserved_um2": 0.9185399999999999
+  }
+ },
+ "shared_rect_um": [
+  124.74,
+  497.34,
+  134.46,
+  507.06
+ ],
+ "shared_area_um2": 94.47840000000039,
+ "joint_reserved_um2": 6.561,
+ "joint_actual_um2": 2.5952400000000004,
+ "ring_overlaps": [],
+ "hops": [
+  {
+   "kind": "collector-output",
+   "source": "rst_n_t2",
+   "target": "rst_rl_3",
+   "max_um": 19.44000000000004
+  },
+  {
+   "kind": "local-status-input",
+   "source": "hr_ei",
+   "target": "rst_n_t2",
+   "max_um": 289.34400000000005
+  },
+  {
+   "kind": "local-status-input",
+   "source": "rd_ei",
+   "target": "rst_n_t2",
+   "max_um": 172.584
+  },
+  {
+   "kind": "local-status-input",
+   "source": "re_ei",
+   "target": "rst_n_t2",
+   "max_um": 218.33599999999996
+  },
+  {
+   "kind": "local-status-input",
+   "source": "rl_ei",
+   "target": "rst_n_t2",
+   "max_um": 219.90399999999994
+  },
+  {
+   "kind": "local-status-input",
+   "source": "rr_ei",
+   "target": "rst_n_t2",
+   "max_um": 221.392
+  },
+  {
+   "kind": "local-status-input",
+   "source": "rv_ei",
+   "target": "rst_n_t2",
+   "max_um": 222.88000000000005
+  },
+  {
+   "kind": "local-status-input",
+   "source": "sc_ei",
+   "target": "rst_n_t2",
+   "max_um": 237.25600000000003
+  },
+  {
+   "kind": "clock-entry",
+   "source": "rst_n_t2",
+   "target": "unchanged grid tap",
+   "max_um": 39.96000000000011
+  },
+  {
+   "kind": "raw-copy",
+   "source": "unchanged rst_n_t2",
+   "target": "existing raw-copy/collector cohort",
+   "max_um": 39.96000000000011
+  },
+  {
+   "kind": "collector-output",
+   "source": "rst_rl_3",
+   "target": "rst_rl_0",
+   "max_um": 374.76
+  },
+  {
+   "kind": "collector-child-input",
+   "source": "rst_n_t2",
+   "target": "rst_rl_3",
+   "max_um": 19.44000000000004
+  },
+  {
+   "kind": "collector-child-input",
+   "source": "rst_n_t0",
+   "target": "rst_rl_3",
+   "max_um": 374.76
+  },
+  {
+   "kind": "clock-entry",
+   "source": "rst_rl_3",
+   "target": "unchanged grid tap",
+   "max_um": 39.96000000000011
+  },
+  {
+   "kind": "raw-copy",
+   "source": "unchanged rst_rl_3",
+   "target": "existing raw-copy/collector cohort",
+   "max_um": 39.96000000000011
+  }
+ ],
+ "reset_or_status_max_um": 374.76,
+ "clock_max_um": 39.96000000000011,
+ "semantics": "0 RTL/state/data/boot cycle changes; unchanged relay nodes, taps, depths, outline and public pins. Conservative declared-box model; actual FIRM obstacles/site packing and G1 remain pending."
+}

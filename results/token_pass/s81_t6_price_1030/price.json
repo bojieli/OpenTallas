@@ -1,0 +1,354 @@
+{
+  "scope": "ONE_T6_INSTANCE_TWO_EXACT_FT_BRANCHES_NOT_ADOPTED",
+  "source_plan_commit": "b19b88c9a78",
+  "source_plan_sha256": "39aa595f5bd3e5006d7d6045103a7c145b8779ed8a2fb50cd125bfddd94338a2",
+  "physical_type": "slice_station__t6__cl54a9ceeb",
+  "physical_instance": "s_0S_x07",
+  "candidate_reason": "4FF across1442.88um cannot meet broad30um endpoint admission; private5FF stage adds1 per declared FT",
+  "affected_lanes": {
+    "x_W2_out": {
+      "current": {
+        "cycles": 59,
+        "stations": 44,
+        "boundary": 2,
+        "faces": 9,
+        "fixed": 1,
+        "clock_landing": 12,
+        "natural": 59,
+        "pad": 0,
+        "param": "LAT_X_W2_OUT"
+      },
+      "candidate": {
+        "cycles": 60,
+        "stations": 45,
+        "boundary": 2,
+        "faces": 9,
+        "fixed": 1,
+        "clock_landing": 12,
+        "natural": 60,
+        "pad": 0,
+        "param": "LAT_X_W2_OUT"
+      },
+      "added_cycles": 1,
+      "payload_bits": 1104,
+      "epoch_bits": 1
+    },
+    "x_W2_in": {
+      "current": {
+        "cycles": 24,
+        "stations": 16,
+        "boundary": 2,
+        "faces": 4,
+        "fixed": 0,
+        "clock_landing": 6,
+        "natural": 24,
+        "pad": 0,
+        "param": "LAT_X_W2_IN"
+      },
+      "candidate": {
+        "cycles": 25,
+        "stations": 17,
+        "boundary": 2,
+        "faces": 4,
+        "fixed": 0,
+        "clock_landing": 6,
+        "natural": 25,
+        "pad": 0,
+        "param": "LAT_X_W2_IN"
+      },
+      "added_cycles": 1,
+      "payload_bits": 1104,
+      "epoch_bits": 1
+    }
+  },
+  "changed_lanes": [
+    "x_W2_in",
+    "x_W2_out"
+  ],
+  "extra_FF": 2210,
+  "extra_FF_formula": "2*(1104payload+1epoch)",
+  "fixed_flags_preserved": {
+    "x_W2_out": 1,
+    "x_W2_in": 0
+  },
+  "reverse_or_return_lane_changes": [],
+  "wire_II_change": 0,
+  "per_occurrence_added_ps": 833,
+  "actual_raw_bound": [
+    {
+      "lane": "x_W2_out",
+      "src": "s_3S_C",
+      "dst": "fW2_p4_b0",
+      "bus_out": "x_o0",
+      "bus_in": "x_i0",
+      "width": 1104,
+      "planned_width": 1104,
+      "param": "LAT_X_W2_OUT",
+      "leaves": [
+        "u_s_3S.u_sl.$7.Y[1104]"
+      ],
+      "source_bit_order": "lsb_first",
+      "forwarded": 0,
+      "asbuilt_stages": [
+        39,
+        45
+      ],
+      "bound_stages": 59,
+      "plan_cycles": 59,
+      "delta": 14
+    },
+    {
+      "lane": "x_W2_in",
+      "src": "s_1S_C",
+      "dst": "fW2_p1_b0",
+      "bus_out": "x_o0",
+      "bus_in": "x_i0",
+      "width": 1104,
+      "planned_width": 1104,
+      "param": "LAT_X_W2_IN",
+      "leaves": [
+        "u_s_1S.u_lp.$16.Y[1104]"
+      ],
+      "source_bit_order": "lsb_first",
+      "forwarded": 0,
+      "asbuilt_stages": [
+        65,
+        69
+      ],
+      "bound_stages": 24,
+      "plan_cycles": 24,
+      "delta": -45
+    }
+  ],
+  "affected_W2_field_rounds": [
+    {
+      "group": "in",
+      "frame_position": 1,
+      "affected_lane": "x_W2_in",
+      "current_round_edges": 56,
+      "candidate_round_edges": 57,
+      "forward_added_edges": 1,
+      "return_lane": "rt_W2_in_0",
+      "return_added_edges": 0
+    },
+    {
+      "group": "in",
+      "frame_position": 2,
+      "affected_lane": "x_W2_in",
+      "current_round_edges": 64,
+      "candidate_round_edges": 65,
+      "forward_added_edges": 1,
+      "return_lane": "rt_W2_in_1",
+      "return_added_edges": 0
+    },
+    {
+      "group": "in",
+      "frame_position": 3,
+      "affected_lane": "x_W2_in",
+      "current_round_edges": 77,
+      "candidate_round_edges": 78,
+      "forward_added_edges": 1,
+      "return_lane": "rt_W2_in_2",
+      "return_added_edges": 0
+    },
+    {
+      "group": "out",
+      "frame_position": 4,
+      "affected_lane": "x_W2_out",
+      "current_round_edges": 124,
+      "candidate_round_edges": 125,
+      "forward_added_edges": 1,
+      "return_lane": "rt_W2_out_0",
+      "return_added_edges": 0
+    },
+    {
+      "group": "out",
+      "frame_position": 5,
+      "affected_lane": "x_W2_out",
+      "current_round_edges": 138,
+      "candidate_round_edges": 139,
+      "forward_added_edges": 1,
+      "return_lane": "rt_W2_out_1",
+      "return_added_edges": 0
+    },
+    {
+      "group": "out",
+      "frame_position": 6,
+      "affected_lane": "x_W2_out",
+      "current_round_edges": 147,
+      "candidate_round_edges": 148,
+      "forward_added_edges": 1,
+      "return_lane": "rt_W2_out_2",
+      "return_added_edges": 0
+    }
+  ],
+  "composer_terms_current": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)"
+    },
+    "field_round": {
+      "cycles": 152,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+    },
+    "leaf_hub_rt": {
+      "cycles": 39,
+      "lanes": [
+        "dn_s_1S_L4",
+        "up_s_6S_L4"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+    },
+    "svc_to_hub": {
+      "cycles": 30,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+    },
+    "link_end": {
+      "cycles": 70,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0S"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+    }
+  },
+  "composer_terms_candidate": {
+    "ring_link": {
+      "cycles": 5,
+      "lanes": [
+        "xring__s_0N_C__s_1N_C",
+        "xring__s_0S_C__s_1S_C",
+        "xring__s_1N_C__s_0N_C",
+        "xring__s_1N_C__s_2N_C",
+        "xring__s_1S_C__s_0S_C",
+        "xring__s_1S_C__s_2S_C",
+        "xring__s_2N_C__s_1N_C",
+        "xring__s_2N_C__s_3N_C",
+        "xring__s_2S_C__s_1S_C",
+        "xring__s_2S_C__s_3S_C",
+        "xring__s_3N_C__s_2N_C",
+        "xring__s_3N_C__s_4N_C",
+        "xring__s_3S_C__s_2S_C",
+        "xring__s_3S_C__s_4S_C",
+        "xring__s_4N_C__s_3N_C",
+        "xring__s_4N_C__s_5N_C",
+        "xring__s_4S_C__s_3S_C",
+        "xring__s_4S_C__s_5S_C",
+        "xring__s_5N_C__s_4N_C",
+        "xring__s_5N_C__s_6N_C",
+        "xring__s_5S_C__s_4S_C",
+        "xring__s_5S_C__s_6S_C",
+        "xring__s_6N_C__s_5N_C",
+        "xring__s_6N_C__s_7N_C",
+        "xring__s_6S_C__s_5S_C",
+        "xring__s_6S_C__s_7S_C",
+        "xring__s_7N_C__s_6N_C",
+        "xring__s_7S_C__s_6S_C"
+      ],
+      "rule": "max xring lane (slice hub C -> neighbour hub C)"
+    },
+    "field_round": {
+      "cycles": 152,
+      "lanes": [
+        "x_E3_out",
+        "xo_E3_out_a",
+        "xo_E3_out_b",
+        "fi_E3_p6_r0r1",
+        "fi_E3_p6_r1r0",
+        "fi_E3_p6_r1r2",
+        "fi_E3_p6_r2r1",
+        "rt_E3_out_2"
+      ],
+      "rule": "max over columns/positions of x + xo chain + 4 fi + rt (one hub->frame->hub round)"
+    },
+    "leaf_hub_rt": {
+      "cycles": 39,
+      "lanes": [
+        "dn_s_1S_L4",
+        "up_s_6S_L4"
+      ],
+      "rule": "max dn (hub C -> leaf) + max up (leaf -> hub C)"
+    },
+    "svc_to_hub": {
+      "cycles": 30,
+      "lanes": [
+        "attn__svc_11__s_4S_C"
+      ],
+      "rule": "max attn lane svc -> slice hub C (SO -> XS)"
+    },
+    "link_end": {
+      "cycles": 70,
+      "lanes": [
+        "coll__s_0S_LP__lk_WS2",
+        "kd_s_0S"
+      ],
+      "rule": "end slice hub C <-> LP (kd/ku) + LP <-> link (coll); NOT substituted (inside the measured xdie co-sim lane legs), reported as a bound"
+    }
+  },
+  "composer_global_field_max": 152,
+  "composer_dominating_lanes": [
+    "x_E3_out",
+    "xo_E3_out_a",
+    "xo_E3_out_b",
+    "fi_E3_p6_r0r1",
+    "fi_E3_p6_r1r0",
+    "fi_E3_p6_r1r2",
+    "fi_E3_p6_r2r1",
+    "rt_E3_out_2"
+  ],
+  "composer_delta_edges": 0,
+  "composer_reason": "Both x_W2 branches are considered by field-round scan; exact W2 rounds gain1 but global E3/out/p6 maximum152 remains larger. This is scoped max domination, unlike omittedCW.",
+  "local_calendar_effect": "Inputbranchuse+1 andoutputbranchuse+1, each independently. A trulyserialpathusingboth gains2; modelround usesone branch, so no automatic2/wholeoperation.",
+  "entry_dependency": "PW/HLOAD/GAIN are VN/VS ring\u2192XR\u2192VP/VN, no 1104b matrix-band x_W2 crossing. Pinnedc092entry fences not retagged to newplan.",
+  "model_rates_carried_not_requalified": {
+    "MTP_tok_s": 3655.3,
+    "AR_tok_s": 1259.6
+  },
+  "actual_token_rate_delta_qualified": false,
+  "candidate_global_START_or_programme_dates_qualified": false,
+  "source_RTL_or_plan_adopted": false,
+  "compiler_followup": "Afterapprovedsource/gates publish, update only these two field input-arrival/calendar terms and all exposedW2consumers; preserveoutfixed1/infixed0 andunchangedreturns. No allT6/wholeS81+1."
+}

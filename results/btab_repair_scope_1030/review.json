@@ -1,0 +1,12 @@
+{
+  "status": "PREPARED/REVIEW REQUIRED; no physical repair or reroute executed",
+  "picture": "repair_scope.png",
+  "viewed": true,
+  "findings": [
+    "Four SRAM 2x2 outline293.76x155.52 unchanged. Most bad data nets span central-to-east macro overpasses, so no legal midspan repeater site inside SRAM; source-side drive/buffer choices must be checked, not inserted under macro.",
+    "Three hold paths lie in SW open logic strip. Preserve source/capture FF homes/clock tree and add data delay through existing qualified helper, exact TT setup guard and final legalization/routing checks.",
+    "Proposed dedicated fault output uses actual existing late clone home256.770,5.265; frozenfaultpin253.788,0.042 gives8.205um L1. Same currentclockleaf mp_ck_Tqpvv_out serves oldstate andlateclone, bothsameDnet9479/resetnet7432. Sourcecandidate mustaccount/replace these2physicalFF, notaddthird.",
+    "Actual DRC3 window inside westedge easttopSRAM M4/V4; endpoint guide line is a proxy, not actualmetal. Route repair needs V4 outside macro OBS and M5 or southstreet detour."
+  ],
+  "verdict": "PASS-COND for scoped data-only repair proposal review; NOT permission to execute P&R"
+}

@@ -8,13 +8,19 @@ import argparse,json,subprocess,sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent;REPO=HERE.parents[1]
 ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--provider-dir',type=Path);a=ap.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
-canonical=REPO/'rtl/hbm_accel/loader/service_native/split'
-if a.provider_dir is None:a.provider_dir=canonical if(canonical/'ot_hbm_static_load_provider_quad.sv').is_file()else REPO/'results/hbm_bind_1030/static_load'
+# This older launcher is an explicit historical dd491 packet-boundary replay.
+# The current default-enabled VM audit is exercised by run_vm_provider_fixture.
+source_repo=REPO
+if a.provider_dir is None:
+ from historical_sources import export_packet_snapshot
+ source_repo,replay_manifest=export_packet_snapshot(REPO,out)
+ a.provider_dir=source_repo/replay_manifest['canonical_directory']
+ print('HISTORICAL_PACKET_ONLY_CP_REPLAY source='+replay_manifest['canonical_RTL_tip'])
 subprocess.run([sys.executable,str(HERE/'gen_fixture.py'),'--out',str(out)],check=True)
 names=['ot_hbm_static_load_cp_provider_quad.sv','ot_hbm_static_load_provider_quad.sv','ot_hbm_static_load_addr_counter.sv','ot_hbm_static_load_addr_map.sv','ot_hbm_static_load_quad_vehicle.sv']
 from dependency_guard import require_sources
-require_sources(REPO,a.provider_dir.resolve(),names)
-sources=[a.provider_dir.resolve()/x for x in names]+[HERE/'tb_cp_provider.sv',REPO/'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv',REPO/'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv',REPO/'rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv',REPO/'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
+require_sources(source_repo,a.provider_dir.resolve(),names)
+sources=[a.provider_dir.resolve()/x for x in names]+[HERE/'tb_cp_provider.sv',source_repo/'rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv',source_repo/'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv',source_repo/'rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv',source_repo/'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v']
 if any(not p.is_file()for p in sources):raise FileNotFoundError('provider/source dependency missing: '+','.join(str(p)for p in sources if not p.is_file()))
 with(out/'build.log').open('w')as f:subprocess.run(['verilator','--binary','--timing','-j','2','-Wno-fatal','--top-module','tb_cp_provider',*map(str,sources),'--Mdir',str(out/'obj')],cwd=out,stdout=f,stderr=subprocess.STDOUT,check=True)
 result=[]

@@ -1,0 +1,41 @@
+{
+  "scope": "Standalone omitted-material checks ONLY; no STA rerun, diagnostic/nonadopted",
+  "face_guard": {
+    "verdict": "FAIL",
+    "top": "qfd_dv_s8x_btab",
+    "checked": 1316,
+    "ok": 1315,
+    "fail_counts": {
+      "shared": 1
+    },
+    "fails": {
+      "shared": [
+        "fault: net _2080_ has 1 loads besides the port chain"
+      ]
+    },
+    "dead_declared": [],
+    "netlist": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/run/results/asap7/codex_btab_mif1_1847/base/1_2_yosys.v",
+    "pins": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/pins.json",
+    "boundary_context": {
+      "manifest": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/boundary_guard_context.json",
+      "source_core_json": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/core.json",
+      "controls": [
+        "ck",
+        "rst_n"
+      ]
+    },
+    "one_station_ft_slots": []
+  },
+  "route": {
+    "drc": 3,
+    "antenna_nets": 0,
+    "drc_source": "5_2_route.json",
+    "antenna_source": "5_2_route.json"
+  },
+  "timing_modes": {
+    "verdict": "FAIL",
+    "applicable": true,
+    "reason": "two-mode kit lacks orfs_hold_mm.py"
+  },
+  "clock_contract": null
+}

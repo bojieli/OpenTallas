@@ -31,7 +31,7 @@ def channel_path(a,b,obstacles=(),clearance=0.,vertical_obstacles=(),return_poin
     return [(abs(p[0]-q[0])+abs(p[1]-q[1]),'horizontal' if p[1]==q[1] else 'vertical') for p,q in zip(path,path[1:])]
 
 
-def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,vertical_obstacles=(),merge_collinear=False,horizontal_layer=None,vertical_layer=None,terminal_layers=None,via_resistance_kohm=None):
+def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,vertical_obstacles=(),merge_collinear=False,horizontal_layer=None,vertical_layer=None,terminal_layers=None,via_resistance_kohm=None,outline_um=None):
     """points[0] is driver; caps supplies every target in points[1:].
 
     Per-layer RC=(kohm/um,fF/um) must already reflect that layer's width rule.
@@ -46,6 +46,10 @@ def rooted_rc(points,caps,horizontal_rc,vertical_rc,obstacles=(),clearance=0.,ve
     for i in range(n):
         for j in range(i+1,n):
             route=channel_path(points[i],points[j],obstacles,clearance,vertical_obstacles)
+            if outline_um is not None:
+                polyline=channel_path(points[i],points[j],obstacles,clearance,vertical_obstacles,return_points=True)
+                if any(not (0 <= x <= outline_um[0] and 0 <= y <= outline_um[1]) for x,y in polyline):
+                    raise ValueError('declared effective routing model leaves the physical outline')
             distances[i,j]=sum(v for v,_ in route);routes[i,j]=route
     while len(used)<n:
         _,i,j=min((distances[min(i,j),max(i,j)],i,j) for i in sorted(used) for j in range(n) if j not in used)

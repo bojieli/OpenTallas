@@ -1,0 +1,4 @@
+CP_CMD index=1 edge=277 nativecycle=242 issue_at=250 drain_at=334 n=512
+[314000] %Fatal: tb_vm_provider.sv:73: Assertion failed in tb_vm_provider: VM_PROVIDER_FAULT first=369 edge=377 slot=0 bank=0 late=1 actual_native_acks=64 load_done=0 vm_fault=00000000
+%Error: tb_vm_provider.sv:73: Verilog $stop
+Aborting...

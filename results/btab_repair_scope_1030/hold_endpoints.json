@@ -1,0 +1,41 @@
+[
+  {
+    "source": "ptw_data[153]$_DFF_P_",
+    "sink": "u_twpd/q[153]$_DFF_P_",
+    "slack_ps": -2.5896,
+    "source_xy": [
+      42.876,
+      6.345
+    ],
+    "sink_xy": [
+      20.574,
+      8.505
+    ]
+  },
+  {
+    "source": "ptw_data[145]$_DFF_P_",
+    "sink": "u_twpd/q[145]$_DFF_P_",
+    "slack_ps": -2.431,
+    "source_xy": [
+      41.58,
+      5.805
+    ],
+    "sink_xy": [
+      18.36,
+      7.965
+    ]
+  },
+  {
+    "source": "u_twpd/q[247]$_DFF_P_",
+    "sink": "g_btb[0].g_r.u_wd/q[247]$_DFF_P_",
+    "slack_ps": -1.5967,
+    "source_xy": [
+      61.722,
+      7.695
+    ],
+    "sink_xy": [
+      13.176,
+      9.585
+    ]
+  }
+]
