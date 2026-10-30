@@ -1,0 +1,24 @@
+{
+  "kit": "/srv/opentallas-scratch2/claude/codex-reset-canary-1900/gen2/hfd_hgi_vm_calendar_f20_f6ca3a8cd75a",
+  "freeze_reset_contract": {
+    "edges": 64,
+    "module": "hfd_hgi_vm_calendar_f20",
+    "die": "hbm",
+    "contract": "/srv/opentallas-scratch2/claude/wt/codex-reset-canary-1900/physical/die_plan/hbm/reset_contract.json",
+    "contract_sha256": "df3508496db4614c7f07b7e13e9f557ab5263edbbbad7807e93ea9b2584c0418",
+    "receipt_sha256": "afe72796da2b1d74b7d15541f7bc61d787d584a84dd256e80aea9f4240ecfb8a"
+  },
+  "consumer_gate": {
+    "default": 4,
+    "requested": null,
+    "contract": {
+      "file": "/srv/opentallas-scratch2/claude/codex-reset-canary-1900/gen2/hfd_hgi_vm_calendar_f20_f6ca3a8cd75a/reset_contract.json",
+      "die": "hbm",
+      "edges": 64,
+      "assert_edges": 66,
+      "receipt": "/srv/opentallas-scratch2/claude/codex-reset-canary-1900/gen2/hfd_hgi_vm_calendar_f20_f6ca3a8cd75a/reset_contract/receipt.txt"
+    },
+    "used": 64,
+    "debug_overrides": {}
+  }
+}
