@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS",
+  "reviewer": "CODEX",
+  "recorded": "2026-10-30 00:04 PDT",
+  "reviewed_before_route": true,
+  "kit": "ot_s81sl_cap_tr_face3",
+  "kit_hash": "2aa2e0e42cdcd540",
+  "pictures": [
+    "placed_face3.png",
+    "auto_geom.png"
+  ],
+  "findings": [
+    "Both actual placement images viewed before route. Uniform macro-free core, fill0.4939, no5um bins>0.8; max0.74. W-input and S-output capture rows are close to ports; no macro wall or channel pinch.",
+    "Full r2r census max129.6um with0 over-reach pairs; pin-reg p90=6.31um/max53.36um;0unregistered; maxpin density3.9/um. Clock entry M5S0.048x0.48, clock reach121.08um,6225rooted sinks. Continuous PG stripes.",
+    "Diagnostic pre-CTS signal GRT50 overflow0. This is not die freeze or GRT0 including a built clock.",
+    "Current nativeLEC EQUIVALENT and both FACE347/347 before P&R. Actual CTS/route/signoff pending; no SIGNED claim."
+  ]
+}
