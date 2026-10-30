@@ -1,0 +1,119 @@
+{
+ "rows": [
+  {
+   "type": "ot_s81sl_kv_leaf__t1",
+   "mapped_total": 288060,
+   "mapped_total_24cut": 94717,
+   "measured_VNb_soft_delta": 193343,
+   "flops": 58177,
+   "flop_types": {
+    "DFFHQNx1_ASAP7_75t_R": 56024,
+    "DFFLQNx1_ASAP7_75t_R": 10,
+    "DFFASRHQNx1_ASAP7_75t_R": 2143
+   },
+   "real_sram_instances": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2,
+    "ot_sram_1r1w_512x128_m4_r0c0": 2
+   },
+   "real_sram_total": 4,
+   "reported_chip_area_um2": 54603.3127,
+   "real_sram_area_um2": 17665.2472,
+   "standard_cell_area_um2": 36938.0655,
+   "cycles_added": 0,
+   "retained_soft": [
+    "VN_b",
+    "VQ"
+   ],
+   "expected_abstract_children": 23,
+   "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+   "report_sha256": "ee29005bd031e9ef6a6d37a7e5c1430fba6f8549c7d0efb7d7046ee1b3efe87e"
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t3",
+   "mapped_total": 330365,
+   "mapped_total_24cut": 138117,
+   "measured_VNb_soft_delta": 192248,
+   "flops": 70729,
+   "flop_types": {
+    "DFFHQNx1_ASAP7_75t_R": 68536,
+    "DFFLQNx1_ASAP7_75t_R": 35,
+    "DFFASRHQNx1_ASAP7_75t_R": 2158
+   },
+   "real_sram_instances": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2,
+    "ot_sram_1r1w_512x128_m4_r0c0": 2
+   },
+   "real_sram_total": 4,
+   "reported_chip_area_um2": 60451.2049,
+   "real_sram_area_um2": 17665.2472,
+   "standard_cell_area_um2": 42785.9577,
+   "cycles_added": 0,
+   "retained_soft": [
+    "VN_b",
+    "VQ"
+   ],
+   "expected_abstract_children": 23,
+   "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+   "report_sha256": "60025cc145460dae6a798dee35437bcdb86edc856e0d534532e6be094148d613"
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t4",
+   "mapped_total": 315654,
+   "mapped_total_24cut": 123432,
+   "measured_VNb_soft_delta": 192222,
+   "flops": 64761,
+   "flop_types": {
+    "DFFHQNx1_ASAP7_75t_R": 62585,
+    "DFFLQNx1_ASAP7_75t_R": 30,
+    "DFFASRHQNx1_ASAP7_75t_R": 2146
+   },
+   "real_sram_instances": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2,
+    "ot_sram_1r1w_512x128_m4_r0c0": 2
+   },
+   "real_sram_total": 4,
+   "reported_chip_area_um2": 58186.53724,
+   "real_sram_area_um2": 17665.2472,
+   "standard_cell_area_um2": 40521.29003999999,
+   "cycles_added": 0,
+   "retained_soft": [
+    "VN_b",
+    "VQ"
+   ],
+   "expected_abstract_children": 23,
+   "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+   "report_sha256": "c3cb2683aa0b940acdbf02e090b6aee4b5ecf5859d49d54866d8438c8a5952ab"
+  },
+  {
+   "type": "ot_s81sl_kv_leaf__t5",
+   "mapped_total": 280220,
+   "mapped_total_24cut": 88282,
+   "measured_VNb_soft_delta": 191938,
+   "flops": 53767,
+   "flop_types": {
+    "DFFHQNx1_ASAP7_75t_R": 51603,
+    "DFFLQNx1_ASAP7_75t_R": 30,
+    "DFFASRHQNx1_ASAP7_75t_R": 2134
+   },
+   "real_sram_instances": {
+    "ot_sram_1r1w_128x256_m1_r2c2": 2,
+    "ot_sram_1r1w_512x128_m4_r0c0": 2
+   },
+   "real_sram_total": 4,
+   "reported_chip_area_um2": 53161.43818,
+   "real_sram_area_um2": 17665.2472,
+   "standard_cell_area_um2": 35496.19098,
+   "cycles_added": 0,
+   "retained_soft": [
+    "VN_b",
+    "VQ"
+   ],
+   "expected_abstract_children": 23,
+   "scope": "MAPPED_CENSUS_ONLY; native old-source frozencanonical sameas24cut; no physical macro/clock/ABI adoption",
+   "report_sha256": "acd902831297a7c6c6465b2b6e5688e3e12e53607a05811675e522cea375bdf9"
+  }
+ ],
+ "source": "Same original frozen canonical/native configs; ONLY removed *ot_s81sl_vn_b from24cut SYNTH_BLACKBOXES. New postmaps include realVNb SRAM, not behavioralflattened storage.",
+ "next": "Real23childviews and4SRAM parent packing+58177..sourceclockloadcomposition; reservedinputs+FTspareFACE fixes; fullparent594/597 ABI stillheld",
+ "adopted": false
+}
