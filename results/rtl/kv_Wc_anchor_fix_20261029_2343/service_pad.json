@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.qwen_kv.service_slot_pad.v1",
+ "need": 1775,
+ "worst_T": 7937,
+ "base_service_end": 1687,
+ "pad": 88,
+ "v_rl": 186,
+ "d_rl": 167,
+ "pv_result_extra": 0,
+ "f_dly": 1,
+ "rule": "pad = max(0, max_T (PV_START + R + 48 + F_DLY) - service_end(pad 0)); one pad for every layer",
+ "ages": "/srv/opentallas-scratch2/claude/codex-kvtok-2249/mu833_Wc_ofs-2_pinned/prep/die_ages_bound_padded.json"
+}
