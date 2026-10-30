@@ -259,3 +259,18 @@ Additional body/area review option: {
  "result": "Thin clockdriver channel does not establish fullregisteredadapter space; FFlowbound76.4%fill beforeoverhead >70% target."
 }
 Current schema.ORIENTS onlyR0/MX/MY/R180;90deg alternative needs explicitschema/transform support. link_phy_gen.generate_nface tall is an edge-specific MODELED variant, notrotation of licensedview; no implicit migration.
+
+
+CURRENT TRACK-PHASE CORRECTION (supersedes historical12nmcomment): {
+ "actual_target_tracks": "target_infra2/grt/tracks.tcl: make_tracksM5 x_offset0.024 x_pitch0.048; samecurrent schema.layers M5",
+ "historical_generator_comment": "link_phy_gen.py commentM5offset0.012; thisdoesnotmatchcurrenttargettracks. Its6nmphasecorrectionguaranteesreachabilityatsome54nmorigin, notorigin0.",
+ "SerDes_native_first_pin_center_nm_mod48": 42,
+ "current_track_center_nm_mod48": 24,
+ "center_aligned_native_X_origin_um": 0.27,
+ "origin_grid_sites": 5,
+ "body_right_um": 1563.84,
+ "baseline_origin_zero_result": "No currentM5trackcenterline liesinsideSerDes24nmclockpin; actualnativepinaccessmustbeproven, not inferredfrommetadata.",
+ "KV_and_coll_origin_zero": "Native12nmcenterphase vscurrent24nmtrackphase putsverticaltrackat24nmpinrectangleedge. Full777.6umbodyhasnoxslack; accessmustbephysicallyprovenorhandledbyexplicitadaptertrackphase. No automaticunreachabilityverdict andno pinmovement.",
+ "guard": "Use actualtargettrackfile+exactnativePINrect/layer+actualaccesssolver. Never silentlysnapnativehardpin or followoutdatedphasecomment."
+}
+Updatedcandidatebodyoriginsare {'phy_serdes_b': [0.27, 0], 'phy_serdes': [0.27, 4.104]}; unapproved proposal only. Earlierbaselineper-bitdistances use explicitnativebodyorigin0 so remain reproducible baseline comparisons.

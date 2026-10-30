@@ -96599,11 +96599,11 @@
   "baseline_issue": "SerDes2 nativebody[0,0] and upperSerDes1 nativebody[0,0] leave4.104um actual gap; two2.16umhalos consume4.32um, leavingno driverrow nearSerDes2Nclock.",
   "candidate_type_body_origins_um": {
    "phy_serdes_b": [
-    0,
+    0.27,
     0
    ],
    "phy_serdes": [
-    0,
+    0.27,
     4.104
    ]
   },
@@ -96611,16 +96611,17 @@
   "after_2p16_halos_gap_um": 3.888,
   "guard": "Requires actualbody placement/domain identity, explicit slot-body offsets and parentorient composition. Fullslotdomain exclusions still forbid this channel. No interior PHY cells or smaller assumed logic strip.",
   "MX_candidate_io_serdes_bbox_um": [
-   0,
+   0.27,
    14005.44,
-   1563.57,
+   1563.84,
    16325.496
   ],
   "MX_candidate_clk_xy_um": [
-   753.018,
+   753.288,
    14005.536
   ],
-  "native_field_plus_30um_R2_band_area_um2": 456.94886399999996
+  "native_field_plus_30um_R2_band_area_um2": 456.94886399999996,
+  "phase_status": "X=.270 onlya center-alignment proposal againstCURRENT24nmoffsettrackfile. Previous.162suggestionappliedonlyhistorical12nmoffsetandisnotcurrentrecipe. Actualaccessrouteandbodydomainsunapproved."
  },
  "adapter_area_lowerbounds": {
   "source": "tools/uarch_model.py DFF_UM2=0.2916 (DFFHQNx1)",
@@ -96632,5 +96633,17 @@
   "candidate_R2_band_FF_only_fill": 0.7638605268531755,
   "result": "Thin clockdriver channel does not establish fullregisteredadapter space; FFlowbound76.4%fill beforeoverhead >70% target."
  },
- "alternative_orientation_guard": "Current schema.ORIENTS onlyR0/MX/MY/R180;90deg alternative needs explicitschema/transform support. link_phy_gen.generate_nface tall is an edge-specific MODELED variant, notrotation of licensedview; no implicit migration."
+ "alternative_orientation_guard": "Current schema.ORIENTS onlyR0/MX/MY/R180;90deg alternative needs explicitschema/transform support. link_phy_gen.generate_nface tall is an edge-specific MODELED variant, notrotation of licensedview; no implicit migration.",
+ "native_access_phase_review": {
+  "actual_target_tracks": "target_infra2/grt/tracks.tcl: make_tracksM5 x_offset0.024 x_pitch0.048; samecurrent schema.layers M5",
+  "historical_generator_comment": "link_phy_gen.py commentM5offset0.012; thisdoesnotmatchcurrenttargettracks. Its6nmphasecorrectionguaranteesreachabilityatsome54nmorigin, notorigin0.",
+  "SerDes_native_first_pin_center_nm_mod48": 42,
+  "current_track_center_nm_mod48": 24,
+  "center_aligned_native_X_origin_um": 0.27,
+  "origin_grid_sites": 5,
+  "body_right_um": 1563.84,
+  "baseline_origin_zero_result": "No currentM5trackcenterline liesinsideSerDes24nmclockpin; actualnativepinaccessmustbeproven, not inferredfrommetadata.",
+  "KV_and_coll_origin_zero": "Native12nmcenterphase vscurrent24nmtrackphase putsverticaltrackat24nmpinrectangleedge. Full777.6umbodyhasnoxslack; accessmustbephysicallyprovenorhandledbyexplicitadaptertrackphase. No automaticunreachabilityverdict andno pinmovement.",
+  "guard": "Use actualtargettrackfile+exactnativePINrect/layer+actualaccesssolver. Never silentlysnapnativehardpin or followoutdatedphasecomment."
+ }
 }
