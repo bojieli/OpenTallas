@@ -1,0 +1,36 @@
+{
+  "scope": "Exact current module-scope-function corrected TIMING_833=0 controller vs byteexact actual preferred preprofile controller; enabledprofile proof separately pending",
+  "source_branch": "codex/hbm-load-provider-rtl-1030",
+  "source_tip": "abdb23bfa",
+  "boot_tool_tip": "6739d1690",
+  "configuration": {
+    "ENABLE": 1,
+    "WR_EN": 1,
+    "AQ_RD": 1,
+    "WQ": 32,
+    "PHYS_WACT": 2,
+    "TIMING_833": 0
+  },
+  "proven_equiv_cells": 5742,
+  "unproven": 0,
+  "log": "current_default_equiv.log",
+  "script": "current_default.ys",
+  "gold": "gold.sv",
+  "gate": "current_gate.sv",
+  "tool": "Yosys0.68",
+  "time_seconds": 204.0,
+  "memory_MB": 566.63,
+  "enabled_raw_FF_delta_per_PC": 72,
+  "enabled_raw_FF_delta_32PC": 2304,
+  "no_claim": [
+    "enabledprofile timing PASS",
+    "physical PHY qualification",
+    "production fill deadline"
+  ],
+  "hashes": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "23497f55bfe965034c6d8c8e10515644d9c4133b958a208ac240824a3c65e825",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": "ef1a98278c1e25596d7b22b6fe86697afdf7aacdc7c1302f9bf7f68f0c01c1b6",
+    "tools/hbm_timing_833_profile.py": "5677f9b8bb2680fc47b58f2dbbe56df9d95c00a90552353daf4e1847eb5e8f70"
+  },
+  "unit": "oth-ubuntu-2923793-1793376372"
+}

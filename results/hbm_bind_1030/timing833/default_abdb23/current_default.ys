@@ -1,0 +1,24 @@
+read_verilog -sv gold.sv
+chparam -set ENABLE 1 -set WR_EN 1 -set AQ_RD 1 -set WQ 32 -set PHYS_WACT 2 gold
+hierarchy -top gold
+proc
+opt
+memory_map
+opt
+design -stash gold
+read_verilog -sv current_gate.sv
+chparam -set ENABLE 1 -set WR_EN 1 -set AQ_RD 1 -set WQ 32 -set PHYS_WACT 2 gate
+hierarchy -top gate
+proc
+opt
+memory_map
+opt
+design -stash gate
+design -copy-from gold -as gold gold
+design -copy-from gate -as gate gate
+equiv_make gold gate equiv
+hierarchy -top equiv
+equiv_struct
+equiv_simple
+equiv_induct -seq 2
+equiv_status -assert
