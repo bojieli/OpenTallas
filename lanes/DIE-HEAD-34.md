@@ -1,0 +1,2 @@
+# DIE-HEAD-34 (HEAD die owner, successor of DIE-HEAD-33)
+- 2026-10-29 19:37 PDT started 19:04; adopted Codex HEAD handoff (codex_head_20261029_1902.md). Sparse WT intel2 /srv/opentallas-scratch2/claude/wt/die-head-34 (branch claude/die-head-34-1029). Results: queue lines 2026-10-29 19:37 PDT. Live: hd_mesh_e rekit done (DRT-0255), serdes route_r2 unit 547157, lep VA/VB 3836197/3836194 + geom watchers, canary LEC 2071068. Items (2) pin-reg scope fix + (6) lep guard fix already on main (62d8d8746, 19edb5bf4).
