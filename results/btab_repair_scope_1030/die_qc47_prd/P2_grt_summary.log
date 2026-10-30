@@ -1,0 +1,34 @@
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/run/results/asap7/codex_btab_mif1_1847/base/4_cts.sdc
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 296.23 / FF hold ws 13.97 ps
+OT_CLK_FREEZE ON clock nets 474 (with wire 0, re-encoded FIXED 0) instances 5009 (placement -> LOCKED: 4532 were movable) dont_touch nets + 473 clock-tree cells
+OT_PRD pass 1 sink guard: 5009 clock-net instances, 3 sink master families -> set_dont_use 10 lib cells for the ECO session: DFFASRHQNx*_ASAP7_75t_R DFFHQNx*_ASAP7_75t_R ot_sram_1r1w_128x256_m1_r2c2
+OT_PRD pass 1 repair_design slew_margin 20 cap_margin 20 max_fanout 0 (routed RCX SPEF)
+OT_PRD pass 1 repair_design -slew_margin 20 -cap_margin 20
+[INFO RSZ-0034] Found 307 slew violations.
+[INFO RSZ-0036] Found 4 capacitance violations.
+[INFO RSZ-0039] Resized 7 instances.
+[INFO RSZ-0038] Inserted 245 buffers in 307 nets.
+OT_PRD pass 1 repair_timing -setup -setup_margin 10
+[INFO RSZ-0098] No setup violations found
+OT_PRD pass 1 hold: shared guarded repair (orfs_hold_mm.tcl) -hold_margin 27 -max_buffer_percent 40 -allow_setup_violations
+OT_HOLD_MM after repair: SS setup ws 323.13 / FF hold ws 13.97 ps
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 323.13 / FF hold ws 13.97 ps
+OT_HOLD_GUARD start: hold ws 13.97 tns 0.0 viol 0 (margin 27, chunk 1000 it)
+[INFO RSZ-0046] Found 1281 endpoints with hold violations.
+[INFO RSZ-0032] Inserted 1299 hold buffers.
+OT_HOLD_GUARD chunk 1: hold ws 27.00 (+13.04) tns 0.0 (+0.0%) viol 0, 517 s
+OT_HOLD_MM after repair: SS setup ws 323.13 / FF hold ws 27.00 ps
+OT_HOLD_MM: ff mode reads /work/vclk_ff.sdc
+OT_HOLD_MM sync: SS setup ws 323.13 / FF hold ws 27.00 ps
+OT_PRD sink guard: 0 clock-net instance masters restored 
+OT_CLK_FREEZE post_grt OK: all 0 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+OT_PRD pass 1 hook done (sink masters restored 0)
+OT_HOLD_MM after repair: SS setup ws 323.13 / FF hold ws 24.54 ps
+[INFO RSZ-0034] Found 98 slew violations.
+[INFO RSZ-0036] Found 3 capacitance violations.
+[INFO RSZ-0039] Resized 3 instances.
+[INFO RSZ-0038] Inserted 102 buffers in 95 nets.
+[INFO RSZ-0033] No hold violations found.
+RC 0 Fri Oct 30 11:38:39 PDT 2026
