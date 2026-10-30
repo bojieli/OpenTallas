@@ -1,0 +1,3 @@
+# S81 PHY FT0 per-bit v3 estimate
+
+PASS-COND geometric estimate only. Independently viewed phy_perbit_v3.png and summary from codex-s81-0336/results/codex_s81_phy_fit_1030. Actual mapped DFFHQNx1 1.080x.270 and epoch1.404x.270 dimensions produce12-row/3.24um station boxes on.054/.270grid. All513FT0 native pin bits x9stages fit; zero candidate cell/domain collisions,4.05um interior PG clearance, maxhop399.978um/0>405. Margin5.022um is before detail routing. Source explicitly records+1cycle, lane57/58. No DPL/tapcell/pin-access/clock/STA or nine-flop RTL/LEC proof; remaining FT1 ring/digital area and clock/START/CA qualification are separate gates. Earlier straight-path bound correction remains valid. No P&R permission or whole-die gate claim.
