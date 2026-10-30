@@ -126,6 +126,31 @@ endmodule
 """
 
 
+
+# Yosys numbered cells without a source location in the name ($procdff$N ...) renumber on any edit of the elaborated RTL
+# (QC-KITS-X 10-30: main 8bb9043d0 moved u_suvm $procdff$60311-13 -> 60305-07, same flops).  For align_r8: a table source
+# of that form that is ABSENT from this bind matches the bind's driver when both are numbered cells of the SAME parent,
+# type and pin, and the old -> new map stays one-to-one over the whole table (a consistent renumbering); anything else
+# is not the same source (R8_STALE).  Returns (same_source(bind_src, table_src) -> bool, the old -> new cell map).
+_AUTO_PIN = re.compile(r"^(.*)\.\$(\w+)\$(\d+)\.(\w+)$")
+
+
+def r8_source_matcher(cells, canon):
+    renum, back = {}, {}
+
+    def same_source(src, tsrc):
+        if canon(src) == canon(tsrc):
+            return True
+        a, b = _AUTO_PIN.match(src), _AUTO_PIN.match(tsrc)
+        if not a or not b or (a[1], a[2], a[4]) != (b[1], b[2], b[4]):
+            return False
+        old, new = tsrc.rsplit(".", 1)[0], src.rsplit(".", 1)[0]
+        if old in cells:
+            return False    # the table's cell still exists in this bind: a different flop
+        ok = renum.setdefault(old, new) == new
+        return back.setdefault(new, old) == old and ok
+    return same_source, renum
+
 class BindError(Exception):
     pass
 
@@ -1873,6 +1898,7 @@ class Binder:
                 xsrc[(c, pn)].add(canon(f"{self.F.cells[d[2]].path}.{d[3]}"))
         st["renamed_cells"] = 0
         st["gone_pad0"] = []
+        same_source, renum = r8_source_matcher(cidx, canon)
         want = {}
         for m in js["members"]:
             st["members"] += 1
@@ -1916,7 +1942,7 @@ class Binder:
             seen.add((ci, pn, i))
             b0 = self.bitcyc[(d[1], d[6], d[2], d[3], d[4])]
             src = f"{self.F.cells[d[2]].path}.{d[3]}"
-            if canon(src) != canon(m["source"]) or d[5] != m["asbuilt"] or b0 != m["bound"]:
+            if not same_source(src, m["source"]) or d[5] != m["asbuilt"] or b0 != m["bound"]:
                 st["stale"] += 1
                 if st["stale"] <= 30:
                     self.errors.append(f"R8_STALE {m['id']} bit {i}: bind has {src} as-built {d[5]} bound {b0}, table "
@@ -1942,6 +1968,7 @@ class Binder:
                 lp = self.land_pads.setdefault(f"{path}.{pn}", dict(src_part=d[1], pads=[pad, pad], bits=0, r8=True))
                 lp["pads"] = [min(lp["pads"][0], pad), max(lp["pads"][1], pad)]
                 lp["bits"] += 1
+        st["renumbered_sources"] = len(renum)
         miss = [k for k in want if k not in seen]
         for k in miss:
             m = want[k]
