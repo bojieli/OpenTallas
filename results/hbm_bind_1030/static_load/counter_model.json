@@ -15,7 +15,7 @@
  "VM_payload_bytes_per_step": 4,
  "output_register_added_cycles": 1,
  "source_dataload": "one scalar address does not imply one HBM sector demand; current ownedwindow32KiB/quad overfetch priced by TOK",
- "address_units": "source227 codedbase40: code0linear/code1STRIPE4, local35bytes+physicalstack2; counter output decodedphysical37 in40. Destination40word; srcrowstride localbytes,dstrowstride words.",
+ "address_units": "source227 codedbase40: code0linear/code1STRIPE4, physical37 linear or local35bytes+stripedphysicalstack2; counter output decodedphysical37 in40. Destination40word; srcrowstride localbytes,dstrowstride words.",
  "address_adder_proposal": "explicit five8bit carry-select blocks, two40bit state feedback additions; unmapped,no833ps fit claim",
  "negative_contract": "m/n0,bad source/destspace,reservedsourceformat,unowneddatedstep,misalignedelement,40bitoverflow fault; reset clears fault",
  "destination_format": "metadata not converted here: output address only, final existingload_static conversion remains authoritative",
@@ -31,12 +31,13 @@
   "833psmappedfeedbackadder/lot/clock/route"
  ],
  "source_code_inventory": {
-  "0": "linear fixedstack",
+  "0": "linear full37bit physical arithmetic; row/element carry may change stack, subject to localcapacity/providercoverage guards",
   "1": "STRIPE4 (basestack+row)mod4; localbase+row*stride+i*sis*esize",
   "other": "fault"
  },
- "source_capacity": "localbyte+element_size<=22500000000, no local35 carry changingstack",
+ "source_capacity": "each decoded localbyte+element_size<=22500000000; code0full37overflow/code1local35overflow fault",
  "descriptor_setup_cycles": 1,
  "sequential_descriptor_nonissue_cycles": 1,
- "chain_latency": "counter1 + combinationalmapper0 + eightleafcomponent7 =8 componentedges before physicalcomposition"
+ "chain_latency": "counter1 + combinationalmapper0 + eightleafcomponent7 =8 componentedges before physicalcomposition",
+ "per_step_handoff": "combinationalmapper takes caller-provided buffer1,epoch16,ownedwindowrow15,col4 EACHstep; not constant per descriptor. No caller/controller yet installed."
 }

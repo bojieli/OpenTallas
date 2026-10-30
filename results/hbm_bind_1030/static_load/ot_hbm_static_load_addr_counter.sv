@@ -30,7 +30,7 @@ module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT
  wire[15:0]sis=(MUT_ZERO_STRIDE!=0&&desc_i[92:77]==0)?16'd1:desc_i[92:77];
  wire badshape=desc_i[1:0]!=0||desc_i[94:93]!=1||desc_i[44:42]>1||dfmt==3||dfmt==7||desc_i[205:186]==0||desc_i[226:206]==0;
  wire[2:0]esize=(fmt==0||fmt==5)?3'd4:fmt==1?3'd2:3'd1;
- wire badsource=sa>40'd22500000000-{37'd0,esize};
+ wire badsource=(stripe?(|sa[39:35]):(|sa[39:37]))||({5'd0,sa[34:0]}>40'd22500000000-{37'd0,esize});
  wire badalign=(fmt==0||fmt==5)?(|sa[1:0]):fmt==1?sa[0]:1'b0;
  always @(posedge clk)begin
  if(!rst_n)begin active_o<=0;fault_o<=0;addr_v_o<=0;last_o<=0;src_byte_o<=0;dst_word_o<=0;format_o<=0;
@@ -40,15 +40,15 @@ module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT
  if(desc_v_i)begin
  if(active_o||step_i||badshape||fault_o)begin fault_o<=1;active_o<=0;end
  else begin
- active_o<=1;srow<={5'd0,desc_i[39:5]};sa<={5'd0,desc_i[39:5]};stripe<=desc_i[44:42]==1;stack<=desc_i[41:40];drow<=desc_i[137:98];da<=desc_i[137:98];
+ active_o<=1;srow<=desc_i[44:42]==1?{5'd0,desc_i[39:5]}:{3'd0,desc_i[41:5]};sa<=desc_i[44:42]==1?{5'd0,desc_i[39:5]}:{3'd0,desc_i[41:5]};stripe<=desc_i[44:42]==1;stack<=desc_i[41:40];drow<=desc_i[137:98];da<=desc_i[137:98];
  sst<=desc_i[76:45];dst<=desc_i[169:138];sstep<={2'd0,sis}<<eszshift;dstep<=desc_i[185:170];
  m<=desc_i[205:186];n<=desc_i[226:206];row<=0;col<=0;fmt<=dfmt;end
  end else if(step_i)begin
  if(!active_o||fault_o||badalign||badsource)begin fault_o<=1;active_o<=0;end
  else begin
- addr_v_o<=1;src_byte_o<={3'd0,stack,sa[34:0]};dst_word_o<=da;format_o<=fmt;last_o<=last_col&&last_row;
+ addr_v_o<=1;src_byte_o<=stripe?{3'd0,stack,sa[34:0]}:{3'd0,sa[36:0]};dst_word_o<=da;format_o<=fmt;last_o<=last_col&&last_row;
  if(last_col&&last_row)active_o<=0;
- else if((|snext[40:35])||dnext[40])begin fault_o<=1;active_o<=0;end
+ else if((stripe?(|snext[40:35]):(|snext[40:37]))||dnext[40])begin fault_o<=1;active_o<=0;end
  else begin sa<=snext[39:0];da<=dnext[39:0];
  if(last_col)begin srow<=snext[39:0];drow<=dnext[39:0];col<=0;row<=row+20'd1;if(stripe&&MUT_STRIPE==0)stack<=stack+2'd1;end
  else col<=col+21'd1;end
