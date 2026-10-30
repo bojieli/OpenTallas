@@ -1,5 +1,51 @@
 # Selector revised FF placement roles (diagnostic only)
 
+## Active revision: roles6 / role_model_v3
+
+The original broad regions and roles5 are superseded. Fresh kits were generated
+from approved clock-feedthrough main `304e8a41733`, with unchanged complete RTL
+and macro-view inventories versus the completed 301,964-instance synthesis.
+Roles5's SRAM rows collided with eight inherited clock/reset islands. The active
+emitted rows are Y=9.708, 62.220, 166.188, 234.204, 286.860, 373.548 um, in each
+macro column. Minimum macro channel is 11.448 um (required 10.8), island clearance
+4.716 um (halo 4.32), and the bottom halo ends at 5.388 um versus core bottom
+4.32. There are no south functional ports or boundary-capture FFs under that
+narrow bottom strip. Actual PG/clock/cell fit remains a placement gate.
+
+The active model includes each native in_r register's two direct consumers:
+SRAM WD and all own-quarter histogram FFs. All quarter state uses the reduced-Y
+WD-safe body; threshold/tie copies stay near the common controller. Relay bays
+are entirely outside quarter bodies, root, first-reset box, macro halos and
+clock/reset islands. Quarter unions exclude root; root excludes threshold boxes.
+This avoids an unsupported assumption about overlapping INCLUSIVE groups.
+Exact distinct-region overlap count is zero. Quarter union areas are
+9069.926/7166.362/8286.106/6550.502 um², root 5076.173 um², each threshold/reset
+box 74.650 um². Bays hold at most 16 FFs. Actual master/fixed-cell capacity must
+pass below 80% before GPL.
+
+Active bounds: worst registered station-box leg 394.872 um, histogram→threshold
+311.04 um, SRAM RD→quarter FF 265.614 um, direct same-quarter SRAM RD→WD 339.744
+um; no modeled leg over 405 um and no halo/island collision. Mapped FF role
+census remains 20,728 FFs with zero unclassified native FFs. Both normal
+preflight v3 receipts pass with zero issues. `selector_roles6_disjoint.png` was
+personally viewed. This remains an estimate and review-before-PLACE receipt;
+actual FF and memory endpoint geometry is required before CTS/route.
+
+Native LEC was still solving when this milestone was saved. The lane-local
+reuse mechanism is adapted from the established HBM core helper and checks
+complete RTL inventory/digests, RTL_FILES, top/parameters/defines, complete macro
+views, original EQUIVALENT receipt, gold/gate scripts+AIGs and both synthesis
+netlist hashes. A private runner changes only the LEC call to this checker,
+with a full native proof fallback; unproved fallback fails closed. All other
+lint, face, port, SELRANGE, mode, placement and geometry gates remain. No physical
+run has started, and source default LOCAL_CTRL=0 is unchanged.
+
+The first v3 finalization stopped because kit_preflight intentionally opens its
+output receipt exclusively and the v2 filename already existed. Unique v3
+receipt names fixed that driver error, preserving the earlier receipts.
+
+The following initial planning history is retained to explain the revisions.
+
 This replaces the broad quarter-prefix guide before any placement. The old guide
 made six W-input-to-capture legs unavoidably longer than 405 um (worst lower bound
 517.464 um). It also constrained combinational cells with each broad prefix.

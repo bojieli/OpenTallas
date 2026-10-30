@@ -6,6 +6,7 @@ set blk [ord::get_db_block]
 set unit [[ord::get_db_tech] getDbUnitsPerMicron]
 array set boxes $::ot_sel_boxes
 array set roles $::ot_sel_roles
+array set rects $::ot_sel_regions
 array set members {}; array set area {}; array set seen {}
 set count 0
 foreach inst [$blk getInsts] {
@@ -24,10 +25,10 @@ foreach inst [$blk getInsts] {
     # Per-quarter tie budget also reaches packed_next -> SRAM WD directly.
     set group threshold$q
   } elseif {[regexp {^u_fcore\.core\.gq\[([0-3])\]\.buf_q\[} $base -> q]} {
-    set group buf$q
+    set group q$q
   } elseif {[regexp {^u_fcore\.core\.gq\[([0-3])\]\.} $base -> q]} {
     # fill/rv/rop/ties/pack controls also reach the combinational WD cone.
-    set group buf$q
+    set group q$q
   } elseif {[regexp {^u_fcore\.core\.hist\[([0-9]+)\]} $base -> b]} {
     set group q[expr {$b / 64}]
   } elseif {[regexp {^u_fcore\.core\.selected_line\[([0-9]+)\]} $base -> b]} {
@@ -60,16 +61,24 @@ foreach i [$blk getInsts] {
 }
 foreach group [array names members] {
  lassign $boxes($group) x0 y0 x1 y1
- set fixedarea 0.0
+ set fixedarea 0.0;set unionarea 0.0
+ foreach rect $rects($group) {
+ lassign $rect rx0 ry0 rx1 ry1
+ set unionarea [expr {$unionarea+($rx1-$rx0)*($ry1-$ry0)}]
  foreach b $fixed {
   lassign $b a c d e
-  set dx [expr {min($x1,$d)-max($x0,$a)}];set dy [expr {min($y1,$e)-max($y0,$c)}]
+  set dx [expr {min($rx1,$d)-max($rx0,$a)}];set dy [expr {min($ry1,$e)-max($ry0,$c)}]
   if {$dx>0 && $dy>0} {set fixedarea [expr {$fixedarea+$dx*$dy}]}
  }
- set fill [expr {($area($group)+$fixedarea)/(($x1-$x0)*($y1-$y0))}]
+ }
+ if {$unionarea<=0} {error "OT_SEL_ROLE_EMPTY_UNION $group"}
+ set fill [expr {($area($group)+$fixedarea)/$unionarea}]
  if {$fill>=0.80} {error "OT_SEL_ROLE_CAPACITY $group $fill >= .80"}
  set r [odb::dbRegion_create $blk ot_mrg_sel_$group];$r setRegionType INCLUSIVE
- odb::dbBox_create $r [expr {round($x0*$unit)}] [expr {round($y0*$unit)}] [expr {round($x1*$unit)}] [expr {round($y1*$unit)}]
+ foreach rect $rects($group) {
+ lassign $rect rx0 ry0 rx1 ry1
+ odb::dbBox_create $r [expr {round($rx0*$unit)}] [expr {round($ry0*$unit)}] [expr {round($rx1*$unit)}] [expr {round($ry1*$unit)}]
+ }
  set g [odb::dbGroup_create $r ot_mrg_sel_$group];$g setType VOLTAGE_DOMAIN
  foreach i $members($group) {$g addInst $i}
  puts "OT_SEL_ROLE $group cells [llength $members($group)] fill $fill"

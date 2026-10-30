@@ -10,7 +10,7 @@ for master,nm in ff:
  if g:pass
  elif m:=re.match(r'u_fcore.core.gthreshold\[([0-3])\].local_copy.value\[',n):g='threshold'+m[1]
  elif m:=re.match(r'u_fcore.core.ties\[([0-3])\]',n):g='threshold'+m[1]
- elif m:=re.match(r'u_fcore.core.gq\[([0-3])\].',n):g='buf'+m[1]
+ elif m:=re.match(r'u_fcore.core.gq\[([0-3])\].',n):g='q'+m[1]
  elif m:=re.match(r'u_fcore.core.hist\[([0-9]+)\]',n):g='q'+str(int(m[1])//64)
  elif m:=re.match(r'u_fcore.core.selected_line\[([0-9]+)\]',n):g='q'+str(int(m[1])//592)
  elif m:=re.match(r'u_fcore.core.(selected|selected_v|qfault)\[([0-3])\]',n):g='q'+m[2]

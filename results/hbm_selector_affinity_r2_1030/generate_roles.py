@@ -2,12 +2,12 @@
 """Fresh current-source selector role trials; never executes physical flow."""
 import sys,json,argparse,importlib.util,subprocess,shutil
 from pathlib import Path
-a=argparse.ArgumentParser();a.add_argument('--repo',required=True);a.add_argument('--views',required=True);a.add_argument('--slice',required=True);a.add_argument('--out',required=True);a=a.parse_args()
+a=argparse.ArgumentParser();a.add_argument('--repo',required=True);a.add_argument('--views',required=True);a.add_argument('--slice',required=True);a.add_argument('--out',required=True);a.add_argument('--revision',choices=['roles5','roles6'],default='roles6');a=a.parse_args()
 repo=Path(a.repo);out=Path(a.out);H=repo/'physical/die_plan/hbm_arch_cores';sys.path.insert(0,str(H))
 sp=importlib.util.spec_from_file_location('role_gen',H/'gen_core_kit_hbm.py');G=importlib.util.module_from_spec(sp);sp.loader.exec_module(G)
 mod='ot_hbm_idx_selector_static_sel';v=next(v for v in json.load(open(a.views))['view_list'] if v['module']==mod)
 here=Path(__file__).resolve().parent
-for tag,td in [('roles5_td',True),('roles5_notd',False)]:
+for tag,td in [(a.revision+'_td',True),(a.revision+'_notd',False)]:
  kd=out/(v['view'].replace('@','_')+'-'+tag)
  if kd.exists():raise SystemExit(f'refuse existing kit {kd}')
  recipes=G.load_recipes();rk=mod if mod in recipes else next(k for k in v['recipe_keys'] if k in recipes)
@@ -17,7 +17,8 @@ for tag,td in [('roles5_td',True),('roles5_notd',False)]:
  for q in range(4):
   for row in range(3):
    m=(2-row) if q%2==0 else row
-   rec['macro_placement'].append(dict(inst=f'core.gq[{q}].gm[{m}].mem',macro='ot_sram_1r1w_256x256_m2_r2c2',xy_um=[68.526 if q<2 else 358.830,(27.948 if q%2==0 else 235.308)+row*69.12],orient='MY' if q<2 else 'R0'))
+   y=([166.188,62.208,9.72] if q%2==0 else [234.228,286.848,373.548])[m] if a.revision=='roles6' else (27.948 if q%2==0 else 235.308)+row*69.12
+   rec['macro_placement'].append(dict(inst=f'core.gq[{q}].gm[{m}].mem',macro='ot_sram_1r1w_256x256_m2_r2c2',xy_um=[68.526 if q<2 else 358.830,y],orient='MY' if q<2 else 'R0'))
  sys.argv=['gen_core_kit_hbm.py','--views',a.views,'--view',v['view'],'--out',a.out,'--master-slice',a.slice,'--trial','--tag',tag]
  if not td:sys.argv+=['--orfs-var','GPL_TIMING_DRIVEN=0']
  G.main(recipe_overrides={rk:rec},source_overrides={'rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv':str(repo/'rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv')})
