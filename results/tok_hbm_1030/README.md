@@ -286,3 +286,21 @@ STORE/arithmetic, window service, physical commit, scratch/stack authority and
 full-calendar installation remain open. Window-policy release conservation now
 also counts2 terminal owned windows; all27907 acquisitions require one all8leaf
 release each. No RTL/P&R/target allocation is changed here.
+
+Window-safe caller programme (source only):
+load_provider/window_programme.py groups only adjacent LOADs with disjointVM
+outputs, splits effective227 runs at actual PC-window-half boundaries and
+preserves every source command anchor by its raw stream offset; precisely
+12543 body/drain anchors plus12155 STORE anchors. The95313splitdescriptors
+retain all43117008words and27907all8fill/release pairs, with2761validepochhits.
+95313address/ownership/route checks PASS, staleepoch/wrongVM/missingrelease
+controls caught. --program-out writes the complete caller event programme;
+the checked-in JSON stores its digest, count and representative events.
+Each run exposes sourcePC and destinationbank/quad mapping formulas to support
+future real collision-free issue planning; no parallel hardware is assumed.
+Symbolic dependencies keep taggedPHYfill before datedstep, actualVMcommit before
+sourcebody, STOREcompletion before invalidation and actuallastconsumer before
+release/reuse. Fill/commit/physical/done dates remain open. Revised singleword
+counter+splitsetup43212321cycles=35.995863393ms@833ps. Proven future count8
+coalescing would yield5389626sectorcommands+95313setupedges=5484939cycles
+(4.568954187ms), before windows/sourcework/commit; not current implementation.
