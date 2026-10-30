@@ -103,7 +103,7 @@ def tree_fingerprint(sl):
     tree = copy.deepcopy(plan["core_tree"])
     tree.pop("model_qualification", None)
     names = {node["name"] for node in tree["nodes"]}
-    identity = dict(tree=tree, clock_entry=plan.get("clock_entry"), outline_um=plan["outline_um"],
+    identity = dict(tree=tree, routing_profile=profile(sl), clock_entry=plan.get("clock_entry"), outline_um=plan["outline_um"],
                     cells=[cell for cell in plan["cells"] if cell["name"] in names])
     return hashlib.sha256(json.dumps(identity, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 

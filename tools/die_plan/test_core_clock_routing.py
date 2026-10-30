@@ -117,6 +117,10 @@ def test_stale_tree_and_invalid_policy_refused():
         with pytest.raises(CCR.RoutingError,match='policy'):
             CCR.check_qualification(sl)
         q.pop(key)
+    sl['pg_obstructions_um']['M3']=[[1,1,2,2]]
+    with pytest.raises(CCR.RoutingError,match='compiled tree'):
+        CCR.check_qualification(sl)
+    sl['pg_obstructions_um']['M3']=[]
     sl['core_tree']['nodes'][1]['xy_um'][0]+=1
     with pytest.raises(CCR.RoutingError,match='compiled tree'):
         CCR.check_qualification(sl)
