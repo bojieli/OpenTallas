@@ -1,0 +1,73 @@
+{
+ "scope": "Boolean-symbolic initial state, no X rails or output mask; bounded method diagnosis only",
+ "counts": {
+  "differs": 1408,
+  "proved": 2470
+ },
+ "by_edge": {
+  "1": {
+   "differs": 323
+  },
+  "2": {
+   "differs": 323
+  },
+  "3": {
+   "differs": 323
+  },
+  "4": {
+   "differs": 323
+  },
+  "5": {
+   "proved": 305,
+   "differs": 18
+  },
+  "6": {
+   "proved": 311,
+   "differs": 12
+  },
+  "7": {
+   "proved": 311,
+   "differs": 12
+  },
+  "8": {
+   "proved": 311,
+   "differs": 12
+  },
+  "9": {
+   "proved": 311,
+   "differs": 12
+  },
+  "10": {
+   "proved": 311,
+   "differs": 12
+  },
+  "11": {
+   "proved": 305,
+   "differs": 18
+  },
+  "12": {
+   "proved": 305,
+   "differs": 18
+  }
+ },
+ "final_failed": [
+  "ff:u_dut.u_bound.u_core.u_svc.g_ctxmu.u_context.fault@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_land.fault@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.fault@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.g_obs_tag[0].u_tag.q[0]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.g_obs_tag[0].u_tag.q[1]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.g_obs_tag[0].u_tag.q[2]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.g_obs_tag[0].u_tag.q[3]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.g_obs_tag[0].u_tag.q[4]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[0].u_service.g_obs_tag[0].u_tag.q[5]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.fault@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.g_obs_tag[0].u_tag.q[0]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.g_obs_tag[0].u_tag.q[1]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.g_obs_tag[0].u_tag.q[2]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.g_obs_tag[0].u_tag.q[3]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.g_obs_tag[0].u_tag.q[4]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.g_slot[1].u_service.g_obs_tag[0].u_tag.q[5]@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.qtag_fault@edge12",
+  "ff:u_dut.u_bound.u_core.u_svc.u_kvn.fault@edge12"
+ ]
+}
