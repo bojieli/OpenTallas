@@ -1802,7 +1802,16 @@ class Landings:
             # The existing same-clock relay is the typed count-origin sampler.
             # Its input is die-timed; adding another input FF would shift K.
             buses["cland_rstart_in"] = {"form": "origin_start", "origin": "u_cland_rstart_rx"}
-            copies = [f"u_cland_fstart_{b}" for b in sorted(self.by_type[tn]["outputs"])]
+            # Declare the actual first sampler of the original input. Writer
+            # transport changes the direct D loads; the final FSTART face flop
+            # is no longer a same-D copy after an explicit writer branch.
+            cfg = self.types[tn].get("clock", {}).get("landing_writer_start") or {}
+            copies = []
+            for b in sorted(self.by_type[tn]["outputs"]):
+                if b not in cfg.get("branches", {}):
+                    copies.append(f"u_cland_fstart_{b}")
+                elif not cfg.get("reuse_relay_origin", False):
+                    copies.append(f"u_cland_writer_start_{ident(b)}_0")
             if self.tstart and self.tstart["type_pins"].get(tn, {}).get(START_PIN_OUT):
                 copies.append("u_cland_tstart_o")
             if copies:
