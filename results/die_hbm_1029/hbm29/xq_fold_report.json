@@ -1,0 +1,85 @@
+{
+ "event": "DIE-HBM-29 xq_pegress hub fold",
+ "types": {
+  "q_hub_nw": {
+   "removed_cores": [
+    [
+     "u_xq_Q_p0_eg",
+     "ot_hgi_sm_xload_xq_pegress",
+     [
+      362.8800000000001,
+      276.48
+     ]
+    ],
+    [
+     "u_xq_Q_p1_eg",
+     "ot_hgi_sm_xload_xq_pegress",
+     [
+      362.88,
+      276.48
+     ]
+    ]
+   ],
+   "stations_removed": 67,
+   "taps_removed": 2,
+   "core_conns_refs_removed": 24
+  },
+  "q_hub_ne": {
+   "removed_cores": [
+    [
+     "u_xq_Q_p0_eg",
+     "ot_hgi_sm_xload_xq_pegress",
+     [
+      362.8800000000001,
+      276.48
+     ]
+    ],
+    [
+     "u_xq_Q_p1_eg",
+     "ot_hgi_sm_xload_xq_pegress",
+     [
+      362.88,
+      276.48
+     ]
+    ]
+   ],
+   "stations_removed": 65,
+   "taps_removed": 2,
+   "core_conns_refs_removed": 24
+  }
+ },
+ "map_moves": [
+  {
+   "key": "xq_NW_p0_eg",
+   "before": [
+    "NW_hub",
+    "u_xq_Q_p0_eg"
+   ],
+   "after": "NW_hub"
+  },
+  {
+   "key": "xq_NW_p1_eg",
+   "before": [
+    "NW_hub",
+    "u_xq_Q_p1_eg"
+   ],
+   "after": "NW_hub"
+  },
+  {
+   "key": "xq_NE_p0_eg",
+   "before": [
+    "NE_hub",
+    "u_xq_Q_p0_eg"
+   ],
+   "after": "NE_hub"
+  },
+  {
+   "key": "xq_NE_p1_eg",
+   "before": [
+    "NE_hub",
+    "u_xq_Q_p1_eg"
+   ],
+   "after": "NE_hub"
+  }
+ ]
+}
