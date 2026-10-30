@@ -1,0 +1,3 @@
+# HBM collar literal placement diagnostic
+
+Actual geometry accepted diagnostically, route held for shared FT-clock pin/source rekit. Independently viewed collar_literal/kits/ot_hbm_static_cfg_collar_idx256r_ae70500553b2-_literal1030/rev/auto_geom.png. Uniform body and full face pin bands, coherent literal clock/feed positions. AUTO-GEOM PASS without exception or WARN: fill.4142/empty.1744, r2r138.73/0bad, pinmax11.04/unreg0, clock78.89, colV.347, GRT50zero. NativeLEC12058EQ reported. No CTS/route authorization across upcoming physical FT pin change; new source/preflight and actual changed pin review required. No SIGNED claim.
