@@ -1,5 +1,5 @@
 {
- "scope": "External START wave pricing; nativecollectorfinalrst_n_t depths9/8 unchanged and needcounterresetmappingconfirmation beforephysicaladoption.",
+ "scope": "Confirmed native binding: CA ring resets from cland_start, final nativecollector rawreset onlyqualifies START synchronizer; no9/8cycles addedto CA origin.",
  "external_origins": {
   "old": {
    "lk_ES0": 12,
@@ -29,10 +29,6 @@
  "nativecollector_depth": {
   "lk_ES0": 9,
   "lk_ES1": 8
- },
- "if_counter_resets_use_final_native_tap_origin": {
-  "lk_ES0": 83,
-  "lk_ES1": 145
  },
  "crossings": [
   {
@@ -84,5 +80,13 @@
    "depth": 4
   }
  ],
- "build_allowed": false
+ "build_allowed": false,
+ "raw_reset_after_inputrelay_and_collector_from_b705_cycles": {
+  "lk_ES0": 54,
+  "lk_ES1": 95
+ },
+ "raw_release_margin_before_start_without_existing_rootlead_cycles": {
+  "lk_ES0": 12,
+  "lk_ES1": 34
+ }
 }
