@@ -1,3 +1,16 @@
+Latest status: PARKED on explicit user reset 2026-10-30 00:04 PDT.
+Actual originalr2 signoff is NOT SIGNED: TTsetup-136.27/573eps, FFhold-11.30/5eps, slewTT1178/FF997, fanout132(max182), DRC0. True internalcriticalpath e1_dv[13][5]->crc[411] includes GF inverse13 net35122 fanout182/cap163.97fF and NOR stage248.86ps; the oldkit has no currentmaxfanout/PRD hook. TTpairmax74.92/min83.52 and FF70.41/77.27 are reported measurements; finalsignoffpolicy remains authoritative, no independent83.52 gate imposed. Originalfailure never overwritten.
+
+ROOT-approved standarddataPRD LIVE intel2 codex-head-lep-serdes-2249/serdes_prd64_m15, unitoth-ubuntu-4064879-1793343563 (48GB8threads): existing post_route_drv scripts, fo64/slewcapmargin20/maxwire60/m15, frozenclock-net instances/masters, max2standardpasses. Uses actualroutedSPEF with standard5_1grt warmstart, not a fabricatedview. m15 basis=GRT+10.05 to routed-11.30 loss21.35>10. Review serdes_prd_review.png + results/geom_review/codex_head_serdes_prd_2249.md. NoPRDresult yet atreset.
+
+ParentSYNTHsizing prototype LIVE GEN phase (SYNTH NOT STARTED): intel2 codex-head-lep-serdes-2249/parent_sizing, unitoth-ubuntu-4078513-1793343598, ownworker wt/codex-head-parent-synth-2249. q3 source from codex-head-2249/src25q3; actualoriginalr2 LEF/TTFFlibs+ORIGINALreset108.024 pin table copied into assets. Prototype adds naturalDCHNchild at1347.84,172.8 only for sizing; twoexistingSRAMcores retained. Re-kit GEN errors preserved (v1 FileExists, v2 sparse historicalsink_bins missing; added committedresults/die_head_34_1029; v3 GEN live PID4078651 at38%CPU). Collect gen_v3.log,kit_v3/gen.log,synth_v3.log, then actualblackboxcellcount+remainingSRAMinventory. No inventedcells0 claim.
+
+All12 actualq3PHY masks normalize to local[0,150,2885.76,1226.88]; the old216x194.4 child at prototypeorigin lies insidePHY reserve and is NOT a validplacement. SizingONLY, NOparentPNR/adoption. AnalyticNOTRUNreshape276.48x138.24 at967.68,4.32 fits with4.32halo(y0..146.88), SRAMgap8.64, rootclockreach341.16 fromactualroot1442.88,77.76; aspect2, area38220.5952, actualr2stdarea21304.5 -> grossutil.5574/usable.61375. Full12maskreceipt phy_mask_and_reshape_estimate.json. No newshape built, no mask shrunk, no pin/clock/outline adopted.
+
+OwnLEPHB4unit1375164 remainsactive epyc2 codex-head-lep-serdes-2249/hb4; inheritedVB3109883 / VB2(3141910) remainactive with GRT FFholdpositive~6.0/~5.9 but margin10chase. OwnSerDeswestresetunit2946706 remainsactive DRTiter0 at60%,83056intermediateviolations. These are not terminalfailures or signoffclaims. Alllivejobs preserved; no newengineering after reset.
+
+Historical work detail follows.
+
 HEAD LEP / SerDes continuation, 2026-10-29 23:01 PDT.
 
 Inherited LEP VB3109883 and VB2(3141910) are still live and untouched. VB input pads covered2601bits with3593HB4. Actual hold guardchunk1 residual24 endpoints/WNS−9.357/TNS−94.633 improved after chunk2 toWNS+4.367/TNS0(iter260); margin10 remains unmet and repair continues. VB2 remains WNS−21.574 at u_ski.u_head.mwd[5]. No failure verdict overwritten. Clock/IO/uncertainty untouched.

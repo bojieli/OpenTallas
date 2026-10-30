@@ -1,0 +1,180 @@
+{
+ "scope": "analytic_only_no_new_shape_built_or_adopted",
+ "source": "q3actualdie.pg.domains",
+ "digital_strip_height_um": 150,
+ "all_instances": [
+  {
+   "part": "lk_WN2",
+   "orient": "R0",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_WN1",
+   "orient": "R0",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_WN0",
+   "orient": "R0",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_WN3",
+   "orient": "MY",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_EN0",
+   "orient": "MY",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_EN1",
+   "orient": "MY",
+   "local_phy_rect_um": [
+    -0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_WS1",
+   "orient": "MX",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_WS0",
+   "orient": "MX",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_HOST0",
+   "orient": "MX",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_HOST1",
+   "orient": "R180",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_ES0",
+   "orient": "R180",
+   "local_phy_rect_um": [
+    0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  },
+  {
+   "part": "lk_ES1",
+   "orient": "R180",
+   "local_phy_rect_um": [
+    -0.0,
+    150.0,
+    2885.76,
+    1226.88
+   ]
+  }
+ ],
+ "old_child": {
+  "origin": [
+   1347.84,
+   172.8
+  ],
+  "outline": [
+   216,
+   194.4
+  ],
+  "phy_overlap_um2": 41990.4,
+  "placement_verdict": "FAIL_PHY_OVERLAP",
+  "synth_sizing_only": true
+ },
+ "reshape_candidate": {
+  "origin": [
+   967.68,
+   4.32
+  ],
+  "outline": [
+   276.48,
+   138.24
+  ],
+  "aspect": 2,
+  "area_um2": 38220.5952,
+  "body_box": [
+   967.68,
+   4.32,
+   1244.16,
+   142.56
+  ],
+  "halo_box": [
+   963.36,
+   0,
+   1248.48,
+   146.88
+  ],
+  "halo_each_side_um": 4.32,
+  "nearest_existing_sram_gap_um": 8.64,
+  "clock_global_estimate": [
+   1106.04,
+   73.44
+  ],
+  "parent_root": [
+   1442.88,
+   77.76
+  ],
+  "root_reach_um": 341.16,
+  "actual_r2_std_area_um2": 21304.5,
+  "gross_util": 0.5574089018896283,
+  "usable_core_util": 0.613749156489225,
+  "clock_sta_and_route": "NOT_RUN",
+  "cycles_delta": 0
+ }
+}
