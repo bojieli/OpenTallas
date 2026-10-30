@@ -1,0 +1,223 @@
+{
+ "event": "event3-h2fix-1030",
+ "source": "codex/s81-lp-plan-2249@1837506a6",
+ "src_sha256": {
+  "h2_2249/coll_w/spec.json": "46e5bdc3032ae2e941d1af5f77009cd26f3c23444843376ec6e84b01cfb9ae67",
+  "h2_2249/coll_e/spec.json": "c98af5d4d6b3d5a4d2706d931be6521d937d99f5525b9efb0246cf3f4953056d",
+  "h2_2249/coll_w/slices/dsfd_coll_lane_w_safe8_ntf.json": "d2e59d4911ed3865d7a076ace3f83853929ba49b8ac4bb744ed5a7170a31387f",
+  "h2_2249/coll_e/slices/dsfd_coll_lane_e_safe8_ntf.json": "4381538fa8ed92616509d028f134145d38742d29c275fd12071f0af1e0fca272",
+  "core_lat/families_r13.json": "b6273e98f5b21aa87fe3c2b320591115a48d83eb61f043e418e41a8209137d44"
+ },
+ "w_equals_e": true,
+ "estimate": {
+  "islands": [
+   {
+    "name": "ck_isl0",
+    "xy_um": [
+     55.632,
+     70.332
+    ],
+    "node_legal": true,
+    "macro_clearance_um": 5.373
+   },
+   {
+    "name": "ck_isl1",
+    "xy_um": [
+     240.312,
+     70.332
+    ],
+    "node_legal": true,
+    "macro_clearance_um": 5.373
+   },
+   {
+    "name": "ck_isl2",
+    "xy_um": [
+     55.632,
+     227.244
+    ],
+    "node_legal": true,
+    "macro_clearance_um": 5.373
+   },
+   {
+    "name": "ck_isl3",
+    "xy_um": [
+     240.312,
+     227.244
+    ],
+    "node_legal": true,
+    "macro_clearance_um": 5.373
+   },
+   {
+    "name": "ck_isl4",
+    "xy_um": [
+     55.632,
+     386.076
+    ],
+    "node_legal": true,
+    "macro_clearance_um": 5.325
+   },
+   {
+    "name": "ck_isl5",
+    "xy_um": [
+     240.312,
+     386.076
+    ],
+    "node_legal": true,
+    "macro_clearance_um": 5.325
+   }
+  ],
+  "clock_reach": {
+   "points": 95248,
+   "single_entry_max": 375.83,
+   "single_entry_far": [
+    4.32,
+    4.32
+   ],
+   "islands_max": 171.68,
+   "islands_far": [
+    147.96,
+    306.72
+   ],
+   "limit": 220.0,
+   "ok": true
+  },
+  "r2r_read": {
+   "per_bank": [
+    {
+     "bank": 0,
+     "slice_box": [
+      4.55,
+      275.99,
+      106.71
+     ],
+     "li_d_x": [
+      157.93,
+      173.05
+     ],
+     "worst_um": 332.51
+    },
+    {
+     "bank": 1,
+     "slice_box": [
+      95.7,
+      275.99,
+      200.24
+     ],
+     "li_d_x": [
+      173.29,
+      188.41
+     ],
+     "worst_um": 256.72
+    },
+    {
+     "bank": 2,
+     "slice_box": [
+      189.23,
+      275.99,
+      291.39
+     ],
+     "li_d_x": [
+      188.65,
+      203.77
+     ],
+     "worst_um": 266.75
+    },
+    {
+     "bank": 3,
+     "slice_box": [
+      4.55,
+      328.26,
+      106.71
+     ],
+     "li_d_x": [
+      204.01,
+      219.13
+     ],
+     "worst_um": 326.32
+    },
+    {
+     "bank": 4,
+     "slice_box": [
+      95.7,
+      328.26,
+      200.24
+     ],
+     "li_d_x": [
+      219.37,
+      234.49
+     ],
+     "worst_um": 250.52
+    },
+    {
+     "bank": 5,
+     "slice_box": [
+      189.23,
+      328.26,
+      291.39
+     ],
+     "li_d_x": [
+      234.73,
+      249.85
+     ],
+     "worst_um": 172.36
+    },
+    {
+     "bank": 6,
+     "slice_box": [
+      4.55,
+      380.54,
+      106.71
+     ],
+     "li_d_x": [
+      250.09,
+      265.21
+     ],
+     "worst_um": 320.12
+    },
+    {
+     "bank": 7,
+     "slice_box": [
+      95.7,
+      380.54,
+      200.24
+     ],
+     "li_d_x": [
+      265.45,
+      280.57
+     ],
+     "worst_um": 244.33
+    },
+    {
+     "bank": 8,
+     "slice_box": [
+      189.23,
+      380.54,
+      291.39
+     ],
+     "li_d_x": [
+      280.81,
+      290.41
+     ],
+     "worst_um": 160.64
+    }
+   ],
+   "worst_um": 332.51,
+   "limit": 405.0,
+   "ok": true
+  },
+  "tx_stage": {
+   "replay_y": [
+    75.84,
+    221.736
+   ],
+   "gearbox_y": [
+    21.6,
+    64.824
+   ],
+   "replay_to_gearbox_max_um": 464.98,
+   "ski_to_gearbox_max_um": 516.62,
+   "note": "f_tx is the TX_STAGES register between the endpoint TX mux (replay / u_ski in_data) and the gearbox store: one stage splits ski->gearbox into two hops; replay->gearbox alone <= the max"
+  }
+ },
+ "status": "PLAN ESTIMATE (geometry only); PLACE/AUTO-GEOM evidence reported separately"
+}
