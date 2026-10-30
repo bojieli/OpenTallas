@@ -1,0 +1,12 @@
+[
+  [
+    "gate",
+    "ff:u_dut.ot_prs_00000_ff",
+    [
+      "eq",
+      "gold",
+      "ff:u_dut.g_fault_clone.u_state.q",
+      0
+    ]
+  ]
+]

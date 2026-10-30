@@ -1,0 +1,7 @@
+# Immutable final binding proof, source prep only
+
+ROOT/FLOW approved one ordinary proof after exact post-json_alias_keys normalization. Final C native netlist, ODB and SPEF never changed. EQ11660/11660,0diff/undecided, globalKEEP2188/2188,missing0,constant0,removed0. One untrusted gateot_prs→goldprivate-state correspondence was PROVED with allD/hyp; given1/applied1/skipped0/dropped0. The already named post-alias physicaloldfault slot claims the output-state bit. This is an ordinary bijection between identical D/reset/clock states, not a trusted alias/waiver or hardware rename. Original failedname/hint records remain separate.
+
+Actual physical roles were independently checked on final6_final.v: FACE1316/1316PASS; privateoldfault QN onlyfeeds internalfeedback, dedicatedot_prs QN onlyfeedsoutputchain. BothsameDnet9479/resetnet7432/clockmp_ck_Tqpvv_out, same DFFmaster, distinct current homes. Therefore geometry roles are not inferred from proof-witness permutation. Originalsource4531FF+4macroclockpins; freshcanonicalsource4532FF+4; currentphysicalC4532FF+4,so +1sourceclone replacesexistinglateclone without anotherclockload. Requalification/adoption must use actualclocksourceassociation, not claimoldsourcefreeze unchanged.
+
+Source-only qualification does not close physicalholds/DRV/DRC. TTsetup274.93 andFFhold-2.59/3EP plus73badDATAnets/DRC3remain unchanged. No new fullsignoff, repair or route performed by this proof.

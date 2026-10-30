@@ -1,0 +1,55 @@
+{
+  "source": "fresh canonical MIF1+FAULT_OUTPUT_CLONE1 versus exact immutable C final6_final.v",
+  "original_native": {
+    "std_ff": 4531,
+    "macro_clocks": 4
+  },
+  "fresh_native": {
+    "std_ff": 4532,
+    "macro_clocks": 4,
+    "stdcell": 9644
+  },
+  "actual_Cfinal": {
+    "std_ff": 4532,
+    "macro_clocks": 4,
+    "total_clocked": 4536
+  },
+  "physical_slots": [
+    {
+      "instance": "fault$_DFF_PN0_",
+      "actual_role": "private sticky feedback",
+      "xy": [
+        256.446,
+        6.075
+      ],
+      "D": "net9479",
+      "RESETN": "net7432",
+      "CLK": "mp_ck_Tqpvv_out",
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "instance": "ot_prs_00000_ff",
+      "actual_role": "dedicated port output",
+      "xy": [
+        256.77,
+        5.265
+      ],
+      "D": "net9479",
+      "RESETN": "net7432",
+      "CLK": "mp_ck_Tqpvv_out",
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    }
+  ],
+  "proof_witness_permutation": {
+    "physical oldfault (post-json-alias matched output key)": "gold g_fault_clone.u_output.q",
+    "physical ot_prs_00000_ff (one UNTRUSTED proved hint)": "gold g_fault_clone.u_state.q"
+  },
+  "proof_rule": "AllD/hyp plus ordinaryglobalone-to-oneKEEP:2188/2188, no constant or removedkeepers. Witness permutation does not rewire physical feedback/output; actualroles checkedseparately.",
+  "mutation": "NONE: netlist/ODB/SPEF/clock geometry unchanged",
+  "remaining_failures": [
+    "FFhold3endpoints",
+    "73dataDRVnets",
+    "DRC3net3486"
+  ],
+  "adoption": "NOT SIGNED; canonical source association/actual repair still requires ROOT/FLOW review"
+}

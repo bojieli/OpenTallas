@@ -1,0 +1,30 @@
+{
+  "scope": "ACTUAL IMMUTABLE FINAL physical data-face role check, separate from failed original native face and fresh canonical nativePASS; no signoff substitution",
+  "face_guard": {
+    "verdict": "PASS",
+    "top": "qfd_dv_s8x_btab",
+    "checked": 1316,
+    "ok": 1316,
+    "fail_counts": {},
+    "fails": {},
+    "dead_declared": [],
+    "netlist": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/6_final.v",
+    "pins": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/pins.json",
+    "boundary_context": {
+      "manifest": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/boundary_guard_context.json",
+      "source_core_json": "/srv/opentallas-scratch2/claude/codex-btab-0336/C_metadata_diag_PREPARED/core.json",
+      "controls": [
+        "ck",
+        "rst_n"
+      ]
+    },
+    "one_station_ft_slots": []
+  },
+  "roles": {
+    "private_feedback": "fault$_DFF_PN0_: QN _2080_ -> _6622_/A only",
+    "dedicated_output": "ot_prs_00000_ff: QN -> hold12458/A -> outputchain only",
+    "same_D": "net9479",
+    "same_reset": "net7432",
+    "same_clock": "mp_ck_Tqpvv_out"
+  }
+}
