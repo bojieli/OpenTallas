@@ -194,6 +194,8 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       end
     end
     always @(posedge clk) if (!reset_regions[0]) hold <= 0; else hold <= hold_n;
+    localparam integer W_PHASE=(ROW_CADENCE==2)?2:1;
+    reg [W_PHASE-1:0]phase;
     wire wr_ok;wire ccds_ready;
     wire column_slot=(COL_TDM==0)||(phase[0]==slot_parity);
     if(T_CCDS<=1)begin:g_legacy_ccds
@@ -210,8 +212,6 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
 
     // ---- refresh windows -------------------------------------------------------------
     wire ref_due = (ref_c == 0);
-    localparam integer W_PHASE=(ROW_CADENCE==2)?2:1;
-    reg [W_PHASE-1:0]phase;
     wire [W_PHASE-1:0]next_phase=phase+1'b1;
     // 833 profile: paired PCs share one row slot every2 edges and alternate
     // those slots; original profile has the historical alternating edge slots.
