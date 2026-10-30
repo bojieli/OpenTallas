@@ -127,7 +127,10 @@ def io_tcl(pins, w, h, tag):
         # An explicit centre/area pin is a literal plan location.  Projecting
         # it to the nearest face silently moved reset entries (and clock
         # aliases not subsequently restored by master_slice.tcl).
-        f = "C" if p.get("face") in ("C", "area") else face_of(p["x"], p["y"], w, h)
+        edge_distance = min(p["x"], w - p["x"], p["y"], h - p["y"])
+        interior = p.get("face") in ("C", "area") or (
+            p.get("face") is None and edge_distance > PIN_LEN_UM / 2 + 1e-4)
+        f = "C" if interior else face_of(p["x"], p["y"], w, h)
         lw = LAYER_W.get(p["layer"], 0.04)
         # DIE-HBM-10 C25a (opt-in): a plan pin record with explicit w (across the face) and h (into the core) keeps that
         # size, e.g. the clock-class pins at M5 0.048 x 0.48 (GEOM-21 / KIT_PREFLIGHT clock_pin_geometry); records
