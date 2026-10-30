@@ -509,6 +509,56 @@ if __name__ == "__main__":
     sys.exit(main())
 
 
+
+def bound_phy_macro(P, domain):
+    """Actual placed physical PHY body for an explicit PG-only coverage contract.
+
+    Functional IO windows and their signal bump lattice remain independent.
+    The binding names the physical instance/master, never a module prefix.
+    """
+    binding = domain.get("phy_macro_binding")
+    if binding is None:
+        return None
+    if not isinstance(binding, dict) or set(binding) != {"part", "inst", "module"} or any(
+            not isinstance(v, str) or not v for v in binding.values()):
+        raise ValueError("phy_macro_binding requires exact part/inst/module")
+    part = binding["part"]
+    if part not in P.parts:
+        raise ValueError("phy_macro_binding names an unknown partition")
+    import gen_phys as GP
+    typ = P.ptype(part)
+    cores = {c["inst"]: c for c in typ.get("hard_cores", [])}
+    entries = [(c, c["inst"], c.get("module", c["inst"]), True) for c in cores.values() if c.get("lef")]
+    entries += [(c, *GP.content_physical_identity(c), False) for c in typ.get("contents", [])
+                if c.get("lef") and c["inst"] not in cores]
+    matches = [(c, core) for c, inst, module, core in entries
+               if inst == binding["inst"] and module == binding["module"]]
+    if len(matches) != 1:
+        raise ValueError("phy_macro_binding is not one exact declared physical instance/master")
+    c, core = matches[0]
+    kind = classify(c.get("module", ""))
+    if kind is None:
+        raise ValueError("phy_macro_binding is not a declared PHY interface class")
+    try:
+        x, y = map(float, c["origin_um"])
+        w, h = map(float, c["outline_um"])
+        dx, dy = map(float, c.get("track_offset_um", [0, 0])) if core else (0, 0)
+    except (KeyError, TypeError, ValueError):
+        raise ValueError("phy_macro_binding requires the actual placed macro footprint") from None
+    orient = c.get("orient", "R0")
+    if orient not in ("R0", "MX", "MY", "R180", "R90", "R270", "MXR90", "MYR90"):
+        raise ValueError("phy_macro_binding has unknown placement orientation")
+    if orient in ("R90", "R270", "MXR90", "MYR90"):
+        w, h = h, w
+    x += dx; y += dy
+    if not all(math.isfinite(v) for v in (x, y, w, h)) or w <= 0 or h <= 0:
+        raise ValueError("phy_macro_binding has a nonphysical footprint")
+    points = [P.to_die(part, (x, y)), P.to_die(part, (x+w, y+h))]
+    box = [min(p[0] for p in points), min(p[1] for p in points),
+           max(p[0] for p in points), max(p[1] for p in points)]
+    return dict(part=part, inst=binding["inst"], module=binding["module"], iface=kind[0], rect_um=box)
+
+
 def check_pg_domains(P, R):
     """OWNER DECISION 7 (2026-10-24): IR over SerDes windows -> a separate PHY supply + dedicated bump rows per window.
     ERROR: a domain names an unknown io window, does not cover its windows, has bumps outside its rect or not over
@@ -523,13 +573,32 @@ def check_pg_domains(P, R):
     covered = set()
     for d in doms:
         r = d["rect_um"]
+        if "origin_um" in d["bumps"] or "counts" in d["bumps"]:
+            import phy_bumps
+            try:
+                phy_bumps.sites(d)
+            except ValueError as exc:
+                R.err("pg_domain", f"pg domain {d['name']}: anchored bump lattice: {exc}")
+        body = None
+        try:
+            body = bound_phy_macro(P, d)
+        except ValueError as exc:
+            R.err("pg_domain", f"pg domain {d['name']}: {exc}")
+        if body and d.get("phy_macro_um") and any(abs(a-b) > 0.0001 for a,b in zip(body["rect_um"], d["phy_macro_um"])):
+            R.err("pg_domain", f"pg domain {d['name']}: phy_macro_um differs from actual bound PHY body")
         for n in d["io"]:
             w = io.get(n)
             if w is None:
                 R.err("pg_domain", f"pg domain {d['name']}: io window {n} not in die.io")
                 continue
             covered.add(n)
-            if not inside(w["rect_um"], r):
+            if body:
+                if (w.get("part") != body["part"] or w.get("iface") != body["iface"] or
+                        not inside(body["rect_um"], w["rect_um"])):
+                    R.err("pg_domain", f"pg domain {d['name']}: bound PHY body is not inside its matching IO window {n}")
+                if not inside(body["rect_um"], r):
+                    R.err("pg_domain", f"pg domain {d['name']}: rect does not cover the actual bound PHY body")
+            elif not inside(w["rect_um"], r):
                 R.err("pg_domain", f"pg domain {d['name']}: rect {r} does not cover io window {n} {w['rect_um']}")
             b = d["bumps"]["rect_um"]
             if not (b[0] < w["rect_um"][2] and b[2] > w["rect_um"][0] and b[1] < w["rect_um"][3] and b[3] > w["rect_um"][1]):
@@ -548,7 +617,7 @@ def check_pg_domains(P, R):
                 if not any(inside(e, x) for x in bx):
                     R.err("pg_domain", f"pg domain {d['name']}: io window {n} bump_exclude_um {e} not in the domain's "
                           f"bumps.exclude_um (power bumps in the die-corner stress zone)")
-        mac = d.get("phy_macro_um")
+        mac = body["rect_um"] if body else d.get("phy_macro_um")
         if mac:
             # S81.IR split form (coordinator 10-25): macro inside the domain, the windows on the macro, the domain inside
             # its serdes partition (no VDDPHY straps over a core-VDD neighbour), core strips outside the domain
@@ -556,7 +625,7 @@ def check_pg_domains(P, R):
                 R.err("pg_domain", f"pg domain {d['name']}: phy_macro_um {mac} outside the domain rect {r}")
             for n in d["io"]:
                 w = io.get(n)
-                if w is not None and not inside(w["rect_um"], mac):
+                if w is not None and not (inside(mac, w["rect_um"]) if body else inside(w["rect_um"], mac)):
                     R.err("pg_domain", f"pg domain {d['name']}: io window {n} {w['rect_um']} not on the PHY macro {mac}")
                 pn = (w or {}).get("part")
                 if pn in P.parts and not inside(r, P.rect(pn)):

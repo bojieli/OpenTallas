@@ -343,6 +343,10 @@ SCHEMA = {
                             # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
                             # core-facing edges and the macro area target (die_io.check_pg_domains)
                             "phy_macro_um": _rect,
+                            # PG-only body coverage: exact declared physical PHY, functional IO window stays fixed.
+                            "phy_macro_binding": {"type": "object", "additionalProperties": False,
+                                                  "required": ["part", "inst", "module"],
+                                                  "properties": {k: _name for k in ("part", "inst", "module")}},
                             "core_strip_um": {"type": "array", "items": _rect},
                             "core_edge_bumps": {"enum": ["relocate", "drop"]},
                             "phy_area_target_mm2": _pos,
