@@ -16,3 +16,5 @@ Validation:
 - Loader controls pass the48-cut event and reject wrong JSON/source hashes, a late unmatched instance and a duplicate instance atomically; absent option is unchanged. Run `python3 results/hbm_die_codex_1030/su_structural_bridges/check_loader.py` from any checkout containing this packet.
 
 The QUERY DROP3 startup bridge needs explicit cold-state FFs. This wire/constant-only helper deliberately does not support that stateful case or claim that time-zero uninitialized outputs equal zero. FLOW and coverage_support own its separate structural eligibility event.
+
+Actual FLOW5b3fbcc7c Binder-constructor integration also passes allthree bridge fragments: actual compose creates the native ABI cut, the optional loader expands it, and the newly built Graph sees the loaded source0 bits. Removing the option leaves the old native pin sources. This minimal actual-ABI fixture checks real constructor ordering; it is not the full current source cohort. See binder_hook_receipt.json.
