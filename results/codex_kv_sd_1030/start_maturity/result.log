@@ -1,0 +1,7 @@
+START hub_C cycle=85 after_release=65
+START io_W2 cycle=550 after_release=530
+START io_E6 cycle=565 after_release=545
+START sys_SW cycle=583 after_release=563
+START sys_SE cycle=598 after_release=578
+COMPLETE
+/srv/opentallas-scratch2/claude/codex-kv-sd-1030/start_maturity/tb.sv:3384: $finish called at 599760 (1ps)
