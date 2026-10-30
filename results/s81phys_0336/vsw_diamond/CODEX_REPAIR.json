@@ -1,0 +1,14 @@
+{
+  "scope": "Current same-source same-clock same-pin prototype GRT-only; no SIGNED claim",
+  "baseline": "diamond NOTSIGNED TT23.17 STDFF-9.34/40ep; DRC0 CPPRpass",
+  "ff_hold_guard_ps": 45,
+  "previous_ff_hold_guard_ps": 30,
+  "setup_guard_ps": 25,
+  "clock_period_ps": 833,
+  "actual_pin_positions_changed": false,
+  "only_metadata_change": "clk faceC derived from fresh current generator, same executed XY/size389pins; oldFAIL preserved",
+  "rtl_source_files_byte_equal": 17,
+  "rtl_or_cycle_changes": 0,
+  "geometry_review": "same actual3PLACE PASS-COND and new actual postroute image required before any reroute",
+  "dpl": "explicit existing diamond flag, keepFIRM actualclockcells"
+}

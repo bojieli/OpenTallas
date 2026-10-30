@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "ot_s81sl_vsw_auditregen",
+ "module": "ot_s81sl_vsw",
+ "plan_type": "ot_s81sl_leaf__t1",
+ "outline_um": [
+  224.64,
+  224.64
+ ],
+ "ref_tile": "physical/ref_tile/s81sl_vsw",
+ "spec": "94b1643dc5b:physical/ref_tile/s81sl_vsw/spec.json",
+ "spec_sha256": "a1157b0f3e25113998e643f14a9303dd7f3137499718b00665e93b8c25993dcb",
+ "pins_file": "inputs/core_pins/ot_s81sl_vsw_tpl.json",
+ "pins_sha256": "e5fe9edd7de9ab973d415f58231a058997727e0ca8e620a2cd95891637cf08a9",
+ "pins": 389,
+ "plan_lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vsw_tpl.lef",
+ "pins_canon_sha256": "4adf036b05263317a92b21197ab6e96366c98e4c8833a4ff696014cddec33e20",
+ "pins_placed_canon_sha256": "4adf036b05263317a92b21197ab6e96366c98e4c8833a4ff696014cddec33e20",
+ "clocks": [
+  "clk"
+ ],
+ "resets": [
+  "rst_n"
+ ],
+ "recipe_sha256": "e6728c7b0fb133b5488e1496b5800c2b1d8118d0fa49882fc0994808a04cc2d1",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "7b39d96143e",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "b78bbda6de89b1d9a927d6c0380302f08f00e554cc6f4e39e21f7882c3e74176",
+ "signoff_sha256": "6ab2d28bcdc086cde72c5895c0544d6babd7cbd7211a7b0fb55f5347d0e00401",
+ "macros": {
+  "ot_sram_1r1w_128x256_m1_r2c2": [
+   [
+    107.568,
+    64.8,
+    "R0"
+   ],
+   [
+    107.568,
+    118.8,
+    "R0"
+   ]
+  ]
+ },
+ "rtl_patches": [],
+ "kit_hash": "beaedcd899af2333",
+ "master_plan": {
+  "slice_sha256": "76092497a850898377d9344ff65a7429e4e2419e5c8128ebff4e974b1c262d25",
+  "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+  "type": "ot_s81sl_vsw",
+  "frozen": false
+ },
+ "reset_contract": {
+  "edges": 64,
+  "module": "ot_s81sl_vsw",
+  "contract_sha256": "c46fd87332e1a6ab24498887b1c9a7cd61ee8dc74844c492c2aa1aba4d0769ca",
+  "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+ }
+}
