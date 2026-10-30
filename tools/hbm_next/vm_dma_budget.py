@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Inventory actual finite-VM boundary DMA and its optimistic mover service floor.
+"""Inventory actual finite-VM boundary DMA and a hypothetical generic mover service floor.
 
-This is a source bandwidth bound, not measured RTL timing or a token-rate model.
+This is a HYPOTHETICAL GENERIC-MOVER bandwidth bound, not a selected-native
+service bound, measured RTL timing, or a token-rate model. The current native
+top directly instantiates static DMA BACK engines, which have wider bank ports.
+LOAD dispatch/source selection is still unproven; this model cannot price it.
 The native mover publishes at most one 256-bit destination sector per cycle;
 its optional raw KVW STORE consumes at most 512 bits per cycle. HBM die aggregate
 bandwidth cannot replace these narrower source interfaces. Full-wait commands
@@ -60,20 +63,23 @@ def budget(chain_path, decode, stack_bytes=22_500_000_000):
                      bytes=sum(x['bytes'] for x in rows if x['op'] == op),
                      source_cycles=sum(x['optimistic_source_cycles'] for x in rows if x['op'] == op))
              for op in ('LOAD', 'STORE')}
-    return dict(schema='opentallas.hbm.vm_boundary_dma_budget.v1',
-                status='OPTIMISTIC_SOURCE_SERVICE_BOUND_NOT_RTL_MEASUREMENT',
+    return dict(schema='opentallas.hbm.vm_boundary_dma_budget.v2',
+                status='HYPOTHETICAL_GENERIC_MOVER_ONLY_NOT_CURRENT_NATIVE_COST',
                 source_range=chain['source_range'], by_op=by_op,
                 scratch_reserved=chain.get('scratch_reserved', False),
                 total_boundary_bytes=sum(x['bytes'] for x in rows),
-                single_issuing_mover_source_cycles=sum(x['optimistic_source_cycles'] for x in rows),
+                hypothetical_generic_mover_source_cycles=sum(x['optimistic_source_cycles'] for x in rows),
                 hbm_stack_records=dict(sorted(Counter(str(x['stack']) for x in rows).items())),
                 all_commands_linear_full_wait=True, rows=rows,
+                current_native_cost_model_qualified=False,
+                current_native_dispatch_status='BLOCKED: observed static BACK engines use stack2; scratch uses stack3; LOAD and VM ownership unproven',
+                current_native_observed_back=dict(master='ot_hgi_dma_back_static_vp4_banks_cp', instances=['hb_dbk_NE','hb_dbk_NW'], stk=2, rr_rt=80, max_port_bytes_per_cycle=256),
                 physical_capacity=dict(status='FAIL' if invalid else 'PASS',
                                        stack_bytes=stack_bytes, invalid_records=len(invalid),
                                        maximum_local_end=max(x['stack_local_end'] for x in rows),
                                        source='ot_hgi_dma_{front,back,engines}.sv STACK_BYTES default22_500_000_000'),
-                assumptions=['LOAD sector engine maximum32B/cycle; optional KVW rawSTORE maximum64B/cycle',
-                             'one issuing mover, as encoded; no invented four-way distribution',
+                assumptions=['HYPOTHETICAL selection of generic mover LOAD32B/cycle and KVW STORE64B/cycle; NOT current static BACK',
+                             'one issuing GENERIC mover in the hypothesis; actual native dispatch not established',
                              'full waits serialize source consumption; posted write acknowledgement may lag'],
                 excluded=['HBM request/refresh/response and VM service latency',
                           'command decode, all-unit drains and body arithmetic',
