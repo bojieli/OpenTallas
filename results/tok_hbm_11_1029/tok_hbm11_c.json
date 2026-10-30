@@ -1,0 +1,29 @@
+{
+ "base_cycles": 576702.4178468838,
+ "rows": [
+  {
+   "case": "C pipeline +1 on SU records (estimate: SU VM round trips)",
+   "cycles": 577592.4178468838,
+   "cost_pct": 0.154,
+   "tok_s_from_1906": 1903.1
+  },
+  {
+   "case": "C pipeline +1 on SU+SM records",
+   "cycles": 577953.4178468838,
+   "cost_pct": 0.217,
+   "tok_s_from_1906": 1901.9
+  },
+  {
+   "case": "C pipeline +1 on every non-CTL record (bound)",
+   "cycles": 578762.4178468838,
+   "cost_pct": 0.357,
+   "tok_s_from_1906": 1899.2
+  },
+  {
+   "case": "C pipeline +2 (request+response) on every non-CTL record (bound x2)",
+   "cycles": 580822.4178468838,
+   "cost_pct": 0.714,
+   "tok_s_from_1906": 1892.5
+  }
+ ]
+}
