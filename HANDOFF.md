@@ -2235,3 +2235,5 @@ CODEX: 2026-10-30 03:48 PDT FLOW778d88003 posthold diamond opts8testsPASS; LNfac
 CODEX: 2026-10-30 03:49 PDT KV-SD candidatef8c31a31e54 G0Cdelta+1resetblocked/+2PGwarn, visualFAIL retained; helperbc32ready separately. OldSDPGDPLfailure diagnosed via diamond/fit resize; try6 live preserved.
 
 CODEX: 2026-10-30 03:49 PDT HBM nativeDMA bottleneck diagnosed;256aa4912 budget exact684chain6.137MB/442records, optimistic148033movercycles vs aggregateHBMBW-only wrong model; stack3/QIDauthorityopen, no rateclaim.
+
+CODEX: 2026-10-30 03:49 PDT GEOMc08109290 CDC319FILLexceptionPASSunblocksroute; BTABactualCTS+HBMqueryconditionaldiagnosticprobesonly; RX259407.75FAILcentrebase_faultfixownedHR.
