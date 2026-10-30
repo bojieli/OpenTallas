@@ -1,0 +1,1619 @@
+{
+  "status": "PREP_UNADOPTED_NOT_PNR",
+  "base": "/srv/opentallas-scratch/claude/su-native-base1030",
+  "base_plan_sha256": "721ba17b8ebf4ac580c3f92507170ccf6249cb1a631c1e2017c71d5a0f150290",
+  "changed": [
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp0",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+      "id": {
+        "width": 11,
+        "value": 0
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp2",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 2
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp4",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 4
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp6",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 6
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp8",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 8
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp10",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 10
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp12",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 12
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp14",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 14
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 16
+      }
+    },
+    {
+      "type": "q_su00",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain8_11",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 18
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp1",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 1
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp3",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 3
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp5",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 5
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp7",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 7
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp9",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 9
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp11",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 11
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp13",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 13
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp_l",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 15
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 17
+      }
+    },
+    {
+      "type": "q_su01",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 19
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp0",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+      "id": {
+        "width": 11,
+        "value": 16
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp2",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 18
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp4",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 20
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp6",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 22
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp8",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 24
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp10",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 26
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp12",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 28
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp14",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 30
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 20
+      }
+    },
+    {
+      "type": "q_su10",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain8_11",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 22
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp1",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 17
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp3",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 19
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp5",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 21
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp7",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 23
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp9",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 25
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp11",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 27
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp13",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 29
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp_l",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 31
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 21
+      }
+    },
+    {
+      "type": "q_su11",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 23
+      }
+    },
+    {
+      "type": "q_su20",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 8
+      }
+    },
+    {
+      "type": "q_su20",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes16_19",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 24
+      }
+    },
+    {
+      "type": "q_su20",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes24_27",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 26
+      }
+    },
+    {
+      "type": "q_su21",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 9
+      }
+    },
+    {
+      "type": "q_su21",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 11
+      }
+    },
+    {
+      "type": "q_su21",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes20_23",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 25
+      }
+    },
+    {
+      "type": "q_su21",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes28_31",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 27
+      }
+    },
+    {
+      "type": "q_su30",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 12
+      }
+    },
+    {
+      "type": "q_su30",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes16_19",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 28
+      }
+    },
+    {
+      "type": "q_su30",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes24_27",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 30
+      }
+    },
+    {
+      "type": "q_su31",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 13
+      }
+    },
+    {
+      "type": "q_su31",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 15
+      }
+    },
+    {
+      "type": "q_su31",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes20_23",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 29
+      }
+    },
+    {
+      "type": "q_su31",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes28_31",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 31
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp0",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+      "id": {
+        "width": 11,
+        "value": 0
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp2",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 2
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp4",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 4
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp6",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 6
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp8",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 8
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp10",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 10
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp12",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 12
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp14",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 14
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 16
+      }
+    },
+    {
+      "type": "q_su00__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain8_11",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 18
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp1",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 1
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp3",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 3
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp5",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 5
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp7",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 7
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp9",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 9
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp11",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 11
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp13",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 13
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lane_exp_l",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 15
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 17
+      }
+    },
+    {
+      "type": "q_su01__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q0_lanes_plain12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 19
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp0",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+      "id": {
+        "width": 11,
+        "value": 16
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp2",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 18
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp4",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 20
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp6",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 22
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp8",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 24
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp10",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 26
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp12",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 28
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp14",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 30
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 20
+      }
+    },
+    {
+      "type": "q_su10__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain8_11",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 22
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp1",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 17
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp3",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 19
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp5",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 21
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp7",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 23
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp9",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 25
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp11",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 27
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp13",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 29
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lane_exp_l",
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "id": {
+        "width": 11,
+        "value": 31
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 21
+      }
+    },
+    {
+      "type": "q_su11__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q1_lanes_plain12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "id": {
+        "width": 9,
+        "value": 23
+      }
+    },
+    {
+      "type": "q_su20__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 8
+      }
+    },
+    {
+      "type": "q_su20__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes16_19",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 24
+      }
+    },
+    {
+      "type": "q_su20__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes24_27",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 26
+      }
+    },
+    {
+      "type": "q_su21__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 9
+      }
+    },
+    {
+      "type": "q_su21__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 11
+      }
+    },
+    {
+      "type": "q_su21__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes20_23",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 25
+      }
+    },
+    {
+      "type": "q_su21__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q2_lanes28_31",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 27
+      }
+    },
+    {
+      "type": "q_su30__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes0_3",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 12
+      }
+    },
+    {
+      "type": "q_su30__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes16_19",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 28
+      }
+    },
+    {
+      "type": "q_su30__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes24_27",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 30
+      }
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes4_7",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 13
+      }
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes12_15",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 15
+      }
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes20_23",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 29
+      }
+    },
+    {
+      "type": "q_su31__physical_v1",
+      "kind": "hard_cores",
+      "inst": "u_su_Q3_lanes28_31",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "id": {
+        "width": 9,
+        "value": 31
+      }
+    }
+  ],
+  "modules": {
+    "ot_hbm_su_static_pgslice_lg__lane_exp0_id": {
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+      "native": "ot_hnx_su_exp__rst3",
+      "outline_um": [
+        414.72,
+        207.36
+      ],
+      "pins": 2032,
+      "banks": 1,
+      "face_peak_per_um": {
+        "N": 5.3,
+        "S": 5.3,
+        "W": 5.3,
+        "E": 5.3
+      },
+      "macro_read_to_planned_boundary_ff_upper_bound_um": 182.168,
+      "reach": [
+        {
+          "bank": 0,
+          "reader": 0,
+          "macro": "u_native.m0.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 74.132
+        },
+        {
+          "bank": 0,
+          "reader": 1,
+          "macro": "u_native.m0.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 182.168
+        },
+        {
+          "bank": 0,
+          "reader": 2,
+          "macro": "u_native.m0.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 71.312
+        },
+        {
+          "bank": 0,
+          "reader": 3,
+          "macro": "u_native.m0.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 74.162
+        },
+        {
+          "bank": 0,
+          "reader": 4,
+          "macro": "u_native.m0.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 182.138
+        },
+        {
+          "bank": 0,
+          "reader": 5,
+          "macro": "u_native.m0.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 71.306
+        }
+      ],
+      "source_component_added_cycles": 0,
+      "physical_face_shell_cycles": "in1/out1, must be priced in native calendar before adoption",
+      "holds": [
+        "Native ID capture R7 bypass not yet qualified",
+        "Exact native topology ownership receipt required",
+        "New station/pin-interface reconciliation and actual placement review required"
+      ]
+    },
+    "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "native": "ot_hnx_su_exp__rst3",
+      "outline_um": [
+        440.64,
+        207.36
+      ],
+      "pins": 2032,
+      "banks": 1,
+      "face_peak_per_um": {
+        "N": 5.3,
+        "S": 5.3,
+        "W": 5.3,
+        "E": 5.3
+      },
+      "macro_read_to_planned_boundary_ff_upper_bound_um": 195.128,
+      "reach": [
+        {
+          "bank": 0,
+          "reader": 0,
+          "macro": "u_native.m0.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.092
+        },
+        {
+          "bank": 0,
+          "reader": 1,
+          "macro": "u_native.m0.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.128
+        },
+        {
+          "bank": 0,
+          "reader": 2,
+          "macro": "u_native.m0.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.272
+        },
+        {
+          "bank": 0,
+          "reader": 3,
+          "macro": "u_native.m0.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.122
+        },
+        {
+          "bank": 0,
+          "reader": 4,
+          "macro": "u_native.m0.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.098
+        },
+        {
+          "bank": 0,
+          "reader": 5,
+          "macro": "u_native.m0.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.266
+        }
+      ],
+      "source_component_added_cycles": 0,
+      "physical_face_shell_cycles": "in1/out1, must be priced in native calendar before adoption",
+      "holds": [
+        "Native ID capture R7 bypass not yet qualified",
+        "Exact native topology ownership receipt required",
+        "New station/pin-interface reconciliation and actual placement review required"
+      ]
+    },
+    "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "native": "ot_hnx_su_plain4__lid9_rst3",
+      "outline_um": [
+        440.64,
+        457.92
+      ],
+      "pins": 3440,
+      "banks": 4,
+      "face_peak_per_um": {
+        "N": 5.3,
+        "S": 5.3,
+        "W": 5.3,
+        "E": 5.3
+      },
+      "macro_read_to_planned_boundary_ff_upper_bound_um": 195.134,
+      "reach": [
+        {
+          "bank": 0,
+          "reader": 0,
+          "macro": "u_native.m0.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 0,
+          "reader": 1,
+          "macro": "u_native.m0.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 0,
+          "reader": 2,
+          "macro": "u_native.m0.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 0,
+          "reader": 3,
+          "macro": "u_native.m0.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 0,
+          "reader": 4,
+          "macro": "u_native.m0.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 0,
+          "reader": 5,
+          "macro": "u_native.m0.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 1,
+          "reader": 0,
+          "macro": "u_native.m2.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 1,
+          "reader": 1,
+          "macro": "u_native.m2.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 1,
+          "reader": 2,
+          "macro": "u_native.m2.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 1,
+          "reader": 3,
+          "macro": "u_native.m2.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 1,
+          "reader": 4,
+          "macro": "u_native.m2.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 1,
+          "reader": 5,
+          "macro": "u_native.m2.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 2,
+          "reader": 0,
+          "macro": "u_native.m4.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 2,
+          "reader": 1,
+          "macro": "u_native.m4.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 2,
+          "reader": 2,
+          "macro": "u_native.m4.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 2,
+          "reader": 3,
+          "macro": "u_native.m4.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 2,
+          "reader": 4,
+          "macro": "u_native.m4.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 2,
+          "reader": 5,
+          "macro": "u_native.m4.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 3,
+          "reader": 0,
+          "macro": "u_native.m6.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 3,
+          "reader": 1,
+          "macro": "u_native.m6.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 3,
+          "reader": 2,
+          "macro": "u_native.m6.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        },
+        {
+          "bank": 3,
+          "reader": 3,
+          "macro": "u_native.m6.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 87.086
+        },
+        {
+          "bank": 3,
+          "reader": 4,
+          "macro": "u_native.m6.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 195.134
+        },
+        {
+          "bank": 3,
+          "reader": 5,
+          "macro": "u_native.m6.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 84.278
+        }
+      ],
+      "source_component_added_cycles": 0,
+      "physical_face_shell_cycles": "in1/out1, must be priced in native calendar before adoption",
+      "holds": [
+        "Native ID capture R7 bypass not yet qualified",
+        "Exact native topology ownership receipt required",
+        "New station/pin-interface reconciliation and actual placement review required"
+      ]
+    },
+    "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "native": "ot_hnx_su_plain4__lid9_rst3",
+      "outline_um": [
+        760.32,
+        725.76
+      ],
+      "pins": 3440,
+      "banks": 4,
+      "face_peak_per_um": {
+        "N": 5.3,
+        "S": 5.3,
+        "W": 5.3,
+        "E": 5.3
+      },
+      "macro_read_to_planned_boundary_ff_upper_bound_um": 354.974,
+      "reach": [
+        {
+          "bank": 0,
+          "reader": 0,
+          "macro": "u_native.m0.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.926
+        },
+        {
+          "bank": 0,
+          "reader": 1,
+          "macro": "u_native.m0.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.974
+        },
+        {
+          "bank": 0,
+          "reader": 2,
+          "macro": "u_native.m0.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 0,
+          "reader": 3,
+          "macro": "u_native.m0.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.926
+        },
+        {
+          "bank": 0,
+          "reader": 4,
+          "macro": "u_native.m0.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.974
+        },
+        {
+          "bank": 0,
+          "reader": 5,
+          "macro": "u_native.m0.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 1,
+          "reader": 0,
+          "macro": "u_native.m2.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.926
+        },
+        {
+          "bank": 1,
+          "reader": 1,
+          "macro": "u_native.m2.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.974
+        },
+        {
+          "bank": 1,
+          "reader": 2,
+          "macro": "u_native.m2.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 1,
+          "reader": 3,
+          "macro": "u_native.m2.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.974
+        },
+        {
+          "bank": 1,
+          "reader": 4,
+          "macro": "u_native.m2.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.926
+        },
+        {
+          "bank": 1,
+          "reader": 5,
+          "macro": "u_native.m2.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 2,
+          "reader": 0,
+          "macro": "u_native.m4.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.974
+        },
+        {
+          "bank": 2,
+          "reader": 1,
+          "macro": "u_native.m4.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.926
+        },
+        {
+          "bank": 2,
+          "reader": 2,
+          "macro": "u_native.m4.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 2,
+          "reader": 3,
+          "macro": "u_native.m4.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.926
+        },
+        {
+          "bank": 2,
+          "reader": 4,
+          "macro": "u_native.m4.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.974
+        },
+        {
+          "bank": 2,
+          "reader": 5,
+          "macro": "u_native.m4.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 3,
+          "reader": 0,
+          "macro": "u_native.m6.u_data.g_read[0].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.926
+        },
+        {
+          "bank": 3,
+          "reader": 1,
+          "macro": "u_native.m6.u_data.g_read[1].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.974
+        },
+        {
+          "bank": 3,
+          "reader": 2,
+          "macro": "u_native.m6.u_data.g_read[2].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        },
+        {
+          "bank": 3,
+          "reader": 3,
+          "macro": "u_native.m6.u_data.g_read[3].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 246.926
+        },
+        {
+          "bank": 3,
+          "reader": 4,
+          "macro": "u_native.m6.u_data.g_read[4].u_m",
+          "read_face": "W",
+          "planned_upper_bound_um": 354.974
+        },
+        {
+          "bank": 3,
+          "reader": 5,
+          "macro": "u_native.m6.u_data.g_read[5].u_m",
+          "read_face": "E",
+          "planned_upper_bound_um": 244.118
+        }
+      ],
+      "source_component_added_cycles": 0,
+      "physical_face_shell_cycles": "in1/out1, must be priced in native calendar before adoption",
+      "holds": [
+        "Native ID capture R7 bypass not yet qualified",
+        "Exact native topology ownership receipt required",
+        "New station/pin-interface reconciliation and actual placement review required"
+      ]
+    }
+  },
+  "remaining": [
+    "Rebuild core_macros and clock core_islands from native hierarchy before G0C",
+    "Reconcile all native interface/station endpoints; old decoded-port station data is stale",
+    "Finish typed-ID capture bypass proof, no new masks",
+    "Independent actual placement GEOM reply and all physical gates before route"
+  ]
+}

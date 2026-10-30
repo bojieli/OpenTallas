@@ -1,401 +1,147 @@
-// CODEX source PREP only: exact physical ID alias, no new state/cycles.
-// DIE-HBM/KITS 10-27 (UNCOMMITTED PROPOSAL): canon wrapper ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 = pure rename of the proven sw2.py member
-// wrappers ['ot_hbm_su_static_pgslice_lg__lanes0_3', 'ot_hbm_su_static_pgslice_lg__lanes12_15', 'ot_hbm_su_static_pgslice_lg__lanes16_19', 'ot_hbm_su_static_pgslice_lg__lanes20_23', 'ot_hbm_su_static_pgslice_lg__lanes24_27', 'ot_hbm_su_static_pgslice_lg__lanes28_31', 'ot_hbm_su_static_pgslice_lg__lanes4_7'] (byte-identical after renaming g_*_<n>_ -> g_*_k<i>_ and lane-id straps -> pin).
-// Plan pins: cores/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__760.32x725.76__canon.json (C19).  Pure wiring; re-run split/miter.py equivalence before sign-off.
+`timescale 1ns/1ps
 `default_nettype none
-module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77 (
-    input wire [8:0] strap_lane_lane_id,
-    input wire [119:0] g_lane_k0_g_plain_u_lane_vb,
-    input wire [127:0] g_lane_k0_g_plain_u_lane_rd_q,
-    input wire [127:0] g_lane_k1_g_plain_u_lane_rd_q,
-    input wire [127:0] g_lane_k2_g_plain_u_lane_rd_q,
-    input wire [127:0] g_lane_k3_g_plain_u_lane_rd_q,
-    input wire [15:0] clk_insert,
-    input wire [1:0] g_lane_k0_g_plain_u_lane_aind,
-    input wire [1:0] g_lane_k0_g_plain_u_lane_ce_e2,
-    input wire [1:0] g_lane_k0_g_plain_u_lane_cm_m2,
-    input wire [1:0] g_lane_k0_g_plain_u_lane_co_dst,
-    input wire [1:0] g_lane_k0_g_plain_u_lane_dst,
-    input wire [23:0] clk_bank_macro,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_aibase,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_i_v,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_krow,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_ni,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_no,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_o_v,
-    input wire [23:0] g_lane_k0_g_plain_u_lane_obase,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_ca_ad,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_ci_sfu,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_cm_m1,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_cm_qm,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_cp_m1,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_cs_e1,
-    input wire [2:0] g_lane_k0_g_plain_u_lane_cs_sfu,
-    input wire [31:0] clk_lane,
-    input wire [31:0] g_bank_k0_u_bank_write_data,
-    input wire [31:0] g_bank_k1_u_bank_write_data,
-    input wire [31:0] g_bank_k2_u_bank_write_data,
-    input wire [31:0] g_bank_k3_u_bank_write_data,
-    input wire [31:0] g_lane_k0_g_plain_u_lane_ca_imm2,
-    input wire [31:0] g_lane_k0_g_plain_u_lane_ce_imm1,
-    input wire [31:0] g_lane_k0_g_plain_u_lane_cm_imm1,
-    input wire [31:0] g_lane_k0_g_plain_u_lane_cp_imm1,
-    input wire [31:0] g_lane_k0_g_plain_u_lane_cs_imm2,
-    input wire [31:0] g_lane_k0_g_plain_u_lane_cx_imm3,
-    input wire [3:0] clk_bank,
-    input wire [3:0] g_bank_k1_u_bank_read_v,
-    input wire [3:0] g_bank_k2_u_bank_read_v,
-    input wire [3:0] g_bank_k3_u_bank_read_v,
-    input wire [3:0] g_lane_k0_g_plain_u_lane_ls,
-    input wire [3:0] g_lane_k0_g_plain_u_lane_lvw,
-    input wire [3:0] rst_lane_n,
-    input wire [4:0] g_bank_k0_u_bank_read_v,
-    input wire [4:0] g_lane_k0_g_plain_u_lane_gsh,
-    input wire [7:0] g_lane_k0_g_plain_u_lane_cx_srcs,
-    input wire [839:0] g_lane_k0_g_plain_u_lane_ld_c,
-    input wire [8:0] g_bank_k0_u_bank_read_addr,
-    input wire [8:0] g_bank_k0_u_bank_write_addr,
-    input wire [8:0] g_bank_k1_u_bank_write_addr,
-    input wire [8:0] g_bank_k2_u_bank_write_addr,
-    input wire [8:0] g_bank_k3_u_bank_write_addr,
-    input wire g_bank_k0_u_bank_write_v,
-    input wire g_bank_k1_u_bank_write_v,
-    input wire g_bank_k2_u_bank_write_v,
-    input wire g_bank_k3_u_bank_write_v,
-    input wire g_lane_k0_g_plain_u_lane_bank,
-    input wire g_lane_k0_g_plain_u_lane_co_rnd,
-    input wire g_lane_k0_g_plain_u_lane_cpair,
-    input wire g_lane_k0_g_plain_u_lane_cx_amin,
-    input wire g_lane_k0_g_plain_u_lane_cx_arelu,
-    input wire g_lane_k0_g_plain_u_lane_cx_arnd,
-    input wire g_lane_k0_g_plain_u_lane_cx_cclip,
-    input wire g_lane_k0_g_plain_u_lane_emit,
-    input wire g_lane_k0_g_plain_u_lane_ld,
-    input wire g_lane_k0_g_plain_u_lane_ld_bank,
-    input wire rst_n,
-    output wire [127:0] g_bank_k0_u_bank_read_data,
-    output wire [127:0] g_bank_k1_u_bank_read_data,
-    output wire [127:0] g_bank_k2_u_bank_read_data,
-    output wire [127:0] g_bank_k3_u_bank_read_data,
-    output wire [127:0] inj_q,
-    output wire [17:0] g_lane_k0_g_plain_u_lane_kv_waddr,
-    output wire [17:0] g_lane_k0_g_plain_u_lane_vm_waddr,
-    output wire [17:0] g_lane_k1_g_plain_u_lane_kv_waddr,
-    output wire [17:0] g_lane_k1_g_plain_u_lane_vm_waddr,
-    output wire [17:0] g_lane_k2_g_plain_u_lane_kv_waddr,
-    output wire [17:0] g_lane_k2_g_plain_u_lane_vm_waddr,
-    output wire [17:0] g_lane_k3_g_plain_u_lane_kv_waddr,
-    output wire [17:0] g_lane_k3_g_plain_u_lane_vm_waddr,
-    output wire [31:0] g_lane_k0_g_plain_u_lane_kv_wdata,
-    output wire [31:0] g_lane_k0_g_plain_u_lane_ro_x,
-    output wire [31:0] g_lane_k0_g_plain_u_lane_vm_wdata,
-    output wire [31:0] g_lane_k1_g_plain_u_lane_kv_wdata,
-    output wire [31:0] g_lane_k1_g_plain_u_lane_ro_x,
-    output wire [31:0] g_lane_k1_g_plain_u_lane_vm_wdata,
-    output wire [31:0] g_lane_k2_g_plain_u_lane_kv_wdata,
-    output wire [31:0] g_lane_k2_g_plain_u_lane_ro_x,
-    output wire [31:0] g_lane_k2_g_plain_u_lane_vm_wdata,
-    output wire [31:0] g_lane_k3_g_plain_u_lane_kv_wdata,
-    output wire [31:0] g_lane_k3_g_plain_u_lane_ro_x,
-    output wire [31:0] g_lane_k3_g_plain_u_lane_vm_wdata,
-    output wire [35:0] g_bank_k0_u_bank_read_addr_1,
-    output wire [35:0] g_bank_k1_u_bank_read_addr,
-    output wire [35:0] g_bank_k2_u_bank_read_addr,
-    output wire [35:0] g_bank_k3_u_bank_read_addr,
-    output wire [3:0] g_lane_k0_g_plain_u_lane_rd_re,
-    output wire [3:0] g_lane_k1_g_plain_u_lane_rd_re,
-    output wire [3:0] g_lane_k2_g_plain_u_lane_rd_re,
-    output wire [3:0] g_lane_k3_g_plain_u_lane_rd_re,
-    output wire [59:0] g_lane_k0_g_plain_u_lane_rd_addr,
-    output wire [59:0] g_lane_k1_g_plain_u_lane_rd_addr,
-    output wire [59:0] g_lane_k2_g_plain_u_lane_rd_addr,
-    output wire [59:0] g_lane_k3_g_plain_u_lane_rd_addr,
-    output wire [7:0] g_lane_k0_g_plain_u_lane_rd_src,
-    output wire [7:0] g_lane_k1_g_plain_u_lane_rd_src,
-    output wire [7:0] g_lane_k2_g_plain_u_lane_rd_src,
-    output wire [7:0] g_lane_k3_g_plain_u_lane_rd_src,
-    output wire g_lane_k0_g_plain_u_lane_coll,
-    output wire g_lane_k0_g_plain_u_lane_fault,
-    output wire g_lane_k0_g_plain_u_lane_kv_we,
-    output wire g_lane_k0_g_plain_u_lane_ro_v,
-    output wire g_lane_k0_g_plain_u_lane_vm_we,
-    output wire g_lane_k1_g_plain_u_lane_coll,
-    output wire g_lane_k1_g_plain_u_lane_fault,
-    output wire g_lane_k1_g_plain_u_lane_kv_we,
-    output wire g_lane_k1_g_plain_u_lane_ro_v,
-    output wire g_lane_k1_g_plain_u_lane_vm_we,
-    output wire g_lane_k2_g_plain_u_lane_coll,
-    output wire g_lane_k2_g_plain_u_lane_fault,
-    output wire g_lane_k2_g_plain_u_lane_kv_we,
-    output wire g_lane_k2_g_plain_u_lane_ro_v,
-    output wire g_lane_k2_g_plain_u_lane_vm_we,
-    output wire g_lane_k3_g_plain_u_lane_coll,
-    output wire g_lane_k3_g_plain_u_lane_fault,
-    output wire g_lane_k3_g_plain_u_lane_kv_we,
-    output wire g_lane_k3_g_plain_u_lane_ro_v,
-    output wire g_lane_k3_g_plain_u_lane_vm_we
+// Actual current native cut ABI. SOURCE PREP only; no legacy decoded-port shim.
+module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77(
+ input wire bank_clk,
+ output wire [767:0] bank_read_data,
+ input wire [15:0] bank_read_v,
+ output wire [3:0] lane_coll,
+ output wire [3:0] lane_fault,
+ output wire [95:0] lane_kv_waddr,
+ output wire [3:0] lane_kv_we,
+ input wire [8:0] strap_lane_lane_id,
+ output wire [383:0] lane_rd_addr,
+ output wire [15:0] lane_rd_re,
+ output wire [31:0] lane_rd_src,
+ output wire [3:0] lane_ro_v,
+ output wire [127:0] lane_ro_x,
+ output wire [95:0] lane_vm_waddr,
+ output wire [3:0] lane_vm_we,
+ input wire [1381:0] cmd0_D,
+ input wire comb0_A,
+ input wire comb0_B,
+ input wire comb1_A,
+ input wire comb2_A,
+ input wire comb3_A,
+ input wire comb4_B,
+ input wire [8:0] comb8_A,
+ input wire [8:0] comb8_B,
+ input wire [8:0] comb12_B,
+ input wire comb12_S,
+ input wire comb13_S,
+ input wire comb14_S,
+ input wire comb15_S,
+ input wire [31:0] comb16_B,
+ input wire [31:0] comb17_B,
+ input wire [31:0] comb18_B,
+ input wire [31:0] comb19_B,
+ input wire [31:0] comb20_B,
+ input wire comb20_S,
+ input wire [31:0] comb21_B,
+ input wire comb21_S,
+ input wire [31:0] comb22_B,
+ input wire comb22_S,
+ input wire [31:0] comb23_B,
+ input wire comb23_S,
+ input wire comb24_S,
+ input wire comb25_S,
+ input wire comb26_S,
+ input wire comb27_S,
+ input wire comb28_S,
+ input wire comb29_S,
+ input wire comb30_S,
+ input wire comb31_S,
+ input wire comb32_S,
+ input wire comb33_S,
+ input wire comb34_S,
+ input wire comb35_S,
+ input wire comb36_A,
+ input wire comb37_A,
+ input wire comb38_A,
+ input wire comb39_A,
+ input wire [8:0] comb40_A,
+ input wire [8:0] comb40_B,
+ input wire [8:0] comb41_A,
+ input wire [8:0] comb42_A,
+ input wire [8:0] comb43_A,
+ input wire [31:0] comb44_B,
+ input wire [31:0] comb45_B,
+ input wire [31:0] comb46_B,
+ input wire [31:0] comb47_B,
+ input wire rst_n,
+ input wire [3:0] rst_lane_n,
+ input wire rst_bcast_n
 );
-    wire [95:0] c_lane0_rd_addr;
-    wire [159:0] c_bank0_read_data;
-    wire [95:0] c_lane1_rd_addr;
-    wire [159:0] c_bank1_read_data;
-    wire [95:0] c_lane2_rd_addr;
-    wire [159:0] c_bank2_read_data;
-    wire [95:0] c_lane3_rd_addr;
-    wire [159:0] c_bank3_read_data;
-    wire [3:0] c_lane0_rd_re;
-    wire [7:0] c_lane0_rd_src;
-    wire c_lane0_vm_we;
-    wire [17:0] c_lane0_vm_waddr;
-    wire [31:0] c_lane0_vm_wdata;
-    wire c_lane0_kv_we;
-    wire [17:0] c_lane0_kv_waddr;
-    wire [31:0] c_lane0_kv_wdata;
-    wire c_lane0_ro_v;
-    wire [31:0] c_lane0_ro_x;
-    wire c_lane0_fault;
-    wire c_lane0_coll;
-    wire [3:0] c_lane1_rd_re;
-    wire [7:0] c_lane1_rd_src;
-    wire c_lane1_vm_we;
-    wire [17:0] c_lane1_vm_waddr;
-    wire [31:0] c_lane1_vm_wdata;
-    wire c_lane1_kv_we;
-    wire [17:0] c_lane1_kv_waddr;
-    wire [31:0] c_lane1_kv_wdata;
-    wire c_lane1_ro_v;
-    wire [31:0] c_lane1_ro_x;
-    wire c_lane1_fault;
-    wire c_lane1_coll;
-    wire [3:0] c_lane2_rd_re;
-    wire [7:0] c_lane2_rd_src;
-    wire c_lane2_vm_we;
-    wire [17:0] c_lane2_vm_waddr;
-    wire [31:0] c_lane2_vm_wdata;
-    wire c_lane2_kv_we;
-    wire [17:0] c_lane2_kv_waddr;
-    wire [31:0] c_lane2_kv_wdata;
-    wire c_lane2_ro_v;
-    wire [31:0] c_lane2_ro_x;
-    wire c_lane2_fault;
-    wire c_lane2_coll;
-    wire [3:0] c_lane3_rd_re;
-    wire [7:0] c_lane3_rd_src;
-    wire c_lane3_vm_we;
-    wire [17:0] c_lane3_vm_waddr;
-    wire [31:0] c_lane3_vm_wdata;
-    wire c_lane3_kv_we;
-    wire [17:0] c_lane3_kv_waddr;
-    wire [31:0] c_lane3_kv_wdata;
-    wire c_lane3_ro_v;
-    wire [31:0] c_lane3_ro_x;
-    wire c_lane3_fault;
-    wire c_lane3_coll;
-    ot_hbm_su_pg_lanes4_core #(.MLAT(4), .ALAT(4), .WCOPY(0)) u_core (
-        .bank0_clk(clk_bank[0]),
-        .bank0_rst_n(rst_n),
-        .bank0_clk_macro(clk_bank_macro[5:0]),
-        .bank0_read_v(g_bank_k0_u_bank_read_v[4:0]),
-        .bank0_read_addr(g_bank_k0_u_bank_read_addr[8:0]),
-        .bank0_write_v(g_bank_k0_u_bank_write_v),
-        .bank0_write_addr(g_bank_k0_u_bank_write_addr[8:0]),
-        .bank0_write_data(g_bank_k0_u_bank_write_data[31:0]),
-        .bank1_clk(clk_bank[1]),
-        .bank1_clk_macro(clk_bank_macro[11:6]),
-        .bank1_read_v(g_bank_k1_u_bank_read_v[3:0]),
-        .bank1_write_v(g_bank_k1_u_bank_write_v),
-        .bank1_write_addr(g_bank_k1_u_bank_write_addr[8:0]),
-        .bank1_write_data(g_bank_k1_u_bank_write_data[31:0]),
-        .bank2_clk(clk_bank[2]),
-        .bank2_clk_macro(clk_bank_macro[17:12]),
-        .bank2_read_v(g_bank_k2_u_bank_read_v[3:0]),
-        .bank2_write_v(g_bank_k2_u_bank_write_v),
-        .bank2_write_addr(g_bank_k2_u_bank_write_addr[8:0]),
-        .bank2_write_data(g_bank_k2_u_bank_write_data[31:0]),
-        .bank3_clk(clk_bank[3]),
-        .bank3_clk_macro(clk_bank_macro[23:18]),
-        .bank3_read_v(g_bank_k3_u_bank_read_v[3:0]),
-        .bank3_write_v(g_bank_k3_u_bank_write_v),
-        .bank3_write_addr(g_bank_k3_u_bank_write_addr[8:0]),
-        .bank3_write_data(g_bank_k3_u_bank_write_data[31:0]),
-        .lane0_clk_stage(clk_lane[7:0]),
-        .lane0_clk_insert(clk_insert[3:0]),
-        .lane0_rst_n(rst_lane_n[0]),
-        .lane0_ld(g_lane_k0_g_plain_u_lane_ld),
-        .lane0_ld_bank(g_lane_k0_g_plain_u_lane_ld_bank),
-        .lane0_ld_c(g_lane_k0_g_plain_u_lane_ld_c[839:0]),
-        .lane0_emit(g_lane_k0_g_plain_u_lane_emit),
-        .lane0_bank(g_lane_k0_g_plain_u_lane_bank),
-        .lane0_o_v(g_lane_k0_g_plain_u_lane_o_v[23:0]),
-        .lane0_i_v(g_lane_k0_g_plain_u_lane_i_v[23:0]),
-        .lane0_no(g_lane_k0_g_plain_u_lane_no[23:0]),
-        .lane0_ni(g_lane_k0_g_plain_u_lane_ni[23:0]),
-        .lane0_ls(g_lane_k0_g_plain_u_lane_ls[3:0]),
-        .lane0_lvw(g_lane_k0_g_plain_u_lane_lvw[3:0]),
-        .lane0_vb(g_lane_k0_g_plain_u_lane_vb[119:0]),
-        .lane0_krow(g_lane_k0_g_plain_u_lane_krow[23:0]),
-        .lane0_obase(g_lane_k0_g_plain_u_lane_obase[23:0]),
-        .lane0_aibase(g_lane_k0_g_plain_u_lane_aibase[23:0]),
-        .lane0_aind(g_lane_k0_g_plain_u_lane_aind[1:0]),
-        .lane0_gsh(g_lane_k0_g_plain_u_lane_gsh[4:0]),
-        .lane0_cpair(g_lane_k0_g_plain_u_lane_cpair),
-        .lane0_dst(g_lane_k0_g_plain_u_lane_dst[1:0]),
-        .lane0_srcs(g_lane_k0_g_plain_u_lane_cx_srcs[7:0]),
-        .lane0_rd_q(g_lane_k0_g_plain_u_lane_rd_q[127:0]),
-        .lane0_cx_arnd(g_lane_k0_g_plain_u_lane_cx_arnd),
-        .lane0_cx_arelu(g_lane_k0_g_plain_u_lane_cx_arelu),
-        .lane0_cx_amin(g_lane_k0_g_plain_u_lane_cx_amin),
-        .lane0_cx_cclip(g_lane_k0_g_plain_u_lane_cx_cclip),
-        .lane0_cx_imm3(g_lane_k0_g_plain_u_lane_cx_imm3[31:0]),
-        .lane0_cp_m1(g_lane_k0_g_plain_u_lane_cp_m1[2:0]),
-        .lane0_cp_imm1(g_lane_k0_g_plain_u_lane_cp_imm1[31:0]),
-        .lane0_cm_m1(g_lane_k0_g_plain_u_lane_cm_m1[2:0]),
-        .lane0_cm_m2(g_lane_k0_g_plain_u_lane_cm_m2[1:0]),
-        .lane0_cm_qm(g_lane_k0_g_plain_u_lane_cm_qm[2:0]),
-        .lane0_cm_imm1(g_lane_k0_g_plain_u_lane_cm_imm1[31:0]),
-        .lane0_ca_ad(g_lane_k0_g_plain_u_lane_ca_ad[2:0]),
-        .lane0_ca_imm2(g_lane_k0_g_plain_u_lane_ca_imm2[31:0]),
-        .lane0_ci_sfu(g_lane_k0_g_plain_u_lane_ci_sfu[2:0]),
-        .lane0_cs_sfu(g_lane_k0_g_plain_u_lane_cs_sfu[2:0]),
-        .lane0_cs_e1(g_lane_k0_g_plain_u_lane_cs_e1[2:0]),
-        .lane0_cs_imm2(g_lane_k0_g_plain_u_lane_cs_imm2[31:0]),
-        .lane0_ce_e2(g_lane_k0_g_plain_u_lane_ce_e2[1:0]),
-        .lane0_ce_imm1(g_lane_k0_g_plain_u_lane_ce_imm1[31:0]),
-        .lane0_co_rnd(g_lane_k0_g_plain_u_lane_co_rnd),
-        .lane0_co_dst(g_lane_k0_g_plain_u_lane_co_dst[1:0]),
-        .lane0_side_y({1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0, 1'b0}),
-        .lane1_clk_stage(clk_lane[15:8]),
-        .lane1_clk_insert(clk_insert[7:4]),
-        .lane1_rst_n(rst_lane_n[1]),
-        .lane1_rd_q(g_lane_k1_g_plain_u_lane_rd_q[127:0]),
-        .lane2_clk_stage(clk_lane[23:16]),
-        .lane2_clk_insert(clk_insert[11:8]),
-        .lane2_rst_n(rst_lane_n[2]),
-        .lane2_rd_q(g_lane_k2_g_plain_u_lane_rd_q[127:0]),
-        .lane3_clk_stage(clk_lane[31:24]),
-        .lane3_clk_insert(clk_insert[15:12]),
-        .lane3_rst_n(rst_lane_n[3]),
-        .lane3_rd_q(g_lane_k3_g_plain_u_lane_rd_q[127:0]),
-        .lane2_lane_id({strap_lane_lane_id, 2'd2}),
-        .lane0_lane_id({strap_lane_lane_id, 2'd0}),
-        .lane3_lane_id({strap_lane_lane_id, 2'd3}),
-        .lane1_lane_id({strap_lane_lane_id, 2'd1}),
-        .lane0_rd_addr(c_lane0_rd_addr),
-        .bank0_read_data(c_bank0_read_data),
-        .lane1_rd_addr(c_lane1_rd_addr),
-        .bank1_read_data(c_bank1_read_data),
-        .lane2_rd_addr(c_lane2_rd_addr),
-        .bank2_read_data(c_bank2_read_data),
-        .lane3_rd_addr(c_lane3_rd_addr),
-        .bank3_read_data(c_bank3_read_data),
-        .lane0_rd_re(c_lane0_rd_re),
-        .lane0_rd_src(c_lane0_rd_src),
-        .lane0_vm_we(c_lane0_vm_we),
-        .lane0_vm_waddr(c_lane0_vm_waddr),
-        .lane0_vm_wdata(c_lane0_vm_wdata),
-        .lane0_kv_we(c_lane0_kv_we),
-        .lane0_kv_waddr(c_lane0_kv_waddr),
-        .lane0_kv_wdata(c_lane0_kv_wdata),
-        .lane0_ro_v(c_lane0_ro_v),
-        .lane0_ro_x(c_lane0_ro_x),
-        .lane0_fault(c_lane0_fault),
-        .lane0_coll(c_lane0_coll),
-        .lane1_rd_re(c_lane1_rd_re),
-        .lane1_rd_src(c_lane1_rd_src),
-        .lane1_vm_we(c_lane1_vm_we),
-        .lane1_vm_waddr(c_lane1_vm_waddr),
-        .lane1_vm_wdata(c_lane1_vm_wdata),
-        .lane1_kv_we(c_lane1_kv_we),
-        .lane1_kv_waddr(c_lane1_kv_waddr),
-        .lane1_kv_wdata(c_lane1_kv_wdata),
-        .lane1_ro_v(c_lane1_ro_v),
-        .lane1_ro_x(c_lane1_ro_x),
-        .lane1_fault(c_lane1_fault),
-        .lane1_coll(c_lane1_coll),
-        .lane2_rd_re(c_lane2_rd_re),
-        .lane2_rd_src(c_lane2_rd_src),
-        .lane2_vm_we(c_lane2_vm_we),
-        .lane2_vm_waddr(c_lane2_vm_waddr),
-        .lane2_vm_wdata(c_lane2_vm_wdata),
-        .lane2_kv_we(c_lane2_kv_we),
-        .lane2_kv_waddr(c_lane2_kv_waddr),
-        .lane2_kv_wdata(c_lane2_kv_wdata),
-        .lane2_ro_v(c_lane2_ro_v),
-        .lane2_ro_x(c_lane2_ro_x),
-        .lane2_fault(c_lane2_fault),
-        .lane2_coll(c_lane2_coll),
-        .lane3_rd_re(c_lane3_rd_re),
-        .lane3_rd_src(c_lane3_rd_src),
-        .lane3_vm_we(c_lane3_vm_we),
-        .lane3_vm_waddr(c_lane3_vm_waddr),
-        .lane3_vm_wdata(c_lane3_vm_wdata),
-        .lane3_kv_we(c_lane3_kv_we),
-        .lane3_kv_waddr(c_lane3_kv_waddr),
-        .lane3_kv_wdata(c_lane3_kv_wdata),
-        .lane3_ro_v(c_lane3_ro_v),
-        .lane3_ro_x(c_lane3_ro_x),
-        .lane3_fault(c_lane3_fault),
-        .lane3_coll(c_lane3_coll));
-    assign g_bank_k0_u_bank_read_addr_1 = c_lane0_rd_addr[35:0];
-    assign g_bank_k0_u_bank_read_data = c_bank0_read_data[127:0];
-    assign g_bank_k1_u_bank_read_addr = c_lane1_rd_addr[35:0];
-    assign g_bank_k1_u_bank_read_data = c_bank1_read_data[127:0];
-    assign g_bank_k2_u_bank_read_addr = c_lane2_rd_addr[35:0];
-    assign g_bank_k2_u_bank_read_data = c_bank2_read_data[127:0];
-    assign g_bank_k3_u_bank_read_addr = c_lane3_rd_addr[35:0];
-    assign g_bank_k3_u_bank_read_data = c_bank3_read_data[127:0];
-    assign g_lane_k0_g_plain_u_lane_coll = c_lane0_coll;
-    assign g_lane_k0_g_plain_u_lane_fault = c_lane0_fault;
-    assign g_lane_k0_g_plain_u_lane_kv_waddr = c_lane0_kv_waddr[17:0];
-    assign g_lane_k0_g_plain_u_lane_kv_wdata = c_lane0_kv_wdata[31:0];
-    assign g_lane_k0_g_plain_u_lane_kv_we = c_lane0_kv_we;
-    assign g_lane_k0_g_plain_u_lane_rd_addr = c_lane0_rd_addr[95:36];
-    assign g_lane_k0_g_plain_u_lane_rd_re = c_lane0_rd_re[3:0];
-    assign g_lane_k0_g_plain_u_lane_rd_src = c_lane0_rd_src[7:0];
-    assign g_lane_k0_g_plain_u_lane_ro_v = c_lane0_ro_v;
-    assign g_lane_k0_g_plain_u_lane_ro_x = c_lane0_ro_x[31:0];
-    assign g_lane_k0_g_plain_u_lane_vm_waddr = c_lane0_vm_waddr[17:0];
-    assign g_lane_k0_g_plain_u_lane_vm_wdata = c_lane0_vm_wdata[31:0];
-    assign g_lane_k0_g_plain_u_lane_vm_we = c_lane0_vm_we;
-    assign g_lane_k1_g_plain_u_lane_coll = c_lane1_coll;
-    assign g_lane_k1_g_plain_u_lane_fault = c_lane1_fault;
-    assign g_lane_k1_g_plain_u_lane_kv_waddr = c_lane1_kv_waddr[17:0];
-    assign g_lane_k1_g_plain_u_lane_kv_wdata = c_lane1_kv_wdata[31:0];
-    assign g_lane_k1_g_plain_u_lane_kv_we = c_lane1_kv_we;
-    assign g_lane_k1_g_plain_u_lane_rd_addr = c_lane1_rd_addr[95:36];
-    assign g_lane_k1_g_plain_u_lane_rd_re = c_lane1_rd_re[3:0];
-    assign g_lane_k1_g_plain_u_lane_rd_src = c_lane1_rd_src[7:0];
-    assign g_lane_k1_g_plain_u_lane_ro_v = c_lane1_ro_v;
-    assign g_lane_k1_g_plain_u_lane_ro_x = c_lane1_ro_x[31:0];
-    assign g_lane_k1_g_plain_u_lane_vm_waddr = c_lane1_vm_waddr[17:0];
-    assign g_lane_k1_g_plain_u_lane_vm_wdata = c_lane1_vm_wdata[31:0];
-    assign g_lane_k1_g_plain_u_lane_vm_we = c_lane1_vm_we;
-    assign g_lane_k2_g_plain_u_lane_coll = c_lane2_coll;
-    assign g_lane_k2_g_plain_u_lane_fault = c_lane2_fault;
-    assign g_lane_k2_g_plain_u_lane_kv_waddr = c_lane2_kv_waddr[17:0];
-    assign g_lane_k2_g_plain_u_lane_kv_wdata = c_lane2_kv_wdata[31:0];
-    assign g_lane_k2_g_plain_u_lane_kv_we = c_lane2_kv_we;
-    assign g_lane_k2_g_plain_u_lane_rd_addr = c_lane2_rd_addr[95:36];
-    assign g_lane_k2_g_plain_u_lane_rd_re = c_lane2_rd_re[3:0];
-    assign g_lane_k2_g_plain_u_lane_rd_src = c_lane2_rd_src[7:0];
-    assign g_lane_k2_g_plain_u_lane_ro_v = c_lane2_ro_v;
-    assign g_lane_k2_g_plain_u_lane_ro_x = c_lane2_ro_x[31:0];
-    assign g_lane_k2_g_plain_u_lane_vm_waddr = c_lane2_vm_waddr[17:0];
-    assign g_lane_k2_g_plain_u_lane_vm_wdata = c_lane2_vm_wdata[31:0];
-    assign g_lane_k2_g_plain_u_lane_vm_we = c_lane2_vm_we;
-    assign g_lane_k3_g_plain_u_lane_coll = c_lane3_coll;
-    assign g_lane_k3_g_plain_u_lane_fault = c_lane3_fault;
-    assign g_lane_k3_g_plain_u_lane_kv_waddr = c_lane3_kv_waddr[17:0];
-    assign g_lane_k3_g_plain_u_lane_kv_wdata = c_lane3_kv_wdata[31:0];
-    assign g_lane_k3_g_plain_u_lane_kv_we = c_lane3_kv_we;
-    assign g_lane_k3_g_plain_u_lane_rd_addr = c_lane3_rd_addr[95:36];
-    assign g_lane_k3_g_plain_u_lane_rd_re = c_lane3_rd_re[3:0];
-    assign g_lane_k3_g_plain_u_lane_rd_src = c_lane3_rd_src[7:0];
-    assign g_lane_k3_g_plain_u_lane_ro_v = c_lane3_ro_v;
-    assign g_lane_k3_g_plain_u_lane_ro_x = c_lane3_ro_x[31:0];
-    assign g_lane_k3_g_plain_u_lane_vm_waddr = c_lane3_vm_waddr[17:0];
-    assign g_lane_k3_g_plain_u_lane_vm_wdata = c_lane3_vm_wdata[31:0];
-    assign g_lane_k3_g_plain_u_lane_vm_we = c_lane3_vm_we;
-    assign inj_q = {c_bank3_read_data[159:128], c_bank2_read_data[159:128], c_bank1_read_data[159:128], c_bank0_read_data[159:128]};
+ ot_hnx_su_plain4__lid9_rst3 u_native(
+  .bank_clk(bank_clk),
+  .bank_read_data(bank_read_data),
+  .bank_read_v(bank_read_v),
+  .lane_coll(lane_coll),
+  .lane_fault(lane_fault),
+  .lane_kv_waddr(lane_kv_waddr),
+  .lane_kv_we(lane_kv_we),
+  .lane_lane_id(strap_lane_lane_id),
+  .lane_rd_addr(lane_rd_addr),
+  .lane_rd_re(lane_rd_re),
+  .lane_rd_src(lane_rd_src),
+  .lane_ro_v(lane_ro_v),
+  .lane_ro_x(lane_ro_x),
+  .lane_vm_waddr(lane_vm_waddr),
+  .lane_vm_we(lane_vm_we),
+  .cmd0_D(cmd0_D),
+  .comb0_A(comb0_A),
+  .comb0_B(comb0_B),
+  .comb1_A(comb1_A),
+  .comb2_A(comb2_A),
+  .comb3_A(comb3_A),
+  .comb4_B(comb4_B),
+  .comb8_A(comb8_A),
+  .comb8_B(comb8_B),
+  .comb12_B(comb12_B),
+  .comb12_S(comb12_S),
+  .comb13_S(comb13_S),
+  .comb14_S(comb14_S),
+  .comb15_S(comb15_S),
+  .comb16_B(comb16_B),
+  .comb17_B(comb17_B),
+  .comb18_B(comb18_B),
+  .comb19_B(comb19_B),
+  .comb20_B(comb20_B),
+  .comb20_S(comb20_S),
+  .comb21_B(comb21_B),
+  .comb21_S(comb21_S),
+  .comb22_B(comb22_B),
+  .comb22_S(comb22_S),
+  .comb23_B(comb23_B),
+  .comb23_S(comb23_S),
+  .comb24_S(comb24_S),
+  .comb25_S(comb25_S),
+  .comb26_S(comb26_S),
+  .comb27_S(comb27_S),
+  .comb28_S(comb28_S),
+  .comb29_S(comb29_S),
+  .comb30_S(comb30_S),
+  .comb31_S(comb31_S),
+  .comb32_S(comb32_S),
+  .comb33_S(comb33_S),
+  .comb34_S(comb34_S),
+  .comb35_S(comb35_S),
+  .comb36_A(comb36_A),
+  .comb37_A(comb37_A),
+  .comb38_A(comb38_A),
+  .comb39_A(comb39_A),
+  .comb40_A(comb40_A),
+  .comb40_B(comb40_B),
+  .comb41_A(comb41_A),
+  .comb42_A(comb42_A),
+  .comb43_A(comb43_A),
+  .comb44_B(comb44_B),
+  .comb45_B(comb45_B),
+  .comb46_B(comb46_B),
+  .comb47_B(comb47_B),
+  .rst_n(rst_n),
+  .rst_lane_n(rst_lane_n),
+  .rst_bcast_n(rst_bcast_n)
+ );
 endmodule
 `default_nettype wire
