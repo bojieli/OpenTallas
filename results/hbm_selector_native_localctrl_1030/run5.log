@@ -1,0 +1,9 @@
+MISMATCH cyc 69 t=137000 rst_n 1 sv 0/0 fault 0/0 qfault 0000/0000
+NATIVE_INITIAL_CAPTURE edge70 assert66 release2 core1 outer1 t=139000
+MISMATCH cyc 70 t=139000 rst_n 1 sv 0/0 fault 0/0 qfault 0000/0000
+MISMATCH cyc 71 t=141000 rst_n 1 sv 0/0 fault 0/0 qfault 0000/0000
+MISMATCH cyc 72 t=143000 rst_n 1 sv 0/0 fault 0/0 qfault 0000/0000
+MISMATCH cyc 73 t=145000 rst_n 1 sv 0/0 fault 0/0 qfault 0000/0000
+TB_SEL_LOCALCTRL FAIL mutant caught POSTBOOT mismatches 10
+FATAL: tb_native_por66.sv:43: local bank mutant detected
+       Time: 157200  Scope: tb_sel_localctrl

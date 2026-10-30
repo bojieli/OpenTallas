@@ -1,0 +1,6 @@
+NATIVE_INITIAL_CAPTURE edge70 assert66 release2 core1 outer1 t=139000
+STRICT_NATIVE payload/control/state all compared from edge1, no data or valid mask
+FILL coverage max=15 at15=20
+TB_SEL_LOCALCTRL cycles 1566 resets 6 selected_beats 267 mismatches 0
+TB_SEL_LOCALCTRL PASS
+tb_native_por66.sv:97: $finish called at 3133000 (1ps)

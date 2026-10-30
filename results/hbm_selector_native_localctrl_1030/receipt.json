@@ -1,0 +1,58 @@
+{
+  "reference": {
+    "path": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+    "sha256": "6798864c30e069930756e352009310362d095f96087a9f9e033ad60ed5c88504",
+    "instance": "hb_idx__selector",
+    "parameters": {},
+    "master_parameters": [
+      "MUT"
+    ]
+  },
+  "candidate": {
+    "source": "rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv",
+    "sha256": "f46566069ffb3f93f9c3720b1c232ed52644481b3c25c42a7c0b8a9fdac67afb",
+    "STRUCT": 1,
+    "LOCAL_CTRL": 1
+  },
+  "native_reference_lockstep": {
+    "verdict": "PASS",
+    "cycles": 1566,
+    "async_resets": 6,
+    "selected_beats": 267,
+    "mismatches": 0,
+    "max_fill": 15,
+    "fill15_edges": 20,
+    "comparison": "strict 4-state all outputs and architectural state from edge1; no valid/data mask"
+  },
+  "reset": {
+    "initial_assert_edges": 66,
+    "asserted_before_first_clock": true,
+    "contract": "physical/die_plan/hbm/reset_contract.json: selector edges64/assert_edges66",
+    "first_assigned_capture_edge": 70,
+    "first_assigned_capture": "existing reset2 + core1 + outer1; comparison already strict before it"
+  },
+  "mutant": {
+    "MUT": 5,
+    "verdict": "CAUGHT",
+    "postboot_mismatches": 10,
+    "exit": 1
+  },
+  "added_ff": {
+    "vs_current_main": 120,
+    "vs_actual_native": 128,
+    "previously_added_quarter_reset_ff": 8
+  },
+  "added_cycles": 0,
+  "production_shape": {
+    "quarters": 4,
+    "entries_per_quarter": 16,
+    "entry_bits": 37,
+    "sram_instances": 12
+  },
+  "physical": "SYNTH_ONLY_RUNNING; NO PLACE/CTS/ROUTE/SIGNED",
+  "token_pass": "NOT RUN - component only, not G5",
+  "host": "intel2 / ot-run hub localhost",
+  "run": "/srv/opentallas-scratch2/claude/codex-hbm-selector-1030/native_por66",
+  "unit": "oth-ubuntu-1658807-1793360567",
+  "prior_failure": "timezero reginit0 and only2 asserted edges, violates existing66-edge reset fixture; 4 unreset-payload X-pattern mismatches before first assignment; all controls/state matched; failure logs retained"
+}
