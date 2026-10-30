@@ -12,14 +12,20 @@ patch=r'''
 # Resolve the already-existing canonical u_ft_<slot>_s<j> flop directly; distribute
 # all k captures AFTER the ring, including the last capture at the output face.
 set head_ft_cells 0
+set head_ft_maxbit {}
+foreach hbt [$ff_blk getBTerms] {
+ if {![regexp {^(.+)_i\[([0-9]+)\]$} [$hbt getName] -> hs hb]} continue
+ if {![dict exists $ff_ft $hs]} continue
+ if {![dict exists $head_ft_maxbit $hs] || $hb>[dict get $head_ft_maxbit $hs]} {dict set head_ft_maxbit $hs $hb}
+}
 foreach hi [$ff_blk getInsts] {
  set hn [$hi getName]
  if {![regexp {^u_ft_(.+)_s([0-9]+)/((q\\?\[([0-9]+)\\?\])|eq)\$_[A-Z0-9_]+$} $hn -> hs hj hsig hq hb]} continue
  if {![dict exists $ff_ft $hs]} {error "HEAD_FT unknown slot $hs"}
  lassign [dict get $ff_ft $hs] hk hfin hfout hregs
  if {$hj >= $hk} {error "HEAD_FT stage outside table $hn"}
- set hin [format {%s_i[%d]} $hs [expr {$hb eq ""?64:$hb}]]
- set hout [format {%s_o[%d]} $hs [expr {$hb eq ""?64:$hb}]]
+ set hin [format {%s_i[%d]} $hs [expr {$hb eq ""?[dict get $head_ft_maxbit $hs]:$hb}]]
+ set hout [format {%s_o[%d]} $hs [expr {$hb eq ""?[dict get $head_ft_maxbit $hs]:$hb}]]
  set hbi [$ff_blk findBTerm $hin];set hbo [$ff_blk findBTerm $hout]
  if {$hbi eq "NULL" || $hbo eq "NULL"} {error "HEAD_FT missing bit port $hn $hin $hout"}
  set ha [$hbi getBBox];set hz [$hbo getBBox]
