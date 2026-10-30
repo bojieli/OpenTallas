@@ -52,7 +52,8 @@ if "--core-finite" in sys.argv:
     # Keep each established emitter's contract: finite per-bump pads must be
     # positive; explicit PHY point sources use the separate legacy point deck.
     finite_text = G.D.bumps_tcl(actual_core_plan, finite, pad_um=0)
-    finite_text = re.sub(r"\b(VDD|VSS)_b(\d+)\b", r"\1_core_b\2", finite_text)
+    assert "${net}_b$k" in finite_text
+    finite_text = finite_text.replace("${net}_b$k", "${net}_core_b$k")
     text = finite_text + G.D.bumps_tcl(actual_core_plan, points, pad_um=0)
     text = text.replace('foreach net_name {VDD VSS}', 'foreach net_name {VDD VSS VDDPHY}')
     text = re.sub(r'(dbBTerm_create \[\$block findNet VDDPHY\].*?\$bt setSigType )GROUND',
