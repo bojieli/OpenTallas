@@ -78,3 +78,35 @@ Peer review scope: these actual caller vectors use normative U32 5→5 only. Des
 Input programme scope is explicitly N=6 MTP VERIFY with data-dependent ACCEPT3913/TOKX3914 output count (TOKX A.n7). These bounded copies repeat three ownership epochs; they execute neither three full verify steps nor three AR tokens. Fixture generators and receipts now state that scope. Accepted token rates require actual native ACCEPT/TOKX observations plus draft/seed costs; no fixed acceptance gamma is assumed.
 
 Current source is pinned by source_dependencies.json to canonical RTL tip dd491a076 (ordered73430d378→7af555e3e→dd491a076), with separate format-control result commit5a703c0a9. The tested counter in5a is byte-identical to canonicaldd491. Both launchers require those exact provider/native dependencies before compile; old counter hashes remain historical and are rejected by the current guard. The actual legalU32 CW308 fixture rerun on immutable dd491 at exact833ps PASS:42cmds/2688packets/21504words, latency8, same first/lastdates and both controls. cp_dd_* logs preserve this corrected-source proof separately from earlier cp_* history. No broad format sweep, whole-programme rebuild or physical run was added.
+
+Native32bank VM join: run_vm_provider_fixture.py uses the default-enabled
+bankdone audit and actual32 hfd_vms_bank_native_q0_faces/core/body instances,
+96 original1024x256 SRAM replicas and the real CE/status pipe. All42 nativeCW308
+commands,2688 packets/21504 U32words,2688 nativeDQdone and42 guardedLOADdone PASS;
+all2688 sectors read back exactly through actual rq0/rr0 with rslot0. Writes
+reserve DMA wslot6. All other clients are disabled; memory is never peeked.
+Geography is explicit SWsid0(flat0..7),SEsid1(8..15),NWsid2(16..23),NEsid3(24..31),
+with response-bank identity checked on every readback. This is not NW-first qid
+mapping and not a new physical geographic-routing adoption.
+
+Measured timing at833ps: counterstep→producerpacket8cycles; nextedge externalbank
+capture1; capture→realDQdone4; thus step→ACKobservation13. Native rq0capture→rr0
+latency7. ACKtime is not a LOADdone bound: fixeddrain additionally requires empty
+pending, no sameedgeACK, clean stickyfault/UE and quietcompletion. This fixture
+uses margin20 and100edge commandstarts for64packet runs; counter-onlyn+1 is only
+a floor. Production R8/FT/relay/pathbounds are not measured by this fixture.
+
+Wrongslot faults withoutACK. Wrongheaderbank produces8 genuine invalid-write
+ACKs but stickyfault0xff andzeroLOADdone. DelayedACKfeedback reaches the fixed
+deadline with64 actual writes acknowledged, statusclean andzeroLOADdone; it
+fails rather than waiting. dq_done identifies a bank and DMAport/slot6, not an
+arbitrary producer. Production must statically exclude other DQ/raw producers
+and drain priorDMA beforestart or implement actualtag/date correlation. The
+fixture proves that isolated ownership; no runtime arbitration is added.
+
+backend_source_dependencies.json pins current canonical9a5727aa2 and records
+actual tested9d366e3b4. The difference is comments only; noncommentRTLtokens of
+all7 sourcefiles are identical. Packet-only legacy fixtures remain pinned to
+their dd491 snapshot and do not silently turn off the mandatory new audit.
+
+The final native-bank log directly records every guarded LOADdone: firstedge369, last6893, each21edges after its laststep under the conservative margin20 calendar. It also records every native command issue/drain value. This is separate from the13edge step→ACK observation; no minimum LOADdone bound is claimed. The actual64packet command start interval is100edges, including issue lead, drain and nextcommand spacing. Counter-only n+1 remains a floor and is not this achieved CP cadence.
