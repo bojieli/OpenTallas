@@ -1,0 +1,11 @@
+{"r2r_max": 1049.17, "n": 10}
+1049.2	u_cland_rst_tx_i/q$_DFF_P_(388.3, 43.9)	->	u_cland_up_tx_o/ready_o$_SDFF_PN0_(1434.8, 41.2)
+1047.3	u_cland_rst_tx_i/q$_DFF_P_(388.3, 43.9)	->	u_cland_up_tx_o/fault_o$_SDFF_PN0_(1434.8, 43.1)
+1030.5	u_cland_rx_i/u_fault_port/q$_SDFF_PN0_(1392.6, 68.7)	->	u_cland_agg_1/ready_o$_SDFF_PN0_(385.8, 45.0)
+1022.9	u_cland_rst_rx_i/q$_DFF_P_(969.3, 49.0)	->	u_cland_fstart_rx_o/q$_SDFF_PN0_(5.0, 107.6)
+1018.7	u_cland_rx_i/u_fault_port/q$_SDFF_PN0_(1392.6, 68.7)	->	u_cland_agg_1/fault_o$_SDFF_PN0_(381.2, 61.4)
+930.9	u_cland_rx_i/ready$_SDFF_PN0_(1392.6, 68.2)	->	u_cland_loc_tx_o_1/ready_o$_SDFF_PN0_(485.2, 44.7)
+928.0	u_cland_rx_i/u_fault_port/q$_SDFF_PN0_(1392.6, 68.7)	->	u_cland_loc_tx_o_1/fault_o$_SDFF_PN0_(488.3, 45.0)
+718.6	u_cland_origin/s1$_SDFF_PN0_(723.1, 43.3)	->	u_cland_fstart_tx_o/q$_SDFF_PN0_(1437.1, 47.9)
+441.8	u_cland_rst_tx_i/q$_DFF_P_(388.3, 43.9)	->	u_cland_up_rx_o/fault_o$_SDFF_PN0_(5.9, 103.3)
+439.6	u_cland_rst_tx_i/q$_DFF_P_(388.3, 43.9)	->	u_cland_up_rx_o/ready_o$_SDFF_PN0_(5.9, 101.1)

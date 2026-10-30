@@ -1,0 +1,108 @@
+{
+ "top": "ot_s81hd_st_m",
+ "checked": 279,
+ "ok": 278,
+ "fails": {
+  "shared": [
+   "rst_o_0: net u_rrl_18/q has 1 loads besides the port chain"
+  ]
+ },
+ "flops": {
+  "start_o_0": "u_srl_18/q$_DFF_P_",
+  "tx_i[64]": "u_cland_tx_i/u_ring.s_d[0][64]$_DFFE_PP_",
+  "tx_i[63]": "u_cland_tx_i/u_ring.s_d[0][63]$_DFFE_PP_",
+  "tx_i[62]": "u_cland_tx_i/u_ring.s_d[0][62]$_DFFE_PP_",
+  "tx_i[61]": "u_cland_tx_i/u_ring.s_d[0][61]$_DFFE_PP_",
+  "tx_i[60]": "u_cland_tx_i/u_ring.s_d[0][60]$_DFFE_PP_",
+  "tx_i[59]": "u_cland_tx_i/u_ring.s_d[0][59]$_DFFE_PP_",
+  "tx_i[58]": "u_cland_tx_i/u_ring.s_d[0][58]$_DFFE_PP_",
+  "tx_i[57]": "u_cland_tx_i/u_ring.s_d[0][57]$_DFFE_PP_",
+  "tx_i[56]": "u_cland_tx_i/u_ring.s_d[0][56]$_DFFE_PP_",
+  "tx_i[55]": "u_cland_tx_i/u_ring.s_d[0][55]$_DFFE_PP_",
+  "tx_i[54]": "u_cland_tx_i/u_ring.s_d[0][54]$_DFFE_PP_",
+  "tx_i[53]": "u_cland_tx_i/u_ring.s_d[0][53]$_DFFE_PP_",
+  "tx_i[52]": "u_cland_tx_i/u_ring.s_d[0][52]$_DFFE_PP_",
+  "tx_i[51]": "u_cland_tx_i/u_ring.s_d[0][51]$_DFFE_PP_",
+  "tx_i[50]": "u_cland_tx_i/u_ring.s_d[0][50]$_DFFE_PP_",
+  "tx_i[49]": "u_cland_tx_i/u_ring.s_d[0][49]$_DFFE_PP_",
+  "tx_i[48]": "u_cland_tx_i/u_ring.s_d[0][48]$_DFFE_PP_",
+  "tx_i[47]": "u_cland_tx_i/u_ring.s_d[0][47]$_DFFE_PP_",
+  "tx_i[46]": "u_cland_tx_i/u_ring.s_d[0][46]$_DFFE_PP_"
+ },
+ "straps_exempt": [
+  "strap_ca_efall",
+  "strap_ca_k_rx_i",
+  "strap_ca_k_tx_i",
+  "strap_ca_pad"
+ ],
+ "dead_declared": [],
+ "bumps_exempt": [],
+ "clock_exports": {
+  "fclk_out_rx_o": "clk",
+  "fclk_out_tx_o": "clk"
+ },
+ "land_mux_depth": {
+  "1": 404,
+  "2": 132
+ },
+ "land_slot_bits": 134,
+ "land_mux_bits": 134,
+ "ring_start": {
+  "cland_fstart_in_rx_i": {
+   "ring": [
+    "rx_i"
+   ],
+   "ring_clock": [
+    "u_cland_rx_i/fclk"
+   ],
+   "writer_flops": 294,
+   "writer_groups": {
+    "u_cland_rx_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_cland_rx_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_cland_rx_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_rx_i/u_ring.s_d[N][N]$_DFFE_PP_": 268,
+    "u_cland_rx_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_fstart_in_tx_i": {
+   "ring": [
+    "tx_i"
+   ],
+   "ring_clock": [
+    "u_cland_tx_i/fclk"
+   ],
+   "writer_flops": 294,
+   "writer_groups": {
+    "u_cland_tx_i/u_ring.ctl_lap[N]$_DFFE_PP_": 4,
+    "u_cland_tx_i/u_ring.ctl_w[N]$_SDFF_PN0_": 4,
+    "u_cland_tx_i/u_ring.g_tag.s_tag[N][N]$_DFFE_PP_": 12,
+    "u_cland_tx_i/u_ring.s_d[N][N]$_DFFE_PP_": 268,
+    "u_cland_tx_i/u_ring.tc[N]$_SDFF_PN0_": 6
+   },
+   "sampler_flops": [],
+   "sampler_clock": null
+  },
+  "cland_tstart_in": {
+   "ring": [],
+   "ring_clock": [],
+   "writer_flops": 0,
+   "writer_groups": {},
+   "sampler_flops": [
+    "u_cland_origin/s0$_SDFF_PN0_",
+    "u_cland_origin/sf$_DFF_N_"
+   ],
+   "sampler_clock": "u_srl_8/clk"
+  }
+ },
+ "ring_start_bits": 3,
+ "pairs_declared": [],
+ "planned_bits": 260,
+ "missing_ports": 0,
+ "fail_counts": {
+  "shared": 1
+ },
+ "verdict": "FAIL",
+ "netlist": "/work/run/results/asap7/dp_hd_st_m/base/1_2_yosys.v"
+}
