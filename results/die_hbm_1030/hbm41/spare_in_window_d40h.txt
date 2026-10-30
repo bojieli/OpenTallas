@@ -1,0 +1,33 @@
+NE_hub NE_su20 2126 L38m(w1329,c9,spare0,data) L104m(w21,c8,spare29,ctl)
+NW_hub NW_su20 2126 L38(w1329,c9,spare0,data) L104(w21,c8,spare29,ctl)
+NW_hub root 2065 L74(w1171,c2,spare85,data) L89(w2,c2,spare48,ctl) L156(w2740,c2,spare3826,data) N4U_NW(w271,c13,spare29,data) HOST_BOOT(w320,c30,spare39,data)
+NE_su00 NE_hub 1207 L55m(w514,c8,spare1,data) L134m(w3,c8,spare47,ctl)
+NE_su20 NE_hub 1207 L59m(w514,c8,spare1,data) L136m(w3,c8,spare47,ctl)
+NW_su00 NW_hub 1207 L55(w514,c8,spare1,data) L134(w3,c8,spare47,ctl)
+NW_su20 NW_hub 1207 L59(w514,c8,spare1,data) L136(w3,c8,spare47,ctl)
+NE_hub NE_su00 1198 L36m(w1329,c14,spare0,data) L102m(w21,c7,spare29,ctl)
+NW_hub NW_su00 1198 L36(w1329,c14,spare0,data) L102(w21,c7,spare29,ctl)
+NE_hub NE_spb0 632 
+NW_hub NW_spb0 632 
+NE_spb0 NE_hub 615 
+NW_spb0 NW_hub 615 
+NE_sm0 NE_hub 37 L67m(w268,c8,spare0,data) L120m(w9,c7,spare41,ctl)
+NE_sm1 NE_hub 37 L68m(w268,c9,spare0,data) L121m(w9,c8,spare41,ctl)
+NE_sm2 NE_hub 37 L69m(w268,c8,spare0,data) L122m(w9,c8,spare41,ctl)
+NE_sm3 NE_hub 37 L70m(w268,c7,spare0,data) L123m(w9,c7,spare0,ctl)
+NW_sm0 NW_hub 37 L67(w268,c8,spare0,data) L120(w9,c7,spare41,ctl)
+NW_sm1 NW_hub 37 L68(w268,c9,spare0,data) L121(w9,c8,spare41,ctl)
+NW_sm2 NW_hub 37 L69(w268,c8,spare0,data) L122(w9,c8,spare41,ctl)
+NW_sm3 NW_hub 37 L70(w268,c7,spare0,data) L123(w9,c7,spare0,ctl)
+NE_spt0 root 9 
+NW_spt0 root 9 
+NE_b011 NE_hub 3 
+NW_b011 NW_hub 3 
+NE_spb2 NW_hub 2 
+NE_spt0 NW_hub 2 
+NE_b013 NE_hub 1 
+NE_su11 NE_su20 1 
+NE_su20 NE_su31 1 
+NW_b013 NW_hub 1 
+NW_su11 NW_su20 1 
+NW_su20 NW_su31 1 

@@ -1,0 +1,199 @@
+{
+ "base": "plan/d40h",
+ "base_sha": "3702cfb3f678",
+ "lanes": [
+  {
+   "lane": "L156",
+   "width": [
+    2740,
+    4796
+   ],
+   "cycles": 2
+  },
+  {
+   "lane": "L89",
+   "width": [
+    2,
+    11
+   ],
+   "cycles": 2
+  },
+  {
+   "lane": "L120",
+   "width": [
+    9,
+    46
+   ],
+   "cycles": 7
+  },
+  {
+   "lane": "L120m",
+   "width": [
+    9,
+    46
+   ],
+   "cycles": 7
+  },
+  {
+   "lane": "L121",
+   "width": [
+    9,
+    46
+   ],
+   "cycles": 8
+  },
+  {
+   "lane": "L121m",
+   "width": [
+    9,
+    46
+   ],
+   "cycles": 8
+  },
+  {
+   "lane": "L122",
+   "width": [
+    9,
+    46
+   ],
+   "cycles": 8
+  },
+  {
+   "lane": "L122m",
+   "width": [
+    9,
+    46
+   ],
+   "cycles": 8
+  }
+ ],
+ "buses": {
+  "q_hub_nw/L156_o": [
+   2740,
+   4796
+  ],
+  "root/L156_i": [
+   2740,
+   4796
+  ],
+  "q_hub_nw/L89_o": [
+   2,
+   11
+  ],
+  "root/L89_i": [
+   2,
+   11
+  ],
+  "q_sm0/L120_o": [
+   9,
+   46
+  ],
+  "q_hub_nw/L120_i": [
+   9,
+   46
+  ],
+  "q_hub_ne/L120_i": [
+   9,
+   46
+  ],
+  "q_sm1/L121_o": [
+   9,
+   46
+  ],
+  "q_hub_nw/L121_i": [
+   9,
+   46
+  ],
+  "q_hub_ne/L121_i": [
+   9,
+   46
+  ],
+  "q_sm2/L122_o": [
+   9,
+   46
+  ],
+  "q_hub_nw/L122_i": [
+   9,
+   46
+  ],
+  "q_hub_ne/L122_i": [
+   9,
+   46
+  ]
+ },
+ "slots": {
+  "q_su01/L120x1": {
+   "width": [
+    9,
+    46
+   ],
+   "bit_sites": true,
+   "new_sites_per_stage": 37,
+   "max_new_site_from_centroid_um": 3.81
+  },
+  "q_su01__physical_v1/L120x1": {
+   "width": [
+    9,
+    46
+   ],
+   "bit_sites": true,
+   "new_sites_per_stage": 37,
+   "max_new_site_from_centroid_um": 3.81
+  },
+  "q_su10/L121x1": {
+   "width": [
+    9,
+    46
+   ],
+   "bit_sites": true,
+   "new_sites_per_stage": 37,
+   "max_new_site_from_centroid_um": 3.64
+  },
+  "q_su10__physical_v1/L121x1": {
+   "width": [
+    9,
+    46
+   ],
+   "bit_sites": true,
+   "new_sites_per_stage": 37,
+   "max_new_site_from_centroid_um": 3.64
+  },
+  "q_su21/L122x1": {
+   "width": [
+    9,
+    46
+   ],
+   "bit_sites": true,
+   "new_sites_per_stage": 37,
+   "max_new_site_from_centroid_um": 3.21
+  },
+  "q_su21__physical_v1/L122x1": {
+   "width": [
+    9,
+    46
+   ],
+   "bit_sites": true,
+   "new_sites_per_stage": 37,
+   "max_new_site_from_centroid_um": 3.21
+  }
+ },
+ "failed": [
+  {
+   "lane": "L123",
+   "add": 37,
+   "why": [
+    "L123_r0_0 window 1.67 um holds 10 pins < 47",
+    "L123_r0_1 window 1.67 um holds 10 pins < 47"
+   ]
+  },
+  {
+   "lane": "L123m",
+   "add": 37,
+   "why": [
+    "L123m_r0_0 window 1.67 um holds 10 pins < 47",
+    "L123m_r0_1 window 1.67 um holds 10 pins < 47"
+   ]
+  }
+ ],
+ "out_sha": "5342b82eeadc"
+}
