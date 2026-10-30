@@ -1,0 +1,194 @@
+{
+ "schema": "opentallas.lec.v1",
+ "kit": "/work",
+ "generated": "2026-10-30T06:58:09+0000",
+ "verdict": "EQUIVALENT",
+ "reset_contract": {
+  "default": 4,
+  "requested": null,
+  "contract": null,
+  "used": 4,
+  "debug_overrides": {}
+ },
+ "top": "ot_s81sl_cap_ed",
+ "netlist": "/work/run/results/asap7/kl_ot_s81sl_cap_ed_owner_option1/base/1_2_yosys.v",
+ "synth_frontend": "verilog",
+ "gold_frontend": "slang",
+ "implicit_nets": [],
+ "black_boxes": {},
+ "ports": {
+  "inputs": 69,
+  "outputs": 67
+ },
+ "t_aig_s": 5.2,
+ "kit_reset_ports": [
+  "rst_n"
+ ],
+ "noreset_constants": {
+  "enabled": true,
+  "reset_ports": {
+   "gold": [
+    "pi:rst_n[0]"
+   ],
+   "gate": [
+    "pi:rst_n[0]"
+   ]
+  },
+  "reset_asserted": {
+   "gold": {
+    "pi:rst_n[0]": 0
+   },
+   "gate": {
+    "pi:rst_n[0]": 0
+   }
+  },
+  "reset_cycles": 4,
+  "release_edges": 8,
+  "n_release": 0,
+  "release": [],
+  "n_universal_raw_D": 0,
+  "universal_raw_D": [],
+  "raw_base_steps": 0,
+  "n_universal_raw_prefix": 0,
+  "universal_raw_prefix": [],
+  "n_kept": 0,
+  "n_reloaded": 0,
+  "n_dropped": 0,
+  "reloaded": [],
+  "dropped": [],
+  "basis": "a constant hypothesis is kept only when the reset state (every reset port asserted for reset_cycles edges from an all-unknown power-up) gives that constant, or an acyclic reload is inductively constant from already established constants; equality/FSM assumptions never establish a constant's base case",
+  "listing": {
+   "file": "/work/lec/noreset_constants.tsv",
+   "sha256": "9281382eae0f24f9f712bdb4a59941a62eb981266c9b391c19101559de2e8b23",
+   "n_kept": 0,
+   "n_dropped": 0
+  }
+ },
+ "t_corr_s": 6.9,
+ "keypoints": {
+  "gold": {
+   "inputs": 730,
+   "flops": 1669,
+   "outputs": 0,
+   "ands": 10929
+  },
+  "gate": {
+   "inputs": 112,
+   "flops": 3271,
+   "outputs": 0,
+   "ands": 12725
+  },
+  "matched": 1671,
+  "gold_constant_flops": {
+   "n": 0,
+   "first": []
+  },
+  "paired_flops": {
+   "n": 2,
+   "first": [
+    "both:ff:u_dut.u_fault_face.q=ff:u_dut.face_fault_state",
+    "both:ff:u_dut.u_rr.relay_q[1]=ff:u_dut.u_rr.relay_q[0]"
+   ]
+  },
+  "gold_unmatched_live": {
+   "n": 0,
+   "first": []
+  },
+  "gate_unmatched": {
+   "n": 0,
+   "first": []
+  },
+  "gold_x_sources": 661,
+  "gold_unwritten_x": {
+   "n": 0,
+   "first": []
+  },
+  "gate_x_sources": 43,
+  "gold_only_compare": {
+   "n": 0,
+   "first": []
+  },
+  "gate_only_compare": {
+   "n": 0,
+   "first": []
+  }
+ },
+ "t_prove_s": 0.3,
+ "x_dont_care_points": {
+  "n": 66,
+  "first": [
+   "ff:u_dut.face_valid",
+   "ff:u_dut.o_d[0]",
+   "ff:u_dut.o_d[10]",
+   "ff:u_dut.o_d[11]",
+   "ff:u_dut.o_d[12]",
+   "ff:u_dut.o_d[13]",
+   "ff:u_dut.o_d[14]",
+   "ff:u_dut.o_d[15]",
+   "ff:u_dut.o_d[16]",
+   "ff:u_dut.o_d[17]",
+   "ff:u_dut.o_d[18]",
+   "ff:u_dut.o_d[19]",
+   "ff:u_dut.o_d[1]",
+   "ff:u_dut.o_d[20]",
+   "ff:u_dut.o_d[21]",
+   "ff:u_dut.o_d[22]",
+   "ff:u_dut.o_d[23]",
+   "ff:u_dut.o_d[24]",
+   "ff:u_dut.o_d[25]",
+   "ff:u_dut.o_d[26]",
+   "ff:u_dut.o_d[27]",
+   "ff:u_dut.o_d[28]",
+   "ff:u_dut.o_d[29]",
+   "ff:u_dut.o_d[2]",
+   "ff:u_dut.o_d[30]",
+   "ff:u_dut.o_d[31]",
+   "ff:u_dut.o_d[3]",
+   "ff:u_dut.o_d[4]",
+   "ff:u_dut.o_d[5]",
+   "ff:u_dut.o_d[6]",
+   "ff:u_dut.o_d[7]",
+   "ff:u_dut.o_d[8]",
+   "ff:u_dut.o_d[9]",
+   "ff:u_dut.o_e",
+   "ff:u_dut.o_t[0]",
+   "ff:u_dut.o_t[10]",
+   "ff:u_dut.o_t[11]",
+   "ff:u_dut.o_t[12]",
+   "ff:u_dut.o_t[13]",
+   "ff:u_dut.o_t[14]"
+  ]
+ },
+ "kept_registers": {
+  "declared": 3,
+  "in_netlist": 3,
+  "constant_proved": {
+   "n": 0,
+   "first": []
+  },
+  "missing": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_removed": {
+   "n": 0,
+   "first": []
+  },
+  "unobservable_reason": null
+ },
+ "counts": {
+  "compare_points": 1673,
+  "proved": 1673,
+  "differs": 0,
+  "undecided": 0
+ },
+ "failing": [],
+ "unproven_points": [],
+ "note": "1673 compare points proved; 1671 key points matched by name, 2 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 66 of them reach an RTL X (don't care: equal wherever the RTL is not X)",
+ "t_total_s": 12.5,
+ "provenance": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: FileNotFoundError: [Errno 2] No such file or directory: '/work/PROVENANCE.json'"
+ }
+}

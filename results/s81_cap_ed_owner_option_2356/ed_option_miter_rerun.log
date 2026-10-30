@@ -1,0 +1,7 @@
+CAP_ED_OWNER_OPTION PASS D=3 cycles12000 payload_mismatch0 fault_plus1_mismatch0 wrongedge_mutant125 OLD_FAULT_CONTRACT_DIFFERENCES125 reset_edges248
+CAP_ED_OWNER_OPTION PASS D=4 cycles12000 payload_mismatch0 fault_plus1_mismatch0 wrongedge_mutant125 OLD_FAULT_CONTRACT_DIFFERENCES125 reset_edges248
+CAP_ED_OWNER_OPTION PASS D=23 cycles12000 payload_mismatch0 fault_plus1_mismatch0 wrongedge_mutant125 OLD_FAULT_CONTRACT_DIFFERENCES125 reset_edges248
+CAP_ED_OWNER_OPTION PASS D=24 cycles12000 payload_mismatch0 fault_plus1_mismatch0 wrongedge_mutant125 OLD_FAULT_CONTRACT_DIFFERENCES125 reset_edges248
+CAP_ED_OWNER_OPTION ALL_PASS payload_cycles0 fault_visibility_cycles1 NOT_ADOPTED
+/srv/opentallas-scratch2/claude/s81-kits-e/ed_miter/s2/tb.sv:26: $finish called at 10002664 (1ps)
+rc2=0
