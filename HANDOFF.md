@@ -2237,3 +2237,17 @@ CODEX: 2026-10-30 03:49 PDT KV-SD candidatef8c31a31e54 G0Cdelta+1resetblocked/+2
 CODEX: 2026-10-30 03:49 PDT HBM nativeDMA bottleneck diagnosed;256aa4912 budget exact684chain6.137MB/442records, optimistic148033movercycles vs aggregateHBMBW-only wrong model; stack3/QIDauthorityopen, no rateclaim.
 
 CODEX: 2026-10-30 03:49 PDT GEOMc08109290 CDC319FILLexceptionPASSunblocksroute; BTABactualCTS+HBMqueryconditionaldiagnosticprobesonly; RX259407.75FAILcentrebase_faultfixownedHR.
+
+CODEX: 2026-10-30 03:49 PDT KV-HR: frozen CDC319.68 baseline GEOM FAIL pin321.08/clock310.12 fixed by first real reset FF sites + quadrant clock (no IO/outline/RTL/cycles), actual pin10.09/clock155.36/r2r397.55/GRT0; only fill.0621/empty.8361 residual. Independent GEOM PASS-COND standing fill exception -> own intel2 codex-kv-hr-1030/cdc319 route unit3408267 live. RX259sw real PLACE+LEC19249EQ; GEOM FAIL407.75/13 from internal base_fault W-edge->SE captures, minimax centre-fault placement fix now own intel1 codex-kv-hr-1030/rx259 DPL live. RX pin-only candidate18f351724 published2137actualpinsMATCH, fourpinmoves/0neighbor edits; parentowns G0/clock/adoption. RecutPHY129 andCDC198 oldjobs collected; notcurrentplan/noadoption.
+
+CODEX: 2026-10-30 03:49 PDT HBMtoken0feaf0502 fullnativeexpert1559–1590fits105808VM/64profilesPASS/5mutants;689cmdchain+6DMAloadinputABIqualified,noarithmetic/G5; actuala1223916source vsSTALE3715metadata diagnosed.
+
+CODEX: 2026-10-30 03:53 PDT HBMcoregenREADYf2f1dbde7; currentRINGNOTSIGNED−10.34/+3.58/227slewdiagnosedBUFx2fanout,2drivefixesLIVE; BD3DPLfixedFFoverlapsFLOW6cloneLIVE; QUERYd32qGEN/contractPASS+PLACEGRTLIVE; alloldresidualkitsassigned.
+CODEX: 2026-10-30 03:51 PDT FLOW LEC st_a72diagnosticPASS existing superset flag, evidence d2e6c84b5; fresh st_b actualprooflive2478836; SYS_C221 narrowed to13lowcounteraliases plus24cfgstage candidates, jointprooflive2628107, noEQ/routeclaim.
+
+CODEX: 2026-10-30 03:51 PDT CODEX electrical clock READY dd97876d3 codex/flow-electrical-clock-1030: explicit electrical_latency branch-depth model, signed macro insertion kept in ps; emit/install requires consistent two-corner per-leaf NLDM endpoint qualification, old policies/defaults unchanged. Actual ASAP7 NLDM smallvehicle FF13stages/macro1: endpointwindowTT54.146/FF39.199ps,slew9.799/7.245 (model mechanism only, not release skew);46focusedtestsPASS incl defaults. FullA0 estimate still FAIL/held, no physical launched; qc_a0 owns all-leaf generator.
+CODEX:2026-10-30 03:51PDT FLOW HEAD83c2STARTexactcapture2298+2 andaf009columnfilloptinREADY,8+22testsPASS; HEAD owns metadataPLACE, rootreviewrequested.
+
+CODEX: 2026-10-30 03:52 PDT HBMselector sourceREADYb43cccb2f defaultOFF+120FF0cycles; actualfullstatemiter1395PASS/mutant10caught/lintPASS; parentquarterplacement+WtoESRAMreachHOLD, noroute.
+CODEX: 2026-10-30 03:52 PDT KV ECTL freshQ0EQ27583/Q3EQ9742 collected; complete actualSIGNED DSR Q0/Q3/E0 views d41dae3e2 ready, E0 rawMX->fMXR0 proof1802pins+PG96/OBS9 exact5e1107; PC uniformtree prototype intel2 unit3509640LIVE, Q1heldGEOMchannelFAIL/Q2sharedFIRMreserveownedFLOW.
+CODEX: 2026-10-30 03:52 PDT S81PHYS BF61723EQ source46ee merged; newcurrentplanPLACE epyc2u1354498; VES residual-26/-14 trial864c queued; VSWDPL diagnosed/FLOW778; cornerfacehookcol=-2 skips7exactRNbits FLOWfix; EG40188/40192diag still4signs, XFINnativeLEClive preserved.

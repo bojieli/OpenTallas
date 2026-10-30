@@ -7688,3 +7688,6 @@ May the single shared VQ hard-core master add an opt-in temporal-only k_slot map
 
 ## OWNER? 2026-10-30 03:52 PDT — HBM finite-VM scratch allocation
 OWNER? May the HBM compiler reserve stack3 flat [0x1d11000000,0x1d20000000) (240MiB), inside the existing weight-excluded DATA_WIN and above the actual MTP column slots, for finite-VM phase publication/spill scratch? Current source-only candidate needs roughly118MiB and must retain exact source HBM map checks before adoption. Actual MTP COLB=0x1d10000000 uses13slots*128KiB=1,703,936B; proposed start leaves14.375MiB above those slots. Prior unreserved0x1f00000000 is physically invalid (local28GiB beyond22.5GB), all442transfers fail capacity; prior symbolic proofs retained. HBM die owner has no scratch-allocation authority. No reservation/adoption is made while this is open; source/compiler and other lanes continue.
+
+## OWNER? 2026-10-30 03:52 PDT S81 physical residual
+OWNER? If unchanged-plan corrective placement cannot close L1 iv->ct_b reach, authorize a narrow future pin event moving i_v on E face from y~70 to y>=150 with its matching partner endpoint (0cycles; estimated worst Manhattan401um vs465.43 actual). Frozenplan remains unchanged; partner/density impact still needs concrete review before adoption. Shared negative-column facehook fix proceeds independently.
