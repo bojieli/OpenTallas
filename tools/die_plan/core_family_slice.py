@@ -333,7 +333,8 @@ def reparent_obstructed_edges(P, smax, model=None, edges=None, max_donors=4):
             if last in P['land']:P['land'][last]=(segs[-1],u)
             prediction=M7.model_x(P,*model)[0] if model else None
             score=objective(prediction) if model else (sum(segs),drv,b)
-            valid=not model or (all(prediction[c]['leaf_out_slew_max']<=GATES['slew_ps'] for c in ('TT','FF'))
+            valid=not model or (all(prediction[c][key]<=GATES['slew_ps'] for c in ('TT','FF')
+                                   for key in ('leaf_slew_in_max','leaf_out_slew_max'))
                                      and score < objective(baseline))
             if valid and (best is None or score<best[0]):
                 best=(score,new_nodes,segs,paths,dict(P['land']),drv,b,stub,bound,hub,prediction)
