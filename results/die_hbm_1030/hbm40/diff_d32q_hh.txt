@@ -1,0 +1,47 @@
+CHG /note
+ADD /latency/lanes/L700
+ADD /latency/lanes/L701
+CHG /latency/lanes/L96/cycles
+CHG /latency/lanes/L96/pad
+CHG /latency/lanes/L96m/cycles
+CHG /latency/lanes/L96m/pad
+ADD /partition_types/q_b112__physical_v1/ft_slots[L700x1]
+ADD /partition_types/q_b112__physical_v1/ft_slots[L701x3]
+ADD /partition_types/q_b112/ft_slots[L700x3]
+ADD /partition_types/q_b112/ft_slots[L701x1]
+CHG /partition_types/q_hub_ne/buses[L4_i]/width
+CHG /partition_types/q_hub_ne/buses[L4_o]/width
+ADD /partition_types/q_hub_ne/buses[L700_o]
+ADD /partition_types/q_hub_ne/buses[L701_i]
+CHG /partition_types/q_hub_nw/buses[L4_i]/width
+CHG /partition_types/q_hub_nw/buses[L4_o]/width
+ADD /partition_types/q_hub_nw/buses[L700_i]
+ADD /partition_types/q_hub_nw/buses[L701_o]
+CHG /partition_types/root/ft_slots[L4mx1]/width
+CHG /partition_types/root/ft_slots[L4mx1]/bit_sites_um
+CHG /partition_types/root/ft_slots[L4x1]/width
+CHG /partition_types/root/ft_slots[L4x1]/bit_sites_um
+ADD /partition_types/root/ft_slots[L700x2]
+ADD /partition_types/root/ft_slots[L701x2]
+CHG /die/label
+ADD /latency_groups[SOUTHERN_VMS_NE_hub]
+ADD /latency_groups[SOUTHERN_VMS_NW_hub]
+ADD /lanes[L700]
+ADD /lanes[L701]
+CHG /ports[L4_0]/width
+CHG /ports[L4_1]/width
+CHG /ports[L4m_0]/width
+CHG /ports[L4m_1]/width
+ADD /ports[L700_0]
+ADD /ports[L700_1]
+ADD /ports[L700_2]
+ADD /ports[L700_3]
+ADD /ports[L701_0]
+ADD /ports[L701_1]
+ADD /ports[L701_2]
+ADD /ports[L701_3]
+FILE ADD coherent_input_report.json
+FILE ADD g0_report.json
+FILE ADD hh_station_review.png
+FILE CHG lane_add_report.json
+FILE ADD ordered_station_report.json
