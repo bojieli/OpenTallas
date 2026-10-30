@@ -1,0 +1,37 @@
+VMFC_BEGIN edge=168 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=184 epoch=7 buffer=0 row=20752 col=0
+NATIVE_PHY_FILL phase=0 first=160 ready=1727 edges=1567 RD=1024 fills=1024 REF=208
+CP_CMD index=1 edge=1879 nativecycle=1844 issue_at=1852 drain_at=1936 n=512
+VM_LOAD_DONE index=1 edge=1971 cycle_post=1937 drain_at=1936
+CP_CMD index=2 edge=1979 nativecycle=1944 issue_at=1952 drain_at=2036 n=512
+VM_LOAD_DONE index=2 edge=2071 cycle_post=2037 drain_at=2036
+CP_CMD index=3 edge=2079 nativecycle=2044 issue_at=2052 drain_at=2136 n=512
+VM_LOAD_DONE index=3 edge=2171 cycle_post=2137 drain_at=2136
+CP_CMD index=4 edge=2179 nativecycle=2144 issue_at=2152 drain_at=2236 n=512
+VM_LOAD_DONE index=4 edge=2271 cycle_post=2237 drain_at=2236
+CP_CMD index=5 edge=2279 nativecycle=2244 issue_at=2252 drain_at=2336 n=512
+VM_LOAD_DONE index=5 edge=2371 cycle_post=2337 drain_at=2336
+CP_CMD index=6 edge=2379 nativecycle=2344 issue_at=2352 drain_at=2436 n=512
+VM_LOAD_DONE index=6 edge=2471 cycle_post=2437 drain_at=2436
+CP_CMD index=7 edge=2479 nativecycle=2444 issue_at=2452 drain_at=2536 n=512
+VM_LOAD_DONE index=7 edge=2571 cycle_post=2537 drain_at=2536
+CP_CMD index=8 edge=2579 nativecycle=2544 issue_at=2552 drain_at=2636 n=512
+VM_LOAD_DONE index=8 edge=2671 cycle_post=2637 drain_at=2636
+CP_CMD index=9 edge=2679 nativecycle=2644 issue_at=2652 drain_at=2736 n=512
+VM_LOAD_DONE index=9 edge=2771 cycle_post=2737 drain_at=2736
+CP_CMD index=10 edge=2779 nativecycle=2744 issue_at=2752 drain_at=2836 n=512
+VM_LOAD_DONE index=10 edge=2871 cycle_post=2837 drain_at=2836
+CP_CMD index=11 edge=2879 nativecycle=2844 issue_at=2852 drain_at=2936 n=512
+VM_LOAD_DONE index=11 edge=2971 cycle_post=2937 drain_at=2936
+CP_CMD index=12 edge=2979 nativecycle=2944 issue_at=2952 drain_at=3036 n=512
+VM_LOAD_DONE index=12 edge=3071 cycle_post=3037 drain_at=3036
+CP_CMD index=13 edge=3079 nativecycle=3044 issue_at=3052 drain_at=3136 n=512
+VM_LOAD_DONE index=13 edge=3171 cycle_post=3137 drain_at=3136
+CP_CMD index=14 edge=3179 nativecycle=3144 issue_at=3152 drain_at=3236 n=512
+VM_LOAD_DONE index=14 edge=3271 cycle_post=3237 drain_at=3236
+VMFC_BEGIN edge=6475 epoch=8 buffer=0 row=20752 col=0
+NATIVE_PHY_FILL phase=1 first=6467 ready=6477 edges=10 RD=1024 fills=1024 REF=848
+VMFC_FILL edge=6491 epoch=8 buffer=0 row=20752 col=0
+[5409000000] %Fatal: tb_role_provider.sv:256: Assertion failed in tb_role_provider: CP_PROVIDER_FILL_READY
+%Error: tb_role_provider.sv:256: Verilog $stop
+Aborting...

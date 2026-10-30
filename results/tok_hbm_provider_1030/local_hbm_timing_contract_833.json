@@ -1,0 +1,336 @@
+{
+  "scope": "Authoritative LOCAL source/model assumptions extracted for default-OFF833timing candidate. No physical/licensedPHY or G5 adoption.",
+  "selected_logical_clock_ps": 833,
+  "source_old_DFI_controller_clock_ps": 1024,
+  "sources": {
+    "r14_selected": {
+      "path": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+      "sha256": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750"
+    },
+    "h9b_selected": {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+      "sha256": "fb3cc9676c535510fa689ae1a69333a3bcbeec2558146fcd62f2bcdabe701ffc"
+    },
+    "refresh_cfg": {
+      "path": "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv",
+      "sha256": "f43194b2c7c7a114de5c3beabf34b026afa7c0666449c25cb903c1945946832f"
+    },
+    "timing_model": {
+      "path": "tools/qwen_hbm_sustained_bw_model.py",
+      "sha256": "f405571eeedf5e4c4ebd36ba723fdac9b7106f8d2dc12a6dc9f2dbffff4deed9"
+    },
+    "base_DRAM_ps": {
+      "path": "rtl/hdc/kv/ot_hdc_hbm_model.sv",
+      "sha256": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d"
+    },
+    "REFpb_ps": {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv",
+      "sha256": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4"
+    },
+    "PHY_abstract": {
+      "path": "physical/asap7_memory_macros/ot_hbm3e_phy/ot_hbm3e_phy.json",
+      "sha256": "97386fab0eb91806e169e44bfde35501bea0d0677f12e95957b24f9be8e65444"
+    }
+  },
+  "anchors": {
+    "r14_parameters": "r14_selected:68..87",
+    "timing_source": "timing_model:43..90",
+    "PHY_envelope": "PHY_abstract:claim_boundary/interface/timing_grade",
+    "old_row_TDM": "r14_selected:186..187,585",
+    "timer_widths": "r14_selected:130,223..248,280..285,553..554"
+  },
+  "minimum_cooldowns": [
+    {
+      "parameter": "T_RCD",
+      "physical_ps": 19375,
+      "old_1024ps_cycles": 19,
+      "ceil_833ps_cycles": 24,
+      "source_expression": "RCDRD_PS",
+      "anchor": "base_DRAM_ps:70",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RP",
+      "physical_ps": 16250,
+      "old_1024ps_cycles": 16,
+      "ceil_833ps_cycles": 20,
+      "source_expression": "RP_PS",
+      "anchor": "base_DRAM_ps:72",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RAS",
+      "physical_ps": 28125,
+      "old_1024ps_cycles": 28,
+      "ceil_833ps_cycles": 34,
+      "source_expression": "RAS_PS",
+      "anchor": "base_DRAM_ps:73",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RTP",
+      "physical_ps": 5625,
+      "old_1024ps_cycles": 6,
+      "ceil_833ps_cycles": 7,
+      "source_expression": "RTP_PS",
+      "anchor": "base_DRAM_ps:75",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_CCDL",
+      "physical_ps": 2560,
+      "old_1024ps_cycles": 3,
+      "ceil_833ps_cycles": 4,
+      "source_expression": "TCCDL_PS",
+      "anchor": "base_DRAM_ps:67",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RRDS",
+      "physical_ps": 2500,
+      "old_1024ps_cycles": 3,
+      "ceil_833ps_cycles": 4,
+      "source_expression": "RRDS_PS",
+      "anchor": "base_DRAM_ps:76",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RRDL",
+      "physical_ps": 3125,
+      "old_1024ps_cycles": 4,
+      "ceil_833ps_cycles": 4,
+      "source_expression": "RRDL_PS",
+      "anchor": "base_DRAM_ps:77",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_FAW",
+      "physical_ps": 15000,
+      "old_1024ps_cycles": 15,
+      "ceil_833ps_cycles": 19,
+      "source_expression": "FAW_PS",
+      "anchor": "base_DRAM_ps:78",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RFC",
+      "physical_ps": 350000,
+      "old_1024ps_cycles": 342,
+      "ceil_833ps_cycles": 421,
+      "source_expression": "RFC_PS",
+      "anchor": "base_DRAM_ps:82",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RFCPB",
+      "physical_ps": 200000,
+      "old_1024ps_cycles": 196,
+      "ceil_833ps_cycles": 241,
+      "source_expression": "RFCPB_PS",
+      "anchor": "REFpb_ps:124",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RREFD",
+      "physical_ps": 8000,
+      "old_1024ps_cycles": 8,
+      "ceil_833ps_cycles": 10,
+      "source_expression": "RREFD",
+      "anchor": "timing_model:47..65; EXPLICIT ASSUMPTION",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RCDW",
+      "physical_ps": 9375,
+      "old_1024ps_cycles": 10,
+      "ceil_833ps_cycles": 12,
+      "source_expression": "RCDWR_PS",
+      "anchor": "base_DRAM_ps:71",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_RTW",
+      "physical_ps": 9948,
+      "old_1024ps_cycles": 10,
+      "ceil_833ps_cycles": 12,
+      "source_expression": "RTW_PS",
+      "anchor": "base_DRAM_ps:81",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_WTR",
+      "physical_ps": 13524,
+      "old_1024ps_cycles": 14,
+      "ceil_833ps_cycles": 17,
+      "source_expression": "CWL_PS+BURST_PS+WTRL_PS=6250+1024+6250",
+      "anchor": "base_DRAM_ps:66,69,80; r14_selected:38",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "T_WRR",
+      "physical_ps": 27899,
+      "old_1024ps_cycles": 28,
+      "ceil_833ps_cycles": 34,
+      "source_expression": "CWL_PS+BURST_PS+WR_PS=6250+1024+20625",
+      "anchor": "base_DRAM_ps:66,69,74; r14_selected:41",
+      "rounding": "ceil minimum separation"
+    },
+    {
+      "parameter": "implicit_T_CCDS",
+      "physical_ps": 1024,
+      "old_1024ps_cycles": 1,
+      "ceil_833ps_cycles": 2,
+      "source_expression": "BURST_PS",
+      "anchor": "base_DRAM_ps:66; r14_selected:7..9",
+      "rounding": "ceil minimum separation"
+    }
+  ],
+  "maximum_refresh_periods": [
+    {
+      "parameter": "T_REFI",
+      "physical_ps": 3900000,
+      "old_cycles": 3808,
+      "profile_cycles": 4681,
+      "rounding": "floor maximum refresh interval"
+    },
+    {
+      "parameter": "T_REFIPB",
+      "physical_ps": 121875,
+      "old_cycles": 118,
+      "profile_cycles": 144,
+      "rounding": "floor multiple4 for conservative4phaseROW_TDM",
+      "alternate_floor_even_cycles": 146
+    }
+  ],
+  "derived": {
+    "T_RC_cycles": 54,
+    "LEAD_cycles": 58,
+    "internal_LEAD_extra_edges": 4,
+    "CL_ceil_edges": 16,
+    "RSP_assumed_ceil_edges": 13,
+    "external_DRAM_return_edges_to_model_local_CLplusRSP": 29,
+    "native_RREG_edges": 1,
+    "local_CL_RET_edges": 30
+  },
+  "width_obligations": [
+    {
+      "state": "bank.ras",
+      "replicas": 32,
+      "old_bits": 5,
+      "needed_bits": 6,
+      "why": "T_RAS34-1=33"
+    },
+    {
+      "state": "bank.wrr",
+      "replicas": 32,
+      "old_bits": 5,
+      "needed_bits": 6,
+      "why": "T_WRR34-1=33"
+    },
+    {
+      "state": "BG.faw",
+      "replicas": 4,
+      "old_bits": 4,
+      "needed_bits": 5,
+      "why": "T_FAW19-1=18"
+    },
+    {
+      "state": "wtr_c",
+      "replicas": 1,
+      "old_bits": 4,
+      "needed_bits": 5,
+      "why": "T_WTR17-1=16"
+    },
+    {
+      "state": "ref_c/ref_n",
+      "replicas": "source-owned",
+      "old_bits": 8,
+      "needed_bits": 9,
+      "why": "$clog2(2*144+4)=9; input8bit canremainbounded"
+    },
+    {
+      "state": "phase",
+      "replicas": 1,
+      "old_bits": 1,
+      "needed_bits": 2,
+      "why": "ROW4phase candidate; defaultOFF retainsold1bit"
+    }
+  ],
+  "unchanged_capacity_or_policy": {
+    "CRED": 32,
+    "WQ": 32,
+    "AQ_STARVE": 64,
+    "PULLIN": 0,
+    "PHYS_WACT": 2,
+    "OREG": 1,
+    "KREG": 1,
+    "KRREG": 1,
+    "RREG": 1,
+    "WPAY": 1,
+    "QREG": 1,
+    "REL_HOLD": 64
+  },
+  "CA_contract": {
+    "row_min_ps": 1024,
+    "row_grade": "LOCALmodelassumption:oneROWcommand/channel/2tCK",
+    "row_profile": "PC0phase0,PC1phase2mod4;combined2coreedges=1666ps",
+    "column_min_ps": 512,
+    "column_grade": "LOCALJESDorganisation/tCK model",
+    "column_profile": "PC0even,PC1odd;eachPCII2coreedges,channelCA\u2265833ps"
+  },
+  "refresh_boot": {
+    "contract": "one-shotcompiler-owned F20row800; no uniform/fullphasecoverage requirement",
+    "source_range_defaults": [
+      118,
+      236
+    ],
+    "candidate_range": [
+      144,
+      252
+    ],
+    "candidate_PC0to31": [
+      144,
+      150,
+      152,
+      154,
+      160,
+      162,
+      164,
+      170,
+      172,
+      174,
+      180,
+      182,
+      184,
+      190,
+      192,
+      194,
+      200,
+      202,
+      204,
+      210,
+      212,
+      214,
+      220,
+      222,
+      228,
+      230,
+      232,
+      238,
+      240,
+      242,
+      248,
+      250
+    ],
+    "formula": "R=144+floor(P*108/32); R+=(2*(P%2)-R)%4",
+    "physical_stage_settle": "REL_HOLD64 protects3..28relaySTAGES; retainedCDC and64coreedges=53.312ns, not a DRAMns timer"
+  },
+  "holds": [
+    "Allseeds/ROW4phase assumepairedcontrollerreset/phasealignment; physicalreset/clockrelatedpathreviewrequired",
+    "ExistinglicensedPHYabstract isassumed1000ps minperiod/ownreq-rsp ABI, notactualselectedDFIimplementation; actualnativegraphcontainsnoPHYRTL",
+    "RREFD8ns andRSP10ns areexplicitLOCALassumptions",
+    "Current16edgeexternalREADfixture onlycoversCL12.5ns; doesnotcoverRSP10ns orphysicalPHY; newassumedmodelreturn29+RREG1\u219230 isnotalicensedguarantee",
+    "No productionfixedwindowdates/overlap/acceptedtoken rates; actualprofilefillmeasurements pendingbinderRTL+nativefixture",
+    "DefaultOFF mustremainbit/cycleexact; no9bitrefreshport orDFIclockchangeassumed"
+  ]
+}

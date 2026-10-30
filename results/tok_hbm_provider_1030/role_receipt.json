@@ -1,0 +1,75 @@
+{
+  "status": "PASS_SELECTED_ROLE89_NATIVE_SOURCE_MECHANISM_ONLY",
+  "source_manifest": "shared_source_dependencies.json",
+  "ROLE_source_manifest": "selected_role_sources.json",
+  "baseline_unit": "intel1:oth-ubuntu-2235406-1793373627",
+  "wrong_bank_unit": "intel1:oth-ubuntu-2398649-1793374097",
+  "clock_ps": 833,
+  "ROLE": {
+    "module": "hfd_hgi_vm_calendar_f20_role",
+    "W": 89,
+    "target": 58,
+    "table_rows_per_page": 18,
+    "pages": 3,
+    "total_programme_payload_bytes": 1728,
+    "BEGIN_edges": [
+      168,
+      6475,
+      12740
+    ],
+    "FILL_edges": [
+      184,
+      6491,
+      12756
+    ],
+    "launch_edges": [
+      160,
+      6467,
+      12732
+    ],
+    "ready_edges": [
+      1727,
+      7992,
+      14003
+    ],
+    "launch_to_ready_edges": [
+      1567,
+      1525,
+      1271
+    ],
+    "FILL_to_ready_edges": [
+      1543,
+      1501,
+      1247
+    ]
+  },
+  "host_preparation": "Wait for this calendar FILL event after its new BEGIN, then actual owned block_ready; no on-chip ready wait or production host loop assumed.",
+  "LOADs": 42,
+  "STOREs": 3,
+  "physical_WR_sectors": 24,
+  "physical_RD_sectors": 3072,
+  "delivery_fill_sectors": 3072,
+  "VM_packets": 2688,
+  "native_DQdone": 2688,
+  "status_qualified_LOADdone": 42,
+  "actual_SRAM_readbacks": 2688,
+  "step_to_packet_edges": 8,
+  "DQcapture_to_ACK_edges": 4,
+  "first_step": 1887,
+  "last_step": 15526,
+  "first_packet": 1895,
+  "last_packet": 15534,
+  "history": {
+    "failed_unit": "intel1:oth-ubuntu-2110836-1793373108",
+    "log": "role_stale_ready_FAIL.log",
+    "cause": "Host accepted the previous epoch fullness level before the new calendar BEGIN cleared it; phase1 readiness check failed before launching incomplete DMA.",
+    "fix": "Observe the actual new FILL event, then check owned readiness; unchanged DUT RTL."
+  },
+  "holds": [
+    "Actual native F20 cfg/desc/launch ports; AXI parser and global status-aggregate gating are not instantiated",
+    "No existing RAW consumers/RAW-COPY coexistence qualification; private COPY candidate RAWstart remains0",
+    "Bare source bodies and real SRAM behavior; future +1in/+1out physical faces and routed paths not adopted",
+    "Physical HBM ns timing not qualified: old controller 1024ps timing counts on833logicalclock; default-OFF833 profile pending; READ16 is functional only",
+    "No fullprogramme/dynamicEngram/fullstack/scratch/acceptedtoken rate qualification"
+  ]
+}

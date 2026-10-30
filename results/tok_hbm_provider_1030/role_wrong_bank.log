@@ -1,0 +1,7 @@
+VMFC_BEGIN edge=168 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=184 epoch=7 buffer=0 row=20752 col=0
+NATIVE_PHY_FILL phase=0 first=160 ready=1727 edges=1567 RD=1024 fills=1024 REF=208
+CP_CMD index=1 edge=1879 nativecycle=1844 issue_at=1852 drain_at=1936 n=512
+[1589000000] %Fatal: tb_role_provider.sv:188: Assertion failed in tb_role_provider: VM_PROVIDER_FAULT first=1900 edge=1908 slot=0 bank=1 late=0 actual_native_acks=8 load_done=0 vm_fault=000000ff
+%Error: tb_role_provider.sv:188: Verilog $stop
+Aborting...
