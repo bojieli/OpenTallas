@@ -427,9 +427,10 @@ def land_ring_captures(D, land, guard):
     -divide_by 1 forwarded clock outputs) are returned as kit-declared clock pins.  Missing / invalid metadata grants
     no exemption and is recorded in errors."""
     res = dict(caps={}, clock_exports=[], errors=[], rejected=[], buses=[])
-    if not isinstance(land, dict) or not str(land.get("schema", "")).startswith("land_slots/") \
+    if not isinstance(land, dict) or not (str(land.get("schema", "")).startswith("land_slots/")
+                                         or land.get("schema") == "opentallas.land_slots.v1") \
             or not isinstance(land.get("buses"), dict):
-        res["errors"].append("land_slots: want {schema: land_slots/N, buses: {...}}")
+        res["errors"].append("land_slots: want {schema: land_slots/N or opentallas.land_slots.v1, buses: {...}}")
         return res
     if not isinstance(guard, dict) or guard.get("verdict") != "PASS" or not isinstance(guard.get("flops", {}), dict):
         res["errors"].append(f"face_guard verdict {guard.get('verdict') if isinstance(guard, dict) else None} (want PASS)")
@@ -480,7 +481,19 @@ def land_ring_captures(D, land, guard):
     ex = guard.get("clock_exports", {})
     if isinstance(ex, dict):
         outs = {p["name"] for p in D.pins if p["io"] == "OUTPUT"}
-        res["clock_exports"] = sorted(t for t in ex if t in outs)
+        names = {p["name"] for p in D.pins}
+        accepted = set()
+        for t in ex:
+            if t in outs:
+                accepted.add(t)
+            elif t + "[0]" in outs:
+                # A width-one bound RTL port [0:0] becomes BTerm <port>[0].
+                # Keep the face_guard clock proof; resolve only a singleton
+                # actual bit inventory, never a slice of a wider output bus.
+                bits = {n for n in names if re.fullmatch(re.escape(t) + r"\[\d+\]", n)}
+                if bits == {t + "[0]"}:
+                    accepted.add(t + "[0]")
+        res["clock_exports"] = sorted(accepted)
     return res
 
 

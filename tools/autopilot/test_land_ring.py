@@ -48,6 +48,16 @@ def test_declared_ring_via_mux_registers_at_farthest_slot(tmp_path):
     assert m['pin_reg_max'] == 400 and m['pin_reg_max'] > G.PINREG_HARD  # distance still judged
 
 
+def test_core_kit_v1_declaration_uses_the_same_capture_checks(tmp_path):
+    land = dict(LAND, schema="opentallas.land_slots.v1")
+    D = dump(tmp_path, far=400)
+    assert reg(D, land=land) == reg(D)  # includes the farthest-slot distance gate
+    rejected, m = reg(D, land=land, guard=dict(GUARD, verdict="FAIL"))
+    assert rejected["errors"] and not rejected["caps"] and m["pins_unregistered"] == 3
+    rejected, _ = reg(D, land=dict(land, schema="opentallas.land_slots.v2"))
+    assert rejected["errors"] and not rejected["caps"]
+
+
 def test_undeclared_mux_input_and_ring_start_stay_unregistered(tmp_path):
     D = dump(tmp_path)
     _, m = reg(D, land={"schema": "land_slots/3", "buses": {}}, guard=GUARD)
@@ -76,3 +86,16 @@ def test_missing_or_invalid_metadata_grants_nothing(tmp_path):
     (tmp_path / 'l.json').write_text(json.dumps(LAND)); (tmp_path / 'g.json').write_text(json.dumps(GUARD))
     m = G.metrics(str(tmp_path / 'dump.tsv'), land_slots=str(tmp_path / 'l.json'), face_guard=str(tmp_path / 'g.json'))
     assert m['land_ring']['pins'] == 1 and m['pins_unregistered'] == 1 and m['pin_reg_max'] == 40
+
+
+def test_declared_clock_export_resolves_only_a_singleton_actual_bit_zero(tmp_path):
+    dump(tmp_path)
+    p = tmp_path / 'dump.tsv'
+    p.write_text(p.read_text().replace('P\t2\tfclk_o\t', 'P\t2\tfclk_o[0]\t'))
+    r, m = reg(G.Design(p))
+    assert r['clock_exports'] == ['fclk_o[0]']
+    assert m['pins_unregistered'] == 1 and m['unregistered_sample'] == ['go_i']
+    # A declared scalar cannot excuse either bit of a real vector.
+    p.write_text(p.read_text() + 'P\t3\tfclk_o[1]\tOUTPUT\tSIGNAL\tM4\t600\t60\n')
+    r, m = reg(G.Design(p))
+    assert r['clock_exports'] == [] and m['pins_unregistered'] == 3

@@ -442,6 +442,19 @@ def strap_bits(value, width):
     return int(value) % (1 << int(width))
 
 
+def reader_start_depth(plan, tn):
+    """Optional uniform ring-reader START transport; logical origin is unchanged."""
+    cfg = plan["partition_types"][tn].get("clock", {}).get("landing_reader_start")
+    if cfg is None:
+        return 0
+    if not isinstance(cfg, dict):
+        raise BindError(f"{tn}: landing_reader_start must be an object")
+    depth = cfg.get("depth")
+    if isinstance(depth, bool) or not isinstance(depth, int) or depth < 1:
+        raise BindError(f"{tn}: landing_reader_start.depth must be an integer >= 1")
+    return depth
+
+
 # START-TREE compose slice (DIE-HEAD-11, opt-in by a bind with start_tree="clock"): a child region's start no longer rides
 # a landed data crossing; it arrives on ONE dedicated start pin of its origin partition (cland_tstart_in), launched
 # from the parent origin partition's cland_tstart_out (= its cland_start, one pin per partition, fanned out at the die
@@ -473,7 +486,10 @@ def strap_ties(ca, plan):
         q, bus = p["dst"]["part"], p["dst"]["bus"]
         if bus in inst_bus[q]:
             raise BindError(f"strap ties: two count-aligned crossings land on {q}.{bus}")
-        inst_bus[q][bus] = dict(K=int(c["K"]), depth=int(c["depth"]), port=pid, tree=bool(c["tree"]))
+        # Only the reader count starts R edges later.  c_new-K_new equals
+        # c_old-K_old exactly when K_new=K_old-R (modulo the ring count width).
+        inst_bus[q][bus] = dict(K=int(c["K"]) - reader_start_depth(plan, ptype[q]),
+                               depth=int(c["depth"]), port=pid, tree=bool(c["tree"]))
     cparts = ca.get("parts")
     role = {}
     landed = set(inst_bus) | {ports[pid]["src"]["part"] for pid in ca["ports"]}

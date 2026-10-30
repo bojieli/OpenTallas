@@ -8,6 +8,7 @@ placement, waive clocks, or silently split hardened types.
 """
 import hashlib
 import json
+import math
 import re
 from collections import defaultdict
 from pathlib import Path
@@ -376,9 +377,14 @@ class Landings:
                     raise LandingError(f"count-aligned landing {pid}: no K/DEPTH/latency in the bind table")
                 if int(c["depth"]) not in (4, 8, 16):
                     raise LandingError(f"count-aligned landing {pid}: DEPTH {c['depth']} not 4/8/16")
+                import count_align_bind as CAB
+                reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
-                           ring_offset=None, ring_k=int(c["K"]), start_tree_port=bool(c["tree"]))
+                           ring_offset=None, ring_k=int(c["K"]) - reader_depth, start_tree_port=bool(c["tree"]))
+                if reader_depth:
+                    row.update(reader_start_depth=reader_depth, logical_ring_k=int(c["K"]),
+                               boot_extra_cycles=reader_depth, steady_data_cycles_added=0)
             self.rows.append(row)
             self.ins[dp][db] = row
             self.outs[sp].add(sb)
@@ -671,6 +677,46 @@ class Landings:
                                   ports=dict(ready=spec["ready_port"],fault=spec["fault_port"]),gating="ready AND, fault OR",
                                   added_data_cycles=0,added_external_ports=0,check="native leaf header (gen_rtl)")
 
+    def _reader_start_rtl(self, tn, bus, body, logic, type_key=None):
+        """Transport the mature origin to one reader; mission/writer START stay unchanged."""
+        key = type_key or tn
+        cfg = self.types[key].get("clock", {}).get("landing_reader_start")
+        if cfg is None:
+            return "cland_start"
+        import count_align_bind as CAB
+        depth = CAB.reader_start_depth(self.plan, key)
+        branch = cfg["branches"][bus]
+        stages = branch.get("stages", []) if isinstance(branch, dict) else []
+        if len(stages) != depth:
+            raise LandingError(f"{tn}.{bus}: reader START needs exactly {depth} physical stages")
+        records = []
+        prev = "cland_start"
+        for i, stage in enumerate(stages):
+            xy, raw = stage.get("xy_um"), stage.get("raw_reset")
+            if (not isinstance(xy, list) or len(xy) != 2 or
+                    any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) for x in xy)):
+                raise LandingError(f"{tn}.{bus}: reader START stage {i} needs finite xy_um")
+            if not isinstance(raw, str) or not re.fullmatch(r"[A-Za-z_]\w*", raw):
+                raise LandingError(f"{tn}.{bus}: reader START stage {i} needs a local registered raw reset")
+            # Existing wavefront relays, not an invented/resetless control net.
+            registered = re.search(r"\bot_dp_rrelay\s+\w+\s*\([^;]*?\.q\(\s*" +
+                                   re.escape(raw) + r"\s*\)[^;]*?\);", body + "\n" + "\n".join(logic), re.S)
+            if not registered:
+                raise LandingError(f"{tn}.{bus}: reader START raw reset {raw} has no registered wavefront driver")
+            name = f"u_cland_reader_start_{ident(bus)}_{i}"
+            net = f"cland_reader_start_{ident(bus)}_{i}"
+            logic += [f"    wire {net};",
+                      f'    (* keep = "true" *) ot_dp_landing_relay {name} (.clk(clk), .rst_raw_n({raw}), '
+                      f".d({prev}), .q({net}));"]
+            records.append(dict(instance=name, net=net, d=prev, xy_um=list(xy), raw_reset=raw,
+                                stage=i, control_cycles_added=depth, steady_data_cycles_added=0))
+            prev = net
+        self.reset_placements.setdefault(tn, {})[bus]["reader_start"] = dict(
+            depth=depth, stages=records, ring_reset=prev, K_adjustment=-depth,
+            boot_extra_cycles=depth, steady_data_cycles_added=0,
+            qualification="local raw-reset release and actual placed hops require plan timing")
+        return prev
+
     def type_rtl(self, tn, text, base=None, inst=None, depth=None):
         """Emit actual landing hardware before each incoming boundary/station.
 
@@ -681,6 +727,12 @@ class Landings:
         # hardware is per plan type (mask uniformity over all T instances is checked in __init__).
         key = base or tn
         mask = self.by_type[key]
+        reader_cfg = self.types[key].get("clock", {}).get("landing_reader_start")
+        if reader_cfg is not None:
+            if not self.ca:
+                raise LandingError(f"{tn}: landing_reader_start requires count-aligned rings")
+            if set(reader_cfg.get("branches", {})) != set(mask["inputs"]):
+                raise LandingError(f"{tn}: landing_reader_start branches must cover exactly every input ring")
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
         if not mask["inputs"] and not mask["outputs"] and not active_collector:
@@ -826,21 +878,22 @@ class Landings:
             if cat:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
+                reader_start = self._reader_start_rtl(tn, b, body, logic, type_key=key)
                 if cat.get("straps"):
                     kw = cat["rings"][b]["kw"]
                     extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]
                     ring_mod = f"ot_dp_clk_landing_cas #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}))"
-                    ring_rst = (f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start), "
+                    ring_rst = (f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n({reader_start}), "
                                 f".strap_k(strap_ca_k_{b})")
                 else:
                     ring_mod = (f"ot_dp_clk_landing_ca #(.W({{w}}), .DEPTH({cat['rings'][b]['depth']}), "
                                 f".K({cat['rings'][b]['K']}))")
-                    ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n(cland_start)"
+                    ring_rst = f".t_rst_n(cland_fstart_in_{b}), .clk(clk), .rst_n({reader_start})"
                 if status_copy:
                     ring_mod = ring_mod[:-1] + ", .CONTROL_STATUS_COPY(1))"
                     self.reset_placements[tn][b].update(control_status_copy=True,
                         status_copy_flops=2 * int(cat["rings"][b]["depth"]), status_copy_added_cycles=0)
-                self.reset_placements[tn][b].update(ring_rst_n="cland_start", origin_raw_reset=reset)
+                self.reset_placements[tn][b].update(ring_rst_n=reader_start, origin_raw_reset=reset)
             else:
                 # per-row ring form (main: ring_module/ring_params/ring_ports sidecar); default = today's ring
                 rpar = "".join(f", .{k}({v})" for k, v in sorted(r.get("ring_params", {}).items()))
@@ -1418,6 +1471,13 @@ class Landings:
             # The existing same-clock relay is the typed count-origin sampler.
             # Its input is die-timed; adding another input FF would shift K.
             buses["cland_rstart_in"] = {"form": "origin_start", "origin": "u_cland_rstart_rx"}
+            copies = [f"u_cland_fstart_{b}" for b in sorted(self.by_type[tn]["outputs"])]
+            if self.tstart and self.tstart["type_pins"].get(tn, {}).get(START_PIN_OUT):
+                copies.append("u_cland_tstart_o")
+            if copies:
+                # Every named private export is a physical same-D/reset/clock
+                # copy of the typed origin, never an arbitrary extra sampler.
+                buses["cland_rstart_in"]["copies"] = copies
         if origin:
             buses[START_PIN_IN] = {"form": "origin_start", "origin": origin}
         return {"schema": LAND_SLOTS_SCHEMA, "buses": buses} if buses else None

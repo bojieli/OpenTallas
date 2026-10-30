@@ -1,0 +1,7 @@
+Existing r4 GRT FAIL preserved at intel2 codex-head-mesh-2249/run_r4.log: OT_VCLK_MEASURED_HOLD pin-register mean unavailable(samples542,missing0,clocks2). Root cause is forwarded writer inclusion in measured-hold helper after signoff/pinreg scopes were fixed.
+Narrow shared correction reads golden-SDC OT_FWD_RING_INPUTS declarations; excludes only those actual clock families by clock_family ancestry. Every other actual family remains in the census, including independent core roots (no global clk-name exemption). Without forwarded declarations the legacy selection and result are unchanged. Generated local descendants group under their real root; ambiguous selected endpoints still fail through the existing missing-sample gate.
+13 focused tests PASS. Main negative control:2 FAIL/1PASS, including unchanged no-forwarded control. Existing band and mode isolation tests retained.
+Actual read-only replay, same r3 routed FF SPEF/ODB/netlist/constraints, unit3007619 exit0 (first probe missing-helper loader failure preserved):
+HEAD_VMH_BEFORE 198.37482096361418 542 0 2
+HEAD_VMH_AFTER 337.33383716791394 248 0 1
+Corrected mean matches actual independent signoff/pinreg248regset337.3ps;342.67 bound±40 retained, margin10 retained. No physical rebuild or repair occurred in this replay. Source adoption goes through shared ROOT-MERGE; actual GRT retry after geometry repair.

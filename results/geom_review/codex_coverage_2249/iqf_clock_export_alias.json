@@ -1,0 +1,55 @@
+{
+  "baseline_failures": [
+    "singleton_clock_bit0",
+    "native_core_schema_v1"
+  ],
+  "clock_root_exclusions": [
+    "clk",
+    "clk_t1",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9",
+    "fclk_in_ft1_i[0]",
+    "fclk_in_idx_i0[0]",
+    "fclk_in_ql_i0[0]"
+  ],
+  "before": {
+    "capture_pins": 2397,
+    "clock_exports": [],
+    "unregistered": 5,
+    "unregistered_sample": [
+      "fclk_out_cland_up[0]",
+      "fclk_out_flt_o0[0]",
+      "fclk_out_ft0_o[0]",
+      "fclk_out_idx_o0[0]",
+      "fclk_out_qc_o0[0]"
+    ],
+    "pin_reg_max": 1325.35,
+    "pin_reg_p90": 1162.13
+  },
+  "after": {
+    "capture_pins": 2397,
+    "clock_exports": [
+      "fclk_out_cland_up[0]",
+      "fclk_out_flt_o0[0]",
+      "fclk_out_ft0_o[0]",
+      "fclk_out_idx_o0[0]",
+      "fclk_out_qc_o0[0]"
+    ],
+    "unregistered": 0,
+    "unregistered_sample": [],
+    "pin_reg_max": 1325.35,
+    "pin_reg_p90": 1162.13
+  }
+}
