@@ -1,0 +1,37 @@
+{
+  "status": "PASS_CURRENT_SOURCE_PAGE_LOCAL_ENTRY_LOADS",
+  "die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+  "source_asbuilt_sha256": "062ef0c41db92b2c3b89369cdffd96f2cb2dbdee2ec0f4c3050f4652123f3dec",
+  "layer": "L14",
+  "pages": 40,
+  "target5_commands": 3920,
+  "HLOAD_commands": 80,
+  "GAIN_commands": 80,
+  "commands_per_page": 102,
+  "reserved_KIT_END_rows": 2,
+  "native_page_capacity": 128,
+  "templates_per_page": 102,
+  "native_template_capacity": 128,
+  "native_HOST_words": 16360,
+  "local_HOST_reservation_at5edges": 81800,
+  "retire_floor_range": [
+    338,
+    482
+  ],
+  "same_actual_3920_payloads_preserved": true,
+  "controls_caught": [
+    "stale_HLOAD_same_edge_as_store",
+    "GAIN_before_HLOAD_store",
+    "premature_page_retirement",
+    "encoded_PW_date_corruption",
+    "wrong_bound_arrival_age",
+    "wrong_GAIN_source_payload"
+  ],
+  "rootphase_qualified": false,
+  "physical_START_qualified": false,
+  "KIT_END_emitted": false,
+  "BEGIN_SEAL_emitted": false,
+  "native_job_sealed": false,
+  "full_token": false,
+  "independent_exact_route_recheck_pages": 40
+}

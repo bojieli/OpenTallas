@@ -13,6 +13,7 @@ import sys
 ROOT=Path(__file__).resolve().parents[3]
 sys.path[:0]=[str(ROOT/'tools/s81_dv'),str(ROOT/'tools/s81_dv/seqhost_timing_1026')]
 from native_boot import compile_boot
+from native_phase import seqhost_phase_contract
 from dv_layer_compile import csr_len,csr_pw,csr_template,pack_row,pw_header,pw_row_words
 
 
@@ -49,7 +50,8 @@ def compose(program, control, timing, cadence, *, mux_config=None, host_booking=
             raise ValueError('reset-phase receipt source identity differs from selected control timing')
         if seqhost_receipt['masters']['dsdv_hostb_seqhost_mux']!=master:
             raise ValueError('reset-phase receipt seqhost timing/variant differs')
-        timing=dict(timing,seqhost_input_clock=seqhost_receipt['seqhost_input_clock'],
+        phase_contract=seqhost_phase_contract(seqhost_receipt)
+        timing=dict(timing,seqhost_input_clock=phase_contract,
                     edge_convention=seqhost_receipt['edge_convention'])
     keys=['f_ks_pin_event_to_issuer_accept','f_ks_pin_event_to_age0_command',
           'calendar_command_to_vo_n','calendar_command_to_vo_s','calendar_command_to_cw']
