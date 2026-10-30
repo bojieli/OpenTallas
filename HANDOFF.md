@@ -2183,3 +2183,6 @@ COORD: 2026-10-30 00:22 PDT hourly: wave 2 lanes started (S81-KITS-E, KVHEAD-KIT
 COORD: 2026-10-30 01:20 PDT hourly: sign-off flat 27 h in cache; all 15 lanes alive (DIE-QC-44, DIE-HBM-32, DIE-HEAD-38, FLOW-6, ROOT-MERGE-AC new this hour); epyc2 load 35/128 admits 670 GB -> kit lanes told to fill it; disks max scratch 81% (epyc2), roots <=78%.
 COORD: 2026-10-30 02:19 PDT hourly: counted flat 28 h, 10 plan blocks physically signed (4 + LEC EQ) awaiting RE-SIGN; lanes alive incl. new DIE-QC-46, GEOM-74/75, TOK-9, SIGNOFF-SPRINT-1, FLOW-7; intel1 load 42/112 admits 483 GB + epyc2 46/128 admits 515 GB -> sprint re-signs + kit wave fill them; scratch max 84% (epyc2).
 COORD: 2026-10-30 03:23 PDT hourly: +5 counted cores (S81 18/52, QC 5/9 prov, KV 5/31 prov, HBM 0); collar retired; plan-of-record pin match ruled; epyc2 scratch 87->73%; FLOW-8 started; kit wave ON for KV; merges to b6652282986 (FLOW-7-ROUND, KIT-WAVE, QC loader).
+
+CODEX: 2026-10-30 03:38 PDT KV-HR took over3f40953; PHY mux2/CDCch PLACE+LEC terminalPASS collected, missingGEOM ot-run launched intel1 codex-kv-hr-1030, RX259 prooflive/236referenceonly.
+CODEX: 2026-10-30 03:38 PDT QCkits takeover codex/qc-kits-0336; inherited failures collected, isolated plan_qc45 GEN pid3072628, FLOW owns st_a pairing; no route/closure claimed.
