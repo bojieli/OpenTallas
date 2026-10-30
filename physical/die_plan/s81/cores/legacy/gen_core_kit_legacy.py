@@ -810,8 +810,10 @@ def plan_pin_sites(pins, outline, spec):
 
 def one_bit_clock_pin(pins, clock_port):
     """Resolve a scalar clock or its sole declared [0] bit; never a wider clock bus."""
+    if any(p["name"] == clock_port for p in pins):
+        return clock_port
     candidates = [p["name"] for p in pins if re.sub(r"\[\d+\]$", "", p["name"]) == clock_port]
-    return candidates[0] if candidates in ([clock_port], [clock_port + "[0]"]) else None
+    return candidates[0] if candidates == [clock_port + "[0]"] else None
 
 
 def clock_roots(spec):
