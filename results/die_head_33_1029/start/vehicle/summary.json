@@ -1,0 +1,23 @@
+{
+ "scope": "DIE-HEAD-33 src25m leaf provider mapping (map-before-flatten)",
+ "mapped_cells": 13264,
+ "mapped_flops": 4786,
+ "planned_flops": 4786,
+ "cell_types": {
+  "INVx1_ASAP7_75t_R": 4781,
+  "OR3x1_ASAP7_75t_R": 2,
+  "OR4x1_ASAP7_75t_R": 1,
+  "OR5x1_ASAP7_75t_R": 1,
+  "AOI21x1_ASAP7_75t_R": 2,
+  "OA21x2_ASAP7_75t_R": 2,
+  "NAND2x1_ASAP7_75t_R": 3,
+  "AND3x1_ASAP7_75t_R": 5,
+  "OAI21x1_ASAP7_75t_R": 2,
+  "NOR2x1_ASAP7_75t_R": 2,
+  "AND4x1_ASAP7_75t_R": 1,
+  "AND2x2_ASAP7_75t_R": 3676,
+  "DFFHQNx1_ASAP7_75t_R": 3683,
+  "DFFLQNx1_ASAP7_75t_R": 1103
+ },
+ "unmapped_types": []
+}
