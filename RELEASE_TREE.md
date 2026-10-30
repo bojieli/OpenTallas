@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 10-29 18:21 PDT by COORD hourly: main ca6c3203d; 0 types signed off on any die; HEAD src25m GRT0+clock PASS (freeze pending bind); KV bind of record eB3b; HBM plan d23a; ROOT-MERGE-X live.
+Updated 10-29 19:23 PDT by COORD hourly: main e4b3808d5; 0 types signed off on any die (20 h flat); frozen S81/KV/HEAD (src25m); HBM plan d24a (all-mismatch bind 163 -> rows HBM-045..048); KV q0 route in slot (OWNER A); ROOT-MERGE-Y live.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
