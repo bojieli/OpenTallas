@@ -18,7 +18,7 @@
   "band_policy": "info",
   "all_buffers_80": true,
   "local_related_model_bound80": true,
-  "related_basis": "Conservative union of ALL saved corner/polarity sink arrivals bounds local related model differences; actualG2 exhaustive pairSTA stillrequired",
+  "related_basis": "Union of ALL SAVED states (TT-rise; FF-rise/fall), not TTboth-edge coverage; actualG2 exhaustive pairSTA stillrequired",
   "verdict": "MODEL_ADMISSION_PASS",
   "historical_window_failures_preserved": true,
   "related_model_envelope": {
@@ -34,5 +34,6 @@
       "span": 45.11027495395342,
       "basis": "Union of every saved rise/fall run at this corner; no extra predictor"
     }
-  }
+  },
+  "finite_saved_state_audit": "finite_saved_state_audit.json PASS; no model rerun"
 }

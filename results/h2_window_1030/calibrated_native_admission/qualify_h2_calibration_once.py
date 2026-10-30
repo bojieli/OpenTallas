@@ -29,6 +29,8 @@ def actual_input(plan,libs,corner,*args,**kwargs):
  calls.append((corner,kwargs.get('edge','rise')))
  answer=stock(plan,libs,corner,*args,**kwargs)
  arr=answer[1];leafdetail=kwargs['detail'];all_slew={}
+ assert all(math.isfinite(float(value)) for state in arr.values()for value in state), 'nonfinite saved buffer arrival/input'
+ assert all(float(state[1])>=0 for state in arr.values()), 'negative saved buffer input slew'
  for u,node in plan.nodes.items():
   if u in plan.kids:
    net=plan.nets[u];cw,cp,el,rw=A.U.rc_tree(net['pts'],net['edges'],{net['pin'][child]:libs[corner][plan.nodes[child]['cell']]['cin']for child in plan.kids[u]},A.U.R45,A.U.C45)
@@ -36,6 +38,7 @@ def actual_input(plan,libs,corner,*args,**kwargs):
    assert max(vals)-min(vals)<1e-5
    so=vals[0]
   else:so=leafdetail[u]['slew_out']
+  assert math.isfinite(float(so)) and so>=0, 'nonfinite/negative buffer output '+u
   all_slew[u]=dict(input_ps=arr[u][1],output_ps=so)
  traces[corner+'_'+kwargs.get('edge','rise')]={'leaves':answer[0],'node_arrival_slew':arr,'leaf_detail':leafdetail,'all_buffer_slew':all_slew}
  return answer
@@ -73,11 +76,12 @@ checks['all_buffers_80']=all(result[c][key]<=80 for c in ['TT','FF']for key in [
 envelopes={}
 for co in ['TT','FF']:
  values=[value for tag,run in traces.items()if tag.startswith(co+'_')for leaf in run['leaf_detail'].values()for value in leaf['sinks']]
+ assert values and all(math.isfinite(float(value)) for value in values), 'nonfinite saved sink envelope '+co
  offset=arrival[co]
  envelopes[co]=dict(min=min(values)+offset,max=max(values)+offset,span=max(values)-min(values))
 checks['related_model_envelope']=envelopes
 checks['local_related_model_bound80']=all(q['span']<=80 for q in envelopes.values())
-checks['related_basis']='Conservative union of ALL saved corner/polarity sink arrivals; realG2 exhaustive pairSTA stillrequired'
+checks['related_basis']='Union of ALL SAVED states (TT-rise; FF-rise/fall), not TTboth-edge coverage; realG2 exhaustive pairSTA stillrequired'
 checks['verdict']='MODEL_ADMISSION_PASS'if checks['all_buffers_80']and checks['local_related_model_bound80']and pg['verdict']=='PASS'else'HOLD'
 checks['historical_window_failures_preserved']=True
 (O/'checks.json').write_text(json.dumps(checks,indent=2)+'\n');(O/'slice_model.json').write_text(json.dumps(sl,indent=1)+'\n')

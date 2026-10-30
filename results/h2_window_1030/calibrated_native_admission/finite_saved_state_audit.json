@@ -1,0 +1,12 @@
+{
+  "scope": "Read-only check of original saved model arrays, no new predictor/model/EDA",
+  "states": [
+    "TT_rise",
+    "FF_rise",
+    "FF_fall"
+  ],
+  "buffer_input_output_records": 5433,
+  "arrival_states": 5433,
+  "sink_arrival_values": 59241,
+  "verdict": "PASS"
+}
