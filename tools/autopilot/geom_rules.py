@@ -102,6 +102,8 @@ def load(path, extra=None):
                 cells[int(f[1])] = (f[2], f[3], float(f[4]), float(f[5]), float(f[6]), float(f[7]), f[8] if len(f) > 8 else "")
             elif t == "N":
                 nets.append((f[1], f[2], f[3:]))
+            elif t == "ND" and nets:      # extra driver of the preceding net (parallel drivers, geom_dump.tcl)
+                ex.setdefault("net_drivers", {}).setdefault(len(nets) - 1, []).append(f[1])
             elif t == "P":
                 pins.append(dict(k=int(f[1]), name=f[2], io=f[3], sig=f[4], layer=f[5], x=float(f[6]), y=float(f[7])))
             elif t == "D":
@@ -175,6 +177,13 @@ class Design:
                     self.pin_net[s[1]] = n
                 else:
                     self.cell_in[s[1]].append((n, s[2]))
+        # parallel drivers (ND rows): every driver cell drives the net; nets[n][1] stays the first driver
+        self.multi_drv = {}
+        for n, xs in self.extra.get("net_drivers", {}).items():
+            refs = [r for r in map(ref, xs) if r and r[0] == "i"]
+            self.multi_drv[n] = {self.nets[n][1][1]} | {r[1] for r in refs} if self.nets[n][1] and self.nets[n][1][0] == "i" else {r[1] for r in refs}
+            for r in refs:
+                self.drives[r[1]].append(n)
 
     def kind(self, cid):
         c = self.cells.get(cid)
@@ -358,6 +367,10 @@ def declared_infra_arcs(D, interface, declaration):
                 if net in seen:
                     # A pure single-input BUF/INV network cannot reconverge to
                     # itself without a cycle; never bless an ambiguous graph.
+                    # FLOW-KITFAIL-3: the one exception is a net driven in parallel (ND rows) by cone buffers of the
+                    # same parity (island ft mesh drivers); every driver must be a cone buffer (checked below).
+                    if net in getattr(D, "multi_drv", {}) and seen[net] == parity:
+                        continue
                     raise ValueError("cycle/repeated net in infrastructure cone")
                 seen[net] = parity
                 sinks = D.nets[net][2]
@@ -377,6 +390,9 @@ def declared_infra_arcs(D, interface, declaration):
                         todo.append((outputs[0],parity ^ int(master.startswith("INV"))))
                     else:
                         raise ValueError("ordinary data/sequential/logic fanout")
+            for net in seen:
+                if net in getattr(D, "multi_drv", {}) and not D.multi_drv[net] <= buffers:
+                    raise ValueError("parallel driver outside the infrastructure cone")
             if not hits or any(hits): raise ValueError("endpoint is not non-inverting pass-through equivalent")
             rec.update(status="PASS",buffers=len(buffers),nets=len(seen),equivalence="y=x for both binary inputs")
             accepted.update((a["source"],a["sink"]))
