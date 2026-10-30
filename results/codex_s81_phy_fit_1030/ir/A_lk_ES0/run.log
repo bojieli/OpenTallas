@@ -1,0 +1,1117 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 4 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /work/loads.lef, created 200 library cells
+[INFO ODB-0127] Reading DEF file: /work/case.def
+[INFO ODB-0128] Design: s81ir
+[INFO ODB-0131]     Created 1616 components and 3232 component-terminals.
+[INFO ODB-0133]     Created 6 nets and 0 connections.
+[INFO ODB-0134] Finished DEF file: /work/case.def
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: cload - C_0_1
+[INFO PDN-0001] Inserting grid: cload - C_0_2
+[INFO PDN-0001] Inserting grid: cload - C_0_3
+[INFO PDN-0001] Inserting grid: cload - C_0_25
+[INFO PDN-0001] Inserting grid: cload - C_3_1
+[INFO PDN-0001] Inserting grid: cload - C_3_2
+[INFO PDN-0001] Inserting grid: cload - C_33_1
+[INFO PDN-0001] Inserting grid: cload - C_33_2
+[INFO PDN-0001] Inserting grid: cload - C_33_26
+[INFO PDN-0001] Inserting grid: cload - C_33_27
+[INFO PDN-0001] Inserting grid: cload - C_34_1
+[INFO PDN-0001] Inserting grid: cload - C_34_2
+[INFO PDN-0001] Inserting grid: cload - C_34_26
+[INFO PDN-0001] Inserting grid: cload - C_34_27
+[INFO PDN-0001] Inserting grid: cload - C_35_1
+[INFO PDN-0001] Inserting grid: cload - C_35_2
+[INFO PDN-0001] Inserting grid: cload - C_35_26
+[INFO PDN-0001] Inserting grid: cload - C_35_27
+[INFO PDN-0001] Inserting grid: cload - C_36_1
+[INFO PDN-0001] Inserting grid: cload - C_36_2
+[INFO PDN-0001] Inserting grid: cload - C_36_26
+[INFO PDN-0001] Inserting grid: cload - C_36_27
+[INFO PDN-0001] Inserting grid: cload - C_37_1
+[INFO PDN-0001] Inserting grid: cload - C_37_2
+[INFO PDN-0001] Inserting grid: cload - C_37_26
+[INFO PDN-0001] Inserting grid: cload - C_37_27
+[INFO PDN-0001] Inserting grid: cload - C_38_1
+[INFO PDN-0001] Inserting grid: cload - C_38_2
+[INFO PDN-0001] Inserting grid: cload - C_38_26
+[INFO PDN-0001] Inserting grid: cload - C_38_27
+[INFO PDN-0001] Inserting grid: cload - C_39_1
+[INFO PDN-0001] Inserting grid: cload - C_39_2
+[INFO PDN-0001] Inserting grid: cload - C_3_26
+[INFO PDN-0001] Inserting grid: cload - C_3_27
+[INFO PDN-0001] Inserting grid: cload - C_39_26
+[INFO PDN-0001] Inserting grid: cload - C_39_27
+[INFO PDN-0001] Inserting grid: cload - C_40_1
+[INFO PDN-0001] Inserting grid: cload - C_40_2
+[INFO PDN-0001] Inserting grid: cload - C_40_26
+[INFO PDN-0001] Inserting grid: cload - C_40_27
+[INFO PDN-0001] Inserting grid: cload - C_41_1
+[INFO PDN-0001] Inserting grid: cload - C_41_2
+[INFO PDN-0001] Inserting grid: cload - C_41_26
+[INFO PDN-0001] Inserting grid: cload - C_41_27
+[INFO PDN-0001] Inserting grid: cload - C_42_1
+[INFO PDN-0001] Inserting grid: cload - C_42_2
+[INFO PDN-0001] Inserting grid: cload - C_42_26
+[INFO PDN-0001] Inserting grid: cload - C_42_27
+[INFO PDN-0001] Inserting grid: cload - C_4_1
+[INFO PDN-0001] Inserting grid: cload - C_4_2
+[INFO PDN-0001] Inserting grid: cload - C_43_1
+[INFO PDN-0001] Inserting grid: cload - C_43_2
+[INFO PDN-0001] Inserting grid: cload - C_43_26
+[INFO PDN-0001] Inserting grid: cload - C_43_27
+[INFO PDN-0001] Inserting grid: cload - C_44_1
+[INFO PDN-0001] Inserting grid: cload - C_44_2
+[INFO PDN-0001] Inserting grid: cload - C_44_26
+[INFO PDN-0001] Inserting grid: cload - C_44_27
+[INFO PDN-0001] Inserting grid: cload - C_45_1
+[INFO PDN-0001] Inserting grid: cload - C_45_2
+[INFO PDN-0001] Inserting grid: cload - C_45_26
+[INFO PDN-0001] Inserting grid: cload - C_45_27
+[INFO PDN-0001] Inserting grid: cload - C_46_1
+[INFO PDN-0001] Inserting grid: cload - C_46_2
+[INFO PDN-0001] Inserting grid: cload - C_46_26
+[INFO PDN-0001] Inserting grid: cload - C_46_27
+[INFO PDN-0001] Inserting grid: cload - C_47_1
+[INFO PDN-0001] Inserting grid: cload - C_47_2
+[INFO PDN-0001] Inserting grid: cload - C_47_26
+[INFO PDN-0001] Inserting grid: cload - C_47_27
+[INFO PDN-0001] Inserting grid: cload - C_48_1
+[INFO PDN-0001] Inserting grid: cload - C_48_2
+[INFO PDN-0001] Inserting grid: cload - C_48_26
+[INFO PDN-0001] Inserting grid: cload - C_48_27
+[INFO PDN-0001] Inserting grid: cload - C_49_1
+[INFO PDN-0001] Inserting grid: cload - C_49_2
+[INFO PDN-0001] Inserting grid: cload - C_4_26
+[INFO PDN-0001] Inserting grid: cload - C_4_27
+[INFO PDN-0001] Inserting grid: cload - C_49_26
+[INFO PDN-0001] Inserting grid: cload - C_49_27
+[INFO PDN-0001] Inserting grid: cload - C_50_1
+[INFO PDN-0001] Inserting grid: cload - C_50_2
+[INFO PDN-0001] Inserting grid: cload - C_50_26
+[INFO PDN-0001] Inserting grid: cload - C_50_27
+[INFO PDN-0001] Inserting grid: cload - C_51_1
+[INFO PDN-0001] Inserting grid: cload - C_51_2
+[INFO PDN-0001] Inserting grid: cload - C_51_26
+[INFO PDN-0001] Inserting grid: cload - C_51_27
+[INFO PDN-0001] Inserting grid: cload - C_52_1
+[INFO PDN-0001] Inserting grid: cload - C_52_2
+[INFO PDN-0001] Inserting grid: cload - C_52_26
+[INFO PDN-0001] Inserting grid: cload - C_52_27
+[INFO PDN-0001] Inserting grid: cload - C_5_1
+[INFO PDN-0001] Inserting grid: cload - C_5_2
+[INFO PDN-0001] Inserting grid: cload - C_53_1
+[INFO PDN-0001] Inserting grid: cload - C_53_2
+[INFO PDN-0001] Inserting grid: cload - C_53_26
+[INFO PDN-0001] Inserting grid: cload - C_53_27
+[INFO PDN-0001] Inserting grid: cload - C_54_1
+[INFO PDN-0001] Inserting grid: cload - C_54_2
+[INFO PDN-0001] Inserting grid: cload - C_54_26
+[INFO PDN-0001] Inserting grid: cload - C_54_27
+[INFO PDN-0001] Inserting grid: cload - C_55_1
+[INFO PDN-0001] Inserting grid: cload - C_55_2
+[INFO PDN-0001] Inserting grid: cload - C_55_26
+[INFO PDN-0001] Inserting grid: cload - C_55_27
+[INFO PDN-0001] Inserting grid: cload - C_56_1
+[INFO PDN-0001] Inserting grid: cload - C_56_2
+[INFO PDN-0001] Inserting grid: cload - C_56_26
+[INFO PDN-0001] Inserting grid: cload - C_56_27
+[INFO PDN-0001] Inserting grid: cload - C_57_1
+[INFO PDN-0001] Inserting grid: cload - C_57_2
+[INFO PDN-0001] Inserting grid: cload - C_57_26
+[INFO PDN-0001] Inserting grid: cload - C_57_27
+[INFO PDN-0001] Inserting grid: cload - C_58_1
+[INFO PDN-0001] Inserting grid: cload - C_58_2
+[INFO PDN-0001] Inserting grid: cload - C_58_26
+[INFO PDN-0001] Inserting grid: cload - C_58_27
+[INFO PDN-0001] Inserting grid: cload - C_59_1
+[INFO PDN-0001] Inserting grid: cload - C_59_2
+[INFO PDN-0001] Inserting grid: cload - C_5_26
+[INFO PDN-0001] Inserting grid: cload - C_5_27
+[INFO PDN-0001] Inserting grid: cload - C_59_26
+[INFO PDN-0001] Inserting grid: cload - C_59_27
+[INFO PDN-0001] Inserting grid: cload - C_60_1
+[INFO PDN-0001] Inserting grid: cload - C_60_2
+[INFO PDN-0001] Inserting grid: cload - C_60_26
+[INFO PDN-0001] Inserting grid: cload - C_60_27
+[INFO PDN-0001] Inserting grid: cload - C_61_1
+[INFO PDN-0001] Inserting grid: cload - C_61_2
+[INFO PDN-0001] Inserting grid: cload - C_61_26
+[INFO PDN-0001] Inserting grid: cload - C_61_27
+[INFO PDN-0001] Inserting grid: cload - C_62_1
+[INFO PDN-0001] Inserting grid: cload - C_62_2
+[INFO PDN-0001] Inserting grid: cload - C_62_26
+[INFO PDN-0001] Inserting grid: cload - C_62_27
+[INFO PDN-0001] Inserting grid: cload - C_6_1
+[INFO PDN-0001] Inserting grid: cload - C_6_2
+[INFO PDN-0001] Inserting grid: cload - C_63_1
+[INFO PDN-0001] Inserting grid: cload - C_63_2
+[INFO PDN-0001] Inserting grid: cload - C_63_26
+[INFO PDN-0001] Inserting grid: cload - C_63_27
+[INFO PDN-0001] Inserting grid: cload - C_64_1
+[INFO PDN-0001] Inserting grid: cload - C_64_2
+[INFO PDN-0001] Inserting grid: cload - C_64_3
+[INFO PDN-0001] Inserting grid: cload - C_64_25
+[INFO PDN-0001] Inserting grid: cload - C_64_4
+[INFO PDN-0001] Inserting grid: cload - C_64_5
+[INFO PDN-0001] Inserting grid: cload - C_64_6
+[INFO PDN-0001] Inserting grid: cload - C_64_7
+[INFO PDN-0001] Inserting grid: cload - C_64_8
+[INFO PDN-0001] Inserting grid: cload - C_64_9
+[INFO PDN-0001] Inserting grid: cload - C_64_10
+[INFO PDN-0001] Inserting grid: cload - C_64_11
+[INFO PDN-0001] Inserting grid: cload - C_64_12
+[INFO PDN-0001] Inserting grid: cload - C_64_13
+[INFO PDN-0001] Inserting grid: cload - C_64_14
+[INFO PDN-0001] Inserting grid: cload - C_64_15
+[INFO PDN-0001] Inserting grid: cload - C_64_16
+[INFO PDN-0001] Inserting grid: cload - C_64_17
+[INFO PDN-0001] Inserting grid: cload - C_64_18
+[INFO PDN-0001] Inserting grid: cload - C_64_19
+[INFO PDN-0001] Inserting grid: cload - C_64_20
+[INFO PDN-0001] Inserting grid: cload - C_64_21
+[INFO PDN-0001] Inserting grid: cload - C_64_22
+[INFO PDN-0001] Inserting grid: cload - C_64_23
+[INFO PDN-0001] Inserting grid: cload - C_64_24
+[INFO PDN-0001] Inserting grid: cload - C_64_26
+[INFO PDN-0001] Inserting grid: cload - C_64_27
+[INFO PDN-0001] Inserting grid: cload - C_65_1
+[INFO PDN-0001] Inserting grid: cload - C_65_2
+[INFO PDN-0001] Inserting grid: cload - C_65_3
+[INFO PDN-0001] Inserting grid: cload - C_65_25
+[INFO PDN-0001] Inserting grid: cload - C_65_4
+[INFO PDN-0001] Inserting grid: cload - C_65_5
+[INFO PDN-0001] Inserting grid: cload - C_65_6
+[INFO PDN-0001] Inserting grid: cload - C_65_7
+[INFO PDN-0001] Inserting grid: cload - C_65_8
+[INFO PDN-0001] Inserting grid: cload - C_65_9
+[INFO PDN-0001] Inserting grid: cload - C_65_10
+[INFO PDN-0001] Inserting grid: cload - C_65_11
+[INFO PDN-0001] Inserting grid: cload - C_65_12
+[INFO PDN-0001] Inserting grid: cload - C_65_13
+[INFO PDN-0001] Inserting grid: cload - C_65_14
+[INFO PDN-0001] Inserting grid: cload - C_65_15
+[INFO PDN-0001] Inserting grid: cload - C_65_16
+[INFO PDN-0001] Inserting grid: cload - C_65_17
+[INFO PDN-0001] Inserting grid: cload - C_65_18
+[INFO PDN-0001] Inserting grid: cload - C_65_19
+[INFO PDN-0001] Inserting grid: cload - C_65_20
+[INFO PDN-0001] Inserting grid: cload - C_65_21
+[INFO PDN-0001] Inserting grid: cload - C_65_22
+[INFO PDN-0001] Inserting grid: cload - C_65_23
+[INFO PDN-0001] Inserting grid: cload - C_65_24
+[INFO PDN-0001] Inserting grid: cload - C_65_26
+[INFO PDN-0001] Inserting grid: cload - C_65_27
+[INFO PDN-0001] Inserting grid: cload - C_0_4
+[INFO PDN-0001] Inserting grid: cload - C_0_5
+[INFO PDN-0001] Inserting grid: cload - C_0_6
+[INFO PDN-0001] Inserting grid: cload - C_0_7
+[INFO PDN-0001] Inserting grid: cload - C_0_8
+[INFO PDN-0001] Inserting grid: cload - C_0_9
+[INFO PDN-0001] Inserting grid: cload - C_0_10
+[INFO PDN-0001] Inserting grid: cload - C_0_11
+[INFO PDN-0001] Inserting grid: cload - C_0_12
+[INFO PDN-0001] Inserting grid: cload - C_0_13
+[INFO PDN-0001] Inserting grid: cload - C_0_14
+[INFO PDN-0001] Inserting grid: cload - C_0_15
+[INFO PDN-0001] Inserting grid: cload - C_0_16
+[INFO PDN-0001] Inserting grid: cload - C_0_17
+[INFO PDN-0001] Inserting grid: cload - C_0_18
+[INFO PDN-0001] Inserting grid: cload - C_0_19
+[INFO PDN-0001] Inserting grid: cload - C_0_20
+[INFO PDN-0001] Inserting grid: cload - C_0_21
+[INFO PDN-0001] Inserting grid: cload - C_0_22
+[INFO PDN-0001] Inserting grid: cload - C_0_23
+[INFO PDN-0001] Inserting grid: cload - C_0_24
+[INFO PDN-0001] Inserting grid: cload - C_6_26
+[INFO PDN-0001] Inserting grid: cload - C_6_27
+[INFO PDN-0001] Inserting grid: cload - C_7_1
+[INFO PDN-0001] Inserting grid: cload - C_7_2
+[INFO PDN-0001] Inserting grid: cload - C_7_26
+[INFO PDN-0001] Inserting grid: cload - C_7_27
+[INFO PDN-0001] Inserting grid: cload - C_8_1
+[INFO PDN-0001] Inserting grid: cload - C_8_2
+[INFO PDN-0001] Inserting grid: cload - C_8_26
+[INFO PDN-0001] Inserting grid: cload - C_8_27
+[INFO PDN-0001] Inserting grid: cload - C_9_1
+[INFO PDN-0001] Inserting grid: cload - C_9_2
+[INFO PDN-0001] Inserting grid: cload - C_0_26
+[INFO PDN-0001] Inserting grid: cload - C_0_27
+[INFO PDN-0001] Inserting grid: cload - C_9_26
+[INFO PDN-0001] Inserting grid: cload - C_9_27
+[INFO PDN-0001] Inserting grid: cload - C_10_1
+[INFO PDN-0001] Inserting grid: cload - C_10_2
+[INFO PDN-0001] Inserting grid: cload - C_10_26
+[INFO PDN-0001] Inserting grid: cload - C_10_27
+[INFO PDN-0001] Inserting grid: cload - C_11_1
+[INFO PDN-0001] Inserting grid: cload - C_11_2
+[INFO PDN-0001] Inserting grid: cload - C_11_26
+[INFO PDN-0001] Inserting grid: cload - C_11_27
+[INFO PDN-0001] Inserting grid: cload - C_12_1
+[INFO PDN-0001] Inserting grid: cload - C_12_2
+[INFO PDN-0001] Inserting grid: cload - C_12_26
+[INFO PDN-0001] Inserting grid: cload - C_12_27
+[INFO PDN-0001] Inserting grid: cload - C_1_1
+[INFO PDN-0001] Inserting grid: cload - C_1_2
+[INFO PDN-0001] Inserting grid: cload - C_13_1
+[INFO PDN-0001] Inserting grid: cload - C_13_2
+[INFO PDN-0001] Inserting grid: cload - C_13_26
+[INFO PDN-0001] Inserting grid: cload - C_13_27
+[INFO PDN-0001] Inserting grid: cload - C_14_1
+[INFO PDN-0001] Inserting grid: cload - C_14_2
+[INFO PDN-0001] Inserting grid: cload - C_14_26
+[INFO PDN-0001] Inserting grid: cload - C_14_27
+[INFO PDN-0001] Inserting grid: cload - C_15_1
+[INFO PDN-0001] Inserting grid: cload - C_15_2
+[INFO PDN-0001] Inserting grid: cload - C_15_26
+[INFO PDN-0001] Inserting grid: cload - C_15_27
+[INFO PDN-0001] Inserting grid: cload - C_16_1
+[INFO PDN-0001] Inserting grid: cload - C_16_2
+[INFO PDN-0001] Inserting grid: cload - C_1_3
+[INFO PDN-0001] Inserting grid: cload - C_1_25
+[INFO PDN-0001] Inserting grid: cload - C_16_26
+[INFO PDN-0001] Inserting grid: cload - C_16_27
+[INFO PDN-0001] Inserting grid: cload - C_17_1
+[INFO PDN-0001] Inserting grid: cload - C_17_2
+[INFO PDN-0001] Inserting grid: cload - C_17_26
+[INFO PDN-0001] Inserting grid: cload - C_17_27
+[INFO PDN-0001] Inserting grid: cload - C_18_1
+[INFO PDN-0001] Inserting grid: cload - C_18_2
+[INFO PDN-0001] Inserting grid: cload - C_18_26
+[INFO PDN-0001] Inserting grid: cload - C_18_27
+[INFO PDN-0001] Inserting grid: cload - C_19_1
+[INFO PDN-0001] Inserting grid: cload - C_19_2
+[INFO PDN-0001] Inserting grid: cload - C_1_4
+[INFO PDN-0001] Inserting grid: cload - C_1_5
+[INFO PDN-0001] Inserting grid: cload - C_1_6
+[INFO PDN-0001] Inserting grid: cload - C_1_7
+[INFO PDN-0001] Inserting grid: cload - C_1_8
+[INFO PDN-0001] Inserting grid: cload - C_1_9
+[INFO PDN-0001] Inserting grid: cload - C_1_10
+[INFO PDN-0001] Inserting grid: cload - C_1_11
+[INFO PDN-0001] Inserting grid: cload - C_1_12
+[INFO PDN-0001] Inserting grid: cload - C_1_13
+[INFO PDN-0001] Inserting grid: cload - C_1_14
+[INFO PDN-0001] Inserting grid: cload - C_1_15
+[INFO PDN-0001] Inserting grid: cload - C_1_16
+[INFO PDN-0001] Inserting grid: cload - C_1_17
+[INFO PDN-0001] Inserting grid: cload - C_1_18
+[INFO PDN-0001] Inserting grid: cload - C_1_19
+[INFO PDN-0001] Inserting grid: cload - C_1_20
+[INFO PDN-0001] Inserting grid: cload - C_1_21
+[INFO PDN-0001] Inserting grid: cload - C_1_22
+[INFO PDN-0001] Inserting grid: cload - C_1_23
+[INFO PDN-0001] Inserting grid: cload - C_1_24
+[INFO PDN-0001] Inserting grid: cload - C_19_26
+[INFO PDN-0001] Inserting grid: cload - C_19_27
+[INFO PDN-0001] Inserting grid: cload - C_20_1
+[INFO PDN-0001] Inserting grid: cload - C_20_2
+[INFO PDN-0001] Inserting grid: cload - C_20_26
+[INFO PDN-0001] Inserting grid: cload - C_20_27
+[INFO PDN-0001] Inserting grid: cload - C_21_1
+[INFO PDN-0001] Inserting grid: cload - C_21_2
+[INFO PDN-0001] Inserting grid: cload - C_21_26
+[INFO PDN-0001] Inserting grid: cload - C_21_27
+[INFO PDN-0001] Inserting grid: cload - C_22_1
+[INFO PDN-0001] Inserting grid: cload - C_22_2
+[INFO PDN-0001] Inserting grid: cload - C_22_26
+[INFO PDN-0001] Inserting grid: cload - C_22_27
+[INFO PDN-0001] Inserting grid: cload - C_1_26
+[INFO PDN-0001] Inserting grid: cload - C_1_27
+[INFO PDN-0001] Inserting grid: cload - C_23_1
+[INFO PDN-0001] Inserting grid: cload - C_23_2
+[INFO PDN-0001] Inserting grid: cload - C_23_26
+[INFO PDN-0001] Inserting grid: cload - C_23_27
+[INFO PDN-0001] Inserting grid: cload - C_24_1
+[INFO PDN-0001] Inserting grid: cload - C_24_2
+[INFO PDN-0001] Inserting grid: cload - C_24_26
+[INFO PDN-0001] Inserting grid: cload - C_24_27
+[INFO PDN-0001] Inserting grid: cload - C_25_1
+[INFO PDN-0001] Inserting grid: cload - C_25_2
+[INFO PDN-0001] Inserting grid: cload - C_25_26
+[INFO PDN-0001] Inserting grid: cload - C_25_27
+[INFO PDN-0001] Inserting grid: cload - C_26_1
+[INFO PDN-0001] Inserting grid: cload - C_26_2
+[INFO PDN-0001] Inserting grid: cload - C_2_1
+[INFO PDN-0001] Inserting grid: cload - C_2_2
+[INFO PDN-0001] Inserting grid: cload - C_26_26
+[INFO PDN-0001] Inserting grid: cload - C_26_27
+[INFO PDN-0001] Inserting grid: cload - C_27_1
+[INFO PDN-0001] Inserting grid: cload - C_27_2
+[INFO PDN-0001] Inserting grid: cload - C_27_26
+[INFO PDN-0001] Inserting grid: cload - C_27_27
+[INFO PDN-0001] Inserting grid: cload - C_28_1
+[INFO PDN-0001] Inserting grid: cload - C_28_2
+[INFO PDN-0001] Inserting grid: cload - C_28_26
+[INFO PDN-0001] Inserting grid: cload - C_28_27
+[INFO PDN-0001] Inserting grid: cload - C_29_1
+[INFO PDN-0001] Inserting grid: cload - C_29_2
+[INFO PDN-0001] Inserting grid: cload - C_2_26
+[INFO PDN-0001] Inserting grid: cload - C_2_27
+[INFO PDN-0001] Inserting grid: cload - C_29_26
+[INFO PDN-0001] Inserting grid: cload - C_29_27
+[INFO PDN-0001] Inserting grid: cload - C_30_1
+[INFO PDN-0001] Inserting grid: cload - C_30_2
+[INFO PDN-0001] Inserting grid: cload - C_30_26
+[INFO PDN-0001] Inserting grid: cload - C_30_27
+[INFO PDN-0001] Inserting grid: cload - C_31_1
+[INFO PDN-0001] Inserting grid: cload - C_31_2
+[INFO PDN-0001] Inserting grid: cload - C_31_26
+[INFO PDN-0001] Inserting grid: cload - C_31_27
+[INFO PDN-0001] Inserting grid: cload - C_32_1
+[INFO PDN-0001] Inserting grid: cload - C_32_2
+[INFO PDN-0001] Inserting grid: cload - C_32_26
+[INFO PDN-0001] Inserting grid: cload - C_32_27
+[INFO PDN-0001] Inserting grid: phy0
+[INFO PDN-0001] Inserting grid: pload0 - P_10_10
+[INFO PDN-0001] Inserting grid: pload0 - P_10_11
+[INFO PDN-0001] Inserting grid: pload0 - P_10_12
+[INFO PDN-0001] Inserting grid: pload0 - P_10_13
+[INFO PDN-0001] Inserting grid: pload0 - P_10_14
+[INFO PDN-0001] Inserting grid: pload0 - P_10_15
+[INFO PDN-0001] Inserting grid: pload0 - P_10_16
+[INFO PDN-0001] Inserting grid: pload0 - P_10_17
+[INFO PDN-0001] Inserting grid: pload0 - P_10_18
+[INFO PDN-0001] Inserting grid: pload0 - P_10_19
+[INFO PDN-0001] Inserting grid: pload0 - P_10_20
+[INFO PDN-0001] Inserting grid: pload0 - P_10_21
+[INFO PDN-0001] Inserting grid: pload0 - P_10_22
+[INFO PDN-0001] Inserting grid: pload0 - P_10_23
+[INFO PDN-0001] Inserting grid: pload0 - P_10_24
+[INFO PDN-0001] Inserting grid: pload0 - P_10_4
+[INFO PDN-0001] Inserting grid: pload0 - P_10_5
+[INFO PDN-0001] Inserting grid: pload0 - P_10_6
+[INFO PDN-0001] Inserting grid: pload0 - P_10_7
+[INFO PDN-0001] Inserting grid: pload0 - P_10_8
+[INFO PDN-0001] Inserting grid: pload0 - P_10_9
+[INFO PDN-0001] Inserting grid: pload0 - P_11_10
+[INFO PDN-0001] Inserting grid: pload0 - P_11_11
+[INFO PDN-0001] Inserting grid: pload0 - P_11_12
+[INFO PDN-0001] Inserting grid: pload0 - P_11_13
+[INFO PDN-0001] Inserting grid: pload0 - P_11_14
+[INFO PDN-0001] Inserting grid: pload0 - P_11_15
+[INFO PDN-0001] Inserting grid: pload0 - P_11_16
+[INFO PDN-0001] Inserting grid: pload0 - P_11_17
+[INFO PDN-0001] Inserting grid: pload0 - P_11_18
+[INFO PDN-0001] Inserting grid: pload0 - P_11_19
+[INFO PDN-0001] Inserting grid: pload0 - P_11_20
+[INFO PDN-0001] Inserting grid: pload0 - P_11_21
+[INFO PDN-0001] Inserting grid: pload0 - P_11_22
+[INFO PDN-0001] Inserting grid: pload0 - P_11_23
+[INFO PDN-0001] Inserting grid: pload0 - P_11_24
+[INFO PDN-0001] Inserting grid: pload0 - P_11_4
+[INFO PDN-0001] Inserting grid: pload0 - P_11_5
+[INFO PDN-0001] Inserting grid: pload0 - P_11_6
+[INFO PDN-0001] Inserting grid: pload0 - P_11_7
+[INFO PDN-0001] Inserting grid: pload0 - P_11_8
+[INFO PDN-0001] Inserting grid: pload0 - P_11_9
+[INFO PDN-0001] Inserting grid: pload0 - P_12_10
+[INFO PDN-0001] Inserting grid: pload0 - P_12_11
+[INFO PDN-0001] Inserting grid: pload0 - P_12_12
+[INFO PDN-0001] Inserting grid: pload0 - P_12_13
+[INFO PDN-0001] Inserting grid: pload0 - P_12_14
+[INFO PDN-0001] Inserting grid: pload0 - P_12_15
+[INFO PDN-0001] Inserting grid: pload0 - P_12_16
+[INFO PDN-0001] Inserting grid: pload0 - P_12_17
+[INFO PDN-0001] Inserting grid: pload0 - P_12_18
+[INFO PDN-0001] Inserting grid: pload0 - P_12_19
+[INFO PDN-0001] Inserting grid: pload0 - P_12_20
+[INFO PDN-0001] Inserting grid: pload0 - P_12_21
+[INFO PDN-0001] Inserting grid: pload0 - P_12_22
+[INFO PDN-0001] Inserting grid: pload0 - P_12_23
+[INFO PDN-0001] Inserting grid: pload0 - P_12_24
+[INFO PDN-0001] Inserting grid: pload0 - P_12_4
+[INFO PDN-0001] Inserting grid: pload0 - P_12_5
+[INFO PDN-0001] Inserting grid: pload0 - P_12_6
+[INFO PDN-0001] Inserting grid: pload0 - P_12_7
+[INFO PDN-0001] Inserting grid: pload0 - P_12_8
+[INFO PDN-0001] Inserting grid: pload0 - P_12_9
+[INFO PDN-0001] Inserting grid: pload0 - P_13_10
+[INFO PDN-0001] Inserting grid: pload0 - P_13_11
+[INFO PDN-0001] Inserting grid: pload0 - P_13_12
+[INFO PDN-0001] Inserting grid: pload0 - P_13_13
+[INFO PDN-0001] Inserting grid: pload0 - P_13_14
+[INFO PDN-0001] Inserting grid: pload0 - P_13_15
+[INFO PDN-0001] Inserting grid: pload0 - P_13_16
+[INFO PDN-0001] Inserting grid: pload0 - P_13_17
+[INFO PDN-0001] Inserting grid: pload0 - P_13_18
+[INFO PDN-0001] Inserting grid: pload0 - P_13_19
+[INFO PDN-0001] Inserting grid: pload0 - P_13_20
+[INFO PDN-0001] Inserting grid: pload0 - P_13_21
+[INFO PDN-0001] Inserting grid: pload0 - P_13_22
+[INFO PDN-0001] Inserting grid: pload0 - P_13_23
+[INFO PDN-0001] Inserting grid: pload0 - P_13_24
+[INFO PDN-0001] Inserting grid: pload0 - P_13_4
+[INFO PDN-0001] Inserting grid: pload0 - P_13_5
+[INFO PDN-0001] Inserting grid: pload0 - P_13_6
+[INFO PDN-0001] Inserting grid: pload0 - P_13_7
+[INFO PDN-0001] Inserting grid: pload0 - P_13_8
+[INFO PDN-0001] Inserting grid: pload0 - P_13_9
+[INFO PDN-0001] Inserting grid: pload0 - P_14_10
+[INFO PDN-0001] Inserting grid: pload0 - P_14_11
+[INFO PDN-0001] Inserting grid: pload0 - P_14_12
+[INFO PDN-0001] Inserting grid: pload0 - P_14_13
+[INFO PDN-0001] Inserting grid: pload0 - P_14_14
+[INFO PDN-0001] Inserting grid: pload0 - P_14_15
+[INFO PDN-0001] Inserting grid: pload0 - P_14_16
+[INFO PDN-0001] Inserting grid: pload0 - P_14_17
+[INFO PDN-0001] Inserting grid: pload0 - P_14_18
+[INFO PDN-0001] Inserting grid: pload0 - P_14_19
+[INFO PDN-0001] Inserting grid: pload0 - P_14_20
+[INFO PDN-0001] Inserting grid: pload0 - P_14_21
+[INFO PDN-0001] Inserting grid: pload0 - P_14_22
+[INFO PDN-0001] Inserting grid: pload0 - P_14_23
+[INFO PDN-0001] Inserting grid: pload0 - P_14_24
+[INFO PDN-0001] Inserting grid: pload0 - P_14_4
+[INFO PDN-0001] Inserting grid: pload0 - P_14_5
+[INFO PDN-0001] Inserting grid: pload0 - P_14_6
+[INFO PDN-0001] Inserting grid: pload0 - P_14_7
+[INFO PDN-0001] Inserting grid: pload0 - P_14_8
+[INFO PDN-0001] Inserting grid: pload0 - P_14_9
+[INFO PDN-0001] Inserting grid: pload0 - P_15_10
+[INFO PDN-0001] Inserting grid: pload0 - P_15_11
+[INFO PDN-0001] Inserting grid: pload0 - P_15_12
+[INFO PDN-0001] Inserting grid: pload0 - P_15_13
+[INFO PDN-0001] Inserting grid: pload0 - P_15_14
+[INFO PDN-0001] Inserting grid: pload0 - P_15_15
+[INFO PDN-0001] Inserting grid: pload0 - P_15_16
+[INFO PDN-0001] Inserting grid: pload0 - P_15_17
+[INFO PDN-0001] Inserting grid: pload0 - P_15_18
+[INFO PDN-0001] Inserting grid: pload0 - P_15_19
+[INFO PDN-0001] Inserting grid: pload0 - P_15_20
+[INFO PDN-0001] Inserting grid: pload0 - P_15_21
+[INFO PDN-0001] Inserting grid: pload0 - P_15_22
+[INFO PDN-0001] Inserting grid: pload0 - P_15_23
+[INFO PDN-0001] Inserting grid: pload0 - P_15_24
+[INFO PDN-0001] Inserting grid: pload0 - P_15_4
+[INFO PDN-0001] Inserting grid: pload0 - P_15_5
+[INFO PDN-0001] Inserting grid: pload0 - P_15_6
+[INFO PDN-0001] Inserting grid: pload0 - P_15_7
+[INFO PDN-0001] Inserting grid: pload0 - P_15_8
+[INFO PDN-0001] Inserting grid: pload0 - P_15_9
+[INFO PDN-0001] Inserting grid: pload0 - P_16_10
+[INFO PDN-0001] Inserting grid: pload0 - P_16_11
+[INFO PDN-0001] Inserting grid: pload0 - P_16_12
+[INFO PDN-0001] Inserting grid: pload0 - P_16_13
+[INFO PDN-0001] Inserting grid: pload0 - P_16_14
+[INFO PDN-0001] Inserting grid: pload0 - P_16_15
+[INFO PDN-0001] Inserting grid: pload0 - P_16_16
+[INFO PDN-0001] Inserting grid: pload0 - P_16_17
+[INFO PDN-0001] Inserting grid: pload0 - P_16_18
+[INFO PDN-0001] Inserting grid: pload0 - P_16_19
+[INFO PDN-0001] Inserting grid: pload0 - P_16_20
+[INFO PDN-0001] Inserting grid: pload0 - P_16_21
+[INFO PDN-0001] Inserting grid: pload0 - P_16_22
+[INFO PDN-0001] Inserting grid: pload0 - P_16_23
+[INFO PDN-0001] Inserting grid: pload0 - P_16_24
+[INFO PDN-0001] Inserting grid: pload0 - P_16_4
+[INFO PDN-0001] Inserting grid: pload0 - P_16_5
+[INFO PDN-0001] Inserting grid: pload0 - P_16_6
+[INFO PDN-0001] Inserting grid: pload0 - P_16_7
+[INFO PDN-0001] Inserting grid: pload0 - P_16_8
+[INFO PDN-0001] Inserting grid: pload0 - P_16_9
+[INFO PDN-0001] Inserting grid: pload0 - P_17_10
+[INFO PDN-0001] Inserting grid: pload0 - P_17_11
+[INFO PDN-0001] Inserting grid: pload0 - P_17_12
+[INFO PDN-0001] Inserting grid: pload0 - P_17_13
+[INFO PDN-0001] Inserting grid: pload0 - P_17_14
+[INFO PDN-0001] Inserting grid: pload0 - P_17_15
+[INFO PDN-0001] Inserting grid: pload0 - P_17_16
+[INFO PDN-0001] Inserting grid: pload0 - P_17_17
+[INFO PDN-0001] Inserting grid: pload0 - P_17_18
+[INFO PDN-0001] Inserting grid: pload0 - P_17_19
+[INFO PDN-0001] Inserting grid: pload0 - P_17_20
+[INFO PDN-0001] Inserting grid: pload0 - P_17_21
+[INFO PDN-0001] Inserting grid: pload0 - P_17_22
+[INFO PDN-0001] Inserting grid: pload0 - P_17_23
+[INFO PDN-0001] Inserting grid: pload0 - P_17_24
+[INFO PDN-0001] Inserting grid: pload0 - P_17_4
+[INFO PDN-0001] Inserting grid: pload0 - P_17_5
+[INFO PDN-0001] Inserting grid: pload0 - P_17_6
+[INFO PDN-0001] Inserting grid: pload0 - P_17_7
+[INFO PDN-0001] Inserting grid: pload0 - P_17_8
+[INFO PDN-0001] Inserting grid: pload0 - P_17_9
+[INFO PDN-0001] Inserting grid: pload0 - P_18_10
+[INFO PDN-0001] Inserting grid: pload0 - P_18_11
+[INFO PDN-0001] Inserting grid: pload0 - P_18_12
+[INFO PDN-0001] Inserting grid: pload0 - P_18_13
+[INFO PDN-0001] Inserting grid: pload0 - P_18_14
+[INFO PDN-0001] Inserting grid: pload0 - P_18_15
+[INFO PDN-0001] Inserting grid: pload0 - P_18_16
+[INFO PDN-0001] Inserting grid: pload0 - P_18_17
+[INFO PDN-0001] Inserting grid: pload0 - P_18_18
+[INFO PDN-0001] Inserting grid: pload0 - P_18_19
+[INFO PDN-0001] Inserting grid: pload0 - P_18_20
+[INFO PDN-0001] Inserting grid: pload0 - P_18_21
+[INFO PDN-0001] Inserting grid: pload0 - P_18_22
+[INFO PDN-0001] Inserting grid: pload0 - P_18_23
+[INFO PDN-0001] Inserting grid: pload0 - P_18_24
+[INFO PDN-0001] Inserting grid: pload0 - P_18_4
+[INFO PDN-0001] Inserting grid: pload0 - P_18_5
+[INFO PDN-0001] Inserting grid: pload0 - P_18_6
+[INFO PDN-0001] Inserting grid: pload0 - P_18_7
+[INFO PDN-0001] Inserting grid: pload0 - P_18_8
+[INFO PDN-0001] Inserting grid: pload0 - P_18_9
+[INFO PDN-0001] Inserting grid: pload0 - P_19_10
+[INFO PDN-0001] Inserting grid: pload0 - P_19_11
+[INFO PDN-0001] Inserting grid: pload0 - P_19_12
+[INFO PDN-0001] Inserting grid: pload0 - P_19_13
+[INFO PDN-0001] Inserting grid: pload0 - P_19_14
+[INFO PDN-0001] Inserting grid: pload0 - P_19_15
+[INFO PDN-0001] Inserting grid: pload0 - P_19_16
+[INFO PDN-0001] Inserting grid: pload0 - P_19_17
+[INFO PDN-0001] Inserting grid: pload0 - P_19_18
+[INFO PDN-0001] Inserting grid: pload0 - P_19_19
+[INFO PDN-0001] Inserting grid: pload0 - P_19_20
+[INFO PDN-0001] Inserting grid: pload0 - P_19_21
+[INFO PDN-0001] Inserting grid: pload0 - P_19_22
+[INFO PDN-0001] Inserting grid: pload0 - P_19_23
+[INFO PDN-0001] Inserting grid: pload0 - P_19_24
+[INFO PDN-0001] Inserting grid: pload0 - P_19_4
+[INFO PDN-0001] Inserting grid: pload0 - P_19_5
+[INFO PDN-0001] Inserting grid: pload0 - P_19_6
+[INFO PDN-0001] Inserting grid: pload0 - P_19_7
+[INFO PDN-0001] Inserting grid: pload0 - P_19_8
+[INFO PDN-0001] Inserting grid: pload0 - P_19_9
+[INFO PDN-0001] Inserting grid: pload0 - P_20_10
+[INFO PDN-0001] Inserting grid: pload0 - P_20_11
+[INFO PDN-0001] Inserting grid: pload0 - P_20_12
+[INFO PDN-0001] Inserting grid: pload0 - P_20_13
+[INFO PDN-0001] Inserting grid: pload0 - P_20_14
+[INFO PDN-0001] Inserting grid: pload0 - P_20_15
+[INFO PDN-0001] Inserting grid: pload0 - P_20_16
+[INFO PDN-0001] Inserting grid: pload0 - P_20_17
+[INFO PDN-0001] Inserting grid: pload0 - P_20_18
+[INFO PDN-0001] Inserting grid: pload0 - P_20_19
+[INFO PDN-0001] Inserting grid: pload0 - P_20_20
+[INFO PDN-0001] Inserting grid: pload0 - P_20_21
+[INFO PDN-0001] Inserting grid: pload0 - P_20_22
+[INFO PDN-0001] Inserting grid: pload0 - P_20_23
+[INFO PDN-0001] Inserting grid: pload0 - P_20_24
+[INFO PDN-0001] Inserting grid: pload0 - P_20_4
+[INFO PDN-0001] Inserting grid: pload0 - P_20_5
+[INFO PDN-0001] Inserting grid: pload0 - P_20_6
+[INFO PDN-0001] Inserting grid: pload0 - P_20_7
+[INFO PDN-0001] Inserting grid: pload0 - P_20_8
+[INFO PDN-0001] Inserting grid: pload0 - P_20_9
+[INFO PDN-0001] Inserting grid: pload0 - P_21_10
+[INFO PDN-0001] Inserting grid: pload0 - P_21_11
+[INFO PDN-0001] Inserting grid: pload0 - P_21_12
+[INFO PDN-0001] Inserting grid: pload0 - P_21_13
+[INFO PDN-0001] Inserting grid: pload0 - P_21_14
+[INFO PDN-0001] Inserting grid: pload0 - P_21_15
+[INFO PDN-0001] Inserting grid: pload0 - P_21_16
+[INFO PDN-0001] Inserting grid: pload0 - P_21_17
+[INFO PDN-0001] Inserting grid: pload0 - P_21_18
+[INFO PDN-0001] Inserting grid: pload0 - P_21_19
+[INFO PDN-0001] Inserting grid: pload0 - P_21_20
+[INFO PDN-0001] Inserting grid: pload0 - P_21_21
+[INFO PDN-0001] Inserting grid: pload0 - P_21_22
+[INFO PDN-0001] Inserting grid: pload0 - P_21_23
+[INFO PDN-0001] Inserting grid: pload0 - P_21_24
+[INFO PDN-0001] Inserting grid: pload0 - P_21_4
+[INFO PDN-0001] Inserting grid: pload0 - P_21_5
+[INFO PDN-0001] Inserting grid: pload0 - P_21_6
+[INFO PDN-0001] Inserting grid: pload0 - P_21_7
+[INFO PDN-0001] Inserting grid: pload0 - P_21_8
+[INFO PDN-0001] Inserting grid: pload0 - P_21_9
+[INFO PDN-0001] Inserting grid: pload0 - P_22_10
+[INFO PDN-0001] Inserting grid: pload0 - P_22_11
+[INFO PDN-0001] Inserting grid: pload0 - P_22_12
+[INFO PDN-0001] Inserting grid: pload0 - P_22_13
+[INFO PDN-0001] Inserting grid: pload0 - P_22_14
+[INFO PDN-0001] Inserting grid: pload0 - P_22_15
+[INFO PDN-0001] Inserting grid: pload0 - P_22_16
+[INFO PDN-0001] Inserting grid: pload0 - P_22_17
+[INFO PDN-0001] Inserting grid: pload0 - P_22_18
+[INFO PDN-0001] Inserting grid: pload0 - P_22_19
+[INFO PDN-0001] Inserting grid: pload0 - P_22_20
+[INFO PDN-0001] Inserting grid: pload0 - P_22_21
+[INFO PDN-0001] Inserting grid: pload0 - P_22_22
+[INFO PDN-0001] Inserting grid: pload0 - P_22_23
+[INFO PDN-0001] Inserting grid: pload0 - P_22_24
+[INFO PDN-0001] Inserting grid: pload0 - P_22_4
+[INFO PDN-0001] Inserting grid: pload0 - P_22_5
+[INFO PDN-0001] Inserting grid: pload0 - P_22_6
+[INFO PDN-0001] Inserting grid: pload0 - P_22_7
+[INFO PDN-0001] Inserting grid: pload0 - P_22_8
+[INFO PDN-0001] Inserting grid: pload0 - P_22_9
+[INFO PDN-0001] Inserting grid: pload0 - P_23_10
+[INFO PDN-0001] Inserting grid: pload0 - P_23_11
+[INFO PDN-0001] Inserting grid: pload0 - P_23_12
+[INFO PDN-0001] Inserting grid: pload0 - P_23_13
+[INFO PDN-0001] Inserting grid: pload0 - P_23_14
+[INFO PDN-0001] Inserting grid: pload0 - P_23_15
+[INFO PDN-0001] Inserting grid: pload0 - P_23_16
+[INFO PDN-0001] Inserting grid: pload0 - P_23_17
+[INFO PDN-0001] Inserting grid: pload0 - P_23_18
+[INFO PDN-0001] Inserting grid: pload0 - P_23_19
+[INFO PDN-0001] Inserting grid: pload0 - P_23_20
+[INFO PDN-0001] Inserting grid: pload0 - P_23_21
+[INFO PDN-0001] Inserting grid: pload0 - P_23_22
+[INFO PDN-0001] Inserting grid: pload0 - P_23_23
+[INFO PDN-0001] Inserting grid: pload0 - P_23_24
+[INFO PDN-0001] Inserting grid: pload0 - P_23_4
+[INFO PDN-0001] Inserting grid: pload0 - P_23_5
+[INFO PDN-0001] Inserting grid: pload0 - P_23_6
+[INFO PDN-0001] Inserting grid: pload0 - P_23_7
+[INFO PDN-0001] Inserting grid: pload0 - P_23_8
+[INFO PDN-0001] Inserting grid: pload0 - P_23_9
+[INFO PDN-0001] Inserting grid: pload0 - P_24_10
+[INFO PDN-0001] Inserting grid: pload0 - P_24_11
+[INFO PDN-0001] Inserting grid: pload0 - P_24_12
+[INFO PDN-0001] Inserting grid: pload0 - P_24_13
+[INFO PDN-0001] Inserting grid: pload0 - P_24_14
+[INFO PDN-0001] Inserting grid: pload0 - P_24_15
+[INFO PDN-0001] Inserting grid: pload0 - P_24_16
+[INFO PDN-0001] Inserting grid: pload0 - P_24_17
+[INFO PDN-0001] Inserting grid: pload0 - P_24_18
+[INFO PDN-0001] Inserting grid: pload0 - P_24_19
+[INFO PDN-0001] Inserting grid: pload0 - P_24_20
+[INFO PDN-0001] Inserting grid: pload0 - P_24_21
+[INFO PDN-0001] Inserting grid: pload0 - P_24_22
+[INFO PDN-0001] Inserting grid: pload0 - P_24_23
+[INFO PDN-0001] Inserting grid: pload0 - P_24_24
+[INFO PDN-0001] Inserting grid: pload0 - P_24_4
+[INFO PDN-0001] Inserting grid: pload0 - P_24_5
+[INFO PDN-0001] Inserting grid: pload0 - P_24_6
+[INFO PDN-0001] Inserting grid: pload0 - P_24_7
+[INFO PDN-0001] Inserting grid: pload0 - P_24_8
+[INFO PDN-0001] Inserting grid: pload0 - P_24_9
+[INFO PDN-0001] Inserting grid: pload0 - P_25_10
+[INFO PDN-0001] Inserting grid: pload0 - P_25_11
+[INFO PDN-0001] Inserting grid: pload0 - P_25_12
+[INFO PDN-0001] Inserting grid: pload0 - P_25_13
+[INFO PDN-0001] Inserting grid: pload0 - P_25_14
+[INFO PDN-0001] Inserting grid: pload0 - P_25_15
+[INFO PDN-0001] Inserting grid: pload0 - P_25_16
+[INFO PDN-0001] Inserting grid: pload0 - P_25_17
+[INFO PDN-0001] Inserting grid: pload0 - P_25_18
+[INFO PDN-0001] Inserting grid: pload0 - P_25_19
+[INFO PDN-0001] Inserting grid: pload0 - P_25_20
+[INFO PDN-0001] Inserting grid: pload0 - P_25_21
+[INFO PDN-0001] Inserting grid: pload0 - P_25_22
+[INFO PDN-0001] Inserting grid: pload0 - P_25_23
+[INFO PDN-0001] Inserting grid: pload0 - P_25_24
+[INFO PDN-0001] Inserting grid: pload0 - P_25_4
+[INFO PDN-0001] Inserting grid: pload0 - P_25_5
+[INFO PDN-0001] Inserting grid: pload0 - P_25_6
+[INFO PDN-0001] Inserting grid: pload0 - P_25_7
+[INFO PDN-0001] Inserting grid: pload0 - P_25_8
+[INFO PDN-0001] Inserting grid: pload0 - P_25_9
+[INFO PDN-0001] Inserting grid: pload0 - P_26_10
+[INFO PDN-0001] Inserting grid: pload0 - P_26_11
+[INFO PDN-0001] Inserting grid: pload0 - P_26_12
+[INFO PDN-0001] Inserting grid: pload0 - P_26_13
+[INFO PDN-0001] Inserting grid: pload0 - P_26_14
+[INFO PDN-0001] Inserting grid: pload0 - P_26_15
+[INFO PDN-0001] Inserting grid: pload0 - P_26_16
+[INFO PDN-0001] Inserting grid: pload0 - P_26_17
+[INFO PDN-0001] Inserting grid: pload0 - P_26_18
+[INFO PDN-0001] Inserting grid: pload0 - P_26_19
+[INFO PDN-0001] Inserting grid: pload0 - P_26_20
+[INFO PDN-0001] Inserting grid: pload0 - P_26_21
+[INFO PDN-0001] Inserting grid: pload0 - P_26_22
+[INFO PDN-0001] Inserting grid: pload0 - P_26_23
+[INFO PDN-0001] Inserting grid: pload0 - P_26_24
+[INFO PDN-0001] Inserting grid: pload0 - P_26_4
+[INFO PDN-0001] Inserting grid: pload0 - P_26_5
+[INFO PDN-0001] Inserting grid: pload0 - P_26_6
+[INFO PDN-0001] Inserting grid: pload0 - P_26_7
+[INFO PDN-0001] Inserting grid: pload0 - P_26_8
+[INFO PDN-0001] Inserting grid: pload0 - P_26_9
+[INFO PDN-0001] Inserting grid: pload0 - P_27_10
+[INFO PDN-0001] Inserting grid: pload0 - P_27_11
+[INFO PDN-0001] Inserting grid: pload0 - P_27_12
+[INFO PDN-0001] Inserting grid: pload0 - P_27_13
+[INFO PDN-0001] Inserting grid: pload0 - P_27_14
+[INFO PDN-0001] Inserting grid: pload0 - P_27_15
+[INFO PDN-0001] Inserting grid: pload0 - P_27_16
+[INFO PDN-0001] Inserting grid: pload0 - P_27_17
+[INFO PDN-0001] Inserting grid: pload0 - P_27_18
+[INFO PDN-0001] Inserting grid: pload0 - P_27_19
+[INFO PDN-0001] Inserting grid: pload0 - P_27_20
+[INFO PDN-0001] Inserting grid: pload0 - P_27_21
+[INFO PDN-0001] Inserting grid: pload0 - P_27_22
+[INFO PDN-0001] Inserting grid: pload0 - P_27_23
+[INFO PDN-0001] Inserting grid: pload0 - P_27_24
+[INFO PDN-0001] Inserting grid: pload0 - P_27_4
+[INFO PDN-0001] Inserting grid: pload0 - P_27_5
+[INFO PDN-0001] Inserting grid: pload0 - P_27_6
+[INFO PDN-0001] Inserting grid: pload0 - P_27_7
+[INFO PDN-0001] Inserting grid: pload0 - P_27_8
+[INFO PDN-0001] Inserting grid: pload0 - P_27_9
+[INFO PDN-0001] Inserting grid: pload0 - P_28_10
+[INFO PDN-0001] Inserting grid: pload0 - P_28_11
+[INFO PDN-0001] Inserting grid: pload0 - P_28_12
+[INFO PDN-0001] Inserting grid: pload0 - P_28_13
+[INFO PDN-0001] Inserting grid: pload0 - P_28_14
+[INFO PDN-0001] Inserting grid: pload0 - P_28_15
+[INFO PDN-0001] Inserting grid: pload0 - P_28_16
+[INFO PDN-0001] Inserting grid: pload0 - P_28_17
+[INFO PDN-0001] Inserting grid: pload0 - P_28_18
+[INFO PDN-0001] Inserting grid: pload0 - P_28_19
+[INFO PDN-0001] Inserting grid: pload0 - P_28_20
+[INFO PDN-0001] Inserting grid: pload0 - P_28_21
+[INFO PDN-0001] Inserting grid: pload0 - P_28_22
+[INFO PDN-0001] Inserting grid: pload0 - P_28_23
+[INFO PDN-0001] Inserting grid: pload0 - P_28_24
+[INFO PDN-0001] Inserting grid: pload0 - P_28_4
+[INFO PDN-0001] Inserting grid: pload0 - P_28_5
+[INFO PDN-0001] Inserting grid: pload0 - P_28_6
+[INFO PDN-0001] Inserting grid: pload0 - P_28_7
+[INFO PDN-0001] Inserting grid: pload0 - P_28_8
+[INFO PDN-0001] Inserting grid: pload0 - P_28_9
+[INFO PDN-0001] Inserting grid: pload0 - P_29_10
+[INFO PDN-0001] Inserting grid: pload0 - P_29_11
+[INFO PDN-0001] Inserting grid: pload0 - P_29_12
+[INFO PDN-0001] Inserting grid: pload0 - P_29_13
+[INFO PDN-0001] Inserting grid: pload0 - P_29_14
+[INFO PDN-0001] Inserting grid: pload0 - P_29_15
+[INFO PDN-0001] Inserting grid: pload0 - P_29_16
+[INFO PDN-0001] Inserting grid: pload0 - P_29_17
+[INFO PDN-0001] Inserting grid: pload0 - P_29_18
+[INFO PDN-0001] Inserting grid: pload0 - P_29_19
+[INFO PDN-0001] Inserting grid: pload0 - P_29_20
+[INFO PDN-0001] Inserting grid: pload0 - P_29_21
+[INFO PDN-0001] Inserting grid: pload0 - P_29_22
+[INFO PDN-0001] Inserting grid: pload0 - P_29_23
+[INFO PDN-0001] Inserting grid: pload0 - P_29_24
+[INFO PDN-0001] Inserting grid: pload0 - P_29_4
+[INFO PDN-0001] Inserting grid: pload0 - P_29_5
+[INFO PDN-0001] Inserting grid: pload0 - P_29_6
+[INFO PDN-0001] Inserting grid: pload0 - P_29_7
+[INFO PDN-0001] Inserting grid: pload0 - P_29_8
+[INFO PDN-0001] Inserting grid: pload0 - P_29_9
+[INFO PDN-0001] Inserting grid: pload0 - P_30_10
+[INFO PDN-0001] Inserting grid: pload0 - P_30_11
+[INFO PDN-0001] Inserting grid: pload0 - P_30_12
+[INFO PDN-0001] Inserting grid: pload0 - P_30_13
+[INFO PDN-0001] Inserting grid: pload0 - P_30_14
+[INFO PDN-0001] Inserting grid: pload0 - P_30_15
+[INFO PDN-0001] Inserting grid: pload0 - P_30_16
+[INFO PDN-0001] Inserting grid: pload0 - P_30_17
+[INFO PDN-0001] Inserting grid: pload0 - P_30_18
+[INFO PDN-0001] Inserting grid: pload0 - P_30_19
+[INFO PDN-0001] Inserting grid: pload0 - P_30_20
+[INFO PDN-0001] Inserting grid: pload0 - P_30_21
+[INFO PDN-0001] Inserting grid: pload0 - P_30_22
+[INFO PDN-0001] Inserting grid: pload0 - P_30_23
+[INFO PDN-0001] Inserting grid: pload0 - P_30_24
+[INFO PDN-0001] Inserting grid: pload0 - P_30_4
+[INFO PDN-0001] Inserting grid: pload0 - P_30_5
+[INFO PDN-0001] Inserting grid: pload0 - P_30_6
+[INFO PDN-0001] Inserting grid: pload0 - P_30_7
+[INFO PDN-0001] Inserting grid: pload0 - P_30_8
+[INFO PDN-0001] Inserting grid: pload0 - P_30_9
+[INFO PDN-0001] Inserting grid: pload0 - P_31_10
+[INFO PDN-0001] Inserting grid: pload0 - P_31_11
+[INFO PDN-0001] Inserting grid: pload0 - P_31_12
+[INFO PDN-0001] Inserting grid: pload0 - P_31_13
+[INFO PDN-0001] Inserting grid: pload0 - P_31_14
+[INFO PDN-0001] Inserting grid: pload0 - P_31_15
+[INFO PDN-0001] Inserting grid: pload0 - P_31_16
+[INFO PDN-0001] Inserting grid: pload0 - P_31_17
+[INFO PDN-0001] Inserting grid: pload0 - P_31_18
+[INFO PDN-0001] Inserting grid: pload0 - P_31_19
+[INFO PDN-0001] Inserting grid: pload0 - P_31_20
+[INFO PDN-0001] Inserting grid: pload0 - P_31_21
+[INFO PDN-0001] Inserting grid: pload0 - P_31_22
+[INFO PDN-0001] Inserting grid: pload0 - P_31_23
+[INFO PDN-0001] Inserting grid: pload0 - P_31_24
+[INFO PDN-0001] Inserting grid: pload0 - P_31_4
+[INFO PDN-0001] Inserting grid: pload0 - P_31_5
+[INFO PDN-0001] Inserting grid: pload0 - P_31_6
+[INFO PDN-0001] Inserting grid: pload0 - P_31_7
+[INFO PDN-0001] Inserting grid: pload0 - P_31_8
+[INFO PDN-0001] Inserting grid: pload0 - P_31_9
+[INFO PDN-0001] Inserting grid: pload0 - P_32_10
+[INFO PDN-0001] Inserting grid: pload0 - P_32_11
+[INFO PDN-0001] Inserting grid: pload0 - P_32_12
+[INFO PDN-0001] Inserting grid: pload0 - P_32_13
+[INFO PDN-0001] Inserting grid: pload0 - P_32_14
+[INFO PDN-0001] Inserting grid: pload0 - P_32_15
+[INFO PDN-0001] Inserting grid: pload0 - P_32_16
+[INFO PDN-0001] Inserting grid: pload0 - P_32_17
+[INFO PDN-0001] Inserting grid: pload0 - P_32_18
+[INFO PDN-0001] Inserting grid: pload0 - P_32_19
+[INFO PDN-0001] Inserting grid: pload0 - P_32_20
+[INFO PDN-0001] Inserting grid: pload0 - P_32_21
+[INFO PDN-0001] Inserting grid: pload0 - P_32_22
+[INFO PDN-0001] Inserting grid: pload0 - P_32_23
+[INFO PDN-0001] Inserting grid: pload0 - P_32_24
+[INFO PDN-0001] Inserting grid: pload0 - P_32_4
+[INFO PDN-0001] Inserting grid: pload0 - P_32_5
+[INFO PDN-0001] Inserting grid: pload0 - P_32_6
+[INFO PDN-0001] Inserting grid: pload0 - P_32_7
+[INFO PDN-0001] Inserting grid: pload0 - P_32_8
+[INFO PDN-0001] Inserting grid: pload0 - P_32_9
+[INFO PDN-0001] Inserting grid: pload0 - P_33_10
+[INFO PDN-0001] Inserting grid: pload0 - P_33_11
+[INFO PDN-0001] Inserting grid: pload0 - P_33_12
+[INFO PDN-0001] Inserting grid: pload0 - P_33_13
+[INFO PDN-0001] Inserting grid: pload0 - P_33_14
+[INFO PDN-0001] Inserting grid: pload0 - P_33_15
+[INFO PDN-0001] Inserting grid: pload0 - P_33_16
+[INFO PDN-0001] Inserting grid: pload0 - P_33_17
+[INFO PDN-0001] Inserting grid: pload0 - P_33_18
+[INFO PDN-0001] Inserting grid: pload0 - P_33_19
+[INFO PDN-0001] Inserting grid: pload0 - P_33_20
+[INFO PDN-0001] Inserting grid: pload0 - P_33_21
+[INFO PDN-0001] Inserting grid: pload0 - P_33_22
+[INFO PDN-0001] Inserting grid: pload0 - P_33_23
+[INFO PDN-0001] Inserting grid: pload0 - P_33_24
+[INFO PDN-0001] Inserting grid: pload0 - P_33_4
+[INFO PDN-0001] Inserting grid: pload0 - P_33_5
+[INFO PDN-0001] Inserting grid: pload0 - P_33_6
+[INFO PDN-0001] Inserting grid: pload0 - P_33_7
+[INFO PDN-0001] Inserting grid: pload0 - P_33_8
+[INFO PDN-0001] Inserting grid: pload0 - P_33_9
+[INFO PDN-0001] Inserting grid: pload0 - P_34_10
+[INFO PDN-0001] Inserting grid: pload0 - P_34_11
+[INFO PDN-0001] Inserting grid: pload0 - P_34_12
+[INFO PDN-0001] Inserting grid: pload0 - P_34_13
+[INFO PDN-0001] Inserting grid: pload0 - P_34_14
+[INFO PDN-0001] Inserting grid: pload0 - P_34_15
+[INFO PDN-0001] Inserting grid: pload0 - P_34_16
+[INFO PDN-0001] Inserting grid: pload0 - P_34_17
+[INFO PDN-0001] Inserting grid: pload0 - P_34_18
+[INFO PDN-0001] Inserting grid: pload0 - P_34_19
+[INFO PDN-0001] Inserting grid: pload0 - P_34_20
+[INFO PDN-0001] Inserting grid: pload0 - P_34_21
+[INFO PDN-0001] Inserting grid: pload0 - P_34_22
+[INFO PDN-0001] Inserting grid: pload0 - P_34_23
+[INFO PDN-0001] Inserting grid: pload0 - P_34_24
+[INFO PDN-0001] Inserting grid: pload0 - P_34_4
+[INFO PDN-0001] Inserting grid: pload0 - P_34_5
+[INFO PDN-0001] Inserting grid: pload0 - P_34_6
+[INFO PDN-0001] Inserting grid: pload0 - P_34_7
+[INFO PDN-0001] Inserting grid: pload0 - P_34_8
+[INFO PDN-0001] Inserting grid: pload0 - P_34_9
+[INFO PDN-0001] Inserting grid: pload0 - P_35_10
+[INFO PDN-0001] Inserting grid: pload0 - P_35_11
+[INFO PDN-0001] Inserting grid: pload0 - P_35_12
+[INFO PDN-0001] Inserting grid: pload0 - P_35_13
+[INFO PDN-0001] Inserting grid: pload0 - P_35_14
+[INFO PDN-0001] Inserting grid: pload0 - P_35_15
+[INFO PDN-0001] Inserting grid: pload0 - P_35_16
+[INFO PDN-0001] Inserting grid: pload0 - P_35_17
+[INFO PDN-0001] Inserting grid: pload0 - P_35_18
+[INFO PDN-0001] Inserting grid: pload0 - P_35_19
+[INFO PDN-0001] Inserting grid: pload0 - P_35_20
+[INFO PDN-0001] Inserting grid: pload0 - P_35_21
+[INFO PDN-0001] Inserting grid: pload0 - P_35_22
+[INFO PDN-0001] Inserting grid: pload0 - P_35_23
+[INFO PDN-0001] Inserting grid: pload0 - P_35_24
+[INFO PDN-0001] Inserting grid: pload0 - P_35_4
+[INFO PDN-0001] Inserting grid: pload0 - P_35_5
+[INFO PDN-0001] Inserting grid: pload0 - P_35_6
+[INFO PDN-0001] Inserting grid: pload0 - P_35_7
+[INFO PDN-0001] Inserting grid: pload0 - P_35_8
+[INFO PDN-0001] Inserting grid: pload0 - P_35_9
+[INFO PDN-0001] Inserting grid: pload0 - P_36_10
+[INFO PDN-0001] Inserting grid: pload0 - P_36_11
+[INFO PDN-0001] Inserting grid: pload0 - P_36_12
+[INFO PDN-0001] Inserting grid: pload0 - P_36_13
+[INFO PDN-0001] Inserting grid: pload0 - P_36_14
+[INFO PDN-0001] Inserting grid: pload0 - P_36_15
+[INFO PDN-0001] Inserting grid: pload0 - P_36_16
+[INFO PDN-0001] Inserting grid: pload0 - P_36_17
+[INFO PDN-0001] Inserting grid: pload0 - P_36_18
+[INFO PDN-0001] Inserting grid: pload0 - P_36_19
+[INFO PDN-0001] Inserting grid: pload0 - P_36_20
+[INFO PDN-0001] Inserting grid: pload0 - P_36_21
+[INFO PDN-0001] Inserting grid: pload0 - P_36_22
+[INFO PDN-0001] Inserting grid: pload0 - P_36_23
+[INFO PDN-0001] Inserting grid: pload0 - P_36_24
+[INFO PDN-0001] Inserting grid: pload0 - P_36_4
+[INFO PDN-0001] Inserting grid: pload0 - P_36_5
+[INFO PDN-0001] Inserting grid: pload0 - P_36_6
+[INFO PDN-0001] Inserting grid: pload0 - P_36_7
+[INFO PDN-0001] Inserting grid: pload0 - P_36_8
+[INFO PDN-0001] Inserting grid: pload0 - P_36_9
+[INFO PDN-0001] Inserting grid: pload0 - P_37_10
+[INFO PDN-0001] Inserting grid: pload0 - P_37_11
+[INFO PDN-0001] Inserting grid: pload0 - P_37_12
+[INFO PDN-0001] Inserting grid: pload0 - P_37_13
+[INFO PDN-0001] Inserting grid: pload0 - P_37_14
+[INFO PDN-0001] Inserting grid: pload0 - P_37_15
+[INFO PDN-0001] Inserting grid: pload0 - P_37_16
+[INFO PDN-0001] Inserting grid: pload0 - P_37_17
+[INFO PDN-0001] Inserting grid: pload0 - P_37_18
+[INFO PDN-0001] Inserting grid: pload0 - P_37_19
+[INFO PDN-0001] Inserting grid: pload0 - P_37_20
+[INFO PDN-0001] Inserting grid: pload0 - P_37_21
+[INFO PDN-0001] Inserting grid: pload0 - P_37_22
+[INFO PDN-0001] Inserting grid: pload0 - P_37_23
+[INFO PDN-0001] Inserting grid: pload0 - P_37_24
+[INFO PDN-0001] Inserting grid: pload0 - P_37_4
+[INFO PDN-0001] Inserting grid: pload0 - P_37_5
+[INFO PDN-0001] Inserting grid: pload0 - P_37_6
+[INFO PDN-0001] Inserting grid: pload0 - P_37_7
+[INFO PDN-0001] Inserting grid: pload0 - P_37_8
+[INFO PDN-0001] Inserting grid: pload0 - P_37_9
+[INFO PDN-0001] Inserting grid: pload0 - P_38_10
+[INFO PDN-0001] Inserting grid: pload0 - P_38_11
+[INFO PDN-0001] Inserting grid: pload0 - P_38_12
+[INFO PDN-0001] Inserting grid: pload0 - P_38_13
+[INFO PDN-0001] Inserting grid: pload0 - P_38_14
+[INFO PDN-0001] Inserting grid: pload0 - P_38_15
+[INFO PDN-0001] Inserting grid: pload0 - P_38_16
+[INFO PDN-0001] Inserting grid: pload0 - P_38_17
+[INFO PDN-0001] Inserting grid: pload0 - P_38_18
+[INFO PDN-0001] Inserting grid: pload0 - P_38_19
+[INFO PDN-0001] Inserting grid: pload0 - P_38_20
+[INFO PDN-0001] Inserting grid: pload0 - P_38_21
+[INFO PDN-0001] Inserting grid: pload0 - P_38_22
+[INFO PDN-0001] Inserting grid: pload0 - P_38_23
+[INFO PDN-0001] Inserting grid: pload0 - P_38_24
+[INFO PDN-0001] Inserting grid: pload0 - P_38_4
+[INFO PDN-0001] Inserting grid: pload0 - P_38_5
+[INFO PDN-0001] Inserting grid: pload0 - P_38_6
+[INFO PDN-0001] Inserting grid: pload0 - P_38_7
+[INFO PDN-0001] Inserting grid: pload0 - P_38_8
+[INFO PDN-0001] Inserting grid: pload0 - P_38_9
+[INFO PDN-0001] Inserting grid: pload0 - P_39_10
+[INFO PDN-0001] Inserting grid: pload0 - P_39_11
+[INFO PDN-0001] Inserting grid: pload0 - P_39_12
+[INFO PDN-0001] Inserting grid: pload0 - P_39_13
+[INFO PDN-0001] Inserting grid: pload0 - P_39_14
+[INFO PDN-0001] Inserting grid: pload0 - P_39_15
+[INFO PDN-0001] Inserting grid: pload0 - P_39_16
+[INFO PDN-0001] Inserting grid: pload0 - P_39_17
+[INFO PDN-0001] Inserting grid: pload0 - P_39_18
+[INFO PDN-0001] Inserting grid: pload0 - P_39_19
+[INFO PDN-0001] Inserting grid: pload0 - P_39_20
+[INFO PDN-0001] Inserting grid: pload0 - P_39_21
+[INFO PDN-0001] Inserting grid: pload0 - P_39_22
+[INFO PDN-0001] Inserting grid: pload0 - P_39_23
+[INFO PDN-0001] Inserting grid: pload0 - P_39_24
+[INFO PDN-0001] Inserting grid: pload0 - P_39_4
+[INFO PDN-0001] Inserting grid: pload0 - P_39_5
+[INFO PDN-0001] Inserting grid: pload0 - P_39_6
+[INFO PDN-0001] Inserting grid: pload0 - P_39_7
+[INFO PDN-0001] Inserting grid: pload0 - P_39_8
+[INFO PDN-0001] Inserting grid: pload0 - P_39_9
+[INFO PDN-0001] Inserting grid: pload0 - P_3_10
+[INFO PDN-0001] Inserting grid: pload0 - P_3_11
+[INFO PDN-0001] Inserting grid: pload0 - P_3_12
+[INFO PDN-0001] Inserting grid: pload0 - P_3_13
+[INFO PDN-0001] Inserting grid: pload0 - P_3_14
+[INFO PDN-0001] Inserting grid: pload0 - P_3_15
+[INFO PDN-0001] Inserting grid: pload0 - P_3_16
+[INFO PDN-0001] Inserting grid: pload0 - P_3_17
+[INFO PDN-0001] Inserting grid: pload0 - P_3_18
+[INFO PDN-0001] Inserting grid: pload0 - P_3_19
+[INFO PDN-0001] Inserting grid: pload0 - P_3_20
+[INFO PDN-0001] Inserting grid: pload0 - P_3_21
+[INFO PDN-0001] message limit (1000) reached. This message will no longer print.
+[INFO PDN-0500] Runtime: 5.60s
+OT_T pdngen 10
+OT_BUMPS 1280 120 columns
+OT_T bumps 11
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[INFO PSM-0040] All shapes on net VDD are connected.
+OT_PG_CHECK_OK VDD
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 9.26e-02 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.80e-01 V
+Average voltage  : 6.93e-01 V
+Average IR drop  : 6.62e-03 V
+Worstcase IR drop: 1.99e-02 V
+Percentage drop  : 2.84 %
+######################################
+OT_PSM_OK VDD
+OT_T psm_VDD 15
+[INFO PSM-0040] All shapes on net VSS are connected.
+OT_PG_CHECK_OK VSS
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : default
+Total power      : 9.26e-02 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 3.72e-03 V
+Average voltage  : 2.03e-03 V
+Average IR drop  : 2.03e-03 V
+Worstcase IR drop: 3.72e-03 V
+Percentage drop  : 0.53 %
+######################################
+OT_PSM_OK VSS
+OT_T psm_VSS 17
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+OT_PG_CHECK_OK VDDPHY
+[INFO PSM-0040] All shapes on net VDDPHY are connected.
+########## IR report #################
+Net              : VDDPHY
+Corner           : default
+Total power      : 4.37e+00 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.88e-01 V
+Average voltage  : 6.95e-01 V
+Average IR drop  : 5.39e-03 V
+Worstcase IR drop: 1.21e-02 V
+Percentage drop  : 1.72 %
+######################################
+OT_PSM_OK VDDPHY
+OT_T psm_VDDPHY 297
+[INFO PSM-0040] All shapes on net VSSPHY are connected.
+OT_PG_CHECK_OK VSSPHY
+[INFO PSM-0040] All shapes on net VSSPHY are connected.
+########## IR report #################
+Net              : VSSPHY
+Corner           : default
+Total power      : 4.37e+00 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 1.16e-02 V
+Average voltage  : 5.41e-03 V
+Average IR drop  : 5.41e-03 V
+Worstcase IR drop: 1.16e-02 V
+Percentage drop  : 1.66 %
+######################################
+OT_PSM_OK VSSPHY
+OT_T psm_VSSPHY 635
+OT_DONE
+	Command being timed: "openroad -threads 4 -no_init -exit /work/run.tcl"
+	User time (seconds): 612.09
+	System time (seconds): 24.11
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 10:36.41
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 10057536
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 14084390
+	Voluntary context switches: 5
+	Involuntary context switches: 1191
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 416
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+EXIT 0

@@ -1,0 +1,224 @@
+{
+ "name": "S81 isolated PHY PG sizing coupon",
+ "not_release_plan": true,
+ "candidate_guard_um": 10.8,
+ "variant": "B",
+ "part": "lk_ES0",
+ "die": {
+  "name": "s81",
+  "label": "DeepSeek ROM S81 72-frame MU release die",
+  "tech": "asap7",
+  "outline_um": [
+   31950.72,
+   24744.96
+  ],
+  "period_ps": 833,
+  "reach_um": 405.0,
+  "rep_um": 450.0,
+  "grid_um": 8.64,
+  "layer_budget": {
+   "partition_signal_max": "M7",
+   "die_layers": [
+    "M8",
+    "M9"
+   ],
+   "die_use": [
+    "clock_spine",
+    "pg"
+   ]
+  },
+  "pg": {
+   "partition_pg_max": "M7",
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    }
+   ],
+   "domains": [
+    {
+     "name": "phy_lk_ES0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_ES0_u_phy"
+     ],
+     "rect_um": [
+      23318.0,
+      179.28,
+      25948.08,
+      1125.36
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       23328.8,
+       190.08,
+       25937.28,
+       1114.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid",
+     "phy_macro_um": [
+      23328.8,
+      190.08,
+      25937.28,
+      1114.56
+     ],
+     "core_strip_um": [
+      [
+       23189.76,
+       103.68,
+       26075.519999999997,
+       179.28
+      ],
+      [
+       23189.76,
+       1125.36,
+       26075.519999999997,
+       1330.5600000000002
+      ],
+      [
+       23189.76,
+       179.28,
+       23318.0,
+       1125.36
+      ],
+      [
+       25948.08,
+       179.28,
+       26075.519999999997,
+       1125.36
+      ]
+     ]
+    }
+   ]
+  },
+  "channels": [
+   {
+    "rect_um": [
+     28961.280000000002,
+     103.68,
+     31847.04,
+     1330.5600000000002
+    ],
+    "reason": "die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes here; both neighbours are PHY or seal ring)"
+   },
+   {
+    "rect_um": [
+     11646.720000000001,
+     23414.4,
+     13089.600000000002,
+     24641.280000000002
+    ],
+    "reason": "free cell of the retired bk_col (S81/H4: no consumer in v4.8); top edge between lk_WN3 and gunit, no lane routes here"
+   },
+   {
+    "rect_um": [
+     17418.24,
+     22187.520000000004,
+     18861.120000000003,
+     23414.4
+    ],
+    "reason": "free cell (S81/PORTFIX 10-25): s_5N_x06 was an empty slice station (no lane passes it), top edge; left free for die PG / decap"
+   },
+   {
+    "rect_um": [
+     0,
+     0,
+     31950.72,
+     103.68
+    ],
+    "reason": "seal ring"
+   },
+   {
+    "rect_um": [
+     0,
+     24641.28,
+     31950.72,
+     24744.96
+    ],
+    "reason": "seal ring"
+   },
+   {
+    "rect_um": [
+     0,
+     103.68,
+     103.68,
+     24641.28
+    ],
+    "reason": "seal ring"
+   },
+   {
+    "rect_um": [
+     31847.04,
+     103.68,
+     31950.72,
+     24641.28
+    ],
+    "reason": "seal ring"
+   }
+  ],
+  "io": [
+   {
+    "name": "io_lk_ES0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_ES0",
+    "rect_um": [
+     23328.8,
+     190.08,
+     25937.28,
+     1114.56
+    ],
+    "sites": 102,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY ZONE OFF-SHORE: free area [23403.4, 395.76, 26075.52, 1330.56] is 396 um from the die edge (the partition's ft / bus strip is on the die-edge side; orient fix owed) -> window = whole slot"
+   }
+  ]
+ }
+}
