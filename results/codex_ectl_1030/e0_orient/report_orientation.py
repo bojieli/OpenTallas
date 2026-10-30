@@ -44,6 +44,7 @@ def run(root,plan=None,out=None):
     if Path(c.get('pins_file','')).name!='kv3_head_eighth_e0_pins_r25_r26q4.json':continue
     assert c.get('orient')=='MX';changes.append(dict(type=tn,inst=c['inst'],before='raw/MX',after='signed-fMX/R0',origin_um=c['origin_um']))
     c['orient']='R0';c['pins_file']=c['pins_file'].replace('_pins_r25_r26q4.json','_pins_fMX_r25_r26q4.json')
+  assert len(changes)==10, f'expected ten raw/MX entries, got {len(changes)}'
   report['candidate_entries']=changes
   if out:out.write_text(json.dumps(j,indent=1)+'\n')
  (root/'report.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps(report,indent=1))
