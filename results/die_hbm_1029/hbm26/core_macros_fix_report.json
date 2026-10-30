@@ -1,0 +1,39 @@
+{
+ "master_fixed": {
+  "ot_hbm_idx_qctl_static": {
+   "None->ot_sram_1r1w_256x256_m2_r2c2": 1
+  },
+  "ot_hbm_su_programme_pslice_c5": {
+   "width->ot_sram_1r1w_128x256_m1_r2c2": 100
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp0": {
+   "width->ot_sram_1r1w_128x256_m1_r2c2": 6
+  },
+  "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+   "width->ot_sram_1r1w_128x256_m1_r2c2": 6
+  },
+  "ot_hbm_svc_vmdel_lane_n": {
+   "None->ot_sram_1r1w_128x256_m1_r2c2": 2
+  }
+ },
+ "static": {
+  "ot_hbm_su_static_pgslice_lg__lanes8_11": {
+   "macros": 24,
+   "columns": 6,
+   "masters": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hgi_sfu_core_split3__opstore_b": {
+   "macros": 48,
+   "columns": 4,
+   "masters": [
+    "ot_sram_1r1w_256x256_m2_r2c2"
+   ]
+  }
+ },
+ "schema": "opentallas.hbm.core_macros_fix.v1",
+ "source_sha256": "5047d56dac7ed79bf6fef53c414f9a7596f84764173ff28548b9f78721eebdb2",
+ "core_macros_sha256": "9c40b92384e3b5062e266bdfa029b73047f81021eeea3459673d96465aa9da6a",
+ "die_plan_sha256": "77fb5f39596865b1ae97171856b0e65b5b116aac6127910aec97b2b93db453a7"
+}

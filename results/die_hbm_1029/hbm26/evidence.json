@@ -1,0 +1,13 @@
+{
+ "ot_hbm_su_static_pgslice_lg__lane_exp0": ["ot_sram_1r1w_128x256_m1_r2c2"],
+ "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": ["ot_sram_1r1w_128x256_m1_r2c2"],
+ "ot_hbm_su_programme_pslice_c5": ["ot_sram_1r1w_128x256_m1_r2c2"],
+ "ot_hbm_idx_qctl_static": ["ot_sram_1r1w_256x256_m2_r2c2"],
+ "ot_hbm_svc_vmdel_lane_n": ["ot_sram_1r1w_128x256_m1_r2c2"],
+ "_sources": {
+  "lane_exp0/lane_exp__canon": "plan lane_exp_macro_placement.json macro field + ot_hbm_su_static_data_store g_read u_m (HBM-CORES-KITS-24 kit LEF)",
+  "programme_pslice_c5": "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme.sv:46,142 + _pgcol.sv:291",
+  "ot_hbm_idx_qctl_static": "rtl/hbm_accel/index/quad_1017 ot_hbm_idx_calendar_static store (line 19)",
+  "ot_hbm_svc_vmdel_lane_n": "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_n.sv:133"
+ }
+}
