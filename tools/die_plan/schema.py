@@ -934,7 +934,9 @@ SCHEMA = {
             # FLOW-6 10-30 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=resize (landing_placement fits CLAND cells on
             # the widest drive variant of their own family, the in-place GPL upsize; not the w/0.4 reserve of the
             # boolean above, which overfills ring bands); unset = unchanged kits; both keys set = gen error
-            cland_fit_resize={"type": "boolean"})},
+            cland_fit_resize={"type": "boolean"},
+            # Opt-in diamond DPL for fragmented FIRM landing sites; absent preserves default.
+            dpl_legalizer={"enum": ["diamond"]})},
     },
 }
 
