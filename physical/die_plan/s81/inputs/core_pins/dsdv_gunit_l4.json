@@ -1,13 +1,13 @@
 {
 "module": "dsdv_gunit_l4",
-"lef": "physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef",
-"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 558 constant pins dropped (inputs/const_pins_dropped.json)",
-"pinhash": "a55196bc0b7a",
+"lef": "physical/die_plan/s81/cores/legacy/lef/dsdv_gunit_l4.lef",
+"source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (largest non-M1 rect centre, CORE-KS rule); OWNER DECISION 8 10-24: 558 constant pins dropped (inputs/const_pins_dropped.json); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): clock clk M4(0.042,35.292) -> M5(0.06,35.292) 0.120x0.480 edge rectangle on the M5 track (GEOM-21); plan LEF = plan-owned copy of physical/ref_tile/dsdv_gunit_l4/views/dsdv_gunit_l4/dsdv_gunit_l4.lef (only PIN clk differs)",
+"pinhash": "405b4ff105a8",
 "pins": [
 {
 "name": "clk",
-"layer": "M4",
-"x": 0.042,
+"layer": "M5",
+"x": 0.06,
 "y": 35.292
 },
 {

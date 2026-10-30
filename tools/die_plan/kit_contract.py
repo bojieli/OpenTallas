@@ -559,7 +559,9 @@ def _canon(doc, outline):
 
 def placed_pins(kd):
     """the kit's placed pin set in plan pin-file form [{name, layer, x, y}] (pin centres) from io.tcl, without the
-    kit-added pins of pins_added.json (they are not plan pins)."""
+    kit-added pins of pins_added.json (they are not plan pins).  place_pin pins and native multiPORT pins (DIE-S81-32/PINEV
+    10-29: the generator's dbBPin/dbBox blocks were invisible here, so kits with declared multiPORT pins failed
+    pins_canonical although they carry exactly the plan pins)."""
     kd = Path(kd)
     added = set()
     pa = kd / "pins_added.json"
@@ -568,14 +570,48 @@ def placed_pins(kd):
         for p in (d.get("added", []) if isinstance(d, dict) else d):
             added.add(p if isinstance(p, str) else (p.get("name") or
                       (p["bus"] if p.get("bit") is None else f"{p['bus']}[{p['bit']}]")))
-    pins = {}
+    pins, native, cur = {}, {}, None
     for line in (kd / "io.tcl").read_text(errors="replace").splitlines():
         m = re.match(r"\s*place_pin\s+-pin_name\s+(\{[^}]*\}|\S+)\s+-layer\s+(\S+)\s+-location\s+\{\s*" + _NUM +
                      r"\s+" + _NUM + r"\s*\}", line)
         if m and m.group(1).strip("{}").strip() not in added:
             n = m.group(1).strip("{}").strip()
             pins[n] = dict(name=n, layer=m.group(2), x=float(m.group(3)), y=float(m.group(4)))
-    return list(pins.values())
+            continue
+        # native multiPORT pins (gen_core_kit_legacy native_multiport_tcl): the declared rects as dbBox shapes of one BPin
+        b = _MP_BTERM.match(line)
+        if b:
+            cur = b.group(1).strip()
+            if cur not in added:
+                native[cur] = []
+                pins[cur] = None        # keep io.tcl order
+            continue
+        r = _MP_BOX.match(line)
+        if r and cur in native:
+            native[cur].append((r.group(1), *(float(r.group(i)) for i in range(2, 6))))
+    if native:
+        # the pin centre is the rect the generator centred on the plan pin (pins.json row); without such a rect the
+        # first one stands (and then mismatches the plan pin file: no silent pass)
+        rows = {}
+        pj = kd / "pins.json"
+        if pj.is_file():
+            rows = {p["name"]: p for p in _kit_pins(json.loads(pj.read_text()))}
+        for n, rects in native.items():
+            if not rects:
+                pins.pop(n, None)
+                continue
+            q, pick = rows.get(n), rects[0]
+            if q is not None:
+                hit = [a for a in rects if abs((a[1] + a[3]) / 2 - float(q["x"])) < 1e-4
+                       and abs((a[2] + a[4]) / 2 - float(q["y"])) < 1e-4]
+                pick = hit[0] if hit else pick
+            pins[n] = dict(name=n, layer=pick[0], x=round((pick[1] + pick[3]) / 2, 4), y=round((pick[2] + pick[4]) / 2, 4))
+    return [p for p in pins.values() if p is not None]
+
+
+_MP_BTERM = re.compile(r"\s*set\s+ot_mp_bt\s+\[\[ord::get_db_block\]\s+findBTerm\s+\{([^}]*)\}\]")
+_MP_BOX = re.compile(r"\s*odb::dbBox_create\s+\$ot_mp_bp\s+\[\[ord::get_db_tech\]\s+findLayer\s+(\S+)\]" +
+                     "".join(r"\s+\[expr\s+\{int\(round\(" + _NUM + r"\*\$ot_mp_u\)\)\}\]" for _ in range(4)))
 
 
 def slice_expected(kd, recs):
