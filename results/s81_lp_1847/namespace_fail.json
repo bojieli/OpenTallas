@@ -1,0 +1,1493 @@
+{
+  "scope": "saved actual LP hunt-none64 AIG diagnostic; not fresh official kit LEC",
+  "hints": {
+    "given": 4,
+    "applied": 4,
+    "skipped": [],
+    "anon": 0,
+    "dropped": [],
+    "kept": 0,
+    "loaded": [],
+    "loaded_refused": [],
+    "fill": [],
+    "fill_refused": []
+  },
+  "profile": {
+    "given": 3509,
+    "kept": 3401,
+    "swapped": [],
+    "resided": [
+      {
+        "old": [
+          "both",
+          "ff:u_dut.u.u_sko.nz[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_sko.nz[0]",
+            0
+          ]
+        ],
+        "new": [
+          "gold",
+          "ff:u_dut.u.u_sko.nz[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_sko.nz[0]",
+            0
+          ]
+        ]
+      },
+      {
+        "old": [
+          "both",
+          "ff:u_dut.u.u_sko.nz[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_sko.nz[0]",
+            0
+          ]
+        ],
+        "new": [
+          "gold",
+          "ff:u_dut.u.u_sko.nz[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_sko.nz[0]",
+            0
+          ]
+        ]
+      }
+    ],
+    "reanchored": [],
+    "ambiguous": [],
+    "dropped": [
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[11].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[2]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[3]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[4]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[5]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[6]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[7]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r#t[8]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[11].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[2]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[3]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[4]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[5]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[6]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[7]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r#t[8]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[11].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[2]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[3]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[4]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[5]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[6]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[7]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r#t[8]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[11].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[2]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[3]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[4]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[5]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[6]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[7]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r#t[8]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[11].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[2]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[3]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[4]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[5]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[6]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[7]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r#t[8]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[11].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[2]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[3]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[4]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[5]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[6]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[7]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gate",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r#t[8]",
+          [
+            "eq",
+            "gate",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "key or partner absent in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[3]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[4]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[5]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[6]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[7]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[13].rp_r[8]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[3]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[4]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[5]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[6]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[7]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[15].rp_r[8]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[3]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[4]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[5]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[6]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[7]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[16].rp_r[8]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[3]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[4]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[5]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[6]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[7]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[17].rp_r[8]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[3]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[4]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[5]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[6]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[7]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[3].rp_r[8]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[0]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[0]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[1]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[1]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[2]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[2]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[3]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[3]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[4]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[4]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[5]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[5]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[6]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[6]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[7]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[7]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      },
+      {
+        "hint": [
+          "gold",
+          "ff:u_dut.u.u_ep.g_rb_safe.g_address[7].rp_r[8]",
+          [
+            "eq",
+            "gold",
+            "ff:u_dut.u.u_ep.g_rb_safe.g_address[0].rp_r[8]",
+            0
+          ]
+        ],
+        "why": "stale side gold: key is both in this gate"
+      }
+    ]
+  },
+  "keep": {
+    "declared": 3742,
+    "missing": [
+      "ff:u_dut.u.u_ep.rdy_k[3]",
+      "ff:u_dut.u.u_gb.g_pc[0].ps[5]",
+      "ff:u_dut.u.u_gb.g_pc[11].ps[3]",
+      "ff:u_dut.u.u_gb.g_pc[5].ps[4]",
+      "ff:u_dut.u.u_sko.nz[0]",
+      "ff:u_dut.u.u_sko.nz[1]",
+      "ff:u_dut.u.u_sko.nz[2]"
+    ],
+    "constant": []
+  },
+  "counts": {
+    "proved": 30129,
+    "differs": 2610
+  },
+  "verdict": "FAIL",
+  "diagnosis": "Replay omitted production namespace normalization;108 stale profile entries dropped before proof. Counts describe diagnostic harness failure, not RTL regression."
+}

@@ -1,0 +1,34 @@
+{
+  "netlist_sha256": "abbc56bcde8a1ab5d341666b6c6da246976995381f1b99b067ae282de8804f7c",
+  "verdict": "4_PHYSICAL_FLOPS_LOCATED_NOT_FORMAL_PROOF",
+  "flops": {
+    "_15858_": {
+      "gold": "u.u_ep.rdy_k[3]",
+      "gate": "u.u_ep.in_ready",
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u.u_ep.in_ready$_DFF_PN1_",
+      "ports": ".CLK(ck),\n    .D(_23826_),\n    .QN(_15858_),\n    .RESETN(_50436_),\n    .SETN(\\u.u_rr.g_local[10].local_r )"
+    },
+    "_18098_": {
+      "gold": "u.u_gb.g_pc[0].ps[5]",
+      "gate": "u.u_gb.g_pc[0].g_b[0].a0",
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u.u_gb.g_pc[0].g_b[0].a0$_DFF_PN0_",
+      "ports": ".CLK(ck),\n    .D(\\u.u_gb.psel_n[5] ),\n    .QN(_18098_),\n    .RESETN(\\u.u_rr.g_local[203].local_r ),\n    .SETN(_50436_)"
+    },
+    "_18030_": {
+      "gold": "u.u_gb.g_pc[11].ps[3]",
+      "gate": "u.u_gb.g_pc[11].g_b[280].a2",
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u.u_gb.g_pc[11].g_b[280].a2$_DFF_PN0_",
+      "ports": ".CLK(ck),\n    .D(\\u.u_gb.psel_n[3] ),\n    .QN(_18030_),\n    .RESETN(\\u.u_rr.g_local[205].local_r ),\n    .SETN(_50436_)"
+    },
+    "_18067_": {
+      "gold": "u.u_gb.g_pc[5].ps[4]",
+      "gate": "u.u_gb.g_pc[5].g_b[140].a1",
+      "cell": "DFFASRHQNx1_ASAP7_75t_R",
+      "instance": "\\u.u_gb.g_pc[5].g_b[140].a1$_DFF_PN0_",
+      "ports": ".CLK(ck),\n    .D(\\u.u_gb.psel_n[4] ),\n    .QN(_18067_),\n    .RESETN(\\u.u_rr.g_local[204].local_r ),\n    .SETN(_50436_)"
+    }
+  }
+}
