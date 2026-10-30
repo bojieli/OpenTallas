@@ -1,0 +1,244 @@
+{
+  "name": "dsfd_coll_lane_w_safe8_ntf_r13_s81_coll_uf3d1",
+  "family": "s81_coll",
+  "splits": "2,3,8,8",
+  "sinks": 19747,
+  "n_cells": 1856,
+  "stages": [
+    13
+  ],
+  "islands_xy": [
+    [
+      55.62,
+      70.2
+    ],
+    [
+      55.62,
+      227.34
+    ],
+    [
+      55.62,
+      386.1
+    ],
+    [
+      240.3,
+      70.2
+    ],
+    [
+      240.3,
+      227.34
+    ],
+    [
+      240.3,
+      386.1
+    ]
+  ],
+  "islands_requested_xy": [
+    [
+      55.632,
+      70.332
+    ],
+    [
+      240.312,
+      70.332
+    ],
+    [
+      55.632,
+      227.244
+    ],
+    [
+      240.312,
+      227.244
+    ],
+    [
+      55.632,
+      386.076
+    ],
+    [
+      240.312,
+      386.076
+    ]
+  ],
+  "island_snap": [
+    {
+      "group": [
+        0,
+        0
+      ],
+      "requested_xy_um": [
+        55.632,
+        70.332
+      ],
+      "maze_xy_um": [
+        55.62,
+        70.2
+      ],
+      "maze_displacement_um": 0.144
+    },
+    {
+      "group": [
+        0,
+        1
+      ],
+      "requested_xy_um": [
+        55.632,
+        227.244
+      ],
+      "maze_xy_um": [
+        55.62,
+        227.34
+      ],
+      "maze_displacement_um": 0.108
+    },
+    {
+      "group": [
+        0,
+        2
+      ],
+      "requested_xy_um": [
+        55.632,
+        386.076
+      ],
+      "maze_xy_um": [
+        55.62,
+        386.1
+      ],
+      "maze_displacement_um": 0.036
+    },
+    {
+      "group": [
+        1,
+        0
+      ],
+      "requested_xy_um": [
+        240.312,
+        70.332
+      ],
+      "maze_xy_um": [
+        240.3,
+        70.2
+      ],
+      "maze_displacement_um": 0.144
+    },
+    {
+      "group": [
+        1,
+        1
+      ],
+      "requested_xy_um": [
+        240.312,
+        227.244
+      ],
+      "maze_xy_um": [
+        240.3,
+        227.34
+      ],
+      "maze_displacement_um": 0.108
+    },
+    {
+      "group": [
+        1,
+        2
+      ],
+      "requested_xy_um": [
+        240.312,
+        386.076
+      ],
+      "maze_xy_um": [
+        240.3,
+        386.1
+      ],
+      "maze_displacement_um": 0.036
+    }
+  ],
+  "TT": {
+    "mean": 395.54,
+    "leaf_mean_min": 366.72,
+    "leaf_mean_max": 414.46,
+    "window": 47.74,
+    "sink_min": 366.2,
+    "sink_max": 415.38,
+    "leaf_slew_in_max": 59.57,
+    "leaf_out_slew_max": 47.08,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+  },
+  "FF": {
+    "mean": 296.54,
+    "leaf_mean_min": 273.24,
+    "leaf_mean_max": 314.59,
+    "window": 41.35,
+    "sink_min": 272.81,
+    "sink_max": 315.73,
+    "leaf_slew_in_max": 45.69,
+    "leaf_out_slew_max": 35.41,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+  },
+  "leaf_spread_max": {
+    "all": 41.84,
+    "main": 41.84,
+    "strip": 0.0,
+    "n_gt_40": 1,
+    "top": [
+      [
+        "Tpqqa",
+        41.84
+      ],
+      [
+        "Tqqpw",
+        34.13
+      ],
+      [
+        "Tppwc",
+        33.63
+      ],
+      [
+        "Tqpwt",
+        33.01
+      ],
+      [
+        "Tqrvw",
+        32.84
+      ],
+      [
+        "Tqpsx",
+        32.82
+      ],
+      [
+        "Tprvx",
+        31.2
+      ],
+      [
+        "Tppwv",
+        30.95
+      ]
+    ]
+  },
+  "level_len_um": [
+    97.74,
+    158.22,
+    240.3,
+    92.34
+  ],
+  "repeaters_per_edge": [
+    1,
+    2,
+    3,
+    1
+  ],
+  "model": "uf_phys3 v1 GRT, TT max-rise / FF min-rise-fall; SAME frozen masters and kernel as d1 (R21); R7 retained as info",
+  "source_sha": "f73b32dc5d465b9d38787cc624ac89b2e9ad688c",
+  "plan_model_only": true,
+  "physical_build": false,
+  "verdict": "FAIL",
+  "artifacts": "/srv/opentallas-scratch2/claude/codex-s81-islands-0336/plan/dsfd_coll_lane_w_safe8_ntf",
+  "source_family": "de6d79d952e H2FIX6 family; original cached placed census, libs and UF3fit",
+  "source_hashes": {
+    "geo.txt": "0570b7572c2c70860980f98920bbc0f09cc61794bb627157908d21b8d274f904",
+    "sites.txt": "f70ebd43c3e1e53fffa0f755a3c169636ac6e2ecbded027df4aaa355a456bc20",
+    "plan_d1.json": "07381a3471da9b950aac698c04c790940dc2c0336b68cabdceafa63e450c32a2"
+  }
+}

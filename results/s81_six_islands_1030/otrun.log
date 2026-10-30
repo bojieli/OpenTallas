@@ -1,0 +1,8 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/codex-s81-islands-0336
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/codex-s81-islands-0336
+ot-run: localhost      admits   736 GB (avail 848, reserve 0, fresh 27.5, peak 19.6, headroom 0, waiters 0/0 GB) load 65/112 running 26 disk 624 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-3089457-1793362226 after 1 s
+f73b32dc5d465b9d38787cc624ac89b2e9ad688c
+CORE_FAMILY_SLICE {"core": "dsfd_coll_lane_w_safe8_ntf", "family": "s81_coll", "splits": "2,3,8,8", "sinks": 19747, "cells": 1856, "stages": [13], "TT": 395.54, "TTw": 47.74, "FF": 296.54, "FFw": 41.35, "verdict": "FAIL", "fails": ["leaves over 40 um spread: 1", "TT window 47.7 > 20", "FF window 41.4 > 20", "converter rc 1: /srv/opentallas-scratch2/claude/wt/codex-support-0336/tools/die_plan/core_infra.py\", line 764, in emit_tcl\n    raise InfraError(f\"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build\")\ncore_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build"]}
+ot-run: RAN on localhost (unit oth-ubuntu-3089457-1793362226): exit 0
