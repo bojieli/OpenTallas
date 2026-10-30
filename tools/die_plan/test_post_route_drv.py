@@ -123,7 +123,7 @@ def test_mk_refuses_ff_only_variant_on_two_mode_kit(tmp_path):
 
 def test_hook_sink_guard_order():
     s = (PRD / "prd_hook.tcl").read_text()
-    order = ["ot_clk_freeze\n", "set_dont_use $lc", "repair_design -slew_margin", "repair_timing -setup",
+    order = ["ot_clk_freeze\n", "set_dont_use $lc", "repair_design {*}${_drv_args}", "repair_timing -setup",
              "ot_repair_hold_guarded $args", "repair_timing -hold {*}$args", "set ::ot_prd_reverted [ot_prd_sink_revert]", "\ndetailed_placement\n",
              "check_placement", "global_route -end_incremental", "ot_clk_freeze_assert post_grt"]
     pos = [s.index(x) for x in order]
@@ -211,3 +211,17 @@ def test_loop_route_failure_stops_without_signoff(tmp_path):
     r, res, log = run_loop(tmp_path, "p1_tc=5", FAKE_ROUTE_RC=2)
     assert r.returncode == 2 and "final" not in res and res["passes"][0]["route_rc"] == "2"
     assert log("finish") == [] and log("post") == []
+
+
+def test_optional_wire_limit_uses_real_repair_command():
+    import subprocess
+    source = (PRD / "prd_hook.tcl").read_text()
+    start = source.index("set _drv_args")
+    end = source.index("repair_design {*}${_drv_args}", start) + len("repair_design {*}${_drv_args}")
+    fragment = source[start:end]
+    prefix = "set ::env(OT_SLEW_MARGIN) 20\nset _pass 1\nproc repair_design {args} {puts \"CALL $args\"}\n"
+    for limit, expected in ((None, "-slew_margin 20 -cap_margin 20"), (100, "-slew_margin 20 -cap_margin 20 -max_wire_length 100")):
+        envset = "" if limit is None else f"set ::env(OT_PRD_MAX_WIRE_LENGTH) {limit}\n"
+        result = subprocess.run(["tclsh"], input=prefix + envset + fragment, text=True, capture_output=True)
+        assert result.returncode == 0 and not result.stderr, result.stderr
+        assert f"CALL {expected}" in result.stdout

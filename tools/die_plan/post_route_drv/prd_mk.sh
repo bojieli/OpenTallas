@@ -67,6 +67,7 @@ case ${V:0:1} in
 esac > $OUT/variant.env
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env
+[ -n "${OT_PRD_MAX_WIRE_LENGTH:-}" ] && echo "OT_PRD_MAX_WIRE_LENGTH=$OT_PRD_MAX_WIRE_LENGTH" >> $OUT/variant.env
 echo "OT_HOLD_MM_KIT=${MM:-0}" >> $OUT/variant.env
 echo "OT_ECO_FROM=grt" >> $OUT/variant.env   # clk_freeze_check.sh --pre-unrouted (always the pre-DRT start)
 printf '{"tool": "post_route_drv", "variant": "%s", "source_kit": "%s:%s", "source_grt": "%s/5_1_grt.odb", "parasitics": "%s", "signoff_tools": "%s"}\n' \

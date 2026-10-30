@@ -57,7 +57,14 @@ puts "OT_PRD pass $_pass sink guard: [dict size $::ot_prd_masters] clock-net ins
 
 if {$::env(OT_MAX_FANOUT) > 0} { set_max_fanout $::env(OT_MAX_FANOUT) [current_design] }
 puts "OT_PRD pass $_pass repair_design slew_margin $::env(OT_SLEW_MARGIN) cap_margin $::env(OT_SLEW_MARGIN) max_fanout $::env(OT_MAX_FANOUT) (routed RCX SPEF)"
-repair_design -slew_margin $::env(OT_SLEW_MARGIN) -cap_margin $::env(OT_SLEW_MARGIN)
+set _drv_args [list -slew_margin $::env(OT_SLEW_MARGIN) -cap_margin $::env(OT_SLEW_MARGIN)]
+# Optional geometric data-net segmentation, independent of the Liberty slew
+# repair decision. Frozen clock nets/drivers remain protected by ot_clk_freeze.
+set _wire_limit [expr {[info exists ::env(OT_PRD_MAX_WIRE_LENGTH)] ? $::env(OT_PRD_MAX_WIRE_LENGTH) : 0}]
+if {![string is double -strict $_wire_limit] || $_wire_limit < 0} {error "OT_PRD invalid max wire length $_wire_limit"}
+if {$_wire_limit > 0} {lappend _drv_args -max_wire_length $_wire_limit}
+puts "OT_PRD pass $_pass repair_design $_drv_args"
+repair_design {*}${_drv_args}
 if {$::env(OT_SETUP_MARGIN) ne ""} {
   puts "OT_PRD pass $_pass repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN)"
   repair_timing -setup -setup_margin $::env(OT_SETUP_MARGIN) -skip_last_gasp
