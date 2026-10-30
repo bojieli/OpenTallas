@@ -907,8 +907,18 @@ def multi_root_tcl_patches(kd, mr):
     f = kd / "postcts_gate.tcl"
     if f.is_file():
         t = f.read_text()
-        rp = [("set vck [lsearch -all -inline -not [all_clocks] [get_clocks clk]]\n", "set vck [get_clocks vclk]\n"),
-              ("set_propagated_clock [get_clocks clk]\n", f"set_propagated_clock [get_clocks {{{real}}}]\n"),
+        # Explicit real-root census: the shared insertion measure excludes independent
+        # forwarded landing clocks by default, while declared core roots all count.
+        census = "dict for {i p} [ot_pinreg_set] {\n"
+        assert t.count(census) == 1, "postcts_gate.tcl pin-register census anchor changed"
+        t = t.replace(census, f"set ::ot_pinreg_clocks {{{real}}}\n" + census, 1)
+        legacy_virtual = "set vck [lsearch -all -inline -not [all_clocks] [get_clocks clk]]\n"
+        if legacy_virtual in t:
+            assert t.count(legacy_virtual) == 1, "postcts_gate.tcl ambiguous virtual-clock anchor"
+            t = t.replace(legacy_virtual, "set vck [get_clocks vclk]\n", 1)
+        else:
+            assert "set ot_pg_virtual {}" in t, "postcts_gate.tcl missing virtual-clock selector"
+        rp = [("set_propagated_clock [get_clocks clk]\n", f"set_propagated_clock [get_clocks {{{real}}}]\n"),
               ("  set a [ot_pinreg_arr $p [get_clocks clk]]\n",
                f"  set a \"\"\n  foreach ot_rc [get_clocks {{{real}}}] {{ if {{$a eq \"\"}} {{ set a [ot_pinreg_arr $p $ot_rc] }} }}\n")]
         for o, n in rp:
