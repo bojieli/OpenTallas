@@ -1,0 +1,13 @@
+DIE-S81-32 S81 source-pin event (VSW centre clock entry + early-tap move; COORD 20:4x approved ASK default (b)), 2026-10-29 20:55 PDT
+Delta physical/die_plan/s81/delta_vsw_clkc_1029.py (exact-old-form asserts incl. every tap row vs its pin; 2nd run refuses, CHECKED). Base main d9f8b6c4278.
+  inputs/core_pins/ot_s81sl_vsw_tpl.json clk M5 S face (56.652,0.24) -> M5 interior (107.484,117.18) face C; pinhash 84ec9c1ddba5 -> f60c64639a87
+  cores/leaf/lef/ot_s81sl_vsw_tpl.lef clk PORT M5 RECT 107.460 116.940 107.508 117.420 (plan LEF obstructs M1-M5 only, obs_max M5: no OBS edit)
+  plan_s13r2.json: 74 early core-tap rows u_lf.u_vsw.clk (33 R0 / 41 MX) xy += (50.832, +-116.94); per-row tap-to-pin offset kept
+  (R0 +0.129/-0.209, MX +0.129/+0.257); insertion_ps/insertion_ff_ps unchanged (298.4/243.2 = signed view; the new VSW view replaces them at
+  sign-off; approved in-core plan model TT 267.07 / FF 199.96, UNCHECKED). Textual edit == structural edit (asserted). Plan sha CHANGES (74 tap xy).
+Source: Codex vsw_replan slice island ck_entry [105.30,115.02,109.62,119.34] M9->M5, clock_pin (107.46,117.18) snapped to M5 track 2239.
+CHECKED: G0C FAIL 20 errors / 1591 warnings, error set and warning set identical to main baseline (intel2 die-s81-32/vswc/g0c).
+CHECKED: kit regen (gen_core_kit_legacy --recipes results/die_s81_25_1029/vsw_b_recipe.json --plan --master-slice, suffix d32c): clk {M5,107.484,117.18,face C},
+  other 388 pins identical to d32b, KIT_PREFLIGHT PASS 0; io.tcl physically identical to the d32b kit now routing (autopilot fc9a627a7b6c),
+  only the "was:" comment differs -> the d32b routed view is this event's form.
+UNCHECKED: die clock check GRT0 incl clock (ot_clk s81_g03c2) with the moved taps; strict bind (bind.py never reads pin files/LEF/tap xy: expected unaffected).

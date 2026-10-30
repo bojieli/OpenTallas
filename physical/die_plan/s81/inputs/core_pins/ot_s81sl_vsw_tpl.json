@@ -1,14 +1,14 @@
 {
  "module": "ot_s81sl_vsw",
  "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vsw_tpl.lef",
- "source": "S81 fresh VSW template 2026-10-29: explicit N/S M5 edge contract; nearest existing x track, preserved faces/order/clock/outline; old routed view and old input table retained. No logic/cycle change.",
- "pinhash": "84ec9c1ddba5",
+ "source": "S81 fresh VSW template 2026-10-29: explicit N/S M5 edge contract; nearest existing x track, preserved faces/order/clock/outline; old routed view and old input table retained. No logic/cycle change.; S81 source-pin event DIE-S81-32 2026-10-29 (delta_vsw_clkc_1029.py): clk M5 S face (56.652,0.24) -> M5 interior slice entry (107.484,117.18) 0.048x0.48 face C; 74 early taps moved",
+ "pinhash": "f60c64639a87",
  "pins": [
   {
    "name": "clk",
    "layer": "M5",
-   "x": 56.652,
-   "y": 0.24
+   "x": 107.484,
+   "y": 117.18
   },
   {
    "name": "i_d[0]",
