@@ -1,0 +1,21 @@
+ACTUAL_XFIN_RSTD sid=13 cycle=351 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=10 cycle=354 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=5 cycle=355 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=8 cycle=355 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=9 cycle=355 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=4 cycle=356 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=6 cycle=356 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=12 cycle=356 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=2 cycle=357 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=3 cycle=357 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=7 cycle=357 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=11 cycle=357 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=15 cycle=357 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=0 cycle=358 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=1 cycle=358 data=40ca3c85 eps=1e3ce508
+ACTUAL_XFIN_RSTD sid=14 cycle=358 data=40ca3c85 eps=1e3ce508
+XFIN_SOURCE_PASS rstd=40ca3c85 NS16 NVL5 SIW7 clock833 component_ring_registers=1
+- tb_current_xfin.sv:47: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 215.892 s; speed 15.436 ns/s
+- Verilator: cpu 215.869 s on 1 threads; allocated 53 MB
