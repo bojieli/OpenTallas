@@ -96,3 +96,42 @@ def test_false_source_binding_and_bad_census_fail_closed(vehicle,mutant):
     if mutant=='child_double':s['children']*=2
     (path/'parent.json').write_text(json.dumps(parent));(path/'child.json').write_text(json.dumps(child))
     with pytest.raises(ValueError):N.contract(P,'src')
+
+
+def test_scalar_and_bit_zero_root_collision_is_rejected_before_map_merge(vehicle):
+    P,parent,child,path=vehicle
+    parent['clock_root_ports'].append(dict(port='pma_rck',net='other_actual_net',dir='INPUT'))
+    (path/'parent.json').write_text(json.dumps(parent))
+    with pytest.raises(ValueError,match='canonical root collision'):
+        N.contract(P,'src')
+
+
+def test_noncore_native_release_keeps_raw_target_but_no_core_cycle_credit(vehicle):
+    P,*_=vehicle
+    P.reset['release']='wavefront'
+    targets=R.core_reset_targets(P,'src')
+    W=R.wf_plan(P)
+    part=next(name for name,row in W['parts'].items() if row['type']=='src')
+    row=W['parts'][part]
+    assert row['core_release']['u_child.rst_n'] is None
+    native=row['native_release']['u_child.rst_n']
+    assert native['status']=='PENDING' and native['native_clock_root']=='pma_rck'
+    assert native['core_cycle_release'] is None and native['raw_pin_arrival_core_cycles']==row['release']
+    assert native['internal_depth_native_cycles']==1
+    assert W['types']['src']['core_resets'][0]['pin_um']==targets[0]['pin_um']
+    assert W['types']['src']['core_resets'][0]['xy']==targets[0]['xy']
+    assert W['release_qualification']['verdict']=='PENDING'
+    errs,_,info=R.check(P)
+    assert any('FULL native release qualification PENDING' in e for e in errs)
+    assert info['release_qualification']['verdict']=='PENDING'
+
+
+def test_full_smoke_refuses_pending_native_release_before_calendar_credit(tmp_path):
+    import bind_smoke
+    top=tmp_path/'rtl'/'parts'/'top.sv';top.parent.mkdir(parents=True)
+    metadata=top.parent.parent/'bind_reset.json'
+    metadata.write_text(json.dumps(dict(release='wavefront',max_release=5,
+        release_qualification=dict(verdict='PENDING'),parts=dict(p=dict(core_release={'child.rst_n':None})),
+        unreachable=[],long_hops=[])))
+    with pytest.raises(SystemExit,match='native reset release is PENDING'):
+        bind_smoke.qc_reset_contract(top,[])

@@ -22,7 +22,7 @@ def _census(P,path,sha,module):
     if not re.fullmatch(r'[0-9a-f]{64}',sha or '') or c.get('source_odb_sha256')!=sha:
         raise ValueError('native clock census source ODB identity mismatch')
     if c.get('top_module')!=module:raise ValueError('native clock census top module mismatch')
-    ports={};nets={}
+    ports={};nets={};canonical_roots=set()
     for p in c.get('clock_root_ports',[]):
         port,net=p.get('port'),p.get('net')
         if p.get('dir')!='INPUT' or not isinstance(port,str) or not isinstance(net,str) or port in ports or net in nets:
@@ -31,6 +31,9 @@ def _census(P,path,sha,module):
         if port.endswith('[0]'):
             base=port[:-3]
             if {r['port'] for r in c['clock_root_ports'] if r['port'].startswith(base+'[')}=={port}:root=base
+        if root in canonical_roots:
+            raise ValueError('native clock census canonical root collision: '+root)
+        canonical_roots.add(root)
         ports[port]=dict(root=root,net=net);nets[net]=root
     counts=Counter();seen=set()
     for p in c.get('ff_clock_pins',[]):
