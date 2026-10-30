@@ -1,0 +1,69 @@
+{
+  "status": "SOURCE_COMPOSITION_OFFSETS_ONLY_NOT_ADOPTED",
+  "clock_ps": 833,
+  "source_path": "rtl/hbm_accel/generic/collective/tkm/ot_hgi_coll_tkm_static_p.sv",
+  "source_sha256": "a5586385cba2985934f8c875987f704302d836dec2fc3472c9659e42f0c83c08",
+  "source_formula": "2*PIPE+2*(SETTLE-SETTLE0)+2*XL+2*CLRB; SETTLE=(3+HOP)*(NT-1)+11-CB; XL=FRT+CB+HOP*(NT-1)",
+  "bare_pipe0": {
+    "parameters": {
+      "kmax": 2048,
+      "pipe": 0,
+      "hop": 0,
+      "frt": 0,
+      "cb": 0,
+      "clrb": 0,
+      "external_input": 0,
+      "external_output": 0
+    },
+    "tiles": 32,
+    "bare_settle": 104,
+    "settle": 104,
+    "stream_age": 0,
+    "stat_done_offset_vs_pipe0": 0,
+    "external_done_offset_vs_pipe0": 0
+  },
+  "current_native_pipe1": {
+    "parameters": {
+      "kmax": 2048,
+      "pipe": 1,
+      "hop": 0,
+      "frt": 0,
+      "cb": 0,
+      "clrb": 0,
+      "external_input": 0,
+      "external_output": 0
+    },
+    "tiles": 32,
+    "bare_settle": 104,
+    "settle": 104,
+    "stream_age": 0,
+    "stat_done_offset_vs_pipe0": 2,
+    "external_done_offset_vs_pipe0": 2
+  },
+  "physical_candidate": {
+    "parameters": {
+      "kmax": 2048,
+      "pipe": 1,
+      "hop": 2,
+      "frt": 4,
+      "cb": 21,
+      "clrb": 0,
+      "external_input": 1,
+      "external_output": 1
+    },
+    "tiles": 32,
+    "bare_settle": 104,
+    "settle": 145,
+    "stream_age": 87,
+    "stat_done_offset_vs_pipe0": 258,
+    "external_done_offset_vs_pipe0": 260
+  },
+  "candidate_stat_done_delta_vs_native": 256,
+  "candidate_external_done_delta_vs_native": 258,
+  "candidate_external_delta_ps_vs_native": 214914,
+  "actual_record_G": "PENDING actual selected source decode; TP192 does not imply G192",
+  "individual_write_dates": "not inferred for general CLRB; exact whole mechanism required",
+  "source_model": "hgi_coll_tkm_static_calendar is barePIPE0 and G<=96; leaf_split_latency tkm_done adds2 only when enabled",
+  "legacy_e86_tkm64": "separate historical TLAT4 assumption; not automatically additive or selected",
+  "scope": "per TOPK_MERGE call done offset only; not gather/link267, no whole programme/rate/acceptance claim"
+}

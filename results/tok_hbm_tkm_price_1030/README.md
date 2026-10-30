@@ -1,0 +1,7 @@
+# Explicit TKM service offsets
+
+The current native PIPE1/HOP0/FRT0/CB0 profile contributes two done/stat edges relative to bare PIPE0. The physical candidate PIPE1/HOP2/FRT4/CB21/CLRB0 has NT32, bare SETTLE104, candidate SETTLE145 and XL87. It contributes258 body/stat edges relative to PIPE0. One external input face and one external output face make260 at the parent boundary: **+256 stat edges and +258 parent-boundary edges relative to current native PIPE1**. The latter is214914ps at833ps.
+
+`tools/hbm_static/tkm_latency.py` records the exact source equations as an explicit helper. Its default is barePIPE0 and no existing compiler or model imports it, so no defaults change. The three checked profiles reproduce the existing PIPE1 two-edge lockstep and boundft21 source formula. This is source composition, not a new RTL/timing measurement or signoff.
+
+The existing leaf-split table charges tkm_done2 only when enabled. The bare uarch calendar is PIPE0 and asserts G<=96. Historical e86_tkm64 is a separate TLAT4 assumption and must not be blindly added to the new candidate. Actual selected G/call exposure and the compiled caller's enabled charges remain to be established. TP192 names capacity, not actual G. This helper does not use the serialized-link267 age as the service delta, does not infer intermediate write dates for arbitrary CLRB, and makes no programme or accepted-token rate claim.
