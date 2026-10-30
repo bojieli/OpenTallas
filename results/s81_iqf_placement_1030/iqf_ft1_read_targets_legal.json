@@ -1,10 +1,4 @@
 {
- "metrics": {
-  "readFF": 1369,
-  "max_first_hop": 363.231,
-  "over405": 0,
-  "cycles_change": 0
- },
  "targets": [
   {
    "bit": 0,
@@ -24649,5 +24643,17 @@
    "master": "DFFHQNx2_ASAP7_75t_R"
   }
  ],
+ "nominal_estimate_metrics": {
+  "readFF": 1369,
+  "max_first_hop": 363.231,
+  "over405": 0,
+  "cycles_change": 0
+ },
+ "actual_legal_metrics": {
+  "max_first_hop": 363.231,
+  "over405": 0,
+  "read_FF": 1369,
+  "cycles_change": 0
+ },
  "provenance": "Actual legalize0/check-placement0; source identical; inherited IQF ODB; no new cycles. Full geometry/source/route gates held."
 }
