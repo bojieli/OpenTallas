@@ -1,0 +1,14 @@
+{
+ "status": "SOURCE_PREP_NOT_ADOPTED",
+ "original_return_capture": 0,
+ "macro_mux": 1,
+ "macro_cycles_added": 0,
+ "credit_cycles_added": 0,
+ "extra_credit_state_ff": 1,
+ "original_reset_counter": 5,
+ "encoded_reset_base": 5,
+ "encoded_reset_capture": 0,
+ "invariant": "logical_o_cred=(hr_credit_base+hr_credit_capture_q) mod16; base_next=logical_o_cred-pop_rb; capture_next=r_cr",
+ "port_scope": "r_cr has only its direct capture load after dead old expression cleanup; o_cred is internal, public outputs retain existing FFs",
+ "internal_macro_abi": "rr_addr16 zero->18 zero, rr_en0 disables repairs; mask allones; no public ABI change"
+}

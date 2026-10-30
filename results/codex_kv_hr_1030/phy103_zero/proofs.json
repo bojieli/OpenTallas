@@ -1,0 +1,30 @@
+{
+ "macro_layout_lockstep": {
+  "status": "PASS",
+  "cycles": 5120,
+  "bit_checks": 655360,
+  "mutant_caught": 5120,
+  "scope": "all512addresses,write-bitmask,sameedgecollision,readenable; actualcompiledM1vsM2models;repairdisabledasbinding"
+ },
+ "native_joint_controller": {
+  "status": "PASS",
+  "cycles_compared": 1765,
+  "words": 256,
+  "mutant_differences": 496,
+  "scope": "actualoriginaldirect-creditM2topvsM1+zero-cyclecounterencoding;allpublicoutputscompared"
+ },
+ "counter_encoding": {
+  "status": "PASS",
+  "checks": 618,
+  "states": 16,
+  "binary_transitions": 64,
+  "reset": 5,
+  "xz_return_and_x_pop": "PASS"
+ },
+ "cycles_added": {
+  "macro": 0,
+  "credit": 0
+ },
+ "credit_capacity_delta": 0,
+ "status": "SOURCE_READY_MAPPED_FACE_PENDING_NOT_ADOPTED"
+}
