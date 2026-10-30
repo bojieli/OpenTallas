@@ -1,0 +1,45 @@
+{
+  "status": "SOURCE_DERIVED_CANDIDATE_PRICE_NO_ADOPTION",
+  "period_edges": 293376,
+  "clock_period_ps": 833,
+  "source": {
+    "producer": "rtl/qwen_sys/mu_qwen_20261018/qkd_static_kv_ownership_calendar_mu.sv",
+    "receiver": "rtl/qwen_sys/host_20261013/qkd_host_rx_class_admission.sv",
+    "compiler": "tools/qwen_kv_die/kv_static_programme.py"
+  },
+  "source_facts": [
+    "ownership_valid rises only at seal write cfg_addr3, stays1 through nominal windows/rearms, falls onfault/reset",
+    "RX captures native_reserved/ownership_valid then permits HOST/ING only when !reserved_q&&valid_q",
+    "MU rearm keeps native_reserved1 across overlapping users; firstHOST->native andlastnative->HOST are the transitions",
+    "compiler target3 currently enter_root3; leave/deadline derived from complete token/MU user windows"
+  ],
+  "valid_only_plus2": {
+    "steady_native_payload_added_edges": 0,
+    "recurring_token_period_added_edges": 0,
+    "first_host_enable_extra_edges_max": 2,
+    "first_host_enable_extra_ps_max": 1666,
+    "condition": "native_reserved route unchanged; mission starts after ownership configuration, fault isolation also checked through reserved"
+  },
+  "coherent_reserved_and_valid_plus2": {
+    "steady_native_payload_added_edges": 0,
+    "first_reservation_close_shift_edges": 2,
+    "last_host_reopen_shift_edges": 2,
+    "fault_disable_shift_edges": 2,
+    "enter_guard_price": "UNPROVEN: require actual HOSTlaunchquiet return and firstnativebeat margin before enter_root3->5",
+    "period_added_edges": null
+  },
+  "upper_sensitivity": {
+    "premise": "IF two serial cycles were inserted once EVERY293376edgeperiod",
+    "extra_edges": 2,
+    "relative_rate_loss_percent": 0.0006817143753110322,
+    "actual_measured": false
+  },
+  "held": [
+    "actual receiver relay placement/geometry and plan event",
+    "paired qualification delay coherence/native_reserved reach",
+    "actual mission enter guard and fault isolation calendar",
+    "current native token/signed physical qualification"
+  ],
+  "new_stages_adopted": false,
+  "whole_token_pass": false
+}
