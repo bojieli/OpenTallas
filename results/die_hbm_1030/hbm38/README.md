@@ -50,3 +50,23 @@ claude/flow-9-g2cut-1030@7518687ff52 (run-local copy g2tools/, the COORD-accepte
   nothing to cut; estimate stays DIE-HBM-37's (8 cuts/hub ~20.7k FF, north band 6.87 mm2 free) [UNCHECKED].
 - RING pin-only event d35c (COORD 12:5x optional): skipped (station-hop priority; HBM-CORES-KITS-28 rebuilds RING on d35b pins).
 - 30-iteration probes: none launched by me. DIE-HBM-36's dhbm36-g2-* still LIVE (stock d35a = pre-fix baseline).
+
+## Post-DPL actual station hops on the fixed plans (q0f probes, insts.tsv after detailed placement) -- CHECKED
+- d38r: actual max hop 404.19 um, over-reach 0 bits (was 1,014 on d35a/d35b); d38a: 404.19 um, 0 bits
+  (g2/q0f_*_hops.json via proto_geometry.hop_stats). Margin is thin (0.8 um, a movable cloud after DPL).
+- The two q0f containers exited during pin_access without probe.exit (cause not determined) -> pin access UNCHECKED.
+
+## d35c pin-only event (COORD 13:1x: HBM-CORES-KITS-28 ASK 12:50 (A) + RING option (b)) -- CHECKED
+mk_d35c.py on d35b (independent of d38r: disjoint types; compose by re-applying either script):
+- SU ot_hbm_su_static_pgslice_lg__lane_exp0_id (4 hard_cores entries q_su00/q_su10 + physical_v1, outline 414.72x207.36
+  unchanged): g_lane_0_g_plain_u_lane_emit / _lane_ld / _lane_ld_bank S face M5 y 0.096, x 11.112/12.12/13.128 ->
+  318.696/319.704/320.664 (on the M5 track grid 0.024+k*0.048, >= 0.48 um from every other S pin); all other 2,065 pins
+  byte-identical; worst pin -> s_q load field (340-405, 40-200) ~286 um. Render viewed (d35c/su_d35c_pins.png).
+  Core-local pins: the core S face faces an in-partition 8.64-um gap to u_su_Q0_lanes_plain0_3 (same as before) -> no
+  partition face / neighbour pin change.
+- RING ot_hfd_coll_q2_hard_v8g__ring_ag (q_hub_nw/ne): pins_file ..c25c_centerclk__codex_g21 (clk N face, contradicts
+  the plan clock entry) -> ..c25c_centerclk (sha bb7960a3d6b9, clk centre) + die-owned FT sidecar (12 island ports,
+  sha 0e18c0c6091c). pincmp v2 vs signed hbm-cores-kits-27/ring_wl120 6_final.def (pins + sidecar): MATCH 2240/2240,
+  0 moved, 0 layer (d35c/pincmp_ring_d35c.txt).
+- G0 6 err/918 warn, G0C 14 err/128 pending/910 warn = d35b finding set exactly (0 new / 0 gone).
+- die_plan.json sha 9d53f97a0a60; plan_of_record/d35c (gz + new cores files + SHA256SUMS).
