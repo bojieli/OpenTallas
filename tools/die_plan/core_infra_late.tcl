@@ -98,6 +98,9 @@ proc ot_ci_late_legalize {max_um} {
   }
   try {
     detailed_placement
+    # An unconverged DPL (DPL-0701 violations left) returns normally; check legality here, with the held cells still
+    # FIRM, so the late cells fail closed now instead of as DPL-0033 in cts_post (DIE-S81-36 10-30).
+    if {[catch {check_placement -verbose} ot_ci_msg]} {error "OT_CORE_INFRA_LATE_DPL_UNLEGAL $ot_ci_msg"}
   } finally {
     foreach i $held {$i setPlacementStatus PLACED}
   }
