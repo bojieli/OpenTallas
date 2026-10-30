@@ -1,0 +1,46 @@
+# ot-clk config DIE-QC-46: QC trial25 tree form (link_htree + region DME, inv2 NDR) on plan_qc45 with the DIE-QC-45
+# TRIAL1 placed-stage refit (inv2_ndr_qc_trial1p, rms 4.96 ps TT). Target <=150 ps in-region spread (12.15c).
+schema: ot_clk_config/1
+die: qc
+event:
+  name: qc46
+  host: intel2
+  source: DIE-QC-46 plan_qc45 (2257b9fb) on main 28e3502c1dd (exact-origin die_trial b462b6cd050)
+inputs:
+  plan: /srv/opentallas-scratch2/claude/die-qc-46/plan/plan_qc45.json
+  region_map: /srv/opentallas-scratch2/claude/codex-die-qc-0359-1028/build_inputs/part_region.json
+  feed: /srv/opentallas-scratch2/claude/die-qc11-1028/plan/feed_rt2.json
+stack:
+  cell: inv2
+  clock_rc: ndr
+top:
+  form: link_htree
+  leaf_um: 200
+  rep_um: 250
+  site_legal: true
+  site_slide: true
+  rep_on_leg: true
+  rep_off_leg_max: 50
+  opts:
+    dme_feed_centroid: 1
+    region_stub: 1
+region:
+  form: dme
+  dme_mode: delay
+  only:
+    - "c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}"
+    - "sl_{E,W}{0..5}_su_c"
+  early:
+    tt: 1.0
+    ff: 0.87
+    merge_only:
+      - "c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}"
+  workers: 24
+stage_model:
+  entry: inv2_ndr_qc_trial1p
+  corners: [TT, FF]
+  edge: rise
+residual:
+  snake:
+    - "sl_{E,W}{0..5}_su_c"
+    - "c_{E,W}{0..5}_{bf,bn,tf,tn}_{00,01,10,11}"
