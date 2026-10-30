@@ -26,7 +26,7 @@ Existing static-compatible source that supplies the missing mechanism:
    to the existing HBM boundary. K addresses are stack-local SECTOR indices,
    not byte addresses. PC(s)=s[6:2]^s[11:7]^s[16:12]. Its fixed window request
    formula is {row15,j[2:0],{col4,j[3]},P^col^{row[1:0],j[2:0]},2'b00},
-   len4, j0..15. This is a swizzled fixed block, not arbitrary linear DMA.
+   len4, j0..15. This is a fixed swizzled block; the inverse below selects any linear sector.
 3. ot_hbm_svc_vmdel_lane_load_static NPC2: an existing alternative leaf type
    preserves begin/fill ownership/epochs/raw mode and accepts load_v+load_cmd62.
    It faults for unowned/unfilled/stale/illegal requests and never waits.
@@ -70,10 +70,11 @@ Open physical/compiler choices the die owner must resolve:
 - Current selected PHY path reaches stack2 only. Stack3 scratch has no selected
   LOAD/STORE provider. Choosing stack2 instead needs actual VM-read namespace,
   request routing, manifest reservation and target binding; no implicit fix.
-- Existing vmks fills a fixed PC-swizzled64-slot block. A linear canonical
-  HBM sector must either be pre-swizzled into that native layout, or a bounded
-  arbitrary-sector request mode must be specified. The generic FRONT/mover
-  family has rotating-priority picks/credits; it is not a drop-in static source.
+- Existing vmks fills a fixed PC-swizzled64-slot block. The exact inverse
+  below reaches any linear source sector without data pre-swizzle, at the
+  full-window fill cost. A narrow arbitrary-sector mode is an optional cost
+  reduction requiring its own contract. Generic FRONT/mover rotating-priority
+  picks/credits are not a drop-in static source.
 - Existing raw vmdel has no read-data export. Reusing it with the new3-stage
   converter requires a new leaf/interface or the existing load_static leaf;
   estimate lots/pins/clocks and accept one coherent plan event first.
@@ -97,7 +98,32 @@ Additional cost caution: NPC2 block_ready requires both64-slot PC payloads in
 all8 lanes:1024sectors=32768HBMbytes per quadrant window. It cannot be priced as
 one32-byte scalar source read when a command selects one item. Reusing that
 fixed-window mode for an arbitrary canonical source address may overfetch and
-requires the exact inverse PC/block swizzle; charge the real fill bytes. A narrow
+uses the exact inverse PC/block selector below; charge the real fill bytes. A narrow
 new arbitrary-sector PHY window with matching response identity would avoid that
 block cost but changes provider/source contracts and needs the die owner's
 explicit coherent plan/port/clock estimate before build.
+
+Exact inverse removes the supposed pre-swizzle blocker (qualified analysis):
+  Let s be stack-local SECTOR, not byte address.
+  row=s>>15; col=(s>>8)&15; PC=hash(s);
+  j=(((s>>7)&1)<<3)|((s>>12)&7); slot=4*j+(s&3).
+  Landing owner: NW forPC<16, NE otherwise; bank=PC&7; group=(PC>>3)&1.
+  Request that native(row,col) window, then read its(group,slot) at the
+  selected landing bank, with sourcebyte=original_byte_address&31.
+  window_map.py proves131100 inverse cases including every low17-bit PC/
+  slot/column/row-low2 combination; high row bits pass through. One complete
+  window is2048 unique sectors/64KiB; each landing quadrant is32KiB.
+  This is a planner proposal, not selected source coverage or a physical gate.
+
+Routing/target cost to carry into the plan estimate:
+  A single command issuer needs load_cmd62+sourcebank3+sourcequad1+valid
+  (~67bits), gating exactly one landing leaf per scheduled cycle. The leaf's
+  output destinationquad2/bank3 must match its sector16 namespace and reach
+  that VM's physical DQ. Existing raw DQ wires are fixed bank/quad, so this
+  cannot be adopted by simply adding a converter and leaving routing intact.
+  Static source selection/routing may be compiler fixed per crossing; no
+  runtime merge/credit/arbitration. Price281-bit neighbour hops and CA landing
+  latency, all VM slot6 reservations, PHY completion, macro read and decoder
+  latency, and real DQ-done. W89 fill target uses all existing fields; an
+  appended LOAD command or new issuer type requires explicit target/interface
+  ownership and one coherent plan event. No target ID is guessed here.
