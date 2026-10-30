@@ -23,6 +23,8 @@ proc get_cells {args} {return [ot_ps_inst [lindex $args end]]}
 proc get_pins {args} {return [lindex $args end]}
 proc get_property {p prop} {
  switch $prop {
+  direction {return [expr {$p in {mem/rd ff/Q} ? "output" : "input"}]}
+  is_clock {return [expr {$p eq "ff/CLK"}]}
   ref_name {return [expr {$p eq "mem" ? "SRAM" : "DFF"}]}
   lib_pin_name {return [lindex [split $p /] end]}
   clocks {return clk}
@@ -33,7 +35,7 @@ proc get_property {p prop} {
 proc report_edges {args} {
  set p [lindex $args end]
  switch $p {
-  mem/wd {set ::report "WCLK -> wd setup\n  ^ -> ^ 1:2\n  ^ -> v 2:3\nWCLK -> wd hold\n  ^ -> ^ 1:2\n"}
+  mem/wd {if {[lindex $args 0] eq "-from"} {set ::report "";return};set ::report "WCLK -> wd setup\n  ^ -> ^ 1:2\n  ^ -> v 2:3\nWCLK -> wd hold\n  ^ -> ^ 1:2\n"}
   mem/rd {set ::report "RCLK -> rd Reg Clk to Q\n  ^ -> ^ 1:2\n  ^ -> v 2:3\n"}
   ff/CLK {set ::report [expr {[lindex $args 0] eq "-from" ? "CLK -> Q Reg Clk to Q\n  v -> ^ 1:2\n" : ""}]}
   ff/Q {set ::report "CLK -> Q Reg Clk to Q\n  v -> ^ 1:2\n  v -> v 2:3\n"}
@@ -86,3 +88,30 @@ puts [format %.6f [expr {$raw-1.030053}]]
 set wf [ot_ps_add_clock mem/WCLK fall]
 puts [list [ot_ps_off $wf] [dict size $::ot_ps_tmatched]]
 ''') == ['2 mem/WCLK 20 10', '22.633518', '20 2']
+
+
+def test_capture_only_input_with_no_forward_edges_is_not_a_launch():
+    assert run('''
+set ::ot_ps_nonlaunch_cache {}
+puts [ot_ps_capture_only_input mem/wd]
+puts [ot_ps_capture_only_input mem/rd]
+puts [ot_ps_capture_only_input ff/CLK]
+''') == ['1', '0', '0']
+
+
+def test_through_arc_unknown_report_and_api_error_cannot_exclude_input():
+    assert run('''
+rename report_edges original_report_edges
+proc report_edges {args} {
+ if {[lindex $args 0] ne "-from"} {original_report_edges {*}$args;return}
+ if {$::case eq "error"} {error "native reporter failed"}
+ set ::report [expr {$::case eq "through" ? "wd -> rd combinational\\n  ^ -> ^ 1:2\\n" : "unexpected native report"}]
+}
+foreach case {through unknown} {
+ set ::ot_ps_nonlaunch_cache {}
+ puts [ot_ps_capture_only_input mem/wd]
+}
+set ::case error;set ::ot_ps_nonlaunch_cache {}
+puts [catch {ot_ps_capture_only_input mem/wd} message]
+puts [string match {*report_edges failed*} $message]
+''') == ['0', '0', '1', '1']

@@ -211,6 +211,26 @@ proc ot_ps_clock_role {pin role} {
   if {[llength $clocks] != 1} {error "ot_ps_clock_role: missing/nonunique actual clock pin $full"}
   return [list [lindex $clocks 0] $rf]
 }
+# Native get_fanin may return a constant SRAM DATA input itself (its wire and
+# checks are disabled by constant). It is a capture endpoint, not a launch.
+# Require actual input/nonclock role, setup+hold checks and an EMPTY forward
+# edge report. A through arc, unknown report or reporter error remains held.
+proc ot_ps_capture_only_input {pin} {
+  set name [get_full_name $pin]
+  if {[dict exists $::ot_ps_nonlaunch_cache $name]} {return [dict get $::ot_ps_nonlaunch_cache $name]}
+  if {[get_property $pin direction] ne "input" || [get_property $pin is_clock]} {return 0}
+  if {![llength [ot_ps_clock_role $pin setup]] || ![llength [ot_ps_clock_role $pin hold]]} {return 0}
+  sta::redirect_string_begin
+  set failed [catch {report_edges -from $pin} message]
+  set report [sta::redirect_string_end]
+  if {$failed} {error "ot_ps_capture_only_input: report_edges failed for [get_full_name $pin]: $message"}
+  # The pinned native reporter emits an empty string for no edges. Any
+  # unrecognized nonempty output, including a possible through arc, is held.
+  set result [expr {[string trim $report] eq ""}]
+  dict set ::ot_ps_nonlaunch_cache $name $result
+  return $result
+}
+
 proc ot_ps_add_clock {pin rf} {
   set full [get_full_name $pin]; set key [list $full $rf]
   if {[dict exists $::ot_ps_by_clock $key]} {return [dict get $::ot_ps_by_clock $key]}
@@ -242,7 +262,7 @@ proc ot_ps_add_clock {pin rf} {
   return $ref
 }
 proc ot_ps_regs {} {
-  set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_tmatched {};set ::ot_ps_noarr 0
+  set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_nonlaunch_cache {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_tmatched {};set ::ot_ps_noarr 0
   foreach p [all_registers -clock_pins] {ot_ps_add_clock $p [ot_ps_edge $p]}
   return $::ot_ps_R
 }
@@ -263,6 +283,7 @@ proc ot_ps_related {R} {
       set launch [ot_ps_clock_role $s clkq]
       if {![llength $launch]} {
         if {[dict exists $::ot_ps_R [ot_ps_inst [get_full_name $s]]]} {
+          if {[ot_ps_capture_only_input $s]} continue
           error "ot_ps_related: unresolved sequential launch clock for [get_full_name $s]"
         }
         continue
