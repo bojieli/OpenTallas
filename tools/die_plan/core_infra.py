@@ -641,12 +641,21 @@ def compile_slice(sl, kd=None):
             c["xy_um"] = xy(p.get("centre_um"), c["name"], outline)
             c["origin_um"] = xy(p.get("origin_um"), c["name"], outline)
             c["orient"] = p["orient"]
-    return dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
+    result = dict(module=sl["module"], outline_um=outline, cells=cells, ports=ports, arcs=arcs,
                 core_tree=tree, core_clock_port=clock_port, clock_entry=entry,
                 bays=bays, reserved_bays=reserved,
                 entry_pins=[p for p in sl.get("entry_pins", []) if p.get("pin")],
                 unbound_entry_pins=sum(1 for p in sl.get("entry_pins", []) if not p.get("pin")),
                 clock_ndr=sl.get("clock_ndr"))
+    if sl.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_trunks(sl, result)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
+        result["effective_clock_routing"] = sl["effective_clock_routing"]
+        result["effective_clock_routing_profile"] = CCR.profile(sl)
+    return result
 
 
 def named_tree_report(report, clock_port, macro_pins=None, load_balance="equal_counts"):
@@ -790,6 +799,12 @@ def _tree_lines(t, late=False):
 
 def emit_tcl(sl, kd=None):
     plan = compile_slice(sl, kd)
+    if plan.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(plan, compiled=True)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
     tree = plan.get("core_tree")
     pgc = trunk_pg_clearance(sl, plan)
     if pgc["verdict"] not in ("PASS", "NOT APPLICABLE"):
@@ -871,12 +886,15 @@ def emit_tcl(sl, kd=None):
 
 def _ndr_line(plan):
     ndr = plan["clock_ndr"]
-    if not plan["core_tree"] or ndr.get("layers") != ["M4", "M5"]:
-        raise InfraError("core clock NDR requires a planned tree on M4/M5")
+    effective = plan.get("effective_clock_routing")
+    layers = effective["layers"] if effective is not None else ["M4", "M5"]
+    if not plan["core_tree"] or ndr.get("layers") != layers:
+        raise InfraError("core clock NDR requires a planned tree and matching explicit routing layers")
     wm, sm = ndr["width_multiplier"], ndr["spacing_multiplier"]
     if not all(isinstance(v, (int, float)) and 1 <= v <= 8 for v in (wm, sm)):
         raise InfraError("core clock width/spacing multiplier must lie in [1, 8]")
-    return f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}"
+    suffix = " {" + " ".join(layers) + "}" if effective is not None else ""
+    return f"ot_ci_clock_ndr {word(ndr['name'])} {wm:g} {sm:g}" + suffix
 
 
 LATE_HOOK, LATE_IMPL = "master_core_infra_late.tcl", "core_infra_late.tcl"
@@ -887,6 +905,12 @@ def emit_late_tcl(plan):
     the PRE_CTS hook (before core_infra_cts.tcl), not by the pre-GPL master_core_infra.tcl. Planned tree cells are
     created at their plan xy and legalized by an incremental DPL that moves ONLY them (every other instance held
     FIRM, restored after); clock gates keep their placed xy (the plan xy is reported, never applied)."""
+    if plan.get("effective_clock_routing") is not None:
+        import core_clock_routing as CCR
+        try:
+            CCR.check_qualification(plan, compiled=True)
+        except CCR.RoutingError as error:
+            raise InfraError(str(error)) from error
     t = plan.get("core_tree") or {}
     if t.get("install_stage", "pre_gpl") != "pre_cts":
         raise InfraError("emit_late_tcl needs core_tree.install_stage pre_cts")
