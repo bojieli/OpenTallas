@@ -1,8 +1,15 @@
 {
   "scope": "Exactselectedresidentcompiler manifest/image pair fromthemain-reviewedcompilerclosure; source-onlynohardwareadoption.",
-  "manifest_sha256": "a8119084dc52afdfa300c101f1c04619cd549c8b70126d96b878dc3e3f981efb",
+  "manifest_sha256": [
+    "a8119084dc52afdfa300c101f1c04619cd549c8b70126d96b878dc3e3f981efb",
+    "787f0bc2e62aff5cb011274e4b201295c741a75c415275b314b186883831367c"
+  ],
   "image_sha256": "79a81185a91387fdfe5e8bea1cd4429f31b7ce4a19f9d5f962109878802e76a3",
   "source_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
   "native_commands": 37226,
-  "manifest_repo_path": "results/tok_hbm_1030/canonical_resident_cached/stream.json"
+  "manifest_repo_path": "results/tok_hbm_1030/canonical_resident_cached/stream.json",
+  "manifest_versions": [
+    "Historicalcompilerclosuremetadata",
+    "Currentmain9772f462: adds onlyprogramme_scope=N6MTP_VERIFY; recordsbyteidentical"
+  ]
 }
