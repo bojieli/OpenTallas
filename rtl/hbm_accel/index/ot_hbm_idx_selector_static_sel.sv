@@ -20,7 +20,7 @@
 //  8 Schedule: static; no added cycle; compiler unchanged (op 8 never issued)                         PASS
 module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
  input wire clk_ctl,input wire [3:0] clk_q,input wire [11:0] clk_mem,
- input wire rst_n,input wire [3:0] op,input wire [1:0] pass,
+ input wire rst_n,input wire [3:0] rst_q_n,input wire [3:0] op,input wire [1:0] pass,
  input wire [7:0] addr,input wire [9:0] k,
  input wire [2367:0] in_line,
  output reg [3:0] selected_v,output reg [2367:0] selected_line,
@@ -138,8 +138,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
        (((orderkey(raw[l*EW+1+:16])>>shift)&binmask)==16'(b)))hits[l]=1;
      end
     end
-    always @(posedge clk_q[q] or negedge rst_n)begin
-     if(!rst_n)hist[q][b]<=0;
+    always @(posedge clk_q[q] or negedge rst_q_n[q])begin
+     if(!rst_q_n[q])hist[q][b]<=0;
      else begin
       if(op==3)hist[q][b]<=0;
       if((rv&&rop==4)||op==2)hist[q][b]<=hist[q][b]+14'(pop16(hits));
@@ -152,8 +152,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
    // per-bin processes above are the only drivers of hist (a runtime if(!STRUCT) inside the shared process
    // still elaborated a second, hold-only driver per bit: 3584 double-driven bits at rtl_lint). Same clock,
    // reset and statement order as before, so STRUCT=0 behaviour is unchanged.
-   always @(posedge clk_q[q] or negedge rst_n)begin
-    if(!rst_n)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
+   always @(posedge clk_q[q] or negedge rst_q_n[q])begin
+    if(!rst_q_n[q])for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
     else begin
      if(op==3)for(integer b=0;b<64;b=b+1)hist[q][b]<=0;
      if((rv&&rop==4)||op==2)begin
@@ -171,8 +171,8 @@ module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0)(
     end
    end
   end
-  always @(posedge clk_q[q] or negedge rst_n)begin
-   if(!rst_n)begin
+  always @(posedge clk_q[q] or negedge rst_q_n[q])begin
+   if(!rst_q_n[q])begin
     rv<=0;buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;qfault[q]<=0;selected_v[q]<=0;last_id<=0;
    end else begin
     rv<=re;rop<=op;rpass<=pass;raddr<=addr;selected_v[q]<=compact;
@@ -210,6 +210,17 @@ module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
  (* keep *) reg [1:0] rst_sync;
  always @(posedge clk_ctl or negedge rst_n) if(!rst_n) rst_sync<=2'b00; else rst_sync<={rst_sync[0],1'b1};
  wire rst_core_n=rst_sync[1];
+ // HBM-CORES-KITS-26 10-30 (GEOM-72 selector (a), 12.8 local reset): one kept 2-FF release copy per gq quarter with
+ // the same async assert from rst_n and the same 2-edge clk_ctl release as rst_sync, so every copy equals rst_sync on
+ // every edge (cycle-identical, no added cycle). The placer puts each copy beside its quarter instead of one sync
+ // driving the clears of all four quarters across the 600-um outline (k11 reset r2r 887.76 um). Core control keeps
+ // rst_core_n. MUT=4 (negative bench only): quarter 3 releases one edge early.
+ wire [3:0] rst_q_n;
+ for(genvar q=0;q<4;q=q+1)begin:grst
+  (* keep *) reg [1:0] rs;
+  always @(posedge clk_ctl or negedge rst_n) if(!rst_n) rs<=2'b00; else rs<={rs[0],1'b1};
+  assign rst_q_n[q]=(MUT==4&&q==3)?rs[0]:rs[1];
+ end
  (* keep *) reg [3:0] op_r;(* keep *) reg [1:0] pass_r;(* keep *) reg [7:0] addr_r;(* keep *) reg [9:0] k_r;
  (* keep *) reg [2367:0] in_r;
  wire [3:0] c_sel_v;wire [2367:0] c_sel_line;wire c_fault;
@@ -217,7 +228,7 @@ module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0)(
   op_r<=op;pass_r<=pass;addr_r<=addr;k_r<=k;in_r<=in_line;
   selected_v<=c_sel_v;selected_line<=c_sel_line;fault<=c_fault;
  end
- ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.STRUCT(STRUCT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),
+ ot_hbm_idx_selector_static_sel_core #(.MUT(MUT),.STRUCT(STRUCT)) core(.clk_ctl(clk_ctl),.clk_q({4{clk_ctl}}),.clk_mem({12{clk_ctl}}),.rst_n(rst_core_n),.rst_q_n(rst_q_n),
   .op(op_r),.pass(pass_r),.addr(addr_r),.k(k_r),.in_line(in_r),
   .selected_v(c_sel_v),.selected_line(c_sel_line),.fault(c_fault));
 endmodule
