@@ -1,0 +1,31 @@
+{
+  "scope": "PROPOSED R2 reader-only START tree; not released",
+  "clock_ps": 833,
+  "reader_warmup_added_cycles": 2,
+  "reader_warmup_added_ps": 1666,
+  "steady_data_cycles_added": 0,
+  "writer_start_cycle_change": 0,
+  "mission_start_cycle_change": 0,
+  "K_adjustment": -2,
+  "types": {
+    "hd_st_str": {
+      "instances": 4,
+      "new_reader_relays_per_instance": 4,
+      "die_new_ff": 16
+    },
+    "hd_st_n3_transit": {
+      "instances": 1,
+      "new_reader_relays_per_instance": 4,
+      "die_new_ff": 4
+    },
+    "hd_st_m": {
+      "instances": 3,
+      "new_reader_relays_per_instance": 4,
+      "die_new_ff": 12
+    }
+  },
+  "data_agreement_bound_receiver_cycles": "R+2=4",
+  "valid_ready_fault_agreement_bound_receiver_cycles": "R+ARM+2=16 for D4 ARM12",
+  "validation": "actual4572cases/438430checks/wrongKmutantcaught4572 on15a7f62b6",
+  "release_condition": "Compiler/boot issue must wait extra2 reader warmup edges; actualsourcebind/geometry/timing required; no rate increase claimed"
+}
