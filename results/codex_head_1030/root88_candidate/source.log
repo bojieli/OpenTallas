@@ -1,0 +1,31 @@
+ot-run: localhost      admits   632 GB (avail 835, reserve 0, fresh 116.6, peak 21.9, headroom 0, waiters 0/0 GB) load 86/112 running 28 disk 616 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-4048969-1793364096 after 0 s
+CANONICAL_RAW 3 0.03200000000003911
+RTL hd_ctl
+RTL hd_ctl_e
+RTL hd_ctl_n
+RTL hd_host
+RTL hd_host_n
+RTL hd_lep0N
+RTL hd_mesh
+RTL hd_mesh_e
+RTL hd_serdes
+RTL hd_spn
+RTL hd_spn_end
+RTL hd_spn_eshim_rx
+RTL hd_spn_eshim_tx
+RTL hd_spn_wshim_rx
+RTL hd_spn_wshim_tx
+RTL hd_st_k5
+RTL hd_st_m
+RTL hd_st_n3_transit
+RTL hd_st_n3_turn
+RTL hd_st_n4
+RTL hd_st_str
+RTL hd_st_turn
+RTL hd_tile
+RTL hd_turn_a
+RTL hd_turn_b
+ROOT88_SOURCE_PASS {"root_settle_cycles": 88, "raw_relative_span": 84, "guard_cycles": 4, "delta_boot_cycles": 14, "added_steady_cycles": 0, "max_reset_hop_um": 402.112, "raw_release_absolute_min": 3, "raw_release_absolute_max": 105, "all_part_raw_release_max": 107, "unused_uniform_exports": 1755}
+ot-run: RAN on localhost (unit oth-ubuntu-4048969-1793364096): exit 0
