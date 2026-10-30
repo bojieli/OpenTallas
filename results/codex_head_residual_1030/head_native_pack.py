@@ -2,6 +2,7 @@
 import sys,re,json,hashlib,argparse
 from pathlib import Path
 ap=argparse.ArgumentParser(description=__doc__)
+ap.add_argument('--align-post-captures',action='store_true',help='align existing u_bin boundary captures to actual native read bit')
 ap.add_argument('--private-write-comb',action='store_true',help='explicit typed per-bit writer feedback/hold logic placement')
 ap.add_argument('--kit',type=Path,required=True);ap.add_argument('--dump',type=Path,required=True)
 ap.add_argument('--geom-tools',type=Path,required=True);ap.add_argument('--out',type=Path,required=True)
@@ -83,6 +84,42 @@ if a.private_write_comb:
  for b,ids in sorted(private_comb.items()):
   y=target[b];group(ids,[20.52,max(742,y-1.08),47.52,min(990,y+1.08)],f'private_write_comb_globalbit_{b}')
 
+boundary={};boundary_in_buf={};boundary_out_buf={}
+if a.align_post_captures:
+ for b,i in reads.items():
+  if not where[b].startswith('i['):continue
+  todo=list(D.drives.get(i,[]));seen=set();caps=set();buf=set()
+  while todo:
+   n=todo.pop()
+   if n in seen:continue
+   seen.add(n)
+   for e in D.nets[n][2]:
+    if e[0]!='i' or e[2]:continue
+    if D.kind(e[1])=='S':caps.add(e[1])
+    elif D.kind(e[1])=='B':buf.add(e[1]);todo.extend(D.drives.get(e[1],[]))
+  ids=[j for j in caps if D.cells[j][6].startswith('u_bin_')]
+  assert len(ids)==1, ('unknown actual native payload boundary',where[b],[D.cells[j][6] for j in caps])
+  boundary[b]=ids[0];boundary_in_buf[b]=buf
+  todo=list(D.drives.get(ids[0],[]));seen=set();bb=set()
+  while todo:
+   n=todo.pop()
+   if n in seen:continue
+   seen.add(n)
+   for e in D.nets[n][2]:
+    if e[0]=='i' and not e[2] and D.kind(e[1])=='B':bb.add(e[1]);todo.extend(D.drives.get(e[1],[]))
+  boundary_out_buf[b]=bb
+ assert len(boundary)==566 and len(set(boundary.values()))==566, 'payload boundary must be one-to-one 566 actual retained FF'
+ for b,i in sorted(boundary.items()):
+  y=target[b];group([i],[52.0,y-4.32,90.0,y+4.32],f'post_native_capture_globalbit_{b}')
+ for label,groups0,x0,x1 in [('input_buffer',boundary_in_buf,47.52,52.0),('output_buffer',boundary_out_buf,90.0,96.0)]:
+  owner={}
+  for b,ids in groups0.items():
+   for i in ids:owner.setdefault(i,set()).add(b)
+  for b,ids in sorted(groups0.items()):
+   exclusive=[i for i in ids if len(owner[i])==1];y=target[b]
+   group(exclusive,[x0,y-4.32,x1,y+4.32],f'post_native_{label}_globalbit_{b}')
+
+
 lines=['# Actual native CA ring, typed write/read slot inventory; default source untouched.']
 for g in groups:
  rect=' '.join(map(str,g['rect_um']));lines.append('set cland_cursor {}')
@@ -95,6 +132,7 @@ for g in groups:
   else:lines.append(put)
 lines.append(f'puts "NATIVE_RING typed packing {len(ring)} ring FF + {len(origin)} origin FF; {len(writes)} global bits; chunk={CHUNK}"')
 (p/'native_ring_layout.tcl').write_text('\n'.join(lines)+'\n')
-(p/'native_ring_layout.json').write_text(json.dumps({'kind':'HD_TILE_NATIVE8_REUSABLE_TYPED_PROFILE','source_dump_sha256':hashlib.sha256(a.dump.read_bytes()).hexdigest(),'requires_band_i_rect_um':[12.96,708.48,47.52,1008.512],'live_read_ff':568,'logical_padded_read_width':576,'forwarded_writer_ff':2298,'data_cycles_added':0,'private_write_comb_opt_in':a.private_write_comb,'private_write_comb_count':sum(map(len,private_comb.values())),'actual_rtl_sha256':hashlib.sha256(ca.encode()).hexdigest(),'chunk_width_derived':CHUNK,'write_bits':len(writes),'write_ff':sum(map(len,writes.values())),'read_ff':len(reads),'ring_ff':len(ring),'origin_ff':len(origin),'all_ring_ff_covered':True,'groups':groups},indent=1)+'\n')
+(p/'native_ring_layout.json').write_text(json.dumps({'kind':'HD_TILE_NATIVE8_REUSABLE_TYPED_PROFILE','source_dump_sha256':hashlib.sha256(a.dump.read_bytes()).hexdigest(),'requires_band_i_rect_um':[12.96,708.48,47.52,1008.512],'live_read_ff':568,'logical_padded_read_width':576,'forwarded_writer_ff':2298,'data_cycles_added':0,'aligned_boundary_capture_ff':len(boundary),'boundary_input_buf_candidates':sum(map(len,boundary_in_buf.values())),'boundary_output_buf_candidates':sum(map(len,boundary_out_buf.values())),'private_write_comb_opt_in':a.private_write_comb,'private_write_comb_count':sum(map(len,private_comb.values())),'actual_rtl_sha256':hashlib.sha256(ca.encode()).hexdigest(),'chunk_width_derived':CHUNK,'write_bits':len(writes),'write_ff':sum(map(len,writes.values())),'read_ff':len(reads),'ring_ff':len(ring),'origin_ff':len(origin),'all_ring_ff_covered':True,'groups':groups},indent=1)+'\n')
+print('aligned_boundary_capture_ff',len(boundary))
 print('private_write_comb',sum(map(len,private_comb.values())),'max_per_bit',max(map(len,private_comb.values()),default=0))
 print('ring',len(ring),'write',sum(map(len,writes.values())),'read',len(reads),'chunk',CHUNK,'origin',len(origin))
