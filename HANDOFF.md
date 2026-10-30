@@ -2322,3 +2322,13 @@ CODEX: 2026-10-30 04:29 PDT HEAD realLEP DPL2/GRT50PASS(pin148.39/r2r403.06x0), 
 CODEX: 2026-10-30 04:29 PDT S81RTnative13119EQ/face746/fanout0 SOURCE83f66READY; RTtall exactcompiledreusePLACE2895634live. LDG2TT8.717FF11.593/pair13.74/11.59PASS ->APDRT1e7338; EDTT-15diagnosedFF-onlyblindness ->canonicalMMGRT668c8; ROMLEClive.
 
 CODEX: 2026-10-30 04:30 PDT SUPPORTnativecoupon50812/7889connectedbut750reachFAILpreserved; canonicalQCtargetactual313START+rootresetfixed(ac913); cellsparser6fdmodernYosysfix10testsPASS+6KV32measuredcohorts(no currentadoption). Allownheavyjobsterminal; nextsafeQCgraph/provider.
+
+CODEX: 2026-10-30 04:31 PDT CODEX S81PHY clock/reset estimate packet READY8ff62a6a5 codex/flow-s81phy-1030 results-only. SameoutlinedES0/ES1 A/B10.8guard: resetdepth9/8geofit;32clocktapIDsretained,calg03regionalTT/FFwindowsA1.56/2.92,B1.41/16.67ps,maxhop241/298,0illegalchainpoints/LCbandoverlaps. Existingfeedreprice+spice changesES1clockA167..183/B222..256ps; canonicaloldSTARTsourceES1becomes2samplevalues(bestRISEdist21.7/77.51<104.125). BOTHHELD_REPLAN_START,nobuild/newplan/RTL; sourceSTARTmustrecomposeatactualnewcommonclocknode(co-routedclkQ/wire),notintegerK/Ttrim. ParentS81ownsPG/FT9stageestimate; FLOWassignsSTARTcontinuation. Allownjobs214514FAIL(APIinteriorsdiagnosed),906978partialFAIL(APIcontrol),1004515+1074429PASSmodelterminal; no physicaljobs.
+
+CODEX: 2026-10-30 04:32 PDT HBMtokensf8c0aa07f groupedall3916source40536cmd/383.876MB/addressPASS; LOADproposala0cdb68a0 solvesnativePCwindowinverse/all6fmtµopaddresses, noHW/planadoption; fullwindowrelease8leafobligation and32KiBoverfetchowned.
+CODEX:2026-10-30 04:37PDT FLOWf91fixedmacroPREP22tests/actualreadonlyvalidatorPASS; sourceadoptionHELDQCactualG1/rootreview, noimagefork/halooff/noownphysicaljob.
+CODEX: 2026-10-30 04:55 PDT FLOW EG4remainingresolvedmechanismALL40212PROVED/nohmpositivity,wrongfill1refused4; freshmainnative2984321LIVE/results0313f6cf7. SYS_CcurrentTXDPdeltaownedKVreproof; native59cachedobservationsguardTOKowned/faultbootprotocolheldnotwaived.
+
+CODEX: 2026-10-30 04:55 PDT selectoractualnativeGATE5ce995420 PASS1566/6reset/267beat/0diff strictallbitsedge1 +mutant10POSTBOOT; real66PORfixture/old4FAILowned, +128FF0cycles;2freshkitsPREFLIGHT0/SYNTH-onlyliveintel1/3655945+3655631, noPNR.
+
+CODEX: 2026-10-30 04:58 PDT FLOWsecondaryPHY READY69b6029c1 root-scopedCTS+nativewrong-rootmutantcaught;27fixturesPASS/63compatPASS; W522wholeconePLANphase47.06/42.02,data39293max380.54,0cycles; actualG1/PG/primaryclock/IOdataNOTRUN, SDownercontinues.
