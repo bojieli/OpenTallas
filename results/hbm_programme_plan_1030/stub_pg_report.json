@@ -1,0 +1,108 @@
+{
+ "status": "BOUNDED_PLAN_PREP_NOT_PHYSICAL",
+ "basis": "Existing CP.legalize_slice using actual posttap rows/LEF footprints/all1983fixed+macro obstacles. No measured timing input, no tap deletion/manual offset or threshold change.",
+ "cell_placements": {
+  "mp_isl0_ck0": {
+   "origin_um": [
+    103.194,
+    65.34
+   ],
+   "orient": "R0",
+   "master": "BUFx12f_ASAP7_75t_R",
+   "size_um": [
+    0.972,
+    0.27
+   ],
+   "centre_um": [
+    103.68,
+    65.475
+   ]
+  },
+  "mp_isl0_rst0": {
+   "origin_um": [
+    103.464,
+    63.99
+   ],
+   "orient": "MX",
+   "master": "BUFx4_ASAP7_75t_R",
+   "size_um": [
+    0.378,
+    0.27
+   ],
+   "centre_um": [
+    103.653,
+    64.125
+   ]
+  }
+ },
+ "actual_obstacles": 1983,
+ "all_TAPs_preserved": true,
+ "same_layer_signal_pin_PG_intersections": 0,
+ "PG_scope": "ActualA/YM1rectangles versusactualsame-layer specialPG; standard roworientation preserved. FTports/shapes/PG unchanged. Fullviaaccess/PDNsignoff stillphysicalgates.",
+ "stubs": [
+  {
+   "cell": "mp_isl0_ck0",
+   "pin": "A",
+   "FT": "mp_isl0_ck_i",
+   "FT_layer": "M5",
+   "cell_pin_layers": [
+    "M1"
+   ],
+   "minimum_manhattan_um": 1.996,
+   "all_access_corner_upper_um": 2.216,
+   "M5_wire_only_upper_R_kohm": 0.042089596,
+   "M5_wire_only_upper_C_ff": 0.217168
+  },
+  {
+   "cell": "mp_isl0_ck0",
+   "pin": "Y",
+   "FT": "mp_isl0_ck_o",
+   "FT_layer": "M5",
+   "cell_pin_layers": [
+    "M1"
+   ],
+   "minimum_manhattan_um": 1.989,
+   "all_access_corner_upper_um": 2.849,
+   "M5_wire_only_upper_R_kohm": 0.054112482,
+   "M5_wire_only_upper_C_ff": 0.279202
+  },
+  {
+   "cell": "mp_isl0_rst0",
+   "pin": "A",
+   "FT": "mp_isl0_rst_i",
+   "FT_layer": "M5",
+   "cell_pin_layers": [
+    "M1"
+   ],
+   "minimum_manhattan_um": 2.295,
+   "all_access_corner_upper_um": 2.476,
+   "M5_wire_only_upper_R_kohm": 0.047027906,
+   "M5_wire_only_upper_C_ff": 0.242648
+  },
+  {
+   "cell": "mp_isl0_rst0",
+   "pin": "Y",
+   "FT": "mp_isl0_rst_o",
+   "FT_layer": "M5",
+   "cell_pin_layers": [
+    "M1"
+   ],
+   "minimum_manhattan_um": 2.316,
+   "all_access_corner_upper_um": 2.744,
+   "M5_wire_only_upper_R_kohm": 0.052118164,
+   "M5_wire_only_upper_C_ff": 0.268912
+  }
+ ],
+ "RC_scope": "Actual calibratedM5wire-only geometric load/reprice; via/layertransition and externaldie load unchanged/unpredicted. No latencyPASSclaim; fullparentclockreplay beforeadoption.",
+ "latency_targets_unchanged": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "topology_masters_ports_outline_island_unchanged": true,
+ "source_added_cycles": 0,
+ "remaining": "Root/parentreview, freshGENwithfrozencell_placements and actualpreplaceLOOK beforeownedphysicalsuccessor"
+}
