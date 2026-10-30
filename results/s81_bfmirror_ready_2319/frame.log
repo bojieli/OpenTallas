@@ -1,0 +1,19 @@
+ot-run: localhost      admits   424 GB (avail 745, reserve 0, fresh 175.9, peak 80.5, headroom 0, waiters 0/0 GB) load 114/112 running 42 disk 965 GB 
+ot-run: -> localhost
+ot-heavy: request 32G is charged 21G (class 'frame_bench.sh:col_h#' measured peak 12.8G, n=37+0 proved); the cap stays 32G
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1289167-1793337594 after 1 s
+  [0] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [1] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [2] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [3] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [5] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [6] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [7] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [9] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [10] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [11] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [12] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+  [14] FRAME_BENCH PASS col_h9 rows=4 words=4 complete_at_root=4 partials=0 END edges=3063 ret_words=4 xo_checked=3061 fault=0
+FRAME_SET col_h9 MUT=0 set=each pass=12 fail=0
+PASS frame col_h9
+ot-run: RAN on localhost (unit oth-ubuntu-1289167-1793337594): exit 0
