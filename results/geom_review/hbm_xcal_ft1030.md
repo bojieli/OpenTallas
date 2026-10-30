@@ -1,0 +1,7 @@
+# XCAL current source / interior reset / clock-FT prototype
+
+VIEWED actual kit `intel1:/srv/opentallas-scratch2/claude/codex-hbm-residual-1030/xcal_ft/kits/ot_hbm_svc_sm_xcal_rel_t_59bcf8ea762e-_res1030FT/preplace.png`, copied as hbm_xcal_ft1030.png. PREPLACE PASS-COND for SYNTH/LEC/PLACE diagnostic only; no CTS/route before actual placed review.
+
+Actual current parameters DD256/PAW11/PREL1/XSLOT1; source four-file body previously checked against current native preferred closure and self-componentLEC5593/5593. Old shallow kit reset projection was wrong; this fresh kit emits reset M5(121.032,112.32), preserved literal interior coordinate. Four macros leave outer pin/logic bands and a centre gap: program hi/lo1024x256 at(33.588,8.652)/(33.588,142.284), tabs128x256 at(15.12,90.156)/(131.976,90.156), opposite tab read orientations R0/MY. Centre clock(125.304,125.28) and side leaf islands are clear. Actual clock FT .048x.48 and resetFT .032x.192 shapes are distinct and visibly clear of planned ck0/rst0 points. Clock/root+tab channels look reasonable. Actual placement must establish pin FF locality and macro/control reach; diagonal canvas bound466.56um is not a universal data reach proof. No source arithmetic/pipeline change or native-calendar adoption claim.
+
+Old clock-route overflow157 and previous source FT failures remain immutable. Shared clock FIRM release and FT shape fixes are in this fresh kit; if clock congestion repeats, diagnose its exact nets/sites rather than relax thresholds.
