@@ -1,0 +1,23 @@
+
+-- Executing script file `/srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/fragment.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/physical_bb.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/physical_bb.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge'.
+Successfully finished Verilog frontend.
+
+3. Executing HIERARCHY pass (managing design hierarchy).
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge
+Removed 0 unused modules.
+
+4. Executing JSON backend.

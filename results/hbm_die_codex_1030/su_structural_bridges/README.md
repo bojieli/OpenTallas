@@ -1,0 +1,18 @@
+# Structural source bridges after native composition: PREP
+
+`tools/die_plan/structural_bridge.py` supplies `expand(F, path, fragment, *, expected_module, expected_abi, physical, Cell)` and `apply(binder, descriptors, base)`. FLOW owns the optional bind.py call after composition and before Graph. No shared caller file was edited here. Omission is inert.
+
+The helper expands actual flattened source, not a table of desired constants. This narrow first version allows exactly one parameter-free physical leaf, wires and known source constants. It preserves the full old logical ABI and global nets; importing a missing/unknown driver, joining distinct port nets, colliding with another driver or using a partial physical/native ABI fails. The loader validates the exact JSON and all declared source-file hashes, then expands a private copy of the complete F. Only a fully successful source event is committed, so a later bad path cannot leave a partial change. No subprocess, state, stage or RTL output patch occurs in the loader.
+
+The manifest contains three actual source fragments from1f9fe3c3a and48 exact native paths, with current parameter-free native ABI descriptors. Each physical child keeps68 ports and omits lane_coll; parent source constants preserve those192 logical outputs. The new paths are `<native_cut>.u_phys`, not the old pre-elab shim proposal's `.u_sub.u_phys`. `map_parts_PREP.json` explicitly keeps each child's current partition and canonical local instance name. The parent plan must adopt those exact path mappings and qualified physical pin descriptors as an explicit event; neither the helper nor this packet changes a plan implicitly.
+
+Actual source fragment generation used the full native bridge plus a black-box header copied from the exact physical variant. The complete physical variant source is also frozen and supplied as `physical.rtl_file`; its body and dependency closure still require the qualified native-source cohort at parent intake. A black-box header here represents a physical leaf for structural elaboration, not a cell-count or behavioral proof. The separate1f9 native/constant bridge proofs remain functional qualification. This packet has no current full-parent binding, G0C, mapped-LEC or P&R adoption claim.
+
+Validation:
+
+- Three exact native source bridges preserve69 logical ports /1540 public output bits and map to68-port physical children. Loaded source0 checks pass; wrong-TIE1 source mutants fail the native functional constant contract. A wrong constant is structurally possible source and is not silently rewritten to zero by this helper.
+- Actual fragment controls reject undriven output, wrong native width, wrong physical width, duplicate child path and existing driver, without partial mutation.
+- A constructed context containing all112 exact native ABIs expands all48 selected cuts, preserves every top-port net and actual ID strap, and gives all192 loaded collision consumers the source0 value. This is an exact ABI context test, not the actual full-parent source graph.
+- Loader controls pass the48-cut event and reject wrong JSON/source hashes, a late unmatched instance and a duplicate instance atomically; absent option is unchanged. Run `python3 results/hbm_die_codex_1030/su_structural_bridges/check_loader.py` from any checkout containing this packet.
+
+The QUERY DROP3 startup bridge needs explicit cold-state FFs. This wire/constant-only helper deliberately does not support that stateful case or claim that time-zero uninitialized outputs equal zero. FLOW and coverage_support own its separate structural eligibility event.

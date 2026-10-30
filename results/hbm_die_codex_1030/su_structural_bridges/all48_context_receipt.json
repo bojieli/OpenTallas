@@ -1,0 +1,1643 @@
+{
+  "scope": "Actual112 native ABIs in constructed loaded context, not current full-source bind",
+  "cuts": 112,
+  "expanded": 48,
+  "loaded_const0_bits": 192,
+  "exact_ID_straps": 48,
+  "unchanged_all_top_port_nets": true,
+  "unchanged_cell_count": 113,
+  "events": [
+    {
+      "inst": "su_NW0.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW0.__cut_lanes_plain0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW0.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW0.__cut_lanes_plain4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW0.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW0.__cut_lanes_plain8_11.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW0.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW0.__cut_lanes_plain12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW1.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW1.__cut_lanes_plain0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW1.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW1.__cut_lanes_plain4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW1.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW1.__cut_lanes_plain8_11.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW1.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW1.__cut_lanes_plain12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "physical_child": "su_NW2.__cut_lanes8_11.u_phys",
+      "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes16_19.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes20_23.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes24_27.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW2.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW2.__cut_lanes28_31.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "physical_child": "su_NW3.__cut_lanes8_11.u_phys",
+      "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes16_19.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes20_23.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes24_27.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NW3.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NW3.__cut_lanes28_31.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE0.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE0.__cut_lanes_plain0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE0.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE0.__cut_lanes_plain4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE0.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE0.__cut_lanes_plain8_11.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE0.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE0.__cut_lanes_plain12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE1.__cut_lanes_plain0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE1.__cut_lanes_plain0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE1.__cut_lanes_plain4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE1.__cut_lanes_plain4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE1.__cut_lanes_plain8_11",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE1.__cut_lanes_plain8_11.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE1.__cut_lanes_plain12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE1.__cut_lanes_plain12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "physical_child": "su_NE2.__cut_lanes8_11.u_phys",
+      "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes16_19.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes20_23.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes24_27.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE2.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE2.__cut_lanes28_31.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes0_3",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes0_3.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes4_7",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes4_7.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes8_11",
+      "native_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "physical_child": "su_NE3.__cut_lanes8_11.u_phys",
+      "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes12_15",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes12_15.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes16_19",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes16_19.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes20_23",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes20_23.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes24_27",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes24_27.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    },
+    {
+      "inst": "su_NE3.__cut_lanes28_31",
+      "native_module": "ot_hnx_su_plain4__lid9_rst3",
+      "physical_child": "su_NE3.__cut_lanes28_31.u_phys",
+      "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "logical_ports": 69,
+      "physical_ports": 68,
+      "public_constant_bits": [
+        [
+          "lane_coll",
+          0,
+          "0"
+        ],
+        [
+          "lane_coll",
+          1,
+          "0"
+        ],
+        [
+          "lane_coll",
+          2,
+          "0"
+        ],
+        [
+          "lane_coll",
+          3,
+          "0"
+        ]
+      ],
+      "imported_constant_nets": 4,
+      "new_internal_nets": 0,
+      "extra_cycles": 0,
+      "source_fragment_only": true
+    }
+  ]
+}

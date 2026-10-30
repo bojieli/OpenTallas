@@ -1,0 +1,4 @@
+read_verilog -lib -sv /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/physical_bb.sv
+read_verilog -sv /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge.sv
+hierarchy -check -top ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge
+write_json /srv/opentallas-scratch/claude/wt/codex-hbm-1030/results/hbm_die_codex_1030/su_structural_bridges/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll/fragment.json
