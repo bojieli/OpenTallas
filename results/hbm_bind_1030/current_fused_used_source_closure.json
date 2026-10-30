@@ -1,0 +1,878 @@
+{
+ "scope": "Source-level reachable module closure using ACTUAL b31t preferences; parameter-dead branches may overinclude, not an elaborated-cone proof",
+ "roots": {
+  "ot_hnx_fused_tnode": {
+   "ot_hnx_fused_tnode": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "b45f9e693fcd48d4db76611e1cf5e55fcccc9686c9459691b566aae7a46e1782",
+    "children": [
+     "ot_dsrom_qadd",
+     "ot_hdc_vline",
+     "ot_hnx_fused_delivered_reset",
+     "ot_hnx_fused_pad",
+     "ot_rst_relay"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_rst_relay": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+    "file_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "module_sha256": "378f229d60637bd54e1e88ae91ff8ef1b4407719df71e90c8d58539b3a881f93",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_pad": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "f14b7de441f67037db53d5b3b2919ecd36abc98a8af7ce099b806fd8b374135e",
+    "children": [
+     "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "file_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "module_sha256": "041ae7aef33fa41b15791317478dd74962f04ce769a763e4bf8fbe34e5eef607",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_delivered_reset": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "b07f1d50f5b04879d39cd814133e2c391b91661dfc80f5afeeed5df1d8e90be2",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_vline": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+    "file_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "module_sha256": "59bca4b9db9d48b510ed03c792558c17846650eb3fbf2ba4cc23d4e2c2ae3c09",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_qadd": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "file_sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "module_sha256": "459c16da8b999b8200af0b6912e9a42bd28edb60cd5fed1999fdad873362543e",
+    "children": [
+     "ot_dsrom_fp32_add_f12_l6",
+     "ot_hdc_qadd_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_qadd_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "66a1f5476264bc36196c522b293a01c8f221fe559f42b840cc53ea58ce42ed22",
+    "children": [
+     "ot_hdc_fp32_add_fast",
+     "ot_hdc_fp32_add_lat3",
+     "ot_hdc_fp32_add_lat4i"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat4i": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "45dbdb890e88a6f68451d82faa4ffd7b414a68fef30b4744720eebeb319f34a7",
+    "children": [
+     "ot_hdc_fp32_add_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "1ae43d93eeb44750b01e5c6cdeec253b5571a37d7c995ee205900402b73e7037",
+    "children": [
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32",
+     "ot_hdc_w11_cut"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_w11_cut": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "f46eaa3239ab5430fa3bb68eec734335a1f708bc9f36c40603f23290fd83619a",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_lzc32": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "726ec318719c940126c23bfafde5b9139c79cdc3e17d4d743083492728d825cc",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_ksadd_k__u1": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "module_sha256": "39bbde2b18d113477160885d08e5cf5d978ec31e409bc7f941d8d008a24186e4",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat3": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "35b4dd335932d578c188227e73412bab2b3156516bcd1642f496df517c9b37c1",
+    "children": [
+     "ot_hdc_fp32_add_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_fast": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "0d3d9b00bb9b4997b7508c143f11673789dd8735d154e5fc4d96181abbd14aee",
+    "children": [
+     "ot_hdc_ksa",
+     "ot_hdc_lzc32"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_ksa": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "b89225aa21c84eaed593e57b678d8b258bcdba1969e37a1913be259d5b559980",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_fp32_add_f12_l6": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "file_sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "module_sha256": "e4d2ad1d59fcfdbee287ff91601c7cfc18b708a170f833e212f4d250d571a32e",
+    "children": [
+     "ot_hdc_fp32_add_f12"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_f12": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "ce9711fc7f0ebdb4c610c5a627090537bfa187de736b80b1a11a9a6fdefe4848",
+    "children": [
+     "ot_hdc_f12_cut",
+     "ot_hdc_inc_k__u1",
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_inc_k__u1": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "module_sha256": "85f93178c5d4451aa6aee59c2cb5470faf0ae0da1aff6e735212c8798f6a0d9a",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_f12_cut": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "82f808244702b4e3d0d80701faee417d8ec9c38da30fd13d1ca3c21306080f01",
+    "children": [],
+    "ambiguous_without_preference": false
+   }
+  },
+  "ot_hnx_fused_hub_n4ext": {
+   "ot_hnx_fused_hub_n4ext": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_hub_n4ext.sv",
+    "file_sha256": "09a34eff3dc7496270b394f1503b45858e51732eb9dde679dec3bc63836f4c6f",
+    "module_sha256": "b1aba75c52c480a276026c412b23a28e0f4b5ef57144d3a5fb0b55df55ce302e",
+    "children": [
+     "ot_hnx_fused_hub"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_hub": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "32a6fd2cce551751a6e629bab5253a4f168f6fc4789d7582510612564717b0f7",
+    "children": [
+     "ot_dsrom_divc",
+     "ot_dsrom_qadd",
+     "ot_dsrom_rsqrt",
+     "ot_hdc_vline",
+     "ot_hnx_fused_delivered_reset",
+     "ot_hnx_fused_tnode",
+     "ot_rst_relay",
+     "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "file_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "module_sha256": "041ae7aef33fa41b15791317478dd74962f04ce769a763e4bf8fbe34e5eef607",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_rst_relay": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+    "file_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "module_sha256": "378f229d60637bd54e1e88ae91ff8ef1b4407719df71e90c8d58539b3a881f93",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_tnode": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "b45f9e693fcd48d4db76611e1cf5e55fcccc9686c9459691b566aae7a46e1782",
+    "children": [
+     "ot_dsrom_qadd",
+     "ot_hdc_vline",
+     "ot_hnx_fused_delivered_reset",
+     "ot_hnx_fused_pad",
+     "ot_rst_relay"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_pad": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "f14b7de441f67037db53d5b3b2919ecd36abc98a8af7ce099b806fd8b374135e",
+    "children": [
+     "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_delivered_reset": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_tree.sv",
+    "file_sha256": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+    "module_sha256": "b07f1d50f5b04879d39cd814133e2c391b91661dfc80f5afeeed5df1d8e90be2",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_vline": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+    "file_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "module_sha256": "59bca4b9db9d48b510ed03c792558c17846650eb3fbf2ba4cc23d4e2c2ae3c09",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_qadd": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "file_sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "module_sha256": "459c16da8b999b8200af0b6912e9a42bd28edb60cd5fed1999fdad873362543e",
+    "children": [
+     "ot_dsrom_fp32_add_f12_l6",
+     "ot_hdc_qadd_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_qadd_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "66a1f5476264bc36196c522b293a01c8f221fe559f42b840cc53ea58ce42ed22",
+    "children": [
+     "ot_hdc_fp32_add_fast",
+     "ot_hdc_fp32_add_lat3",
+     "ot_hdc_fp32_add_lat4i"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat4i": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "45dbdb890e88a6f68451d82faa4ffd7b414a68fef30b4744720eebeb319f34a7",
+    "children": [
+     "ot_hdc_fp32_add_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "1ae43d93eeb44750b01e5c6cdeec253b5571a37d7c995ee205900402b73e7037",
+    "children": [
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32",
+     "ot_hdc_w11_cut"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_w11_cut": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "f46eaa3239ab5430fa3bb68eec734335a1f708bc9f36c40603f23290fd83619a",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_lzc32": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "726ec318719c940126c23bfafde5b9139c79cdc3e17d4d743083492728d825cc",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_ksadd_k__u1": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "module_sha256": "39bbde2b18d113477160885d08e5cf5d978ec31e409bc7f941d8d008a24186e4",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat3": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "35b4dd335932d578c188227e73412bab2b3156516bcd1642f496df517c9b37c1",
+    "children": [
+     "ot_hdc_fp32_add_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_fast": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "0d3d9b00bb9b4997b7508c143f11673789dd8735d154e5fc4d96181abbd14aee",
+    "children": [
+     "ot_hdc_ksa",
+     "ot_hdc_lzc32"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_ksa": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "b89225aa21c84eaed593e57b678d8b258bcdba1969e37a1913be259d5b559980",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_fp32_add_f12_l6": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "file_sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "module_sha256": "e4d2ad1d59fcfdbee287ff91601c7cfc18b708a170f833e212f4d250d571a32e",
+    "children": [
+     "ot_hdc_fp32_add_f12"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_f12": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "ce9711fc7f0ebdb4c610c5a627090537bfa187de736b80b1a11a9a6fdefe4848",
+    "children": [
+     "ot_hdc_f12_cut",
+     "ot_hdc_inc_k__u1",
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_inc_k__u1": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "module_sha256": "85f93178c5d4451aa6aee59c2cb5470faf0ae0da1aff6e735212c8798f6a0d9a",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_f12_cut": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "82f808244702b4e3d0d80701faee417d8ec9c38da30fd13d1ca3c21306080f01",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_rsqrt": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "file_sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "module_sha256": "7357edc5fd18cc92d2ffaaea40a924e7ca8ffc786ffa947458e589ee4ba303d7",
+    "children": [
+     "ot_dsrom_qadd",
+     "ot_hdc_delay",
+     "ot_hdc_kadd",
+     "ot_hdc_qmul_lat",
+     "ot_hdc_vline"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_qmul_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "07fcf0a0acce4ec99036193298b87a7a38f3d4f47b044dbb20ca9189d051514f",
+    "children": [
+     "ot_hdc_fp32_mul_fast",
+     "ot_hdc_fp32_mul_lat",
+     "ot_hdc_fp32_mul_lat4",
+     "ot_hdc_fp32_mul_lat5i"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_lat5i": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "28d719152726a0aa9739e0d98e7d18b1ce033a9ebb8798cca6b81c5a0b0e96d3",
+    "children": [
+     "ot_hdc_fp32_mul_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "3fb29c86e30db14cf11f19b788b656a43bf7890c8f6a3eadbfdeb742d056b7b6",
+    "children": [
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32",
+     "ot_hdc_mul24_rows",
+     "ot_hdc_mul24_rows_k",
+     "ot_hdc_mul_kcp48",
+     "ot_hdc_w11_cut"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul_kcp48": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "ef19aa3e178e781af6cfb8e4141f1c91a0f5120c19886a0bfd8ec237622248c7",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul24_rows_k": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "edd20a151c2238179363ed970ecdadb89c056798fcba738482773b10ab1f1e9b",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul24_rows": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "431503ed0cc41a490116efae0b51c0e3e12edd462b7defa49a36b94de0271014",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_lat4": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "f7bd95b98ffaa1b26edc97e61e82180c9fbdbf36aa799eb62e5ed99d878c526e",
+    "children": [
+     "ot_hdc_fp32_mul_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_fast": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "a11254c14584235bb5706542e3cc9f91d91cfc5d02ca921736075c2ccc48ab93",
+    "children": [
+     "ot_hdc_ksa",
+     "ot_hdc_lzc32",
+     "ot_hdc_mul24_rows",
+     "ot_hdc_mul24_sum"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul24_sum": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "c7916af372abc2a5a2c3590f6e186414af50f38ffeede45e749b54e06e42bb3f",
+    "children": [
+     "ot_hdc_ksa"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_kadd": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "adf3a705c20a7fa1edfceb2ea2bcd6e67e32d0847b8251770337960fd407bf74",
+    "children": [
+     "ot_hdc_ksadd_k__u1"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_delay": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+    "file_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "module_sha256": "c339250bc6e2009919d25742ee6aa895dd55c5c9440d967d8e0a1fee08dba74c",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_divc": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_divc.sv",
+    "file_sha256": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+    "module_sha256": "29f802604f02b500d8efec6818a9a169c2ebb9c42fbb0ce5293b9b931683f166",
+    "children": [
+     "ot_hdc_kinc",
+     "ot_hdc_vline"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_kinc": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "5ae99cf17d7c790d48cc6a361748e86cc444fb21f4d82eda3105d5e8c6baeb1a",
+    "children": [
+     "ot_hdc_inc_k"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_inc_k": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+    "file_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "module_sha256": "85f93178c5d4451aa6aee59c2cb5470faf0ae0da1aff6e735212c8798f6a0d9a",
+    "children": [],
+    "ambiguous_without_preference": true
+   }
+  },
+  "ot_hnx_fused_host_program": {
+   "ot_hnx_fused_host_program": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_host_program.sv",
+    "file_sha256": "2eb7dfdfe0f53cc81502c4f3be98576ce06410729aa116fbb7afe5a4f7b3a4f7",
+    "module_sha256": "f7c7d87ce416895b2f6344a1ed81fab09763c384d22538a1e50522069dcfdb29",
+    "children": [
+     "ot_hnx_fused_host_boot",
+     "ot_hnx_fused_job217_provider"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_job217_provider": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_job217_provider.sv",
+    "file_sha256": "9be13ccf2acda8bc3e113b9d55d0251461744911223b4a7c461ffdcbbbbfc5ae",
+    "module_sha256": "bb46c57cb472d075b6f63219fff98521505b8657619d103f20e379aacc569109",
+    "children": [
+     "ot_sram_1r1w_256x256_m2_r2c2"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_sram_1r1w_256x256_m2_r2c2": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "file_sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+    "module_sha256": "a3f20e7899a65cef7c5a38622140b48c82660f5881d5d6ecc4739d01216b0ffe",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_host_boot": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_host_boot.sv",
+    "file_sha256": "1aa81c28e1f6e1678cbee3f7284fb24a7b74feada82b327bd4a989e0677843b1",
+    "module_sha256": "8158288225e01110cb762c198af9b17a99f9aef58dc8c89e5ab98e11e3403b08",
+    "children": [],
+    "ambiguous_without_preference": false
+   }
+  },
+  "ot_hnx_fused_lane": {
+   "ot_hnx_fused_lane": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+    "file_sha256": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+    "module_sha256": "947e5860c1b7c7691dda8154816deee3d59ba4891ea76a634f924312484744b1",
+    "children": [
+     "ot_dsrom_qadd",
+     "ot_hdc_delay_ring",
+     "ot_hdc_vline",
+     "ot_hnx_fused_el2",
+     "ot_rst_relay",
+     "ot_sram_1r1w_128x256_m1_r2c2"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_sram_1r1w_128x256_m1_r2c2": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "file_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "module_sha256": "041ae7aef33fa41b15791317478dd74962f04ce769a763e4bf8fbe34e5eef607",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_rst_relay": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+    "file_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "module_sha256": "378f229d60637bd54e1e88ae91ff8ef1b4407719df71e90c8d58539b3a881f93",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hnx_fused_el2": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hbm_next/fused/ot_hnx_fused_eng.sv",
+    "file_sha256": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+    "module_sha256": "76456b6631ac03270bc0b1ab590dd6a4690ca7e6f2c7ccc5ba39d21756975c88",
+    "children": [
+     "ot_hdc_delay",
+     "ot_hdc_delay_ring",
+     "ot_hdc_fp32_add_f12_l6x",
+     "ot_hdc_fp32_mul_f12_l6r",
+     "ot_hdc_fp32_mul_f12_l7",
+     "ot_hdc_inc_k",
+     "ot_hdc_qmul_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_qmul_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "07fcf0a0acce4ec99036193298b87a7a38f3d4f47b044dbb20ca9189d051514f",
+    "children": [
+     "ot_hdc_fp32_mul_fast",
+     "ot_hdc_fp32_mul_lat",
+     "ot_hdc_fp32_mul_lat4",
+     "ot_hdc_fp32_mul_lat5i"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_lat5i": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "28d719152726a0aa9739e0d98e7d18b1ce033a9ebb8798cca6b81c5a0b0e96d3",
+    "children": [
+     "ot_hdc_fp32_mul_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "3fb29c86e30db14cf11f19b788b656a43bf7890c8f6a3eadbfdeb742d056b7b6",
+    "children": [
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32",
+     "ot_hdc_mul24_rows",
+     "ot_hdc_mul24_rows_k",
+     "ot_hdc_mul_kcp48",
+     "ot_hdc_w11_cut"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_w11_cut": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "f46eaa3239ab5430fa3bb68eec734335a1f708bc9f36c40603f23290fd83619a",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul_kcp48": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "ef19aa3e178e781af6cfb8e4141f1c91a0f5120c19886a0bfd8ec237622248c7",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul24_rows_k": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "edd20a151c2238179363ed970ecdadb89c056798fcba738482773b10ab1f1e9b",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul24_rows": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "431503ed0cc41a490116efae0b51c0e3e12edd462b7defa49a36b94de0271014",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_lzc32": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "726ec318719c940126c23bfafde5b9139c79cdc3e17d4d743083492728d825cc",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_ksadd_k__u1": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "module_sha256": "39bbde2b18d113477160885d08e5cf5d978ec31e409bc7f941d8d008a24186e4",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_lat4": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+    "file_sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74",
+    "module_sha256": "f7bd95b98ffaa1b26edc97e61e82180c9fbdbf36aa799eb62e5ed99d878c526e",
+    "children": [
+     "ot_hdc_fp32_mul_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_fast": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "a11254c14584235bb5706542e3cc9f91d91cfc5d02ca921736075c2ccc48ab93",
+    "children": [
+     "ot_hdc_ksa",
+     "ot_hdc_lzc32",
+     "ot_hdc_mul24_rows",
+     "ot_hdc_mul24_sum"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_mul24_sum": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "c7916af372abc2a5a2c3590f6e186414af50f38ffeede45e749b54e06e42bb3f",
+    "children": [
+     "ot_hdc_ksa"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_ksa": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "b89225aa21c84eaed593e57b678d8b258bcdba1969e37a1913be259d5b559980",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_inc_k": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/dsrom_sys/s81_window_la/recovered_ctl_m2/ot_hdc_prefix.sv",
+    "file_sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "module_sha256": "85f93178c5d4451aa6aee59c2cb5470faf0ae0da1aff6e735212c8798f6a0d9a",
+    "children": [],
+    "ambiguous_without_preference": true
+   },
+   "ot_hdc_fp32_mul_f12_l7": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "0991555998d541b7d7da69f34a7af12b2ccc5493032b00a4a1687d564fb2e688",
+    "children": [
+     "ot_hdc_fp32_mul_f12"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_f12": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "112a4f5552de98f669aba94c37b060b9337b1a382d7170cce882457cc1fbbf33",
+    "children": [
+     "ot_hdc_f12_cut",
+     "ot_hdc_inc_k__u1",
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32",
+     "ot_hdc_mul24_rows"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_inc_k__u1": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+    "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+    "module_sha256": "85f93178c5d4451aa6aee59c2cb5470faf0ae0da1aff6e735212c8798f6a0d9a",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_f12_cut": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "82f808244702b4e3d0d80701faee417d8ec9c38da30fd13d1ca3c21306080f01",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_mul_f12_l6r": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "330fd4cbf345a937c32444cf4645ed4724b3f01494c71a4c16525908f4d85f0e",
+    "children": [
+     "ot_hdc_fp32_mul_f12"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_f12_l6x": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+    "file_sha256": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+    "module_sha256": "303d054eb2b2ab50bd7cdc1d2e0a9f1902d109d79e035279757a832add0fe6e0",
+    "children": [
+     "ot_hdc_fp32_add_f12"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_f12": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+    "file_sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da",
+    "module_sha256": "ce9711fc7f0ebdb4c610c5a627090537bfa187de736b80b1a11a9a6fdefe4848",
+    "children": [
+     "ot_hdc_f12_cut",
+     "ot_hdc_inc_k__u1",
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_delay_ring": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/ot_hdc_delay_ring.sv",
+    "file_sha256": "b73ee094bbf20688a072fe60251127e47ca39e1f3c0fc04499a33623a19bdfc6",
+    "module_sha256": "c434a95f839a22322ba7f9246528854d3c7423f8be18c62e84664d26dce712d1",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_delay": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+    "file_sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "module_sha256": "c339250bc6e2009919d25742ee6aa895dd55c5c9440d967d8e0a1fee08dba74c",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_vline": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+    "file_sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "module_sha256": "59bca4b9db9d48b510ed03c792558c17846650eb3fbf2ba4cc23d4e2c2ae3c09",
+    "children": [],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_qadd": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+    "file_sha256": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+    "module_sha256": "459c16da8b999b8200af0b6912e9a42bd28edb60cd5fed1999fdad873362543e",
+    "children": [
+     "ot_dsrom_fp32_add_f12_l6",
+     "ot_hdc_qadd_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_qadd_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+    "file_sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe",
+    "module_sha256": "66a1f5476264bc36196c522b293a01c8f221fe559f42b840cc53ea58ce42ed22",
+    "children": [
+     "ot_hdc_fp32_add_fast",
+     "ot_hdc_fp32_add_lat3",
+     "ot_hdc_fp32_add_lat4i"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat4i": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "45dbdb890e88a6f68451d82faa4ffd7b414a68fef30b4744720eebeb319f34a7",
+    "children": [
+     "ot_hdc_fp32_add_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "1ae43d93eeb44750b01e5c6cdeec253b5571a37d7c995ee205900402b73e7037",
+    "children": [
+     "ot_hdc_ksadd_k__u1",
+     "ot_hdc_lzc32",
+     "ot_hdc_w11_cut"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_lat3": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+    "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+    "module_sha256": "35b4dd335932d578c188227e73412bab2b3156516bcd1642f496df517c9b37c1",
+    "children": [
+     "ot_hdc_fp32_add_lat"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_hdc_fp32_add_fast": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+    "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+    "module_sha256": "0d3d9b00bb9b4997b7508c143f11673789dd8735d154e5fc4d96181abbd14aee",
+    "children": [
+     "ot_hdc_ksa",
+     "ot_hdc_lzc32"
+    ],
+    "ambiguous_without_preference": false
+   },
+   "ot_dsrom_fp32_add_f12_l6": {
+    "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+    "file_sha256": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+    "module_sha256": "e4d2ad1d59fcfdbee287ff91601c7cfc18b708a170f833e212f4d250d571a32e",
+    "children": [
+     "ot_hdc_fp32_add_f12"
+    ],
+    "ambiguous_without_preference": false
+   }
+  }
+ }
+}

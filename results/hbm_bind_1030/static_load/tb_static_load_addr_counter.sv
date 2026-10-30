@@ -13,7 +13,7 @@ module tb_static_load_addr_counter;
  for(mode=0;mode<2;mode=mode+1)for(base_stack=0;base_stack<4;base_stack=base_stack+1)for(f=0;f<6;f=f+1)for(si=0;si<3;si=si+1)for(di=0;di<3;di=di+1)begin
  reset();sc=si==2?3:si;dc=di;esize=(fs[f]==0||fs[f]==5)?4:(fs[f]==1)?2:1;
  desc=0;desc[4:2]=3'(fs[f]);desc[44:5]=40'h100000;desc[44:42]=3'(mode);desc[41:40]=2'(base_stack);desc[76:45]=512;desc[92:77]=16'(sc);
- desc[94:93]=1;desc[97:95]=5;desc[137:98]=12345;desc[169:138]=128;desc[185:170]=16'(dc);desc[205:186]=3;desc[226:206]=7;
+ desc[94:93]=1;desc[97:95]=(fs[f]==5)?3'd5:3'd0;desc[137:98]=12345;desc[169:138]=128;desc[185:170]=16'(dc);desc[205:186]=3;desc[226:206]=7;
  dv=1;tick();@(negedge clk);dv=0;
  for(r=0;r<3;r=r+1)for(i=0;i<7;i=i+1)begin
  step=1;tick();
@@ -26,8 +26,10 @@ module tb_static_load_addr_counter;
  // Resolved227 excludes zero extents; malformed dates fail closed.
  reset();desc=0;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_ZERO_EXTENT");
  reset();step=1;tick();if(!fault||av)$fatal(1,"COUNTER_LATE_STEP");
+ reset();desc=0;desc[94:93]=1;desc[205:186]=1;desc[226:206]=1;desc[4:2]=5;desc[97:95]=0;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_U32_DST_MISMATCH");
+ reset();desc[4:2]=0;desc[97:95]=3;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_RESERVED_DST");
  reset();desc=0;desc[94:93]=1;desc[205:186]=1;desc[226:206]=1;desc[44:42]=2;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_BAD_SOURCE_CODE");
  reset();desc[44:42]=0;desc[4:2]=3;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_BAD_FORMAT");
- $display("PASS STATIC_LOAD_ADDR_COUNTER formats=6 descriptors=432 sourcecodes=linear0/stripe4_1 all4stacks/wrap words=%0d istride0=broadcast II=1 scalar_VMbytes_per_step=4 added_output_cycles=1",checked);$finish;
+ $display("PASS STATIC_LOAD_ADDR_COUNTER formats=6 destination_controls=U32_to_FP32_rejected/reserved3_rejected descriptors=432 sourcecodes=linear0/stripe4_1 all4stacks/wrap words=%0d istride0=broadcast II=1 scalar_VMbytes_per_step=4 added_output_cycles=1",checked);$finish;
  end
 endmodule

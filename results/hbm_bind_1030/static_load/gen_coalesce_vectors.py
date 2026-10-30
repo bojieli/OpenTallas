@@ -10,7 +10,7 @@ for code in range(2):
    for sis in [0,1,3]:
     for dis in [0,1,2]:
      local=0x100000+(fmt%4)*es;dest=65529;sb=(code<<37)|(st<<35)|local;n=19;m=3
-     desc=0|(fmt<<2)|(sb<<5)|(512<<45)|(sis<<77)|(1<<93)|(5<<95)|(dest<<98)|(128<<138)|(dis<<170)|(m<<186)|(n<<206)
+     desc=0|(fmt<<2)|(sb<<5)|(512<<45)|(sis<<77)|(1<<93)|((5 if fmt==5 else 0)<<95)|(dest<<98)|(128<<138)|(dis<<170)|(m<<186)|(n<<206)
      start=len(ev);items=[]
      for row in range(m):
       rowbase=(((st+row)%4 if code else st)<<35)+local+row*512

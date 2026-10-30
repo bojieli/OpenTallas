@@ -18,7 +18,7 @@
  "address_units": "source227 codedbase40: code0linear/code1STRIPE4, physical37 linear or local35bytes+stripedphysicalstack2; counter output decodedphysical37 in40. Destination40word; srcrowstride localbytes,dstrowstride words.",
  "address_adder_proposal": "explicit five8bit carry-select blocks, two40bit state feedback additions; unmapped,no833ps fit claim",
  "negative_contract": "m/n0,bad source/destspace,reservedsourceformat,unowneddatedstep,misalignedelement,40bitoverflow fault; reset clears fault",
- "destination_format": "metadata not converted here: output address only, final existingload_static conversion remains authoritative",
+ "destination_format": "guarded normative LOAD output: FP32(0) or U32(5), U32 iff sourceformat5; FP32/BF16/E4/INT8/UE8 decode to FP32word. Reserved/mismatcheddstformatsfault.",
  "VM_mapping": "ordinaryword<2^18 implemented in separate combinationaladdr_map; mirror/highword faults; currentphysicalonlystack2, othersfault atmapper",
  "source_mapping": "existingNPC2 ownedwindow inverse by TOK; no source sector buffer or runtime refill producer invented",
  "qualification": "432 descriptors9072words6formats,srcistride0/1/3,dst0/1/2,linear/STRIPE4,all4basestacks andwrap PASS; badbroadcast anddisabledstriping mutantscaught",
@@ -47,5 +47,6 @@
   "coalesced_counter": 1930,
   "coalesced_FF": 434,
   "timing": "UNMAPPED/no833ps claim"
- }
+ },
+ "destination_format_controls": "U32\u2192FP32 mismatch and reserved destinationformat rejected; all9072scalar/24624expanded coalesced valid-formatwords pass"
 }

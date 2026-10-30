@@ -44,7 +44,8 @@ module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT
  wire[2:0]dfmt=desc_i[4:2];
  wire[1:0]eszshift=(dfmt==0||dfmt==5)?2'd2:(dfmt==1)?2'd1:2'd0;
  wire[15:0]sis=(MUT_ZERO_STRIDE!=0&&desc_i[92:77]==0)?16'd1:desc_i[92:77];
- wire badshape=desc_i[1:0]!=0||desc_i[94:93]!=1||desc_i[44:42]>1||dfmt==3||dfmt==7||desc_i[205:186]==0||desc_i[226:206]==0;
+ wire[2:0]destination_format=desc_i[97:95];
+ wire badshape=(destination_format!=0&&destination_format!=5)||((destination_format==5)!=(dfmt==5))||desc_i[1:0]!=0||desc_i[94:93]!=1||desc_i[44:42]>1||dfmt==3||dfmt==7||desc_i[205:186]==0||desc_i[226:206]==0;
  wire[2:0]esize=(fmt==0||fmt==5)?3'd4:fmt==1?3'd2:3'd1;
  wire badsource=(stripe?(|sa[39:35]):(|sa[39:37]))||({5'd0,sa[34:0]}>40'd22500000000-{37'd0,esize});
  wire badalign=(fmt==0||fmt==5)?(|sa[1:0]):fmt==1?sa[0]:1'b0;
