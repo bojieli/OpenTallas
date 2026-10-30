@@ -13,3 +13,5 @@ All are geometry-only prebuild runs on intel2:/srv/opentallas-scratch2/claude/co
 The pinned14MB src_pc snapshot is copied from DIE-QC-39, including the leaf-load change already on main9c711d06afa. It reads immutable predecessor clock/PG/access artifacts; all output and new source is in own lane root. Current native bind obligation remains pair image32h03039da9 (TOK-KV-4 now merged4208361ea2a).
 
 N3 FAIL retained native_N3_fail.log: clipping ran before R7 backbone substitution and found ck_b1750/Y versus ck_n1752 at the old cell pin column. This is not an actual R7-stack conclusion. N4 corrects ordering: native clipping after mapping R7 M7 backbone coordinates. No source failure hidden, no physical route.
+
+N4 actual R7-column FAIL retained native_N4_fail.log: ck_b3046/Y M7 backbone intersects actual native ck_n3048 M7 pin metal. Upstream structural fix RUNNING: unchanged backbone planner plus explicit reserved-metal argument containing7889 actual native M7 rectangles and reviewed PHY stub extensions. Outputs backbone_native/RN1,RN1c. Existing R7 default-window pin exceptions must be revisited on the new geometry; no pass assumed.
