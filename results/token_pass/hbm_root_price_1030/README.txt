@@ -62,3 +62,19 @@ wide_all_VM_units_pair12_once: 1730.168260 tok/s, +24576.0cycles, lossvsrecord3.
 wide_nonCOLL_VM_pair12_plus_COLL_pair12_perphase: 1728.862043 tok/s, +25056.0cycles, lossvsrecord3.940918%, loss vs1812.4 4.609245%.
 
 Wide assumed-one-encounter row1728.862 is4.609% below1812.4, only7.082tok/s above5%floor1721.78 BEFORE unpriced spill/drains. Separate unintegrated arithmetic IF all6382848bytes occur once serially: +2015.636cycles at die BW =>1723.398tok/s; at single-stack BW +8062.545 =>1707.213. This is not authority for repeat counts, overlap, mapping, fences or a whole-token rate.
+
+Tnode-only source service sensitivity, source39624526a:
+Four external physical tnode levels each input+1/output+1 give down+8/up+8,
+RT/WSC+16. Same row pace implies HC_POST+32 and HC_PRE+48 per native command.
+All161selectedS2HC records are primitive records with no appended ROWX;
+full codec consumption and exact reencoding were asserted. Emitter authority
+setsN=rx.n if ROWX present, else1. Tensor dimension5120 is NOT rowcount5.
+81PRE/N1+80POST/N1 change;40QDQ records unchanged. Source81*48+80*32=6448
+addedcommandcycles; S2 overlap absorbs118.552;
+nettoken+6329.448cycles =>1781.329219tok/s,
+lossvs1799.790reference1.025735% andvs1812.4
+1.714345%. No hubdetour cost included in this row.
+No multiuserROWX grouping inferred. N>4 chosenRGap+4 would givePRE5+64/
+PRE6+68, but the true minimum increase is derived from current bound and
+can be0..3 when previous ceiling was clipped at0; not priced bythisN1row.
+Spill/DMA/drains remain excluded; no physical or G5 adoption claim.

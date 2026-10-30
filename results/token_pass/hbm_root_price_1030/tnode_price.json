@@ -1,0 +1,33 @@
+{
+  "scope": "TNODE_ONLY_SINGLE_POSITION_N1_NATIVE_S2_SENSITIVITY_NOT_G5",
+  "source_commit": "39624526a",
+  "reference_cycles": 610734.931155155,
+  "cycles": 617064.3791551549,
+  "added_cycles": 6329.447999999975,
+  "reference_tok_s": 1799.7903055058,
+  "tok_s": 1781.329218568324,
+  "loss_vs_record_pct": 1.0257354360116877,
+  "loss_vs_1812_4_pct": 1.7143445945528635,
+  "native_N_authority": "fused_job217_emit.py n=rx.n if ROWX else 1; selected g25 codec consumes entire nativebase record and reencodes exactly, no appended ROWX",
+  "native_counts": {
+    "HC_PRE_NORM/N1": 81,
+    "HC_POST/N1": 80
+  },
+  "per_record_extra_cycles": {
+    "HC_PRE_NORM/N1": 48,
+    "HC_POST/N1": 32
+  },
+  "QDQ_extra_cycles": 0,
+  "external_tree_levels": 4,
+  "input_shell_stages": 1,
+  "output_shell_stages": 1,
+  "root_roundtrip_added_cycles": 16,
+  "row_pace_added_cycles": 0,
+  "hub_detour_added_cycles": 0,
+  "rate_excludes_native_VM_spill_and_drains": true,
+  "multiuser_ROWX_programme_priced": false,
+  "operations": "ot-run actualintel2 schedulerlocalhost unit4148878 exit0,4GB1thread",
+  "sum_explicit_record_added_cycles": 6448,
+  "overlap_absorbed_cycles": 118.55200000002515,
+  "ROWX_N_gt4_scope": "not selected by this native S2 programme; PRE5+64/PRE6+68 only conditional on explicitly chosen +4 RGap, not a universal minimum"
+}
