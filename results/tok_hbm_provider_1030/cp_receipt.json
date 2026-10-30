@@ -69,5 +69,19 @@
   "no acceptedtokenrate or fullMTPstepqualification"
  ],
  "format_scope": "Only normative U32 source5\u2192destination5 actual retained copies; old broad-format toy vectors do not establish other destination-format legality.",
- "release_scope": "Caller must date release after actual last consumer. Wrapper does not provide complete inflight-packet/physical VMdone release guard."
+ "release_scope": "Caller must date release after actual last consumer. Wrapper does not provide complete inflight-packet/physical VMdone release guard.",
+ "input_programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "accepted_outputs_data_dependent": true,
+  "rate_unit": "programme_steps_per_second",
+  "evidence": {
+   "ACCEPT_record": 3913,
+   "TOKX_record": 3914,
+   "TOKX_A_n": 7
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no AR-token equivalence or fixed acceptance gamma."
+ },
+ "fixture_is_complete_programme": false,
+ "ownership_epochs_are_MTP_steps_or_ARtokens": false
 }

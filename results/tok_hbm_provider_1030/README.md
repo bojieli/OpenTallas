@@ -74,3 +74,5 @@ The fixture is one retained window from N6MTPVERIFY, repeated in3ownership
 epochs, not3complete MTPsteps and not3ARtokens. No tokenrate is inferred.
 
 Peer review scope: these actual caller vectors use normative U32 5→5 only. Destination-format guard correction in the provider counter is separately owned by binder and remains required for other or malformed formats. The old broad-format toy vectors are not this proof. Release remains a caller obligation after the actual last consumer; the wrapper does not implement a complete inflight-packet or physical VMdone release guard.
+
+Input programme scope is explicitly N=6 MTP VERIFY with data-dependent ACCEPT3913/TOKX3914 output count (TOKX A.n7). These bounded copies repeat three ownership epochs; they execute neither three full verify steps nor three AR tokens. Fixture generators and receipts now state that scope. Accepted token rates require actual native ACCEPT/TOKX observations plus draft/seed costs; no fixed acceptance gamma is assumed.
