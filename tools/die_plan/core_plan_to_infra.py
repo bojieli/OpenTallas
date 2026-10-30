@@ -228,7 +228,9 @@ def convert(rec, sites, module, clock_port="clk", outline=None, calibration=Fals
     for corner in ("TT", "FF"):
         m = rec[corner]
         q[corner] = dict(leaf_min=m[corner_keys[0]], leaf_max=m[corner_keys[1]], leaf_window=m["window"],
-                         slew_max=max(m.get("leaf_out_slew_max", 0), m.get("leaf_slew_in_max", 0)), mean=m["mean"])
+                         slew_max=max(m.get("all_buffer_slew_max", 0), m.get("all_buffer_slew_in_max", 0),
+                                      m.get("all_buffer_slew_out_max", 0), m.get("leaf_out_slew_max", 0),
+                                      m.get("leaf_slew_in_max", 0)), mean=m["mean"])
     disp = [t["displacement_um"] for t in tree_nodes]
     macro_leaves = set(rec.get("macro_leaves", []))
     for leaf in leaves:

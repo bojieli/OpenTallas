@@ -310,3 +310,21 @@ def test_outline_is_the_source_die_area_not_row_truncated_core(tmp_path):
     assert C.convert(p, s, "tiny_core", outline=[37.8, 37.8])["outline_um"] == [37.8, 37.8]
     s.pop("die")
     assert C.convert(p, s, "tiny_core")["outline_um"] == [450.144, 198.72]
+
+
+@pytest.mark.parametrize("slew,blocked", [(95.5255173102168, True), (52.581153028785806, False)])
+@pytest.mark.parametrize("coverage", ["combined", "observed_inputs_outputs"])
+def test_internal_slew_remains_required_with_window_info(slew, blocked, coverage):
+    rec = plan()
+    if coverage == "combined":
+        rec["TT"]["all_buffer_slew_max"] = slew
+    else:
+        rec["TT"]["all_buffer_slew_in_max"] = slew
+        rec["TT"]["all_buffer_slew_out_max"] = 47.65460975816248
+    sl = C.convert(rec, sites(), "tiny_core", outline=[37.8, 37.8])
+    sl["core_tree"]["model_qualification"].update(band_policy="info", window_policy="info")
+    if blocked:
+        with pytest.raises(CI.InfraError, match="model target FAIL"):
+            CI.emit_tcl(sl)
+    else:
+        assert "core tap window INFO" in CI.emit_tcl(sl)
