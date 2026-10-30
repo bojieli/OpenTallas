@@ -87,7 +87,9 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
   // -> age winner -> wab_oh): the per-bank write-ACT eligibility (~open & ~blk & aok_z & rrdl_z) and the per-slot
   // eligibility are REGISTERED from the exact next-state values the existing registers load (bok_q, ent_q, bsel_oh),
   // so the row decision starts from flops.  Same edges, same decisions (lockstep miter vs PHYS_WACT 0/1).
-  parameter integer PHYS_WACT = 0
+  parameter integer PHYS_WACT = 0,
+  // Default off: caller supplies the separately qualified 833ps timing table.
+  parameter integer TIMING_833 = 0, T_CCDS = 1, COL_TDM = 0, ROW_CADENCE = 1
 )(
   input wire [7:0] reset_regions,
     input  wire        clk, rst_n,
@@ -120,14 +122,26 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     // first refresh due on one of this PC's row slots (cycle parity == PC[0]); PERIOD is even
     // Identity and refresh seed come from registered constant pins in the
     // physical leaf. The academic HBM service uses the existing118-edge class.
-    initial if(REF_MODE!=1 || PERIOD!=118) $fatal(1,"HBM strap refresh class mismatch");
+    initial if(REF_MODE!=1 || PERIOD!=(TIMING_833!=0?144:118) ||
+               (TIMING_833!=0&&(T_CCDS!=2||COL_TDM!=1||ROW_CADENCE!=2))) $fatal(1,"HBM strap refresh class mismatch");
     function automatic [2:0] idle_rank(input [2:0] s);
       idle_rank = (s==3'(IDLE0))?0:(s==3'(IDLE1))?1:(s==3'(IDLE2))?2:(s==3'(IDLE3))?3:
                   (s==3'(IDLE4))?4:(s==3'(IDLE5))?5:(s==3'(IDLE6))?6:7;
     endfunction
+    // The enabled833 profile exceeds historical RAS/WRR/FAW/WTR storage.
+    // Every default width stays identical; all loads/comparisons use the same
+    // derived width so no timing minimum is silently truncated.
+    function automatic integer timing_width(input integer floor_bits,input integer cycles);
+      integer cb;begin cb=(cycles>1)?$clog2(cycles):1;timing_width=cb>floor_bits?cb:floor_bits;end
+    endfunction
+    localparam integer W_RCD=timing_width(5,T_RCD),W_RAS=timing_width(5,T_RAS),W_RTP=timing_width(3,T_RTP);
+    localparam integer W_WRR=timing_width(5,T_WRR),W_AOK=timing_width(9,T_RFC>T_RFCPB?(T_RFC>T_RAS+T_RP?T_RFC:T_RAS+T_RP):(T_RFCPB>T_RAS+T_RP?T_RFCPB:T_RAS+T_RP));
+    localparam integer W_RRDL=timing_width(3,T_RRDL),W_CCDL=timing_width(2,T_CCDL),W_FAW=timing_width(4,T_FAW);
+    localparam integer W_RRDS=timing_width(2,T_RRDS),W_RREFD=timing_width(4,T_RREFD),W_SACT=timing_width(4,T_RREFD+3);
+    localparam integer W_RTW=timing_width(4,T_RTW),W_WTR=timing_width(4,T_WTR);
     reg [10:0] j, n; reg [18:0] row;
     reg [31:0] open, done, stale, refreshed;
-    reg [1:0] rrds_c; reg [3:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
+    reg [W_RRDS-1:0] rrds_c; reg [W_RREFD-1:0] noact_c; reg [RW-1:0] ref_c; reg ref_pend; reg [4:0] rb; reg fault_r;
     reg [6:0] credit; reg running; reg [31:0] blk;   // blk: one-hot of rb while a REFpb is pending
     reg streaming; reg [2:0] last; reg [10:0] nm1;   // registered at descriptor accept
     wire [2:0] k = j[9:7];
@@ -149,7 +163,7 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
     reg hr;                                           // AQ_RD: the head entry is a read (registered)
     reg [WQW:0] wq_n; reg [WQW-1:0] wq_rp;
-    reg [3:0] rtw_c, wtr_c;
+    reg [W_RTW-1:0] rtw_c; reg [W_WTR-1:0] wtr_c;
     reg [31:0] wopen;                                 // banks opened by a write ACT (precharged after)
     reg c_w;                                          // the registered row command is a write ACT
     wire wq_ne = W && wq_n != 0;
@@ -180,11 +194,28 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       end
     end
     always @(posedge clk) if (!reset_regions[0]) hold <= 0; else hold <= hold_n;
-    wire wr_ok;
+    wire wr_ok;wire ccds_ready;
+    wire column_slot=(COL_TDM==0)||(phase[0]==slot_parity);
+    if(T_CCDS<=1)begin:g_legacy_ccds
+      assign ccds_ready=1'b1;
+    end else begin:g_timed_ccds
+      localparam integer W_CCDS=$clog2(T_CCDS);
+      reg[W_CCDS-1:0]left;
+      always @(posedge clk)
+        if(!reset_regions[0])left<=0;
+        else if(rd_ok||(W&&wr_ok))left<=W_CCDS'(T_CCDS-1);
+        else if(left!=0)left<=left-1'b1;
+      assign ccds_ready=left==0;
+    end
+
     // ---- refresh windows -------------------------------------------------------------
     wire ref_due = (ref_c == 0);
-    reg  phase;                                       // cycle parity; this PC's row slot when == PC[0]
-    wire slot_next = (phase != slot_parity);           // the next cycle is this PC's row slot
+    localparam integer W_PHASE=(ROW_CADENCE==2)?2:1;
+    reg [W_PHASE-1:0]phase;
+    wire [W_PHASE-1:0]next_phase=phase+1'b1;
+    // 833 profile: paired PCs share one row slot every2 edges and alternate
+    // those slots; original profile has the historical alternating edge slots.
+    wire slot_next = ROW_CADENCE==2 ? (next_phase==W_PHASE'(2*slot_parity)) : (phase != slot_parity);           // the next cycle is this PC's row slot
     wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;   // ref_c of the next cycle
     wire ref_due_n = (ref_n == 0);
     // (declared after ref_n: yosys needs the width before use)
@@ -217,8 +248,8 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     wire [31:0] aok_zn;                               // the value aok_zr loads at this edge
     wire [223:0] keys;
     for (genvar b = 0; b < 32; b = b + 1) begin : bank
-      reg [4:0] rcd, ras; reg [8:0] aok; reg [2:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
-      reg [4:0] wrr;
+      reg [W_RCD-1:0] rcd; reg [W_RAS-1:0] ras; reg [W_AOK-1:0] aok; reg [W_RTP-1:0] rtp; reg aok_zr, rcd_zr;   // == 0 flags, registered
+      reg [W_WRR-1:0] wrr;
       wire wr_e = W && wr_ok && hb_oh[b] && !(AQ && hr);
       wire act_e = row_fire && c_op == ACT && c_oh[b];
       wire pre_e = row_fire && ((c_op == PRE && c_oh[b]) || c_op == PREALL);
@@ -228,27 +259,27 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       always @(posedge clk)
         if (!reset_regions[b/4]) begin rcd <= 0; ras <= 0; aok <= 0; rtp <= 0; aok_zr <= 1'b1; rcd_zr <= 1'b1; wrr <= 0; end
         else begin
-          rcd_zr <= act_e ? (T_RCD - 1 == 0) : (rcd <= 5'd1);
-          if (wr_e) wrr <= 5'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
-          if (act_e) begin rcd <= 5'(T_RCD - 1); ras <= 5'(T_RAS - 1); end
+          rcd_zr <= act_e ? (T_RCD - 1 == 0) : (rcd <= W_RCD'(1));
+          if (wr_e) wrr <= W_WRR'(T_WRR - 1); else if (wrr != 0) wrr <= wrr - 1'b1;
+          if (act_e) begin rcd <= W_RCD'(T_RCD - 1); ras <= W_RAS'(T_RAS - 1); end
           else begin if (rcd != 0) rcd <= rcd - 1'b1; if (ras != 0) ras <= ras - 1'b1; end
-          if (rd_e) rtp <= 3'(T_RTP - 1); else if (rtp != 0) rtp <= rtp - 1'b1;
-          if (act_e) aok <= 9'(T_RAS + T_RP - 1);
-          else if (rfa_e) aok <= 9'(T_RFC - 1);
-          else if (rfp_e) aok <= 9'(T_RFCPB - 1);
-          else if (pre_e && aok < 9'(T_RP)) aok <= 9'(T_RP - 1);
+          if (rd_e) rtp <= W_RTP'(T_RTP - 1); else if (rtp != 0) rtp <= rtp - 1'b1;
+          if (act_e) aok <= W_AOK'(T_RAS + T_RP - 1);
+          else if (rfa_e) aok <= W_AOK'(T_RFC - 1);
+          else if (rfp_e) aok <= W_AOK'(T_RFCPB - 1);
+          else if (pre_e && aok < W_AOK'(T_RP)) aok <= W_AOK'(T_RP - 1);
           else if (aok != 0) aok <= aok - 1'b1;
           // the same priority, evaluated as "is the next aok zero" (exact, registered flag)
           if (act_e) aok_zr <= (T_RAS + T_RP - 1 == 0);
           else if (rfa_e) aok_zr <= (T_RFC - 1 == 0);
           else if (rfp_e) aok_zr <= (T_RFCPB - 1 == 0);
-          else if (pre_e && aok < 9'(T_RP)) aok_zr <= (T_RP - 1 == 0);
-          else aok_zr <= (aok <= 9'd1);
+          else if (pre_e && aok < W_AOK'(T_RP)) aok_zr <= (T_RP - 1 == 0);
+          else aok_zr <= (aok <= W_AOK'(1));
         end
-      assign rcd_z[b] = rcd_zr; assign rcdw_z[b] = (rcd <= 5'(T_RCD - T_RCDW)); assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0) && (!W || wrr == 0);
+      assign rcd_z[b] = rcd_zr; assign rcdw_z[b] = (rcd <= W_RCD'(T_RCD - T_RCDW)); assign ras_z[b] = (ras == 0); assign rtp_z[b] = (rtp == 0) && (!W || wrr == 0);
       assign aok_z[b] = aok_zr; assign aok_busy[b] = (aok > 9'(LEAD));
       assign aok_zn[b] = act_e ? (T_RAS + T_RP - 1 == 0) : rfa_e ? (T_RFC - 1 == 0) : rfp_e ? (T_RFCPB - 1 == 0) :
-                         (pre_e && aok < 9'(T_RP)) ? (T_RP - 1 == 0) : (aok <= 9'd1);
+                         (pre_e && aok < W_AOK'(T_RP)) ? (T_RP - 1 == 0) : (aok <= W_AOK'(1));
       // REFpb key: 127 refreshed; streaming/posted: open 24 (finished) / 32, protected (needed
       // within the next two sets) 16..18 farthest first, upcoming = distance, passed 8 + set;
       // idle: IDLE rank (+32 open); +64 if still busy from an earlier tRFCpb / tRC.
@@ -269,7 +300,7 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     wire [3:0] rrdl_z, ccdl_z, faw_z;
     wire [3:0] rrdl_zn;                               // the value rrdl_zr loads at this edge
     for (genvar g = 0; g < 4; g = g + 1) begin : bgs
-      reg [2:0] rrdl; reg [1:0] ccdl; reg [3:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
+      reg [W_RRDL-1:0] rrdl; reg [W_CCDL-1:0] ccdl; reg [W_FAW-1:0] faw; reg rrdl_zr, faw_zr, ccdl_zr;   // registered (== 0) flags
       wire act_g = row_fire && c_op == ACT && c_bank[1:0] == 2'(g);
       // FAW slot g takes this ACT if it is the lowest free slot
       wire ccdl_e = (rd_ok && rd_bgoh[g]) || (W && wr_ok && hb[1:0] == 2'(g));
@@ -277,15 +308,15 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       always @(posedge clk)
         if (!reset_regions[g*2]) begin rrdl <= 0; ccdl <= 0; faw <= 0; rrdl_zr <= 1'b1; faw_zr <= 1'b1; ccdl_zr <= 1'b1; end
         else begin
-          if (act_g) rrdl <= 3'(T_RRDL - 1); else if (rrdl != 0) rrdl <= rrdl - 1'b1;
-          if (ccdl_e) ccdl <= 2'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
-          if (faw_take) faw <= 4'(T_FAW - 1); else if (faw != 0) faw <= faw - 1'b1;
-          rrdl_zr <= act_g ? (T_RRDL - 1 == 0) : (rrdl <= 3'd1);
-          ccdl_zr <= ccdl_e ? (T_CCDL - 1 == 0) : (ccdl <= 2'd1);
-          faw_zr  <= faw_take ? (T_FAW - 1 == 0) : (faw <= 4'd1);
+          if (act_g) rrdl <= W_RRDL'(T_RRDL - 1); else if (rrdl != 0) rrdl <= rrdl - 1'b1;
+          if (ccdl_e) ccdl <= W_CCDL'(T_CCDL - 1); else if (ccdl != 0) ccdl <= ccdl - 1'b1;
+          if (faw_take) faw <= W_FAW'(T_FAW - 1); else if (faw != 0) faw <= faw - 1'b1;
+          rrdl_zr <= act_g ? (T_RRDL - 1 == 0) : (rrdl <= W_RRDL'(1));
+          ccdl_zr <= ccdl_e ? (T_CCDL - 1 == 0) : (ccdl <= W_CCDL'(1));
+          faw_zr  <= faw_take ? (T_FAW - 1 == 0) : (faw <= W_FAW'(1));
         end
       assign rrdl_z[g] = rrdl_zr; assign ccdl_z[g] = ccdl_zr; assign faw_z[g] = faw_zr;
-      assign rrdl_zn[g] = act_g ? (T_RRDL - 1 == 0) : (rrdl <= 3'd1);
+      assign rrdl_zn[g] = act_g ? (T_RRDL - 1 == 0) : (rrdl <= W_RRDL'(1));
     end
     wire faw_ok = |faw_z;
     // ---- REFpb bank choice: argmin of keys, ties to the lowest bank ----------------------
@@ -334,9 +365,9 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     // was absent when that command was chosen, so hold_n alone cannot protect it.
     wire [31:0] pre_fl = !c_v ? 32'b0 : (c_op == PRE) ? c_oh : (c_op == PREALL) ? 32'hffffffff : 32'b0;
     wire wr_bank_rdy = wq_ne && |(hb_oh & open & ~stale & (AQ ? rcd_z : rcdw_z) & ~blk & ~pre_fl);   // AQ: every access-queue head waits full tRCD (no hr on this path)
-    wire rd_ok_base = running && streaming && !rd_block && |(rd_oh & open & ~stale & rcd_z & ~blk) &&
+    wire rd_ok_base = running && streaming && ccds_ready && column_slot && !rd_block && |(rd_oh & open & ~stale & rcd_z & ~blk) &&
                       |(rd_bgoh & ccdl_z) && cred_nz;
-    assign wr_ok = wr_bank_rdy && ccdl_z[hb[1:0]] && ((AQ && hr) ? (wtr_c == 0) : (rtw_c == 0)) && !rd_block &&
+    assign wr_ok = ccds_ready && column_slot && wr_bank_rdy && ccdl_z[hb[1:0]] && ((AQ && hr) ? (wtr_c == 0) : (rtw_c == 0)) && !rd_block &&
                    (head_prio || !rd_ok_base);
     assign rd_ok = rd_ok_base && !(W && ((wr_bank_rdy && head_prio) || wtr_c != 0));
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
@@ -449,11 +480,11 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     reg [PIW-1:0] pin;                                // REFpb issued ahead of the schedule
     reg ep;                                           // a pulled-in REFpb is pending (rb / blk)
     reg skip;                                         // this due slot was paid ahead: nothing issues
-    reg [3:0] sact;                                   // cycles since the last ACT / REFpb (saturating)
+    reg [W_SACT-1:0] sact;                                   // cycles since the last ACT / REFpb (saturating)
     wire pi_idle = !streaming || !running;
     wire ep_start = PI && pi_idle && !ep && !ref_pend && 32'(pin) < PULLIN && ref_c > RW'(LEAD + 8) &&
                     (bkey < 7'd16 || bkey == 7'd20) && !(|(blk)) && sact >= 4'd6;   // bsel/bkey see a REFpb / ACT 5 cycles late
-    wire ep_rdy = PI && ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= 4'(T_RREFD + 2) &&
+    wire ep_rdy = PI && ep && !(|(blk & open)) && (|(blk & aok_z)) && noact_c == 0 && sact >= W_SACT'(T_RREFD + 2) &&
                   ref_c > RW'(LEAD + 8);   // bsel at LEAD must not see a REFpb in flight
     // PHYS_WACT 2: next-state mirrors of blk (the main sequential block below), then the registered eligibilities.
     reg [31:0] blk_n;
@@ -550,8 +581,8 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
       end else begin
         if (AQ) begin if (!wq_ne || !hr || wr_ok) hwait <= 0; else if (hwait != 8'hff) hwait <= hwait + 1'b1; end
         if (W) begin
-          if (rd_ok || (AQ && wr_ok && hr)) rtw_c <= 4'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
-          if (wr_ok && !(AQ && hr)) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
+          if (rd_ok || (AQ && wr_ok && hr)) rtw_c <= W_RTW'(T_RTW - 1); else if (rtw_c != 0) rtw_c <= rtw_c - 1'b1;
+          if (wr_ok && !(AQ && hr)) wtr_c <= W_WTR'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
           if (wr_v && wr_r) begin
             wq_bank[WQW'(wq_rp + wq_n)] <= wr_bank; wq_col[WQW'(wq_rp + wq_n)] <= wr_col;
             if (AQ) wq_rd[WQW'(wq_rp + wq_n)] <= wr_rd;
@@ -582,13 +613,13 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
         if (noact_c != 0) noact_c <= noact_c - 1'b1;
         credit <= rd_ok ? cr_dec : cr_inc;      // both sums precomputed; rd_ok only selects
         // refresh schedule
-        phase <= ~phase;
+        phase <= phase+1'b1;
         // register the row decision for this PC's next slot (an off-slot cycle issues nothing)
         c_v <= slot_next && r_v; c_prio <= r_prio; c_op <= r_op; c_bank <= r_bank; c_oh <= r_oh; c_w <= W && r_w;
         if (!PI) begin
           if (REF_MODE && ref_c == RW'(LEAD)) begin ref_pend <= 1; rb <= bsel; blk <= 32'b1 << bsel; end
         end else begin
-          if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != 4'hf) sact <= sact + 1'b1;
+          if (row_fire && (c_op == ACT || c_op == REFPB)) sact <= 0; else if (sact != {W_SACT{1'b1}}) sact <= sact + 1'b1;
           if (ref_c == RW'(LEAD)) begin
             if (ep) begin ref_pend <= 1; ep <= 0; end                 // a pending pull-in becomes this slot's REFpb
             else if (pin != 0 && !pi_idle) begin pin <= pin - 1'b1; skip <= 1; end  // paid ahead: skip (only while reading)
@@ -609,11 +640,11 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
         end
         // row
         if (row_fire) case (c_op)
-          ACT: begin open <= open | c_oh; rrds_c <= 2'(T_RRDS - 1); end
+          ACT: begin open <= open | c_oh; rrds_c <= W_RRDS'(T_RRDS - 1); end
           PRE: begin open <= open & ~c_oh; stale <= stale & ~c_oh; end
           PREALL: begin open <= 0; stale <= 0; end
           REFPB: begin
-            noact_c <= 4'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
+            noact_c <= W_RREFD'(T_RREFD - 1); ref_pend <= 0; blk <= 0;
             if (PI && ep && !ref_pend) begin ep <= 0; pin <= pin + 1'b1; end
             refreshed <= (&(refreshed | (32'b1 << rb))) ? 32'b0 : (refreshed | (32'b1 << rb));
           end

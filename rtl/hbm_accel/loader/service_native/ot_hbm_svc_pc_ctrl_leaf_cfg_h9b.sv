@@ -44,7 +44,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     // identity reads both candidate slots from registered addresses and selects late; (d) controller PHYS_WACT 2.
     // QREG=0 is H6 exactly.
     parameter integer QREG=1,
-    parameter integer RMUT=0
+    parameter integer RMUT=0,
+    // Default OFF. Conservative local-R14-model 833ps profile; same clock/CDC.
+    // Paired PC row/column phase alignment and bootreload144..252 are required.
+    // This is not licensed PHY timing signoff.
+    parameter integer TIMING_833=0
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -197,7 +201,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
         .clk(clk),.r_ce_in(response_read),.r_addr_in({2'b0,response_read_address}),.rd_out(response_data),
         .w_ce_in(response_write),.w_addr_in({2'b0,response_wp}),.wd_in(ret_data),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
-    ot_hbm_r14_stream_pc_strap_h9 #(.ENABLE(1),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),.PHYS_WACT((QREG!=0)?2:1)) controller(
+    ot_hbm_r14_stream_pc_strap_h9 #(.ENABLE(1),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),.PHYS_WACT((QREG!=0)?2:1),
+      .TIMING_833(TIMING_833),.T_CCDS(TIMING_833?2:1),.COL_TDM(TIMING_833?1:0),.ROW_CADENCE(TIMING_833?2:1),
+      .T_RCD(TIMING_833?24:19),.T_RP(TIMING_833?20:16),.T_RAS(TIMING_833?34:28),.T_RTP(TIMING_833?7:6),.T_CCDL(TIMING_833?4:3),
+      .T_RRDS(TIMING_833?4:3),.T_RRDL(4),.T_FAW(TIMING_833?19:15),.T_RFC(TIMING_833?421:342),.T_RFCPB(TIMING_833?241:196),
+      .T_REFI(TIMING_833?4681:3808),.T_REFIPB(TIMING_833?144:118),.T_RREFD(TIMING_833?10:8),
+      .T_RTW(TIMING_833?12:10),.T_WTR(TIMING_833?17:14),.T_WRR(TIMING_833?34:28),.T_RCDW(TIMING_833?12:10)) controller(
         .reset_regions(reset_regions),.slot_parity(pc_id_q[0]),.refresh_reload(refresh_reload_q),
         .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
