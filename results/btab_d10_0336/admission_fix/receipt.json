@@ -1,0 +1,12 @@
+{
+  "scope": "Generated metadata synchronization only; no RTL, clock tree, placement or SDC edit",
+  "failed_kit": "variantB",
+  "corrected_kit": "variantC",
+  "cause": "Old H13 master_slice JSON/Tcl survived after D10B core infrastructure install; new admission correctly rejected mismatch",
+  "tree_hooks_sha_identical": true,
+  "compiled_core_infra_json_identical": true,
+  "exact_checkpoint": "4_cts.odb copied byte-identically",
+  "master_slice_verdict": "PASS",
+  "preflight_verdict": "PASS",
+  "slice_sha256": "e32d85f5f223afa25554b3f1520a2f47e7b3028262a5392d74cd59754f928ad4"
+}
