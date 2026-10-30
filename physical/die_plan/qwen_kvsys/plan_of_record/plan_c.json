@@ -560063,7 +560063,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "cells": 80413
   },
   "kv3_hub_C": {
    "module": "kv3_hub_C_part",
@@ -785141,7 +785142,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "cells": 289525
   },
   "kv3_hub_Eo": {
    "module": "kv3_hub_Eo_part",
@@ -1077683,7 +1077685,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "cells": 116471
   },
   "kv3_io_cor_v1": {
    "module": "kv3_io_cor_v1_part",
@@ -1146577,7 +1146580,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "cells": 119885
   },
   "kv3_io_ft": {
    "module": "kv3_io_ft_part",
@@ -1169200,7 +1169204,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "cells": 38472
   },
   "kv3_io_ft_v1": {
    "module": "kv3_io_ft_v1_part",
@@ -1191783,7 +1191788,8 @@
      "width": 1,
      "note": "OWNER 12.15a count strap (tied at the parent)"
     }
-   ]
+   ],
+   "cells": 38398
   },
   "kv3_pc_v3": {
    "module": "kv3_pc_v3_part",
@@ -1606644,129 +1606650,765 @@
     {
      "name": "strap_ca_efall",
      "width": 1,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       21.6,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_ft1_i",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       23.776,
+       4.32
+      ],
+      [
+       25.952,
+       4.32
+      ],
+      [
+       28.128,
+       4.32
+      ],
+      [
+       30.304,
+       4.32
+      ],
+      [
+       32.48,
+       4.32
+      ],
+      [
+       34.656,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_boot_go",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       36.832,
+       4.32
+      ],
+      [
+       39.008,
+       4.32
+      ],
+      [
+       41.184,
+       4.32
+      ],
+      [
+       43.36,
+       4.32
+      ],
+      [
+       45.536,
+       4.32
+      ],
+      [
+       47.712,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_die_rst_n",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       49.888,
+       4.32
+      ],
+      [
+       52.064,
+       4.32
+      ],
+      [
+       54.24,
+       4.32
+      ],
+      [
+       56.416,
+       4.32
+      ],
+      [
+       58.592,
+       4.32
+      ],
+      [
+       60.768,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_host_drained_local",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       62.944,
+       4.32
+      ],
+      [
+       65.12,
+       4.32
+      ],
+      [
+       67.296,
+       4.32
+      ],
+      [
+       69.472,
+       4.32
+      ],
+      [
+       71.648,
+       4.32
+      ],
+      [
+       73.824,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_link_rst_n",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       76.0,
+       4.32
+      ],
+      [
+       78.176,
+       4.32
+      ],
+      [
+       80.352,
+       4.32
+      ],
+      [
+       82.528,
+       4.32
+      ],
+      [
+       84.704,
+       4.32
+      ],
+      [
+       86.88,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_lrc",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       89.056,
+       4.32
+      ],
+      [
+       91.232,
+       4.32
+      ],
+      [
+       93.408,
+       4.32
+      ],
+      [
+       95.584,
+       4.32
+      ],
+      [
+       97.76,
+       4.32
+      ],
+      [
+       99.936,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_program_begin_v",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       102.112,
+       4.32
+      ],
+      [
+       104.288,
+       4.32
+      ],
+      [
+       106.464,
+       4.32
+      ],
+      [
+       108.64,
+       4.32
+      ],
+      [
+       110.816,
+       4.32
+      ],
+      [
+       112.992,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_rec_tx",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       115.168,
+       4.32
+      ],
+      [
+       117.344,
+       4.32
+      ],
+      [
+       119.52,
+       4.32
+      ],
+      [
+       121.696,
+       4.32
+      ],
+      [
+       123.872,
+       4.32
+      ],
+      [
+       126.048,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_host_token_epoch",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       128.224,
+       4.32
+      ],
+      [
+       130.4,
+       4.32
+      ],
+      [
+       132.576,
+       4.32
+      ],
+      [
+       134.752,
+       4.32
+      ],
+      [
+       136.928,
+       4.32
+      ],
+      [
+       139.104,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_attn_attn__tx_payload",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       141.28,
+       4.32
+      ],
+      [
+       143.456,
+       4.32
+      ],
+      [
+       145.632,
+       4.32
+      ],
+      [
+       147.808,
+       4.32
+      ],
+      [
+       149.984,
+       4.32
+      ],
+      [
+       152.16,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_attn_attn__tx_valid",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       154.336,
+       4.32
+      ],
+      [
+       156.512,
+       4.32
+      ],
+      [
+       158.688,
+       4.32
+      ],
+      [
+       160.864,
+       4.32
+      ],
+      [
+       163.04,
+       4.32
+      ],
+      [
+       165.216,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_addr",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       167.392,
+       4.32
+      ],
+      [
+       169.568,
+       4.32
+      ],
+      [
+       171.744,
+       4.32
+      ],
+      [
+       173.92,
+       4.32
+      ],
+      [
+       176.096,
+       4.32
+      ],
+      [
+       178.272,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_data",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       180.448,
+       4.32
+      ],
+      [
+       182.624,
+       4.32
+      ],
+      [
+       184.8,
+       4.32
+      ],
+      [
+       186.976,
+       4.32
+      ],
+      [
+       189.152,
+       4.32
+      ],
+      [
+       191.328,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_rx_we",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       193.504,
+       4.32
+      ],
+      [
+       195.68,
+       4.32
+      ],
+      [
+       197.856,
+       4.32
+      ],
+      [
+       200.032,
+       4.32
+      ],
+      [
+       202.208,
+       4.32
+      ],
+      [
+       204.384,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_boot__link_cfg_tx_we",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       206.56,
+       4.32
+      ],
+      [
+       208.736,
+       4.32
+      ],
+      [
+       210.912,
+       4.32
+      ],
+      [
+       213.088,
+       4.32
+      ],
+      [
+       215.264,
+       4.32
+      ],
+      [
+       217.44,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_kvi",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       219.616,
+       4.32
+      ],
+      [
+       221.792,
+       4.32
+      ],
+      [
+       223.968,
+       4.32
+      ],
+      [
+       226.144,
+       4.32
+      ],
+      [
+       228.32,
+       4.32
+      ],
+      [
+       230.496,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_oobs__kv_active_local",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       232.672,
+       4.32
+      ],
+      [
+       234.848,
+       4.32
+      ],
+      [
+       237.024,
+       4.32
+      ],
+      [
+       239.2,
+       4.32
+      ],
+      [
+       241.376,
+       4.32
+      ],
+      [
+       243.552,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_oobs__kv_drained_local",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       245.728,
+       4.32
+      ],
+      [
+       247.904,
+       4.32
+      ],
+      [
+       250.08,
+       4.32
+      ],
+      [
+       252.256,
+       4.32
+      ],
+      [
+       254.432,
+       4.32
+      ],
+      [
+       256.608,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_ctl_oobs__kv_flush_local",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       258.784,
+       4.32
+      ],
+      [
+       260.96,
+       4.32
+      ],
+      [
+       263.136,
+       4.32
+      ],
+      [
+       265.312,
+       4.32
+      ],
+      [
+       267.488,
+       4.32
+      ],
+      [
+       269.664,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_emb_rowtx__emb_tx_payload",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       271.84,
+       4.32
+      ],
+      [
+       274.016,
+       4.32
+      ],
+      [
+       276.192,
+       4.32
+      ],
+      [
+       278.368,
+       4.32
+      ],
+      [
+       280.544,
+       4.32
+      ],
+      [
+       282.72,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_kvs_emb_rowtx__emb_tx_v",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       284.896,
+       4.32
+      ],
+      [
+       287.072,
+       4.32
+      ],
+      [
+       289.248,
+       4.32
+      ],
+      [
+       291.424,
+       4.32
+      ],
+      [
+       293.6,
+       4.32
+      ],
+      [
+       295.776,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_serdes_E_tx_up",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       297.952,
+       4.32
+      ],
+      [
+       300.128,
+       4.32
+      ],
+      [
+       302.304,
+       4.32
+      ],
+      [
+       304.48,
+       4.32
+      ],
+      [
+       306.656,
+       4.32
+      ],
+      [
+       308.832,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_k_i_serdes_W_tx_up",
      "width": 6,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       311.008,
+       4.32
+      ],
+      [
+       313.184,
+       4.32
+      ],
+      [
+       315.36,
+       4.32
+      ],
+      [
+       317.536,
+       4.32
+      ],
+      [
+       319.712,
+       4.32
+      ],
+      [
+       321.888,
+       4.32
+      ]
+     ]
     },
     {
      "name": "strap_ca_pad",
      "width": 1,
-     "note": "OWNER 12.15a count strap (tied at the parent)"
+     "note": "OWNER 12.15a count strap (tied at the parent)",
+     "layer": "M7",
+     "sites_um": [
+      [
+       324.064,
+       4.32
+      ]
+     ]
     }
-   ]
+   ],
+   "cells": 147573
   },
   "kv3_hg_v1": {
    "module": "kv3_hg_v1_part",

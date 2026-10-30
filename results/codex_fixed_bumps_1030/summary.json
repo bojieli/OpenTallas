@@ -1,0 +1,47 @@
+{
+ "scope": "Source-only dedicated PHY point lattice; no finite pad geometry or IR/physical qualification",
+ "source_sites_sha256": "acf3a84b9e1cc7bfea80bdecd47dc4beed5ddcb2ea1e2a47705868ea63a6e2fb",
+ "source_sites": "intel1:/srv/opentallas-scratch2/claude/codex-kv-sd-1030/sd_original_bump_lattice.json",
+ "checks": [
+  {
+   "domain": "phy_sys_SW_serdes",
+   "sites": 861,
+   "origin_um": [
+    50.39999999999998,
+    26096.4
+   ],
+   "counts": [
+    41,
+    21
+   ],
+   "trim_rect_um": [
+    17.28,
+    26060.4,
+    1870.56,
+    27032.4
+   ],
+   "all_world_positions_order_nets_identical": true
+  },
+  {
+   "domain": "phy_sys_SE_serdes",
+   "sites": 861,
+   "origin_um": [
+    9226.080000000002,
+    26096.4
+   ],
+   "counts": [
+    41,
+    21
+   ],
+   "trim_rect_um": [
+    9205.92,
+    26060.4,
+    11059.2,
+    27032.4
+   ],
+   "all_world_positions_order_nets_identical": true
+  }
+ ],
+ "focused_tests": 13,
+ "peer_review": "KV SD: approved world/local geometry, legacy equivalence, parity/order and guards; tiny positive pitch collapse finding fixed with >=1DBU pitch and negative control."
+}

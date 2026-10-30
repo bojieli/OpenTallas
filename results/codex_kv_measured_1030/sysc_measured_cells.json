@@ -1,0 +1,15 @@
+{
+ "type": "kv3_sys_c",
+ "cells": 147573,
+ "complete_mapped_cells_including_macros": 147579,
+ "excluded_macro_instances": {
+  "d2d_sram_1r1w_64x137_m1_r2c2_p288": 4,
+  "ot_qkvd_ucie_x64_phy": 1,
+  "ot_rom_64x32_m2": 1
+ },
+ "stat_path": "/srv/opentallas-scratch2/claude/codex-kv-1030/kit_sysc_current/gen/kv3_sys_c/run/reports/asap7/dp_kv3_sys_c/base/synth_stat.txt",
+ "stat_sha256": "ffdc21d433bff9f96597867b04d3c908868f51d973cbcc6832cca17946e24bd3",
+ "bound_txdp": "03039da9",
+ "status": "actual current SYNTH; frontgates PASS; LEC still live; no physical signoff",
+ "scope": "complete native standardcell hierarchy including wrapper landing infra; no analytical landing add"
+}

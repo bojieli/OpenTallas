@@ -1,0 +1,365 @@
+{
+  "status": "PASS_CURRENT_SOURCE_ENTRY_PW_AND_VP_COMMIT_DATES",
+  "layer": "L14",
+  "source_die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+  "source_asbuilt_sha256": "062ef0c41db92b2c3b89369cdffd96f2cb2dbdee2ec0f4c3050f4652123f3dec",
+  "fixture_meta_sha256": "21e4630930eb54a6928f5142ed2087fb25a2a25e2256d68c712659b691c86056",
+  "input_sources": {
+    "io/h_in.bin": {
+      "sha256": "eaf3017e557b98cb4039ae5a07707ab151d65f909f749f470b853b059118ee42",
+      "dtype": "float32",
+      "shape": [
+        4,
+        5120
+      ]
+    },
+    "entry_engram": {
+      "manifest_sha256": "1a50acf7bcd41103a89aff18d23b8229e7680c7296fddb2fe07f4785506d66d1",
+      "producer": "checkpoint rows/scales/wkv + genuine layer inputs"
+    },
+    "io/pre_in.bin": {
+      "sha256": "6c29248eea3f09270ccf9822e1c4125b27f476982d15898f1c3720697760e3b6",
+      "dtype": "float32",
+      "shape": [
+        4
+      ]
+    },
+    "weights/attn_norm.bin": {
+      "sha256": "5582111c8c4137acab35749b26cfe96e911fafff7a811b2f9cc80c7d67f739b1",
+      "dtype": "uint8",
+      "shape": [
+        5120,
+        2
+      ]
+    }
+  },
+  "pages": [
+    {
+      "page": "job000.json",
+      "commands": 126,
+      "first_commit": 236,
+      "last_commit": 492,
+      "source_write_indices": [
+        0,
+        126
+      ]
+    },
+    {
+      "page": "job001.json",
+      "commands": 126,
+      "first_commit": 242,
+      "last_commit": 485,
+      "source_write_indices": [
+        126,
+        252
+      ]
+    },
+    {
+      "page": "job002.json",
+      "commands": 126,
+      "first_commit": 126,
+      "last_commit": 383,
+      "source_write_indices": [
+        252,
+        378
+      ]
+    },
+    {
+      "page": "job003.json",
+      "commands": 126,
+      "first_commit": 133,
+      "last_commit": 479,
+      "source_write_indices": [
+        378,
+        504
+      ]
+    },
+    {
+      "page": "job004.json",
+      "commands": 126,
+      "first_commit": 229,
+      "last_commit": 487,
+      "source_write_indices": [
+        504,
+        630
+      ]
+    },
+    {
+      "page": "job005.json",
+      "commands": 126,
+      "first_commit": 237,
+      "last_commit": 452,
+      "source_write_indices": [
+        630,
+        756
+      ]
+    },
+    {
+      "page": "job006.json",
+      "commands": 126,
+      "first_commit": 119,
+      "last_commit": 374,
+      "source_write_indices": [
+        756,
+        882
+      ]
+    },
+    {
+      "page": "job007.json",
+      "commands": 126,
+      "first_commit": 127,
+      "last_commit": 475,
+      "source_write_indices": [
+        882,
+        1008
+      ]
+    },
+    {
+      "page": "job008.json",
+      "commands": 126,
+      "first_commit": 225,
+      "last_commit": 480,
+      "source_write_indices": [
+        1008,
+        1134
+      ]
+    },
+    {
+      "page": "job009.json",
+      "commands": 126,
+      "first_commit": 230,
+      "last_commit": 418,
+      "source_write_indices": [
+        1134,
+        1260
+      ]
+    },
+    {
+      "page": "job010.json",
+      "commands": 126,
+      "first_commit": 115,
+      "last_commit": 372,
+      "source_write_indices": [
+        1260,
+        1386
+      ]
+    },
+    {
+      "page": "job011.json",
+      "commands": 126,
+      "first_commit": 122,
+      "last_commit": 468,
+      "source_write_indices": [
+        1386,
+        1512
+      ]
+    },
+    {
+      "page": "job012.json",
+      "commands": 126,
+      "first_commit": 218,
+      "last_commit": 475,
+      "source_write_indices": [
+        1512,
+        1638
+      ]
+    },
+    {
+      "page": "job013.json",
+      "commands": 126,
+      "first_commit": 225,
+      "last_commit": 382,
+      "source_write_indices": [
+        1638,
+        1764
+      ]
+    },
+    {
+      "page": "job014.json",
+      "commands": 126,
+      "first_commit": 105,
+      "last_commit": 362,
+      "source_write_indices": [
+        1764,
+        1890
+      ]
+    },
+    {
+      "page": "job015.json",
+      "commands": 126,
+      "first_commit": 112,
+      "last_commit": 456,
+      "source_write_indices": [
+        1890,
+        2016
+      ]
+    },
+    {
+      "page": "job016.json",
+      "commands": 126,
+      "first_commit": 206,
+      "last_commit": 465,
+      "source_write_indices": [
+        2016,
+        2142
+      ]
+    },
+    {
+      "page": "job017.json",
+      "commands": 126,
+      "first_commit": 215,
+      "last_commit": 346,
+      "source_write_indices": [
+        2142,
+        2268
+      ]
+    },
+    {
+      "page": "job018.json",
+      "commands": 126,
+      "first_commit": 96,
+      "last_commit": 357,
+      "source_write_indices": [
+        2268,
+        2394
+      ]
+    },
+    {
+      "page": "job019.json",
+      "commands": 126,
+      "first_commit": 107,
+      "last_commit": 468,
+      "source_write_indices": [
+        2394,
+        2520
+      ]
+    },
+    {
+      "page": "job020.json",
+      "commands": 126,
+      "first_commit": 218,
+      "last_commit": 479,
+      "source_write_indices": [
+        2520,
+        2646
+      ]
+    },
+    {
+      "page": "job021.json",
+      "commands": 126,
+      "first_commit": 209,
+      "last_commit": 358,
+      "source_write_indices": [
+        2646,
+        2772
+      ]
+    },
+    {
+      "page": "job022.json",
+      "commands": 126,
+      "first_commit": 108,
+      "last_commit": 372,
+      "source_write_indices": [
+        2772,
+        2898
+      ]
+    },
+    {
+      "page": "job023.json",
+      "commands": 126,
+      "first_commit": 122,
+      "last_commit": 472,
+      "source_write_indices": [
+        2898,
+        3024
+      ]
+    },
+    {
+      "page": "job024.json",
+      "commands": 126,
+      "first_commit": 222,
+      "last_commit": 489,
+      "source_write_indices": [
+        3024,
+        3150
+      ]
+    },
+    {
+      "page": "job025.json",
+      "commands": 126,
+      "first_commit": 185,
+      "last_commit": 362,
+      "source_write_indices": [
+        3150,
+        3276
+      ]
+    },
+    {
+      "page": "job026.json",
+      "commands": 126,
+      "first_commit": 112,
+      "last_commit": 378,
+      "source_write_indices": [
+        3276,
+        3402
+      ]
+    },
+    {
+      "page": "job027.json",
+      "commands": 126,
+      "first_commit": 128,
+      "last_commit": 479,
+      "source_write_indices": [
+        3402,
+        3528
+      ]
+    },
+    {
+      "page": "job028.json",
+      "commands": 126,
+      "first_commit": 240,
+      "last_commit": 495,
+      "source_write_indices": [
+        3528,
+        3654
+      ]
+    },
+    {
+      "page": "job029.json",
+      "commands": 126,
+      "first_commit": 164,
+      "last_commit": 379,
+      "source_write_indices": [
+        3654,
+        3780
+      ]
+    },
+    {
+      "page": "job030.json",
+      "commands": 126,
+      "first_commit": 129,
+      "last_commit": 386,
+      "source_write_indices": [
+        3780,
+        3906
+      ]
+    },
+    {
+      "page": "job031.json",
+      "commands": 14,
+      "first_commit": 136,
+      "last_commit": 162,
+      "source_write_indices": [
+        3906,
+        3920
+      ]
+    }
+  ],
+  "commands": 3920,
+  "first_issue": 20,
+  "issue_stride": 2,
+  "native_HOST_words": 15712,
+  "programme_epoch": "per-page issuer-relative only; no page reload or physical START date",
+  "native_job_sealed": false,
+  "full_token": false
+}

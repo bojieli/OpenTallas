@@ -1,0 +1,11 @@
+{
+  "status": "PASS_COMPLETE_SELECTED_SEQHOST_CLOSURE_GUARD",
+  "actual_current_source_pass": true,
+  "required_nested_dependencies": 24,
+  "all_measured_master_paths_required": true,
+  "selective_single_omissions_caught": [
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv",
+    "rtl/lib/ot_rst_relay.sv"
+  ],
+  "no_native_fixture_rerun": true
+}

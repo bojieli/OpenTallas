@@ -30,6 +30,8 @@ def type_tables(P, tn):
     pins = defaultdict(dict)
     for bus, bit, _, x, y, f in gen_phys.type_pins(P, tn):
         pins[bus][bit] = (x, y, f)
+    from ft_full_stage import load, centre
+    full = load(P, tn)
     chains = {}
     for slot in P.types[tn].get('ft_slots', []):
         sn, k = slot['name'], int(slot.get('stations', 1))
@@ -41,7 +43,9 @@ def type_tables(P, tn):
             b = (bp[0] + INSET[bp[2]][0], bp[1] + INSET[bp[2]][1])
             seg = check.zroute(a, b, ap[2], bp[2]); L = check.plen(seg); st = []
             for j in range(k):
-                if slot.get('bit_sites_um') and j > 0:
+                if sn in full:
+                    st.append(centre(full[sn][j, bit]))
+                elif slot.get('bit_sites_um') and j > 0:
                     x, y = slot['bit_sites_um'][j - 1][bit]; w, h = slot['bit_site_cell_um']; st.append((x + w / 2, y + h / 2))
                 elif slot.get('bit_sites_um'):
                     st.append(a)

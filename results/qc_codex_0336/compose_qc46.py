@@ -15,4 +15,14 @@ for name in (
     plan["partition_types"][name]["clock"]["landing_contract"]["bands"]["rsn_i"]["ring_place"] = "ff"
 # PHY occupies the existing west/south/east edges of its unchanged slot.
 plan["partition_types"]["coll_ucie"]["kit_core_margins_um"] = [0, 0, 0, 4.32]
+# Full-wrapper mapped totals include the CA rings already.
+measured = json.loads((Path(__file__).parent / "synth_cells_imported.json").read_text())
+for row in measured["rows"]:
+    plan["partition_types"][row["type"]]["cells"] = row["stdcells"]
+# Later actual synthesis counts include the explicit sc_v2 cap failure.
+additional = json.loads((Path(__file__).parent / "synth_cells_additional.json").read_text())
+for row in additional["rows"]:
+    plan["partition_types"][row["type"]]["cells"] = row["stdcells"]
+# Replace stale slice/manual collective census with the current native graph.
+plan["census"] = json.loads((Path(__file__).parent / "native_census_spec.json").read_text())
 (PD / "plan_qc46.json").write_text(json.dumps(plan, indent=1) + "\n")

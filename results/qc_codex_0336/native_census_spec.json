@@ -1,0 +1,18 @@
+[
+ {
+  "rows": "census/die_rows.tsv.gz",
+  "map": "census/die_map.json",
+  "note": "as-built die census (FT-TOOL, r50 die; inputs/qc_census.json.gz), kind relabels only"
+ },
+ {
+  "rows": "census/native_current2_rows.tsv.gz",
+  "map": "census/native_current4_map.json",
+  "bitcon": "census/native_current4_bit_witness.json.gz",
+  "note": "Native leaf/glue source graph before plan lane/bus matching; exact bit unions and bit witness archive."
+ },
+ {
+  "rows": "census/cb_rows.tsv.gz",
+  "map": "census/cb_map.json",
+  "note": "CB16 cluster internals: as-built reduction tree (qfd_c_b16_dv_fabric trace)"
+ }
+]

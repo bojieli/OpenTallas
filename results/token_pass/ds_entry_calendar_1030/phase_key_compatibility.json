@@ -1,0 +1,16 @@
+{
+  "status": "PASS_ACTUAL_SELECTED_RESET_PHASE_KEY_COMPATIBILITY",
+  "actual_receipt_key": "input_clock",
+  "measured_offset_from_reset_mod4": 3,
+  "old_new_matching_dual_keys_pass": true,
+  "controls_caught": [
+    "missing",
+    "malformed",
+    "missing_phase",
+    "out_of_range",
+    "boolean_phase",
+    "conflicting"
+  ],
+  "no_default_phase": true,
+  "absolute_HOST_or_KS_dates": null
+}

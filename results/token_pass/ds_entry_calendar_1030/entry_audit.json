@@ -1,0 +1,52 @@
+{
+  "scope": "HISTORIC_FC30_FC31_HANDOFF_BLOCKER_STATUS_AUDIT_NOT_REVALIDATION",
+  "native_entry_fix_main": "0e75647078a820b661c1529a6f07dd4837fa9f4a",
+  "native_entry_verdict": "PASS_CUT_COMPONENT",
+  "native_entry_jobs": 6,
+  "native_entry_output_checks": 4188,
+  "native_entry_faults": 0,
+  "native_entry_mismatches": 0,
+  "meaningful_mutant": "hf_7N_l0 bit33 caught204 mismatches; old nullbit13 missed result retained",
+  "split_layer_control_source": "49f7915d5a / ab386d3e5 prepare_split_control.py",
+  "canonical_BK_control_source": "4b668b7740 and canonical sink adoption",
+  "canonical_layers": {
+    "L0": {
+      "verdict": "PASS_CUT_COMPONENT",
+      "jobs": 2,
+      "mismatches": 0,
+      "fault_cycles": 0,
+      "mutants": [
+        "CAUGHT"
+      ]
+    },
+    "L2": {
+      "verdict": "PASS_CUT_COMPONENT",
+      "jobs": 2,
+      "mismatches": 0,
+      "fault_cycles": 0,
+      "mutants": [
+        "CAUGHT"
+      ]
+    },
+    "L14": {
+      "verdict": "PASS_CUT_COMPONENT",
+      "jobs": 2,
+      "mismatches": 0,
+      "fault_cycles": 0,
+      "mutants": [
+        "CAUGHT"
+      ]
+    },
+    "L20": {
+      "verdict": "PASS_CUT_COMPONENT",
+      "jobs": 2,
+      "mismatches": 0,
+      "fault_cycles": 0,
+      "mutants": [
+        "CAUGHT"
+      ]
+    }
+  },
+  "conclusion": "fc31 native boot/KS and multi-job HOST omission solved for documented component; no new fc31 replay warranted",
+  "current_remaining_source_gap": "BoundBoot entry writes previously template-only; new native target5 PW pages encode real commands. Current selected source transport/commit/readiness/KIT/END/MU/reset/START remains explicit, unsealed, unadopted."
+}

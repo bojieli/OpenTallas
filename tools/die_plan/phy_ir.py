@@ -99,6 +99,8 @@ def make(plan, domain, out, density):
     power, ground = pg['nets']
     if not pg.get('bumps'):
         raise ValueError('PHY domain has no explicit dedicated PG bump rectangle')
+    from phy_bumps import sites
+    bumps = sites(pg)  # Reject an invalid anchor before writing any vehicle files.
     x0, y0, x1, y1 = pg['rect_um']
     # Copy only immutable plan data into a small standalone supply-domain plan.
     # It uses exactly the declared domain dimensions, grid and PG bump rectangle.
@@ -117,13 +119,6 @@ def make(plan, domain, out, density):
     m = _window_kit(lp, out, [0,0,x1-x0,y1-y0], density, domain)
     r = pg['bumps']['rect_um']
     pitch = pg['bumps']['pitch_um']
-    nx, ny = int((r[2]-r[0])//pitch), int((r[3]-r[1])//pitch)
-    if min(nx,ny)<1:
-        raise ValueError('declared PHY bump rectangle has no complete row')
-    sx=(r[0]+r[2]-(nx-1)*pitch)/2-x0
-    sy=(r[1]+r[3]-(ny-1)*pitch)/2-y0
-    bumps=[(power if (i+j)%2==0 else ground,round(sx+i*pitch,3),round(sy+j*pitch,3))
-           for i in range(nx) for j in range(ny)]
     # Existing irwin emits VDD/VSS at the load pins and in PDNSim. Rename the
     # whole independent domain consistently, keeping its ground net as declared.
     for f in (out/'psm').iterdir():
@@ -147,6 +142,8 @@ def make(plan, domain, out, density):
              assumptions=['Uniform PHY density sweep; actual PHY power not yet supplied',
                           'Standalone domain with shared VSS; coupled core-ground loading excluded',
                           'Declared PG bump rows are dedicated; package/PHY signal-map collision check pending'])
+    if 'origin_um' in pg['bumps']:
+        m['bump_lattice'] = {k: pg['bumps'][k] for k in ('origin_um', 'counts')}
     (out/'irwin.json').write_text(json.dumps(m,indent=2)+'\n')
     (out/'bumps.json').write_text(json.dumps(bumps))
     render(out,m,bumps)

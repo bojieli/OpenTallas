@@ -25,6 +25,10 @@ import g2
 
 def station_sites(P, tn, slot, bits):
     """Match G2/face-flop semantics: stage0 at input, metadata stages1..k-1."""
+    from ft_full_stage import load, centre
+    full = load(P,tn)
+    if slot["name"] in full:
+        return [[list(centre(full[slot["name"]][j,b])) for b in range(bits)] for j in range(slot["stations"])]
     pins={bit:(x,y,f) for bus,bit,layer,x,y,f in gen_phys.type_pins(P,tn) if bus==slot['name']+'_i'}
     sites=[]
     ft_bit_sites.validate_slot(slot)

@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.s81.xrt_target5.v1",
+  "status": "PASS",
+  "clock_period_ps": 833,
+  "checks": {
+    "base": 0,
+    "payload_mutant": 1,
+    "age_mutant": 1
+  },
+  "jobs": 240,
+  "payload_date_checks": 480,
+  "source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_xrt.sv": "59a53960b2c66851b14fbfcc615e451d380774ac483f2987a5f806abeb0cffa9"
+  },
+  "masters": {
+    "ot_s81sl_xrt1": {
+      "params": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "edges": {
+        "E": 3,
+        "W": 3,
+        "V": 3
+      }
+    },
+    "ot_s81sl_xrt3": {
+      "params": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "edges": {
+        "E": 3,
+        "W": 3,
+        "V": 3
+      }
+    }
+  },
+  "scope": "actual atomic DL pins to target5 sw outputs; all16SID/fiveleaves/threeports; not global clocks or reset launch"
+}

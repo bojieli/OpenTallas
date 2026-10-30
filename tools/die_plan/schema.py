@@ -328,7 +328,11 @@ SCHEMA = {
                                 "properties": {"layer": _layer, "width_um": _pos, "pitch_um": _pos,
                                                "offset_um": _nonneg, "nets": {"type": "array", "items": _name}}}},
                             "bumps": {"type": "object", "required": ["rect_um", "pitch_um"], "additionalProperties": False,
+                                      "dependentRequired": {"origin_um": ["counts"], "counts": ["origin_um"]},
                                       "properties": {"rect_um": _rect, "pitch_um": _pos,
+                                                     "origin_um": _xy,
+                                                     "counts": {"type": "array", "minItems": 2, "maxItems": 2,
+                                                                "items": {"type": "integer", "minimum": 1}},
                                                      "use": {"enum": ["power_ground"]}, "note": {"type": "string"},
                                                      # S81-XDIE 10-24: no power bumps here (= the window's
                                                      # bump_exclude_um, die-corner stress zone)
@@ -354,6 +358,7 @@ SCHEMA = {
                 "type": "object", "required": ["module", "outline_um"], "additionalProperties": False,
                 "properties": {
                     "module": _name,                 # generated wrapper module name
+                    "ft_full_stage_placement_file": {"type": "string", "minLength": 1},
                     # Proof-layout matching opt-in; ordinary full proof and its guarded receipt remain mandatory.
                     "lec": {"type": "object", "additionalProperties": False,
                             "properties": {"superset_vec": {"type": "boolean"}}},
@@ -361,6 +366,9 @@ SCHEMA = {
                     # explicitly retain boundary rows without changing outline, macro origins or pin positions.
                     "kit_core_margins_um": {"type": "array", "minItems": 4, "maxItems": 4,
                                             "items": {"type": "number", "minimum": 0}},
+                    # Explicit complete fixed-macro stage: validate every actual BLOCK against the planned
+                    # exact LOCKED inventory; ordinary tapcell/PDN/placement follow unchanged.
+                    "fully_fixed_macros": {"type": "boolean"},
                     # DIE-HEAD-5 10-28 (gen_phys.phy_pg_domains opt-in): the type PHY body is off-model (behind its pads),
                     # so its die.pg.domains region may hold no macro; the note states why
                     "phy_pg_offmodel": {"type": "string", "minLength": 1},
@@ -651,6 +659,12 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Type-local control reset copies: emitted old net, equal published depth and core clock.
+                        "consumer_localization": {"type": "array", "items": {
+                            "type": "object", "additionalProperties": False,
+                            "required": ["instance", "pin", "old_reset", "new_reset", "clock_net"],
+                            "properties": {k: {"type": "string", "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"}
+                                           for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
@@ -959,6 +973,18 @@ SCHEMA = {
 # status hops are checked by landing_contract.py; default plans are unchanged.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_contract"] = {"type": "object"}
 SCHEMA["properties"]["clock"]["properties"]["landing_network"] = {"type": "object"}
+# Existing PHY pad clocks have an explicit period/source and physical role.
+# They are distinct from registered landing clocks and imply no CDC exception.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["pad_clock"] = {
+    "type": "object", "additionalProperties": False, "required": ["pins"], "properties": {
+        "pins": {"type": "array", "minItems": 1, "items": {
+            "type": "object", "additionalProperties": False,
+            "required": ["name", "dir", "period_ps", "source", "layer", "xy_um"],
+            "properties": {"name": _name, "dir": {"enum": ["in", "out"]},
+                "period_ps": {"type": "number", "exclusiveMinimum": 0}, "source": _name,
+                "layer": _name, "xy_um": _xy, "source_clock_port": _name,
+                "sink_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                    "required": ["module", "pin"], "properties": {"module": _name, "pin": _name}}}}}}}}
 # FLOW-GEN-2 CTS-0114 (DIE-HEAD-14/15, opt-in): a forwarded clock output leaves through ONE dedicated buffer at its
 # source tap (landing_contract.export_tcl "fwd_buffer"), not tied onto the clk root net; default "tie" = legacy text.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_export_form"] = {
@@ -2036,6 +2062,12 @@ def validate(raw):
                 errs.append(f"{what} '{x[key]}' defined twice")
             seen.add(x[key])
     for tn, t in raw["partition_types"].items():
+        if t.get('clock', {}).get('pad_clock') is not None:
+            import pad_clock as PC
+            try:
+                PC.pins(P, tn)
+            except (ValueError, KeyError, TypeError) as exc:
+                errs.append(f'type {tn}: {exc}')
         for y in t.get("clock", {}).get("tap_edge_y_um", []):
             if not 0 <= y <= t["outline_um"][1]:
                 errs.append(f"type {tn}: clock edge y {y} outside outline")

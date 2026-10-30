@@ -1,0 +1,81 @@
+{
+  "schema": "opentallas.s81.entry_local_reload_gate.v1",
+  "status": "PASS",
+  "clock_period_ps": 833,
+  "source_sha256": {
+    "physical/die_plan/s81/bind/source_modules/portfix178/dsdv_hostb_seqhost_mux.sv": "a7c2353f0e23a595bc79b4179fe0089cbe9033c4c42be6c0b25dcf7669e62479",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hwin.sv": "fe83722aed98be5c319ebc7c2b63514b75016add0dfa7522e878c907f6bfee49",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_static_ks6.sv": "758c0d32743231c626a0d8c774ca21d533757cbaf65cef84c003bf1c0001ef5c",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_mu_hslot.sv": "9fa7ee0971842e66d799cd1b0582ac35fa8fde1b1610ea28716779a58506999e",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_seq_host.sv": "6bdcd4970e2b7c2ee8e28ea4e10edc6a74d096ed80f6aa0a663751a6f96b23c4",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_vstop.sv": "5ef19b8bf58472be345bce5e2a6edda0f3bb2514acf1c39defbc9cd0d5524e11",
+    "rtl/dsrom_sys/s81_dv/unit/ot_dsdv_walk_issue.sv": "6c77b4c5d7f2e84da15089bc5e0f94abedc5b7a4f772cc911a8193aee80d0a3f",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "7a1ec9b22780ab7df4ad6144c2604ae9cf933f8ecdce75d1c7ac6d3ee7876a1e",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+    "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "62690ce62ff6db01c9fd353b3dca4945c4460ce542602c47c43ffffd47ec7549",
+    "rtl/link/ot_link_afifo.sv": "4f9c395577c94e477ef77a4cda39a752daa2e644f4a670b0b535bfbc1c51ea89",
+    "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "cc507efd4ca7ab486f9b9e34307551aee3d8b938a6819cfcf9950f0ff8b1bafa",
+    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v": "9024999f58109d0031ef989d101f5a537dabaf185e6348d32305aec58af8aafa",
+    "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+    "rtl/dsrom_sys/s81_dv/unit/dsdv_sh_sd.sv": "30c0f16a6c90807cc99b6e0e3eb11b5b722844ddbccc89bd6dea659cb7e95f11",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w2c_32x64_m1/ot_sram_1r1w2c_32x64_m1.v": "2a2a1aa8e015910789e25f178352fb4af6c0255fbbe472708c3a4bd5922bce9e",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv": "151ce45020da1396af30fb17f275fcddb3257c4e216ff8b7ae92e5bd9e85a915",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "6f87b48e0860f3645178d2973638322af7867280a6884809be5e2024b2d91828",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_source.sv": "792f588ad90d481cd70edbc91a0a18b486194d5e4e63e4d08f6d2840bc50d200",
+    "rtl/dsrom_sys/s81_dv/hostb/dsdv_hostb_landing.sv": "ab2345cfab6981548fc6fdd6b70ff21bd7d6c91005beb04f90fe2e024e1c1140"
+  },
+  "bench_sha256": "45188479d0dd9825c38f8461847e7463ccd729ed775a48908cc30fa9d60c1f32",
+  "fixture_sha256": {
+    "page0.host.memh": "8a2fd8f5c5e7c6f3bc0c08be4c980665ca49b1950834d9d3b016c241a31133ef",
+    "page1.host.memh": "05b68b7a429c12b9cc56c0fb7f9135eb725b23dfe64a4d63ddf253993977ad14",
+    "expect_n.memh": "e746d5b8ae6af12793ae6b8ffa6f10927f195422039ef21039fad782ef65fedb",
+    "expect_s.memh": "43eb4c308911e4ae8a75a4b5978873a8310522a203996304ad439d76daf24cf4"
+  },
+  "actual_source_pages": [
+    2,
+    23
+  ],
+  "source_page_store_floors": [
+    482,
+    338
+  ],
+  "selected_params": {
+    "HOSTB_ENABLE": 0,
+    "STATIC_KS6": 0,
+    "STATIC_KS_SPAN": 0,
+    "STATIC_KS_GRAPH_TAG": 0,
+    "FMUT": 0
+  },
+  "shared_KIT": 482,
+  "shared_END": 486,
+  "shared_RL": 489,
+  "shared_KS_gap": 2596,
+  "selected_KS_pin_phase_from_reset_mod4": 3,
+  "first_page_HOST_words": 452,
+  "second_page_HOST_words": 417,
+  "north_full276b_checks": 153,
+  "south_full276b_checks": 51,
+  "actual_KIT_returns": 2,
+  "return_pin_age_from_KS_pin": 490,
+  "base_errors": 0,
+  "base_MU_fault": 0,
+  "base_issuer_code": 0,
+  "bad_MU_reinit_fault": 8,
+  "bad_MU_reinit_errors": 2653,
+  "bad_payload_errors": 1,
+  "checks": {
+    "base": 0,
+    "bad_MU_reinit": 1,
+    "bad_payload": 1
+  },
+  "reset_between_pages": false,
+  "scope": "actual selected native KIT counter/postedV ACK,reload,seal,MUretention/descriptor returns; memoryretirement composes separate exactXRT/VP/VN measurements +all40fences,not new endtoend memoryexecution",
+  "actual_global_HOST_KS_dates": null,
+  "physical_START_qualified": false,
+  "full_token": false
+}
