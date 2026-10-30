@@ -1,0 +1,167 @@
+{
+ "stage_model": "cal_g03b_refit existing routed-stage model; regional geometry estimate only",
+ "variants": [
+  {
+   "part": "lk_ES0",
+   "macro_origin_um": [
+    63.64,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1821.204,
+    65.88
+   ],
+   "stats": {
+    "reused_geometry": true
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 622.482205609248,
+     "max_ps": 624.045127579872,
+     "mean_ps": 623.3431716513439,
+     "window_ps": 1.562921970623961,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 241.21799999999996,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 546.7676359050561,
+     "max_ps": 549.684609544992,
+     "mean_ps": 548.030177410726,
+     "window_ps": 2.916973639935918,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 241.21799999999996,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  },
+  {
+   "part": "lk_ES1",
+   "macro_origin_um": [
+    63.64,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1821.204,
+    65.88
+   ],
+   "stats": {
+    "reused_geometry": true
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 622.482205609248,
+     "max_ps": 624.045127579872,
+     "mean_ps": 623.3431716513439,
+     "window_ps": 1.562921970623961,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 241.21799999999996,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 546.7676359050561,
+     "max_ps": 549.684609544992,
+     "mean_ps": 548.030177410726,
+     "window_ps": 2.916973639935918,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 241.21799999999996,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  },
+  {
+   "part": "lk_ES0",
+   "macro_origin_um": [
+    138.24,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1943.19,
+    70.2
+   ],
+   "stats": {
+    "reused_geometry": true
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 658.1500091641759,
+     "max_ps": 659.562591380496,
+     "mean_ps": 658.6989728236609,
+     "window_ps": 1.412582216320061,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 297.70199999999977,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 568.108062222704,
+     "max_ps": 584.777857665584,
+     "mean_ps": 576.678958099419,
+     "window_ps": 16.669795442879945,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 297.70199999999977,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  },
+  {
+   "part": "lk_ES1",
+   "macro_origin_um": [
+    138.24,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1943.19,
+    70.2
+   ],
+   "stats": {
+    "merges": 31,
+    "imbalanced": 0,
+    "worst_imbalance_um": 0.0,
+    "extra_wire_um": 0.0,
+    "topology": {
+     "greedy": 1
+    },
+    "snakes": 9,
+    "snake_wire_um": 1496.3,
+    "snake_buffers": 11,
+    "spread_um": 1.4
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 658.1500091641759,
+     "max_ps": 659.562591380496,
+     "mean_ps": 658.6989728236609,
+     "window_ps": 1.412582216320061,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 297.70199999999977,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 568.108062222704,
+     "max_ps": 584.777857665584,
+     "mean_ps": 576.678958099419,
+     "window_ps": 16.669795442879945,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 297.70199999999977,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  }
+ ]
+}

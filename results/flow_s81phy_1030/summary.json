@@ -1,0 +1,51 @@
+{
+ "kind": "prebuild_clock_reset_geometry_and_shared_clock_model_estimate",
+ "verdict": "HELD_REPLAN_START",
+ "design": "S81 lk_ES0/lk_ES1",
+ "outline_um": [
+  2885.76,
+  1226.88
+ ],
+ "macro_um": [
+  2608.48,
+  924.48
+ ],
+ "candidates": {
+  "macro_origins_um": [
+   [
+    63.64,
+    86.4
+   ],
+   [
+    138.24,
+    86.4
+   ]
+  ],
+  "phy_pg_guard_um": 10.8,
+  "guard_control_um": 63.64
+ },
+ "reset": "9/8 existing tap depths are geometrically feasible with <=395um segmented rectilinear paths; shared reset-tree/site synthesis not yet qualified.",
+ "clock": "32 existing clock IDs per type retained. Region model uses current cal_g03b_refit, inv2 even legs,250um repeaters,405um actual-hop ceiling. Same TT topology repriced FF. Feed chains preserve existing inverter parity and buffer counts.",
+ "clock_model": {
+  "A_window_ps": {
+   "TT": 1.562921970623961,
+   "FF": 2.916973639935918
+  },
+  "B_window_ps": {
+   "TT": 1.412582216320061,
+   "FF": 16.669795442879945
+  },
+  "A_max_regional_hop_um": 241.218,
+  "B_max_regional_hop_um": 297.702,
+  "illegal_chain_points": 0,
+  "clock_body_landing_band_overlaps": 0
+ },
+ "failure": "The old ES1 START launch source is not clean after the clock arrival change: canonical sync_choice_iv at833ps/T8 returns2 possible sample values. This optimistic control retains old variation intervals; it is not a new full CA proof.",
+ "next_step": "Recompose fixed-latency START retiming stages alongside the new clock feed, price any added boot cycles, then rerun full variation/CA and the narrower-PG-domain IR model before physical build.",
+ "build_allowed": false,
+ "changed_released_plan": false,
+ "rtl_changes": 0,
+ "data_cycles_changed_by_this_artifact": 0,
+ "source_tool_snapshot": "origin/main captured2026-10-30 during estimate; shared die_trial DME/physical_leg and count_align_plan.sync_choice_iv",
+ "reproduce": "Place these files beside tool_snapshot/tools/die_plan from current shared source. estimate.py computes pure geometry. dme_estimate.py writes reusable tree_<part>_<x>.json; run through ot-run. feed_estimate.py then start_phase_estimate.py. Prior routed regional tree/model inputs are preserved here. No P&R/STA run is performed."
+}

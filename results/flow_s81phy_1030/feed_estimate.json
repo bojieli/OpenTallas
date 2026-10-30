@@ -1,0 +1,292 @@
+{
+ "variants": [
+  {
+   "macro_x_um": 63.64,
+   "parts": {
+    "lk_ES0": {
+     "chains": [
+      {
+       "node": 823,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 211.03200000000288,
+       "new_wire_um": 211.03200000000288,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 824,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 21.059999999998013,
+       "new_wire_um": 21.059999999998013,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 825,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 145.31400000000212,
+       "new_wire_um": 145.31400000000212,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 826,
+       "old_stages": 8,
+       "new_stages": 8,
+       "old_wire_um": 1612.9259999999992,
+       "new_wire_um": 1766.2859999999991,
+       "endpoint_shift_um": 163.08
+      }
+     ],
+     "corners": {
+      "TT": {
+       "old": 577.0517010883525,
+       "new": 621.6368808701123,
+       "delta": 44.58517978175985,
+       "cumulative_feed_delta": 44.58517978175985,
+       "new_feed_to_dme": 86.4736659673768,
+       "new_region_min": 708.9558715766248,
+       "new_region_max": 710.5187935472488,
+       "endpoint_delta_min": 78.57951261235485,
+       "endpoint_delta_max": 81.48482291615176
+      },
+      "FF": {
+       "old": 515.3068633062085,
+       "new": 556.9973324972484,
+       "delta": 41.69046919103994,
+       "cumulative_feed_delta": 41.69046919103994,
+       "new_feed_to_dme": 77.18692638190474,
+       "new_region_min": 623.9545622869608,
+       "new_region_max": 626.8715359268967,
+       "endpoint_delta_min": 70.32893875462435,
+       "endpoint_delta_max": 77.39965761286908
+      }
+     },
+     "feed_entry_xy": [
+      24560.226,
+      176.58
+     ],
+     "new_dme_root_xy": [
+      24254.315999999995,
+      169.56
+     ]
+    },
+    "lk_ES1": {
+     "chains": [
+      {
+       "node": 942,
+       "old_stages": 8,
+       "new_stages": 8,
+       "old_wire_um": 1621.7280000000026,
+       "new_wire_um": 1775.0880000000025,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 943,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 283.5540000000001,
+       "new_wire_um": 283.5540000000001,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 944,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 143.15399999999863,
+       "new_wire_um": 143.15399999999863,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 945,
+       "old_stages": 8,
+       "new_stages": 8,
+       "old_wire_um": 1612.980000000003,
+       "new_wire_um": 1766.3400000000029,
+       "endpoint_shift_um": 163.08
+      }
+     ],
+     "corners": {
+      "TT": {
+       "old": 999.2830970460811,
+       "new": 1092.710348836545,
+       "delta": 93.42725179046397,
+       "cumulative_feed_delta": 138.01243157222382,
+       "new_feed_to_dme": 86.4736659673768,
+       "new_region_min": 708.9558715766248,
+       "new_region_max": 710.5187935472488,
+       "endpoint_delta_min": 172.00676440281768,
+       "endpoint_delta_max": 174.9120706475419
+      },
+      "FF": {
+       "old": 896.7193118403211,
+       "new": 984.283747755777,
+       "delta": 87.56443591545587,
+       "cumulative_feed_delta": 129.2549051064958,
+       "new_feed_to_dme": 77.18692638190474,
+       "new_region_min": 623.9545622869608,
+       "new_region_max": 626.8715359268967,
+       "endpoint_delta_min": 157.89337467007908,
+       "endpoint_delta_max": 164.96409352832404
+      }
+     },
+     "feed_entry_xy": [
+      27445.986,
+      176.58
+     ],
+     "new_dme_root_xy": [
+      27140.075999999997,
+      169.56
+     ]
+    }
+   },
+   "max_feed_repeater_hop_um": 404.2440000000013,
+   "build_allowed": false,
+   "scope": "Shared calibrated nominal-delay delta; unchanged old-clock input prefix before s_7S_x10. No new routed RC/IR or CA proof."
+  },
+  {
+   "macro_x_um": 138.24,
+   "parts": {
+    "lk_ES0": {
+     "chains": [
+      {
+       "node": 823,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 211.03200000000288,
+       "new_wire_um": 211.03200000000288,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 824,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 21.059999999998013,
+       "new_wire_um": 21.059999999998013,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 825,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 145.31400000000212,
+       "new_wire_um": 124.90200000000186,
+       "endpoint_shift_um": 20.412000000000262
+      },
+      {
+       "node": 826,
+       "old_stages": 8,
+       "new_stages": 8,
+       "old_wire_um": 1612.9259999999992,
+       "new_wire_um": 1785.5099999999975,
+       "endpoint_shift_um": 163.08
+      }
+     ],
+     "corners": {
+      "TT": {
+       "old": 577.0517010883525,
+       "new": 626.1062365627519,
+       "delta": 49.05453547439936,
+       "cumulative_feed_delta": 49.05453547439936,
+       "new_feed_to_dme": 115.35030913865617,
+       "new_region_min": 773.500318302832,
+       "new_region_max": 774.9129005191521,
+       "endpoint_delta_min": 147.59331503120166,
+       "endpoint_delta_max": 150.34828558069455
+      },
+      "FF": {
+       "old": 515.3068633062085,
+       "new": 561.4060993518078,
+       "delta": 46.099236045599355,
+       "cumulative_feed_delta": 46.099236045599355,
+       "new_feed_to_dme": 103.93451495302415,
+       "new_region_min": 672.0425771757282,
+       "new_region_max": 688.7123726186081,
+       "endpoint_delta_min": 122.82572049795112,
+       "endpoint_delta_max": 143.64926115913988
+      }
+     },
+     "feed_entry_xy": [
+      24560.226,
+      176.58
+     ],
+     "new_dme_root_xy": [
+      24132.329999999998,
+      173.88
+     ]
+    },
+    "lk_ES1": {
+     "chains": [
+      {
+       "node": 942,
+       "old_stages": 8,
+       "new_stages": 8,
+       "old_wire_um": 1621.7280000000026,
+       "new_wire_um": 1775.0880000000025,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 943,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 283.5540000000001,
+       "new_wire_um": 283.5540000000001,
+       "endpoint_shift_um": 0.0
+      },
+      {
+       "node": 944,
+       "old_stages": 2,
+       "new_stages": 2,
+       "old_wire_um": 143.15399999999863,
+       "new_wire_um": 122.79599999999846,
+       "endpoint_shift_um": 20.358000000000175
+      },
+      {
+       "node": 945,
+       "old_stages": 8,
+       "new_stages": 8,
+       "old_wire_um": 1612.980000000003,
+       "new_wire_um": 1785.5100000000011,
+       "endpoint_shift_um": 163.08
+      }
+     ],
+     "corners": {
+      "TT": {
+       "old": 999.2830970460811,
+       "new": 1093.0922542038088,
+       "delta": 93.80915715772767,
+       "cumulative_feed_delta": 142.86369263212703,
+       "new_feed_to_dme": 115.35030913865617,
+       "new_region_min": 773.500318302832,
+       "new_region_max": 774.9129005191521,
+       "endpoint_delta_min": 241.4024721889282,
+       "endpoint_delta_max": 244.1574386793484
+      },
+      "FF": {
+       "old": 896.7193118403211,
+       "new": 984.6755375664327,
+       "delta": 87.9562257261116,
+       "cumulative_feed_delta": 134.05546177171095,
+       "new_feed_to_dme": 103.93451495302415,
+       "new_region_min": 672.0425771757282,
+       "new_region_max": 688.7123726186081,
+       "endpoint_delta_min": 210.78194622406158,
+       "endpoint_delta_max": 231.60548688525057
+      }
+     },
+     "feed_entry_xy": [
+      27445.986,
+      176.58
+     ],
+     "new_dme_root_xy": [
+      27018.09,
+      173.88
+     ]
+    }
+   },
+   "max_feed_repeater_hop_um": 400.4639999999988,
+   "build_allowed": false,
+   "scope": "Shared calibrated nominal-delay delta; unchanged old-clock input prefix before s_7S_x10. No new routed RC/IR or CA proof."
+  }
+ ]
+}

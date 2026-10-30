@@ -1,0 +1,96 @@
+{
+ "variants": [
+  {
+   "macro_x_um": 63.64,
+   "scope": "Unchanged old START source; nominal cal-g03 stage deltas across TT/FF with current spice factors. Old variation interval retained as optimistic control; new variation/START routing not yet qualified.",
+   "starts": [
+    {
+     "part": "lk_ES0",
+     "delta_union_ps": [
+      74.21109617387961,
+      85.43683682758511
+     ],
+     "rise_interval_ps": [
+      650.6664278619228,
+      844.0422866440606
+     ],
+     "fall_interval_ps": [
+      659.3156419365232,
+      843.4640895532596
+     ],
+     "best_edge": "fall",
+     "sync_values": 1,
+     "boundary_distance_ps": 242.8156419365232,
+     "existing_source_phase_clean": true
+    },
+    {
+     "part": "lk_ES1",
+     "delta_union_ps": [
+      166.60908895186745,
+      183.39530607394767
+     ],
+     "rise_interval_ps": [
+      1687.704511241391,
+      2095.8142506613945
+     ],
+     "fall_interval_ps": [
+      1696.815092491391,
+      2095.742317866195
+     ],
+     "best_edge": "rise",
+     "sync_values": 2,
+     "boundary_distance_ps": 21.704511241390946,
+     "existing_source_phase_clean": false
+    }
+   ],
+   "verdict": "HELD_REPLAN_START",
+   "build_allowed": false
+  },
+  {
+   "macro_x_um": 138.24,
+   "scope": "Unchanged old START source; nominal cal-g03 stage deltas across TT/FF with current spice factors. Old variation interval retained as optimistic control; new variation/START routing not yet qualified.",
+   "starts": [
+    {
+     "part": "lk_ES0",
+     "delta_union_ps": [
+      129.60570026943802,
+      157.64017743135824
+     ],
+     "rise_interval_ps": [
+      706.0610319574812,
+      916.2456272478337
+     ],
+     "fall_interval_ps": [
+      714.7102460320816,
+      915.6674301570326
+     ],
+     "best_edge": "fall",
+     "sync_values": 1,
+     "boundary_distance_ps": 298.2102460320816,
+     "existing_source_phase_clean": true
+    },
+    {
+     "part": "lk_ES1",
+     "delta_union_ps": [
+      222.41710965562976,
+      255.99907445529678
+     ],
+     "rise_interval_ps": [
+      1743.5125319451531,
+      2168.4180190427437
+     ],
+     "fall_interval_ps": [
+      1752.623113195153,
+      2168.3460862475445
+     ],
+     "best_edge": "rise",
+     "sync_values": 2,
+     "boundary_distance_ps": 77.51253194515311,
+     "existing_source_phase_clean": false
+    }
+   ],
+   "verdict": "HELD_REPLAN_START",
+   "build_allowed": false
+  }
+ ]
+}
