@@ -1,0 +1,11 @@
+{
+  "verdict": "FAIL",
+  "picture": "auto_geom.png",
+  "findings": [
+    "Current station-recovery code visibly fixes bulk feedthrough collapse: planned station rows now span the tile (old2217 collapsed ->16), most remaining long arcs are START/reset/control (155 captures over405um, worst1244.65um)",
+    "South RX1 landing storage occupies a deep rotated band; incoming pin-to-bank distances cannot meet the30um rule in that rectangle (p90122.17um,max203.31)",
+    "Forwarded/source clock and data FF rows are still highly imbalanced (3056worst grid tap sinks, nearest clock-entry max361.65um vs250um current guard)",
+    "Large empty corridors are expected for this feedthrough frame and covered by standing fill-only exception, but structural pin/reach/reset/START/clock failures remain. NoGRT/route requested."
+  ],
+  "next": "Bounded shallow face-near FF bands/bit-correlated storage placement candidate; native START/reset arc census owned by QC sublane; parent clock plan owns root/tap changes"
+}
