@@ -1,0 +1,57 @@
+{
+  "spice_edge": {
+    "result_sha256": "091dbec9a3877ffbdc0d1e7a9e9dfcd8bc8e3530b3bed65988473a486c2cf4f1",
+    "corners": {
+      "TT": {
+        "crossings": 3595,
+        "ca_fail": 0,
+        "margin_lo_ps": 143.2,
+        "margin_hi_ps": 144.5,
+        "start_edges": 1687,
+        "start_fail": 0,
+        "start_sync_distance_min_ps": 87.2
+      },
+      "FF": {
+        "crossings": 3595,
+        "ca_fail": 0,
+        "margin_lo_ps": 110.0,
+        "margin_hi_ps": 264.0,
+        "start_edges": 1687,
+        "start_fail": 0,
+        "start_sync_distance_min_ps": 74.0
+      }
+    },
+    "hold_status": {
+      "intra": "BLOCKED(kits)",
+      "seam": "BLOCKED(kits)"
+    }
+  },
+  "spice_cell": {
+    "result_sha256": "f48bde0f024fef5525c9682356c3de53e3549f517f34f3a93f82bc60f078487f",
+    "corners": {
+      "TT": {
+        "crossings": 3595,
+        "ca_fail": 0,
+        "margin_lo_ps": 120.1,
+        "margin_hi_ps": 121.5,
+        "start_edges": 1687,
+        "start_fail": 0,
+        "start_sync_distance_min_ps": 84.9
+      },
+      "FF": {
+        "crossings": 3595,
+        "ca_fail": 0,
+        "margin_lo_ps": 101.3,
+        "margin_hi_ps": 233.9,
+        "start_edges": 1687,
+        "start_fail": 0,
+        "start_sync_distance_min_ps": 70.8
+      }
+    },
+    "hold_status": {
+      "intra": "BLOCKED(kits)",
+      "seam": "BLOCKED(kits)"
+    }
+  },
+  "independent_number_check": "COVERAGE2249 raw-row read 23:36; no STA rerun"
+}

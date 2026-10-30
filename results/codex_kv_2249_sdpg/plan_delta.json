@@ -1,0 +1,43 @@
+{
+  "changes": [
+    {
+      "type": "kv3_sys_SD",
+      "old_phy_width": 1866.24,
+      "actual_lef_width": 1848.96,
+      "local_macro_box": [
+        17.28,
+        54,
+        1866.24,
+        1026
+      ],
+      "new_supply_box": [
+        17.28,
+        54,
+        1870.56,
+        1026
+      ]
+    },
+    {
+      "type": "kv3_sys_SD_v1",
+      "old_phy_width": 1866.24,
+      "actual_lef_width": 1848.96,
+      "local_macro_box": [
+        17.28,
+        54,
+        1866.24,
+        1026
+      ],
+      "new_supply_box": [
+        17.28,
+        54,
+        1870.56,
+        1026
+      ]
+    }
+  ],
+  "logic_cycles_added": 0,
+  "new_ring_width_um": 25.92,
+  "physical_phy_pg_contacts_removed": 0,
+  "reason": "New supply box still strictly contains the actual entire PHY LEF; bump generator already retains in-leaf legal sites only",
+  "status": "PREP not adopted"
+}

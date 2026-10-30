@@ -30,3 +30,11 @@ Both-edge data source: existing DIE-KV42 stgrt die_TT/FF.sdf, read-only OpenROAD
 annotation on SAME combo netlist (no repeated GRT). All3448risingtap arrivals agree
 with original to max0.0142psTT; fall/node fields merged through existing shared
 `tap_fall_merge --tree` and `start_stage_emit proof`. 15424nodes + source root0.
+
+ACTUAL result now complete (same math, before constant-time lookup refactor):
+EDGE TT/FF:3595CA0fail,1687START0fail; minCAlo143.2/110.0ps,
+minsyncdistance87.2/74.0ps vs26.5ps aperture. CELL:minCAlo120.1/101.3ps,
+minsyncdistance84.9/70.8ps;0CA/STARTfails inbothcorners. Independent COVERAGE
+raw-row recomputation CHECKED all counts/minima. Physicalclocks untouched;
+release hold still BLOCKED(kits):missingviewunion56 (54intra,8seam,6overlap).
+Resultfile SHA256 and exact reduced fields are in cppr_result.json.

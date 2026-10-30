@@ -1,0 +1,30 @@
+EXPLICIT RESET PARK 2026-10-30 00:03 PDT. No further engineering.
+
+IMPORTANT: cppr_result.json and earlier sta_cpprfix* positive arithmetic was on
+DIE-KV42 proof_st whose1528stage taps were loaded but1920core taps/tree node
+arrivals remained cached OLDw243. Its counts are arithmetic-correct but it is
+NOT the fully loaded clock gate. Historical positive record retained with this
+scope correction. loaded_clock_check_128.json in scratch also uses cachedcores;
+DO NOT adopt it as the loaded-region check.
+
+Actual new export uses ALLcore+node+stage measured T/N/F/M from same loadedSDF,
+through trial_tap_arrivals then start_stage_emit. proof_all_loaded:
+EDGE:3595CA0fail, START1687allPASS bothcorners; minCAlo136.8TT/108.5FF.
+CELL with actual mixed-master tracing:11TT/13FF CAfail (min23.0/-15.5),
+30TT/23FF STARTfail. Worstdata phy_WS_3->phy_WS_2. HoldBLOCKED56kitviews.
+ActualfullSTA units3710771/3713542 terminal0 (tool exit0 does NOT mean allgatesPASS).
+
+Cause diagnosed: absent per-master component tags, CELLmax-master bound applies
+BUFx24 factor to an entire deep inverter path; olduntraced proof assumedallINV.
+Existing clock_components can telescope measured per-master delays correctly.
+Completed DATA-ONLY diagnostic unit3906686: sta_components_DATA_ONLY_spice_cell,
+all3595dataCA PASS TT/FF, min110.4/100.0. STARTports deliberately removed from
+that diagnostic bind. It CANNOT establish START/die gate; zeroSTARTfailure count
+there is meaningless. No threshold/derate was changed.
+
+NEXT: carry actual t_st_* per-master component records through stage proof
+export and handle the one stage clocked from real rootinput (__source__). Do not
+invent delay components or CPPRcredit for root. Then rerun complete START+CA.
+SoftwareCPPR fix bbaf4547c remains independently valid/53focusedPASS: partial
+__source__@fall cannot zero othernodecredit; measuredfall ranges derived after
+calibration and commoncredit alwaysmin(rise,measuredfall).

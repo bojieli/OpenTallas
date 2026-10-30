@@ -1,0 +1,11 @@
+2026-10-29 23:16 PDT CODEX visual review: ONE PLACE only, no CTS/route claim.
+Personally viewed review.png before new PLACE. Current SD1900.8x1036.8 contains
+actual1848.96x972 PHY at17.28,54; sourceplan stale1866.24 width drovePGdomain
+right1883.52. New domain1870.56 stillcontains entiremacro plus4.32um, loses0
+physicalPHY PGpins and0in-leafbumps (existinggeneratorfilterslegalinleafsites).
+Eaststandardlogic band doubles12.96->25.92um and avoidsPHYdomainhardblock.
+Same input/output pins, main/PHYclockports, collector homes/reset source/RTL.
+WideIO remains next to E landingbank. Parentoutline unchanged, no new macro wall;
+M6/M7PHYPGgrid continuousover actualPHY. PASS-COND ONEPLACE to measure legal
+mappedcellsite occupancy/reach. Need actualDPLgeometry beforeCTS; oldtry4continuing
+unchanged. No new gate threshold or physical qualification is inferred.
