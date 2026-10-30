@@ -3,11 +3,11 @@
  "module": "ot_s81_kp4_dchn",
  "origin_um": [
   967.68,
-  0.0
+  8.64
  ],
  "track_offset_um": [
   0,
-  4.32
+  -2.112
  ],
  "outline_um": [
   276.48,
@@ -15,7 +15,6 @@
  ],
  "orient": "R0",
  "pins_file": "core_pins/kp4_276x138_pins.json",
- "cells": 189510,
  "obs_max": "M5",
- "note": "PROPOSED NOT SIGNED: actual189510stdcells21631.646um2;945sameRTLports0cycles; recenteredpinprofile within150um digitalstrip. Parent origin967.68,0 + trackoffset0,4.32; noLEF/lib until matching actualview."
+ "note": "PROPOSED NOT SIGNED:189510native synth cells; actual276.48x138.24 child view unchanged. Origin8.64 plus legal sublattice offset\u22122.112 givesY6.528 aligned to M4/M6(.192commonpitch);4.32halo top149.088 leaves two parent stdcell crown rows belowPHY150. RecoveredPMAclock, matching routedLEF/libs held."
 }

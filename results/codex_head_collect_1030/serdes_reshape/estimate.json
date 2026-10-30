@@ -19,9 +19,9 @@
  "macro_halo_um": 4.32,
  "parent_actual_origin_um": [
   967.68,
-  4.32
+  6.528
  ],
- "parent_core_root_geometric_reference_only_um": 341.16000000000014,
+ "parent_core_root_geometric_reference_only_um": 338.9520000000001,
  "srams_preserved": [
   {
    "name": "cmem",
@@ -47,7 +47,7 @@
   }
  ],
  "nearest_SRAM_edge_gap_um": 8.6400000000001,
- "halo_top_um": 146.88,
+ "halo_top_um": 149.088,
  "phy_start_y_um": 150,
  "child_clock_domain": "PMA recovered pma_rck; actual parent pad site and input clock contract pending; parent core clk is not the source",
  "pins": 945,

@@ -1,0 +1,30 @@
+{
+ "scope": "NARROW existing G0C check_taps_cores newKP4 descriptor/typeframe only; parent full G0C still required",
+ "errors": [],
+ "metrics": {
+  "taps": 0,
+  "hard_cores": 1,
+  "core_pins": 945,
+  "core_pins_off_track": 0,
+  "types_no_cells": 0,
+  "over_cap_no_cores": 0,
+  "cell_sources": [],
+  "no_cells": []
+ },
+ "actual_origin_um": [
+  967.68,
+  6.528
+ ],
+ "halo_top_um": 149.088,
+ "crown_rows_um": [
+  [
+   149.31,
+   149.58
+  ],
+  [
+   149.58,
+   149.85
+  ]
+ ],
+ "new_child_view_unchanged": true
+}
