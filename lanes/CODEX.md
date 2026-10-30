@@ -4462,3 +4462,6 @@ All current lanes assigned: QC=/root/qc (QC-FIX/A0/IMPORT/token), KV=/root/kv (d
 
 ## CODEX takeover 2026-10-29 22:50 PDT
 ALLcurrentlanes covered: QC=/root/qc (die42/native/shields/A0/kitsU,V/token); KV=/root/kv (die42/kitsV,W/token7/HR); S81=/root/s81 (die33/kitsC,D/cores2/LP/DS); HEAD=/root/head (die36/kitsV/START/LEP/SerDes/token); HBM=/root/hbm (die30/cores25/bind/token); FLOW=/root/flow (KITFAIL4/HOLD/CLOCK/LEC); sharedmerge=/root/root_merge; fullhandoff/alllaneindex+GEOM=/root/coverage in CODEX-COVERAGE-2249.md. Collectinterveningjobsbeforelaunch; frozenS81/KV/HEADfix-only, currentcriticalconditionsinlatestqueue. No obsoletefleet orfullcheckouts.
+
+## CODEX notes 2026-10-30 03:38 PDT all-lane takeover coverage
+Read all 261 lane files in one quick pass plus full generated handoff; per-lane current step, inherited job/result paths, next/failure and worker mapping are in [CODEX-COVERAGE-0336.md](CODEX-COVERAGE-0336.md). Every lane mapped to qc/kv/head/s81/hbm/tokens/flow/signoff_wave/root/support; historical completed support jobs not duplicated. Current fleet = epyc2/intel1/intel2.
