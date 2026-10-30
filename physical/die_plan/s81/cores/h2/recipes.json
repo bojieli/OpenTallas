@@ -9,7 +9,42 @@
   "plan": "physical/die_plan/s81/cores/h2/kit_plan.json",
   "insertion_ps": 250,
   "insertion_ff_ps": 202.5,
-  "insertion_tol_ps": 20
+  "insertion_tol_ps": 20,
+  "land_slots": {
+   "k_lo_v": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "k_lo_d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "k_li_r": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "k_rxv": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_lo_r": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_li_v": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_li_d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_flt": {
+    "D": 4,
+    "form": "hold_mux"
+   }
+  },
+  "why_land_slots": "Actual existing ot_pl_land_local_kw D4 banks are each input bits face registers. Requires strict hold-mux proof including mapped reset/rotation onehot invariant; no capture waiver or added cycles."
  },
  "ot_s81_mu72_lnland": {
   "ref_tile": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland",
@@ -21,6 +56,45 @@
   "plan": "physical/die_plan/s81/cores/h2/kit_plan.json",
   "insertion_ps": 250,
   "insertion_ff_ps": 202.5,
-  "insertion_tol_ps": 20
+  "insertion_tol_ps": 20,
+  "land_slots": {
+   "k_lo_v": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "k_lo_d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "k_li_r": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "k_rxv": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_lo_r": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_li_v": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_li_d": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_flt": {
+    "D": 4,
+    "form": "hold_mux"
+   },
+   "n_st": {
+    "D": 4,
+    "form": "hold_mux"
+   }
+  },
+  "why_land_slots": "Actual existing ot_pl_land_local_kw D4 banks are each input bits face registers. Requires strict hold-mux proof including mapped reset/rotation onehot invariant; no capture waiver or added cycles."
  }
 }
