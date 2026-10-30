@@ -423,7 +423,7 @@ def land_ring_captures(D, land, guard):
     reaches exactly D sequential data pins and nothing else (no output pin, macro, clock pin or clock cell), and the
     face_guard-named capture flop of that bit, when it names one, is among them.  The pin is then judged at the
     distance to its FARTHEST slot flop (GEOM-59), so pin_reg_p90/max still judge the placement.  ring_start /
-    origin_start inputs and undeclared buses get nothing.  face_guard clock_exports (sdc create_generated_clock
+    origin_start inputs require their exact proved writer groups / sampler names at the checkpoint. Undeclared buses get nothing.  face_guard clock_exports (sdc create_generated_clock
     -divide_by 1 forwarded clock outputs) are returned as kit-declared clock pins.  Missing / invalid metadata grants
     no exemption and is recorded in errors."""
     res = dict(caps={}, clock_exports=[], errors=[], rejected=[], buses=[])
@@ -478,6 +478,53 @@ def land_ring_captures(D, land, guard):
             res["rejected"].append(f"{p['name']}: {leak}")
         else:
             res["caps"][p["name"]] = sorted(flops)
+    # START has no extra pin FF: adding one changes the count frame. Use only the
+    # already-proved typed writer/sampler cone, and still measure its farthest FF.
+    for p in D.pins:
+        spec=land["buses"].get(_bus_of(p["name"]))
+        if p["io"]!="INPUT" or not isinstance(spec,dict) or spec.get("form") not in ("ring_start","origin_start"):
+            continue
+        proof=guard.get("ring_start",{}).get(p["name"])
+        if not isinstance(proof,dict):
+            res["rejected"].append(f"{p['name']}: no face_guard START proof")
+            continue
+        n=D.pin_net.get(p["k"])
+        flops=set();leak=None;front=[n] if n is not None else [];seen=set(front)
+        while front and leak is None:
+            nf=[]
+            for nn in front:
+                for sink in D.nets[nn][2]:
+                    kind=D.kind(sink[1]) if sink[0]=="i" else "P"
+                    if sink[0]!="i" or sink[2] or kind in ("M","K",None):
+                        leak=f"START reaches {kind or 'unknown'} or clock pin";break
+                    if kind=="S":flops.add(sink[1])
+                    else:
+                        for output in D.drives.get(sink[1],[]):
+                            if output not in seen:seen.add(output);nf.append(output)
+            front=nf
+        names={D.cells[c][6].replace("\\","") for c in flops}
+        samplers=proof.get("sampler_flops")
+        groups=proof.get("writer_groups")
+        writers=proof.get("writer_flops")
+        if n is None:leak="START has no net"
+        elif not isinstance(samplers,list) or not all(isinstance(x,str) for x in samplers) \
+                or not isinstance(groups,dict) or not isinstance(writers,int):
+            leak="invalid face_guard START capture record"
+        elif leak is None:
+            sampler_names={x.replace("\\","") for x in samplers}
+            actual=Counter(re.sub(r"\[\d+\]","[N]",name) for name in names-sampler_names)
+            expected={name.replace("\\",""):count for name,count in groups.items()}
+            if not flops or not sampler_names<=names or dict(actual)!=expected \
+                    or sum(actual.values())!=writers or len(names)!=len(flops):
+                leak="START capture names/groups differ from face_guard proof"
+            elif spec["form"]=="origin_start" and (writers or not sampler_names):
+                leak="origin START lacks exclusive sampler proof"
+            elif spec["form"]=="ring_start":
+                rings=spec.get("ring");rings=[rings] if isinstance(rings,str) else rings
+                if rings!=proof.get("ring") or not writers:
+                    leak="START ring declaration differs from face_guard proof"
+        if leak:res["rejected"].append(f"{p['name']}: {leak}")
+        else:res["caps"][p["name"]]=sorted(flops)
     ex = guard.get("clock_exports", {})
     if isinstance(ex, dict):
         outs = {p["name"] for p in D.pins if p["io"] == "OUTPUT"}

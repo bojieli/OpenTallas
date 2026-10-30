@@ -99,3 +99,43 @@ def test_declared_clock_export_resolves_only_a_singleton_actual_bit_zero(tmp_pat
     p.write_text(p.read_text() + 'P\t3\tfclk_o[1]\tOUTPUT\tSIGNAL\tM4\t600\t60\n')
     r, m = reg(G.Design(p))
     assert r['clock_exports'] == [] and m['pins_unregistered'] == 3
+
+
+def test_start_requires_exact_guard_capture_record_and_measures_farthest(tmp_path):
+    import copy
+    D=dump(tmp_path)
+    # This test's START cone ends at exactly one dedicated sampler, through AND.
+    land=copy.deepcopy(LAND)
+    land['buses']['go_i']=dict(form='origin_start',origin='origin')
+    guard=copy.deepcopy(GUARD)
+    guard['ring_start']=dict(go_i=dict(ring=[],writer_flops=0,writer_groups={},sampler_flops=['gff']))
+    r,m=reg(D,land,guard)
+    assert r['caps']['go_i']==[51] and m['pins_unregistered']==0
+    assert m['pin_reg_max']==40
+    D.cells[51]=('S','DFF',399.5,49.5,400.5,50.5,'gff')
+    r,m=reg(D,land,guard)
+    assert m['pin_reg_max']==400  # no waived distance threshold
+    for change in [dict(sampler_flops=['wrong']),dict(sampler_flops=[]),dict(writer_flops=1)]:
+        bad=copy.deepcopy(guard);bad['ring_start']['go_i'].update(change)
+        r,m=reg(D,land,bad)
+        assert 'go_i' not in r['caps'] and m['pins_unregistered']==1
+
+
+def test_ring_start_writer_groups_must_match_every_checkpoint_capture(tmp_path):
+    import copy
+    D=dump(tmp_path)
+    D.cells[51]=('S','DFF',9.5,49.5,10.5,50.5,'u_ring.valid[3]')
+    guard=copy.deepcopy(GUARD)
+    guard['ring_start']=dict(go_i=dict(ring=['i'],writer_flops=1,writer_groups={'u_ring.valid[N]':1},sampler_flops=[]))
+    r,m=reg(D,LAND,guard)
+    assert r['caps']['go_i']==[51] and m['pins_unregistered']==0
+    for mutation in ['group','count','ring','clock','extra']:
+        d=dump(tmp_path);d.cells[51]=D.cells[51]
+        g=copy.deepcopy(guard)
+        if mutation=='group':g['ring_start']['go_i']['writer_groups']={'other[N]':1}
+        if mutation=='count':g['ring_start']['go_i']['writer_flops']=2
+        if mutation=='ring':g['ring_start']['go_i']['ring']=['other']
+        if mutation=='clock':d.nets[d.cell_in[51][0][0]][2][0]=('i',51,True)
+        if mutation=='extra':d.nets[d.cell_in[51][0][0]][2].append(('p',2,False))
+        r,m=reg(d,LAND,g)
+        assert 'go_i' not in r['caps'] and m['pins_unregistered']==1,(mutation,r)
