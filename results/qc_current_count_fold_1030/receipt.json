@@ -1,0 +1,66 @@
+{
+  "scope": "Seven current native type cell counts only; no source/geometry/cap-rule/qualification changes. Three SU-C retain real cap and missing-clock-ABI FAIL. Four FE kit_rtl variants=one and params empty; explicit current representative topology, no unrelated parameter extrapolation.",
+  "counts": [
+    {
+      "type": "sle_fe_v2",
+      "old_cells": null,
+      "new_cells": 161797,
+      "macro_count": 0,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "PASS"
+    },
+    {
+      "type": "slw_fe_v2__cle312294d",
+      "old_cells": null,
+      "new_cells": 155299,
+      "macro_count": 0,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "PASS"
+    },
+    {
+      "type": "sle_fe_v1__cl1cbb7497",
+      "old_cells": null,
+      "new_cells": 176558,
+      "macro_count": 0,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "PASS"
+    },
+    {
+      "type": "slw_fe_v1__clfe325744__cl08d14f0d",
+      "old_cells": null,
+      "new_cells": 154992,
+      "macro_count": 0,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "PASS"
+    },
+    {
+      "type": "sle_su_c",
+      "old_cells": null,
+      "new_cells": 473444,
+      "macro_count": 18,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "FAIL"
+    },
+    {
+      "type": "slw_su_c__cl92142dac",
+      "old_cells": null,
+      "new_cells": 464986,
+      "macro_count": 18,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "FAIL"
+    },
+    {
+      "type": "slw_su_c__cl19bb38ef",
+      "old_cells": null,
+      "new_cells": 464067,
+      "macro_count": 18,
+      "scope": "Actual current native fullwrapper incl CA/FT/reset; macros excluded from std count; no extra CA added",
+      "cap": "FAIL"
+    }
+  ],
+  "source_receipts": [
+    "5bc92771c",
+    "3967dbd7b",
+    "1f6a38392"
+  ]
+}
