@@ -45,6 +45,13 @@ def _dpl_args(budgets):
     return ["export DETAIL_PLACEMENT_ARGS = -use_diamond_legalizer"]
 
 
+def _cland_pinslot(budgets, tn):
+    """FLOW-11 10-30: plan budgets.cland_pinslot_types names the types (or unsplit base names, as
+    cland_avoid_reset_types) whose ring slot flops are fit next to their own bus-bit pin (OT_CLAND_PINSLOT=1)."""
+    sel = budgets.get("cland_pinslot_types") or []
+    return tn in sel or tn.split("__")[0] in sel
+
+
 def _cland_fit_resize(budgets):
     """FLOW-6 10-30: plan budgets.cland_fit_resize -> OT_CLAND_FIT_RESERVE=resize; it cannot be combined with
     budgets.cland_fit_reserve (one OT_CLAND_FIT_RESERVE value per kit): both set fails closed here."""
@@ -2162,6 +2169,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
            # FLOW-7 10-30 opt-in plan budgets.dpl_legalizer="diamond" (KV-022 SD: negotiation DPL non-convergence
            # around ~12k FIRM landing cells). Absent = unchanged kit.
            *_dpl_args(P.budgets),
+           # FLOW-11 10-30 opt-in plan budgets.cland_pinslot_types (DIE-HEAD-43 (C)): ring slot flops next to their own
+           # bus-bit pin (HEAD turn_a t_i farthest-slot p90 69 um, bit-major band fill). Absent = unchanged kit.
+           *(["export OT_CLAND_PINSLOT = 1"] if _cland_pinslot(P.budgets, tn) else []),
            "export LEC_CHECK = 0",
            # COORD ruling 4 (10-25): the platform adder map with every DONT_USE cell (HAxp5) as generic logic; run_kit.sh
            # generates it in the image before synth (adder_map_dontuse.py gen) and FAILs a netlist with a DONT_USE cell
