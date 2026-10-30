@@ -1,0 +1,11 @@
+# Current-native SU constant-output physical bridge: component PREP
+
+The actual48 KIND0 native cuts have192 lane_coll bits which must remain native0 while the physical variants omit those pins. Existing substitute_inst alone deliberately leaves removed output loads undriven, so it cannot implement this event.
+
+The three source bridges from1f9fe3c3a were exercised through existing make_shim, Yosys hierarchy, bind_elab.flatten and bind.Graph. Their full69-port ABI and1540 public output widths/directions match native_cut_abi.json. Each physical u_native.u_sub.u_phys leaf has68 ports, exact actual physical strap renaming and no lane_coll port. A real loaded consumer of allfour lane_coll bits resolves to source0. Allthree wrong-TIE1 mutants and allthree removed-assign/undriven controls reject. This verifies the existing structural binding path only; the child's RTL behavior is covered by the separate source adapter proof, not this black-box structural vehicle. No cycle is added.
+
+The first hand-written physical stub used native lane_lane_id instead of actual physical strap_lane_lane_id and Yosys rejected the missing port. The successful control uses the exact physical source header. This was a coupon setup error, not a hardware failure.
+
+CURRENT BLOCKER: current top_native.sv instantiates whole SU; g4 composition creates these48 cuts only after substitute_inst, immediately before Graph. Therefore pre-elab global substitution+dissolution cannot see the cuts in the actual current flow. plan_fragment_PREP.json records the correct48 source/physical mappings but MUST NOT be applied directly as if the current flow supported it. A reviewed structural post-compose bridge expansion or exact post-compose whole-source export/re-elaboration is required. FLOW owns the shared mechanism decision. No untracked post-emission patch or constant pin waiver is proposed.
+
+The44 normal native cuts share one parameter-free source module:16 need663526 physical outline and28 needcf1e77. Four special cuts use the distinct parameter-free id44 source. After structural bridge expansion, existing same-interface per-instance substitution can select the exact physical outline without removing any outputs. Full-current bind/G0, constant consumers, parent TIE0 implementation, native ID straps and unchanged noncollision outputs remain required.

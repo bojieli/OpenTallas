@@ -1,0 +1,262 @@
+{
+  "scope": "Exercise existing pre-elab substitute+dissolve and actual constant-output bridge, not RTL behavior proof.",
+  "source": "1f9fe3c3a",
+  "cases": [
+    {
+      "physical": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "mode": "nominal",
+      "constant_sources": [
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[0]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[1]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[2]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[3]"
+        ]
+      ],
+      "qualification": true,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "mode": "wrong_tie1",
+      "constant_sources": [
+        [
+          "const",
+          "1",
+          "u_native.u_sub.lane_coll[0]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[1]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[2]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[3]"
+        ]
+      ],
+      "qualification": false,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "mode": "undriven_removed_output",
+      "constant_sources": [
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ]
+      ],
+      "qualification": false,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "mode": "nominal",
+      "constant_sources": [
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[0]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[1]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[2]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[3]"
+        ]
+      ],
+      "qualification": true,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "mode": "wrong_tie1",
+      "constant_sources": [
+        [
+          "const",
+          "1",
+          "u_native.u_sub.lane_coll[0]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[1]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[2]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[3]"
+        ]
+      ],
+      "qualification": false,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "mode": "undriven_removed_output",
+      "constant_sources": [
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ]
+      ],
+      "qualification": false,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "mode": "nominal",
+      "constant_sources": [
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[0]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[1]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[2]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[3]"
+        ]
+      ],
+      "qualification": true,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "mode": "wrong_tie1",
+      "constant_sources": [
+        [
+          "const",
+          "1",
+          "u_native.u_sub.lane_coll[0]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[1]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[2]"
+        ],
+        [
+          "const",
+          "0",
+          "u_native.u_sub.lane_coll[3]"
+        ]
+      ],
+      "qualification": false,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    },
+    {
+      "physical": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "mode": "undriven_removed_output",
+      "constant_sources": [
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ],
+        [
+          "undriven"
+        ]
+      ],
+      "qualification": false,
+      "physical_leaf": "u_native.u_sub.u_phys",
+      "physical_ports": 68,
+      "public_outputs": 1540,
+      "extra_cycles": 0
+    }
+  ],
+  "all_expected_results": true
+}

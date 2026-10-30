@@ -1,0 +1,38 @@
+
+-- Executing script file `/srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/elab.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/physical_stub.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/physical_stub.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/selected.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/selected.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll__native_bridge'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/shim.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/shim.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hnx_su_plain4__lid9_rst3'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/top.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/codex-hbm-1030/su_bind_bridge/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526/top.sv' to AST representation.
+Generating RTLIL representation for module `\coupon'.
+Generating RTLIL representation for module `\consumer'.
+Successfully finished Verilog frontend.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \coupon
+Used module:     \ot_hnx_su_plain4__lid9_rst3
+Used module:         \ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll__native_bridge
+
+5.2. Analyzing design hierarchy..
+Top module:  \coupon
+Used module:     \ot_hnx_su_plain4__lid9_rst3
+Used module:         \ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll__native_bridge
+Removed 0 unused modules.
+
+6. Executing JSON backend.

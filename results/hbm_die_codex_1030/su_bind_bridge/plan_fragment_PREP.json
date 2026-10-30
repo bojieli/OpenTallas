@@ -1,0 +1,1235 @@
+{
+  "scope": "PREP only, merge into EXACT current-native source plan after conflict checks; no current plan changed",
+  "asbuilt": {
+    "substitute": {
+      "ot_hnx_su_plain4__lid9_rst3": {
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll__native_bridge",
+        "reason": "Explicit full-native ABI TIE0 collision outputs, zero cycles"
+      },
+      "ot_hnx_su_plain4__7dd6a1bbbf47_rst3": {
+        "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge",
+        "reason": "Special id44 full-native ABI TIE0 collision outputs, zero cycles"
+      }
+    },
+    "dissolve": [
+      "ot_hnx_su_plain4__lid9_rst3",
+      "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+      "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll__native_bridge",
+      "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge"
+    ],
+    "substitute_inst": [
+      {
+        "inst": "su_NW0\\.__cut_lanes_plain0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW0\\.__cut_lanes_plain4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW0\\.__cut_lanes_plain8_11\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW0\\.__cut_lanes_plain12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW1\\.__cut_lanes_plain0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW1\\.__cut_lanes_plain4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW1\\.__cut_lanes_plain8_11\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW1\\.__cut_lanes_plain12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes8_11\\.u_sub\\.u_phys",
+        "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes16_19\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes20_23\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes24_27\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW2\\.__cut_lanes28_31\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes8_11\\.u_sub\\.u_phys",
+        "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes16_19\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes20_23\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes24_27\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NW3\\.__cut_lanes28_31\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE0\\.__cut_lanes_plain0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE0\\.__cut_lanes_plain4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE0\\.__cut_lanes_plain8_11\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE0\\.__cut_lanes_plain12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE1\\.__cut_lanes_plain0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE1\\.__cut_lanes_plain4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE1\\.__cut_lanes_plain8_11\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE1\\.__cut_lanes_plain12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes8_11\\.u_sub\\.u_phys",
+        "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes16_19\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes20_23\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes24_27\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE2\\.__cut_lanes28_31\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes0_3\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes4_7\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes8_11\\.u_sub\\.u_phys",
+        "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes12_15\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes16_19\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes20_23\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes24_27\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      },
+      {
+        "inst": "su_NE3\\.__cut_lanes28_31\\.u_sub\\.u_phys",
+        "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+        "reason": "Same68-port exact physical outline variant; no output removal here"
+      }
+    ],
+    "map": {
+      "parts": {
+        "su_NW0.__cut_lanes_plain0_3.u_sub.u_phys": [
+          "NW_su00",
+          "u_su_Q0_lanes_plain0_3"
+        ],
+        "su_NW0.__cut_lanes_plain4_7.u_sub.u_phys": [
+          "NW_su01",
+          "u_su_Q0_lanes_plain4_7"
+        ],
+        "su_NW0.__cut_lanes_plain8_11.u_sub.u_phys": [
+          "NW_su00",
+          "u_su_Q0_lanes_plain8_11"
+        ],
+        "su_NW0.__cut_lanes_plain12_15.u_sub.u_phys": [
+          "NW_su01",
+          "u_su_Q0_lanes_plain12_15"
+        ],
+        "su_NW1.__cut_lanes_plain0_3.u_sub.u_phys": [
+          "NW_su10",
+          "u_su_Q1_lanes_plain0_3"
+        ],
+        "su_NW1.__cut_lanes_plain4_7.u_sub.u_phys": [
+          "NW_su11",
+          "u_su_Q1_lanes_plain4_7"
+        ],
+        "su_NW1.__cut_lanes_plain8_11.u_sub.u_phys": [
+          "NW_su10",
+          "u_su_Q1_lanes_plain8_11"
+        ],
+        "su_NW1.__cut_lanes_plain12_15.u_sub.u_phys": [
+          "NW_su11",
+          "u_su_Q1_lanes_plain12_15"
+        ],
+        "su_NW2.__cut_lanes0_3.u_sub.u_phys": [
+          "NW_su20",
+          "u_su_Q2_lanes0_3"
+        ],
+        "su_NW2.__cut_lanes4_7.u_sub.u_phys": [
+          "NW_su21",
+          "u_su_Q2_lanes4_7"
+        ],
+        "su_NW2.__cut_lanes8_11.u_sub.u_phys": [
+          "NW_su20",
+          "u_su_Q2_lanes8_11"
+        ],
+        "su_NW2.__cut_lanes12_15.u_sub.u_phys": [
+          "NW_su21",
+          "u_su_Q2_lanes12_15"
+        ],
+        "su_NW2.__cut_lanes16_19.u_sub.u_phys": [
+          "NW_su20",
+          "u_su_Q2_lanes16_19"
+        ],
+        "su_NW2.__cut_lanes20_23.u_sub.u_phys": [
+          "NW_su21",
+          "u_su_Q2_lanes20_23"
+        ],
+        "su_NW2.__cut_lanes24_27.u_sub.u_phys": [
+          "NW_su20",
+          "u_su_Q2_lanes24_27"
+        ],
+        "su_NW2.__cut_lanes28_31.u_sub.u_phys": [
+          "NW_su21",
+          "u_su_Q2_lanes28_31"
+        ],
+        "su_NW3.__cut_lanes0_3.u_sub.u_phys": [
+          "NW_su30",
+          "u_su_Q3_lanes0_3"
+        ],
+        "su_NW3.__cut_lanes4_7.u_sub.u_phys": [
+          "NW_su31",
+          "u_su_Q3_lanes4_7"
+        ],
+        "su_NW3.__cut_lanes8_11.u_sub.u_phys": [
+          "NW_su30",
+          "u_su_Q3_lanes8_11"
+        ],
+        "su_NW3.__cut_lanes12_15.u_sub.u_phys": [
+          "NW_su31",
+          "u_su_Q3_lanes12_15"
+        ],
+        "su_NW3.__cut_lanes16_19.u_sub.u_phys": [
+          "NW_su30",
+          "u_su_Q3_lanes16_19"
+        ],
+        "su_NW3.__cut_lanes20_23.u_sub.u_phys": [
+          "NW_su31",
+          "u_su_Q3_lanes20_23"
+        ],
+        "su_NW3.__cut_lanes24_27.u_sub.u_phys": [
+          "NW_su30",
+          "u_su_Q3_lanes24_27"
+        ],
+        "su_NW3.__cut_lanes28_31.u_sub.u_phys": [
+          "NW_su31",
+          "u_su_Q3_lanes28_31"
+        ],
+        "su_NE0.__cut_lanes_plain0_3.u_sub.u_phys": [
+          "NE_su00",
+          "u_su_Q0_lanes_plain0_3"
+        ],
+        "su_NE0.__cut_lanes_plain4_7.u_sub.u_phys": [
+          "NE_su01",
+          "u_su_Q0_lanes_plain4_7"
+        ],
+        "su_NE0.__cut_lanes_plain8_11.u_sub.u_phys": [
+          "NE_su00",
+          "u_su_Q0_lanes_plain8_11"
+        ],
+        "su_NE0.__cut_lanes_plain12_15.u_sub.u_phys": [
+          "NE_su01",
+          "u_su_Q0_lanes_plain12_15"
+        ],
+        "su_NE1.__cut_lanes_plain0_3.u_sub.u_phys": [
+          "NE_su10",
+          "u_su_Q1_lanes_plain0_3"
+        ],
+        "su_NE1.__cut_lanes_plain4_7.u_sub.u_phys": [
+          "NE_su11",
+          "u_su_Q1_lanes_plain4_7"
+        ],
+        "su_NE1.__cut_lanes_plain8_11.u_sub.u_phys": [
+          "NE_su10",
+          "u_su_Q1_lanes_plain8_11"
+        ],
+        "su_NE1.__cut_lanes_plain12_15.u_sub.u_phys": [
+          "NE_su11",
+          "u_su_Q1_lanes_plain12_15"
+        ],
+        "su_NE2.__cut_lanes0_3.u_sub.u_phys": [
+          "NE_su20",
+          "u_su_Q2_lanes0_3"
+        ],
+        "su_NE2.__cut_lanes4_7.u_sub.u_phys": [
+          "NE_su21",
+          "u_su_Q2_lanes4_7"
+        ],
+        "su_NE2.__cut_lanes8_11.u_sub.u_phys": [
+          "NE_su20",
+          "u_su_Q2_lanes8_11"
+        ],
+        "su_NE2.__cut_lanes12_15.u_sub.u_phys": [
+          "NE_su21",
+          "u_su_Q2_lanes12_15"
+        ],
+        "su_NE2.__cut_lanes16_19.u_sub.u_phys": [
+          "NE_su20",
+          "u_su_Q2_lanes16_19"
+        ],
+        "su_NE2.__cut_lanes20_23.u_sub.u_phys": [
+          "NE_su21",
+          "u_su_Q2_lanes20_23"
+        ],
+        "su_NE2.__cut_lanes24_27.u_sub.u_phys": [
+          "NE_su20",
+          "u_su_Q2_lanes24_27"
+        ],
+        "su_NE2.__cut_lanes28_31.u_sub.u_phys": [
+          "NE_su21",
+          "u_su_Q2_lanes28_31"
+        ],
+        "su_NE3.__cut_lanes0_3.u_sub.u_phys": [
+          "NE_su30",
+          "u_su_Q3_lanes0_3"
+        ],
+        "su_NE3.__cut_lanes4_7.u_sub.u_phys": [
+          "NE_su31",
+          "u_su_Q3_lanes4_7"
+        ],
+        "su_NE3.__cut_lanes8_11.u_sub.u_phys": [
+          "NE_su30",
+          "u_su_Q3_lanes8_11"
+        ],
+        "su_NE3.__cut_lanes12_15.u_sub.u_phys": [
+          "NE_su31",
+          "u_su_Q3_lanes12_15"
+        ],
+        "su_NE3.__cut_lanes16_19.u_sub.u_phys": [
+          "NE_su30",
+          "u_su_Q3_lanes16_19"
+        ],
+        "su_NE3.__cut_lanes20_23.u_sub.u_phys": [
+          "NE_su31",
+          "u_su_Q3_lanes20_23"
+        ],
+        "su_NE3.__cut_lanes24_27.u_sub.u_phys": [
+          "NE_su30",
+          "u_su_Q3_lanes24_27"
+        ],
+        "su_NE3.__cut_lanes28_31.u_sub.u_phys": [
+          "NE_su31",
+          "u_su_Q3_lanes28_31"
+        ]
+      }
+    }
+  },
+  "physical_updates": [
+    {
+      "part": "NW_su00",
+      "type": "q_su00__physical_v1",
+      "local": "u_su_Q0_lanes_plain0_3",
+      "native_path": "su_NW0.__cut_lanes_plain0_3",
+      "physical_path": "su_NW0.__cut_lanes_plain0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su01",
+      "type": "q_su01",
+      "local": "u_su_Q0_lanes_plain4_7",
+      "native_path": "su_NW0.__cut_lanes_plain4_7",
+      "physical_path": "su_NW0.__cut_lanes_plain4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su00",
+      "type": "q_su00__physical_v1",
+      "local": "u_su_Q0_lanes_plain8_11",
+      "native_path": "su_NW0.__cut_lanes_plain8_11",
+      "physical_path": "su_NW0.__cut_lanes_plain8_11.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su01",
+      "type": "q_su01",
+      "local": "u_su_Q0_lanes_plain12_15",
+      "native_path": "su_NW0.__cut_lanes_plain12_15",
+      "physical_path": "su_NW0.__cut_lanes_plain12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su10",
+      "type": "q_su10",
+      "local": "u_su_Q1_lanes_plain0_3",
+      "native_path": "su_NW1.__cut_lanes_plain0_3",
+      "physical_path": "su_NW1.__cut_lanes_plain0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su11",
+      "type": "q_su11__physical_v1",
+      "local": "u_su_Q1_lanes_plain4_7",
+      "native_path": "su_NW1.__cut_lanes_plain4_7",
+      "physical_path": "su_NW1.__cut_lanes_plain4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su10",
+      "type": "q_su10",
+      "local": "u_su_Q1_lanes_plain8_11",
+      "native_path": "su_NW1.__cut_lanes_plain8_11",
+      "physical_path": "su_NW1.__cut_lanes_plain8_11.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su11",
+      "type": "q_su11__physical_v1",
+      "local": "u_su_Q1_lanes_plain12_15",
+      "native_path": "su_NW1.__cut_lanes_plain12_15",
+      "physical_path": "su_NW1.__cut_lanes_plain12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su20",
+      "type": "q_su20__physical_v1",
+      "local": "u_su_Q2_lanes0_3",
+      "native_path": "su_NW2.__cut_lanes0_3",
+      "physical_path": "su_NW2.__cut_lanes0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su21",
+      "type": "q_su21",
+      "local": "u_su_Q2_lanes4_7",
+      "native_path": "su_NW2.__cut_lanes4_7",
+      "physical_path": "su_NW2.__cut_lanes4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su20",
+      "type": "q_su20__physical_v1",
+      "local": "u_su_Q2_lanes8_11",
+      "native_path": "su_NW2.__cut_lanes8_11",
+      "physical_path": "su_NW2.__cut_lanes8_11.u_sub.u_phys",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll.json",
+      "pins_sha256": "a8e484a77e6fdb7946cd40c4887de3a5ae761bf5519657f9d119ff0d98a29dc3",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su21",
+      "type": "q_su21",
+      "local": "u_su_Q2_lanes12_15",
+      "native_path": "su_NW2.__cut_lanes12_15",
+      "physical_path": "su_NW2.__cut_lanes12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su20",
+      "type": "q_su20__physical_v1",
+      "local": "u_su_Q2_lanes16_19",
+      "native_path": "su_NW2.__cut_lanes16_19",
+      "physical_path": "su_NW2.__cut_lanes16_19.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su21",
+      "type": "q_su21",
+      "local": "u_su_Q2_lanes20_23",
+      "native_path": "su_NW2.__cut_lanes20_23",
+      "physical_path": "su_NW2.__cut_lanes20_23.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su20",
+      "type": "q_su20__physical_v1",
+      "local": "u_su_Q2_lanes24_27",
+      "native_path": "su_NW2.__cut_lanes24_27",
+      "physical_path": "su_NW2.__cut_lanes24_27.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su21",
+      "type": "q_su21",
+      "local": "u_su_Q2_lanes28_31",
+      "native_path": "su_NW2.__cut_lanes28_31",
+      "physical_path": "su_NW2.__cut_lanes28_31.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su30",
+      "type": "q_su30",
+      "local": "u_su_Q3_lanes0_3",
+      "native_path": "su_NW3.__cut_lanes0_3",
+      "physical_path": "su_NW3.__cut_lanes0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su31",
+      "type": "q_su31__physical_v1",
+      "local": "u_su_Q3_lanes4_7",
+      "native_path": "su_NW3.__cut_lanes4_7",
+      "physical_path": "su_NW3.__cut_lanes4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su30",
+      "type": "q_su30",
+      "local": "u_su_Q3_lanes8_11",
+      "native_path": "su_NW3.__cut_lanes8_11",
+      "physical_path": "su_NW3.__cut_lanes8_11.u_sub.u_phys",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll.json",
+      "pins_sha256": "a8e484a77e6fdb7946cd40c4887de3a5ae761bf5519657f9d119ff0d98a29dc3",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su31",
+      "type": "q_su31__physical_v1",
+      "local": "u_su_Q3_lanes12_15",
+      "native_path": "su_NW3.__cut_lanes12_15",
+      "physical_path": "su_NW3.__cut_lanes12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su30",
+      "type": "q_su30",
+      "local": "u_su_Q3_lanes16_19",
+      "native_path": "su_NW3.__cut_lanes16_19",
+      "physical_path": "su_NW3.__cut_lanes16_19.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su31",
+      "type": "q_su31__physical_v1",
+      "local": "u_su_Q3_lanes20_23",
+      "native_path": "su_NW3.__cut_lanes20_23",
+      "physical_path": "su_NW3.__cut_lanes20_23.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su30",
+      "type": "q_su30",
+      "local": "u_su_Q3_lanes24_27",
+      "native_path": "su_NW3.__cut_lanes24_27",
+      "physical_path": "su_NW3.__cut_lanes24_27.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NW_su31",
+      "type": "q_su31__physical_v1",
+      "local": "u_su_Q3_lanes28_31",
+      "native_path": "su_NW3.__cut_lanes28_31",
+      "physical_path": "su_NW3.__cut_lanes28_31.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su00",
+      "type": "q_su00",
+      "local": "u_su_Q0_lanes_plain0_3",
+      "native_path": "su_NE0.__cut_lanes_plain0_3",
+      "physical_path": "su_NE0.__cut_lanes_plain0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su01",
+      "type": "q_su01__physical_v1",
+      "local": "u_su_Q0_lanes_plain4_7",
+      "native_path": "su_NE0.__cut_lanes_plain4_7",
+      "physical_path": "su_NE0.__cut_lanes_plain4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su00",
+      "type": "q_su00",
+      "local": "u_su_Q0_lanes_plain8_11",
+      "native_path": "su_NE0.__cut_lanes_plain8_11",
+      "physical_path": "su_NE0.__cut_lanes_plain8_11.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su01",
+      "type": "q_su01__physical_v1",
+      "local": "u_su_Q0_lanes_plain12_15",
+      "native_path": "su_NE0.__cut_lanes_plain12_15",
+      "physical_path": "su_NE0.__cut_lanes_plain12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su10",
+      "type": "q_su10__physical_v1",
+      "local": "u_su_Q1_lanes_plain0_3",
+      "native_path": "su_NE1.__cut_lanes_plain0_3",
+      "physical_path": "su_NE1.__cut_lanes_plain0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su11",
+      "type": "q_su11",
+      "local": "u_su_Q1_lanes_plain4_7",
+      "native_path": "su_NE1.__cut_lanes_plain4_7",
+      "physical_path": "su_NE1.__cut_lanes_plain4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su10",
+      "type": "q_su10__physical_v1",
+      "local": "u_su_Q1_lanes_plain8_11",
+      "native_path": "su_NE1.__cut_lanes_plain8_11",
+      "physical_path": "su_NE1.__cut_lanes_plain8_11.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su11",
+      "type": "q_su11",
+      "local": "u_su_Q1_lanes_plain12_15",
+      "native_path": "su_NE1.__cut_lanes_plain12_15",
+      "physical_path": "su_NE1.__cut_lanes_plain12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+      "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su20",
+      "type": "q_su20",
+      "local": "u_su_Q2_lanes0_3",
+      "native_path": "su_NE2.__cut_lanes0_3",
+      "physical_path": "su_NE2.__cut_lanes0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su21",
+      "type": "q_su21__physical_v1",
+      "local": "u_su_Q2_lanes4_7",
+      "native_path": "su_NE2.__cut_lanes4_7",
+      "physical_path": "su_NE2.__cut_lanes4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su20",
+      "type": "q_su20",
+      "local": "u_su_Q2_lanes8_11",
+      "native_path": "su_NE2.__cut_lanes8_11",
+      "physical_path": "su_NE2.__cut_lanes8_11.u_sub.u_phys",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll.json",
+      "pins_sha256": "a8e484a77e6fdb7946cd40c4887de3a5ae761bf5519657f9d119ff0d98a29dc3",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su21",
+      "type": "q_su21__physical_v1",
+      "local": "u_su_Q2_lanes12_15",
+      "native_path": "su_NE2.__cut_lanes12_15",
+      "physical_path": "su_NE2.__cut_lanes12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su20",
+      "type": "q_su20",
+      "local": "u_su_Q2_lanes16_19",
+      "native_path": "su_NE2.__cut_lanes16_19",
+      "physical_path": "su_NE2.__cut_lanes16_19.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su21",
+      "type": "q_su21__physical_v1",
+      "local": "u_su_Q2_lanes20_23",
+      "native_path": "su_NE2.__cut_lanes20_23",
+      "physical_path": "su_NE2.__cut_lanes20_23.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su20",
+      "type": "q_su20",
+      "local": "u_su_Q2_lanes24_27",
+      "native_path": "su_NE2.__cut_lanes24_27",
+      "physical_path": "su_NE2.__cut_lanes24_27.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su21",
+      "type": "q_su21__physical_v1",
+      "local": "u_su_Q2_lanes28_31",
+      "native_path": "su_NE2.__cut_lanes28_31",
+      "physical_path": "su_NE2.__cut_lanes28_31.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su30",
+      "type": "q_su30__physical_v1",
+      "local": "u_su_Q3_lanes0_3",
+      "native_path": "su_NE3.__cut_lanes0_3",
+      "physical_path": "su_NE3.__cut_lanes0_3.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su31",
+      "type": "q_su31",
+      "local": "u_su_Q3_lanes4_7",
+      "native_path": "su_NE3.__cut_lanes4_7",
+      "physical_path": "su_NE3.__cut_lanes4_7.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su30",
+      "type": "q_su30__physical_v1",
+      "local": "u_su_Q3_lanes8_11",
+      "native_path": "su_NE3.__cut_lanes8_11",
+      "physical_path": "su_NE3.__cut_lanes8_11.u_sub.u_phys",
+      "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll.json",
+      "pins_sha256": "a8e484a77e6fdb7946cd40c4887de3a5ae761bf5519657f9d119ff0d98a29dc3",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su31",
+      "type": "q_su31",
+      "local": "u_su_Q3_lanes12_15",
+      "native_path": "su_NE3.__cut_lanes12_15",
+      "physical_path": "su_NE3.__cut_lanes12_15.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su30",
+      "type": "q_su30__physical_v1",
+      "local": "u_su_Q3_lanes16_19",
+      "native_path": "su_NE3.__cut_lanes16_19",
+      "physical_path": "su_NE3.__cut_lanes16_19.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su31",
+      "type": "q_su31",
+      "local": "u_su_Q3_lanes20_23",
+      "native_path": "su_NE3.__cut_lanes20_23",
+      "physical_path": "su_NE3.__cut_lanes20_23.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su30",
+      "type": "q_su30__physical_v1",
+      "local": "u_su_Q3_lanes24_27",
+      "native_path": "su_NE3.__cut_lanes24_27",
+      "physical_path": "su_NE3.__cut_lanes24_27.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    },
+    {
+      "part": "NE_su31",
+      "type": "q_su31",
+      "local": "u_su_Q3_lanes28_31",
+      "native_path": "su_NE3.__cut_lanes28_31",
+      "physical_path": "su_NE3.__cut_lanes28_31.u_sub.u_phys",
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+      "pins_source": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+      "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+      "TIE0_parent_outputs": {
+        "lane_coll": {
+          "width": 4,
+          "value": 0
+        }
+      }
+    }
+  ],
+  "expected": {
+    "plain_cuts": 48,
+    "const0_outputs": 192,
+    "extra_cycles": 0
+  },
+  "CURRENT_COMPOSE_BLOCKER": "Current g4 composes these48cuts only AFTER substitute_inst; this pre-elab fragment is NOT applicable directly to current whole-SU source. Need reviewed structural post-compose source bridge expansion or exact postcompose source export+re-elab."
+}
