@@ -207,3 +207,13 @@ def test_kit_rtl_prefixed_status_net_is_found(tmp_path):
 def test_ambiguous_prefixed_status_net_fails_closed(tmp_path):
     r = _run_lp(tmp_path, 50.0, stname="u_bound.st_o", xnet="st_x")
     assert r.returncode != 0 and "ambiguous status net st_o" in r.stderr
+
+
+def test_status_half_window_slide_is_independent_of_dbu_rounding(tmp_path, monkeypatch):
+    # Exact coll_ftn geometry: 691.2 - 686.88 = the 4.32um window width. The old
+    # ceil/floor DBU guard rejects it by a few DBU due to floating representation.
+    monkeypatch.setitem(globals(), 'MOCK', MOCK.replace('set ff_x1 100000', 'set ff_x1 686880'))
+    r = _run_lp(tmp_path, 691.2, inv=False)
+    assert r.returncode == 0, r.stdout + r.stderr
+    x, _y, st = _loc(r)
+    assert st == 'FIRM' and 686880 - 4320 <= x <= 686880 - 1080

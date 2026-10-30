@@ -54,17 +54,25 @@ proc cland_put {i rect tag {sp {}} {cur 0}} {
  if {[dict exists $cland_done $name]} { error "OT_CLAND duplicate placement $name" }
  lassign $rect ax ay bx by
  set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
+ # Evaluate the existing half-window slide eligibility before conservative DBU quantization.
+ # QC coll_ftn: face 691.2 / core edge 686.88 / half-window 2.16 is exactly eligible,
+ # but ceil(689.040... * 1000) became 689041 and incorrectly rejected the window.
+ # The drawn bounds remain ceil/floor-conservative; this only removes the rounding artefact.
+ set sxov [expr {min($bx,double($ff_x1)/$ff_dbu)-max($ax,double($ff_x0)/$ff_dbu)}]
+ set syov [expr {min($by,double($ff_y1)/$ff_dbu)-max($ay,double($ff_y0)/$ff_dbu)}]
+ set slide_x [expr {2.0*$sxov+1e-9 >= $ax-$bx}]
+ set slide_y [expr {2.0*$syov+1e-9 >= $ay-$by}]
  set ax [expr {int(ceil($ax*$ff_dbu))}];set ay [expr {int(ceil($ay*$ff_dbu))}]
  set bx [expr {int(floor($bx*$ff_dbu))}];set by [expr {int(floor($by*$ff_dbu))}]
  # FLOW-GEN-1 10-28 (DIE-HEAD-9 bug 5): a window centred within half its size of the core edge (a status pin in the
  # core margin) clips to less than the cell; slide it, same size, inside the core (windows that fit are unchanged,
  # windows farther out still fail closed)
  set ov [expr {min($bx,$ff_x1)-max($ax,$ff_x0)}]
- if {$ov < $w && $bx-$ax >= $w && 2*$ov >= $ax-$bx} {
+ if {$ov < $w && $bx-$ax >= $w && $slide_x} {
   if {$ax < $ff_x0} { set bx [expr {$bx+$ff_x0-$ax}];set ax $ff_x0 } elseif {$bx > $ff_x1} { set ax [expr {$ax-($bx-$ff_x1)}];set bx $ff_x1 }
  }
  set ov [expr {min($by,$ff_y1)-max($ay,$ff_y0)}]
- if {$ov < $h && $by-$ay >= $h && 2*$ov >= $ay-$by} {
+ if {$ov < $h && $by-$ay >= $h && $slide_y} {
   if {$ay < $ff_y0} { set by [expr {$by+$ff_y0-$ay}];set ay $ff_y0 } elseif {$by > $ff_y1} { set ay [expr {$ay-($by-$ff_y1)}];set by $ff_y1 }
  }
  set ax [expr {max($ff_x0,$ax)}];set ay [expr {max($ff_y0,$ay)}]
