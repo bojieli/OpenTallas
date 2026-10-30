@@ -1,0 +1,2 @@
+# DIE-QC-47 (QC die owner, successor of DIE-QC-46 + Codex QC park 10:16)
+- 2026-10-30 10:35 PDT CLAIM [DIE-QC-47] goals (1) QC freeze gate on plan_qc45/46 (2) VMR plan-of-record entry (3) BTAB 8f3e56cc9f60 intake + repair recipe (4) COLLFT forest contract (5) SUCAP/FE3 (6) A0 PG n9. Read master handback + 4 QC park packets. Live QC jobs (kits union/native59/count wave, epyc2 btab_r6, prog_h3) are owned by the kit lanes / Codex leftovers: ADOPTED read-only, none killed or rerun. No own jobs yet.
