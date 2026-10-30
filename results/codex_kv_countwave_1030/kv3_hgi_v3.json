@@ -26,24 +26,6 @@
   "head3_e6": "kv3_head_eighth_e6",
   "head3_e7": "kv3_head_eighth_e5"
  },
- "hard_child_std_counts": {
-  "head2_e0": 228479,
-  "head2_e1": 153650,
-  "head2_e2": 155626,
-  "head2_e3": 153650,
-  "head2_e4": 155882,
-  "head2_e5": 153650,
-  "head2_e6": 155882,
-  "head2_e7": 153650,
-  "head3_e0": 227703,
-  "head3_e1": 153650,
-  "head3_e2": 155882,
-  "head3_e3": 153650,
-  "head3_e4": 155626,
-  "head3_e5": 153650,
-  "head3_e6": 155626,
-  "head3_e7": 153650
- },
  "validated_plan_member_prefixes": {
   "head2_e0": [
    "head2_e0",
@@ -110,11 +92,30 @@
    "u_head3_e7"
   ]
  },
- "parent_physical_residual_std": 420199,
- "residual_status": "exact actual scope attribution",
+ "residual_status": "UNSEALED: prefix-only hard-child attribution is a lower bound; anonymous global ABC logic can escape named prefixes. Parent remainder is an upper estimate, not a demonstrated capacity failure. Full native total remains valid.",
  "native_json_sha256": "84dd71fe01b3d0283c0d99d6aec7c1da38580f32f6e31eda3078da0579b76f1e",
  "native_json_path": "kits3/kv3_hgi_v3/kv3_hgi_v3/run/results/asap7/dp_kv3_hgi_v3/base/1_2_yosys_native_metadata.json",
  "top": "kv3_hgi_v3_part",
  "defines": "actual GEN VERILOG_DEFINES from config.mk",
- "physical_gates": "NOT RUN: SYNTH/count only"
+ "physical_gates": "NOT RUN: SYNTH/count only",
+ "parent_physical_residual_named_upper_estimate_std": 420199,
+ "hard_child_named_std_lower_bounds": {
+  "head2_e0": 228479,
+  "head2_e1": 153650,
+  "head2_e2": 155626,
+  "head2_e3": 153650,
+  "head2_e4": 155882,
+  "head2_e5": 153650,
+  "head2_e6": 155882,
+  "head2_e7": 153650,
+  "head3_e0": 227703,
+  "head3_e1": 153650,
+  "head3_e2": 155882,
+  "head3_e3": 153650,
+  "head3_e4": 155626,
+  "head3_e5": 153650,
+  "head3_e6": 155626,
+  "head3_e7": 153650
+ },
+ "parent_physical_residual_std": null
 }
