@@ -3,8 +3,8 @@ import copy,json,sys,tempfile
 from pathlib import Path
 from layer_prog.head_root_boot import PINS,read_witness,pipeline_guard
 base=Path('/srv/opentallas-scratch2/claude/codex-head-event-1030')
-selection=dict(schema='opentallas.head.root88_source_selection.v1',metadata_root=str(base/'meta_legal88'),emitted_root=str(base/'src25legal88_native'))
-b=dict(head_root88_witness=selection,selected_HEAD_source_plan_sha256=PINS['metadata/source_plan.json'])
+selection=dict(schema='opentallas.head.root88_source_selection.v1',bundle_root=str(base/'head_current_source_legal88'))
+b=dict(head_root88_witness=selection,selected_HEAD_source_plan_sha256=PINS['source_plan.json'])
 w,g=pipeline_guard(b,'.')
 assert w['root_settle_cycles']==88 and w['delta_boot_cycles']==14 and w['added_steady_cycles']==0
 assert len(g)==1 and g[0]['cause']=='HEAD_physical_START_HOST_PMA_authority_missing'
@@ -18,13 +18,13 @@ for date in [None,110,382,5861]:
 controls['missing_or_timeout_derived_START']='all blocked; no physical event inferred'
 with tempfile.TemporaryDirectory(prefix='root88_guard_')as d:
  p=Path(d)
- for key in PINS:
-  if key.startswith('metadata/'):
-   name=key.split('/',1)[1];(p/name).write_bytes((base/'meta_legal88'/name).read_bytes())
+ bundle=base/'head_current_source_legal88'
+ for key in list(PINS)+['current_source_manifest.json']:
+  (p/key).write_bytes((bundle/key).read_bytes())
  for stale in [64,74]:
-  r=json.loads((base/'meta_legal88/source_sidecar.json').read_text());r['count_aligned']['root_settle_cycles']=stale
+  r=json.loads((base/'head_current_source_legal88/source_sidecar.json').read_text());r['count_aligned']['root_settle_cycles']=stale
   (p/'source_sidecar.json').write_text(json.dumps(r))
-  bad=copy.deepcopy(b);bad['head_root88_witness']['metadata_root']=str(p)
+  bad=copy.deepcopy(b);bad['head_root88_witness']['bundle_root']=str(p)
   assert pipeline_guard(bad,'.')[0]is None;controls['stale_settle_'+str(stale)]='rejected actual source identity mismatch'
 result=dict(verdict='PASS_CURRENT_SOURCE_WITNESS_GUARD',actual_witness=w,production_gaps=g,controls_caught=controls,
     selected_source=selection,physical_START_qualified=False,full_token=False)
