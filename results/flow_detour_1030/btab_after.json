@@ -1,0 +1,40 @@
+{
+ "channel_v_max": 0.735,
+ "channel_v_at": [
+  265.0,
+  275.0,
+  92.5
+ ],
+ "blocked_v": 0,
+ "detour_v": 0,
+ "detour_v_extension_max_um": 0.0,
+ "detour_v_extent_at": null,
+ "col_v_max": 0.959,
+ "col_v_at": [
+  270.0,
+  87.5
+ ],
+ "tracks_v_per_um": 36.46,
+ "channel_h_max": 0.632,
+ "channel_h_at": [
+  0.0,
+  10.0,
+  17.5
+ ],
+ "blocked_h": 0,
+ "detour_h": 11514,
+ "detour_h_extension_max_um": 70.0,
+ "detour_h_extent_at": {
+  "cut_um": 162.5,
+  "original_um": [
+   18.0,
+   20.0
+  ],
+  "allocated_um": [
+   0.0,
+   90.0
+  ]
+ },
+ "tracks_h_per_um": 36.46,
+ "demand_layers": "M2-M5"
+}
