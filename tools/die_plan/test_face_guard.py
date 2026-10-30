@@ -777,6 +777,7 @@ def test_explicit_typed_relay_start_and_hardware_mutants():
         (text, RS),
         (_relay_start_net(typ="unrelated_relay"), spec),
         (_relay_start_net(gate="XOR2x2"), spec),
+        (text.replace(".B(rq)", ".B(q)"), spec),
         (_relay_start_net(extra=f"DFFHQNx1{_X} sf2 (.CLK(clk), .D(st), .QN(q2));"), spec),
         (text.replace(".B(rq)", ".B(efall)"), dict(spec)),
         (text.replace("sf (.CLK(clk)", "sf (.CLK(st)"), spec),
