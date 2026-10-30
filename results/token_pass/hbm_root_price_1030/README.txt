@@ -48,3 +48,17 @@ runs on actual intel2 tolerant-swine (scratch2), not coordinator. An initial
 failures (missing top-level tool modules, then missing SU-chain records) were
 diagnosed/restored from the exact pinned checkout; no existing job killed or
 in-place failed result overwritten. Successful model job3823499.
+
+Measured tool results (conditional reference model):
+Clean 576702.417847; record 610734.931155 cycles / 1799.790306 tok/s.
+COLL_ne_to_nw_data5_once: 1791.678780 tok/s, +2765.0cycles, lossvsrecord0.450693%, loss vs1812.4 1.143303%.
+COLL_nw_to_ne_data7_once: 1788.454606 tok/s, +3871.0cycles, lossvsrecord0.629834%, loss vs1812.4 1.321198%.
+COLL_pair_data12_once: 1780.444710 tok/s, +6636.0cycles, lossvsrecord1.074881%, loss vs1812.4 1.763148%.
+COLL_data7_per_cross_phase: 1787.640199 tok/s, +4151.0cycles, lossvsrecord0.675085%, loss vs1812.4 1.366133%.
+COLL_pair_data12_per_cross_phase: 1779.061507 tok/s, +7116.0cycles, lossvsrecord1.151734%, loss vs1812.4 1.839467%.
+COLL_pair_control10_once: 1783.640043 tok/s, +5530.0cycles, lossvsrecord0.897341%, loss vs1812.4 1.586844%.
+COLL_AG_only_pair12: 1782.454179 tok/s, +5940.0cycles, lossvsrecord0.963230%, loss vs1812.4 1.652274%.
+wide_all_VM_units_pair12_once: 1730.168260 tok/s, +24576.0cycles, lossvsrecord3.868342%, loss vs1812.4 4.537174%.
+wide_nonCOLL_VM_pair12_plus_COLL_pair12_perphase: 1728.862043 tok/s, +25056.0cycles, lossvsrecord3.940918%, loss vs1812.4 4.609245%.
+
+Wide assumed-one-encounter row1728.862 is4.609% below1812.4, only7.082tok/s above5%floor1721.78 BEFORE unpriced spill/drains. Separate unintegrated arithmetic IF all6382848bytes occur once serially: +2015.636cycles at die BW =>1723.398tok/s; at single-stack BW +8062.545 =>1707.213. This is not authority for repeat counts, overlap, mapping, fences or a whole-token rate.

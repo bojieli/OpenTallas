@@ -1,0 +1,138 @@
+{
+  "scope": "PLAN_ONLY_CONDITIONAL_S2_BOUNDS_NOT_MEASURED_RATE",
+  "base_cycles": 576702.4178468838,
+  "current_record_cycles": 610734.931155155,
+  "current_record_tok_s": 1799.790305652116,
+  "rate_excludes_native_VM_spill_bytes": true,
+  "rate_excludes_native_VM_serialization_drains": true,
+  "records_per_unit": {
+    "FUSED": 201,
+    "SM": 1095,
+    "COLL": 642,
+    "DMA": 420,
+    "SU": 1356,
+    "CTL": 197,
+    "ATT": 80,
+    "HC": 80,
+    "IDX": 48,
+    "ARGMAX": 1
+  },
+  "COLL_ops": {
+    "ALL_GATHER": 584,
+    "GROUP_REDUCE_MCAST": 40,
+    "TOPK_MERGE": 9,
+    "ROW_GATHER": 8,
+    "ARGMAX_MERGE": 1
+  },
+  "COLL_families": {
+    "all_gather": 504,
+    "hc_mixes": 80,
+    "all_reduce": 40,
+    "indexer": 8,
+    "kv_gather": 8,
+    "candidates": 1,
+    "argmax": 1
+  },
+  "rows": [
+    {
+      "case": "COLL_ne_to_nw_data5_once",
+      "cycles": 613499.9311551548,
+      "tok_s": 1791.678780381432,
+      "delta_cycles": 2764.9999999998836,
+      "loss_vs_record_pct": 0.4506927971114294,
+      "loss_vs_1812_4_pct": 1.1433027818675834
+    },
+    {
+      "case": "COLL_nw_to_ne_data7_once",
+      "cycles": 614605.9311551548,
+      "tok_s": 1788.4546059459894,
+      "delta_cycles": 3870.9999999998836,
+      "loss_vs_record_pct": 0.629834468522672,
+      "loss_vs_1812_4_pct": 1.3211980828741199
+    },
+    {
+      "case": "COLL_pair_data12_once",
+      "cycles": 617370.9311551548,
+      "tok_s": 1780.4447098917842,
+      "delta_cycles": 6635.999999999884,
+      "loss_vs_record_pct": 1.0748805402261752,
+      "loss_vs_1812_4_pct": 1.7631477658472727
+    },
+    {
+      "case": "COLL_data7_per_cross_phase",
+      "cycles": 614885.9311551548,
+      "tok_s": 1787.6401991360563,
+      "delta_cycles": 4150.999999999884,
+      "loss_vs_record_pct": 0.6750845627906288,
+      "loss_vs_1812_4_pct": 1.3661333515749163
+    },
+    {
+      "case": "COLL_pair_data12_per_cross_phase",
+      "cycles": 617850.9311551548,
+      "tok_s": 1779.0615065693416,
+      "delta_cycles": 7115.999999999884,
+      "loss_vs_record_pct": 1.151734122451764,
+      "loss_vs_1812_4_pct": 1.8394666426097106
+    },
+    {
+      "case": "COLL_pair_control10_once",
+      "cycles": 616264.9311551548,
+      "tok_s": 1783.6400431804223,
+      "delta_cycles": 5529.999999999884,
+      "loss_vs_record_pct": 0.8973413414315456,
+      "loss_vs_1812_4_pct": 1.5868437883236552
+    },
+    {
+      "case": "COLL_AG_only_pair12",
+      "cycles": 616674.9311551548,
+      "tok_s": 1782.4541794769407,
+      "delta_cycles": 5939.999999999884,
+      "loss_vs_record_pct": 0.9632303341523984,
+      "loss_vs_1812_4_pct": 1.652274361237005
+    },
+    {
+      "case": "wide_all_VM_units_pair12_once",
+      "cycles": 635310.9311551547,
+      "tok_s": 1730.1682601581376,
+      "delta_cycles": 24575.999999999767,
+      "loss_vs_record_pct": 3.86834206603599,
+      "loss_vs_1812_4_pct": 4.53717390431817
+    },
+    {
+      "case": "wide_nonCOLL_VM_pair12_plus_COLL_pair12_perphase",
+      "cycles": 635790.9311551547,
+      "tok_s": 1728.8620434064028,
+      "delta_cycles": 25055.999999999767,
+      "loss_vs_record_pct": 3.940918118236769,
+      "loss_vs_1812_4_pct": 4.609245011785323
+    }
+  ],
+  "source_commit": "e49e61e1d",
+  "native_source_map_scope": "exact unchanged b30p source bit identities; new L700/L701 packing not yet bound",
+  "candidate_data_added_cycles": {
+    "NE_to_NW": 5,
+    "NW_to_NE": 7,
+    "serial_pair": 12
+  },
+  "candidate_control_added_cycles": {
+    "NE_to_NW": 4,
+    "NW_to_NE": 6,
+    "serial_pair": 10
+  },
+  "native_boundary_bytes_excluded": 6250560,
+  "native_expert_input_LOAD_bytes_excluded": 132288,
+  "scratch_backend_authority": "UNRESERVED/UNQUALIFIED, no whole-programme executable",
+  "operations": "ot-run intel2 actual schedulerlocalhost unit3823499 exit0; 4GB1thread",
+  "assertion_clean_baseline": "PASS abs(base-576702.4178)<0.1",
+  "uncomposed_spill_arithmetic_sensitivity_only": {
+    "premise": "IF all6382848bytes occur once serially at stated bandwidth, excluding drains and all unlowered regions",
+    "bytes": 6382848,
+    "die_B_per_cycle": 3166.6666666666665,
+    "die_added_cycles": 2015.6362105263158,
+    "one_stack_added_cycles": 8062.544842105263,
+    "wide_row_die_BW_tok_s": 1723.3983854323442,
+    "wide_row_one_stack_BW_tok_s": 1707.212664672852,
+    "model_integrated": false,
+    "whole_token": false
+  }
+}
