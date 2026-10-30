@@ -758,12 +758,12 @@ def check_hops(P, R, geo):
     worst = []
     for lid, (pts, regs, xs) in geo.items():
         reach = min(float(P.lanes[lid].get("reach_um", P.reach)), P.reach)
-        hops = [abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])]
+        hops = lane_pin_hops(P, lid, regs)
         h = max(hops) if hops else 0.0
         worst.append((h / reach, lid, h, reach))
         if h > reach + EPS:
             i = hops.index(h)
-            R.err("hops", f"lane {lid}: hop {i} is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
+            R.err("hops", f"lane {lid}: hop {i} via mandatory slot pins is {h:.0f} um > reach {reach:.0f} (add stations to the crossed "
                   "partition's slot or shorten it)", lane=lid)
     # R3 (ruling 9.4): ft stations at most budgets.ft_station_max_um (<= 405) apart inside every crossed partition
     smax = station_max(P, R)
@@ -781,11 +781,11 @@ def check_hops(P, R, geo):
     worst.sort(reverse=True)
     result = []
     for _, lid, h, reach in worst[:10]:
-        via = lane_pin_hops(P, lid, geo[lid][1])
-        vmax = max(via, default=0.0)
+        regs = geo[lid][1]
+        direct = max((abs(p[0] - q[0]) + abs(p[1] - q[1]) for p, q in zip(regs, regs[1:])), default=0.0)
         result.append(dict(lane=lid, hop_um=round(h, 1), reach_um=reach,
-                           via_pin_hop_um=round(vmax, 1), via_pin_over_reach=vmax > reach + EPS,
-                           via_pin_role="DIAGNOSTIC: mandatory seam pin lower bound"))
+                           direct_ff_hop_um=round(direct, 1),
+                           via_pin_role="mandatory seam pin lower bound"))
     return result
 
 
