@@ -1,0 +1,31 @@
+{
+ "N": 16,
+ "M": 16,
+ "LWB": 15,
+ "NS": 8,
+ "NLW": 0,
+ "SRAM_count": 16,
+ "stdcell_FF_bits": 497,
+ "primitive_counts": {
+  "$dffe": 32,
+  "$adffe": 1,
+  "$dff": 35,
+  "$reduce_bool": 1,
+  "$reduce_or": 1280,
+  "$add": 56,
+  "$memrd_v2": 2,
+  "$meminit": 2,
+  "$eq": 1496,
+  "$logic_not": 111,
+  "$logic_and": 31,
+  "$logic_or": 15,
+  "$ne": 16,
+  "$mux": 3447,
+  "$pmux": 3569,
+  "$shiftx": 80,
+  "$shl": 16,
+  "$scopeinfo": 21,
+  "ot_sram_1r1w_256x256_m2_r2c2": 16
+ },
+ "scope": "actual operand port constants/unread outputs folded; abstract SRAMs; operand0 source instance"
+}

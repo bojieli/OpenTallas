@@ -1,0 +1,148 @@
+{
+ "source_sha256": "e494c109a829a081eae4d4f96a0e1e1ee68f08e87f9ac977f3460250ef77db85",
+ "module_sha256": "9769996722bce53fdf8d4dbf3ce076901b48db05da63ad5db9445442c322b5a1",
+ "selector_and_conflict_logic": "BYTE_IDENTICAL",
+ "N": 16,
+ "M": 16,
+ "LWB": 15,
+ "bank_RB": 11,
+ "NS": 8,
+ "chunk_banks": 4,
+ "chunks_per_operand": 4,
+ "operands": 4,
+ "SRAM_per_chunk": 4,
+ "SRAM_per_four_operand_chunk": 16,
+ "SRAM_total": 80,
+ "SRAM_master": "ot_sram_1r1w_256x256_m2_r2c2",
+ "chunk_select_FF": 12,
+ "chunk_input_bits": 224,
+ "chunk_output_bits": 128,
+ "cycles_added": 0,
+ "candidate_banks": {
+  "0": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15
+  ],
+  "1": [
+   0,
+   1,
+   8
+  ],
+  "2": [
+   1,
+   2,
+   3,
+   9
+  ],
+  "3": [
+   1,
+   2,
+   3,
+   9
+  ],
+  "4": [
+   2,
+   4,
+   5,
+   10
+  ],
+  "5": [
+   2,
+   4,
+   5,
+   10
+  ],
+  "6": [
+   3,
+   6,
+   7,
+   11
+  ],
+  "7": [
+   3,
+   6,
+   7,
+   11
+  ],
+  "8": [
+   4,
+   8,
+   9,
+   12
+  ],
+  "9": [
+   4,
+   8,
+   9,
+   12
+  ],
+  "10": [
+   5,
+   10,
+   11,
+   13
+  ],
+  "11": [
+   5,
+   10,
+   11,
+   13
+  ],
+  "12": [
+   6,
+   12,
+   13,
+   14
+  ],
+  "13": [
+   6,
+   12,
+   13,
+   14
+  ],
+  "14": [
+   7,
+   14,
+   15
+  ],
+  "15": [
+   7,
+   14,
+   15
+  ]
+ },
+ "independent_lane_groups": false,
+ "SRAM_operand_total": 64,
+ "SRAM_output_total": 16,
+ "SRAM_per_five_group_chunk": 20,
+ "selected_source_parameters": {
+  "N": 16,
+  "M": 16,
+  "LWB": 15,
+  "NS": 8,
+  "NLW": 0
+ },
+ "output_parameters": {
+  "N": 16,
+  "M": 16,
+  "LWB": 15,
+  "NS": 2,
+  "NLW": 16
+ },
+ "macro_source_sha256": "312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d",
+ "macro_bb_ports": "exact source ANSI module header"
+}

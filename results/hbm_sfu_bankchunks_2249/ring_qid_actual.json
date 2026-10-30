@@ -1,0 +1,126 @@
+{
+ "source": "/srv/opentallas-scratch2/claude/die-hbm-29/b29d/out/asbuilt.json",
+ "source_sha256": "ce2560d35809481e138b82e47c131baec1f425c748fc8704a082af1619589b8d",
+ "rows": [
+  {
+   "side": "NE",
+   "value": 3,
+   "lsb_bits": [
+    "1",
+    "1"
+   ],
+   "terminals": [
+    {
+     "member": "hb_coll_NE.u_body.u_ring",
+     "port": "qid",
+     "bit": 0,
+     "value": "1"
+    },
+    {
+     "member": "hb_coll_NE.u_body.u_ring",
+     "port": "qid",
+     "bit": 1,
+     "value": "1"
+    }
+   ],
+   "trace": [
+    {
+     "path": "hb_coll_NE",
+     "port": "qid",
+     "local_bits": [
+      "1",
+      "1"
+     ],
+     "resolved": [
+      "1",
+      "1"
+     ]
+    },
+    {
+     "path": "hb_coll_NE.u_body",
+     "port": "qid",
+     "local_bits": [
+      3,
+      4
+     ],
+     "resolved": [
+      "1",
+      "1"
+     ]
+    },
+    {
+     "path": "hb_coll_NE.u_body.u_ring",
+     "port": "qid",
+     "local_bits": [
+      3,
+      4
+     ],
+     "resolved": [
+      "1",
+      "1"
+     ]
+    }
+   ]
+  },
+  {
+   "side": "NW",
+   "value": 2,
+   "lsb_bits": [
+    "0",
+    "1"
+   ],
+   "terminals": [
+    {
+     "member": "hb_coll_NW.u_body.u_ring",
+     "port": "qid",
+     "bit": 0,
+     "value": "0"
+    },
+    {
+     "member": "hb_coll_NW.u_body.u_ring",
+     "port": "qid",
+     "bit": 1,
+     "value": "1"
+    }
+   ],
+   "trace": [
+    {
+     "path": "hb_coll_NW",
+     "port": "qid",
+     "local_bits": [
+      "0",
+      "1"
+     ],
+     "resolved": [
+      "0",
+      "1"
+     ]
+    },
+    {
+     "path": "hb_coll_NW.u_body",
+     "port": "qid",
+     "local_bits": [
+      3,
+      4
+     ],
+     "resolved": [
+      "0",
+      "1"
+     ]
+    },
+    {
+     "path": "hb_coll_NW.u_body.u_ring",
+     "port": "qid",
+     "local_bits": [
+      3,
+      4
+     ],
+     "resolved": [
+      "0",
+      "1"
+     ]
+    }
+   ]
+  }
+ ]
+}

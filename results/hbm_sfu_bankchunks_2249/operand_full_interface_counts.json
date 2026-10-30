@@ -1,0 +1,33 @@
+{
+ "top": "ot_hgi_su_lgroup2_bankchunks",
+ "N": 16,
+ "M": 16,
+ "LWB": 15,
+ "NS": 8,
+ "NLW": 0,
+ "SRAM_count": 16,
+ "stdcell_FF_bits": 538,
+ "primitive_counts": {
+  "$add": 168,
+  "$sdff": 1,
+  "$dffe": 40,
+  "$adffe": 1,
+  "$dff": 35,
+  "$memrd_v2": 4,
+  "$meminit": 4,
+  "$reduce_bool": 1,
+  "$reduce_or": 2322,
+  "$eq": 3431,
+  "$logic_and": 96,
+  "$logic_not": 240,
+  "$logic_or": 17,
+  "$ne": 80,
+  "$adff": 1,
+  "$pmux": 5776,
+  "$mux": 6359,
+  "$shiftx": 145,
+  "$shl": 16,
+  "ot_sram_1r1w_256x256_m2_r2c2": 16
+ },
+ "scope": "one full operand group, abstract SRAMs; constant cbank memories not yet mapped"
+}
