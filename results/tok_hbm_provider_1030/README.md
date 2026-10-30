@@ -78,3 +78,57 @@ Peer review scope: these actual caller vectors use normative U32 5→5 only. Des
 Input programme scope is explicitly N=6 MTP VERIFY with data-dependent ACCEPT3913/TOKX3914 output count (TOKX A.n7). These bounded copies repeat three ownership epochs; they execute neither three full verify steps nor three AR tokens. Fixture generators and receipts now state that scope. Accepted token rates require actual native ACCEPT/TOKX observations plus draft/seed costs; no fixed acceptance gamma is assumed.
 
 Current source is pinned by source_dependencies.json to canonical RTL tip dd491a076 (ordered73430d378→7af555e3e→dd491a076), with separate format-control result commit5a703c0a9. The tested counter in5a is byte-identical to canonicaldd491. Both launchers require those exact provider/native dependencies before compile; old counter hashes remain historical and are rejected by the current guard. The actual legalU32 CW308 fixture rerun on immutable dd491 at exact833ps PASS:42cmds/2688packets/21504words, latency8, same first/lastdates and both controls. cp_dd_* logs preserve this corrected-source proof separately from earlier cp_* history. No broad format sweep, whole-programme rebuild or physical run was added.
+
+Native32bank VM join: run_vm_provider_fixture.py uses the default-enabled
+bankdone audit and actual32 hfd_vms_bank_native_q0_faces/core/body instances,
+96 original1024x256 SRAM replicas and the real CE/status pipe. All42 nativeCW308
+commands,2688 packets/21504 U32words,2688 nativeDQdone and42 guardedLOADdone PASS;
+all2688 sectors read back exactly through actual rq0/rr0 with rslot0. Writes
+reserve DMA wslot6. All other clients are disabled; memory is never peeked.
+Geography is explicit SWsid0(flat0..7),SEsid1(8..15),NWsid2(16..23),NEsid3(24..31),
+with response-bank identity checked on every readback. This is not NW-first qid
+mapping and not a new physical geographic-routing adoption.
+
+Measured timing at833ps: counterstep→producerpacket8cycles; nextedge externalbank
+capture1; capture→realDQdone4; thus step→ACKobservation13. Native rq0capture→rr0
+latency7. ACKtime is not a LOADdone bound: fixeddrain additionally requires empty
+pending, no sameedgeACK, clean stickyfault/UE and quietcompletion. This fixture
+uses margin20 and100edge commandstarts for64packet runs; counter-onlyn+1 is only
+a floor. Production R8/FT/relay/pathbounds are not measured by this fixture.
+
+Wrongslot faults withoutACK. Wrongheaderbank produces8 genuine invalid-write
+ACKs but stickyfault0xff andzeroLOADdone. DelayedACKfeedback reaches the fixed
+deadline with64 actual writes acknowledged, statusclean andzeroLOADdone; it
+fails rather than waiting. dq_done identifies a bank and DMAport/slot6, not an
+arbitrary producer. Production must statically exclude other DQ/raw producers
+and drain priorDMA beforestart or implement actualtag/date correlation. The
+fixture proves that isolated ownership; no runtime arbitration is added.
+
+backend_source_dependencies.json pins current canonical9a5727aa2 and records
+actual tested9d366e3b4. The difference is comments only; noncommentRTLtokens of
+all7 sourcefiles are identical. Packet-only legacy fixtures remain pinned to
+their dd491 snapshot and do not silently turn off the mandatory new audit.
+
+The final native-bank log directly records every guarded LOADdone: firstedge369, last6893, each21edges after its laststep under the conservative margin20 calendar. It also records every native command issue/drain value. This is separate from the13edge step→ACK observation; no minimum LOADdone bound is claimed. The actual64packet command start interval is100edges, including issue lead, drain and nextcommand spacing. Counter-only n+1 remains a floor and is not this achieved CP cadence.
+
+Launcher profiles after canonical9a intake: run_provider_fixture uses the four
+current canonical packet modules (byte-identical to dd491). run_cp_provider_fixture
+is now explicitly a historical dd491 packet-boundary replay: it exports the
+nine pinned RTL/shared dependencies from this repository’s Git objects into its
+owned output and verifies their hashes, with no scratch or network dependency.
+The original source/interface/proof is preserved; it does not silently disable
+the current audit. The current completion launcher is run_vm_provider_fixture,
+which uses canonical9a/defaultAUDIT1 and the actual32nativebanks. An explicit
+--provider-dir override on the historical CP launcher still requires the exact
+dd491 source; current9a must use the VM launcher. Exporter/hash-guard smoke PASS;
+this changes source resolution only, not the already-proved dd491 hardware wave.
+
+Actual native PHY service fill join (`phy_receipt.json`) now passes at833ps. Four selected KRL1 splitstrap groups and16 actual h9b controllers (all six register flags1) feed realNPC2 SRAMs; actual NPC16 refreshcfg receives bootrow0x800 at target127 and holds controller release64edges. Only externalDRAM pins supply opaque payload, after legal native row/columncommands and16edge return delay. No forced controller ready/credits or direct deliveryfills. Host preparation observes genuine owned block_ready before native cfg/desc/launch. Fill intervals1643/1228/1228edges are measured preparation, not an adopted production overlap calendar. All3072 DRAM sectors/fills and2688 LOAD packets/nativeDQdone/actualSRAMreadbacks checked;42 status-qualifiedLOADdone. Wrong-bank control catches fault despite8 real nativeACKs. Run `run_phy_provider_fixture.py --out OWN_SCRATCH` through ot-run against canonical9a source and the pinned service dependencies. Logical source edge timing is not physical DRAM ns signoff.
+
+The current95313 window runs cover12528 inserted backingLOADs only. Exact a122 operand inventory (`operand_space_inventory.json`) has421 rawHBM0→VM1 LOADs/2121ROWXscalarrows; zeroVM1→VM1. The resident programme has13257HBM→VM LOAD records, including729 original bodyLOADs outside that inserted caller. All6 providerformats capability does not close those original dynamic/physical address obligations.
+
+Original body static LOAD lowering is now explicit in `body_static_load_plan.py/json`:537 records (533FP32 and4U32),1545 normative ROWX scalarrows,1,198,848VMwords become3715 resolved227 runs. Every source body record/row remains an ordered barrier; no cross-body reuse/reorder assumed. All sources are linearphysicalstack0, ordinaryVM destinations within262144words. Per-run source/destination/format/order/halfwindow conservation passes and changedVMdestination control catches3715. This is a source-only caller plan: epochs, service dates and stack0 provider binding remain open. The192 indexedEngram records (576scalarrows) remain listed with exact source anchors, legacylayoutcode/base andIoperand; no runtime index or publishedphysicalrebase invented. Run with explicit `--manifest resident/stream.json --image resident/stream.hgi1r` using the checked-in versionedISA loader.
+
+Shared direction integration (`shared_receipt.json`) passes canonical8c5 commanded source at833ps: ONE actualCW308 collar,15entrypage reloaded3times withoutreset,42LOADs and3STOREs. The unchanged NWBACKRS source reads64words/phase fromactualnative rq1/rr1 banks;72 explicit fixture return registers compose actualface8-edge launch/return into selectedRR_RT80. ActualWBkport_q/WBcopy4/KRL1VMKS/h9b emit24physicalDRAMwrites, allmasks/datachecked. No forcedWBready/WA; STOREcompletion is actualpostedwrite completion throughreceiver. The LOADpath retains2688nativeDQdone/readbacks and42status-qualifiedLOADdone. Wrong-bank control faults despite8nativeACKs. Sharedsourceconsumer/dispatch source pin8c5; prior9a packet/VMsource history retained. CurrentVM/PHYlaunchers recognize the8c5 pureCPwrapper+commandconsumer profile and include its newdependency; older9a profile remains explicit when thathelper is absent.
+
+The STOREfixture intentionally uses the published BACKlocal namespace: localword8192 plusstk2 requests nativeNW ordinaryglobalword139264. Its HBMdestination is existingWBquadrantordinal0x100000, foldedbyquad0, notthe canonicalflatLOAD scratch namespace. This is selectedNW localmechanismproof; NEBACKstk2/VMsid3mismatch, productionnamespaceadapters/fullstack/calendar remain open. NativeVMFCtarget58 hostcalendar connection is next; currentpreparation usesexistingVMKScommandpins andobservesrealownedblock_ready beforelaunch.
