@@ -1,0 +1,13 @@
+{
+  "previous_ap": "3c63b6d87715 DONE-STRUCTURAL before physical runner",
+  "failure": "exact canonical pins not reachable without external --plan-dir",
+  "correction": "bundle original source pins_file bytes as plan_pins.json; freeze hashes unchanged",
+  "source_pins_file": "inputs/core_pins/dsdv_gunit_l0.json",
+  "bundled_sha256": "6290ec4f0ebb237781645fae51c4a893f0c194abf447c0c618a0a91276633974",
+  "recorded_pins_sha256": "6290ec4f0ebb237781645fae51c4a893f0c194abf447c0c618a0a91276633974",
+  "hashes_match": true,
+  "default_preflight": "PASS0 without --plan-dir",
+  "rtl_clock_pin_positions_changes": 0,
+  "current_GRT_ODB_unchanged": true,
+  "canonical_G2": "prior exact currentG2 PASS remains binding; currentrunner re-enforces canonical4092guard beforeDRT"
+}
