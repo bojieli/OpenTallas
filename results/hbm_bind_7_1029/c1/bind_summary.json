@@ -1,0 +1,28 @@
+{
+ "schema": "hbm.bind7.summary.v1",
+ "plan": "/srv/opentallas-scratch2/claude/hbm-bind-7-1029/plan/c_q0/die_plan.json sha256 2068b326e874",
+ "manifest": "c1/asbuilt.json",
+ "compose": "/srv/opentallas-scratch2/claude/hbm-bind-7-1029/c1/compose.json sha256 6fbd87215718 (83 MB, not committed)",
+ "map": "/srv/opentallas-scratch2/claude/hbm-bind-7-1029/c1/map.json sha256 d0f839b00eef",
+ "netlist": "/srv/opentallas-scratch2/claude/hbm-bind-7-1029/e1/spliced.json sha256 ce2560d35809",
+ "baseline_d4": {
+  "errors": 104,
+  "emit": [
+   "EMIT wavefront core reset q_hub_ne/u_hb_coll_Q_reduce__q0.rst_n: expected one bound leaf, found 0 (partition NE_hub root ; e.g. )"
+  ]
+ },
+ "c1": {
+  "errors": 104,
+  "unplanned": 103,
+  "unplanned_set_equal_to_d4": true,
+  "emit": [
+   "EMIT wavefront core reset q_hub_ne/u_hb_quant_Q__u_dec__q0.rst_n: expected one bound leaf, found 0 (partition NE_hub root ; e.g. )"
+  ],
+  "cells": {
+   "leaf": 1457,
+   "source": 1,
+   "glue": 64970
+  },
+  "warnings": 0
+ }
+}

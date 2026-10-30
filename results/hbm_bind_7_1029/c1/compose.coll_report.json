@@ -1,0 +1,2725 @@
+{
+ "schema": "hbm.bind7.coll_parent_cutmap.v1",
+ "keep": "q0",
+ "cores": [
+  {
+   "inst": "hb_coll_NE.__cut_reduce",
+   "plan_local": "u_hb_coll_Q_reduce__q0",
+   "partition": "NE_hub",
+   "members": 1,
+   "leaves": [
+    "u_body.u_reduce : ot_hgi_coll_reduce_static_pr"
+   ],
+   "glue": {},
+   "boundary_nets": 1143,
+   "pins": 1143,
+   "ports": {
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_add_issue": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_add_read": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_clear": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_fault": [
+     "output",
+     0,
+     1
+    ],
+    "u_reduce_in_flit": [
+     "input",
+     0,
+     545
+    ],
+    "u_reduce_in_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_load_tag": [
+     "input",
+     0,
+     4
+    ],
+    "u_reduce_load_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_out_flit": [
+     "output",
+     0,
+     545
+    ],
+    "u_reduce_out_v": [
+     "output",
+     0,
+     1
+    ],
+    "u_reduce_pub_bf16": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_issue": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_meta": [
+     "input",
+     0,
+     24
+    ],
+    "u_reduce_pub_read": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_release": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_tag_a": [
+     "input",
+     0,
+     4
+    ],
+    "u_reduce_pub_tag_b": [
+     "input",
+     0,
+     4
+    ],
+    "u_reduce_read_tag": [
+     "input",
+     0,
+     4
+    ]
+   },
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce"
+  },
+  {
+   "inst": "hb_coll_NE.__cut_ring_ag",
+   "plan_local": "u_hb_coll_Q_ring_ag__q0",
+   "partition": "NE_hub",
+   "members": 1,
+   "leaves": [
+    "u_body.u_ring : ot_hgi_coll_ring_ag"
+   ],
+   "glue": {},
+   "boundary_nets": 2226,
+   "pins": 2228,
+   "ports": {
+    "ag_d": [
+     "output",
+     0,
+     512
+    ],
+    "ag_src": [
+     "output",
+     0,
+     4
+    ],
+    "ag_tag": [
+     "output",
+     0,
+     6
+    ],
+    "ag_v": [
+     "output",
+     0,
+     2
+    ],
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "pr_ccw_i": [
+     "input",
+     0,
+     280
+    ],
+    "pr_ccw_o": [
+     "output",
+     0,
+     280
+    ],
+    "pr_cw_i": [
+     "input",
+     0,
+     280
+    ],
+    "pr_cw_o": [
+     "output",
+     0,
+     280
+    ],
+    "ra_add_rhs_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_add_src": [
+     "input",
+     0,
+     2
+    ],
+    "ra_add_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_add_v": [
+     "input",
+     0,
+     1
+    ],
+    "ra_lp_data": [
+     "input",
+     0,
+     256
+    ],
+    "ra_lp_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_lp_we": [
+     "input",
+     0,
+     1
+    ],
+    "ra_rr_local": [
+     "input",
+     0,
+     1
+    ],
+    "ra_rr_local_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_rx_kind": [
+     "input",
+     0,
+     4
+    ],
+    "ra_rx_slot": [
+     "input",
+     0,
+     2
+    ],
+    "ra_rx_src": [
+     "input",
+     0,
+     4
+    ],
+    "ra_rx_tag": [
+     "input",
+     0,
+     6
+    ],
+    "ra_state_add_rhs_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_add_src": [
+     "input",
+     0,
+     2
+    ],
+    "ra_state_add_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_state_read_add": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_read_rr": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_read_tx": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_rr_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_state_tx_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_tx_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_tx_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_tx_dst": [
+     "input",
+     0,
+     2
+    ],
+    "ra_tx_forward": [
+     "input",
+     0,
+     2
+    ],
+    "ra_tx_gather": [
+     "input",
+     0,
+     1
+    ],
+    "ra_tx_inject": [
+     "input",
+     0,
+     2
+    ],
+    "ra_tx_result": [
+     "input",
+     0,
+     1
+    ],
+    "ra_tx_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_tx_ttl": [
+     "input",
+     0,
+     4
+    ],
+    "rr_d": [
+     "output",
+     0,
+     256
+    ],
+    "rr_tag": [
+     "output",
+     0,
+     3
+    ],
+    "rr_v": [
+     "output",
+     0,
+     1
+    ],
+    "rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "strap_qid": [
+     "input",
+     0,
+     2
+    ],
+    "u_ring_fault": [
+     "output",
+     0,
+     1
+    ]
+   },
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
+  },
+  {
+   "inst": "hb_coll_NE.__cut_vm",
+   "plan_local": "u_hb_coll_Q_vm__q0",
+   "partition": "NE_hub",
+   "members": 2,
+   "leaves": [
+    "u_body.u_vmasm : ot_hgi_coll_vmasm_sliced_v7",
+    "u_body.u_writer : ot_hgi_coll_static_vmwrite_roots_v6_physical"
+   ],
+   "glue": {},
+   "boundary_nets": 8629,
+   "pins": 8629,
+   "ports": {
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "vm_kq": [
+     "output",
+     0,
+     2248
+    ],
+    "vm_rr__b0": [
+     "input",
+     0,
+     256
+    ],
+    "vm_rr__b1028": [
+     "input",
+     1028,
+     256
+    ],
+    "vm_rr__b1285": [
+     "input",
+     1285,
+     256
+    ],
+    "vm_rr__b1542": [
+     "input",
+     1542,
+     256
+    ],
+    "vm_rr__b1799": [
+     "input",
+     1799,
+     256
+    ],
+    "vm_rr__b257": [
+     "input",
+     257,
+     256
+    ],
+    "vm_rr__b514": [
+     "input",
+     514,
+     256
+    ],
+    "vm_rr__b771": [
+     "input",
+     771,
+     256
+    ],
+    "vmasm_as_il": [
+     "output",
+     0,
+     2048
+    ],
+    "vmasm_sel": [
+     "input",
+     0,
+     24
+    ],
+    "writer_fault": [
+     "output",
+     0,
+     1
+    ],
+    "writer_ingress_slot": [
+     "input",
+     0,
+     5
+    ],
+    "writer_rgx_addr": [
+     "input",
+     0,
+     160
+    ],
+    "writer_rgx_data0": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_data1": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_data2": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_data3": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_v": [
+     "input",
+     0,
+     4
+    ],
+    "writer_rgx_vm": [
+     "input",
+     0,
+     1
+    ],
+    "writer_rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "writer_slot_owner": [
+     "input",
+     0,
+     32
+    ],
+    "writer_slot_valid": [
+     "input",
+     0,
+     8
+    ]
+   },
+   "module": "ot_hfd_coll_q2n2_vm_core"
+  },
+  {
+   "inst": "hb_coll_NE.__cut_body",
+   "plan_local": "u_hb_coll_Q_body_n2__q0",
+   "partition": "NE_hub",
+   "members": 46,
+   "leaves": [
+    "u_body.g_iss256.u_issuer : ot_hgi_coll_issuer_m256",
+    "u_body.g_link[0].u_link : ot_hgi_coll_link_e",
+    "u_body.g_link[1].u_link : ot_hgi_coll_link_e",
+    "u_body.g_q2.genblk1.n_u_control_r.u_control : ot_hgi_coll_ctl_v5r_q2",
+    "u_body.g_q2.n_u_fj.u_fj : ot_hgi_coll_fj_q2",
+    "u_body.g_qcap[0].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[1].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[2].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[3].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[4].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[5].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[6].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[7].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[8].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qout[0].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[10].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[11].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[12].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[13].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[14].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[15].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[16].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[17].g2.n.o.u_out : ot_hgi_coll_qso_q2_b1",
+    "u_body.g_qout[1].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[2].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[3].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[4].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[5].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[6].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[7].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[8].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.g_qout[9].g2.w.o.u_out : ot_hgi_coll_qso_q2_b32",
+    "u_body.u_upipe : ot_hgi_coll_upipe_sliced_v7"
+   ],
+   "glue": {
+    "$add": 5,
+    "$mul": 1,
+    "$dff": 7
+   },
+   "boundary_nets": 12073,
+   "pins": 12073,
+   "ports": {
+    "cfg_addr": [
+     "input",
+     0,
+     12
+    ],
+    "cfg_data": [
+     "input",
+     0,
+     256
+    ],
+    "cfg_target": [
+     "input",
+     0,
+     8
+    ],
+    "cfg_v": [
+     "input",
+     0,
+     1
+    ],
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "del_flit": [
+     "output",
+     0,
+     2180
+    ],
+    "del_valid": [
+     "output",
+     0,
+     4
+    ],
+    "desc_base": [
+     "input",
+     0,
+     12
+    ],
+    "desc_limit": [
+     "input",
+     0,
+     13
+    ],
+    "desc_loops": [
+     "input",
+     0,
+     16
+    ],
+    "desc_v": [
+     "input",
+     0,
+     1
+    ],
+    "done": [
+     "output",
+     0,
+     1
+    ],
+    "fault": [
+     "output",
+     0,
+     1
+    ],
+    "fault_cause": [
+     "output",
+     0,
+     16
+    ],
+    "hgi_busy": [
+     "output",
+     0,
+     1
+    ],
+    "hgi_del_obase": [
+     "output",
+     0,
+     160
+    ],
+    "hgi_inj_addr": [
+     "output",
+     0,
+     160
+    ],
+    "inj_d": [
+     "input",
+     0,
+     1024
+    ],
+    "inj_idx": [
+     "output",
+     0,
+     32
+    ],
+    "inj_rd": [
+     "output",
+     0,
+     2
+    ],
+    "isa_ring": [
+     "output",
+     0,
+     58
+    ],
+    "launch_v": [
+     "input",
+     0,
+     1
+    ],
+    "phy_up": [
+     "input",
+     0,
+     2
+    ],
+    "program_configured": [
+     "output",
+     0,
+     1
+    ],
+    "program_fault": [
+     "output",
+     0,
+     1
+    ],
+    "program_init_busy": [
+     "output",
+     0,
+     1
+    ],
+    "rc_tag": [
+     "input",
+     0,
+     3
+    ],
+    "rc_v": [
+     "input",
+     0,
+     1
+    ],
+    "retry_requested": [
+     "output",
+     0,
+     2
+    ],
+    "rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "rx_pin_flit": [
+     "input",
+     0,
+     1224
+    ],
+    "rx_pin_v": [
+     "input",
+     0,
+     2
+    ],
+    "stat_cycles": [
+     "output",
+     0,
+     32
+    ],
+    "tx_pin_flit": [
+     "output",
+     0,
+     1224
+    ],
+    "tx_pin_v": [
+     "output",
+     0,
+     2
+    ],
+    "u_body_g_q2_genblk1_n_u_control_r_u_control_rgx_addr_pin": [
+     "output",
+     0,
+     160
+    ],
+    "u_body_g_q2_genblk1_n_u_control_r_u_control_vm_sel_d": [
+     "output",
+     0,
+     24
+    ],
+    "u_body_g_q2_n_u_fj_u_fj_reduce_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_q2_n_u_fj_u_fj_ring_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_q2_n_u_fj_u_fj_writer_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qcap_4_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_5_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_6_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_7_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_8_u_cap_src_d": [
+     "input",
+     0,
+     545
+    ],
+    "u_body_g_qcap_8_u_cap_src_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qout_0_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_0_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_0_g2_w_o_u_out_dst_v__b14": [
+     "output",
+     14,
+     1
+    ],
+    "u_body_g_qout_0_g2_w_o_u_out_dst_v__b6": [
+     "output",
+     6,
+     4
+    ],
+    "u_body_g_qout_10_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_10_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_11_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_11_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_12_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_12_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_13_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_13_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_14_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_14_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_15_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_15_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_16_g2_w_o_u_out_dst_d": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_17_g2_n_o_u_out_dst_d": [
+     "output",
+     14,
+     1
+    ],
+    "u_body_g_qout_1_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_1_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_2_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_2_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_3_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_3_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_4_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_4_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_5_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_5_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_6_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_6_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_7_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_7_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_8_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_8_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_g_qout_9_g2_w_o_u_out_dst_d__b192": [
+     "output",
+     192,
+     128
+    ],
+    "u_body_g_qout_9_g2_w_o_u_out_dst_d__b448": [
+     "output",
+     448,
+     32
+    ],
+    "u_body_procdff_797_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_798_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_799_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_800_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_801_Q": [
+     "output",
+     0,
+     16
+    ],
+    "u_body_u_upipe_d3__b1505": [
+     "output",
+     1505,
+     1
+    ],
+    "u_body_u_upipe_d3__b1510": [
+     "output",
+     1510,
+     1
+    ],
+    "u_body_u_upipe_d3__b1515": [
+     "output",
+     1515,
+     2
+    ],
+    "u_body_u_upipe_d3__b1525": [
+     "output",
+     1525,
+     11
+    ],
+    "u_body_u_upipe_d3__b584": [
+     "output",
+     584,
+     46
+    ],
+    "u_body_u_upipe_d3__b713": [
+     "output",
+     713,
+     1
+    ],
+    "vm_rq": [
+     "output",
+     0,
+     136
+    ],
+    "vm_rr__b1027": [
+     "input",
+     1027,
+     1
+    ],
+    "vm_rr__b1284": [
+     "input",
+     1284,
+     1
+    ],
+    "vm_rr__b1541": [
+     "input",
+     1541,
+     1
+    ],
+    "vm_rr__b1798": [
+     "input",
+     1798,
+     1
+    ],
+    "vm_rr__b2055": [
+     "input",
+     2055,
+     1
+    ],
+    "vm_rr__b256": [
+     "input",
+     256,
+     1
+    ],
+    "vm_rr__b513": [
+     "input",
+     513,
+     1
+    ],
+    "vm_rr__b770": [
+     "input",
+     770,
+     1
+    ]
+   },
+   "module": "ot_hfd_coll_q2n2_body_core"
+  },
+  {
+   "inst": "hb_coll_NW.__cut_reduce",
+   "plan_local": "u_hb_coll_Q_reduce__q0",
+   "partition": "NW_hub",
+   "members": 1,
+   "leaves": [
+    "u_body.u_reduce : ot_hgi_coll_reduce_static"
+   ],
+   "glue": {},
+   "boundary_nets": 1143,
+   "pins": 1143,
+   "ports": {
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_add_issue": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_add_read": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_clear": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_fault": [
+     "output",
+     0,
+     1
+    ],
+    "u_reduce_in_flit": [
+     "input",
+     0,
+     545
+    ],
+    "u_reduce_in_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_load_tag": [
+     "input",
+     0,
+     4
+    ],
+    "u_reduce_load_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_out_flit": [
+     "output",
+     0,
+     545
+    ],
+    "u_reduce_out_v": [
+     "output",
+     0,
+     1
+    ],
+    "u_reduce_pub_bf16": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_issue": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_meta": [
+     "input",
+     0,
+     24
+    ],
+    "u_reduce_pub_read": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_release": [
+     "input",
+     0,
+     1
+    ],
+    "u_reduce_pub_tag_a": [
+     "input",
+     0,
+     4
+    ],
+    "u_reduce_pub_tag_b": [
+     "input",
+     0,
+     4
+    ],
+    "u_reduce_read_tag": [
+     "input",
+     0,
+     4
+    ]
+   },
+   "module": "ot_hfd_coll_q2_hard_v8g__reduce__nw_actual"
+  },
+  {
+   "inst": "hb_coll_NW.__cut_ring_ag",
+   "plan_local": "u_hb_coll_Q_ring_ag__q0",
+   "partition": "NW_hub",
+   "members": 1,
+   "leaves": [
+    "u_body.u_ring : ot_hgi_coll_ring_ag"
+   ],
+   "glue": {},
+   "boundary_nets": 2226,
+   "pins": 2228,
+   "ports": {
+    "ag_d": [
+     "output",
+     0,
+     512
+    ],
+    "ag_src": [
+     "output",
+     0,
+     4
+    ],
+    "ag_tag": [
+     "output",
+     0,
+     6
+    ],
+    "ag_v": [
+     "output",
+     0,
+     2
+    ],
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "pr_ccw_i": [
+     "input",
+     0,
+     280
+    ],
+    "pr_ccw_o": [
+     "output",
+     0,
+     280
+    ],
+    "pr_cw_i": [
+     "input",
+     0,
+     280
+    ],
+    "pr_cw_o": [
+     "output",
+     0,
+     280
+    ],
+    "ra_add_rhs_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_add_src": [
+     "input",
+     0,
+     2
+    ],
+    "ra_add_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_add_v": [
+     "input",
+     0,
+     1
+    ],
+    "ra_lp_data": [
+     "input",
+     0,
+     256
+    ],
+    "ra_lp_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_lp_we": [
+     "input",
+     0,
+     1
+    ],
+    "ra_rr_local": [
+     "input",
+     0,
+     1
+    ],
+    "ra_rr_local_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_rx_kind": [
+     "input",
+     0,
+     4
+    ],
+    "ra_rx_slot": [
+     "input",
+     0,
+     2
+    ],
+    "ra_rx_src": [
+     "input",
+     0,
+     4
+    ],
+    "ra_rx_tag": [
+     "input",
+     0,
+     6
+    ],
+    "ra_state_add_rhs_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_add_src": [
+     "input",
+     0,
+     2
+    ],
+    "ra_state_add_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_state_read_add": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_read_rr": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_read_tx": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_rr_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_state_tx_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_state_tx_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_tx_acc": [
+     "input",
+     0,
+     1
+    ],
+    "ra_tx_dst": [
+     "input",
+     0,
+     2
+    ],
+    "ra_tx_forward": [
+     "input",
+     0,
+     2
+    ],
+    "ra_tx_gather": [
+     "input",
+     0,
+     1
+    ],
+    "ra_tx_inject": [
+     "input",
+     0,
+     2
+    ],
+    "ra_tx_result": [
+     "input",
+     0,
+     1
+    ],
+    "ra_tx_tag": [
+     "input",
+     0,
+     3
+    ],
+    "ra_tx_ttl": [
+     "input",
+     0,
+     4
+    ],
+    "rr_d": [
+     "output",
+     0,
+     256
+    ],
+    "rr_tag": [
+     "output",
+     0,
+     3
+    ],
+    "rr_v": [
+     "output",
+     0,
+     1
+    ],
+    "rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "strap_qid": [
+     "input",
+     0,
+     2
+    ],
+    "u_ring_fault": [
+     "output",
+     0,
+     1
+    ]
+   },
+   "module": "ot_hfd_coll_q2_hard_v8g__ring_ag"
+  },
+  {
+   "inst": "hb_coll_NW.__cut_vm",
+   "plan_local": "u_hb_coll_Q_vm__q0",
+   "partition": "NW_hub",
+   "members": 2,
+   "leaves": [
+    "u_body.u_vmasm : ot_hgi_coll_vmasm_sliced_v7",
+    "u_body.u_writer : ot_hgi_coll_static_vmwrite_roots_v6_physical"
+   ],
+   "glue": {},
+   "boundary_nets": 9198,
+   "pins": 9198,
+   "ports": {
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "tkx_w_addr": [
+     "input",
+     0,
+     40
+    ],
+    "tkx_w_data": [
+     "input",
+     0,
+     512
+    ],
+    "tkx_w_mask": [
+     "input",
+     0,
+     16
+    ],
+    "tkx_w_v": [
+     "input",
+     0,
+     1
+    ],
+    "vm_kq": [
+     "output",
+     0,
+     2248
+    ],
+    "vm_rr__b0": [
+     "input",
+     0,
+     256
+    ],
+    "vm_rr__b1028": [
+     "input",
+     1028,
+     256
+    ],
+    "vm_rr__b1285": [
+     "input",
+     1285,
+     256
+    ],
+    "vm_rr__b1542": [
+     "input",
+     1542,
+     256
+    ],
+    "vm_rr__b1799": [
+     "input",
+     1799,
+     256
+    ],
+    "vm_rr__b257": [
+     "input",
+     257,
+     256
+    ],
+    "vm_rr__b514": [
+     "input",
+     514,
+     256
+    ],
+    "vm_rr__b771": [
+     "input",
+     771,
+     256
+    ],
+    "vmasm_as_il": [
+     "output",
+     0,
+     2048
+    ],
+    "vmasm_sel": [
+     "input",
+     0,
+     24
+    ],
+    "writer_fault": [
+     "output",
+     0,
+     1
+    ],
+    "writer_ingress_slot": [
+     "input",
+     0,
+     5
+    ],
+    "writer_rgx_addr": [
+     "input",
+     0,
+     160
+    ],
+    "writer_rgx_data0": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_data1": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_data2": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_data3": [
+     "input",
+     0,
+     512
+    ],
+    "writer_rgx_v": [
+     "input",
+     0,
+     4
+    ],
+    "writer_rgx_vm": [
+     "input",
+     0,
+     1
+    ],
+    "writer_rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "writer_slot_owner": [
+     "input",
+     0,
+     32
+    ],
+    "writer_slot_valid": [
+     "input",
+     0,
+     8
+    ]
+   },
+   "module": "ot_hfd_coll_q3_vm_core"
+  },
+  {
+   "inst": "hb_coll_NW.__cut_edge",
+   "plan_local": "u_hb_coll_Q_edge__q0",
+   "partition": "NW_hub",
+   "members": 4,
+   "leaves": [
+    "u_body.g_link[0].u_link : ot_hgi_coll_link_e",
+    "u_body.g_link[1].u_link : ot_hgi_coll_link_e",
+    "u_body.g_link[2].u_link : ot_hgi_coll_link_e",
+    "u_body.g_q3.t192.u_arg : ot_hgi_coll_argmax_m_tp192"
+   ],
+   "glue": {},
+   "boundary_nets": 8124,
+   "pins": 8124,
+   "ports": {
+    "arg_cfg_rank": [
+     "input",
+     0,
+     8
+    ],
+    "arg_fault": [
+     "output",
+     0,
+     1
+    ],
+    "arg_flush_slot": [
+     "input",
+     0,
+     1
+    ],
+    "arg_in_slot": [
+     "input",
+     0,
+     4
+    ],
+    "arg_out_flit": [
+     "output",
+     0,
+     545
+    ],
+    "arg_out_v": [
+     "output",
+     0,
+     1
+    ],
+    "arg_publish_slot": [
+     "input",
+     0,
+     1
+    ],
+    "arg_rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "arg_start": [
+     "input",
+     0,
+     1
+    ],
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "link0_epoch_abort": [
+     "output",
+     0,
+     1
+    ],
+    "link0_epoch_begin": [
+     "input",
+     0,
+     1
+    ],
+    "link0_epoch_new": [
+     "input",
+     0,
+     8
+    ],
+    "link0_held_epoch": [
+     "input",
+     0,
+     8
+    ],
+    "link0_rd_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link0_rd_v": [
+     "input",
+     0,
+     1
+    ],
+    "link0_rx_expect_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link0_rx_expect_v": [
+     "input",
+     0,
+     1
+    ],
+    "link0_rx_flit": [
+     "output",
+     0,
+     545
+    ],
+    "link0_rx_v": [
+     "output",
+     0,
+     1
+    ],
+    "link0_wr_flit": [
+     "input",
+     0,
+     545
+    ],
+    "link0_wr_observed_v": [
+     "input",
+     0,
+     1
+    ],
+    "link0_wr_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link0_wr_v": [
+     "input",
+     0,
+     1
+    ],
+    "link1_epoch_abort": [
+     "output",
+     0,
+     1
+    ],
+    "link1_epoch_begin": [
+     "input",
+     0,
+     1
+    ],
+    "link1_held_epoch": [
+     "input",
+     0,
+     8
+    ],
+    "link1_rd_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link1_rd_v": [
+     "input",
+     0,
+     1
+    ],
+    "link1_rx_expect_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link1_rx_expect_v": [
+     "input",
+     0,
+     1
+    ],
+    "link1_rx_flit": [
+     "output",
+     0,
+     545
+    ],
+    "link1_rx_v": [
+     "output",
+     0,
+     1
+    ],
+    "link1_wr_flit": [
+     "input",
+     0,
+     545
+    ],
+    "link1_wr_observed_v": [
+     "input",
+     0,
+     1
+    ],
+    "link1_wr_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link1_wr_v": [
+     "input",
+     0,
+     1
+    ],
+    "link2_epoch_abort": [
+     "output",
+     0,
+     1
+    ],
+    "link2_epoch_begin": [
+     "input",
+     0,
+     1
+    ],
+    "link2_held_epoch": [
+     "input",
+     0,
+     8
+    ],
+    "link2_rd_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link2_rd_v": [
+     "input",
+     0,
+     1
+    ],
+    "link2_rx_expect_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link2_rx_expect_v": [
+     "input",
+     0,
+     1
+    ],
+    "link2_rx_flit": [
+     "output",
+     0,
+     545
+    ],
+    "link2_rx_v": [
+     "output",
+     0,
+     1
+    ],
+    "link2_wr_flit": [
+     "input",
+     0,
+     545
+    ],
+    "link2_wr_observed_v": [
+     "input",
+     0,
+     1
+    ],
+    "link2_wr_seq": [
+     "input",
+     0,
+     16
+    ],
+    "link2_wr_v": [
+     "input",
+     0,
+     1
+    ],
+    "phy_up": [
+     "input",
+     0,
+     3
+    ],
+    "retry_requested": [
+     "output",
+     0,
+     3
+    ],
+    "rx_pin_flit": [
+     "input",
+     0,
+     1836
+    ],
+    "rx_pin_v": [
+     "input",
+     0,
+     3
+    ],
+    "tkx_arg_mode": [
+     "input",
+     0,
+     1
+    ],
+    "tkx_cfg_g": [
+     "input",
+     0,
+     8
+    ],
+    "tkx_cfg_gbase": [
+     "input",
+     0,
+     8
+    ],
+    "tkx_del_flit__b0": [
+     "input",
+     0,
+     64
+    ],
+    "tkx_del_flit__b1057": [
+     "input",
+     1057,
+     97
+    ],
+    "tkx_del_flit__b1602": [
+     "input",
+     1602,
+     97
+    ],
+    "tkx_del_flit__b2147": [
+     "input",
+     2147,
+     33
+    ],
+    "tkx_del_flit__b512": [
+     "input",
+     512,
+     97
+    ],
+    "tkx_del_valid": [
+     "input",
+     0,
+     4
+    ],
+    "tx_pin_flit": [
+     "output",
+     0,
+     1836
+    ],
+    "tx_pin_v": [
+     "output",
+     0,
+     3
+    ]
+   },
+   "module": "ot_hfd_coll_q3_edge_core"
+  },
+  {
+   "inst": "hb_coll_NW.__cut_body",
+   "plan_local": "u_hb_coll_Q_body_core__q0",
+   "partition": "NW_hub",
+   "members": 46,
+   "leaves": [
+    "u_body.g_iss256.u_issuer : ot_hgi_coll_issuer_m256",
+    "u_body.g_q3.genblk1.n_u_control_r.u_control : ot_hgi_coll_ctl_v5r_q3",
+    "u_body.g_q3.n_u_fj.u_fj : ot_hgi_coll_fj_q3",
+    "u_body.g_qcap[0].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[10].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[1].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[2].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[3].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[4].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[5].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[6].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[7].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[8].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qcap[9].u_cap : ot_hgi_coll_qslots_capture_pin_v2",
+    "u_body.g_qout[0].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[10].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[11].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[12].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[13].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[14].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[15].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[16].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[17].g3.n.o.u_out : ot_hgi_coll_qso_q3_b1",
+    "u_body.g_qout[1].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[2].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[3].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[4].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[5].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[6].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[7].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[8].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.g_qout[9].g3.w.o.u_out : ot_hgi_coll_qso_q3_b32",
+    "u_body.u_upipe : ot_hgi_coll_upipe_sliced_v7"
+   ],
+   "glue": {
+    "$add": 5,
+    "$mul": 1,
+    "$dff": 7
+   },
+   "boundary_nets": 15982,
+   "pins": 15982,
+   "ports": {
+    "cfg_addr": [
+     "input",
+     0,
+     12
+    ],
+    "cfg_data": [
+     "input",
+     0,
+     256
+    ],
+    "cfg_target": [
+     "input",
+     0,
+     8
+    ],
+    "cfg_v": [
+     "input",
+     0,
+     1
+    ],
+    "clk": [
+     "input",
+     0,
+     1
+    ],
+    "del_flit": [
+     "output",
+     0,
+     2180
+    ],
+    "del_valid": [
+     "output",
+     0,
+     4
+    ],
+    "desc_base": [
+     "input",
+     0,
+     12
+    ],
+    "desc_limit": [
+     "input",
+     0,
+     13
+    ],
+    "desc_loops": [
+     "input",
+     0,
+     16
+    ],
+    "desc_v": [
+     "input",
+     0,
+     1
+    ],
+    "done": [
+     "output",
+     0,
+     1
+    ],
+    "fault": [
+     "output",
+     0,
+     1
+    ],
+    "fault_cause": [
+     "output",
+     0,
+     16
+    ],
+    "hgi_busy": [
+     "output",
+     0,
+     1
+    ],
+    "hgi_del_obase": [
+     "output",
+     0,
+     160
+    ],
+    "hgi_inj_addr": [
+     "output",
+     0,
+     160
+    ],
+    "inj_d": [
+     "input",
+     0,
+     1024
+    ],
+    "inj_idx": [
+     "output",
+     0,
+     32
+    ],
+    "inj_rd": [
+     "output",
+     0,
+     2
+    ],
+    "isa_ring": [
+     "output",
+     0,
+     58
+    ],
+    "launch_v": [
+     "input",
+     0,
+     1
+    ],
+    "program_configured": [
+     "output",
+     0,
+     1
+    ],
+    "program_fault": [
+     "output",
+     0,
+     1
+    ],
+    "program_init_busy": [
+     "output",
+     0,
+     1
+    ],
+    "rc_tag": [
+     "input",
+     0,
+     3
+    ],
+    "rc_v": [
+     "input",
+     0,
+     1
+    ],
+    "rst_n": [
+     "input",
+     0,
+     1
+    ],
+    "stat_cycles": [
+     "output",
+     0,
+     32
+    ],
+    "tkx_arg_mode": [
+     "output",
+     0,
+     1
+    ],
+    "tkx_busy": [
+     "input",
+     0,
+     1
+    ],
+    "tkx_cfg_g": [
+     "output",
+     0,
+     8
+    ],
+    "tkx_cfg_gbase": [
+     "output",
+     0,
+     8
+    ],
+    "tkx_cfg_has_r": [
+     "output",
+     0,
+     1
+    ],
+    "tkx_cfg_k": [
+     "output",
+     0,
+     13
+    ],
+    "tkx_cfg_n": [
+     "output",
+     0,
+     12
+    ],
+    "tkx_cfg_nout": [
+     "output",
+     0,
+     13
+    ],
+    "tkx_cfg_obase": [
+     "output",
+     0,
+     40
+    ],
+    "tkx_cfg_pf": [
+     "output",
+     0,
+     16
+    ],
+    "tkx_cfg_rbase": [
+     "output",
+     0,
+     40
+    ],
+    "tkx_del_flit": [
+     "output",
+     0,
+     2180
+    ],
+    "tkx_del_slot": [
+     "output",
+     0,
+     4
+    ],
+    "tkx_del_valid": [
+     "output",
+     0,
+     4
+    ],
+    "tkx_done": [
+     "input",
+     0,
+     1
+    ],
+    "tkx_fault": [
+     "input",
+     0,
+     1
+    ],
+    "tkx_start": [
+     "output",
+     0,
+     1
+    ],
+    "u_body_g_q3_genblk1_n_u_control_r_u_control_held_epoch": [
+     "output",
+     0,
+     24
+    ],
+    "u_body_g_q3_genblk1_n_u_control_r_u_control_rd_sequence_pin": [
+     "output",
+     0,
+     48
+    ],
+    "u_body_g_q3_genblk1_n_u_control_r_u_control_rgx_addr_pin": [
+     "output",
+     0,
+     160
+    ],
+    "u_body_g_q3_genblk1_n_u_control_r_u_control_rx_sequence_pin": [
+     "output",
+     0,
+     48
+    ],
+    "u_body_g_q3_genblk1_n_u_control_r_u_control_vm_sel_d": [
+     "output",
+     0,
+     24
+    ],
+    "u_body_g_q3_genblk1_n_u_control_r_u_control_wr_sequence_pin": [
+     "output",
+     0,
+     48
+    ],
+    "u_body_g_q3_n_u_fj_u_fj_arg_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_q3_n_u_fj_u_fj_link_abort": [
+     "input",
+     0,
+     3
+    ],
+    "u_body_g_q3_n_u_fj_u_fj_reduce_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_q3_n_u_fj_u_fj_ring_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_q3_n_u_fj_u_fj_writer_fault": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qcap_10_u_cap_src_d": [
+     "input",
+     0,
+     545
+    ],
+    "u_body_g_qcap_10_u_cap_src_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qcap_2_u_cap_src_d": [
+     "input",
+     0,
+     545
+    ],
+    "u_body_g_qcap_2_u_cap_src_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qcap_3_u_cap_src_d": [
+     "input",
+     0,
+     545
+    ],
+    "u_body_g_qcap_3_u_cap_src_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qcap_4_u_cap_src_d": [
+     "input",
+     0,
+     545
+    ],
+    "u_body_g_qcap_4_u_cap_src_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qcap_5_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_6_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_7_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_8_u_cap_src_d": [
+     "input",
+     0,
+     512
+    ],
+    "u_body_g_qcap_9_u_cap_src_d": [
+     "input",
+     0,
+     545
+    ],
+    "u_body_g_qcap_9_u_cap_src_v": [
+     "input",
+     0,
+     1
+    ],
+    "u_body_g_qout_0_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_0_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_0_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_0_g3_w_o_u_out_dst_v__b0": [
+     "output",
+     0,
+     3
+    ],
+    "u_body_g_qout_0_g3_w_o_u_out_dst_v__b15": [
+     "output",
+     15,
+     1
+    ],
+    "u_body_g_qout_0_g3_w_o_u_out_dst_v__b7": [
+     "output",
+     7,
+     4
+    ],
+    "u_body_g_qout_10_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_10_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_10_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_11_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_11_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_11_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_12_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_12_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_12_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_13_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_13_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_13_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_14_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_14_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_14_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_15_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_15_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_15_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_16_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_16_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_17_g3_n_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     3
+    ],
+    "u_body_g_qout_17_g3_n_o_u_out_dst_d__b15": [
+     "output",
+     15,
+     1
+    ],
+    "u_body_g_qout_1_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_1_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_1_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_2_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_2_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_2_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_3_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_3_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_3_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_4_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_4_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_4_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_5_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_5_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_5_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_6_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_6_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_6_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_7_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_7_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_7_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_8_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_8_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_8_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_g_qout_9_g3_w_o_u_out_dst_d__b0": [
+     "output",
+     0,
+     96
+    ],
+    "u_body_g_qout_9_g3_w_o_u_out_dst_d__b224": [
+     "output",
+     224,
+     128
+    ],
+    "u_body_g_qout_9_g3_w_o_u_out_dst_d__b480": [
+     "output",
+     480,
+     32
+    ],
+    "u_body_procdff_804_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_805_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_806_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_807_Q": [
+     "output",
+     0,
+     4
+    ],
+    "u_body_procdff_808_Q": [
+     "output",
+     0,
+     16
+    ],
+    "u_body_u_upipe_d3__b1505": [
+     "output",
+     1505,
+     1
+    ],
+    "u_body_u_upipe_d3__b1510": [
+     "output",
+     1510,
+     1
+    ],
+    "u_body_u_upipe_d3__b1515": [
+     "output",
+     1515,
+     2
+    ],
+    "u_body_u_upipe_d3__b1525": [
+     "output",
+     1525,
+     11
+    ],
+    "u_body_u_upipe_d3__b350": [
+     "output",
+     350,
+     3
+    ],
+    "u_body_u_upipe_d3__b371": [
+     "output",
+     371,
+     3
+    ],
+    "u_body_u_upipe_d3__b392": [
+     "output",
+     392,
+     3
+    ],
+    "u_body_u_upipe_d3__b413": [
+     "output",
+     413,
+     11
+    ],
+    "u_body_u_upipe_d3__b584": [
+     "output",
+     584,
+     46
+    ],
+    "u_body_u_upipe_d3__b705": [
+     "output",
+     705,
+     7
+    ],
+    "u_body_u_upipe_d3__b713": [
+     "output",
+     713,
+     1
+    ],
+    "vm_rq": [
+     "output",
+     0,
+     136
+    ],
+    "vm_rr__b1027": [
+     "input",
+     1027,
+     1
+    ],
+    "vm_rr__b1284": [
+     "input",
+     1284,
+     1
+    ],
+    "vm_rr__b1541": [
+     "input",
+     1541,
+     1
+    ],
+    "vm_rr__b1798": [
+     "input",
+     1798,
+     1
+    ],
+    "vm_rr__b2055": [
+     "input",
+     2055,
+     1
+    ],
+    "vm_rr__b256": [
+     "input",
+     256,
+     1
+    ],
+    "vm_rr__b513": [
+     "input",
+     513,
+     1
+    ],
+    "vm_rr__b770": [
+     "input",
+     770,
+     1
+    ]
+   },
+   "module": "ot_hfd_coll_q3_body_core"
+  }
+ ],
+ "structure_variants": {
+  "ot_hfd_coll_q2_hard_v8g__reduce": {
+   "kit_source": "hb_coll_NE",
+   "variant": "ot_hfd_coll_q2_hard_v8g__reduce__nw_actual",
+   "on": "hb_coll_NW"
+  }
+ }
+}
