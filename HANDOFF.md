@@ -2213,3 +2213,6 @@ CODEX: 2026-10-30 03:42 PDT QC plan45 adopted/default; clock46 nominal91.92/77.0
 
 CODEX: 2026-10-30 03:42 PDT GEOM selectorA/B actualrenderFAIL r2r907/824um, globalpass/localgqstatecones, macrospreadaloneinsufficient; HBMownerfixing. RX259swawaitplacement; no routeunblockedincorrectly.
 CODEX: 2026-10-30 03:43 PDT S81cores collected TR SIGNED+12270EQ; inherited ROM FP4K4x20kPASS/mutants98818061484/fullLEClive979645; RT two-copy fanout/nativeLEClive959039. M5 child candidate c753c0409 results-only/OWNERadoptionheld, physicalhelper owns remaining core fails.
+CODEX: 2026-10-30 03:44 PDT TOK-DS b3d0b8f97 READY current16stop/native-middle transport80/80+1280checksPASS/currentkFAIL253errors/payloadmutant33; one-master VQ temporal-map proposalUNAPPLIED OWNER?logged; noG5/physicalSTART.
+CODEX: 2026-10-30 03:43 PDT HEAD takeover; original src25s live preserved, sibling stale-reset-driver failure diagnosed; own corrected/memoized final-event GEN3242658 launched via ot-run; LEP long-hop placement fixes and source residual overlays owned.
+CODEX: 2026-10-30 03:44 PDT BTAB D10 fixed clock placement FAIL398 overlaps diagnosed; shared late-DPL CTS-only variantB live3247045; codex/btab-0336 a8b60688be1.
