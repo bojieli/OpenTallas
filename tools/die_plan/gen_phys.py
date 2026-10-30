@@ -2537,7 +2537,7 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
     """land_slots of a --kit-rtl type (DIE-KV-31): Landings.land_slots(tn), fail-closed against the bound RTL text.
     Every declared hold_mux ring <b> (cland_dn_ready_/fault_<b> ride ring <b>) must be an ot_dp_clk_landing_ca/_cas
     instance u_cland_<b> with DEPTH == D; every ring_start must name a declared ring; an origin_start origin must be
-    an ot_dp_landing_origin* instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
+    an ot_dp_landing_origin[_s] or ot_dp_landing_relay instance; and every count-aligned u_cland_* ring in the bound RTL must be declared
     (no undeclared ring, no declared ring that the binder did not build).  None when the type lands nothing."""
     import copy
     import gen_rtl
@@ -2566,10 +2566,10 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                 if r not in rings:
                     raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
         elif v.get("form") == "origin_start":
-            path = _kit_inst_path(txt, v["origin"], r"ot_dp_landing_origin\w*")
+            path = _kit_inst_path(txt, v["origin"], r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)")
             if path is None:
                 raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "
-                                       "ot_dp_landing_origin* instance under one instance path")
+                                       "ot_dp_landing_origin[_s] or ot_dp_landing_relay instance under one instance path")
             v["origin"] = path      # face_guard matches the synthesized instance path (kit top -> u_bound -> origin)
     extra = sorted(set(built) - set(rings))
     if extra:

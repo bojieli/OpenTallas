@@ -393,6 +393,7 @@ SCHEMA = {
                                                                  "required": ["inst", "pin", "xy", "stages"]}}}},
                     # Optional same-cycle private CA status drivers; emitted by clock_landings.
                     "landing_control_status_copy": {"type": "boolean"},
+                    "landing_relay_start_copy": {"type": "boolean"},
                     "private_reset_start_exports": {"type": "boolean"},
                     # HEAD SOURCE7: actual existing registered raw reset Q exports.
                     # head_start_reset_aliases verifies each source instance/net in emitted RTL.
@@ -415,11 +416,11 @@ SCHEMA = {
                                        "layer": {"type": "string"},
                                        "sites_um": {"type": "array", "items": _xy}}}},
                     # MESO-STRAP-1 (OWNER 12.15a): count-aligned crossing straps strap_ca_* (ring K, origin PAD/EDGE_FALL/
-                    # tree select/root) emitted by clock_landings (strap form); values per instance from
+                    # tree select/root), plus OWNER 10-28 R8 pad-count straps strap_r8pad_*. Values per instance from
                     # count_align_bind.strap_ties, tied at the die top by clock_landings.top_rtl, value-audited (straps.py)
                     "count_straps": {"type": "array", "items": {
                         "type": "object", "required": ["name", "width"], "additionalProperties": False,
-                        "properties": {"name": {"type": "string", "pattern": "^strap_ca_[A-Za-z0-9_]+$"},
+                        "properties": {"name": {"type": "string", "pattern": "^strap_(?:ca|r8pad)_[A-Za-z0-9_]+$"},
                                        "width": {"type": "integer", "minimum": 1}, "note": {"type": "string"},
                                        "layer": {"type": "string"},
                                        "sites_um": {"type": "array", "items": _xy}}}},
