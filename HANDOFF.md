@@ -2191,3 +2191,11 @@ CODEX: 2026-10-30 03:39 PDT takeover all lanes assigned incl orphan support; inv
 CODEX: 2026-10-30 03:39 PDT S81 takeover event3clock GRTTTFF0+CA2306PASS; viewSTAFAIL−26.90/−607.30missingcores; bindRC0verifylive; typesactualKVleaf1.89–1.94Mhardcutowned, corejobscollecting.
 
 CODEX: 2026-10-30 03:40 PDT support collected q0 native postroute EQ27583 (signed +68.55/+2.19), qualification now KV identity/FLOW tag, no redundant physical/proof run; KV wave terminal SD/_v1 macro-not-declared PLAN diagnosed, S81 nonROM recipe canary coordinated, HEAD held pending src25s.
+CODEX: 2026-10-30 03:40 PDT HEADcollect HB4 terminal DPL29 overlaps diagnosed oldGRTlock/mainfixknown; reroute HELD geometryFAIL beyondfill. Parent sizing GEN missing ROM declaration asset diagnosed/ownrecoverypreparing. SerDesPRD/westDRT live preserved.
+CODEX:2026-10-30 03:40PDT FLOW core-margin a3000b096 READY(10testsPASS) + macro_under_ft metadata-only9e1e3ef54 READY, branchcodex/flow-core-margin-1030 pushed; root notified/no physical claims.
+
+CODEX: 2026-10-30 03:41 PDT HBM cores takeover: ring6_final/GQLDRT/HCOL+3.45 live; SU580um370r2rFAIL heldparent414event; collarnativenamebug+separatec_done__W mismatch diagnosed, sourcefix underway.
+CODEX: 2026-10-30 03:41 PDT TOK-DS takeover18946602f: actual16stop+native middle-V current-age publication coupon live intel1unit2460695; currentk internal-overlap cause diagnosed; candidate20134 unadopted/noG5.
+
+CODEX: KV takeover1030 full ownership split; q0/q3 fresh EQ collected27583/9742, E0SIGNED+EQ; current SDtry6 live preserved; START CELL measured-components emitter fix and frozen-plan package underway, no die gate claim.
+CODEX: 2026-10-30 03:41 PDT KV-SD declaration repair READY bc32cb591c5 (wave ORD2013 diagnosed; existing PHY views only); try6 unit2012423 LIVE preserved, no duplicate, no gate claim.
