@@ -162,6 +162,29 @@ def build_inputs(plan_f, work):
     return vf, mf, rec, clk, len(srams)
 
 
+LAND_ARG = 'land=FG.kit_land(kd / "land_slots.json")'
+
+
+def add_land_decl(text):
+    """Append the land= declaration as the last argument of the single FG.guard(...) call in the kit's
+    face_guard_core.py, whatever the other keyword arguments are (main d379a4b741c added straps=/dead= on a second line,
+    which broke the former exact-string hook).  Fails closed on zero or several calls or an existing land= argument."""
+    head = "r = FG.guard("
+    if text.count(head) != 1:
+        raise SystemExit("core face_guard invocation changed; review landing declaration hook")
+    i = text.index(head) + len(head)
+    depth, j = 1, i
+    while depth:
+        if j >= len(text):
+            raise SystemExit("core face_guard invocation: unbalanced parentheses")
+        depth += {"(": 1, ")": -1}.get(text[j], 0)
+        j += 1
+    call = text[i:j - 1]
+    if re.search(r"\bland\s*=", call):
+        raise SystemExit("core face_guard invocation already passes land=; review landing declaration hook")
+    return text[:j - 1] + ", " + LAND_ARG + text[j - 1:]
+
+
 def fix_interior(kd, w, h):
     """plan_pins.json: interior entries at their exact io.tcl centres; freeze pins/kit hashes recomputed; kit pin audit =
     main tools/die_plan/pin_audit.py (interior case)."""
@@ -213,11 +236,7 @@ def main():
     # guard(), so it must also pass the declaration (the partition CLI loads
     # land_slots.json automatically).  Keep all existing guard inputs intact.
     fg = kd / "face_guard_core.py"
-    fg_text = fg.read_text()
-    old = 'r = FG.guard(Path(net).read_text(), fz["design"], skip_re=skip, pins=pins)'
-    if fg_text.count(old) != 1:
-        raise SystemExit("core face_guard invocation changed; review landing declaration hook")
-    fg.write_text(fg_text.replace(old, old[:-1] + ', land=FG.kit_land(kd / "land_slots.json"))'))
+    fg.write_text(add_land_decl(fg.read_text()))
     # Exact original-netlist matching; all nine entries remain untrusted SAT
     # obligations, including the one-to-one kept alias matches.
     from head_collective_lec_hints import collective_lec_hints

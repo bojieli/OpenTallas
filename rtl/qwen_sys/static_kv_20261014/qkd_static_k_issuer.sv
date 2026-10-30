@@ -37,12 +37,14 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
  // At edge c+L compare response to request sampled at edge c.  The peer's
  // registered response becomes visible before its next sampling edge.
  reg [RESPONSE_LAT:0] ev;
- reg [35:0] ident[0:RESPONSE_LAT];
+ // KV-KITS-21 (KV-014): req_t[13] is constant 0 ({1'b0,rq[15:3]}); the RESPONSE_LAT+1-deep unreset ident line holds the
+ // 35 live bits and the compare re-inserts the 0 (no elaborated constant carried through an unreset pipeline).
+ reg [34:0] ident[0:RESPONSE_LAT];
  reg [35:0] returned;
  integer j;
  always @(posedge ck)begin
   returned<={rsp_epoch,rsp_layer,rsp_t};
-  ident[0]<={req_epoch,req_layer,req_t};
+  ident[0]<={req_epoch,req_layer,req_t[12:0]};
   for(j=1;j<=RESPONSE_LAT;j=j+1)ident[j]<=ident[j-1];
  end
  // The landing return is shared with the V port. Legal V responses belong
@@ -55,6 +57,6 @@ module qkd_static_k_issuer #(parameter integer RESPONSE_LAT=0, parameter integer
    ev<=(ev<<1)|req_valid;rv_q<=rsp_valid;vv_q<=rsp_v;
    bad_rq<=rq[0]&&(!active||rq[2:1]!=0||rq[16]!=ly[0]);
    if(bad_rq || (go_q&&((|ev)||req_valid||rq[0])) || (rv_q&&!vv_q)!=ev[RESPONSE_LAT] ||
-      (rv_q&&!vv_q&&returned!=ident[RESPONSE_LAT]))fault<=1;
+      (rv_q&&!vv_q&&returned!={ident[RESPONSE_LAT][34:13],1'b0,ident[RESPONSE_LAT][12:0]}))fault<=1;
   end
 endmodule
