@@ -2210,3 +2210,5 @@ CODEX: 2026-10-30 03:42 PDT FLOW takeover40358d9c5 opt-in reset-site scope13test
 
 CODEX: 2026-10-30 03:42 PDT HBMbind codex/hbm-bind-1030 owns current81pairs + NWglue>=2-region estimate; exactcollar c_done stale N/selectedW alias diagnosed to dieowner; hierarchyinventoryLIVEintel1/noPNR.
 CODEX: 2026-10-30 03:42 PDT QC plan45 adopted/default; clock46 nominal91.92/77.09 diagnostic, native routed next; VMR14ea048c3 typed4FTpin receipt; kit18PLANregen+currentcollFTpilot, A0structuraldiag owned.
+
+CODEX: 2026-10-30 03:42 PDT GEOM selectorA/B actualrenderFAIL r2r907/824um, globalpass/localgqstatecones, macrospreadaloneinsufficient; HBMownerfixing. RX259swawaitplacement; no routeunblockedincorrectly.
