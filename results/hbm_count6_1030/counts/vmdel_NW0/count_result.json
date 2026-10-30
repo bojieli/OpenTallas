@@ -1,0 +1,37 @@
+{
+ "instance": "vmdel_NW0",
+ "module": "ot_hbm_svc_vmdel_lane_n",
+ "params": {
+  "NPC": 2
+ },
+ "defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "scope": "Actual current native WHOLE wrapper, direct wiring0addedFF; no PNR/LEC; realqualifiedmemoryproviders only",
+ "source_hashes": {
+  "ot_hbm_svc_vmdel_lane_n": "ace23a5be98b153b39a43b248648f4b899b3b7b0525108e7b11d78b8b23dca0e",
+  "ot_sram_1r1w_128x256_m1_r2c2": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac"
+ },
+ "native_inferred_memory_bits": 0,
+ "actual_pre_macro_instances": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 2
+ },
+ "mapped_std_cells": 4554,
+ "mapped_macro_cells": 2,
+ "mapped_total_cells": 4556,
+ "std_area_um2": 638.371,
+ "macro_area_um2": 7783.15,
+ "mapped_netlist_sha256": "a6de8bdedde3da2eec4e11a183955899ebae01e7745553aaa4036e071d7691d0",
+ "mapped_macro_types": {
+  "ot_sram_1r1w_128x256_m1_r2c2": 2
+ },
+ "under_400k_std_cells": true,
+ "status": "MAPPED_COUNT_PASS",
+ "reason": null
+}
