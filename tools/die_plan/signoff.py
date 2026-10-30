@@ -186,6 +186,11 @@ def discover(base, kit=None, sdc=None, record=None):
     return d
 
 
+NATIVE_PDK_LIB = re.compile(
+    r'/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_'
+    r'(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?')
+
+
 def macro_libs(kit, corner):
     """(host paths of the corner's macro liberty files, missing corner list) from shared or corner-scoped KIT/config.mk libraries."""
     if not kit or not (Path(kit) / "config.mk").is_file():
@@ -201,6 +206,13 @@ def macro_libs(kit, corner):
             if re.fullmatch(r"\$\((TC|BC|WC)_NLDM_LIB_FILES\)", w):
                 continue  # standard cells are loaded independently for this corner
             w = w.replace("$(KIT)", "/work").replace("${KIT}", "/work")
+            native = NATIVE_PDK_LIB.fullmatch(w)
+            if native:
+                # The corner's standard-cell selector loads and validates these;
+                # they are not host-staged composed-child Liberty files.
+                if scoped and native.group(3).lower() != corner:
+                    missing.append(f"{w} (native PDK corner != {corner})")
+                continue
             if not w.startswith("/work/"):
                 missing.append(f"{w} (not under /work)")
                 continue
@@ -410,7 +422,7 @@ def consumed_clock_model_coverage(receipt_path, disc, masters, mapping_errors=0)
         for row in receipt['libraries']:
             source = row['path']
             # These are the exact native PDK groups, not composed child models.
-            if re.fullmatch(r'/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_[^/]+\.lib(?:\.gz)?', source):
+            if NATIVE_PDK_LIB.fullmatch(source):
                 continue
             if not source.startswith('/work/') or '..' in Path(source).parts:
                 raise ValueError(f'consumed non-PDK Liberty host mapping unavailable: {source}')

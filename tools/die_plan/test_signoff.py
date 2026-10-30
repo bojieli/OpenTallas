@@ -569,3 +569,28 @@ def test_pair_target_file_only_for_mean_contract_kits(tmp_path):
     (kit / "core_latency.txt").write_text("# inst pin ETM_MAX_BOUND_ps tap (legacy diagnostic, NOT a mean/SIGNED contract)\n"
                                           "u_core.u_eA0 ft_mstrap_i 300 grid\n")
     assert signoff.pair_target_file(disc, "tt") is None            # legacy bound is not a planned target
+
+
+def test_explicit_native_pdk_libs_are_not_macros(tmp_path):
+    native = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_LVT_{}_nldm_220122.lib.gz"
+    (tmp_path / "config.mk").write_text(
+        "export TC_LIB_FILES = " + native.format("TT") + "\n"
+        "export BC_LIB_FILES = " + native.format("FF") + "\n")
+    for corner in ("tt", "ff"):
+        assert signoff.macro_libs(tmp_path, corner) == ([], [])
+    # A wrong corner, unrelated external macro or lookalike path still blocks.
+    for bad in (native.format("TT"), "/external/child_ff.lib",
+                native.format("FF").replace("/NLDM/", "/other/")):
+        (tmp_path / "config.mk").write_text("export BC_LIB_FILES = " + bad + "\n")
+        assert signoff.macro_libs(tmp_path, "ff")[1]
+
+
+def test_shared_native_tt_and_scoped_native_ff_with_macro(tmp_path):
+    native = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_LVT_{}_nldm_220122.lib.gz"
+    (tmp_path / "child_tt.lib").write_text("library(child) {}")
+    (tmp_path / "child_ff.lib").write_text("library(child) {}")
+    (tmp_path / "config.mk").write_text(
+        "export ADDITIONAL_LIBS = /work/child_tt.lib " + native.format("TT") + "\n"
+        "export TC_LIB_FILES = " + native.format("TT") + "\n"
+        "export BC_LIB_FILES = " + native.format("FF") + "\n")
+    assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "child_ff.lib")], [])
