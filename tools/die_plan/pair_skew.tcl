@@ -37,6 +37,13 @@
 # difference = false verify mismatch).  A cell without one unique Clk-to-Q edge keeps the rise read (previous behaviour);
 # rising-edge registers are unchanged.
 #
+# ARC CLOCK ROLES (HEAD LEP dual-clock SRAM): capture setup/hold pins and edges
+# come from the checked DATA pin's timing arcs; launch clocks come from Clk-to-Q.
+# An instance may have multiple clocks, and a write-only SRAM WCLK need not be
+# returned by all_registers -clock_pins. Such clocks are added on discovery, with
+# separate clock/edge records and exact clock-pin target offsets. Ambiguous or
+# incomplete check roles fail closed rather than borrowing another instance pin.
+#
 # OpenSTA pitfall (sta_die.tcl): an arrival query while PathEnd objects are live re-runs the search and frees them.
 # All CK arrivals are read BEFORE any path search; path-end values are copied into Tcl values at once.
 #
@@ -157,70 +164,118 @@ proc ot_ps_ckarr {pin clk which {rf rise}} {
   return $a
 }
 
-proc ot_ps_regs {} {
-  # inst -> {ckpin clock late early rf} for every register clock pin with exactly one clock and a unique clock arrival
-  # on its active CK transition rf; ::ot_ps_insertion: clock -> rise source {late early}, "clock fall" -> fall source
-  set R {}; set ::ot_ps_noarr 0
-  set ::ot_ps_insertion {}
-  foreach p [all_registers -clock_pins] {
-    set cl [get_property $p clocks]
-    if {[llength $cl] != 1} continue
-    set rf [ot_ps_edge $p]
-    set a [ot_ps_ckarr $p [lindex $cl 0] max $rf]; set b [ot_ps_ckarr $p [lindex $cl 0] min $rf]
-    if {$a eq "" || $b eq ""} { incr ::ot_ps_noarr; continue }
-    set cn [get_full_name [lindex $cl 0]]
-    set ik [expr {$rf eq "rise" ? $cn : "$cn fall"}]
-    if {![dict exists $::ot_ps_insertion $ik]} {
-      set roots {}
-      foreach src [get_property [lindex $cl 0] sources] {
-        set late [ot_ps_ckarr $src [lindex $cl 0] max $rf]
-        set early [ot_ps_ckarr $src [lindex $cl 0] min $rf]
-        if {$late eq "" || $early eq ""} continue
-        lappend roots [list $late $early]
-      }
-      set roots [lsort -unique $roots]
-      if {[llength $roots] != 1} { error "clock $cn has no unique $rf source insertion arrival" }
-      dict set ::ot_ps_insertion $ik [lindex $roots 0]
+# Clock roles belong to the data timing arc, not to a register instance.
+# Write-only SRAM clocks need not appear in all_registers -clock_pins.
+proc ot_ps_parse_role {report role} {
+  set out {}; set source ""; set enabled 0
+  foreach line [split $report \n] {
+    if {[regexp {^(\S+)\s+->\s+(\S+)\s+(.+)$} $line -> from to kind]} {
+      set source $from
+      set enabled [expr {$role eq "clkq" ? [regexp -nocase {Clk to Q} $kind] : [string equal -nocase [string trim $kind] $role]}]
+      continue
     }
-    dict set R [ot_ps_inst [get_full_name $p]] [list [get_full_name $p] $cn $a $b $rf]
-  }
-  set ::ot_ps_toff {}
-  if {[info exists ::ot_ps_tpin]} {
-    dict for {i v} $R {
-      set pn [lindex $v 0]
-      if {[dict exists $::ot_ps_tpin $pn]} { dict set ::ot_ps_toff $i [dict get $::ot_ps_tpin $pn] }
+    if {$enabled && [regexp {^\s+([\^v])\s+->} $line -> edge]} {
+      lappend out [list $source [expr {$edge eq "^" ? "rise" : "fall"}]]
     }
   }
-  return $R
+  return [lsort -unique $out]
 }
-
+proc ot_ps_clock_role {pin role} {
+  set owners [get_cells -quiet -of_objects $pin]
+  if {[llength $owners] != 1} { return {} }
+  set key [list [get_property [lindex $owners 0] ref_name] [get_property $pin lib_pin_name] $role]
+  if {![info exists ::ot_ps_role_cache]} {set ::ot_ps_role_cache {}}
+  if {![dict exists $::ot_ps_role_cache $key]} {
+    sta::redirect_string_begin
+    set failed [catch {report_edges -to $pin} message]
+    set report [sta::redirect_string_end]
+    if {$failed} {error "ot_ps_clock_role: report_edges failed for [get_full_name $pin]: $message"}
+    set found [ot_ps_parse_role $report $role]
+    # OpenSTA startpoints may be the sequential output or its source clock
+    # pin. Both are resolved through the actual Clk-to-Q arc, never by instance.
+    if {$role eq "clkq" && ![llength $found]} {
+      sta::redirect_string_begin
+      set failed [catch {report_edges -from $pin} message]
+      set report [sta::redirect_string_end]
+      if {$failed} {error "ot_ps_clock_role: report_edges failed for [get_full_name $pin]: $message"}
+      set found [ot_ps_parse_role $report $role]
+    }
+    if {[llength $found] > 1} {error "ot_ps_clock_role: ambiguous $role clock/edge for [get_full_name $pin]: $found"}
+    dict set ::ot_ps_role_cache $key $found
+  }
+  set found [dict get $::ot_ps_role_cache $key]
+  if {![llength $found]} {return {}}
+  lassign [lindex $found 0] formal rf
+  set full "[ot_ps_inst [get_full_name $pin]]/$formal"
+  set clocks [get_pins -quiet $full]
+  if {[llength $clocks] != 1} {error "ot_ps_clock_role: missing/nonunique actual clock pin $full"}
+  return [list [lindex $clocks 0] $rf]
+}
+proc ot_ps_add_clock {pin rf} {
+  set full [get_full_name $pin]; set key [list $full $rf]
+  if {[dict exists $::ot_ps_by_clock $key]} {return [dict get $::ot_ps_by_clock $key]}
+  set cl [get_property $pin clocks]
+  if {[llength $cl] != 1} {incr ::ot_ps_noarr;return ""}
+  set a [ot_ps_ckarr $pin [lindex $cl 0] max $rf];set b [ot_ps_ckarr $pin [lindex $cl 0] min $rf]
+  if {$a eq "" || $b eq ""} {incr ::ot_ps_noarr;return ""}
+  set cn [get_full_name [lindex $cl 0]]
+  set ik [expr {$rf eq "rise" ? $cn : "$cn fall"}]
+  if {![dict exists $::ot_ps_insertion $ik]} {
+    set roots {}
+    foreach src [get_property [lindex $cl 0] sources] {
+      set late [ot_ps_ckarr $src [lindex $cl 0] max $rf];set early [ot_ps_ckarr $src [lindex $cl 0] min $rf]
+      if {$late ne "" && $early ne ""} {lappend roots [list $late $early]}
+    }
+    set roots [lsort -unique $roots]
+    if {[llength $roots]!=1} {error "clock $cn has no unique $rf source insertion arrival"}
+    dict set ::ot_ps_insertion $ik [lindex $roots 0]
+  }
+  set inst [ot_ps_inst $full];set ref $inst
+  if {[dict exists $::ot_ps_R $ref]} {set ref "$inst@[lindex [split $full /] end]:$rf"}
+  if {[dict exists $::ot_ps_R $ref]} {error "ot_ps_add_clock: clock reference collision $ref"}
+  dict set ::ot_ps_R $ref [list $full $cn $a $b $rf]
+  dict set ::ot_ps_by_clock $key $ref
+  if {[info exists ::ot_ps_tpin] && [dict exists $::ot_ps_tpin $full]} {dict set ::ot_ps_toff $ref [dict get $::ot_ps_tpin $full]}
+  return $ref
+}
+proc ot_ps_regs {} {
+  set ::ot_ps_R {};set ::ot_ps_by_clock {};set ::ot_ps_insertion {};set ::ot_ps_toff {};set ::ot_ps_noarr 0
+  foreach p [all_registers -clock_pins] {ot_ps_add_clock $p [ot_ps_edge $p]}
+  return $::ot_ps_R
+}
 proc ot_ps_related {R} {
-  # exhaustive related pairs: {launch capture capture_data_pin raw_setup_damage raw_hold_damage}, unique per pair
-  # (worst raw over the capture register's data pins) + counters {pairs inter_clock data_pins}
-  set async {}
-  foreach p [all_registers -async_pins] { dict set async [get_full_name $p] 1 }
-  set P {}; set nx 0; set nd 0
+  set async {};foreach p [all_registers -async_pins] {dict set async [get_full_name $p] 1}
+  set P {};set nx 0;set nd 0
   foreach d [all_registers -data_pins] {
     set dn [get_full_name $d]
     if {[dict exists $async $dn]} continue
-    set c [ot_ps_inst $dn]
-    if {![dict exists $R $c]} continue
+    set setup [ot_ps_clock_role $d setup];set hold [ot_ps_clock_role $d hold]
+    if {[llength $setup]!=2 || [llength $hold]!=2} {error "ot_ps_related: incomplete setup/hold clock role for $dn"}
+    set cs [ot_ps_add_clock {*}$setup];set ch [ot_ps_add_clock {*}$hold]
+    if {$cs eq "" || $ch eq ""} continue
     incr nd
-    lassign [dict get $R $c] cck cclk clate cearly
+    lassign [dict get $::ot_ps_R $cs] - cclk - cearly
+    lassign [dict get $::ot_ps_R $ch] - hclk clate
     foreach s [get_fanin -to $d -startpoints_only -flat] {
-      set l [ot_ps_inst [get_full_name $s]]
-      if {![dict exists $R $l]} continue
-      lassign [dict get $R $l] lck lclk llate learly
-      if {$lclk ne $cclk} { incr nx; continue }
-      set ds [expr {$llate - $cearly}]
-      set dh [expr {$clate - $learly}]
-      set k "$l\t$c"
+      set launch [ot_ps_clock_role $s clkq]
+      if {![llength $launch]} {
+        if {[dict exists $::ot_ps_R [ot_ps_inst [get_full_name $s]]]} {
+          error "ot_ps_related: unresolved sequential launch clock for [get_full_name $s]"
+        }
+        continue
+      }
+      set l [ot_ps_add_clock {*}$launch]
+      if {$l eq ""} continue
+      lassign [dict get $::ot_ps_R $l] - lclk llate learly
+      if {$lclk ne $cclk || $lclk ne $hclk} {incr nx;continue}
+      set ds [expr {$llate-$cearly}];set dh [expr {$clate-$learly}]
+      set k [list $l $cs $ch]
       if {[dict exists $P $k]} {
         lassign [dict get $P $k] - - - os oh
-        if {$ds <= $os && $dh <= $oh} continue
-        set ds [expr {max($ds, $os)}]; set dh [expr {max($dh, $oh)}]
+        if {$ds<=$os && $dh<=$oh} continue
+        set ds [expr {max($ds,$os)}];set dh [expr {max($dh,$oh)}]
       }
-      dict set P $k [list $l $c $dn $ds $dh]
+      dict set P $k [list $l $cs $dn $ds $dh $ch]
     }
   }
   return [list $P [dict size $P] $nx $nd]
@@ -282,6 +337,7 @@ proc ot_ps_check {P dly credit_max tgt} {
   set raw {}
   dict for {k v} $P {
     set rd [lindex $v $idx]
+    if {$dly eq "min" && [llength $v] > 5} {set v [lreplace $v 1 1 [lindex $v 5]]}
     if {$tgt} {
       set d [expr {[ot_ps_off [lindex $v 1]] - [ot_ps_off [lindex $v 0]]}]
       set rd [expr {$dly eq "max" ? $rd - $d : $rd + $d}]
