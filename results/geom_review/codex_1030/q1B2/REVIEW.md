@@ -1,0 +1,3 @@
+# Q1B2 actual placed data relays
+
+PASS-COND GRT50+TTFF prototype only, no DRT. Independently viewed actual q1B2_geom/auto_geom.png. Four SRAMs, wide central cross streets and full W/E face bands remain coherent. Twelve data BUFx12f repeaters split four remaining215..263um data wires while all FF/pin/macro geometry and365clock wires stay fixed. DPL0, displacement<=.5um. Current r2r267.30/0bad, pinmax28.94, no macro overlap; clockreach14.47. Hard estimated H1.002 stays unresolved, V.603/col.661 conditional, actualGRT NA; do not waive or reuse predecessor route. Standing fill/empty exception applies. Qualified clock RC, actualGRT50/TTFF and final independent review required before any DRT. No source/cycle/pin/clock-contract change or SIGNED claim.
