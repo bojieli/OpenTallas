@@ -1,0 +1,91 @@
+{
+  "status": "PINNED_NATIVE32BANK_BACKEND_AUDIT_SOURCE",
+  "canonical_RTL_branch": "codex/hbm-load-provider-rtl-1030",
+  "canonical_RTL_tip": "8c5f35a6f data/provider plus abdb23bfa timing RTL",
+  "canonical_RTL_order": [
+    "73430d378",
+    "7af555e3e",
+    "dd491a076",
+    "9d366e3b4",
+    "9a5727aa2"
+  ],
+  "canonical_directory": "rtl/hbm_accel/loader/service_native/split/",
+  "provider_files": {
+    "ot_hbm_static_load_addr_counter.sv": "f2ebfa09cc72b60e4461df45110ba3b2399c2d0d60ca6c9182c0070301889b3b",
+    "ot_hbm_static_load_addr_map.sv": "2105a2c3dd7a9dfd18223a602da11edf354d2c453b1855d938afaf2fb22fb974",
+    "ot_hbm_static_load_quad_vehicle.sv": "5ff1d8b050ab276238b0da56d81971471c9afc1602e743ae34009a59b9c98800",
+    "ot_hbm_static_load_provider_quad.sv": "7ea83328a00506f2c9697c657d738aacb1abfd27f8ad1ce2172b909a63a9e356",
+    "ot_hbm_static_load_vm_commit_guard.sv": "92757dde8257d933d2c257156f9c9e3d67dc4d3c501c146a6fb8803b30aa0ee6",
+    "ot_hbm_static_load_vm_dq_demux.sv": "cb89d0ae29a543668986823f437c01e87d4a1f673d6762b3e08b8d22df7f7a0e",
+    "ot_hbm_static_load_cmd_provider_quad.sv": "47a5ccee730ffaffa82e8d9aef16fd82fecb21227d5accc26b882ccf0f7f34ae",
+    "ot_hbm_static_dma_cmd_dispatch.sv": "62c3b5926e7b7cdc0a9b706d5bcafb7887d420ab117839d622331638d0fd3fd6"
+  },
+  "shared_repo_files": {
+    "rtl/hbm_accel/loader/service_native/split/ot_hbm_svc_vmdel_lane_load_static.sv": "27c68f04777546e13dc32628eeb0481afa8d81668b29fc34d894a23e5eca7789",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv": "54ffc8c1fc8cd14ce59cddae0d3a0529f2541f4625f12454aa9b95356b7fc81a",
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "0c779d0cbf900226d481fdcacee3236246dabbeadb36e332ec0461f5afc9358a",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": "2a7d478da253fb741749607d8a803ebb5bb2186dc2825f0aa78055f4dfa1dfc4",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": "c55ad634a94838dc57e4c8111e97dcb8319fb2d7474dfe1e3bce3a115b16e621",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": "b069136bfe9572147c212d2c9ba2a11ad162663f777b8a52829e9327b7483a17",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv": "acb135a98c2ba055dfe801fe0bb5b4b940b3a175f5faacb93505b5e546865758",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": "ef1a98278c1e25596d7b22b6fe86697afdf7aacdc7c1302f9bf7f68f0c01c1b6",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_pc_refresh_cfg.sv": "f43194b2c7c7a114de5c3beabf34b026afa7c0666449c25cb903c1945946832f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv": "1c7ba5548eff11256723104b6a6efb361c80114264997930eb20bbcf281be4ce",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+    "rtl/lib/ot_reset_sync.sv": "607e5cbb71e4912c3ac966fa555b1be83bf5f0346b41b69411e46a641c4e326a",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "23497f55bfe965034c6d8c8e10515644d9c4133b958a208ac240824a3c65e825",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv": "8ecb2a27377ffad4c091c94819eda42df0787c46b506d0d036a7812c90ef1c88",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv": "a7022ed021e90407c48ef984a76f1d832b9c7a53f12a036e3d707cf640fab84e",
+    "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv": "0920c1f32e3802b4a4f19fafd8bd43f61c6a5f3fd2002a3b9a89710bf0e9ae00",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv": "d526e268a54716d4f4c5ac3620395e50f5a59e0fa56e71e1ec6eee76f5a24fa0",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv": "41666af96d2b1f0138ebe7233d6e8f0ce48835992aee4c884e4bcc02b4398ae8",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b"
+  },
+  "tested_RTL_tip": "9d366e3b4",
+  "tested_provider_hashes": {
+    "ot_hbm_static_load_addr_counter.sv": "f2ebfa09cc72b60e4461df45110ba3b2399c2d0d60ca6c9182c0070301889b3b",
+    "ot_hbm_static_load_addr_map.sv": "2105a2c3dd7a9dfd18223a602da11edf354d2c453b1855d938afaf2fb22fb974",
+    "ot_hbm_static_load_quad_vehicle.sv": "5ff1d8b050ab276238b0da56d81971471c9afc1602e743ae34009a59b9c98800",
+    "ot_hbm_static_load_provider_quad.sv": "7ea83328a00506f2c9697c657d738aacb1abfd27f8ad1ce2172b909a63a9e356",
+    "ot_hbm_static_load_cp_provider_quad.sv": "9d10deed4df955acf2066715d887fe35675bff28d3af92e1281af3e6425333ee",
+    "ot_hbm_static_load_vm_commit_guard.sv": "2feabdad3ef141f7054648fa91a04292eef5791d2ff3cd7ff6c6aa13089be90e",
+    "ot_hbm_static_load_vm_dq_demux.sv": "cb89d0ae29a543668986823f437c01e87d4a1f673d6762b3e08b8d22df7f7a0e"
+  },
+  "tested_and_current_noncomment_RTL_tokens_equal": true,
+  "format_control_results": {
+    "branch": "codex/hbm-bind-1030",
+    "commit": "5a703c0a9",
+    "scope": "wrongdestinationformat controls; results branch separate from canonicalRTL ancestry",
+    "files_sha256": {
+      "counter_model.json": "bc2f01ca8c44afbe82564016b5fdc004248c29f872036fca90bbdedadb46898f",
+      "counter_scalar_current.log": "7b73e2c3cb470064ab1a5be9a3555b84eabd4549c53f184b0c3bf0b0f638c128"
+    },
+    "tested_counter_matches_canonical_dd491": true
+  },
+  "exclusive_ownership": "Sole DQ/slot6 producer perbank during LOAD; oldDMA requests drained beforestart. dq_done identifies bankandDMAport, not uniqueproducer. OtherDMA source would require static ownership or actual tag/date correlation.",
+  "scope": "Enabled TIMING_833=1 local-model source mechanism only; currentdefaultOFF equivalence and physical/licensedPHY scope remain separate.",
+  "tested_provider_tip": "9d366e3b4",
+  "tested_provider_files": {
+    "ot_hbm_static_load_addr_counter.sv": "f2ebfa09cc72b60e4461df45110ba3b2399c2d0d60ca6c9182c0070301889b3b",
+    "ot_hbm_static_load_addr_map.sv": "2105a2c3dd7a9dfd18223a602da11edf354d2c453b1855d938afaf2fb22fb974",
+    "ot_hbm_static_load_quad_vehicle.sv": "5ff1d8b050ab276238b0da56d81971471c9afc1602e743ae34009a59b9c98800",
+    "ot_hbm_static_load_provider_quad.sv": "7ea83328a00506f2c9697c657d738aacb1abfd27f8ad1ce2172b909a63a9e356",
+    "ot_hbm_static_load_cp_provider_quad.sv": "9d10deed4df955acf2066715d887fe35675bff28d3af92e1281af3e6425333ee",
+    "ot_hbm_static_load_vm_commit_guard.sv": "2feabdad3ef141f7054648fa91a04292eef5791d2ff3cd7ff6c6aa13089be90e",
+    "ot_hbm_static_load_vm_dq_demux.sv": "cb89d0ae29a543668986823f437c01e87d4a1f673d6762b3e08b8d22df7f7a0e"
+  },
+  "source_equivalence": "Current canonical9a5727aa2 differs from tested9d366e3b4 only by8 ownership comments inCP/guard; noncommenttokens equal (same prior32bank proof).",
+  "timing_RTL_tip": "abdb23bfa",
+  "tools": {
+    "tools/hbm_timing_833_profile.py": "5677f9b8bb2680fc47b58f2dbbe56df9d95c00a90552353daf4e1847eb5e8f70"
+  },
+  "h9b_normalization": "Canonical h9b retains YC1 B2/b[1:0] concat spelling correction vs preferredaaf5; sameSVvalue/cycles, notbyteexactwholewrapper orcurrentcacheLEC claim. Preferredcontrollergold byteexact preprofilecanonical and abdbdefault5742cellEQ are separately owned by binder."
+}

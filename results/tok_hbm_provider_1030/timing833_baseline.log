@@ -1,0 +1,99 @@
+VMFC_BEGIN edge=168 epoch=7 buffer=0 row=20752 col=0
+VMFC_FILL edge=184 epoch=7 buffer=0 row=20752 col=0
+NATIVE_PHY_FILL phase=0 first=160 ready=1072 edges=912 RD=1024 fills=1024 REF=96
+CP_CMD index=1 edge=1224 nativecycle=1189 issue_at=1197 drain_at=1281 n=512
+VM_LOAD_DONE index=1 edge=1316 cycle_post=1282 drain_at=1281
+CP_CMD index=2 edge=1324 nativecycle=1289 issue_at=1297 drain_at=1381 n=512
+VM_LOAD_DONE index=2 edge=1416 cycle_post=1382 drain_at=1381
+CP_CMD index=3 edge=1424 nativecycle=1389 issue_at=1397 drain_at=1481 n=512
+VM_LOAD_DONE index=3 edge=1516 cycle_post=1482 drain_at=1481
+CP_CMD index=4 edge=1524 nativecycle=1489 issue_at=1497 drain_at=1581 n=512
+VM_LOAD_DONE index=4 edge=1616 cycle_post=1582 drain_at=1581
+CP_CMD index=5 edge=1624 nativecycle=1589 issue_at=1597 drain_at=1681 n=512
+VM_LOAD_DONE index=5 edge=1716 cycle_post=1682 drain_at=1681
+CP_CMD index=6 edge=1724 nativecycle=1689 issue_at=1697 drain_at=1781 n=512
+VM_LOAD_DONE index=6 edge=1816 cycle_post=1782 drain_at=1781
+CP_CMD index=7 edge=1824 nativecycle=1789 issue_at=1797 drain_at=1881 n=512
+VM_LOAD_DONE index=7 edge=1916 cycle_post=1882 drain_at=1881
+CP_CMD index=8 edge=1924 nativecycle=1889 issue_at=1897 drain_at=1981 n=512
+VM_LOAD_DONE index=8 edge=2016 cycle_post=1982 drain_at=1981
+CP_CMD index=9 edge=2024 nativecycle=1989 issue_at=1997 drain_at=2081 n=512
+VM_LOAD_DONE index=9 edge=2116 cycle_post=2082 drain_at=2081
+CP_CMD index=10 edge=2124 nativecycle=2089 issue_at=2097 drain_at=2181 n=512
+VM_LOAD_DONE index=10 edge=2216 cycle_post=2182 drain_at=2181
+CP_CMD index=11 edge=2224 nativecycle=2189 issue_at=2197 drain_at=2281 n=512
+VM_LOAD_DONE index=11 edge=2316 cycle_post=2282 drain_at=2281
+CP_CMD index=12 edge=2324 nativecycle=2289 issue_at=2297 drain_at=2381 n=512
+VM_LOAD_DONE index=12 edge=2416 cycle_post=2382 drain_at=2381
+CP_CMD index=13 edge=2424 nativecycle=2389 issue_at=2397 drain_at=2481 n=512
+VM_LOAD_DONE index=13 edge=2516 cycle_post=2482 drain_at=2481
+CP_CMD index=14 edge=2524 nativecycle=2489 issue_at=2497 drain_at=2581 n=512
+VM_LOAD_DONE index=14 edge=2616 cycle_post=2582 drain_at=2581
+VMFC_BEGIN edge=5820 epoch=8 buffer=0 row=20752 col=0
+VMFC_FILL edge=5836 epoch=8 buffer=0 row=20752 col=0
+NATIVE_PHY_FILL phase=1 first=5812 ready=7834 edges=2022 RD=2048 fills=2048 REF=848
+CP_CMD index=15 edge=7986 nativecycle=7951 issue_at=7959 drain_at=8043 n=512
+VM_LOAD_DONE index=15 edge=8078 cycle_post=8044 drain_at=8043
+CP_CMD index=16 edge=8086 nativecycle=8051 issue_at=8059 drain_at=8143 n=512
+VM_LOAD_DONE index=16 edge=8178 cycle_post=8144 drain_at=8143
+CP_CMD index=17 edge=8186 nativecycle=8151 issue_at=8159 drain_at=8243 n=512
+VM_LOAD_DONE index=17 edge=8278 cycle_post=8244 drain_at=8243
+CP_CMD index=18 edge=8286 nativecycle=8251 issue_at=8259 drain_at=8343 n=512
+VM_LOAD_DONE index=18 edge=8378 cycle_post=8344 drain_at=8343
+CP_CMD index=19 edge=8386 nativecycle=8351 issue_at=8359 drain_at=8443 n=512
+VM_LOAD_DONE index=19 edge=8478 cycle_post=8444 drain_at=8443
+CP_CMD index=20 edge=8486 nativecycle=8451 issue_at=8459 drain_at=8543 n=512
+VM_LOAD_DONE index=20 edge=8578 cycle_post=8544 drain_at=8543
+CP_CMD index=21 edge=8586 nativecycle=8551 issue_at=8559 drain_at=8643 n=512
+VM_LOAD_DONE index=21 edge=8678 cycle_post=8644 drain_at=8643
+CP_CMD index=22 edge=8686 nativecycle=8651 issue_at=8659 drain_at=8743 n=512
+VM_LOAD_DONE index=22 edge=8778 cycle_post=8744 drain_at=8743
+CP_CMD index=23 edge=8786 nativecycle=8751 issue_at=8759 drain_at=8843 n=512
+VM_LOAD_DONE index=23 edge=8878 cycle_post=8844 drain_at=8843
+CP_CMD index=24 edge=8886 nativecycle=8851 issue_at=8859 drain_at=8943 n=512
+VM_LOAD_DONE index=24 edge=8978 cycle_post=8944 drain_at=8943
+CP_CMD index=25 edge=8986 nativecycle=8951 issue_at=8959 drain_at=9043 n=512
+VM_LOAD_DONE index=25 edge=9078 cycle_post=9044 drain_at=9043
+CP_CMD index=26 edge=9086 nativecycle=9051 issue_at=9059 drain_at=9143 n=512
+VM_LOAD_DONE index=26 edge=9178 cycle_post=9144 drain_at=9143
+CP_CMD index=27 edge=9186 nativecycle=9151 issue_at=9159 drain_at=9243 n=512
+VM_LOAD_DONE index=27 edge=9278 cycle_post=9244 drain_at=9243
+CP_CMD index=28 edge=9286 nativecycle=9251 issue_at=9259 drain_at=9343 n=512
+VM_LOAD_DONE index=28 edge=9378 cycle_post=9344 drain_at=9343
+VMFC_BEGIN edge=12582 epoch=9 buffer=1 row=20752 col=0
+VMFC_FILL edge=12598 epoch=9 buffer=1 row=20752 col=0
+NATIVE_PHY_FILL phase=2 first=12574 ready=14340 edges=1766 RD=3072 fills=3072 REF=1568
+CP_CMD index=29 edge=14492 nativecycle=14457 issue_at=14465 drain_at=14549 n=512
+VM_LOAD_DONE index=29 edge=14584 cycle_post=14550 drain_at=14549
+CP_CMD index=30 edge=14592 nativecycle=14557 issue_at=14565 drain_at=14649 n=512
+VM_LOAD_DONE index=30 edge=14684 cycle_post=14650 drain_at=14649
+CP_CMD index=31 edge=14692 nativecycle=14657 issue_at=14665 drain_at=14749 n=512
+VM_LOAD_DONE index=31 edge=14784 cycle_post=14750 drain_at=14749
+CP_CMD index=32 edge=14792 nativecycle=14757 issue_at=14765 drain_at=14849 n=512
+VM_LOAD_DONE index=32 edge=14884 cycle_post=14850 drain_at=14849
+CP_CMD index=33 edge=14892 nativecycle=14857 issue_at=14865 drain_at=14949 n=512
+VM_LOAD_DONE index=33 edge=14984 cycle_post=14950 drain_at=14949
+CP_CMD index=34 edge=14992 nativecycle=14957 issue_at=14965 drain_at=15049 n=512
+VM_LOAD_DONE index=34 edge=15084 cycle_post=15050 drain_at=15049
+CP_CMD index=35 edge=15092 nativecycle=15057 issue_at=15065 drain_at=15149 n=512
+VM_LOAD_DONE index=35 edge=15184 cycle_post=15150 drain_at=15149
+CP_CMD index=36 edge=15192 nativecycle=15157 issue_at=15165 drain_at=15249 n=512
+VM_LOAD_DONE index=36 edge=15284 cycle_post=15250 drain_at=15249
+CP_CMD index=37 edge=15292 nativecycle=15257 issue_at=15265 drain_at=15349 n=512
+VM_LOAD_DONE index=37 edge=15384 cycle_post=15350 drain_at=15349
+CP_CMD index=38 edge=15392 nativecycle=15357 issue_at=15365 drain_at=15449 n=512
+VM_LOAD_DONE index=38 edge=15484 cycle_post=15450 drain_at=15449
+CP_CMD index=39 edge=15492 nativecycle=15457 issue_at=15465 drain_at=15549 n=512
+VM_LOAD_DONE index=39 edge=15584 cycle_post=15550 drain_at=15549
+CP_CMD index=40 edge=15592 nativecycle=15557 issue_at=15565 drain_at=15649 n=512
+VM_LOAD_DONE index=40 edge=15684 cycle_post=15650 drain_at=15649
+CP_CMD index=41 edge=15692 nativecycle=15657 issue_at=15665 drain_at=15749 n=512
+VM_LOAD_DONE index=41 edge=15784 cycle_post=15750 drain_at=15749
+CP_CMD index=42 edge=15792 nativecycle=15757 issue_at=15765 drain_at=15849 n=512
+VM_LOAD_DONE index=42 edge=15884 cycle_post=15850 drain_at=15849
+LOCAL_NS_COUNTS ACT=3108 PRE=3108 REF=2081 RD=3072 WR=24
+PASS TIMING833_ROLE_VMFC_SHARED_NATIVE_PHY_VM_CP_PROVIDER exact833ps descriptors=42 packets=2688 words=21504 epochs=3 latency=8 first_step=1232 last_step=15863 first_packet=1240 last_packet=15871 native_dq_done=2688 load_done=42 SRAMreadback=2688 dqcap_to_ack=4 read_latency=7 first_dq_capture=1241 first_native_ack=1245
+- tb_timing833_provider.sv:323: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 16us; walltime 10.603 s; speed 1.492 us/s
+- Verilator: cpu 10.601 s on 1 threads; allocated 18 MB

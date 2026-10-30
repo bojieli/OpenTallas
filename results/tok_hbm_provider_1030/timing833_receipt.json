@@ -1,0 +1,123 @@
+{
+  "status": "PASS_LOCAL_NS_PROFILE_SOURCE_MECHANISM_ONLY",
+  "timing_RTL_tip": "abdb23bfa",
+  "boot_tool_source": "6739d1690:tools/hbm_timing_833_profile.py",
+  "boot_tool_sha256": "5677f9b8bb2680fc47b58f2dbbe56df9d95c00a90552353daf4e1847eb5e8f70",
+  "provider_data_source": "8c5f35a6f",
+  "baseline_unit": "intel1:oth-ubuntu-2929994-1793376396",
+  "small_baseline_and_mutant_unit": "intel1:oth-ubuntu-3042470-1793377032",
+  "clock_ps": 833,
+  "TIMING_833": 1,
+  "default_OFF": true,
+  "refresh_period_edges": 144,
+  "refresh_cfg_range": [
+    144,
+    252
+  ],
+  "external_DRAM_return_edges": 29,
+  "RREG_edges": 1,
+  "local_model_CL_RET_edges": 30,
+  "minimum_ns_guards": [
+    "ACT/RP",
+    "ACT/RRD_S/L",
+    "ACT/fouractivatewindow",
+    "PRE/RAS",
+    "PRE/RTP",
+    "PRE/WRR",
+    "REF/RP",
+    "REF/ACT-RREFD",
+    "ACT/REF-RREFD",
+    "perPCcol/BURST",
+    "sameBGcol/CCDL",
+    "RD/RCD",
+    "WR/RCDW",
+    "RD/WTR",
+    "WR/RTW",
+    "pairedROW_CA1024ps",
+    "pairedCOL_CA512ps",
+    "perbankRFCpb200ns"
+  ],
+  "actual_command_counts": {
+    "ACT": 3108,
+    "PRE": 3108,
+    "REF": 2081,
+    "RD": 3072,
+    "WR": 24
+  },
+  "LOADs": 42,
+  "STOREs": 3,
+  "VM_packets": 2688,
+  "native_DQdone": 2688,
+  "status_qualified_LOADdone": 42,
+  "actual_SRAM_readbacks": 2688,
+  "ROLE_launch_edges": [
+    160,
+    5812,
+    12574
+  ],
+  "ROLE_FILL_edges": [
+    184,
+    5836,
+    12598
+  ],
+  "ready_edges": [
+    1072,
+    7834,
+    14340
+  ],
+  "launch_to_ready_edges": [
+    912,
+    2022,
+    1766
+  ],
+  "FILL_to_ready_edges": [
+    888,
+    1998,
+    1742
+  ],
+  "matched_old_ROLE_launch_to_ready": [
+    1567,
+    1525,
+    1271
+  ],
+  "matched_old_FILL_to_ready": [
+    1543,
+    1501,
+    1247
+  ],
+  "interval_deltas_edges": [
+    -655,
+    497,
+    495
+  ],
+  "total_delta_edges": 337,
+  "total_delta_ps": 280721,
+  "first_step": 1232,
+  "last_step": 15863,
+  "first_packet": 1240,
+  "last_packet": 15871,
+  "old_last_packet": 15534,
+  "step_to_packet_edges": 8,
+  "DQcapture_to_ACK_edges": 4,
+  "short_RCD_mutant": {
+    "change": "Only enabledRCD24\u219219; ROW4/COL2/REF144 remain unchanged",
+    "actual_gap_edges": 20,
+    "actual_gap_ps": 16660,
+    "required_min_ps": 19375,
+    "result": "Independent ns guard catches actual premature RD atedge166"
+  },
+  "history": {
+    "elaboration_failure": "timing833_fd419_elaboration_FAIL.log",
+    "cause": "Constant function declared under generate; no simulation ran",
+    "correction": "abdb moves pure constant function to module scope, no derived value change"
+  },
+  "fixed_calendar_scope": "All existing page-relative issue/drain tables remain unchanged and pass after host initialization observes actualownedready. No production absolute HOST/VMAP/window calendar was qualified before or after this run; it still needs fixeddate/transport composition.",
+  "holds": [
+    "LOCAL published-model timings and explicit RSP10ns/RREFD8ns/ROW_CA assumptions, not licensedPHY timing",
+    "No DFI clock migration or new clock; all actualfixture clocks exactly833ps",
+    "Bare source bodies, no routedphysical faces/trunks or oldRAW/privateCOPY coexistence claim",
+    "Newprofile remainsdefaultOFF; source and physicalplan adoption separate",
+    "Sourcefault return/pairedcontroller reset alignment/global fullprogramme calendar remain unqualified",
+    "No acceptedtoken normalization, dynamicEngram/fullstack orscratchauthority claim"
+  ]
+}
