@@ -75,5 +75,61 @@ class BandResize(unittest.TestCase):
         self.assertGreaterEqual(CP.ring_ff_reserve_um2(33), 350.8)
 
 
+def _ov(a, o):
+    return min(a[2], o[2]) > max(a[0], o[0]) + 1e-6 and min(a[3], o[3]) > max(a[1], o[1]) + 1e-6
+
+
+class BandResetSites(unittest.TestCase):
+    """FLOW-7 10-30 (DIE-KV-43 KV-022 SD try5 3_3 'u_cland_collect_rst_rl_39 ... band upper bound 0.0 um2'): ring bands
+    avoid the type's reset relay / collector sites (the 4.32-um landing_place collector box around each relay xy)."""
+    def tearDown(self):
+        CP.BAND_RESERVE = "padded"
+
+    def _t(self):
+        t = dict(outline_um=[400.0, 300.0], hard_cores=[], buses=[], clock=dict(landing_contract=dict(pins=[], bands={})))
+        t["_cland_geom"] = GEOM
+        return t
+
+    def test_reset_site_rects_are_the_collector_boxes(self):
+        tree = dict(root=[10.0, 20.0], relays=[dict(q="rst_rl_39", d="x", xy=[1750.0, 30.24]),
+                                                 dict(q="rst_n_t0", d="x", xy=[1750.0, 30.24])])
+        self.assertEqual(CP.reset_site_rects(tree), [[1747.84, 28.08, 1752.16, 32.4], [7.84, 17.84, 12.16, 22.16]])
+        self.assertEqual(CP.reset_site_rects(None), [])
+
+    def test_band_over_a_relay_site_moves_off_it(self):
+        t = self._t()
+        free = CP._storage_band(t, "wide_i", 63, [])
+        x0, y0, x1, y1 = free["rect_um"]
+        site = [[(x0 + x1) / 2 - 2.16, (y0 + y1) / 2 - 2.16, (x0 + x1) / 2 + 2.16, (y0 + y1) / 2 + 2.16]]
+        b = CP._storage_band(t, "wide_i", 63, [], resets=site)
+        self.assertFalse(_ov(b["rect_um"], site[0]))
+        self.assertEqual(b["reset_sites_avoided_um"], site)
+        self.assertLessEqual(b["max_pin_to_band_hop_um"], 405)
+
+    def test_band_clear_of_relay_sites_is_byte_identical(self):
+        t = self._t()
+        free = CP._storage_band(t, "wide_i", 63, [])
+        far = [[380.0, 280.0, 384.32, 284.32]]
+        self.assertFalse(_ov(free["rect_um"], far[0]))
+        self.assertEqual(CP._storage_band(t, "wide_i", 63, [], resets=far), free)
+
+    def test_resize_moves_a_sized_band_off_a_reset_site(self):
+        p, side = _plan()
+        CP.BAND_RESERVE = "ring_ff"
+        t = copy.deepcopy(p["partition_types"]["a"]);t["_cland_geom"] = GEOM
+        big = CP._storage_band(t, "wide_i", 63, [p["partition_types"]["a"]["clock"]["landing_contract"]["bands"]["ft1_i"]["rect_um"]])
+        CP.BAND_RESERVE = "padded"
+        for tn in ("a", "b"):
+            p["partition_types"][tn]["clock"]["landing_contract"]["bands"]["wide_i"] = dict(big, instance="u_cland_wide_i")
+        x0, y0, x1, y1 = big["rect_um"];cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
+        side["collector"]["types"]["a"]["tree"] = dict(root=[390.0, 290.0], relays=[dict(q="rst_rl_39", d="rst_root_n", xy=[cx, cy])])
+        new, rep = CP.resize_undersized_bands(p, side, ["a", "b"])
+        b = new["partition_types"]["a"]["clock"]["landing_contract"]["bands"]["wide_i"]
+        self.assertFalse(_ov(b["rect_um"], [cx - 2.16, cy - 2.16, cx + 2.16, cy + 2.16]))
+        self.assertIn("reset relay/collector site", b["resize"])
+        self.assertEqual([(r["type"], r["bus"]) for r in rep], [("a", "wide_i")])   # b has no tree: unchanged
+        self.assertEqual(new["partition_types"]["b"], p["partition_types"]["b"])
+
+
 if __name__ == "__main__":
     unittest.main()

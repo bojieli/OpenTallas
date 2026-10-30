@@ -4497,6 +4497,11 @@
     },
     "cland_fit_resize": {
      "type": "boolean"
+    },
+    "dpl_legalizer": {
+     "enum": [
+      "diamond"
+     ]
     }
    }
   }

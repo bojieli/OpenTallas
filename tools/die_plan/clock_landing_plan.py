@@ -258,7 +258,31 @@ def phy_supply_rects(P,tn):
     return out
 
 
-def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=()):
+# FLOW-7 10-30 (DIE-KV-43 KV-022 SD try5, 3_3 OT_CLAND "u_cland_collect_rst_rl_39 ... band upper bound 0.0 um2"): the
+# ring band search did not see the type's reset-tree relay sites (reset relays, local taps rst_n_t*, the tree root). The
+# kit places each relay / collector / raw reset copy in the same 4.32-um box around the relay xy (landing_place.near),
+# so a ring band packed over that box leaves the collector no site; the b64 fail-closed check catches it only at 3_3.
+# reset_site_rects gives those boxes, and _storage_band(resets=...) avoids them.  A band that overlaps none of them
+# is returned unchanged (byte-identical plans); only an overlapping band is searched again with them as obstacles.
+def reset_site_rects(tree):
+    if not tree:return []
+    pts=[r["xy"] for r in tree.get("relays",[]) if r.get("xy")]+([tree["root"]] if tree.get("root") else [])
+    out=[]
+    for x,y in pts:
+        r=[round(x-2.16,6),round(y-2.16,6),round(x+2.16,6),round(y+2.16,6)]
+        if r not in out:out.append(r)
+    return out
+
+
+def _storage_band(t,bus,width,used,*,has_epoch=True,_scale=None,phy=(),resets=()):
+    if resets:
+        try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale,phy=phy)
+        except ValueError:b=None
+        if b is not None and not any(_rect_overlap(b["rect_um"],o) for o in resets):return b
+        hit=[list(o) for o in resets if b is not None and _rect_overlap(b["rect_um"],o)]
+        b=_storage_band(t,bus,width,list(used)+[list(o) for o in resets],has_epoch=has_epoch,_scale=_scale,phy=phy)
+        b["reset_sites_avoided_um"]=hit
+        return b
     if phy:
         try:b=_storage_band(t,bus,width,used,has_epoch=has_epoch,_scale=_scale)
         except ValueError:b=None
@@ -804,7 +828,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
         else:tree=RT.for_type(P,tn) if pn in active else None
         info=dict(base_type=base_type[pn],mask=sig,tree=tree,local_sources=[],children=[],up_parent=monitor_parent[pn] if pn in active else None,
                   reset_entry_um=W["types"].get(tn,{}).get("in_um"),bands={},bus_geometry=copy.deepcopy(t.get("_cland_geom",{})))
-        used=[];phy=phy_supply_rects(P,tn)
+        used=[];phy=phy_supply_rects(P,tn);resets=reset_site_rects(tree)
         landings=sorted(ins[pn].items())
         band_order=(band_order_by_type or {}).get(base_type[pn],"name")
         if band_order=="largest_first":
@@ -816,7 +840,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
             else:
                 tapxy={int(r["q"].split("rst_n_t")[1]):r["xy"] for r in tree["relays"] if r["q"].startswith("rst_n_t")}
                 tap=min(range(RT.consumer_count(tree)),key=lambda i:abs(tapxy[i][0]-point[0])+abs(tapxy[i][1]-point[1]))
-            try:band=_storage_band(t,bus,int(r["width"]),used,phy=phy);used.append(band["rect_um"])
+            try:band=_storage_band(t,bus,int(r["width"]),used,phy=phy,resets=resets);used.append(band["rect_um"])
             except ValueError as e:
                 placement_failures.append(dict(type=tn,bus=bus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
             band["instance"]="u_cland_"+bus
@@ -860,7 +884,7 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
                         note="reverse monitor forwarded clock; 2bit landed ring, boot-only cost"))
                 if c["seam"]:
                     monbus=f"cland_dn_ready_{i}"
-                    try:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy);used.append(band["rect_um"])
+                    try:band=_storage_band(t,monbus,2,used,has_epoch=False,phy=phy,resets=resets);used.append(band["rect_um"])
                     except ValueError as e:
                         placement_failures.append(dict(type=tn,bus=monbus,error=str(e)));band=dict(placement="FAIL",rect_um=None)
                     band["instance"]=f"u_cland_monitor_{i}"
@@ -1025,18 +1049,21 @@ def resize_undersized_bands(plan,sidecar,types):
         for tn in types:
             t=out["partition_types"][tn];bands=t["clock"]["landing_contract"]["bands"]
             phy=phy_supply_rects(P,tn) if P is not None else []
+            resets=reset_site_rects(geoms[tn].get("tree"))   # FLOW-7: the type's reset relay / collector sites
             tt=copy.deepcopy(t);tt["_cland_geom"]=copy.deepcopy(geoms[tn]["bus_geometry"])
             for bus in sorted(bands):
                 b=bands[bus]
                 if bus.startswith("monitor_") or not b.get("rect_um"):continue
                 x0,y0,x1,y1=b["rect_um"];need=ring_ff_reserve_um2(b["width"])
                 inphy=any(_rect_overlap(b["rect_um"],o) for o in phy)   # DIE-KV-42: inside a hard PHY supply region
-                if (x1-x0)*(y1-y0)+1e-6>=need and not inphy:continue
+                inrst=any(_rect_overlap(b["rect_um"],o) for o in resets)   # FLOW-7: over a reset relay/collector site
+                if (x1-x0)*(y1-y0)+1e-6>=need and not inphy and not inrst:continue
                 used=[list(o["rect_um"]) for k,o in bands.items() if k!=bus and o.get("rect_um")]
-                nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy)
+                nb=_storage_band(tt,bus,int(b["width"]),used,phy=phy,resets=resets)
                 nb.update(instance=b.get("instance","u_cland_"+bus),resized_from_um=list(b["rect_um"]),
-                          resize="DIE-KV-32 ring_ff reserve (undersized for the CA ring)" if not inphy else
-                          "DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)")
+                          resize="DIE-KV-42 band overlapped a PHY supply-region hard blockage (pdn.tcl)" if inphy else
+                          "FLOW-7 band overlapped a reset relay/collector site (landing_place collector box)" if inrst else
+                          "DIE-KV-32 ring_ff reserve (undersized for the CA ring)")
                 report.append(dict(type=tn,bus=bus,old_um2=round((x1-x0)*(y1-y0),1),reserve_um2=round(need,1),
                                    new_rect_um=nb["rect_um"],hop_um=nb["max_pin_to_band_hop_um"]))
                 bands[bus]=nb
