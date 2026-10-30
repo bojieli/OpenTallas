@@ -428,6 +428,61 @@ def lef_pin_rects(path, geometry=False):
     return out
 
 
+
+def native_pin_rects(path):
+    """All declared non-M1 rectangles, without collapsing multi-PORT access metal."""
+    out, name, layer = {}, None, None
+    for line in Path(path).read_text().splitlines():
+        t = line.split()
+        if t[:1] == ["PIN"]:
+            name, layer = t[1], None
+        elif name and t[:1] == ["LAYER"]:
+            layer = t[1]
+        elif name and t[:1] == ["RECT"] and layer != "M1":
+            out.setdefault(name, []).append([layer, *map(float, t[1:5])])
+        elif name and t[:2] == ["END", name]:
+            name, layer = None, None
+    return out
+
+
+def native_multiport(q, rects, w, h):
+    """Accept only the original connected same-layer metal from logical centre to edge."""
+    if len(rects) < 2 or any(a[0] != q["layer"] for a in rects):
+        return None
+    f = face_of(q["x"], q["y"], w, h)
+    for a in rects:
+        if not (0 <= a[1] < a[3] <= w and 0 <= a[2] < a[4] <= h):
+            return None
+    center = [i for i,a in enumerate(rects) if abs((a[1]+a[3])/2-q["x"]) < 1e-4 and abs((a[2]+a[4])/2-q["y"]) < 1e-4]
+    if not center:
+        return None
+    reached = set(center)
+    while True:
+        more = {i for i,a in enumerate(rects) if any(max(a[1],rects[j][1]) <= min(a[3],rects[j][3]) and max(a[2],rects[j][2]) <= min(a[4],rects[j][4]) for j in reached)}
+        if more <= reached:
+            break
+        reached |= more
+    if len(reached) != len(rects):
+        return None
+    if not any(abs({"W":a[1],"E":w-a[3],"S":a[2],"N":h-a[4]}[f]) < 1e-4 for a in rects):
+        return None
+    return rects
+
+
+def native_multiport_tcl(name, rects):
+    # Create exactly the original rectangles; no place_pin snapping or synthetic union box.
+    lines = [f"set ot_mp_bt [[ord::get_db_block] findBTerm {{{name}}}]",
+             'if {$ot_mp_bt eq "NULL" || $ot_mp_bt eq ""} {error "native multiPORT BTerm missing"}',
+             "foreach ot_mp_old [$ot_mp_bt getBPins] {odb::dbBPin_destroy $ot_mp_old}",
+             "set ot_mp_bp [odb::dbBPin_create $ot_mp_bt]",
+             "set ot_mp_u [[ord::get_db_block] getDbUnitsPerMicron]",
+             "$ot_mp_bp setPlacementStatus FIRM"]
+    for layer,*box in rects:
+        coords = " ".join(f"[expr {{int(round({v:.6f}*$ot_mp_u))}}]" for v in box)
+        lines.append(f"odb::dbBox_create $ot_mp_bp [[ord::get_db_tech] findLayer {layer}] {coords}")
+    return lines
+
+
 def planned_pin_geometry(q, shapes, w, h, modern=True, interior_clock=None):
     """Preserve a declared edge rectangle; modern kits never silently move plan pins."""
     f = face_of(q["x"], q["y"], w, h)
@@ -1088,6 +1143,7 @@ def main():
         raise SystemExit(pin_gate_refusal(a.module, _pg))
     dirs = lef_dirs(REPO / hc["lef"])
     shapes = lef_pin_rects(REPO / hc["lef"], geometry=True)
+    native_shapes = native_pin_rects(REPO / hc["lef"])
     suffix = a.suffix or rec.get("suffix", "c")
     kd = Path(a.out) / f"{mod}_{suffix}"
     MS.precheck(a.master_slice, a.trial, plan, mod)
@@ -1183,18 +1239,27 @@ def main():
         L_ = shapes.get(q["name"], (q["layer"],))[0]
         if L_ != q["layer"] and not rec.get("rtl_dirs"):
             raise SystemExit(f"{mod}: pin {q['name']} layer {q['layer']} != plan LEF {L_}")
-        q, pw, ph_, projected = planned_pin_geometry(dict(q), shapes, w, h, modern=modern,
-                                                    interior_clock=interior_clocks.get(q["name"]))
+        native = native_multiport(q, native_shapes.get(q["name"], []), w, h) if modern and q["name"] not in interior_clocks else None
+        if native:
+            pw, ph_, projected = RECT[q["layer"]][0], RECT[q["layer"]][1], 0
+        else:
+            q, pw, ph_, projected = planned_pin_geometry(dict(q), shapes, w, h, modern=modern,
+                                                        interior_clock=interior_clocks.get(q["name"]))
         if q["name"] in interior_clocks:
             f = "C"
         snapped += projected
-        io.append(f"place_pin -pin_name {{{q['name']}}} -layer {q['layer']} -location {{{q['x']:.4f} {q['y']:.4f}}} "
-                  f"-pin_size {{{pw:.4f} {ph_:.4f}}}")
+        if native:
+            io.extend(native_multiport_tcl(q["name"], native))
+        else:
+            io.append(f"place_pin -pin_name {{{q['name']}}} -layer {q['layer']} -location {{{q['x']:.4f} {q['y']:.4f}}} "
+                      f"-pin_size {{{pw:.4f} {ph_:.4f}}}")
         mt = re.match(r"^(.*)\[(\d+)\]$", q["name"])
         rows.append(dict(bus=mt.group(1) if mt else q["name"], bit=int(mt.group(2)) if mt else None,
                          layer=q["layer"], x=round(q["x"], 4), y=round(q["y"], 4), face=f))
-        if f == "C":
-            pass  # exact explicit slice clock rectangle was checked above
+        if native:
+            rows[-1]["native_rects"] = native
+        if native or f == "C":
+            pass  # exact original multiPORT metal or explicit slice clock checked above
         elif f in "EW":
             assert abs((q["x"] - pw / 2) if f == "W" else (w - q["x"] - pw / 2)) < 1e-3, q
         else:
