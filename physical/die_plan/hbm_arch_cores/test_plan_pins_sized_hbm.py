@@ -41,3 +41,19 @@ def test_unsized_unchanged():
     assert recs["d[0]"]["y"] == round(0.0 + half, 4)
     assert recs["a[0]"]["x"] == round(0.0 + half, 4)
     assert recs["y[0]"]["x"] == round(W - half, 4)
+
+
+def test_interior_clock_alias_and_reset_keep_literal_plan_centres():
+    # Actual collar alias and XCAL reset regressions: neither may project to S/N.
+    pins = [dict(name="clk_in", face="C", layer="M5", x=44.664, y=43.2, w=.048, h=.48),
+            dict(name="rst_n", face="area", layer="M4", x=121.032, y=112.32),
+            dict(name="clk", face="C", layer="M5", x=125.304, y=125.28)]
+    io, rows = coregen.io_tcl(pins, 250.56, 250.56, "interior")
+    centres = _io_centres(io)
+    recs = coregen.plan_pin_records(rows)
+    for pin in pins:
+        expected = (pin["x"], pin["y"])
+        assert centres[pin["name"]] == expected
+        assert (recs[pin["name"]]["x"], recs[pin["name"]]["y"]) == expected
+    assert "-pin_size {0.0480 0.4800}" in io
+    assert all(row["face"] == "C" for row in rows)
