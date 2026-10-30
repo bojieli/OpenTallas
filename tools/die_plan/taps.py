@@ -80,7 +80,7 @@ def planned_sinks(P, tn, bit_sites=False):
     at = {(p[0], p[1]): (p[3], p[4], p[5]) for p in pins}
     exact_faces = {e["conn"][4:]: e for e in t.get("internal_stations", [])
                    if e.get("conn", "").startswith("bus:") and e.get("face_bit_sites_um")}
-    out = []
+    out = [centre(row) + (f"ft_s{stage}",) for rows in full.values() for (stage, bit), row in sorted(rows.items())]
     for name, bit, _ln, x, y, face in pins:
         base, sfx = (name[:-2], name[-2:]) if name[-2:] in ("_i", "_o") else (name, "")
         if base in slots and sfx:
@@ -88,8 +88,6 @@ def planned_sinks(P, tn, bit_sites=False):
                 continue
             s = slots[base]
             if base in full:
-                for j in range(s["stations"]):
-                    out.append(centre(full[base][j,bit]) + (f"ft_s{j}",))
                 continue
             out.append(_inset(x, y, face, w, h) + ("ft_s0",))
             k = int(s.get("stations", 1))

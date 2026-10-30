@@ -176,6 +176,16 @@ def check_ft_macro_sites(P, R):
                 R.err('geometry', f'type {tn} slot {slot["name"]}: {exc}', type=tn)
                 continue
             name = slot['name']; stages = int(slot.get('stations', 1)); hits = 0; example = None
+            if name in full:
+                for (j,bit), row in full[name].items():
+                    x,y=row['xy']; w,h=row['size']
+                    for macro,(x0,y0,x1,y1) in boxes.items():
+                        if min(x+w,x1)-max(x,x0)>EPS and min(y+h,y1)-max(y,y0)>EPS:
+                            hits+=1; example=example or (j,bit,macro); break
+                if hits:
+                    j,bit,macro=example; count+=hits
+                    R.err('geometry', f'type {tn} slot {name}: {hits} exact full-stage cells intersect physical macros (stage {j}, bit {bit}, macro {macro})', type=tn)
+                continue
             pi, po = pins[name+'_i'], pins[name+'_o']
             for bit in sorted(set(pi) | set(po)):
                 ap = pi.get(bit) or po[bit]; bp = po.get(bit) or pi[bit]

@@ -45,6 +45,8 @@ class FullStageTests(unittest.TestCase):
                 expected=[ft_full_stage.centre(r) for r in self.doc['slots']['ft0']['targets']]
                 self.assertEqual(chains['ft0'][0],expected)
                 self.assertEqual([r[:2] for r in taps.planned_sinks(P,'t')],expected)
+                with patch('gen_phys.type_pins',return_value=[]):
+                    self.assertEqual([r[:2] for r in taps.planned_sinks(P,'t')],expected)
                 self.assertEqual(ft_station_probe.station_sites(P,'t',self.t['ft_slots'][0],1),[[list(x)] for x in expected])
     def test_lane_hops_preserve_pin_detour(self):
         import ft_full_stage, schema
