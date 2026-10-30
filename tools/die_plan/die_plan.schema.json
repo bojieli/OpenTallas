@@ -688,6 +688,14 @@
            "pitch_um"
           ],
           "additionalProperties": false,
+          "dependentRequired": {
+           "origin_um": [
+            "counts"
+           ],
+           "counts": [
+            "origin_um"
+           ]
+          },
           "properties": {
            "rect_um": {
             "type": "array",
@@ -700,6 +708,23 @@
            "pitch_um": {
             "type": "number",
             "exclusiveMinimum": 0
+           },
+           "origin_um": {
+            "type": "array",
+            "items": {
+             "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+           },
+           "counts": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+             "type": "integer",
+             "minimum": 1
+            }
            },
            "use": {
             "enum": [
