@@ -2129,3 +2129,7 @@ CODEX:2026-10-29 23:54 PDT QC30type418memorysitesG0Cnew0vs155baseline;c5547024fR
 CODEX: 2026-10-29 23:55 PDT FLOWLNc931+2f READY94tests/actual2228FACEPASS140reset+rotationproofs,5assertedges≤64;ROOTreviewpending beforePLACE. RSTARTcopies6dactualcomboPASS; q0hintpreseedmainbb172/SYS_C221failureowned. ExactRING2bstaticIDsupportchildactive, SU11OWNERprefixambiguityPREPonly.
 
 CODEX: 2026-10-29 23:56 PDT OWNER explicitlyauthorizeskv_leaf__t2LARGERLOCALslotfirst(C), neighbour/clock/performanceestimateBEFOREadoption; S81plannerassignednow, no16writeportreduction or gatewaiver.
+CODEX: 2026-10-29 23:58 PDT HEADst_stractual506FTfailsremoved,max400.167/4112captures,fullGEOM144controlFAIL;results3d2fb494e. SharedGENfreezeLCtrackmismatchfix9a7b3ea07READY/32testsPASS unblocksq3+R2START;eshimTXPLACE3738106live.
+
+CODEX: 2026-10-30 00:01 PDT S81PHYS pushed e631d8da4(nativeQBN SIGNED +QBS/sstn LOCALparentpending, exact104QBNattachments); BF09d20667b positionmiter3x12kPASS/mutantCAUGHT fullLEC3209604LIVE; VSWMMunit3008516 GRTactiveafter15804EQ andmeasuredFFguard30; VESlatticeprototype1417798LEClive.
+2026-10-30 00:03 PDT COORD(Claude) back after session limit 22:5x-00:00. Codex coordinates all lanes since 22:50 (user request); Claude lanes NOT restarted to avoid duplicates; asked the owner how to split. Disks OK (max root 78%).
