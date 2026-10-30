@@ -1,0 +1,62 @@
+{
+ "type": "coll_ft__cla4a25d77",
+ "bands": {
+  "crec_rx_s1_i": {
+   "rect_um": [
+    4.32,
+    4.32,
+    118.656,
+    30.24
+   ],
+   "ring_place": "ff"
+  },
+  "crec_rx_s2_i": {
+   "rect_um": [
+    119.616,
+    4.32,
+    233.968,
+    30.24
+   ],
+   "ring_place": "ff"
+  },
+  "crec_tx_s1_i": {
+   "rect_um": [
+    234.928,
+    963.36,
+    349.68,
+    989.28
+   ],
+   "ring_place": "ff"
+  },
+  "crec_tx_s2_i": {
+   "rect_um": [
+    350.64,
+    963.36,
+    464.816,
+    989.28
+   ],
+   "ring_place": "ff"
+  },
+  "fltk_i": {
+   "rect_um": [
+    452.056,
+    4.32,
+    460.696,
+    30.24
+   ],
+   "ring_place": "ff"
+  },
+  "fltv_i": {
+   "rect_um": [
+    465.416,
+    4.32,
+    474.056,
+    30.24
+   ],
+   "ring_place": "ff"
+  }
+ },
+ "reserved_fraction": 0.4,
+ "source_odb": "intel1:/srv/opentallas-scratch2/claude/codex-collft-0336/gen_nf40low_ff2/coll_ft__cla4a25d77/coll_ft__cla4a25d77/run/results/asap7/dp_coll_ft__cla4a25d77/base/3_5_place_dp-failed.odb",
+ "source_odb_sha256": "1febec8b28bc638b2dc65610b0d5be7773865e3058b0634e5a6af1a834cf475c"
+}
