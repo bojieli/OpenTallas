@@ -1,0 +1,1025 @@
+{
+  "scope": "Saved final model traces plus exact static RC only, no new timing/kernel run",
+  "corners": {
+    "TT": {
+      "critical_leaf_mean_paths": {
+        "min": {
+          "leaf": "Tpquc",
+          "edge": "rise",
+          "total_ps": 340.22139158457054,
+          "native_input_ps": 0.005142054314186564,
+          "cell_ps": 332.730881958099,
+          "wire_ps": 7.490509626471504,
+          "path": [
+            {
+              "driver": "root",
+              "child": "Tp_br",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 20.720092831719505,
+              "wire_ps": 0.008579015715852999,
+              "driver_slew_ps": 0.011312519491210442,
+              "pin_cap_ff": 4.68475,
+              "wire_cap_ff": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125,
+              "hub_wire_ps": 0.008579015715852999
+            },
+            {
+              "driver": "Tp_br",
+              "child": "Tp_r0",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "cell_ps": 22.176662223847195,
+              "wire_ps": 3.0546419600766566,
+              "driver_slew_ps": 10.19930820941434,
+              "pin_cap_ff": 1.20694,
+              "wire_cap_ff": 10.743839433000003,
+              "net_length_um": 69.66000000000001,
+              "hub_wire_ps": 3.0546419600766566
+            },
+            {
+              "driver": "Tp_r0",
+              "child": "Tpq_br",
+              "master": "BUFx10_ASAP7_75t_R",
+              "cell_ps": 32.00169737435061,
+              "wire_ps": 1.6914676590841877,
+              "driver_slew_ps": 29.871272908567537,
+              "pin_cap_ff": 5.5378050000000005,
+              "wire_cap_ff": 5.0804201970000005,
+              "net_length_um": 32.94,
+              "hub_wire_ps": 1.6914676590841877
+            },
+            {
+              "driver": "Tpq_br",
+              "child": "Tpq_r0",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 27.888526991817983,
+              "wire_ps": 0.0,
+              "driver_slew_ps": 22.073888134394746,
+              "pin_cap_ff": 2.35026,
+              "wire_cap_ff": 0.0,
+              "net_length_um": 0.0,
+              "hub_wire_ps": 0.0
+            },
+            {
+              "driver": "Tpq_r0",
+              "child": "Tpq_r1",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 23.377421996572963,
+              "wire_ps": 0.0,
+              "driver_slew_ps": 10.095454386403052,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 0.0,
+              "net_length_um": 0.0,
+              "hub_wire_ps": 0.0
+            },
+            {
+              "driver": "Tpq_r1",
+              "child": "Tpqu_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 30.537646683667653,
+              "wire_ps": 0.08656440014740324,
+              "driver_slew_ps": 8.11065907786706,
+              "pin_cap_ff": 11.942415,
+              "wire_cap_ff": 2.0821394250000016,
+              "net_length_um": 13.500000000000007,
+              "hub_wire_ps": 0.05032891757984065
+            },
+            {
+              "driver": "Tpqu_br",
+              "child": "Tpqu_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 28.447325973602815,
+              "wire_ps": 0.1737199568173225,
+              "driver_slew_ps": 22.969106482627183,
+              "pin_cap_ff": 2.35026,
+              "wire_cap_ff": 1.3325692320000002,
+              "net_length_um": 8.64,
+              "hub_wire_ps": 0.1737199568173225
+            },
+            {
+              "driver": "Tpqu_r0",
+              "child": "Tpqu_r1",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 23.580376935494478,
+              "wire_ps": 0.08743916928228251,
+              "driver_slew_ps": 9.796195197659186,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 1.3325692320000002,
+              "net_length_um": 8.64,
+              "hub_wire_ps": 0.08743916928228251
+            },
+            {
+              "driver": "Tpqu_r1",
+              "child": "Tpquc_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 34.96221496954762,
+              "wire_ps": 1.4479245395160822,
+              "driver_slew_ps": 8.803978797590789,
+              "pin_cap_ff": 11.722755000000001,
+              "wire_cap_ff": 10.077554816999989,
+              "net_length_um": 65.33999999999992,
+              "hub_wire_ps": 1.143268809079427
+            },
+            {
+              "driver": "Tpquc_br",
+              "child": "Tpquc_r0",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 33.68246310349476,
+              "wire_ps": 0.5181884763227398,
+              "driver_slew_ps": 33.686095343048734,
+              "pin_cap_ff": 2.35026,
+              "wire_cap_ff": 3.0815663490000005,
+              "net_length_um": 19.98,
+              "hub_wire_ps": 0.5181884763227398
+            },
+            {
+              "driver": "Tpquc_r0",
+              "child": "Tpquc",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 25.580188702871308,
+              "wire_ps": 0.3186641551479598,
+              "driver_slew_ps": 14.457673309783866,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 3.0815663490000005,
+              "net_length_um": 19.98,
+              "hub_wire_ps": 0.3186641551479598
+            },
+            {
+              "driver": "Tpquc",
+              "child": "leaf_mean",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 29.776264171112143,
+              "wire_ps": 0.10332029436101653,
+              "driver_slew_ps": 10.010892930055993
+            }
+          ]
+        },
+        "max": {
+          "leaf": "Tqppp",
+          "edge": "rise",
+          "total_ps": 377.90209299756026,
+          "native_input_ps": 0.005142054314186564,
+          "cell_ps": 359.7535824468095,
+          "wire_ps": 18.148510550750753,
+          "path": [
+            {
+              "driver": "root",
+              "child": "Tq_br",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 20.720092831719505,
+              "wire_ps": 0.008582651025012539,
+              "driver_slew_ps": 0.011312519491210442,
+              "pin_cap_ff": 4.68475,
+              "wire_cap_ff": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125,
+              "hub_wire_ps": 0.008579015715852999
+            },
+            {
+              "driver": "Tq_br",
+              "child": "Tq_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "cell_ps": 21.212172262203797,
+              "wire_ps": 3.5820722652748165,
+              "driver_slew_ps": 10.199308451068934,
+              "pin_cap_ff": 2.34288,
+              "wire_cap_ff": 10.743839433000003,
+              "net_length_um": 69.66000000000001,
+              "hub_wire_ps": 3.5820722652748165
+            },
+            {
+              "driver": "Tq_r0",
+              "child": "Tqp_br",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "cell_ps": 27.538036054409584,
+              "wire_ps": 1.8606951434790795,
+              "driver_slew_ps": 34.85716080291215,
+              "pin_cap_ff": 5.88969,
+              "wire_cap_ff": 5.246991351,
+              "net_length_um": 34.019999999999996,
+              "hub_wire_ps": 1.843230070319189
+            },
+            {
+              "driver": "Tqp_br",
+              "child": "Tqp_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "cell_ps": 24.783131024790265,
+              "wire_ps": 3.581603310393177,
+              "driver_slew_ps": 21.678735932893165,
+              "pin_cap_ff": 2.34187,
+              "wire_cap_ff": 10.743839433000003,
+              "net_length_um": 69.66000000000001,
+              "hub_wire_ps": 3.581603310393177
+            },
+            {
+              "driver": "Tqp_r0",
+              "child": "Tqp_r1",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "cell_ps": 29.69312248277432,
+              "wire_ps": 2.8898600365918763,
+              "driver_slew_ps": 34.93817357684394,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 10.743839433000003,
+              "net_length_um": 69.66000000000001,
+              "hub_wire_ps": 2.8898600365918763
+            },
+            {
+              "driver": "Tqp_r1",
+              "child": "Tqpp_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 37.45240052557845,
+              "wire_ps": 1.496312589051531,
+              "driver_slew_ps": 28.76783553010173,
+              "pin_cap_ff": 8.66646,
+              "wire_cap_ff": 5.330276928000001,
+              "net_length_um": 34.56,
+              "hub_wire_ps": 1.4586349252766702
+            },
+            {
+              "driver": "Tqpp_br",
+              "child": "Tqpp_r0",
+              "master": "BUFx12_ASAP7_75t_R",
+              "cell_ps": 31.221851451999083,
+              "wire_ps": 1.5202791877084276,
+              "driver_slew_ps": 26.389427422622806,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 7.578987507000002,
+              "net_length_um": 49.14,
+              "hub_wire_ps": 1.5202791877084276
+            },
+            {
+              "driver": "Tqpp_r0",
+              "child": "Tqpp_r1",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 31.819586788266395,
+              "wire_ps": 2.3349160721248086,
+              "driver_slew_ps": 19.259019348288373,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 9.577841355000002,
+              "net_length_um": 62.1,
+              "hub_wire_ps": 2.3349160721248086
+            },
+            {
+              "driver": "Tqpp_r1",
+              "child": "Tqppp_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 41.544018457293134,
+              "wire_ps": 0.1547568902000766,
+              "driver_slew_ps": 27.525418376792743,
+              "pin_cap_ff": 18.15591,
+              "wire_cap_ff": 3.4147086570000007,
+              "net_length_um": 22.14,
+              "hub_wire_ps": 0.07748958730710596
+            },
+            {
+              "driver": "Tqppp_br",
+              "child": "Tqppp_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 31.19342219332398,
+              "wire_ps": 0.14780816667704255,
+              "driver_slew_ps": 31.533155985092638,
+              "pin_cap_ff": 2.35026,
+              "wire_cap_ff": 1.165998078,
+              "net_length_um": 7.56,
+              "hub_wire_ps": 0.14780816667704255
+            },
+            {
+              "driver": "Tqppp_r0",
+              "child": "Tqppp",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 23.592115494104217,
+              "wire_ps": 0.07231247758388254,
+              "driver_slew_ps": 9.9325929281518,
+              "pin_cap_ff": 0.852045,
+              "wire_cap_ff": 1.165998078,
+              "net_length_um": 7.56,
+              "hub_wire_ps": 0.07231247758388254
+            },
+            {
+              "driver": "Tqppp",
+              "child": "leaf_mean",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 38.983632880346775,
+              "wire_ps": 0.49931176064102445,
+              "driver_slew_ps": 8.713492418143694
+            }
+          ]
+        }
+      },
+      "total_span_ps": 37.68070141298972,
+      "critical_cell_delta_ps": 27.022700488710484,
+      "critical_wire_delta_ps": 10.65800092427925,
+      "six_bay_hub_arrivals": [
+        {
+          "bay": "Tpp",
+          "driver": "Tpp_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 177.57594302255,
+            "wire_to_hub_ps": 15.136366369143403,
+            "cell_to_hub_ps": 162.43957665340662,
+            "driver_slew_ps": 35.15634774570373,
+            "pin_cap_ff": 22.2868,
+            "wire_cap_ff": 6.829417314000001,
+            "net_length_um": 44.28,
+            "hub_wire_ps": 3.200068130557182
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 177.57594302255,
+              "wire_to_hub_ps": 15.136366369143403,
+              "cell_to_hub_ps": 162.43957665340662,
+              "driver_slew_ps": 35.15634774570373,
+              "pin_cap_ff": 22.2868,
+              "wire_cap_ff": 6.829417314000001,
+              "net_length_um": 44.28,
+              "hub_wire_ps": 3.200068130557182
+            }
+          ]
+        },
+        {
+          "bay": "Tpq",
+          "driver": "Tpq_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 161.50706565443244,
+            "wire_to_hub_ps": 4.805017552456539,
+            "cell_to_hub_ps": 156.7020481019759,
+            "driver_slew_ps": 8.11065907786706,
+            "pin_cap_ff": 11.942415,
+            "wire_cap_ff": 2.0821394250000016,
+            "net_length_um": 13.500000000000007,
+            "hub_wire_ps": 0.05032891757984065
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 161.50706565443244,
+              "wire_to_hub_ps": 4.805017552456539,
+              "cell_to_hub_ps": 156.7020481019759,
+              "driver_slew_ps": 8.11065907786706,
+              "pin_cap_ff": 11.942415,
+              "wire_cap_ff": 2.0821394250000016,
+              "net_length_um": 13.500000000000007,
+              "hub_wire_ps": 0.05032891757984065
+            }
+          ]
+        },
+        {
+          "bay": "Tpr",
+          "driver": "Tpr_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 167.84551887738525,
+            "wire_to_hub_ps": 12.926963444319522,
+            "cell_to_hub_ps": 154.91855543306573,
+            "driver_slew_ps": 35.15634774570373,
+            "pin_cap_ff": 5.4671650000000005,
+            "wire_cap_ff": 4.247564427000005,
+            "net_length_um": 27.540000000000028,
+            "hub_wire_ps": 0.9906652057333011
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 167.84551887738525,
+              "wire_to_hub_ps": 12.926963444319522,
+              "cell_to_hub_ps": 154.91855543306573,
+              "driver_slew_ps": 35.15634774570373,
+              "pin_cap_ff": 5.4671650000000005,
+              "wire_cap_ff": 4.247564427000005,
+              "net_length_um": 27.540000000000028,
+              "hub_wire_ps": 0.9906652057333011
+            }
+          ]
+        },
+        {
+          "bay": "Tqp",
+          "driver": "Tqp_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 174.78040351351655,
+            "wire_to_hub_ps": 13.381448332040632,
+            "cell_to_hub_ps": 161.3989551814759,
+            "driver_slew_ps": 28.76783553010173,
+            "pin_cap_ff": 8.66646,
+            "wire_cap_ff": 5.330276928000001,
+            "net_length_um": 34.56,
+            "hub_wire_ps": 1.4586349252766702
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 174.78040351351655,
+              "wire_to_hub_ps": 13.381448332040632,
+              "cell_to_hub_ps": 161.3989551814759,
+              "driver_slew_ps": 28.76783553010173,
+              "pin_cap_ff": 8.66646,
+              "wire_cap_ff": 5.330276928000001,
+              "net_length_um": 34.56,
+              "hub_wire_ps": 1.4586349252766702
+            }
+          ]
+        },
+        {
+          "bay": "Tqq",
+          "driver": "Tqq_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 159.56176789772422,
+            "wire_to_hub_ps": 5.509868873460379,
+            "cell_to_hub_ps": 154.05189902426383,
+            "driver_slew_ps": 8.110286165505542,
+            "pin_cap_ff": 14.073015,
+            "wire_cap_ff": 7.079274044999998,
+            "net_length_um": 45.899999999999984,
+            "hub_wire_ps": 0.07598388684136055
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 159.56176789772422,
+              "wire_to_hub_ps": 5.509868873460379,
+              "cell_to_hub_ps": 154.05189902426383,
+              "driver_slew_ps": 8.110286165505542,
+              "pin_cap_ff": 14.073015,
+              "wire_cap_ff": 7.079274044999998,
+              "net_length_um": 45.899999999999984,
+              "hub_wire_ps": 0.07598388684136055
+            }
+          ]
+        },
+        {
+          "bay": "Tqr",
+          "driver": "Tqr_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 164.10807167986943,
+            "wire_to_hub_ps": 13.262205432334063,
+            "cell_to_hub_ps": 150.84586624753535,
+            "driver_slew_ps": 35.15211483237584,
+            "pin_cap_ff": 3.40818,
+            "wire_cap_ff": 3.4147086569999994,
+            "net_length_um": 22.139999999999993,
+            "hub_wire_ps": 0.6471797968871609
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 164.10807167986943,
+              "wire_to_hub_ps": 13.262205432334063,
+              "cell_to_hub_ps": 150.84586624753535,
+              "driver_slew_ps": 35.15211483237584,
+              "pin_cap_ff": 3.40818,
+              "wire_cap_ff": 3.4147086569999994,
+              "net_length_um": 22.139999999999993,
+              "hub_wire_ps": 0.6471797968871609
+            }
+          ]
+        }
+      ]
+    },
+    "FF": {
+      "critical_leaf_mean_paths": {
+        "min": {
+          "leaf": "Tpquc",
+          "edge": "rise",
+          "total_ps": 252.4559728043447,
+          "native_input_ps": 0.005701832824946531,
+          "cell_ps": 243.76458341323018,
+          "wire_ps": 8.691389391114512,
+          "path": [
+            {
+              "driver": "root",
+              "child": "Tp_br",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 15.683669028801557,
+              "wire_ps": 0.010554565405481149,
+              "driver_slew_ps": 0.012544032214882369,
+              "pin_cap_ff": 5.19925,
+              "wire_cap_ff": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125,
+              "hub_wire_ps": 0.010554565405481149
+            },
+            {
+              "driver": "Tp_br",
+              "child": "Tp_r0",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "cell_ps": 16.316124093424342,
+              "wire_ps": 3.4603193880889958,
+              "driver_slew_ps": 8.072915317941373,
+              "pin_cap_ff": 1.3354,
+              "wire_cap_ff": 10.743839433000003,
+              "net_length_um": 69.66000000000001,
+              "hub_wire_ps": 3.4603193880889958
+            },
+            {
+              "driver": "Tp_r0",
+              "child": "Tpq_br",
+              "master": "BUFx10_ASAP7_75t_R",
+              "cell_ps": 22.947460469676535,
+              "wire_ps": 2.017071093232182,
+              "driver_slew_ps": 22.797078471206493,
+              "pin_cap_ff": 6.141703,
+              "wire_cap_ff": 5.0804201970000005,
+              "net_length_um": 32.94,
+              "hub_wire_ps": 2.017071093232182
+            },
+            {
+              "driver": "Tpq_br",
+              "child": "Tpq_r0",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 20.355499415315187,
+              "wire_ps": 0.0,
+              "driver_slew_ps": 17.14530174431131,
+              "pin_cap_ff": 2.60735,
+              "wire_cap_ff": 0.0,
+              "net_length_um": 0.0,
+              "hub_wire_ps": 0.0
+            },
+            {
+              "driver": "Tpq_r0",
+              "child": "Tpq_r1",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 17.23377505419971,
+              "wire_ps": 0.0,
+              "driver_slew_ps": 7.62345598403822,
+              "pin_cap_ff": 0.938203,
+              "wire_cap_ff": 0.0,
+              "net_length_um": 0.0,
+              "hub_wire_ps": 0.0
+            },
+            {
+              "driver": "Tpq_r1",
+              "child": "Tpqu_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 22.65560761731334,
+              "wire_ps": 0.10545592057740805,
+              "driver_slew_ps": 6.251631504436201,
+              "pin_cap_ff": 13.232809,
+              "wire_cap_ff": 2.0821394250000016,
+              "net_length_um": 13.500000000000007,
+              "hub_wire_ps": 0.06108161483371627
+            },
+            {
+              "driver": "Tpqu_br",
+              "child": "Tpqu_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 20.768892302526428,
+              "wire_ps": 0.20947280802706944,
+              "driver_slew_ps": 17.580339965725397,
+              "pin_cap_ff": 2.60735,
+              "wire_cap_ff": 1.3325692320000002,
+              "net_length_um": 8.64,
+              "hub_wire_ps": 0.20947280802706944
+            },
+            {
+              "driver": "Tpqu_r0",
+              "child": "Tpqu_r1",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 17.482610398671078,
+              "wire_ps": 0.10266769685458946,
+              "driver_slew_ps": 7.67227270052408,
+              "pin_cap_ff": 0.938203,
+              "wire_cap_ff": 1.3325692320000002,
+              "net_length_um": 8.64,
+              "hub_wire_ps": 0.10266769685458946
+            },
+            {
+              "driver": "Tpqu_r1",
+              "child": "Tpquc_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 25.67575250272845,
+              "wire_ps": 1.693485383584678,
+              "driver_slew_ps": 6.800920434233918,
+              "pin_cap_ff": 12.927583,
+              "wire_cap_ff": 10.077554816999989,
+              "net_length_um": 65.33999999999992,
+              "hub_wire_ps": 1.3425746217157188
+            },
+            {
+              "driver": "Tpquc_br",
+              "child": "Tpquc_r0",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 23.90774590653071,
+              "wire_ps": 0.6138070643211331,
+              "driver_slew_ps": 25.29363174785635,
+              "pin_cap_ff": 2.60735,
+              "wire_cap_ff": 3.0815663490000005,
+              "net_length_um": 19.98,
+              "hub_wire_ps": 0.6138070643211331
+            },
+            {
+              "driver": "Tpquc_r0",
+              "child": "Tpquc",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 18.73779685212558,
+              "wire_ps": 0.3668202447347731,
+              "driver_slew_ps": 10.810406633414654,
+              "pin_cap_ff": 0.938203,
+              "wire_cap_ff": 3.0815663490000005,
+              "net_length_um": 19.98,
+              "hub_wire_ps": 0.3668202447347731
+            },
+            {
+              "driver": "Tpquc",
+              "child": "leaf_mean",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 21.999649771917262,
+              "wire_ps": 0.11173522628820187,
+              "driver_slew_ps": 7.752104524614438
+            }
+          ]
+        },
+        "max": {
+          "leaf": "Tpqtu",
+          "edge": "rise",
+          "total_ps": 282.79919825566844,
+          "native_input_ps": 0.005701832824946531,
+          "cell_ps": 263.32732077447923,
+          "wire_ps": 19.471877481189207,
+          "path": [
+            {
+              "driver": "root",
+              "child": "Tp_br",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 15.683669028801557,
+              "wire_ps": 0.010554565405481149,
+              "driver_slew_ps": 0.012544032214882369,
+              "pin_cap_ff": 5.19925,
+              "wire_cap_ff": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125,
+              "hub_wire_ps": 0.010554565405481149
+            },
+            {
+              "driver": "Tp_br",
+              "child": "Tp_r0",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "cell_ps": 16.316124093424342,
+              "wire_ps": 3.4603193880889958,
+              "driver_slew_ps": 8.072915317941373,
+              "pin_cap_ff": 1.3354,
+              "wire_cap_ff": 10.743839433000003,
+              "net_length_um": 69.66000000000001,
+              "hub_wire_ps": 3.4603193880889958
+            },
+            {
+              "driver": "Tp_r0",
+              "child": "Tpq_br",
+              "master": "BUFx10_ASAP7_75t_R",
+              "cell_ps": 22.947460469676535,
+              "wire_ps": 2.017071093232182,
+              "driver_slew_ps": 22.797078471206493,
+              "pin_cap_ff": 6.141703,
+              "wire_cap_ff": 5.0804201970000005,
+              "net_length_um": 32.94,
+              "hub_wire_ps": 2.017071093232182
+            },
+            {
+              "driver": "Tpq_br",
+              "child": "Tpq_r0",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 20.355499415315187,
+              "wire_ps": 0.0,
+              "driver_slew_ps": 17.14530174431131,
+              "pin_cap_ff": 2.60735,
+              "wire_cap_ff": 0.0,
+              "net_length_um": 0.0,
+              "hub_wire_ps": 0.0
+            },
+            {
+              "driver": "Tpq_r0",
+              "child": "Tpq_r1",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 17.23377505419971,
+              "wire_ps": 0.0,
+              "driver_slew_ps": 7.62345598403822,
+              "pin_cap_ff": 0.938203,
+              "wire_cap_ff": 0.0,
+              "net_length_um": 0.0,
+              "hub_wire_ps": 0.0
+            },
+            {
+              "driver": "Tpq_r1",
+              "child": "Tpqt_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 22.655607617313336,
+              "wire_ps": 0.0825578181956389,
+              "driver_slew_ps": 6.251631504436201,
+              "pin_cap_ff": 13.232809,
+              "wire_cap_ff": 2.0821394250000016,
+              "net_length_um": 13.500000000000007,
+              "hub_wire_ps": 0.06108161483371627
+            },
+            {
+              "driver": "Tpqt_br",
+              "child": "Tpqt_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "cell_ps": 15.940849150945521,
+              "wire_ps": 0.7317272610560254,
+              "driver_slew_ps": 17.575931486787717,
+              "pin_cap_ff": 2.60735,
+              "wire_cap_ff": 3.4979942340000005,
+              "net_length_um": 22.68,
+              "hub_wire_ps": 0.7317272610560254
+            },
+            {
+              "driver": "Tpqt_r0",
+              "child": "Tpqt_r1",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 17.614529654550985,
+              "wire_ps": 0.028508015991626647,
+              "driver_slew_ps": 8.552418325636813,
+              "pin_cap_ff": 0.938203,
+              "wire_cap_ff": 0.4997134620000001,
+              "net_length_um": 3.24,
+              "hub_wire_ps": 0.028508015991626647
+            },
+            {
+              "driver": "Tpqt_r1",
+              "child": "Tpqtu_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 30.72339644274099,
+              "wire_ps": 10.832946746646444,
+              "driver_slew_ps": 6.459599723335428,
+              "pin_cap_ff": 23.880668,
+              "wire_cap_ff": 14.49169039800001,
+              "net_length_um": 93.96000000000005,
+              "hub_wire_ps": 10.829028108175244
+            },
+            {
+              "driver": "Tpqtu_br",
+              "child": "Tpqtu_r0",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 34.791468325534105,
+              "wire_ps": 1.7903239458733073,
+              "driver_slew_ps": 73.62203057826108,
+              "pin_cap_ff": 2.60735,
+              "wire_cap_ff": 6.4129894290000005,
+              "net_length_um": 41.58,
+              "hub_wire_ps": 1.7903239458733073
+            },
+            {
+              "driver": "Tpqtu_r0",
+              "child": "Tpqtu",
+              "master": "BUFx24_ASAP7_75t_R",
+              "cell_ps": 20.493585043824,
+              "wire_ps": 0.06900687637786657,
+              "driver_slew_ps": 17.8896979411902,
+              "pin_cap_ff": 0.938203,
+              "wire_cap_ff": 0.9994269240000002,
+              "net_length_um": 6.48,
+              "hub_wire_ps": 0.06900687637786657
+            },
+            {
+              "driver": "Tpqtu",
+              "child": "leaf_mean",
+              "master": "BUFx8_ASAP7_75t_R",
+              "cell_ps": 28.571356478152968,
+              "wire_ps": 0.44886177032163843,
+              "driver_slew_ps": 6.767081839281167
+            }
+          ]
+        }
+      },
+      "total_span_ps": 30.343225451323747,
+      "critical_cell_delta_ps": 19.56273736124905,
+      "critical_wire_delta_ps": 10.780488090074694,
+      "six_bay_hub_arrivals": [
+        {
+          "bay": "Tpp",
+          "driver": "Tpp_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 134.915627024186,
+            "wire_to_hub_ps": 17.60442966370122,
+            "cell_to_hub_ps": 117.31119736048477,
+            "driver_slew_ps": 27.058475816652432,
+            "pin_cap_ff": 24.72565,
+            "wire_cap_ff": 6.829417314000001,
+            "net_length_um": 44.28,
+            "hub_wire_ps": 3.8677447433426466
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 134.915627024186,
+              "wire_to_hub_ps": 17.60442966370122,
+              "cell_to_hub_ps": 117.31119736048477,
+              "driver_slew_ps": 27.058475816652432,
+              "pin_cap_ff": 24.72565,
+              "wire_cap_ff": 6.829417314000001,
+              "net_length_um": 44.28,
+              "hub_wire_ps": 3.8677447433426466
+            },
+            {
+              "edge": "fall",
+              "arrival_to_hub_ps": 140.05411779635622,
+              "wire_to_hub_ps": 17.60442966370122,
+              "cell_to_hub_ps": 122.449688132655,
+              "driver_slew_ps": 26.661016692114416,
+              "pin_cap_ff": 24.72565,
+              "wire_cap_ff": 6.829417314000001,
+              "net_length_um": 44.28,
+              "hub_wire_ps": 3.8677447433426466
+            }
+          ]
+        },
+        {
+          "bay": "Tpq",
+          "driver": "Tpq_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 120.74116234029104,
+            "wire_to_hub_ps": 5.549026661560375,
+            "cell_to_hub_ps": 115.19213567873066,
+            "driver_slew_ps": 6.251631504436201,
+            "pin_cap_ff": 13.232809,
+            "wire_cap_ff": 2.0821394250000016,
+            "net_length_um": 13.500000000000007,
+            "hub_wire_ps": 0.06108161483371627
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 120.74116234029104,
+              "wire_to_hub_ps": 5.549026661560375,
+              "cell_to_hub_ps": 115.19213567873066,
+              "driver_slew_ps": 6.251631504436201,
+              "pin_cap_ff": 13.232809,
+              "wire_cap_ff": 2.0821394250000016,
+              "net_length_um": 13.500000000000007,
+              "hub_wire_ps": 0.06108161483371627
+            },
+            {
+              "edge": "fall",
+              "arrival_to_hub_ps": 125.86840739695793,
+              "wire_to_hub_ps": 5.549026661560375,
+              "cell_to_hub_ps": 120.31938073539756,
+              "driver_slew_ps": 6.21664811762893,
+              "pin_cap_ff": 13.232809,
+              "wire_cap_ff": 2.0821394250000016,
+              "net_length_um": 13.500000000000007,
+              "hub_wire_ps": 0.06108161483371627
+            }
+          ]
+        },
+        {
+          "bay": "Tpr",
+          "driver": "Tpr_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 126.45839443064337,
+            "wire_to_hub_ps": 14.911231011850019,
+            "cell_to_hub_ps": 111.54716341879335,
+            "driver_slew_ps": 27.058475816652432,
+            "pin_cap_ff": 6.026415,
+            "wire_cap_ff": 4.247564427000005,
+            "net_length_um": 27.540000000000028,
+            "hub_wire_ps": 1.1745460914914454
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 126.45839443064337,
+              "wire_to_hub_ps": 14.911231011850019,
+              "cell_to_hub_ps": 111.54716341879335,
+              "driver_slew_ps": 27.058475816652432,
+              "pin_cap_ff": 6.026415,
+              "wire_cap_ff": 4.247564427000005,
+              "net_length_um": 27.540000000000028,
+              "hub_wire_ps": 1.1745460914914454
+            },
+            {
+              "edge": "fall",
+              "arrival_to_hub_ps": 132.11066845048947,
+              "wire_to_hub_ps": 14.911231011850019,
+              "cell_to_hub_ps": 117.19943743863945,
+              "driver_slew_ps": 26.661016692114416,
+              "pin_cap_ff": 6.026415,
+              "wire_cap_ff": 4.247564427000005,
+              "net_length_um": 27.540000000000028,
+              "hub_wire_ps": 1.1745460914914454
+            }
+          ]
+        },
+        {
+          "bay": "Tqp",
+          "driver": "Tqp_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 131.89483837068568,
+            "wire_to_hub_ps": 15.450628288513512,
+            "cell_to_hub_ps": 116.44421008217216,
+            "driver_slew_ps": 21.831294246895524,
+            "pin_cap_ff": 9.572788,
+            "wire_cap_ff": 5.330276928000001,
+            "net_length_um": 34.56,
+            "hub_wire_ps": 1.7366934146326736
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 131.89483837068568,
+              "wire_to_hub_ps": 15.450628288513512,
+              "cell_to_hub_ps": 116.44421008217216,
+              "driver_slew_ps": 21.831294246895524,
+              "pin_cap_ff": 9.572788,
+              "wire_cap_ff": 5.330276928000001,
+              "net_length_um": 34.56,
+              "hub_wire_ps": 1.7366934146326736
+            },
+            {
+              "edge": "fall",
+              "arrival_to_hub_ps": 137.3036717571285,
+              "wire_to_hub_ps": 15.450628288513512,
+              "cell_to_hub_ps": 121.853043468615,
+              "driver_slew_ps": 21.600934035648336,
+              "pin_cap_ff": 9.572788,
+              "wire_cap_ff": 5.330276928000001,
+              "net_length_um": 34.56,
+              "hub_wire_ps": 1.7366934146326736
+            }
+          ]
+        },
+        {
+          "bay": "Tqq",
+          "driver": "Tqq_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 119.24977201507858,
+            "wire_to_hub_ps": 6.415887843308208,
+            "cell_to_hub_ps": 112.83388417177036,
+            "driver_slew_ps": 6.249088514745223,
+            "pin_cap_ff": 15.534933,
+            "wire_cap_ff": 7.079274044999998,
+            "net_length_um": 45.899999999999984,
+            "hub_wire_ps": 0.09027310187716506
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 119.24977201507858,
+              "wire_to_hub_ps": 6.415887843308208,
+              "cell_to_hub_ps": 112.83388417177036,
+              "driver_slew_ps": 6.249088514745223,
+              "pin_cap_ff": 15.534933,
+              "wire_cap_ff": 7.079274044999998,
+              "net_length_um": 45.899999999999984,
+              "hub_wire_ps": 0.09027310187716506
+            },
+            {
+              "edge": "fall",
+              "arrival_to_hub_ps": 124.01077214489604,
+              "wire_to_hub_ps": 6.415887843308208,
+              "cell_to_hub_ps": 117.59488430158783,
+              "driver_slew_ps": 6.2162088265158,
+              "pin_cap_ff": 15.534933,
+              "wire_cap_ff": 7.079274044999998,
+              "net_length_um": 45.899999999999984,
+              "hub_wire_ps": 0.09027310187716506
+            }
+          ]
+        },
+        {
+          "bay": "Tqr",
+          "driver": "Tqr_r1",
+          "early_corner": {
+            "edge": "rise",
+            "arrival_to_hub_ps": 123.67861867085267,
+            "wire_to_hub_ps": 15.336733475570355,
+            "cell_to_hub_ps": 108.34188519528232,
+            "driver_slew_ps": 27.04547588463066,
+            "pin_cap_ff": 3.752812,
+            "wire_cap_ff": 3.4147086569999994,
+            "net_length_um": 22.139999999999993,
+            "hub_wire_ps": 0.7645714438373964
+          },
+          "edge_runs": [
+            {
+              "edge": "rise",
+              "arrival_to_hub_ps": 123.67861867085267,
+              "wire_to_hub_ps": 15.336733475570355,
+              "cell_to_hub_ps": 108.34188519528232,
+              "driver_slew_ps": 27.04547588463066,
+              "pin_cap_ff": 3.752812,
+              "wire_cap_ff": 3.4147086569999994,
+              "net_length_um": 22.139999999999993,
+              "hub_wire_ps": 0.7645714438373964
+            },
+            {
+              "edge": "fall",
+              "arrival_to_hub_ps": 129.20500283363498,
+              "wire_to_hub_ps": 15.336733475570355,
+              "cell_to_hub_ps": 113.86826935806462,
+              "driver_slew_ps": 26.648063367562543,
+              "pin_cap_ff": 3.752812,
+              "wire_cap_ff": 3.4147086569999994,
+              "net_length_um": 22.139999999999993,
+              "hub_wire_ps": 0.7645714438373964
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

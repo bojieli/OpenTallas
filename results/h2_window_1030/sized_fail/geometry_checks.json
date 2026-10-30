@@ -1,0 +1,32 @@
+{
+  "fixed_graph": true,
+  "masters_rvt_envelope": true,
+  "cells": 1811,
+  "sinks": 19747,
+  "converter": {
+    "source": "dsfd_coll_lane_w_safe8_ntf_r13_s81_coll_uf3d1_native_landing_geometry_uf3d1",
+    "calibration": false,
+    "masters_outside_envelope": [],
+    "cells": 1811,
+    "sinks": 19747,
+    "leaves": 548,
+    "displacement_um": {
+      "max": 1.539,
+      "mean": 0.2446,
+      "over_2um": 0
+    },
+    "site_rule": "row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"
+  },
+  "native_pg": {
+    "verdict": "PASS",
+    "layers": [
+      "M4",
+      "M5"
+    ],
+    "edges": 1811,
+    "blocked_edges": 0,
+    "examples": []
+  },
+  "site_rule": "Canonical SiteMap places full actual master widths on native rows, excludes occupied/fixed cells and M5 centre straps",
+  "verdict": "PASS"
+}
