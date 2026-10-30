@@ -56,7 +56,12 @@ def _val(v):
 
 
 def parse_stat(text):
-    """Yosys `stat` report -> {module: cells} (the per-module 'Number of cells', hierarchy totals not summed)."""
+    """Yosys stat -> module cell counts, including children in modern tables.
+
+    Legacy Number-of-cells reports retain their hierarchy-total override.
+    Modern Count/Area tables use the first count (including submodules), never
+    the third count (local cells). Hierarchy rows are not summed together.
+    """
     out, mod = {}, None
     for ln in text.splitlines():
         m = re.match(r"^===\s*(\S+)\s*===", ln.strip())
@@ -66,10 +71,20 @@ def parse_stat(text):
         m = re.match(r"^\s*Number of cells:\s*(\d+)", ln)
         if m and mod and mod not in out:
             out[mod] = int(m.group(1))
+        m = re.match(r"^\s*(\d+)\s+\S+\s+\d+\s+\S+\s+cells\s*$", ln)
+        if m and mod and mod not in out:
+            out[mod] = int(m.group(1))
     # design-hierarchy block: "=== design hierarchy ===" ... "<top>  1" + total "Number of cells: N" -> top total
     m = re.search(r"=== design hierarchy ===.*?\n\s*(\S+)\s+1\s*\n.*?Number of cells:\s*(\d+)", text, re.S)
     if m:
         out[m.group(1).lstrip("\\")] = int(m.group(2))
+    # Yosys 0.68: Count/Area including children, then Count/Area local,
+    # followed by the top module name (no legacy '<top> 1' row).
+    block = re.search(r"=== design hierarchy ===(.*?)(?=^===|\Z)", text, re.S | re.M)
+    if block:
+        row = re.search(r"^\s*(\d+)\s+\S+\s+\d+\s+\S+\s+(\S+)\s*$", block.group(1), re.M)
+        if row:
+            out[row.group(2).lstrip("\\")] = int(row.group(1))
     out.pop("design", None)
     return out
 
@@ -77,7 +92,7 @@ def parse_stat(text):
 def load_source(path, types, parts):
     """-> list of (kind, table) with kind in by_type / by_part / modules."""
     p = Path(path)
-    if p.suffix == ".stat" or p.name.endswith(".stat.txt"):
+    if p.suffix == ".stat" or p.name.endswith((".stat.txt", "_stat.txt")):
         return [("modules", parse_stat(p.read_text(errors="replace")))]
     js = json.loads(p.read_text())
     if not isinstance(js, dict):
@@ -115,6 +130,7 @@ def discover(plan_dir):
     fs = [d / f for f in AUTO if (d / f).is_file()]
     if (d / "cells").is_dir():
         fs += sorted((d / "cells").glob("*.json")) + sorted((d / "cells").glob("*.stat"))
+        fs += sorted((d / "cells").glob("*.stat.txt")) + sorted((d / "cells").glob("*_stat.txt"))
     return fs
 
 
