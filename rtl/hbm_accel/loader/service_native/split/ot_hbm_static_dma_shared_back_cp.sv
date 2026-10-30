@@ -21,7 +21,10 @@ module ot_hbm_static_dma_shared_back_cp #(
  output wire[31:0]wb_reserve_base,output wire wb_fill_start,input wire wb_ready,
  output wire[2311:0]wd,input wire[11:0]wa,
  // New explicit cut boundary: no command retiming here. LOAD endpoint reset is
- // the same E+6 controller release as STORE; its command dates use cycle_o.
+ // direct reset-relay output E+4. STORE controller adds two internal reset
+ // capture edges (effective E+6); LOAD consumer has no such capture here.
+ // Leaf-local reset relays add their own declared edges. Command dates use
+ // cycle_o; host programming/launch must honor all endpoint cold guards.
  output wire load_cmd_v_o,output wire[307:0]cmd_o,output wire[31:0]cycle_o,
  output wire load_rst_n_o,command_fault_o,
  input wire load_busy_i,load_fault_i,load_done_i
