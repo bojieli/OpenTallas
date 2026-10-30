@@ -1,0 +1,11 @@
+# ref.sv = origin/main qkd_host_rx_class_admission.sv with the module renamed qkd_host_rx_class_admission_ref (see run.sh); run from the repo root
+read_verilog -sv ref.sv rtl/qwen_sys/host_20261013/fault_dreg/qkd_host_rx_class_admission.sv rtl/qwen_sys/host_20261013/qkd_host_rx_class.sv
+chparam -set STRAPPED 1 qkd_host_rx_class_admission_ref qkd_host_rx_class_admission
+chparam -set FAULT_DREG 1 qkd_host_rx_class_admission
+hierarchy -check; proc; flatten; opt_clean; memory -nomap; memory_map; opt -fast
+async2sync
+equiv_make qkd_host_rx_class_admission_ref qkd_host_rx_class_admission eq
+hierarchy -top eq
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status
