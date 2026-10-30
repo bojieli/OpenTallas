@@ -1,0 +1,4 @@
+    assign cland_start_raw = cland_reset_crec_rx_s1_i;
+    ot_dp_landing_origin_s #(.PADW(1), .BOOT_BRANCH_EXPORT(1)) u_cland_origin (
+        .clk(clk), .rst_raw_n(cland_reset_crec_rx_s1_i), .p_start(cland_tstart_in), .strap_efall(strap_ca_efall), .strap_pad(strap_ca_pad), .start(cland_start), .start_d(cland_start_d), .boot_s0(cland_boot_s0));
+    ot_dp_landing_boot_branch #(.ENABLE(1)) u_cland_boot_north (.clk(clk), .baseline_start(cland_start), .baseline_raw(cland_start_raw), .origin_s0(cland_boot_s0), .raw_parent(rst_rl_9), .strap_pad(strap_ca_pad), .north_start(cland_boot_north_start), .north_raw(cland_boot_north_raw));

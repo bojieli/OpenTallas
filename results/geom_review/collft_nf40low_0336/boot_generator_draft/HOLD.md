@@ -1,0 +1,9 @@
+# Opt-in generator draft — NOT adoption-ready
+
+Default absent key preserves existing behavior. Selected kind padw1_north_copy adds one forwarded BOOT phase to declared output buses and uses same-cycle north START for the two reader controls. Reuses existing writer_start_depth K adjustment in BOTH manifest and parent strap generation: actual QC plan/table changes exactly8 K14→15 and8 parent ties; region mapping unchanged. Origin hook emits default-off helper enabled only for one non-root PADW1 dedicated START sampler, no existing FWD_COPY or reader/writer transport mix. Exact original raw predecessor required; wrong rst_rl_10 rejected. Start-tree edges rejected.
+
+Current actual helper/counter lockstep/mutants passed in prior5733984. These draft generator changes have been syntax checked and exercised on actual plan/table K/tie generation and typed origin emission. Full native wrapper bind and physical placement integration NOT RUN. No current FF kit modified with BOOT behavior.
+
+Do not merge/adopt this draft as completed physical integration. A full fresh bind must emit wrapper RTL and all neighbour ties from the same phase delta, then stage/source anchoring must be added and reviewed. kit-rtl alone only copies cached bound wrappers and cannot apply new semantics. Initial empty bind_boot lacked bind_report; copied bind_boot_ready then exposed stale absolute extra_lib paths into absent die-qc-46 source. Those are diagnosed input-path/cache failures, not native proof failures; parent current joint full-bind assets should supply actual source paths. Do not handpatch cached RTL or K ties.
+
+No regionN, start-tree, arithmetic/data LAT changes. TOK/R8/static programme gets+1 coldBOOT phase833ps per north output before adoption. Parent owns joint adoption and physical continuation; author switched to urgent sc_v2 hardcap census per parent order.

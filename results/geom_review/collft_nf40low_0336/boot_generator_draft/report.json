@@ -1,0 +1,98 @@
+{
+  "region_mapping_unchanged": true,
+  "generated_K_changes": [
+    {
+      "port": "coll_s__crec_rx_s1__2",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__crec_rx_s1__3",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__crec_rx_s2__2",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__crec_rx_s2__3",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__fltk__2",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__fltk__3",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__fltv__2",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "port": "coll_s__fltv__3",
+      "old": 14,
+      "new": 15
+    }
+  ],
+  "parent_tie_changes": [
+    {
+      "instance": "coll_core",
+      "pin": "strap_ca_k_flt_s_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_core",
+      "pin": "strap_ca_k_fltv_s_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_core",
+      "pin": "strap_ca_k_rec_rx_s1_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_core",
+      "pin": "strap_ca_k_rec_rx_s2_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_f2",
+      "pin": "strap_ca_k_crec_rx_s1_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_f2",
+      "pin": "strap_ca_k_crec_rx_s2_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_f2",
+      "pin": "strap_ca_k_fltk_i",
+      "old": 14,
+      "new": 15
+    },
+    {
+      "instance": "coll_f2",
+      "pin": "strap_ca_k_fltv_i",
+      "old": 14,
+      "new": 15
+    }
+  ],
+  "wrong_raw_parent": "REJECTED",
+  "scope": "actual full plan/table rows and typed origin hook; full native wrapper bind/physical integration NOT RUN",
+  "nonselected_crossing_Ks_unchanged": true
+}
