@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS-COND for physical PG import and die GRT trial",
+  "images": [
+    "results/qc_codex_2249/native_review_region.png",
+    "results/qc_codex_2249/pg_review.png"
+  ],
+  "findings": [
+    "Viewed c_E2_bf_10: hard cores retain central/edge clock streets; branches follow the existing reviewed lattice; no changed macro placement or new macro wall.",
+    "Viewed actual PG candidate at ck_b15689 prior VSS failure: short local power bridges run beside existing clock channels; VSS joins actual tied shield supply metal, while every clock-signal NDR reservation is retained.",
+    "Actual BFR3 prebuild census 1215180 shapes:0short/0spacing/0top conflicts; all191962VSSshields tied. Physical materialization retains44591clocknets/89180stairs/11156joins and moves actual M9 root pin +0.92um to acceptedjoin.",
+    "The completePGcandidate must reach198762contacts with0failures before import. No gate relaxation; IR/realviewclock/timing remain required for freeze. Any initialGRT is explicitly PG-IR-open TRIAL."
+  ],
+  "physical_route_started": false
+}
