@@ -130,7 +130,9 @@ _bump_ports = {"type": "array", "items": {"type": "object", "required": ["pin", 
                                                          "note": {"type": "string"}}}}
 
 # Owner decision 2026-10-25 07:01: IDs alone may be constant-driven by the parent.
-_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6}
+_physical_id_widths = {"strap_corner": 2, "strap_hid": 2, "strap_bsel": 2, "strap_tile_tid": 6,
+                       # OWNER 2026-10-30 (B): HBM SU lane_exp0_id physical alias of native lane_lane_id (IDs 0/16)
+                       "strap_lane_lane_id": 11}
 _parent_id_straps = {"type": "object", "additionalProperties": False, "properties": {
     name: {"type": "object", "required": ["width", "value"], "additionalProperties": False,
            "properties": {"width": ({"type": "integer", "const": _physical_id_widths[name]} if name in _physical_id_widths
@@ -149,13 +151,16 @@ _position_id_contract = {"type": "object", "required": ["kind", "pbase", "lane"]
 _core_id_straps = {"type": "array", "items": {
     "type": "object", "required": ["port", "width", "value"], "additionalProperties": False,
     "properties": {"port": {"enum": list(_physical_id_widths)},
-                   "width": {"enum": [2, 6]},
+                   "width": {"enum": [2, 6, 11]},
                    "value": {"type": ["integer", "string"], "minimum": 0, "maximum": 63,
                              "pattern": "^(2'[bB][01]{2}|6'[bB][01]{6})$"},
                    "note": {"type": "string"}},
     "allOf": [{"if": {"properties": {"port": {"const": "strap_tile_tid"}}},
                "then": {"properties": {"width": {"const": 6}, "value": {"maximum": 63, "pattern": "^6'[bB][01]{6}$"}}},
-               "else": {"properties": {"width": {"const": 2}, "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}]}}
+               "else": {"if": {"properties": {"port": {"const": "strap_lane_lane_id"}}},
+                        "then": {"properties": {"width": {"const": 11}, "value": {"type": "integer", "enum": [0, 16]}}},
+                        "else": {"properties": {"width": {"const": 2},
+                                                "value": {"maximum": 3, "pattern": "^2'[bB][01]{2}$"}}}}}]}}
 
 _clock_mesh_region = {
     "type": "object", "additionalProperties": False,
