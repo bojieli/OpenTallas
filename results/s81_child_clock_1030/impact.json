@@ -1,0 +1,65 @@
+[
+  {
+    "module": "ot_s81sl_cap_ed",
+    "outline_um": [
+      51.84,
+      47.52
+    ],
+    "clock_old": "  PIN clk\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M3 ;\n        RECT  24.84 0 24.858 0.038 ;\n    END\n    PORT\n      LAYER M3 ;\n        RECT  24.84 0.012 24.858 0.125 ;\n    END\n  END clk",
+    "clock_new": [
+      25.932,
+      0.24
+    ],
+    "clock_rect": [
+      25.907999999999998,
+      0,
+      25.956,
+      0.48
+    ],
+    "max_geometric_reach_um": 73.212,
+    "cycles": 0,
+    "instances": 1
+  },
+  {
+    "module": "ot_s81sl_cap_ld",
+    "outline_um": [
+      43.2,
+      43.2
+    ],
+    "clock_old": "  PIN clk\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M3 ;\n        RECT  20.52 0 20.538 0.038 ;\n    END\n    PORT\n      LAYER M3 ;\n        RECT  20.52 0.012 20.538 0.125 ;\n    END\n  END clk",
+    "clock_new": [
+      21.612,
+      0.24
+    ],
+    "clock_rect": [
+      21.587999999999997,
+      0,
+      21.636,
+      0.48
+    ],
+    "max_geometric_reach_um": 64.572,
+    "cycles": 0,
+    "instances": 1
+  },
+  {
+    "module": "ot_s81sl_cap_rt",
+    "outline_um": [
+      259.2,
+      116.64
+    ],
+    "clock_old": "  PIN clk\n    DIRECTION INPUT ;\n    USE SIGNAL ;\n    PORT\n      LAYER M3 ;\n        RECT  129.492 116.602 129.51 116.64 ;\n    END\n    PORT\n      LAYER M3 ;\n        RECT  129.492 115.723 129.51 116.621 ;\n    END\n  END clk",
+    "clock_new": [
+      129.612,
+      116.4
+    ],
+    "clock_rect": [
+      129.588,
+      116.16,
+      129.636,
+      116.64
+    ],
+    "max_geometric_reach_um": 246.012,
+    "cycles": 0,
+    "instances": 1
+  }
+]

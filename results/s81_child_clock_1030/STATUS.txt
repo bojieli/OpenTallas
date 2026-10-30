@@ -1,0 +1,9 @@
+PREPARED CANDIDATES ONLY; no frozen-plan adoption or signed-view claim.
+Parents: capc5r has 1 ED,1 LD,1 RT,2 TR instances. TR already has a separate
+SIGNED M5 south entry view. New candidate parent spec changes only the
+three corresponding children view paths so the existing generator can
+emit test kits without accepting an incompatible parent binding.
+Impacts: 3 one-instance masters, common parent capc5r; no neighbouring die
+type, outline, schedule, RTL or cycle changes. Re-sign ED/LD/RT before any
+parent hosting; parent layout/signoff/bind required before release.
+Canonical recipes and parent spec are not modified.

@@ -1,0 +1,410 @@
+{
+  "name": "s81sl_capc5r",
+  "top": "ot_s81sl_capc5r",
+  "kind": "cluster",
+  "sources": [
+    "rtl/common/landed_parent/ot_pl_land.sv",
+    "rtl/common/landed_parent/ot_pl_land_n32.sv",
+    "rtl/common/landed_parent/ot_pl_land_rst_copy.sv",
+    "rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r.sv",
+    "rtl/lib/ot_rst_relay.sv",
+    "rtl/hdc/ot_hdc_delay_rf.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv",
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv"
+  ],
+  "params": {},
+  "clock": "multiple_cts_roots",
+  "clock_port": "ck_rt",
+  "clock_ports": [
+    "ck_rt",
+    "ck_cw",
+    "ck_ce",
+    "ck_rn",
+    "ck_rs"
+  ],
+  "clock_data_paths": "related_same_frequency",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_rt"
+      ],
+      "inputs": [
+        "rst_n_rt"
+      ],
+      "outputs": []
+    },
+    "cw": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_cw"
+      ],
+      "inputs": [
+        "rst_n_cw",
+        "rt_w"
+      ],
+      "outputs": []
+    },
+    "ce": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_ce"
+      ],
+      "inputs": [
+        "rst_n_ce",
+        "rt_e"
+      ],
+      "outputs": []
+    },
+    "rn": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_rn"
+      ],
+      "inputs": [
+        "rst_n_rn",
+        "cfg_v",
+        "cfg_d"
+      ],
+      "outputs": [
+        "cw_n_v",
+        "cw_n_a",
+        "cw_n_d"
+      ]
+    },
+    "rs": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_rs"
+      ],
+      "inputs": [
+        "rst_n_rs"
+      ],
+      "outputs": [
+        "cw_s_v",
+        "cw_s_a",
+        "cw_s_d",
+        "fault"
+      ]
+    }
+  },
+  "landed_record": "results/arch/landed_parent_1018/s81sl_capc5r/ot_s81sl_capc5r_record.json",
+  "reset_ports": [
+    "rst_n_rt",
+    "rst_n_cw",
+    "rst_n_ce",
+    "rst_n_rn",
+    "rst_n_rs"
+  ],
+  "reset_landing": {
+    "enable": false,
+    "reason": "S81-CAPRST 10-21 regional_reset_ports: the lp.py RTL lands each regional reset port 2 stages on its OWN region clock beside its pin (u_lpr_cw/ce/rn/rs N=2; rt = u_lpr_rt_p + 2 kept copies u_lpr_rt_c0/c1 <=32 loads); no reset root, no cross-region reset path; each port net has ONE sink"
+  },
+  "pin_regs": {
+    "enable": false,
+    "reason": "lp RTL registers every data input at the face (u_fw / u_fe / u_fcv / u_fcd) and every output in its face region (N: u_onv/u_ona/u_ond, S: u_osv/u_osa/u_osd/u_osf children, all landed from u_rt); do not double the stages"
+  },
+  "children": [
+    {
+      "view": "results/s81_child_clock_1030/ot_s81sl_cap_rt",
+      "count": 1,
+      "inst": "u_rt",
+      "at": [
+        43.2,
+        43.2
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+      "count": 1,
+      "inst": "u_tw",
+      "at": [
+        43.2,
+        302.4
+      ]
+    },
+    {
+      "view": "physical/ref_tile/s81sl_cap_tr/views/ot_s81sl_cap_tr",
+      "count": 1,
+      "inst": "u_te",
+      "at": [
+        216,
+        302.4
+      ]
+    },
+    {
+      "view": "results/s81_child_clock_1030/ot_s81sl_cap_ed",
+      "count": 1,
+      "inst": "u_ed",
+      "at": [
+        216,
+        216
+      ]
+    },
+    {
+      "view": "results/s81_child_clock_1030/ot_s81sl_cap_ld",
+      "count": 1,
+      "inst": "u_ld3",
+      "at": [
+        43.2,
+        216
+      ]
+    }
+  ],
+  "pins": {
+    "W": [
+      "rt_w",
+      "ck_cw",
+      "rst_n_cw",
+      "ck_rt",
+      "rst_n_rt"
+    ],
+    "E": [
+      "rt_e",
+      "ck_ce",
+      "rst_n_ce"
+    ],
+    "N": [
+      "cfg_v",
+      "cfg_d",
+      "rst_n_rn",
+      "ck_rn",
+      "cw_n_v",
+      "cw_n_a",
+      "cw_n_d"
+    ],
+    "S": [
+      "cw_s_v",
+      "cw_s_a",
+      "ck_rs",
+      "cw_s_d",
+      "rst_n_rs",
+      "fault"
+    ]
+  },
+  "outline": {
+    "w": 329.184,
+    "h": 411.48
+  },
+  "layer_cap": "M5",
+  "recipe": 3,
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 24,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4,
+    "io_hold_margin_ns": 0.03,
+    "pin_balance": {
+      "group_max": 1,
+      "h": "M4",
+      "v": "M3 M5"
+    }
+  },
+  "child_clock_ref": "boundary",
+  "hard_define": "OT_HARD_CHILDREN",
+  "defines": [
+    "OT_HARD_CHILDREN"
+  ],
+  "macros": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": false,
+  "outhold": false,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "hold_budget": "tile",
+  "hold_budget_reason": "level-1 cluster: tile hold budget, no pin pads (lp RTL registers every data pin: face pads u_f*, out_regs u_lpo_*); die-budget admission needs a ROOT candidate receipt for this identity",
+  "pg_strict": false,
+  "max_signal_net_um": 130,
+  "orfs_vars": {
+    "POST_RESIZE_TCL": "physical/common_flow/max_wire_repeat.tcl",
+    "OT_MAX_WIRE_UM": "80"
+  },
+  "pin_ranges": {
+    "cw_s_v": [
+      2.16,
+      10.8
+    ],
+    "cw_s_a": [
+      10.8,
+      166.32
+    ],
+    "fault": [
+      180.36,
+      182.52
+    ],
+    "cw_s_d": [
+      188,
+      327.02
+    ],
+    "cfg_v": [
+      2.16,
+      4.32
+    ],
+    "cfg_d": [
+      4.32,
+      160.0
+    ],
+    "cw_n_v": [
+      168.48,
+      172.8
+    ],
+    "cw_n_a": [
+      174,
+      222
+    ],
+    "cw_n_d": [
+      224,
+      327.02
+    ],
+    "rt_w": [
+      218.16,
+      409.32
+    ],
+    "rt_e": [
+      218.16,
+      409.32
+    ],
+    "ck_rt": [
+      95.04,
+      97.2
+    ],
+    "ck_cw": [
+      210.6,
+      212.76
+    ],
+    "ck_ce": [
+      210.6,
+      212.76
+    ],
+    "ck_rn": [
+      164.88,
+      167.04
+    ],
+    "ck_rs": [
+      168.48,
+      170.64
+    ],
+    "rst_n_rs": [
+      176.04,
+      178.2
+    ],
+    "rst_n_rt": [
+      99.36,
+      101.52
+    ],
+    "rst_n_cw": [
+      206.28,
+      208.44
+    ],
+    "rst_n_ce": [
+      206.28,
+      208.44
+    ],
+    "rst_n_rn": [
+      160.92,
+      163.08
+    ]
+  },
+  "std_area_um2": 2600.0,
+  "structural_change": "S81-CAPRST 10-21 s81sl_capc5r = capc5k recipe (same floorplan/children/hooks/CTS balance) on the successor RTL ot_s81sl_capc5r: capc5c's plain cross-region reset hops (u_lpr_root ck_rt -> u_lpr_cw/ce/rn/rs, single-cycle reg->reg between regional clocks) replaced by five regional reset ports rst_n_<r>, each landed 2 stages on its own region clock beside its pin (lp.py regional_reset_ports + regional_reset_copies); same reset age RB 2, cycles/landings unchanged. Pins: rst_n_rt W beside ck_rt, rst_n_cw W / rst_n_ce E beside their clocks, rst_n_rn N beside ck_rn (cfg_d 4.32-160.0), rst_n_rs S (old rst_n slot). DRIVE-S81-CAP 10-20 s81sl_capc5k = capc5i + post_cts REFINE (rt_leaf_balance.tcl ot_rtb_refine): the 5i/5j gates (GRT0, cw/ce 30-43 in 5j) failed only rt pair TT 86.2/FF 84.5 because DPL + hold repair after the in-CTS balance moved the soft region (512..536 -> 470..497) while the u_rt chain did not follow (u_rt 493..556); refine after repair removes/adds u_rt chain stages to the soft centre, legalises and re-measures (offline replay on the 5i db: pair 86.1 -> 48.7 TT). DRIVE-S81-CAP 10-20 s81sl_capc5k: capc5e (W-face ck_rt entry) + POST-CTS REGION LATENCY BALANCE on ck_rt (rt_leaf_balance.tcl): capc5e per-sink TT showed the rt region tree split into two tight bands (N 382..426, S 444..497 under the 259-um u_rt; u_rt boundary 395..459) -> a ~62 ps systematic branch imbalance, not spread. Every leaf driver and the u_rt clock pin are brought to the latest group centre with whole BUFx4 delay stages (offline replay on the capc5e CTS db: pair 102 -> 50 ps, soft spread 24). capc5g/h (clock_split_km) are dropped: under the hybrid -clk_nets CTS the cluster nets got NO tree (one BUFx24 per ~1300 sinks, 548/624 ps). GRT fix generalised: RSZ-3006 in 5g/5h came from max_wire_repeat's kept strong INV (_2216_ after u_fw.q[66]); pre_grt releases instance dont_touch on every non-clock std cell except out-pin drivers / hold cells (cells/nets unchanged). Same RTL, regions, landings, cycles. S81-TILES-B 10-20 VARIANT E = capc5c with the ck_rt entry moved from the S face (x185) to the W face at y95-97, in the W channel beside u_rt between the two rt register bands (S band y~10-40 under u_rt, N band y~150-200 above it): capc5c/5d gates FAILED ck_rt TT 131/FF 108 pin-flop spread because the S-face entry reached the N band only around the 250-um-wide u_rt. Same RTL (ot_s81sl_capc5c), regions, children, landings. S81-CAPC5 10-20 VARIANT C of the LANDED capc parent (tools/landed_parent/specs/ot_s81sl_capc5c.json from flat ot_s81sl_capc5cf): capc5b gate 03:2x FAILED clock with cw 49/49 PASS but core 134/120 and rt 178/150 (a region holding a hard child or u_rt together with a full face of pin registers gets ~100+ ps TritonCTS soft spread). C = 5 LOCAL regions: rt (u_rt + landing rings only), cw (W face regs + u_ld3 + u_tw, as B PASS), ce (E face regs + u_te + u_ed), rn (N face: cfg in-regs + N out-regs), rs (S face out-regs + fault). Every u_rt output face is now LANDED into its own face region (S +3 vs capc5b: all outputs W+8 = +6 vs capc2; inputs unchanged). rt reset loads 45 -> lp regional_reset_copies (2 kept copies, same reset age, no added edge). n32 ring writer kept (native32).",
+  "why_floorplan": "Same closed children, 43.2-lattice origins and 329.184 x 411.48 outline as CLOSED capc2 / capc5b; face pin ranges as capc5b plus one clock pin per face region beside its pin group. Landing rings sit between the face region and u_rt (south band / channels); fill set by the children and lattice.",
+  "job": {
+    "owner": "Claude:S81-CAPRST-1021",
+    "branch": "claude/s81-caprst-1021",
+    "tag": "s81sl_capc5r",
+    "purpose": "S81 release CAP cluster successor of CLOSED capc5k: landed regional reset ports (no plain cross-region reset hops)",
+    "benches": [
+      {
+        "name": "c5r_gold",
+        "cmd": "bash tools/s81_slice/cap_c5r_gold_bench.sh {RUN}/c5_gold {RUN}/slcap_vec_c5 0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "pass_regex": "^PASS cap_c5r_gold MUT=0 slcap_vec_c5$"
+      },
+      {
+        "name": "c5r_lp_lockstep",
+        "cmd": "env SIM=verilator VERILATOR=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator bash rtl/dsrom_sys/s81_dv/slice/lp/ot_s81sl_capc5r_bench.sh {RUN}/lp_bench",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16,
+        "pass_regex": "^BENCH_EXIT 0$"
+      },
+      {
+        "name": "c5r_gold_mut1",
+        "cmd": "bash tools/s81_slice/cap_c5r_gold_bench.sh {RUN}/c5_gold_m1 {RUN}/slcap_vec_c5m1 1 raw",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "fail_regex": "^CAP_C5R_MUTANT_DETECTED MUT=1 "
+      },
+      {
+        "name": "c5r_gold_mut2",
+        "cmd": "bash tools/s81_slice/cap_c5r_gold_bench.sh {RUN}/c5_gold_m2 {RUN}/slcap_vec_c5m2 2 raw",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "fail_regex": "^CAP_C5R_MUTANT_DETECTED MUT=2 "
+      },
+      {
+        "name": "c5r_gold_mut4",
+        "cmd": "bash tools/s81_slice/cap_c5r_gold_bench.sh {RUN}/c5_gold_m4 {RUN}/slcap_vec_c5m4 4 raw",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 16,
+        "fail_regex": "^CAP_C5R_MUTANT_DETECTED MUT=4 "
+      }
+    ],
+    "extra_paths": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "physical/ref_tile/s81sl_cap_ed/views",
+      "physical/ref_tile/s81sl_cap_ld/views",
+      "physical/ref_tile/s81sl_cap_rt/views",
+      "physical/ref_tile/s81sl_cap_tr/views",
+      "results/arch/landed_parent_1018/s81sl_capc5r",
+      "rtl/common/landed_parent",
+      "rtl/dsrom_sys/s81_die_bind",
+      "rtl/dsrom_sys/s81_dv/slice",
+      "rtl/dsrom_sys/s81_static_net",
+      "rtl/hdc",
+      "rtl/lib",
+      "rtl/proto",
+      "tools/s81",
+      "tools/s81_slice",
+      "tools/landed_parent"
+    ],
+    "views_to": "physical/ref_tile/s81sl_capc5r/views",
+    "record_to": "results/rtl/ref_tile/s81sl_capc5r"
+  }
+}

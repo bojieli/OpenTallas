@@ -1,0 +1,14 @@
+Candidate child clock review, 2026-10-30.
+Image results/s81_child_clock_1030/contracts.png personally viewed.
+ED and LD retain south face; RT retains north face. M5 entry is snapped to
+ASAP7 M5 tracks, 0.048 x 0.480 um. All other LEF text remains identical.
+Outlines unchanged. Data paths/pins/macro sites remain untouched. No RTL,
+cycle, reset or latency change. No parent is built with these contracts.
+These are candidate contract LEFs, not signed physical views. Candidate
+parent spec/recipe lives only under results and does not alter frozen plan.
+G1 CONTRACT REVIEW PASS-COND for isolated child placement, subject to
+per-block event approval. RT farthest outline L1 reach 246.012 um is above
+the 220 um clock guidance; actual sink reach must pass before CTS/route.
+Actual channel, r2r, pin-register and PG checks await child placement.
+Multi-block adoption is held by OWNER 12.20a/event3 hard freeze; no event4
+or permanent recipe change is proposed by this results-only packet.
