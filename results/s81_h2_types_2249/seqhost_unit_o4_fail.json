@@ -1,0 +1,382 @@
+{
+ "verdict": "FAIL_PLAN_WIDTH_SPARES",
+ "event": "847628f9632",
+ "job": "epyc2:oth-ubuntu-1007310-1793338803",
+ "kit": "/srv/opentallas-scratch2/claude/s81-kits-c/ev/gen/seqhost__t1/seqhost__t1",
+ "boundary": "unit_o4",
+ "declared_data_bits": 267,
+ "bound_live_data_bits": 265,
+ "constant_plan_bits": [
+  265,
+  266
+ ],
+ "epoch": {
+  "old": 267,
+  "bound": 265
+ },
+ "native_payload_low_to_high": [
+  {
+   "range": [
+    0,
+    5
+   ],
+   "native": "u_seqhost.cw_a[5:0]"
+  },
+  {
+   "range": [
+    6,
+    7
+   ],
+   "native": "u_seqhost.cw_a[9:8]"
+  },
+  {
+   "range": [
+    8,
+    263
+   ],
+   "native": "u_seqhost.cw_d[255:0]"
+  },
+  {
+   "range": [
+    264,
+    264
+   ],
+   "native": "u_seqhost.cw_v[0]"
+  }
+ ],
+ "wrapper_assign": "assign unit_o4[266:265]=2d0; spare plan bits; unit_o4[267]=b_unit_o4[265]",
+ "face_guard": {
+  "planned": 6966,
+  "ok": 6964,
+  "shared": [
+   "unit_o4[266]",
+   "unit_o4[265]"
+  ]
+ },
+ "chain": [
+  {
+   "id": "unit__seqhost__gunit__0",
+   "src": {
+    "part": "seqhost",
+    "bus": "unit_o4"
+   },
+   "dst": {
+    "part": "s_3S_L2",
+    "bus": "ft4_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__1",
+   "src": {
+    "part": "s_3S_L2",
+    "bus": "ft4_o"
+   },
+   "dst": {
+    "part": "s_3S_L0",
+    "bus": "ft5_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__2",
+   "src": {
+    "part": "s_3S_L0",
+    "bus": "ft5_o"
+   },
+   "dst": {
+    "part": "s_3S_C",
+    "bus": "ft2_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__3",
+   "src": {
+    "part": "s_3S_C",
+    "bus": "ft2_o"
+   },
+   "dst": {
+    "part": "s_3S_L1",
+    "bus": "ft4_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__4",
+   "src": {
+    "part": "s_3S_L1",
+    "bus": "ft4_o"
+   },
+   "dst": {
+    "part": "s_3S_L3",
+    "bus": "ft3_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__5",
+   "src": {
+    "part": "s_3S_L3",
+    "bus": "ft3_o"
+   },
+   "dst": {
+    "part": "s_3S_L4",
+    "bus": "ft2_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__6",
+   "src": {
+    "part": "s_3S_L4",
+    "bus": "ft2_o"
+   },
+   "dst": {
+    "part": "s_3N_L2",
+    "bus": "ft3_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__7",
+   "src": {
+    "part": "s_3N_L2",
+    "bus": "ft3_o"
+   },
+   "dst": {
+    "part": "s_3N_L0",
+    "bus": "ft4_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__8",
+   "src": {
+    "part": "s_3N_L0",
+    "bus": "ft4_o"
+   },
+   "dst": {
+    "part": "s_3N_C",
+    "bus": "ft2_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__9",
+   "src": {
+    "part": "s_3N_C",
+    "bus": "ft2_o"
+   },
+   "dst": {
+    "part": "s_3N_L1",
+    "bus": "ft5_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__10",
+   "src": {
+    "part": "s_3N_L1",
+    "bus": "ft5_o"
+   },
+   "dst": {
+    "part": "s_3N_L3",
+    "bus": "ft4_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__11",
+   "src": {
+    "part": "s_3N_L3",
+    "bus": "ft4_o"
+   },
+   "dst": {
+    "part": "s_3N_L4",
+    "bus": "ft3_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__12",
+   "src": {
+    "part": "s_3N_L4",
+    "bus": "ft3_o"
+   },
+   "dst": {
+    "part": "s_3N_x06",
+    "bus": "ft4_i"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  },
+  {
+   "id": "unit__seqhost__gunit__13",
+   "src": {
+    "part": "s_3N_x06",
+    "bus": "ft4_o"
+   },
+   "dst": {
+    "part": "gunit",
+    "bus": "unit_i0"
+   },
+   "width": 267,
+   "kind": "data",
+   "face": "N",
+   "layers": [
+    "M7",
+    "M5"
+   ],
+   "window_um": [
+    14538.624,
+    14596.572
+   ],
+   "order": "lsb_low"
+  }
+ ],
+ "owner": "DIE-S81 plan owner; no kit prune/no waiver; update exact chain bus widths/epoch positions as single plan event",
+ "added_cycles": 0
+}
