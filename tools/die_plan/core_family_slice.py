@@ -453,9 +453,11 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     if macro_mode:
         P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
                                 [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)),
-                                entry_node=bool(fam.get("entry_node_legal")))
+                                entry_node=bool(fam.get("entry_node_legal")), x_bands=fam.get("lv0_x_bands_um"))
         rea = None
     else:
+        if fam.get("lv0_x_bands_um") is not None:
+            raise SystemExit("lv0_x_bands_um needs macro_leaves (ungated_macro_htree) plans")
         P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
         rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
@@ -900,8 +902,27 @@ def read_macro_geo(geo):
     return core, entry, sinks, macros
 
 
-def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False):
-    """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads."""
+def lv0_x_bands(pts, k, cuts):
+    """opt-in family lv0_x_bands_um (see ungated_macro_htree): geometric first-level partition, fail closed."""
+    cuts = [float(v) for v in cuts]
+    if not cuts or cuts != sorted(cuts) or len(set(cuts)) != len(cuts):
+        raise SystemExit("lv0_x_bands_um must be a strictly increasing non-empty list, got %r" % (cuts,))
+    if k != len(cuts) + 1:
+        raise SystemExit("lv0_x_bands_um: %d cuts need splits[0] == %d (splits_override), got %d" % (len(cuts), len(cuts) + 1, k))
+    lo = [-math.inf] + cuts; hi = cuts + [math.inf]
+    parts = [[p for p in pts if a <= p[0] < b] for a, b in zip(lo, hi)]
+    empty = [i for i, q in enumerate(parts) if not q]
+    if empty:
+        raise SystemExit("lv0_x_bands_um: empty band(s) %s for cuts %s" % (empty, cuts))
+    return parts
+
+
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False, x_bands=None):
+    """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads.
+    x_bands (HBM-CORES-KITS-25 opt-in family "lv0_x_bands_um": [x1, x2, ...]; absent = unchanged count-median W/E split):
+    the first level splits the sinks into the GEOMETRIC x bands (-inf,x1),[x1,x2),...,[xn,inf) instead of equal counts,
+    so a far, sparse strip (EP hfd_ep_static W/E strips) gets its own subtree rooted inside it rather than a branch
+    fed from the dense centre; upper[0] must equal len(x_bands)+1 and every band must hold a sink (fail closed)."""
     core, entry, sinks, macros = read_macro_geo(geo)
     # entry_node (DIE-S81-30 opt-in family "entry_node_legal"): the root driver snaps to the nearest NODE-legal site
     # (outside the macro keep-outs) instead of the nearest wire-legal one; default unchanged
@@ -911,7 +932,9 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
     for lv, k in enumerate(upper):
         for key in sorted(g for g in groups if len(g) == lv):
             pts = groups[key]
-            if lv == 0 and k == 2:
+            if lv == 0 and x_bands is not None:
+                parts = lv0_x_bands(pts, k, x_bands)
+            elif lv == 0 and k == 2:
                 srt = sorted(pts, key=lambda p: (p[0], p[1])); h = len(srt) // 2; parts = [srt[:h], srt[h:]]
             else:
                 parts = H.split(pts, k, axis=(1 if lv == 1 else None))
