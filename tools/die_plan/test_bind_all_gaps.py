@@ -39,3 +39,24 @@ def test_all_gaps_clean_fixture_matches_default_bytes(tmp_path):
     collected = b.emit(tmp_path/'collected')
     assert not getattr(b,'emit_gaps',[])
     assert [(p.name,p.read_bytes()) for p in regular] == [(p.name,p.read_bytes()) for p in collected]
+
+
+def test_invalid_parent_id_skips_leaf_and_reports_without_keyerror(tmp_path):
+    from types import SimpleNamespace
+    raw = plan()
+    raw['partition_types']['src']['contents'] = [dict(inst='u_bad', module='leaf',
+        parent_id_straps={'lane_lane_id':dict(width=2,value=1)})]
+    b = emitter(raw)
+    part = next(p for p in b.parts if b.parts[p]['type']=='src')
+    b.F.cells = [SimpleNamespace(path='p.u_bad',ports={'lane_lane_id':[1,2]},module='leaf',params={})]
+    b.G.dirs = {0:{'lane_lane_id':'input'}}
+    b.G.kind = ['leaf']
+    b.members[part] = [0]
+    b.rel_of = lambda ci:'u_bad'
+    b.tparams['src'] = {('strap','u_bad','lane_lane_id',i):['0'] for i in range(2)}
+    b.sinks = {(0,'lane_lane_id',i):('strap',) for i in range(2)}
+    b.collect_gaps = True
+    files=b.emit(tmp_path)
+    assert any('parent ID src.u_bad.lane_lane_id' in g for g in b.emit_gaps)
+    assert not (tmp_path/'rtl/tiny_bound_top.sv').exists()
+    assert 'leaf u_u_bad' not in (tmp_path/'rtl'/(raw['partition_types']['src']['module']+'.sv')).read_text()
