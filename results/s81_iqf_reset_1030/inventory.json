@@ -1,0 +1,125 @@
+{
+ "actual_reset_relay_instances": 41,
+ "normal_epoch_consumers": [
+  {
+   "inst": "u_bin_idx_i0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_bin_ql_i0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_bout_flt_o0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_bout_idx_o0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_bout_qc_o0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft0_o_0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft0_o_1",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft0_o_2",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft0_o_3",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft0_o_4",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft0_o_5",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_0",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_1",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_2",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_3",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_4",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_5",
+   "reset": "rst_n"
+  },
+  {
+   "inst": "u_ft_ft1_o_6",
+   "reset": "rst_n"
+  }
+ ],
+ "source_alias": "rst_n=rst_n_t5",
+ "published": {
+  "t5": {
+   "relay": "u_rrl_35",
+   "depth": 5,
+   "xy": [
+    541.08,
+    460.08
+   ]
+  },
+  "t12": {
+   "relay": "u_rrl_16",
+   "depth": 5,
+   "xy": [
+    180.36,
+    1073.52
+   ]
+  },
+  "t13": {
+   "relay": "u_rrl_15",
+   "depth": 5,
+   "xy": [
+    541.08,
+    1073.52
+   ]
+  },
+  "t14": {
+   "relay": "u_rrl_4",
+   "depth": 5,
+   "xy": [
+    901.8,
+    1073.52
+   ]
+  }
+ },
+ "target_localization": {
+  "u_bin_idx_i0": "t13",
+  "u_bin_ql_i0": "t14",
+  "u_core.rst": "t14"
+ },
+ "cycles_change": 0,
+ "native_core": {
+  "module": "dsdv_idx_qfs",
+  "clock_pin": "ck",
+  "reset_pin": "rst",
+  "old_net": "rst_n",
+  "polarity": "active_low from binder role, not inferred from port name"
+ }
+}
