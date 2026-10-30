@@ -275,6 +275,61 @@ proc ff_landed_stations {onet k} {
   return [expr {[llength $r] == $k ? $r : ""}]
 }
 set ff_gocc {}
+# DIE-HEAD-42 V1 (FLOW-10 10-30): a landed slot bit WITHOUT plan sites re-places its stations s0..s<k-2> on the straight
+# line from the bit's PLACED ring fan-in R (centroid of the ring flops in s0/D's combinational fan-in cone, <= 8 levels)
+# to its out pin S: station i at R + (S - R)*(i+1)/k (the out-face register s<k-1> keeps its place).  Runs after
+# landing_placement.tcl has placed the ring (it calls ff_landed_line_place); bits with plan sites/regs_um keep them.
+proc ff_ring_fanin {f} {
+  set nets {}
+  foreach it [$f getITerms] { if {[[$it getMTerm] getName] eq "D"} { lappend nets [$it getNet] } }
+  set seen {}; set out {}; set depth 0
+  while {[llength $nets] && $depth < 8} {
+    set nxt {}
+    foreach net $nets {
+      if {$net eq "NULL" || $net eq "" || [dict exists $seen $net]} continue
+      dict set seen $net 1
+      foreach it [$net getITerms] {
+        if {[[$it getMTerm] getIoType] ne "OUTPUT"} continue
+        set i [$it getInst]
+        if {[ff_is_ff $i]} { if {[ff_in_ring $i]} { dict set out [$i getName] $i }; continue }
+        foreach ii [$i getITerms] {
+          set m2 [$ii getMTerm]
+          if {[$m2 getIoType] eq "INPUT" && [$m2 getSigType] ni {CLOCK POWER GROUND}} { lappend nxt [$ii getNet] }
+        }
+      }
+    }
+    set nets $nxt; incr depth
+  }
+  return [dict values $out]
+}
+proc ff_landed_line_place {} {
+  global ff_landed_line ff_gocc ff_x0 ff_y0 ff_cpitch ff_rh ff_dbu
+  set fh [open $::env(RESULTS_DIR)/ot_landed_line.txt w]
+  set n 0; set bits 0; set miss 0
+  foreach e $ff_landed_line {
+    lassign $e nm ob k fs
+    set rf [ff_ring_fanin [lindex $fs 0]]
+    if {![llength $rf]} { incr miss; continue }
+    set rx 0.0; set ry 0.0
+    foreach i $rf { set b [$i getBBox]; set rx [expr {$rx + ([$b xMin]+[$b xMax])/2.0}]; set ry [expr {$ry + ([$b yMin]+[$b yMax])/2.0}] }
+    set rx [expr {$rx / [llength $rf]}]; set ry [expr {$ry / [llength $rf]}]
+    set ab [$ob getBBox]
+    set sx [expr {([$ab xMin]+[$ab xMax])/2.0}]; set sy [expr {([$ab yMin]+[$ab yMax])/2.0}]
+    incr bits
+    for {set j 0} {$j + 1 < $k} {incr j} {
+      set f [lindex $fs $j]
+      lassign [$f getLocation] ox oy
+      dict unset ff_gocc "[expr {int(($ox - $ff_x0) / $ff_cpitch)}],[expr {int(($oy - $ff_y0) / $ff_rh)}]"
+      set t [expr {double($j+1)/$k}]
+      set got [ff_put_near $f [expr {round($rx + ($sx-$rx)*$t)}] [expr {round($ry + ($sy-$ry)*$t)}]]
+      if {$got eq ""} { incr miss; continue }
+      puts $fh "[$f getName]\tlline$j\t[expr {[lindex $got 0] / double($ff_dbu)}]\t[expr {[lindex $got 1] / double($ff_dbu)}]\t$nm"
+      incr n
+    }
+  }
+  close $fh
+  puts "OT_FACE_FLOPS landed line: $n stations of $bits plan-siteless landed bits re-placed on their placed-ring -> out-pin lines ($miss missing)"
+}
 # Reserve every explicit footprint BEFORE implicit stations run; BTerm order
 # must not let a nearest-site choice occupy a later fixed plan target.
 set ff_explicit_occ {}
@@ -356,7 +411,7 @@ proc ff_put_stage {f slot j nm xy} {
   }
   return [ff_put_near $f [lindex $xy 0] [lindex $xy 1]]
 }
-set ff_st 0; set ff_st_miss 0; set ff_lst 0
+set ff_st 0; set ff_st_miss 0; set ff_lst 0; set ff_landed_line {}
 foreach bt [$ff_blk getBTerms] {
   if {[$bt getSigType] ne "SIGNAL" || [$bt getIoType] ne "INPUT"} continue
   set nm [$bt getName]
@@ -371,6 +426,9 @@ foreach bt [$ff_blk getBTerms] {
     # face) are exactly the landed targets L*(i+1)/k of stations i=0..k-2, so station i takes plan stage i+1; the last
     # station is the out-face register (route end).  Without plan sites this is the route point, as before.
     set fs [ff_landed_stations [$ob getNet] $k]
+    if {$fs ne "" && [llength $regs] < 2 * $k && !([info exists ff_bit_site_cells] && [dict exists $ff_bit_site_cells $slot])} {
+      lappend ff_landed_line [list $nm $ob $k $fs]
+    }
     set clash 0
     foreach f $fs { if {[dict exists $ff_done [$f getName]]} { set clash 1 } }
     if {$fs eq "" || $clash} { incr ff_st_miss; continue }
