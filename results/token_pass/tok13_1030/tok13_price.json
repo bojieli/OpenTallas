@@ -1,0 +1,523 @@
+{
+ "basis": "TOK-13 2026-10-30: EXACT-exposure HBM pricing on the accepted DS native S2 model (same model/traps as TOK-8..12:\nbase clean 576702.4178 asserted; record R = A+B COLL (EP_S1 34/cross + coll q0 32 reduce / 17 other per cross) + IDX+31\n+ SU+3 = 610734.93 cyc = 1799.79 tok/s asserted).\n\nDifference vs TOK-12 (bounds): each plan-cycle delta is charged only to the records whose path crosses it, with the\nper-record crossing map of the accepted H-DIE relay method (tools/hgi_sim/ds_relay_latency.py crossings()) and the RTL:\n  SOUTH  d40h L700 18 (NE->NW: VMS SE.ccw_out + COLL ring B hcollb NE.ccw_o) / L701 21 (NW->NE: VMS SW.cw_out +\n         hcollb NW.cw_o) vs Northern L4 11 (VMS NE.cw/NW.ccw + COLL ring A pr_*). COLL ring B is a 2-stop NW<->NE ring\n         (tools/hbm_b2/make_wiring.py W-RING): a 1-cross COLL phase exchanges both ways at once -> max(+7,+10) = +10;\n         a 2-cross op (ALL_REDUCE_SUM / GROUP_REDUCE_MCAST: reduce then multicast) crosses once each way -> +7 +10 = +17.\n         VMS ring (ot_vms_rstop_static, sid SW0/SE1/NW2/NE3 -> rank ring SW-SE-NE-NW): a mirror goes cw to rank+1,+2\n         and ccw to rank-1, so every VMS mirror path has <= 2 hops and AT MOST ONE hub<->hub hop (same +10 max).\n         Exact charge per COLL record: +10 (1-cross) / +17 (2-cross); TOK-12 pair17 per cross = +17 / +34 (bound).\n  EP     d41c L720 17 (hub->spb0 tx 632 b) / L722+L723 19 (rx 615 b): parallel to EP_S1 root<->vsN0 L200/L201 19/19\n         (same 632/615 b flit buses, still in d41c), which the record already charges (+17/+17 per cross over the\n         2-flop bound). Per cross max(tx) 17 <= 19, max(rx) 19 = 19 -> +0 (no credit taken for tx -2).\n  SM     d41c L721 sm3->hub request 7 = L123; sibling request lanes L120 7 / L121 8 / L122 8 -> max 8 unchanged -> +0.\n         d38s L28/L28m 28->29 (+1, SM per TOK-12) kept.\n  SFU    only SU records whose template uses the SFU (r.sut['sfu'] != 0: q_norm.rs, kv_norm.rs, attend.exp_sum,\n         attend.den, router_act, swiglu x40 + engram 6 = 246 records; crossings() SFU_CORE x2). FUSED records do NOT\n         use the SFU core: FUSED.HC_* = HC_CORE/HC_ENG (tnode term below), FUSED.QDQ = 0.\n         Per-record SFU critical path (ot_hgi_sfu_core_split2_sp2: VM via the SU LG pair tap, bridge read return\n         TAP_RR + 2(LG_PATH+1), write TAP_WR + (LG_PATH+1); lanes are register-direct to the engine):\n           tap->ctl read response + ctl->lane + lane->ctl + ctl->tap write  (request leg and hub->ctl compiler control\n           are issued ahead by the static calendar)  vs the alternative lane->hub kv gather path; each leg = plan cycles\n           - 2 (record = 2-flop bound for the then-unplanned SFU pairs; planned L5/L23/L81/L184/L185 vs record cycles).\n  TNODE  Codex N1: FUSED.HC_PRE_NORM +48 / HC_POST +32 per record (source-derived, unchanged).\n  IDX    L1 IDX chain 1 + 2 + 6 = 9 replaces record 31 (serial per IDX record, unchanged method).\nRun at repo root: PYTHONPATH=src python3 price_tok13.py OUT.json",
+ "base_cycles": 576702.4178468838,
+ "record_cycles": 610734.931155155,
+ "record_tok_s": 1799.79,
+ "records_per_unit": {
+  "FUSED": 201,
+  "SM": 1095,
+  "COLL": 642,
+  "DMA": 420,
+  "SU": 1356,
+  "CTL": 197,
+  "ATT": 80,
+  "HC": 80,
+  "IDX": 48,
+  "ARGMAX": 1
+ },
+ "sfu_records": {
+  "q_norm.rs": 40,
+  "kv_norm.rs": 40,
+  "attend.exp_sum": 40,
+  "attend.den": 40,
+  "router_act": 40,
+  "swiglu": 40,
+  "engram.rH": 2,
+  "engram.rK": 2,
+  "engram.gate": 2
+ },
+ "n_sfu": 246,
+ "coll_ops": {
+  "ALL_GATHER": 584,
+  "GROUP_REDUCE_MCAST": 40,
+  "TOPK_MERGE": 9,
+  "ROW_GATHER": 8,
+  "ARGMAX_MERGE": 1
+ },
+ "rows": [
+  {
+   "case": "tok12_repro_POR_L1_core_pair17_tnode_FUSED74",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1,
+    "FUSED": 74
+   },
+   "kw": {
+    "tnode": true,
+    "south": 17
+   },
+   "cycles": 640366.94,
+   "tok_s": 1716.51,
+   "pct_vs_record": -4.627,
+   "pct_vs_1812_4": -5.291,
+   "above_floor_1721_8": false
+  },
+  {
+   "case": "w_sfu_plus1",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 1
+   },
+   "cycles": 610895.93,
+   "tok_s": 1799.32,
+   "pct_vs_record": -0.026,
+   "pct_vs_1812_4": -0.722,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "w_south_plus1_percross",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "south": 1
+   },
+   "cycles": 611327.93,
+   "tok_s": 1798.04,
+   "pct_vs_record": -0.097,
+   "pct_vs_1812_4": -0.792,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "w_tnode_only",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "tnode": true
+   },
+   "cycles": 617064.38,
+   "tok_s": 1781.33,
+   "pct_vs_record": -1.026,
+   "pct_vs_1812_4": -1.714,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "south_exact_10_or_17",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "south": "exact"
+   },
+   "cycles": 616544.93,
+   "tok_s": 1782.83,
+   "pct_vs_record": -0.942,
+   "pct_vs_1812_4": -1.632,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "south10_percross_k2_20_sens",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "south": 10
+   },
+   "cycles": 616664.93,
+   "tok_s": 1782.48,
+   "pct_vs_record": -0.962,
+   "pct_vs_1812_4": -1.651,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "south7_percross_NEtoNW_only_sens",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "south": 7
+   },
+   "cycles": 614885.93,
+   "tok_s": 1787.64,
+   "pct_vs_record": -0.675,
+   "pct_vs_1812_4": -1.366,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "L28_SM1",
+   "extra": {
+    "IDX": 31,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {},
+   "cycles": 610944.93,
+   "tok_s": 1799.17,
+   "pct_vs_record": -0.034,
+   "pct_vs_1812_4": -0.73,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "sfu_only_L1_est_76",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 76
+   },
+   "cycles": 624546.92,
+   "tok_s": 1759.99,
+   "pct_vs_record": -2.212,
+   "pct_vs_1812_4": -2.892,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "sfu_only_L1_C2w_kv_76",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 76
+   },
+   "cycles": 624546.92,
+   "tok_s": 1759.99,
+   "pct_vs_record": -2.212,
+   "pct_vs_1812_4": -2.892,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "sfu_only_VA_166",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 166
+   },
+   "cycles": 642805.54,
+   "tok_s": 1710.0,
+   "pct_vs_record": -4.989,
+   "pct_vs_1812_4": -5.65,
+   "above_floor_1721_8": false
+  },
+  {
+   "case": "sfu_only_L1_su31fix_to22_66",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 66
+   },
+   "cycles": 622596.92,
+   "tok_s": 1765.5,
+   "pct_vs_record": -1.905,
+   "pct_vs_1812_4": -2.588,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "sfu_only_L1_su31fix_to22_C2w_kv_70",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 70
+   },
+   "cycles": 623376.92,
+   "tok_s": 1763.29,
+   "pct_vs_record": -2.028,
+   "pct_vs_1812_4": -2.71,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "sfu_only_L1_alltaps13_48",
+   "extra": {
+    "IDX": 31,
+    "SU": 3
+   },
+   "kw": {
+    "sfu": 48
+   },
+   "cycles": 619086.92,
+   "tok_s": 1775.51,
+   "pct_vs_record": -1.349,
+   "pct_vs_1812_4": -2.035,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_est_exact",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 76
+   },
+   "cycles": 629190.92,
+   "tok_s": 1747.0,
+   "pct_vs_record": -2.933,
+   "pct_vs_1812_4": -3.608,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_est_exact_tnode",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 76,
+    "tnode": true
+   },
+   "cycles": 635444.37,
+   "tok_s": 1729.8,
+   "pct_vs_record": -3.889,
+   "pct_vs_1812_4": -4.557,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_C2w_kv_exact",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 76
+   },
+   "cycles": 629190.92,
+   "tok_s": 1747.0,
+   "pct_vs_record": -2.933,
+   "pct_vs_1812_4": -3.608,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_C2w_kv_exact_tnode",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 76,
+    "tnode": true
+   },
+   "cycles": 635444.37,
+   "tok_s": 1729.8,
+   "pct_vs_record": -3.889,
+   "pct_vs_1812_4": -4.557,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_VA_exact",
+   "extra": {
+    "IDX": 80,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 166
+   },
+   "cycles": 650824.54,
+   "tok_s": 1688.93,
+   "pct_vs_record": -6.16,
+   "pct_vs_1812_4": -6.813,
+   "above_floor_1721_8": false
+  },
+  {
+   "case": "POR_d41c_VA_exact_tnode",
+   "extra": {
+    "IDX": 80,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 166,
+    "tnode": true
+   },
+   "cycles": 657077.98,
+   "tok_s": 1672.85,
+   "pct_vs_record": -7.053,
+   "pct_vs_1812_4": -7.7,
+   "above_floor_1721_8": false
+  },
+  {
+   "case": "POR_d41c_L1_su31fix_to22_exact",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 66
+   },
+   "cycles": 627240.92,
+   "tok_s": 1752.43,
+   "pct_vs_record": -2.632,
+   "pct_vs_1812_4": -3.309,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_su31fix_to22_exact_tnode",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 66,
+    "tnode": true
+   },
+   "cycles": 633494.37,
+   "tok_s": 1735.13,
+   "pct_vs_record": -3.593,
+   "pct_vs_1812_4": -4.263,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_su31fix_to22_C2w_kv_exact",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 70
+   },
+   "cycles": 628020.92,
+   "tok_s": 1750.25,
+   "pct_vs_record": -2.752,
+   "pct_vs_1812_4": -3.429,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_su31fix_to22_C2w_kv_exact_tnode",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 70,
+    "tnode": true
+   },
+   "cycles": 634274.37,
+   "tok_s": 1733.0,
+   "pct_vs_record": -3.711,
+   "pct_vs_1812_4": -4.381,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_alltaps13_exact",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 48
+   },
+   "cycles": 623730.92,
+   "tok_s": 1762.29,
+   "pct_vs_record": -2.084,
+   "pct_vs_1812_4": -2.765,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_alltaps13_exact_tnode",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 48,
+    "tnode": true
+   },
+   "cycles": 629984.37,
+   "tok_s": 1744.8,
+   "pct_vs_record": -3.056,
+   "pct_vs_1812_4": -3.73,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_est_exact_tnode_SUplus2",
+   "extra": {
+    "IDX": 9,
+    "SU": 5,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 76,
+    "tnode": true
+   },
+   "cycles": 637494.37,
+   "tok_s": 1724.24,
+   "pct_vs_record": -4.198,
+   "pct_vs_1812_4": -4.864,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_est_exact_tnode_plus_ctl6",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 82,
+    "tnode": true
+   },
+   "cycles": 636648.37,
+   "tok_s": 1726.53,
+   "pct_vs_record": -4.07,
+   "pct_vs_1812_4": -4.738,
+   "above_floor_1721_8": true
+  },
+  {
+   "case": "POR_d41c_L1_C2w_kv_exact_tnode_plus_ctl6",
+   "extra": {
+    "IDX": 9,
+    "SU": 3,
+    "SM": 1
+   },
+   "kw": {
+    "south": "exact",
+    "sfu": 82,
+    "tnode": true
+   },
+   "cycles": 636648.37,
+   "tok_s": 1726.53,
+   "pct_vs_record": -4.07,
+   "pct_vs_1812_4": -4.738,
+   "above_floor_1721_8": true
+  }
+ ],
+ "sfu_exposure_cyc": {
+  "L1_est": 76,
+  "L1_C2w_kv": 76,
+  "VA": 166,
+  "L1_su31fix_to22": 66,
+  "L1_su31fix_to22_C2w_kv": 70,
+  "L1_alltaps13": 48
+ }
+}
