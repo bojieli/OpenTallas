@@ -1,0 +1,1265 @@
+{
+ "status": "CANDIDATE_NOT_ADOPTED",
+ "why": "KVleaf omitted ordinaryleaf natural hardcores; sameoutline1442.88x1226.88",
+ "hard_core_count": 25,
+ "storage_masters_remaining_parent": [
+  "u_bound.u_u_vp_u_b0",
+  "u_bound.u_u_vp_u_b1"
+ ],
+ "params_source": "Actual inherited native emitted boundRTL; no re-elaboration or inventedinterfaces",
+ "latency_cycles_change": 0,
+ "core_rows": [
+  {
+   "source_plan_inst": "u_lf.u_ve.u_m",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_ve_m",
+    "physical_inst": "u_bound.u_u_ve_u_m",
+    "actual_params": ".LA(4), .LM(5), .MUT(0)",
+    "ports": [
+     "a_c",
+     "a_g",
+     "a_h",
+     "a_v",
+     "a_val",
+     "clk",
+     "fault",
+     "m_dd",
+     "m_hh",
+     "m_kk",
+     "m_pre",
+     "m_v",
+     "o_c",
+     "o_v",
+     "o_y",
+     "r_c",
+     "r_h",
+     "r_k",
+     "r_v",
+     "r_w",
+     "rst_n"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_ve.u_m",
+    "module": "ot_s81sl_ve_m",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_m_tpl.lef",
+    "origin_um": [
+     216.0,
+     829.44
+    ],
+    "outline_um": [
+     172.8,
+     345.6
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_ve_m_tpl.json",
+    "obs_max": "M7"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_ve.u_s",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_ve_s",
+    "physical_inst": "u_bound.u_u_ve_u_s",
+    "actual_params": ".LA(4), .LM(5), .MUT(0)",
+    "ports": [
+     "clk",
+     "fault",
+     "m_dd",
+     "m_hh",
+     "m_kk",
+     "m_pre",
+     "m_v",
+     "p_c",
+     "p_dd",
+     "p_hh",
+     "p_kk",
+     "p_v",
+     "rst_n"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_ve.u_s",
+    "module": "ot_s81sl_ve_s",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_ve_s_tpl.lef",
+    "origin_um": [
+     34.56,
+     838.08
+    ],
+    "outline_um": [
+     164.16,
+     345.6
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_ve_s_tpl.json",
+    "obs_max": "M7"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vsw",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_vsw",
+    "physical_inst": "u_bound.u_u_vsw",
+    "actual_params": ".LA(4), .LM(5), .LR(1)",
+    "ports": [
+     "clk",
+     "i_d",
+     "i_lim",
+     "i_v",
+     "i_w",
+     "o_d",
+     "o_f",
+     "o_v",
+     "rst_n"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vsw",
+    "module": "ot_s81sl_vsw",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vsw_tpl.lef",
+    "origin_um": [
+     51.84,
+     587.52
+    ],
+    "outline_um": [
+     224.64,
+     224.64
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_vsw_tpl.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vn.u_b",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_vn_b",
+    "physical_inst": "u_bound.u_u_vn_u_b",
+    "actual_params": ".HW_STAGE(0), .LA(6), .LM(5)",
+    "ports": [
+     "c_s",
+     "c_v",
+     "clk",
+     "fault",
+     "hq_d",
+     "hq_v",
+     "hr_hf",
+     "hr_j",
+     "hr_v",
+     "hw_d",
+     "hw_hf",
+     "hw_j",
+     "hw_v",
+     "n_go",
+     "n_pre",
+     "p_d",
+     "p_v",
+     "rb_d",
+     "rb_v",
+     "rst_n",
+     "wl_d",
+     "wl_i",
+     "wl_v",
+     "y",
+     "y_i",
+     "y_v"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vn.u_b",
+    "module": "ot_s81sl_vn_b",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_b_tpl.lef",
+    "origin_um": [
+     622.08,
+     872.64
+    ],
+    "outline_um": [
+     356.4,
+     172.8
+    ],
+    "orient": "MY",
+    "track_offset_um": [
+     0.132,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_vn_b_tpl.json",
+    "obs_max": "M7"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vs",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_vs",
+    "physical_inst": "u_bound.u_u_vs",
+    "actual_params": ".MUT(0), .XL(6)",
+    "ports": [
+     "clk",
+     "e_c",
+     "e_d",
+     "e_v",
+     "fault",
+     "g_c",
+     "g_d",
+     "g_v",
+     "ra_fi",
+     "ra_ri",
+     "ra_v",
+     "ra_vi",
+     "ra_x",
+     "rst_n",
+     "s_d",
+     "s_v",
+     "sw_d",
+     "sw_fi",
+     "sw_lim",
+     "sw_ri",
+     "sw_v",
+     "sw_vi",
+     "sw_w",
+     "u",
+     "u_i",
+     "u_v",
+     "um_b",
+     "um_i",
+     "um_q",
+     "um_v",
+     "ve_ac",
+     "ve_ag",
+     "ve_ah",
+     "ve_av",
+     "ve_aval",
+     "ve_fi",
+     "ve_oc",
+     "ve_ov",
+     "ve_oy",
+     "ve_pc",
+     "ve_pdd",
+     "ve_phh",
+     "ve_pkk",
+     "ve_pv",
+     "ve_rc",
+     "ve_rh",
+     "ve_rk",
+     "ve_rv",
+     "ve_rw",
+     "x_qd",
+     "x_qv",
+     "x_ra",
+     "x_rv",
+     "x_wa",
+     "x_wd",
+     "x_wm",
+     "x_wv"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vs",
+    "module": "ot_s81sl_vs",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vs_tpl.lef",
+    "origin_um": [
+     362.88,
+     639.36
+    ],
+    "outline_um": [
+     172.8,
+     172.8
+    ],
+    "orient": "MY",
+    "track_offset_um": [
+     0.132,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_vs_tpl.json",
+    "obs_max": "M7"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vn.u_a",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_vn_a",
+    "physical_inst": "u_bound.u_u_vn_u_a",
+    "actual_params": ".LA(6), .LM(5)",
+    "ports": [
+     "c_s",
+     "c_v",
+     "clk",
+     "fault",
+     "hq_d",
+     "hq_v",
+     "hr_hf",
+     "hr_j",
+     "hr_v",
+     "hw_d",
+     "hw_hf",
+     "hw_j",
+     "hw_v",
+     "n_go",
+     "n_pre",
+     "rb_d",
+     "rb_v",
+     "rst_n",
+     "wl_d",
+     "wl_i",
+     "wl_v",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vn.u_a",
+    "module": "ot_s81sl_vn_a",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vn_a_tpl.lef",
+    "origin_um": [
+     622.08,
+     691.2
+    ],
+    "outline_um": [
+     356.4,
+     164.16
+    ],
+    "orient": "MY",
+    "track_offset_um": [
+     0.132,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_vn_a_tpl.json",
+    "obs_max": "M7"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_rxsb",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "dsfd_su_t_rxsb",
+    "physical_inst": "u_bound.u_u_rxsb",
+    "actual_params": null,
+    "ports": [
+     "ck",
+     "i_f",
+     "i_mx",
+     "i_u",
+     "i_u2",
+     "i_v",
+     "o_f",
+     "o_r",
+     "o_v",
+     "rst"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_rxsb",
+    "module": "dsfd_su_t_rxsb",
+    "lef": "physical/ref_tile/s81su_rxsb_ref/views/dsfd_su_t_rxsb/dsfd_su_t_rxsb.lef",
+    "origin_um": [
+     345.6,
+     285.12
+    ],
+    "outline_um": [
+     140.4,
+     140.4
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/dsfd_su_t_rxsb.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_rxsf",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "dsfd_su_t_rxsf",
+    "physical_inst": "u_bound.u_u_rxsf",
+    "actual_params": null,
+    "ports": [
+     "ck",
+     "i_v",
+     "i_x",
+     "o_f",
+     "o_mx",
+     "o_u",
+     "o_u2",
+     "o_v",
+     "rst"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_rxsf",
+    "module": "dsfd_su_t_rxsf",
+    "lef": "physical/die_plan/s81/cores/rx/lef/dsfd_su_t_rxsf.lef",
+    "origin_um": [
+     397.44,
+     440.64
+    ],
+    "outline_um": [
+     140.4,
+     140.4
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/dsfd_su_t_rxsf.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vq",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_s81sl_vq",
+    "physical_inst": "u_bound.u_u_vq",
+    "actual_params": ".AQ_XMEM(2)",
+    "ports": [
+     "clk",
+     "fault",
+     "k",
+     "m_b",
+     "m_i",
+     "m_q",
+     "m_v",
+     "rst_n",
+     "sid",
+     "u",
+     "u_i",
+     "u_v",
+     "um_b",
+     "um_i",
+     "um_q",
+     "um_v",
+     "xf",
+     "xf_s",
+     "xf_v",
+     "y",
+     "y_i",
+     "y_v"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vq",
+    "module": "ot_s81sl_vq",
+    "lef": "physical/die_plan/s81/cores/leaf/lef/ot_s81sl_vq_tpl.lef",
+    "origin_um": [
+     432.0,
+     933.12
+    ],
+    "outline_um": [
+     172.8,
+     129.6
+    ],
+    "orient": "MY",
+    "track_offset_um": [
+     0.132,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_s81sl_vq_tpl.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[0].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_0_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[0].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1002.24,
+     777.6
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[10].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_10_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[10].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1123.2,
+     501.12
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[11].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_11_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[11].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1140.48,
+     1054.08
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[12].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_12_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[12].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1278.72,
+     915.84
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[13].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_13_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[13].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1278.72,
+     639.36
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[14].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_14_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[14].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     984.96,
+     224.64
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[15].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_15_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[15].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1114.56,
+     371.52
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[1].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_1_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[1].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1002.24,
+     915.84
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[2].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_2_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[2].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1002.24,
+     639.36
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[3].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_3_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[3].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1140.48,
+     777.6
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[4].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_4_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[4].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     984.96,
+     501.12
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[5].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_5_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[5].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1002.24,
+     1054.08
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[6].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_6_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[6].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1140.48,
+     915.84
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[7].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_7_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[7].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1140.48,
+     639.36
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[8].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_8_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[8].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     1278.72,
+     777.6
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  },
+  {
+   "source_plan_inst": "u_lf.u_vp.g_ln[9].u_l",
+   "candidate_only": true,
+   "source_interface": {
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "physical_inst": "u_bound.u_u_vp_g_ln_9_u_l",
+    "actual_params": ".AL(6), .ML(7), .MUTANT(0)",
+    "ports": [
+     "c0",
+     "c1",
+     "c2",
+     "c3",
+     "clk",
+     "fault",
+     "o",
+     "p",
+     "r0",
+     "r1",
+     "r2",
+     "r3",
+     "rst_n",
+     "v",
+     "vo",
+     "y"
+    ]
+   },
+   "known_parent_placement": {
+    "inst": "u_lf.u_vp.g_ln[9].u_l",
+    "module": "ot_dsrom_su_hcpost_lane_pr",
+    "lef": "physical/ref_tile/s81sl_hcpl/views/ot_dsrom_su_hcpost_lane_pr/ot_dsrom_su_hcpost_lane_pr.lef",
+    "origin_um": [
+     984.96,
+     362.88
+    ],
+    "outline_um": [
+     114.48,
+     114.48
+    ],
+    "orient": "R0",
+    "track_offset_um": [
+     0.108,
+     0.012
+    ],
+    "pins_file": "inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json",
+    "obs_max": "M5"
+   },
+   "view_status": "UNQUALIFIED_UNTIL_EXACT_NATIVE_ABI_SOURCE_PARAMS_AND_SIGNOFF_MATCH"
+  }
+ ],
+ "remaining_gates": [
+  "Residual parent mapped census <=400k",
+  "Compare every sourceinterface to exact qualified view",
+  "Internalmacroplacement/corridor and vectorbus reach review",
+  "Compose actualcoreclock contract",
+  "Parentstrictbind and preflight beforePLACE"
+ ]
+}
