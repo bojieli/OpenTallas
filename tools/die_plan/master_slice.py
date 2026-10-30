@@ -27,7 +27,9 @@ gen_core_kit_legacy multi_root_contract, 12.2a/12.8a "one entry / island per roo
 Rules (all hard): every port once, every island once and existing, the clock_pin inside the outline AND inside its
 island rect, a per-entry 12.3 latency (TT and FF); no island of a multi-root slice carries its own clock_pin and the
 slice has no core_clock_port / pushdown core_tree (one plan tree per root is not compiled by core_infra yet: refused,
-fail-closed, rather than one tree on the primary root).  The kit consumes every entry like the single clock entry
+fail-closed, rather than one tree on the primary root), except the explicit opt-ins core_tree.root_scope (one planned
+root + ordinary roots) and "core_forest" (one ordinary core_tree body per root, disjoint sink/cell owners, ports ==
+clock_entries ports exactly; core_infra.validate_forest).  The kit consumes every entry like the single clock entry
 (GEOM-21 M5 track snap + full-width shape) and check_kit verifies each, plus the kit's clock_roots.json (pins and
 the per-root 12.3 budget) against the entries.
 """
@@ -205,6 +207,8 @@ def validate(sl):
     ents = sl.get("clock_entries")
     if ents is not None:
         _validate_clock_entries(sl, ents, outline, errs)
+    elif sl.get("core_forest") is not None:
+        errs.append("core_forest: a forest is a multi-root slice; clock_entries (one per root) required")
     lat = sl.get("latency")
     if lat is not None:
         cl = lat.get("common_clock_latency_ps") if isinstance(lat, dict) else None
@@ -263,7 +267,14 @@ def _validate_clock_entries(sl, ents, outline, errs):
         if i.get("clock_pin"):
             errs.append(f"islands[{i.get('name')}]: multi-root slice: the entry is clock_entries[], not islands[].clock_pin")
     tree = sl.get("core_tree")
-    if tree and tree.get("root_scope") is not None:
+    if sl.get("core_forest") is not None:
+        # DIE-QC-47 COLLFT (default off): one ordinary plan tree per root, disjoint owners (core_infra.validate_forest)
+        import core_infra
+        try:
+            core_infra.validate_forest(sl)
+        except core_infra.InfraError as exc:
+            errs.append(str(exc))
+    elif tree and tree.get("root_scope") is not None:
         import core_infra
         try:
             core_infra.validate_root_scope(tree, ents)

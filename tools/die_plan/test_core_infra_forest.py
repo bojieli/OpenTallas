@@ -1,0 +1,190 @@
+"""QC COLLFT disjoint-owner forest (DIE-QC-47 10-30, default off): one ordinary core_tree body per root."""
+import copy
+import hashlib
+import json
+
+import pytest
+
+import core_infra as CI
+import master_slice as MS
+
+ROOTS = [('clk', 20, 'fa_'), ('clk_t1', 80, 'fb_')]
+
+
+def _tree(port, x, pre):
+    return dict(nodes=[dict(name=pre + 'r', master='BUFx24_ASAP7_75t_R', parent='port:' + port, xy_um=[x, 50]),
+                       dict(name=pre + 'l0', master='BUFx8_ASAP7_75t_R', parent=pre + 'r', xy_um=[x, 30]),
+                       dict(name=pre + 'l1', master='BUFx8_ASAP7_75t_R', parent=pre + 'r', xy_um=[x, 70])],
+                leaves=[dict(node=pre + 'l0', sinks=[f'{port}_a/CLK', f'{port}_b/CLK']),
+                        dict(node=pre + 'l1', sinks=[f'{port}_c/CLK', f'{port}_d/CLK'])])
+
+
+def _sinks(tmp, port, pins):
+    f = tmp / f'{port}.sinks'
+    f.write_text('# clock pins\n' + ''.join(p + '\n' for p in pins))
+    return f.name, hashlib.sha256(f.read_bytes()).hexdigest()
+
+
+def _slice(tmp, monkeypatch):
+    monkeypatch.setattr(CI, 'REPO', tmp)
+    forest = []
+    for port, x, pre in ROOTS:
+        t = _tree(port, x, pre)
+        name, sha = _sinks(tmp, port, [s for leaf in t['leaves'] for s in leaf['sinks']])
+        forest.append(dict(clock_port=port, name_prefix=pre, sinks_file=name, sinks_sha256=sha,
+                           latency=dict(TT=250, FF=202.5), tree=t))
+    return dict(schema=MS.SCHEMA, module='fixture', kind='core', outline_um=[100, 100], pushdown={'islands': []},
+                islands=[dict(name=p, rect_um=[0, 0, 100, 100]) for p, _, _ in ROOTS], bays=[],
+                clock_entries=[dict(port=p, island=p, clock_pin=dict(layer='M5', xy_um=[x, 2]),
+                                    latency=dict(common_clock_latency_ps=dict(TT=250, FF=202.5)))
+                               for p, x, _ in ROOTS],
+                core_forest=forest)
+
+
+def test_forest_compiles_each_root_through_core_tree_path(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    plan = CI.compile_slice(sl)
+    assert plan['core_tree'] is None and plan['clock_entry'] is None
+    assert [f['clock_port'] for f in plan['core_forest']] == ['clk', 'clk_t1']
+    assert [f['sinks'] for f in plan['core_forest']] == [4, 4]
+    assert sorted(c['name'] for c in plan['cells']) == sorted(p + n for _, _, p in ROOTS for n in ('r', 'l0', 'l1'))
+    for f in plan['core_forest']:
+        assert f['tree']['depth'] == 2 and f['tree']['clock_port'] == f['clock_port']
+        assert f['clock_entry']['layer'] == 'M5'
+    # the plan json round-trips (core_infra_plan.json / check_kit compare)
+    assert json.loads(json.dumps(plan))['core_forest'][1]['tree']['leaves'][0]['node'] == 'fb_l0'
+
+
+def test_forest_emits_one_begin_finish_per_root_and_one_cts_census(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    sl['pg_obstructions_um'] = {}
+    tcl = CI.emit_tcl(sl)
+    lines = tcl.splitlines()
+    assert [l for l in lines if l.startswith('ot_ci_clock_entry')] == ['ot_ci_clock_entry {clk} 20 2',
+                                                                         'ot_ci_clock_entry {clk_t1} 80 2']
+    begins = [i for i, l in enumerate(lines) if l.startswith('ot_ci_tree_begin')]
+    ends = [i for i, l in enumerate(lines) if l == 'ot_ci_tree_finish']
+    assert len(begins) == 2 and len(ends) == 2 and begins[0] < ends[0] < begins[1] < ends[1]
+    assert lines[begins[1]] == 'ot_ci_tree_begin {clk_t1}'
+    # every sink of root B is emitted inside B's begin/finish only
+    assert all('clk_t1_' in l for l in lines[begins[1]:ends[1]] if l.startswith('ot_ci_tree_sink'))
+    sl['core_forest'][0]['tree']['leaves'][0]['cts_open'] = True
+    sl['core_forest'][0]['tree']['leaves'][1]['cts_open'] = True
+    sl['core_forest'][0]['tree']['leaves'][0]['domain_sinks'] = 2
+    sl['core_forest'][0]['tree']['leaves'][1]['domain_sinks'] = 2
+    plan = CI.compile_slice(sl)
+    head = CI.emit_cts_tcl(plan).splitlines()[:2]
+    assert head[1] == 'set ::ot_ci_cts_plan_open 2'
+
+
+def test_forest_kit_hook_installs_unscoped_cts_hook(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    sl['pg_obstructions_um'] = {}
+    sl['pushdown'] = {'islands': [{'name': 'i0', 'rect_um': [40, 40, 60, 60], 'centre_um': [50, 50],
+                                   'driver': {'cell': 'BUFx4_ASAP7_75t_R'},
+                                   'ft_ports': [dict(name=f'mp_i0_{k}_{d}', dir='in' if d == 'i' else 'out',
+                                                     xy_um=[45 + 10 * (d == 'o'), 50 + 5 * (k == 'ck')])
+                                                for k in ('ck', 'rst') for d in ('i', 'o')]}]}
+    kd = tmp_path / 'kit'
+    kd.mkdir()
+    assert CI.install(kd, sl) is True
+    assert json.loads((kd / 'core_infra_plan.json').read_text())['core_forest'][0]['clock_port'] == 'clk'
+    assert (kd / CI.CTS_HOOK).read_text().startswith(
+        '# GENERATED by tools/die_plan/core_infra.py emit_cts_tcl: plan CTS-open nets = 0\n')
+    cfg = []
+    assert CI.kit_cts_hook(kd, cfg) is True
+    assert cfg == [f'override export PRE_CTS_TCL = /work/{CI.CTS_PRE_CHAIN}']
+    assert not (kd / CI.ROOT_SCOPE_HOOK).exists()
+
+
+def test_master_slice_validates_forest_contract(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    errs = MS.validate(sl)
+    assert not [e for e in errs if 'forest' in e or 'clock_entries' in e], errs
+    bad = copy.deepcopy(sl); bad['core_forest'].pop()
+    assert any('exactly (no implicit or missing root)' in e for e in MS.validate(bad))
+    bad = copy.deepcopy(sl); del bad['clock_entries']
+    assert any('clock_entries (one per root) required' in e for e in MS.validate(bad))
+    bad = copy.deepcopy(sl); bad['core_tree'] = sl['core_forest'][0]['tree']
+    assert any('exclusive with core_tree' in e for e in MS.validate(bad))
+
+
+def _refused(sl, match):
+    with pytest.raises(CI.InfraError, match=match):
+        CI.compile_slice(sl)
+
+
+@pytest.mark.parametrize('mutate,match', [
+    (lambda sl: sl['core_forest'].pop(), r'must equal clock_entries ports .* exactly'),
+    (lambda sl: sl['core_forest'].append(copy.deepcopy(sl['core_forest'][0])), 'root listed twice'),
+    (lambda sl: sl['core_forest'][1].update(name_prefix='fa_x'), 'is a prefix of'),
+    (lambda sl: sl['core_forest'][1].update(name_prefix='fc_'), 'outside name_prefix'),
+    (lambda sl: sl['core_forest'][0].update(latency=dict(TT=240, FF=202.5)), 'common_clock_latency_ps'),
+    (lambda sl: sl['core_forest'][0].update(sinks_sha256='0' * 64), 'sha256 != sinks_sha256'),
+    (lambda sl: sl['core_forest'][0].update(sinks_file='../x'), 'repo-relative'),
+    (lambda sl: sl['core_forest'][0].pop('latency'), 'needs exactly the keys'),
+    (lambda sl: sl['core_forest'][0]['tree'].update(clock_port='clk_t1'), 'own clock_port'),
+    (lambda sl: sl['core_forest'][0]['tree'].update(root_scope={}), 'root_scope is not supported'),
+    (lambda sl: sl['core_forest'][0]['tree'].update(post_place_rebind='exact_count'), 'post_place_rebind'),
+    (lambda sl: sl['core_forest'][0]['tree'].update(install_stage='pre_cts'), 'pre_gpl only'),
+    (lambda sl: sl.update(effective_clock_routing={}), 'effective_clock_routing'),
+])
+def test_forest_refusals(tmp_path, monkeypatch, mutate, match):
+    sl = _slice(tmp_path, monkeypatch)
+    mutate(sl)
+    _refused(sl, match)
+
+
+def test_forest_sinks_must_match_file_and_stay_disjoint(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    # an unlisted tree sink (implicit sink) is refused
+    sl['core_forest'][0]['tree']['leaves'][0]['sinks'].append('extra/CLK')
+    sl['core_forest'][0]['tree']['leaves'][1]['sinks'].append('extra2/CLK')
+    _refused(sl, r'tree sinks != sinks_file .*unlisted')
+    # a file pin no leaf owns (dropped sink) is refused
+    sl = _slice(tmp_path, monkeypatch)
+    e = sl['core_forest'][0]
+    e['sinks_file'], e['sinks_sha256'] = _sinks(tmp_path, 'clk', ['clk_a/CLK', 'clk_b/CLK', 'clk_c/CLK',
+                                                                   'clk_d/CLK', 'lost/CLK'])
+    _refused(sl, r'tree sinks != sinks_file \(missing')
+    # one pin owned by two roots
+    sl = _slice(tmp_path, monkeypatch)
+    for k, (port, _, _) in enumerate(ROOTS):
+        e = sl['core_forest'][k]
+        for leaf in e['tree']['leaves']:
+            leaf['sinks'][0] = 'shared/CLK' if leaf is e['tree']['leaves'][0] else leaf['sinks'][0]
+        pins = [s for leaf in e['tree']['leaves'] for s in leaf['sinks']]
+        e['sinks_file'], e['sinks_sha256'] = _sinks(tmp_path, port, pins)
+    _refused(sl, 'clock sinks shared with root')
+
+
+def test_forest_cells_and_gates_are_not_shared(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    sl['core_forest'][1]['name_prefix'] = 'f'
+    sl['core_forest'][0]['name_prefix'] = 'g'
+    sl['core_forest'][0]['tree']['nodes'][0]['name'] = 'gr'
+    for n in sl['core_forest'][0]['tree']['nodes'][1:]:
+        n['parent'] = 'gr'
+    _refused(sl, 'is a prefix of|outside name_prefix')
+    sl = _slice(tmp_path, monkeypatch)
+    t1 = sl['core_forest'][1]['tree']
+    t1['nodes'][1]['name'] = 'fa_l0'          # cell of root A reused by root B
+    t1['leaves'][0]['node'] = 'fa_l0'
+    _refused(sl, 'duplicate/invalid planned cell')
+
+
+def test_forest_refuses_gated_domain_leaves(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    t = sl['core_forest'][0]['tree']
+    t['gates'] = [dict(inst='u_icg', master='ICGx1_ASAP7_75t_R', parent='fa_r', xy_um=[20, 60])]
+    t['leaves'] = [dict(node='u_icg', load_class='gated_domain', domain_sinks=4, cts_open=True)]
+    t['nodes'] = t['nodes'][:1]
+    _refused(sl, 'gated_domain leaves')
+
+
+def test_absent_forest_is_unchanged(tmp_path, monkeypatch):
+    sl = _slice(tmp_path, monkeypatch)
+    del sl['core_forest']
+    plan = CI.compile_slice(sl)
+    assert 'core_forest' not in plan and plan['core_tree'] is None
+    assert 'ot_ci_tree_begin' not in CI.emit_tcl(sl)
