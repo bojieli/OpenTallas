@@ -1,0 +1,4 @@
+2026-10-29 18:55 PDT IQF pre-synthesis review (Codex)
+Image personally viewed: /srv/opentallas-scratch2/claude/codex-s81types-1851/kits/iqf__t1/plan_review.png
+Frozen source a2b2a0808c2; IQF kit exact completed S81-KITS-A source export from strict bind7 stage.
+6783 face pins,16 grid clock entries,1442.88x1226.88um; no hard macro walls. North landing strips align adjacent north face buses. East feedthrough face remains separated; interior open for data placement and continuous PG. No rendered physical placement yet: no CTS/route authority. Clock grid needs actual sink-reach review after PLACE; full partition latency/r2r reach not measured. PASS-COND for synthesis/LEC/census only. Preflight0 issues. Parent LP >400k cut unresolved, no LP physical job submitted.
