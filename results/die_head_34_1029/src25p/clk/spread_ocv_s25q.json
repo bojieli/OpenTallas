@@ -1,0 +1,166 @@
+{
+ "rule": "12.15c in-region spread <=150 ps incl. OCV+droop",
+ "method": "DIE-HEAD-26: in-region spread incl. OCV + droop (12.15c \"in-region spread <=150 ps incl. OCV+droop\").\nPer region (spine_regions part_region), every ordered tap pair (a late, b early):\n  skew = f*(arr_a - arr_b) on OpenSTA late arrivals, f = spice factor (inverter tree: SPICE_CLOCK_CAL_INV 0.9324/0.9380\n         = die_sta_related spice for inv; also reported with the x1.0485/1.0552 BUF factor as the pessimistic bound)\n  ocv  = clk_aocv.branch_pessimism (approved table clk_aocv_table_g021, class Ainv, one stage per CKINVDCx16) on the two\n         branches below their last common clock CELL (cell-level LCA from tree.json parent_of), core latency NOT included\n         (die tap spread), distance = bbox diagonal of the 2 taps + LCA cell.  droop: shared rule (same region -> 0) and,\n         as a bound, stated (+one_sided_late_frac on the late branch always).\nusage: spread_ocv.py TAG REGIONS_JSON TOOLS_DIE_PLAN_DIR",
+ "corners": {
+  "TT": {
+   "regions": 314,
+   "worst_shared_droop": 112.34,
+   "worst_stated_droop": 134.9,
+   "worst_bufx105_stated": 144.92,
+   "n_over_150_shared": 0,
+   "n_over_150_stated": 0,
+   "worst5": [
+    {
+     "region": "sp1",
+     "spread_ocv": 112.3,
+     "stated": 134.9,
+     "raw": 86.3,
+     "a": "t_sp1__clk_t17",
+     "b": "t_sp1_bw_i_shim__clk_t1",
+     "ocv_shared": 31.9,
+     "ocv_stated": 54.4,
+     "stages": [
+      17,
+      17
+     ]
+    },
+    {
+     "region": "tW4b4",
+     "spread_ocv": 111.0,
+     "stated": 123.8,
+     "raw": 99.0,
+     "a": "t_tW4b4__clk_t20",
+     "b": "t_tW4b4__clk_t10",
+     "ocv_shared": 18.7,
+     "ocv_stated": 31.5,
+     "stages": [
+      11,
+      10
+     ]
+    },
+    {
+     "region": "tW1b3",
+     "spread_ocv": 110.3,
+     "stated": 120.9,
+     "raw": 100.2,
+     "a": "t_tW1b3__clk_t2",
+     "b": "t_tW1b3__clk_t28",
+     "ocv_shared": 16.9,
+     "ocv_stated": 27.6,
+     "stages": [
+      7,
+      8
+     ]
+    },
+    {
+     "region": "sp3",
+     "spread_ocv": 107.3,
+     "stated": 131.7,
+     "raw": 78.8,
+     "a": "t_sp3__clk_t4",
+     "b": "t_sp3_bw_i_shim__clk_t1",
+     "ocv_shared": 33.8,
+     "ocv_stated": 58.2,
+     "stages": [
+      18,
+      18
+     ]
+    },
+    {
+     "region": "tE0o8",
+     "spread_ocv": 104.9,
+     "stated": 117.8,
+     "raw": 92.2,
+     "a": "t_tE0o8__clk_t21",
+     "b": "t_tE0o8__clk_t7",
+     "ocv_shared": 18.9,
+     "ocv_stated": 31.8,
+     "stages": [
+      12,
+      9
+     ]
+    }
+   ]
+  },
+  "FF": {
+   "regions": 314,
+   "worst_shared_droop": 106.24,
+   "worst_stated_droop": 119.2,
+   "worst_bufx105_stated": 128.22,
+   "n_over_150_shared": 0,
+   "n_over_150_stated": 0,
+   "worst5": [
+    {
+     "region": "tW1b3",
+     "spread_ocv": 106.2,
+     "stated": 114.4,
+     "raw": 97.0,
+     "a": "t_tW1b3__clk_t2",
+     "b": "t_tW1b3__clk_t28",
+     "ocv_shared": 15.3,
+     "ocv_stated": 23.4,
+     "stages": [
+      7,
+      8
+     ]
+    },
+    {
+     "region": "sp1",
+     "spread_ocv": 102.0,
+     "stated": 119.2,
+     "raw": 76.9,
+     "a": "t_sp1_xw_o_shim__clk",
+     "b": "t_sp1_bw_i_shim__clk_t1",
+     "ocv_shared": 29.9,
+     "ocv_stated": 47.1,
+     "stages": [
+      17,
+      17
+     ]
+    },
+    {
+     "region": "tW0o6",
+     "spread_ocv": 102.0,
+     "stated": 109.8,
+     "raw": 93.3,
+     "a": "t_tW0o6__clk_t4",
+     "b": "t_tW0o6__clk_t1",
+     "ocv_shared": 14.5,
+     "ocv_stated": 22.2,
+     "stages": [
+      7,
+      8
+     ]
+    },
+    {
+     "region": "tE4o9",
+     "spread_ocv": 100.9,
+     "stated": 108.9,
+     "raw": 91.7,
+     "a": "t_tE4o9__clk_t3",
+     "b": "t_tE4o9__clk_t28",
+     "ocv_shared": 15.0,
+     "ocv_stated": 22.9,
+     "stages": [
+      7,
+      8
+     ]
+    },
+    {
+     "region": "tW2o6",
+     "spread_ocv": 99.9,
+     "stated": 107.7,
+     "raw": 90.9,
+     "a": "t_tW2o6__clk_t4",
+     "b": "t_tW2o6__clk_t1",
+     "ocv_shared": 14.6,
+     "ocv_stated": 22.4,
+     "stages": [
+      7,
+      8
+     ]
+    }
+   ]
+  }
+ }
+}

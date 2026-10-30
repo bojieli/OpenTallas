@@ -1,0 +1,42 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+OT_KLOR hop 0 wire17020 BUFx12f_ASAP7_75t_R 123.822 4.59
+OT_KLOR hop 1 place19182 BUFx3_ASAP7_75t_R 260.658 5.4
+OT_KLOR hop 2 u_land.u_nk.u_r.g_chunk\[69\].u_local/_61_ INVx1_ASAP7_75t_R 261.36 5.4
+OT_KLOR hop 3 u_land.u_nk.u_r.g_chunk\[69\].u_local/o\[2\]$_SDFF_PN0_ DFFHQNx1_ASAP7_75t_R 261.036 64.8
+[INFO DPL-0006] Core area: 372053.61 um^2
+[INFO DPL-0007] Movable instances area: 16009.06 um^2
+[INFO DPL-0008] Fixed instances area within core: 63140.58 um^2
+[INFO DPL-0009] Utilization: 21.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 148418 cells
+[INFO DPL-0393]   height 65 row(s): 19 cells
+[INFO DPL-0393]   height 154 row(s): 36 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 2.29s
+Placement Analysis
+---------------------------------
+total displacement          4.7 u
+average displacement        0.0 u
+max displacement            2.9 u
+original HPWL         1437081.0 u
+legalized HPWL        1437085.8 u
+delta HPWL                    0 %
+
+OT_KLOR_NEW wire17020 4.428 7.02
+OT_KLOR_NEW place19182 5.508 4.86
+OT_KLOR_NEW u_land.u_nk.u_r.g_chunk\[69\].u_local/_61_ 6.858 4.59
+OT_KLOR_NEW u_land.u_nk.u_r.g_chunk\[69\].u_local/o\[2\]$_SDFF_PN0_ 8.424 4.86
+OT_DONE
