@@ -57,9 +57,13 @@ fi
 if [[ ${V:0:1} = b ]] && ! grep -q '^override export CORNERS = bc' $OUT/config.mk; then
   printf 'override export OT_HOLD_MM = 0\noverride export CORNERS = bc\n' >> $OUT/config.mk
 fi
+# FLOW-CLOCK-R8: no fanout limit by default.  Sign-off limits are liberty max_transition/max_capacitance; fanout is
+# WARN-only there (64) and ASAP7 liberty has no max_fanout.  The R7 KV-recipe basis 24 split bdring's 56-load bs[*]
+# nets with BUFx2 fanout buffers: TT setup -22.43 -> -39.69 ps (10 -> 100 endpoints).  OT_PRD_MAX_FANOUT=<n> opts in.
+FO=${OT_PRD_MAX_FANOUT:-0}; [[ "$FO" =~ ^[0-9]+$ ]] || { echo "prd_mk: OT_PRD_MAX_FANOUT=$FO: want an integer"; exit 2; }
 case ${V:0:1} in
-  b) printf "OT_MAX_FANOUT=24\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" ;;
-  m) printf "OT_MAX_FANOUT=24\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\n" ;;
+  b) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=BC CORNERS=bc'\n" ;;
+  m) printf "OT_MAX_FANOUT=$FO\nOT_SLEW_MARGIN=20\nOT_SETUP_MARGIN=10\nOT_HOLD_MARGIN=$HM\nOT_HOLD_ALLOW_SETUP=1\nOT_HOLD_MAXBUF=40\nROUTE_CORNERS='CORNER=TC CORNERS=\"tc bc\"'\n" ;;
 esac > $OUT/variant.env
 [ ${V:0:1} = b ] && [ -f $OUT/vclk_corner.tcl ] && echo "OT_VCLK_CORNER=ff" >> $OUT/variant.env
 [ -n "${OT_PAD_MASTERS:-}" ] && echo "OT_PAD_MASTERS='$OT_PAD_MASTERS'" >> $OUT/variant.env

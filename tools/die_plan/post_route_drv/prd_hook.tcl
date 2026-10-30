@@ -10,8 +10,8 @@
 #       set_dont_use for the ECO session (no sink can be resized; buffering at its pins is unchanged), and a fail-safe
 #       guard reverts + reports any frozen instance whose master still changed before legalization;
 #   (3) the <= 2-pass loop is in prd_run.sh (re-extract RCX after DRT, repeat only while slew/cap violations remain).
-# Limits are the existing sign-off ones (liberty max_transition / max_capacitance, the kit's max_fanout basis 24,
-# repair margins 20 %); no corner, margin or check kind changes.
+# Limits are the existing sign-off ones (liberty max_transition / max_capacitance; no fanout limit unless
+# OT_PRD_MAX_FANOUT opts in (R8), repair margins 20 %); no corner, margin or check kind changes.
 #   OT_MAX_FANOUT OT_SLEW_MARGIN OT_SETUP_MARGIN OT_HOLD_MARGIN OT_HOLD_ALLOW_SETUP OT_HOLD_MAXBUF  (as eco_route.tcl)
 #   OT_PRD_PASS (1|2, log only)
 set _here [file dirname [info script]]

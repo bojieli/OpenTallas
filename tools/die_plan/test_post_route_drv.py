@@ -104,6 +104,17 @@ def test_mk_stages_two_mode_session_and_keeps_kit_runner(tmp_path):
     assert mk(kit, p1).returncode == 2
 
 
+def test_mk_no_fanout_limit_by_default(tmp_path):
+    # R8: sign-off fanout is WARN-only; a default max_fanout split wide nets with weak buffers (bdring TT setup -22 -> -40)
+    kit = make_kit(tmp_path)
+    assert mk(kit, tmp_path / "p1").returncode == 0
+    assert "OT_MAX_FANOUT=0" in (tmp_path / "p1" / "variant.env").read_text().splitlines()
+    r = mk(kit, tmp_path / "p2", env=dict(os.environ, OT_PRD_MAX_FANOUT="24"))
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "OT_MAX_FANOUT=24" in (tmp_path / "p2" / "variant.env").read_text().splitlines()
+    assert mk(kit, tmp_path / "p3", env=dict(os.environ, OT_PRD_MAX_FANOUT="x")).returncode == 2
+
+
 def test_mk_refuses_ff_only_variant_on_two_mode_kit(tmp_path):
     kit = make_kit(tmp_path)
     r = mk(kit, tmp_path / "p1", "b10")
