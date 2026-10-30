@@ -28,7 +28,8 @@ def run(tag='ring:i+x+ff',obstacle=False,resize=False,rect='0 0 1.08 1.08', lega
  getPlacementStatus {{return PLACED}} setPlacementStatus {{}} setOrient {{}}
  setLocation {{incr ::moves;dict set ::places {{{name}}} $args}} }}
 }}\nlappend instances {inst}\n'''
-    script+='proc block {m args} {return $::instances}\nset ff_blk block\n'
+    # the mock block has no ports (the c3 START-pin control key looks for cland_fstart_in_<bus>)
+    script+='proc block {m args} {if {$m eq "getBTerms"} {return {}};return $::instances}\nset ff_blk block\n'
     if obstacle:script+='cland_occupy 0 0 270 270\n'
     if legacy:script+='rename cland_column_select actual_select\nproc cland_column_select {args} {return 0}\n'
     script+=f'''if {{[catch {{cland_place_ff u_ring {{{rect}}} {tag}}} e]}} {{puts "ERR $e"}} else {{
