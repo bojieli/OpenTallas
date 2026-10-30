@@ -1015,6 +1015,7 @@ def main():
     ap.add_argument("--hr-face-ports", metavar="DIR", help="KVHR2 10-26: qkd_hr_* zero-cycle face recut: kit RTL = DIR/<core>.v "
                     "from hr_face_ports.sh (private port flop copies of shared output flops, merged identical input "
                     "capture flops; equiv proof + mutant in DIR/eq_rc.txt) + the macro black boxes of the core json")
+    ap.add_argument("--hr-credit-return-capture", action="store_true", help="opt-in PHY-adapter credit-return pin capture: +1 return edge, same credit capacity; requires independently gated retimed contract")
     ap.add_argument("--related-clock", action="append", default=[], metavar="PORT",
                     help="DIE-KV-10 opt-in: this clock-class port is its own RELATED clock root at the core period "
                          "(landing-ring write clock fclk), with the landing-contract phase window to clk; default off")
@@ -1136,6 +1137,8 @@ def main():
         if rc != ["post", "rc=0", "mut", "rc=1", "emitted_v", "rc=0"]:
             raise SystemExit(f"--hr-face-ports: proof not clean in {fpd}/eq_rc.txt: {rc}")
         files = [str(fpd / f"{mod}.v")] + [f for f in files if f.endswith("_bb.v")]
+    if a.hr_credit_return_capture and (mod != "qkd_hr_phy_adp" or not a.hr_face_ports):
+        raise SystemExit("--hr-credit-return-capture requires qkd_hr_phy_adp --hr-face-ports")
     if a.astk_face_ports and not any(Path(f).name == "qkd_astk_static_leaves.sv" for f in files):
         files.append(str(REPO / "rtl/qwen_sys/split_20261014/qkd_astk_static_leaves.sv"))
     for f in files:
@@ -1158,6 +1161,11 @@ def main():
                 raise SystemExit(f"rtl name clash {dst.name}")
             continue
         shutil.copyfile(f, dst)
+        if a.hr_credit_return_capture and dst.stem == mod:
+            from hr_credit_return_capture import enabled_wrapper
+            credit_rtl, credit_receipt = enabled_wrapper(dst.read_text(), mod)
+            dst.write_text(credit_rtl)
+            (kd / "credit_return_capture.json").write_text(json.dumps(credit_receipt, indent=1)+"\n")
         if a.astk_face_ports and dst.stem == mod:
             from astk_face_ports import transform
             dst.write_text(transform(dst.read_text()))
