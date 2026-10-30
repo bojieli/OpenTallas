@@ -349,6 +349,8 @@ module ot_s81ph_link_ep_safe4 #(
     end endgenerate
 `else
     wire ok_ready=ok_c;
+    // Default endpoint uses the existing rewind-state registers directly.
+    wire [SEQW-1:0] nxt_rw2 = nxt_rw, una_rw2 = una_rw;
 `endif
     always @(posedge clk or negedge rst_v[0])
         if (!rst_v[0]) begin pv <= 1'b0; s2v <= 1'b0; pnak <= 1'b0; ok_f <= 1'b0; una_s <= 0; end
