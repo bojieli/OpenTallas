@@ -434,7 +434,7 @@ module qfd_dv_s6_tap (
         .xpf_split(xpf[1+AW+2*XCW +: 4]), .xpf_k(xpf[1+AW+2*XCW+4 +: NW]), .xpf_round(xpf[1+AW+2*XCW+4+NW]),
         .sw_v(xt_v), .sw_a(xt_a), .sw_d(xt_f),
         .gi(gi), .hw(hw), .fw_i(|lq_bad), .fe_i(xt_bad), .fault(tap_fault));
-    wire [23:0] cid_c = {4'(sid) * 6'd4 + 6'd3, 4'(sid) * 6'd4 + 6'd2, 4'(sid) * 6'd4 + 6'd1, 4'(sid) * 6'd4};
+    wire [23:0] cid_c = {sid, 2'd3, sid, 2'd2, sid, 2'd1, sid, 2'd0};  // = {4'(sid)*6'd4+k}: low 2 bits k, no carry (YC1-safe form)
     reg [23:0] cq;
     always @(posedge ck) cq <= cid_c;
     assign cid = cq;
