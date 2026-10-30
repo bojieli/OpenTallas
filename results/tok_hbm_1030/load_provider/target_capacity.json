@@ -39,5 +39,26 @@
   "MODE1_table_pages": 128,
   "ROLE_table_pages": 16
  },
- "conclusion": "Existing128/1024 literal target loops do not generate general LOAD source slot/destination/epoch progress. Explicit consumer counters over existing HGI descriptor fields or a defined ROM/page lookup contract is required; no implementation selected."
+ "conclusion": "Existing128/1024 literal target loops do not generate general LOAD source slot/destination/epoch progress. Explicit consumer counters over existing HGI descriptor fields or a defined ROM/page lookup contract is required; no implementation selected.",
+ "programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "rate_unit": "programme_steps_per_second",
+  "accepted_outputs_data_dependent": true,
+  "evidence": {
+   "ACCEPT_records": [
+    3913
+   ],
+   "TOKX_records": [
+    {
+     "record": 3914,
+     "A_n": 7
+    }
+   ]
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no fixed acceptance gamma or AR-token equivalence is assumed.",
+  "actual_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+  "actual_native_records": 3916,
+  "emitter_evidence": "Frozen emitter.py MTP defaultN6; actual binary six-row operations and ACCEPT3913/TOKX3914 independently confirm scope. Adjacent emitter.json offsets remain rejected as stale."
+ }
 }

@@ -131,7 +131,7 @@ indexed payload cases across3 profiles per component, retaining all source
 arithmetic fields. It also refuses3 unqualified dynamic mutants. The existing
 64-profile representative check still passes on the new derived layout101152.
 This closes the expert-address/selection footprint obstacle for ALL40 regions,
-not full numerical replay, whole-token liveness, mutable-HBM execution or G5.
+not full numerical replay, whole MTP VERIFY programme liveness, mutable-HBM execution or G5.
 
 Conservative source-complete canonical backing stream
 
@@ -277,9 +277,9 @@ load_provider/target_capacity.json records why existing128-entry MODE1 loops
 and1024-entry ROLE literal calendars do not generate LOAD address progress.
 load_provider/effective227_contract.json supplies exact adapter fields, ordinary
 VM mapping and dated window handoff. load_provider/counter_budget.json prices
-actual full40-layer3916-record token source, inserted copies only:43117008 U32
+actual full40-layer3916-record N6 MTP VERIFY source, inserted copies only:43117008 U32
 words +12528 setupedges under chosen one-global-counter serial implementation.
-At833ps the counter-only35.926903488ms ceiling is27.8343token/s; this is not
+At833ps the counter-only35.926903488ms ceiling is27.8343programme-steps/s; this is not
 qualified performance or an unavoidable floor for coalesced/parallel designs.
 No current programme/model includes this spill tax. Original dynamic LOADs,
 STORE/arithmetic, window service, physical commit, scratch/stack authority and
@@ -306,3 +306,5 @@ coalescing would yield5389626sectorcommands+95313setupedges=5484939cycles
 (4.568954187ms), before windows/sourcework/commit; not current implementation.
 
 Repository ISA integration: all new compiler tools default to checked-in, SHA-guarded isa_v1r_20261019 format files through isa_loader.py. Optional --compiler-tools requires exact source equality; the historical external0830 path is preserved as a receipt. Default loader plus actual retainedsource91 ROWX3 decode/encode PASS; altered external format control caught. See isa_default_smoke.json. No whole programme rebuild was run.
+
+Current rate scope: actual a1223916 is N=6 MTP VERIFY across40layers/head, with six row positions, CTL.ACCEPT3913 and CTL.TOKX3914 A.n7. Programme traffic/cycles are per verify STEP, not one AR token. Earlier 27.8343token/s and single-token labels are superseded; the same serial floor is27.8343programme-steps/s. Accepted tokens/s requires actual native ACCEPT/TOKX observations plus draft/seed costs. No fixed acceptance gamma is assumed. Historical counts, source bytes and cycle results remain unchanged.
