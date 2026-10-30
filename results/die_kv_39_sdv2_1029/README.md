@@ -20,7 +20,10 @@ V2 = plan delta built through bind + gen_phys, per-tap trees balanced to the 12.
   the macro; collector (mk_sd36 rule) 0 on macro, local sources 39-42 um from their taps, collector depth unchanged.
 
 ## Delta (fix-only, kv3_sys_SD/_v1 only)
-1. main serdes delta first (results/die_kv_32_1029/serdes/apply_serdes_phys.py): x6 PHY footprint + VDDPHY domains.
+1. main serdes delta first (results/die_kv_32_1029/serdes/apply_serdes_phys.py): x6 PHY identity + VDDPHY domains; then
+   the content := the DIE-KV-33-SD kit form (event33 abstract, outline 1848.96, E side trimmed for the landing channel).
+   try1 with the event27 outline 1866.24 FAILED 3_3 GP on both types: OT_CLAND no legal site in reserved band
+   ring:i_host_fdi (the 1883.52 macro edge swallows the ring band 1872.72-1883.52) [CHECKED try1/chain_place.log].
 2. mk_sd39.py: clock.tap_mode explicit + 6 taps (above), tap_max_sinks 2400, tap_radius_um 400, sink_bins_file =
    the placed clk inventory (sd39_bins_*.json, relays/collector excluded: their sites come from the plan trees);
    tap_edge_y_um dropped; reset.local_taps_um re-sited off the macro onto the actual async-reset consumer groups
@@ -34,7 +37,7 @@ V2 = plan delta built through bind + gen_phys, per-tap trees balanced to the 12.
 - strict bind (eB3b recipe + sidecar_sd39): errors 0 / unbound 0 / undriven 0 / multiply_bound 0 [CHECKED bind.log]
 - kit-rtl + specialize rc 0 (clk_t5 in the kit wrapper); gen.py phys rc 0; KIT_PREFLIGHT PASS issues 0 (both)
   [CHECKED]; SDC create_clock clk on clk..clk_t5, OT_TAP_MAX_SINKS 2400, OT_TAP_TARGET_PS 250 (no hand edits).
-- place + CTS + FF structural hold gate: LIVE (sd39_chain.sh STAGE=place then cts; declared FDI CDC = DIE-KV-38
+- try2 (event33 outline): bind -> kits -> place -> CTS + FF structural hold gate LIVE, unit oth-ubuntu-520830-1793328962 (sd39_chain.sh STAGE=place then cts; declared FDI CDC = DIE-KV-38
   kv38_cdc_fdi.sdc appended to 3_place.sdc). Collect kits/<T>/hold_gate.log + chain_cts.log.
 
 ## Open (not in V2 scope)

@@ -7,6 +7,18 @@ cd $WT; git show origin/main:results/die_kv_32_1029/serdes/apply_serdes_phys.py 
 git show origin/main:results/die_kv_32_1029/serdes/serdes_phys_delta.json > $D/serdes_phys_delta.json
 zcat $B/results/die_kv_36_1029/kv021b/event28b_plan.json.gz > $D/event28b_plan.json 2>/dev/null || cp $B/kv36/event28b/plan.json $D/event28b_plan.json
 python3 $D/apply_serdes_phys.py tools/die_plan $D/event28b_plan.json $D/serdes_phys_delta.json $D/plan_s.json | tee $D/apply_serdes.log
+# the kit form of the PHY content (DIE-KV-33-SD): event33 abstract trimmed 17.28 um on the E side for the landing
+# channel (outline 1848.96 = the macro the kits place); the event27 1866.24 outline swallows ring:i_host_fdi (GP fail)
+python3 - $D/plan_s.json /srv/opentallas-scratch2/claude/die-kv-33-1029/sd/plan/die_plan_sd33s.json <<'PY'
+import json, sys
+p, a = json.load(open(sys.argv[1])), json.load(open(sys.argv[2]))
+for tn in ("kv3_sys_SD", "kv3_sys_SD_v1"):
+    (c,), (s,) = p["partition_types"][tn]["contents"], a["partition_types"][tn]["contents"]
+    assert (c["inst"], c["module"], c["physical_inst"], c["physical_master"], c["origin_um"]) == (s["inst"], s["module"], s["physical_inst"], s["physical_master"], s["origin_um"]), tn
+    p["partition_types"][tn]["contents"] = [s]
+json.dump(p, open(sys.argv[1], "w"), indent=1)
+print("contents := sd33s event33 (outline 1848.96)")
+PY
 K=$B/kv39; mkdir -p $K $WT/kv39; cp $R/sd39_bins_*.json $K/; cp $R/sd39_bins_*.json $WT/kv39/; ln -sfn ../kv36/event28b/event27 $K/event27
 python3 $R/mk_sd39.py tools/die_plan $D/plan_s.json $K/plan_sd39.json x x kv39/sd39_bins_kv3_sys_SD.json kv39/sd39_bins_kv3_sys_SD_v1.json > $R/sd39_delta.json
 python3 $R/check_sd39.py tools/die_plan $K/plan_sd39.json > $R/sd39_check.json
