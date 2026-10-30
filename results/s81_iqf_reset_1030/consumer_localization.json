@@ -1,0 +1,23 @@
+[
+ {
+  "instance": "u_bin_idx_i0",
+  "pin": "rst_n",
+  "old_reset": "rst_n",
+  "new_reset": "rst_n_t13",
+  "clock_net": "clk"
+ },
+ {
+  "instance": "u_bin_ql_i0",
+  "pin": "rst_n",
+  "old_reset": "rst_n",
+  "new_reset": "rst_n_t14",
+  "clock_net": "clk"
+ },
+ {
+  "instance": "u_core",
+  "pin": "rst",
+  "old_reset": "rst_n",
+  "new_reset": "rst_n_t14",
+  "clock_net": "clk"
+ }
+]
