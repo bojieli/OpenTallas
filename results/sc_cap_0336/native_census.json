@@ -1,0 +1,1374 @@
+{
+  "schema": "codex.sc.native_census.v1",
+  "source": "/srv/opentallas-scratch2/claude/codex-sc-cap-0336/1_synth_odb.v",
+  "total_std": 542365,
+  "total_seq": 104670,
+  "total_comb": 437695,
+  "masters": {
+    "INVx1_ASAP7_75t_R": 126320,
+    "BUFx2_ASAP7_75t_R": 8738,
+    "AND2x2_ASAP7_75t_R": 29503,
+    "AND3x1_ASAP7_75t_R": 14758,
+    "OR2x2_ASAP7_75t_R": 715,
+    "BUFx4f_ASAP7_75t_R": 273,
+    "NOR2x2_ASAP7_75t_R": 31,
+    "INVx2_ASAP7_75t_R": 56,
+    "NAND2x1_ASAP7_75t_R": 1312,
+    "XNOR2x2_ASAP7_75t_R": 1325,
+    "NOR2x1_ASAP7_75t_R": 1835,
+    "AND2x4_ASAP7_75t_R": 71100,
+    "INVx3_ASAP7_75t_R": 46954,
+    "XNOR2x1_ASAP7_75t_R": 4,
+    "AO21x1_ASAP7_75t_R": 28185,
+    "AND4x1_ASAP7_75t_R": 737,
+    "XOR2x2_ASAP7_75t_R": 5167,
+    "OR3x1_ASAP7_75t_R": 811,
+    "OR4x1_ASAP7_75t_R": 2392,
+    "NOR3x1_ASAP7_75t_R": 75,
+    "AND5x1_ASAP7_75t_R": 206,
+    "OR5x1_ASAP7_75t_R": 843,
+    "INVx4_ASAP7_75t_R": 5,
+    "BUFx3_ASAP7_75t_R": 1789,
+    "AND3x2_ASAP7_75t_R": 5,
+    "OA21x2_ASAP7_75t_R": 472,
+    "OA211x2_ASAP7_75t_R": 383,
+    "AOI22x1_ASAP7_75t_R": 24,
+    "NAND3x1_ASAP7_75t_R": 17,
+    "AO22x1_ASAP7_75t_R": 8792,
+    "AOI21x1_ASAP7_75t_R": 280,
+    "AO221x1_ASAP7_75t_R": 3777,
+    "MAJx2_ASAP7_75t_R": 126,
+    "OA31x2_ASAP7_75t_R": 5,
+    "AOI211x1_ASAP7_75t_R": 11,
+    "OA22x2_ASAP7_75t_R": 15,
+    "OAI21x1_ASAP7_75t_R": 273,
+    "AO211x2_ASAP7_75t_R": 2,
+    "AO31x2_ASAP7_75t_R": 5,
+    "OA33x2_ASAP7_75t_R": 50,
+    "OA222x2_ASAP7_75t_R": 14,
+    "AO32x1_ASAP7_75t_R": 159,
+    "AO222x2_ASAP7_75t_R": 174,
+    "AOI221x1_ASAP7_75t_R": 4,
+    "AO21x2_ASAP7_75t_R": 53649,
+    "OR2x6_ASAP7_75t_R": 12502,
+    "BUFx6f_ASAP7_75t_R": 570,
+    "OR4x2_ASAP7_75t_R": 4,
+    "OR3x2_ASAP7_75t_R": 34,
+    "OAI22x1_ASAP7_75t_R": 3,
+    "OR2x4_ASAP7_75t_R": 1,
+    "AO221x2_ASAP7_75t_R": 4148,
+    "OA221x2_ASAP7_75t_R": 3,
+    "FAx1_ASAP7_75t_R": 4201,
+    "TIEHIx1_ASAP7_75t_R": 687,
+    "TIELOx1_ASAP7_75t_R": 19,
+    "DFFASRHQNx1_ASAP7_75t_R": 686,
+    "DFFHQNx1_ASAP7_75t_R": 103942,
+    "AND4x2_ASAP7_75t_R": 4,
+    "OR5x2_ASAP7_75t_R": 14,
+    "BUFx12f_ASAP7_75t_R": 156,
+    "DFFLQNx1_ASAP7_75t_R": 42,
+    "NAND3x2_ASAP7_75t_R": 2,
+    "INVx5_ASAP7_75t_R": 2,
+    "AO33x2_ASAP7_75t_R": 1,
+    "AND3x4_ASAP7_75t_R": 2,
+    "AND5x2_ASAP7_75t_R": 2,
+    "XOR2x1_ASAP7_75t_R": 3969
+  },
+  "seq_masters": {
+    "DFFASRHQNx1_ASAP7_75t_R": 686,
+    "DFFHQNx1_ASAP7_75t_R": 103942,
+    "DFFLQNx1_ASAP7_75t_R": 42
+  },
+  "hierarchy": {
+    "1": [
+      {
+        "prefix": "u_bound",
+        "std": 487376,
+        "seq": 104670,
+        "comb": 382706
+      },
+      {
+        "prefix": "_21867_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21868_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21869_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21870_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21871_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21872_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21873_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21874_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21875_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21876_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21877_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21878_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21879_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21880_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21881_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21882_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21883_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21884_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21885_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21886_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21887_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21888_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21889_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21890_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21891_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21892_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21893_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21894_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21895_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21896_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21897_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21898_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21899_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21900_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21901_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21902_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21903_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21904_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21905_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      }
+    ],
+    "2": [
+      {
+        "prefix": "u_bound.u_core",
+        "std": 281884,
+        "seq": 43052,
+        "comb": 238832
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i",
+        "std": 12468,
+        "seq": 2866,
+        "comb": 9602
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i",
+        "std": 12468,
+        "seq": 2866,
+        "comb": 9602
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i",
+        "std": 12445,
+        "seq": 2861,
+        "comb": 9584
+      },
+      {
+        "prefix": "u_bound.u_cland_x_stm_fe_i",
+        "std": 12297,
+        "seq": 2826,
+        "comb": 9471
+      },
+      {
+        "prefix": "u_bound.u_cland_x_stm_fe_p1_i",
+        "std": 12297,
+        "seq": 2826,
+        "comb": 9471
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_i",
+        "std": 12190,
+        "seq": 2801,
+        "comb": 9389
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_p1_i",
+        "std": 12190,
+        "seq": 2801,
+        "comb": 9389
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_p2_i",
+        "std": 12166,
+        "seq": 2796,
+        "comb": 9370
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i",
+        "std": 12122,
+        "seq": 2786,
+        "comb": 9336
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p2_i",
+        "std": 12122,
+        "seq": 2786,
+        "comb": 9336
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i",
+        "std": 11696,
+        "seq": 2686,
+        "comb": 9010
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_l1_ctl_i",
+        "std": 10377,
+        "seq": 2382,
+        "comb": 7995
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_i",
+        "std": 3876,
+        "seq": 882,
+        "comb": 2994
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_c_i",
+        "std": 1604,
+        "seq": 359,
+        "comb": 1245
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_i",
+        "std": 1411,
+        "seq": 314,
+        "comb": 1097
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_fw_o_0",
+        "std": 1109,
+        "seq": 554,
+        "comb": 555
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_fw_o_1",
+        "std": 1109,
+        "seq": 554,
+        "comb": 555
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_o_0",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_o_1",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_o_2",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_o_3",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p1_o_0",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p1_o_1",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p1_o_2",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p1_o_3",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_fw_p1_o_0",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_fw_p1_o_1",
+        "std": 1107,
+        "seq": 553,
+        "comb": 554
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p2_o_0",
+        "std": 1105,
+        "seq": 552,
+        "comb": 553
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p2_o_1",
+        "std": 1105,
+        "seq": 552,
+        "comb": 553
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p2_o_2",
+        "std": 1105,
+        "seq": 552,
+        "comb": 553
+      },
+      {
+        "prefix": "u_bound.u_ft_x_ctl_su_c_p2_o_3",
+        "std": 1105,
+        "seq": 552,
+        "comb": 553
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_stm_o_0",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_stm_o_1",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_stm_p1_o_0",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_fe_stm_p1_o_1",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_stm_fe_o_0",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_stm_fe_o_1",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_stm_fe_p1_o_0",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      },
+      {
+        "prefix": "u_bound.u_ft_x_stm_fe_p1_o_1",
+        "std": 1091,
+        "seq": 545,
+        "comb": 546
+      }
+    ],
+    "3": [
+      {
+        "prefix": "u_bound.u_core.u",
+        "std": 281884,
+        "seq": 43052,
+        "comb": 238832
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring",
+        "std": 4950,
+        "seq": 2847,
+        "comb": 2103
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring",
+        "std": 4950,
+        "seq": 2847,
+        "comb": 2103
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring",
+        "std": 4942,
+        "seq": 2842,
+        "comb": 2100
+      },
+      {
+        "prefix": "u_bound.u_cland_x_stm_fe_i.u_ring",
+        "std": 4883,
+        "seq": 2807,
+        "comb": 2076
+      },
+      {
+        "prefix": "u_bound.u_cland_x_stm_fe_p1_i.u_ring",
+        "std": 4883,
+        "seq": 2807,
+        "comb": 2076
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_i.u_ring",
+        "std": 4842,
+        "seq": 2782,
+        "comb": 2060
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_p1_i.u_ring",
+        "std": 4842,
+        "seq": 2782,
+        "comb": 2060
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_p2_i.u_ring",
+        "std": 4834,
+        "seq": 2777,
+        "comb": 2057
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring",
+        "std": 4817,
+        "seq": 2767,
+        "comb": 2050
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p2_i.u_ring",
+        "std": 4817,
+        "seq": 2767,
+        "comb": 2050
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring",
+        "std": 4649,
+        "seq": 2667,
+        "comb": 1982
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_ring",
+        "std": 4117,
+        "seq": 2363,
+        "comb": 1754
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_i.u_ring",
+        "std": 1493,
+        "seq": 863,
+        "comb": 630
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_c_i.u_ring",
+        "std": 573,
+        "seq": 340,
+        "comb": 233
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_i.u_ring",
+        "std": 498,
+        "seq": 295,
+        "comb": 203
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_l1_i.u_ring",
+        "std": 129,
+        "seq": 75,
+        "comb": 54
+      },
+      {
+        "prefix": "u_bound.u_cland_monitor_0.u_ring",
+        "std": 109,
+        "seq": 67,
+        "comb": 42
+      },
+      {
+        "prefix": "u_bound.u_cland_monitor_1.u_ring",
+        "std": 109,
+        "seq": 67,
+        "comb": 42
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_monitor_0.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_monitor_1.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p2_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_p1_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_fe_p2_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_stm_fe_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_stm_fe_p1_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_c_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_l1_ctl_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "u_bound.u_cland_x_su_l1_i.u_fault_port",
+        "std": 3,
+        "seq": 1,
+        "comb": 2
+      },
+      {
+        "prefix": "_21867_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21868_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      },
+      {
+        "prefix": "_21869_",
+        "std": 1,
+        "seq": 0,
+        "comb": 1
+      }
+    ],
+    "4": [
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[0]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[1]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[2]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[3]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[4]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[5]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[6]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_cws2_i.u_ring.dch[7]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[0]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_i.u_ring.dch[1]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[0]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[1]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[2]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[3]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[4]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[5]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[6]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_i.u_ring.dch[7]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[0]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[1]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[2]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[3]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[4]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[5]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[6]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p1_i.u_ring.dch[7]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[0]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[1]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[2]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[3]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[4]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[5]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[6]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_ctl_su_c_p2_i.u_ring.dch[7]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring.dch[0]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring.dch[1]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring.dch[2]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring.dch[3]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring.dch[4]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      },
+      {
+        "prefix": "u_bound.u_cland_x_fw_ctl_p1_i.u_ring.dch[5]",
+        "std": 309,
+        "seq": 68,
+        "comb": 241
+      }
+    ]
+  },
+  "state_stems": [
+    [
+      "u_bound.u_cland_x_ctl_su_c_i/u_ring.s_d[*][*]",
+      2212
+    ],
+    [
+      "u_bound.u_cland_x_ctl_su_c_p1_i/u_ring.s_d[*][*]",
+      2212
+    ],
+    [
+      "u_bound.u_cland_x_ctl_su_c_p2_i/u_ring.s_d[*][*]",
+      2208
+    ],
+    [
+      "u_bound.u_cland_x_stm_fe_i/u_ring.s_d[*][*]",
+      2180
+    ],
+    [
+      "u_bound.u_cland_x_stm_fe_p1_i/u_ring.s_d[*][*]",
+      2180
+    ],
+    [
+      "u_bound.u_cland_x_fw_fe_i/u_ring.s_d[*][*]",
+      2160
+    ],
+    [
+      "u_bound.u_cland_x_fw_fe_p1_i/u_ring.s_d[*][*]",
+      2160
+    ],
+    [
+      "u_bound.u_cland_x_fw_fe_p2_i/u_ring.s_d[*][*]",
+      2156
+    ],
+    [
+      "u_bound.u_cland_x_fw_ctl_p1_i/u_ring.s_d[*][*]",
+      2148
+    ],
+    [
+      "u_bound.u_cland_x_fw_ctl_p2_i/u_ring.s_d[*][*]",
+      2148
+    ],
+    [
+      "u_bound.u_cland_cws2_i/u_ring.s_d[*][*]",
+      2068
+    ],
+    [
+      "u_bound.u_cland_x_su_l1_ctl_i/u_ring.s_d[*][*]",
+      1828
+    ],
+    [
+      "u_bound.u_cland_x_ctl_i/u_ring.s_d[*][*]",
+      644
+    ],
+    [
+      "u_bound.u_cland_x_ctl_su_c_i/u_ring.dch[*].u_dsel/y[*]",
+      553
+    ],
+    [
+      "u_bound.u_cland_x_ctl_su_c_p1_i/u_ring.dch[*].u_dsel/y[*]",
+      553
+    ],
+    [
+      "u_bound.u_ft_x_fe_fw_o_0/q[*]",
+      553
+    ],
+    [
+      "u_bound.u_ft_x_fe_fw_o_1/q[*]",
+      553
+    ],
+    [
+      "u_bound.u_cland_x_ctl_su_c_p2_i/u_ring.dch[*].u_dsel/y[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_o_0/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_o_1/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_o_2/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_o_3/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p1_o_0/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p1_o_1/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p1_o_2/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p1_o_3/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_fe_fw_p1_o_0/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_fe_fw_p1_o_1/q[*]",
+      552
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p2_o_0/q[*]",
+      551
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p2_o_1/q[*]",
+      551
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p2_o_2/q[*]",
+      551
+    ],
+    [
+      "u_bound.u_ft_x_ctl_su_c_p2_o_3/q[*]",
+      551
+    ],
+    [
+      "u_bound.u_cland_x_stm_fe_i/u_ring.dch[*].u_dsel/y[*]",
+      545
+    ],
+    [
+      "u_bound.u_cland_x_stm_fe_p1_i/u_ring.dch[*].u_dsel/y[*]",
+      545
+    ],
+    [
+      "u_bound.u_ft_x_fe_stm_o_0/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_fe_stm_o_1/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_fe_stm_p1_o_0/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_fe_stm_p1_o_1/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_stm_fe_o_0/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_stm_fe_o_1/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_stm_fe_p1_o_0/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_ft_x_stm_fe_p1_o_1/q[*]",
+      544
+    ],
+    [
+      "u_bound.u_cland_x_fw_fe_i/u_ring.dch[*].u_dsel/y[*]",
+      540
+    ],
+    [
+      "u_bound.u_cland_x_fw_fe_p1_i/u_ring.dch[*].u_dsel/y[*]",
+      540
+    ],
+    [
+      "u_bound.u_cland_x_fw_fe_p2_i/u_ring.dch[*].u_dsel/y[*]",
+      539
+    ],
+    [
+      "u_bound.u_ft_x_fw_fe_o_0/q[*]",
+      539
+    ],
+    [
+      "u_bound.u_ft_x_fw_fe_o_1/q[*]",
+      539
+    ],
+    [
+      "u_bound.u_ft_x_fw_fe_p1_o_0/q[*]",
+      539
+    ],
+    [
+      "u_bound.u_ft_x_fw_fe_p1_o_1/q[*]",
+      539
+    ],
+    [
+      "u_bound.u_ft_x_fw_fe_p2_o_0/q[*]",
+      538
+    ],
+    [
+      "u_bound.u_ft_x_fw_fe_p2_o_1/q[*]",
+      538
+    ],
+    [
+      "u_bound.u_cland_x_fw_ctl_p1_i/u_ring.dch[*].u_dsel/y[*]",
+      537
+    ],
+    [
+      "u_bound.u_cland_x_fw_ctl_p2_i/u_ring.dch[*].u_dsel/y[*]",
+      537
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p1_o_0/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p1_o_1/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p1_o_2/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p1_o_3/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p1_o_4/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p2_o_0/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_ft_x_fw_ctl_p2_o_1/q[*]",
+      536
+    ],
+    [
+      "u_bound.u_cland_cws2_i/u_ring.dch[*].u_dsel/y[*]",
+      517
+    ],
+    [
+      "u_bound.u_ft_cws2_o_0/q[*]",
+      516
+    ],
+    [
+      "u_bound.u_ft_cws2_o_1/q[*]",
+      516
+    ],
+    [
+      "u_bound.u_ft_cws2_o_2/q[*]",
+      516
+    ],
+    [
+      "u_bound.u_ft_cws2_o_3/q[*]",
+      516
+    ],
+    [
+      "u_bound.u_ft_l9_eo_l9_wi_o_0/q[*]",
+      514
+    ],
+    [
+      "u_bound.u_ft_l9_eo_l9_wi_o_1/q[*]",
+      514
+    ],
+    [
+      "u_bound.u_cland_x_su_l1_ctl_i/u_ring.dch[*].u_dsel/y[*]",
+      457
+    ],
+    [
+      "u_bound.u_ft_x_su_l1_ctl_o_0/q[*]",
+      456
+    ],
+    [
+      "u_bound.u_ft_x_su_l1_ctl_o_1/q[*]",
+      456
+    ],
+    [
+      "u_bound.u_ft_x_su_l1_ctl_o_2/q[*]",
+      456
+    ],
+    [
+      "u_bound.u_ft_x_su_l1_ctl_o_3/q[*]",
+      456
+    ],
+    [
+      "u_bound.u_cland_x_su_c_i/u_ring.s_d[*][*]",
+      232
+    ],
+    [
+      "u_bound.u_cland_x_fw_i/u_ring.s_d[*][*]",
+      196
+    ],
+    [
+      "u_bound.u_cland_x_ctl_i/u_ring.dch[*].u_dsel/y[*]",
+      161
+    ],
+    [
+      "u_bound.u_bin_x_ctl_i/q[*]",
+      160
+    ],
+    [
+      "u_bound.u_r8b_strap_r8pad_core_red_data_f.r[*][*]",
+      160
+    ],
+    [
+      "u_bound.u_r8b_strap_r8pad_core_red_addr_f.r[*][*]",
+      120
+    ],
+    [
+      "u_bound.u_bout_x_ctl_o/q[*]",
+      119
+    ],
+    [
+      "u_bound.u_cland_x_su_c_i/u_ring.dch[*].u_dsel/y[*]",
+      58
+    ]
+  ]
+}
