@@ -72,6 +72,26 @@ proc ot_ci_scope_snapshot {roots {frontiers {}}} {
   foreach root $roots {dict set out $root [dict get [ot_ci_scope_cone $root $frontiers] graph]}
   return $out
 }
+proc ot_ci_scope_hook {path} {
+  # Protect the complete generator hook too: direct Tcl edits outside the
+  # known sourced editor files must not bypass the selected-root guard.
+  set allowed {}
+  dict for {script roots} $::ot_ci_scope_editors {set allowed [concat $allowed $roots]}
+  set protected {};foreach root $::ot_ci_scope_roots {
+    if {[lsearch -exact $allowed $root] < 0} {lappend protected $root}
+  }
+  ot_ci_scope_disjoint
+  set before [ot_ci_scope_snapshot $protected]
+  try {
+    set result [uplevel 1 [list ::source $path]]
+  } finally {
+    ot_ci_scope_disjoint
+    if {[ot_ci_scope_snapshot $protected] ne $before} {
+      error "OT_CORE_SCOPE_HOOK_CHANGED $path changed a root outside its declared ordinary editor roots ($protected)"
+    }
+  }
+  return $result
+}
 if {![llength [info commands ::ot_ci_scope_source]]} {
   rename ::source ::ot_ci_scope_source
   proc ::source {args} {

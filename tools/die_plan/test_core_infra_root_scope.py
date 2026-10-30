@@ -323,3 +323,15 @@ proc ::clock_tree_synthesis {args} {
     assert 'BASE -clk_nets phy_leaf -no_insertion_delay' in out
     assert 'BASE -repair_clock_nets -clk_nets core_in' in out
     assert 'BASE -clk_nets {core_in phy_leaf}' not in out
+
+
+@pytest.mark.skipif(shutil.which('tclsh') is None, reason='tclsh required')
+def test_direct_generator_hook_edits_cannot_bypass_known_editor_guard(tmp_path):
+    tree=dict(clock_port='clk_phy',root_scope=dict(ordinary_roots=['clk'],ordinary_cts_roots=['clk'],
+              clock_editor_roots={'core_density_taps.tcl':['clk']}))
+    hook=tmp_path/'arbitrary_pre_hook.tcl';hook.write_text('dict set ::links pc ncore\n')
+    script=DB_FIXTURE+CI.emit_root_scope_tcl(tree)
+    script+='if {[catch {ot_ci_scope_hook {'+str(hook)+'}} msg]} {puts $msg} else {puts BAD_DIRECT_EDIT}\n'
+    out=_tcl(script)
+    assert 'OT_CORE_SCOPE_HOOK_CHANGED' in out
+    assert 'BAD_DIRECT_EDIT' not in out

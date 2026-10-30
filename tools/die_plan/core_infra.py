@@ -1101,11 +1101,11 @@ def kit_cts_hook(kd, cfg):
         # selected-root install. Do not change a shared generator hook in place.
         pre_body = f"source /work/{ROOT_SCOPE_HOOK}\n"
         if pre:
-            pre_body += f"source /work/{pre}\n"
+            pre_body += f"ot_ci_scope_hook /work/{pre}\n"
         (kd / CTS_PRE_CHAIN).write_text(pre_body + pre_lines)
         cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
         if post:
-            (kd / CTS_POST_CHAIN).write_text(f"source /work/{ROOT_SCOPE_HOOK}\nsource /work/{post}\n")
+            (kd / CTS_POST_CHAIN).write_text(f"source /work/{ROOT_SCOPE_HOOK}\not_ci_scope_hook /work/{post}\n")
             cfg.append(f"override export POST_CTS_TCL = /work/{CTS_POST_CHAIN}")
         return True
     if bad:
