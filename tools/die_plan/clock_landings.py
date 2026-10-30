@@ -380,6 +380,8 @@ class Landings:
                 import count_align_bind as CAB
                 reader_depth = CAB.reader_start_depth(plan, self.parts[dp]["type"])
                 writer_depth = CAB.writer_start_depth(plan, self.parts[sp]["type"], sb)
+                if writer_depth and CAB.origin_boot_branch(plan, self.parts[sp]["type"]) and c["tree"]:
+                    raise LandingError(f"{pid}: north BOOT copy is forbidden on a region start-tree edge")
                 row.update(added_cycles=int(c["sched_lat"]), module="ot_dp_clk_landing_cas" if self.strap else
                            "ot_dp_clk_landing_ca", ring_depth=int(c["depth"]),
                            ring_offset=None, ring_k=int(c["K"]) - reader_depth + writer_depth,
@@ -884,6 +886,14 @@ class Landings:
                     needed.append(s_)
                     extra.append(f"    input wire {s_}  /* planned physical tap: forwarded-clock export only */")
             return s_
+        import count_align_bind as CAB
+        boot_branch = CAB.origin_boot_branch(self.plan, key)
+        if boot_branch:
+            if not cat or not cat.get("straps") or not face_start:
+                raise LandingError(f"{tn}: north BOOT copy needs strap-form origin and FSTART face flops")
+            if not set(boot_branch["forwarded_outputs"]) <= set(mask["outputs"]) or not set(boot_branch["reader_inputs"]) <= set(mask["inputs"]):
+                raise LandingError(f"{tn}: north BOOT copy names an absent landed input/output")
+            logic.append("    wire cland_boot_s0, cland_boot_north_start, cland_boot_north_raw;")
         for b in mask["outputs"]:
             extra.append(f"    output wire fclk_out_{b}")
             logic.append(f"    assign fclk_out_{b} = {_exp(f'fclk_out_{b}')};")
@@ -891,8 +901,10 @@ class Landings:
                 # the sender's start, forwarded beside its bus with fclk: resets the receiver ring's write count
                 extra.append(f"    output wire cland_fstart_out_{b}")
                 if face_start:
-                    fstart_d = self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
-                    logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n(cland_start_raw), "
+                    northern = boot_branch and b in boot_branch["forwarded_outputs"]
+                    fstart_d = "cland_boot_north_start" if northern else self._writer_start_rtl(tn, b, head, body, logic, type_key=key)
+                    fstart_raw = "cland_boot_north_raw" if northern else "cland_start_raw"
+                    logic.append(f"    ot_dp_landing_relay u_cland_fstart_{b} (.clk(clk), .rst_raw_n({fstart_raw}), "
                                  f".d({fstart_d}), .q(cland_fstart_out_{b}));")
                 elif (self.types[key].get("clock", {}).get("landing_writer_start") or {}).get("branches", {}).get(b):
                     raise LandingError(f"{tn}.{b}: landing_writer_start needs an FSTART face flop (strap-form origin)")
@@ -966,6 +978,8 @@ class Landings:
                 extra += [f"    input wire cland_fstart_in_{b}"]
                 ca_raw[b] = reset
                 reader_start, body = self._reader_start_rtl(tn, b, body, logic, type_key=key, head=head)
+                if boot_branch and b in boot_branch["reader_inputs"]:
+                    reader_start = "cland_boot_north_start"
                 if cat.get("straps"):
                     kw = cat["rings"][b]["kw"]
                     extra += [f"    input wire [{kw-1}:0] strap_ca_k_{b}"]
@@ -1120,7 +1134,7 @@ class Landings:
             return raw_logic + [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
         if role[0] == "strap":
-            logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw)
+            logic, raw = self._origin_strap_rtl(tn, role, ca_raw, extra, local_raw, type_key=type_key)
         elif role[0] == "child":
             b = role[1]
             if b == START_PIN_IN:
@@ -1159,7 +1173,7 @@ class Landings:
             logic.append(f"    ot_dp_rrelay u_cland_raw_reset_o (.clk(clk), .d({raw}), .q({RAW_RESET_PIN_OUT}));")
         return raw_logic + logic
 
-    def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw):
+    def _origin_strap_rtl(self, tn, role, ca_raw, extra, local_raw, type_key=None):
         """MESO-STRAP-1 strap origin: ot_dp_landing_origin_s (strap_ca_pad / strap_ca_efall), the parent's forwarded
         start and the child raw reset chosen by strap_ca_tsel among the copies' tree buses. Each tree bus has its own
         origin sampler; static selection follows those samplers (out-of-range values take the last bus). An optional
@@ -1168,6 +1182,12 @@ class Landings:
         _, tbs, padw, settle, root = role
         copy_export = getattr(self, "types", {}).get(tn, {}).get("clock", {}).get("landing_origin_export_copy", False)
         fwd_param = ", .FWD_COPY(1)" if copy_export else ""
+        import count_align_bind as CAB
+        boot_branch = CAB.origin_boot_branch(self.plan, type_key or tn)
+        if boot_branch and (root or padw != 1 or len(tbs) != 1 or tbs[0] != START_PIN_IN or copy_export):
+            raise LandingError(f"{tn}: north BOOT copies require one non-root PADW1 dedicated START origin, no FWD_COPY")
+        if boot_branch:
+            fwd_param += ", .BOOT_BRANCH_EXPORT(1)"
         ca_raw = dict(ca_raw)
         if START_PIN_IN in tbs:
             # START-TREE: the dedicated start pin is one of the choices; its raw reset is a local timed relay
@@ -1226,7 +1246,22 @@ class Landings:
         else:
             logic += [f"    ot_dp_landing_origin_s #(.PADW({padw}){fwd_param}) u_cland_origin (",
                       f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .strap_efall(strap_ca_efall), "
-                      f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d}));"]
+                      f".strap_pad(strap_ca_pad), .start({start}), .start_d({start_d})" +
+                      (", .boot_s0(cland_boot_s0)" if boot_branch else "") + ");"]
+        if boot_branch:
+            records = self.reset_placements.setdefault(tn, {})
+            raw_record = next((r for r in records.values() if isinstance(r, dict) and r.get("net") == raw_used), None)
+            if raw_record is None or raw_record.get("copied_raw_parent") != boot_branch["raw_parent"]:
+                raise LandingError(f"{tn}: north raw copy must use the SAME origin raw predecessor; got {raw_record}")
+            logic.append("    ot_dp_landing_boot_branch #(.ENABLE(1)) u_cland_boot_north (" +
+                         f".clk(clk), .baseline_start(cland_start), .baseline_raw(cland_start_raw), .origin_s0(cland_boot_s0), " +
+                         f".raw_parent({boot_branch['raw_parent']}), .strap_pad(strap_ca_pad), " +
+                         ".north_start(cland_boot_north_start), .north_raw(cland_boot_north_raw));")
+            records["origin_boot_branch"] = dict(kind="padw1_north_copy", instance="u_cland_boot_north",
+                raw_parent=boot_branch["raw_parent"], forwarded_outputs=list(boot_branch["forwarded_outputs"]),
+                reader_inputs=list(boot_branch["reader_inputs"]), boot_extra_cycles=1, steady_data_cycles_added=0,
+                K_adjustment_at_receivers=1, region_origin_cycles_added=0,
+                qualification="candidate only: exact kept state anchors, native retention and physical timing required")
         self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="strap", tree_buses=list(tbs), padw=padw,
                                                                      root=bool(root), raw_reset=raw_used,
                                                                      **({"per_bus_origins": [f"u_cland_origin_t{i}" for i in range(len(tbs))]} if multi else {}))

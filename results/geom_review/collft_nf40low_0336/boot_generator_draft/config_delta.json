@@ -1,0 +1,18 @@
+{
+  "type": "coll_ft__cla4a25d77",
+  "clock.landing_origin_boot_branch": {
+    "kind": "padw1_north_copy",
+    "boot_extra_cycles": 1,
+    "forwarded_outputs": [
+      "crec_rx_s1_o",
+      "crec_rx_s2_o",
+      "fltk_o",
+      "fltv_o"
+    ],
+    "reader_inputs": [
+      "crec_tx_s1_i",
+      "crec_tx_s2_i"
+    ],
+    "raw_parent": "rst_rl_9"
+  }
+}

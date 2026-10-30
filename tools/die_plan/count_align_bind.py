@@ -34,6 +34,7 @@ import argparse
 import json
 import math
 import random
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -455,9 +456,34 @@ def reader_start_depth(plan, tn):
     return depth
 
 
+def origin_boot_branch(plan, tn):
+    """Default-off PADW1 state-copy branch; selected FSTART writer origins advance one BOOT cycle only."""
+    clock = plan["partition_types"][tn].get("clock", {})
+    cfg = clock.get("landing_origin_boot_branch")
+    if cfg is None:
+        return None
+    if not isinstance(cfg, dict) or cfg.get("kind") != "padw1_north_copy":
+        raise BindError(f"{tn}: landing_origin_boot_branch needs kind padw1_north_copy")
+    if clock.get("landing_writer_start") is not None or clock.get("landing_reader_start") is not None:
+        raise BindError(f"{tn}: boot state copies cannot mix with reader/writer START transport")
+    if cfg.get("boot_extra_cycles") != 1 or isinstance(cfg.get("boot_extra_cycles"), bool):
+        raise BindError(f"{tn}: north copy has exactly one forwarded BOOT cycle")
+    for key in ("forwarded_outputs", "reader_inputs"):
+        v = cfg.get(key)
+        if (not isinstance(v, list) or not v or
+                any(not isinstance(n, str) or not re.fullmatch(r"[A-Za-z_]\w*", n) for n in v) or len(set(v)) != len(v)):
+            raise BindError(f"{tn}: boot branch {key} must be unique bus names")
+    if not isinstance(cfg.get("raw_parent"), str) or not re.fullmatch(r"[A-Za-z_]\w*", cfg["raw_parent"]):
+        raise BindError(f"{tn}: boot branch needs the exact registered raw predecessor")
+    return cfg
+
+
 def writer_start_depth(plan, tn, bus=None):
     """Optional forwarded-writer START transport (W1, DIE-HEAD-38): W registered stages between the sender's safe
     start_d and its FSTART face flop on the listed output buses only. bus=None -> the declared W (0 if absent)."""
+    boot = origin_boot_branch(plan, tn)
+    if boot is not None:
+        return 1 if bus is None or bus in boot["forwarded_outputs"] else 0
     cfg = plan["partition_types"][tn].get("clock", {}).get("landing_writer_start")
     if cfg is None:
         return 0
