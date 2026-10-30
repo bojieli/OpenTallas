@@ -1,0 +1,22 @@
+read_json post.json
+memory_share
+memory_map
+rename qkd_hr_core_rx gold
+design -stash g
+read_verilog -sv keep_mapped.v
+hierarchy -top qkd_hr_core_rx
+proc
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten
+ memory_share
+memory_map
+rename qkd_hr_core_rx gate
+design -copy-from g -as gold gold
+equiv_make gold gate eq
+hierarchy -top eq
+expose -evert eq/t:ot_sram*
+async2sync
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert
