@@ -1,8 +1,8 @@
 {
 "module": "ot_s81_sstn_base566",
-"lef": "physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566.lef",
-"source": "CORE-KS 10-23 from plan LEF @d528c7aa5 (largest non-M1 rect centre); S81-P9 10-23: 1 multi-port pins re-pointed to their on-track access rect",
-"pinhash": "2cf91b3294f2",
+"lef": "physical/die_plan/s81/cores/legacy/lef/ot_s81_sstn_base566.lef",
+"source": "CORE-KS 10-23 from plan LEF @d528c7aa5 (largest non-M1 rect centre); S81-P9 10-23: 1 multi-port pins re-pointed to their on-track access rect; S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): clock ck M4(0.096,15.132) -> M5(0.06,15.132) 0.120x0.480 edge rectangle on the M5 track (GEOM-21); plan LEF = plan-owned copy of physical/s81_die_views/frame_restub_1019/ot_s81_sstn_base566/ot_s81_sstn_base566.lef (only PIN ck differs)",
+"pinhash": "d68e45a49244",
 "pins": [
 {
 "name": "c0[0]",
@@ -210,8 +210,8 @@
 },
 {
 "name": "ck",
-"layer": "M4",
-"x": 0.096,
+"layer": "M5",
+"x": 0.06,
 "y": 15.132
 },
 {

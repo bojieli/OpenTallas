@@ -328,3 +328,39 @@ def test_partition_landing_name_alone_or_wrong_contract_never_waives_geometry(ki
         if mutate == 'layer': pin['layer'] = 'M5'
         p.write_text(json.dumps(contract))
     assert KC.clock_pin_geometry(kit)[0]
+
+
+def test_pins_canonical_native_multiport_pins(tmp_path):
+    """DIE-S81-32/PINEV 10-29: gen_core_kit_legacy emits a declared multiPORT pin as dbBPin/dbBox shapes, not place_pin;
+    the placed pin set reads it at the rect centred on the plan pin (kit = plan: PASS), a moved rect still FAILs."""
+    import hashlib
+    kd = tmp_path / "k"
+    kd.mkdir()
+    rows = [dict(name="a[0]", layer="M5", x=10.02, y=0.042), dict(name="ck", layer="M4", x=0.096, y=15.132)]
+    doc = dict(module="k", pins=rows)
+    b = json.dumps(doc).encode()
+    (kd / "plan_pins.json").write_bytes(b)
+    mp = ("set ot_mp_bt [[ord::get_db_block] findBTerm {ck}]\n"
+          'if {$ot_mp_bt eq "NULL" || $ot_mp_bt eq ""} {error "native multiPORT BTerm missing"}\n'
+          "foreach ot_mp_old [$ot_mp_bt getBPins] {odb::dbBPin_destroy $ot_mp_old}\n"
+          "set ot_mp_bp [odb::dbBPin_create $ot_mp_bt]\n"
+          "set ot_mp_u [[ord::get_db_block] getDbUnitsPerMicron]\n"
+          "$ot_mp_bp setPlacementStatus FIRM\n"
+          "odb::dbBox_create $ot_mp_bp [[ord::get_db_tech] findLayer M4] [expr {int(round(0.156000*$ot_mp_u))}] "
+          "[expr {int(round(15.120000*$ot_mp_u))}] [expr {int(round(0.275000*$ot_mp_u))}] [expr {int(round(15.144000*$ot_mp_u))}]\n"
+          "odb::dbBox_create $ot_mp_bp [[ord::get_db_tech] findLayer M4] [expr {int(round(0.000000*$ot_mp_u))}] "
+          "[expr {int(round(15.120000*$ot_mp_u))}] [expr {int(round(0.192000*$ot_mp_u))}] [expr {int(round(15.144000*$ot_mp_u))}]\n")
+    (kd / "io.tcl").write_text("place_pin -pin_name {a[0]} -layer M5 -location {10.0200 0.0420} -pin_size {0.024 0.084}\n"
+                               + mp)
+    (kd / "pins.json").write_text(json.dumps([dict(bus="a", bit=0, layer="M5", x=10.02, y=0.042),
+                                              dict(bus="ck", bit=None, layer="M4", x=0.096, y=15.132)]))
+    (kd / "freeze.json").write_text(json.dumps(dict(
+        outline_um=[100.0, 100.0], pins_file="cores/x/k_pins.json", pins_sha256=hashlib.sha256(b).hexdigest(),
+        pins_canon_sha256=KC._canon(doc, [100.0, 100.0]))))
+    assert {p["name"]: (p["layer"], p["x"], p["y"]) for p in KC.placed_pins(kd)} == {
+        "a[0]": ("M5", 10.02, 0.042), "ck": ("M4", 0.096, 15.132)}
+    errors, _ = KC.pins_canonical(kd)
+    assert not errors, errors
+    (kd / "io.tcl").write_text((kd / "io.tcl").read_text().replace("15.120000", "15.168000").replace("15.144000", "15.192000"))
+    errors, _ = KC.pins_canonical(kd)
+    assert errors and "plan pin file" in errors[-1]

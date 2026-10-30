@@ -1,13 +1,13 @@
 {
  "module": "dsdv_gunit_l0r",
- "lef": "physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef",
- "source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef (largest non-M1 rect centre, CORE-KS rule) | S81-PLAN3/CCONN2 10-25: outline current -> 267.84x267.84 (COORD S81-CORES (3), parent-slot growth): E/N faces moved out, bus groups re-spread along each face; S81-CORE-LAT-R6 10-26: interleaved W-face groups re-spread pin by pin (order + 0.192 pitch kept, 0 stacked; core_pin_sites_gate PASS)",
- "pinhash": "a432946ac029",
+ "lef": "physical/die_plan/s81/cores/legacy/lef/dsdv_gunit_l0r.lef",
+ "source": "S81-P9-HC 10-23 from LEF physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef (largest non-M1 rect centre, CORE-KS rule) | S81-PLAN3/CCONN2 10-25: outline current -> 267.84x267.84 (COORD S81-CORES (3), parent-slot growth): E/N faces moved out, bus groups re-spread along each face; S81-CORE-LAT-R6 10-26: interleaved W-face groups re-spread pin by pin (order + 0.192 pitch kept, 0 stacked; core_pin_sites_gate PASS); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): clock clk M4(0.042,100.236) -> M5(0.06,100.236) 0.120x0.480 edge rectangle on the M5 track (GEOM-21); plan LEF = plan-owned copy of physical/ref_tile/dsdv_gunit_l0r/views/dsdv_gunit_l0r/dsdv_gunit_l0r.lef (only PIN clk differs)",
+ "pinhash": "772a413be5ab",
  "pins": [
   {
    "name": "clk",
-   "layer": "M4",
-   "x": 0.042,
+   "layer": "M5",
+   "x": 0.06,
    "y": 100.236
   },
   {
