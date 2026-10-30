@@ -16,7 +16,7 @@ def uint(value, bits, name):
     return value
 
 
-def compile_boot(config, receipt):
+def compile_boot(config, receipt, *, allow_unbooked_launch=False):
     if config['schema'] != 'opentallas.s81.seqhost_native_boot.v1':
         raise ValueError('unsupported explicit boot configuration schema')
     if receipt['schema'] != 'opentallas.s81.bound_control_local.v1' or receipt['verdict'] != 'PASS':
@@ -70,18 +70,26 @@ def compile_boot(config, receipt):
                     raise ValueError('two events drive one actual endpoint on the same edge')
                 output_dates.add(key)
             word(0x16, (1 << 25) | (2 << 21) | slot | (ab << 10) | (land << 11))
-    launch = config['launch']
-    reset_edge = uint(launch['reset_release_pin_edge'], 48, 'reset release pin edge')
-    ks = [uint(x, 48, 'KS pin edge') for x in launch['ks_pin_edges']]
-    phase = receipt['seqhost_input_clock']['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4']
-    if not ks or any(x <= reset_edge or (x-reset_edge) % 4 != phase for x in ks):
-        raise ValueError('KS pin date violates selected issuer phase relative to reset release')
-    for index, (a, b) in enumerate(zip(ks, ks[1:])):
-        if b-a != gaps[index % len(gaps)]:
-            raise ValueError('KS pin dates differ from explicit slot gap calendar')
+    launch = config.get('launch')
+    if launch is None:
+        if not allow_unbooked_launch:
+            raise ValueError('actual launch booking required unless local encoding is explicitly unbooked')
+        if 'seqhost_input_clock' not in receipt:
+            raise ValueError('unbooked local encoding still requires actual reset/KS phase contract')
+    else:
+        reset_edge = uint(launch['reset_release_pin_edge'], 48, 'reset release pin edge')
+        ks = [uint(x, 48, 'KS pin edge') for x in launch['ks_pin_edges']]
+        phase = receipt['seqhost_input_clock']['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4']
+        if not ks or any(x <= reset_edge or (x-reset_edge) % 4 != phase for x in ks):
+            raise ValueError('KS pin date violates selected issuer phase relative to reset release')
+        for index, (a, b) in enumerate(zip(ks, ks[1:])):
+            if b-a != gaps[index % len(gaps)]:
+                raise ValueError('KS pin dates differ from explicit slot gap calendar')
     return words, dict(schema='opentallas.s81.seqhost_native_boot_emission.v1',
         status='ENCODED', words=len(words), slots=slots, kit_issue=kit,
-        return_latency=rl, launch=launch, pin_event_convention=receipt['edge_convention'],
+        return_latency=rl, launch=launch, launch_booked=launch is not None,
+        pin_event_convention=receipt['edge_convention'],
+        required_relative_KS_phase=receipt['seqhost_input_clock']['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4'],
         source_sha256=receipt['source_sha256'], params=master['params'], defines=master['defines'],
         obligations=['boot all words while actual tracker unarmed and no outstanding starts',
                      'caller books actual host-word transport and reset release pin event',

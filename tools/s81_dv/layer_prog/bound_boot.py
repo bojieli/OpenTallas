@@ -20,6 +20,18 @@ def digest(obj):
     return hashlib.sha256(json.dumps(obj,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 
+def seqhost_phase_contract(receipt):
+    """Read the two existing source receipt key versions without a phase default."""
+    current=receipt.get('seqhost_input_clock');prior=receipt.get('input_clock')
+    if current is not None and prior is not None and current!=prior:
+        raise ValueError('conflicting source-qualified seqhost reset/KS phase contracts')
+    contract=current if current is not None else prior
+    key='accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4'
+    if not isinstance(contract,dict) or type(contract.get(key))is not int or not 0<=contract[key]<4:
+        raise ValueError('source-qualified seqhost reset/KS phase contract missing or outside mod4')
+    return contract
+
+
 def compose(program, control, timing, cadence, *, mux_config=None, host_booking=None, seqhost_receipt=None):
     """Return manifest and named concrete HOST word arrays; never writes SEAL.
 
@@ -49,7 +61,8 @@ def compose(program, control, timing, cadence, *, mux_config=None, host_booking=
             raise ValueError('reset-phase receipt source identity differs from selected control timing')
         if seqhost_receipt['masters']['dsdv_hostb_seqhost_mux']!=master:
             raise ValueError('reset-phase receipt seqhost timing/variant differs')
-        timing=dict(timing,seqhost_input_clock=seqhost_receipt['seqhost_input_clock'],
+        phase_contract=seqhost_phase_contract(seqhost_receipt)
+        timing=dict(timing,seqhost_input_clock=phase_contract,
                     edge_convention=seqhost_receipt['edge_convention'])
     keys=['f_ks_pin_event_to_issuer_accept','f_ks_pin_event_to_age0_command',
           'calendar_command_to_vo_n','calendar_command_to_vo_s','calendar_command_to_cw']

@@ -174,3 +174,35 @@ GAINbeforeHLOADstore,prematureretire,encodedPWcorruption,wrongboundarrivalage,
 wrongGAINpayload. Record entry_loads_L14.json, one complete page example and
 actual runners loads/recheck_loads.py here; allpages+HOSTfiles intel1
 codex-ds-entry-current-1030/load_pages_L14. Prior32write-onlypage result preserved.
+
+Native local page KIT/END and seal protocol (1030 05:38 PDT)
+----------------------------------------------------------
+entry_page_protocol encodes real existing KIT/END/BEGIN/SEAL plus all35explicit
+MU0x15/0x16 words. All8eventrows explicitly kind1/replaydisabled in bothslots;
+entry pages use only VN/VScommands, so no MUevent replay traffic is needed.
+KIT waits until all actual page VNstores and normal ACKs have completed;
+END follows the selected KIT return (measured returnKIT+3fromage0) by1edge.
+40pages104rows/102templates; KIT338..482,END342..486. Total18080HOSTwords,
+90400local5edge reservation; delta+1720words/+8600edges vs priorunsealedloads.
+All normal command/data payloads retained. Six softwareprotocolcontrols refused.
+Headerstage0/localphase0 matches the already measured selected source; actual
+KSphase is3mod4 from resetreleasepin. No absolute ROOTphase or KSdate invented.
+
+Concrete boot adapter failure found: actual selected receipt uses input_clock,
+but BoundBoot required seqhost_input_clock and KeyErrored. Compatibility helper
+accepts either established key, requires exactagreement if bothpresent and
+rejects missing/malformed/conflicting/outofrange/bool phases;6controlsPASS.
+No defaultphase. Failure before any protocoloutput retained in original runner
+protocol_input_clock_key_failed.py on intel1 and diagnosed here.
+NativeBoot's default still requires actual launch bookings; only explicit
+allow_unbooked_launch=True permits local byteencoding with launch=None.
+
+Actual selected native seqhost+real SRAM receives452HOSTwords/104row actual
+page0 at833ps/fiveedgeHOSTcadence, no KSlaunch. Unit165539 PASS: actualissuer
+sealed1/code0; SEALphase corruption rejected sealed0/code3 and fatalstatus1.
+This is one actual local SEAL gate; all40pages encoded/datechecked separately,
+not40runtime executions and not globalprogrammeadoption. entry_seal.json exact
+productionhashes/bench/HOSTinput and logs retained. Global HOST/reset/KS pin
+bookings + matching incoming descriptors stillabsent, page reload mustfollow
+END/nooutstandingstarts, nophysicalSTART/fulltokenclaim. Previous unsealed
+receipts are retained unmodified. Ownerfield requests sent HEAD/S81 and logged.
