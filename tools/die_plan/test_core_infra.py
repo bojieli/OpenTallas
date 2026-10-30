@@ -402,3 +402,12 @@ ot_ci_entry entry 1 2
     assert "-layer M5" in lines[0] and "-pin_size {0.048 0.48}" in lines[0]
     assert "-layer M5" in lines[1] and "-pin_size {0.032 0.192}" in lines[1]
     assert "-layer M7" in lines[2] and "-pin_size {0.032 0.192}" in lines[2]
+
+
+def test_clock_ft_overlap_uses_actual_larger_shape():
+    s = sample()
+    ports = s["pushdown"]["islands"][0]["ft_ports"]
+    # .30um spacing clears the old generic .192um shape, but clocks are .48um.
+    ports[1]["xy_um"] = [ports[0]["xy_um"][0], ports[0]["xy_um"][1] + .30]
+    with pytest.raises(CI.InfraError, match="pin shapes overlap"):
+        CI.compile_slice(s)
