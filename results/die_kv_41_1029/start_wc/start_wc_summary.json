@@ -1,0 +1,23 @@
+{
+ "counts": {
+  "stages": 1528,
+  "flops": 10530,
+  "die_inputs": 87,
+  "die_outputs": 157,
+  "direct_ports": 2,
+  "max_cell_to_stage_um": 8.3700000000008
+ },
+ "schema": "ot_start_stages/1",
+ "root_settle": 64,
+ "stages": 1528,
+ "inputs": {
+  "bind": "die-kv-40-1029/kv40/eW_sidecar.json count_aligned (+virtual flag on st: regions)",
+  "proof": "trial_tap_arrivals --node-cell-names on clk_w243 tree + out_w243_{TT,FF}",
+  "ctree": "die-kv-40-1029/clk_w243/kit/clock",
+  "plan": "kv40/event28w/plan_c.json",
+  "flags": "--reset-wave --path-encoding base36",
+  "top": "bindWc/rtl/qwen_kvsys_bound_top.sv",
+  "reset_port": "pad_por_n"
+ },
+ "path": "intel1:/srv/opentallas-scratch2/claude/die-kv-41-1029/start_wc"
+}

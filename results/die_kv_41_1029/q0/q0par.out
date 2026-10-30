@@ -1,0 +1,21 @@
+clkbuf_leaf_428_ck[0]_regs
+  clkbuf_leaf_428_ck[0]_regs BUFx24_ASAP7_75t_R @(65.8,5.7) <- net clknet_5_4_0_ck[0]_regs fanout 10 wire 193.4um
+  clkbuf_5_4_0_ck[0]_regs BUFx24_ASAP7_75t_R @(58.5,56.7) <- net clknet_3_1_0_ck[0]_regs fanout 4 wire 68.9um
+  clkbuf_3_1_0_ck[0]_regs BUFx24_ASAP7_75t_R @(64.2,69.7) <- net clknet_2_0_0_ck[0]_regs fanout 2 wire 61.8um
+  clkbuf_2_0_0_ck[0]_regs BUFx24_ASAP7_75t_R @(42.9,83.2) <- net clknet_1_0_0_ck[0]_regs fanout 2 wire 50.3um
+  clkbuf_1_0_0_ck[0]_regs BUFx24_ASAP7_75t_R @(72.7,85.9) <- net clknet_0_ck[0]_regs fanout 2 wire 71.1um
+  clkbuf_0_ck[0]_regs BUFx24_ASAP7_75t_R @(107.5,85.9) <- net ck[0]_regs fanout 1 wire 1.7um
+clkbuf_leaf_431_ck[0]_regs
+  clkbuf_leaf_431_ck[0]_regs BUFx24_ASAP7_75t_R @(46.4,7.0) <- net clknet_5_1_0_ck[0]_regs fanout 15 wire 113.4um
+  clkbuf_5_1_0_ck[0]_regs BUFx24_ASAP7_75t_R @(11.8,43.7) <- net clknet_3_0_0_ck[0]_regs fanout 4 wire 75.9um
+  clkbuf_3_0_0_ck[0]_regs BUFx24_ASAP7_75t_R @(24.7,61.0) <- net clknet_2_0_0_ck[0]_regs fanout 2 wire 61.8um
+  clkbuf_2_0_0_ck[0]_regs BUFx24_ASAP7_75t_R @(42.9,83.2) <- net clknet_1_0_0_ck[0]_regs fanout 2 wire 50.3um
+  clkbuf_1_0_0_ck[0]_regs BUFx24_ASAP7_75t_R @(72.7,85.9) <- net clknet_0_ck[0]_regs fanout 2 wire 71.1um
+  clkbuf_0_ck[0]_regs BUFx24_ASAP7_75t_R @(107.5,85.9) <- net ck[0]_regs fanout 1 wire 1.7um
+clkbuf_leaf_295_ck[0]_regs
+  clkbuf_leaf_295_ck[0]_regs BUFx24_ASAP7_75t_R @(150.2,74.8) <- net clknet_5_29_0_ck[0]_regs fanout 12 wire 58.7um
+  clkbuf_5_29_0_ck[0]_regs BUFx24_ASAP7_75t_R @(143.5,75.1) <- net clknet_3_7_0_ck[0]_regs fanout 4 wire 78.7um
+  clkbuf_3_7_0_ck[0]_regs BUFx24_ASAP7_75t_R @(153.8,97.2) <- net clknet_2_3_0_ck[0]_regs fanout 2 wire 54.4um
+  clkbuf_2_3_0_ck[0]_regs BUFx24_ASAP7_75t_R @(129.9,81.0) <- net clknet_1_1_0_ck[0]_regs fanout 2 wire 49.0um
+  clkbuf_1_1_0_ck[0]_regs BUFx24_ASAP7_75t_R @(136.5,79.1) <- net clknet_0_ck[0]_regs fanout 2 wire 71.1um
+  clkbuf_0_ck[0]_regs BUFx24_ASAP7_75t_R @(107.5,85.9) <- net ck[0]_regs fanout 1 wire 1.7um
