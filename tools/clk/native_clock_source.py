@@ -257,11 +257,20 @@ def build(target, netlist, tree_path, output, root_xy=None, legalize=False, site
     return receipt
 
 
-def main(argv=None):
-    p=argparse.ArgumentParser(description=__doc__)
+def add_arguments(p):
     for key in ('target','netlist','tree','out'):p.add_argument('--'+key,required=True,type=Path)
     p.add_argument('--legalize-sites',action='store_true');p.add_argument('--site-space',type=Path);p.add_argument('--clock-tcl',type=Path)
     p.add_argument('--root-xy',type=float,nargs=2,metavar=('X_UM','Y_UM'),help='declared PG-clear physical root pin; clock cell sites stay fixed')
-    a=p.parse_args(argv);print(json.dumps(build(a.target,a.netlist,a.tree,a.out,root_xy=a.root_xy,legalize=a.legalize_sites,site_space=a.site_space,clock_tcl=a.clock_tcl)))
+
+
+def run(a):
+    print(json.dumps(build(a.target,a.netlist,a.tree,a.out,root_xy=a.root_xy,
+                          legalize=a.legalize_sites,site_space=a.site_space,clock_tcl=a.clock_tcl)))
+    return 0
+
+
+def main(argv=None):
+    p=argparse.ArgumentParser(description=__doc__);add_arguments(p)
+    return run(p.parse_args(argv))
 
 if __name__=='__main__':main()
