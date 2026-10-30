@@ -1,0 +1,133 @@
+{
+ "schema": "opentallas.s81_core_families.r13",
+ "rule": "OWNER 10-27 type reduction + automated work; COORD RULING S81-CORE-LAT-R12: one scripted path, one template per family",
+ "families": [
+  {
+   "name": "ves_lat",
+   "members": [
+    "ot_s81sl_ve_s"
+   ],
+   "leaf_target": 24,
+   "smax": 70.0,
+   "leaf_limit": 20.0,
+   "wire": "std",
+   "reassign": true,
+   "reassign_cap": 1.0,
+   "members_why": "DIE-S81-32 C: symmetric lattice 2x4^4x2 = 1024 leaves of 9.72x5.265 um on the 155.52x336.96 core (QC-A0-KITS-8 form)",
+   "menu": [
+    1,
+    2,
+    4,
+    8,
+    16
+   ],
+   "lattice": {
+    "levels": [
+     [
+      [
+       0,
+       -84.24
+      ],
+      [
+       0,
+       84.24
+      ]
+     ],
+     [
+      [
+       -38.88,
+       -42.12
+      ],
+      [
+       38.88,
+       -42.12
+      ],
+      [
+       -38.88,
+       42.12
+      ],
+      [
+       38.88,
+       42.12
+      ]
+     ],
+     [
+      [
+       -19.44,
+       -21.06
+      ],
+      [
+       19.44,
+       -21.06
+      ],
+      [
+       -19.44,
+       21.06
+      ],
+      [
+       19.44,
+       21.06
+      ]
+     ],
+     [
+      [
+       -9.72,
+       -10.53
+      ],
+      [
+       9.72,
+       -10.53
+      ],
+      [
+       -9.72,
+       10.53
+      ],
+      [
+       9.72,
+       10.53
+      ]
+     ],
+     [
+      [
+       -4.86,
+       -5.265
+      ],
+      [
+       4.86,
+       -5.265
+      ],
+      [
+       -4.86,
+       5.265
+      ],
+      [
+       4.86,
+       5.265
+      ]
+     ],
+     [
+      [
+       0,
+       -2.6325
+      ],
+      [
+       0,
+       2.6325
+      ]
+     ]
+    ]
+   }
+  }
+ ],
+ "other_generators": {
+  "note": "kits from the repin (kr_) / hcore (hc_) generators: need the core_infra_cts.tcl hook before a 12.3 slice can build",
+  "members": [
+   "dsdv_eng_rr_e",
+   "dsdv_eng_rr_h0",
+   "dsfd_su_t_rxsf",
+   "dsdv_idx_tx_n32",
+   "ot_s81c_attn_hcore",
+   "dsfd_bf_front_roots"
+  ]
+ }
+}
