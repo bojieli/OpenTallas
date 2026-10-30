@@ -47,6 +47,13 @@ The current frame file records old per-core NK insertion 665.8/576.5ps and NL
 not old core insertion. Exact safe-tree binding and actual input slew/pricing
 remain with the die owner; no SDC adoption or compensation has occurred.
 
+Documentary fields inherited in the unfrozen slice still mention centre-entry,
+TritonCTS fallback and an M9-to-M5 island stack. Those fields did not drive the
+actual explicit core_tree installation and are not a frozen routing budget.
+Normalize them in the root-owned adoption event; qualified source bytes remain
+preserved here. The report helper also retains an old UNBALANCED scope label;
+current pass/fail is stated by the actual related-pair and compiler outputs.
+
 Shared source dependencies are FLOW electrical compiler dd97876d3, deferred-set
 performance fix f3f3e2d60, and private late-hook row-cache e6a71788c. The latter
 was replayed against every completed NL placement with zero mismatches and used
