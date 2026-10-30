@@ -1,0 +1,23 @@
+{
+  "reviewer": "CODEX",
+  "date": "2026-10-29 18:56 PDT",
+  "source": "5d1d6e87018",
+  "verdict": "SYNTH_ONLY",
+  "kits": [
+    {
+      "kit": "dsfd_cfifo_crs4_cfix4",
+      "image": "/srv/opentallas-scratch/claude/codex-s81ck-fix/review/crs4.png",
+      "findings": "Viewed: compact 280.8x69.12 core, aligned N/S buses, <=5pins/um, no macros/walls. Multiple root entry pins retained. Placement needs exact six-entry clock review after synth; no route authorized."
+    },
+    {
+      "kit": "dsdv_gunit_l5_cfix4",
+      "image": "/srv/opentallas-scratch/claude/codex-s81ck-fix/review/l5.png",
+      "findings": "Viewed:12 SRAMS separated by broad open channels, no halo overlap, >=11.2um E margin, <=5.5pins/um. Legacy W M4 clock conflicts with M5 entry rule; hold physical work for die-owner pin event."
+    },
+    {
+      "kit": "dsfd_bf_front_roots_cfix4",
+      "image": "/srv/opentallas-scratch/claude/codex-s81ck-fix/review/bfr.png",
+      "findings": "Viewed: narrow116.64x198.72 no macros; W/E wide buses opposite each other; N density9.5pins/um and S6.5 need <=6 rule/spacing correction before P&R. Hold physical; synth/LEC only."
+    }
+  ]
+}
