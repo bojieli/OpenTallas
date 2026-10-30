@@ -46,7 +46,10 @@ def pins():
                 out.append(dict(name=bus if width == 1 else f"{bus}[{bit}]",
                                 x=x, y=y, layer="M4" if face in "WE" else "M5"))
                 k += 1
-    for name, delta in (("rst_n", 0), ("clk", 0.096)):
+    # The 0.048-um clock entry is above the ASAP7 M5 0.025-um
+    # width threshold: parallel spacing is 0.072, not 0.024. Keep
+    # clk fixed; shift only reset one M5 track west (DRC r2 it20).
+    for name, delta in (("rst_n", -0.048), ("clk", 0.096)):
         x = round((w / 2 - 0.024) / 0.048) * 0.048 + 0.024 + delta
         out.append(dict(name=name, x=round(x, 4), y=h / 2, layer="M5"))
     return out
