@@ -1,0 +1,47 @@
+{
+  "scope": "PRIVATE R25newstation reset-localization PREP; not adopted",
+  "changes": [
+    {
+      "consumer": "u_ist_unit_i0_0.rst_n",
+      "old_reset": "rst_n",
+      "old_node": "rst_n_t19",
+      "new_reset": "rst_n_t40",
+      "new_node": "rst_n_t40",
+      "depth": 7,
+      "clock_net": "clk",
+      "cycles_added": 0
+    }
+  ],
+  "old_source_sha256": "c242f9eeb80bc47aa551c01b2ed6ed1df10d3eab1e76eb2d47b7a3d9a1a43be3",
+  "new_source_sha256": "9e10a1efa921b490f0f4ba7497a4a280ebf268a11eeab4166c9a05fe19023631",
+  "declaration": [
+    {
+      "instance": "u_ist_unit_i0_0",
+      "pin": "rst_n",
+      "old_reset": "rst_n",
+      "new_reset": "rst_n_t40",
+      "clock_net": "clk"
+    }
+  ],
+  "added_flops": 0,
+  "added_cycles": 0,
+  "old_reset_point_um": [
+    1262.52,
+    766.8
+  ],
+  "new_reset_point_um": [
+    1628.64,
+    335.88
+  ],
+  "station_point_um": [
+    1440.08,
+    328.32
+  ],
+  "old_point_reach_um": 616.04,
+  "new_point_reach_um": 196.12,
+  "holds": [
+    "fullINmaterializationrecipeintegration",
+    "actualstationFFrowmatrix/clock/site/STA",
+    "R25lane+1adoption/globaldatesheld"
+  ]
+}
