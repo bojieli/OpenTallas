@@ -1,0 +1,617 @@
+{
+  "slw_st_b_v1__cl6357f1cc": {
+    "module": "slw_st_b_v1__cl6357f1cc",
+    "macros": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cl6357f1cc/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "sle_stm_v2__cl7b3062fa": {
+    "module": "sle_stm_v2__cl7b3062fa",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "sle_stm_v2__cl7b3062fa/u_bound.u_core.u_tload.u_ld.m3",
+      "sle_stm_v2__cl7b3062fa/u_bound.u_core.u_tload.u_ld.m2",
+      "sle_stm_v2__cl7b3062fa/u_bound.u_core.u_tload.u_ld.m1",
+      "sle_stm_v2__cl7b3062fa/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
+    "module": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "slw_stm_v1__cl05fc43f7__cl2086fa2c/u_bound.u_core.u_tload.u_ld.m3",
+      "slw_stm_v1__cl05fc43f7__cl2086fa2c/u_bound.u_core.u_tload.u_ld.m2",
+      "slw_stm_v1__cl05fc43f7__cl2086fa2c/u_bound.u_core.u_tload.u_ld.m1",
+      "slw_stm_v1__cl05fc43f7__cl2086fa2c/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "slw_stm_v1__cle34a73c3": {
+    "module": "slw_stm_v1__cle34a73c3",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "slw_stm_v1__cle34a73c3/u_bound.u_core.u_tload.u_ld.m3",
+      "slw_stm_v1__cle34a73c3/u_bound.u_core.u_tload.u_ld.m2",
+      "slw_stm_v1__cle34a73c3/u_bound.u_core.u_tload.u_ld.m1",
+      "slw_stm_v1__cle34a73c3/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "slw_st_a_v1__clfc5867a6": {
+    "module": "slw_st_a_v1__clfc5867a6",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clfc5867a6/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "coll_s": {
+    "module": "qfd_qc_coll_s_part",
+    "macros": {
+      "ot_sram_1r1w2c_64x546_m1": 4,
+      "ot_sram_1r1w_64x512_m1_r2c2": 8
+    },
+    "instances": [
+      "qfd_qc_coll_s_part/u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_3_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_3_u_face.u_rx.u_mem",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_3_u_face.u_tx.u_mem",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_4_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_4_u_face.u_rx.u_mem",
+      "qfd_qc_coll_s_part/u_bound.u_g_face_4_u_face.u_tx.u_mem"
+    ]
+  },
+  "sle_st_b_v2__cl14c98df5": {
+    "module": "sle_st_b_v2__cl14c98df5",
+    "macros": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__cl14c98df5/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "coll_core": {
+    "module": "qfd_qc_coll_core_part",
+    "macros": {
+      "ot_sram_1r1w2c_64x546_m1": 4,
+      "ot_sram_1r1w_32x546_m1": 4,
+      "ot_sram_1r1w_512x128_m4_r2c2": 5,
+      "ot_sram_1r1w_64x512_m1_r2c2": 8
+    },
+    "instances": [
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_0_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_0_u_face.u_rx.u_mem",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_0_u_face.u_tx.u_mem",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[2].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_1_u_face.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_1_u_face.u_rx.u_mem",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_g_face_1_u_face.u_tx.u_mem",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[0].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[1].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[2].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[3].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.g_sring[4].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[1].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.u_pring.g_b[0].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[1].u_m",
+      "qfd_qc_coll_core_part/u_bound.u_io_collective_u_io_u_collective.u_coll.u_rring.g_b[0].u_m"
+    ]
+  },
+  "glue": {
+    "module": "qfd_qc_glue_part",
+    "macros": {
+      "ot_rom_4096x72_m8": 3,
+      "ot_sram_1r1w_64x512_m1_r2c2": 1
+    },
+    "instances": [
+      "qfd_qc_glue_part/u_bound.u_embed_prov.store.codes",
+      "qfd_qc_glue_part/u_bound.u_sys_face.u_ot_pr_core.u_rom",
+      "qfd_qc_glue_part/u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_tx_rom",
+      "qfd_qc_glue_part/u_bound.u_sys_face.u_ot_pr_core.u_cseq.u_rx_rom"
+    ]
+  },
+  "slw_st_a_v2__cl9f076a5c": {
+    "module": "slw_st_a_v2__cl9f076a5c",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__cl9f076a5c/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "sle_st_b_v2__clfde1249e": {
+    "module": "sle_st_b_v2__clfde1249e",
+    "macros": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_b_v2__clfde1249e/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "slw_st_b_v1__cle6023ec2": {
+    "module": "slw_st_b_v1__cle6023ec2",
+    "macros": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_b_v1__cle6023ec2/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "sle_st_a_v1__cl989804f6__cled3c1d7b": {
+    "module": "sle_st_a_v1__cl989804f6__cled3c1d7b",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cled3c1d7b/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "slw_st_a_v1__clb036e152": {
+    "module": "slw_st_a_v1__clb036e152",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "slw_st_a_v1__clb036e152/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v1__clb036e152/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "sle_st_a_v2": {
+    "module": "qfd_qc_sle_st_a",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "qfd_qc_sle_st_a/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_a/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "sle_st_b_v1": {
+    "module": "qfd_qc_sle_st_b",
+    "macros": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "qfd_qc_sle_st_b/u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_sle_st_b/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "slw_stm_v2__cl1ca9c415": {
+    "module": "slw_stm_v2__cl1ca9c415",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "slw_stm_v2__cl1ca9c415/u_bound.u_core.u_tload.u_ld.m3",
+      "slw_stm_v2__cl1ca9c415/u_bound.u_core.u_tload.u_ld.m2",
+      "slw_stm_v2__cl1ca9c415/u_bound.u_core.u_tload.u_ld.m1",
+      "slw_stm_v2__cl1ca9c415/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "slw_st_b_v2": {
+    "module": "qfd_qc_slw_st_b",
+    "macros": {
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "qfd_qc_slw_st_b/u_bound.u_u_r4.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r4.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r4.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r4.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r4.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r5.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r5.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r5.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r5.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r5.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r6.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r6.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r6.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r6.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r6.u_sks.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r7.u_scale_wait.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r7.u_h9.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r7.u_hb.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r7.u_skn.u_m.g_bank[0].u_m",
+      "qfd_qc_slw_st_b/u_bound.u_u_r7.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "sle_st_a_v1__cl989804f6__cl18eece69": {
+    "module": "sle_st_a_v1__cl989804f6__cl18eece69",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl989804f6__cl18eece69/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "slw_st_a_v2__clf4365a62": {
+    "module": "slw_st_a_v2__clf4365a62",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "slw_st_a_v2__clf4365a62/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  },
+  "coll_n": {
+    "module": "qfd_qc_coll_n_part",
+    "macros": {
+      "ot_sram_1r1w2c_64x546_m1": 2,
+      "ot_sram_1r1w_64x512_m1_r2c2": 4
+    },
+    "instances": [
+      "qfd_qc_coll_n_part/u_bound.u_core.g_codec.u_codec.g_bank[0].u_store.u_sram",
+      "qfd_qc_coll_n_part/u_bound.u_core.g_codec.u_codec.g_bank[1].u_store.u_sram",
+      "qfd_qc_coll_n_part/u_bound.u_core.g_codec.u_codec.g_bank[2].u_store.u_sram",
+      "qfd_qc_coll_n_part/u_bound.u_core.g_codec.u_codec.g_bank[3].u_store.u_sram",
+      "qfd_qc_coll_n_part/u_bound.u_core.u_rx.u_mem",
+      "qfd_qc_coll_n_part/u_bound.u_core.u_tx.u_mem"
+    ]
+  },
+  "sle_stm_v1__cl27746664": {
+    "module": "sle_stm_v1__cl27746664",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "sle_stm_v1__cl27746664/u_bound.u_core.u_tload.u_ld.m3",
+      "sle_stm_v1__cl27746664/u_bound.u_core.u_tload.u_ld.m2",
+      "sle_stm_v1__cl27746664/u_bound.u_core.u_tload.u_ld.m1",
+      "sle_stm_v1__cl27746664/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "slw_stm_v3": {
+    "module": "qfd_qc_slw_stm",
+    "macros": {
+      "ot_rom_4096x266_m8": 4
+    },
+    "instances": [
+      "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m3",
+      "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m2",
+      "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m1",
+      "qfd_qc_slw_stm/u_bound.u_core.u_tload.u_ld.m0"
+    ]
+  },
+  "tt_ctlm": {
+    "module": "qfd_qc_tt_ctlm_part",
+    "macros": {
+      "ot_rom_4096x266_m8": 2,
+      "ot_rom_4096x72_m8": 3,
+      "ot_sram_1r1w_32x128_m1": 6,
+      "ot_sram_1r1w_64x512_m1_r2c2": 8
+    },
+    "instances": [
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24525",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24526",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24527",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24528",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24529",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24530",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24531",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_hr.u_24532",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_m[1].u_pm",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_m[0].u_pm",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_fifo[3].u_fifo",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_fifo[2].u_fifo",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_fifo[1].u_fifo",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_fifo[0].u_fifo",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m1",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.u_cal.g_calrom.u_rom.m0",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.g_op.u_leaf.g_op.u_rom",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom2",
+      "qfd_qc_tt_ctlm_part/u_bound.u_core.u_gi.g_op.u_leaf.g_op.g_banked.u_rom1"
+    ]
+  },
+  "sle_st_a_v1__cl67389ecd": {
+    "module": "sle_st_a_v1__cl67389ecd",
+    "macros": {
+      "ot_sram_1r1w_128x256_m1_r2c2": 4,
+      "ot_sram_1r1w_32x64_m1": 20
+    },
+    "instances": [
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_btab.u_bt.u_core.g_btb[3].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_btab.u_bt.u_core.g_btb[2].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_btab.u_bt.u_core.g_btb[1].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_btab.u_bt.u_core.g_btb[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r0.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r0.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r0.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r0.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r0.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r1.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r1.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r1.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r1.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r1.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r2.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r2.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r2.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r2.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r2.u_sks.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r3.u_scale_wait.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r3.u_h9.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r3.u_hb.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r3.u_skn.u_m.g_bank[0].u_m",
+      "sle_st_a_v1__cl67389ecd/u_bound.u_u_r3.u_sks.u_m.g_bank[0].u_m"
+    ]
+  }
+}
