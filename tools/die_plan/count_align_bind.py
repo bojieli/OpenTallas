@@ -455,6 +455,22 @@ def reader_start_depth(plan, tn):
     return depth
 
 
+def writer_start_depth(plan, tn, bus=None):
+    """Optional forwarded-writer START transport (W1, DIE-HEAD-38): W registered stages between the sender's safe
+    start_d and its FSTART face flop on the listed output buses only. bus=None -> the declared W (0 if absent)."""
+    cfg = plan["partition_types"][tn].get("clock", {}).get("landing_writer_start")
+    if cfg is None:
+        return 0
+    if not isinstance(cfg, dict):
+        raise BindError(f"{tn}: landing_writer_start must be an object")
+    depth = cfg.get("depth")
+    if isinstance(depth, bool) or not isinstance(depth, int) or depth < 1:
+        raise BindError(f"{tn}: landing_writer_start.depth must be an integer >= 1")
+    if bus is None:
+        return depth
+    return depth if bus in cfg.get("branches", {}) else 0
+
+
 # START-TREE compose slice (DIE-HEAD-11, opt-in by a bind with start_tree="clock"): a child region's start no longer rides
 # a landed data crossing; it arrives on ONE dedicated start pin of its origin partition (cland_tstart_in), launched
 # from the parent origin partition's cland_tstart_out (= its cland_start, one pin per partition, fanned out at the die
@@ -488,7 +504,11 @@ def strap_ties(ca, plan):
             raise BindError(f"strap ties: two count-aligned crossings land on {q}.{bus}")
         # Only the reader count starts R edges later.  c_new-K_new equals
         # c_old-K_old exactly when K_new=K_old-R (modulo the ring count width).
-        inst_bus[q][bus] = dict(K=int(c["K"]) - reader_start_depth(plan, ptype[q]),
+        # A sender writer START delayed W edges (landing_writer_start) writes W edges later: K_new=K_old+W-R
+        # (W1/R proof results/die_head_36_1029/writer_r1_proof, 4572 cases).
+        s = p["src"]
+        inst_bus[q][bus] = dict(K=int(c["K"]) - reader_start_depth(plan, ptype[q])
+                                + writer_start_depth(plan, ptype[s["part"]], s["bus"]),
                                depth=int(c["depth"]), port=pid, tree=bool(c["tree"]))
     cparts = ca.get("parts")
     role = {}

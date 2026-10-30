@@ -1,0 +1,35 @@
+{
+  "source_clock_nets": 44591,
+  "fixed_changed": 0,
+  "fixed_missing": 0,
+  "fixed_sig_not_clock": 0,
+  "changed_sample": [],
+  "new_clock_nets": 6532,
+  "new_clock_class": {
+    "('SIGNAL', False, False, False)": 6532
+  },
+  "new_clock_sample": [
+    "start_provider_n53060",
+    "start_provider_n52714",
+    "start_provider_n54419",
+    "start_provider_n56849",
+    "start_provider_n57416",
+    "start_provider_n58001",
+    "start_provider_n56549",
+    "start_provider_n53059",
+    "start_provider_n56121",
+    "start_provider_n54078",
+    "start_provider_n56106",
+    "start_provider_n55673",
+    "start_provider_n56060",
+    "start_provider_n54401",
+    "start_provider_n52502",
+    "start_provider_n53797",
+    "start_provider_n53188",
+    "start_provider_n55201",
+    "start_provider_n54912",
+    "start_provider_n57494"
+  ],
+  "new_clock_wire_or_swire_changed": 0,
+  "verdict": "FIXED_CLOCK_UNCHANGED"
+}

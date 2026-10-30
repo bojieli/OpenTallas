@@ -1,0 +1,75 @@
+{
+ "corner": "TT",
+ "placed_stages": false,
+ "regions": 313,
+ "missing_taps": 0,
+ "measured_gt150": 73,
+ "refit_resid_gt150": 0,
+ "refit_resid_max": 97.1,
+ "worst": [
+  {
+   "region": "c_W0_bf_11",
+   "taps": 28,
+   "measured": 181.0,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 91.2
+  },
+  {
+   "region": "c_E2_bf_11",
+   "taps": 28,
+   "measured": 181.0,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 91.2
+  },
+  {
+   "region": "c_W2_bf_11",
+   "taps": 28,
+   "measured": 181.0,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 91.2
+  },
+  {
+   "region": "c_E4_bf_11",
+   "taps": 28,
+   "measured": 181.0,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 92.0
+  },
+  {
+   "region": "c_E3_bf_11",
+   "taps": 28,
+   "measured": 180.9,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 91.9
+  },
+  {
+   "region": "c_E0_bn_11",
+   "taps": 28,
+   "measured": 177.2,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 88.0
+  },
+  {
+   "region": "c_W0_bn_11",
+   "taps": 28,
+   "measured": 176.7,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 86.7
+  },
+  {
+   "region": "c_W2_bn_11",
+   "taps": 28,
+   "measured": 176.7,
+   "old_model": 79.2,
+   "refit_model": 133.6,
+   "measured_minus_refit": 86.7
+  }
+ ]
+}

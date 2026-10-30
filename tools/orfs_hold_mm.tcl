@@ -711,13 +711,58 @@ proc ot_grt_clk_insts {} {
   }
   return [dict values $out]
 }
+# FLOW-6 10-30 (HEAD LEP VB/VB2 5_1_grt DPL-0033: 29 overlaps, all flop-flop, under 31269 locked clock-net
+# instances): the GRT hold repair resizes clock SINKS in place (DFFHQNx1 -> x2), so a sink can overlap its neighbour;
+# with both FIRM, detailed_placement cannot legalize them.  A clock-net instance that overlaps another locked or
+# already fixed (FIRM/LOCKED) standard cell stays PLACED: legalization moves only those, and global_route
+# -end_incremental re-routes only their clock pins.  A lock set without overlaps is locked exactly as before.
+proc ot_grt_clk_overlapped {locked} {
+  set lk [dict create]; foreach i $locked { dict set lk $i 1 }
+  set rows [dict create]
+  foreach i [[ord::get_db_block] getInsts] {
+    set mine [dict exists $lk $i]
+    if {!$mine && [$i getPlacementStatus] ni {FIRM LOCKED}} continue
+    set blk 0; catch { set blk [[$i getMaster] isBlock] }
+    if {$blk} continue
+    set b [$i getBBox]
+    dict lappend rows [$b yMin] [list [$b xMin] [$b xMax] $i $mine]
+  }
+  set ov [dict create]
+  dict for {y cells} $rows {
+    set ux {}; set uo {}
+    foreach c [lsort -integer -index 0 $cells] {
+      lassign $c x0 x1 i mine
+      if {$ux ne {} && $x0 < $ux} {
+        if {$mine} { dict set ov $i 1 }
+        if {[lindex $uo 1]} { dict set ov [lindex $uo 0] 1 }
+      }
+      if {$ux eq {} || $x1 > $ux} { set ux $x1; set uo [list $i $mine] }
+    }
+  }
+  return [dict keys $ov]
+}
 if {[info commands ::ot_grt_dpl_orig] eq "" && [info commands ::detailed_placement] ne ""} {
   rename ::detailed_placement ::ot_grt_dpl_orig
   proc ::detailed_placement {args} {
+    # FLOW 10-30: global_route's post-repair call is bare detailed_placement, unlike 3_5 which passes ORFS args.
+    # Honor only the existing opt-in diamond selection here, without changing the default or clock-lock policy.
+    if {[info exists ::env(DETAIL_PLACEMENT_ARGS)] &&
+        "-use_diamond_legalizer" in $::env(DETAIL_PLACEMENT_ARGS) &&
+        "-use_diamond_legalizer" ni $args} {
+      lappend args -use_diamond_legalizer
+    }
     if {![ot_grt_clk_lock_on]} { return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]] }
     set locked [ot_grt_clk_insts]
+    set free [ot_grt_clk_overlapped $locked]
+    if {[llength $free]} {
+      set fd [dict create]; foreach i $free { dict set fd $i 1 }
+      set locked [lmap i $locked { if {[dict exists $fd $i]} continue; set i }]
+    }
     foreach i $locked { $i setPlacementStatus FIRM }
     puts "OT_GRT_CLK_LOCK: [llength $locked] clock-net instances FIRM during detailed_placement"
+    if {[llength $free]} {
+      puts "OT_GRT_CLK_LOCK: [llength $free] overlapping clock-net instances left PLACED for legalization (in-place resized sinks): [lrange [lmap i $free {$i getName}] 0 9][expr {[llength $free] > 10 ? " ..." : ""}]"
+    }
     try {
       return [uplevel 1 [list ::ot_grt_dpl_orig {*}$args]]
     } finally {

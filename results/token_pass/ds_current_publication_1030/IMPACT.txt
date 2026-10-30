@@ -1,0 +1,43 @@
+Current sixteen-stop publication transport, 2026-10-30
+
+Measured finite transport coupon: 80/80 unique flagged XB egress words,
+all16 stops gather all80 words =1280 full1024-bit payload comparisons,
+zero stop and native middle-body faults,833ps. Real sixteen rstop_xo bodies,
+real Gunit/BK/seqhost/Eng foreign transport mechanisms and exact current
+registered station ages are composed. Same vehicle current temporal k
+profile fails51egress/38unique/253errors/all16 stopfaults. One payload-bit
+mutant catches33errors. Original failed logs retained.
+
+Proposed scope for approval, NOT EDITED OR ADOPTED:
+One shared ot_s81sl_vq hard-core master gets an opt-in temporal-only map
+k_slot = (k==0 ? 2 : k==1 ? 0 : k==2 ? 1 : k).
+Use k_slot only in the two existing xf_v/xf_s st comparisons. Keep sid,
+input k, m_i, all headers, payload arithmetic, storage and reset unchanged.
+Default profile remains identity. This is a hardware-cycle contract change,
+not a logical leaf/parameter remap: input k also arrives in-band in the
+leaf, so blindly changing its source risks other consumers. No RTL change
+was made while approval is absent. Proposed diff is in proposal.diff.txt.
+
+Impact:80 VQ instances of one hardened master; logical leaves0/1/2 shift
+XQ and XB emission +8/-4/-4edges;3/4 unchanged. Existing output macro-window
+still40edges and last k4 launch unchanged. Every affected static publication
+slot (XQ as well as XB), parent type latency/occupancy record and parent/child
+binding must regenerate once; VQ master must pass lint, payload/date lockstep,
+mutant and physical TT/FF SIGNED before any adoption. Parent/consumer timing
+and calendar need re-evaluation; no automatic claim that parent views remain
+SIGNED. No die lane station/clock/reset/outline/pin geometry change proposed.
+
+Limits: the coupon injects deterministic BF16 payloads at VQ source output,
+with exact rstd-wire+XF-wire+4k relative dates and400edge spacing perSID.
+It does not execute80 native VQ arithmetic producers and does not establish
+that independent perSID releases can be emitted by current XFIN hardware.
+This finite conservative stimulus proves the current physical transport
+mechanisms can carry all80 once their input windows are legal; it is NOT
+an executable full norm/publication calendar, physical START, final-layer
+activation authority, full token pass or revised token-rate claim. The
+previous PDSK[0,0,0,1,0] norm-source candidate remains separately unadopted.
+The current HEAD compiler stays PARTIAL pending actual producer and receiver
+dates. Current event3 bind/clock identities are preserved.
+
+Jobs all terminal: intel1 /srv/opentallas-scratch2/claude/codex-ds-publication-1030
+unit oth-ubuntu-2460695-1793356823 exit0. Source18946602f.

@@ -1,0 +1,876 @@
+{
+ "schema": "opentallas.station_resite.v1",
+ "reach_um": 360.0,
+ "halo_um": 4.32,
+ "types": {
+  "q_b113": {
+   "regs_total": 180,
+   "regs_in_body_halo_before": 36,
+   "regs_in_body_halo_after": 0,
+   "chains_resited": 50,
+   "chains_added_cycles": [
+    {
+     "index": 41,
+     "conn": "bus:L127_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    },
+    {
+     "index": 43,
+     "conn": "bus:L54_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    }
+   ],
+   "cycles_added_total": 2,
+   "failed": [],
+   "worst_cores_before": [
+    [
+     "u_sfucore_Q_opstore_a",
+     36
+    ]
+   ],
+   "rows": [
+    {
+     "index": 1,
+     "conn": "u_sfucore_Q_lane14.sfu_kv_waddr|u_sfucore_Q_lane15",
+     "bits": 24,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 3,
+     "conn": "u_sfucore_Q_lane14.sfu_kv_we|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 4,
+     "conn": "u_sfucore_Q_lane14.sfu_coll|u_sfucore_Q_ctl",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 5,
+     "conn": "u_sfucore_Q_lane14.sfu_fault|u_sfucore_Q_ctl",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 6,
+     "conn": "u_sfucore_Q_lane14.sfu_ro_v|u_sfucore_Q_ctl",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 7,
+     "conn": "u_sfucore_Q_lane14.sfu_ro_x|u_sfucore_Q_ctl",
+     "bits": 32,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 9,
+     "conn": "u_sfucore_Q_lane14.sfu_vi_re|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 14,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_flt|u_sfucore_Q_opstore_b",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 16,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr|u_sfucore_Q_opstore_b",
+     "bits": 120,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 17,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_flt|u_sfucore_Q_opstore_b",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 19,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_flt|u_sfucore_Q_opstore_b",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 20,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_addr|u_sfucore_Q_opstore_b",
+     "bits": 30,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 21,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_v|u_sfucore_Q_opstore_b",
+     "bits": 2,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 22,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_rq|u_sfucore_Q_opstore_b",
+     "bits": 16,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 23,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v|u_sfucore_Q_opstore_b",
+     "bits": 8,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 24,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_rq|u_sfucore_Q_opstore_b",
+     "bits": 16,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 25,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v|u_sfucore_Q_opstore_b",
+     "bits": 8,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 26,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rq|u_sfucore_Q_opstore_a",
+     "bits": 16,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 27,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_addr|u_sfucore_Q_opstore_a",
+     "bits": 120,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 28,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_v|u_sfucore_Q_opstore_a",
+     "bits": 8,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 29,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_rq|u_sfucore_Q_opstore_a",
+     "bits": 16,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 30,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_sw_v|u_sfucore_Q_opstore_a",
+     "bits": 8,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 31,
+     "conn": "u_sfucore_Q_opstore_b.u_output_sr_addr|u_sfucore_Q_opstore_a",
+     "bits": 30,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 32,
+     "conn": "u_sfucore_Q_opstore_b.u_output_sr_v|u_sfucore_Q_opstore_a",
+     "bits": 2,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 33,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_flt|u_sfucore_Q_opstore_a",
+     "bits": 1,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 34,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rd|u_sfucore_Q_opstore_a",
+     "bits": 512,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 35,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_flt|u_sfucore_Q_opstore_a",
+     "bits": 1,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 37,
+     "conn": "u_sfucore_Q_opstore_b.u_output_flt|u_sfucore_Q_opstore_a",
+     "bits": 1,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 38,
+     "conn": "bus:L127_i",
+     "bits": 2056,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 39,
+     "conn": "bus:L47_o",
+     "bits": 2056,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 40,
+     "conn": "bus:L54_i",
+     "bits": 2056,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 41,
+     "conn": "bus:L127_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    },
+    {
+     "index": 42,
+     "conn": "bus:L47_o",
+     "bits": 8,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 43,
+     "conn": "bus:L54_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    },
+    {
+     "index": 44,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 45,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 46,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 47,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x|u_sfucore_Q_lane14",
+     "bits": 32,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 48,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 49,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 50,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 51,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x|u_sfucore_Q_lane15",
+     "bits": 32,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 52,
+     "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 53,
+     "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 54,
+     "conn": "bus:L127_i",
+     "bits": 136,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 55,
+     "conn": "bus:L47_o",
+     "bits": 136,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 56,
+     "conn": "bus:L54_i",
+     "bits": 136,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 57,
+     "conn": "bus:L127_i",
+     "bits": 2248,
+     "old": 7,
+     "final": 7,
+     "added": 0
+    },
+    {
+     "index": 58,
+     "conn": "bus:L47_o",
+     "bits": 2248,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 59,
+     "conn": "bus:L54_i",
+     "bits": 2248,
+     "old": 7,
+     "final": 7,
+     "added": 0
+    }
+   ]
+  },
+  "q_b113__physical_v1": {
+   "regs_total": 180,
+   "regs_in_body_halo_before": 36,
+   "regs_in_body_halo_after": 0,
+   "chains_resited": 50,
+   "chains_added_cycles": [
+    {
+     "index": 41,
+     "conn": "bus:L127_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    },
+    {
+     "index": 43,
+     "conn": "bus:L54_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    }
+   ],
+   "cycles_added_total": 2,
+   "failed": [],
+   "worst_cores_before": [
+    [
+     "u_sfucore_Q_opstore_a",
+     36
+    ]
+   ],
+   "rows": [
+    {
+     "index": 1,
+     "conn": "u_sfucore_Q_lane14.sfu_kv_waddr|u_sfucore_Q_lane15",
+     "bits": 24,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 3,
+     "conn": "u_sfucore_Q_lane14.sfu_kv_we|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 4,
+     "conn": "u_sfucore_Q_lane14.sfu_coll|u_sfucore_Q_ctl",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 5,
+     "conn": "u_sfucore_Q_lane14.sfu_fault|u_sfucore_Q_ctl",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 6,
+     "conn": "u_sfucore_Q_lane14.sfu_ro_v|u_sfucore_Q_ctl",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 7,
+     "conn": "u_sfucore_Q_lane14.sfu_ro_x|u_sfucore_Q_ctl",
+     "bits": 32,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 9,
+     "conn": "u_sfucore_Q_lane14.sfu_vi_re|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 14,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_flt|u_sfucore_Q_opstore_b",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 16,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr|u_sfucore_Q_opstore_b",
+     "bits": 120,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 17,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_flt|u_sfucore_Q_opstore_b",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 19,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_flt|u_sfucore_Q_opstore_b",
+     "bits": 1,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 20,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_addr|u_sfucore_Q_opstore_b",
+     "bits": 30,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 21,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_u_output_sr_v|u_sfucore_Q_opstore_b",
+     "bits": 2,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 22,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_rq|u_sfucore_Q_opstore_b",
+     "bits": 16,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 23,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v|u_sfucore_Q_opstore_b",
+     "bits": 8,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 24,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_rq|u_sfucore_Q_opstore_b",
+     "bits": 16,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 25,
+     "conn": "u_sfucore_Q_opstore_a.x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v|u_sfucore_Q_opstore_b",
+     "bits": 8,
+     "old": 1,
+     "final": 1,
+     "added": 0
+    },
+    {
+     "index": 26,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rq|u_sfucore_Q_opstore_a",
+     "bits": 16,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 27,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_addr|u_sfucore_Q_opstore_a",
+     "bits": 120,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 28,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_sw_v|u_sfucore_Q_opstore_a",
+     "bits": 8,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 29,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_rq|u_sfucore_Q_opstore_a",
+     "bits": 16,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 30,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_sw_v|u_sfucore_Q_opstore_a",
+     "bits": 8,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 31,
+     "conn": "u_sfucore_Q_opstore_b.u_output_sr_addr|u_sfucore_Q_opstore_a",
+     "bits": 30,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 32,
+     "conn": "u_sfucore_Q_opstore_b.u_output_sr_v|u_sfucore_Q_opstore_a",
+     "bits": 2,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 33,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_flt|u_sfucore_Q_opstore_a",
+     "bits": 1,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 34,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_2_u_group_rd|u_sfucore_Q_opstore_a",
+     "bits": 512,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 35,
+     "conn": "u_sfucore_Q_opstore_b.g_operand_3_u_group_flt|u_sfucore_Q_opstore_a",
+     "bits": 1,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 37,
+     "conn": "u_sfucore_Q_opstore_b.u_output_flt|u_sfucore_Q_opstore_a",
+     "bits": 1,
+     "old": 4,
+     "final": 4,
+     "added": 0
+    },
+    {
+     "index": 38,
+     "conn": "bus:L127_i",
+     "bits": 2056,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 39,
+     "conn": "bus:L47_o",
+     "bits": 2056,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 40,
+     "conn": "bus:L54_i",
+     "bits": 2056,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 41,
+     "conn": "bus:L127_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    },
+    {
+     "index": 42,
+     "conn": "bus:L47_o",
+     "bits": 8,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 43,
+     "conn": "bus:L54_i",
+     "bits": 8,
+     "old": 5,
+     "final": 6,
+     "added": 1
+    },
+    {
+     "index": 44,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_coll|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 45,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_fault|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 46,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_v|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 47,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_14_u_sfu_ro_x|u_sfucore_Q_lane14",
+     "bits": 32,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 48,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_coll|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 49,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_fault|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 50,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_v|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 51,
+     "conn": "u_sfucore_Q_ctl.x_u_core_u_engine_u_arithmetic_u_grid_g_lane_15_u_sfu_ro_x|u_sfucore_Q_lane15",
+     "bits": 32,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 52,
+     "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane14",
+     "bits": 1,
+     "old": 3,
+     "final": 3,
+     "added": 0
+    },
+    {
+     "index": 53,
+     "conn": "u_sfucore_Q_ctl.fault|u_sfucore_Q_lane15",
+     "bits": 1,
+     "old": 2,
+     "final": 2,
+     "added": 0
+    },
+    {
+     "index": 54,
+     "conn": "bus:L127_i",
+     "bits": 136,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 55,
+     "conn": "bus:L47_o",
+     "bits": 136,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 56,
+     "conn": "bus:L54_i",
+     "bits": 136,
+     "old": 5,
+     "final": 5,
+     "added": 0
+    },
+    {
+     "index": 57,
+     "conn": "bus:L127_i",
+     "bits": 2248,
+     "old": 7,
+     "final": 7,
+     "added": 0
+    },
+    {
+     "index": 58,
+     "conn": "bus:L47_o",
+     "bits": 2248,
+     "old": 6,
+     "final": 6,
+     "added": 0
+    },
+    {
+     "index": 59,
+     "conn": "bus:L54_i",
+     "bits": 2248,
+     "old": 7,
+     "final": 7,
+     "added": 0
+    }
+   ]
+  }
+ },
+ "plan_sha256": "ffc87beb3733500d90cc2a52d8204062e7a97c090a180a3617eae6f9dbca2ca2"
+}

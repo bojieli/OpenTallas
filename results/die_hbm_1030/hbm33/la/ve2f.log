@@ -1,0 +1,7 @@
+DEBUG build_one fail NE_hub NE_b102 1046 why no macro-free station chain with 22 stations (hop<= 364)
+DEBUG build_one fail NE_hub NE_b102 523 why no macro-free station chain with 22 stations (hop<= 364)
+DEBUG build_one fail NE_hub NE_b102 349 why no macro-free station chain with 22 stations (hop<= 364)
+DEBUG build_one fail NE_hub NE_b102 262 why no macro-free station chain with 22 stations (hop<= 364)
+{"built": 0, "built_bits": 0, "far": 0, "far_bits": 0, "failed": 1, "by_kind": {"adj": 0, "same": 0, "reverse": 0, "path": 0}, "cycle_mismatch": 0, "macro_hits": 0}
+FAILED {"src": "NE_hub", "dst": "NE_b102", "bits": 1046, "why": "no macro-free station chain with 22 stations (hop<= 364)", "chains": [["NE_hub", "NE_b000", "NE_b010", "NE_b001", "NE_b011", "NE_b002", "NE_b012", "NE_b003", "NE_b013", "NE_io", "NE_b102"]]}
+rc=0

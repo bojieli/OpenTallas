@@ -1,0 +1,32 @@
+{
+ "x5p33": {
+  "nets": 3266,
+  "sig_CLOCK": 3266,
+  "sinks": 3266,
+  "sinkm_CKINVDCx16_ASAP7_75t_R": 3266,
+  "layers_M1/M2": 2717,
+  "layers_M1/M2/M3/M4/M5": 516,
+  "layers_M1/M2/M3/M4": 33,
+  "hpwl_um": {
+   "p50": 0.478,
+   "p90": 1.153,
+   "max": 2.465
+  }
+ },
+ "x16": {
+  "nets": 3266,
+  "sig_CLOCK": 3266,
+  "sinks": 22365,
+  "sinkm_DFFLQNx1_ASAP7_75t_R": 6032,
+  "sinkm_DFFHQNx1_ASAP7_75t_R": 16333,
+  "layers_M1/M2/M3/M4/M5": 789,
+  "layers_M1/M2/M3/M4": 500,
+  "layers_M1/M2": 1977,
+  "hpwl_um": {
+   "p50": 4.86,
+   "p90": 4.86,
+   "max": 84.24
+  }
+ },
+ "examples_M8M9": []
+}

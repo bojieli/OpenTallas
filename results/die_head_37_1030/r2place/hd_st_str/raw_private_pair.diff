@@ -1,0 +1,21 @@
+--- /srv/opentallas-scratch2/claude/die-head-37/r2place/hd_st_str/preflight_orig/ot_s81hd_st_str.sv	2026-10-30 00:16:59.216161657 -0700
++++ /srv/opentallas-scratch2/claude/die-head-37/r2place/hd_st_str/rtl/ot_s81hd_st_str.sv	2026-10-30 00:17:07.629215556 -0700
+@@ -71,7 +71,8 @@
+     wire cland_reader_start_u_i_0;
+     (* keep = "true" *) ot_dp_landing_relay u_cland_reader_start_u_i_0 (.clk(clk), .rst_raw_n(rst_rl_19), .d(cland_start), .q(cland_reader_start_u_i_0));
+     wire cland_reader_start_u_i_1;
+-    (* keep = "true" *) ot_dp_landing_relay u_cland_reader_start_u_i_1 (.clk(clk), .rst_raw_n(rr_t10), .d(cland_reader_start_u_i_0), .q(cland_reader_start_u_i_1));
++    wire rr_t10_rd;  // DIE-HEAD-37 R2 trial: private copy for the reader START stage raw reset (face_guard: rr_t10 drives rst_o_0)
++    (* keep = "true" *) ot_dp_landing_relay u_cland_reader_start_u_i_1 (.clk(clk), .rst_raw_n(rr_t10_rd), .d(cland_reader_start_u_i_0), .q(cland_reader_start_u_i_1));
+     wire landing_ready_u_i, landing_fault_u_i;
+     wire [516:0] cland_ring_u_i;
+     wire [514:0] cland_u_i;
+@@ -284,7 +285,7 @@
+     wire rn_rst_rl_41;
+     ot_dp_rrelay u_srl_41 (.clk(clk), .d(rn_rst_rl_40), .q(rn_rst_rl_41));  // run wire tap None depth 4 @ (471.6, 77.8)
+     wire rr_t10;
+-    ot_dp_rrelay u_rrl_42 (.clk(clk), .d(rst_rl_41), .q(rr_t10));  // raw tap tap 10 depth 5 @ (180.4, 8.6)
++    ot_dp_head_raw_export_pair u_rrl_42 (.clk(clk), .d(rst_rl_41), .q(rr_t10), .export_q(rr_t10_rd));  // raw tap tap 10 depth 5 @ (180.4, 8.6)
+     wire rn_rr_t10;
+     ot_dp_rrelay u_srl_42 (.clk(clk), .d(rn_rst_rl_41), .q(rn_rr_t10));  // run tap tap 10 depth 5 @ (180.4, 8.6)
+     assign rst_o_0 = rr_t10;  // registered reset out (wavefront) at (180.4, 8.6)

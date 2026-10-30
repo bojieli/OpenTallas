@@ -1,0 +1,12 @@
+source fb729ab869d7e519a042a21020b3c044b828d709 (gen_core_kit_legacy.py --module ot_s81sl_cap_ed; run_kit.sh synth 8 4 via ot-run)
+{"kit": "kits/ot_s81sl_cap_ed_cc1", "pins": 136, "clocks": ["clk"], "resets": ["rst_n"], "ins": 6, "outs": 5, "macros": 0, "kit_hash": "8d0e8df022690771"}
+ot-run: -> localhost
+FACE_GUARD PASS top ot_s81sl_cap_ed bits 134 ok 134 fails {} missing 0 extra 0
+FACE_GUARD self_loops 0 other 0 self_loop_only False
+OT_LEGACY_GATE LEC EQUIVALENT
+REG_FANOUT PASS top=ot_s81sl_cap_ed registers=1601 over_64=0 hist={'2-8': 1305, '1': 296}
+make: Nothing to be done for 'synth'.
+ot-run: RAN on localhost (unit oth-ubuntu-840038-1793345691): exit 0
+image openroad/orfs:asap7lock sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 host tolerant-swine start 2026-10-30T00:34:52-07:00
+end 2026-10-30T00:35:42-07:00 rc 0
+LEC EQUIVALENT: ot_s81sl_cap_ed cp=1673 proved=1673 differs=0 undecided=0 1673 compare points proved; 1671 key points matched by name, 2 register pairs / merges and 0 constant registers proved inductively; 0 RTL and 0 gate registers unmatched and unobservable (proved as free inputs); 66 of them reach an RTL X (don't care: equal wherever the RTL is not X) (21.0 s)

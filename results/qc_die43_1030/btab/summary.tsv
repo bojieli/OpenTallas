@@ -1,0 +1,16 @@
+variant	splits	stages	TT	TTw	FF	FFw	verdict	fails
+A_ctr_std_merge	2,2,4,8	[11]	317.85	31.21	245.31	42.05	FAIL	TT window 31.2 > 20; FF window 42.0 > 20; converter rc 1: xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpppy_br: no free legal site within 20.0 um of (6.48, 25.92)
+B_ctr_ndr_merge	2,2,4,8	[11]	299.75	14.36	225.87	20.33	FAIL	FF window 20.3 > 20; converter rc 1: xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpppy_br: no free legal site within 20.0 um of (6.48, 25.92)
+C_cen_ndr_merge	2,2,4,8	[10]	275.78	16.74	208.74	20.84	FAIL	FF window 20.8 > 20; converter rc 1: xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpppy_br: no free legal site within 20.0 um of (6.48, 25.92)
+D10_kit_ko_m	2,2,8,8	[9]	259.58	14.04	199.93	12.2	PASS	
+D11_kit_ko_lt20	2,2,8,8	[9]	262.24	16.1	201.61	14.23	PASS	
+D2_xb150_lt24	2,2,8,8	[9]	257.6	13.47	196.59	12.91	FAIL	driver displacement 11.15 > 2
+D3_xb140	2,2,4,8	[11]	301.1	15.66	227.5	18.68	FAIL	converter rc 1: xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpppp_br: no free legal site within 20.0 um of (7.56, 38.88)
+D4_xb160	2,2,4,8	[9]	259.23	25.96	198.09	26.46	FAIL	TT window 26.0 > 20; FF window 26.5 > 20; converter rc 1:  .. core_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build
+D5_xb112_160_3w	3,2,4,8	[8]	231.06	18.42	175.53	21.41	FAIL	FF window 21.4 > 20; converter rc 1: (xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpqp_br: no free legal site within 20.0 um of (6.48, 31.86)
+D6_xb150_rep	2,2,4,8	[9]	258.38	22.18	196.89	21.52	FAIL	TT window 22.2 > 20; FF window 21.5 > 20; converter rc 1:  .. core_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build
+D7_xb150_ll25	2,2,4,8	[9]	261.66	31.84	199.04	28.7	FAIL	TT window 31.8 > 20; FF window 28.7 > 20; converter rc 1:  .. core_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build
+D9_kit_ko	2,2,8,8	[9]	260.21	15.82	199.81	11.01	PASS	
+D_ctr_ndr_xband	2,2,4,8	[9]	258.38	22.18	196.89	21.52	FAIL	TT window 22.2 > 20; FF window 21.5 > 20; converter rc 1:  .. core_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build
+E_ctr_ndr_s100	2,2,4,8	[7]	242.32	42.15	186.87	45.59	FAIL	TT window 42.1 > 20; FF window 45.6 > 20; converter rc 1: xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpppy_br: no free legal site within 20.0 um of (6.48, 25.92)
+F_ctr_ndr_reparent	2,2,4,8	[11]	299.75	14.36	225.87	20.33	FAIL	FF window 20.3 > 20; converter rc 1: xy[0]), float(xy[1])) .. ConvertError: mp_ck_Tpppy_br: no free legal site within 20.0 um of (6.48, 25.92)

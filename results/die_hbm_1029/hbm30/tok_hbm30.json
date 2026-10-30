@@ -1,0 +1,67 @@
+{
+ "basis": "DIE-HBM-30: d29d pgp relay +2 cyc (hub->su01 L0 14 + su01->su00 hop 2 = 16 vs direct L36 14; su00/su01 are\nlockstep halves of one SU, so the whole SU command delivery is +2) priced in the token model TOGETHER with the\nDIE-HBM-29-T set. pgp_*.command feeds the SU command path -> unit SU, priced as a serial +2 on every SU record\n(no masking assumed). su20 relay path L2 6 + 2 = 8 vs L38 9 is not slower (+0).\nBase: DIE-HBM-29-T tok_hbm29t.py (same model, same 576702.4 guard). Run at repo root: PYTHONPATH=src python3 tok_hbm30.py OUT.json",
+ "records_per_unit": {
+  "FUSED": 201,
+  "SM": 1095,
+  "COLL": 642,
+  "DMA": 420,
+  "SU": 1356,
+  "CTL": 197,
+  "ATT": 80,
+  "HC": 80,
+  "IDX": 48,
+  "ARGMAX": 1
+ },
+ "base_cycles": 576702.4178468838,
+ "ab_cycles": 606474.9311551548,
+ "ab_cost_pct": 5.163,
+ "ab_tok_s": 1812.4,
+ "rows": [
+  {
+   "case": "pgp alone: SU +2",
+   "extra": {
+    "SU": 2
+   },
+   "cycles": 608322.9311551548,
+   "cost_pct_vs_1906": 5.483,
+   "tok_s": 1806.9,
+   "delta_pct_vs_1812": -0.304
+  },
+  {
+   "case": "29T plausible + pgp: IDX +31, SU +2 (ESTIMATE OF RECORD)",
+   "extra": {
+    "IDX": 31,
+    "SU": 2
+   },
+   "cycles": 609810.931155155,
+   "cost_pct_vs_1906": 5.741,
+   "tok_s": 1802.5,
+   "delta_pct_vs_1812": -0.547
+  },
+  {
+   "case": "29T bound + pgp: IDX +31, SU +3+2",
+   "extra": {
+    "IDX": 31,
+    "SU": 5
+   },
+   "cycles": 612582.931155155,
+   "cost_pct_vs_1906": 6.222,
+   "tok_s": 1794.4,
+   "delta_pct_vs_1812": -0.997
+  },
+  {
+   "case": "29T wide bound + pgp: IDX +31, SU +5, COLL/HC/FUSED +3",
+   "extra": {
+    "IDX": 31,
+    "SU": 5,
+    "COLL": 3,
+    "HC": 3,
+    "FUSED": 3
+   },
+   "cycles": 614790.9311551548,
+   "cost_pct_vs_1906": 6.605,
+   "tok_s": 1787.9,
+   "delta_pct_vs_1812": -1.353
+  }
+ ]
+}

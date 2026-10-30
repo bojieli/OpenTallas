@@ -38,7 +38,11 @@ module qfd_dv_table_rom_loader #(
         else begin p_start<=start;p_other<=other_table_write;end
     reg active,cap_v,cap_last;
     reg [6:0] slot;
-    reg [11:0] base,rom_addr;
+    // QC-KITS-W 10-30: stage_base = 106*k is even, so base[0] is constant 0; it is not stored (synthesis removed the FF,
+    // LEC kept it as free state under the derived addr_reset and failed rom_addr). Same values every edge.
+    reg [11:0] rom_addr;
+    reg [11:1] base_hi;
+    wire [11:0] base={base_hi,1'b0};
     reg [1:0] owner;
     assign busy=active|cap_v|((CAPTURE_STAGE!=0)&&data_valid);
     function automatic [11:0] row_addr(input [11:0] b,input [1:0] u,input [6:0] k);
@@ -189,11 +193,11 @@ module qfd_dv_table_rom_loader #(
         end
     end
     always @(posedge ck or negedge addr_reset)begin
-        if(!addr_reset)begin base<=0;rom_addr<=0;owner<=0;end
+        if(!addr_reset)begin base_hi<=0;rom_addr<=0;owner<=0;end
         else if(r2)begin
             if(active&&slot!=87)rom_addr<=row_addr(base,owner,slot+1);
             if(p_start&&!busy&&p_stage!=0&&p_stage<=36)begin
-                base<=go_base;owner<=p_user;rom_addr<=row_addr(go_base,p_user,0);
+                base_hi<=go_base[11:1];owner<=p_user;rom_addr<=row_addr(go_base,p_user,0);
             end
         end
     end

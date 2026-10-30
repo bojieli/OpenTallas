@@ -1,0 +1,92 @@
+{
+ "odb": "/s/codex-qc-2249/complete_pg/provider.odb",
+ "plan": "/s/die-qc-45/plan/plan_qc43.json",
+ "die_um": [
+  31216.32,
+  26265.6
+ ],
+ "layers": {
+  "M8:VDD": {
+   "rects": 229637,
+   "stripes": 6222,
+   "expected_lattice": 3040,
+   "off_lattice_or_wrong_net": 226381,
+   "wrong_width": 226597,
+   "widths": [
+    0.04,
+    0.48
+   ],
+   "missing_lattice": 0,
+   "missing_examples": [],
+   "stripes_cover_lt98pct": 0,
+   "short_examples": [],
+   "total_len_um": 95053539.7
+  },
+  "M8:VSS": {
+   "rects": 375756,
+   "stripes": 10761,
+   "expected_lattice": 3039,
+   "off_lattice_or_wrong_net": 372717,
+   "wrong_width": 372717,
+   "widths": [
+    0.04,
+    0.08,
+    0.48
+   ],
+   "missing_lattice": 0,
+   "missing_examples": [],
+   "stripes_cover_lt98pct": 0,
+   "short_examples": [],
+   "total_len_um": 99643590.2
+  },
+  "M9:VDD": {
+   "rects": 56807,
+   "stripes": 6469,
+   "expected_lattice": 3613,
+   "off_lattice_or_wrong_net": 53007,
+   "wrong_width": 53194,
+   "widths": [
+    0.04,
+    0.672
+   ],
+   "missing_lattice": 0,
+   "missing_examples": [],
+   "stripes_cover_lt98pct": 0,
+   "short_examples": [],
+   "total_len_um": 94899740.6
+  },
+  "M9:VSS": {
+   "rects": 108892,
+   "stripes": 13583,
+   "expected_lattice": 3612,
+   "off_lattice_or_wrong_net": 105280,
+   "wrong_width": 105280,
+   "widths": [
+    0.04,
+    0.08,
+    0.672
+   ],
+   "missing_lattice": 0,
+   "missing_examples": [],
+   "stripes_cover_lt98pct": 0,
+   "short_examples": [],
+   "total_len_um": 100446350.1
+  }
+ },
+ "other_layer_swire_rects": {
+  "M7:VDD": 232395,
+  "M6:VDD": 174558,
+  "M5:VDD": 174558,
+  "M4:VDD": 174558,
+  "M3:VDD": 174558,
+  "M2:VDD": 116372,
+  "M1:VDD": 58186,
+  "M7:VSS": 232739,
+  "M6:VSS": 174558,
+  "M5:VSS": 174558,
+  "M4:VSS": 174558,
+  "M3:VSS": 174558,
+  "M2:VSS": 116372,
+  "M1:VSS": 58186
+ }
+}

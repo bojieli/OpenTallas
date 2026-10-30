@@ -1,0 +1,151 @@
+NE_b100->NE_b102  2777
+      2176  hb_idx__s_NE.scorer.$procdff$71770  ->  gc.leaf.$procdff$71561
+       512  hb_idx__s_NE.scorer.$procdff$71765  ->  gc.leaf.$procdff$71558
+        32  hb_idx__s_NE.scorer.$procdff$71766  ->  gc.leaf.$procdff$71558
+        20  hb_idx__s_NE.scorer.$add$ot_hbm_idx_score_quarter_static_h  ->  gc.leaf.$procdff$71562
+NE_hub->NW_hub  2775
+      2170  hb_vms_SE.ccw_out  ->  u_hb_vms_Q__q0.ccw_in
+       280  hcollb_NE.ccw_o  ->  u_hcollb_Q.ccw_i
+       280  hcollb_NE.cw_o  ->  u_hcollb_Q.cw_i
+        32  obs_NE.r_d  ->  u_obs_Q.q_d
+NE_hub->NE_b113  2277
+      1742  sfup_NE.compiler_control  ->  u_sfucore_Q_ctl.u_core_procdff_66941__D
+       471  sfup_NE.io_word  ->  u_sfucore_Q_ctl.u_core_procdff_66936__D
+        32  sfus_NE.l14_vi_q  ->  u_sfucore_Q_lane14.lane_vi_q
+        32  sfus_NE.l15_vi_q  ->  u_sfucore_Q_lane15.lane_vi_q
+NE_hub->NE_su20  2126
+      1190  pgp_NE.command  ->  u_su_Q2_lanes0_3.cmd0_D
+       257  vmb_NE4.rr0  ->  u_su_controller.g_tap_r8b.u_tap
+       257  vmb_NE5.rr0  ->  u_su_controller.g_tap_r8b.u_tap
+       256  sucore_NE.rf_dsec  ->  u_su_controller.u_slice.$procdff$64393
+NE_b113->NE_b111  1662
+      1022  sfucore_NE.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q  ->  u_sfucore_Q_lane4.map_i_emit
+       640  sfucore_NE.u_core.u_engine  ->  u_sfucore_Q_lane4.lane_rd_q
+NE_b113->NE_b112  1662
+      1022  sfucore_NE.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q  ->  u_sfucore_Q_lane10.map_i_emit
+       640  sfucore_NE.u_core.u_engine  ->  u_sfucore_Q_lane10.lane_rd_q
+NE_b113->NE_b110  1534
+      1022  sfucore_NE.__cut_ctl.u_core_u_engine_u_arithmetic_procdff_71639__Q  ->  u_sfucore_Q_lane0.map_i_emit
+       512  sfucore_NE.u_core.u_engine  ->  u_sfucore_Q_lane0.lane_rd_q
+NE_su00->NE_hub  1207
+       562  su_NE0.g_tap_r8b.u_tap  ->  u_vmb_Q0.wq0
+       128  su_NE0.__cut_lanes_plain0_3.bank_read_data  ->  u_cxij_Q_q__q1.inj_q0
+       128  su_NE0.__cut_lanes_plain8_11.bank_read_data  ->  u_cxij_Q_q__q1.inj_q0
+        67  su_NE0.__cut_pretree.pretree_tree_o  ->  u_sucore_Q__q0.slice_t
+NE_su20->NE_hub  1207
+       562  su_NE2.g_tap_r8b.u_tap  ->  u_vmb_Q4.wq0
+       128  su_NE2.__cut_lanes0_3.bank_read_data  ->  u_cxij_Q_q__q1.inj_q2
+       128  su_NE2.__cut_lanes16_19.bank_read_data  ->  u_cxij_Q_q__q1.inj_q2
+       128  su_NE2.__cut_lanes24_27.bank_read_data  ->  u_cxij_Q_q__q1.inj_q2
+NE_hub->NE_su00  1198
+       262  pgp_NE.command  ->  u_su_Q0_lane_exp0.cmd0_D
+       257  vmb_NE0.rr0  ->  u_su_controller.g_tap_r8b.u_tap
+       257  vmb_NE1.rr0  ->  u_su_controller.g_tap_r8b.u_tap
+       256  sucore_NE.rf_dsec  ->  u_su_controller.u_slice.$procdff$63220
+NE_b111->NE_b113  1000
+        96  sfucore_NE.__cut_lane4.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane5.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane6.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane7.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+NE_b112->NE_b113  1000
+        96  sfucore_NE.__cut_lane10.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane11.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane12.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane13.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+NE_b110->NE_b113  798
+        96  sfucore_NE.__cut_lane0.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane1.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane2.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+        96  sfucore_NE.__cut_lane3.lane_rd_addr  ->  u_sfucore_Q_opstore_a.cmd1_D
+NE_b113->NE_hub  693
+       256  sfucore_NE.__cut_ctl.u_core_procdff_66906__Q  ->  u_cxrc_Q_s.ro_x
+       256  sfucore_NE.__cut_ctl.u_core_procdff_66911__Q  ->  u_cxrc_Q_s.ro_x
+        32  sfucore_NE.__cut_lane14.lane_kv_wdata  ->  u_sfus_Q__q1.l14_kv_wdata
+        32  sfucore_NE.__cut_lane15.lane_kv_wdata  ->  u_sfus_Q__q1.l15_kv_wdata
+NE_hub->NE_spb0  632
+       612  hb_coll_NE.__cut_body.tx_pin_flit  ->  u_ep_S0.tx_frame
+        19  epcal_NE.payload  ->  u_ep_S0.rx_arm_bank
+         1  hb_coll_NE.__cut_body.tx_pin_v  ->  u_ep_S0.tx_v
+NE_spb0->NE_hub  615
+       612  ep_S3.rx_pin_flit  ->  u_hb_coll_Q_body_n2__q0.rx_pin_flit
+         1  ep_S3.fault  ->  u_hleaf_Q.t_fault
+         1  ep_S3.phy_up  ->  u_hb_coll_Q_body_n2__q0.phy_up
+         1  ep_S3.rx_pin_v  ->  u_hb_coll_Q_body_n2__q0.rx_pin_v
+NE_b113->NE_su11  596
+       562  sfucore_NE.__cut_ctl.u_core_procdff_66921__Q  ->  u_sfu_Q1.c_wq
+        34  sfucore_NE.__cut_ctl.u_core_procdff_66916__Q  ->  u_sfu_Q1.c_rq
+NE_b113->NE_su20  596
+       562  sfucore_NE.__cut_ctl.u_core_procdff_66921__Q  ->  u_sfu_Q2.c_wq
+        34  sfucore_NE.__cut_ctl.u_core_procdff_66916__Q  ->  u_sfu_Q2.c_rq
+NE_b113->NE_su31  596
+       562  sfucore_NE.__cut_ctl.u_core_procdff_66921__Q  ->  u_sfu_Q3.c_wq
+        34  sfucore_NE.__cut_ctl.u_core_procdff_66916__Q  ->  u_sfu_Q3.c_rq
+NE_su11->NE_b113  516
+       514  sfu_NE1.c_rr  ->  u_sfucore_Q_ctl.u_core_procdff_66926__D
+         2  sfu_NE1.c_w_done  ->  u_sfucore_Q_ctl.u_core_procdff_66931__D
+NE_su20->NE_b113  516
+       514  sfu_NE2.c_rr  ->  u_sfucore_Q_ctl.u_core_procdff_66926__D
+         2  sfu_NE2.c_w_done  ->  u_sfucore_Q_ctl.u_core_procdff_66931__D
+NE_su31->NE_b113  516
+       514  sfu_NE3.c_rr  ->  u_sfucore_Q_ctl.u_core_procdff_66926__D
+         2  sfu_NE3.c_w_done  ->  u_sfucore_Q_ctl.u_core_procdff_66931__D
+NE_b111->NE_hub  410
+        32  sfucore_NE.__cut_lane4.lane_kv_wdata  ->  u_sfus_Q__q1.l04_kv_wdata
+        32  sfucore_NE.__cut_lane5.lane_kv_wdata  ->  u_sfus_Q__q1.l05_kv_wdata
+        32  sfucore_NE.__cut_lane6.lane_kv_wdata  ->  u_sfus_Q__q1.l06_kv_wdata
+        32  sfucore_NE.__cut_lane7.lane_kv_wdata  ->  u_sfus_Q__q1.l07_kv_wdata
+NE_b002->root  297
+       296  hb_idx__s_SE.scorer.$procdff$71751  ->  u_hb_idx__xq_S.b
+         1  hb_idx__s_SE.scorer.$procdff$71756  ->  u_hb_idx__xq_S.b
+NE_hub->NE_b111  160
+        32  sfus_NE.l04_vi_q  ->  u_sfucore_Q_lane4.lane_vi_q
+        32  sfus_NE.l05_vi_q  ->  u_sfucore_Q_lane5.lane_vi_q
+        32  sfus_NE.l06_vi_q  ->  u_sfucore_Q_lane6.lane_vi_q
+        32  sfus_NE.l07_vi_q  ->  u_sfucore_Q_lane7.lane_vi_q
+NE_b103->NE_b101  101
+        64  hb_idx__s_NE.scorer.ge  ->  $procdff$71687.D
+        24  hb_idx__s_NE.scorer.ge  ->  $add$ot_hbm_idx_score_quarter_static_h.sv:145$55003.A
+         4  hb_idx__s_NE.scorer.ge  ->  $procdff$71686.D
+         4  hb_idx__s_NE.scorer.ge  ->  $procdff$71685.D
+NE_sm0->NE_hub  37
+        37  sm_NW4.u_front.request  ->  u_svg_Q0.sm_request
+NE_sm1->NE_hub  37
+        37  sm_NW5.u_front.request  ->  u_svg_Q1.sm_request
+NE_sm2->NE_hub  37
+        37  sm_NW6.u_front.request  ->  u_svg_Q2.sm_request
+NE_sm3->NE_hub  37
+        37  sm_NW7.u_front.request  ->  u_svg_Q3.sm_request
+NE_b101->NE_b103  9
+         2  hb_idx__s_NE.scorer.$procdff$71750  ->  $procmux$66618.A
+         2  hb_idx__s_NE.scorer.$sub$ot_hbm_idx_score_quarter_static_h  ->  $procmux$66618.B
+         1  hb_idx__s_NE.scorer.$logic_and$ot_hbm_idx_score_quarter_static_h  ->  $procmux$66623.S
+         1  hb_idx__s_NE.scorer.$ne$ot_hbm_idx_score_quarter_static_h  ->  $procmux$66618.S
+NE_spt0->root  9
+         8  cp_svg_NW4.run_arg  ->  u_hb_router_ids.run1_layer
+         1  cp_svg_NW4.run_v  ->  u_hb_router_ids.run1_v
+NE_b002->NE_hub  4
+         1  hb_idx__s_SE.scorer.score_fault_check  ->  hb_idx__s_SE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$27976
+         1  hcb_NE2.$procdff$71591.Q  ->  u_hc_Q.u_cen.$procdff$72756
+         1  hcb_NE2.$procdff$71611.Q  ->  u_hc_Q.u_cen.$procdff$72756
+         1  hcb_NE2.u_c.$procdff$66826  ->  u_hc_Q.u_cen.$procdff$72756
+NE_b011->NE_hub  3
+         1  hcb_NE6.$procdff$71591.Q  ->  u_hc_Q.u_cen.$procdff$72756
+         1  hcb_NE6.$procdff$71611.Q  ->  u_hc_Q.u_cen.$procdff$72756
+         1  hcb_NE6.u_c.$procdff$66826  ->  u_hc_Q.u_cen.$procdff$72756
+NE_b101->NE_hub  2
+         1  hb_idx__s_NE.scorer.$procdff$71751  ->  u_obs_Q.obs
+         1  hb_idx__s_NE.scorer.score_fault_check  ->  hb_idx__s_NE.$or$ot_hnx_idxn_quarter_with_keybuf_sliced.sv:30$27976
+NE_spb2->NW_hub  2
+         1  xc_NW6.done  ->  u_obs_Q.obs
+         1  xc_NW7.done  ->  u_obs_Q.obs
+NE_spt0->NW_hub  2
+         1  xc_NW4.done  ->  u_obs_Q.obs
+         1  xc_NW5.done  ->  u_obs_Q.obs
+NE_b013->NE_hub  1
+         1  hcb_NE4.u_c.$procdff$71857  ->  u_hc_Q.u_cen.$procdff$72756
+NE_b100->NE_b103  1
+         1  hb_idx__s_NE.scorer.g_delivered_reset  ->  $procdff$71697.ARST
+NE_su11->NE_su20  1
+         1  fl_NE1.fault  ->  u_fl_Q2.in
+NE_su20->NE_su31  1
+         1  fl_NE2.fault  ->  u_fl_Q3.in
