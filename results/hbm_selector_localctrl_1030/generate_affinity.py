@@ -35,4 +35,5 @@ for tag,td in [('localctrl_affinity_td',True),('localctrl_affinity_notd',False)]
  (kd/'candidate_settings.json').write_text(json.dumps(dict(parameters=rec['params'],GPL_TIMING_DRIVEN=td,quarter_boxes_um=boxes,placement_only=True,added_cycles=0,added_ff=120,unresolved='parent W input -> E SRAM reach; no CTS/route'),indent=2)+'\n')
  fz=json.load(open(kd/'freeze.json'));fz['candidate_settings']='candidate_settings.json';fz['kit_hash']=G.kit_hash(kd);(kd/'freeze.json').write_text(json.dumps(fz,indent=1)+'\n')
  G.stamp_generation_inputs(kd,repo)
+ fz=json.load(open(kd/'freeze.json'));fz['kit_hash']=G.kit_hash(kd);(kd/'freeze.json').write_text(json.dumps(fz,indent=1)+'\n')
  print('CANDIDATE',kd,flush=True)
