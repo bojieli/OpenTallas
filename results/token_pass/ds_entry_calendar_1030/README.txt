@@ -117,3 +117,16 @@ per-page/twoissuerports; actual output regenerated completely in terminal0unit.
 Native KIT/END, page retirement/reload and rootphase/MU remain unqualified;
 noBEGIN/SEAL/START emitted. This closes current-source data/dated-write lowering,
 not a full native runtime programme or rate claim.
+
+Actual VP→split VN transport (1030 05:17 PDT)
+------------------------------------------
+layer_prog.bound_vp_vn_transport proves all80actualleaves/twoVNhalves,62880bits
+HW256+control and WL128+control perhalf from same current BoundDie/inventory.
+Both full field groups are coherent; exact public VP output net→unique primitive
+Q driver is compared against bound VN input driver (not inferred port alias).
+Terminalunit4032785 PASS80/80,0blocked; controls replacing actual first payload
+bit source and first payloadbit age both BLOCKED. No second bind scan forcontrols.
+Firstunit3998538 BLOCKED80 used public output names instead of exact binder
+$driver$…Q endpoints; failure retained vp_vn_publicpin_failed.json, fixed via
+existing inventory bit→unique driver mapping (same mechanism as BoundDie.route).
+VN local SRAM/write capture and readerready remain unqualified; noSEAL/START.
