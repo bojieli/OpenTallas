@@ -1,0 +1,34 @@
+{
+ "kind": "g2-partition",
+ "die": "hbm_arch_B2o",
+ "type": "q_b010",
+ "instance": "NE_b010",
+ "outline_um": [
+  829.44,
+  4320.0
+ ],
+ "pins": 71111,
+ "flops": 127489,
+ "leaf_blockages": 31,
+ "adjust": 0.5,
+ "route_layers": "M2-M7",
+ "va_bits": 11866,
+ "va_corridor": [
+  950.0,
+  2908.0
+ ],
+ "va_x": [
+  552.0,
+  200.0
+ ],
+ "note": "DIE-HBM-36 V-A 12/um probe",
+ "vt_bits": 3000,
+ "vt_e": [
+  2950.0,
+  4250.0
+ ],
+ "vt_n": [
+  300.0,
+  826.0
+ ]
+}
