@@ -1,0 +1,11 @@
+{
+ "source_commit": "80f1bbcb2b7",
+ "g0c_before": 133,
+ "g0c_after": 98,
+ "remaining": "98 partition types lack measured standard-cell estimates; no census coverage errors",
+ "packed_lane_positions": 790393,
+ "unique_source_bit_destination_routes": 790369,
+ "sink_witnesses": 880792,
+ "physical_or_RTL_change": false,
+ "dependencies": "Main07c9 contains physical candidate plan46. This isolated patch adds census,18measured full-wrapper cell counts,and byte-copy canonical die_io sidecar. No coll_ucie physical aliases or PG experiment source imported."
+}

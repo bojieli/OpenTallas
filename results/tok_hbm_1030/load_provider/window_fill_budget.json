@@ -1,0 +1,23 @@
+{
+ "status": "CONSERVATIVE_PROPOSED_WINDOW_POLICY_NOT_CURRENT_EXECUTION",
+ "source": "canonical_group_anchored inserted LOADs only",
+ "inserted_load_bytes": 221242144,
+ "prefetch_batches": 3946,
+ "window_half_fills": 36837,
+ "max_window_halves_per_batch": 64,
+ "existing_NPC2_half_fill_bytes": 32768,
+ "proposed_HBM_fill_bytes": 1207074816,
+ "overfetch_ratio": 5.45589910754074,
+ "source_stacks": [
+  3
+ ],
+ "current_selected_stack2_matches": false,
+ "cache_between_batches": false,
+ "original_source_DMA_LOADs_included": false,
+ "calendar_or_cycle_price_assigned": false,
+ "holds": [
+  "source stack3 unselected; actual path supports stack2 only",
+  "dates/target/routing/PHYcompletion and scratch authority unresolved",
+  "possible cache reuse requires source-epoch invalidation proof, not a free discount"
+ ]
+}

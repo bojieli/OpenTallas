@@ -1,0 +1,27 @@
+{
+ "old_candidate": {
+  "address": "0x1f00000000",
+  "verdict": "FAIL_PHYSICAL_STACK_CAPACITY"
+ },
+ "first_mtp_candidate": {
+  "address": "0x1d10000000",
+  "verdict": "FAIL_SOURCE_COLUMN_SLOT_OVERLAP",
+  "column_slot_bytes": 1703936
+ },
+ "tail_candidate": {
+  "address": "0x1d11000000",
+  "end": "0x1d17600000",
+  "span_bytes": 106954752,
+  "stack_local_begin": 21760049152,
+  "stack_bytes": 22500000000,
+  "within_physical_stack": true,
+  "above_actual_column_slots": true,
+  "inside_reserved_data_window": true,
+  "scratch_reserved": false,
+  "source_allocation_adopted": false
+ },
+ "controls": [
+  "old28GiBoutsidecapacity",
+  "firstinvalidphysicalsector"
+ ]
+}

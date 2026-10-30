@@ -9,10 +9,12 @@ sys.path.insert(0,str(Path(__file__).resolve().parent))
 import gen_phys as GP
 
 
-@pytest.mark.parametrize("value,early,superset", [
-    (None,None,None),("0","0","0"),("1",None,None),(None,"1",None),(None,None,"1")])
-def test_generated_runner_forwards_preseed_without_changing_default(tmp_path,value,early,superset):
+@pytest.mark.parametrize("value,early,superset,configured", [
+    (None,None,None,False),("0","0","0",False),("1",None,None,False),(None,"1",None,False),(None,None,"1",False),
+    (None,None,None,True),(None,None,"0",True)])
+def test_generated_runner_forwards_preseed_without_changing_default(tmp_path,value,early,superset,configured):
     kit=tmp_path/"kit";kit.mkdir()
+    GP.write_lec_options(kit, {"lec": {"superset_vec": True}} if configured else {})
     (kit/"kit_preflight.py").write_text("raise SystemExit(0)\n")
     runner=kit/"run_kit.sh";runner.write_text(GP.RUN_KIT)
     bin=tmp_path/"bin";bin.mkdir()
@@ -32,6 +34,18 @@ def test_generated_runner_forwards_preseed_without_changing_default(tmp_path,val
     i=args.index("OT_LEC_HINTS_PRESEED="+(value or "0"))
     assert args[i-1]=="-e"
     assert args[args.index("OT_LEC_EARLY_COMPARE="+(early or "0"))-1]=="-e"
-    assert args[args.index("OT_LEC_SUPERSET_VEC="+(superset or "0"))-1]=="-e"
+    assert args[args.index("OT_LEC_SUPERSET_VEC="+(superset if superset is not None else "1" if configured else "0"))-1]=="-e"
     # The container still runs the ordinary generated pre-floorplan LEC command.
     assert any("/work/lec.py" in arg for arg in args)
+
+
+def test_persisted_optin_removed_on_regeneration_and_bad_options_reject(tmp_path):
+    GP.write_lec_options(tmp_path, {})
+    assert not (tmp_path / "lec_options.json").exists()
+    GP.write_lec_options(tmp_path, {"lec": {"superset_vec": True}})
+    assert json.loads((tmp_path / "lec_options.json").read_text()) == {"superset_vec": True}
+    GP.write_lec_options(tmp_path, {"lec": {"superset_vec": False}})
+    assert not (tmp_path / "lec_options.json").exists()
+    for options in ({"superset_vec": "1"}, {"unknown": True}, True):
+        with pytest.raises(ValueError):
+            GP.write_lec_options(tmp_path, {"lec": options})

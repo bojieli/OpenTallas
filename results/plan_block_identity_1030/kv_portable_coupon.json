@@ -1,0 +1,119 @@
+{
+  "schema": "opentallas.portable_identity_coupon.v1",
+  "plans": {
+    "old": {
+      "path": "/srv/opentallas-scratch2/claude/die-kv-40-1029/kv40/event28w/plan_c.json",
+      "sha256": "16980115aa4afb562d43abf9bae5743bd9b0f1fe85236ac783151b587c7f632e"
+    },
+    "e0": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-1030/plan_of_record/plan_c_e0.json",
+      "sha256": "c792fe2c3af3b53b2be602c9174680dbcbd1241324a262f731e8df6363c7a5df"
+    },
+    "ahub": {
+      "path": "/srv/opentallas-scratch2/claude/codex-kv-1030/plan_of_record/plan_c_e0_ahubtrack.json",
+      "sha256": "a61a4f5e658042cb0c941c40e721da70395bf171c34db98cb60b7fa05f1d14cb"
+    }
+  },
+  "comparisons": {
+    "old_e0": {
+      "same_count": 80,
+      "changed_count": 6,
+      "path_only_count": 69,
+      "path_only_items": [
+        "kv3_astk",
+        "kv3_head_eighth_e1",
+        "kv3_head_eighth_e2",
+        "kv3_head_eighth_e5",
+        "kv3_head_eighth_e6",
+        "kv3_hg",
+        "kv3_hg_v1",
+        "kv3_hg_v3",
+        "kv3_hgi",
+        "kv3_hgi_v1__cl141fc26e",
+        "kv3_hgi_v1__cl42bc8b12",
+        "kv3_hgi_v2__cl2862d491",
+        "kv3_hgi_v2__cle0015330",
+        "kv3_hgi_v3",
+        "kv3_hgi_v4",
+        "kv3_hgi_v5",
+        "kv3_hgi_v6",
+        "kv3_hgi_v7",
+        "kv3_hgi_v8",
+        "kv3_hub_C",
+        "kv3_hub_Eo",
+        "kv3_hub_Wi",
+        "kv3_hub_Wo",
+        "kv3_pc__cl254f2e73",
+        "kv3_pc__cl5a95b461",
+        "kv3_pc_v1__cl23f6a148",
+        "kv3_pc_v1__cl4ea58a5c",
+        "kv3_pc_v1__cl7f648944",
+        "kv3_pc_v3",
+        "kv3_pv",
+        "kv3_pv_pair",
+        "kv3_pv_v1",
+        "kv3_pv_v12",
+        "kv3_pv_v1n",
+        "kv3_pv_v2",
+        "kv3_pv_v2n",
+        "kv3_pv_v3",
+        "kv3_pv_v3n",
+        "kv3_pv_v4",
+        "kv3_pv_v4n",
+        "kv3_pv_v5",
+        "kv3_pv_v5n",
+        "kv3_pv_v6",
+        "kv3_pv_v6n",
+        "kv3_pv_v7",
+        "kv3_pv_v8",
+        "ot_qwen_tp8_pv_join_t",
+        "qkd_ahub",
+        "qkd_ectlk_q0",
+        "qkd_ectlk_q1",
+        "qkd_ectlk_q2",
+        "qkd_ectlk_q3",
+        "qkd_hr_cdc_ch",
+        "qkd_hr_cdc_ci",
+        "qkd_hr_cdc_hi",
+        "qkd_hr_cdc_pc",
+        "qkd_hr_core_guard",
+        "qkd_hr_core_order",
+        "qkd_hr_core_peer",
+        "qkd_hr_core_prompt",
+        "qkd_hr_core_queue",
+        "qkd_hr_core_rx",
+        "qkd_hr_core_tx",
+        "qkd_hr_ingest_eng",
+        "qkd_hr_phy_adp",
+        "qkd_hr_phy_pad",
+        "qkd_kvs_ctl",
+        "qkd_kvs_pc",
+        "qkd_kvs_pc_h_head_p"
+      ],
+      "changed_items": [
+        "kv3_head_eighth_e0",
+        "kv3_hg_v1p2",
+        "kv3_hg_v1p3",
+        "kv3_hg_v1p4",
+        "kv3_hg_v1p5",
+        "kv3_hg_v1p6"
+      ],
+      "legacy_ambiguous_count": 10,
+      "added": [],
+      "removed": []
+    },
+    "e0_ahub": {
+      "same_count": 84,
+      "changed_count": 2,
+      "path_only_count": 0,
+      "path_only_items": [],
+      "changed_items": [
+        "kv3_hub_C",
+        "qkd_ahub"
+      ],
+      "legacy_ambiguous_count": 10,
+      "added": [],
+      "removed": []
+    }
+  }
+}

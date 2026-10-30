@@ -692,34 +692,10 @@ def plan_core(plan, module, pins_file=None):
 
 
 def lef_contract(path, module):
-    """pin contract of a closed view that the plan lists as partition CONTENTS (no plan pins file): outline = LEF SIZE,
-    pin centre = the centre of the pin's non-M1 rect that touches the outline (the edge pin itself)."""
-    txt = Path(path).read_text()
-    w, h = map(float, re.search(r"SIZE ([\d.]+) BY ([\d.]+)", txt).groups())
-    pins, cur, layer = [], None, None
-    best = {}
-    for ln in txt.splitlines():
-        t = ln.split()
-        if t[:1] == ["PIN"]:
-            cur = t[1]
-        elif cur and t[:1] == ["LAYER"]:
-            layer = t[1]
-        elif cur and t[:1] == ["USE"] and t[1] in ("POWER", "GROUND"):
-            best[cur] = None
-        elif cur and t[:1] == ["RECT"] and layer not in (None, "M1") and best.get(cur, 0) is not None:
-            x0, y0, x1, y1 = map(float, t[1:5])
-            if min(x0, y0) <= 1e-6 or x1 >= w - 1e-6 or y1 >= h - 1e-6:
-                best.setdefault(cur, (layer, round((x0 + x1) / 2, 4), round((y0 + y1) / 2, 4)))
-        elif t[:1] == ["END"] and cur and t[1:2] == [cur]:
-            if cur not in best:
-                raise SystemExit(f"{module}: LEF pin {cur} has no rect on the outline")
-            cur, layer = None, None
-    for n, v in best.items():
-        if v is None:
-            continue
-        L, x, y = v
-        pins.append(dict(name=n, layer=L, x=x, y=y))
-    return [w, h], pins
+    """Use the same declared LEF boundary-pin parser as the preflight gate."""
+    sys.path.insert(0, str(TOOL))
+    import kit_contract
+    return kit_contract.lef_pin_contract(path, module)
 
 
 def pin_expand(pins, exp, w, h, step=0.096):
