@@ -820,6 +820,8 @@ class Landings:
         collector_info=self.collector["types"][key] if self.collector else None
         active_collector=collector_info and collector_info["mask"]["active"]
         if not mask["inputs"] and not mask["outputs"] and not active_collector:
+            if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None:
+                raise LandingError(f'{tn}: landing_origin_clock_port needs active dedicated START origin hardware')
             self.emitted_types.add(tn)
             return text
         marker = "\n);\n"
@@ -842,6 +844,8 @@ class Landings:
             cat["role"] = tuple(cat["role"])
             for b, d in (depth or {}).items():
                 cat["rings"][b]["depth"] = int(d)
+        if self.types[key].get('clock', {}).get('landing_origin_clock_port') is not None and not cat:
+            raise LandingError(f'{tn}: landing_origin_clock_port needs count-aligned START origin hardware')
         # DIE-HEAD-10 FSTART out (strap form, every origin but an intra-region relay rx): each forwarded start pin
         # cland_fstart_out_<b> is the Q of its OWN face flop u_cland_fstart_<b> (ot_dp_landing_relay on the region
         # start's raw reset, d = the start's D-side), equal to cland_start every cycle (0 added cycles); internal
@@ -1014,7 +1018,7 @@ class Landings:
                       f"        .fclk(fclk_in_{b}), {ring_rst}, .d({b}), .q({landed}),",
                       f"        .ready(landing_ready_{b}), .fault(landing_fault_{b}));"]
         if cat:
-            logic += self._origin_rtl(tn, cat, ca_raw, body, extra, type_key=key)
+            logic += self._origin_rtl(tn, cat, ca_raw, body, extra, type_key=key, head=head)
             if self.tstart and self.tstart["type_pins"].get(key, {}).get(START_PIN_OUT):
                 # START-TREE: the region start leaves on ONE dedicated pin (fanned out at the die top / to a stage)
                 extra.append(f"    output wire {START_PIN_OUT}")
@@ -1081,13 +1085,70 @@ class Landings:
         self.emitted_types.add(tn)
         return head + marker + "\n".join(logic) + "\n" + body
 
-    def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None):
+    def _origin_clock_port(self, tn, role, head, type_key=None):
+        key = type_key or tn
+        typ = getattr(self, 'types', {}).get(key, {})
+        chosen = typ.get('clock', {}).get('landing_origin_clock_port')
+        if chosen is None:
+            return 'clk'
+        if (not isinstance(chosen, str) or not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', chosen)
+                or not getattr(self, 'ca', None) or getattr(self, 'strap', None)
+                or role[0] != 'child' or role[1] != START_PIN_IN):
+            raise LandingError(f'{tn}: landing_origin_clock_port requires a dedicated parameter START child')
+        import schema
+        P = schema.Plan(self.plan)
+        grid = schema.tap_grid(P, key)
+        cores = schema.core_taps(P, key)
+        canonical = lambda n: re.sub(r'\[0\]$', '', n.lstrip('\\'))
+        names = [canonical(n) for n, *_ in grid + cores]
+        if len(names) != len(set(names)):
+            raise LandingError(f'{tn}: primary clock tap canonical root collision')
+        # The generator's actual primary inventories are authoritative. A name
+        # resembling clk_tN is not a role; explicit secondary/forwarded roles
+        # and data ports cannot overlap the selected primary interface.
+        forbidden = {canonical(e['port']) for e in typ.get('clock', {}).get('edge_clocks', [])}
+        forbidden.update(canonical(p['name']) for p in typ.get('pads', []))
+        forbidden.update(canonical(p['name']) for p in typ.get('clock', {}).get('landing_contract', {}).get('pins', [])
+                         if p.get('kind') == 'clock')
+        forbidden.update(canonical(p['name']) for p in typ.get('clock', {}).get('taps', [])
+                         if p.get('kind') == 'landed' or p.get('forwarded') or p.get('clock_domain', 'clk') != 'clk')
+        forbidden.update(canonical(p['name']) for p in typ.get('buses', []))
+        forbidden.update(canonical(p['name'] + suffix) for p in typ.get('ft_slots', []) for suffix in ('_i', '_o'))
+        if chosen not in names or chosen in forbidden:
+            raise LandingError(f'{tn}: origin clock {chosen} is not an unambiguous primary Plan tap')
+        if not isinstance(head, str):
+            raise LandingError(f'{tn}: origin clock requires the actual emitted RTL input header')
+        clean = re.sub(r'//[^\n]*|/\*.*?\*/', '', head, flags=re.S)
+        module = re.search(r'\bmodule\s+[A-Za-z_]\w*\s*\(', clean)
+        if module is None:
+            raise LandingError(f'{tn}: origin clock needs the emitted ANSI header')
+        ports, direction, width = [], None, ''
+        ident = r'(\\[^\s,]+|[A-Za-z_][A-Za-z0-9_$]*)'
+        for token in clean[module.end():].split(','):
+            match = re.fullmatch(r'\s*(input|output|inout)\s+(?:(?:wire|reg|logic|signed|unsigned)\s+)*(\[[^\]]*\]\s*)?' + ident + r'\s*', token)
+            if match:
+                direction, width, name = match.group(1), match.group(2) or '', match.group(3)
+            else:
+                match = re.fullmatch(r'\s*' + ident + r'\s*', token)
+                if not match or direction is None:
+                    raise LandingError(f'{tn}: cannot prove scalar origin clock input from emitted header')
+                name = match.group(1)
+            ports.append((canonical(name), direction, width))
+        primary_ports = [n for n, _d, _w in ports if n in names]
+        if len(primary_ports) != len(set(primary_ports)):
+            raise LandingError(f'{tn}: emitted clock/port canonical root collision')
+        if [(d, w) for n, d, w in ports if n == chosen] != [('input', '')]:
+            raise LandingError(f'{tn}: origin clock {chosen} is not an existing scalar INPUT in emitted RTL')
+        return chosen
+
+    def _origin_rtl(self, tn, cat, ca_raw, body, extra, type_key=None, head=None):
         """The region's count origin: root = ot_dp_landing_root (fixed settle count), child = ot_dp_landing_origin on
         the start-tree port (3-FF sync of the parent's forwarded start, edge/PAD from the bind).  Its raw reset is the
         timed local raw-reset relay of the tree bus (child) / of a landed input or tap 0 (root), never START-gated.
         Intra-region relay (ASK 3): the origin partition of a multi-partition region adds the tx flop u_cland_rstart_tx
         -> cland_rstart_out; a relay partition's start is the rx flop u_cland_rstart_rx on cland_rstart_in."""
         role = cat["role"]
+        origin_clock = self._origin_clock_port(tn, role, head, type_key)
         raw_logic = []
         raw_fallback = None
 
@@ -1133,8 +1194,10 @@ class Landings:
                 raise LandingError(f"{tn}: start-tree bus {b} is not a landed input of this type")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="child", tree_bus=b, raw_reset=raw,
                                                                          edge_fall=role[2], pad=role[3])
+            if getattr(self, 'types', {}).get(type_key or tn, {}).get('clock', {}).get('landing_origin_clock_port') is not None:
+                self.reset_placements[tn]['count_origin']['clock_port'] = origin_clock
             logic = [f"    ot_dp_landing_origin #(.PAD({role[3]}), .EDGE_FALL({int(role[2])})) u_cland_origin (",
-                     f"        .clk(clk), .rst_raw_n({raw}), .p_start({p_start}), .start(cland_start));"]
+                     f"        .clk({origin_clock}), .rst_raw_n({raw}), .p_start({p_start}), .start(cland_start));"]
         else:
             raw = local_raw("root count origin")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="root", raw_reset=raw, settle=role[1])

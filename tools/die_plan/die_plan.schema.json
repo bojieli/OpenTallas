@@ -1514,6 +1514,10 @@
         "minItems": 2,
         "maxItems": 2
        },
+       "landing_origin_clock_port": {
+        "type": "string",
+        "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+       },
        "tap_pin_heights_um": {
         "type": "object",
         "additionalProperties": {
