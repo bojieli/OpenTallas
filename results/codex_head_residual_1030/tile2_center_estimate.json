@@ -1,0 +1,86 @@
+{
+ "trial_longpairs": [
+  [
+   541.675,
+   "u_rrl_35/q$_DFF_P_",
+   "u_core.xvo_q$_DFF_PN0_"
+  ],
+  [
+   541.675,
+   "u_rrl_35/q$_DFF_P_",
+   "u_core.o_rv$_DFF_PN0_"
+  ],
+  [
+   541.675,
+   "u_rrl_35/q$_DFF_P_",
+   "u_core.goo_q$_DFF_PN0_"
+  ],
+  [
+   538.408,
+   "u_core.u_b.res_bits\\[20\\]$_DFF_P_",
+   "u_core.o_bits\\[20\\]$_DFF_P_"
+  ],
+  [
+   529.606,
+   "u_core.u_b.res_bits\\[13\\]$_DFF_P_",
+   "u_core.o_bits\\[13\\]$_DFF_P_"
+  ],
+  [
+   526.906,
+   "u_core.u_b.res_bits\\[26\\]$_DFF_P_",
+   "u_core.o_bits\\[26\\]$_DFF_P_"
+  ],
+  [
+   525.61,
+   "u_core.u_b.res_bits\\[21\\]$_DFF_P_",
+   "u_core.o_bits\\[21\\]$_DFF_P_"
+  ],
+  [
+   516.808,
+   "u_core.u_b.res_bits\\[28\\]$_DFF_P_",
+   "u_core.o_bits\\[28\\]$_DFF_P_"
+  ],
+  [
+   508.32899999999995,
+   "u_cland_i/u_ring.dch\\[5\\].u_dsel/y\\[52\\]$_DFF_P_",
+   "u_bin_i/q\\[372\\]$_DFF_P_"
+  ],
+  [
+   507.8699999999999,
+   "u_cland_rst_i/q$_DFF_P_",
+   "u_cland_fstart_o/q$_SDFF_PN0_"
+  ],
+  [
+   505.25199999999995,
+   "u_core.u_b.res_bits\\[24\\]$_DFF_P_",
+   "u_core.o_bits\\[24\\]$_DFF_P_"
+  ],
+  [
+   502.741,
+   "u_core.u_b.res_bits\\[23\\]$_DFF_P_",
+   "u_core.o_bits\\[23\\]$_DFF_P_"
+  ],
+  [
+   501.44399999999996,
+   "u_cland_rst_i/q$_DFF_P_",
+   "u_cland_up_o/fault_o$_SDFF_PN0_"
+  ],
+  [
+   499.5540000000001,
+   "u_cland_rst_i/q$_DFF_P_",
+   "u_cland_up_o/ready_o$_SDFF_PN0_"
+  ],
+  [
+   496.45000000000005,
+   "u_core.u_b.res_bits\\[14\\]$_DFF_P_",
+   "u_core.o_bits\\[14\\]$_DFF_P_"
+  ]
+ ],
+ "r2r_memory_instances": 0,
+ "r2r_incomplete_macros": [],
+ "r2r_max": 541.67,
+ "r2r_captures_gt405": 183,
+ "r2r_captures": 27795,
+ "comb_loop_cells": 0,
+ "r2r_worst": "u_rrl_35/q$_DFF_P_ -> u_core.o_rv$_DFF_PN0_"
+}
