@@ -22,7 +22,7 @@ MACRO ot_s81ph_native_sel_hist_bank
     USE SIGNAL ;
     PORT
       LAYER M5 ;
-        RECT  19.92 0 19.944 0.084 ;
+        RECT  19.908 0 19.956 0.48 ;
     END
   END clk
   PIN clr

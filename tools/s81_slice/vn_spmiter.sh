@@ -3,9 +3,11 @@
 # two-core split ot_s81sl_vn_sp (vn_a + vn_b) against the unsplit ot_s81sl_vn on random static-schedule stimulus:
 # hq / y / fault on the same edge, p 2 edges later.  base must print "MITER PASS"; c1 / hq (split mutants) must print
 # "MITER FAIL".  Exit 0 = the expected verdict.
+# OT_VN_DEFS (env, optional): extra defines for both sides, e.g. +define+OT_S81_VN_CONST_ZERO (DIE-S81-31/VEZ: the split
+# cores read their declared constant-zero lanes masked; the unsplit vn does not, so the miter checks bit-exactness).
 set -u; O=$1; M=${2:-base}; N=${3:-40000}; mkdir -p $O
 V=verilator; [ -x ~/.local/opentallas-tools/verilator-5.050/bin/verilator ] && V=~/.local/opentallas-tools/verilator-5.050/bin/verilator
-DEF=""; [ "$M" = c1 ] && DEF="+define+OT_S81SL_SPMUT_C1"; [ "$M" = hq ] && DEF="+define+OT_S81SL_SPMUT_HQ"
+DEF="${OT_VN_DEFS:-}"; [ "$M" = c1 ] && DEF="$DEF +define+OT_S81SL_SPMUT_C1"; [ "$M" = hq ] && DEF="$DEF +define+OT_S81SL_SPMUT_HQ"
 MACV=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 srcs="$(sort -u physical/hbm_norm_split_20261008/sources.f | tr '\n' ' ') $MACV rtl/lib/ot_rst_relay.sv rtl/dsrom_sys/s81_dv/slice/ot_s81sl_vn.sv rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_vn_spmiter.sv"
 $V --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD $DEF -GCYC=$N --top-module tb_s81sl_vn_spmiter -Mdir $O/obj $srcs \

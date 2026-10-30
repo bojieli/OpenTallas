@@ -1273,8 +1273,11 @@ def run_face_guard(disc, clock_ports=()):
         sl = face_guard.kit_strap_list(disc["kit"]) if disc.get("kit") else []
         # QK-CORES-5 10-27: declared proven-dead inputs (kit dead_inputs.json + proof receipt), verified unloaded
         dl = face_guard.kit_dead_list(disc["kit"]) if disc.get("kit") else []
+        # S81-CORE-LAT-R21: declared landing-ring slots (kit land_slots.json), as the kit face_guard_core / CLI pass them
+        lf = Path(disc["kit"]) / "land_slots.json" if disc.get("kit") else None
+        land = face_guard.kit_land(lf) if lf is not None and lf.is_file() else None
         r = face_guard.guard(Path(disc["synth"]).read_text(errors="replace"), pins=pins, skip_re=skip_re, ft1=ft1,
-                             straps=sl, dead=dl)
+                             straps=sl, dead=dl, land=land)
     except Exception as e:
         return dict(verdict="NOT RUN", reason=f"face_guard error: {e}", netlist=disc["synth"])
     return dict(verdict=r["verdict"], top=r.get("top"), checked=r.get("checked"), ok=r.get("ok"),

@@ -1,0 +1,26 @@
+{
+ "source_plan_sha256": "128ad3093cb45b1e7dc9d0cbfbf44aa0ad01f67cddd1b6881a44693bcdf97823",
+ "plan_sha256": "77fb5f39596865b1ae97171856b0e65b5b116aac6127910aec97b2b93db453a7",
+ "changed": {
+  "u_tkm_SW_root": {
+   "kind": "port",
+   "content": "u_tkm_SW",
+   "pin": "rst_n",
+   "source": "rtl/hbm_accel/cores_split/ot_hgi_coll_tkm_m_tp192/ot_hgi_coll_tkm_m_tp192_p.sv u.rst_n; ot_hgi_coll_tkm_static_p.sv:116/127/178 (root flops + u_buffer; tiles reset-free)"
+  },
+  "u_hc_eng_tail0_sk_steady": {
+   "kind": "internal",
+   "content": "u_hc_eng",
+   "pin": "rst_n",
+   "source": "ot_hbm_hc_root_static_s.sv:109-110 u_rst ot_rst_relay rst_c=rn[0] -> :260 u_t.rst_n(rst_c) -> sinkhorn u_ss"
+  },
+  "u_hc_eng_tail1_sk_steady": {
+   "kind": "internal",
+   "content": "u_hc_eng",
+   "pin": "rst_n",
+   "source": "ot_hbm_hc_root_static_s.sv:109-110 u_rst ot_rst_relay rst_c=rn[0] -> :260 u_t.rst_n(rst_c) -> sinkhorn u_ss"
+  }
+ },
+ "cycles_added": 0,
+ "rtl_changed": false
+}

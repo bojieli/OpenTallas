@@ -1,0 +1,5 @@
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-qc-1847/src_pc/tools/die_plan/die_clock_128.py", line 242, in _fixed_wires_stack
+    d, k = self.nearest(p)
+    ^^^^^^^^^^^^^^^^^^^^^
+die_clock_128.PlanError: 7 plan error(s): no_clock_track 7

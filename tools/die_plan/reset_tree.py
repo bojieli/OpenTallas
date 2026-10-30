@@ -1341,6 +1341,19 @@ def core_reset_targets(P, tn):
     boxes = blockages(t)
     out = []
     for c in t.get("hard_cores", []):
+        rfm = c.get("reset_from_master")
+        if rfm is not None:
+            # DIE-HBM-25 (HBM-047/048): a split piece of a reuse content bound WHOLE (one as-built leaf).  The plan
+            # declares where the piece's reset pin comes from in the source master: kind "port" = the master's own
+            # reset port (the die wavefront drives the master leaf pin, relay sited at this piece pin as usual);
+            # kind "internal" = a master-internal reset net (e.g. the master's ot_rst_relay output) - not a die
+            # wavefront consumer, the master's reset port is then an ordinary partition reset consumer.
+            if rfm.get("kind") not in ("port", "internal") or not rfm.get("content") or not rfm.get("source"):
+                raise ResetError(f"type {tn}: {c['inst']}: reset_from_master needs kind port|internal, content, source")
+            if not any(d.get("inst") == rfm["content"] for d in t.get("contents", [])):
+                raise ResetError(f"type {tn}: {c['inst']}: reset_from_master content {rfm['content']} not in contents")
+            if rfm["kind"] == "internal":
+                continue
         pd = None
         if c.get("pins_file") and not Path(c["pins_file"]).is_absolute():
             # The declaration's plan directory is authoritative. Pin tables may

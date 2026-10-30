@@ -996,7 +996,9 @@ module qfd_dv_s5_tap #(parameter integer HARD = 1, parameter integer TAP_MUT = 0
         .sw_v(xt_v), .sw_a(xt_a), .sw_m({64{1'b1}}), .sw_d(xt_f),
         .aw_v(1'b0), .aw_a({AW{1'b0}}), .aw_m(16'd0), .aw_d(512'd0),
         .gi(gi), .hw(hw), .he(he_unused), .fw_i(|lq_bad), .fe_i(xt_bad), .fault(tap_fault));
-    wire [23:0] cid_c = {4'(sid) * 6'd4 + 6'd3, 4'(sid) * 6'd4 + 6'd2, 4'(sid) * 6'd4 + 6'd1, 4'(sid) * 6'd4};
+    // YOSYS-CONCAT YC1 form removed (QC-KITS-T 10-29): sid is [3:0], so 4'(sid) == sid; named 6-bit base, same value.
+    wire [5:0] cid_b = {sid, 2'b00};
+    wire [23:0] cid_c = {cid_b + 6'd3, cid_b + 6'd2, cid_b + 6'd1, cid_b};
     generate if (HARD != 0) begin : g_h
         reg [23:0] cq;
         always @(posedge ck) cq <= cid_c;

@@ -1,0 +1,8 @@
+ot_hbm_su_static_pgslice_lg__lanes8_11 macro_channels PASS [] {'applies': True, 'macros': 24, 'columns': 6, 'min_channel_um': 10.8}
+ot_hbm_su_static_pgslice_lg__lanes8_11 clock_entry_clear PASS [] {'applies': True, 'entries': 6, 'macros': 24}
+ot_hbm_su_static_pgslice_lg__lanes8_11 macro_pin_grid PASS [] {'applies': True, 'macros': 24, 'pins': 19656, 'tracks': 'make_tracks.tcl', 'worst_off_nm': 0.0}
+ot_hbm_su_static_pgslice_lg__lanes8_11 island_macro_clear PASS [] {'applies': False, 'reason': 'no island_ft rects'}
+ot_hgi_sfu_core_split3__opstore_b macro_channels PASS [] {'applies': True, 'macros': 48, 'columns': 4, 'min_channel_um': 10.8}
+ot_hgi_sfu_core_split3__opstore_b clock_entry_clear PASS [] {'applies': True, 'entries': 3, 'macros': 48}
+ot_hgi_sfu_core_split3__opstore_b macro_pin_grid PASS [] {'applies': True, 'macros': 48, 'pins': 39408, 'tracks': 'make_tracks.tcl', 'worst_off_nm': 0.0}
+ot_hgi_sfu_core_split3__opstore_b island_macro_clear PASS [] {'applies': False, 'reason': 'no island_ft rects'}

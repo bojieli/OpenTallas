@@ -1,0 +1,1579 @@
+{
+ "status": "FAIL",
+ "physical_route": false,
+ "source_cells": 44590,
+ "source_nets": 44591,
+ "tap_iterms": 7889,
+ "source_masters": [
+  "CKINVDCx16_ASAP7_75t_R"
+ ],
+ "pin_access": {
+  "CKINVDCx16_ASAP7_75t_R": {
+   "A": [
+    0.16699999999999998,
+    0.09
+   ],
+   "Y": [
+    1.5390000000000001,
+    0.18
+   ]
+  }
+ },
+ "inputs": {
+  "tree": {
+   "path": "/srv/opentallas-scratch2/claude/die-qc36/resite/tree_resite.json",
+   "sha256": "48b559ec5ac1f3e4e24fa7cdd63161ef02bdebcf5d93f84c4d808372d256cc22"
+  },
+  "netlist": {
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/mechanics/clkonly.v",
+   "sha256": "f0f1424fdc9f7fa1ac2937263dcb0792411458dee2a53b832169cdb5b36dab48"
+  },
+  "lef": {
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-physical-1029/inputs/cells.lef",
+   "sha256": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1"
+  },
+  "plan": {
+   "path": "/srv/opentallas-scratch2/claude/qc-import-1/plan/plan_qc_import1.json",
+   "sha256": "d0b301f8738717f3f225690e9540ecfd5005961c85a1ce2937d84123702dffed"
+  },
+  "endpoints": {
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-import-0824/reachfix/mechanics/endpoints.json",
+   "sha256": "2c3e3e1229cdd2ed17c0ae1f6c0c1fa693f6cc6cbb2fa520a870b07e52621e55"
+  }
+ },
+ "actual_tech_vias": {
+  "path": "/srv/opentallas-scratch2/claude/codex-qc-mesh5-1029/census119_h800/probe_census.json",
+  "sha256": "7010e4c8e26624ca6862262b6cce39abcdcc64720263fb117b367515f7307f9e",
+  "enclosures_um": {
+   "VIA89": {
+    "M8": [
+     0.02,
+     0.02
+    ],
+    "M9": [
+     0.02,
+     0.02
+    ]
+   },
+   "VIA78": {
+    "M7": [
+     0.016,
+     0.027
+    ],
+    "M8": [
+     0.027,
+     0.02
+    ]
+   },
+   "VIA67": {
+    "M6": [
+     0.027,
+     0.016
+    ],
+    "M7": [
+     0.016,
+     0.027
+    ]
+   },
+   "VIA56": {
+    "M5": [
+     0.012,
+     0.027
+    ],
+    "M6": [
+     0.023,
+     0.016
+    ]
+   },
+   "VIA45": {
+    "M4": [
+     0.023,
+     0.012
+    ],
+    "M5": [
+     0.012,
+     0.023
+    ]
+   },
+   "VIA34": {
+    "M3": [
+     0.009,
+     0.017
+    ],
+    "M4": [
+     0.02,
+     0.012
+    ]
+   },
+   "VIA23": {
+    "M2": [
+     0.014,
+     0.009
+    ],
+    "M3": [
+     0.009,
+     0.014
+    ]
+   },
+   "VIA12": {
+    "M1": [
+     0.009,
+     0.011
+    ],
+    "M2": [
+     0.014,
+     0.009
+    ]
+   }
+  }
+ },
+ "access_minarea_patches": {
+  "m8_dimensions_um": [
+   0.192,
+   0.08
+  ],
+  "m8_area_um2": 0.01536,
+  "short_m7_dimensions_um": [
+   0.032,
+   0.072
+  ],
+  "short_m7_area_um2": 0.002304,
+  "tree_width_um": 0.08,
+  "tree_spacing_um": 0.32
+ },
+ "physical_m7_windows": {
+  "radius_um": 8.64,
+  "host_and_macro_clipped": 3726,
+  "pins": 89180,
+  "macro_halo_um": 2.16
+ },
+ "clock_column_windows": {
+  "pins_clipped": 2108,
+  "pins": 89180,
+  "bisector_margin_um": 0.048,
+  "note": "conservative disjoint M7 windows; no extra M7 conductor or cell move"
+ },
+ "m6_entry_jogs": {
+  "path": "/srv/opentallas-scratch2/claude/die-qc40/prov_RN1cJ/backbone_plan_e3.json",
+  "count": 89180,
+  "sha256": "311a1744f88d686bee5c656d06a5fd6444ee4a277e824444302f0e07bb959642"
+ },
+ "cause": "no legal fixed-wire geometry",
+ "findings": [
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn98_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn242_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn282_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn418_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn460_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn602_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn644_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn820_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn947_4",
+   "detail": "driver jog M8 ideal 18204.615"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn1135_0",
+   "detail": "jog ck_b1135 M8 ideal 9138.555"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn1159_0",
+   "detail": "jog ck_b1159 M8 ideal 3911.355"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn1233_0",
+   "detail": "jog ck_b1233 M8 ideal 9138.555"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn1257_0",
+   "detail": "jog ck_b1257 M8 ideal 3911.355"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn1493_0",
+   "detail": "trunk M8 ideal 13413.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn1500_0",
+   "detail": "trunk M8 ideal 13413.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1626",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1641",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1657",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1672",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1827",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1830",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1850",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1853",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1874",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1905",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1920",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1951",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1954",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1974",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1977",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n1997",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2004",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2012",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2058",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2073",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2089",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2104",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2200",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2259",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2262",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2282",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2285",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2306",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2337",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2352",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2383",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2386",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2406",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2409",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2429",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2436",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2444",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2490",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2505",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2521",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2536",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2632",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2691",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2694",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2707",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2710",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2714",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2717",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2738",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2769",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2784",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2815",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2818",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2838",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2841",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2861",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2868",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2876",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2922",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2937",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2953",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n2968",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3123",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3126",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3146",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3149",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3154",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3157",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3170",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3201",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3216",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3247",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3250",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3270",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3273",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3293",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3300",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3308",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3354",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3369",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3385",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3400",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3496",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3555",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3558",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3578",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3581",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3602",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3633",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3648",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3679",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3682",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3702",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3705",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3725",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3732",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3740",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3786",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3801",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3817",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3832",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3987",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n3990",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4010",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4013",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4034",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4065",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4080",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4111",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4114",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4134",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4137",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4157",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4164",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4172",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4218",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4233",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4249",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4264",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4360",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4419",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4422",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4442",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4445",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4466",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4497",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4512",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4543",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4546",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4566",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4569",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4589",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4596",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4604",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4650",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4665",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4681",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4696",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4851",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4854",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4874",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4877",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4882",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4885",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4898",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4929",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4944",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4975",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4978",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n4998",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5001",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5021",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5028",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5036",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5082",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5097",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5113",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5128",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5224",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5283",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5286",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5299",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5302",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5306",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5309",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5330",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5361",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5376",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5407",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5410",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5430",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5433",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5453",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5460",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5468",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5514",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5529",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5545",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5560",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5656",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5715",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5718",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5738",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5741",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5762",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5793",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5808",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5839",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5842",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5862",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5865",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5885",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5892",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5900",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5946",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5961",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5977",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n5992",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6088",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6147",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6150",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6170",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6173",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6194",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6225",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6240",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6271",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6274",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6294",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6297",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6317",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6324",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6332",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6378",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6393",
+   "detail": "driver jog M8 ideal 13300.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6409",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6424",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6520",
+   "detail": "driver jog M8 ideal 11961.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6571",
+   "detail": "driver jog M8 ideal 13635.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6574",
+   "detail": "driver jog M8 ideal 13635.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6582",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6605",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6626",
+   "detail": "driver jog M8 ideal 14639.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6657",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6672",
+   "detail": "driver jog M8 ideal 15309.135"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6703",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6706",
+   "detail": "driver jog M8 ideal 13969.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6726",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6729",
+   "detail": "driver jog M8 ideal 14974.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6749",
+   "detail": "driver jog M8 ideal 10621.935"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6756",
+   "detail": "driver jog M8 ideal 10956.735"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n6764",
+   "detail": "driver jog M8 ideal 11291.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn7488_0",
+   "detail": "driver jog M8 ideal 17860.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n7543",
+   "detail": "driver jog M8 ideal 8404.695"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn8016_0",
+   "detail": "drop ck_b8016 M8 ideal 19159.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn8370_0",
+   "detail": "driver jog M8 ideal 23087.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n8425",
+   "detail": "driver jog M8 ideal 3177.495"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn8898_0",
+   "detail": "drop ck_b8898 M8 ideal 24386.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn9024_0",
+   "detail": "drop ck_b9024 M8 ideal 19159.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn9504_0",
+   "detail": "driver jog M8 ideal 17860.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n9559",
+   "detail": "driver jog M8 ideal 8404.695"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn9906_0",
+   "detail": "drop ck_b9906 M8 ideal 24386.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn10032_0",
+   "detail": "drop ck_b10032 M8 ideal 19159.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn10386_0",
+   "detail": "driver jog M8 ideal 23087.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n10441",
+   "detail": "driver jog M8 ideal 3177.495"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn10914_0",
+   "detail": "drop ck_b10914 M8 ideal 24386.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn12048_0",
+   "detail": "drop ck_b12048 M8 ideal 19159.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn12237_0",
+   "detail": "drop ck_b12237 M8 ideal 19159.335"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn12678_0",
+   "detail": "drop ck_b12678 M8 ideal 24386.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn12804_0",
+   "detail": "drop ck_b12804 M8 ideal 24386.535"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn13167_0",
+   "detail": "driver jog M8 ideal 17860.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n13267",
+   "detail": "driver jog M8 ideal 8404.695"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn13464_0",
+   "detail": "driver jog M8 ideal 19156.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn13716_0",
+   "detail": "driver jog M8 ideal 17860.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n13771",
+   "detail": "driver jog M8 ideal 8404.695"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn13887_0",
+   "detail": "driver jog M8 ideal 23087.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n14113",
+   "detail": "driver jog M8 ideal 3177.495"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn14310_0",
+   "detail": "driver jog M8 ideal 19156.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn14436_0",
+   "detail": "driver jog M8 ideal 24383.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn14688_0",
+   "detail": "driver jog M8 ideal 23087.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n14743",
+   "detail": "driver jog M8 ideal 3177.495"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn15282_0",
+   "detail": "driver jog M8 ideal 24383.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn17010_0",
+   "detail": "driver jog M8 ideal 17860.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n17065",
+   "detail": "driver jog M8 ideal 8404.695"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn17604_0",
+   "detail": "driver jog M8 ideal 19156.635"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn17982_0",
+   "detail": "driver jog M8 ideal 23087.835"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_n18037",
+   "detail": "driver jog M8 ideal 3177.495"
+  },
+  {
+   "kind": "no_clock_track",
+   "name": "ck_rn18486_0",
+   "detail": "driver jog M8 ideal 24383.835"
+  }
+ ]
+}

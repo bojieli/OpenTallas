@@ -2,6 +2,7 @@
 incoming reset and re-drives registered rst_o outs to its neighbours; per-partition release cycles published by
 reset_tree.py offsets and checked here against a simulation of the generated die."""
 import copy
+import pytest
 import json
 import re
 import shutil
@@ -421,3 +422,22 @@ def test_rst_o_has_own_relay_and_tap_copy_is_placed():
         assert f"assign rst_o_{k}" not in body and body.count(f".q(rst_o_{k}))") == 1
         assert f"rtr_place {q} {{*{r['name']}[./]*}}" in tcl and f"rtr_place_opt {q}:copy {{*{r['name']}_t[./]*}}" in tcl
     assert "proc rtr_place_opt" in tcl
+
+
+def test_reset_from_master_port_keeps_target_internal_drops_it_and_needs_content():
+    """DIE-HBM-25 (HBM-047/048): a split piece of a reuse content bound whole declares where its reset comes from.
+    kind port keeps the wavefront target (the bind drives the master leaf port); kind internal (master-internal relayed
+    net) is not a die wavefront consumer; an unknown content fails closed."""
+    def plan(kind, content="u_m"):
+        raw = wave(TINY)
+        t = raw["partition_types"]["src"]
+        t.setdefault("contents", []).append(dict(inst="u_m", module="m", status="reuse", cells=1,
+                                                 origin_um=[600, 600], outline_um=[10, 10]))
+        t["hard_cores"] = [dict(inst="u_m_piece", module="m__piece", origin_um=[50, 50], outline_um=[200, 300],
+                                pins=[dict(name="rst_n", layer="M4", xy=[0, 150])],
+                                reset_from_master=dict(kind=kind, content=content, pin="rst_n", source="test"))]
+        return schema.Plan(raw)
+    assert [c["inst"] for c in RT.for_type(plan("port"), "src")["core_resets"]] == ["u_m_piece"]
+    assert RT.for_type(plan("internal"), "src")["core_resets"] == []
+    with pytest.raises(RT.ResetError):
+        RT.core_reset_targets(plan("port", content="u_nope"), "src")

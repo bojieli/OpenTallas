@@ -2521,6 +2521,34 @@
           "members"
          ],
          "type": "object"
+        },
+        "reset_from_master": {
+         "additionalProperties": false,
+         "properties": {
+          "kind": {
+           "enum": [
+            "port",
+            "internal"
+           ]
+          },
+          "content": {
+           "minLength": 1,
+           "type": "string"
+          },
+          "pin": {
+           "const": "rst_n"
+          },
+          "source": {
+           "minLength": 1,
+           "type": "string"
+          }
+         },
+         "required": [
+          "kind",
+          "content",
+          "source"
+         ],
+         "type": "object"
         }
        }
       }
