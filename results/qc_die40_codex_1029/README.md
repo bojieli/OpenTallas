@@ -11,3 +11,5 @@ N3 additionally clips cell M7 riser windows against actual native M7 pin rectang
 All are geometry-only prebuild runs on intel2:/srv/opentallas-scratch2/claude/codex-qc-1847/prov_R7N{1,2,3}. Every heavy run uses ot-run64GB/4threads. No P&R/STA launched. Existing R7/L4/L9 failures remain untouched. Render is generated with each prebuild; must view and review before materializing/route.
 
 The pinned14MB src_pc snapshot is copied from DIE-QC-39, including the leaf-load change already on main9c711d06afa. It reads immutable predecessor clock/PG/access artifacts; all output and new source is in own lane root. Current native bind obligation remains pair image32h03039da9 (TOK-KV-4 now merged4208361ea2a).
+
+N3 FAIL retained native_N3_fail.log: clipping ran before R7 backbone substitution and found ck_b1750/Y versus ck_n1752 at the old cell pin column. This is not an actual R7-stack conclusion. N4 corrects ordering: native clipping after mapping R7 M7 backbone coordinates. No source failure hidden, no physical route.
