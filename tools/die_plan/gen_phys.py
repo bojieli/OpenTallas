@@ -2510,6 +2510,8 @@ puts "OT_CLAND preserved $cland_refirm legally packed cells FIRM through DPL"
         (kd / "infra_ports.json").write_text(json.dumps(infra, indent=1) + "\n")
         bud["native_infrastructure"] = dict(pins=len(infra), arcs=len(decl["arcs"]), data_cycles_added=0, timing="die-timed FT interfaces; actual characterisation required")
         (kd / "budget.json").write_text(json.dumps(bud, indent=1) + "\n")
+    from flat_clock_forest import install as install_flat_clock_forest
+    install_flat_clock_forest(P, tn, kd)
     write_partition_freeze(P, tn, kd, plan_pin_records(P, tn, pins, bump_sites))
     return kd
 

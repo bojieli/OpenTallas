@@ -798,6 +798,10 @@
        }
       }
      },
+     "flat_clock_forest_file": {
+      "type": "string",
+      "minLength": 1
+     },
      "kit_core_margins_um": {
       "type": "array",
       "minItems": 4,
