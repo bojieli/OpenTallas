@@ -1,0 +1,16 @@
+  Proof for induction step holds. Entire workset of 2052 cells proven!
+Proved 2052 previously unproven $equiv cells.
+
+16. Executing EQUIV_STATUS pass.
+Found 17769 $equiv cells in eq:
+  Of those cells 17769 are proven and 0 are unproven.
+  Equivalence successfully proven!
+Proved 2052 previously unproven $equiv cells.
+
+16. Executing EQUIV_STATUS pass.
+ERROR: Found 2 unproven $equiv cells in 'equiv_status -assert'.
+Found 17769 $equiv cells in eq:
+  Of those cells 17767 are proven and 2 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:295:find_same_wires$93842: \u_rx.admission_open_gold \u_rx.admission_open_gate
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$101338: \admission_open_gold \admission_open_gate
+Found a total of 2 unproven $equiv cells.

@@ -60,8 +60,10 @@ def transform(design, top, retime=(), mutant=False):
                 reset_value[b] = rv
                 cache[b] = c["connections"]["D"][index]
                 return cache[b]
-            if c["type"] not in ("$reduce_or", "$reduce_bool", "$logic_or"):
+            if c["type"] not in ("$reduce_or", "$reduce_bool", "$logic_or", "$or"):
                 raise ValueError("unsupported retime cone " + c["type"])
+            if c["type"] == "$or" and any(len(v) != 1 for v in c["connections"].values()):
+                raise ValueError("only scalar bitwise OR can be retimed as a reduction")
             nc = copy.deepcopy(c)
             for ip, direction in nc["port_directions"].items():
                 nc["connections"][ip] = ([advance(x) for x in nc["connections"][ip]]
@@ -82,7 +84,9 @@ def transform(design, top, retime=(), mutant=False):
             connections=dict(CLK=list(ck), ARST=list(rn), D=[d], Q=[new_q]))
         p["bits"] = [new_q]
         # The old internal signal keeps its own name; only the public alias moves.
-        m["netnames"][port] = dict(hide_name=0, bits=[new_q], attributes={"keep": ONE})
+        m["netnames"][port] = copy.deepcopy(m["netnames"][port])
+        m["netnames"][port]["bits"] = [new_q]
+        m["netnames"][port].setdefault("attributes", {})["keep"] = ONE
         retimed.append(port)
 
     wrappers = {}
