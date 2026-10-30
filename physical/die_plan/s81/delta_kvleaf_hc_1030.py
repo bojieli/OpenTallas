@@ -20,7 +20,8 @@ tools/die_plan/ft_nudge.py (station counts / windows / pins unchanged; only thes
 Step 3 (G0C face-rule sidecar): core_conns.json gets the 4 KV types' entries = the template type's entries for the 23
 kept cores, renamed, with targets on the soft vn_b / vq dropped (only additions; every existing key unchanged).
 Step 2b: landing_contract.collector_tree of the 4 types = their recomputed reset tree (depth unchanged).
-usage (repo root): delta_kvleaf_hc_1030.py PLAN_IN PLAN_OUT [REPORT.json [CONNS_IN CONNS_OUT]]"""
+Step 2c: the same tree in the clock landing table h2_2249/landed_sidecar_h2.json (collector.types[tn].tree).
+usage (repo root): delta_kvleaf_hc_1030.py PLAN_IN PLAN_OUT [REPORT.json [CONNS_IN CONNS_OUT [SIDECAR_IN SIDECAR_OUT]]]"""
 import copy
 import json
 import math
@@ -249,6 +250,17 @@ def main():
         cout = json.dumps(conns, indent=0)
         assert json.loads(cout) == dict(json.loads(cin), **{t_: conns[t_] for t_ in conns if t_ not in json.loads(cin)})
         open(sys.argv[5], "w").write(cout)
+    if len(sys.argv) > 7:
+        # step 2c: the bind reads the collector from the clock landing table (manifest clock_landing_table =
+        # h2_2249/landed_sidecar_h2.json), not from the plan copy: same recomputed tree there, nothing else changed
+        sin = json.loads(open(sys.argv[6]).read())
+        sout = copy.deepcopy(sin)
+        for tn in report:
+            ct = sout["collector"]["types"][tn]
+            assert json.loads(json.dumps(ct["tree"])) == plan["partition_types"][tn]["clock"]["landing_contract"][
+                "collector_tree"], tn
+            ct["tree"] = out["partition_types"][tn]["clock"]["landing_contract"]["collector_tree"]
+        open(sys.argv[7], "w").write(json.dumps(sout, separators=(",", ":")) + "\n")
     if len(sys.argv) > 3:
         json.dump(report, open(sys.argv[3], "w"), indent=1)
     print(json.dumps(report, indent=1)[:3000])
