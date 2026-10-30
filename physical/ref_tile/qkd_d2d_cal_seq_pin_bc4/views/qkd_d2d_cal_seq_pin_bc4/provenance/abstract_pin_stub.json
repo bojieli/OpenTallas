@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qkd_d2d_cal_seq_pin_bc4.lef",
-    "sha256": "0fd6320aafcfb9490a0fe45964b5dd43bf8ee62cff7bbf17ed8549a0c038b6da"
+    "sha256": "6da1997cb0c01d9ba8d9036d0601cfd978578bb60067c0bd3a4dccaf5b9401c5"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-89fec6b77/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-2c36aa550/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "a616467806736b1b1083076120236e16955806f0da7cbdddaf4139406b4e2890"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-89fec6b77/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-89fec6b77/record/views/qkd_d2d_cal_seq_pin_bc4/provenance/raw/qkd_d2d_cal_seq_pin_bc4.lef",
-    "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-89fec6b77/record/views/qkd_d2d_cal_seq_pin_bc4/provenance/qkd_d2d_cal_seq_pin_bc4.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-2c36aa550/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-2c36aa550/record/views/qkd_d2d_cal_seq_pin_bc4/provenance/raw/qkd_d2d_cal_seq_pin_bc4.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-2c36aa550/record/views/qkd_d2d_cal_seq_pin_bc4/provenance/qkd_d2d_cal_seq_pin_bc4.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 3 OBS rects moved into 3 pins: ck, reload, rst_n; pockets: 62 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 3 OBS rects moved into 3 pins: ck, reload, rst_n; pockets: 61 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-89fec6b77/record/views/qkd_d2d_cal_seq_pin_bc4/provenance/qkd_d2d_cal_seq_pin_bc4.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_d2d_cal_seq_pin_bc4-k22a-2c36aa550/record/views/qkd_d2d_cal_seq_pin_bc4/provenance/qkd_d2d_cal_seq_pin_bc4.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qkd_d2d_cal_seq_pin_bc4 25.92 x 34.56: PG M5 VDD 8 stripes (73% spread, 100% cov) / VSS 8 stripes (73% spread, 100% cov); strap M6; face pins 98 blocked-above 0 blocked-same 0; clock ck insertion 98 ps; pockets M5 0 (closed)",
+    "summary": "qkd_d2d_cal_seq_pin_bc4 25.92 x 34.56: PG M5 VDD 8 stripes (73% spread, 100% cov) / VSS 8 stripes (73% spread, 100% cov); strap M6; face pins 98 blocked-above 0 blocked-same 0; clock ck insertion 100 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qkd_d2d_cal_seq_pin_bc4",
       "W": 25.92,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 98,
         "blocked_above": 0,
-        "covered_below": 0,
+        "covered_below": 5,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 98.5,
-          "min_ps": 82.02
+          "max_ps": 99.82,
+          "min_ps": 82.41
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 62
+          "added": 61
         },
         "count": 0,
         "area_um2": 0,
@@ -98,6 +98,6 @@
   },
   "output": {
     "path": "qkd_d2d_cal_seq_pin_bc4.lef",
-    "sha256": "6adca5b0e3544ceba9e820a756df8f78116ff9c6b354b450216589da3a40dabc"
+    "sha256": "3ef2916bfc32784585887c15fc1d98bf45d01a8744c1ef5ff3864aac4fe41385"
   }
 }
