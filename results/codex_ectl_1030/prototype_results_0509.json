@@ -1,0 +1,39 @@
+{
+  "q1A": {
+    "tt_ps": 147.5128,
+    "ff_ps": 10.7368,
+    "slew": 4,
+    "cap": 0,
+    "DRT": "HELD",
+    "remaining": "4 data wires215..263um; relay prototype next; fixedclock RC qualification pending"
+  },
+  "q2b": {
+    "tt_ps": 179.274,
+    "ff_ps": 3.79149,
+    "slew": 0,
+    "cap": 0,
+    "old_DPL_overlaps": 0,
+    "next": "clock-inclusiveGRT50+TTFFlive"
+  },
+  "pv5": {
+    "tt_ps": -2.84,
+    "ff_ps": 13.04,
+    "IO_HB4_bits": 632,
+    "IO_cells": 638,
+    "internal_hold_buffers": 578,
+    "DRT": "HELD"
+  },
+  "pc_uniform": {
+    "GRT_TT_ps": 2.46,
+    "FF_input_ps": -172.95,
+    "failure": "i_next79 requires5HB4 exceeds4",
+    "next": "approvedbalancedleaf64+SNbuffer"
+  },
+  "pc_data_coupon": {
+    "baseline_sq1_tt_ps": -115.726982,
+    "buffer_sq1_tt_ps": 140.689346,
+    "whole_tt_ps": -113.081545,
+    "added_buffer": "BUFx6f atFA_SN",
+    "cycles_added": 0
+  }
+}
