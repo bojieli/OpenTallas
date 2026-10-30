@@ -36,6 +36,10 @@ mkdir -p $O/gen
 python3 -I $H/partrec/gen_partrec.py $TOPF $RD/kv3_hub_Wi_part.sv hub_Wi $O/gen > $O/gen/partrec.log || exit 2
 mv $O/gen/rec_hub_Wi.svh $O/gen/partrec_hub_Wi.svh
 python3 -I $H/gen_kvpc_rst_diag.py $TOPF $O/gen/kvpc_rst_diag.svh > $O/gen/kvpc_rst_diag.log || exit 2
+# TOK-KV-7 10-29: under a joined START provider (start_provider_bind.py) the bound die is dut.u_bound; the bench
+# hierarchical refs (tb + generated includes + the kvtok2 observer, copied into gen/ which precedes $H) follow it
+cp $H/kvtok2_obs.svh $O/gen/ || exit 2
+python3 -I $H/join_scope.py $TOPF $O/tb_kvslice.sv $O/gen/*.svh || exit 2
 # bench-side sources (off-die peers + PHY models); the UCIe macro model is the hard macro's own simulation model
 UCIE_MODEL=$R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv
 BENCH="$H/kvs_link_phy_models.sv $UCIE_MODEL $H/qkd_pll_analog_model_bench.sv $H/qkd_hbm3e_phy_pc4_bench.sv $H/kvs_compute_end.sv $JOIN_SRC $R/rtl/qwen_split/qfd_kvn_static_transport.sv $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv $R/rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv"
