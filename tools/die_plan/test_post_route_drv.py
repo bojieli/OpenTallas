@@ -225,3 +225,25 @@ def test_optional_wire_limit_uses_real_repair_command():
         result = subprocess.run(["tclsh"], input=prefix + envset + fragment, text=True, capture_output=True)
         assert result.returncode == 0 and not result.stderr, result.stderr
         assert f"CALL {expected}" in result.stdout
+
+
+def test_finish_passes_both_mm_corners_as_one_make_argument(tmp_path):
+    result, record, log = run_loop(tmp_path, "p1_tc=0,p1_bc=0")
+    assert result.returncode == 0, result.stdout + result.stderr
+    command = (tmp_path / "p1" / "finish_cmd.txt").read_text()
+    command = command[command.index("make DESIGN_CONFIG="):]
+    argfile = tmp_path / "make_args.txt"
+    prefix = 'make() { printf "%s\\n" "$@" > "$ARGFILE"; }; '
+    env = dict(os.environ, ARGFILE=str(argfile), ROUTE_CORNERS='CORNER=TC CORNERS="tc bc"')
+    run = subprocess.run(["bash", "-c", prefix + command], env=env, capture_output=True, text=True)
+    assert run.returncode == 0, run.stderr
+    args = argfile.read_text().splitlines()
+    assert "CORNER=TC" in args and "CORNERS=tc bc" in args
+    assert 'bc"' not in args
+    # Old R7 expanded this variable inside the container: quote characters in
+    # its value become data, so word splitting creates a literal bc" target.
+    mutant = command.replace('CORNER=TC CORNERS="tc bc"', '$ROUTE_CORNERS')
+    bad = subprocess.run(["bash", "-c", prefix + mutant], env=env, capture_output=True, text=True)
+    assert bad.returncode == 0, bad.stderr
+    broken = argfile.read_text().splitlines()
+    assert "CORNERS=tc bc" not in broken and 'bc"' in broken
