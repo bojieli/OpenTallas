@@ -15,7 +15,8 @@ P = "dvs_E0.u_core.u_sub.u_suvm"
 
 
 def matcher(cells):
-    return bind.r8_source_matcher({c: i for i, c in enumerate(cells)}, canon)
+    rn = bind.R8Renumber({c: i for i, c in enumerate(cells)}, canon)
+    return rn.same_source, rn.map
 
 
 def test_consistent_renumbering_matches_and_is_recorded():
@@ -51,3 +52,16 @@ def test_renumbering_must_be_one_to_one():
     assert same(f"{P}.$procdff$1.Q", f"{P}.$procdff$11.Q")
     assert not same(f"{P}.$procdff$1.Q", f"{P}.$procdff$12.Q")    # two old flops onto one new flop
     assert not same(f"{P}.$procdff$2.Q", f"{P}.$procdff$11.Q")    # one old flop onto two new flops
+
+
+def test_renumbered_sink_flop_resolves_by_its_driver_and_shares_the_map():
+    cells = [f"{P}.$procdff$60305", f"{P}.$procdff$60306", f"{P}.u_lrly0"]
+    rn = bind.R8Renumber({c: i for i, c in enumerate(cells)}, canon)
+    fed = {f"{P}.$procdff$60306": {f"{P}.u_lrly0.vm_we"}}
+    drives = lambda c: f"{P}.u_lrly0.vm_we" in fed.get(c, ())      # noqa: E731
+    assert rn.sink(f"{P}.$procdff$60312", drives) == 1
+    assert rn.sink(f"{P}.$procdff$60312", drives) == 1                 # every bit asks again
+    assert not rn.same_source(f"{P}.$procdff$60305.Q", f"{P}.$procdff$60312.Q")   # 60312 is already 60306
+    assert rn.sink(f"{P}.u_gone", drives) is None                      # named cells never renumber
+    assert rn.sink(f"{P}.$procdff$60305", drives) is None              # still exists: not renumbered
+    assert rn.sink(f"{P}.$procdff$99", lambda c: True) is None         # ambiguous: two candidates

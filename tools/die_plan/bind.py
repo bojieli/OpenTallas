@@ -128,28 +128,50 @@ endmodule
 
 
 # Yosys numbered cells without a source location in the name ($procdff$N ...) renumber on any edit of the elaborated RTL
-# (QC-KITS-X 10-30: main 8bb9043d0 moved u_suvm $procdff$60311-13 -> 60305-07, same flops).  For align_r8: a table source
-# of that form that is ABSENT from this bind matches the bind's driver when both are numbered cells of the SAME parent,
-# type and pin, and the old -> new map stays one-to-one over the whole table (a consistent renumbering); anything else
-# is not the same source (R8_STALE).  Returns (same_source(bind_src, table_src) -> bool, the old -> new cell map).
-_AUTO_PIN = re.compile(r"^(.*)\.\$(\w+)\$(\d+)\.(\w+)$")
+# (QC-KITS-X 10-30: main 8bb9043d0 moved u_suvm $procdff$60311-13 -> 60305-07, same flops).  For align_r8: a table cell
+# of that form (member source or sink) that is ABSENT from this bind is renamed to the bind's cell of the SAME parent and
+# type (and pin) that the member's own crossing identifies, and the old -> new map must stay one-to-one over the whole
+# table (a consistent renumbering); anything else stays R8_STALE / no such sink.
+_AUTO_CELL = re.compile(r"^(.*)\.\$(\w+)\$(\d+)$")
 
 
-def r8_source_matcher(cells, canon):
-    renum, back = {}, {}
+class R8Renumber:
+    def __init__(self, cells, canon):
+        self.cells, self.canon = cells, canon
+        self.map, self.back = {}, {}
+        self.by_kind = defaultdict(list)
+        for path, ci in cells.items():
+            mm = _AUTO_CELL.match(path)
+            if mm:
+                self.by_kind[(mm[1], mm[2])].append(path)
 
-    def same_source(src, tsrc):
-        if canon(src) == canon(tsrc):
+    def _bind(self, old, new):
+        ok = self.map.setdefault(old, new) == new
+        return self.back.setdefault(new, old) == old and ok
+
+    def _kind(self, cell):
+        mm = _AUTO_CELL.match(cell)
+        return (mm[1], mm[2]) if mm else None
+
+    def same_source(self, src, tsrc):
+        """bind driver pin `src` vs table source pin `tsrc`"""
+        if self.canon(src) == self.canon(tsrc):
             return True
-        a, b = _AUTO_PIN.match(src), _AUTO_PIN.match(tsrc)
-        if not a or not b or (a[1], a[2], a[4]) != (b[1], b[2], b[4]):
-            return False
-        old, new = tsrc.rsplit(".", 1)[0], src.rsplit(".", 1)[0]
-        if old in cells:
-            return False    # the table's cell still exists in this bind: a different flop
-        ok = renum.setdefault(old, new) == new
-        return back.setdefault(new, old) == old and ok
-    return same_source, renum
+        (old, op), (new, np_) = tsrc.rsplit(".", 1), src.rsplit(".", 1)
+        k = self._kind(old)
+        if k is None or op != np_ or k != self._kind(new) or old in self.cells:
+            return False    # not numbered, other parent/type/pin, or the table's cell still exists (a different one)
+        return self._bind(old, new)
+
+    def sink(self, old, drives):
+        """table sink cell `old` absent from the bind: the unique same-parent/type cell for which drives(path) holds"""
+        k = self._kind(old)
+        if k is None or old in self.cells:
+            return None
+        cs = [c for c in self.by_kind.get(k, ()) if drives(c)]
+        if len(cs) != 1 or not self._bind(old, cs[0]):
+            return None
+        return self.cells[cs[0]]
 
 class BindError(Exception):
     pass
@@ -1898,7 +1920,8 @@ class Binder:
                 xsrc[(c, pn)].add(canon(f"{self.F.cells[d[2]].path}.{d[3]}"))
         st["renamed_cells"] = 0
         st["gone_pad0"] = []
-        same_source, renum = r8_source_matcher(cidx, canon)
+        rn = R8Renumber(cidx, canon)
+        same_source = rn.same_source
         want = {}
         for m in js["members"]:
             st["members"] += 1
@@ -1910,6 +1933,12 @@ class Binder:
                 if len(cs) == 1:
                     ci = cs[0]
                     st["renamed_cells"] += 1
+            if ci is None:      # numbered sink flop ($procdff$N.D): the one fed by this member's (possibly renumbered) source
+                ci = rn.sink(m["sink"], lambda c: any(
+                    x == canon(m["source"]) or (rn._kind(x.rsplit(".", 1)[0]) is not None
+                                               and rn._kind(x.rsplit(".", 1)[0]) == rn._kind(m["source"].rsplit(".", 1)[0])
+                                               and x.rsplit(".", 1)[1] == m["source"].rsplit(".", 1)[1])
+                    for x in xsrc.get((cidx[c], m["sink_port"]), ())))
             bits = [i for a, b in m["sink_bits"] for i in range(a, b + 1)]
             if ci is None or m["sink_port"] not in self.F.cells[ci].ports:
                 if not m["pad"]:
@@ -1968,7 +1997,7 @@ class Binder:
                 lp = self.land_pads.setdefault(f"{path}.{pn}", dict(src_part=d[1], pads=[pad, pad], bits=0, r8=True))
                 lp["pads"] = [min(lp["pads"][0], pad), max(lp["pads"][1], pad)]
                 lp["bits"] += 1
-        st["renumbered_sources"] = len(renum)
+        st["renumbered_cells"] = len(rn.map)
         miss = [k for k in want if k not in seen]
         for k in miss:
             m = want[k]
