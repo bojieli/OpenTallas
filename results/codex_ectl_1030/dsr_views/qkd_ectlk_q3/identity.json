@@ -1,0 +1,90 @@
+{
+ "schema": "opentallas.collected_routed_view.v1",
+ "kit": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30",
+ "proof": "/srv/opentallas-scratch2/claude/die-kv-43-1030/q3lec/lec_post",
+ "routed_netlist": "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.v",
+ "signoff_verdict": "SIGNED",
+ "lec_verdict": "EQUIVALENT",
+ "counts": {
+  "compare_points": 9742,
+  "proved": 9742,
+  "differs": 0,
+  "undecided": 0
+ },
+ "rtl_source_checks": {
+  "rtl/ot_hdc_delay.sv": {
+   "previous": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "actual": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "match": true,
+   "mtime": 1793258494.5998716
+  },
+  "rtl/ot_qkd_ectl_parts.sv": {
+   "previous": "1ac0e1eec3115ce43fc4eb156e337753eef31b47de28ce254995965d9916ae80",
+   "actual": "1ac0e1eec3115ce43fc4eb156e337753eef31b47de28ce254995965d9916ae80",
+   "match": true,
+   "mtime": 1793258494.6001642
+  },
+  "rtl/ot_qwen_nearhbm_attn_stack_h.sv": {
+   "previous": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+   "actual": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+   "match": true,
+   "mtime": 1793258494.6003263
+  },
+  "rtl/ot_rst_relay.sv": {
+   "previous": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "actual": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "match": true,
+   "mtime": 1793258494.6004899
+  },
+  "rtl/qkd_ectl_c_st.sv": {
+   "previous": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+   "actual": "673d15ba39f68c557ba6fde08c9624470fa6a3d46a0b53d65739b9358aadad1f",
+   "match": true,
+   "mtime": 1793258494.6005983
+  },
+  "rtl/qkd_ectl_native_direct_tp8.sv": {
+   "previous": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+   "actual": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+   "match": true,
+   "mtime": 1793258494.6007164
+  },
+  "rtl/qkd_ectlk_columns.sv": {
+   "previous": "03c915c06583faf6f9b4e10f534ac4d9df4665845bc2efcea4ccca27c7e48129",
+   "actual": "03c915c06583faf6f9b4e10f534ac4d9df4665845bc2efcea4ccca27c7e48129",
+   "match": true,
+   "mtime": 1793258494.6011655
+  },
+  "rtl/qkd_static_ectl_st.sv": {
+   "previous": "18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f",
+   "actual": "18cea9e75d01c34e5039d60ac6589f9aacc4ab3192318217c42bdbbb2309044f",
+   "match": true,
+   "mtime": 1793258494.6008255
+  },
+  "rtl/qkd_static_ectla_kiss.sv": {
+   "previous": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+   "actual": "59db194022ebbfc6f6e77664f470008a45f2ff068468c655bf3c73ee21734ec9",
+   "match": true,
+   "mtime": 1793258494.6009347
+  },
+  "rtl/qkd_static_k_issuer.sv": {
+   "previous": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+   "actual": "3a134bf12bbbdbac2a6c8ff4c4ae476a59ac2ef235dbe884df8ee53d3a8396ce",
+   "match": true,
+   "mtime": 1793258494.601057
+  }
+ },
+ "artifact_sha256": {
+  "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.v": "572664858bccd50654738ceb20c436a4483975209685601894d80592e7363a23",
+  "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.odb": "094d3c55930879e31439652066d14903394c411888789b162f05e170a71f3467",
+  "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/run/results/asap7/hc_qkd_ectlk_q3__216x172_8/base/6_final.spef": "8df2ed02f54861ed3d06a14a1d6fcc85379cb61c85081413b380ce6ea4acd36e",
+  "/srv/opentallas-scratch2/claude/die-kv-43-1030/q3lec/lec_post/gate.aig": "d09e03a3f26e8b361b355ec61980ed5f4a2ea324444bc38040c17350a263be51",
+  "/srv/opentallas-scratch2/claude/die-kv-43-1030/q3lec/lec_post/gold.aig": "2198551eb603a6d7c39b74669d5d3a19702583cb06adfca7d1bbc056c0a13757",
+  "/srv/opentallas-scratch2/claude/codex-ectl-pc-2249/q3h432_prd30/lec.py": "8618eae3eea6822d889a28711357adab1eb46a3f798b52d5092593b5ce8be0a9"
+ },
+ "provenance_caveat": {
+  "commit": null,
+  "dirty": null,
+  "source": "kit provenance invalid: ValueError: source, input or running-tool identity mismatch"
+ },
+ "note": "Fresh actual AIG proof includes current kit RTL, whose files predate gold export. Old PROVENANCE preserved; two q0 old digest mismatches recorded, never replaced. Droop INFO NOT RUN."
+}

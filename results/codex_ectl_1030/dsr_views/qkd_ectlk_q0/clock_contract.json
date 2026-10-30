@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.core_clock_contract.v1",
+ "view_lib_sha256": "58f77ca1f125b599989853c37d448581e6c2f7c9651ba655d4fb44490dae8001",
+ "signed": true,
+ "signoff_source": "/srv/opentallas-scratch/claude/wt/codex-ectl-1030/results/codex_ectl_1030/dsr_views/qkd_ectlk_q0/signoff.json",
+ "signoff_verdict": "SIGNED",
+ "pins": {
+  "ck[0]": {
+   "tt": {
+    "mean_ps": 232.17,
+    "n": 1476,
+    "basis": "pin_register_mean",
+    "source": "/srv/opentallas-scratch/claude/wt/codex-ectl-1030/results/codex_ectl_1030/dsr_views/qkd_ectlk_q0/signoff.json:ck[0]:tt:insertion_pinflops"
+   },
+   "ff": {
+    "mean_ps": 188.28,
+    "n": 1476,
+    "basis": "pin_register_mean",
+    "source": "/srv/opentallas-scratch/claude/wt/codex-ectl-1030/results/codex_ectl_1030/dsr_views/qkd_ectlk_q0/signoff.json:ck[0]:ff:insertion_pinflops"
+   }
+  }
+ }
+}

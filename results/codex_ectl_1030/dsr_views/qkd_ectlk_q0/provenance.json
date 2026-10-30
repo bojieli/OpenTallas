@@ -1,0 +1,45 @@
+{
+ "verdict": "SIGNED",
+ "views_status": "signoff",
+ "kit": {
+  "module": "qkd_ectlk_q0",
+  "outline_um": [
+   216.0,
+   172.8
+  ],
+  "pins_file": "pins.json",
+  "pins_sha256": "4cc0cb61c5a91857e5cd11f3971be789e152e4117dd47c2a9ea53fbed42e93ca",
+  "pins_canon_sha256": "e85230fd16d7d1599e31c1850ed6d2172d26712e2a61341145ee700372c1c332",
+  "pins": 1478
+ },
+ "routed_lec": {
+  "verdict": "EQUIVALENT",
+  "counts": {
+   "compare_points": 27583,
+   "proved": 27583,
+   "differs": 0,
+   "undecided": 0
+  },
+  "record": "lec_routed.json"
+ },
+ "measurement": {
+  "pin_means": {
+   "tt": {
+    "n": 1476,
+    "min": 204.27,
+    "mean": 232.17,
+    "max": 270.4,
+    "spread": 66.13
+   },
+   "ff": {
+    "n": 1476,
+    "min": 162.57,
+    "mean": 188.28,
+    "max": 223.65,
+    "spread": 61.08
+   }
+  },
+  "source": "signoff.json corners insertion_pinflops",
+  "info_droop": "NOT RUN; non-gating"
+ }
+}
