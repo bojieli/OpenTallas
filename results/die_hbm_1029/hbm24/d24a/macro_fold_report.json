@@ -1,0 +1,56 @@
+{
+ "schema": "opentallas.hbm.macro_fold.v1",
+ "source_core_macros_sha256": "000a42968308bb55156c213c565e5515c85a15f3bd2d7bb67bd6a9afe498341c",
+ "cores": {
+  "hfd_ep_static": {
+   "plan_outline_um": [
+    427.68,
+    246.24
+   ],
+   "kit_outline_um": [
+    427.68,
+    246.24
+   ],
+   "macros": 4,
+   "old_macros": 0,
+   "old_min_channel_um": null,
+   "old_violations": 0,
+   "new_min_channel_um": 21.576,
+   "source": "/srv/opentallas-scratch2/claude/hbm-cores-kits-22/k2/mp/hfd_ep_static_b.json"
+  },
+  "ot_hbm_host_cp_rxs": {
+   "plan_outline_um": [
+    434.808,
+    480.0
+   ],
+   "kit_outline_um": [
+    434.808,
+    302.4
+   ],
+   "macros": 6,
+   "old_macros": 6,
+   "old_min_channel_um": 8.64,
+   "old_violations": 4,
+   "new_min_channel_um": 10.8,
+   "source": "/srv/opentallas-scratch2/claude/hbm-cores-kits-22/k2/mp/ot_hbm_host_cp_rxs_b.json"
+  },
+  "ot_hbm_su_static_sfustore_hw": {
+   "plan_outline_um": [
+    362.88,
+    388.8
+   ],
+   "kit_outline_um": [
+    362.88,
+    388.8
+   ],
+   "macros": 16,
+   "old_macros": 16,
+   "old_min_channel_um": 6.48,
+   "old_violations": 5,
+   "new_min_channel_um": 10.8,
+   "source": "/srv/opentallas-scratch2/claude/hbm-cores-kits-22/k2/mp/ot_hbm_su_static_sfustore_hw_b.json"
+  }
+ },
+ "core_macros_sha256": "5047d56dac7ed79bf6fef53c414f9a7596f84764173ff28548b9f78721eebdb2",
+ "die_plan_sha256": "77d613ccd6003946e6d497198890d3550251cd6a9ea1354356f052b4459651ae"
+}
