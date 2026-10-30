@@ -1,0 +1,21 @@
+{
+  "status": "SOURCE_CANDIDATE_PHYSICAL_RESET_ADMISSION_NOT_QUALIFIED",
+  "station_point_um": [1440.08, 328.32],
+  "existing_parent_reset_alias": "rst_n_t19",
+  "existing_parent_reset_final_depth": 7,
+  "existing_parent_reset_xy_um": [1262.52, 766.8],
+  "new_station_current_reset": "rst_n",
+  "current_point_to_reset_driver_manhattan_um": 616.04,
+  "existing_l2_reset": "rst_n_t36",
+  "existing_l2_reset_final_depth": 7,
+  "possible_local_reset": "rst_n_t40",
+  "possible_local_reset_final_depth": 7,
+  "possible_local_reset_xy_um": [1628.64, 335.88],
+  "possible_local_reset_manhattan_um": 196.12,
+  "local_reset_change_applied": false,
+  "required": [
+    "Exact actual new epoch FF site and macro-avoiding reset path",
+    "Explicit same-clock/equal-final-depth localization receipt and cold/warm exactness if reset is retargeted",
+    "Actual local clock assignment and G2 before any physical gate claim"
+  ]
+}
