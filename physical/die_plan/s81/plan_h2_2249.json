@@ -20952,9 +20952,29 @@
     ]
    },
    "contents": [
-    {"inst":"u_phy_hbm","module":"ot_hbm3e_phy_v41x_aw30_e8p5","status":"reuse","note":"hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge)"}
+    {
+     "inst": "u_phy_hbm",
+     "module": "ot_hbm3e_phy_v41x_aw30_e8p5",
+     "status": "reuse",
+     "note": "hard HBM3E PHY 8500 x 1177 in a 6-cell S-edge slot (bump field at the die edge); DIE-S81-36 10-30: view = K-only macro ot_hbm3e_phy_v41x_aw30_e8p5_k (the bound RTL's u_core), site at the S die-edge side, signal pins N/M5",
+     "physical_inst": "u_bound.u_core",
+     "physical_master": "ot_hbm3e_phy_v41x_aw30_e8p5_k",
+     "lef": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k/ot_hbm3e_phy_v41x_aw30_e8p5_k.lef",
+     "lib": "physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5_k/ot_hbm3e_phy_v41x_aw30_e8p5_k_tt.lib",
+     "origin_um": [
+      77.76,
+      0.0
+     ],
+     "outline_um": [
+      8500.056,
+      1177.2
+     ],
+     "orient": "R0",
+     "obs_max": "M5"
+    }
    ],
-   "note": "phy partition; 1 instance(s) (R0)"
+   "note": "phy partition; 1 instance(s) (R0)",
+   "core_pg_connect": true
   },
   "iqf__t1": {
    "module": "s81p_iqf__t1",
