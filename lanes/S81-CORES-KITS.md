@@ -1,0 +1,4 @@
+# S81-CORES-KITS (S81 hard-core kit throughput, OWNER 10-29 18:31 decision)
+
+- 2026-10-29 18:45 PDT START [S81-CORES-KITS] fresh lane. Plan of record plan_s13r2 (frozen), main a2b2a0808c2+. Sparse worktree intel2 /srv/opentallas-scratch2/claude/wt/s81-cores-kits (branch claude/s81-cores-kits-1029), data intel2 /srv/opentallas-scratch2/claude/s81ck.
+- 2026-10-29 18:45 PDT CLAIM [S81-CORES-KITS] wave 1 (no live owner claim in last 3 h, OWNERS.tsv NEEDS-KIT, owner S81-CORES ended): ot_s81dv_xfin, ot_s81sl_capc5r, ot_s81sl_xrt1, ot_s81sl_xrt3, ot_s81sl_eg (KIT-PLACED 10-24, stale epyc1 kit) = the 4 cores blocking 16 dsdv_slice_*_C types; then dsfd_bf_front_roots, dsfd_cfifo_crs4 (block 7 col types), dsdv_bksel_c, dsdv_bksel_q, dsdv_gunit_l1/l3/l5. NOT taken: ve_m/vn_a/vn_b (wait VEZ merge), ot_s81sl_vsw (DIE-S81-31 live), ve_s (routing), rom_elem_q_qxpq_w10 + bf_col (ROM64/BF LEC + BF t16 replan history with DIE-S81; later wave after check), FIX rows (later wave).
