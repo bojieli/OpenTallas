@@ -51,7 +51,8 @@ def test_declared_ring_via_mux_registers_at_farthest_slot(tmp_path):
 def test_core_kit_v1_declaration_uses_the_same_capture_checks(tmp_path):
     land = dict(LAND, schema="opentallas.land_slots.v1")
     D = dump(tmp_path, far=400)
-    assert reg(D, land=land) == reg(D)  # includes the farthest-slot distance gate
+    for version in ("opentallas.land_slots.v1", "opentallas.core_land_slots.v1"):
+        assert reg(D, land=dict(LAND, schema=version)) == reg(D)  # identical strict capture and distance gates
     rejected, m = reg(D, land=land, guard=dict(GUARD, verdict="FAIL"))
     assert rejected["errors"] and not rejected["caps"] and m["pins_unregistered"] == 3
     rejected, _ = reg(D, land=dict(land, schema="opentallas.land_slots.v2"))
