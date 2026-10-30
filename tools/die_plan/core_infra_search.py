@@ -18,6 +18,12 @@ import die_clock_128 as C128
 class Model:
     def __init__(self, sl, libraries, points, caps, r, c, input_slew_ps=40., routing_model=None):
         plan=CI.compile_slice(sl);tree=plan['core_tree'];self.plan=plan
+        if sl.get("effective_clock_routing") is not None:
+            import core_clock_routing as CCR
+            if routing_model is not None:
+                raise ValueError("effective clock routing refuses a competing routing_model")
+            profile = CCR.profile(sl)
+            routing_model = dict(nonleaf=profile, leaf=profile)
         self.routing_model=routing_model;self.branch=[];self.wire_cap=[];self.wire_summary=[]
         self.input_slew_ps=float(input_slew_ps)
         if not math.isfinite(self.input_slew_ps) or self.input_slew_ps < 0:raise ValueError('invalid declared core input slew')
@@ -124,7 +130,7 @@ def design(sl, libraries, points, caps, r, c, slew_limit=80., passes=10, input_s
     out.pop('cell_placements',None)
     for i,n in enumerate(out['core_tree']['nodes']):n['master']=choices[i];n['xy_um']=frozen[n['name']]['xy_um']
     return out,dict(baseline=baseline,result=best,score=bestscore,steps=steps,
-                   driver_counts={n:choices.count(n) for n in options if choices.count(n)},slew_limit_ps=slew_limit,input_slew_ps=input_slew_ps,wire_model=('rooted_directional' if routing_model is not None else 'historical_direct'),wire_geometry=model.wire_summary)
+                   driver_counts={n:choices.count(n) for n in options if choices.count(n)},slew_limit_ps=slew_limit,input_slew_ps=input_slew_ps,wire_model=('effective_directional_envelope' if sl.get('effective_clock_routing') is not None else ('rooted_directional' if routing_model is not None else 'historical_direct')),wire_geometry=model.wire_summary)
 
 
 def add_entry_chain(sl,n,cell):
