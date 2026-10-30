@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.s81.gunit_cw_relative_calendar_delta.v1",
+  "status": "PRIVATE_R25_CANDIDATE_NOT_ADOPTED",
+  "price_source": "codex/ds-native-slot-1030@320ffe4ce",
+  "lane": "unit__seqhost__gunit",
+  "period_ps": 833,
+  "issuer_to_local_pin_edges": 3,
+  "old_lane_edges": 72,
+  "candidate_lane_edges": 73,
+  "old_admission_from_issue_edges": 75,
+  "candidate_admission_from_issue_edges": 76,
+  "affected_forward_arrival_delta_edges": 1,
+  "affected_forward_arrival_delta_ps": 833,
+  "initiation_interval_delta_edges": 0,
+  "reverse_delta_edges": 0,
+  "absolute_boot_start_dates": "HELD_NOT_RETAGGED",
+  "programme_exposure": {
+    "c092_entry_40pages_16715words": {
+      "gunit_issues": 0,
+      "csr14_words": 0,
+      "retagged_as_r25": false
+    },
+    "historical_mathB": {
+      "gunit_issue_indices": [
+        7948,
+        9654
+      ],
+      "cw_configuration_words": 63,
+      "scope": "structural old-source exposure; not65serializedcycles"
+    }
+  },
+  "composer": {
+    "consumes_cw_lane": false,
+    "unchanged_terms_mean": "MODEL_OMISSION_NOT_ZERO_GLOBAL_RATE_PROOF"
+  },
+  "required_before_adoption": [
+    "all affected admission/consumer dates recompiled against actual source",
+    "real CW pin/reset/clock perbit timing",
+    "full programme/BoundDie/event coherence"
+  ]
+}
