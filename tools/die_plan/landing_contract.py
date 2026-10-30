@@ -91,7 +91,7 @@ START_FORM="die_start_stages"
 _NET={START_PIN_IN:re.compile(r"^pst_\w+$"),START_PIN_OUT:re.compile(r"^rs_\w+$"), RAW_RESET_PIN_OUT:re.compile(r"^rraw_\w+$")}
 
 
-def start_declaration(start_pins,part_types,type_pins,edge_uses):
+def start_declaration(start_pins,part_types,type_pins,edge_uses,raw_outputs=None):
     """landing_network.start_tree for a compose: start_pins = sidecar count_aligned.start_pins (clock_landings.start_pins),
     part_types {part: type}, type_pins {type: {pin: dir}} (landing contract pins), edge_uses {(part, pin)} already used by
     network edges.  Uses = the die-level stage ends; open = launch outputs of copies that launch nothing."""
@@ -101,15 +101,51 @@ def start_declaration(start_pins,part_types,type_pins,edge_uses):
         if u not in uses:uses.append(u)
     for e in start_pins.get("die_outputs",[]):
         uses.append(dict(part=e["dst_part"],pin=START_PIN_IN,net=e["net"]))
-    uses += [dict(part=e["src_part"],pin=RAW_RESET_PIN_OUT,net=e["net"]) for e in start_pins.get("reset_inputs",[])]
+    uses += [dict(part=e["src_part"],pin=e.get("src_port",RAW_RESET_PIN_OUT),net=e["net"]) for e in start_pins.get("reset_inputs",[])]
     used={(u["part"],u["pin"]) for u in uses}|set(edge_uses)
     opened=[dict(part=pn,pin=START_PIN_OUT) for pn,tn in sorted(part_types.items())
             if type_pins.get(tn,{}).get(START_PIN_OUT)=="out" and (pn,START_PIN_OUT) not in used]
     opened += [dict(part=pn,pin=RAW_RESET_PIN_OUT) for pn,tn in sorted(part_types.items())
                if type_pins.get(tn,{}).get(RAW_RESET_PIN_OUT)=="out" and (pn,RAW_RESET_PIN_OUT) not in used]
+    opened += [dict(part=pn,pin=pin) for pn,tn in sorted(part_types.items())
+               for pin in sorted((raw_outputs or {}).get(tn,()))
+               if type_pins.get(tn,{}).get(pin)=="out" and (pn,pin) not in used]
     return dict(form=START_FORM,pins=dict(input=START_PIN_IN,output=START_PIN_OUT),
                 source="sidecar count_aligned.start_pins (clock_landings.top_rtl wires it)",
                 uses=sorted(uses,key=lambda u:(u["part"],u["pin"],u["net"])),open=opened)
+
+
+def _typed_raw_reset_output(P,tn,name,pinmap,cache):
+    """Actual registered raw-wavefront producer, never a prefix-based exception."""
+    if tn not in cache:
+        import reset_tree as RT
+        try:
+            tree=RT.for_type(P,tn)
+            relays=RT.start_relays(tree) if tree.get("start") else tree["relays"]
+            cache[tn]={r["name"]:r for r in relays if not tree.get("start") or
+                       r.get("role") in ("raw","boot","bootstrap_transport")}
+        except (RT.ResetError,KeyError,ValueError,TypeError) as ex:
+            cache[tn]=str(ex)
+    sources=cache[tn]
+    if not isinstance(sources,dict):return False,f"raw reset tree invalid: {sources}"
+    rows=[r for r in P.types[tn].get("reset_start_raw_exports",[]) if r.get("port")==name and not r.get("existing_port")]
+    if len(rows)!=1:return False,"not one declared raw reset export"
+    row=rows[0];pin=pinmap.get(tn,{}).get(name,{})
+    if (pin.get("dir"),pin.get("kind"),pin.get("source_registered"))!=("out","ctl",True):
+        return False,"raw reset export requires a registered control OUTPUT"
+    source=sources.get(row.get("instance"))
+    def same_xy(a,b):
+        return len(a or ())==len(b or ())==2 and all(abs(x-y)<=1e-6 for x,y in zip(a,b))
+    if source is None or source.get("q")!=row.get("net") or not same_xy(source.get("xy"),row.get("xy_um")):
+        return False,"raw reset export source instance/net/xy differs from actual reset tree"
+    if pin.get("source_instance")!=row["instance"] or not same_xy(pin.get("xy_um"),row["xy_um"]):
+        return False,"raw reset export pin source/site differs from declaration"
+    if P.types[tn].get("private_reset_start_exports"):
+        if (pin.get("source_net"),pin.get("source_copy_from_net"),pin.get("source_output_pin"))!=(name,row["net"],"export_q"):
+            return False,"raw reset private output does not copy the declared raw source"
+    elif pin.get("source_net")!=row["net"]:
+        return False,"raw reset export pin net differs from actual source"
+    return True,None
 
 
 def _start_tree_check(P,st,pinmap,uses,errors,side):
@@ -136,18 +172,24 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
         for message in reset_summary["errors"]:bad(message)
     want={START_PIN_IN:"in",START_PIN_OUT:"out",RAW_RESET_PIN_OUT:"out"}
     edge_used={k for k,v in uses.items() if v}
+    raw_cache={};raw_outputs={}
     seen=set();declared=set();net_parts={};n_ok=0
 
     def pin_ok(pn,pin,what):
-        if pin not in want:
-            bad(f"{what} {pn}.{pin}: only {START_PIN_IN}/{START_PIN_OUT} are START-tree pins");return False
         if pn not in P.parts:
             bad(f"{what} {pn}.{pin}: not a plan partition");return False
+        if pin not in want:
+            tn=P.parts[pn]["type"]
+            if not any(r.get("port")==pin for r in P.types[tn].get("reset_start_raw_exports",[])):
+                bad(f"{what} {pn}.{pin}: only {START_PIN_IN}/{START_PIN_OUT} or declared raw outputs are START-tree pins");return False
+            good,why=_typed_raw_reset_output(P,tn,pin,pinmap,raw_cache)
+            if not good:bad(f"{what} {pn}.{pin}: {why}");return False
+            raw_outputs.setdefault(tn,set()).add(pin)
         p=pinmap[P.parts[pn]["type"]].get(pin)
         if not p:
             bad(f"{what} {pn}.{pin}: type {P.parts[pn]['type']} has no such landing-contract pin");return False
-        if p.get("dir")!=want[pin] or p.get("kind")!="ctl":
-            bad(f"{what} {pn}.{pin}: dir/kind {p.get('dir')}/{p.get('kind')} (want {want[pin]}/ctl)");return False
+        if p.get("dir")!=want.get(pin,"out") or p.get("kind")!="ctl":
+            bad(f"{what} {pn}.{pin}: dir/kind {p.get('dir')}/{p.get('kind')} (want {want.get(pin,'out')}/ctl)");return False
         # A real registered launch may fan out to a direct real child and
         # to virtual START stages. A capture input still has exactly one source;
         # an open output cannot simultaneously drive any edge.
@@ -159,7 +201,8 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
         if (pn,pin,nt) in seen:bad(f"use {pn}.{pin} -> {nt}: declared twice");continue
         seen.add((pn,pin,nt))
         if not pin_ok(pn,pin,"use"):continue
-        if not isinstance(nt,str) or not _NET[pin].match(nt):
+        raw_net="wr_"+re.sub(r"[^A-Za-z0-9_]","_",pn)+"__"+str(pin)
+        if not isinstance(nt,str) or (not _NET[pin].match(nt) if pin in _NET else nt!=raw_net):
             bad(f"use {pn}.{pin}: net {nt!r} is not a die start-stage {'pst_' if pin==START_PIN_IN else 'rs_'}<region> net");continue
         if (pn,pin) in declared:
             bad(f"use {pn}.{pin}: on more than one stage net (one start wire per pin)");continue
@@ -182,8 +225,14 @@ def _start_tree_check(P,st,pinmap,uses,errors,side):
         if not sp:
             bad("sidecar has no count_aligned.start_pins to prove the declaration against")
         else:
+            for tn,t in P.types.items():
+                for row in t.get("reset_start_raw_exports",[]):
+                    if row.get("existing_port"):continue
+                    good,why=_typed_raw_reset_output(P,tn,row.get("port"),pinmap,raw_cache)
+                    if good:raw_outputs.setdefault(tn,set()).add(row["port"])
+                    else:bad(f"{tn}.{row.get('port')}: {why}")
             exp=start_declaration(sp,{pn:p["type"] for pn,p in P.parts.items()},
-                                  {tn:{n:q.get("dir") for n,q in ps.items()} for tn,ps in pinmap.items()},edge_used)
+                                  {tn:{n:q.get("dir") for n,q in ps.items()} for tn,ps in pinmap.items()},edge_used,raw_outputs)
             got_u={(u.get("part"),u.get("pin"),u.get("net")) for u in st.get("uses") or []}
             exp_u={(u["part"],u["pin"],u["net"]) for u in exp["uses"]}
             for x in sorted(exp_u-got_u)[:20]:bad(f"sidecar start-tree end {x[0]}.{x[1]} -> {x[2]} not declared")
