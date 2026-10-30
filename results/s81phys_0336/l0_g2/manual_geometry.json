@@ -1,0 +1,12 @@
+{
+  "verdict": "MANUAL_GEOMETRY_PASS",
+  "scope": "Existing actual3PLACE hardgeometry + independent currentGRT image review; canonicalG2 TTFF passed; diagnostic DRT trial permitted",
+  "reviewer": "S81 lead /root/s81",
+  "raw_auto": "FAIL retained;5_1_grt deliberately outside AUTO pre-route stage scope",
+  "existing_exception": "OWNER standing fill/empty exception only",
+  "image": "results/s81phys_0336/l0_g2/auto_geom.png",
+  "thresholds_waived": false,
+  "pins_changed": false,
+  "rtl_changed": false,
+  "notes": "Controlled S/N/E face banks; clear channels/no macros; clock24.35,r2r379.4/0,p90 8.88,pinmax100.81,col_v.307,partial0"
+}
