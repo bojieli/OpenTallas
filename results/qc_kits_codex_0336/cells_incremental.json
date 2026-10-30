@@ -1,5 +1,5 @@
 {
- "scope": "Actual original native synthesis counts only; gen_union copies excluded; six FW rows repeat prior4757675 measurements, onlyCTL/NB0 are new. Full-wrappercounts, no CA doublecount. native59 is a distinct diagnostic type absentcurrent119typeplan and is not mapped to another type.",
+ "scope": "Actual original native synthesis counts only; gen_union copies excluded. SixFW rows repeat prior4757675; CTL/NB0/native59 are new, full-wrappercounts without CA doublecount. Count-only, no EQ/physical claim.",
  "rows": [
   {
    "type": "sle_fw_v2__cl69f5e854",
@@ -71,6 +71,14 @@
    "path": "/srv/opentallas-scratch2/claude/codex-qc-nb0-0336/gen/sle_st_a_v2/sle_st_a_v2/run/logs/asap7/dp_sle_st_a_v2/base/1_synth.json",
    "freeze_sha256": "3471059b84ca5103b688bc862502f383719a26d1f7a0dc8e167dc448fa6e4969",
    "candidate_source": "e1094a67103"
+  },
+  {
+   "type": "native59",
+   "stdcells": 238800,
+   "macros": 8,
+   "host": "epyc2",
+   "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/native59/native59/run/logs/asap7/dp_native59/base/1_synth.json",
+   "freeze_sha256": "369c664c27293350b42041dd2839d03a100feac637d40f6105162021c737e4bd"
   }
  ]
 }
