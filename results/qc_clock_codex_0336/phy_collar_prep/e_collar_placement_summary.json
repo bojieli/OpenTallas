@@ -1,0 +1,73 @@
+{
+  "status": "GEOMETRY PREP ONLY, notreviewapproved, noRTLadoption or timingrun",
+  "cell_entries": 65241,
+  "data_FF": 10773,
+  "per_bank_epochs": 5,
+  "per_bank_control_DFF": 6,
+  "per_bank_BUF8_clock_reset": 39,
+  "per_bank_BUF24_clock": 17,
+  "data_repeater_cells": 53865,
+  "max_actual_pin_hop_um": 374.731,
+  "hops_over405": 0,
+  "outer_pin_to_lastFF_proxy_max_um": 6.167999999999914,
+  "max_cell_anchor_shift_um": 28.103000000000065,
+  "master_actualpins": "DFFQN positiveoutput via inputINV; DFFpinclock/input/output actualmasterlocalpositions included. Controlcompactsubcellsplanned, notindividualplaced; epochclockroleprepriced notadopted.",
+  "R0rows": 0.54,
+  "xsite": 0.054,
+  "conservative_clear_rectangles": "N y>=2322.216; E x>=1566; outer2.16haloboundaries. TrackcutactualE64.8um/N68.904um, not69.12clear.",
+  "failures": [
+    "datarepeaterspacked; native/sourcecq/load and actualM6/M7 RC stillunbound",
+    "clockconnectivity/RC notbuilt fromallactualcells",
+    "nativeinputdirection andepoch/wavefront semantics needexactRTL+miter",
+    "intermediateepoch/control compactsubcells needexplicitbodycoordinates",
+    "fullPG/island/cutcapacitynotrouted"
+  ],
+  "max_buffered_wire_section_um": 110.8629999999996,
+  "buffered_wire_sections_over120": 0,
+  "N_horizontal_trackcut": {
+    "peak_segments": 1447,
+    "cut_coordinate_um": 1451.946,
+    "includes": "actualmanhattan datarepeaters/FF paths only; noPG/clock/reset/epoch"
+  },
+  "E_vertical_trackcut": {
+    "peak_segments": 1466,
+    "cut_coordinate_um": 2159.0550000000003,
+    "includes": "actualmanhattan datarepeaters/FF paths only; noPG/clock/reset/epoch"
+  },
+  "routing_layer_assignment": {
+    "local_wirelength_limit_um": 30,
+    "local_layers": [
+      "M2horizontal",
+      "M3vertical"
+    ],
+    "global_layers": [
+      "M4/M6horizontal",
+      "M5/M7vertical"
+    ],
+    "reason": "Lower layers permitted by partition<=M7; no localdataoverlicensedbody. Must reserve actualPG/clockaccess before route."
+  },
+  "N_global_M4_M6_cut": {
+    "peak_segments": 1312,
+    "cut_coordinate_um": 1448.696,
+    "includes": "actualmanhattan datarepeaters/FF paths only; noPG/clock/reset/epoch"
+  },
+  "E_global_M5_M7_cut": {
+    "peak_segments": 1329,
+    "cut_coordinate_um": 2159.0550000000003,
+    "includes": "actualmanhattan datarepeaters/FF paths only; noPG/clock/reset/epoch"
+  },
+  "N_local_M2_cut": {
+    "peak_segments": 213,
+    "cut_coordinate_um": 810.2639999999999,
+    "includes": "actualmanhattan datarepeaters/FF paths only; noPG/clock/reset/epoch"
+  },
+  "E_local_M3_cut": {
+    "peak_segments": 137,
+    "cut_coordinate_um": 2158.5150000000003,
+    "includes": "actualmanhattan datarepeaters/FF paths only; noPG/clock/reset/epoch"
+  },
+  "N_local_M2_60pct_budget": 1148.4,
+  "E_local_M3_60pct_budget": 1080.0,
+  "N_track_upperbudget_at60pct": 1507.2749999999996,
+  "E_track_upperbudget_at60pct": 1417.4999999999995
+}
