@@ -21,9 +21,13 @@ def ring_taps(plan, tn):
     """[(x, y)] of the taps whose wavefront relays drive rst_n_t<i> in type tn (type frame): the index space a ring
     reset node rst_n_t<i> refers to.  A plan clock.taps list of kind 'core' entries (S81 12.8a plan-defined core
     clock entries) is NOT that index space: the reset tree numbers its relays over schema.tap_grid
-    (reset_tree._taps), so such types use the reset tree's own taps.  Every other type keeps clock.taps."""
-    taps = plan["partition_types"][tn].get("clock", {}).get("taps", [])
-    if not any(x.get("kind") == "core" for x in taps):
+    (reset_tree._taps), so such types use the reset tree's own taps. A physical type with only tap_um/tap_mode
+    also uses that generated grid; an absent explicit list must not silently assign every ring to tap zero.
+    Explicit non-core taps and types without physical clock geometry keep their existing behaviour."""
+    ck = plan["partition_types"][tn].get("clock", {})
+    taps = ck.get("taps", [])
+    generated_grid = not taps and ("tap_um" in ck or "tap_mode" in ck)
+    if not generated_grid and not any(x.get("kind") == "core" for x in taps):
         return [tuple(x["xy"]) for x in taps]
     import schema
     import reset_tree as RT
