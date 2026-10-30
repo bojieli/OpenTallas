@@ -110,3 +110,15 @@ all7 sourcefiles are identical. Packet-only legacy fixtures remain pinned to
 their dd491 snapshot and do not silently turn off the mandatory new audit.
 
 The final native-bank log directly records every guarded LOADdone: firstedge369, last6893, each21edges after its laststep under the conservative margin20 calendar. It also records every native command issue/drain value. This is separate from the13edge step→ACK observation; no minimum LOADdone bound is claimed. The actual64packet command start interval is100edges, including issue lead, drain and nextcommand spacing. Counter-only n+1 remains a floor and is not this achieved CP cadence.
+
+Launcher profiles after canonical9a intake: run_provider_fixture uses the four
+current canonical packet modules (byte-identical to dd491). run_cp_provider_fixture
+is now explicitly a historical dd491 packet-boundary replay: it exports the
+nine pinned RTL/shared dependencies from this repository’s Git objects into its
+owned output and verifies their hashes, with no scratch or network dependency.
+The original source/interface/proof is preserved; it does not silently disable
+the current audit. The current completion launcher is run_vm_provider_fixture,
+which uses canonical9a/defaultAUDIT1 and the actual32nativebanks. An explicit
+--provider-dir override on the historical CP launcher still requires the exact
+dd491 source; current9a must use the VM launcher. Exporter/hash-guard smoke PASS;
+this changes source resolution only, not the already-proved dd491 hardware wave.

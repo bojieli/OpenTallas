@@ -106,5 +106,7 @@
   "cp_dd_wrong_epoch.log",
   "cp_dd_early_drain.log"
  ],
- "current_corrected_source_result": "PASS exact833ps, same42cmds/2688packets/21504words/3epochs, everypacketlatency8 andsamefirst/lastdates; bothwrongcmdepoch/earlydrain controls caught"
+ "current_corrected_source_result": "PASS exact833ps, same42cmds/2688packets/21504words/3epochs, everypacketlatency8 andsamefirst/lastdates; bothwrongcmdepoch/earlydrain controls caught",
+ "current_launcher_profile": "Explicit historical dd491 packet-only replay, source dependencies exported from this repositoryGitobjects intoownedoutput and SHA-guarded; no external scratch/network. For currentcanonical9a use run_vm_provider_fixture/defaultAUDIT1.",
+ "launcher_source_resolution_smoke": "9 exact exportedfiles/hashguardPASS; currentcanonical9a packet4filesbyteidenticalPASS"
 }
