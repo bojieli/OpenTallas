@@ -1,0 +1,67 @@
+{
+  "scope": "PREBUILD PLAN MODEL (R7 NLDM, rc_cal from families_C), UNCHECKED; all 2611 buffer inputs + leaf outputs",
+  "candidate": {
+    "TT": {
+      "all_buffer_slew_in_max": 52.479413878037164,
+      "worst_in_node": "T023_br",
+      "nodes": 2611,
+      "terminal_out_slew_max": 28.5,
+      "all_buffer_slew_max": 52.479413878037164
+    },
+    "FF": {
+      "all_buffer_slew_in_max": 51.07913279346207,
+      "worst_in_node": "T023_br",
+      "nodes": 2611,
+      "terminal_out_slew_max": 24.2,
+      "all_buffer_slew_max": 51.07913279346207
+    }
+  },
+  "frozen_existing": {
+    "TT": {
+      "all_buffer_slew_in_max": 52.479413878037164,
+      "worst_in_node": "T023_br",
+      "nodes": 2611,
+      "all_buffer_slew_max": 52.479413878037164
+    },
+    "FF": {
+      "all_buffer_slew_in_max": 51.07913279346207,
+      "worst_in_node": "T023_br",
+      "nodes": 2611,
+      "all_buffer_slew_max": 51.07913279346207
+    }
+  },
+  "candidate_summary": {
+    "TT": {
+      "mean": 271.16,
+      "leaf_mean_min": 264.25,
+      "leaf_mean_max": 276.83,
+      "window": 12.59,
+      "sink_min": 264.25,
+      "sink_max": 278.77,
+      "leaf_slew_in_max": 10.4,
+      "leaf_ct_ff": [
+        0.8,
+        42.5
+      ],
+      "leaf_out_slew_max": 28.5
+    },
+    "FF": {
+      "mean": 219.32,
+      "leaf_mean_min": 213.24,
+      "leaf_mean_max": 224.88,
+      "window": 11.63,
+      "sink_min": 213.24,
+      "sink_max": 226.97,
+      "leaf_slew_in_max": 7.7,
+      "leaf_ct_ff": [
+        0.9,
+        45.9
+      ],
+      "leaf_out_slew_max": 24.2
+    }
+  },
+  "gate": {
+    "all_buffer_slew80": true,
+    "window20_INFO": true
+  }
+}
