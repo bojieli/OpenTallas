@@ -132,3 +132,43 @@ arithmetic fields. It also refuses3 unqualified dynamic mutants. The existing
 64-profile representative check still passes on the new derived layout101152.
 This closes the expert-address/selection footprint obstacle for ALL40 regions,
 not full numerical replay, whole-token liveness, mutable-HBM execution or G5.
+
+Conservative source-complete canonical backing stream
+
+vm_canonical_stream.py now lowers ALL3916 actual a122 source records through
+END. One2MiB canonical HBM backing image retains the original full VM namespace.
+Static operations execute ordered3-row workspace phases; each expert block stays
+one6-row component, and each attention plan stays nativeNL3. Native whole-sector
+loads/stores keep canonical source order rather than trying to retain the old
+six-row overlap schedule. All source arithmetic/template/rounding fields remain.
+
+The conservative artifact is54176 native commands,421238848 boundarybytes, and
+max255168oldVMwords. This intentionally gives up overlap and has large unpriced
+traffic. It is a complete source-address lowering vehicle, not a viable-rate or
+physical release claim. Actual current DMA coverage/VM banking is unqualified;
+stack3 backing is a source-only candidate and remains UNRESERVED.
+
+Additional failures handled: standalone nativeDMA.FENCE/STORE and CTL.ACCEPT/
+TOKX require explicit support; ACCEPT/TOKX VM pointers must be relocated, not
+copied above262144. The final SM3910→ARGMAX3911 is a STREAM producer/consumer
+pair. Inserting an ALL-unit drain between them could alter source protocol or
+stall a finite stream. They now stay coupled inside each3-row phase and retain
+the original consumer wait0. This is a preserved source contract, not a measured
+RTL deadlock claim.
+
+check_canonical.py proves the address/version mechanism by interval translations
+rather than hundreds of millions of per-word tags. Native loads establish source
+address identities; source/physical writes invalidate prior aliases; reads and
+whole-sector retirements must see the right remaining translation. It checks
+20842 static addresses, all40 previously-qualified dynamic expert components,
+all3916 source records/row order, and six coupled head stream rows. Wrong backing
+load, missing load drain and altered stream-consumer wait controls are caught.
+Numerical operator execution, mutable-HBM execution, actual backend namespace,
+initial canonical-image publication, scratch authority and full schedule remain
+OPEN: whole_programme_executable=false/full_programme_fits=null.
+
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_canonical_stream.py \
+ --image /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r \
+ --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
+ --backing-base 0x1D11000000 --out-dir results/tok_hbm_1030/canonical_all
+python3 results/tok_hbm_1030/check_canonical.py

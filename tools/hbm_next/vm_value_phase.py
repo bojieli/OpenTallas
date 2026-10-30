@@ -82,7 +82,7 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
             if(source.unit,source.op)==('IDX','KVUNION'):
                 if(source.param&15)+1!=count:raise ValueError('KVUNION physical lane count differs')
                 if((source.param>>4)&15)!=start:continue
-            elif(source.unit,source.op)not in(('DMA','LOAD'),('CTL','NOP')):raise ValueError('unbounded shared control operation')
+            elif(source.unit,source.op)not in(('DMA','LOAD'),('DMA','STORE'),('DMA','FENCE'),('CTL','NOP'),('CTL','ACCEPT'),('CTL','TOKX')):raise ValueError('unbounded shared control operation')
             expanded=IR.expand(source,x)
         elif x.rsel and source.unit=='ATT':
             if x.n!=count or x.emask:raise ValueError('requires bounded native attention plan')
