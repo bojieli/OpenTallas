@@ -40,3 +40,11 @@ missingselectedMUcontract gap each onR000/A/r0 andR001/A/r0. No blanket
 cross-resourceKITconflict is reported. IfsamecurrentnativeMUX wereused, those
 KITs wouldrequiredifferentRL thanentry489; no suchphysicalassignment assumed.
 Source clock/physical/globalstage/lifetime holds remain open and explicit.
+
+Actual caller selected-binding branch also executed on the same real priorA/B
+bytes (noRTLrerun). It loads the actual currententry35wordMU/selectedsource and
+correctlyreports2KIT482-vs789/10750,2sourcec092-vs86dd,2receiver-variant/clock,
+2off-slot and2initialization-not-emitted blockers. Bothdiagnosticpayloadsets
+still emitted/PARTIAL; no cross-R000/R001KITconflict. bound_caller.json is not a
+newglobalbooking: suppliedselectedMU's localcomponentfixture clock/edges remain
+explicitlydifferent from originalTEST_COMMONCLOCK legacytransportbook.
