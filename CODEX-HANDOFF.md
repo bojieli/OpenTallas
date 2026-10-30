@@ -6005,4 +6005,4 @@ COORD: 2026-10-30 03:23 PDT hourly: +5 counted cores (S81 18/52, QC 5/9 prov, KV
 ```
 
 
-CODEX: 2026-10-30 05:2x PDT S81 CAP_LD actual SIGNED/routedEQ1204, complete child view READY a9a1fc62bcd; ED canonicalMM G2 TT18.746/FF10.943, independently viewed current geometry PASS, diagnostic DRT c0300fb7d52a queued. RT tall placement only clockreach fails; two clock models fail same SRAM-corner topology, private structural reparent repair owned, no CTS/DRT. ROM structural native proof still live, no EQ claim.
+CODEX: 2026-10-30 05:15 PDT S81 CAP_LD actual SIGNED/routedEQ1204, complete child view READY a9a1fc62bcd; ED canonicalMM G2 TT18.746/FF10.943, independently viewed current geometry PASS, diagnostic DRT c0300fb7d52a queued. RT tall placement only clockreach fails; two clock models fail same SRAM-corner topology, private structural reparent repair owned, no CTS/DRT. ROM structural native proof still live, no EQ claim.
