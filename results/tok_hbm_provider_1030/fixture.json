@@ -1,0 +1,41 @@
+{
+ "status": "STACK2_MECHANISM_FIXTURE_NO_PRODUCTION_REBASE",
+ "actual_source_window_bundle": 990,
+ "original_stack": 3,
+ "fixture_stack": 2,
+ "local_geometry_preserved": true,
+ "source_quad": 2,
+ "window_row": 20752,
+ "window_col": 0,
+ "descriptors_per_epoch": 14,
+ "packets_per_epoch": 896,
+ "epochs": 3,
+ "expected_packets": 2688,
+ "expected_VMwords": 21504,
+ "VMquads": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "payload": "deterministic opaqueU32 externalpin sectors, phase/leaf/group/slot/word distinct; not checkpoint compute results",
+ "holds": [
+  "No productionstack/addressreservation/calendaradoption",
+  "actualPHYsourceksharefillinterface starts at ownedleaf fillpins",
+  "actualVMbank slot6/physicalcommit notinstantiated; packetboundary checked"
+ ],
+ "input_programme_scope": {
+  "kind": "MTP_VERIFY",
+  "row_positions": 6,
+  "accepted_outputs_data_dependent": true,
+  "rate_unit": "programme_steps_per_second",
+  "evidence": {
+   "ACCEPT_record": 3913,
+   "TOKX_record": 3914,
+   "TOKX_A_n": 7
+  },
+  "normalization": "Observe actual native ACCEPT/TOKX outputs and include draft/seed costs; no AR-token equivalence or fixed acceptance gamma."
+ },
+ "fixture_is_complete_programme": false,
+ "ownership_epochs_are_MTP_steps_or_ARtokens": false
+}
