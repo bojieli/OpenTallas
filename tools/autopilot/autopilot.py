@@ -492,8 +492,16 @@ pat = {"hold_structural": r"OT_HOLD_STRUCTURAL[^\n]*", "congestion": r"GRT-0116[
        "gate_fail": r"(?m)^(?:CORE_PREFLIGHT|KIT_PREFLIGHT|RP1_GATE|SDC_LINT|S6_GRT_GATE|OT_HOLD_GATE) FAIL\b[^\n]*",
        "orfs_error": r"\[ERROR [A-Z]+-\d+\][^\n]*"}
 for k, p in pat.items():
-    m = re.search(p, alltxt)
-    if m: out[k] = m.group(0)[:300]
+    if k == "orfs_error":
+        # Hold repair catches bounded RSZ errors and continues. Diagnose the
+        # terminal tool error rather than an earlier caught repair chunk.
+        errors = re.findall(p, runlog) or re.findall(p, txt)
+        if errors:
+            out[k] = errors[-1][:300]
+            out["orfs_errors"] = [e[:300] for e in errors[-5:]]
+    else:
+        m = re.search(p, alltxt)
+        if m: out[k] = m.group(0)[:300]
 cells = 0
 for js in glob.glob(os.path.join(K, "run", "logs", "asap7", "*", "base", "*.json")):
     d = jl(js) or {}

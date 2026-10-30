@@ -415,5 +415,17 @@ class Overlay(unittest.TestCase):
         self.assertIn("kw-x", r["kv3_hub_Eo"]["live_job"])
 
 
+class GeometryOutput(unittest.TestCase):
+    def test_verdict_precedes_png_and_runner_footer(self):
+        for verdict in ("PASS", "FAIL"):
+            line = "AP_AUTO_GEOM AUTO-GEOM " + verdict + " tile fill=ok"
+            txt = "AP_AUTO_GEOM_GRT rc 0\n" + line + "\nAP_AUTO_GEOM_PNG /k/auto_geom.png\not-run: RAN on localhost (unit oth-x): exit 1\n"
+            self.assertEqual(KW.geom_result_line(txt), line)
+
+    def test_explicit_error_and_missing_verdict(self):
+        self.assertEqual(KW.geom_result_line("AP_AUTO_GEOM_ERROR missing ODB\nAP_AUTO_GEOM_PNG /p"), "AP_AUTO_GEOM_ERROR missing ODB")
+        self.assertEqual(KW.geom_result_line("AP_AUTO_GEOM_PNG /p\nAP_AUTO_GEOM_GRT rc 0"), "")
+
+
 if __name__ == "__main__":
     unittest.main()

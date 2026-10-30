@@ -1,0 +1,3 @@
+# KV Q2 current CTS prototype review
+
+Independent Codex GEOM2026-10-30: viewed actual4CTS cts.png from intel1 codex-ectl-1030/q2_geom. **PASS-COND for same-checkpoint GRT50 prototype only; no DRT**. BroadcentralHstreet andcentralVstreet clear, four macros at corners. H.694 tinySstripcorner/V.656Wcorner each<1 capacity; measuredGRT0 would make WARN under unchanged existing rule. r2r322.22/0bad, pinmax32.83, clock212.33<220,0collapse,0cellsmacro. Use current frozen243.648x172.8 outline explicitly; supplieddiagnostic outlineNA. RefreshedmainFLOW6 clock-overlap hook may release only previouslyPLACED cells, not FIRMfaceanchors. NewGRT/clock/hold result required; old3placeGRT0 not reused. Fill.108/empty.612 standingexception applies only once otherchecks resolved.

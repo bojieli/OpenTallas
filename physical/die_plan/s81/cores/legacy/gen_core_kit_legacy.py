@@ -269,6 +269,35 @@ REG_FANOUT_STEP = ("if [ \\$rc = 0 ] && [ -f /work/reg_fanout_gate.py ]; then py
                    "see reg_fanout.json' | tee -a /work/FAIL_PREFLOOR; rc=7; fi; fi; ")
 
 
+def land_slot_contract(rec,buses_in):
+    """Validate declared slots and retain hierarchy types for the mapped ODB guard.
+
+    The raw Yosys netlist is the exact source of ODB flattening. Its type map
+    supplies provenance only; the guard still proves the mapped FF equations.
+    """
+    sys.path.insert(0,str(TOOL))
+    import face_guard as G
+    land=rec.get("land_slots") or {}
+    bad=[]
+    for bus,spec in land.items():
+        try:depth,form=G.land_spec(spec)
+        except (ValueError,KeyError,TypeError):bad.append(bus);continue
+        if bus not in buses_in or depth<2 or form not in G.LAND_FORMS:bad.append(bus)
+    if bad:raise SystemExit(f"land_slots {sorted(bad)} are not plan input buses with D >= 2")
+    payload=dict(schema="opentallas.core_land_slots.v1",
+                 buses={b:land[b] if isinstance(land[b],dict) else int(land[b]) for b in sorted(land)},
+                 why=rec.get("why_land_slots",""))
+    fgc=FACE_GUARD_CORE.replace(
+        "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
+        "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
+        "_raw = Path(net).with_name(\"1_2_yosys.v\")\n"
+        "_types = G.hier_module_types(_raw.read_text(), top) if _raw.is_file() else None\n"
+        "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
+        "            land=G.kit_land(_lf) if _lf.is_file() else None, types=_types)")
+    assert fgc!=FACE_GUARD_CORE,"FACE_GUARD_CORE guard call anchor changed"
+    return payload,fgc
+
+
 def run_kit(modern):
     """run_kit.sh text: modern = rtl_lint first, reg_fanout after face_guard, FF-only GRT hold step before the goal
     (core_flow); legacy = the pre-10-25 script bit for bit."""
@@ -1392,21 +1421,8 @@ def main():
             " proc repair_timing_helper {args} {kr_default_repair_timing_helper -max_buffer_percent 100 {*}$args}\n}\n")
     land = rec.get("land_slots") or {}
     if land:
-        # S81-CORE-LAT-R21 (COORD S81-CORE-LAT-R20 ruling (a)): DECLARED landing-ring input buses {bus: D}; the D gated
-        # ring slots are the pin's face registers (face_guard class land_slot checks D flop D pins on D own ICGs of one
-        # clock).  Kits without the declaration keep the byte-identical face_guard_core.py.
-        bad = sorted(b for b in land if b not in buses_in or int(land[b]) < 2)
-        if bad:
-            raise SystemExit(f"{mod}: land_slots {bad} are not plan input buses with D >= 2")
-        (kd / "land_slots.json").write_text(json.dumps(dict(
-            schema="opentallas.core_land_slots.v1", buses={b: int(land[b]) for b in sorted(land)},
-            why=rec.get("why_land_slots", "")), indent=1) + "\n")
-        fgc = FACE_GUARD_CORE.replace(
-            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
-            "_lf = Path(__file__).resolve().parent / \"land_slots.json\"\n"
-            "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set(),\n"
-            "            land=G.kit_land(_lf) if _lf.is_file() else None)")
-        assert fgc != FACE_GUARD_CORE, "FACE_GUARD_CORE guard call anchor changed"
+        payload,fgc=land_slot_contract(rec,buses_in)
+        (kd / "land_slots.json").write_text(json.dumps(payload,indent=1)+"\n")
         (kd / "face_guard_core.py").write_text(fgc)
     else:
         (kd / "face_guard_core.py").write_text(FACE_GUARD_CORE)

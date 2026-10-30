@@ -168,12 +168,16 @@ foreach pass {INPUT OUTPUT} {
         }
       }
     } else {
-      set col [expr {($px - $ff_x0) / $ff_cpitch}]
+      # Face pins may lie in the core margin. Clamp the starting column to
+      # the legal interval before the local neighbor search, on both edges.
+      set cmax [expr {int(($ff_x1-$ff_x0-$w)/$ff_cpitch)}]
+      if {$cmax < 0} { incr ff_miss; continue }
+      set col [expr {max(0,min($cmax,($px-$ff_x0)/$ff_cpitch))}]
       set placed 0
       for {set r 0} {$r < 400 && !$placed} {incr r} {
         foreach dc {0 1 -1} {
           set c [expr {$col + $dc}]
-          if {$c < 0 || [dict exists $ff_occ "$face,$r,$c"]} continue
+          if {$c < 0 || $c > $cmax || [dict exists $ff_occ "$face,$r,$c"]} continue
           dict set ff_occ "$face,$r,$c" 1
           set cx [expr {min($ff_x0 + $c * $ff_cpitch, $ff_x1 - $w)}]
           set cy [expr {$face eq "S" ? $ff_y0 + $r * $ff_rh : $ff_y1 - ($r + 1) * $ff_rh}]

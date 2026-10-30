@@ -1,0 +1,25 @@
+{
+  "module": "ot_s81sl_cap_ed",
+  "params": {
+    "D": 24
+  },
+  "defines": [
+    "SYNTHESIS",
+    "OT_S81_CAP_ED_FACE_DELAYED_FAULT"
+  ],
+  "source": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ed.sv": "c97ca783fe425e09862f9962e53b0a8adb4c03972b60366937296e9af280bba5"
+  },
+  "qualified_source_commit": "fb729ab86",
+  "functional_cycles_added": {
+    "payload": 0,
+    "fault": 1
+  },
+  "source_qualification": "Owner option A adopted; actual 2/4state D3/4/23/24 strict lockstep PASS, wrong-D mutant caught, native source LEC1673EQ; payload t+D, fault t+2 vs old t+1, D-2>=21edges before last payload drains",
+  "native_postroute_lec": "1671/1671 EQUIVALENT",
+  "adopted": false,
+  "parent": "ot_s81sl_capc5r",
+  "parent_instance": "u_ed3",
+  "parent_external_contract_changed": false,
+  "flow_correction": "canonical kit_modes TT setup + FF hold repair; no added margin tuning"
+}

@@ -1,0 +1,61 @@
+{
+  "cut_x_um": 252.5,
+  "windows": {
+    "hotspot1um": {
+      "M2": 17,
+      "M4": 14
+    },
+    "central_street": {
+      "M4": 177,
+      "M2": 422
+    },
+    "macro_body_top": {},
+    "north_margin": {
+      "M2": 123,
+      "M4": 22
+    }
+  },
+  "crossings_by_y10um": {
+    "0": {
+      "M2": 131,
+      "M4": 44
+    },
+    "10": {
+      "M4": 68,
+      "M2": 98
+    },
+    "50": {
+      "M2": 19,
+      "M4": 13
+    },
+    "60": {
+      "M4": 67,
+      "M2": 168
+    },
+    "70": {
+      "M2": 112,
+      "M4": 9
+    },
+    "80": {
+      "M2": 116,
+      "M4": 83
+    },
+    "90": {
+      "M2": 7,
+      "M4": 5
+    },
+    "130": {
+      "M4": 19,
+      "M2": 115
+    },
+    "140": {
+      "M2": 8,
+      "M4": 3
+    }
+  },
+  "all_M5": {
+    "segments": 4946
+  },
+  "M5_nonpreferred_horizontal_nets": 0,
+  "guide_only": "Global-route segment centre lines, not detailed-route track assignment. Each crossing counted per unique net/layer/window."
+}

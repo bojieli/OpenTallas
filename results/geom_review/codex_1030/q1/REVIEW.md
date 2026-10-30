@@ -1,0 +1,5 @@
+# KV q1 routed channel diagnosis
+
+Independent Codex GEOM2026-10-30: viewed actual6_final routed.png from intel1 codex-ectl-1030/q1_geom. Four SRAMs frame a broad~70um horizontal centre street and~23um vertical centre street, with face FF bands and logic in central streets. H1.852 estimate is y125..127um slice atx107.5, beside NW-SRAM lower corner; no obvious full macro wall. Existing route DRC0 is measured fact, but candidate remains NOT SIGNED (FFhold-8.17,210TTslew). No reroute authorized by this review. Source FFweakdrive -> longdetour -> sinksideinverter is diagnosed by core owner; move polarity inverter to source and drive segment at correctstrength, then actual placement review.
+
+Initial supplied rule artifact compared obsolete233.28 slot. Independently read CURRENT plan-of-record event28w_c plan_c.json16980115aa4a: all8 qkd_ectlk_q1 entries243.648x172.8 and qkd_ectlk_q1_pins_243.json. Actual243.648x172.8 therefore matches currentplan; preserve old outlineFAIL as historical. Template checkpoint unsupported6_final and absentGRT in diagnostic are not new physical claims. H>1 hard model FAIL preserved until shared accurate capacity diagnosis.

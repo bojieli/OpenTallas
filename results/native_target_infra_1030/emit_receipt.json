@@ -1,0 +1,14 @@
+{
+  "schema": "opentallas.native_target_infra.v1",
+  "plan": "/srv/opentallas-scratch2/claude/die-qc-46/plan/plan_qc45.json",
+  "plan_sha256": "2257b9fb1a4772dffa84b801e4b327fe8334edc87145e11ea64bcefc1551568d",
+  "source": "existing die_trial.abstract_lef/route_netlist landing_infra=True,reset_infra=True; reference exact-origin target Tcl/OBS",
+  "types": 119,
+  "parts": 377,
+  "declared_start_pin_types": 81,
+  "raw_reset_pin_types": 0,
+  "landing_infra": true,
+  "reset_infra": true,
+  "route": false,
+  "physical_timing": false
+}

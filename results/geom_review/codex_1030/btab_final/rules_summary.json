@@ -1,0 +1,264 @@
+{
+  "main": "f5f7a27c289",
+  "flow_source": "8866df9d9",
+  "line": "AUTO-GEOM FAIL BTAB D10B main f5f7a27c289 independent final WARN[channel_h 0.632: at (0.0, 10.0, 17.5) (M2-M5, est.); GRT 0 overflow; channel_v 0.735: at (265.0, 275.0, 92.5) (M2-M5, est.); GRT 0 overflow; col_v 0.959: at (270.0, 87.5) (M2-M5, est.); GRT 0 overflow] fill=FAIL(0.0865) empty=FAIL(0.7964) channel_h=WARN(0.632) channel_v=WARN(0.735) col_v=WARN(0.959) outline=ok(293.76x155.52) aspect=ok(1.889) fill_hi=ok(0.0865) pin_reg_p90=ok(9.74) pin_reg_max=ok(23.92) pin_unreg=ok(0) r2r=ok(253.21) r2r_count=ok(0) pin_density=ok(4.2) std_band=ok(1.0) cells_on_macros=ok(0) partial_face=ok(0) relay_collapse=ok(0) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) clock_reach=ok(9.77) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(4536)",
+  "rules": [
+    {
+      "rule": "outline",
+      "status": "PASS",
+      "value": "293.76x155.52",
+      "limit": "==293.76x155.52",
+      "source": "METHODOLOGY 1.14; tile-outline-from-parent-slot-1023",
+      "detail": ""
+    },
+    {
+      "rule": "aspect",
+      "status": "PASS",
+      "value": 1.889,
+      "limit": "<=2.0",
+      "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+      "detail": ""
+    },
+    {
+      "rule": "fill",
+      "status": "FAIL",
+      "value": 0.0865,
+      "limit": ">=0.15",
+      "source": "GEOM-AUTO-2 band <0.15 / >0.75 (owner 10-27); METHODOLOGY 1.14 target 40-60 %",
+      "detail": ""
+    },
+    {
+      "rule": "fill_hi",
+      "status": "PASS",
+      "value": 0.0865,
+      "limit": "<=0.75",
+      "source": "GEOM-AUTO-2 band <0.15 / >0.75 (owner 10-27); METHODOLOGY 1.14 target 40-60 %",
+      "detail": ""
+    },
+    {
+      "rule": "empty",
+      "status": "FAIL",
+      "value": 0.7964,
+      "limit": "<=0.5",
+      "source": "layout_review.py EMPTY_FLAG (bins < 5 %)",
+      "detail": ""
+    },
+    {
+      "rule": "pin_reg_p90",
+      "status": "PASS",
+      "value": 9.74,
+      "limit": "<=30.0",
+      "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+      "detail": "23.9 tw_data[27], 23.7 tw_data[28]"
+    },
+    {
+      "rule": "pin_reg_max",
+      "status": "PASS",
+      "value": 23.92,
+      "limit": "<=150.0",
+      "source": "layout_review.py PIN_REG_P90_FAIL 150 (backstop)",
+      "detail": ""
+    },
+    {
+      "rule": "pin_unreg",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "METHODOLOGY 1.9 register every partition pin",
+      "detail": ""
+    },
+    {
+      "rule": "r2r",
+      "status": "PASS",
+      "value": 253.21,
+      "limit": "<=405.0",
+      "source": "METHODOLOGY 1.3/4.2 reach 405",
+      "detail": "0 captures > 405; worst u_twpd/q\\[767\\]$_DFF_P_ -> g_btb\\[2\\].g_r.u_wd/q\\[255\\]$_DFF_P_"
+    },
+    {
+      "rule": "r2r_count",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "METHODOLOGY 1.3 (count of captures > 405 um)",
+      "detail": ""
+    },
+    {
+      "rule": "pin_density",
+      "status": "PASS",
+      "value": 4.2,
+      "limit": "<=6.0",
+      "source": "METHODOLOGY 5.2 per layer+face BUDGET (COORD 10-27 10:48); route (pin-access DRC / GRT0) decides",
+      "detail": "per layer {'E/M4': 2.7, 'S/M5': 4.2}"
+    },
+    {
+      "rule": "std_band",
+      "status": "PASS",
+      "value": 1.0,
+      "limit": ">=0.95",
+      "source": "tile-review-pin-clustering-1017 (one contiguous std-cell band)",
+      "detail": ""
+    },
+    {
+      "rule": "cells_on_macros",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "GEOM-REVIEW-24 pslice_c5 cond (2) 0 std cells on macros",
+      "detail": ""
+    },
+    {
+      "rule": "macro_lattice",
+      "status": "INFO",
+      "value": "0 off site/row grid, 0 off 4.32",
+      "limit": "reported",
+      "source": "METHODOLOGY 5.6 (no pitch defined)",
+      "detail": "max 4.32 residual 0.0"
+    },
+    {
+      "rule": "partial_face",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+      "detail": ""
+    },
+    {
+      "rule": "relay_collapse",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "gpl-collapses-relay-chains-1022 (stacked relay stages)",
+      "detail": "None"
+    },
+    {
+      "rule": "channel_h",
+      "status": "WARN",
+      "value": 0.632,
+      "limit": "<=0.6 plan budget",
+      "source": "METHODOLOGY 5.2/12.7b tracks <= 0.6; GEOM-REVIEW-24 ep/pslice channel demand",
+      "detail": "at (0.0, 10.0, 17.5) (M2-M5, est.); GRT 0 overflow"
+    },
+    {
+      "rule": "channel_v",
+      "status": "WARN",
+      "value": 0.735,
+      "limit": "<=0.6 plan budget",
+      "source": "METHODOLOGY 5.2/12.7b tracks <= 0.6; GEOM-REVIEW-24 ep/pslice channel demand",
+      "detail": "at (265.0, 275.0, 92.5) (M2-M5, est.); GRT 0 overflow"
+    },
+    {
+      "rule": "col_v",
+      "status": "WARN",
+      "value": 0.959,
+      "limit": "<=0.6 plan budget",
+      "source": "per-column vertical demand; GEOM-REVIEW-24 hub_Ei spine",
+      "detail": "at (270.0, 87.5) (M2-M5, est.); GRT 0 overflow"
+    },
+    {
+      "rule": "blocked_h",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "GEOM-REVIEW-24 ep: nets with no legal crossing (capacity 0 under the layer ceiling)",
+      "detail": ""
+    },
+    {
+      "rule": "blocked_v",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "GEOM-REVIEW-24 ep: nets with no legal crossing (capacity 0 under the layer ceiling)",
+      "detail": ""
+    },
+    {
+      "rule": "detour",
+      "status": "INFO",
+      "value": "h 11514 v 0",
+      "limit": "info",
+      "source": "net-cut crossings detoured around macros (counted into channel demand)",
+      "detail": ""
+    },
+    {
+      "rule": "clock_on_macro",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "GEOM-REVIEW-24 vm_calendar_f20 (entry ON the SRAM)",
+      "detail": "ck at [146.892, 77.76] []"
+    },
+    {
+      "rule": "clock_reach",
+      "status": "PASS",
+      "value": 9.77,
+      "limit": "<=220.0",
+      "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)",
+      "detail": "sink farthest from its nearest entry (167.7, 74.4), 473 pre-placed clock cells"
+    },
+    {
+      "rule": "clock_leaf_reach",
+      "status": "INFO",
+      "value": 25.33,
+      "limit": "info",
+      "source": "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46",
+      "detail": "sink (129.7, 97.1) driver (137.7, 79.8)"
+    },
+    {
+      "rule": "clock_entry_sink",
+      "status": "INFO",
+      "value": 214.69,
+      "limit": "info",
+      "source": "root port to farthest clock sink",
+      "detail": "sink (5.0, 5.0)"
+    },
+    {
+      "rule": "grt",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "OWNER 10-26 GRT0 at >= 50 iterations (hbm-overflow-core-ceiling-1026)",
+      "detail": "13 it, {'M1': [0.0, 0], 'M2': [32.44, 0], 'M3': [23.33, 0], 'M4': [21.29, 0], 'M5': [7.56, 0]}"
+    },
+    {
+      "rule": "clock_taps",
+      "status": "INFO",
+      "value": "1 grid taps, 4536 sinks",
+      "limit": "n/a (< 2 grid taps)",
+      "source": "METHODOLOGY 3.3",
+      "detail": ""
+    },
+    {
+      "rule": "interface",
+      "status": "INFO",
+      "value": 1318,
+      "limit": "kit pin contract",
+      "source": "OWNER 2026-10-27 08:02",
+      "detail": "new kit: parent interface checks stay in shared preflight; no replica equality asserted"
+    },
+    {
+      "rule": "comb_loops",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "complete r2r reach census (acyclic combinational graph)",
+      "detail": ""
+    },
+    {
+      "rule": "clock_rooted",
+      "status": "PASS",
+      "value": 0,
+      "limit": "<=0",
+      "source": "all sequential sinks trace to a clock input",
+      "detail": ""
+    },
+    {
+      "rule": "clock_sinks",
+      "status": "PASS",
+      "value": 4536,
+      "limit": ">=1",
+      "source": "measured clock topology required",
+      "detail": ""
+    }
+  ],
+  "conditions": "standing FILL-EXCEPTION; route standard gates remain"
+}
