@@ -1,0 +1,154 @@
+{
+ "verdict": "CONDITIONAL CHILD PLAN ONLY; parent placement HOLD",
+ "body_um": [
+  345.6,
+  656.64,
+  598.8,
+  1162.08
+ ],
+ "halo_um": 4.32,
+ "child_cells": 281884,
+ "parent_remaining_cells": 260481,
+ "child_cell_area_um2": 36859.27518,
+ "usable_child_core_area_um2": 121497.40799999997,
+ "child_utilization": 0.30337499199982937,
+ "parent_outline_um": [
+  613.44,
+  1339.2
+ ],
+ "state_or_data_cycles_added": 0,
+ "output_port_to_public_face_L1_upper_um": {
+  "x_ctl_o": 402.84000000000015,
+  "x_fe_o": 400.08000000000015,
+  "x_fw_o": 352.20799999999997
+ },
+ "output_proxy_all_le405": true,
+ "source_scope": "Existing u_bound.u_core only. 27ports/572bits unchanged. Output-pin model is not actual parent boutFF geometry or child timing.",
+ "preserved_parent_clock_reset": [
+  311.04,
+  673.92
+ ],
+ "preserved_count_strap_bounds": [
+  280.8,
+  643.68,
+  341.28,
+  704.16
+ ],
+ "intersecting_reserved_groups": [
+  {
+   "prefix": "u_cland_collect_rst_rl_15",
+   "rect_um": [
+    379.848,
+    834.864,
+    384.168,
+    839.184
+   ],
+   "role": "collector:rst_rl_15"
+  },
+  {
+   "prefix": "u_cland_collect_rst_rl_6",
+   "rect_um": [
+    457.92,
+    834.84,
+    462.24,
+    839.16
+   ],
+   "role": "collector:rst_rl_6"
+  },
+  {
+   "prefix": "u_cland_reset_rst_rl_15",
+   "rect_um": [
+    379.848,
+    834.864,
+    384.168,
+    839.184
+   ],
+   "role": "raw-copy-optional"
+  },
+  {
+   "prefix": "u_cland_reset_rst_rl_6",
+   "rect_um": [
+    457.92,
+    834.84,
+    462.24,
+    839.16
+   ],
+   "role": "raw-copy-optional"
+  }
+ ],
+ "intersecting_FT_ideal_stages": [
+  {
+   "slot": "x_fw_ctl_p1",
+   "stage": 2,
+   "bits": 537,
+   "ideal_bbox_um": [
+    432.608,
+    711.974,
+    525.216,
+    713.843
+   ]
+  },
+  {
+   "slot": "x_fw_ctl_p1",
+   "stage": 3,
+   "bits": 537,
+   "ideal_bbox_um": [
+    432.608,
+    1025.587,
+    525.216,
+    1026.522
+   ]
+  },
+  {
+   "slot": "x_su_l1_ctl",
+   "stage": 1,
+   "bits": 457,
+   "ideal_bbox_um": [
+    458.912,
+    669.6,
+    537.408,
+    669.6
+   ]
+  },
+  {
+   "slot": "x_su_l1_ctl",
+   "stage": 2,
+   "bits": 457,
+   "ideal_bbox_um": [
+    526.24,
+    970.668,
+    604.448,
+    971.052
+   ]
+  },
+  {
+   "slot": "x_ctl_su_c_p2",
+   "stage": 0,
+   "bits": 552,
+   "ideal_bbox_um": [
+    337.568,
+    991.44,
+    431.648,
+    991.44
+   ]
+  },
+  {
+   "slot": "x_ctl_su_c_p2",
+   "stage": 1,
+   "bits": 552,
+   "ideal_bbox_um": [
+    311.648,
+    669.6,
+    405.728,
+    669.6
+   ]
+  }
+ ],
+ "required_work": [
+  "Move same-depth reset/run/collector instances intersecting bay and recheck entire reset graph.",
+  "Retarget existing FT stages around bay with actual per-bit constraints and .4 footprints; no new FF stages.",
+  "Place CA read outputs/R8 final stages near child input faces while checking every source cone.",
+  "Generate and qualify actual child source/LEF/pins; retain all native state and whole-logical LEC baseline.",
+  "Actual parent fixed-body/clock/PG/geometry and TT/FF closure required before route."
+ ]
+}
