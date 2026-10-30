@@ -1,0 +1,477 @@
+{
+ "hnx_fused_lane": {
+  "verdict": "PASS",
+  "ports": [
+   [
+    "clk",
+    "input",
+    1
+   ],
+   [
+    "rst_n",
+    "input",
+    1
+   ],
+   [
+    "lid",
+    "input",
+    5
+   ],
+   [
+    "rq_v",
+    "output",
+    1
+   ],
+   [
+    "rq_s",
+    "output",
+    16
+   ],
+   [
+    "rr_v",
+    "input",
+    1
+   ],
+   [
+    "rr_d",
+    "input",
+    256
+   ],
+   [
+    "wq_v",
+    "output",
+    1
+   ],
+   [
+    "wq_s",
+    "output",
+    16
+   ],
+   [
+    "wq_d",
+    "output",
+    256
+   ],
+   [
+    "dn_v",
+    "input",
+    1
+   ],
+   [
+    "dn_op",
+    "input",
+    3
+   ],
+   [
+    "dn_x",
+    "input",
+    8
+   ],
+   [
+    "dn_d",
+    "input",
+    128
+   ],
+   [
+    "r_v",
+    "input",
+    1
+   ],
+   [
+    "r_d",
+    "input",
+    32
+   ],
+   [
+    "up_v",
+    "output",
+    1
+   ],
+   [
+    "up_t",
+    "output",
+    1
+   ],
+   [
+    "up_x",
+    "output",
+    10
+   ],
+   [
+    "up_d",
+    "output",
+    256
+   ],
+   [
+    "fin",
+    "output",
+    1
+   ],
+   [
+    "flt",
+    "output",
+    1
+   ]
+  ],
+  "mismatch": [],
+  "source_sha256": {
+   "ot_hnx_fused_tree.sv": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+   "ot_hnx_fused_eng.sv": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_hdc_delay_ring.sv": "b73ee094bbf20688a072fe60251127e47ca39e1f3c0fc04499a33623a19bdfc6",
+   "ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+   "ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+   "ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+   "ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+   "ot_hdc_fp32_add_lat.sv": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+   "ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+   "ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+   "ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+   "ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+   "ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+   "ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+   "ot_dsrom_su_hcpost.sv": "b93c785ff8fd90b7ad9402071210a4cf8799f82a801b31f6bcaf0e1d7eb12233",
+   "ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+   "ot_dsrom_aq12.sv": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+   "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+  }
+ },
+ "ot_hnx_fused_tnode": {
+  "verdict": "PASS",
+  "ports": [
+   [
+    "clk",
+    "input",
+    1
+   ],
+   [
+    "rst_n",
+    "input",
+    1
+   ],
+   [
+    "pad_k",
+    "input",
+    6
+   ],
+   [
+    "pad_b",
+    "input",
+    1
+   ],
+   [
+    "ua",
+    "input",
+    271
+   ],
+   [
+    "ub",
+    "input",
+    271
+   ],
+   [
+    "uo",
+    "output",
+    271
+   ],
+   [
+    "dn",
+    "input",
+    173
+   ],
+   [
+    "da",
+    "output",
+    173
+   ],
+   [
+    "db",
+    "output",
+    173
+   ]
+  ],
+  "mismatch": [],
+  "source_sha256": {
+   "ot_hnx_fused_tree.sv": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+   "ot_hnx_fused_eng.sv": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_hdc_delay_ring.sv": "b73ee094bbf20688a072fe60251127e47ca39e1f3c0fc04499a33623a19bdfc6",
+   "ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+   "ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+   "ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+   "ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+   "ot_hdc_fp32_add_lat.sv": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+   "ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+   "ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+   "ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+   "ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+   "ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+   "ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+   "ot_dsrom_su_hcpost.sv": "b93c785ff8fd90b7ad9402071210a4cf8799f82a801b31f6bcaf0e1d7eb12233",
+   "ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+   "ot_dsrom_aq12.sv": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+   "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+   "ot_sram_1r1w2c_32x64_m1_bb.v": "a21c47f48da07db2e746b68c5519a41f0b53185d8de066689040631b29c1a19e"
+  }
+ },
+ "ot_hnx_fused_hub_n4ext": {
+  "verdict": "PASS",
+  "ports": [
+   [
+    "clk",
+    "input",
+    1
+   ],
+   [
+    "rst_n",
+    "input",
+    1
+   ],
+   [
+    "job_v",
+    "input",
+    1
+   ],
+   [
+    "job",
+    "input",
+    217
+   ],
+   [
+    "done",
+    "output",
+    1
+   ],
+   [
+    "fault",
+    "output",
+    1
+   ],
+   [
+    "busy",
+    "output",
+    1
+   ],
+   [
+    "wsc",
+    "input",
+    8
+   ],
+   [
+    "pk5",
+    "input",
+    6
+   ],
+   [
+    "pb5",
+    "input",
+    1
+   ],
+   [
+    "up_nw",
+    "input",
+    271
+   ],
+   [
+    "up_ne",
+    "input",
+    271
+   ],
+   [
+    "down_nw",
+    "output",
+    173
+   ],
+   [
+    "down_ne",
+    "output",
+    173
+   ]
+  ],
+  "mismatch": [],
+  "source_sha256": {
+   "ot_hnx_fused_tree.sv": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+   "ot_hnx_fused_eng.sv": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_hdc_delay_ring.sv": "b73ee094bbf20688a072fe60251127e47ca39e1f3c0fc04499a33623a19bdfc6",
+   "ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+   "ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+   "ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+   "ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+   "ot_hdc_fp32_add_lat.sv": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+   "ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+   "ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+   "ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+   "ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+   "ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+   "ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+   "ot_dsrom_su_hcpost.sv": "b93c785ff8fd90b7ad9402071210a4cf8799f82a801b31f6bcaf0e1d7eb12233",
+   "ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+   "ot_dsrom_aq12.sv": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+   "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "ot_hnx_fused_hub_n4ext.sv": "09a34eff3dc7496270b394f1503b45858e51732eb9dde679dec3bc63836f4c6f",
+   "ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c",
+   "ot_sram_1r1w2c_32x64_m1_bb.v": "a21c47f48da07db2e746b68c5519a41f0b53185d8de066689040631b29c1a19e"
+  }
+ },
+ "ot_hnx_fused_host_program": {
+  "verdict": "PASS",
+  "ports": [
+   [
+    "clk",
+    "input",
+    1
+   ],
+   [
+    "rst_n",
+    "input",
+    1
+   ],
+   [
+    "cfg_v",
+    "input",
+    1
+   ],
+   [
+    "cfg_target",
+    "input",
+    8
+   ],
+   [
+    "cfg_addr",
+    "input",
+    12
+   ],
+   [
+    "cfg_data",
+    "input",
+    256
+   ],
+   [
+    "desc_v",
+    "input",
+    1
+   ],
+   [
+    "desc_base",
+    "input",
+    12
+   ],
+   [
+    "desc_limit",
+    "input",
+    13
+   ],
+   [
+    "desc_loops",
+    "input",
+    16
+   ],
+   [
+    "launch_v",
+    "input",
+    1
+   ],
+   [
+    "ready",
+    "output",
+    1
+   ],
+   [
+    "active",
+    "output",
+    1
+   ],
+   [
+    "done",
+    "output",
+    1
+   ],
+   [
+    "fault",
+    "output",
+    1
+   ],
+   [
+    "job_v",
+    "output",
+    1
+   ],
+   [
+    "job",
+    "output",
+    217
+   ],
+   [
+    "wsc",
+    "output",
+    8
+   ],
+   [
+    "pk5",
+    "output",
+    6
+   ],
+   [
+    "pb5",
+    "output",
+    1
+   ],
+   [
+    "root_done",
+    "input",
+    1
+   ],
+   [
+    "root_fault",
+    "input",
+    1
+   ],
+   [
+    "root_busy",
+    "input",
+    1
+   ]
+  ],
+  "mismatch": [],
+  "source_sha256": {
+   "ot_hnx_fused_tree.sv": "838587d4c314abb25cec767d9c4b8a33a5e08f72e1ca697d5bffce7e1daa9b54",
+   "ot_hnx_fused_eng.sv": "11dce25459efa96db88323cbb9da19ab0f6558048cade64e5f0c79bd3fff5a8f",
+   "ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+   "ot_hdc_delay_ring.sv": "b73ee094bbf20688a072fe60251127e47ca39e1f3c0fc04499a33623a19bdfc6",
+   "ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+   "ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+   "ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+   "ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+   "ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+   "ot_hdc_fastfp_lat.sv": "e09be17358e95ebcfe64c2ecc01090410ec81542e737fc96207244cc134f5cbc",
+   "ot_hdc_fp32_mul_lat.sv": "ddc4c3bfb4f22788534148049bf381d469053ff5b54c6197548636a3f4aac8e3",
+   "ot_hdc_fp32_add_lat.sv": "f64e238c6bfe1d5013dae3f8f9c4fbb25c31e88f6e82a4ee1ae6a902db10f3df",
+   "ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+   "ot_hdc_fp32_f12.sv": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+   "ot_dsrom_divc.sv": "edc9b8c291ee1f0140db7a62b08f4dd3524cd70f8a8681b0d595f07b70d70cd8",
+   "ot_dsrom_fp32_add_l6.sv": "b9b633cd35f09bfa5ab05aa9312e73922412e0891e8b5e063912c2709b6d05bd",
+   "ot_dsrom_su_add6.sv": "f779ce2b94b227a14202985b868f6de927340c815142f0ff00c3054a22b98007",
+   "ot_dsrom_su_norm.sv": "dfc78ae038cfc283517d7f6d6a50976847796217c341184a48e753ad3087eeec",
+   "ot_dsrom_su_hcpost.sv": "b93c785ff8fd90b7ad9402071210a4cf8799f82a801b31f6bcaf0e1d7eb12233",
+   "ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+   "ot_dsrom_aq12.sv": "eb24a7e820ea7afaf1ced280fa5352ec38a6e55b75bfdc40839b456ce49153c8",
+   "ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "ot_hnx_fused_host_program.sv": "2eb7dfdfe0f53cc81502c4f3be98576ce06410729aa116fbb7afe5a4f7b3a4f7",
+   "ot_hnx_fused_host_boot.sv": "1aa81c28e1f6e1678cbee3f7284fb24a7b74feada82b327bd4a989e0677843b1",
+   "ot_hnx_fused_job217_provider.sv": "9be13ccf2acda8bc3e113b9d55d0251461744911223b4a7c461ffdcbbbbfc5ae",
+   "ot_sram_1r1w_256x256_m2_r2c2_bb.v": "35e0905c083a17f1c222512a3093a059cec5b128f5f017fda999653084c9e75f"
+  }
+ }
+}

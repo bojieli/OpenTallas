@@ -52,7 +52,7 @@ def read_arr(arr):
     return A, N, F, M
 
 
-def export(tree, arr, corner, components=False, node_cells=False):
+def export(tree, arr, corner, components=False, node_cells=False, physical_paths=False):
     T = json.loads(Path(tree).read_text())
     nodes = {int(k): v for k, v in T["nodes"].items()}
     buf = {int(k): v for k, v in T["node_buf"].items()}
@@ -109,7 +109,7 @@ def export(tree, arr, corner, components=False, node_cells=False):
         if cell in M:
             meta.setdefault("node_fall_late_ps", {})[key], meta.setdefault("node_fall_early_ps", {})[key] = M[cell]
 
-    physical = any("driver" in t for t in T["taps"])
+    physical = physical_paths or any("driver" in t for t in T["taps"])
     cell_paths = {}
     if physical:
         children = {}
@@ -178,8 +178,11 @@ def main():
                     help="export measured per-master clock delay components (requires both-edge T/N/F/M readout)")
     ap.add_argument("--node-cell-names", action="store_true",
                     help="include physical node-to-cell inventory for START-stage placement; arrival numbers unchanged")
+    ap.add_argument("--physical-paths", action="store_true",
+                    help="export every actual clock cell, including repeater nodes, on raw die_trial trees; default keeps legacy node-only paths")
     a = ap.parse_args()
-    result, missing = export(a.tree, a.arr, a.corner, components=a.clock_components, node_cells=a.node_cell_names)
+    result, missing = export(a.tree, a.arr, a.corner, components=a.clock_components, node_cells=a.node_cell_names,
+                             physical_paths=a.physical_paths)
     Path(a.out).write_text(json.dumps(result))
     print(a.corner, "taps", len(result["taps"]), "missing", missing, "regions", result["regions"],
           "nodes", len(result["node_late_ps"]), "fall taps", sum(1 for x in result["taps"] if "fall_late_ps" in x),

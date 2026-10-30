@@ -968,6 +968,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
     if sha(pdir / v["pins_file"]) != v["pins_sha256"]:
         raise SystemExit("pins file changed since the inventory")
     pins_canon = plan_pins_canon_sha256(pins, [w, h])
+    # Plan tables may use bus/bit records; use the canonical checker's
+    # spelling before inventory, lattice checks and IO generation.
+    from kit_contract import _kit_pins
+    pins = _kit_pins(pins)
     off = [q["name"] for q in pins if q["layer"] in ("M4", "M5") and
            abs(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048 -
                round(((q["x"] if q["layer"] == "M5" else q["y"]) - 0.024) / 0.048)) > 0.05]

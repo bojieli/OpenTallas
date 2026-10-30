@@ -1,0 +1,66 @@
+%Warning-TIMESCALEMOD: ot_hbm_idx_selector_static_sel.sv:23:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+   23 | module ot_hbm_idx_selector_static_sel_core #(parameter integer MUT=0,STRUCT=0,LOCAL_CTRL=0)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ot_sram_1r1w_256x256_m2_r2c2.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w_256x256_m2_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.050
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-TIMESCALEMOD: ot_hbm_idx_selector_static_sel.sv:232:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+  232 | module ot_hbm_idx_selector_static_sel #(parameter integer MUT=0,STRUCT=0,LOCAL_CTRL=0)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ot_sram_1r1w_256x256_m2_r2c2.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w_256x256_m2_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: ot_hbm_idx_selector_compact.sv:4:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    4 | module ot_hbm_idx_selector_compact #(parameter integer N=16,EW=37,MUT=0)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+                       ot_sram_1r1w_256x256_m2_r2c2.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w_256x256_m2_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-TIMESCALEMOD: ot_hbm_idx_compact_tree.sv:4:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    4 | module ot_hbm_idx_compact_tree #(parameter integer N=64,W=64)(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       ot_sram_1r1w_256x256_m2_r2c2.v:6:8: ... Location of module with timescale
+    6 | module ot_sram_1r1w_256x256_m2_r2c2 (
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%Warning-MULTIDRIVEN: ot_hbm_idx_selector_static_sel.sv:48:13: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_selector_static_sel.core.hist'
+                      ot_hbm_idx_selector_static_sel.sv:176:16: ... Location of first driving block
+  176 |       if(op==3)hist[q][b]<=0;
+      |                ^~~~
+                      ot_hbm_idx_selector_static_sel.sv:176:16: ... Location of other driving block
+  176 |       if(op==3)hist[q][b]<=0;
+      |                ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: ot_hbm_idx_selector_static_sel.sv:258:13: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_selector_static_sel.c_sel_v'
+                      ot_hbm_idx_selector_static_sel.sv:210:44: ... Location of first driving block
+  210 |     rv<=re;rop<=op;rpass<=pass;raddr<=addr;selected_v[q]<=compact;
+      |                                            ^~~~~~~~~~
+                      ot_hbm_idx_selector_static_sel.sv:210:44: ... Location of other driving block
+  210 |     rv<=re;rop<=op;rpass<=pass;raddr<=addr;selected_v[q]<=compact;
+      |                                            ^~~~~~~~~~
+%Warning-MULTIDRIVEN: ot_hbm_idx_selector_static_sel.sv:258:35: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_selector_static_sel.c_sel_line'
+                      ot_hbm_idx_selector_static_sel.sv:211:37: ... Location of first driving block
+  211 |     for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
+      |                                     ^~~~~~~~~~~~~
+                      ot_hbm_idx_selector_static_sel.sv:211:37: ... Location of other driving block
+  211 |     for(integer l=0;l<W;l=l+1)begin selected_line[q*LW+l*EW+:EW]<=raw[l*EW+:EW];selected_line[q*LW+l*EW]<=compact&&mask_choose[l];end
+      |                                     ^~~~~~~~~~~~~
+%Warning-MULTIDRIVEN: ot_hbm_idx_selector_static_sel.sv:51:13: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_selector_static_sel.core.selected'
+                      ot_hbm_idx_selector_static_sel.sv:212:70: ... Location of first driving block
+  212 |     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
+      |                                                                      ^~~~~~~~
+                      ot_hbm_idx_selector_static_sel.sv:212:70: ... Location of other driving block
+  212 |     if(op==1)begin buf_q<=0;fill<=0;wp<=0;tie_rem<=0;comp_started<=0;selected[q]<=0;last_id<=0;end
+      |                                                                      ^~~~~~~~
+%Warning-MULTIDRIVEN: ot_hbm_idx_selector_static_sel.sv:52:12: Signal has multiple driving blocks with different clocking: 'ot_hbm_idx_selector_static_sel.core.qfault'
+                      ot_hbm_idx_selector_static_sel.sv:217:37: ... Location of first driving block
+  217 |      if(selected[q]+chosen_next>512)qfault[q]<=1;
+      |                                     ^~~~~~
+                      ot_hbm_idx_selector_static_sel.sv:217:37: ... Location of other driving block
+  217 |      if(selected[q]+chosen_next>512)qfault[q]<=1;
+      |                                     ^~~~~~
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.133 MB sources in 7 modules, into 32.950 MB in 47 C++ files needing 0.000 MB
+- Verilator: Walltime 5.021 s (elab=0.072, cvt=3.722, bld=0.000); cpu 5.021 s on 1 threads; allocated 300.609 MB

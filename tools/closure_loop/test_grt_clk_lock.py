@@ -36,6 +36,7 @@ proc ::mockblock {m} {
   return [lmap n [dict keys $::nets] {mknet $n}]
 }
 proc detailed_placement {args} {
+  set ::dpl_args $args
   set ::during [lsort [lmap n [array names ::st] {list $n $::st($n)}]]
   if {[info exists ::dpl_fail]} { error "DPL-0036 mock failure" }
   return ok
@@ -72,6 +73,17 @@ class GrtClkLockTests(unittest.TestCase):
         self.assertEqual(o["AFTER"], AFTER)
         self.assertIn("OT_GRT_CLK_LOCK: 3 clock-net instances FIRM", log)
         self.assertTrue(o["RC"].startswith("0 ok"))
+
+    def test_diamond_selection_reaches_bare_post_repair_dpl(self):
+        for stage in ("4_cts.sdc", "3_place.sdc", None):
+            log, o = run(stage, env={"DETAIL_PLACEMENT_ARGS": "-use_diamond_legalizer"},
+                         extra='trace add variable ::dpl_args write {apply {{args} {puts "ARGS $::dpl_args"}}}\n')
+            self.assertEqual(o["ARGS"], "-max_displacement 10 -use_diamond_legalizer")
+            self.assertEqual(o["AFTER"], AFTER)
+
+    def test_no_diamond_without_explicit_selection(self):
+        _, o = run("4_cts.sdc", extra='trace add variable ::dpl_args write {apply {{args} {puts "ARGS $::dpl_args"}}}\n')
+        self.assertEqual(o["ARGS"], "-max_displacement 10")
 
     def test_cts_stage_and_non_mm_untouched(self):
         for stage in ("3_place.sdc", None):

@@ -1,0 +1,14 @@
+{
+ "verdict": "PASS-COND",
+ "scope": "physical-only candidate for generation/PLACE trial; not approval to route failed placement",
+ "images": [
+  "die.png",
+  "local_fix.png"
+ ],
+ "findings": [
+  "Viewed whole die and local fixes. All existing partition/core outlines, faces, clock entries and channels retained.",
+  "Three rsn_i reserved bands fit between lane4/lane5 macro halos. FF-only mapped estimate2326.97um2 within2661.12um2; actual mapped reserve/clock/relay geometry required.",
+  "UCIe PHY is already at existing W/S/E die edges. Zero corresponding core inset admits existing777.6um macro without moving collective neighbors. North inset stays4.32um.",
+  "No new long signal paths or data cycles. Existing PG continuity and native clock trials remain separate die gates."
+ ]
+}
