@@ -1,0 +1,314 @@
+{
+ "check": {
+  "constant_plan_bits": {},
+  "mapped_buses": 29,
+  "n_rtl_inputs_uncovered": 0,
+  "n_unresolved_rtl": 0,
+  "notes": {
+   "g_operand_0_u_group_sw_mask": "BY_ELIMINATION: the only free input bits of width 64 (stage_mask bits 0..63; constant net in the master)",
+   "glue": "BY_ELIMINATION: the only free input bits of width 4 (u_core_io_r bits 0..3; 0 same-width master candidates, 0 distinct nets)",
+   "glue_1": "BY_ELIMINATION: the only free output bits of width 1 (u_core_u_engine_u_memory_fault bits 0..0; 0 same-width master candidates, 0 distinct nets)",
+   "x_u_core_u_engine_u_arithmetic_vm_waddr": "NARROW: 144 of 384 master bits reached by the piece, ascending order"
+  },
+  "plan_bits": 7534,
+  "plan_buses": 29,
+  "problems": [],
+  "rtl_inputs_multi": [],
+  "rtl_inputs_uncovered": [],
+  "rtl_outputs_open": 0,
+  "unproven_mappings": {
+   "g_operand_0_u_group_sw_mask": "BY_ELIMINATION: the only free input bits of width 64 (stage_mask bits 0..63; constant net in the master)",
+   "glue": "BY_ELIMINATION: the only free input bits of width 4 (u_core_io_r bits 0..3; 0 same-width master candidates, 0 distinct nets)",
+   "glue_1": "BY_ELIMINATION: the only free output bits of width 1 (u_core_u_engine_u_memory_fault bits 0..0; 0 same-width master candidates, 0 distinct nets)",
+   "x_u_core_u_engine_u_arithmetic_vm_waddr": "NARROW: 144 of 384 master bits reached by the piece, ascending order"
+  },
+  "unresolved_rtl": [],
+  "verdict": "UNPROVEN",
+  "whole_bus_entries": {
+   "clk": "SAME_NET",
+   "g_operand_0_u_group_sw_d": "SAME_NET",
+   "glue_1": "SAME_NET",
+   "x_u_core_u_engine_u_arithmetic_rd_addr": "SAME_NET",
+   "x_u_core_u_engine_u_arithmetic_rd_q": "SAME_NET",
+   "x_u_core_u_engine_u_arithmetic_vm_waddr": "SAME_NET",
+   "x_u_core_u_vm_scalar_load_addr": "SAME_NET",
+   "x_u_core_u_vm_stage_v": "SAME_NET"
+  }
+ },
+ "master_top": "ot_hgi_sfu_core_split3",
+ "piece": "ot_hgi_sfu_core_split3__opstore_a",
+ "rest_top": "ot_hgi_sfu_split3_opstore_a_core",
+ "slices": {
+  "clk": [
+   [
+    "clk",
+    0,
+    0,
+    1
+   ]
+  ],
+  "g_operand_0_u_group_sw_d": [
+   [
+    "u_core_b_rr",
+    0,
+    0,
+    2048
+   ]
+  ],
+  "g_operand_0_u_group_sw_mask": [
+   [
+    "stage_mask",
+    0,
+    0,
+    64
+   ]
+  ],
+  "glue": [
+   [
+    "u_core_io_r",
+    0,
+    0,
+    4
+   ]
+  ],
+  "glue_1": [
+   [
+    "u_core_u_engine_u_memory_fault",
+    0,
+    0,
+    1
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_rd_addr": [
+   [
+    "u_core_u_engine_u_arithmetic_u_grid_rd_addr",
+    0,
+    0,
+    1536
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_rd_q": [
+   [
+    "u_core_u_engine_u_arithmetic_u_grid_rd_q",
+    0,
+    0,
+    2048
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_rd_re": [
+   [
+    "u_core_u_engine_u_arithmetic_u_grid_rd_re",
+    0,
+    0,
+    64
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_rd_src": [
+   [
+    "u_core_u_engine_u_arithmetic_u_grid_rd_src",
+    0,
+    0,
+    128
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_rst_control_n": [
+   [
+    "u_core_u_rst_relay_q_0",
+    0,
+    0,
+    1
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_vm_waddr": [
+   [
+    "u_core_u_engine_u_arithmetic_u_grid_vm_waddr",
+    0,
+    0,
+    144
+   ]
+  ],
+  "x_u_core_u_engine_u_arithmetic_vm_we": [
+   [
+    "u_core_u_engine_u_arithmetic_u_grid_vm_we",
+    0,
+    0,
+    16
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_2_u_group_flt": [
+   [
+    "u_core_u_engine_u_memory_group_fault",
+    0,
+    0,
+    1
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_2_u_group_rd": [
+   [
+    "u_core_u_engine_u_memory_g_operand_2_data",
+    0,
+    0,
+    512
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_2_u_group_rq": [
+   [
+    "u_core_u_engine_u_memory_g_operand_2_req",
+    0,
+    0,
+    16
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_addr": [
+   [
+    "u_core_u_vm_g_lg_0_meta_78",
+    0,
+    0,
+    30
+   ],
+   [
+    "u_core_u_vm_g_lg_1_meta_78",
+    0,
+    30,
+    30
+   ],
+   [
+    "u_core_u_vm_g_lg_2_meta_78",
+    0,
+    60,
+    30
+   ],
+   [
+    "u_core_u_vm_g_lg_3_meta_78",
+    0,
+    90,
+    30
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_2_u_group_sw_v": [
+   [
+    "u_core_u_engine_u_memory_g_operand_2_sw",
+    0,
+    0,
+    8
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_3_u_group_flt": [
+   [
+    "u_core_u_engine_u_memory_group_fault",
+    1,
+    0,
+    1
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_3_u_group_rd": [
+   [
+    "u_core_u_engine_u_memory_g_operand_3_data",
+    0,
+    0,
+    512
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_3_u_group_rq": [
+   [
+    "u_core_u_engine_u_memory_g_operand_3_req",
+    0,
+    0,
+    16
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_g_operand_3_u_group_sw_v": [
+   [
+    "u_core_u_engine_u_memory_g_operand_3_sw",
+    0,
+    0,
+    8
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_u_output_flt": [
+   [
+    "u_core_u_engine_u_memory_group_fault",
+    2,
+    0,
+    1
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_u_output_sr_addr": [
+   [
+    "u_core_io_r",
+    6,
+    0,
+    30
+   ]
+  ],
+  "x_u_core_u_engine_u_memory_u_output_sr_v": [
+   [
+    "u_core_io_r",
+    4,
+    0,
+    2
+   ]
+  ],
+  "x_u_core_u_vm_scalar_data": [
+   [
+    "u_core_u_engine_u_memory_scalar_data",
+    0,
+    0,
+    128
+   ]
+  ],
+  "x_u_core_u_vm_scalar_load": [
+   [
+    "u_core_u_engine_u_memory_scalar_load",
+    0,
+    0,
+    4
+   ]
+  ],
+  "x_u_core_u_vm_scalar_load_addr": [
+   [
+    "u_core_u_vm_scalar_addr_pipe_78",
+    0,
+    0,
+    96
+   ]
+  ],
+  "x_u_core_u_vm_stage_group": [
+   [
+    "u_core_u_vm_g_lg_0_meta_78",
+    30,
+    0,
+    4
+   ],
+   [
+    "u_core_u_vm_g_lg_1_meta_78",
+    30,
+    4,
+    4
+   ],
+   [
+    "u_core_u_vm_g_lg_2_meta_78",
+    30,
+    8,
+    4
+   ],
+   [
+    "u_core_u_vm_g_lg_3_meta_78",
+    30,
+    12,
+    4
+   ]
+  ],
+  "x_u_core_u_vm_stage_v": [
+   [
+    "u_core_u_engine_u_memory_stage_v",
+    0,
+    0,
+    8
+   ]
+  ]
+ },
+ "type_ids": [
+  "ot_hgi_sfu_core_split3__opstore_a__388.8x345.6"
+ ]
+}
