@@ -1,0 +1,13 @@
+HELD: current full native synth LEC is live, not equivalent verdict yet.
+Recovered exact inherited ROM source98818061484 with held-source reset
+mirror correction0bf70739c. Source matches epyc2 s81-kits-e/kits/rom_gb2r2_bt5
+under nativeLEC unit979645. No branch-ancestry merge; BF source omitted.
+FP4K default0 preserves every other caller. Only existing fp4=1 u_l1 opts
+in to observing the shared bit1/bit2 decode field via one representation.
+0 cycle change, no arithmetic rounding/pipeline change, no pin/outline
+change. Full three-seed ROM mirror-reset lockstep already passed1773914,
+1806452,1849282 cycles incl50/42/26 mid-run resets, mutant377 caught
+(Codex prior22:59 collection). FP4K smallest actual helper lockstep4x20k
+P0B0..3 passed with mutants5136..5138 caught, receipt copied here.
+Original151NEQ source retained. Raw-prefix6 diagnostic3966648 does not
+qualify source; full current native proof is mandatory before READY.
