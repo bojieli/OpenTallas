@@ -520,7 +520,7 @@ def run_item(spec_path):
         if ok:
             phosts = ok
     rc, txt = run("place", otrun(m, t, K, f"bash {q(W)}/gen/run_kit.sh {q(K)} place {m} {t}", phosts))
-    ran = re.findall(r"RAN on (\S+?):", txt)
+    ran = re.findall(r"(?m)^ot-run: RAN on ([^\s:]+)(?: \(unit [^)\n]+\))?:", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
     if h and h != G and not (on_hub and h == hub):
         if h != hub:
