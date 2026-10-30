@@ -1,0 +1,166 @@
+{
+ "scope": "provisional_component_only",
+ "base_commit": "e7c2de2b57b8d597901eafc2213c2a7e026facb2",
+ "plan": "physical/die_plan/s81/plan_s13r2.json",
+ "plan_before_sha256": "80a775dbcf20569acbdbd81c341c1a2e81e7feaa30e9f65d9604e54e9ed34dcb",
+ "plan_after_sha256": "b5663714aaea460d8d5d1b8f37c1f31169aa6488cd1020d08b2ad5c626a86cbf",
+ "all_non_view_plan_fields_unchanged": true,
+ "added_cycles": 0,
+ "re_sign_run": false,
+ "release_qualified": false,
+ "whole_die_adoption": false,
+ "G5_claim": false,
+ "components": {
+  "dsfd_qbank_S": {
+   "instances": 104,
+   "parents": {
+    "col_h10_r0_p4__t1": 4,
+    "col_h9_r0_p5__t1": 4,
+    "col_h9_r0_p6__t1": 4,
+    "col_h9_r0_p1__t1": 4,
+    "col_h10_r0_p1__t1__cl574cc59d": 4,
+    "col_h10_r0_p1__t1__cl911743eb": 4,
+    "col_h10_r1__t1__cl95b37463": 4,
+    "col_h10_r1__t1__cld01bb4ae": 4,
+    "col_h10_r2__t1__clac068e56": 4,
+    "col_h10_r2__t1__cl8b686b3e": 4,
+    "col_h10_r2__t1__cl99efd374": 4,
+    "col_h10_r2__t1__cl1f5d6c2a": 4,
+    "col_h9_r0_p2__t1__cl9f71e63d": 4,
+    "col_h9_r0_p2__t1__cl0045af7b": 4,
+    "col_h9_r1__t1__cl49d7a23e": 4,
+    "col_h9_r1__t1__clf32cde8d": 4,
+    "col_h9_r2__t1__clc9ad8f7e": 4,
+    "col_h9_r2__t1__clce45cab5": 4,
+    "col_h9_r2__t1__clb8d86cd5": 4,
+    "col_h9_r2__t1__cl87f3ff59": 4,
+    "col_h9_r2__t1__cl774acf45": 4,
+    "col_h9_r0_p3__t1__cl31d0dc4b": 4,
+    "col_h9_r0_p3__t1__cl8ce97bcb": 4,
+    "col_h9_r0_p3__t1__cl0cd90c0e": 4,
+    "col_h9_r0_p4__t1__cl8ef405e8": 4,
+    "col_h9_r0_p4__t1__clcb2fbfe8": 4
+   },
+   "rtl_sha256": "1b70fec0ddb421efcad47164657ce726d6740a21b4608174a41b0444e5cb7d57",
+   "pins_file_sha256": "89c657990a6b9a7c769b3691758db1e59a2a00a190bc1e579dc66927a5199037",
+   "outline_um": [
+    60.48,
+    25.92
+   ],
+   "params": {},
+   "native_view": "physical/die_plan/s81/cores/views/e1_dsfd_qbank_S_1029",
+   "verdict": "LOCAL_PASS_NEEDS_PARENT",
+   "release_qualified": false,
+   "io_hold_parent": "NEEDS_PARENT",
+   "option_a_inputs": [
+    "i_cfg",
+    "i_x0",
+    "i_x1"
+   ],
+   "core_clock_contract": {
+    "contract": {
+     "kind": "hard_core_latency",
+     "ruling": "COORD 10-24",
+     "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+     "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+    },
+    "measured": {
+     "tt": {
+      "n": 1208,
+      "min": 251.97,
+      "mean": 257.71,
+      "max": 267.99,
+      "spread": 16.02
+     },
+     "ff": {
+      "n": 1208,
+      "min": 190.16,
+      "mean": 196.51,
+      "max": 206.9,
+      "spread": 16.74
+     }
+    }
+   },
+   "local_setup_tt_ps": 338.97,
+   "local_hold_ff_ps": 9.55
+  },
+  "ot_s81_sstn_base566": {
+   "instances": 81,
+   "parents": {
+    "col_h10_r0_p4__t1": 4,
+    "col_h9_r0_p5__t1": 3,
+    "col_h9_r0_p6__t1": 3,
+    "col_h9_r0_p1__t1": 3,
+    "col_h10_r0_p1__t1__cl574cc59d": 4,
+    "col_h10_r0_p1__t1__cl911743eb": 4,
+    "col_h10_r1__t1__cl95b37463": 3,
+    "col_h10_r1__t1__cld01bb4ae": 3,
+    "col_h10_r2__t1__clac068e56": 3,
+    "col_h10_r2__t1__cl8b686b3e": 3,
+    "col_h10_r2__t1__cl99efd374": 3,
+    "col_h10_r2__t1__cl1f5d6c2a": 3,
+    "col_h9_r0_p2__t1__cl9f71e63d": 3,
+    "col_h9_r0_p2__t1__cl0045af7b": 3,
+    "col_h9_r1__t1__cl49d7a23e": 3,
+    "col_h9_r1__t1__clf32cde8d": 3,
+    "col_h9_r2__t1__clc9ad8f7e": 3,
+    "col_h9_r2__t1__clce45cab5": 3,
+    "col_h9_r2__t1__clb8d86cd5": 3,
+    "col_h9_r2__t1__cl87f3ff59": 3,
+    "col_h9_r2__t1__cl774acf45": 3,
+    "col_h9_r0_p3__t1__cl31d0dc4b": 3,
+    "col_h9_r0_p3__t1__cl8ce97bcb": 3,
+    "col_h9_r0_p3__t1__cl0cd90c0e": 3,
+    "col_h9_r0_p4__t1__cl8ef405e8": 3,
+    "col_h9_r0_p4__t1__clcb2fbfe8": 3
+   },
+   "rtl_sha256": "b40694f6fdb6a36bd461c5c0b9c436933231ea56d060dc5fbcc7474d5534e3cf",
+   "pins_file_sha256": "8ddb1461b5fdff89e6a053e0f55086d676f66c7a827329a8df5610e4b9b87ea3",
+   "outline_um": [
+    84.24,
+    30.24
+   ],
+   "params": {},
+   "native_view": "physical/die_plan/s81/cores/views/e1_ot_s81_sstn_base566_1029",
+   "verdict": "LOCAL_PASS_NEEDS_PARENT",
+   "release_qualified": false,
+   "io_hold_parent": "NEEDS_PARENT",
+   "option_a_inputs": [
+    "c0",
+    "c1",
+    "cci",
+    "e0",
+    "e1",
+    "si",
+    "xai",
+    "xbi"
+   ],
+   "core_clock_contract": {
+    "contract": {
+     "kind": "hard_core_latency",
+     "ruling": "COORD 10-24",
+     "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+     "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+    },
+    "measured": {
+     "tt": {
+      "n": 1141,
+      "min": 256.29,
+      "mean": 263.38,
+      "max": 271.56,
+      "spread": 15.27
+     },
+     "ff": {
+      "n": 1141,
+      "min": 194.55,
+      "mean": 201.6,
+      "max": 209.76,
+      "spread": 15.21
+     }
+    }
+   },
+   "local_setup_tt_ps": 413.06,
+   "local_hold_ff_ps": 0.57
+  }
+ }
+}

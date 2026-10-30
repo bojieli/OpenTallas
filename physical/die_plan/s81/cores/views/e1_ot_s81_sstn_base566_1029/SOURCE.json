@@ -1,11 +1,19 @@
 {
-  "schema": "opentallas.s81.e1_native_view.v1",
-  "module": "ot_s81_sstn_base566",
-  "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/ot_s81_sstn_base566_e1_cap100",
-  "source_event": "claude/die-s81-32-event-1029@1dfae74037a",
-  "verdict": "LOCAL_PASS_NEEDS_PARENT",
+ "schema": "opentallas.s81.e1_native_view.v1",
+ "module": "ot_s81_sstn_base566",
+ "kit": "epyc2:/srv/opentallas-scratch2/claude/codex-s81phys-2250/kits/ot_s81_sstn_base566_e1_cap100",
+ "source_event": "claude/die-s81-32-event-1029@1dfae74037a",
+ "verdict": "LOCAL_PASS_NEEDS_PARENT",
+ "release_qualified": false,
+ "constraints": "833ps TT setup/FF hold 60/25ps",
+ "physical_change": "approvedGRTcap100; QB_S additionalFFrepairguard20ps",
+ "added_cycles": 0,
+ "current_plan_attachment": {
+  "scope": "provisional_component_only",
+  "plan": "physical/die_plan/s81/plan_s13r2.json",
+  "record": "results/s81_component_attachment_1030/attachment.json",
+  "status": "LOCAL_PASS_NEEDS_PARENT",
   "release_qualified": false,
-  "constraints": "833ps TT setup/FF hold 60/25ps",
-  "physical_change": "approvedGRTcap100; QB_S additionalFFrepairguard20ps",
-  "added_cycles": 0
+  "real_parent_timing_required": true
+ }
 }
