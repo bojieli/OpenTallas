@@ -907,8 +907,17 @@ def multi_root_tcl_patches(kd, mr):
     f = kd / "postcts_gate.tcl"
     if f.is_file():
         t = f.read_text()
-        rp = [("set vck [lsearch -all -inline -not [all_clocks] [get_clocks clk]]\n", "set vck [get_clocks vclk]\n"),
-              ("set_propagated_clock [get_clocks clk]\n", f"set_propagated_clock [get_clocks {{{real}}}]\n"),
+        # FLOW's source-less virtual-clock selector is already independent of
+        # the real-root names. Older templates need the original named-vclk fix.
+        old_vck = "set vck [lsearch -all -inline -not [all_clocks] [get_clocks clk]]\n"
+        if old_vck in t:
+            assert t.count(old_vck) == 1, "postcts_gate.tcl duplicate virtual-clock anchor"
+            t = t.replace(old_vck, "set vck [get_clocks vclk]\n")
+        else:
+            assert ("set ot_pg_virtual {}\n" in t
+                    and "get_property $ot_pg_clock sources" in t
+                    and "set_clock_latency -source $ot_pg_bound $ot_pg_virtual" in t), "postcts_gate.tcl virtual-clock selector changed"
+        rp = [("set_propagated_clock [get_clocks clk]\n", f"set_propagated_clock [get_clocks {{{real}}}]\n"),
               ("  set a [ot_pinreg_arr $p [get_clocks clk]]\n",
                f"  set a \"\"\n  foreach ot_rc [get_clocks {{{real}}}] {{ if {{$a eq \"\"}} {{ set a [ot_pinreg_arr $p $ot_rc] }} }}\n")]
         for o, n in rp:
