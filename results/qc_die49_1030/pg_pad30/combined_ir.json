@@ -1,0 +1,13 @@
+{
+ "scope": "actual same-load supply/return join; source model remains coupon-specific",
+ "supply": "VDDPHY",
+ "samples": 486,
+ "worst": {
+  "instance": "u_b459",
+  "supply_v": 0.69832,
+  "return_v": 0.009543,
+  "combined_drop_mv": 11.222999999999903
+ },
+ "limit_mv": 35,
+ "verdict": "PASS"
+}
