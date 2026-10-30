@@ -1,0 +1,37 @@
+{
+  "changes": [
+    {
+      "domain": "phy_lk_ES0",
+      "old": [
+        23339.76,
+        342.44,
+        26075.52,
+        1330.56
+      ],
+      "candidate_model_only": [
+        23392.6,
+        179.28,
+        26022.679999999997,
+        1125.36
+      ],
+      "basis": "exact_clock_taps variantA10.8guard; sourcehomeexclusionoverlayonly/notPGassembly"
+    },
+    {
+      "domain": "phy_lk_ES1",
+      "old": [
+        26225.52,
+        342.44,
+        28961.28,
+        1330.56
+      ],
+      "candidate_model_only": [
+        26278.36,
+        179.28,
+        28908.44,
+        1125.36
+      ],
+      "basis": "exact_clock_taps variantA10.8guard; sourcehomeexclusionoverlayonly/notPGassembly"
+    }
+  ],
+  "not_adopted": true
+}
