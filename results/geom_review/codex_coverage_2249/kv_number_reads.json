@@ -1,0 +1,52 @@
+{
+  "scope": "independent raw JSON reads/row arithmetic; no STA or signoff rerun",
+  "q0": {
+    "source": "intel1:codex-ectl-pc-2249/q0v4b_prd60c/signoff/signoff.json",
+    "verdict": "SIGNED",
+    "setup_tt_ps": 68.55,
+    "hold_ff_ps": 2.19,
+    "pair_worst_tt_ps": 75.54,
+    "pair_worst_ff_ps": 69.97,
+    "drc": 0,
+    "antenna": 0,
+    "drv": 0,
+    "pg_open": 0,
+    "pg_terms": 284928,
+    "pin_audit": {
+      "pins": 1478,
+      "ok": 1478,
+      "verdict": "PASS"
+    },
+    "pin_latency_tt_ps": 232.17,
+    "pin_latency_ff_ps": 188.28,
+    "clock_pinflop_samples": 1476,
+    "allflop_info_tt_ps": 225.05,
+    "allflop_info_ff_ps": 180.96,
+    "adoption": "HELD until routed LEC EQUIVALENT"
+  },
+  "kv_loaded_sta": {
+    "source": "intel1:codex-kv-2249/sta_cpprfix_spice_{edge,cell}/die_sta_related.json",
+    "all_four_cases": {
+      "ca_rows": 3595,
+      "ca_failed_rows": 0,
+      "start_rows": 1687,
+      "start_failed_rows": 0
+    },
+    "edge": {
+      "min_ca_lo_tt": 143.2,
+      "min_ca_lo_ff": 110.0,
+      "min_start_sync_tt": 87.2,
+      "min_start_sync_ff": 74.0
+    },
+    "cell": {
+      "min_ca_lo_tt": 120.1,
+      "min_ca_lo_ff": 101.3,
+      "min_start_sync_tt": 84.9,
+      "min_start_sync_ff": 70.8
+    },
+    "hold": "BLOCKED(kits)",
+    "missing_intra": 54,
+    "missing_seam": 8,
+    "missing_union": 56
+  }
+}
