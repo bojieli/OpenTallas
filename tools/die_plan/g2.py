@@ -284,6 +284,8 @@ def out_of_cores(site, boxes, w, h, m=STATION_CORE_MARGIN_UM):
 
 def part_probe(P, tn, out, adjust=0.5, mem=32):
     t = P.types[tn]
+    if t.get("ft_full_stage_placement_file"):
+        raise ValueError("G2 synthetic FLOP probe cannot qualify exact full-stage mapped-cell placement; use native kit actual geometry")
     w, h = t["outline_um"]
     inst = next(n for n, p in P.parts.items() if p["type"] == tn)
     out = Path(out)
