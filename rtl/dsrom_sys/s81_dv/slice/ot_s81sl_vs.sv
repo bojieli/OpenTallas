@@ -513,6 +513,14 @@ module ot_s81sl_vs #(
         else if (vx[XL]) k_xo <= k_xo + 8'd1;
     always @(posedge clk) for (integer i = 0; i < 8; i = i + 1) acc1[i] <= ay[i];
     reg xo_v; reg [255:0] xo_d; reg [127:0] qr_h;  // QR: pair 0's two results wait for pair 1's
+`ifdef OT_S81_VS_CONST_ZERO
+    // S81-CORES-KITS-4 10-30 (opt-in define, off by default = unchanged): qr_h is unreset and every write is two
+    // bf16() words (low16 literal 0); synthesis folds those bits to 0. Reading them masked makes the RTL startup
+    // meaning explicit, so the gate is unchanged (same class as DIE-S81-31/VEZ ve_m / vn_a / vn_b).
+    wire [63:0] qr_h_r = qr_h[63:0] & {2{32'hFFFF0000}};
+`else
+    wire [63:0] qr_h_r = qr_h[63:0];
+`endif
     always @(posedge clk or negedge rs_x)
         if (!rs_x) xo_v <= 1'b0;
         else xo_v <= vx[XL] && (op == OP_RB || (op == OP_QR && k_xo[0]) || (op == OP_MOE && k_xo >= 8'd48));
@@ -522,7 +530,7 @@ module ot_s81sl_vs #(
 `endif
 `ifndef OT_S81SL_VS_SRAM
         for (integer i = 0; i < 8; i = i + 1) xo_d[32 * i +: 32] <= (op == OP_RB) ? ay[i] : bf16(ay[i]);
-        if (op == OP_QR) xo_d[127:0] <= {bf16(ay[1]), bf16(ay[0]), qr_h[63:0]};
+        if (op == OP_QR) xo_d[127:0] <= {bf16(ay[1]), bf16(ay[0]), qr_h_r};
 `endif
     end
 
@@ -536,7 +544,7 @@ module ot_s81sl_vs #(
     for(qhb=0;qhb<16;qhb=qhb+1) begin:g_qr_half_byte
       ot_s81sl_vs_qrhold8 u_hold(.clk(clk),.en(qr_en[qhb/2]),.d(qr_half_data[8*qhb+:8]),.q(qr_h[8*qhb+:8]));
     end endgenerate
-    wire [127:0] xo_qr={bf16(ay[1]),bf16(ay[0]),qr_h[63:0]};
+    wire [127:0] xo_qr={bf16(ay[1]),bf16(ay[0]),qr_h_r};
     genvar xb0;
     generate for(xb0=0;xb0<32;xb0=xb0+1) begin:g_xresult_byte
       wire [31:0] bf=bf16(ay[xb0/4]);
@@ -832,6 +840,12 @@ if (fl_on) for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1
     // ================================================================ results: leaf-store write port, vq stream, done
     `S81_VS_CONTROL_KEEP reg [7:0] k_out; reg [127:0] sw_prev;
     wire [127:0] sw_w32 = {swr_c[63:48], 16'd0, swr_c[47:32], 16'd0, swr_c[31:16], 16'd0, swr_c[15:0], 16'd0};
+`ifdef OT_S81_VS_CONST_ZERO
+    // S81-CORES-KITS-4 10-30 (opt-in, see qr_h_r): sw_prev is unreset and only ever loads sw_w32 (low16 of each word 0)
+    wire [127:0] sw_prev_r = sw_prev & {4{32'hFFFF0000}};
+`else
+    wire [127:0] sw_prev_r = sw_prev;
+`endif
     always @(posedge clk or negedge rs_out)
         if (!rs_out) begin x_wv <= 1'b0; u_v <= 1'b0; um_v <= 1'b0; k_out <= 8'd0; done <= 1'b0; end
         else begin
@@ -878,7 +892,7 @@ if (fl_on) for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1
       end
     end endgenerate
     wire [255:0] out_sw={128'd0,sw_w32};
-    wire [255:0] out_usw={sw_w32,sw_prev};
+    wire [255:0] out_usw={sw_w32,sw_prev_r};
     wire [255:0] out_qb=(MUT==5)?{xq_c[127:0],xq_c[255:128]}:xq_c;
     wire [255:0] out_rb={128'd0,xo_d[127:0]};
     genvar oby;
@@ -917,7 +931,7 @@ if (fl_on) for (integer rq = 0; rq < 4; rq = rq + 1) fl_q[rq] <= fl_q[rq] + 4'd1
         case (op)
             OP_SW: begin
                 begin x_wa <= ob + {2'd0, k_out[7:0]}; x_wa_s <= ob + {2'd0, k_out[7:0]}; end begin x_wm <= 8'h0F; x_wm_s <= 8'h0F; end begin x_wd <= {128'd0, sw_w32}; x_wd_s <= {128'd0, sw_w32}; end
-                begin u <= {sw_w32, sw_prev}; u_s <= {sw_w32, sw_prev}; end begin u_i <= j0 + k_out[3:1]; u_i_s <= j0 + k_out[3:1]; end
+                begin u <= {sw_w32, sw_prev_r}; u_s <= {sw_w32, sw_prev_r}; end begin u_i <= j0 + k_out[3:1]; u_i_s <= j0 + k_out[3:1]; end
             end
             OP_QB: begin
                 begin u <= (MUT == 5) ? {xq_c[127:0], xq_c[255:128]} : xq_c; u_s <= (MUT == 5) ? {xq_c[127:0], xq_c[255:128]} : xq_c; end begin u_i <= j0 + k_out[2:0]; u_i_s <= j0 + k_out[2:0]; end

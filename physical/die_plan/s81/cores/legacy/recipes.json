@@ -175,6 +175,8 @@
   "ref_tile": "physical/ref_tile/s81sl_vs",
   "plan_pins_file": "inputs/core_pins/ot_s81sl_vs_tpl.json",
   "suffix": "tpl_f6",
+  "defines": ["OT_S81_VS_CONST_ZERO"],
+  "note_vs_const_zero": "S81-CORES-KITS-4 10-30: -DOT_S81_VS_CONST_ZERO (opt-in RTL define, default off elsewhere) declares the unreset sw_prev / qr_h bf16 low16 constant-zero lanes the gate already folds (ce12c LEC 160 differs), same class as DIE-S81-31/VEZ",
   "face_band_um": {
    "W": [
     12,
