@@ -54,7 +54,7 @@ def test_default_tags_take_the_unchanged_path():
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_ffkey_sorts_bit_major():
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[10\]$_DFFE_PP_",
              r"u/u_ring.s_d\[1\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_", "u/u_ring.s_d[2][9]$_DFFE_PP_"]
     body = proc + "set l {}\nforeach n {" + " ".join("{" + n + "}" for n in names) + "} { lappend l [list [cland_ffkey $n] $n] }\n" \
@@ -85,12 +85,13 @@ def test_lsb_high_bus_gets_reversed_ff_tag_only():
     assert "ring:q+ff}" in LP.tcl(_PT({"q": dict(r, ring_place="ff", instance="u_cland_q")}), "t")
     # the placer takes the +ffr tag down the flop-only path
     assert "if {[string match {ring:*+ff} $tag] || [string match {ring:*+ffr} $tag]}" in TCL
-    assert "[cland_ffkey $nm [string match {ring:*+ffr} $tag]]" in TCL
+    assert "set rev [string match {ring:*+ffr} $tag]" in TCL
+    assert "[cland_ffkey [lindex $pr 0] $rev $wch]" in TCL
 
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
 def test_ffkey_rev_sorts_bits_descending_slots_ascending():
-    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    proc = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
     names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[10\]$_DFFE_PP_",
              r"u/u_ring.s_d\[1\]\[9\]$_DFFE_PP_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_", "u/u_ring.s_d[2][565]$_DFFE_PP_"]
     def order(rev):
@@ -101,3 +102,46 @@ def test_ffkey_rev_sorts_bits_descending_slots_ascending():
         return [tuple(int(v) for v in re.findall(r"\[(\d+)", o)) for o in out]
     assert order(0) == [(0, 9), (1, 9), (3, 9), (0, 10), (2, 565)]
     assert order(1) == [(2, 565), (0, 10), (0, 9), (1, 9), (3, 9)]
+
+
+def _keyed_order(names, rev):
+    procs = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0) + \
+        re.search(r"proc cland_dsel_wch \{names\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    body = procs + "set ns {" + " ".join("{" + n + "}" for n in names) + "}\nset w [cland_dsel_wch $ns]\nputs W=$w\n" \
+        "set l {}\nforeach n $ns { lappend l [list [cland_ffkey $n %d $w] $n] }\n" % rev + \
+        "foreach p [lsort -dictionary -index 0 $l] { puts [lindex $p 1] }\n"
+    out = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
+    return out[0], out[1:]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_chunked_read_registers_follow_their_word_bit():
+    # FLOW-10 (HEAD st_str r2r 510): dch[c].u_dsel/y[i] = word bit c*WCH+i sits right after that bit's storage slots;
+    # the chunk one-hot selects di[k] at the chunk centre.  Before: raw-name keys packed every y register first.
+    names = [r"u/u_ring.dch\[1\].u_dsel/y\[0\]$_DFF_P_", r"u/u_ring.s_d\[1\]\[2\]$_DFFE_PP_",
+             r"u/u_ring.dch\[0\].u_dsel/y\[1\]$_DFF_P_", r"u/u_ring.s_d\[0\]\[1\]$_DFFE_PP_",
+             r"u/u_ring.dch\[0\].u_dsel/di\[0\]$_DFFE_PP_", r"u/u_ring.s_d\[1\]\[1\]$_DFFE_PP_",
+             r"u/u_ring.dch\[0\].u_dsel/y\[0\]$_DFF_P_", r"u/u_ring.s_d\[0\]\[2\]$_DFFE_PP_",
+             r"u/u_ring.s_d\[0\]\[0\]$_DFFE_PP_", r"u/u_ring.dch\[1\].u_dsel/y\[1\]$_DFF_P_",
+             r"u/u_ring.s_d\[0\]\[3\]$_DFFE_PP_"]
+    w, out = _keyed_order(names, 0)
+    assert w == "W=2"
+    short = [re.sub(r"\\|u/u_ring\.|\$_DFF\w*", "", o) for o in out]
+    assert short == ["s_d[0][0]", "dch[0].u_dsel/y[0]",
+                     "s_d[0][1]", "s_d[1][1]", "dch[0].u_dsel/di[0]", "dch[0].u_dsel/y[1]",
+                     "s_d[0][2]", "s_d[1][2]", "dch[1].u_dsel/y[0]",
+                     "s_d[0][3]", "dch[1].u_dsel/y[1]"]
+    _, rev = _keyed_order(names, 1)
+    assert [re.sub(r"\\|u/u_ring\.|\$_DFF\w*", "", o) for o in rev][:2] == ["s_d[0][3]", "dch[1].u_dsel/y[1]"]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not installed")
+def test_band_without_chunked_registers_keeps_old_keys():
+    names = [r"u/u_ring.s_d\[3\]\[9\]$_DFFE_PP_", r"u/u_ring.rp\[0\]$_DFF_P_", r"u/u_ring.s_d\[0\]\[9\]$_DFFE_PP_"]
+    w, out = _keyed_order(names, 0)
+    assert w == "W=0"
+    old = re.search(r"proc cland_ffkey \{nm \{rev 0\} \{wch 0\}\} \{\n.*?\n\}\n", TCL, re.S).group(0)
+    body = old + "foreach n {" + " ".join("{" + n + "}" for n in names) + "} { puts [cland_ffkey $n 0] }\n"
+    keys = subprocess.run(["tclsh"], input=body, capture_output=True, text=True, check=True).stdout.split()
+    assert keys == ["u/u_ring.s_d|000000009|000000003|$_DFFE_PP_", r"u/u_ring.rp\[0\]$_DFF_P_",
+                    "u/u_ring.s_d|000000009|000000000|$_DFFE_PP_"]
