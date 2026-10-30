@@ -13,3 +13,5 @@ SYS_C static count-strap sites (1030 PREP): all 25 previously declared stable co
 Measured current cell census (1030): seven complete native standardcell counts are now explicit type.cells values, including all wrapper/landing infra and excluding SYS_C six macros. Six source closures match existing actual synth; SYS_C is newly synthesized current TXDP. See results/codex_kv_measured_1030. Physical and equivalence gates remain independent.
 
 Latest G0C after measured census:36 missing-cell errors remain (43→36), warnings2056 unchanged; no new substantive findings. This is a completeness improvement, with independent physical/timing gates still pending.
+
+Six existing count-strap declarations restored (1030):171 straps/966 M7 sites on hroot/hub_Ei/io_cor/io_cor_v1/io_ft/io_ft_v1 now match every name/layer/XY in existing native kit freezes. All public pins, clock budgets and outlines match current GEN exactly. Actual G0C36errors/2056warnings unchanged, no new findings. Existing placement failures remain open; see results/codex_kv_six_strap_sites_1030.

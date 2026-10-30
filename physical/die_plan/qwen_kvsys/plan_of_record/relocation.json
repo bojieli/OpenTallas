@@ -211,7 +211,22 @@
    },
    "scope": "complete actual native wrapper standard cells including landing infra; SYS_C excludes six explicit macros",
    "receipt": "results/codex_kv_measured_1030/README.md"
+  },
+  {
+   "id": "SIX_EXISTING_COUNT_STRAP_SITES_1030",
+   "types": [
+    "kv3_hroot",
+    "kv3_hub_Ei",
+    "kv3_io_cor",
+    "kv3_io_cor_v1",
+    "kv3_io_ft",
+    "kv3_io_ft_v1"
+   ],
+   "straps": 171,
+   "bits": 966,
+   "status": "existing old native physical sites restored in typed declaration; no actual pin/clock/outline move",
+   "receipt": "results/codex_kv_six_strap_sites_1030/README.md"
   }
  ],
- "current_plan_sha256": "6a8a04d0199c3ae274443666303ec6a56d1325a349f341d2371da32c460b0261"
+ "current_plan_sha256": "8af894adbeabd8c7d837fe9d84f3a717ccfef11218b0155e13dac960b1713f6c"
 }
