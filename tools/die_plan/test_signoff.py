@@ -583,3 +583,14 @@ def test_explicit_native_pdk_libs_are_not_macros(tmp_path):
                 native.format("FF").replace("/NLDM/", "/other/")):
         (tmp_path / "config.mk").write_text("export BC_LIB_FILES = " + bad + "\n")
         assert signoff.macro_libs(tmp_path, "ff")[1]
+
+
+def test_shared_native_tt_and_scoped_native_ff_with_macro(tmp_path):
+    native = "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_LVT_{}_nldm_220122.lib.gz"
+    (tmp_path / "child_tt.lib").write_text("library(child) {}")
+    (tmp_path / "child_ff.lib").write_text("library(child) {}")
+    (tmp_path / "config.mk").write_text(
+        "export ADDITIONAL_LIBS = /work/child_tt.lib " + native.format("TT") + "\n"
+        "export TC_LIB_FILES = " + native.format("TT") + "\n"
+        "export BC_LIB_FILES = " + native.format("FF") + "\n")
+    assert signoff.macro_libs(tmp_path, "ff") == ([str(tmp_path / "child_ff.lib")], [])

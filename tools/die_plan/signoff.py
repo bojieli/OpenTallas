@@ -210,7 +210,7 @@ def macro_libs(kit, corner):
             if native:
                 # The corner's standard-cell selector loads and validates these;
                 # they are not host-staged composed-child Liberty files.
-                if native.group(3).lower() != corner:
+                if scoped and native.group(3).lower() != corner:
                     missing.append(f"{w} (native PDK corner != {corner})")
                 continue
             if not w.startswith("/work/"):
