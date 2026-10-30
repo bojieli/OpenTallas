@@ -1,0 +1,844 @@
+{
+  "status": "ANALYTIC_CANDIDATE_NOT_ADOPTED",
+  "layout": [
+    {
+      "inst": "u_bound.u_u_ve_u_m",
+      "module": "ot_s81sl_ve_m",
+      "xy": [
+        721.728,
+        100.824
+      ],
+      "wh": [
+        172.8,
+        345.6
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".LA(4), .LM(5), .MUT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_ve_u_s",
+      "module": "ot_s81sl_ve_s",
+      "xy": [
+        546.624,
+        100.824
+      ],
+      "wh": [
+        164.16,
+        345.6
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".LA(4), .LM(5), .MUT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vsw",
+      "module": "ot_s81sl_vsw",
+      "xy": [
+        930.816,
+        232.728
+      ],
+      "wh": [
+        224.64,
+        224.64
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".LA(4), .LM(5), .LR(1)"
+    },
+    {
+      "inst": "u_bound.u_u_vn_u_b",
+      "module": "ot_s81sl_vn_b",
+      "xy": [
+        552.96,
+        565.944
+      ],
+      "wh": [
+        356.4,
+        172.8
+      ],
+      "orient": "R180",
+      "kind": "hard",
+      "params": ".HW_STAGE(0), .LA(6), .LM(5)"
+    },
+    {
+      "inst": "u_bound.u_u_vs",
+      "module": "ot_s81sl_vs",
+      "xy": [
+        1168.704,
+        277.368
+      ],
+      "wh": [
+        172.8,
+        172.8
+      ],
+      "orient": "R180",
+      "kind": "hard",
+      "params": ".MUT(0), .XL(6)"
+    },
+    {
+      "inst": "u_bound.u_u_vn_u_a",
+      "module": "ot_s81sl_vn_a",
+      "xy": [
+        552.96,
+        881.304
+      ],
+      "wh": [
+        356.4,
+        164.16
+      ],
+      "orient": "R180",
+      "kind": "hard",
+      "params": ".LA(6), .LM(5)"
+    },
+    {
+      "inst": "u_bound.u_u_rxsb",
+      "module": "dsfd_su_t_rxsb",
+      "xy": [
+        1074.624,
+        81.384
+      ],
+      "wh": [
+        140.4,
+        140.4
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": null
+    },
+    {
+      "inst": "u_bound.u_u_rxsf",
+      "module": "dsfd_su_t_rxsf",
+      "xy": [
+        923.328,
+        81.384
+      ],
+      "wh": [
+        140.4,
+        140.4
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": null
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_0_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        928.8,
+        930.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_10_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1179.36,
+        624.264
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_11_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1304.64,
+        624.264
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_12_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        928.8,
+        498.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_13_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1054.08,
+        498.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_14_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1179.36,
+        498.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_15_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1304.64,
+        498.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_1_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1054.08,
+        930.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_2_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1179.36,
+        930.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_3_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1304.64,
+        930.984
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_4_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        928.8,
+        805.704
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_5_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1054.08,
+        805.704
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_6_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1179.36,
+        805.704
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_7_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1304.64,
+        805.704
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_8_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        928.8,
+        624.264
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_9_u_l",
+      "module": "ot_dsrom_su_hcpost_lane_pr",
+      "xy": [
+        1054.08,
+        624.264
+      ],
+      "wh": [
+        114.48,
+        114.48
+      ],
+      "orient": "MX",
+      "kind": "hard",
+      "params": ".AL(6), .ML(7), .MUTANT(0)"
+    },
+    {
+      "inst": "u_bound.u_u_vp_u_b0",
+      "module": "parent_SRAM",
+      "xy": [
+        552.96,
+        1088.64
+      ],
+      "wh": [
+        169.368,
+        29.16
+      ],
+      "orient": "R0",
+      "kind": "parent SRAM"
+    },
+    {
+      "inst": "u_bound.u_u_vp_u_b1",
+      "module": "parent_SRAM",
+      "xy": [
+        743.04,
+        1088.64
+      ],
+      "wh": [
+        169.368,
+        29.16
+      ],
+      "orient": "R0",
+      "kind": "parent SRAM"
+    },
+    {
+      "inst": "u_bound.u_u_vq.g_xr.u_xm",
+      "module": "parent_SRAM",
+      "xy": [
+        933.12,
+        1088.64
+      ],
+      "wh": [
+        94.824,
+        41.064
+      ],
+      "orient": "R0",
+      "kind": "parent SRAM"
+    }
+  ],
+  "geometry_body_findings": [],
+  "clock_reset_keepout_10p8_hits": [],
+  "hard_count": 24,
+  "hard_footprint_um2": 565983.9359999998,
+  "parent_macro_um2": 13771.394496,
+  "target_region_um2": 1055550,
+  "free_region_after_bodies_um2": 475794.6695040002,
+  "parent_glue_cell_counts": {
+    "t1": 94717,
+    "t3": 138117,
+    "t4": 123432,
+    "t5": 88282
+  },
+  "max_average_parent_cell_area_at_60pct_um2": 2.067,
+  "direct_internal_pin_links": [
+    {
+      "name": "VE_m -> VE_s",
+      "bits": 386,
+      "max_manhattan_um": 11.892,
+      "over405": 0,
+      "worst": [
+        11.892000000000053,
+        "m_kk[74]",
+        "m_kk[74]",
+        [
+          721.77,
+          263.62800000000004
+        ],
+        [
+          710.742,
+          262.764
+        ]
+      ],
+      "source": "available unqualified template pins; point distance is a lower bound, not obstacle-routed timing"
+    },
+    {
+      "name": "VN_a -> VN_b",
+      "bits": 32,
+      "max_manhattan_um": 142.644,
+      "over405": 0,
+      "worst": [
+        142.644,
+        "c_v",
+        "c_v",
+        [
+          899.748,
+          881.346
+        ],
+        [
+          899.748,
+          738.702
+        ]
+      ],
+      "source": "available unqualified template pins; point distance is a lower bound, not obstacle-routed timing"
+    },
+    {
+      "name": "RXsf -> RXsb",
+      "bits": 95,
+      "max_manhattan_um": 391.548,
+      "over405": 0,
+      "worst": [
+        391.54799999999994,
+        "o_u2[30]",
+        "i_u2[30]",
+        [
+          923.37,
+          193.5
+        ],
+        [
+          1214.982,
+          93.56400000000001
+        ]
+      ],
+      "source": "available unqualified template pins; point distance is a lower bound, not obstacle-routed timing"
+    }
+  ],
+  "direct_N_boundary_links": [
+    {
+      "core": "vn_u_a",
+      "port": "rb_d",
+      "bus": "leafdn_i0",
+      "bits": 32,
+      "max_manhattan_um": 607.938,
+      "over405": 32,
+      "minimum_segments_lower_bound": 2,
+      "minimum_extra_pipeline_cycles_lower_bound": 1,
+      "worst": [
+        607.9380000000001,
+        1,
+        [
+          909.318,
+          891.372
+        ],
+        [
+          636.888,
+          1226.88
+        ]
+      ],
+      "existing_RTL_path": "direct boundary register -> core (or core -> boundary register), no new relay assumed"
+    },
+    {
+      "core": "vn_u_b",
+      "port": "rb_d",
+      "bus": "leafdn_i0",
+      "bits": 32,
+      "max_manhattan_um": 921.154,
+      "over405": 32,
+      "minimum_segments_lower_bound": 3,
+      "minimum_extra_pipeline_cycles_lower_bound": 2,
+      "worst": [
+        921.1540000000001,
+        0,
+        [
+          897.156,
+          565.986
+        ],
+        [
+          636.896,
+          1226.88
+        ]
+      ],
+      "existing_RTL_path": "direct boundary register -> core (or core -> boundary register), no new relay assumed"
+    },
+    {
+      "core": "vs",
+      "port": "g_d",
+      "bus": "leafdn_i0",
+      "bits": 32,
+      "max_manhattan_um": 1495.434,
+      "over405": 32,
+      "minimum_segments_lower_bound": 4,
+      "minimum_extra_pipeline_cycles_lower_bound": 3,
+      "worst": [
+        1495.434,
+        0,
+        [
+          1303.2839999999999,
+          277.40999999999997
+        ],
+        [
+          757.32,
+          1226.88
+        ]
+      ],
+      "existing_RTL_path": "direct boundary register -> core (or core -> boundary register), no new relay assumed"
+    },
+    {
+      "core": "vs",
+      "port": "e_d",
+      "bus": "leafup_o0",
+      "bits": 96,
+      "max_manhattan_um": 1757.418,
+      "over405": 96,
+      "minimum_segments_lower_bound": 5,
+      "minimum_extra_pipeline_cycles_lower_bound": 4,
+      "worst": [
+        1757.4180000000001,
+        0,
+        [
+          1298.772,
+          277.40999999999997
+        ],
+        [
+          490.824,
+          1226.88
+        ]
+      ],
+      "existing_RTL_path": "direct boundary register -> core (or core -> boundary register), no new relay assumed"
+    }
+  ],
+  "clock_feeds": [
+    {
+      "inst": "u_bound.u_u_ve_u_m",
+      "pin": "clk",
+      "xy": [
+        808.044,
+        446.184
+      ],
+      "tap": 9,
+      "feed_manhattan_um": 107.652
+    },
+    {
+      "inst": "u_bound.u_u_ve_u_s",
+      "pin": "clk",
+      "xy": [
+        628.716,
+        273.624
+      ],
+      "tap": 4,
+      "feed_manhattan_um": 207.9
+    },
+    {
+      "inst": "u_bound.u_u_vsw",
+      "pin": "clk",
+      "xy": [
+        1038.3,
+        340.188
+      ],
+      "tap": 9,
+      "feed_manhattan_um": 256.392
+    },
+    {
+      "inst": "u_bound.u_u_vn_u_b",
+      "pin": "clk",
+      "xy": [
+        909.3,
+        652.428
+      ],
+      "tap": 10,
+      "feed_manhattan_um": 121.872
+    },
+    {
+      "inst": "u_bound.u_u_vs",
+      "pin": "clk",
+      "xy": [
+        1256.34,
+        449.928
+      ],
+      "tap": 13,
+      "feed_manhattan_um": 16.332
+    },
+    {
+      "inst": "u_bound.u_u_vn_u_a",
+      "pin": "clk",
+      "xy": [
+        909.3,
+        963.564
+      ],
+      "tap": 11,
+      "feed_manhattan_um": 117.456
+    },
+    {
+      "inst": "u_bound.u_u_rxsb",
+      "pin": "ck",
+      "xy": [
+        1214.982,
+        96.63600000000001
+      ],
+      "tap": 12,
+      "feed_manhattan_um": 104.262
+    },
+    {
+      "inst": "u_bound.u_u_rxsf",
+      "pin": "ck",
+      "xy": [
+        1063.452,
+        81.62400000000001
+      ],
+      "tap": 8,
+      "feed_manhattan_um": 233.388
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_0_u_l",
+      "pin": "clk",
+      "xy": [
+        957.933,
+        1045.445
+      ],
+      "tap": 11,
+      "feed_manhattan_um": 84.208
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_10_u_l",
+      "pin": "clk",
+      "xy": [
+        1208.493,
+        738.725
+      ],
+      "tap": 14,
+      "feed_manhattan_um": 82.102
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_11_u_l",
+      "pin": "clk",
+      "xy": [
+        1333.7730000000001,
+        738.725
+      ],
+      "tap": 14,
+      "feed_manhattan_um": 99.328
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_12_u_l",
+      "pin": "clk",
+      "xy": [
+        957.933,
+        613.4449999999999
+      ],
+      "tap": 10,
+      "feed_manhattan_um": 209.488
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_13_u_l",
+      "pin": "clk",
+      "xy": [
+        1083.213,
+        613.4449999999999
+      ],
+      "tap": 14,
+      "feed_manhattan_um": 332.662
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_14_u_l",
+      "pin": "clk",
+      "xy": [
+        1208.493,
+        613.4449999999999
+      ],
+      "tap": 14,
+      "feed_manhattan_um": 207.382
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_15_u_l",
+      "pin": "clk",
+      "xy": [
+        1333.7730000000001,
+        613.4449999999999
+      ],
+      "tap": 14,
+      "feed_manhattan_um": 224.608
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_1_u_l",
+      "pin": "clk",
+      "xy": [
+        1083.213,
+        1045.445
+      ],
+      "tap": 15,
+      "feed_manhattan_um": 207.382
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_2_u_l",
+      "pin": "clk",
+      "xy": [
+        1208.493,
+        1045.445
+      ],
+      "tap": 15,
+      "feed_manhattan_um": 82.102
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_3_u_l",
+      "pin": "clk",
+      "xy": [
+        1333.7730000000001,
+        1045.445
+      ],
+      "tap": 15,
+      "feed_manhattan_um": 99.328
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_4_u_l",
+      "pin": "clk",
+      "xy": [
+        957.933,
+        920.165
+      ],
+      "tap": 11,
+      "feed_manhattan_um": 209.488
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_5_u_l",
+      "pin": "clk",
+      "xy": [
+        1083.213,
+        920.165
+      ],
+      "tap": 15,
+      "feed_manhattan_um": 332.662
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_6_u_l",
+      "pin": "clk",
+      "xy": [
+        1208.493,
+        920.165
+      ],
+      "tap": 15,
+      "feed_manhattan_um": 207.382
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_7_u_l",
+      "pin": "clk",
+      "xy": [
+        1333.7730000000001,
+        920.165
+      ],
+      "tap": 15,
+      "feed_manhattan_um": 224.608
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_8_u_l",
+      "pin": "clk",
+      "xy": [
+        957.933,
+        738.725
+      ],
+      "tap": 10,
+      "feed_manhattan_um": 84.208
+    },
+    {
+      "inst": "u_bound.u_u_vp_g_ln_9_u_l",
+      "pin": "clk",
+      "xy": [
+        1083.213,
+        738.725
+      ],
+      "tap": 14,
+      "feed_manhattan_um": 207.382
+    }
+  ],
+  "max_clock_feed_um": 332.662,
+  "cut_budget_estimates": [
+    {
+      "link": "VE_m/VE_s",
+      "bits": 386,
+      "available_face_span_um": 345.6,
+      "tracks": 9450.0,
+      "ratio": 0.040847
+    },
+    {
+      "link": "VN_a/VN_b",
+      "bits": 32,
+      "available_face_span_um": 356.4,
+      "tracks": 9745.312,
+      "ratio": 0.003284
+    },
+    {
+      "link": "HCPL 16 inputs, aggregate",
+      "bits": 4112,
+      "minimum_clear_span_um_at_60pct": 250.636,
+      "note": "actual source256data+valid per lane; VP parent storage/soft registered glue must be placed; do not invent direct HCPL->VN wires"
+    }
+  ],
+  "qualified_clock_views": 0,
+  "qualification": "Footprints and pin tables are not signed/current ABI views; no RTL, plan, latency, pin or clock contract change adopted."
+}

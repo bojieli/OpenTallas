@@ -1,0 +1,16 @@
+{
+  "dataset_commit": "8e3341c88ce",
+  "plan_sha256": "39aa595f5bd3e5006d7d6045103a7c145b8779ed8a2fb50cd125bfddd94338a2",
+  "pin_file_sha256": {
+    "physical/die_plan/s81/inputs/core_pins/ot_s81sl_ve_m_tpl.json": "d40df1bcecd0f633cb6b30c332d4a9ffce138379663a397a1d3b9d0dc09647d5",
+    "physical/die_plan/s81/inputs/core_pins/ot_s81sl_ve_s_tpl.json": "cca96edef842aee147504778e991acad89aefc651784452d212f7839719c3078",
+    "physical/die_plan/s81/inputs/core_pins/ot_s81sl_vsw_tpl.json": "e5fe9edd7de9ab973d415f58231a058997727e0ca8e620a2cd95891637cf08a9",
+    "physical/die_plan/s81/inputs/core_pins/ot_s81sl_vn_b_tpl.json": "260109d40b5941aa735b517956e5a393d0885eac18f2ad877a67fba6657c4ef0",
+    "physical/die_plan/s81/inputs/core_pins/ot_s81sl_vs_tpl.json": "bb01234c82e18075e6c3ba661782d7ed949f4a53f0c12b8b3d482d432ee8fdd8",
+    "physical/die_plan/s81/inputs/core_pins/ot_s81sl_vn_a_tpl.json": "c6070faca6d86eefea680e79e5d2ec4dc32530d0154fa7c10efe54e2bf3ea707",
+    "physical/die_plan/s81/inputs/core_pins/dsfd_su_t_rxsb.json": "e845a21da1722892d6dca5ea749bf377f8a0a104cdd1ad10365b7f6cdd9bcfd4",
+    "physical/die_plan/s81/inputs/core_pins/dsfd_su_t_rxsf.json": "9b132551fe115549c8681be754f4029a348e46c05a6783e6860ae169d346bf0c",
+    "physical/die_plan/s81/inputs/core_pins/ot_dsrom_su_hcpost_lane_pr.json": "814627e8ed32d01fc7eecfbc5819df16ae51df2cdcfc8174dac82719a7a5500b"
+  },
+  "source_ABI_gap": "inherited kv_bound has594data+epoch595; current plan has597data+epoch598, +3 k bits remain SOURCE/PLAN FAIL owned by S81"
+}
