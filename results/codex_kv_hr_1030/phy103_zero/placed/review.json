@@ -1,0 +1,25 @@
+{
+  "image": "auto_geom.png",
+  "viewed_by": [
+    "self",
+    "ROOT independent LOOK"
+  ],
+  "verdict": "GEOMETRY_PASS_COND_EMPTY_EXCEPTION; electrical_admission_PENDING",
+  "facts": {
+    "outline": [
+      103.68,
+      95.04
+    ],
+    "pinmax": 12.59,
+    "r2r": 159.5,
+    "unregistered": 0,
+    "clockreach": 136.51,
+    "colV": 0.394,
+    "channelH": 0.553,
+    "channelV": 0.394,
+    "empty_exception": 0.5868
+  },
+  "PG_before": "Logical19130terms/open0 but actualmacro2/2physicallyopen because missingM4->M5macroconnect",
+  "PG_after": "Sameallcellgeometry;19130logicalPG/open0;181/181actualmacroM4shapes contacted,2terms/0unconnected",
+  "next": "Await ROOTelectricaladmission ofordinaryCTS based2062actualsinkcap986.557485fF andcanonicalclockrecipe. NoCTS/GRT/STA yet."
+}

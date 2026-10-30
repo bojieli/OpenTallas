@@ -1,0 +1,8 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+OT_CORE_PG_PROBE {"odb": "/work/3_place_pg_m4.odb", "macro_pg_terms": 2, "unconnected_terms": 0, "shapes": 181, "touched_shapes": 181}
+OT_CORE_PG_ROW {"inst": "u_slice.u_body.g_grp\\[0\\].u_rb.g_sram.g_t\\[0\\].u_m", "master": "ot_sram_1r1w_512x128_m1_r2c2", "pin": "VDD", "net": "VDD", "layers": ["M4"], "shapes": 91, "touched": 91}
+OT_CORE_PG_ROW {"inst": "u_slice.u_body.g_grp\\[0\\].u_rb.g_sram.g_t\\[0\\].u_m", "master": "ot_sram_1r1w_512x128_m1_r2c2", "pin": "VSS", "net": "VSS", "layers": ["M4"], "shapes": 90, "touched": 90}

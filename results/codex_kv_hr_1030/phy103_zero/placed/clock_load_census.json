@@ -1,0 +1,26 @@
+{
+  "status": "ACTUAL_PLACED_CLOCK_LOAD_CENSUS_NOT_CTS_QUALIFICATION",
+  "FF_count": 2061,
+  "FF_CLKcap_total_fF": 977.211685,
+  "FF_masters": [
+    {
+      "master": "DFFHQNx1_ASAP7_75t_R",
+      "count": 1958,
+      "CLK_cap_fF": 0.474736,
+      "sum_fF": 929.533088
+    },
+    {
+      "master": "DFFASRHQNx1_ASAP7_75t_R",
+      "count": 103,
+      "CLK_cap_fF": 0.462899,
+      "sum_fF": 47.678597
+    }
+  ],
+  "M1_macro_CLKcap_fF": 9.3458,
+  "old_M2_macro_CLKcap_fF": 9.3458,
+  "macro_CLKcap_delta_fF": 0,
+  "all_sinks_CLKcap_total_fF": 986.557485,
+  "sink_count": 2062,
+  "source": "actual placedgeom mastercensus, exactTTSEQ220123.lib capacitance / actualM1 andoldM2generatedLibs",
+  "clock_binding": "250psTT/202.5psFF +/-40ps; pairskew<=80ps canonical833/60/25 policy; existingstandardCTS recipe not yet run"
+}

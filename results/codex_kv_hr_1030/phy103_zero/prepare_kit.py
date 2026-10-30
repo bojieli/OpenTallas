@@ -15,6 +15,8 @@ text=(K/'config.mk').read_text().replace(old,new).replace('129_6x86_4','103_68x9
 text=re.sub(r'^export CORE_AREA = .*$', 'export CORE_AREA = 4.32 4.32 99.36 90.72',text,flags=re.M)
 for key,value in {'TC_LIB_FILES':f'$(TC_NLDM_LIB_FILES) /work/macros/{new}_tt.lib','BC_LIB_FILES':f'$(BC_NLDM_LIB_FILES) /work/macros/{new}_ff.lib','ADDITIONAL_LEFS':f'/work/macros/{new}.lef','ADDITIONAL_LIBS':f'/work/macros/{new}_tt.lib','PRE_GLOBAL_PLACE_TCL':'/work/phy_face_sites.tcl','PRE_DETAIL_PLACE_TCL':'/work/phy_face_release.tcl'}.items():text=re.sub(r'^export '+key+r' = .*$',f'export {key} = {value}',text,flags=re.M)
 (K/'config.mk').write_text(text)
+# Actual M1 SRAM PG is M4; inherited macro-grid M5/M6 alone leaves both supplies physicallyopen.
+shutil.copy2(P/'pdn_m4.tcl',K/'pdn.tcl')
 # No pin coordinate/layer/shape change: exact canonical560 records and existing generated IO.
 assert json.load(open(K/'pins.json'))==json.load(open(P/'pins.json'))
 shutil.copy2(P/'canonical_pins.json',K/'canonical_pins.json')

@@ -1,0 +1,13 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO PDN-0101] Using VDD as power net for Core domain.
+[INFO PDN-0102] Using VSS as ground net for Core domain.
+[WARNING PDN-0183] Replacing existing core voltage domain.
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0001] Inserting grid: macro - u_slice.u_body.g_grp\[0\].u_rb.g_sram.g_t\[0\].u_m
+[INFO PDN-0500] Runtime: 0.21s
+OT_PG_CONNECT phy103_pdn_m4 rules=2 protected_rebound=0
+OT_PG_BOUND phy103_pdn_m4 pg_terms=19130 open=0
+PHY103_PDN_M4_GEOMETRY_IDENTITY_PASS_NO_CTS_GRT_STA
