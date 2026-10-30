@@ -61,7 +61,7 @@ class UF:
         return root
 
 
-def build(records,first,last,start,count,IR,live_out,capacity=262144):
+def build(records,first,last,start,count,IR,live_out,capacity=262144,placement_preference=None):
     current=np.full(1<<19,-1,np.int32);uf=UF();vals=[];ops=[];all_external=[]
     def new(a,b,t,kind,anchor):
         if not 0<=a<b<=len(current):raise ValueError('source VM interval exceeds actual ABI')
@@ -130,13 +130,18 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144):
     for v in vals:
         root=uf.find(v['id']);o=objects.setdefault(root,dict(id=root,a=v['a'],b=v['b'],t0=v['t0'],t1=v['t1'],values=[]))
         o.update(a=min(o['a'],v['a']),b=max(o['b'],v['b']),t0=min(o['t0'],v['t0']),t1=max(o['t1'],v['t1']));o['values'].append(v['id'])
+    hints={o['id']:list(placement_preference(o,vals))for o in objects.values()}if placement_preference else{}
     placed=[];high=0
-    for o in sorted(objects.values(),key=lambda o:(-(o['b']-o['a']),o['t0'])):
+    for o in sorted(objects.values(),key=lambda o:(not bool(hints.get(o['id'])), -(o['b']-o['a']),o['t0'])):
         size=o['b']-o['a'];candidate=o['a']%8
         occupied=sorted((p['base'],p['base']+p['b']-p['a'])for p in placed if not(p['t1']<o['t0']or o['t1']<p['t0']))
-        for lo,hi in occupied:
-            if candidate+size<=lo:break
-            if candidate<hi:candidate=hi+(o['a']-hi)%8
+        preferred=next((int(c)for c in hints.get(o['id'],[])if c>=0 and c+size<=capacity and(c-o['a'])%8==0 and all(c+size<=lo or hi<=c for lo,hi in occupied)),None)
+        if preferred is not None:candidate=preferred
+        else:
+            for lo,hi in occupied:
+                if candidate+size<=lo:break
+                if candidate<hi:candidate=hi+(o['a']-hi)%8
+        if candidate+size>capacity and placement_preference:return build(records,first,last,start,count,IR,live_out,capacity,None)
         if candidate+size>capacity:raise ValueError(f'value phase needs {candidate+size} words > {capacity}')
         o['base']=candidate;placed.append(o);high=max(high,candidate+size)
     # Every source port stays in its joined component with one translation.

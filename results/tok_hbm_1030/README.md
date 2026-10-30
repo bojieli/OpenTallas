@@ -226,3 +226,48 @@ promoted from that harness error.
 The proof is copy/address exactness with unchanged opaque arithmetic, not
 numerical RTL/G5, selected backend/stack coverage, scratch authority, actual
 HBM execution or a token rate. Those holds remain unchanged.
+
+Optional resident placement reduces copy traffic further
+
+--retain-static is an opt-in placement preference for the source compiler's
+existing workspace allocator. An object with external inputs may reuse a current
+physical range only when ALL its external value identities match the canonical
+backing at one affine offset. Hint objects are placed first, still respecting
+actual lifetimes, aliases,8-word alignment and262144-word capacity. Infeasible
+preferences or illegal native array encodings fall back to the old allocator.
+No runtime allocator, cache tags, new instruction, RTL or default change.
+
+This placement initially emits41888commands (1352more than the grouped baseline;
+some SU row arrays become scalar commands). Both candidates keep681 static
+shared-weight SM arrays and120 expert-selected SM arrays: no extra weight-stream
+issue is introduced. The unchanged logical-source proof passes20842 addresses,
+40 expert components and6 head stream rows with4 negative controls.
+
+Applying resident copy elision gives canonical_resident_cached:
+37226commands,319227648boundarybytes, max255168VMwords. Against the original
+grouped40536commands/383876096bytes this saves3310commands(8.17%) and
+64648448bytes(16.84%). Against copy elision without placement preferences it
+saves42395776bytes. All29345 transformed-copy induction checks and final
+workspace/backing identity equality pass; required-LOAD/wrong-STORE controls
+are caught. Body bytes remain identical to the resident-placement baseline;
+expanded arithmetic fields equal the original actual3916-record source.
+
+Reproduce the intermediate baseline rather than storing another redundant
+full manifest:
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_canonical_stream.py \
+ --image /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r \
+ --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
+ --backing-base 0x1D11000000 --group-static --retain-static \
+ --out-dir results/tok_hbm_1030/canonical_resident
+python3 results/tok_hbm_1030/check_canonical.py \
+ --base results/tok_hbm_1030/canonical_resident
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_static_cache.py \
+ --stream results/tok_hbm_1030/canonical_resident/stream.json \
+ --source-image /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r \
+ --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
+ --out-dir results/tok_hbm_1030/canonical_resident_cached
+
+This is still a source-only candidate. Actual provider/stack/VM namespace,
+scratch authority, initial image publication, numeric RTL, physical calendar,
+cycle/rate composition and G5 remain open. Byte savings are not a token-rate
+measurement or permission to install the programme.
