@@ -70,11 +70,11 @@ foreach bt [$gd_b getBTerms] {
 foreach n [$gd_b getNets] {
   set sg [$n getSigType]
   if {$sg eq "POWER" || $sg eq "GROUND"} { continue }
-  set drv "-"; set sk {}
+  set drv "-"; set sk {}; set xd {}
   foreach it [$n getITerms] {
     set i [$it getInst]; set id [$i getId]
     if {[info exists gd_skip($id)]} { continue }
-    if {[$it isOutputSignal]} { if {$drv eq "-"} { set drv "i$id" }; continue }
+    if {[$it isOutputSignal]} { if {$drv eq "-"} { set drv "i$id" } else { lappend xd "i$id" }; continue }
     set mt [$it getMTerm]
     if {[$mt getSigType] eq "CLOCK" || [regexp {^(CLK|CK|GCLK)$} [$mt getName]]} { lappend sk "i${id}c" } else { lappend sk "i$id" }
   }
@@ -84,6 +84,10 @@ foreach n [$gd_b getNets] {
   }
   if {[llength $sk] == 0} { continue }
   puts $gd_o "N\t$sg\t$drv\t[join $sk \t]"
+  # FLOW-KITFAIL-3 (KV-KITS-V kvs_pc d35q): a declared parallel driver (island ft mesh_driver j >= 1, shorted onto the
+  # port net by island_ft.tcl) was dropped, so its cell looked output-less.  Extra drivers follow their N row as ND rows
+  # (older readers skip unknown rows; nets with one driver are written exactly as before).
+  foreach x $xd { puts $gd_o "ND\t$x" }
 }
 close $gd_o
 puts "OT_GEOM_DUMP $::env(OT_GEOM_OUT)"

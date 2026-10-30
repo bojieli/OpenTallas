@@ -1,0 +1,481 @@
+{
+ "schema": "opentallas.hbm.plan_delta.v1",
+ "lane": "DIE-HBM-28-K",
+ "item": "opstore_a core_macros KNOWN",
+ "status": "PROPOSED, NOT APPLIED; needs the q_b113 / q_b113__physical_v1 hard_core outline change (no slot at current packing, see fit.q_b113)",
+ "core_macros": {
+  "ot_hgi_sfu_core_split3__opstore_a": {
+   "status": "KNOWN",
+   "outline_um": [
+    760.32,
+    483.84
+   ],
+   "basis": "DIE-HBM-28-K static grid (DIE-HBM-26 opstore_b method): 4 col x 8 row (2 bands g_operand[0]/g_operand[1] of 4 rows; bank b -> col b//4 row b%4), col channel 12.096 (opstore_b column x), 48.848-um logic channels, centred on x=380.16; 32 x ot_sram_1r1w_256x256_m2_r2c2 from yosys flatten of the HBM-CORES-KITS-24 kit RTL",
+   "macros": [
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      53.148,
+      189.24,
+      94.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      94.236,
+      189.24,
+      135.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      135.324,
+      189.24,
+      176.388
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      176.412,
+      189.24,
+      217.476
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      53.148,
+      374.16,
+      94.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      94.236,
+      374.16,
+      135.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      135.324,
+      374.16,
+      176.388
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      176.412,
+      374.16,
+      217.476
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      53.148,
+      559.08,
+      94.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      94.236,
+      559.08,
+      135.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      135.324,
+      559.08,
+      176.388
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      176.412,
+      559.08,
+      217.476
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      53.148,
+      744.0,
+      94.212
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      94.236,
+      744.0,
+      135.3
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      135.324,
+      744.0,
+      176.388
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[0].u_group.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      176.412,
+      744.0,
+      217.476
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[0].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      266.364,
+      189.24,
+      307.428
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[1].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      307.452,
+      189.24,
+      348.516
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[2].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      348.54,
+      189.24,
+      389.604
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[3].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      16.416,
+      389.628,
+      189.24,
+      430.692
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[4].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      266.364,
+      374.16,
+      307.428
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[5].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      307.452,
+      374.16,
+      348.516
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[6].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      348.54,
+      374.16,
+      389.604
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[7].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      201.336,
+      389.628,
+      374.16,
+      430.692
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[8].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      266.364,
+      559.08,
+      307.428
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[9].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      307.452,
+      559.08,
+      348.516
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[10].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      348.54,
+      559.08,
+      389.604
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[11].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      386.256,
+      389.628,
+      559.08,
+      430.692
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[12].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      266.364,
+      744.0,
+      307.428
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[13].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      307.452,
+      744.0,
+      348.516
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[14].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      348.54,
+      744.0,
+      389.604
+     ]
+    },
+    {
+     "name": "u_fcore.u_core.u_x.u_core.u_engine.u_memory.g_operand[1].u_group.g_bank[15].u_b.genblk1.genblk1.g_m11.u_m",
+     "master": "ot_sram_1r1w_256x256_m2_r2c2",
+     "orient": "R0",
+     "rect_um": [
+      571.176,
+      389.628,
+      744.0,
+      430.692
+     ]
+    }
+   ],
+   "channel_rule_um": 10.8,
+   "previous": {
+    "status": "UNKNOWN",
+    "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+    "outline_um": [
+     388.8,
+     345.6
+    ]
+   }
+  }
+ },
+ "die_plan_hard_cores": [
+  {
+   "type": "q_b113",
+   "inst": "u_sfucore_Q_opstore_a",
+   "outline_um_old": [
+    390.528,
+    436.32
+   ],
+   "outline_um_new": [
+    760.32,
+    483.84
+   ]
+  },
+  {
+   "type": "q_b113__physical_v1",
+   "inst": "u_sfucore_Q_opstore_a",
+   "outline_um_old": [
+    390.528,
+    436.32
+   ],
+   "outline_um_new": [
+    760.32,
+    483.84
+   ]
+  }
+ ],
+ "fit": {
+  "macros": 32,
+  "master": "ot_sram_1r1w_256x256_m2_r2c2",
+  "macro_area_um2": 227099.0,
+  "core_macros_outline": [
+   388.8,
+   345.6
+  ],
+  "core_macros_outline_area": 134369.3,
+  "die_plan_outline": [
+   390.528,
+   436.32
+  ],
+  "die_plan_outline_area": 170395.2,
+  "die_plan_core_area": 163325.9,
+  "proposed_outline": [
+   760.32,
+   483.84
+  ],
+  "proposed_area": 367873.2,
+  "proposed_macro_pct": 61.73,
+  "band_channel_um": 48.848,
+  "floor_10p8_outline": [
+   760.32,
+   371.52
+  ]
+ },
+ "kit_contract_checks": {
+  "macro_channels": {
+   "verdict": "PASS",
+   "err": [],
+   "info": {
+    "applies": true,
+    "macros": 32,
+    "columns": 4,
+    "min_channel_um": 10.8
+   }
+  },
+  "clock_entry_clear(centre)": {
+   "verdict": "PASS",
+   "err": [],
+   "info": {
+    "applies": true,
+    "entries": 2,
+    "macros": 32
+   }
+  },
+  "clock_entry_clear(kit io, stale outline)": {
+   "verdict": "PASS",
+   "err": [],
+   "info": {
+    "applies": true,
+    "entries": 3,
+    "macros": 32
+   }
+  },
+  "macro_pin_grid": {
+   "verdict": "PASS",
+   "err": [],
+   "info": {
+    "applies": true,
+    "macros": 32,
+    "pins": 26272,
+    "tracks": "make_tracks.tcl",
+    "worst_off_nm": 0.0
+   }
+  },
+  "island_macro_clear": {
+   "verdict": "PASS",
+   "err": [],
+   "info": {
+    "applies": false,
+    "reason": "no island_ft rects"
+   }
+  }
+ }
+}

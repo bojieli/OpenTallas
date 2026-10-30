@@ -201,6 +201,33 @@ def test_dataflow_observer_gets_registered_aggregate_and_local_outputs():
     assert "output wire cland_up_ready," not in aa
 
 
+def test_local_status_depth_relays_only_the_local_status_output():
+    """DIE-HEAD-36 (OWNER (A) 10-29): a long source-band -> local-status-pin path gets local_status_depth-1 status
+    relays before its dedicated output register; the aggregate/observer path and the data ring are unchanged."""
+    p, t, a, b = dataflow_vehicle()
+    base = Landings(p, t).type_rtl("A", a)
+    t["collector"]["types"]["A"]["local_status_depth"] = 1
+    assert Landings(p, t).type_rtl("A", a) == base          # explicit 1 == default (byte-identical)
+    t["collector"]["types"]["A"]["local_status_depth"] = {"x": 3}
+    c = Landings(p, t); aa = c.type_rtl("A", a)
+    assert "ot_dp_landing_collect #(.N(1)) u_cland_loc_x_1 (" in aa
+    assert ".ready_i({landing_ready_w}),\n        .fault_i({landing_fault_w}), .ready_o(cland_loc_r_x_1)" in aa
+    assert ".ready_i({cland_loc_r_x_1}),\n        .fault_i({cland_loc_f_x_1}), .ready_o(cland_loc_r_x_2)" in aa
+    assert ".ready_i({cland_loc_r_x_2}),\n        .fault_i({cland_loc_f_x_2}), .ready_o(cland_up_ready_x)" in aa
+    assert "u_cland_loc_x_3" not in aa
+    # observer aggregate untouched
+    assert ".ready_i({cland_ok_w}),\n        .fault_i({cland_bad_w}), .ready_o(cland_up_ready), .fault_o(cland_up_fault)" in aa
+    m = c.reset_placements["A"]["monitor"]
+    assert m["outputs"] == [dict(bus="x", carries="local", registered_depth=3)] and m["data_cycles_added"] == 0
+    assert m["flops"] == 2 * len(m["stages"]) and "u_cland_loc_x_2" in m["stages"]
+    # a tree bus / unknown bus / non-integer depth fails closed
+    for tn, bad in (("B", {"z": 2}), ("A", {"q": 2}), ("A", 0), ("A", "2")):
+        t["collector"]["types"][tn]["local_status_depth"] = bad
+        with pytest.raises(LandingError):
+            Landings(p, t).type_rtl(tn, b if tn == "B" else a)
+        t["collector"]["types"][tn]["local_status_depth"] = 1
+
+
 def test_dataflow_top_wires_status_beside_each_crossing():
     p, t, a, b = dataflow_vehicle(); c = Landings(p, t)
     c.type_rtl("A", a); c.type_rtl("B", b)

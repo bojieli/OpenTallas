@@ -1,0 +1,6 @@
+handshake ready rise after face-branch ready edge=3 (expect 3)
+handshake ready rise after direct ready edge=2 (expect 2)
+face-branch fault edge=3 (expect 3)
+direct-branch fault edge=2 (expect 2)
+face-branch ready drop edge=3 (expect 3)
+collector checks=576 errors=0

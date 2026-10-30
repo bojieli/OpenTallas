@@ -17,8 +17,7 @@ Per-pair table: `hbm004_classes.json` (driver family, sink, gap, planned bits, l
 built 2 pairs / 2,798 b (su31->su30 1,399 x2 via abutting chain), FAR 79 / 54,498 b (not laned by 12.13), FAILED 11
 (no free face window: su30|b100, b010|su00, su21|hub, NW_hub|root; no macro-free 6-station chain hub->su20; cycle
 mismatch 15 vs existing 8 for su00->hub). Not adopted: closes 2 of 92. Report `lane_add_A_near1200_report.json`.
-Variant B (near 4000 um, max-hops 8) LIVE at park: intel1 die-hbm-26/plan/d26B, log la_B.log (pid of
-`lane_add.py ... --out .../d26B`); expected to add hop chains for the 1.2-4 mm pairs only.
+Variant B (near 4000 um, max-hops 8) DONE (CHECKED): built the same 2 pairs / 2,798 b (out sha d67c2f065cbd = A), FAR 51 / 34,932 b, FAILED 39 (no macro-free station chain / no free window). Widening reach does not help: hop chains are blocked by macros and full faces.
 
 ## Face capacity (6 pins/um plan budget, existing ports counted) — UNCHECKED arithmetic
 | face | edge um | cap | used | WIDEN add | verdict |
