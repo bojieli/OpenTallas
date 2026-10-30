@@ -343,6 +343,10 @@ SCHEMA = {
                             # the core strip(s) of the partition outside the domain, the core C4 rule at the domain's
                             # core-facing edges and the macro area target (die_io.check_pg_domains)
                             "phy_macro_um": _rect,
+                            # PG-only body coverage: exact declared physical PHY, functional IO window stays fixed.
+                            "phy_macro_binding": {"type": "object", "additionalProperties": False,
+                                                  "required": ["part", "inst", "module"],
+                                                  "properties": {k: _name for k in ("part", "inst", "module")}},
                             "core_strip_um": {"type": "array", "items": _rect},
                             "core_edge_bumps": {"enum": ["relocate", "drop"]},
                             "phy_area_target_mm2": _pos,
@@ -552,6 +556,21 @@ SCHEMA = {
                         "sink_sites_um": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 3,
                                                                      "items": {"type": "number"}}},
                         "sink_bins_file": {"type": "string"},
+                        # Geometry/model PREP from complete native net/FF census. No periods or clock waivers.
+                        "native_domains": {"type": "object", "additionalProperties": False,
+                            "required": ["schema","census_file","source_odb_sha256","core_root","macro_pins"],
+                            "properties": {
+                                "schema": {"const": "opentallas.native_clock_domains.v1"},
+                                "census_file": _name, "source_odb_sha256": _name, "core_root": {"const": "clk"},
+                                "macro_pins": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                                    "required": ["inst","module","pin","root"],
+                                    "properties": {"inst":_name,"module":_name,"pin":_name,"root":_name}}},
+                                "children": {"type": "array", "items": {"type": "object", "additionalProperties": False,
+                                    "required": ["inst","module","pin","root","census_file","source_odb_sha256"],
+                                    "properties": {"inst":_name,"module":_name,"pin":_name,"root":_name,
+                                                   "census_file":_name,"source_odb_sha256":_name}}},
+                                "planned_sink_sites": {"type":"object","additionalProperties": {"type":"array",
+                                    "items":{"type":"array","minItems":3,"maxItems":3,"items":{"type":"number"}}}}}},
                         # density kits: tap trees re-balanced on GRT RC after global route ("grt", POST_GLOBAL_ROUTE
                         # tap_balance.tcl) or measured only ("grt_report", default for density); "placement" = off
                         "tap_balance_rc": {"enum": ["placement", "grt_report", "grt"]},

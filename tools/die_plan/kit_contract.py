@@ -709,6 +709,9 @@ def lef_pin_contract(path, module):
     return outline, pins
 
 
+PIN_CONTRACT_DIR = 'declared_pin_contract'
+
+
 def pins_canonical(kd, plan_dir=None):
     """GATE-PINS-2: freeze.json pins_canon_sha256 recorded; the kit's placed pin set (io.tcl centres, plan form) has
     that canonical sha; a reachable plan pin file (whole-file sha = freeze pins_sha256) has it too."""
@@ -736,14 +739,27 @@ def pins_canonical(kd, plan_dir=None):
     recorded_miss = bool(want) and not sliced and kit_c != want
     pf = F.get("pins_file")
     cands = []
-    if pf:
+    staged = F.get('pins_staged_file')
+    if staged:
+        parts = Path(staged).parts
+        owned = (len(parts) == 1 and parts[0] not in ('.', '..')) or \
+                (len(parts) == 2 and parts[0] == PIN_CONTRACT_DIR and parts[1] not in ('.', '..'))
+        if not owned or F.get('pins_staged_sha256') != F.get('pins_sha256'):
+            raise ValueError('invalid staged declared pin contract manifest')
+        local = kd / staged
+        if not local.is_file() or local.is_symlink() or (len(parts) == 2 and local.parent.is_symlink()):
+            raise ValueError('staged declared pin contract is not a local regular file')
+        if hashlib.sha256(local.read_bytes()).hexdigest() != F.get('pins_sha256'):
+            raise ValueError('staged declared pin contract whole-file hash differs from freeze')
+        cands.append(local)
+    elif pf:
         cands += [kd / "plan_pins.json", kd / Path(pf).name]
         if plan_dir:
             cands.append(Path(plan_dir) / pf)
         if Path(pf).is_absolute():
             cands.append(Path(pf))
     for c in cands:
-        if c.is_file() and c.name != "pins.json":
+        if c.is_file() and (c.name != "pins.json" or (staged and c == local)):
             b = c.read_bytes()
             if F.get("pins_sha256") and hashlib.sha256(b).hexdigest() != F["pins_sha256"]:
                 continue

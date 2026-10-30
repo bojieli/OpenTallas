@@ -2571,6 +2571,18 @@ LEC_SUPERSET_DEFAULT=0
 if [ -f "$K/lec_options.json" ]; then
   LEC_SUPERSET_DEFAULT=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); assert set(d)=={"superset_vec"} and type(d["superset_vec"]) is bool; print(int(d["superset_vec"]))' "$K/lec_options.json") || { echo 'FAIL_PREFLOOR lec_options' | tee -a "$K/FAIL_PREFLOOR"; exit 10; }
 fi
+# Explicit proof methods must be implemented by the copied driver, not silently ignored.
+LEC_REQUIRED=()
+[ "${OT_LEC_HINTS_PRESEED:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_HINTS_PRESEED)
+[ "${OT_LEC_EARLY_COMPARE:-0}" = 1 ] && LEC_REQUIRED+=(OT_LEC_EARLY_COMPARE)
+[ "${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" = 1 ] && LEC_REQUIRED+=(OT_LEC_SUPERSET_VEC)
+if [ "${#LEC_REQUIRED[@]}" -gt 0 ]; then
+  if ! python3 -I "$K/lec.py" --require-options "${LEC_REQUIRED[@]}"; then
+    echo "LEC CONFIG ERROR: copied driver does not support requested options: ${LEC_REQUIRED[*]}" >&2
+    echo 'FAIL_PREFLOOR lec_options_unsupported' | tee -a "$K/FAIL_PREFLOOR"
+    exit 10
+  fi
+fi
 docker run --rm --name "$NAME" --cpus="$CPUS" --memory="${MEM}g" --memory-swap="${MEM}g" -v "$K":/work \
   -e HUID=$(id -u) -e HGID=$(id -g) -e OT_KIT_IR=${OT_KIT_IR:-defer} -e OT_LEC_HINTS_PRESEED="${OT_LEC_HINTS_PRESEED:-0}" -e OT_LEC_EARLY_COMPARE="${OT_LEC_EARLY_COMPARE:-0}" -e OT_LEC_SUPERSET_VEC="${OT_LEC_SUPERSET_VEC:-$LEC_SUPERSET_DEFAULT}" -w /OpenROAD-flow-scripts/flow "$IMAGE" bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; \
   M='make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work/run FLOW_VARIANT=base NUM_CORES=$CPUS'; rc=0; \
