@@ -82,8 +82,16 @@ def validation_bootstrap(face_text):
         if depth:
             raise ValueError(f'full-stage FT: incomplete native helper {name}')
         definitions.append(face_text[match.start():pos])
+    init = face_text[start:end]
+    # FLOW-9 10-30: the copied initialization must stay pure in every generated kit variant (a kit generator may
+    # patch face_flops.tcl); a placement/status/orientation write, an output file or a clone fails closed.
+    for body in [init] + definitions:
+        bad = re.search(r'\b(setLocation|setPlacementStatus|setOrient|ff_clone_for|ff_put_near|write_db)\b|'
+                        r'\bopen\s+\S+\s+[wa]\+?\b', body)
+        if bad:
+            raise ValueError(f'full-stage FT: validation bootstrap would copy mutating code {bad.group(0)!r}')
     return ('# Validation-only bootstrap; no normal face placement or cloning.\n'
-            'uplevel #0 {\n' + face_text[start:end] + '\n'.join(definitions) +
+            'uplevel #0 {\n' + init + '\n'.join(definitions) +
             '\nsource /work/ft_full_stage_data.tcl\n}\n')
 
 

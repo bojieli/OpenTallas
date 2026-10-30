@@ -17,6 +17,17 @@ def test_bootstrap_uses_exact_pure_helpers_and_fails_closed():
     with pytest.raises(ValueError, match='ff_landed_stations'):
         validation_bootstrap(face.replace('proc ff_landed_stations ', 'proc renamed '))
 
+
+def test_bootstrap_refuses_mutating_initialization_from_a_patched_kit_hook():
+    face = (HERE/'face_flops.tcl').read_text()
+    init = 'set ff_blk [ord::get_db_block]'
+    for patch in ('set ff_log [open $::env(RESULTS_DIR)/x.txt w]', '[$ff_blk findInst a] setLocation 0 0',
+                  'set fa [open /work/y a]'):
+        with pytest.raises(ValueError, match='mutating code'):
+            validation_bootstrap(face.replace(init, init + '\n' + patch, 1))
+    # The kit's read-only ft_stations.txt reader stays allowed.
+    assert 'open /work/ft_stations.txt r' in validation_bootstrap(face)
+
 def test_active_install_bootstraps_fresh_orfs_proc_without_normal_placement(tmp_path):
     doc = dict(schema='opentallas.ft_full_stage.v1', module='m', outline_um=[1000,100],
                slots={'ft0':dict(stations=4,width=0,in_face='W',out_face='E',targets=[
