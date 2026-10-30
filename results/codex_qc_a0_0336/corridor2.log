@@ -1,0 +1,22 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+MASTER BUFx8_ASAP7_75t_R 648 270
+MASTER BUFx12f_ASAP7_75t_R 972 270
+MASTER BUFx24_ASAP7_75t_R 1620 270
+LAYER M1 width18 spacing18 pitch36
+LAYER M2 width18 spacing18 pitch36
+LAYER M3 width18 spacing18 pitch36
+LAYER M4 width24 spacing24 pitch48
+LAYER M5 width24 spacing24 pitch48
+LAYER M6 width32 spacing32 pitch64
+LAYER M7 width32 spacing32 pitch64
+LAYER M8 width40 spacing40 pitch80
+LAYER M9 width40 spacing40 pitch80
+LAYER Pad width40 spacing2000 pitch80
+CORRIDOR_ACTUAL std2401 clocks0 dbu1000
+ROW ROW_3339_2 135648 905850 137808 906120 site54
+ROW ROW_3340_2 135648 906120 137808 906390 site54
+ROW_COUNT 2
+NARROW_CORRIDOR std2401 area216.26514000000128 nominal_area303.264

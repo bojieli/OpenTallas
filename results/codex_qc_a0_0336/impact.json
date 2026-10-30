@@ -1,0 +1,334 @@
+{
+ "scope": "internal unfrozen A0 core placement candidate only",
+ "rtl_cycles_added": 0,
+ "top_pin_outline_unchanged": true,
+ "masters_and_libs_unchanged": true,
+ "corners": {},
+ "dies": {
+  "nl": {
+   "changes": [
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      268.32,
+      673.92
+     ],
+     "after": [
+      272.64,
+      673.92
+     ],
+     "pin_translation_um": [
+      4.32,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      268.32,
+      834.432
+     ],
+     "after": [
+      272.64,
+      834.432
+     ],
+     "pin_translation_um": [
+      4.32,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      268.32,
+      994.944
+     ],
+     "after": [
+      272.64,
+      994.944
+     ],
+     "pin_translation_um": [
+      4.32,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      142.152,
+      834.432
+     ],
+     "after": [
+      144.312,
+      834.432
+     ],
+     "pin_translation_um": [
+      2.16,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      142.152,
+      994.944
+     ],
+     "after": [
+      144.312,
+      994.944
+     ],
+     "pin_translation_um": [
+      2.16,
+      0
+     ]
+    }
+   ],
+   "child_count": 18,
+   "macro_overlap_or_outline_errors": [],
+   "clock_corridors": [
+    {
+     "row_rect_um": [
+      135.648,
+      834.432,
+      139.992,
+      974.832
+     ],
+     "clock_reserved_rect_um": [
+      136.74,
+      834.432,
+      138.9,
+      974.832
+     ],
+     "row_width_um": 4.343999999999994,
+     "clock_width_um": 2.16
+    },
+    {
+     "row_rect_um": [
+      135.648,
+      994.944,
+      139.992,
+      1135.344
+     ],
+     "clock_reserved_rect_um": [
+      136.74,
+      994.944,
+      138.9,
+      1135.344
+     ],
+     "row_width_um": 4.343999999999994,
+     "clock_width_um": 2.16
+    },
+    {
+     "row_rect_um": [
+      263.976,
+      834.432,
+      268.32,
+      974.832
+     ],
+     "clock_reserved_rect_um": [
+      265.068,
+      834.432,
+      267.228,
+      974.832
+     ],
+     "row_width_um": 4.343999999999994,
+     "clock_width_um": 2.16
+    },
+    {
+     "row_rect_um": [
+      263.976,
+      994.944,
+      268.32,
+      1135.344
+     ],
+     "clock_reserved_rect_um": [
+      265.068,
+      994.944,
+      267.228,
+      1135.344
+     ],
+     "row_width_um": 4.343999999999994,
+     "clock_width_um": 2.16
+    }
+   ],
+   "rightmost_macro_um": 441.12,
+   "right_outline_margin_um": 16.80000000000001
+  },
+  "nk": {
+   "changes": [
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      325.94,
+      673.92
+     ],
+     "after": [
+      330.26,
+      673.92
+     ],
+     "pin_translation_um": [
+      4.32,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      325.94,
+      834.432
+     ],
+     "after": [
+      330.26,
+      834.432
+     ],
+     "pin_translation_um": [
+      4.32,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      325.94,
+      994.944
+     ],
+     "after": [
+      330.26,
+      994.944
+     ],
+     "pin_translation_um": [
+      4.32,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      199.8,
+      834.432
+     ],
+     "after": [
+      201.96,
+      834.432
+     ],
+     "pin_translation_um": [
+      2.16,
+      0
+     ]
+    },
+    {
+     "inst": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf",
+     "master": "ot_qwen_tile_lsl_rawfault_m3",
+     "before": [
+      199.8,
+      994.944
+     ],
+     "after": [
+      201.96,
+      994.944
+     ],
+     "pin_translation_um": [
+      2.16,
+      0
+     ]
+    }
+   ],
+   "child_count": 19,
+   "macro_overlap_or_outline_errors": [],
+   "clock_corridors": [
+    {
+     "row_rect_um": [
+      193.104,
+      834.432,
+      197.64,
+      974.832
+     ],
+     "clock_reserved_rect_um": [
+      194.292,
+      834.432,
+      196.452,
+      974.832
+     ],
+     "row_width_um": 4.535999999999973,
+     "clock_width_um": 2.16
+    },
+    {
+     "row_rect_um": [
+      193.104,
+      994.944,
+      197.64,
+      1135.344
+     ],
+     "clock_reserved_rect_um": [
+      194.292,
+      994.944,
+      196.452,
+      1135.344
+     ],
+     "row_width_um": 4.535999999999973,
+     "clock_width_um": 2.16
+    },
+    {
+     "row_rect_um": [
+      321.624,
+      834.432,
+      325.94,
+      974.832
+     ],
+     "clock_reserved_rect_um": [
+      322.702,
+      834.432,
+      324.862,
+      974.832
+     ],
+     "row_width_um": 4.315999999999974,
+     "clock_width_um": 2.16
+    },
+    {
+     "row_rect_um": [
+      321.624,
+      994.944,
+      325.94,
+      1135.344
+     ],
+     "clock_reserved_rect_um": [
+      322.702,
+      994.944,
+      324.862,
+      1135.344
+     ],
+     "row_width_um": 4.315999999999974,
+     "clock_width_um": 2.16
+    }
+   ],
+   "rightmost_macro_um": 445.604,
+   "right_outline_margin_um": 12.316000000000031
+  }
+ },
+ "nl_existing_endpoint_reach_impact": {
+  "affected_edges": 2525,
+  "baseline_gt405": 0,
+  "candidate_gt405": 0,
+  "new_over405": []
+ },
+ "capacity_estimate": {
+  "actual_existing_strip_area_um2": 303.264,
+  "actual_existing_std_area_um2": 216.26514,
+  "clock_pair_leaf_plus_p2p_estimate_um2": 85.0,
+  "new_strip_area_um2": 606.528,
+  "projected_fill": 0.4967044225493299,
+  "clock_master_max_width_um": 1.62,
+  "reserved_clock_column_um": 2.16,
+  "remaining_crosssection_um": 0.54,
+  "M6_clock_2x_with_two_vss_shields_width_um": 0.256
+ }
+}

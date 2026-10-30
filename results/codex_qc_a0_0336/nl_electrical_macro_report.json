@@ -1,0 +1,314 @@
+{
+ "scope": "MODEL ONLY: not a passing electrical candidate",
+ "basis": "Geometry/ASAP7 NLDM + historical Manhattan-MST branch C/direct branch R; no clock measurements/pad selection",
+ "measured_timing_used": false,
+ "signed_insertion_unchanged": true,
+ "baseline": {
+  "TT": {
+   "target_ps": 764.8943743937363,
+   "macros": {
+    "mp_a0_m778": 502.3565875025925,
+    "mp_a0_m782": 621.5253053616432,
+    "mp_a0_m787": 652.933791372508,
+    "mp_a0_m790": 537.8551237530011,
+    "mp_a0_m795": 688.7190525029451,
+    "mp_a0_m801": 745.6623725552295,
+    "mp_a0_m804": 582.0858826825394,
+    "mp_a0_m808": 644.2757855707212,
+    "mp_a0_m813": 645.7234376498317,
+    "mp_a0_m817": 603.0549679157364,
+    "mp_a0_m821": 561.8839198852268,
+    "mp_a0_m822": 457.9752147661916,
+    "mp_a0_m824": 516.0953739181091,
+    "mp_a0_m828": 651.0902936246802,
+    "mp_a0_m832": 596.082826031708,
+    "mp_a0_m835": 546.3707998046168,
+    "mp_a0_m836": 451.5935084177663,
+    "mp_a0_m839": 520.3569305369165
+   }
+  },
+  "FF": {
+   "target_ps": 591.4462236002263,
+   "macros": {
+    "mp_a0_m778": 392.67610596953654,
+    "mp_a0_m782": 498.73279116211063,
+    "mp_a0_m787": 526.9856256835486,
+    "mp_a0_m790": 424.0403441079788,
+    "mp_a0_m795": 558.9486039533061,
+    "mp_a0_m801": 609.7494010661042,
+    "mp_a0_m804": 463.8584233218424,
+    "mp_a0_m808": 519.22305238801,
+    "mp_a0_m813": 525.4799280594327,
+    "mp_a0_m817": 487.18334075890533,
+    "mp_a0_m821": 450.6509928700557,
+    "mp_a0_m822": 358.67020752433484,
+    "mp_a0_m824": 410.55685921180844,
+    "mp_a0_m828": 530.2848624088309,
+    "mp_a0_m832": 481.0792525924445,
+    "mp_a0_m835": 436.42626731577656,
+    "mp_a0_m836": 352.6623204903037,
+    "mp_a0_m839": 413.215532482156
+   }
+  }
+ },
+ "final": {
+  "TT": {
+   "target_ps": 764.8943743937363,
+   "macros": {
+    "mp_a0_m778": 502.3565875025925,
+    "mp_a0_m782": 621.5253053616432,
+    "mp_a0_m787": 630.9532712937989,
+    "mp_a0_m790": 537.8551237530011,
+    "mp_a0_m795": 639.448615131021,
+    "mp_a0_m801": 722.1318909381537,
+    "mp_a0_m804": 513.8820889289261,
+    "mp_a0_m808": 619.0708772526675,
+    "mp_a0_m813": 618.2458408343117,
+    "mp_a0_m817": 603.0549679157364,
+    "mp_a0_m821": 535.4235156895847,
+    "mp_a0_m822": 457.9752147661916,
+    "mp_a0_m824": 516.0953739181091,
+    "mp_a0_m828": 651.0902936246802,
+    "mp_a0_m832": 596.082826031708,
+    "mp_a0_m835": 521.5661821883673,
+    "mp_a0_m836": 451.5935084177663,
+    "mp_a0_m839": 520.3569305369165
+   }
+  },
+  "FF": {
+   "target_ps": 591.4462236002263,
+   "macros": {
+    "mp_a0_m778": 392.67610596953654,
+    "mp_a0_m782": 498.73279116211063,
+    "mp_a0_m787": 511.7805574746627,
+    "mp_a0_m790": 424.0403441079788,
+    "mp_a0_m795": 523.345276183807,
+    "mp_a0_m801": 593.023598313201,
+    "mp_a0_m804": 412.8415811763509,
+    "mp_a0_m808": 500.8707319287874,
+    "mp_a0_m813": 504.98846227380596,
+    "mp_a0_m817": 487.18334075890533,
+    "mp_a0_m821": 431.02113869054614,
+    "mp_a0_m822": 358.67020752433484,
+    "mp_a0_m824": 410.55685921180844,
+    "mp_a0_m828": 530.2848624088309,
+    "mp_a0_m832": 481.0792525924445,
+    "mp_a0_m835": 418.4837877399389,
+    "mp_a0_m836": 352.6623204903037,
+    "mp_a0_m839": 413.215532482156
+   }
+  }
+ },
+ "changes": [
+  {
+   "iteration": 0,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl2_u_icg",
+   "child": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "parent": "mp_a0_s232",
+   "prior_error_ps": {
+    "TT": 150.00858697877175,
+    "FF": 137.2240370833223
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s264",
+   "child": "mp_p2p_mp_a0_s265",
+   "parent": "mp_p2p_mp_a0_s264",
+   "prior_error_ps": {
+    "TT": 185.79384810920885,
+    "FF": 169.1870153530798
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s266",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl5_u_icg",
+   "parent": "mp_p2p_mp_a0_s266",
+   "prior_error_ps": {
+    "TT": 242.73716816149317,
+    "FF": 219.98781246587794
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s229",
+   "child": "mp_p2p_mp_a0_s230",
+   "parent": "mp_p2p_mp_a0_s229",
+   "prior_error_ps": {
+    "TT": 79.16067828880307,
+    "FF": 74.09683472161612
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s167",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl7_u_icg",
+   "parent": "mp_p2p_mp_a0_s167",
+   "prior_error_ps": {
+    "TT": 141.35058117698486,
+    "FF": 129.46146378778383
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s280",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_rp0_u_icg",
+   "parent": "mp_p2p_mp_a0_s280",
+   "prior_error_ps": {
+    "TT": 165.4475032560954,
+    "FF": 157.59593945920642
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s362",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_rp2_u_icg",
+   "parent": "mp_p2p_mp_a0_s362",
+   "prior_error_ps": {
+    "TT": 81.60798549149047,
+    "FF": 82.76700426982939
+   }
+  },
+  {
+   "iteration": 0,
+   "remove": "mp_a0_s8",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_rp7_u_icg",
+   "parent": "mp_p2p_mp_a0_s8",
+   "prior_error_ps": {
+    "TT": 66.09486541088052,
+    "FF": 68.5422787155502
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_a0_s232",
+   "child": "g_icg.g_hop.u_hop_lsl2/u_icg",
+   "parent": "mp_p2p_mp_a0_s232",
+   "prior_error_ps": {
+    "TT": 135.74830984849018,
+    "FF": 126.40180084120027
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_a0_s265",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl4_u_icg",
+   "parent": "mp_p2p_mp_a0_s265",
+   "prior_error_ps": {
+    "TT": 171.56135585684217,
+    "FF": 158.3812373168413
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl5_u_icg",
+   "child": "g_icg.g_hop.u_hop_lsl5/u_icg",
+   "parent": "mp_p2p_mp_a0_s266",
+   "prior_error_ps": {
+    "TT": 228.48947229450982,
+    "FF": 209.17292422190746
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_a0_s231",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl6_u_icg",
+   "parent": "mp_p2p_mp_a0_s231",
+   "prior_error_ps": {
+    "TT": 64.92944720739831,
+    "FF": 63.29227472336004
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl7_u_icg",
+   "child": "g_icg.g_hop.u_hop_lsl7/u_icg",
+   "parent": "mp_p2p_mp_a0_s167",
+   "prior_error_ps": {
+    "TT": 127.11596605019929,
+    "FF": 118.65173585775858
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_rp0_u_icg",
+   "child": "g_icg.g_hop.u_hop_rp0/u_icg",
+   "parent": "mp_p2p_mp_a0_s280",
+   "prior_error_ps": {
+    "TT": 151.21593873962456,
+    "FF": 146.79117870641358
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_rp2_u_icg",
+   "child": "g_icg.g_hop.u_hop_rp2/u_icg",
+   "parent": "mp_p2p_mp_a0_s362",
+   "prior_error_ps": {
+    "TT": 67.37550797316214,
+    "FF": 71.96095085574382
+   }
+  },
+  {
+   "iteration": 1,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_rp7_u_icg",
+   "child": "g_icg.g_hop.u_hop_rp7/u_icg",
+   "parent": "mp_p2p_mp_a0_s8",
+   "prior_error_ps": {
+    "TT": 51.85769329303503,
+    "FF": 57.731449263212085
+   }
+  },
+  {
+   "iteration": 2,
+   "remove": "mp_p2p_mp_a0_s265",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl4_u_icg",
+   "parent": "mp_p2p_mp_a0_s264",
+   "prior_error_ps": {
+    "TT": 157.32709607988897,
+    "FF": 147.57157401002848
+   }
+  },
+  {
+   "iteration": 2,
+   "remove": "mp_p2p_mp_a0_s231",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl6_u_icg",
+   "parent": "mp_a0_s230",
+   "prior_error_ps": {
+    "TT": 50.696984681002164,
+    "FF": 52.48515941494804
+   }
+  },
+  {
+   "iteration": 3,
+   "remove": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl4_u_icg",
+   "child": "g_icg.g_hop.u_hop_lsl4/u_icg",
+   "parent": "mp_p2p_mp_a0_s264",
+   "prior_error_ps": {
+    "TT": 144.9314640549552,
+    "FF": 138.64567239077098
+   }
+  },
+  {
+   "iteration": 3,
+   "remove": "mp_a0_s230",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl6_u_icg",
+   "parent": "mp_p2p_mp_a0_s230",
+   "prior_error_ps": {
+    "TT": 36.465764140229,
+    "FF": 41.680585030803854
+   }
+  },
+  {
+   "iteration": 4,
+   "remove": "mp_p2p_mp_a0_s230",
+   "child": "mp_p2p_gate_g_icg_g_hop_u_hop_lsl6_u_icg",
+   "parent": "mp_p2p_mp_a0_s229",
+   "prior_error_ps": {
+    "TT": 23.17047312392208,
+    "FF": 31.91063229726319
+   }
+  }
+ ]
+}

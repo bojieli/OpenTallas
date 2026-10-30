@@ -1,0 +1,58 @@
+{
+ "reset_removal": {
+  "paths": 117,
+  "violations": 3,
+  "worst_ps": -23.969826,
+  "worst_start": "u_g.g_rst_native.q$_DFF_P_/QN",
+  "worst_end": "u_g.u_tile.u_tile.u_logic.u_me.u_v.line[15]$_DFF_PN0_/RESETN"
+ },
+ "register_to_register": {
+  "paths": 10297,
+  "violations": 1890,
+  "worst_ps": -72.74736,
+  "worst_start": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.g_tx.g_r[0].u_tx/q[30]$_DFF_P_/QN",
+  "worst_end": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.g_tx.g_r[1].u_tx/q[30]$_DFF_P_/D"
+ },
+ "into_rawleaf": {
+  "paths": 3128,
+  "violations": 2009,
+  "worst_ps": -129.249222,
+  "worst_start": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.g_tx.g_r[1].u_tx/q[128]$_DFF_P_/QN",
+  "worst_end": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf/w_d[0]"
+ },
+ "into_romleaf": {
+  "paths": 150,
+  "violations": 1,
+  "worst_ps": -0.656752,
+  "worst_start": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].g_lrr.rq$_DFF_PN0_/QN",
+  "worst_end": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf/rst_n"
+ },
+ "input_frame": {
+  "paths": 525,
+  "violations": 0,
+  "worst_ps": 8.025248,
+  "worst_start": "tap[109]",
+  "worst_end": "ot_fcap_00008_ff/D"
+ },
+ "from_romleaf": {
+  "paths": 2048,
+  "violations": 0,
+  "worst_ps": 48.844208,
+  "worst_start": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf/r_q[320]",
+  "worst_end": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[832]$_DFF_P_/D"
+ },
+ "from_rawleaf": {
+  "paths": 517,
+  "violations": 0,
+  "worst_ps": 73.422104,
+  "worst_start": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf/t_out[0]",
+  "worst_end": "u_g.u_tile.u_tile.u_logic.t_out[448]$_DFF_P_/D"
+ },
+ "output_frame": {
+  "paths": 516,
+  "violations": 2,
+  "worst_ps": -80.416451,
+  "worst_start": "ot_fconst_00000_ff/QN",
+  "worst_end": "tie_hi"
+ }
+}

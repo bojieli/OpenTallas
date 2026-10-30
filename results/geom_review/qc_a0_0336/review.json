@@ -1,0 +1,13 @@
+{
+ "image": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/widen/macro_channel_candidate.png",
+ "viewed": true,
+ "verdict": "PASS-COND FRESH FLOORPLAN/PLACE ONLY",
+ "findings": [
+  "Existing old planner5.8 halo conflicts with actual4.32 rowcut; preserve outerhalo and reserve bounded clock-only row columns.",
+  "Move only second/third rawleaf column+2.16/+4.32um, unchanged wholecorepins/outline/RTL.",
+  "No hardmacro overlap/outline errors; NKrightmargin12.316um.",
+  "2525 exact affected NL data edges stay<=405um,0newfails.",
+  "Clock-only2.16um columns fit max1.62umBUF+0.256umM6clock/shield crosssection; projected total rowfill49.67%.",
+  "Placement legality,density,clock electrical timing and actual clockcorridor occupancy remain pending; no CTS/route authorized by this review."
+ ]
+}
