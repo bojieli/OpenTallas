@@ -1,2 +1,3 @@
 # FLOW-KITFAIL-3 (shared kit failure-class fixer, successor of FLOW-KITFAIL-2)
 - 2026-10-29 21:21 PDT CLAIM [FLOW-KITFAIL-3] worktree intel2 /srv/opentallas-scratch2/claude/wt/flow-kitfail-3 (sparse tools/die_plan, branch claude/flow-kitfail-3-1029 = claude/flow-kitfail-2-1029@a5d9bc72a89 + origin/main 5d8770d6d07). Items: (1) leaf_affinity ICG risk sweep all dies; (2) KV landed kv3_io_ft probe collect; (3) shared classes a GRT hold buffer cap, b cap_tr fold, c ring-vs-band fail-early, d -nofsm default. Adopted predecessor docker probe epyc2 kf2-probe/kv3_io_ft_landed/B (collect only).
+- 2026-10-29 22:06 PDT [FLOW-KITFAIL-3] KF2 test fix pushed claude/flow-kitfail-2-1029@90e69e65dbd (pin-track test off-track input; old FAIL/new PASS CHECKED); READY posted.
