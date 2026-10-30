@@ -122,7 +122,7 @@ set links [dict create bphy nphy bcore ncore ba nphy by nleaf pc nleaf cc ncore]
 proc dbobj {self method args} {
  if {$self eq "blk"} {
   switch $method {
-   findBTerm {return [dict get {clk_phy bphy clk bcore} [lindex $args 0]]}
+   findBTerm {set k [lindex $args 0];if {![dict exists {clk_phy bphy clk bcore} $k]} {return NULL};return [dict get {clk_phy bphy clk bcore} $k]}
    findNet {return [dict get {phy_in nphy phy_leaf nleaf core_in ncore} [lindex $args 0]]}
   }
  }
@@ -163,6 +163,9 @@ dict for {q a} $attrs {interp alias {} $q {} dbobj $q}
 namespace eval ord {proc get_db_block {} {return blk}}
 namespace eval sta {proc sta_to_db_pin {p} {return $p}}
 proc all_registers {args} {return {pc cc}}
+proc all_clocks {} {return {phy_clock core_clock virtual_io}}
+proc get_property {c p} {return [dict get {phy_clock clk_phy core_clock clk virtual_io {}} $c]}
+proc get_full_name {p} {return $p}
 '''
 
 
@@ -272,3 +275,27 @@ dict set ::links din nd1
     editor=tmp_path/'core_density_taps.tcl';editor.write_text('dict set ::links din nd2\n')
     script+='source {'+str(editor)+'}\nputs PASS_DATA_NOT_CLOCK\n'
     assert 'PASS_DATA_NOT_CLOCK' in _tcl(script)
+
+
+@pytest.mark.skipif(shutil.which('tclsh') is None, reason='tclsh required')
+def test_actual_sta_clock_source_cannot_be_omitted_from_metadata():
+    tree=dict(clock_port='clk_phy',root_scope=dict(ordinary_roots=['clk'],ordinary_cts_roots=['clk']),cts_open=[])
+    script=DB_FIXTURE+CI.emit_root_scope_tcl(tree)
+    script+='proc clock_tree_synthesis {args} {error MUST_NOT_RUN}\n'
+    script+=CI.emit_cts_tcl(dict(core_tree=tree))
+    script+='''
+# The third actual root exists physically and has an STA clock, but the
+# incomplete ownership declaration omits it.
+rename blk realblk
+proc blk {method args} {
+ if {$method eq "findBTerm" && [lindex $args 0] eq "omitted"} {return bcore}
+ return [realblk $method {*}$args]
+}
+proc all_clocks {} {return {phy_clock core_clock omitted_clock}}
+rename get_property realgetprop
+proc get_property {c p} {if {$c eq "omitted_clock"} {return omitted};return [realgetprop $c $p]}
+if {[catch {clock_tree_synthesis} msg]} {puts $msg} else {puts BAD_OMISSION_ACCEPTED}
+'''
+    out=_tcl(script)
+    assert 'OT_CORE_SCOPE_UNDECLARED_ROOT' in out
+    assert 'BAD_OMISSION_ACCEPTED' not in out
