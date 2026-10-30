@@ -1027,7 +1027,10 @@ def clock_entry_metrics(D, ck):
     # every clock root port with sinks: an entry inside a macro outline fails (vm_calendar_f20 'clk' at the SRAM)
     on_macro = [f"{x['name']}@{c[6]}" for x in roots for c in D.cells.values()
                 if c[0] == "M" and c[2] < x["x"] < c[4] and c[3] < x["y"] < c[5]]
-    pts = [(x["x"], x["y"]) for x in roots if ts.get(x["name"], 0) >= 0.05 * ts[root]]
+    # A lightly loaded clock input still serves a real local sink cluster (for
+    # example reset relays). Sink-count share is not a reach qualification: all
+    # rooted entries participate; unused ports remain excluded by roots above.
+    pts = [(x["x"], x["y"]) for x in roots]
     st = D.extra.get("status") or {}
     clk_fixed = 0
     for cid, s in st.items():

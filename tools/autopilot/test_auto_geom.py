@@ -97,6 +97,28 @@ class TestRules(unittest.TestCase):
         st = {r["rule"]: r["status"] for r in G.judge(m, None, [200, 200], all_kits=True)[0]}
         self.assertEqual((st["cells_on_macros"], st["clock_on_macro"]), ("FAIL", "FAIL"))
 
+    def test_clock_reach_keeps_lightly_loaded_root(self):
+        # A remote reset cluster has fewer than 5% of the main root's sinks.
+        # Its own live tap must remain a reach entry, while an unused nearby
+        # clock port must not hide a genuinely far sink.
+        near = [(i, 10 + i % 10, 10 + i // 10) for i in range(1, 101)]
+        p = dump(self.d / "light_root.tsv", die=(0, 0, 1000, 200),
+                 flops=near + [(101, 950, 100)],
+                 nets=[("CLOCK", "p0", [f"i{i}c" for i in range(1, 101)]),
+                       ("CLOCK", "p1", ["i101c"])],
+                 pins=[(0, "clk", "INPUT", 10, 10, "CLOCK"),
+                       (1, "clk_t1", "INPUT", 940, 100, "CLOCK"),
+                       (2, "clk_t2", "INPUT", 950, 100, "CLOCK")])
+        d = G.Design(p)
+        ck = G.clock_metrics(d)
+        self.assertEqual(ck["tap_sinks"]["clk_t1"], 1)
+        self.assertEqual(ck["tap_sinks"]["clk_t2"], 0)
+        self.assertLess(G.clock_entry_metrics(d, ck)["clock_reach_max"], 30)
+        # Negative control: move the actually connected entry away; the unused
+        # port at the remote sink does not make its reach safe.
+        d.pin_by_k[1]["x"] = 10
+        self.assertGreater(G.clock_entry_metrics(d, G.clock_metrics(d))["clock_reach_max"], 900)
+
     def test_pin_density_per_layer_is_budget_warn_with_window(self):
         # COORD 10-27 10:48: METHODOLOGY 5.2 pin window = BUDGET -> WARN naming layer, face, peak and window, not FAIL
         pins = [(k, f"a[{k}]", "INPUT", 0, 50 + k * 0.1) for k in range(80)]          # 8/um on W/M4 at y 50..58
