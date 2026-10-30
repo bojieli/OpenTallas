@@ -2278,3 +2278,6 @@ CODEX: 2026-10-30 04:00 PDT CODEX BTAB demand model READY8866df9d9 codex/flow-de
 CODEX: 2026-10-30 04:03 PDT FLOW657tapidentity18PASS/f3clockcompileO(N)72PASS READY; BTAB8866capacitymodelapproved; SYS_C59095proofPASSfreshCLI2734961live; native59resetdomainowned.
 CODEX: 2026-10-30 04:02 PDT TOK9 rootdetour directionpremise correcteddata+5/+7 ctl+4/+6; acceptedS2COLLpair12once1780.445/perphase1779.062 conditionalrates excludeVMspill; unit3823499 widerowslive.
 CODEX: 2026-10-30 04:05 PDT QCkits18/18correctedPLANfailuresGEN; freshPLACEwave+geometryfollowers launched (4038021), collft21356EQactualGPL,collucie46PLACE. NB0sourcee10912000fourstatePASS/mut3,actualnativev2proofLIVE; noSIGNEDorroutebypass.
+
+CODEX: KV E0equivalentview582READY/G0new0+strictbind0+7viewclockpass; worstintrapairwarning notactualsinglecyclepath(3gatherregs). RX259G0new0/routecontinues; SDresetgraphroleclashdiagnosed/rebind; PVHB4/Q2flowfix/PCuniformprototypeslive; q1polaritydriverlocalityPLACEDcandidate.
+CODEX: 2026-10-30 04:07 PDT BTABD10B finalindependentGEOMPASSCONDnormalautopilotREQdc18dbbd5d1a unblocked; oldQCctlO(N²)diagnosed/currentbulkplan46pilotlive4085174 codex/qc-ctl-pilot-0336de30ec3df2c.
