@@ -8,6 +8,9 @@
 module ot_vms_rstop_static #(
     parameter integer PHYSICAL_RING=1,
     parameter integer COMMIT_DELAY=5,
+    // Opt-in physical locality: independent kept controls for each 276-bit lane
+    // and the 16-bit header. The calendar and every output edge are unchanged.
+    parameter integer LOCAL_CTRL_REPLICAS=0,
     parameter integer MUT=0
 ) (
     input wire clk, rst_n,
@@ -58,6 +61,56 @@ module ot_vms_rstop_static #(
     wire [1:0] d1=(PHYSICAL_RING!=0) ? {r1[1],r1[1]^r1[0]} : me+2'd1;
     wire [1:0] d2=(PHYSICAL_RING!=0) ? {r2[1],r2[1]^r2[0]} : me+2'd2;
     wire [1:0] d3=(PHYSICAL_RING!=0) ? {r3[1],r3[1]^r3[0]} : me+2'd3;
+    function automatic [2223:0] make_flit(
+        input en, input [2:0] sel,
+        input [2223:0] in_q, input [289:0] pi_q,
+        input [2207:0] eg_q, input [265:0] ri_q,
+        input [2:0] wki_q, input [1:0] me,
+        input transit, input [3:0] rest, dest, input [7:0] ev);
+        begin
+        make_flit='0;
+        if(en) case(sel)
+            0: begin make_flit=in_q; make_flit[2223]=transit; make_flit[2220:2217]=rest; end
+            1: begin
+                make_flit[2223]=pi_q[289]; make_flit[2222:2221]=0;
+                make_flit[2220:2217]=pi_q[288:285]; make_flit[2216:2215]=me;
+                make_flit[2214:2211]=pi_q[284:281]; make_flit[2210:2209]=pi_q[280:279]; make_flit[2208]=pi_q[278];
+                for(integer b=0;b<8;b=b+1) if(pi_q[277:275]==3'(b))
+                    make_flit[b*276+:276]={1'b1,pi_q[274:264],pi_q[255:0],pi_q[263:256]};
+            end
+            2: begin make_flit[2223]=|ev; make_flit[2222:2221]=1; make_flit[2220:2217]=dest;
+                make_flit[2216:2215]=me; make_flit[2207:0]=eg_q; end
+            3: begin make_flit[2223]=ri_q[265]; make_flit[2222:2221]=2;
+                make_flit[2220:2217]=4'b1<<ri_q[264:263]; make_flit[2216:2215]=me;
+                make_flit[2214:2211]=ri_q[262:259]; make_flit[2210:2209]=ri_q[258:257];
+                make_flit[2208]=ri_q[256]; make_flit[263:8]=ri_q[255:0]; end
+            4: begin make_flit[2223]=wki_q[2]; make_flit[2222:2221]=3;
+                make_flit[2220:2217]=4'b1<<wki_q[1:0]; make_flit[2216:2215]=me; end
+            default: make_flit='0;
+        endcase
+        end
+    endfunction
+    wire [2223:0] local_flit;
+    generate if (LOCAL_CTRL_REPLICAS != 0) begin : local_controls
+        // Keep controls distinct so technology mapping cannot collapse the
+        // lane-local sources back into the measured global mux-select flop.
+        // Placement must bind each instance to its corresponding lane bay.
+        for(genvar r=0;r<9;r=r+1) begin : lane
+            wire [2:0] local_source;
+            wire local_enable;
+            (* keep = 1, keep_hierarchy = 1, dont_touch = 1 *)
+            ot_vms_rstop_local_control u_ctrl(
+                .clk(clk), .rst_n(rst_n), .tx_source(tx_source),
+                .tx_enable(tx_enable), .source_q(local_source),
+                .enable_q(local_enable));
+            wire [2223:0] selected = make_flit(local_enable, local_source, in_q, pi_q, eg_q, ri_q, wki_q, me, transit, rest, dest, ev);
+            localparam integer LO = r*276;
+            localparam integer BITS = r==8 ? 16 : 276;
+            assign local_flit[LO+:BITS] = selected[LO+:BITS];
+        end
+    end else begin : global_controls
+        assign local_flit = flit;
+    end endgenerate
     always @* begin
         lanes='0; ev='0; bank='0; lane='0;
         for(integer b=0;b<8;b=b+1) begin
@@ -98,7 +151,8 @@ module ot_vms_rstop_static #(
         end else begin
             in_q<=l_in;pi_q<=pi;eg_q<=eg;ri_q<=ri;wki_q<=wki;
             source_q<=tx_source;enable_q<=tx_enable;me<=sid;dr<=dir;ack_q<=ack_i;
-            l_out<=flit;
+            l_out<= (LOCAL_CTRL_REPLICAS != 0 && MUT==1 && local_flit[2223] && local_flit[2222:2221]==1)
+                ? (local_flit ^ (2224'd1 << 8)) : local_flit;
             xq<='0;rce<='0;cco<='0;ack_o<=0;
             if(own) case(kind)
                 0: begin
@@ -133,5 +187,19 @@ module ot_vms_rstop_static #(
             if(ack_q && outstanding==0) fault<=1;
         end
     end
+endmodule
+// A real preserved hierarchy boundary is required: keep on the register net
+// alone still permits opt_merge to merge equal FF drivers across lane bays.
+(* keep_hierarchy = 1 *)
+module ot_vms_rstop_local_control (
+    input wire clk, rst_n,
+    input wire [2:0] tx_source,
+    input wire tx_enable,
+    output reg [2:0] source_q,
+    output reg enable_q
+);
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) begin source_q<=0;enable_q<=0;end
+        else begin source_q<=tx_source;enable_q<=tx_enable;end
 endmodule
 `default_nettype wire

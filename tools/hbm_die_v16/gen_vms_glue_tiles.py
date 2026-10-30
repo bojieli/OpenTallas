@@ -69,7 +69,8 @@ def decl(p):
 
 def tile(k, c):
     p = ports(k, c)
-    L = [f'module hfd_hgi_vms_glue_{k}_t (', decl(p), ');']
+    cfgparam = '#(parameter integer LOCAL_CTRL_REPLICAS=0, PRESERVE_STATUS_VALID=0) ' if k == 'nw' else ''
+    L = [f'module hfd_hgi_vms_glue_{k}_t {cfgparam}(', decl(p), ');']
     for n, d, wd, f in BANK + ([FLT] if c['flt'] else []):
         L.append(f'    wire [{8 * wd - 1}:0] {f};')
         if d == 'input':
@@ -80,7 +81,8 @@ def tile(k, c):
     conn += [f'.{nm}({nm})' for nm, d, n in p if nm not in ('clk', 'rst_n', 'sid') and not (nm[0] == 'b' and nm[1].isdigit())]
     conn += [f'.{f}({f})' for _, _, _, f in BANK + ([FLT] if c['flt'] else [])]
     if c['glue']:
-        L.append(f'    {c["glue"]} u_glue (\n        ' + ',\n        '.join(conn) + ');')
+        glueparams = " #(.LOCAL_CTRL_REPLICAS(LOCAL_CTRL_REPLICAS),.PRESERVE_STATUS_VALID(PRESERVE_STATUS_VALID))" if k == "nw" else ""
+        L.append(f'    {c["glue"]}{glueparams} u_glue (\n        ' + ',\n        '.join(conn) + ');')
     else:
         L.append('    // = hfd_hgi_vms_static_SEb_glue / _NEb_glue (hfd_hgi_vms_static_qb.sv) with sid from the strap pin')
         L.append('    ot_vms_slice_static_glue #(.NC(1),.RG(5),.WG(2),.NATIVE_SHAPE(1),.BANK_PIN_IN(1)) u_slice (\n        .sid(sid),\n        '
