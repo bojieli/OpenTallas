@@ -3679,6 +3679,7 @@ def json_alias_keys(L, log, work=None):
     held = {k for (_side, k) in L.hyp}
     bits = {}
     ambiguous = set()
+    bit_of, bit_amb, scalar = {}, set(), set()     # key -> one net bit (mn, bit) for the scalar-alias pass below
     for mn, mod in data.get("modules", {}).items():
         for nn, net in mod.get("netnames", {}).items():
             if net.get("hide_name") or net.get("upto"):
@@ -3695,6 +3696,10 @@ def json_alias_keys(L, log, work=None):
                 for key in keys:
                     if key not in wanted or key in held:
                         continue
+                    if bit_of.setdefault(key, (mn, bit)) != (mn, bit):
+                        bit_amb.add(key)
+                    if len(vector) == 1 and offset == 0 and key == f"ff:{name}":
+                        scalar.add(key)
                     value = (mn, vector, i)
                     if key in bits and bits[key] != value:
                         ambiguous.add(key)
@@ -3708,6 +3713,20 @@ def json_alias_keys(L, log, work=None):
             gate[bits[key]].append(key)
     pairs = [(gate[b][0], gs[0]) for b, gs in gold.items()
              if len(gs) == 1 and len(gate.get(b, ())) == 1]
+    # Scalar Q-wire alias of one vector bit (QC stream 10-30: 'wire cm_x = p2l[234]'; slang keeps the flop as p2l[234],
+    # read_verilog names it after the scalar cm_x).  The GATE key must be a plain 1-bit public net, so no gate-side
+    # index convention is involved (unlike the cf[1] vs h2.cf_o slices kept out above); the gold key is gold's own
+    # element name and both are the SAME gold net bit.  One-to-one per bit only; again only gate keys are renamed.
+    paired = {k for pr in pairs for k in pr}
+    gbit, tbit = collections.defaultdict(list), collections.defaultdict(list)
+    for key in L.gonly:
+        if key in bit_of and key not in bit_amb and key not in paired:
+            gbit[bit_of[key]].append(key)
+    for key in L.tonly:
+        if key in bit_of and key not in bit_amb and key not in paired:
+            tbit[bit_of[key]].append(key)
+    pairs += [(ts[0], gbit[b][0]) for b, ts in tbit.items()
+              if len(ts) == 1 and ts[0] in scalar and len(gbit.get(b, ())) == 1]
     for tk, gk in pairs:
         L.tp[gk] = L.tp.pop(tk)
         if tk in L.tc:

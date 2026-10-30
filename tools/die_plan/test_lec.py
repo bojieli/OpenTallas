@@ -1227,3 +1227,46 @@ def test_transfer_profile_drops_absent_and_resides_matched_constants(tmp_path):
     assert L.hyp == {("both", c(1)): ("const", 1), ("gold", c(2)): ("const", 0)}
     assert lec.replica_siblings("ff:u.g_off[0].r_part[150]", ["ff:u.g_off[3].r_part[150]", "ff:u.g_off[3].r_part[151]",
                                                                "ff:u.g_off[0].r_part[151]"]) == ["ff:u.g_off[3].r_part[150]"]
+
+
+@pytest.mark.parametrize('mutant', [None, 'invert_d'])
+def test_json_q_alias_pairs_gate_scalar_with_gold_vector_bit(tmp_path, mutant):
+    # QC stream 10-30: 'wire cm_x = p2l[234]'; slang keeps p2l[234], read_verilog names the flop cm_x.
+    g, gm = _seq(tmp_path, 'sc_gold', ['d0', 'd1'], ['p2l[0]', 'p2l[1]', 'o'],
+                 lambda m, l: {'p2l[0]': l['d0'], 'p2l[1]': l['d1'], 'o': m.XOR(l['p2l[0]'], l['p2l[1]'])})
+    t, tm = _seq(tmp_path, 'sc_gate', ['d0', 'd1'], ['p2l[0]', 'cm_x', 'o'],
+                 lambda m, l: {'p2l[0]': l['d0'], 'cm_x': l['d1'] ^ (mutant == 'invert_d'),
+                               'o': m.XOR(l['p2l[0]'], l['cm_x'])})
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'lec_top': {'netnames': {
+        'u_dut.p2l': {'bits': [10, 11]}, 'u_dut.cm_x': {'bits': [11]}}}}}))
+    L = lec.Lec(g, gm, t, tm)
+    assert 'ff:u_dut.cm_x' in L.tonly and 'ff:u_dut.p2l[1]' in L.gonly
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 1
+    assert 'ff:u_dut.p2l[1]' in L.matched and not L.tonly and not L.gonly
+    m, _ = L.build(with_compare=True, with_hyp=False)
+    count = 1 << m.ni
+    mask = (1 << count) - 1
+    val = [0] * (m.ni + len(m.ands) // 2 + 1)
+    for v in range(1, m.ni + 1):
+        val[v] = sum(1 << s for s in range(count) if s & (1 << (v - 1)))
+    for k in range(len(m.ands) // 2):
+        a, b = m.ands[2*k:2*k+2]
+        val[m.ni+k+1] = lec.lit_val(val, mask, a) & lec.lit_val(val, mask, b)
+    failures = [n for n, o in zip(m.onames, m.outs) if lec.lit_val(val, mask, o)]
+    assert bool(failures) == bool(mutant)
+
+
+def test_json_q_alias_scalar_pass_needs_gate_scalar_and_one_to_one(tmp_path):
+    from types import SimpleNamespace
+    # gold scalar vs gate vector element (gate-side index convention): left to correspondence
+    L = SimpleNamespace(hyp={}, gp={'ff:u.cm_x': 2}, tp={'ff:u.p2l[1]': 2}, tc={},
+                        gonly=['ff:u.cm_x'], tonly=['ff:u.p2l[1]'])
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
+        'u.p2l': {'bits': [10, 11]}, 'u.cm_x': {'bits': [11]}}}}}))
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
+    # two gold-only names on the gate scalar's bit: ambiguous
+    L = SimpleNamespace(hyp={}, gp={'ff:u.p2l[1]': 2, 'ff:u.q[0]': 4}, tp={'ff:u.cm_x': 2}, tc={},
+                        gonly=['ff:u.p2l[1]', 'ff:u.q[0]'], tonly=['ff:u.cm_x'])
+    (tmp_path / 'gold.aliases.json').write_text(json.dumps({'modules': {'top': {'netnames': {
+        'u.p2l': {'bits': [10, 11]}, 'u.q': {'bits': [11, 12]}, 'u.cm_x': {'bits': [11]}}}}}))
+    assert lec.json_alias_keys(L, [], work=tmp_path) == 0
