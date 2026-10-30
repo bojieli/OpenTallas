@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 r,o=map(Path,sys.argv[1:]);s=r/'rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv'
 import subprocess
-g=subprocess.check_output(['git','show','origin/main:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv'],text=True)
+g=subprocess.check_output(['git','show','b3546d09c02d79f8e05f9a1b242b781756064fbb:rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_tr.sv'],text=True)
 (o/'src/gold.sv').write_text(g.replace('module ot_s81sl_cap_tr #(','module gold_cap_tr #('))
 c=s.read_text();m=c[:c.index('endmodule')+len('endmodule')]
 m=m.replace('module ot_s81sl_cap_tr #(','module mut_cap_tr #(').replace('rv_raw[0] && rv_raw[1]','rv_raw[0] || rv_raw[1]')
