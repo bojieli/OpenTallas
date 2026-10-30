@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.hbm.row1_bind.v1",
+ "plan_sha256": "1aefc6184b2a",
+ "baseline": {
+  "errors": 81,
+  "proof": {
+   "unbound": 57312,
+   "tied": 0,
+   "undriven": 0,
+   "multiply_bound": 0,
+   "straps": 9945,
+   "plan_driven": 0
+  }
+ },
+ "candidate": {
+  "errors": 83,
+  "proof": {
+   "unbound": 57312,
+   "tied": 0,
+   "undriven": 0,
+   "multiply_bound": 0,
+   "straps": 9945,
+   "plan_driven": 0
+  },
+  "unmapped": 0,
+  "emit": []
+ },
+ "affected_pairs": [
+  "UNPLANNED NE_b100 -> NE_b102: 31 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NE_hub -> NE_b102: 2746 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_b100 -> NW_b102: 31 as-built crossing bits with no plan lane path (0 b planned on direct lanes)",
+  "UNPLANNED NW_hub -> NW_b102: 2746 as-built crossing bits with no plan lane path (0 b planned on direct lanes)"
+ ],
+ "source_candidate": "5aa082b452953e057060fa06b61bd0cc988cf860c3f7b5c9598cd13ea4358a55",
+ "adopted": false,
+ "physical_gates": "NOT RUN"
+}
