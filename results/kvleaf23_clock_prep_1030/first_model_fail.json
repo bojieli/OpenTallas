@@ -1,0 +1,2496 @@
+{
+  "status": "PROPOSED_LOAD_BIN_MODEL_ONLY",
+  "kernel": "unchanged uf_phys3 v1 GRT PMAX/PMIN with native TT/FF NLDM; TT rise and FF min(rise,fall)",
+  "proposed_masters": {
+    "root": "BUFx24_ASAP7_75t_R",
+    "branches_repeaters": "BUFx12f_ASAP7_75t_R",
+    "terminal_drivers": "BUFx8_ASAP7_75t_R"
+  },
+  "no_sizing_fitting_or_threshold_changes": true,
+  "variants": [
+    {
+      "type": "ot_s81sl_kv_leaf__t1",
+      "roots": [
+        {
+          "root_index": 0,
+          "nodes": 138,
+          "soft_ff": 5414,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 150.0,
+          "corners": {
+            "TT": {
+              "mean": 234.14,
+              "leaf_mean_min": 186.34,
+              "leaf_mean_max": 309.45,
+              "window": 123.11,
+              "sink_min": 186.26,
+              "sink_max": 309.51,
+              "leaf_slew_in_max": 202.36,
+              "leaf_out_slew_max": 40.73,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 171.12,
+              "leaf_mean_min": 139.4,
+              "leaf_mean_max": 228.8,
+              "window": 89.4,
+              "sink_min": 139.32,
+              "sink_max": 228.86,
+              "leaf_slew_in_max": 149.78,
+              "leaf_out_slew_max": 30.77,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 1,
+          "nodes": 132,
+          "soft_ff": 5273,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 142.5,
+          "corners": {
+            "TT": {
+              "mean": 226.47,
+              "leaf_mean_min": 192.99,
+              "leaf_mean_max": 299.11,
+              "window": 106.12,
+              "sink_min": 192.91,
+              "sink_max": 299.17,
+              "leaf_slew_in_max": 172.19,
+              "leaf_out_slew_max": 39.91,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 165.85,
+              "leaf_mean_min": 140.02,
+              "leaf_mean_max": 222.07,
+              "window": 82.04,
+              "sink_min": 139.93,
+              "sink_max": 222.13,
+              "leaf_slew_in_max": 127.75,
+              "leaf_out_slew_max": 30.23,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 2,
+          "nodes": 131,
+          "soft_ff": 5007,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 139.5,
+          "corners": {
+            "TT": {
+              "mean": 224.74,
+              "leaf_mean_min": 153.07,
+              "leaf_mean_max": 293.64,
+              "window": 140.57,
+              "sink_min": 153.03,
+              "sink_max": 293.69,
+              "leaf_slew_in_max": 194.04,
+              "leaf_out_slew_max": 40.5,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 164.2,
+              "leaf_mean_min": 113.43,
+              "leaf_mean_max": 213.16,
+              "window": 99.73,
+              "sink_min": 113.39,
+              "sink_max": 213.22,
+              "leaf_slew_in_max": 144.14,
+              "leaf_out_slew_max": 30.63,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 3,
+          "nodes": 132,
+          "soft_ff": 5346,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 153.0,
+          "corners": {
+            "TT": {
+              "mean": 224.49,
+              "leaf_mean_min": 204.5,
+              "leaf_mean_max": 312.52,
+              "window": 108.01,
+              "sink_min": 204.41,
+              "sink_max": 312.57,
+              "leaf_slew_in_max": 150.1,
+              "leaf_out_slew_max": 39.31,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 164.21,
+              "leaf_mean_min": 148.31,
+              "leaf_mean_max": 232.97,
+              "window": 84.66,
+              "sink_min": 148.21,
+              "sink_max": 233.03,
+              "leaf_slew_in_max": 111.66,
+              "leaf_out_slew_max": 29.83,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 4,
+          "nodes": 102,
+          "soft_ff": 4132,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 4,
+          "largest_axis_segment_um": 150.0,
+          "corners": {
+            "TT": {
+              "mean": 231.29,
+              "leaf_mean_min": 189.72,
+              "leaf_mean_max": 295.69,
+              "window": 105.97,
+              "sink_min": 189.63,
+              "sink_max": 295.75,
+              "leaf_slew_in_max": 197.07,
+              "leaf_out_slew_max": 40.58,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 169.39,
+              "leaf_mean_min": 141.4,
+              "leaf_mean_max": 217.97,
+              "window": 76.57,
+              "sink_min": 141.3,
+              "sink_max": 218.04,
+              "leaf_slew_in_max": 145.74,
+              "leaf_out_slew_max": 30.67,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 5,
+          "nodes": 75,
+          "soft_ff": 2893,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 150.36,
+          "corners": {
+            "TT": {
+              "mean": 190.66,
+              "leaf_mean_min": 156.56,
+              "leaf_mean_max": 269.6,
+              "window": 113.04,
+              "sink_min": 156.47,
+              "sink_max": 269.66,
+              "leaf_slew_in_max": 193.9,
+              "leaf_out_slew_max": 40.5,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 141.44,
+              "leaf_mean_min": 115.41,
+              "leaf_mean_max": 204.38,
+              "window": 88.98,
+              "sink_min": 115.31,
+              "sink_max": 204.44,
+              "leaf_slew_in_max": 144.14,
+              "leaf_out_slew_max": 30.63,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 6,
+          "nodes": 68,
+          "soft_ff": 2634,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 109.5,
+          "corners": {
+            "TT": {
+              "mean": 184.47,
+              "leaf_mean_min": 134.43,
+              "leaf_mean_max": 217.74,
+              "window": 83.31,
+              "sink_min": 134.43,
+              "sink_max": 217.79,
+              "leaf_slew_in_max": 169.66,
+              "leaf_out_slew_max": 39.84,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 136.93,
+              "leaf_mean_min": 103.89,
+              "leaf_mean_max": 162.84,
+              "window": 58.95,
+              "sink_min": 103.89,
+              "sink_max": 162.9,
+              "leaf_slew_in_max": 127.34,
+              "leaf_out_slew_max": 30.22,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 7,
+          "nodes": 99,
+          "soft_ff": 3694,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 151.8,
+          "corners": {
+            "TT": {
+              "mean": 230.36,
+              "leaf_mean_min": 201.06,
+              "leaf_mean_max": 340.85,
+              "window": 139.79,
+              "sink_min": 200.97,
+              "sink_max": 340.9,
+              "leaf_slew_in_max": 152.21,
+              "leaf_out_slew_max": 39.37,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 167.97,
+              "leaf_mean_min": 143.13,
+              "leaf_mean_max": 252.44,
+              "window": 109.31,
+              "sink_min": 143.03,
+              "sink_max": 252.5,
+              "leaf_slew_in_max": 113.23,
+              "leaf_out_slew_max": 29.87,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 8,
+          "nodes": 81,
+          "soft_ff": 3095,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 157.616,
+          "corners": {
+            "TT": {
+              "mean": 241.19,
+              "leaf_mean_min": 131.31,
+              "leaf_mean_max": 294.98,
+              "window": 163.68,
+              "sink_min": 131.21,
+              "sink_max": 295.04,
+              "leaf_slew_in_max": 152.31,
+              "leaf_out_slew_max": 39.25,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 175.28,
+              "leaf_mean_min": 100.21,
+              "leaf_mean_max": 217.41,
+              "window": 117.2,
+              "sink_min": 100.11,
+              "sink_max": 217.47,
+              "leaf_slew_in_max": 113.02,
+              "leaf_out_slew_max": 29.79,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 9,
+          "nodes": 70,
+          "soft_ff": 2605,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 159.0000000000001,
+          "corners": {
+            "TT": {
+              "mean": 187.2,
+              "leaf_mean_min": 158.49,
+              "leaf_mean_max": 270.15,
+              "window": 111.66,
+              "sink_min": 158.4,
+              "sink_max": 270.21,
+              "leaf_slew_in_max": 179.21,
+              "leaf_out_slew_max": 40.1,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 139.59,
+              "leaf_mean_min": 115.74,
+              "leaf_mean_max": 202.15,
+              "window": 86.4,
+              "sink_min": 115.64,
+              "sink_max": 202.21,
+              "leaf_slew_in_max": 133.49,
+              "leaf_out_slew_max": 30.37,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 10,
+          "nodes": 90,
+          "soft_ff": 3503,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 127.5,
+          "corners": {
+            "TT": {
+              "mean": 217.36,
+              "leaf_mean_min": 157.16,
+              "leaf_mean_max": 309.76,
+              "window": 152.61,
+              "sink_min": 157.16,
+              "sink_max": 309.82,
+              "leaf_slew_in_max": 178.11,
+              "leaf_out_slew_max": 40.07,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 158.09,
+              "leaf_mean_min": 114.9,
+              "leaf_mean_max": 232.49,
+              "window": 117.59,
+              "sink_min": 114.9,
+              "sink_max": 232.55,
+              "leaf_slew_in_max": 131.87,
+              "leaf_out_slew_max": 30.33,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 11,
+          "nodes": 57,
+          "soft_ff": 1820,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 158.5039999999999,
+          "corners": {
+            "TT": {
+              "mean": 188.57,
+              "leaf_mean_min": 144.91,
+              "leaf_mean_max": 240.47,
+              "window": 95.56,
+              "sink_min": 144.91,
+              "sink_max": 240.53,
+              "leaf_slew_in_max": 164.05,
+              "leaf_out_slew_max": 39.69,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 139.73,
+              "leaf_mean_min": 104.91,
+              "leaf_mean_max": 178.47,
+              "window": 73.56,
+              "sink_min": 104.91,
+              "sink_max": 178.53,
+              "leaf_slew_in_max": 122.15,
+              "leaf_out_slew_max": 30.09,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 12,
+          "nodes": 83,
+          "soft_ff": 3154,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 177.1199999999999,
+          "corners": {
+            "TT": {
+              "mean": 239.93,
+              "leaf_mean_min": 183.04,
+              "leaf_mean_max": 303.11,
+              "window": 120.06,
+              "sink_min": 182.96,
+              "sink_max": 303.16,
+              "leaf_slew_in_max": 200.51,
+              "leaf_out_slew_max": 40.68,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 175.47,
+              "leaf_mean_min": 140.06,
+              "leaf_mean_max": 219.7,
+              "window": 79.64,
+              "sink_min": 139.97,
+              "sink_max": 219.76,
+              "leaf_slew_in_max": 149.01,
+              "leaf_out_slew_max": 30.75,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 13,
+          "nodes": 73,
+          "soft_ff": 2524,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 5,
+          "largest_axis_segment_um": 141.44799999999998,
+          "corners": {
+            "TT": {
+              "mean": 191.29,
+              "leaf_mean_min": 155.74,
+              "leaf_mean_max": 276.72,
+              "window": 120.97,
+              "sink_min": 155.65,
+              "sink_max": 276.72,
+              "leaf_slew_in_max": 106.8,
+              "leaf_out_slew_max": 38.14,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 142.24,
+              "leaf_mean_min": 113.85,
+              "leaf_mean_max": 208.35,
+              "window": 94.5,
+              "sink_min": 113.76,
+              "sink_max": 208.35,
+              "leaf_slew_in_max": 78.75,
+              "leaf_out_slew_max": 29.01,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 14,
+          "nodes": 114,
+          "soft_ff": 4230,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 133.92999999999995,
+          "corners": {
+            "TT": {
+              "mean": 223.05,
+              "leaf_mean_min": 165.69,
+              "leaf_mean_max": 292.37,
+              "window": 126.68,
+              "sink_min": 165.69,
+              "sink_max": 292.43,
+              "leaf_slew_in_max": 178.62,
+              "leaf_out_slew_max": 39.21,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 162.7,
+              "leaf_mean_min": 124.17,
+              "leaf_mean_max": 213.29,
+              "window": 89.12,
+              "sink_min": 124.16,
+              "sink_max": 213.35,
+              "leaf_slew_in_max": 132.65,
+              "leaf_out_slew_max": 29.74,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 15,
+          "nodes": 82,
+          "soft_ff": 2853,
+          "hard_terminals": 3,
+          "stages_min": 3,
+          "stages_max": 5,
+          "largest_axis_segment_um": 125.21999999999991,
+          "corners": {
+            "TT": {
+              "mean": 202.42,
+              "leaf_mean_min": 150.49,
+              "leaf_mean_max": 285.86,
+              "window": 135.37,
+              "sink_min": 150.4,
+              "sink_max": 285.92,
+              "leaf_slew_in_max": 133.46,
+              "leaf_out_slew_max": 38.83,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 150.11,
+              "leaf_mean_min": 110.51,
+              "leaf_mean_max": 215.37,
+              "window": 104.86,
+              "sink_min": 110.41,
+              "sink_max": 215.43,
+              "leaf_slew_in_max": 98.67,
+              "leaf_out_slew_max": 29.48,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        }
+      ],
+      "worst_within_root_window_ps": {
+        "TT": 163.68,
+        "FF": 117.59
+      },
+      "worst_input_slew_ps": {
+        "TT": 202.36,
+        "FF": 149.78
+      },
+      "worst_output_slew_ps": {
+        "TT": 40.73,
+        "FF": 30.77
+      },
+      "root_relative_mean_span_ps": {
+        "TT": [
+          184.47,
+          241.19
+        ],
+        "FF": [
+          136.93,
+          175.47
+        ]
+      }
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t3",
+      "roots": [
+        {
+          "root_index": 0,
+          "nodes": 169,
+          "soft_ff": 6582,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 148.5,
+          "corners": {
+            "TT": {
+              "mean": 230.67,
+              "leaf_mean_min": 178.24,
+              "leaf_mean_max": 311.23,
+              "window": 132.98,
+              "sink_min": 178.24,
+              "sink_max": 311.28,
+              "leaf_slew_in_max": 201.81,
+              "leaf_out_slew_max": 40.72,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 168.67,
+              "leaf_mean_min": 134.26,
+              "leaf_mean_max": 226.95,
+              "window": 92.7,
+              "sink_min": 134.25,
+              "sink_max": 227.02,
+              "leaf_slew_in_max": 149.85,
+              "leaf_out_slew_max": 30.78,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 1,
+          "nodes": 161,
+          "soft_ff": 6410,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 153.0,
+          "corners": {
+            "TT": {
+              "mean": 230.53,
+              "leaf_mean_min": 192.49,
+              "leaf_mean_max": 298.53,
+              "window": 106.04,
+              "sink_min": 192.4,
+              "sink_max": 298.59,
+              "leaf_slew_in_max": 191.37,
+              "leaf_out_slew_max": 40.43,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 168.39,
+              "leaf_mean_min": 143.45,
+              "leaf_mean_max": 218.4,
+              "window": 74.95,
+              "sink_min": 143.35,
+              "sink_max": 218.46,
+              "leaf_slew_in_max": 141.96,
+              "leaf_out_slew_max": 30.58,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 2,
+          "nodes": 154,
+          "soft_ff": 6087,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 163.5,
+          "corners": {
+            "TT": {
+              "mean": 227.58,
+              "leaf_mean_min": 199.72,
+              "leaf_mean_max": 312.39,
+              "window": 112.67,
+              "sink_min": 199.63,
+              "sink_max": 312.45,
+              "leaf_slew_in_max": 202.41,
+              "leaf_out_slew_max": 40.73,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 166.07,
+              "leaf_mean_min": 143.84,
+              "leaf_mean_max": 235.78,
+              "window": 91.93,
+              "sink_min": 143.75,
+              "sink_max": 235.84,
+              "leaf_slew_in_max": 150.33,
+              "leaf_out_slew_max": 30.79,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 3,
+          "nodes": 164,
+          "soft_ff": 6500,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 158.5039999999999,
+          "corners": {
+            "TT": {
+              "mean": 235.24,
+              "leaf_mean_min": 197.0,
+              "leaf_mean_max": 325.16,
+              "window": 128.17,
+              "sink_min": 196.91,
+              "sink_max": 325.22,
+              "leaf_slew_in_max": 172.41,
+              "leaf_out_slew_max": 39.92,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 171.98,
+              "leaf_mean_min": 146.05,
+              "leaf_mean_max": 239.15,
+              "window": 93.1,
+              "sink_min": 145.95,
+              "sink_max": 239.21,
+              "leaf_slew_in_max": 127.68,
+              "leaf_out_slew_max": 30.23,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 4,
+          "nodes": 129,
+          "soft_ff": 5023,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 130.5,
+          "corners": {
+            "TT": {
+              "mean": 230.15,
+              "leaf_mean_min": 185.88,
+              "leaf_mean_max": 314.85,
+              "window": 128.97,
+              "sink_min": 185.79,
+              "sink_max": 314.91,
+              "leaf_slew_in_max": 165.3,
+              "leaf_out_slew_max": 39.72,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 168.69,
+              "leaf_mean_min": 140.67,
+              "leaf_mean_max": 233.19,
+              "window": 92.52,
+              "sink_min": 140.57,
+              "sink_max": 233.25,
+              "leaf_slew_in_max": 123.41,
+              "leaf_out_slew_max": 30.13,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 5,
+          "nodes": 94,
+          "soft_ff": 3517,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 154.68,
+          "corners": {
+            "TT": {
+              "mean": 226.3,
+              "leaf_mean_min": 150.53,
+              "leaf_mean_max": 316.83,
+              "window": 166.31,
+              "sink_min": 150.48,
+              "sink_max": 316.89,
+              "leaf_slew_in_max": 205.49,
+              "leaf_out_slew_max": 40.82,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 164.77,
+              "leaf_mean_min": 114.02,
+              "leaf_mean_max": 234.88,
+              "window": 120.86,
+              "sink_min": 113.97,
+              "sink_max": 234.94,
+              "leaf_slew_in_max": 152.26,
+              "leaf_out_slew_max": 30.84,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 6,
+          "nodes": 83,
+          "soft_ff": 3203,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 130.68,
+          "corners": {
+            "TT": {
+              "mean": 226.74,
+              "leaf_mean_min": 144.91,
+              "leaf_mean_max": 267.55,
+              "window": 122.64,
+              "sink_min": 144.91,
+              "sink_max": 267.6,
+              "leaf_slew_in_max": 144.69,
+              "leaf_out_slew_max": 39.17,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 166.12,
+              "leaf_mean_min": 106.81,
+              "leaf_mean_max": 195.28,
+              "window": 88.47,
+              "sink_min": 106.81,
+              "sink_max": 195.34,
+              "leaf_slew_in_max": 106.65,
+              "leaf_out_slew_max": 29.71,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 7,
+          "nodes": 119,
+          "soft_ff": 4491,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 147.02975000000004,
+          "corners": {
+            "TT": {
+              "mean": 221.69,
+              "leaf_mean_min": 185.18,
+              "leaf_mean_max": 320.3,
+              "window": 135.12,
+              "sink_min": 185.09,
+              "sink_max": 320.35,
+              "leaf_slew_in_max": 123.82,
+              "leaf_out_slew_max": 38.6,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 161.94,
+              "leaf_mean_min": 137.48,
+              "leaf_mean_max": 236.31,
+              "window": 98.83,
+              "sink_min": 137.38,
+              "sink_max": 236.37,
+              "leaf_slew_in_max": 91.71,
+              "leaf_out_slew_max": 29.34,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 8,
+          "nodes": 97,
+          "soft_ff": 3763,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 133.616,
+          "corners": {
+            "TT": {
+              "mean": 231.6,
+              "leaf_mean_min": 178.4,
+              "leaf_mean_max": 323.59,
+              "window": 145.19,
+              "sink_min": 178.31,
+              "sink_max": 323.65,
+              "leaf_slew_in_max": 152.23,
+              "leaf_out_slew_max": 39.37,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 169.91,
+              "leaf_mean_min": 132.94,
+              "leaf_mean_max": 241.84,
+              "window": 108.9,
+              "sink_min": 132.84,
+              "sink_max": 241.9,
+              "leaf_slew_in_max": 113.72,
+              "leaf_out_slew_max": 29.89,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 9,
+          "nodes": 88,
+          "soft_ff": 3167,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 162.98000000000002,
+          "corners": {
+            "TT": {
+              "mean": 224.02,
+              "leaf_mean_min": 171.22,
+              "leaf_mean_max": 370.83,
+              "window": 199.6,
+              "sink_min": 171.13,
+              "sink_max": 370.88,
+              "leaf_slew_in_max": 181.42,
+              "leaf_out_slew_max": 40.16,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 163.29,
+              "leaf_mean_min": 128.41,
+              "leaf_mean_max": 276.81,
+              "window": 148.4,
+              "sink_min": 128.31,
+              "sink_max": 276.87,
+              "leaf_slew_in_max": 135.17,
+              "leaf_out_slew_max": 30.42,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 10,
+          "nodes": 111,
+          "soft_ff": 4258,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 148.5,
+          "corners": {
+            "TT": {
+              "mean": 217.71,
+              "leaf_mean_min": 174.38,
+              "leaf_mean_max": 287.11,
+              "window": 112.73,
+              "sink_min": 174.29,
+              "sink_max": 287.16,
+              "leaf_slew_in_max": 183.0,
+              "leaf_out_slew_max": 40.21,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 159.11,
+              "leaf_mean_min": 130.91,
+              "leaf_mean_max": 212.06,
+              "window": 81.15,
+              "sink_min": 130.81,
+              "sink_max": 212.12,
+              "leaf_slew_in_max": 135.63,
+              "leaf_out_slew_max": 30.43,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 11,
+          "nodes": 64,
+          "soft_ff": 2213,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 158.5039999999999,
+          "corners": {
+            "TT": {
+              "mean": 204.79,
+              "leaf_mean_min": 176.9,
+              "leaf_mean_max": 258.55,
+              "window": 81.66,
+              "sink_min": 176.9,
+              "sink_max": 258.61,
+              "leaf_slew_in_max": 189.21,
+              "leaf_out_slew_max": 40.37,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 152.43,
+              "leaf_mean_min": 130.57,
+              "leaf_mean_max": 191.74,
+              "window": 61.17,
+              "sink_min": 130.57,
+              "sink_max": 191.8,
+              "leaf_slew_in_max": 140.58,
+              "leaf_out_slew_max": 30.55,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 12,
+          "nodes": 101,
+          "soft_ff": 3835,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 124.5,
+          "corners": {
+            "TT": {
+              "mean": 228.45,
+              "leaf_mean_min": 177.02,
+              "leaf_mean_max": 304.24,
+              "window": 127.22,
+              "sink_min": 176.94,
+              "sink_max": 304.3,
+              "leaf_slew_in_max": 173.5,
+              "leaf_out_slew_max": 39.95,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 167.77,
+              "leaf_mean_min": 135.28,
+              "leaf_mean_max": 225.48,
+              "window": 90.21,
+              "sink_min": 135.19,
+              "sink_max": 225.54,
+              "leaf_slew_in_max": 128.74,
+              "leaf_out_slew_max": 30.26,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 13,
+          "nodes": 86,
+          "soft_ff": 3068,
+          "hard_terminals": 4,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 168.4799999999998,
+          "corners": {
+            "TT": {
+              "mean": 232.0,
+              "leaf_mean_min": 183.29,
+              "leaf_mean_max": 344.08,
+              "window": 160.78,
+              "sink_min": 183.2,
+              "sink_max": 344.13,
+              "leaf_slew_in_max": 177.49,
+              "leaf_out_slew_max": 39.76,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 169.05,
+              "leaf_mean_min": 137.78,
+              "leaf_mean_max": 256.72,
+              "window": 118.95,
+              "sink_min": 137.68,
+              "sink_max": 256.78,
+              "leaf_slew_in_max": 132.07,
+              "leaf_out_slew_max": 30.14,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 14,
+          "nodes": 132,
+          "soft_ff": 5143,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 154.01,
+          "corners": {
+            "TT": {
+              "mean": 216.66,
+              "leaf_mean_min": 177.89,
+              "leaf_mean_max": 294.73,
+              "window": 116.84,
+              "sink_min": 177.89,
+              "sink_max": 294.79,
+              "leaf_slew_in_max": 189.18,
+              "leaf_out_slew_max": 40.37,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 158.26,
+              "leaf_mean_min": 127.92,
+              "leaf_mean_max": 214.73,
+              "window": 86.81,
+              "sink_min": 127.92,
+              "sink_max": 214.79,
+              "leaf_slew_in_max": 140.39,
+              "leaf_out_slew_max": 30.55,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 15,
+          "nodes": 94,
+          "soft_ff": 3469,
+          "hard_terminals": 3,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 167.24,
+          "corners": {
+            "TT": {
+              "mean": 232.59,
+              "leaf_mean_min": 176.26,
+              "leaf_mean_max": 318.36,
+              "window": 142.1,
+              "sink_min": 176.21,
+              "sink_max": 318.42,
+              "leaf_slew_in_max": 178.62,
+              "leaf_out_slew_max": 40.09,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 169.5,
+              "leaf_mean_min": 132.4,
+              "leaf_mean_max": 234.64,
+              "window": 102.24,
+              "sink_min": 132.34,
+              "sink_max": 234.7,
+              "leaf_slew_in_max": 133.5,
+              "leaf_out_slew_max": 30.38,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        }
+      ],
+      "worst_within_root_window_ps": {
+        "TT": 199.6,
+        "FF": 148.4
+      },
+      "worst_input_slew_ps": {
+        "TT": 205.49,
+        "FF": 152.26
+      },
+      "worst_output_slew_ps": {
+        "TT": 40.82,
+        "FF": 30.84
+      },
+      "root_relative_mean_span_ps": {
+        "TT": [
+          204.79,
+          235.24
+        ],
+        "FF": [
+          152.43,
+          171.98
+        ]
+      }
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t4",
+      "roots": [
+        {
+          "root_index": 0,
+          "nodes": 152,
+          "soft_ff": 6026,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 148.5,
+          "corners": {
+            "TT": {
+              "mean": 229.04,
+              "leaf_mean_min": 205.95,
+              "leaf_mean_max": 308.83,
+              "window": 102.88,
+              "sink_min": 205.86,
+              "sink_max": 308.89,
+              "leaf_slew_in_max": 179.3,
+              "leaf_out_slew_max": 40.1,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 167.33,
+              "leaf_mean_min": 149.23,
+              "leaf_mean_max": 231.9,
+              "window": 82.67,
+              "sink_min": 149.14,
+              "sink_max": 231.96,
+              "leaf_slew_in_max": 132.96,
+              "leaf_out_slew_max": 30.36,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 1,
+          "nodes": 146,
+          "soft_ff": 5869,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 142.5,
+          "corners": {
+            "TT": {
+              "mean": 235.04,
+              "leaf_mean_min": 206.96,
+              "leaf_mean_max": 308.53,
+              "window": 101.58,
+              "sink_min": 206.91,
+              "sink_max": 308.59,
+              "leaf_slew_in_max": 177.52,
+              "leaf_out_slew_max": 40.05,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 171.73,
+              "leaf_mean_min": 152.64,
+              "leaf_mean_max": 229.62,
+              "window": 76.98,
+              "sink_min": 152.54,
+              "sink_max": 229.68,
+              "leaf_slew_in_max": 131.33,
+              "leaf_out_slew_max": 30.32,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 2,
+          "nodes": 141,
+          "soft_ff": 5573,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 148.5,
+          "corners": {
+            "TT": {
+              "mean": 225.86,
+              "leaf_mean_min": 192.19,
+              "leaf_mean_max": 291.7,
+              "window": 99.51,
+              "sink_min": 192.19,
+              "sink_max": 291.76,
+              "leaf_slew_in_max": 196.15,
+              "leaf_out_slew_max": 40.56,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 165.11,
+              "leaf_mean_min": 141.98,
+              "leaf_mean_max": 216.76,
+              "window": 74.78,
+              "sink_min": 141.98,
+              "sink_max": 216.82,
+              "leaf_slew_in_max": 145.52,
+              "leaf_out_slew_max": 30.67,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 3,
+          "nodes": 149,
+          "soft_ff": 5952,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 154.5,
+          "corners": {
+            "TT": {
+              "mean": 230.93,
+              "leaf_mean_min": 206.94,
+              "leaf_mean_max": 323.23,
+              "window": 116.29,
+              "sink_min": 206.85,
+              "sink_max": 323.29,
+              "leaf_slew_in_max": 179.15,
+              "leaf_out_slew_max": 40.1,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 168.73,
+              "leaf_mean_min": 149.92,
+              "leaf_mean_max": 243.37,
+              "window": 93.45,
+              "sink_min": 149.82,
+              "sink_max": 243.43,
+              "leaf_slew_in_max": 133.18,
+              "leaf_out_slew_max": 30.37,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 4,
+          "nodes": 115,
+          "soft_ff": 4599,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 141.0,
+          "corners": {
+            "TT": {
+              "mean": 233.72,
+              "leaf_mean_min": 185.5,
+              "leaf_mean_max": 299.89,
+              "window": 114.39,
+              "sink_min": 185.42,
+              "sink_max": 299.94,
+              "leaf_slew_in_max": 181.77,
+              "leaf_out_slew_max": 40.17,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 171.39,
+              "leaf_mean_min": 141.16,
+              "leaf_mean_max": 221.3,
+              "window": 80.13,
+              "sink_min": 141.08,
+              "sink_max": 221.36,
+              "leaf_slew_in_max": 134.87,
+              "leaf_out_slew_max": 30.41,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 5,
+          "nodes": 87,
+          "soft_ff": 3221,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 153.75,
+          "corners": {
+            "TT": {
+              "mean": 224.2,
+              "leaf_mean_min": 188.78,
+              "leaf_mean_max": 324.16,
+              "window": 135.37,
+              "sink_min": 188.78,
+              "sink_max": 324.21,
+              "leaf_slew_in_max": 169.6,
+              "leaf_out_slew_max": 39.84,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 162.77,
+              "leaf_mean_min": 136.97,
+              "leaf_mean_max": 243.1,
+              "window": 106.13,
+              "sink_min": 136.87,
+              "sink_max": 243.16,
+              "leaf_slew_in_max": 126.29,
+              "leaf_out_slew_max": 30.2,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 6,
+          "nodes": 76,
+          "soft_ff": 2933,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 120.0,
+          "corners": {
+            "TT": {
+              "mean": 183.1,
+              "leaf_mean_min": 150.65,
+              "leaf_mean_max": 235.56,
+              "window": 84.91,
+              "sink_min": 150.56,
+              "sink_max": 235.62,
+              "leaf_slew_in_max": 160.76,
+              "leaf_out_slew_max": 39.04,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 135.67,
+              "leaf_mean_min": 110.43,
+              "leaf_mean_max": 178.09,
+              "window": 67.65,
+              "sink_min": 110.34,
+              "sink_max": 178.15,
+              "leaf_slew_in_max": 120.11,
+              "leaf_out_slew_max": 29.64,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 7,
+          "nodes": 109,
+          "soft_ff": 4112,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 139.8,
+          "corners": {
+            "TT": {
+              "mean": 225.42,
+              "leaf_mean_min": 189.5,
+              "leaf_mean_max": 324.02,
+              "window": 134.52,
+              "sink_min": 189.41,
+              "sink_max": 324.07,
+              "leaf_slew_in_max": 170.09,
+              "leaf_out_slew_max": 39.85,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 164.6,
+              "leaf_mean_min": 141.01,
+              "leaf_mean_max": 239.62,
+              "window": 98.61,
+              "sink_min": 140.91,
+              "sink_max": 239.68,
+              "leaf_slew_in_max": 126.21,
+              "leaf_out_slew_max": 30.19,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 8,
+          "nodes": 89,
+          "soft_ff": 3446,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 147.54999999999995,
+          "corners": {
+            "TT": {
+              "mean": 234.95,
+              "leaf_mean_min": 137.62,
+              "leaf_mean_max": 291.77,
+              "window": 154.15,
+              "sink_min": 137.54,
+              "sink_max": 291.82,
+              "leaf_slew_in_max": 161.24,
+              "leaf_out_slew_max": 39.61,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 171.29,
+              "leaf_mean_min": 104.52,
+              "leaf_mean_max": 214.88,
+              "window": 110.36,
+              "sink_min": 104.43,
+              "sink_max": 214.94,
+              "leaf_slew_in_max": 119.74,
+              "leaf_out_slew_max": 30.03,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 9,
+          "nodes": 78,
+          "soft_ff": 2900,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 162.98000000000002,
+          "corners": {
+            "TT": {
+              "mean": 182.42,
+              "leaf_mean_min": 149.64,
+              "leaf_mean_max": 290.3,
+              "window": 140.66,
+              "sink_min": 149.55,
+              "sink_max": 290.36,
+              "leaf_slew_in_max": 179.11,
+              "leaf_out_slew_max": 40.1,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 135.58,
+              "leaf_mean_min": 108.89,
+              "leaf_mean_max": 219.89,
+              "window": 111.01,
+              "sink_min": 108.79,
+              "sink_max": 219.95,
+              "leaf_slew_in_max": 133.43,
+              "leaf_out_slew_max": 30.37,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 10,
+          "nodes": 100,
+          "soft_ff": 3899,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 151.5,
+          "corners": {
+            "TT": {
+              "mean": 209.99,
+              "leaf_mean_min": 152.39,
+              "leaf_mean_max": 276.39,
+              "window": 124.0,
+              "sink_min": 152.39,
+              "sink_max": 276.45,
+              "leaf_slew_in_max": 180.77,
+              "leaf_out_slew_max": 40.14,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 153.04,
+              "leaf_mean_min": 112.22,
+              "leaf_mean_max": 203.92,
+              "window": 91.7,
+              "sink_min": 112.22,
+              "sink_max": 203.98,
+              "leaf_slew_in_max": 135.09,
+              "leaf_out_slew_max": 30.41,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 11,
+          "nodes": 60,
+          "soft_ff": 2026,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 156.0,
+          "corners": {
+            "TT": {
+              "mean": 203.79,
+              "leaf_mean_min": 153.81,
+              "leaf_mean_max": 268.3,
+              "window": 114.49,
+              "sink_min": 153.81,
+              "sink_max": 268.36,
+              "leaf_slew_in_max": 187.41,
+              "leaf_out_slew_max": 40.32,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 151.25,
+              "leaf_mean_min": 110.46,
+              "leaf_mean_max": 202.9,
+              "window": 92.43,
+              "sink_min": 110.46,
+              "sink_max": 202.96,
+              "leaf_slew_in_max": 139.72,
+              "leaf_out_slew_max": 30.53,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 12,
+          "nodes": 91,
+          "soft_ff": 3511,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 129.0,
+          "corners": {
+            "TT": {
+              "mean": 229.61,
+              "leaf_mean_min": 171.89,
+              "leaf_mean_max": 296.71,
+              "window": 124.81,
+              "sink_min": 171.89,
+              "sink_max": 296.76,
+              "leaf_slew_in_max": 160.72,
+              "leaf_out_slew_max": 39.6,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 168.15,
+              "leaf_mean_min": 129.34,
+              "leaf_mean_max": 216.48,
+              "window": 87.14,
+              "sink_min": 129.34,
+              "sink_max": 216.54,
+              "leaf_slew_in_max": 119.15,
+              "leaf_out_slew_max": 30.02,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 13,
+          "nodes": 79,
+          "soft_ff": 2809,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 168.4799999999998,
+          "corners": {
+            "TT": {
+              "mean": 195.26,
+              "leaf_mean_min": 150.57,
+              "leaf_mean_max": 295.95,
+              "window": 145.38,
+              "sink_min": 150.48,
+              "sink_max": 296.0,
+              "leaf_slew_in_max": 184.35,
+              "leaf_out_slew_max": 40.24,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 144.87,
+              "leaf_mean_min": 110.82,
+              "leaf_mean_max": 224.33,
+              "window": 113.5,
+              "sink_min": 110.73,
+              "sink_max": 224.39,
+              "leaf_slew_in_max": 137.19,
+              "leaf_out_slew_max": 30.47,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 14,
+          "nodes": 124,
+          "soft_ff": 4709,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 138.75,
+          "corners": {
+            "TT": {
+              "mean": 222.42,
+              "leaf_mean_min": 182.84,
+              "leaf_mean_max": 305.02,
+              "window": 122.18,
+              "sink_min": 182.75,
+              "sink_max": 305.07,
+              "leaf_slew_in_max": 187.94,
+              "leaf_out_slew_max": 39.94,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 162.42,
+              "leaf_mean_min": 133.05,
+              "leaf_mean_max": 224.82,
+              "window": 91.78,
+              "sink_min": 133.05,
+              "sink_max": 224.88,
+              "leaf_slew_in_max": 139.68,
+              "leaf_out_slew_max": 30.25,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 15,
+          "nodes": 88,
+          "soft_ff": 3176,
+          "hard_terminals": 3,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 143.24,
+          "corners": {
+            "TT": {
+              "mean": 243.9,
+              "leaf_mean_min": 180.51,
+              "leaf_mean_max": 322.18,
+              "window": 141.67,
+              "sink_min": 180.51,
+              "sink_max": 322.24,
+              "leaf_slew_in_max": 174.79,
+              "leaf_out_slew_max": 39.98,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 177.78,
+              "leaf_mean_min": 135.35,
+              "leaf_mean_max": 237.96,
+              "window": 102.61,
+              "sink_min": 135.34,
+              "sink_max": 238.02,
+              "leaf_slew_in_max": 129.83,
+              "leaf_out_slew_max": 30.28,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        }
+      ],
+      "worst_within_root_window_ps": {
+        "TT": 154.15,
+        "FF": 113.5
+      },
+      "worst_input_slew_ps": {
+        "TT": 196.15,
+        "FF": 145.52
+      },
+      "worst_output_slew_ps": {
+        "TT": 40.56,
+        "FF": 30.67
+      },
+      "root_relative_mean_span_ps": {
+        "TT": [
+          182.42,
+          243.9
+        ],
+        "FF": [
+          135.58,
+          177.78
+        ]
+      }
+    },
+    {
+      "type": "ot_s81sl_kv_leaf__t5",
+      "roots": [
+        {
+          "root_index": 0,
+          "nodes": 128,
+          "soft_ff": 5003,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 147.75,
+          "corners": {
+            "TT": {
+              "mean": 235.15,
+              "leaf_mean_min": 189.94,
+              "leaf_mean_max": 304.76,
+              "window": 114.81,
+              "sink_min": 189.86,
+              "sink_max": 304.81,
+              "leaf_slew_in_max": 185.59,
+              "leaf_out_slew_max": 40.26,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 172.14,
+              "leaf_mean_min": 144.3,
+              "leaf_mean_max": 226.84,
+              "window": 82.54,
+              "sink_min": 144.2,
+              "sink_max": 226.9,
+              "leaf_slew_in_max": 137.76,
+              "leaf_out_slew_max": 30.47,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 1,
+          "nodes": 125,
+          "soft_ff": 4873,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 142.5,
+          "corners": {
+            "TT": {
+              "mean": 223.97,
+              "leaf_mean_min": 191.88,
+              "leaf_mean_max": 295.87,
+              "window": 103.99,
+              "sink_min": 191.79,
+              "sink_max": 295.92,
+              "leaf_slew_in_max": 194.58,
+              "leaf_out_slew_max": 40.51,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 164.01,
+              "leaf_mean_min": 140.0,
+              "leaf_mean_max": 216.39,
+              "window": 76.39,
+              "sink_min": 139.91,
+              "sink_max": 216.45,
+              "leaf_slew_in_max": 144.74,
+              "leaf_out_slew_max": 30.65,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 2,
+          "nodes": 121,
+          "soft_ff": 4627,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 153.0,
+          "corners": {
+            "TT": {
+              "mean": 226.43,
+              "leaf_mean_min": 143.88,
+              "leaf_mean_max": 310.74,
+              "window": 166.86,
+              "sink_min": 143.79,
+              "sink_max": 310.8,
+              "leaf_slew_in_max": 194.31,
+              "leaf_out_slew_max": 40.51,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 165.65,
+              "leaf_mean_min": 107.47,
+              "leaf_mean_max": 230.25,
+              "window": 122.79,
+              "sink_min": 107.37,
+              "sink_max": 230.31,
+              "leaf_slew_in_max": 144.22,
+              "leaf_out_slew_max": 30.63,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 3,
+          "nodes": 124,
+          "soft_ff": 4941,
+          "hard_terminals": 0,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 138.75,
+          "corners": {
+            "TT": {
+              "mean": 226.99,
+              "leaf_mean_min": 196.0,
+              "leaf_mean_max": 308.42,
+              "window": 112.41,
+              "sink_min": 195.91,
+              "sink_max": 308.47,
+              "leaf_slew_in_max": 199.94,
+              "leaf_out_slew_max": 40.66,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 166.11,
+              "leaf_mean_min": 143.28,
+              "leaf_mean_max": 226.72,
+              "window": 83.44,
+              "sink_min": 143.18,
+              "sink_max": 226.78,
+              "leaf_slew_in_max": 148.13,
+              "leaf_out_slew_max": 30.73,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 4,
+          "nodes": 100,
+          "soft_ff": 3819,
+          "hard_terminals": 1,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 154.5,
+          "corners": {
+            "TT": {
+              "mean": 232.69,
+              "leaf_mean_min": 179.46,
+              "leaf_mean_max": 301.9,
+              "window": 122.44,
+              "sink_min": 179.37,
+              "sink_max": 301.95,
+              "leaf_slew_in_max": 194.03,
+              "leaf_out_slew_max": 40.49,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 170.11,
+              "leaf_mean_min": 135.52,
+              "leaf_mean_max": 221.33,
+              "window": 85.82,
+              "sink_min": 135.42,
+              "sink_max": 221.39,
+              "leaf_slew_in_max": 144.17,
+              "leaf_out_slew_max": 30.63,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 5,
+          "nodes": 71,
+          "soft_ff": 2674,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 157.91200000000003,
+          "corners": {
+            "TT": {
+              "mean": 192.53,
+              "leaf_mean_min": 144.04,
+              "leaf_mean_max": 266.18,
+              "window": 122.14,
+              "sink_min": 143.95,
+              "sink_max": 266.23,
+              "leaf_slew_in_max": 129.12,
+              "leaf_out_slew_max": 38.74,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 142.96,
+              "leaf_mean_min": 109.91,
+              "leaf_mean_max": 201.66,
+              "window": 91.76,
+              "sink_min": 109.82,
+              "sink_max": 201.72,
+              "leaf_slew_in_max": 96.42,
+              "leaf_out_slew_max": 29.45,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 6,
+          "nodes": 63,
+          "soft_ff": 2435,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 115.18400000000008,
+          "corners": {
+            "TT": {
+              "mean": 182.41,
+              "leaf_mean_min": 137.98,
+              "leaf_mean_max": 223.97,
+              "window": 85.99,
+              "sink_min": 137.98,
+              "sink_max": 224.03,
+              "leaf_slew_in_max": 152.78,
+              "leaf_out_slew_max": 39.38,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 135.05,
+              "leaf_mean_min": 101.25,
+              "leaf_mean_max": 167.68,
+              "window": 66.43,
+              "sink_min": 101.25,
+              "sink_max": 167.74,
+              "leaf_slew_in_max": 113.22,
+              "leaf_out_slew_max": 29.87,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 7,
+          "nodes": 95,
+          "soft_ff": 3414,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 6,
+          "largest_axis_segment_um": 151.8,
+          "corners": {
+            "TT": {
+              "mean": 234.38,
+              "leaf_mean_min": 162.26,
+              "leaf_mean_max": 343.6,
+              "window": 181.34,
+              "sink_min": 162.26,
+              "sink_max": 343.66,
+              "leaf_slew_in_max": 182.6,
+              "leaf_out_slew_max": 40.19,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 170.82,
+              "leaf_mean_min": 122.49,
+              "leaf_mean_max": 255.36,
+              "window": 132.87,
+              "sink_min": 122.49,
+              "sink_max": 255.42,
+              "leaf_slew_in_max": 136.11,
+              "leaf_out_slew_max": 30.43,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 8,
+          "nodes": 72,
+          "soft_ff": 2861,
+          "hard_terminals": 1,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 143.14999999999986,
+          "corners": {
+            "TT": {
+              "mean": 199.57,
+              "leaf_mean_min": 170.81,
+              "leaf_mean_max": 232.21,
+              "window": 61.4,
+              "sink_min": 170.72,
+              "sink_max": 232.27,
+              "leaf_slew_in_max": 171.69,
+              "leaf_out_slew_max": 39.89,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 148.34,
+              "leaf_mean_min": 126.96,
+              "leaf_mean_max": 173.18,
+              "window": 46.22,
+              "sink_min": 126.86,
+              "sink_max": 173.24,
+              "leaf_slew_in_max": 127.42,
+              "leaf_out_slew_max": 30.22,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 9,
+          "nodes": 65,
+          "soft_ff": 2407,
+          "hard_terminals": 2,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 159.11200000000008,
+          "corners": {
+            "TT": {
+              "mean": 178.87,
+              "leaf_mean_min": 150.34,
+              "leaf_mean_max": 238.01,
+              "window": 87.67,
+              "sink_min": 150.25,
+              "sink_max": 238.01,
+              "leaf_slew_in_max": 179.0,
+              "leaf_out_slew_max": 40.09,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 132.59,
+              "leaf_mean_min": 110.02,
+              "leaf_mean_max": 176.69,
+              "window": 66.67,
+              "sink_min": 109.92,
+              "sink_max": 176.69,
+              "leaf_slew_in_max": 132.86,
+              "leaf_out_slew_max": 30.35,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 10,
+          "nodes": 84,
+          "soft_ff": 3237,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 136.72000000000003,
+          "corners": {
+            "TT": {
+              "mean": 215.42,
+              "leaf_mean_min": 166.21,
+              "leaf_mean_max": 270.07,
+              "window": 103.86,
+              "sink_min": 166.21,
+              "sink_max": 270.11,
+              "leaf_slew_in_max": 131.33,
+              "leaf_out_slew_max": 38.8,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 156.34,
+              "leaf_mean_min": 122.06,
+              "leaf_mean_max": 200.11,
+              "window": 78.05,
+              "sink_min": 122.06,
+              "sink_max": 200.16,
+              "leaf_slew_in_max": 98.23,
+              "leaf_out_slew_max": 29.5,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 11,
+          "nodes": 54,
+          "soft_ff": 1682,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 5,
+          "largest_axis_segment_um": 151.5,
+          "corners": {
+            "TT": {
+              "mean": 195.05,
+              "leaf_mean_min": 139.54,
+              "leaf_mean_max": 259.41,
+              "window": 119.87,
+              "sink_min": 139.54,
+              "sink_max": 259.47,
+              "leaf_slew_in_max": 186.34,
+              "leaf_out_slew_max": 40.29,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 144.29,
+              "leaf_mean_min": 100.71,
+              "leaf_mean_max": 195.53,
+              "window": 94.82,
+              "sink_min": 100.71,
+              "sink_max": 195.59,
+              "leaf_slew_in_max": 138.86,
+              "leaf_out_slew_max": 30.5,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 12,
+          "nodes": 77,
+          "soft_ff": 2915,
+          "hard_terminals": 1,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 138.0,
+          "corners": {
+            "TT": {
+              "mean": 192.21,
+              "leaf_mean_min": 155.84,
+              "leaf_mean_max": 260.39,
+              "window": 104.56,
+              "sink_min": 155.75,
+              "sink_max": 260.45,
+              "leaf_slew_in_max": 166.11,
+              "leaf_out_slew_max": 39.74,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 142.84,
+              "leaf_mean_min": 113.33,
+              "leaf_mean_max": 194.63,
+              "window": 81.3,
+              "sink_min": 113.23,
+              "sink_max": 194.69,
+              "leaf_slew_in_max": 123.04,
+              "leaf_out_slew_max": 30.11,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 13,
+          "nodes": 65,
+          "soft_ff": 2333,
+          "hard_terminals": 4,
+          "stages_min": 3,
+          "stages_max": 5,
+          "largest_axis_segment_um": 168.4799999999998,
+          "corners": {
+            "TT": {
+              "mean": 195.67,
+              "leaf_mean_min": 155.35,
+              "leaf_mean_max": 309.47,
+              "window": 154.12,
+              "sink_min": 155.26,
+              "sink_max": 309.52,
+              "leaf_slew_in_max": 178.63,
+              "leaf_out_slew_max": 39.79,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 145.99,
+              "leaf_mean_min": 113.2,
+              "leaf_mean_max": 233.27,
+              "window": 120.08,
+              "sink_min": 113.1,
+              "sink_max": 233.33,
+              "leaf_slew_in_max": 132.95,
+              "leaf_out_slew_max": 30.15,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 14,
+          "nodes": 101,
+          "soft_ff": 3909,
+          "hard_terminals": 2,
+          "stages_min": 4,
+          "stages_max": 5,
+          "largest_axis_segment_um": 147.0,
+          "corners": {
+            "TT": {
+              "mean": 224.37,
+              "leaf_mean_min": 177.24,
+              "leaf_mean_max": 309.02,
+              "window": 131.78,
+              "sink_min": 177.14,
+              "sink_max": 309.07,
+              "leaf_slew_in_max": 180.91,
+              "leaf_out_slew_max": 40.14,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 163.76,
+              "leaf_mean_min": 134.42,
+              "leaf_mean_max": 231.6,
+              "window": 97.18,
+              "sink_min": 134.31,
+              "sink_max": 231.66,
+              "leaf_slew_in_max": 133.94,
+              "leaf_out_slew_max": 30.38,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        },
+        {
+          "root_index": 15,
+          "nodes": 74,
+          "soft_ff": 2637,
+          "hard_terminals": 3,
+          "stages_min": 3,
+          "stages_max": 4,
+          "largest_axis_segment_um": 149.79999999999995,
+          "corners": {
+            "TT": {
+              "mean": 199.06,
+              "leaf_mean_min": 162.07,
+              "leaf_mean_max": 259.06,
+              "window": 96.99,
+              "sink_min": 162.07,
+              "sink_max": 259.11,
+              "leaf_slew_in_max": 183.74,
+              "leaf_out_slew_max": 40.22,
+              "analysis": "max_rise",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            },
+            "FF": {
+              "mean": 148.11,
+              "leaf_mean_min": 118.12,
+              "leaf_mean_max": 193.62,
+              "window": 75.49,
+              "sink_min": 118.12,
+              "sink_max": 193.68,
+              "leaf_slew_in_max": 136.96,
+              "leaf_out_slew_max": 30.45,
+              "analysis": "min_rise_fall",
+              "basis": "GRT",
+              "model": "uf_phys3 v1"
+            }
+          }
+        }
+      ],
+      "worst_within_root_window_ps": {
+        "TT": 181.34,
+        "FF": 132.87
+      },
+      "worst_input_slew_ps": {
+        "TT": 199.94,
+        "FF": 148.13
+      },
+      "worst_output_slew_ps": {
+        "TT": 40.66,
+        "FF": 30.73
+      },
+      "root_relative_mean_span_ps": {
+        "TT": [
+          178.87,
+          235.15
+        ],
+        "FF": [
+          132.59,
+          172.14
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "FF counts/cell populations/caps are measured; FF XY and grouping are proposed free-area load bins, not native placement.",
+    "Actual clock input phases/slews between 16 roots unknown; root-relative mean span is not whole-parent skew.",
+    "Child endpoint input contract proposed BUF24 Cin; child internal timing excluded. SRAM pin/cap is native, parent placement proposed.",
+    "Point-to-point branch paths are body-halo avoiding visibility routes; common physical wire sharing is not modeled, so parallel wire charge can overestimate GRT Steiner charge.",
+    "No native buffer-body/row/PG legalization; hard terminal stub enters explicit proposed pin opening not qualified by real child views.",
+    "The native594/plan597 ABI remains held; this coupon cannot qualify physical builds or full 833ps behavior."
+  ]
+}

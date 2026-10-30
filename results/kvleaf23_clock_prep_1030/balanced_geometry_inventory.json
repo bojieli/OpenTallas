@@ -1,0 +1,3030 @@
+[
+  {
+    "type": "ot_s81sl_kv_leaf__t1",
+    "roots": [
+      {
+        "pin": "clk",
+        "FF": 5414,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.40454179375,
+        "max_net_wire_um": 179.625,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 179.625,
+            "TT_total_load_fF": 32.40454179375,
+            "FF_total_load_fF": 32.918721793749995,
+            "branch_children": 2,
+            "max_axis_segment_um": 91.57149999999999
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.0
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 150.375,
+            "TT_total_load_fF": 27.89323970625,
+            "FF_total_load_fF": 28.40741970625,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.25
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.0,
+            "TT_total_load_fF": 19.5068448,
+            "FF_total_load_fF": 20.0210248,
+            "branch_children": 2,
+            "max_axis_segment_um": 44.625
+          }
+        ]
+      },
+      {
+        "pin": "clk_t1",
+        "FF": 5273,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.161856876325,
+        "max_net_wire_um": 178.0515,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.0515,
+            "TT_total_load_fF": 32.161856876325,
+            "FF_total_load_fF": 32.676036876325,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.15049999999997
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 153.75,
+            "TT_total_load_fF": 28.4137745625,
+            "FF_total_load_fF": 28.9279545625,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.1875
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 150.75,
+            "TT_total_load_fF": 27.9510769125,
+            "FF_total_load_fF": 28.4652569125,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.3125
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.0,
+            "TT_total_load_fF": 19.5068448,
+            "FF_total_load_fF": 20.0210248,
+            "branch_children": 2,
+            "max_axis_segment_um": 46.125
+          }
+        ]
+      },
+      {
+        "pin": "clk_t2",
+        "FF": 5007,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.75603777519999,
+        "max_net_wire_um": 181.90399999999994,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 181.90399999999994,
+            "TT_total_load_fF": 32.75603777519999,
+            "FF_total_load_fF": 33.27021777519999,
+            "branch_children": 2,
+            "max_axis_segment_um": 96.60450000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.5,
+            "TT_total_load_fF": 28.066751325000002,
+            "FF_total_load_fF": 28.580931325,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.8125
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.29500000000002,
+            "TT_total_load_fF": 28.035133652250003,
+            "FF_total_load_fF": 28.549313652250003,
+            "branch_children": 2,
+            "max_axis_segment_um": 67.78999999999999
+          },
+          {
+            "driver": "b250",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 140.96000000000004,
+            "TT_total_load_fF": 26.441140248000007,
+            "FF_total_load_fF": 26.955320248000007,
+            "branch_children": 2,
+            "max_axis_segment_um": 58.360000000000014
+          }
+        ]
+      },
+      {
+        "pin": "clk_t3",
+        "FF": 5346,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 34.591019538825,
+        "max_net_wire_um": 193.8015,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 193.8015,
+            "TT_total_load_fF": 34.591019538825,
+            "FF_total_load_fF": 35.105199538825,
+            "branch_children": 2,
+            "max_axis_segment_um": 85.7539999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 154.5,
+            "TT_total_load_fF": 28.529448975,
+            "FF_total_load_fF": 29.043628975,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.25
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 154.125,
+            "TT_total_load_fF": 28.47161176875,
+            "FF_total_load_fF": 28.98579176875,
+            "branch_children": 2,
+            "max_axis_segment_um": 71.625
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 100.5,
+            "TT_total_load_fF": 20.200891275,
+            "FF_total_load_fF": 20.715071275,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t4",
+        "FF": 4132,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 40.0669691103,
+        "max_net_wire_um": 229.30600000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.30600000000004,
+            "TT_total_load_fF": 40.0669691103,
+            "FF_total_load_fF": 40.581149110300004,
+            "branch_children": 2,
+            "max_axis_segment_um": 100.62899999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.19500000000005,
+            "TT_total_load_fF": 28.636640597250008,
+            "FF_total_load_fF": 29.150820597250007,
+            "branch_children": 2,
+            "max_axis_segment_um": 65.42250000000001
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 134.62,
+            "TT_total_load_fF": 25.463305881,
+            "FF_total_load_fF": 25.977485881,
+            "branch_children": 2,
+            "max_axis_segment_um": 57.315
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 128.36,
+            "TT_total_load_fF": 24.497810118000004,
+            "FF_total_load_fF": 25.011990118000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 37.525000000000034
+          }
+        ]
+      },
+      {
+        "pin": "clk_t5",
+        "FF": 2893,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 38.690289369,
+        "max_net_wire_um": 225.60000000000002,
+        "worst_nets": [
+          {
+            "driver": "b93",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 220.38,
+            "TT_total_load_fF": 38.690289369,
+            "FF_total_load_fF": 39.204469369,
+            "branch_children": 2,
+            "max_axis_segment_um": 149.04000000000008
+          },
+          {
+            "driver": "b64",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 225.60000000000002,
+            "TT_total_load_fF": 36.49895328,
+            "FF_total_load_fF": 36.671269280000004,
+            "branch_children": 2,
+            "max_axis_segment_um": 106.44
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 194.3400000000002,
+            "TT_total_load_fF": 34.67407376700003,
+            "FF_total_load_fF": 35.18825376700003,
+            "branch_children": 2,
+            "max_axis_segment_um": 149.04000000000002
+          },
+          {
+            "driver": "b66",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.83999999999997,
+            "TT_total_load_fF": 32.12923669199999,
+            "FF_total_load_fF": 32.643416691999995,
+            "branch_children": 2,
+            "max_axis_segment_um": 105.83999999999997
+          }
+        ]
+      },
+      {
+        "pin": "clk_t6",
+        "FF": 2634,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 35.3042679663,
+        "max_net_wire_um": 198.42600000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 198.42600000000004,
+            "TT_total_load_fF": 35.3042679663,
+            "FF_total_load_fF": 35.818447966300006,
+            "branch_children": 2,
+            "max_axis_segment_um": 111.87575000000004
+          },
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.65250000000003,
+            "TT_total_load_fF": 19.607481538875003,
+            "FF_total_load_fF": 20.121661538875003,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.39749999999998
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 93.9925,
+            "TT_total_load_fF": 19.197222955875002,
+            "FF_total_load_fF": 19.711402955875002,
+            "branch_children": 2,
+            "max_axis_segment_um": 46.16250000000002
+          },
+          {
+            "driver": "b109",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 85.5,
+            "TT_total_load_fF": 17.887403025,
+            "FF_total_load_fF": 18.401583025,
+            "branch_children": 2,
+            "max_axis_segment_um": 37.5
+          }
+        ]
+      },
+      {
+        "pin": "clk_t7",
+        "FF": 3694,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 43.270996103999984,
+        "max_net_wire_um": 250.07999999999993,
+        "worst_nets": [
+          {
+            "driver": "b168",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 250.07999999999993,
+            "TT_total_load_fF": 43.270996103999984,
+            "FF_total_load_fF": 43.78517610399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 110.83999999999992
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 215.94000000000005,
+            "TT_total_load_fF": 38.005496847,
+            "FF_total_load_fF": 38.51967684700001,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.50999999999999
+          },
+          {
+            "driver": "b172",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 205.87999999999988,
+            "TT_total_load_fF": 36.45391739399998,
+            "FF_total_load_fF": 36.96809739399998,
+            "branch_children": 2,
+            "max_axis_segment_um": 105.83999999999992
+          },
+          {
+            "driver": "b161",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 174.51999999999992,
+            "TT_total_load_fF": 31.61718462599999,
+            "FF_total_load_fF": 32.131364625999986,
+            "branch_children": 2,
+            "max_axis_segment_um": 114.47999999999979
+          }
+        ]
+      },
+      {
+        "pin": "clk_t8",
+        "FF": 3095,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 41.441566712174996,
+        "max_net_wire_um": 238.2185,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 238.2185,
+            "TT_total_load_fF": 41.441566712174996,
+            "FF_total_load_fF": 41.955746712175,
+            "branch_children": 2,
+            "max_axis_segment_um": 121.68649999999998
+          },
+          {
+            "driver": "b191",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.4800000000001,
+            "TT_total_load_fF": 37.09737557400002,
+            "FF_total_load_fF": 37.26969157400002,
+            "branch_children": 2,
+            "max_axis_segment_um": 116.64000000000001
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 183.13,
+            "TT_total_load_fF": 32.945126881499995,
+            "FF_total_load_fF": 33.4593068815,
+            "branch_children": 2,
+            "max_axis_segment_um": 49.61500000000001
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.25,
+            "TT_total_load_fF": 28.1824257375,
+            "FF_total_load_fF": 28.6966057375,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t9",
+        "FF": 2605,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 32.055205068,
+        "max_net_wire_um": 177.36,
+        "worst_nets": [
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.36,
+            "TT_total_load_fF": 32.055205068,
+            "FF_total_load_fF": 32.569385068,
+            "branch_children": 2,
+            "max_axis_segment_um": 86.80500000000006
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 173.67125,
+            "TT_total_load_fF": 31.4862797491875,
+            "FF_total_load_fF": 32.0004597491875,
+            "branch_children": 2,
+            "max_axis_segment_um": 113.57237499999997
+          },
+          {
+            "driver": "b70",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 144.97999999999996,
+            "TT_total_load_fF": 27.061155098999993,
+            "FF_total_load_fF": 27.575335098999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 64.50000000000006
+          },
+          {
+            "driver": "b66",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 142.04000000000008,
+            "TT_total_load_fF": 26.607711402000014,
+            "FF_total_load_fF": 27.121891402000013,
+            "branch_children": 2,
+            "max_axis_segment_um": 64.50000000000006
+          }
+        ]
+      },
+      {
+        "pin": "clk_t10",
+        "FF": 3503,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 29.781585932175005,
+        "max_net_wire_um": 162.61850000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 162.61850000000004,
+            "TT_total_load_fF": 29.781585932175005,
+            "FF_total_load_fF": 30.295765932175005,
+            "branch_children": 2,
+            "max_axis_segment_um": 98.10450000000003
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.56500000000005,
+            "TT_total_load_fF": 28.69370664075001,
+            "FF_total_load_fF": 29.207886640750008,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.67250000000001
+          },
+          {
+            "driver": "b220",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 133.5,
+            "TT_total_load_fF": 25.290565425,
+            "FF_total_load_fF": 25.804745425,
+            "branch_children": 2,
+            "max_axis_segment_um": 59.020000000000095
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 115.875,
+            "TT_total_load_fF": 22.572216731250002,
+            "FF_total_load_fF": 23.08639673125,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t11",
+        "FF": 1820,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 48.29882300144999,
+        "max_net_wire_um": 282.679,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 282.679,
+            "TT_total_load_fF": 48.29882300144999,
+            "FF_total_load_fF": 48.81300300144999,
+            "branch_children": 2,
+            "max_axis_segment_um": 148.19900000000007
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 261.3599999999999,
+            "TT_total_load_fF": 45.01073926799998,
+            "FF_total_load_fF": 45.524919267999984,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.12000000000012
+          },
+          {
+            "driver": "b78",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 224.20000000000016,
+            "TT_total_load_fF": 39.279457710000024,
+            "FF_total_load_fF": 39.79363771000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 125.83999999999992
+          },
+          {
+            "driver": "b93",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 163.55999999999995,
+            "TT_total_load_fF": 29.926795877999993,
+            "FF_total_load_fF": 30.440975877999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      },
+      {
+        "pin": "clk_t12",
+        "FF": 3154,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 36.59735366550001,
+        "max_net_wire_um": 206.81000000000006,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 206.81000000000006,
+            "TT_total_load_fF": 36.59735366550001,
+            "FF_total_load_fF": 37.111533665500005,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.48062500000015
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.21174999999982,
+            "TT_total_load_fF": 32.18657264246247,
+            "FF_total_load_fF": 32.70075264246247,
+            "branch_children": 2,
+            "max_axis_segment_um": 127.75899999999999
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 157.5,
+            "TT_total_load_fF": 28.992146625,
+            "FF_total_load_fF": 29.506326625,
+            "branch_children": 2,
+            "max_axis_segment_um": 76.125
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 135.0,
+            "TT_total_load_fF": 25.521914250000002,
+            "FF_total_load_fF": 26.03609425,
+            "branch_children": 2,
+            "max_axis_segment_um": 56.625
+          }
+        ]
+      },
+      {
+        "pin": "clk_t13",
+        "FF": 2524,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 40.96174924912499,
+        "max_net_wire_um": 235.10749999999996,
+        "worst_nets": [
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 235.10749999999996,
+            "TT_total_load_fF": 40.96174924912499,
+            "FF_total_load_fF": 41.475929249124995,
+            "branch_children": 2,
+            "max_axis_segment_um": 167.63249999999994
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 219.03724999999986,
+            "TT_total_load_fF": 38.483193612487476,
+            "FF_total_load_fF": 38.99737361248748,
+            "branch_children": 2,
+            "max_axis_segment_um": 103.96524999999997
+          },
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.32600000000002,
+            "TT_total_load_fF": 32.049961161300004,
+            "FF_total_load_fF": 32.5641411613,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.32974999999988
+          },
+          {
+            "driver": "b109",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.13699999999994,
+            "TT_total_load_fF": 28.01076490934999,
+            "FF_total_load_fF": 28.52494490934999,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.339000000000055
+          }
+        ]
+      },
+      {
+        "pin": "clk_t14",
+        "FF": 4230,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 31.02743791293751,
+        "max_net_wire_um": 170.69625000000008,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 170.69625000000008,
+            "TT_total_load_fF": 31.02743791293751,
+            "FF_total_load_fF": 31.54161791293751,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.10500000000002
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 160.53587500000003,
+            "TT_total_load_fF": 29.460377367731255,
+            "FF_total_load_fF": 29.974557367731254,
+            "branch_children": 2,
+            "max_axis_segment_um": 95.66700000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 69.9375
+          },
+          {
+            "driver": "b251",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 110.29500000000007,
+            "TT_total_load_fF": 21.711599102250013,
+            "FF_total_load_fF": 22.225779102250012,
+            "branch_children": 2,
+            "max_axis_segment_um": 39.58999999999992
+          }
+        ]
+      },
+      {
+        "pin": "clk_t15",
+        "FF": 2853,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 39.877880003999984,
+        "max_net_wire_um": 228.07999999999993,
+        "worst_nets": [
+          {
+            "driver": "b73",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 228.07999999999993,
+            "TT_total_load_fF": 39.877880003999984,
+            "FF_total_load_fF": 40.39206000399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 129.27999999999997
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 221.76000000000022,
+            "TT_total_load_fF": 38.90313028800003,
+            "FF_total_load_fF": 39.41731028800003,
+            "branch_children": 2,
+            "max_axis_segment_um": 140.37999999999988
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 218.95899999999983,
+            "TT_total_load_fF": 38.47112491544997,
+            "FF_total_load_fF": 38.98530491544997,
+            "branch_children": 2,
+            "max_axis_segment_um": 116.8789999999999
+          },
+          {
+            "driver": "b77",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 212.07999999999993,
+            "TT_total_load_fF": 37.41015920399999,
+            "FF_total_load_fF": 37.92433920399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "ot_s81sl_kv_leaf__t3",
+    "roots": [
+      {
+        "pin": "clk",
+        "FF": 6582,
+        "terminal_driver_count": 256,
+        "stage_count": 9,
+        "buffers": 511,
+        "max_net_load_fF": 31.7714557341375,
+        "max_net_wire_um": 175.52025,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 175.52025,
+            "TT_total_load_fF": 31.7714557341375,
+            "FF_total_load_fF": 32.2856357341375,
+            "branch_children": 2,
+            "max_axis_segment_um": 91.57149999999999
+          },
+          {
+            "driver": "b382",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 153.5625,
+            "TT_total_load_fF": 28.384855959375,
+            "FF_total_load_fF": 28.899035959375,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.09375
+          },
+          {
+            "driver": "b509",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.8125,
+            "TT_total_load_fF": 28.269181546875,
+            "FF_total_load_fF": 28.783361546875,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.34375
+          },
+          {
+            "driver": "b318",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 90.375,
+            "TT_total_load_fF": 18.63928670625,
+            "FF_total_load_fF": 19.15346670625,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t1",
+        "FF": 6410,
+        "terminal_driver_count": 256,
+        "stage_count": 9,
+        "buffers": 511,
+        "max_net_load_fF": 33.416692903124996,
+        "max_net_wire_um": 186.1875,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 186.1875,
+            "TT_total_load_fF": 33.416692903124996,
+            "FF_total_load_fF": 33.930872903125,
+            "branch_children": 2,
+            "max_axis_segment_um": 86.86924999999997
+          },
+          {
+            "driver": "b509",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.875,
+            "TT_total_load_fF": 28.12458853125,
+            "FF_total_load_fF": 28.63876853125,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.09375
+          },
+          {
+            "driver": "b382",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 142.875,
+            "TT_total_load_fF": 26.73649558125,
+            "FF_total_load_fF": 27.25067558125,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.03125
+          },
+          {
+            "driver": "b508",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 93.75,
+            "TT_total_load_fF": 19.1598215625,
+            "FF_total_load_fF": 19.6740015625,
+            "branch_children": 2,
+            "max_axis_segment_um": 44.4375
+          }
+        ]
+      },
+      {
+        "pin": "clk_t2",
+        "FF": 6087,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.75603777519999,
+        "max_net_wire_um": 181.90399999999994,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 181.90399999999994,
+            "TT_total_load_fF": 32.75603777519999,
+            "FF_total_load_fF": 33.27021777519999,
+            "branch_children": 2,
+            "max_axis_segment_um": 96.60450000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.5,
+            "TT_total_load_fF": 28.066751325000002,
+            "FF_total_load_fF": 28.580931325,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.8125
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.29500000000002,
+            "TT_total_load_fF": 28.035133652250003,
+            "FF_total_load_fF": 28.549313652250003,
+            "branch_children": 2,
+            "max_axis_segment_um": 67.78999999999999
+          },
+          {
+            "driver": "b250",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 140.96000000000004,
+            "TT_total_load_fF": 26.441140248000007,
+            "FF_total_load_fF": 26.955320248000007,
+            "branch_children": 2,
+            "max_axis_segment_um": 58.360000000000014
+          }
+        ]
+      },
+      {
+        "pin": "clk_t3",
+        "FF": 6500,
+        "terminal_driver_count": 256,
+        "stage_count": 9,
+        "buffers": 511,
+        "max_net_load_fF": 32.1876522703125,
+        "max_net_wire_um": 178.21875,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.21875,
+            "TT_total_load_fF": 32.1876522703125,
+            "FF_total_load_fF": 32.7018322703125,
+            "branch_children": 2,
+            "max_axis_segment_um": 85.7147500000001
+          },
+          {
+            "driver": "b509",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 156.75,
+            "TT_total_load_fF": 28.8764722125,
+            "FF_total_load_fF": 29.3906522125,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.28125
+          },
+          {
+            "driver": "b382",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.4375,
+            "TT_total_load_fF": 28.674041990625,
+            "FF_total_load_fF": 29.188221990625,
+            "branch_children": 2,
+            "max_axis_segment_um": 71.8125
+          },
+          {
+            "driver": "b508",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 101.25,
+            "TT_total_load_fF": 20.3165656875,
+            "FF_total_load_fF": 20.8307456875,
+            "branch_children": 2,
+            "max_axis_segment_um": 43.6875
+          }
+        ]
+      },
+      {
+        "pin": "clk_t4",
+        "FF": 5023,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 40.0669691103,
+        "max_net_wire_um": 229.30600000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.30600000000004,
+            "TT_total_load_fF": 40.0669691103,
+            "FF_total_load_fF": 40.581149110300004,
+            "branch_children": 2,
+            "max_axis_segment_um": 100.62899999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.19500000000005,
+            "TT_total_load_fF": 28.636640597250008,
+            "FF_total_load_fF": 29.150820597250007,
+            "branch_children": 2,
+            "max_axis_segment_um": 65.42250000000001
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 134.62,
+            "TT_total_load_fF": 25.463305881,
+            "FF_total_load_fF": 25.977485881,
+            "branch_children": 2,
+            "max_axis_segment_um": 57.315
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 128.36,
+            "TT_total_load_fF": 24.497810118000004,
+            "FF_total_load_fF": 25.011990118000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 37.525000000000034
+          }
+        ]
+      },
+      {
+        "pin": "clk_t5",
+        "FF": 3517,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 40.60585764,
+        "max_net_wire_um": 232.80000000000007,
+        "worst_nets": [
+          {
+            "driver": "b130",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 232.80000000000007,
+            "TT_total_load_fF": 40.60585764,
+            "FF_total_load_fF": 41.12003764000001,
+            "branch_children": 2,
+            "max_axis_segment_um": 115.32
+          },
+          {
+            "driver": "b189",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 220.70999999999992,
+            "TT_total_load_fF": 38.74118611049998,
+            "FF_total_load_fF": 39.255366110499985,
+            "branch_children": 2,
+            "max_axis_segment_um": 149.04000000000008
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 197.02499999999986,
+            "TT_total_load_fF": 35.088188163749976,
+            "FF_total_load_fF": 35.60236816374998,
+            "branch_children": 2,
+            "max_axis_segment_um": 98.19
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 173.4525000000001,
+            "TT_total_load_fF": 31.452541378875015,
+            "FF_total_load_fF": 31.966721378875015,
+            "branch_children": 2,
+            "max_axis_segment_um": 93.11200000000008
+          }
+        ]
+      },
+      {
+        "pin": "clk_t6",
+        "FF": 3203,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 35.0330114689875,
+        "max_net_wire_um": 196.66725000000002,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 196.66725000000002,
+            "TT_total_load_fF": 35.0330114689875,
+            "FF_total_load_fF": 35.5471914689875,
+            "branch_children": 2,
+            "max_axis_segment_um": 112.58387500000003
+          },
+          {
+            "driver": "b248",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 133.39999999999998,
+            "TT_total_load_fF": 22.278712169999995,
+            "FF_total_load_fF": 22.451028169999994,
+            "branch_children": 2,
+            "max_axis_segment_um": 61.56
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 97.03625,
+            "TT_total_load_fF": 19.6666682799375,
+            "FF_total_load_fF": 20.1808482799375,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.900000000000034
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 91.24625000000003,
+            "TT_total_load_fF": 18.773661815437503,
+            "FF_total_load_fF": 19.287841815437503,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.58125000000001
+          }
+        ]
+      },
+      {
+        "pin": "clk_t7",
+        "FF": 4491,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 43.270996103999984,
+        "max_net_wire_um": 250.07999999999993,
+        "worst_nets": [
+          {
+            "driver": "b168",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 250.07999999999993,
+            "TT_total_load_fF": 43.270996103999984,
+            "FF_total_load_fF": 43.78517610399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 110.83999999999992
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 215.94000000000005,
+            "TT_total_load_fF": 38.005496847,
+            "FF_total_load_fF": 38.51967684700001,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.50999999999999
+          },
+          {
+            "driver": "b172",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 205.87999999999988,
+            "TT_total_load_fF": 36.45391739399998,
+            "FF_total_load_fF": 36.96809739399998,
+            "branch_children": 2,
+            "max_axis_segment_um": 105.83999999999992
+          },
+          {
+            "driver": "b161",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 174.51999999999992,
+            "TT_total_load_fF": 31.61718462599999,
+            "FF_total_load_fF": 32.131364625999986,
+            "branch_children": 2,
+            "max_axis_segment_um": 114.47999999999979
+          }
+        ]
+      },
+      {
+        "pin": "clk_t8",
+        "FF": 3763,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 41.441566712174996,
+        "max_net_wire_um": 238.2185,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 238.2185,
+            "TT_total_load_fF": 41.441566712174996,
+            "FF_total_load_fF": 41.955746712175,
+            "branch_children": 2,
+            "max_axis_segment_um": 121.68649999999998
+          },
+          {
+            "driver": "b191",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.4800000000001,
+            "TT_total_load_fF": 37.09737557400002,
+            "FF_total_load_fF": 37.26969157400002,
+            "branch_children": 2,
+            "max_axis_segment_um": 116.64000000000001
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 183.13,
+            "TT_total_load_fF": 32.945126881499995,
+            "FF_total_load_fF": 33.4593068815,
+            "branch_children": 2,
+            "max_axis_segment_um": 49.61500000000001
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.25,
+            "TT_total_load_fF": 28.1824257375,
+            "FF_total_load_fF": 28.6966057375,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t9",
+        "FF": 3167,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 33.70240870199999,
+        "max_net_wire_um": 188.03999999999996,
+        "worst_nets": [
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 188.03999999999996,
+            "TT_total_load_fF": 33.70240870199999,
+            "FF_total_load_fF": 34.216588701999996,
+            "branch_children": 2,
+            "max_axis_segment_um": 86.89499999999998
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 167.43262500000014,
+            "TT_total_load_fF": 30.52408070694377,
+            "FF_total_load_fF": 31.03826070694377,
+            "branch_children": 2,
+            "max_axis_segment_um": 114.5546875
+          },
+          {
+            "driver": "b165",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 144.51999999999998,
+            "TT_total_load_fF": 26.990208126,
+            "FF_total_load_fF": 27.504388126,
+            "branch_children": 2,
+            "max_axis_segment_um": 67.50000000000006
+          },
+          {
+            "driver": "b142",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 126.97999999999996,
+            "TT_total_load_fF": 24.284969198999995,
+            "FF_total_load_fF": 24.799149198999995,
+            "branch_children": 2,
+            "max_axis_segment_um": 55.960000000000036
+          }
+        ]
+      },
+      {
+        "pin": "clk_t10",
+        "FF": 4258,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 29.781585932175005,
+        "max_net_wire_um": 162.61850000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 162.61850000000004,
+            "TT_total_load_fF": 29.781585932175005,
+            "FF_total_load_fF": 30.295765932175005,
+            "branch_children": 2,
+            "max_axis_segment_um": 98.10450000000003
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.56500000000005,
+            "TT_total_load_fF": 28.69370664075001,
+            "FF_total_load_fF": 29.207886640750008,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.67250000000001
+          },
+          {
+            "driver": "b220",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 133.5,
+            "TT_total_load_fF": 25.290565425,
+            "FF_total_load_fF": 25.804745425,
+            "branch_children": 2,
+            "max_axis_segment_um": 59.020000000000095
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 115.875,
+            "TT_total_load_fF": 22.572216731250002,
+            "FF_total_load_fF": 23.08639673125,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t11",
+        "FF": 2213,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 48.29882300144999,
+        "max_net_wire_um": 282.679,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 282.679,
+            "TT_total_load_fF": 48.29882300144999,
+            "FF_total_load_fF": 48.81300300144999,
+            "branch_children": 2,
+            "max_axis_segment_um": 148.19900000000007
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 261.3599999999999,
+            "TT_total_load_fF": 45.01073926799998,
+            "FF_total_load_fF": 45.524919267999984,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.12000000000012
+          },
+          {
+            "driver": "b78",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 224.20000000000016,
+            "TT_total_load_fF": 39.279457710000024,
+            "FF_total_load_fF": 39.79363771000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 125.83999999999992
+          },
+          {
+            "driver": "b93",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 163.55999999999995,
+            "TT_total_load_fF": 29.926795877999993,
+            "FF_total_load_fF": 30.440975877999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      },
+      {
+        "pin": "clk_t12",
+        "FF": 3835,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 36.59735366550001,
+        "max_net_wire_um": 206.81000000000006,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 206.81000000000006,
+            "TT_total_load_fF": 36.59735366550001,
+            "FF_total_load_fF": 37.111533665500005,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.48062500000015
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.21174999999982,
+            "TT_total_load_fF": 32.18657264246247,
+            "FF_total_load_fF": 32.70075264246247,
+            "branch_children": 2,
+            "max_axis_segment_um": 127.75899999999999
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 157.5,
+            "TT_total_load_fF": 28.992146625,
+            "FF_total_load_fF": 29.506326625,
+            "branch_children": 2,
+            "max_axis_segment_um": 76.125
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 135.0,
+            "TT_total_load_fF": 25.521914250000002,
+            "FF_total_load_fF": 26.03609425,
+            "branch_children": 2,
+            "max_axis_segment_um": 56.625
+          }
+        ]
+      },
+      {
+        "pin": "clk_t13",
+        "FF": 3068,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 41.22336621206249,
+        "max_net_wire_um": 236.80374999999992,
+        "worst_nets": [
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 236.80374999999992,
+            "TT_total_load_fF": 41.22336621206249,
+            "FF_total_load_fF": 41.73754621206249,
+            "branch_children": 2,
+            "max_axis_segment_um": 166.81624999999997
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 216.15649999999982,
+            "TT_total_load_fF": 38.03888819407497,
+            "FF_total_load_fF": 38.553068194074974,
+            "branch_children": 2,
+            "max_axis_segment_um": 101.08449999999993
+          },
+          {
+            "driver": "b189",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 146.25,
+            "TT_total_load_fF": 27.2570304375,
+            "FF_total_load_fF": 27.7712104375,
+            "branch_children": 2,
+            "max_axis_segment_um": 60.375
+          },
+          {
+            "driver": "b221",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 130.183,
+            "TT_total_load_fF": 24.77897605665,
+            "FF_total_load_fF": 25.293156056649998,
+            "branch_children": 2,
+            "max_axis_segment_um": 73.72775000000001
+          }
+        ]
+      },
+      {
+        "pin": "clk_t14",
+        "FF": 5143,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 31.02743791293751,
+        "max_net_wire_um": 170.69625000000008,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 170.69625000000008,
+            "TT_total_load_fF": 31.02743791293751,
+            "FF_total_load_fF": 31.54161791293751,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.10500000000002
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 160.53587500000003,
+            "TT_total_load_fF": 29.460377367731255,
+            "FF_total_load_fF": 29.974557367731254,
+            "branch_children": 2,
+            "max_axis_segment_um": 95.66700000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 69.9375
+          },
+          {
+            "driver": "b251",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 110.29500000000007,
+            "TT_total_load_fF": 21.711599102250013,
+            "FF_total_load_fF": 22.225779102250012,
+            "branch_children": 2,
+            "max_axis_segment_um": 39.58999999999992
+          }
+        ]
+      },
+      {
+        "pin": "clk_t15",
+        "FF": 3469,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 44.77630579200002,
+        "max_net_wire_um": 259.84000000000015,
+        "worst_nets": [
+          {
+            "driver": "b149",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 259.84000000000015,
+            "TT_total_load_fF": 44.77630579200002,
+            "FF_total_load_fF": 45.29048579200002,
+            "branch_children": 2,
+            "max_axis_segment_um": 127.70000000000005
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 220.45899999999983,
+            "TT_total_load_fF": 38.70247374044997,
+            "FF_total_load_fF": 39.21665374044997,
+            "branch_children": 2,
+            "max_axis_segment_um": 118.3789999999999
+          },
+          {
+            "driver": "b144",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 234.3199999999997,
+            "TT_total_load_fF": 37.84386111599996,
+            "FF_total_load_fF": 38.01617711599996,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.7199999999998
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 202.01999999999998,
+            "TT_total_load_fF": 35.85857975099999,
+            "FF_total_load_fF": 36.372759751,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "ot_s81sl_kv_leaf__t4",
+    "roots": [
+      {
+        "pin": "clk",
+        "FF": 6026,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.40454179375,
+        "max_net_wire_um": 179.625,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 179.625,
+            "TT_total_load_fF": 32.40454179375,
+            "FF_total_load_fF": 32.918721793749995,
+            "branch_children": 2,
+            "max_axis_segment_um": 91.57149999999999
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.0
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 150.375,
+            "TT_total_load_fF": 27.89323970625,
+            "FF_total_load_fF": 28.40741970625,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.25
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.0,
+            "TT_total_load_fF": 19.5068448,
+            "FF_total_load_fF": 20.0210248,
+            "branch_children": 2,
+            "max_axis_segment_um": 44.625
+          }
+        ]
+      },
+      {
+        "pin": "clk_t1",
+        "FF": 5869,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.161856876325,
+        "max_net_wire_um": 178.0515,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.0515,
+            "TT_total_load_fF": 32.161856876325,
+            "FF_total_load_fF": 32.676036876325,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.15049999999997
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 153.75,
+            "TT_total_load_fF": 28.4137745625,
+            "FF_total_load_fF": 28.9279545625,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.1875
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 150.75,
+            "TT_total_load_fF": 27.9510769125,
+            "FF_total_load_fF": 28.4652569125,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.3125
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.0,
+            "TT_total_load_fF": 19.5068448,
+            "FF_total_load_fF": 20.0210248,
+            "branch_children": 2,
+            "max_axis_segment_um": 46.125
+          }
+        ]
+      },
+      {
+        "pin": "clk_t2",
+        "FF": 5573,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.75603777519999,
+        "max_net_wire_um": 181.90399999999994,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 181.90399999999994,
+            "TT_total_load_fF": 32.75603777519999,
+            "FF_total_load_fF": 33.27021777519999,
+            "branch_children": 2,
+            "max_axis_segment_um": 96.60450000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.5,
+            "TT_total_load_fF": 28.066751325000002,
+            "FF_total_load_fF": 28.580931325,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.8125
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.29500000000002,
+            "TT_total_load_fF": 28.035133652250003,
+            "FF_total_load_fF": 28.549313652250003,
+            "branch_children": 2,
+            "max_axis_segment_um": 67.78999999999999
+          },
+          {
+            "driver": "b250",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 140.96000000000004,
+            "TT_total_load_fF": 26.441140248000007,
+            "FF_total_load_fF": 26.955320248000007,
+            "branch_children": 2,
+            "max_axis_segment_um": 58.360000000000014
+          }
+        ]
+      },
+      {
+        "pin": "clk_t3",
+        "FF": 5952,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 34.591019538825,
+        "max_net_wire_um": 193.8015,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 193.8015,
+            "TT_total_load_fF": 34.591019538825,
+            "FF_total_load_fF": 35.105199538825,
+            "branch_children": 2,
+            "max_axis_segment_um": 85.7539999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 154.5,
+            "TT_total_load_fF": 28.529448975,
+            "FF_total_load_fF": 29.043628975,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.25
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 154.125,
+            "TT_total_load_fF": 28.47161176875,
+            "FF_total_load_fF": 28.98579176875,
+            "branch_children": 2,
+            "max_axis_segment_um": 71.625
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 100.5,
+            "TT_total_load_fF": 20.200891275,
+            "FF_total_load_fF": 20.715071275,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t4",
+        "FF": 4599,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 40.0669691103,
+        "max_net_wire_um": 229.30600000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.30600000000004,
+            "TT_total_load_fF": 40.0669691103,
+            "FF_total_load_fF": 40.581149110300004,
+            "branch_children": 2,
+            "max_axis_segment_um": 100.62899999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.19500000000005,
+            "TT_total_load_fF": 28.636640597250008,
+            "FF_total_load_fF": 29.150820597250007,
+            "branch_children": 2,
+            "max_axis_segment_um": 65.42250000000001
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 134.62,
+            "TT_total_load_fF": 25.463305881,
+            "FF_total_load_fF": 25.977485881,
+            "branch_children": 2,
+            "max_axis_segment_um": 57.315
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 128.36,
+            "TT_total_load_fF": 24.497810118000004,
+            "FF_total_load_fF": 25.011990118000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 37.525000000000034
+          }
+        ]
+      },
+      {
+        "pin": "clk_t5",
+        "FF": 3221,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 40.60585764,
+        "max_net_wire_um": 232.80000000000007,
+        "worst_nets": [
+          {
+            "driver": "b130",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 232.80000000000007,
+            "TT_total_load_fF": 40.60585764,
+            "FF_total_load_fF": 41.12003764000001,
+            "branch_children": 2,
+            "max_axis_segment_um": 115.32
+          },
+          {
+            "driver": "b189",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 220.70999999999992,
+            "TT_total_load_fF": 38.74118611049998,
+            "FF_total_load_fF": 39.255366110499985,
+            "branch_children": 2,
+            "max_axis_segment_um": 149.04000000000008
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 197.02499999999986,
+            "TT_total_load_fF": 35.088188163749976,
+            "FF_total_load_fF": 35.60236816374998,
+            "branch_children": 2,
+            "max_axis_segment_um": 98.19
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 173.4525000000001,
+            "TT_total_load_fF": 31.452541378875015,
+            "FF_total_load_fF": 31.966721378875015,
+            "branch_children": 2,
+            "max_axis_segment_um": 93.11200000000008
+          }
+        ]
+      },
+      {
+        "pin": "clk_t6",
+        "FF": 2933,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 35.0330114689875,
+        "max_net_wire_um": 196.66725000000002,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 196.66725000000002,
+            "TT_total_load_fF": 35.0330114689875,
+            "FF_total_load_fF": 35.5471914689875,
+            "branch_children": 2,
+            "max_axis_segment_um": 112.58387500000003
+          },
+          {
+            "driver": "b248",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 133.39999999999998,
+            "TT_total_load_fF": 22.278712169999995,
+            "FF_total_load_fF": 22.451028169999994,
+            "branch_children": 2,
+            "max_axis_segment_um": 61.56
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 97.03625,
+            "TT_total_load_fF": 19.6666682799375,
+            "FF_total_load_fF": 20.1808482799375,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.900000000000034
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 91.24625000000003,
+            "TT_total_load_fF": 18.773661815437503,
+            "FF_total_load_fF": 19.287841815437503,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.58125000000001
+          }
+        ]
+      },
+      {
+        "pin": "clk_t7",
+        "FF": 4112,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 43.270996103999984,
+        "max_net_wire_um": 250.07999999999993,
+        "worst_nets": [
+          {
+            "driver": "b168",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 250.07999999999993,
+            "TT_total_load_fF": 43.270996103999984,
+            "FF_total_load_fF": 43.78517610399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 110.83999999999992
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 215.94000000000005,
+            "TT_total_load_fF": 38.005496847,
+            "FF_total_load_fF": 38.51967684700001,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.50999999999999
+          },
+          {
+            "driver": "b172",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 205.87999999999988,
+            "TT_total_load_fF": 36.45391739399998,
+            "FF_total_load_fF": 36.96809739399998,
+            "branch_children": 2,
+            "max_axis_segment_um": 105.83999999999992
+          },
+          {
+            "driver": "b161",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 174.51999999999992,
+            "TT_total_load_fF": 31.61718462599999,
+            "FF_total_load_fF": 32.131364625999986,
+            "branch_children": 2,
+            "max_axis_segment_um": 114.47999999999979
+          }
+        ]
+      },
+      {
+        "pin": "clk_t8",
+        "FF": 3446,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 41.441566712174996,
+        "max_net_wire_um": 238.2185,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 238.2185,
+            "TT_total_load_fF": 41.441566712174996,
+            "FF_total_load_fF": 41.955746712175,
+            "branch_children": 2,
+            "max_axis_segment_um": 121.68649999999998
+          },
+          {
+            "driver": "b191",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.4800000000001,
+            "TT_total_load_fF": 37.09737557400002,
+            "FF_total_load_fF": 37.26969157400002,
+            "branch_children": 2,
+            "max_axis_segment_um": 116.64000000000001
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 183.13,
+            "TT_total_load_fF": 32.945126881499995,
+            "FF_total_load_fF": 33.4593068815,
+            "branch_children": 2,
+            "max_axis_segment_um": 49.61500000000001
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.25,
+            "TT_total_load_fF": 28.1824257375,
+            "FF_total_load_fF": 28.6966057375,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t9",
+        "FF": 2900,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 32.055205068,
+        "max_net_wire_um": 177.36,
+        "worst_nets": [
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.36,
+            "TT_total_load_fF": 32.055205068,
+            "FF_total_load_fF": 32.569385068,
+            "branch_children": 2,
+            "max_axis_segment_um": 86.80500000000006
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 173.67125,
+            "TT_total_load_fF": 31.4862797491875,
+            "FF_total_load_fF": 32.0004597491875,
+            "branch_children": 2,
+            "max_axis_segment_um": 113.57237499999997
+          },
+          {
+            "driver": "b70",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 144.97999999999996,
+            "TT_total_load_fF": 27.061155098999993,
+            "FF_total_load_fF": 27.575335098999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 64.50000000000006
+          },
+          {
+            "driver": "b66",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 142.04000000000008,
+            "TT_total_load_fF": 26.607711402000014,
+            "FF_total_load_fF": 27.121891402000013,
+            "branch_children": 2,
+            "max_axis_segment_um": 64.50000000000006
+          }
+        ]
+      },
+      {
+        "pin": "clk_t10",
+        "FF": 3899,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 29.781585932175005,
+        "max_net_wire_um": 162.61850000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 162.61850000000004,
+            "TT_total_load_fF": 29.781585932175005,
+            "FF_total_load_fF": 30.295765932175005,
+            "branch_children": 2,
+            "max_axis_segment_um": 98.10450000000003
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.56500000000005,
+            "TT_total_load_fF": 28.69370664075001,
+            "FF_total_load_fF": 29.207886640750008,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.67250000000001
+          },
+          {
+            "driver": "b220",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 133.5,
+            "TT_total_load_fF": 25.290565425,
+            "FF_total_load_fF": 25.804745425,
+            "branch_children": 2,
+            "max_axis_segment_um": 59.020000000000095
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 115.875,
+            "TT_total_load_fF": 22.572216731250002,
+            "FF_total_load_fF": 23.08639673125,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t11",
+        "FF": 2026,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 48.29882300144999,
+        "max_net_wire_um": 282.679,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 282.679,
+            "TT_total_load_fF": 48.29882300144999,
+            "FF_total_load_fF": 48.81300300144999,
+            "branch_children": 2,
+            "max_axis_segment_um": 148.19900000000007
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 261.3599999999999,
+            "TT_total_load_fF": 45.01073926799998,
+            "FF_total_load_fF": 45.524919267999984,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.12000000000012
+          },
+          {
+            "driver": "b78",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 224.20000000000016,
+            "TT_total_load_fF": 39.279457710000024,
+            "FF_total_load_fF": 39.79363771000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 125.83999999999992
+          },
+          {
+            "driver": "b93",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 163.55999999999995,
+            "TT_total_load_fF": 29.926795877999993,
+            "FF_total_load_fF": 30.440975877999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      },
+      {
+        "pin": "clk_t12",
+        "FF": 3511,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 36.59735366550001,
+        "max_net_wire_um": 206.81000000000006,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 206.81000000000006,
+            "TT_total_load_fF": 36.59735366550001,
+            "FF_total_load_fF": 37.111533665500005,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.48062500000015
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.21174999999982,
+            "TT_total_load_fF": 32.18657264246247,
+            "FF_total_load_fF": 32.70075264246247,
+            "branch_children": 2,
+            "max_axis_segment_um": 127.75899999999999
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 157.5,
+            "TT_total_load_fF": 28.992146625,
+            "FF_total_load_fF": 29.506326625,
+            "branch_children": 2,
+            "max_axis_segment_um": 76.125
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 135.0,
+            "TT_total_load_fF": 25.521914250000002,
+            "FF_total_load_fF": 26.03609425,
+            "branch_children": 2,
+            "max_axis_segment_um": 56.625
+          }
+        ]
+      },
+      {
+        "pin": "clk_t13",
+        "FF": 2809,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 40.96174924912499,
+        "max_net_wire_um": 235.10749999999996,
+        "worst_nets": [
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 235.10749999999996,
+            "TT_total_load_fF": 40.96174924912499,
+            "FF_total_load_fF": 41.475929249124995,
+            "branch_children": 2,
+            "max_axis_segment_um": 167.63249999999994
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 219.03724999999986,
+            "TT_total_load_fF": 38.483193612487476,
+            "FF_total_load_fF": 38.99737361248748,
+            "branch_children": 2,
+            "max_axis_segment_um": 103.96524999999997
+          },
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.32600000000002,
+            "TT_total_load_fF": 32.049961161300004,
+            "FF_total_load_fF": 32.5641411613,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.32974999999988
+          },
+          {
+            "driver": "b109",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.13699999999994,
+            "TT_total_load_fF": 28.01076490934999,
+            "FF_total_load_fF": 28.52494490934999,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.339000000000055
+          }
+        ]
+      },
+      {
+        "pin": "clk_t14",
+        "FF": 4709,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 31.02743791293751,
+        "max_net_wire_um": 170.69625000000008,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 170.69625000000008,
+            "TT_total_load_fF": 31.02743791293751,
+            "FF_total_load_fF": 31.54161791293751,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.10500000000002
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 160.53587500000003,
+            "TT_total_load_fF": 29.460377367731255,
+            "FF_total_load_fF": 29.974557367731254,
+            "branch_children": 2,
+            "max_axis_segment_um": 95.66700000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 69.9375
+          },
+          {
+            "driver": "b251",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 110.29500000000007,
+            "TT_total_load_fF": 21.711599102250013,
+            "FF_total_load_fF": 22.225779102250012,
+            "branch_children": 2,
+            "max_axis_segment_um": 39.58999999999992
+          }
+        ]
+      },
+      {
+        "pin": "clk_t15",
+        "FF": 3176,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 44.77630579200002,
+        "max_net_wire_um": 259.84000000000015,
+        "worst_nets": [
+          {
+            "driver": "b149",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 259.84000000000015,
+            "TT_total_load_fF": 44.77630579200002,
+            "FF_total_load_fF": 45.29048579200002,
+            "branch_children": 2,
+            "max_axis_segment_um": 127.70000000000005
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 220.45899999999983,
+            "TT_total_load_fF": 38.70247374044997,
+            "FF_total_load_fF": 39.21665374044997,
+            "branch_children": 2,
+            "max_axis_segment_um": 118.3789999999999
+          },
+          {
+            "driver": "b144",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 234.3199999999997,
+            "TT_total_load_fF": 37.84386111599996,
+            "FF_total_load_fF": 38.01617711599996,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.7199999999998
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 202.01999999999998,
+            "TT_total_load_fF": 35.85857975099999,
+            "FF_total_load_fF": 36.372759751,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "ot_s81sl_kv_leaf__t5",
+    "roots": [
+      {
+        "pin": "clk",
+        "FF": 5003,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.40454179375,
+        "max_net_wire_um": 179.625,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 179.625,
+            "TT_total_load_fF": 32.40454179375,
+            "FF_total_load_fF": 32.918721793749995,
+            "branch_children": 2,
+            "max_axis_segment_um": 91.57149999999999
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.0
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 150.375,
+            "TT_total_load_fF": 27.89323970625,
+            "FF_total_load_fF": 28.40741970625,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.25
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.0,
+            "TT_total_load_fF": 19.5068448,
+            "FF_total_load_fF": 20.0210248,
+            "branch_children": 2,
+            "max_axis_segment_um": 44.625
+          }
+        ]
+      },
+      {
+        "pin": "clk_t1",
+        "FF": 4873,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.161856876325,
+        "max_net_wire_um": 178.0515,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 178.0515,
+            "TT_total_load_fF": 32.161856876325,
+            "FF_total_load_fF": 32.676036876325,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.15049999999997
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 153.75,
+            "TT_total_load_fF": 28.4137745625,
+            "FF_total_load_fF": 28.9279545625,
+            "branch_children": 2,
+            "max_axis_segment_um": 75.1875
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 150.75,
+            "TT_total_load_fF": 27.9510769125,
+            "FF_total_load_fF": 28.4652569125,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.3125
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.0,
+            "TT_total_load_fF": 19.5068448,
+            "FF_total_load_fF": 20.0210248,
+            "branch_children": 2,
+            "max_axis_segment_um": 46.125
+          }
+        ]
+      },
+      {
+        "pin": "clk_t2",
+        "FF": 4627,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 32.75603777519999,
+        "max_net_wire_um": 181.90399999999994,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 181.90399999999994,
+            "TT_total_load_fF": 32.75603777519999,
+            "FF_total_load_fF": 33.27021777519999,
+            "branch_children": 2,
+            "max_axis_segment_um": 96.60450000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.5,
+            "TT_total_load_fF": 28.066751325000002,
+            "FF_total_load_fF": 28.580931325,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.8125
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.29500000000002,
+            "TT_total_load_fF": 28.035133652250003,
+            "FF_total_load_fF": 28.549313652250003,
+            "branch_children": 2,
+            "max_axis_segment_um": 67.78999999999999
+          },
+          {
+            "driver": "b250",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 140.96000000000004,
+            "TT_total_load_fF": 26.441140248000007,
+            "FF_total_load_fF": 26.955320248000007,
+            "branch_children": 2,
+            "max_axis_segment_um": 58.360000000000014
+          }
+        ]
+      },
+      {
+        "pin": "clk_t3",
+        "FF": 4941,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 34.591019538825,
+        "max_net_wire_um": 193.8015,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 193.8015,
+            "TT_total_load_fF": 34.591019538825,
+            "FF_total_load_fF": 35.105199538825,
+            "branch_children": 2,
+            "max_axis_segment_um": 85.7539999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 154.5,
+            "TT_total_load_fF": 28.529448975,
+            "FF_total_load_fF": 29.043628975,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.25
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 154.125,
+            "TT_total_load_fF": 28.47161176875,
+            "FF_total_load_fF": 28.98579176875,
+            "branch_children": 2,
+            "max_axis_segment_um": 71.625
+          },
+          {
+            "driver": "b158",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 100.5,
+            "TT_total_load_fF": 20.200891275,
+            "FF_total_load_fF": 20.715071275,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t4",
+        "FF": 3819,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 40.0669691103,
+        "max_net_wire_um": 229.30600000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 229.30600000000004,
+            "TT_total_load_fF": 40.0669691103,
+            "FF_total_load_fF": 40.581149110300004,
+            "branch_children": 2,
+            "max_axis_segment_um": 100.62899999999999
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.19500000000005,
+            "TT_total_load_fF": 28.636640597250008,
+            "FF_total_load_fF": 29.150820597250007,
+            "branch_children": 2,
+            "max_axis_segment_um": 65.42250000000001
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 134.62,
+            "TT_total_load_fF": 25.463305881,
+            "FF_total_load_fF": 25.977485881,
+            "branch_children": 2,
+            "max_axis_segment_um": 57.315
+          },
+          {
+            "driver": "b252",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 128.36,
+            "TT_total_load_fF": 24.497810118000004,
+            "FF_total_load_fF": 25.011990118000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 37.525000000000034
+          }
+        ]
+      },
+      {
+        "pin": "clk_t5",
+        "FF": 2674,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 38.690289369,
+        "max_net_wire_um": 225.60000000000002,
+        "worst_nets": [
+          {
+            "driver": "b93",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 220.38,
+            "TT_total_load_fF": 38.690289369,
+            "FF_total_load_fF": 39.204469369,
+            "branch_children": 2,
+            "max_axis_segment_um": 149.04000000000008
+          },
+          {
+            "driver": "b64",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 225.60000000000002,
+            "TT_total_load_fF": 36.49895328,
+            "FF_total_load_fF": 36.671269280000004,
+            "branch_children": 2,
+            "max_axis_segment_um": 106.44
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 194.3400000000002,
+            "TT_total_load_fF": 34.67407376700003,
+            "FF_total_load_fF": 35.18825376700003,
+            "branch_children": 2,
+            "max_axis_segment_um": 149.04000000000002
+          },
+          {
+            "driver": "b66",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.83999999999997,
+            "TT_total_load_fF": 32.12923669199999,
+            "FF_total_load_fF": 32.643416691999995,
+            "branch_children": 2,
+            "max_axis_segment_um": 105.83999999999997
+          }
+        ]
+      },
+      {
+        "pin": "clk_t6",
+        "FF": 2435,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 35.3042679663,
+        "max_net_wire_um": 198.42600000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 198.42600000000004,
+            "TT_total_load_fF": 35.3042679663,
+            "FF_total_load_fF": 35.818447966300006,
+            "branch_children": 2,
+            "max_axis_segment_um": 111.87575000000004
+          },
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 96.65250000000003,
+            "TT_total_load_fF": 19.607481538875003,
+            "FF_total_load_fF": 20.121661538875003,
+            "branch_children": 2,
+            "max_axis_segment_um": 45.39749999999998
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 93.9925,
+            "TT_total_load_fF": 19.197222955875002,
+            "FF_total_load_fF": 19.711402955875002,
+            "branch_children": 2,
+            "max_axis_segment_um": 46.16250000000002
+          },
+          {
+            "driver": "b109",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 85.5,
+            "TT_total_load_fF": 17.887403025,
+            "FF_total_load_fF": 18.401583025,
+            "branch_children": 2,
+            "max_axis_segment_um": 37.5
+          }
+        ]
+      },
+      {
+        "pin": "clk_t7",
+        "FF": 3414,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 43.270996103999984,
+        "max_net_wire_um": 250.07999999999993,
+        "worst_nets": [
+          {
+            "driver": "b168",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 250.07999999999993,
+            "TT_total_load_fF": 43.270996103999984,
+            "FF_total_load_fF": 43.78517610399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 110.83999999999992
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 215.94000000000005,
+            "TT_total_load_fF": 38.005496847,
+            "FF_total_load_fF": 38.51967684700001,
+            "branch_children": 2,
+            "max_axis_segment_um": 87.50999999999999
+          },
+          {
+            "driver": "b172",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 205.87999999999988,
+            "TT_total_load_fF": 36.45391739399998,
+            "FF_total_load_fF": 36.96809739399998,
+            "branch_children": 2,
+            "max_axis_segment_um": 105.83999999999992
+          },
+          {
+            "driver": "b161",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 174.51999999999992,
+            "TT_total_load_fF": 31.61718462599999,
+            "FF_total_load_fF": 32.131364625999986,
+            "branch_children": 2,
+            "max_axis_segment_um": 114.47999999999979
+          }
+        ]
+      },
+      {
+        "pin": "clk_t8",
+        "FF": 2861,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 44.03984536575,
+        "max_net_wire_um": 255.065,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 255.065,
+            "TT_total_load_fF": 44.03984536575,
+            "FF_total_load_fF": 44.55402536575,
+            "branch_children": 2,
+            "max_axis_segment_um": 119.50899999999999
+          },
+          {
+            "driver": "b124",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 189.0,
+            "TT_total_load_fF": 33.85047195,
+            "FF_total_load_fF": 34.364651949999995,
+            "branch_children": 2,
+            "max_axis_segment_um": 66.0
+          },
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 164.38,
+            "TT_total_load_fF": 30.053266568999998,
+            "FF_total_load_fF": 30.567446568999998,
+            "branch_children": 2,
+            "max_axis_segment_um": 46.61500000000001
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 143.25,
+            "TT_total_load_fF": 26.7943327875,
+            "FF_total_load_fF": 27.3085127875,
+            "branch_children": 2,
+            "max_axis_segment_um": 59.25
+          }
+        ]
+      },
+      {
+        "pin": "clk_t9",
+        "FF": 2407,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 32.055205068,
+        "max_net_wire_um": 177.36,
+        "worst_nets": [
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.36,
+            "TT_total_load_fF": 32.055205068,
+            "FF_total_load_fF": 32.569385068,
+            "branch_children": 2,
+            "max_axis_segment_um": 86.80500000000006
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 173.67125,
+            "TT_total_load_fF": 31.4862797491875,
+            "FF_total_load_fF": 32.0004597491875,
+            "branch_children": 2,
+            "max_axis_segment_um": 113.57237499999997
+          },
+          {
+            "driver": "b70",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 144.97999999999996,
+            "TT_total_load_fF": 27.061155098999993,
+            "FF_total_load_fF": 27.575335098999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 64.50000000000006
+          },
+          {
+            "driver": "b66",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 142.04000000000008,
+            "TT_total_load_fF": 26.607711402000014,
+            "FF_total_load_fF": 27.121891402000013,
+            "branch_children": 2,
+            "max_axis_segment_um": 64.50000000000006
+          }
+        ]
+      },
+      {
+        "pin": "clk_t10",
+        "FF": 3237,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 29.781585932175005,
+        "max_net_wire_um": 162.61850000000004,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 162.61850000000004,
+            "TT_total_load_fF": 29.781585932175005,
+            "FF_total_load_fF": 30.295765932175005,
+            "branch_children": 2,
+            "max_axis_segment_um": 98.10450000000003
+          },
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.56500000000005,
+            "TT_total_load_fF": 28.69370664075001,
+            "FF_total_load_fF": 29.207886640750008,
+            "branch_children": 2,
+            "max_axis_segment_um": 70.67250000000001
+          },
+          {
+            "driver": "b220",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 133.5,
+            "TT_total_load_fF": 25.290565425,
+            "FF_total_load_fF": 25.804745425,
+            "branch_children": 2,
+            "max_axis_segment_um": 59.020000000000095
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 115.875,
+            "TT_total_load_fF": 22.572216731250002,
+            "FF_total_load_fF": 23.08639673125,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.0
+          }
+        ]
+      },
+      {
+        "pin": "clk_t11",
+        "FF": 1682,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 48.29882300144999,
+        "max_net_wire_um": 282.679,
+        "worst_nets": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 282.679,
+            "TT_total_load_fF": 48.29882300144999,
+            "FF_total_load_fF": 48.81300300144999,
+            "branch_children": 2,
+            "max_axis_segment_um": 148.19900000000007
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 261.3599999999999,
+            "TT_total_load_fF": 45.01073926799998,
+            "FF_total_load_fF": 45.524919267999984,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.12000000000012
+          },
+          {
+            "driver": "b78",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 224.20000000000016,
+            "TT_total_load_fF": 39.279457710000024,
+            "FF_total_load_fF": 39.79363771000003,
+            "branch_children": 2,
+            "max_axis_segment_um": 125.83999999999992
+          },
+          {
+            "driver": "b93",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 163.55999999999995,
+            "TT_total_load_fF": 29.926795877999993,
+            "FF_total_load_fF": 30.440975877999993,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      },
+      {
+        "pin": "clk_t12",
+        "FF": 2915,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 35.831589054750026,
+        "max_net_wire_um": 201.8450000000002,
+        "worst_nets": [
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 201.8450000000002,
+            "TT_total_load_fF": 35.831589054750026,
+            "FF_total_load_fF": 36.34576905475003,
+            "branch_children": 2,
+            "max_axis_segment_um": 81.6087500000001
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 179.21299999999994,
+            "TT_total_load_fF": 32.34099798314999,
+            "FF_total_load_fF": 32.855177983149986,
+            "branch_children": 2,
+            "max_axis_segment_um": 127.38399999999999
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 155.25,
+            "TT_total_load_fF": 28.6451233875,
+            "FF_total_load_fF": 29.1593033875,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.625
+          },
+          {
+            "driver": "b124",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 135.94999999999993,
+            "TT_total_load_fF": 25.66843517249999,
+            "FF_total_load_fF": 26.18261517249999,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.68000000000001
+          }
+        ]
+      },
+      {
+        "pin": "clk_t13",
+        "FF": 2333,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 40.96174924912499,
+        "max_net_wire_um": 235.10749999999996,
+        "worst_nets": [
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 235.10749999999996,
+            "TT_total_load_fF": 40.96174924912499,
+            "FF_total_load_fF": 41.475929249124995,
+            "branch_children": 2,
+            "max_axis_segment_um": 167.63249999999994
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 219.03724999999986,
+            "TT_total_load_fF": 38.483193612487476,
+            "FF_total_load_fF": 38.99737361248748,
+            "branch_children": 2,
+            "max_axis_segment_um": 103.96524999999997
+          },
+          {
+            "driver": "b125",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 177.32600000000002,
+            "TT_total_load_fF": 32.049961161300004,
+            "FF_total_load_fF": 32.5641411613,
+            "branch_children": 2,
+            "max_axis_segment_um": 74.32974999999988
+          },
+          {
+            "driver": "b109",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 151.13699999999994,
+            "TT_total_load_fF": 28.01076490934999,
+            "FF_total_load_fF": 28.52494490934999,
+            "branch_children": 2,
+            "max_axis_segment_um": 54.339000000000055
+          }
+        ]
+      },
+      {
+        "pin": "clk_t14",
+        "FF": 3909,
+        "terminal_driver_count": 128,
+        "stage_count": 8,
+        "buffers": 255,
+        "max_net_load_fF": 31.02743791293751,
+        "max_net_wire_um": 170.69625000000008,
+        "worst_nets": [
+          {
+            "driver": "b253",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 170.69625000000008,
+            "TT_total_load_fF": 31.02743791293751,
+            "FF_total_load_fF": 31.54161791293751,
+            "branch_children": 2,
+            "max_axis_segment_um": 79.10500000000002
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 160.53587500000003,
+            "TT_total_load_fF": 29.460377367731255,
+            "FF_total_load_fF": 29.974557367731254,
+            "branch_children": 2,
+            "max_axis_segment_um": 95.66700000000003
+          },
+          {
+            "driver": "b190",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 152.625,
+            "TT_total_load_fF": 28.24026294375,
+            "FF_total_load_fF": 28.75444294375,
+            "branch_children": 2,
+            "max_axis_segment_um": 69.9375
+          },
+          {
+            "driver": "b251",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 110.29500000000007,
+            "TT_total_load_fF": 21.711599102250013,
+            "FF_total_load_fF": 22.225779102250012,
+            "branch_children": 2,
+            "max_axis_segment_um": 39.58999999999992
+          }
+        ]
+      },
+      {
+        "pin": "clk_t15",
+        "FF": 2637,
+        "terminal_driver_count": 64,
+        "stage_count": 7,
+        "buffers": 127,
+        "max_net_load_fF": 39.877880003999984,
+        "max_net_wire_um": 228.07999999999993,
+        "worst_nets": [
+          {
+            "driver": "b73",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 228.07999999999993,
+            "TT_total_load_fF": 39.877880003999984,
+            "FF_total_load_fF": 40.39206000399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 129.27999999999997
+          },
+          {
+            "driver": "b94",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 221.76000000000022,
+            "TT_total_load_fF": 38.90313028800003,
+            "FF_total_load_fF": 39.41731028800003,
+            "branch_children": 2,
+            "max_axis_segment_um": 140.37999999999988
+          },
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 218.95899999999983,
+            "TT_total_load_fF": 38.47112491544997,
+            "FF_total_load_fF": 38.98530491544997,
+            "branch_children": 2,
+            "max_axis_segment_um": 116.8789999999999
+          },
+          {
+            "driver": "b77",
+            "master": "BUFx24_ASAP7_75t_R",
+            "wire_um": 212.07999999999993,
+            "TT_total_load_fF": 37.41015920399999,
+            "FF_total_load_fF": 37.92433920399999,
+            "branch_children": 2,
+            "max_axis_segment_um": 123.11999999999989
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,572 @@
+[
+  {
+    "inst": "u_lf.u_ve.u_m",
+    "pin": "clk",
+    "xy_um": [
+      185.772,
+      1002.24
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t12",
+    "manhattan_to_root_um": 77.16400000000007,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      180.84,
+      1002.24
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 72.23200000000008
+  },
+  {
+    "inst": "u_lf.u_ve.u_s",
+    "pin": "clk",
+    "xy_um": [
+      535.668,
+      1010.8800000000001
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t13",
+    "manhattan_to_root_um": 232.69199999999995,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      540.6,
+      1010.8800000000001
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 63.62399999999991
+  },
+  {
+    "inst": "u_lf.u_vsw",
+    "pin": "clk",
+    "xy_um": [
+      164.16,
+      738.7080000000001
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t8",
+    "manhattan_to_root_um": 268.43599999999986,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      164.16,
+      743.6400000000001
+    ],
+    "proposed_entry_face": "N",
+    "parent_route_um": 38.88799999999986
+  },
+  {
+    "inst": "u_lf.u_vs",
+    "pin": "clk",
+    "xy_um": [
+      535.6680000000001,
+      725.76
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t9",
+    "manhattan_to_root_um": 218.73999999999995,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      540.6000000000001,
+      725.76
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 41.03199999999981
+  },
+  {
+    "inst": "u_lf.u_vn.u_a",
+    "pin": "clk",
+    "xy_um": [
+      787.3199999999999,
+      501.132
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t6",
+    "manhattan_to_root_um": 190.668,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      787.3199999999999,
+      496.2
+    ],
+    "proposed_entry_face": "S",
+    "parent_route_um": 150.09600000000006
+  },
+  {
+    "inst": "u_lf.u_rxsb",
+    "pin": "ck",
+    "xy_um": [
+      485.988,
+      355.32
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t5",
+    "manhattan_to_root_um": 270.48400000000004,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      490.92,
+      355.32
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 155.42399999999998
+  },
+  {
+    "inst": "u_lf.u_rxsf",
+    "pin": "ck",
+    "xy_um": [
+      529.1880000000001,
+      510.84
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t5",
+    "manhattan_to_root_um": 202.5399999999999,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      534.1200000000001,
+      510.84
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 57.2319999999998
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[0].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1059.48,
+      777.612
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t10",
+    "manhattan_to_root_um": 168.99599999999998,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1059.48,
+      772.68
+    ],
+    "proposed_entry_face": "S",
+    "parent_route_um": 164.06399999999996
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[10].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1180.44,
+      501.132
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t7",
+    "manhattan_to_root_um": 237.0680000000001,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      1180.44,
+      496.2
+    ],
+    "proposed_entry_face": "S",
+    "parent_route_um": 117.68
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[11].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1254.948,
+      1111.32
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t15",
+    "manhattan_to_root_um": 159.308,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1259.8799999999999,
+      1111.32
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 39.92000000000007
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[12].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1278.732,
+      973.08
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t15",
+    "manhattan_to_root_um": 117.17199999999991,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1273.8000000000002,
+      973.08
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 112.24000000000012
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[13].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1335.96,
+      753.8280000000001
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t11",
+    "manhattan_to_root_um": 85.93999999999983,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1335.96,
+      758.7600000000001
+    ],
+    "proposed_entry_face": "N",
+    "parent_route_um": 81.00799999999981
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[14].u_l",
+    "pin": "clk",
+    "xy_um": [
+      984.972,
+      281.88
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t2",
+    "manhattan_to_root_um": 212.19599999999994,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      980.04,
+      281.88
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 207.26399999999992
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[15].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1229.028,
+      428.76
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t7",
+    "manhattan_to_root_um": 179.74000000000024,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1233.9599999999998,
+      428.76
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 60.35200000000032
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[1].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1002.252,
+      973.08
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t14",
+    "manhattan_to_root_um": 201.39599999999996,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      997.3199999999999,
+      973.08
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 196.46399999999994
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[2].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1059.48,
+      753.8280000000001
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t10",
+    "manhattan_to_root_um": 170.16399999999987,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1059.48,
+      758.7600000000001
+    ],
+    "proposed_entry_face": "N",
+    "parent_route_um": 165.23199999999986
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[3].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1197.72,
+      777.612
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t11",
+    "manhattan_to_root_um": 190.5400000000002,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1197.72,
+      772.68
+    ],
+    "proposed_entry_face": "S",
+    "parent_route_um": 71.15200000000004
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[4].u_l",
+    "pin": "clk",
+    "xy_um": [
+      984.972,
+      558.36
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t6",
+    "manhattan_to_root_um": 180.96399999999994,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      980.04,
+      558.36
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 176.03199999999993
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[5].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1002.252,
+      1111.32
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t14",
+    "manhattan_to_root_um": 137.76399999999978,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      997.3199999999999,
+      1111.32
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 132.83199999999977
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[6].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1254.948,
+      973.08
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t15",
+    "manhattan_to_root_um": 222.94000000000017,
+    "proposed_repeater_segments_200um": 2,
+    "parent_driver_xy": [
+      1259.8799999999999,
+      973.08
+    ],
+    "proposed_entry_face": "E",
+    "parent_route_um": 103.55200000000025
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[7].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1197.72,
+      753.8280000000001
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t11",
+    "manhattan_to_root_um": 191.70800000000008,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1197.72,
+      758.7600000000001
+    ],
+    "proposed_entry_face": "N",
+    "parent_route_um": 72.31999999999994
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[8].u_l",
+    "pin": "clk",
+    "xy_um": [
+      1335.96,
+      777.612
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t11",
+    "manhattan_to_root_um": 84.77199999999993,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      1335.96,
+      772.68
+    ],
+    "proposed_entry_face": "S",
+    "parent_route_um": 79.83999999999992
+  },
+  {
+    "inst": "u_lf.u_vp.g_ln[9].u_l",
+    "pin": "clk",
+    "xy_um": [
+      984.972,
+      420.12
+    ],
+    "cap_fF": {
+      "TT": 2.35026,
+      "FF": 2.60735
+    },
+    "basis": "REVISED PROPOSED native child scalar clock entry on nearest body-halo-accessible face; no existing view pin movement authorized",
+    "proposed_core_root": "clk_t6",
+    "manhattan_to_root_um": 123.63599999999997,
+    "proposed_repeater_segments_200um": 1,
+    "parent_driver_xy": [
+      980.04,
+      420.12
+    ],
+    "proposed_entry_face": "W",
+    "parent_route_um": 118.70399999999995
+  },
+  {
+    "inst": "PROPOSED_REAL_SRAM_0",
+    "pin": "clk",
+    "xy_um": [
+      635.0519999999999,
+      886.38
+    ],
+    "cap_fF": {
+      "TT": 9.3458,
+      "FF": 10.3732
+    },
+    "basis": "native SRAM local clock shape + PROPOSED placement",
+    "proposed_core_root": "clk_t9",
+    "manhattan_to_root_um": 214.03999999999996,
+    "proposed_repeater_segments_200um": 2
+  },
+  {
+    "inst": "PROPOSED_REAL_SRAM_1",
+    "pin": "clk",
+    "xy_um": [
+      635.0519999999999,
+      929.5799999999999
+    ],
+    "cap_fF": {
+      "TT": 9.3458,
+      "FF": 10.3732
+    },
+    "basis": "native SRAM local clock shape + PROPOSED placement",
+    "proposed_core_root": "clk_t13",
+    "manhattan_to_root_um": 238.4000000000001,
+    "proposed_repeater_segments_200um": 2
+  },
+  {
+    "inst": "PROPOSED_REAL_SRAM_2",
+    "pin": "clk",
+    "xy_um": [
+      635.0519999999999,
+      972.78
+    ],
+    "cap_fF": {
+      "TT": 9.3458,
+      "FF": 10.3732
+    },
+    "basis": "native SRAM local clock shape + PROPOSED placement",
+    "proposed_core_root": "clk_t13",
+    "manhattan_to_root_um": 195.20000000000005,
+    "proposed_repeater_segments_200um": 1
+  },
+  {
+    "inst": "PROPOSED_REAL_SRAM_3",
+    "pin": "clk",
+    "xy_um": [
+      635.0519999999999,
+      1028.94
+    ],
+    "cap_fF": {
+      "TT": 9.3458,
+      "FF": 10.3732
+    },
+    "basis": "native SRAM local clock shape + PROPOSED placement",
+    "proposed_core_root": "clk_t13",
+    "manhattan_to_root_um": 139.03999999999996,
+    "proposed_repeater_segments_200um": 1
+  }
+]
