@@ -1,0 +1,5 @@
+{
+  "image": "/srv/opentallas-scratch/claude/codex-s81ck-1849/review/wave1_pins.png",
+  "review": "Personally viewed five canonical pin plans; all macro-free rectangles, no macro walls/halos. L1 and EG distributed buses with unique pin tracks, maximum 5.3 and 0.4 pins/um/layer, no obvious local channel choke. L1 longest outline 345um, EG 260um: ordinary placement reach plausible. PASS-COND for PLACE only; inspect placed data/control reach, clock fanout and PDN before route. XFIN 6.5, L3 10.5, XRT3 8.3 pins/um/layer: hold P&R pending detailed pin-density/geometry judgment; synthesis and LEC proceed. No signoff claim.",
+  "verdict": "PASS-COND l1/eg PLACE; HOLD P&R xfin/l3/xrt3"
+}

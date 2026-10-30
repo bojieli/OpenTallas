@@ -1,0 +1,7 @@
+S81 hard-core closure continuation, 2026-10-29 18:55 PDT.
+
+Five actual source kits generated and copied to owned run directories. L1/EG reviewed for PLACE only; XFIN/L3/XRT3 synthesis+LEC only, dense pin plans await physical judgment. No new SIGNED result. Source kits from intel2 s81ck frozen main a2b2a0808c2+. Own ot-run jobs L1 PLACE epyc2 unit3386056, EG PLACE epyc2 unit3387489, XFIN synth epyc2 unit3388830, L3 synth intel1 unit3188893, XRT3 synth intel1 unit3190397. Runs /srv/opentallas-scratch2/claude/codex-s81ck-1849/kits/<master>_k1.
+
+Original ROM64 LEC ended14:32: NOT EQUIVALENT 76319/76447 proved,128diff,0undecided. All128 depend on32 gold-only q0_wf[*][4i+1] removed bits. Existing q0 eq hints were dropped; the preceding p0_wf relation was absent. FP4 decoder exponents1,6,7,8,9 have bit1==bit2; the second MAC FP4 register is constrained constant1 by existing proven profile. Proposed32 p0 alias hypotheses are joint-proof requests, not assumptions or waivers. New complete source proof runs on own immutable kit copy intel1 rom64_p0; official lec.py proves or drops each hypothesis. Result pending; no equivalence claim.
+
+Other generation failures: CRS4 stale postcts template anchor fixed by helper5d1d6e87018; L5 uses canonical n32 recipe; BF roots LEF omitted by sparse checkout; all three actual regeneration PASS. XRT1/bksel_c actual plan pins interior to declared face, each only one current failing form known, referred to die owner. CAP5/bksel_q require actual signed child views; dependency remains held.
