@@ -1,0 +1,4 @@
+OT_POSTCTS_GATE FF (global_routing) pinreg n 248 mean 342.66 bound 342.67 dev 0.01 tol 20.0 setup_est -353.06 hold_est 10.24 PASS
+OT_POSTCTS_GATE TT (global_routing) pinreg n 248 mean 452.60 bound 450.00 dev 2.60 tol 20.0 setup_est -489.40 hold_est 26.70 PASS
+OT_HOLD_GATE contract in_min -40.0000 out_min 0.0000
+OT_HOLD_GATE PASS FF wns_ps -55.27 endpoints 72 (true negative slack)
