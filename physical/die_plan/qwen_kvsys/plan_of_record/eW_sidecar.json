@@ -339097,7 +339097,10 @@
    "observer_input_capture_cycles": 1,
    "contract": "Cycles after external reset release, clocks running continuously; START is also gated by actual registered ready, never this budget alone.",
    "physical_clock_phase_qualified": false,
-   "data_cycles_added": 0
+   "data_cycles_added": 0,
+   "source_causal_bound_qualified": false,
+   "estimate_status": "HISTORIC_UNDERBUDGET_NOT_ADMISSION_AUTHORITY",
+   "source_admission_contract": "source_boot_admission.json"
   }
  }
 }

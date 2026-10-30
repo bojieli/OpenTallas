@@ -964,6 +964,20 @@ def compose(plan,table,plan_path=None,observer_part="glue",observer=None,monitor
 
 
 def _finish(raw,P,bytype,pports,side):
+    # A measured SOURCE control contract survives regeneration only for the
+    # same complete sidecar identity. Other graphs keep an incomplete estimate;
+    # neither form grants physical clock qualification or replaces live ready.
+    if side.get("source_boot_readiness_contract"):
+        import source_boot_readiness as SBR
+        side=SBR.reapply(side)
+        # Metadata identity cannot prove that emitter templates/primitive RTL
+        # stayed unchanged. Require the fresh full emitted-RTL comparison.
+        side["collector"]["boot_budget"]["source_causal_bound_qualified"]=False
+        side["collector"]["boot_budget"]["emitted_RTL_requalification_required"]=True
+        side["source_boot_readiness_contract"]["emitted_RTL_requalification_required"]=True
+    elif isinstance(side.get("collector",{}).get("boot_budget"),dict):
+        # sidecars without a boot budget (every non-KV die) are left untouched
+        side["collector"]["boot_budget"]["source_causal_bound_qualified"]=False
     # These are clock/reset-adjacent infrastructure pins, like existing tap
     # and wavefront pins. They are NOT ordinary aligned functional bus ports
     # and do not create fictitious R8 lanes. Keep exact physical endpoint and
