@@ -756,6 +756,26 @@ def kv_prog(o):
           group="prog")
 
 
+def kv_host_rec_rt(B):
+    """TOK-KV-4 10-29: the KV HOST record port (qkd_host_record_port[_mu], 2 edges send_kind -> tx_observed_v) answers a
+    d2d_kv port-1 TX slot through the bind: out = record_send_kind / record_witness_slot, back = record_tx_observed_v /
+    record_tx.  Its capture age at the end is TXD K[1] = 2 + out + back + PR 2 (b5 vehicle: 2 + 86 + 67 + 2 = 157, the
+    measured slot -> record edge; the bound 4 aborted the first token epoch, new_fault bit 7).  Each bundle must land on
+    one age (the slot and its record are captured together)."""
+    legs, inp = {}, {}
+    for leg, kw in (("out", dict(source=r"^d2d_kv\.record_(send_kind|witness_slot)$")),
+                    ("back", dict(sink=r"^d2d_kv$", port=r"^record_tx(_observed_v)?$"))):
+        ms = B.members(**kw)
+        if leg == "out":
+            ms = [m for m in ms if m["port"] == m["source"].split(".", 1)[1]]
+        ds = sorted({m["landed"] for m in ms})
+        if len(ds) > 1:
+            raise RuleError(f"HOST record {leg} bundle lands unequal {ds}: the slot and its record must share one age")
+        legs[leg] = ds[0] if ds else 0
+        inp[leg] = ds
+    return legs["out"] + legs["back"], inp
+
+
 def kv_seam(o):
     B = o.B
     st, inp = {}, {}
@@ -771,11 +791,16 @@ def kv_seam(o):
     names = ("KS_RXV", "KS_RXP", "KS_TXS", "KS_TXK", "KS_TXB", "SK_TXV", "SK_TXP")
     o.add("XDIE_SEAM_K", ",".join(str(st[n]) for n in names), "compiler",
           "d2d_link_calendar --die-stages KV half (KV-P6-BOOT KST) = as-built seam + Delta", inp, group="xdie")
-    k = [st["KS_TXS"] + KV_CODEC_LANDED + st["SK_TXP"], 2, 1, 1]
+    hrt, hin = kv_host_rec_rt(B)
+    o.add("D2D_HOST_REC_RT", hrt, "compiler", "HOST record relay = landed D(d2d_kv.record_send_kind/witness_slot -> HOST) + "
+          "D(HOST.record_tx_observed_v/record_tx -> d2d_kv) (0 = not a crossing); d2d_link_calendar --host-stages "
+          "(d2d_cal_image_production.sh D2D_HOST_STAGES, kst.py --host-rt): TXD K[1] + compute WITNESS placements", hin,
+          group="xdie")
+    k = [st["KS_TXS"] + KV_CODEC_LANDED + st["SK_TXP"], 2 + hrt, 1, 1]
     k = [x + p for x, p in zip(k, PINREG_EXT["K"])]
-    r = o.add("D2D_TXDP_K", k, "rtl", "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + host, 1, 1] + PINREG_EXT (d2d_link_calendar "
-              "producer_txd); the compute die must bind the same pair image", dict(st), inst=r"d2d_kv$|u_d2d", param="TXDP",
-              group="xdie")
+    r = o.add("D2D_TXDP_K", k, "rtl", "[KS_TXS + KV_CODEC(2) + SK_TXP, 2 + HOST_REC_RT, 1, 1] + PINREG_EXT "
+              "(d2d_link_calendar producer_txd + --host-stages); the compute die must bind the same pair image",
+              dict(st, HOST_REC_RT=hrt), inst=r"d2d_kv$|u_d2d", param="TXDP", group="xdie")
     r["sv_literal"] = f"32'h{_txdp_word(k):08x}"
     asb = KV_ANCHOR["seam"]["KS_TXS"] + KV_CODEC_LANDED + KV_ANCHOR["seam"]["SK_TXP"] + PINREG_EXT["K"][0]
     o.add("D2D_KV_TX_LAT", k[0], "compiler", "shared QC<->KV pair image KV TX latency = TXDP K[0] = KS_TXS + KV_CODEC + "
