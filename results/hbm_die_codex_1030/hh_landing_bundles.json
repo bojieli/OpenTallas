@@ -1,0 +1,124 @@
+[
+ {
+  "sink": "hb_coll_NE.__cut_ring_ag",
+  "src_part": "NW_hub",
+  "sink_part": "NE_hub",
+  "aligned_landed": true,
+  "sources": [
+   "hb_coll_NW.__cut_ring_ag.pr_ccw_o",
+   "hb_coll_NW.__cut_ring_ag.pr_cw_o"
+  ],
+  "lanes": [
+   "L4"
+  ]
+ },
+ {
+  "sink": "hb_coll_NW.__cut_ring_ag",
+  "src_part": "NE_hub",
+  "sink_part": "NW_hub",
+  "aligned_landed": true,
+  "sources": [
+   "hb_coll_NE.__cut_ring_ag.pr_ccw_o",
+   "hb_coll_NE.__cut_ring_ag.pr_cw_o"
+  ],
+  "lanes": [
+   "L4m"
+  ]
+ },
+ {
+  "sink": "hb_vms_NE",
+  "src_part": "NW_hub",
+  "sink_part": "NE_hub",
+  "aligned_landed": true,
+  "sources": [
+   "hb_vms_NW.ccw_out"
+  ],
+  "lanes": [
+   "L4"
+  ]
+ },
+ {
+  "sink": "hb_vms_NW",
+  "src_part": "NE_hub",
+  "sink_part": "NW_hub",
+  "aligned_landed": true,
+  "sources": [
+   "hb_vms_NE.cw_out"
+  ],
+  "lanes": [
+   "L4m"
+  ]
+ },
+ {
+  "sink": "hb_vms_SE",
+  "src_part": "NW_hub",
+  "sink_part": "NE_hub",
+  "aligned_landed": false,
+  "sources": [
+   "hb_vms_SW.cw_out"
+  ],
+  "lanes": [
+   "L4",
+   "L96",
+   "UNPLANNED"
+  ]
+ },
+ {
+  "sink": "hb_vms_SW",
+  "src_part": "NE_hub",
+  "sink_part": "NW_hub",
+  "aligned_landed": false,
+  "sources": [
+   "hb_vms_SE.ccw_out"
+  ],
+  "lanes": [
+   "L96m",
+   "UNPLANNED",
+   "L4m"
+  ]
+ },
+ {
+  "sink": "hcollb_NE",
+  "src_part": "NW_hub",
+  "sink_part": "NE_hub",
+  "aligned_landed": true,
+  "sources": [
+   "hcollb_NW.cw_o",
+   "hcollb_NW.ccw_o"
+  ],
+  "lanes": [
+   "UNPLANNED"
+  ]
+ },
+ {
+  "sink": "hcollb_NW",
+  "src_part": "NE_hub",
+  "sink_part": "NW_hub",
+  "aligned_landed": true,
+  "sources": [
+   "hcollb_NE.cw_o",
+   "hcollb_NE.ccw_o"
+  ],
+  "lanes": [
+   "UNPLANNED"
+  ]
+ },
+ {
+  "sink": "obs_NW",
+  "src_part": "NE_hub",
+  "sink_part": "NW_hub",
+  "aligned_landed": true,
+  "sources": [
+   "svg_NW4.run_done",
+   "svg_NW7.run_done",
+   "svg_NW6.run_done",
+   "svg_NW5.run_done",
+   "obs_NE.r_d",
+   "obs_NE.r_v",
+   "obs_NE.r_idx"
+  ],
+  "lanes": [
+   "UNPLANNED"
+  ]
+ }
+]

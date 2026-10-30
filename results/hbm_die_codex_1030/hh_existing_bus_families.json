@@ -1,0 +1,44 @@
+{
+ "L4": {
+  "src": "NW_hub",
+  "dst": "NE_hub",
+  "width": 2816,
+  "planned_width": 2816,
+  "source_ports": {
+   "leaf.hb_coll_NW.__cut_ring_ag.pr_ccw_o": 280,
+   "leaf.hb_coll_NW.__cut_ring_ag.pr_cw_o": 280,
+   "leaf.hb_vms_NW.ccw_out": 2224,
+   "leaf.hb_vms_SW.cw_out": 32
+  }
+ },
+ "L4m": {
+  "src": "NE_hub",
+  "dst": "NW_hub",
+  "width": 2816,
+  "planned_width": 2816,
+  "source_ports": {
+   "leaf.hb_coll_NE.__cut_ring_ag.pr_ccw_o": 280,
+   "leaf.hb_coll_NE.__cut_ring_ag.pr_cw_o": 280,
+   "leaf.hb_vms_NE.cw_out": 2224,
+   "leaf.hb_vms_SE.ccw_out": 32
+  }
+ },
+ "L96": {
+  "src": "NW_hub",
+  "dst": "NE_hub",
+  "width": 22,
+  "planned_width": 22,
+  "source_ports": {
+   "leaf.hb_vms_SW.cw_out": 22
+  }
+ },
+ "L96m": {
+  "src": "NE_hub",
+  "dst": "NW_hub",
+  "width": 22,
+  "planned_width": 22,
+  "source_ports": {
+   "leaf.hb_vms_SE.ccw_out": 22
+  }
+ }
+}
