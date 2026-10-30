@@ -1,0 +1,254 @@
+{
+  "scope": "Eight actual current explicit-instance native fullwrapper count-only synthesis; normal complete count pipeline terminal0 inclFACE/fanout, noEQ/P&R. Historical counts not imported.",
+  "counts": [
+    {
+      "type": "slw_stm_v3",
+      "host": "intel1",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 197648,
+      "macros": 4,
+      "area_um2": 29112.1,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/slw_stm_v3/slw_stm_v3/run/logs/asap7/dp_slw_stm_v3/base/1_synth.json",
+      "stats_sha256": "98d66fc3f8fe66238349cb6a22cb0be0cf044014abc391f0f89172a1a0a85ea2",
+      "tail": [
+        "FACE_GUARD PASS top qfd_qc_slw_stm bits 17698 ok 17698 fails {}",
+        "REG_FANOUT PASS top=qfd_qc_slw_stm registers=64699 over_64=0 hist={'1': 57403, '2-8': 7251, '0': 44, '9-64': 1}",
+        "FACE_GUARD PASS top qfd_qc_slw_stm bits 17698 ok 17698 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on intel1 (unit oth-ubuntu-3341885-1793378312): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_W5_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "slw_stm_v3"
+      ],
+      "closure_instances": [
+        "sl_W5_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "sle_stm_v3",
+      "host": "intel1",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 147505,
+      "macros": 4,
+      "area_um2": 22121.1,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/sle_stm_v3/sle_stm_v3/run/logs/asap7/dp_sle_stm_v3/base/1_synth.json",
+      "stats_sha256": "77faaabfa70285d61e7630f514a6e24bb1eb7d3dac8709f3f0b0865e0cebfb16",
+      "tail": [
+        "FACE_GUARD PASS top qfd_qc_sle_stm bits 15005 ok 15005 fails {}",
+        "REG_FANOUT PASS top=qfd_qc_sle_stm registers=51024 over_64=0 hist={'1': 45208, '2-8': 5773, '0': 42, '9-64': 1}",
+        "FACE_GUARD PASS top qfd_qc_sle_stm bits 15005 ok 15005 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on intel1 (unit oth-ubuntu-3342656-1793378312): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_E5_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "sle_stm_v3"
+      ],
+      "closure_instances": [
+        "sl_E5_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "slw_stm_v1__cle34a73c3",
+      "host": "localhost",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 199344,
+      "macros": 4,
+      "area_um2": 29403.8,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/slw_stm_v1__cle34a73c3/slw_stm_v1__cle34a73c3/run/logs/asap7/dp_slw_stm_v1__cle34a73c3/base/1_synth.json",
+      "stats_sha256": "6cf57d9182355f58817a205e6247454186f19ccf4b1ac7dacb38410f5d3598a1",
+      "tail": [
+        "FACE_GUARD PASS top slw_stm_v1__cle34a73c3 bits 18322 ok 18322 fails {}",
+        "REG_FANOUT PASS top=slw_stm_v1__cle34a73c3 registers=65494 over_64=0 hist={'1': 58182, '2-8': 7267, '0': 44, '9-64': 1}",
+        "FACE_GUARD PASS top slw_stm_v1__cle34a73c3 bits 18322 ok 18322 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on localhost (unit oth-ubuntu-1513410-1793378313): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_W0_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "slw_stm_v1__cle34a73c3"
+      ],
+      "closure_instances": [
+        "sl_W0_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
+      "host": "intel1",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 198892,
+      "macros": 4,
+      "area_um2": 29337,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/slw_stm_v1__cl05fc43f7__cl2086fa2c/slw_stm_v1__cl05fc43f7__cl2086fa2c/run/logs/asap7/dp_slw_stm_v1__cl05fc43f7__cl2086fa2c/base/1_synth.json",
+      "stats_sha256": "466c1b905295fe0a7914c4b915a5870768f148baa7b54633e5773afbc6970fc8",
+      "tail": [
+        "FACE_GUARD PASS top slw_stm_v1__cl05fc43f7__cl2086fa2c bits 18316 ok 18316 fails {}",
+        "REG_FANOUT PASS top=slw_stm_v1__cl05fc43f7__cl2086fa2c registers=65317 over_64=0 hist={'1': 58016, '2-8': 7256, '0': 44, '9-64': 1}",
+        "FACE_GUARD PASS top slw_stm_v1__cl05fc43f7__cl2086fa2c bits 18316 ok 18316 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on intel1 (unit oth-ubuntu-3341075-1793378311): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_W4_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "slw_stm_v1__cl05fc43f7__cl2086fa2c"
+      ],
+      "closure_instances": [
+        "sl_W4_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "slw_stm_v1__cl05fc43f7__cl389df4e9",
+      "host": "localhost",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 198872,
+      "macros": 4,
+      "area_um2": 29336.9,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/slw_stm_v1__cl05fc43f7__cl389df4e9/slw_stm_v1__cl05fc43f7__cl389df4e9/run/logs/asap7/dp_slw_stm_v1__cl05fc43f7__cl389df4e9/base/1_synth.json",
+      "stats_sha256": "b992c90106a359014ca4a626ae70fc27b3766ea16f6e11d6b3e4bc2fc4b5e4f3",
+      "tail": [
+        "FACE_GUARD PASS top slw_stm_v1__cl05fc43f7__cl389df4e9 bits 18315 ok 18315 fails {}",
+        "REG_FANOUT PASS top=slw_stm_v1__cl05fc43f7__cl389df4e9 registers=65312 over_64=0 hist={'1': 58027, '2-8': 7241, '0': 43, '9-64': 1}",
+        "FACE_GUARD PASS top slw_stm_v1__cl05fc43f7__cl389df4e9 bits 18315 ok 18315 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on localhost (unit oth-ubuntu-1551427-1793378379): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_W2_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "slw_stm_v1__cl05fc43f7__cl389df4e9"
+      ],
+      "closure_instances": [
+        "sl_W2_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "slw_stm_v2__cl1ca9c415",
+      "host": "localhost",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 197850,
+      "macros": 4,
+      "area_um2": 29148.6,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/slw_stm_v2__cl1ca9c415/slw_stm_v2__cl1ca9c415/run/logs/asap7/dp_slw_stm_v2__cl1ca9c415/base/1_synth.json",
+      "stats_sha256": "64721db7842ede59c172a3a899cccf3e0cc9de0e7a043dd6de4b2182be3b2c5a",
+      "tail": [
+        "FACE_GUARD PASS top slw_stm_v2__cl1ca9c415 bits 17797 ok 17797 fails {}",
+        "REG_FANOUT PASS top=slw_stm_v2__cl1ca9c415 registers=64798 over_64=0 hist={'1': 57502, '2-8': 7251, '0': 44, '9-64': 1}",
+        "FACE_GUARD PASS top slw_stm_v2__cl1ca9c415 bits 17797 ok 17797 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on localhost (unit oth-ubuntu-1553388-1793378380): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_W3_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "slw_stm_v2__cl1ca9c415"
+      ],
+      "closure_instances": [
+        "sl_W3_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "slw_stm_v2__cl9beb65e6",
+      "host": "localhost",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 197830,
+      "macros": 4,
+      "area_um2": 29147.2,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/slw_stm_v2__cl9beb65e6/slw_stm_v2__cl9beb65e6/run/logs/asap7/dp_slw_stm_v2__cl9beb65e6/base/1_synth.json",
+      "stats_sha256": "bb331444e37451b1f4b04fbdc5c5e40e85c02a5441ad45b4169ccee7a7398639",
+      "tail": [
+        "FACE_GUARD PASS top slw_stm_v2__cl9beb65e6 bits 17796 ok 17796 fails {}",
+        "REG_FANOUT PASS top=slw_stm_v2__cl9beb65e6 registers=64793 over_64=0 hist={'1': 57508, '2-8': 7241, '0': 43, '9-64': 1}",
+        "FACE_GUARD PASS top slw_stm_v2__cl9beb65e6 bits 17796 ok 17796 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on localhost (unit oth-ubuntu-1553031-1793378380): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_W1_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "slw_stm_v2__cl9beb65e6"
+      ],
+      "closure_instances": [
+        "sl_W1_stm"
+      ],
+      "closure_params": ""
+    },
+    {
+      "type": "sle_stm_v1__cl27746664",
+      "host": "intel1",
+      "status": "TERMINAL",
+      "exit": 0,
+      "stdcell": 211872,
+      "macros": 4,
+      "area_um2": 31041.5,
+      "stats_path": "/srv/opentallas-scratch2/claude/codex-qc-count-wave-1030/gen_stm_next/sle_stm_v1__cl27746664/sle_stm_v1__cl27746664/run/logs/asap7/dp_sle_stm_v1__cl27746664/base/1_synth.json",
+      "stats_sha256": "a41f0d21ac1676815598a9c0dc4cd03ac2345aa8ba5f0ec1934d1eeda842d11f",
+      "tail": [
+        "FACE_GUARD PASS top sle_stm_v1__cl27746664 bits 18832 ok 18832 fails {}",
+        "REG_FANOUT PASS top=sle_stm_v1__cl27746664 registers=68721 over_64=0 hist={'1': 61324, '2-8': 7350, '0': 46, '9-64': 1}",
+        "FACE_GUARD PASS top sle_stm_v1__cl27746664 bits 18832 ok 18832 fails {}",
+        "make: Nothing to be done for 'synth'.",
+        "ot-run: RAN on intel1 (unit oth-ubuntu-3367329-1793378384): exit 0"
+      ],
+      "source_commit": "d834ee77b33725d89b1c0a8a6a6060a14a3781b1",
+      "plan_sha256": "ff43a804a3754d13203636069301985cb4b16f7c7194e2cd4fe97fa03fcdf985",
+      "instance": "sl_E0_stm",
+      "lec": "NOT_RUN_COUNT_ONLY",
+      "physical": "NOT_RUN",
+      "cap_limit": 400000,
+      "closure_variants": [
+        "sle_stm_v1__cl27746664"
+      ],
+      "closure_instances": [
+        "sl_E0_stm",
+        "sl_E4_stm"
+      ],
+      "closure_params": ""
+    }
+  ]
+}
