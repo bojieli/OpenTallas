@@ -1,0 +1,31 @@
+{
+ "plan_sha256": "7d73e1f134f6f977be41b81a8cfcb23a124d04658d14a2c782b24dd76710ea68",
+ "base_plan_sha256": "bcfcb4e1737e8140fab9c94aec6128c4a086ab5fa953e07159813abb11819d10",
+ "verdict": "FAIL",
+ "errors": [
+  "type ot_s81sl_kv_leaf__t1: 1904350 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t2: 400659 cells (by_part cells_est.json + landing rings 42236) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t3: 1940880 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t4: 1931578 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t5: 1891769 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "vertical cut at 13500: s_2N_L1 segment carries 4169 bits on 6626 tracks = 0.63 > 0.6",
+  "horizontal cut at 5000: svc_1 segment carries 3142 bits on 3071 tracks = 1.02 > 0.6",
+  "horizontal cut at 8500: s_3S_L2 segment carries 2408 bits on 3389 tracks = 0.71 > 0.6",
+  "horizontal cut at 9500: s_0S_L0 segment carries 4464 bits on 5965 tracks = 0.75 > 0.6",
+  "horizontal cut at 9750: s_5S_L0 segment carries 4406 bits on 6157 tracks = 0.72 > 0.6",
+  "horizontal cut at 11250: s_5S_L1 segment carries 3082 bits on 3389 tracks = 0.91 > 0.6",
+  "horizontal cut at 11500: s_6S_L1 segment carries 3683 bits on 5560 tracks = 0.66 > 0.6",
+  "horizontal cut at 17000: s_1N_L0 segment carries 3263 bits on 3985 tracks = 0.82 > 0.6",
+  "horizontal cut at 18750: s_7N_L1 segment carries 5158 bits on 5560 tracks = 0.93 > 0.6",
+  "horizontal cut at 19000: s_7N_L1 segment carries 5158 bits on 7639 tracks = 0.68 > 0.6",
+  "horizontal cut at 20000: s_0N_L3 segment carries 3893 bits on 5560 tracks = 0.70 > 0.6",
+  "horizontal cut at 20250: s_0N_L3 segment carries 3893 bits on 5965 tracks = 0.65 > 0.6",
+  "pg domain phy_lk_ES0: rect [23339.76, 342.44, 26075.52, 1330.56] does not cover io window io_lk_ES0_u_phy [23189.76, 103.68, 26075.52, 1330.56]",
+  "pg domain phy_lk_ES0: bump rect outside the domain rect",
+  "pg domain phy_lk_ES1: rect [26225.52, 342.44, 28961.28, 1330.56] does not cover io window io_lk_ES1_u_phy [26289.16, 103.68, 28897.64, 1028.16]",
+  "pg domain phy_lk_ES1: bump rect outside the domain rect",
+  "pg domain phy_lk_ES1: phy_macro_um [26289.16, 103.68, 28897.64, 1028.16] outside the domain rect [26225.52, 342.44, 28961.28, 1330.56]",
+  "pg domain phy_lk_ES1: core strip [26075.52, 1091.8, 28961.28, 1330.56] overlaps the domain rect"
+ ],
+ "summary_note": "23 errors = same checks/cut locations as event3 (0 new); 7 pre-existing cut ratios +0.01..0.02 (VES OBS widened 8.64 um blocks 79 tracks); 18750 cut segment label tie s_0N_L1->s_7N_L1 (same 5158 bits); +6 WARN = SRAM LEF dir absent in sparse checkout (env only)"
+}

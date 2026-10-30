@@ -1,0 +1,282 @@
+{
+  "scope": "PREBUILD MODEL ONLY, UNCHECKED; actual newG1census must be repriced beforeCTS. No clockgraph/master/home/stage change, only386knownE-pin-registerlocationforecast.",
+  "old_nominal_replay": {
+    "TT": {
+      "mean": 273.05,
+      "leaf_mean_min": 266.39,
+      "leaf_mean_max": 278.81,
+      "window": 12.42,
+      "sink_min": 266.39,
+      "sink_max": 281.19,
+      "leaf_slew_in_max": 10.5,
+      "leaf_ct_ff": [
+        0.8,
+        42.5
+      ],
+      "leaf_out_slew_max": 28.5
+    },
+    "FF": {
+      "mean": 221.11,
+      "leaf_mean_min": 215.29,
+      "leaf_mean_max": 226.77,
+      "window": 11.48,
+      "sink_min": 215.29,
+      "sink_max": 229.34,
+      "leaf_slew_in_max": 7.8,
+      "leaf_ct_ff": [
+        0.9,
+        45.9
+      ],
+      "leaf_out_slew_max": 24.2
+    }
+  },
+  "old_nominal_reference": {
+    "TT": {
+      "mean": 273.05,
+      "leaf_mean_min": 266.39,
+      "leaf_mean_max": 278.81,
+      "window": 12.42,
+      "sink_min": 266.39,
+      "sink_max": 281.19,
+      "leaf_slew_in_max": 10.5,
+      "leaf_ct_ff": [
+        0.8,
+        42.5
+      ],
+      "leaf_out_slew_max": 28.5
+    },
+    "FF": {
+      "mean": 221.11,
+      "leaf_mean_min": 215.29,
+      "leaf_mean_max": 226.77,
+      "window": 11.48,
+      "sink_min": 215.29,
+      "sink_max": 229.34,
+      "leaf_slew_in_max": 7.8,
+      "leaf_ct_ff": [
+        0.9,
+        45.9
+      ],
+      "leaf_out_slew_max": 24.2
+    }
+  },
+  "frozen_legalized_existing": {
+    "TT": {
+      "mean": 271.14,
+      "leaf_mean_min": 264.25,
+      "leaf_mean_max": 276.83,
+      "window": 12.59,
+      "sink_min": 264.25,
+      "sink_max": 278.77,
+      "leaf_slew_in_max": 10.4,
+      "leaf_ct_ff": [
+        0.8,
+        42.5
+      ],
+      "leaf_out_slew_max": 28.5
+    },
+    "FF": {
+      "mean": 219.3,
+      "leaf_mean_min": 213.24,
+      "leaf_mean_max": 224.88,
+      "window": 11.63,
+      "sink_min": 213.24,
+      "sink_max": 226.97,
+      "leaf_slew_in_max": 7.7,
+      "leaf_ct_ff": [
+        0.9,
+        45.9
+      ],
+      "leaf_out_slew_max": 24.2
+    }
+  },
+  "candidate": {
+    "TT": {
+      "mean": 271.16,
+      "leaf_mean_min": 264.25,
+      "leaf_mean_max": 276.83,
+      "window": 12.59,
+      "sink_min": 264.25,
+      "sink_max": 278.77,
+      "leaf_slew_in_max": 10.4,
+      "leaf_ct_ff": [
+        0.8,
+        42.5
+      ],
+      "leaf_out_slew_max": 28.5
+    },
+    "FF": {
+      "mean": 219.32,
+      "leaf_mean_min": 213.24,
+      "leaf_mean_max": 224.88,
+      "window": 11.63,
+      "sink_min": 213.24,
+      "sink_max": 226.97,
+      "leaf_slew_in_max": 7.7,
+      "leaf_ct_ff": [
+        0.9,
+        45.9
+      ],
+      "leaf_out_slew_max": 24.2
+    }
+  },
+  "entry": {
+    "native": [
+      82.092,
+      172.8
+    ],
+    "physical_root": [
+      82.08,
+      172.935
+    ],
+    "wire_um": 0.14699999999999136,
+    "TTFF_delay_slew_ps": {
+      "TT": [
+        0.005123786230226566,
+        0.011272329706498446
+      ],
+      "FF": [
+        0.005680385789546533,
+        0.012496848737002374
+      ]
+    },
+    "fully_priced": true
+  },
+  "moved_capture_count": 386,
+  "moved_by_stem": {
+    "mhh": 128,
+    "mpre_q": 1,
+    "mv": 1,
+    "mkk": 128,
+    "mdd": 128
+  },
+  "node_count": 2611,
+  "leaf_count": 964,
+  "sink_count": 30810,
+  "stages": [
+    8
+  ],
+  "added_cycles": 0,
+  "gate": {
+    "window20_all": true,
+    "slew80_all": true
+  },
+  "stage": {
+    "TT": {
+      "leaf": "T023321",
+      "leaf_drv": [
+        30.96,
+        4.29
+      ],
+      "path": [
+        [
+          "T0_br",
+          "BUFx16f_ASAP7_75t_R",
+          16.08,
+          0.03,
+          8.7
+        ],
+        [
+          "T02_br",
+          "BUFx16f_ASAP7_75t_R",
+          22.87,
+          13.02,
+          15.7
+        ],
+        [
+          "T023_br",
+          "BUFx8_ASAP7_75t_R",
+          43.27,
+          19.51,
+          30.2
+        ],
+        [
+          "T0233_br",
+          "BUFx16f_ASAP7_75t_R",
+          35.6,
+          7.58,
+          16.5
+        ],
+        [
+          "T02332_br",
+          "BUFx24_ASAP7_75t_R",
+          30.74,
+          3.17,
+          14.3
+        ],
+        [
+          "T023321_br",
+          "BUFx24_ASAP7_75t_R",
+          25.84,
+          0.37,
+          9.5
+        ],
+        [
+          "T023321",
+          "BUFx8_ASAP7_75t_R",
+          23.41,
+          0.08,
+          10.4
+        ]
+      ]
+    },
+    "FF": {
+      "leaf": "T023321",
+      "leaf_drv": [
+        23.42,
+        4.63
+      ],
+      "path": [
+        [
+          "T0_br",
+          "BUFx16f_ASAP7_75t_R",
+          12.1,
+          0.04,
+          6.7
+        ],
+        [
+          "T02_br",
+          "BUFx16f_ASAP7_75t_R",
+          17.03,
+          13.45,
+          12.2
+        ],
+        [
+          "T023_br",
+          "BUFx8_ASAP7_75t_R",
+          33.24,
+          20.74,
+          23.0
+        ],
+        [
+          "T0233_br",
+          "BUFx16f_ASAP7_75t_R",
+          27.49,
+          8.17,
+          13.5
+        ],
+        [
+          "T02332_br",
+          "BUFx24_ASAP7_75t_R",
+          23.98,
+          3.46,
+          11.6
+        ],
+        [
+          "T023321_br",
+          "BUFx24_ASAP7_75t_R",
+          19.49,
+          0.4,
+          7.3
+        ],
+        [
+          "T023321",
+          "BUFx8_ASAP7_75t_R",
+          17.16,
+          0.09,
+          7.7
+        ]
+      ]
+    }
+  }
+}
