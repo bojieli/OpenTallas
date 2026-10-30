@@ -1,0 +1,2 @@
+# FLOW-KITFAIL-4 (shared kit failure-class fixer, successor of FLOW-KITFAIL-3)
+- 2026-10-29 22:33 PDT CLAIM [FLOW-KITFAIL-4] items: (1) rerun kv3_io_ft landed / iqf__t1 ring fail-early on real ODB / d35q AUTO-GEOM on d762fab72e1 (+main); (2) new shared classes from kit lanes; (3) review DIE-KV-42 b64d6d012cb band/PHY-blockage fix vs KF3 b6a1eb0f1ad. Worktree intel2 /srv/opentallas-scratch2/claude/wt/flow-kitfail-4 (sparse).
