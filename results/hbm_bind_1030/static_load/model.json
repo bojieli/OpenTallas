@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.hbm.static_load_component_model.v1",
+  "status": "UNUSED_COMPONENT_COUPON_ONLY_EXISTING_STATIC_PROVIDER_REUSE_IS_MAIN_PATH",
+  "purpose": "Restore missing mandatory HGI LOAD implementation under the existing static schedule",
+  "native_descriptor_bits": 227,
+  "formats": {
+    "0": {
+      "name": "FP32",
+      "bytes_per_element": 4,
+      "conversion": "raw 32-bit word"
+    },
+    "1": {
+      "name": "BF16",
+      "bytes_per_element": 2,
+      "conversion": "16-bit payload followed by 16 zero bits"
+    },
+    "2": {
+      "name": "FP8E4M3",
+      "bytes_per_element": 1,
+      "conversion": "exact binary32; NaN code to 0x7fc00000; signed zero retained"
+    },
+    "4": {
+      "name": "INT8",
+      "bytes_per_element": 1,
+      "conversion": "signed integer to exact binary32"
+    },
+    "5": {
+      "name": "U32",
+      "bytes_per_element": 4,
+      "conversion": "raw 32-bit word"
+    },
+    "6": {
+      "name": "UE8M0",
+      "bytes_per_element": 1,
+      "conversion": "Exact existing STATIC LOAD: code255 qNaN; code0 binary32 0x00400000; othercode binary32 exponent"
+    }
+  },
+  "unsupported_existing_formats": {
+    "3": "FP4E2M1 faults in existing mover",
+    "7": "reserved; no supported public format"
+  },
+  "addressing_inventory": [
+    "linear HBM",
+    "STRIPE4 rows",
+    "arbitrary element strides via existing serial semantics",
+    "naturally aligned partial sectors",
+    "indexed row stream with runtime I-list",
+    "B2 QID ownership and stack-local bounds"
+  ],
+  "component_operation": "One scheduled micro-op selects up to eight naturally aligned source elements from one captured 256-bit HBM sector and writes them to distinct word lanes of one VM sector",
+  "microop_fields": {
+    "format": 3,
+    "source_byte_offsets": 40,
+    "destination_word_lanes": 24,
+    "element_mask": 8,
+    "vm_sector_address": 15
+  },
+  "issue_resource": "One fixed-time operation per cycle; no on-chip ready, credit or arbitration",
+  "late_sector_behavior": "Scheduled operation faults and emits no write; never waits or shifts subsequent dates",
+  "phy_boundary": "Existing 256-bit HBM response sector; all variable off-die admission/buffering remains at PHY boundary",
+  "native_vm_output": "281 bits = valid + ap(0) + sector address(15) + data(256) + word mask(8)",
+  "pipeline_stages": 3,
+  "pipeline": [
+    "input face capture",
+    "source element extraction",
+    "exact conversion plus registered VM packet"
+  ],
+  "microop_to_vm_packet_cycles": 3,
+  "throughput": {
+    "elements_per_cycle": 8,
+    "vm_payload_bytes_per_cycle": 32,
+    "qualification": "Datapath peak per scheduled coalesced micro-op only. Not a whole-LOAD rate. Eight strided elements may require eight distinct HBM sectors and at least eight issue slots.",
+    "useful_source_bytes_per_coalesced_output_op": {
+      "FP32": 32,
+      "U32": 32,
+      "BF16": 16,
+      "FP8E4M3": 8,
+      "INT8": 8,
+      "UE8M0": 8
+    },
+    "physical_phy_sector_bytes": 32,
+    "reuse_rule": "Useful payload consumption is not external traffic: each actual PHY transaction transfers a full32B sector; the production owned-window proposal fetches32KiB perNPC2half-window and must price overfetch separately."
+  },
+  "estimate": {
+    "ff_bits_upper": 1100,
+    "stdcells_order": 10000,
+    "hard_cell_cap": 400000,
+    "outline_candidate_um": [
+      60.48,
+      60.48
+    ],
+    "pin_bits_approx": 632,
+    "face_pins_per_um_limit": 6,
+    "note": "Pre-build sizing estimate only; synthesis determines actual cell/area, parent lot and clock sites must pass before any physical run",
+    "parent_lot_fit": "No added coupon lot reserved; actual integration reuses existing vmdel LOAD type delta and must establish lot fit before route"
+  },
+  "cross_boundary_bits_per_cycle": {
+    "phy_capture_to_decode": 256,
+    "microop_to_decode": 90,
+    "decode_to_vm": 281
+  },
+  "open_die_integration": [
+    "Current plan has no LOAD core; die owner must reserve lots and local clocks",
+    "Host/static calendar target and address micro-op compiler must be composed",
+    "Variable PHY arrivals must be captured before a proven drain deadline",
+    "Runtime indexed address generator/I-list port must retain existing semantics",
+    "VM write-port ownership must be reserved by static calendar",
+    "Four-stack/QID source and scratch capacity must be proved; no reservation inferred"
+  ],
+  "microop_compiler_cost_rule": "Group by (source HBM sector, destination VM sector, format); charge each unique source sector transfer, each VM packet and every fixed drain/decode date. Never price gather traffic at contiguous peak.",
+  "format_authority": "Union of actual existing native static LOAD converter plus common five older generic mover formats. Older generic mover rejects UE8M0; static LOAD already accepts it.",
+  "measured_generic_synth": {
+    "cells": 10233,
+    "ff_bits": 938,
+    "port_bits": 633
+  },
+  "analytic_area_estimate": 1699.83846,
+  "pipeline_price": "3 additional registered stages conditional on this coupon being used; no production adoption or token rate claim",
+  "registered_edge_contract": "Upstream source launches at edge E-1; component captures at E0, extracts at E1, emits packet after E2; native receiver captures at E3. Source launch to packet launch is three periods.",
+  "native_phy_pc_scope": "Current source only logical stack2 controllers ctl_NW_p00..31. PC<16 landsNW,NPC2;PC>=16 landsNE,NPC2. Stack3 provider/scratch remains unbound.",
+  "native_vm_slot": "Current native q0faces RG5/WG2: destination DQ slotWG+4=6; compiler reserves wslot_v/wslot6 and no competing writes."
+}

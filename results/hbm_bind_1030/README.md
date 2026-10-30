@@ -1,5 +1,7 @@
 # HBM binding continuation, 2026-10-30 03:39 PDT
 
+Latest: the original ordered HH candidate is GEOM FAIL (mandatory seam pin waypoints omitted), never routed. Current native DMA provider audit is FAIL_R7_SOURCE. The new six-format decode component is an unbound research coupon, not a production provider. See the correction and source sections below.
+
 No plan/source adoption or physical signoff claim. Current d32q physical tables and d31t binding retain 81 UNPLANNED pairs / 57,312 bits, zero EMIT.
 
 ## NW glue count failure
@@ -34,3 +36,19 @@ No station growth was needed. The strict original-cycle control correctly reject
 ## Current fused recipe facts
 
 `current_fused_facts.json` comes from CURRENT d31t `b31t/out/asbuilt.json` (g4 compose), not old e2 defaults. Top instance `u_mu_fused_programme` has module `ot_hnx_fused_host_program`, TARGET225,DELIVERED_RESET1; the name fused_programme is an instance, not a separate module. All30current `ot_hnx_fused_tnode` cells explicitly override DELIVERED_RESET1,LA6,UW271,DW173 (master default reset0 must not be used). The core lane has these facts for new recipes.
+
+## Geometry correction: original ordered detour is NOT physically closed
+
+The die owner rendered the candidate before route and found that the DP omitted mandatory seam pin waypoints. Its FF homes stayed near y10400 while intermediate pin windows were at y11170/11640, so direct FF distances understated via-pin wire reach (about1700um). The saved G0 PASS is a flow undercheck receipt, not a physical chain closure. The candidate is **GEOM FAIL / UNADOPTED**, never routed. Parent owns a revised solver that constrains first/last FFs at each seam and checks actual via-pin hops. No old verdict overwritten.
+
+## Static LOAD source priority
+
+`current_dma_r7.json` records the current emitted-source failure without rewriting the historical G0 receipt: internal production `hb_dbk_SW__rq` and `hb_dbk_SE__rq` (136bits each) are emitted as external die inputs, with no matching native DMA instance, and no production generic LOAD provider is instantiated. Only two static BACK engines exist, NE/NW, both stack strap2. The audited raw top and bound wrapper paths are in the receipt. Generic Python descriptor replay is not a provider.
+
+Root selected plan-first reuse of the existing `ot_hbm_svc_vmdel_lane_load_static` NPC2 with the actual owned PHY windows, its 62-bit command format and a compact descriptor/calendar translator. TOK's source proposal owns window inversion, actual traffic amplification, VM DQ slot6, epoch/slot binding, all-eight-leaf release commands and the new destination routing/dispatch. Current physical source only has stack2 PC0..31; stack3 scratch/dispatch stays unbound. Parent owns the necessary type/plan event. No generic mover is silently adopted.
+
+`static_load/` is the explicitly UNUSED alternative decode coupon built before that reuse decision: three registered stages (input face capture, source extraction, conversion/output), II1 for one coalesced micro-op. It preserves all six actual static LOAD formats: FP32/BF16/FP8E4M3/INT8/U32/UE8M0. FP4/reserved formats, misalignment, empty/overlapping ownership and missing scheduled sectors fault. There is no internal ready/credit/retry. Its schedule date is input_date+3; a burst of N operations costs N+3 pipeline slots including fill/drain, not three cycles per element. It is not inserted into the production model or RTL.
+
+Final coupon evidence: strict Verilator lint0; actual native serial/static conversion lockstep 74,533cycles,74,521scheduled operations,595,968checked words,25rejected operations. BF16 covers65,536payloads; FP8/INT8/UE8 each coverall256codes, checked against independent IEEE truth tables; FP32/U32 use bit-pattern random words. Wrong FP8 subnormal-zero mutant is caught with8mismatches. Generic synth:10,233cells,938FF,633port bits. Actual nonfake RVT TT cell areas give an analytic replacement estimate1699.84square-area units (unmapped), not timing/signoff. A60.48x60.48um candidate gives about46.5percent stdcell fill if units match the physical library; pin proposal256dataW,282outputE,90controlsN is below6pins/um at0.192pitch. No lot is reserved, no current hard core changes, and no P&R/STA runs. The production plan's lot fit belongs to the existing vmdel LOAD type event, not this unused coupon. Arbitrary-stride LOAD traffic must count each distinct source sector; the datapath's32VMbytes/cycle peak is not a whole-provider rate.
+
+Additional exact source facts supplied to core owners: VM query NW usesVM_RT_EXTRA173; NE/SE/SW use171 (currentmaster default4 is wrong for all). Current pinned selector master has onlyMUT, noSTRUCTparameter: nativeSTRUCT1 cannot be inferred from an old trial kit.

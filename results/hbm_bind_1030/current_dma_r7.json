@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.hbm.native_dma_provider_audit.v1",
+ "status": "FAIL_R7_SOURCE",
+ "top": "/srv/opentallas-scratch2/claude/codex-hbm-bind-0300/top_native.sv",
+ "historical_plan_g0": "UNCHANGED",
+ "rtl_modified": false,
+ "dma_back_instances": [
+  {
+   "instance": "hb_dbk_NE",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "parameters": ".RR_RT(80)",
+   "stk": "2'b10",
+   "target": "8'b01101011",
+   "launch": "hleaf_NE__b_launch_v[0:0]",
+   "request": "hb_dbk_NE__rq[135:0]"
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "module": "ot_hgi_dma_back_static_vp4_banks_cp",
+   "parameters": ".RR_RT(80)",
+   "stk": "2'b10",
+   "target": "8'b01101010",
+   "launch": "hleaf_NW__b_launch_v[0:0]",
+   "request": "hb_dbk_NW__rq[135:0]"
+  }
+ ],
+ "generic_load_instances": {},
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "R7_MISSING_DMA_PROVIDER",
+   "role": "SW",
+   "instance": "hb_dbk_SW",
+   "instance_present": false,
+   "net": "hb_dbk_SW__rq",
+   "width": 136,
+   "source": "external_top_input",
+   "bound_die_input": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/die-hbm-31/b31t/out/rtl/hbm_arch_q_hub__q_hub_nw.sv",
+     "line": 132,
+     "declaration": "input  wire [135:0] io_hb_dbk_SW_rq,   // die IO hb_dbk_SW__rq"
+    }
+   ],
+   "reason": "An internal production VM request is exposed as die IO; no native DMA producer drives it"
+  },
+  {
+   "level": "ERROR",
+   "check": "R7_MISSING_DMA_PROVIDER",
+   "role": "SE",
+   "instance": "hb_dbk_SE",
+   "instance_present": false,
+   "net": "hb_dbk_SE__rq",
+   "width": 136,
+   "source": "external_top_input",
+   "bound_die_input": [
+    {
+     "file": "/srv/opentallas-scratch2/claude/die-hbm-31/b31t/out/rtl/hbm_arch_q_hub__q_hub_ne.sv",
+     "line": 130,
+     "declaration": "input  wire [135:0] io_hb_dbk_SE_rq,   // die IO hb_dbk_SE__rq"
+    }
+   ],
+   "reason": "An internal production VM request is exposed as die IO; no native DMA producer drives it"
+  },
+  {
+   "level": "ERROR",
+   "check": "MISSING_PRODUCTION_LOAD_PROVIDER",
+   "reason": "No native generic HGI LOAD/mover provider is instantiated. A Python descriptor replay is not a source provider"
+  }
+ ],
+ "errors": 3,
+ "scope": "Existing R7 production-source obligations only; no physical or token qualification"
+}

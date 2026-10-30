@@ -1,0 +1,50 @@
+{
+ "status": "ANALYTIC_CELL_AREA_ESTIMATE_NOT_MAPPED_OR_ROUTED",
+ "cells": {
+  "ANDNOT": 320,
+  "AND": 1657,
+  "DFF_P": 938,
+  "MUX": 2865,
+  "NAND": 3203,
+  "NOR": 61,
+  "NOT": 47,
+  "ORNOT": 540,
+  "OR": 483,
+  "XNOR": 119
+ },
+ "representative_rvt_tt_cells": {
+  "and": [
+   0.08748,
+   "AND2x2_ASAP7_75t_R"
+  ],
+  "or": [
+   0.08748,
+   "OR2x2_ASAP7_75t_R"
+  ],
+  "nand": [
+   0.05832,
+   "NAND2xp33_ASAP7_75t_R"
+  ],
+  "nor": [
+   0.05832,
+   "NOR2xp33_ASAP7_75t_R"
+  ],
+  "inv": [
+   0.04374,
+   "INVx1_ASAP7_75t_R"
+  ],
+  "xnor": [
+   0.13122,
+   "XNOR2xp5_ASAP7_75t_R"
+  ],
+  "dff": [
+   0.2916,
+   "DFFHQNx1_ASAP7_75t_R"
+  ]
+ },
+ "liberty_area_estimate": 1699.8384600000002,
+ "notes": [
+  "Per generic-gate replacement cost from actual nonfake RVT TT Liberty cells; mux conservatively4 gates; DFF conservativelyplusinverter",
+  "Liberty area units retained; physicalunitcalibration/actualmapping and lotreservation are not established"
+ ]
+}
