@@ -104,3 +104,15 @@ scope steering arrived. Raw second-row output is retained only as unrequested,
 unqualified history in combined_raw_unrequested.json; it is not promoted to
 current pricing, a universal VM bound, or an adoption/owner-policy verdict.
 No further wide cases launched. All own model jobs terminal.
+
+LATEST seam-pin repair, source18cbb86de:
+Former16/18DP ignored actual pin windows and failed geometry review. Placing
+first/lastFFwithin30um ofdeclared seams plus explicitvia-pinhop needs+2/+3
+stations: correctedSouthern18NE->NW/21NW->NE, data+7/+10vs11=pair17,
+22bcontrol+6/+9vs12; Northernold11unchanged. Earlierpair12results remain
+immutable superseded history, not the latest candidate cost.
+ONE scopednewcase only: SouthernCOLLpair17perphase plus nativeN1tnode
+PRE48/POST32 scheduled together ->627009.379155cycles,+16274.448vsrecord,
+1753.075544tok/s,2.595567%vs1799.790record/3.273254%vs1812.4.
+No new wideVM cases. Actual Southern per-record exposure, G0C/strictbind,
+allspill/backend/fence/drain costs remainheld; conditionalnotadoption.

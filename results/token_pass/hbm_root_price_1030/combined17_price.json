@@ -1,0 +1,40 @@
+{
+  "scope": "SEAM_PIN_GEOMETRY_REPAIR_PAIR17_ASSUMED_SOUTHERN_EXPOSURE_S2_SENSITIVITY",
+  "source_commit": "18cbb86de",
+  "reference_cycles": 610734.931155155,
+  "native_counts": {
+    "HC_PRE_NORM/N1": 81,
+    "HC_POST/N1": 80
+  },
+  "rows": [
+    {
+      "case": "N1_tnode_plus_Southern_COLL_pair17_perphase",
+      "cycles": 627009.379155155,
+      "added_cycles": 16274.448000000091,
+      "tok_s": 1753.0755437946991,
+      "loss_vs_record_pct": 2.5955669151119576,
+      "loss_vs_1812_4_pct": 3.2732540391360088
+    }
+  ],
+  "rate_excludes_native_VM_spill_DMAS_fences_drains": true,
+  "multiuser_ROWX_programme_priced": false,
+  "Northern_paths_actually_unchanged": true,
+  "all_COLLandVM_exposure_only_assumed": true,
+  "operations": "ot-run actualintel2 schedulerlocalhost unit1189441 exit0,4GB1thread",
+  "candidate_geometry_correction": "actual first/last station within30um declared seam pins and explicit via-pin hop; false16/18case replacedby18/21, but oldresults preserved",
+  "new_Southern_direction_cycles": {
+    "NE_to_NW": 18,
+    "NW_to_NE": 21
+  },
+  "data_added_vs_11": {
+    "NE_to_NW": 7,
+    "NW_to_NE": 10,
+    "round_pair": 17
+  },
+  "control_added_vs_12": {
+    "NE_to_NW": 6,
+    "NW_to_NE": 9
+  },
+  "previous_pair12_cases_superseded": true,
+  "new_route_G0C_and_strict_bind": "pending die owner, notadopted"
+}
