@@ -1,0 +1,172 @@
+[
+  {
+    "type": "hd_ctl_e",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 694.49,
+    "over405": 7,
+    "collapse": 2,
+    "clock_reach": 198.94
+  },
+  {
+    "type": "hd_ctl_n",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_host",
+    "place": "LIVE",
+    "lec": "LIVE",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_mesh",
+    "place": "LIVE",
+    "lec": "LIVE",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_spn_eshim_rx",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 308.53,
+    "over405": 0,
+    "collapse": 0,
+    "clock_reach": 919.63
+  },
+  {
+    "type": "hd_spn_eshim_tx",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 316.06,
+    "over405": 0,
+    "collapse": 0,
+    "clock_reach": 859.95
+  },
+  {
+    "type": "hd_spn_wshim_rx",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 640.44,
+    "over405": 66,
+    "collapse": 64,
+    "clock_reach": 1028.19
+  },
+  {
+    "type": "hd_spn_wshim_tx",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 349.0,
+    "over405": 0,
+    "collapse": 0,
+    "clock_reach": 353.01
+  },
+  {
+    "type": "hd_st_k5",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_st_m",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 1373.81,
+    "over405": 215,
+    "collapse": 111,
+    "clock_reach": 382.35
+  },
+  {
+    "type": "hd_st_n3_transit",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_st_n3_turn",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_st_n4",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_st_str",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_st_turn",
+    "place": "LIVE",
+    "lec": "EQUIVALENT",
+    "geometry": "LIVE",
+    "r2r": null,
+    "over405": null,
+    "collapse": null,
+    "clock_reach": null
+  },
+  {
+    "type": "hd_turn_a",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 517.7,
+    "over405": 3,
+    "collapse": 0,
+    "clock_reach": 679.76
+  },
+  {
+    "type": "hd_turn_b",
+    "place": "PLACE_RC 0",
+    "lec": "EQUIVALENT",
+    "geometry": "FAIL",
+    "r2r": 343.44,
+    "over405": 0,
+    "collapse": 0,
+    "clock_reach": 664.72
+  }
+]
