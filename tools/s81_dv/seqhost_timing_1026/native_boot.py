@@ -8,6 +8,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+from native_phase import seqhost_phase_contract,qualify_selected
 
 
 def uint(value, bits, name):
@@ -16,11 +17,13 @@ def uint(value, bits, name):
     return value
 
 
-def compile_boot(config, receipt, *, allow_unbooked_launch=False):
+def compile_boot(config, receipt, *, allow_unbooked_launch=False, source_root=None, manifest=None, inventory=None):
     if config['schema'] != 'opentallas.s81.seqhost_native_boot.v1':
         raise ValueError('unsupported explicit boot configuration schema')
     if receipt['schema'] != 'opentallas.s81.bound_control_local.v1' or receipt['verdict'] != 'PASS':
         raise ValueError('current local timing PASS receipt required')
+    phase_contract=seqhost_phase_contract(receipt)
+    if allow_unbooked_launch:qualify_selected(receipt,source_root,manifest,inventory)
     master = receipt['masters']['dsdv_hostb_seqhost_mux']
     if master['params'] != dict(HOSTB_ENABLE=0, STATIC_KS6=0):
         raise ValueError('boot encoder qualified only for selected direct native mux')
@@ -74,12 +77,10 @@ def compile_boot(config, receipt, *, allow_unbooked_launch=False):
     if launch is None:
         if not allow_unbooked_launch:
             raise ValueError('actual launch booking required unless local encoding is explicitly unbooked')
-        if 'seqhost_input_clock' not in receipt:
-            raise ValueError('unbooked local encoding still requires actual reset/KS phase contract')
     else:
         reset_edge = uint(launch['reset_release_pin_edge'], 48, 'reset release pin edge')
         ks = [uint(x, 48, 'KS pin edge') for x in launch['ks_pin_edges']]
-        phase = receipt['seqhost_input_clock']['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4']
+        phase = phase_contract['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4']
         if not ks or any(x <= reset_edge or (x-reset_edge) % 4 != phase for x in ks):
             raise ValueError('KS pin date violates selected issuer phase relative to reset release')
         for index, (a, b) in enumerate(zip(ks, ks[1:])):
@@ -89,7 +90,7 @@ def compile_boot(config, receipt, *, allow_unbooked_launch=False):
         status='ENCODED', words=len(words), slots=slots, kit_issue=kit,
         return_latency=rl, launch=launch, launch_booked=launch is not None,
         pin_event_convention=receipt['edge_convention'],
-        required_relative_KS_phase=receipt['seqhost_input_clock']['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4'],
+        required_relative_KS_phase=phase_contract['accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4'],
         source_sha256=receipt['source_sha256'], params=master['params'], defines=master['defines'],
         obligations=['boot all words while actual tracker unarmed and no outstanding starts',
                      'caller books actual host-word transport and reset release pin event',

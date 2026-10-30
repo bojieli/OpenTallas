@@ -206,3 +206,42 @@ productionhashes/bench/HOSTinput and logs retained. Global HOST/reset/KS pin
 bookings + matching incoming descriptors stillabsent, page reload mustfollow
 END/nooutstandingstarts, nophysicalSTART/fulltokenclaim. Previous unsealed
 receipts are retained unmodified. Ownerfield requests sent HEAD/S81 and logged.
+
+Shared tracker and actual native reload integration (1030 05:55 PDT)
+------------------------------------------------------------------
+11affa414's local perpageMU encoding is NOT a valid40page runtime loop:
+dsdv_mu_hslot.armed never clears until reset, so any0x15reconfiguration after
+firstKS raisesMUfault8, even when all outstandingreturns have retired. The old
+localpage0seal result remains valid and is preserved; no loopadoption was made.
+
+encode_programme now emits one initial35wordMUconfiguration. All40actualpage
+write/HLOAD/GAIN fences and ACKs checked against sharedKIT482; sharedEND486
+follows actual selectedtKD atage0485,RL489=KIT482+8−1. Subsequent39pages emit
+417HOSTwords with noMUconfig. SharedKSgap2596 is multiple4 and reserves
+previousKS→firstHOST492 (age0offset5+END486+1),417*5reloadslots,16settleedges,
+then phase-rounding. Fullwordcost16715HOSTwords/83575localedges. No resets,
+no sourcecounter changes, no ROOT/physicalclock/date inferred. APIs + general
+CLI accept current pages/selectedtiming/phase/inventory; explicit stage/phase
+required. FirstglobalHOST/KSdates and descriptors remain absent.
+
+Root-approved minimum actual gate: worstmixedsourcepage002(storefloor482)
+then sourcepage023(floor338), retainedMU and noreset. Actual selected native
+KITcounter/posted-VACK emits153north+51south full276bwords exactly and2actual
+KITdescriptorreturns, each490edges from its KS pin. Unit375960terminalPASS,
+0errors/MU0/issuercode0. ReinitializingMU atsecondboot catchesfault8 (2653error
+edges), actualtemplatepayloadbit corruption catches1word mismatch. Runtime
+scope is native reload/seal/MUretention/descriptorsequencing; memoryretirement
+COMPOSES prior exactselectedXRT/VP/VN mechanisms +all40fences, not new endtoend
+memoryexecution. No fullarray or unrelated math job. FirstbenchBUILD359264
+mistakenlytreatedsource-internalt_mf asport; corrected to exact hierarchytap,
+failedlog preserved intel1 codex-entry-reload-1030/build_tmf_publicport_failed.log.
+
+Independentreviewguard repair: native_phase shares strict exactint0..3 metadata
+contract across booked/unbooked/Page APIs. Missing/bool/negative/outofrange or
+conflicting versionedkeys fail; unbookedencoding additionally verifies complete
+selectedsource hashes, preferredmaster/defines and actualu_seqhost all5params
+(defaults included). No defaultphase. 15malformedphase/API controls +4source/
+master/parametercontrols caught; guard_paths.json. Actual selectedphase remains
+3mod4 from resetreleasepin, separate from externalHOST/KSbookings. HEAD says
+ROOT88candidate stillnotfrozen/noactualhostproducerdates; S81 similarlynoadopted
+globaldispatcherdates. Actual admission needs registeredready&&!fault&&hostdone.

@@ -13,23 +13,12 @@ import sys
 ROOT=Path(__file__).resolve().parents[3]
 sys.path[:0]=[str(ROOT/'tools/s81_dv'),str(ROOT/'tools/s81_dv/seqhost_timing_1026')]
 from native_boot import compile_boot
+from native_phase import seqhost_phase_contract
 from dv_layer_compile import csr_len,csr_pw,csr_template,pack_row,pw_header,pw_row_words
 
 
 def digest(obj):
     return hashlib.sha256(json.dumps(obj,sort_keys=True,separators=(',',':')).encode()).hexdigest()
-
-
-def seqhost_phase_contract(receipt):
-    """Read the two existing source receipt key versions without a phase default."""
-    current=receipt.get('seqhost_input_clock');prior=receipt.get('input_clock')
-    if current is not None and prior is not None and current!=prior:
-        raise ValueError('conflicting source-qualified seqhost reset/KS phase contracts')
-    contract=current if current is not None else prior
-    key='accepted_ks_pin_event_offset_from_reset_release_pin_event_mod4'
-    if not isinstance(contract,dict) or type(contract.get(key))is not int or not 0<=contract[key]<4:
-        raise ValueError('source-qualified seqhost reset/KS phase contract missing or outside mod4')
-    return contract
 
 
 def compose(program, control, timing, cadence, *, mux_config=None, host_booking=None, seqhost_receipt=None):
