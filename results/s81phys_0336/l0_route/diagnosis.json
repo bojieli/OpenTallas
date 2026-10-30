@@ -1,0 +1,28 @@
+{
+  "verdict": "NOT_SIGNED",
+  "AP": "d3334c917536",
+  "TT_setup_ps": 39.79,
+  "STDFF_hold_ps": -38.42,
+  "STDFF_failing_endpoints": 664,
+  "DRV_slew_TT": 7,
+  "DRV_slew_FF": 7,
+  "DRC": 0,
+  "antenna": 0,
+  "compiled_source_and_1_3_4_5_ODB_sha_identical_to_G2": true,
+  "mechanism": "RCX clock branch coupling and M3 routing outside intended M4/M5 NDR; not wrapper resynthesis or clock/context change",
+  "worst_path": "rst_n -> u_rst.rst_n[3]/RESETN",
+  "clock_branch": {
+    "net": "mp_ck_T0113_br_out",
+    "M3_um": 73.347,
+    "parallel_sibling": "mp_ck_T011p_br_out",
+    "overlap_um": 73.077,
+    "width_nm": 18,
+    "centre_pitch_nm": 36,
+    "edge_space_nm": 18,
+    "total_cap_fF": 12.3114,
+    "ground_cap_fF": 4.81978,
+    "coupling_cap_fF": 7.49164,
+    "dominant_sibling_cap_fF": 6.94463
+  },
+  "next": "FLOW source owner preparing actual layer/NDR bounded repair; no new cohort or margin change"
+}

@@ -1,0 +1,88 @@
+{
+  "scope": "Analytic existing4regionalresetplacement only; noRTL/bootcycles/pins/outline change; no legalrow/physicalclaim",
+  "baseline": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 421.04,
+    "r2r_captures_gt405": 42,
+    "r2r_captures": 2083,
+    "comb_loop_cells": 0,
+    "r2r_worst": "u_rst.rst_n\\[3\\]$_DFF_PN0_ -> we\\[7\\]$_DFF_PN0_"
+  },
+  "bad_launch_groups": {
+    "u_rst.rst_n\\[3\\]$_DFF_PN0_": 42
+  },
+  "candidate": {
+    "r2r_memory_instances": 0,
+    "r2r_incomplete_macros": [],
+    "r2r_max": 396.87,
+    "r2r_captures_gt405": 0,
+    "r2r_captures": 2083,
+    "comb_loop_cells": 0,
+    "r2r_worst": "ab\\[42\\]$_DFF_P_ -> sa_r\\[2\\]$_DFF_P_"
+  },
+  "pin_reg": {
+    "pin_reg_max": 81.72,
+    "pin_reg_p90": 8.97,
+    "pin_reg_worst": [
+      "81.7 ct_b[38]",
+      "81.4 ct_b[92]",
+      "80.9 ct_b[32]",
+      "80.8 ct_b[43]",
+      "80.7 ct_b[37]"
+    ]
+  },
+  "moves": [
+    {
+      "name": "u_rst.rst_n\\[0\\]$_DFF_PN0_",
+      "old": [
+        22.194000000000003,
+        101.38499999999999
+      ],
+      "new": [
+        81.0,
+        108.135
+      ],
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "name": "u_rst.rst_n\\[1\\]$_DFF_PN0_",
+      "old": [
+        23.598,
+        101.38499999999999
+      ],
+      "new": [
+        83.16,
+        108.135
+      ],
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "name": "u_rst.rst_n\\[2\\]$_DFF_PN0_",
+      "old": [
+        25.380000000000003,
+        100.845
+      ],
+      "new": [
+        81.0,
+        108.67500000000001
+      ],
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    },
+    {
+      "name": "u_rst.rst_n\\[3\\]$_DFF_PN0_",
+      "old": [
+        25.380000000000003,
+        101.38499999999999
+      ],
+      "new": [
+        83.16,
+        108.67500000000001
+      ],
+      "master": "DFFASRHQNx1_ASAP7_75t_R"
+    }
+  ],
+  "global_reset_reach_bound_um": 373.27500000000003,
+  "source_proof": "Same fresh5665EQ rawcompiledpoint remains current; no newproofclaim",
+  "added_cycles": 0
+}

@@ -1,0 +1,177 @@
+{
+  "scope": "ActualRCX wire-only clock net split, before input pin caps; no settings change",
+  "units": [
+    "*C_UNIT 1 PF",
+    "*R_UNIT 1 OHM"
+  ],
+  "nets": {
+    "mp_ck_T0113_br_out": {
+      "total_cap": 0.0123114,
+      "ground": 0.00481978155,
+      "coupling": 0.0074916364890000005,
+      "resistance_sum": 2675.7775,
+      "top_coupling": [
+        [
+          "mp_ck_T011p_br_out",
+          0.00694463
+        ],
+        [
+          "net6493",
+          0.000493742
+        ],
+        [
+          "mp_ck_T0111_out",
+          3.03467e-05
+        ]
+      ]
+    },
+    "mp_ck_T0113_out": {
+      "total_cap": 0.000331769,
+      "ground": 0.00021573352,
+      "coupling": 0.00011603556,
+      "resistance_sum": 237.79074,
+      "top_coupling": [
+        [
+          "mp_ck_T0113_out",
+          9.149626e-05
+        ],
+        [
+          "net6799",
+          2.231194e-05
+        ],
+        [
+          "net5177",
+          2.22736e-06
+        ]
+      ]
+    },
+    "mp_ck_T011_br_out": {
+      "total_cap": 0.00103871,
+      "ground": 0.00100349529,
+      "coupling": 3.52118e-05,
+      "resistance_sum": 306.4246,
+      "top_coupling": [
+        [
+          "mp_ck_T011q_out",
+          3.030296e-05
+        ],
+        [
+          "mp_ck_T011_r0_out",
+          4.90884e-06
+        ],
+        [
+          "net6345",
+          0.0
+        ]
+      ]
+    },
+    "mp_ck_T011_r0_out": {
+      "total_cap": 0.00126335,
+      "ground": 0.00112920116,
+      "coupling": 0.00013415311000000002,
+      "resistance_sum": 725.83166,
+      "top_coupling": [
+        [
+          "cwo_d[237]",
+          4.41057e-05
+        ],
+        [
+          "mp_ck_T011_r0_out",
+          4.150374e-05
+        ],
+        [
+          "cwo_d[235]",
+          2.04143e-05
+        ]
+      ]
+    },
+    "mp_ck_T01_br_out": {
+      "total_cap": 0.00410388,
+      "ground": 0.0041038814,
+      "coupling": 0.0,
+      "resistance_sum": 940.0894999999999,
+      "top_coupling": [
+        [
+          "mp_ck_T01_br_out",
+          0.0
+        ]
+      ]
+    },
+    "mp_ck_T01_r0_out": {
+      "total_cap": 0.00437654,
+      "ground": 0.00291942935,
+      "coupling": 0.0014571052439999999,
+      "resistance_sum": 1615.1009000000001,
+      "top_coupling": [
+        [
+          "net6345",
+          0.00137473718
+        ],
+        [
+          "mp_ck_T01_r0_out",
+          5.5693944000000006e-05
+        ],
+        [
+          "mp_ck_T013_br",
+          1.25483e-05
+        ]
+      ]
+    },
+    "mp_ck_T0_br_out": {
+      "total_cap": 0.00447545,
+      "ground": 0.0035124721300000003,
+      "coupling": 0.0009629789750000003,
+      "resistance_sum": 1492.4208999999996,
+      "top_coupling": [
+        [
+          "net6246",
+          0.0006552448000000001
+        ],
+        [
+          "mp_ck_T0_br_out",
+          0.00028087678499999995
+        ],
+        [
+          "net6182",
+          1.71113e-05
+        ]
+      ]
+    },
+    "mp_ck_T0_r0_out": {
+      "total_cap": 0.00486008,
+      "ground": 0.0048600757,
+      "coupling": 0.0,
+      "resistance_sum": 944.6542000000001,
+      "top_coupling": [
+        [
+          "net6246",
+          0.0
+        ],
+        [
+          "net6473",
+          0.0
+        ],
+        [
+          "mp_ck_T00_br_out",
+          0.0
+        ]
+      ]
+    },
+    "mp_ck_root_out": {
+      "total_cap": 0.000124195,
+      "ground": 8.902150000000001e-05,
+      "coupling": 3.517383e-05,
+      "resistance_sum": 136.2284,
+      "top_coupling": [
+        [
+          "mp_ck_root_out",
+          3.1517200000000004e-05
+        ],
+        [
+          "mp_ck_T0_br",
+          3.65663e-06
+        ]
+      ]
+    }
+  }
+}
