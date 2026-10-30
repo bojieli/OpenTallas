@@ -15,7 +15,7 @@ KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
 # HEAD-BIND-4 10-27 (COORD ruling on HEAD-CORE-R13 ASK4): s81_head hd_tile position straps (row0 = the bundle's first
 # local vocab row, ten = 1 used / 0 dark tile), per-instance partition straps tied at the die top (plan id_straps)
 S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
-PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS}
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
@@ -67,6 +67,12 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             raise ValueError('KEYBUF_LANE_ID requires pbase 0/4 and lane 0..3')
         if raw['strap_lane_id'] != {'width': 3, 'value': base + lane}:
             raise ValueError('KEYBUF_LANE_ID requires exact 3-bit pbase+lane value')
+    if 'strap_qid' in raw:
+        ring = 'ot_hfd_coll_q2_hard_v8g__ring_ag'
+        if descriptor.get('module') != ring or (actual_module is not None and actual_module != ring):
+            raise ValueError('strap_qid is authorized only for the exact HBM collective RING master')
+        if raw['strap_qid'] not in ({'width':2,'value':2}, {'width':2,'value':3}):
+            raise ValueError('HBM collective RING strap_qid requires the native NW=2 or NE=3 identity')
     result = {}
     for port, contract in raw.items():
         if port not in ID_PORTS:
