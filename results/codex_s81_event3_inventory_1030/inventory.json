@@ -1,0 +1,546 @@
+{
+  "schema": "opentallas.s81.event3_emitted_sid_xr_inventory.v1",
+  "scope": "ACTUAL_EMITTED_SOURCE_LITERALS_ONLY_NOT_FULL_GRAPH_OR_TRANSPORT_AGES",
+  "source_bind": "die-s81-34/ev3bind BIND_RC0 event3b19",
+  "source_top": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81_bound_top.sv",
+  "source_top_sha256": "845befa157f712fb3f1b1ed755d439a0be1d0608f2bc5ddea6f3410613191a40",
+  "source_files_sha256": {
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81_bound_top.sv": "845befa157f712fb3f1b1ed755d439a0be1d0608f2bc5ddea6f3410613191a40",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv": "a43ad670339ef7e8b8c55fc79fa1616abb4af4d781a4cdce196d1732e5218e63",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv": "b06e5c5749e317980f70475d9fb97f7e5ba347925fd9ea8549884a50520c65d0",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv": "9dc0ff1dac8bbb96578c57d0cc6cd99b90c42f9124d0f264b13154ed90555a71",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv": "389a2861d1f78c1defad57d16a407412778920aa04b870332f2c8ae16ab662e9",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv": "a440f5de896e973221bc24d47277d44849dba3cce0768edede93b2eac14cfe71",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv": "450f9b82fb2de1fce1dcf94a980d29507fc00ead1eb99219b8d556213783e404",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv": "ca727f502bbc83e9c5d2491a923b8579e8c18307d660f90b63a061c644b05947",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv": "9eed99b44c2f10f7a8b8da69342ac29a2d3f0be476176cb590bc7531c47aaf06",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv": "c5f6d2ece89ff2d5acaf473a63f029deb25e9b2f4df9185d80c01f27d13a1a32",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv": "2aa3704e60469dfc03ade11ce42fbae35e20c541e4d488a66999ef7682248820",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_iq_C__t1.sv": "91dc71245a5ab44565201e4ae1d9e6cbc34783c89068d9677f673f386b4aa6ab",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv": "36419d42e2e607658cc64e6cf2edef12d27ce4f442b97f2c74e08fc525baafd3",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv": "cdebf083ff918032998b510de1153c5b1d52cc39baa8e4c2737621ed6f2949b6",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv": "e08b86f24cb0300d51ec2bcb69524567420d725347929a0b733329e2f2c7aca7",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv": "56bf22645decb515042b01e47ed69e3ea6ce2f0a22819533eadc509eaa9fada1",
+    "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv": "8eb0be035ae9bdcf953732e40152bcd426a603b9b30ac5e8bc538f268a74390d"
+  },
+  "slices": [
+    {
+      "logical_slice": "u_s_0S",
+      "part": "s_0S_C",
+      "sid": 0,
+      "sid_parameter": "S_u_s_0S_u_sl_u_xr_sid",
+      "sid_expression": "S_u_s_0S_u_sl_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0000",
+      "sid_top_override": "4'b0000",
+      "all_sid_literals": {
+        "S_u_s_0S_u_sl_u_xf_sid": "4'b0000",
+        "S_u_s_0S_u_sl_u_xg_sid": "4'b0000",
+        "S_u_s_0S_u_sl_u_xr_sid": "4'b0000"
+      },
+      "xr_instance": "u_u_s_0S_u_sl_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_0S.u_sl.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_lepw_mus_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mus_C__t1.sv",
+      "wrapper_sha256": "8eb0be035ae9bdcf953732e40152bcd426a603b9b30ac5e8bc538f268a74390d"
+    },
+    {
+      "logical_slice": "u_s_0N",
+      "part": "s_0N_C",
+      "sid": 1,
+      "sid_parameter": "S_u_s_0N_u_sl_u_xr_sid",
+      "sid_expression": "S_u_s_0N_u_sl_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0001",
+      "sid_top_override": "4'b0001",
+      "all_sid_literals": {
+        "S_u_s_0N_u_sl_u_xf_sid": "4'b0001",
+        "S_u_s_0N_u_sl_u_xg_sid": "4'b0001",
+        "S_u_s_0N_u_sl_u_xr_sid": "4'b0001"
+      },
+      "xr_instance": "u_u_s_0N_u_sl_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_0N.u_sl.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_lepw_mu_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepw_mu_C__t1.sv",
+      "wrapper_sha256": "56bf22645decb515042b01e47ed69e3ea6ce2f0a22819533eadc509eaa9fada1"
+    },
+    {
+      "logical_slice": "u_s_1S",
+      "part": "s_1S_C",
+      "sid": 2,
+      "sid_parameter": "S_u_s_1S_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_1S_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0010",
+      "sid_top_override": "4'b0010",
+      "all_sid_literals": {
+        "S_u_s_1S_u_lp_u_xf_sid": "4'b0010",
+        "S_u_s_1S_u_lp_u_xg_sid": "4'b0010",
+        "S_u_s_1S_u_lp_u_xr_sid": "4'b0010"
+      },
+      "xr_instance": "u_u_s_1S_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_1S.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t1.sv",
+      "wrapper_sha256": "a43ad670339ef7e8b8c55fc79fa1616abb4af4d781a4cdce196d1732e5218e63"
+    },
+    {
+      "logical_slice": "u_s_1N",
+      "part": "s_1N_C",
+      "sid": 3,
+      "sid_parameter": "S_u_s_1N_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_1N_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0011",
+      "sid_top_override": "4'b0011",
+      "all_sid_literals": {
+        "S_u_s_1N_u_lp_u_xf_sid": "4'b0011",
+        "S_u_s_1N_u_lp_u_xg_sid": "4'b0011",
+        "S_u_s_1N_u_lp_u_xr_sid": "4'b0011"
+      },
+      "xr_instance": "u_u_s_1N_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_1N.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t10",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t10.sv",
+      "wrapper_sha256": "b06e5c5749e317980f70475d9fb97f7e5ba347925fd9ea8549884a50520c65d0"
+    },
+    {
+      "logical_slice": "u_s_2S",
+      "part": "s_2S_C",
+      "sid": 4,
+      "sid_parameter": "S_u_s_2S_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_2S_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0100",
+      "sid_top_override": "4'b0100",
+      "all_sid_literals": {
+        "S_u_s_2S_u_lp_u_xf_sid": "4'b0100",
+        "S_u_s_2S_u_lp_u_xg_sid": "4'b0100",
+        "S_u_s_2S_u_lp_u_xr_sid": "4'b0100"
+      },
+      "xr_instance": "u_u_s_2S_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_2S.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t3",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t3.sv",
+      "wrapper_sha256": "9dc0ff1dac8bbb96578c57d0cc6cd99b90c42f9124d0f264b13154ed90555a71"
+    },
+    {
+      "logical_slice": "u_s_2N",
+      "part": "s_2N_C",
+      "sid": 5,
+      "sid_parameter": "S_u_s_2N_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_2N_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0101",
+      "sid_top_override": "4'b0101",
+      "all_sid_literals": {
+        "S_u_s_2N_u_lp_u_xf_sid": "4'b0101",
+        "S_u_s_2N_u_lp_u_xg_sid": "4'b0101",
+        "S_u_s_2N_u_lp_u_xr_sid": "4'b0101"
+      },
+      "xr_instance": "u_u_s_2N_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_2N.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t4",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t4.sv",
+      "wrapper_sha256": "389a2861d1f78c1defad57d16a407412778920aa04b870332f2c8ae16ab662e9"
+    },
+    {
+      "logical_slice": "u_s_3S",
+      "part": "s_3S_C",
+      "sid": 6,
+      "sid_parameter": "S_u_s_3S_u_sl_g_c3_u_xr_sid",
+      "sid_expression": "S_u_s_3S_u_sl_g_c3_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0110",
+      "sid_top_override": "4'b0110",
+      "all_sid_literals": {
+        "S_u_s_3S_u_sl_g_c3_u_xr_sid": "4'b0110",
+        "S_u_s_3S_u_sl_u_xf_sid": "4'b0110",
+        "S_u_s_3S_u_sl_u_xg_sid": "4'b0110"
+      },
+      "xr_instance": "u_u_s_3S_u_sl_g_c3_u_xr",
+      "xr_master": "ot_s81sl_xrt3",
+      "canonical_emitted_leaf_path": "u_s_3S.u_sl.g_c3.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_iq_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_iq_C__t1.sv",
+      "wrapper_sha256": "91dc71245a5ab44565201e4ae1d9e6cbc34783c89068d9677f673f386b4aa6ab"
+    },
+    {
+      "logical_slice": "u_s_3N",
+      "part": "s_3N_C",
+      "sid": 7,
+      "sid_parameter": "S_u_s_3N_u_slice_g_c1_u_xr_sid",
+      "sid_expression": "S_u_s_3N_u_slice_g_c1_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b0111",
+      "sid_top_override": "4'b0111",
+      "all_sid_literals": {
+        "S_u_s_3N_u_slice_g_c1_u_xr_sid": "4'b0111",
+        "S_u_s_3N_u_slice_u_xf_sid": "4'b0111",
+        "S_u_s_3N_u_slice_u_xg_sid": "4'b0111"
+      },
+      "xr_instance": "u_u_s_3N_u_slice_g_c1_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_3N.u_slice.g_c1.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_kv512_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_kv512_C__t1.sv",
+      "wrapper_sha256": "36419d42e2e607658cc64e6cf2edef12d27ce4f442b97f2c74e08fc525baafd3"
+    },
+    {
+      "logical_slice": "u_s_4S",
+      "part": "s_4S_C",
+      "sid": 8,
+      "sid_parameter": "S_u_s_4S_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_4S_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1000",
+      "sid_top_override": "4'b1000",
+      "all_sid_literals": {
+        "S_u_s_4S_u_lp_u_xf_sid": "4'b1000",
+        "S_u_s_4S_u_lp_u_xg_sid": "4'b1000",
+        "S_u_s_4S_u_lp_u_xr_sid": "4'b1000"
+      },
+      "xr_instance": "u_u_s_4S_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt3",
+      "canonical_emitted_leaf_path": "u_s_4S.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c3x_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c3x_C__t1.sv",
+      "wrapper_sha256": "2aa3704e60469dfc03ade11ce42fbae35e20c541e4d488a66999ef7682248820"
+    },
+    {
+      "logical_slice": "u_s_4N",
+      "part": "s_4N_C",
+      "sid": 9,
+      "sid_parameter": "S_u_s_4N_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_4N_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1001",
+      "sid_top_override": "4'b1001",
+      "all_sid_literals": {
+        "S_u_s_4N_u_lp_u_xf_sid": "4'b1001",
+        "S_u_s_4N_u_lp_u_xg_sid": "4'b1001",
+        "S_u_s_4N_u_lp_u_xr_sid": "4'b1001"
+      },
+      "xr_instance": "u_u_s_4N_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_4N.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t5",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t5.sv",
+      "wrapper_sha256": "a440f5de896e973221bc24d47277d44849dba3cce0768edede93b2eac14cfe71"
+    },
+    {
+      "logical_slice": "u_s_5S",
+      "part": "s_5S_C",
+      "sid": 10,
+      "sid_parameter": "S_u_s_5S_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_5S_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1010",
+      "sid_top_override": "4'b1010",
+      "all_sid_literals": {
+        "S_u_s_5S_u_lp_u_xf_sid": "4'b1010",
+        "S_u_s_5S_u_lp_u_xg_sid": "4'b1010",
+        "S_u_s_5S_u_lp_u_xr_sid": "4'b1010"
+      },
+      "xr_instance": "u_u_s_5S_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_5S.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t6",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t6.sv",
+      "wrapper_sha256": "450f9b82fb2de1fce1dcf94a980d29507fc00ead1eb99219b8d556213783e404"
+    },
+    {
+      "logical_slice": "u_s_5N",
+      "part": "s_5N_C",
+      "sid": 11,
+      "sid_parameter": "S_u_s_5N_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_5N_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1011",
+      "sid_top_override": "4'b1011",
+      "all_sid_literals": {
+        "S_u_s_5N_u_lp_u_xf_sid": "4'b1011",
+        "S_u_s_5N_u_lp_u_xg_sid": "4'b1011",
+        "S_u_s_5N_u_lp_u_xr_sid": "4'b1011"
+      },
+      "xr_instance": "u_u_s_5N_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_5N.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t7",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t7.sv",
+      "wrapper_sha256": "ca727f502bbc83e9c5d2491a923b8579e8c18307d660f90b63a061c644b05947"
+    },
+    {
+      "logical_slice": "u_s_6S",
+      "part": "s_6S_C",
+      "sid": 12,
+      "sid_parameter": "S_u_s_6S_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_6S_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1100",
+      "sid_top_override": "4'b1100",
+      "all_sid_literals": {
+        "S_u_s_6S_u_lp_u_xf_sid": "4'b1100",
+        "S_u_s_6S_u_lp_u_xg_sid": "4'b1100",
+        "S_u_s_6S_u_lp_u_xr_sid": "4'b1100"
+      },
+      "xr_instance": "u_u_s_6S_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_6S.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t8",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t8.sv",
+      "wrapper_sha256": "9eed99b44c2f10f7a8b8da69342ac29a2d3f0be476176cb590bc7531c47aaf06"
+    },
+    {
+      "logical_slice": "u_s_6N",
+      "part": "s_6N_C",
+      "sid": 13,
+      "sid_parameter": "S_u_s_6N_u_lp_u_xr_sid",
+      "sid_expression": "S_u_s_6N_u_lp_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1101",
+      "sid_top_override": "4'b1101",
+      "all_sid_literals": {
+        "S_u_s_6N_u_lp_u_xf_sid": "4'b1101",
+        "S_u_s_6N_u_lp_u_xg_sid": "4'b1101",
+        "S_u_s_6N_u_lp_u_xr_sid": "4'b1101"
+      },
+      "xr_instance": "u_u_s_6N_u_lp_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_6N.u_lp.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_c1x_C__t9",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_c1x_C__t9.sv",
+      "wrapper_sha256": "c5f6d2ece89ff2d5acaf473a63f029deb25e9b2f4df9185d80c01f27d13a1a32"
+    },
+    {
+      "logical_slice": "u_s_7S",
+      "part": "s_7S_C",
+      "sid": 14,
+      "sid_parameter": "S_u_s_7S_u_sl_u_xr_sid",
+      "sid_expression": "S_u_s_7S_u_sl_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1110",
+      "sid_top_override": "4'b1110",
+      "all_sid_literals": {
+        "S_u_s_7S_u_sl_u_xf_sid": "4'b1110",
+        "S_u_s_7S_u_sl_u_xg_sid": "4'b1110",
+        "S_u_s_7S_u_sl_u_xr_sid": "4'b1110"
+      },
+      "xr_instance": "u_u_s_7S_u_sl_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_7S.u_sl.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_lepe_nh_mus_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_nh_mus_C__t1.sv",
+      "wrapper_sha256": "e08b86f24cb0300d51ec2bcb69524567420d725347929a0b733329e2f2c7aca7"
+    },
+    {
+      "logical_slice": "u_s_7N",
+      "part": "s_7N_C",
+      "sid": 15,
+      "sid_parameter": "S_u_s_7N_u_sl_u_xr_sid",
+      "sid_expression": "S_u_s_7N_u_sl_u_xr_sid[3:0]",
+      "sid_raw_literal": "4'b1111",
+      "sid_top_override": "4'b1111",
+      "all_sid_literals": {
+        "S_u_s_7N_u_sl_u_xf_sid": "4'b1111",
+        "S_u_s_7N_u_sl_u_xg_sid": "4'b1111",
+        "S_u_s_7N_u_sl_u_xr_sid": "4'b1111"
+      },
+      "xr_instance": "u_u_s_7N_u_sl_u_xr",
+      "xr_master": "ot_s81sl_xrt1",
+      "canonical_emitted_leaf_path": "u_s_7N.u_sl.u_xr",
+      "params_raw": {
+        "FACE_LAND": "1",
+        "FOREG": "0",
+        "PDSK": "15'b000001010011100",
+        "QDELAYS": "128'b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "params_integer": {
+        "FACE_LAND": 1,
+        "FOREG": 0,
+        "PDSK": 668,
+        "QDELAYS": 0
+      },
+      "wrapper_module": "s81p_dsdv_slice_lepe_mu_C__t1",
+      "wrapper_file": "/srv/opentallas-scratch2/claude/die-s81-34/ev3bind/out/rtl/s81p_dsdv_slice_lepe_mu_C__t1.sv",
+      "wrapper_sha256": "cdebf083ff918032998b510de1153c5b1d52cc39baa8e4c2737621ed6f2949b6"
+    }
+  ],
+  "not_claimed": [
+    "global transport/START dates",
+    "oldc092/062ef0 cohort equality",
+    "wholeRTL/physical/G5 qualification"
+  ],
+  "source_view_sha256": "9ecdd5d275448e364cf324ec6ea8a7a4341d8a623ec3c9b502849e0a4a2e2aac"
+}
