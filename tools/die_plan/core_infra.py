@@ -180,6 +180,38 @@ def clock_feedthrough_ports(arcs):
     return {a[k] for a in declaration["arcs"] if a["kind"] == "clock" for k in ("source", "sink")}
 
 
+def validate_root_scope(tree, entries=None):
+    """Opt-in ownership for one planned root beside explicitly ordinary roots.
+
+    Editor declarations are checked again against actual rooted clock graphs in
+    Tcl; this metadata alone never authorizes touching a different root.
+    """
+    cfg = tree.get("root_scope")
+    if cfg is None:
+        return None
+    if not isinstance(cfg, dict) or set(cfg) - {"ordinary_roots", "ordinary_cts_roots", "clock_editor_roots"}:
+        raise InfraError("core_tree.root_scope needs ordinary_roots, ordinary_cts_roots and optional clock_editor_roots only")
+    roots = cfg.get("ordinary_roots")
+    name = re.compile(r"[A-Za-z_][A-Za-z0-9_]*(?:\[[0-9]+\])?\Z")
+    if not isinstance(roots, list) or not roots or any(not isinstance(p, str) or not name.fullmatch(p) for p in roots):
+        raise InfraError("root_scope.ordinary_roots must be explicit nonempty clock pin names")
+    if len(set(roots)) != len(roots) or tree.get("clock_port") in roots:
+        raise InfraError("root_scope planned and ordinary clock roots must be distinct")
+    cts = cfg.get("ordinary_cts_roots")
+    if not isinstance(cts, list) or any(not isinstance(p, str) or p not in roots for p in cts) or len(set(cts)) != len(cts):
+        raise InfraError("root_scope.ordinary_cts_roots must explicitly list the ordinary roots CTS may build")
+    editors = cfg.get("clock_editor_roots", {})
+    if not isinstance(editors, dict):
+        raise InfraError("root_scope.clock_editor_roots must be {script: [ordinary root pins]}")
+    for script, ports in editors.items():
+        if script not in ROOT_SCOPED_EDITORS or not isinstance(ports, list) or not ports or \
+                any(not isinstance(p, str) or p not in roots for p in ports) or len(set(ports)) != len(ports):
+            raise InfraError(f"root_scope editor {script!r} must name distinct ordinary roots only")
+    if entries is not None and {e.get("port") for e in entries} != {tree.get("clock_port"), *roots}:
+        raise InfraError("root_scope roots must cover clock_entries exactly (no implicit or missing roots)")
+    return dict(ordinary_roots=list(roots), ordinary_cts_roots=list(cts), clock_editor_roots={k: list(v) for k, v in editors.items()})
+
+
 def compile_slice(sl, kd=None):
     """Compile physical identities before a build; returns cells, FT ports/arcs, tree and bay assignments."""
     outline = sl["outline_um"]
@@ -296,6 +328,13 @@ def compile_slice(sl, kd=None):
         cp = tree.get("clock_port")
         if not isinstance(cp, str) or cp in seen_ports:
             raise InfraError("core_tree.clock_port must be a separate core clock input")
+        scope = validate_root_scope(tree, sl.get("clock_entries"))
+        if scope is not None:
+            if not sl.get("clock_entries"):
+                raise InfraError("root_scope requires explicit clock_entries for every root")
+            if tree.get("post_place_rebind") is not None:
+                raise InfraError("root_scope does not support post_place_rebind; explicit per-root rebind required")
+            tree["root_scope"] = scope
         depth, nn = {"port:" + cp: 0}, set()
         # CORES-EARLY-5 form C: a node may hang below a planned-domain gate (gate domain "planned"); such nodes (and
         # their descendants) are compiled after the gates. Trees without planned gates take the unchanged path.
@@ -569,6 +608,8 @@ def compile_slice(sl, kd=None):
             bays.append(dict(c, bay=b["name"], rect_um=b["rect_um"], regions_um=b.get("regions_um", [])))
     entry = next((i["clock_pin"] for i in sl.get("islands", []) if i.get("clock_pin")), None)
     clock_port = sl.get("core_clock_port") or ((tree or {}).get("clock_port"))
+    if tree and tree.get("root_scope"):
+        entry = next(e["clock_pin"] for e in sl["clock_entries"] if e["port"] == clock_port)
     if sl.get("kind") == "partition" and not clock_port:
         entry = None      # partition PHY-strip clock entry: placed by the partition io step, checked by kit_check
     if entry and not clock_port:
@@ -935,6 +976,8 @@ def emit_cts_tcl(plan):
         head += ("# FLOW-GEN-2 post-placement exact-count leaf rebind (core_leaf_rebind.py)\n"
                  f"set ::ot_ci_leaf_rebind_leaves [list {' '.join(word(n) for n in rebind_leaves(tree))}]\n"
                  f"set ::ot_ci_leaf_rebind_pinned [list {' '.join(word(n) for n in pinned)}]\n")
+    if tree.get("root_scope"):
+        return head + (HERE / "core_infra_cts_scoped.tcl").read_text()
     return head + (HERE / CTS_HOOK).read_text()
 
 
@@ -954,6 +997,25 @@ CTS_POST_LINES = ("# S81-CORE-LAT-R12: plan-built tree -> tap balance + leaf aff
 PLAN_TREE_CLOCK_EDITORS = ("regional_taps.tcl", "regional_taps_balance.tcl", "core_density_taps.tcl",
                            "core_tap_align.tcl", "f4_chain_leaf.tcl", "multiport_clock_stage_hold.tcl",
                            "head_lane_taps.tcl", "astk_zone_taps.tcl", "astk_face_taps.tcl")
+ROOT_SCOPED_EDITORS = PLAN_TREE_CLOCK_EDITORS + ("tap_balance.tcl", "leaf_affinity.tcl", "tapbal_grt.tcl")
+ROOT_SCOPE_HOOK = "core_infra_scope.tcl"
+
+
+def emit_root_scope_tcl(tree):
+    scope = validate_root_scope(tree)
+    if scope is None:
+        raise InfraError("root scope hook requested without explicit root_scope")
+    roots = [tree["clock_port"], *scope["ordinary_roots"]]
+    lines = ["# GENERATED explicit clock-root ownership; runtime graph checks are mandatory.",
+             "set ::ot_ci_scope_roots [list " + " ".join(word(p) for p in roots) + "]",
+             "set ::ot_ci_scope_owned " + word(tree["clock_port"]),
+             "set ::ot_ci_scope_cts_roots [list " + " ".join(word(p) for p in scope["ordinary_cts_roots"]) + "]",
+             "set ::ot_ci_scope_editors [dict create " + " ".join(word(k) + " [list " + " ".join(word(p) for p in v) + "]"
+                 for k, v in scope["clock_editor_roots"].items()) + "]",
+             "set ::ot_ci_scope_known [list " + " ".join(word(k) for k in ROOT_SCOPED_EDITORS) + "]"]
+    return "\n".join(lines) + "\n" + (HERE / ROOT_SCOPE_HOOK).read_text()
+
+
 _CFG_RE = re.compile(r"^\s*(override\s+)?export\s+([A-Za-z0-9_]+)\s*[:?]?=\s*(.*?)\s*$")
 _SRC_RE = re.compile(r"^\s*source\s+\{?/work/([A-Za-z0-9_.-]+)\}?\s*$", re.M)
 
@@ -1029,6 +1091,23 @@ def kit_cts_hook(kd, cfg):
         if f:
             _sourced(kd, f, used)
     bad = sorted(used & set(PLAN_TREE_CLOCK_EDITORS))
+    scope = validate_root_scope(tree)
+    if scope is not None:
+        undeclared = sorted(set(bad) - set(scope["clock_editor_roots"]))
+        if undeclared:
+            raise SystemExit(f"{kd.name}: scoped plan tree refuses undeclared clock editors {undeclared}")
+        (kd / ROOT_SCOPE_HOOK).write_text(emit_root_scope_tcl(tree))
+        # The guard must run BEFORE the ordinary-root hooks, including a late
+        # selected-root install. Do not change a shared generator hook in place.
+        pre_body = f"source /work/{ROOT_SCOPE_HOOK}\n"
+        if pre:
+            pre_body += f"source /work/{pre}\n"
+        (kd / CTS_PRE_CHAIN).write_text(pre_body + pre_lines)
+        cfg.append(f"override export PRE_CTS_TCL = /work/{CTS_PRE_CHAIN}")
+        if post:
+            (kd / CTS_POST_CHAIN).write_text(f"source /work/{ROOT_SCOPE_HOOK}\nsource /work/{post}\n")
+            cfg.append(f"override export POST_CTS_TCL = /work/{CTS_POST_CHAIN}")
+        return True
     if bad:
         raise SystemExit(f"{kd.name}: plan core tree refuses kit clock editors at CTS {bad} (the plan owns the tree; "
                          "drop the tap / F4 / regional-tap option for a plan-tree kit)")
@@ -1070,6 +1149,8 @@ def install(kd, sl):
     if plan.get("core_tree"):
         # every core-kit generator chains it at PRE_CTS via kit_cts_hook (master_slice.plan_tree_cts); unused otherwise
         (kd / CTS_HOOK).write_text(emit_cts_tcl(plan))
+        if plan["core_tree"].get("root_scope"):
+            (kd / ROOT_SCOPE_HOOK).write_text(emit_root_scope_tcl(plan["core_tree"]))
         if plan["core_tree"].get("install_stage", "pre_gpl") == "pre_cts":
             (kd / LATE_HOOK).write_text(emit_late_tcl(plan))
             shutil.copyfile(HERE / LATE_IMPL, kd / LATE_IMPL)
