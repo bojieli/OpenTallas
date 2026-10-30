@@ -113,11 +113,14 @@ def test_mk_refuses_ff_only_variant_on_two_mode_kit(tmp_path):
 def test_hook_sink_guard_order():
     s = (PRD / "prd_hook.tcl").read_text()
     order = ["ot_clk_freeze\n", "set_dont_use $lc", "repair_design -slew_margin", "repair_timing -setup",
-             "repair_timing {*}$args", "set ::ot_prd_reverted [ot_prd_sink_revert]", "\ndetailed_placement\n",
+             "ot_repair_hold_guarded $args", "repair_timing -hold {*}$args", "set ::ot_prd_reverted [ot_prd_sink_revert]", "\ndetailed_placement\n",
              "check_placement", "global_route -end_incremental", "ot_clk_freeze_assert post_grt"]
     pos = [s.index(x) for x in order]
     assert pos == sorted(pos), list(zip(order, pos))
     assert "read_spef $::env(RESULTS_DIR)/6_final.spef" in s
+    # two-mode kits use the shared chunk-capped hold guard (no -hold in the guarded args: the guard adds it)
+    assert "if {[llength [info commands ot_repair_hold_guarded]] && [ot_hold_guard_on]}" in s
+    assert "set args [list -hold_margin" in s
     # buffer / inverter / hold-cell families are never made dont_use (repair needs them)
     assert re.search(r"regexp \{\^\(BUF\|INV\|HB\[0-9\]\|CKINV\)\}", s)
 
