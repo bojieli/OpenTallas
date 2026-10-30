@@ -1,0 +1,63 @@
+{
+ "state": "PREP_NOT_ADOPTED",
+ "changes": [
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp0",
+   "old_master": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+   "new_master": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap": 0,
+   "pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__static_id11.json"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp0",
+   "old_master": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+   "new_master": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap": 16,
+   "pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__static_id11.json"
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "inst": "u_su_Q0_lane_exp0",
+   "old_master": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+   "new_master": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap": 0,
+   "pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__static_id11.json"
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp0",
+   "old_master": "ot_hbm_su_static_pgslice_lg__lane_exp0",
+   "new_master": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+   "strap": 16,
+   "pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__static_id11.json"
+  }
+ ],
+ "model": {
+  "data_cycles_added": 0,
+  "outline_delta_um": [
+   0,
+   0
+  ],
+  "additional_quasi_static_pins_per_master": 11,
+  "native_cell_count": "NOT RUN"
+ },
+ "recipe_override": {
+  "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+  "canonical_pin_map": {
+   "lane_lane_id": "lane_lane_id"
+  },
+  "required_no_ff_false_path": [
+   "lane_lane_id"
+  ]
+ },
+ "requires": [
+  "canonical free-ID source wrapper",
+  "all-used-value0/16 lockstep+mutant",
+  "explicit strap shell and SDC support",
+  "native parent-cut alias",
+  "synthesis/LEC and new physical qualification"
+ ],
+ "sha": "b3f7a5d742d73a3b4633b488e56bd1fece36aa6e61e5f599715681936c9ad5bb"
+}

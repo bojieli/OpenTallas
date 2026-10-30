@@ -1,0 +1,170 @@
+{
+ "rows": [
+  {
+   "type": "q_b113",
+   "index": 41,
+   "conn": "bus:L127_i",
+   "result": "PASS_CONSTRUCTION",
+   "registers": 5,
+   "old_candidate_registers": 6,
+   "hop_um": 371.6639999999999,
+   "solver_reach_um": 375.0,
+   "source_cycles_added": 0,
+   "from_um": [
+    1857.6,
+    513.936
+   ],
+   "to_um": [
+    723.48,
+    1550.88
+   ],
+   "regs_um": [
+    [
+     1542.24,
+     570.24
+    ],
+    [
+     1425.6,
+     825.12
+    ],
+    [
+     1162.08,
+     933.12
+    ],
+    [
+     1062.72,
+     1205.28
+    ],
+    [
+     1045.44,
+     1559.52
+    ]
+   ]
+  },
+  {
+   "type": "q_b113",
+   "index": 43,
+   "conn": "bus:L54_i",
+   "result": "PASS_CONSTRUCTION",
+   "registers": 5,
+   "old_candidate_registers": 6,
+   "hop_um": 371.5200000000001,
+   "solver_reach_um": 375.0,
+   "source_cycles_added": 0,
+   "from_um": [
+    1857.6,
+    462.904
+   ],
+   "to_um": [
+    723.48,
+    1550.88
+   ],
+   "regs_um": [
+    [
+     1594.08,
+     570.24
+    ],
+    [
+     1425.6,
+     773.28
+    ],
+    [
+     1213.92,
+     933.12
+    ],
+    [
+     1071.36,
+     1162.08
+    ],
+    [
+     1067.04,
+     1529.28
+    ]
+   ]
+  },
+  {
+   "type": "q_b113__physical_v1",
+   "index": 41,
+   "conn": "bus:L127_i",
+   "result": "PASS_CONSTRUCTION",
+   "registers": 5,
+   "old_candidate_registers": 6,
+   "hop_um": 371.6639999999999,
+   "solver_reach_um": 375.0,
+   "source_cycles_added": 0,
+   "from_um": [
+    1857.6,
+    513.936
+   ],
+   "to_um": [
+    723.48,
+    1550.88
+   ],
+   "regs_um": [
+    [
+     1542.24,
+     570.24
+    ],
+    [
+     1425.6,
+     825.12
+    ],
+    [
+     1162.08,
+     933.12
+    ],
+    [
+     1062.72,
+     1205.28
+    ],
+    [
+     1045.44,
+     1559.52
+    ]
+   ]
+  },
+  {
+   "type": "q_b113__physical_v1",
+   "index": 43,
+   "conn": "bus:L54_i",
+   "result": "PASS_CONSTRUCTION",
+   "registers": 5,
+   "old_candidate_registers": 6,
+   "hop_um": 371.5200000000001,
+   "solver_reach_um": 375.0,
+   "source_cycles_added": 0,
+   "from_um": [
+    1857.6,
+    462.904
+   ],
+   "to_um": [
+    723.48,
+    1550.88
+   ],
+   "regs_um": [
+    [
+     1594.08,
+     570.24
+    ],
+    [
+     1425.6,
+     773.28
+    ],
+    [
+     1213.92,
+     933.12
+    ],
+    [
+     1071.36,
+     1162.08
+    ],
+    [
+     1067.04,
+     1529.28
+    ]
+   ]
+  }
+ ],
+ "plan_sha": "dc621ecc6011cf9716d7f6c615ccc8d0b0aeb0f4338dc93248dcf70f6d5ab6cd",
+ "all_solved": true
+}
