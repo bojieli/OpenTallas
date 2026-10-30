@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.ln.control_free.prep.v1",
+ "source": "native plain16466 same RTL/ports/clocks/reset/cycles",
+ "boundary_ff_inventory": 5580,
+ "payload_fences_retained": 32,
+ "control_fences_removed": [
+  16,
+  33
+ ],
+ "control_logical_chunks": [
+  64,
+  65,
+  66,
+  67,
+  68,
+  69
+ ],
+ "output_FF_group_constraints_released": 508,
+ "actual_init_free_area_after_fixed_um2": 1517.7919999999995,
+ "actual_init_free_movable_area_um2": 382.235,
+ "estimated_free_utilization": 0.25183621998271183,
+ "prior_failure": "GPL-0305; routability artificial inflation+50.22%; control-cone homes opposite their actual mixed-face/bottom boundary FFs",
+ "physical_adoption": false,
+ "ready_for": "render+LOOK before ONE fresh PLACE/GRT; no CTS/DRT"
+}
