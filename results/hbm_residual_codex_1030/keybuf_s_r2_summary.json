@@ -1,0 +1,75 @@
+{
+ "plan_sha256": "2abe1e6217949121a5b73b70f12b4726e1656cfbe4040840e079a4cf67b316fb",
+ "baseline_errors": 8,
+ "candidate_errors": 8,
+ "finding_set_identical": true,
+ "pending_view": 128,
+ "new_errors": 0,
+ "non_g0c_errors": [],
+ "macro_gaps_um": [
+  10.824,
+  10.824,
+  10.824,
+  10.824
+ ],
+ "macro_real_rectangles": [
+  {
+   "name": "u_fcore.gm[0].mem",
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "orient": "MY",
+   "rect_um": [
+    24.84,
+    15.12,
+    197.664,
+    56.184
+   ]
+  },
+  {
+   "name": "u_fcore.gm[1].mem",
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "orient": "MY",
+   "rect_um": [
+    24.84,
+    67.008,
+    197.664,
+    108.072
+   ]
+  },
+  {
+   "name": "u_fcore.gm[2].mem",
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "orient": "MY",
+   "rect_um": [
+    24.84,
+    118.896,
+    197.664,
+    159.96
+   ]
+  },
+  {
+   "name": "u_fcore.gm[3].mem",
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "orient": "MY",
+   "rect_um": [
+    24.84,
+    170.784,
+    197.664,
+    211.848
+   ]
+  },
+  {
+   "name": "u_fcore.gm[4].mem",
+   "master": "ot_sram_1r1w_256x256_m2_r2c2",
+   "orient": "MY",
+   "rect_um": [
+    24.84,
+    222.672,
+    197.664,
+    263.736
+   ]
+  }
+ ],
+ "source_cycles_added": 0,
+ "status": "PREP_UNADOPTED_NO_PNR",
+ "basis_erratum": "Real LEF rectangles use +0.048um/bank row spreading (max+.192), not identical original sites; outline/clock/orient and source cycle remain unchanged. See numeric rectangles and report."
+}

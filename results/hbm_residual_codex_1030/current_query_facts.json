@@ -1,0 +1,118 @@
+[
+ {
+  "parent": "hbm_current_native_top",
+  "instance": "hb_idx__op_NE",
+  "module": "ot_hbm_idx_vm_query_static_n12",
+  "parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000010101011"
+  },
+  "module_parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000000000100"
+  },
+  "ports": {
+   "block_data": 1024,
+   "block_head": 5,
+   "block_number": 2,
+   "block_v": 1,
+   "clk": 1,
+   "fault": 1,
+   "head_weight": 16,
+   "query_index": 7,
+   "query_sector": 16,
+   "query_slot": 1,
+   "rst_n": 1,
+   "sid": 2,
+   "vm_rq": 136,
+   "vm_rr": 2056,
+   "weight_sector": 16,
+   "weight_slot": 1
+  }
+ },
+ {
+  "parent": "hbm_current_native_top",
+  "instance": "hb_idx__op_NW",
+  "module": "ot_hbm_idx_vm_query_static_n12",
+  "parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000010101101"
+  },
+  "module_parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000000000100"
+  },
+  "ports": {
+   "block_data": 1024,
+   "block_head": 5,
+   "block_number": 2,
+   "block_v": 1,
+   "clk": 1,
+   "fault": 1,
+   "head_weight": 16,
+   "query_index": 7,
+   "query_sector": 16,
+   "query_slot": 1,
+   "rst_n": 1,
+   "sid": 2,
+   "vm_rq": 136,
+   "vm_rr": 2056,
+   "weight_sector": 16,
+   "weight_slot": 1
+  }
+ },
+ {
+  "parent": "hbm_current_native_top",
+  "instance": "hb_idx__op_SE",
+  "module": "ot_hbm_idx_vm_query_static_n12",
+  "parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000010101011"
+  },
+  "module_parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000000000100"
+  },
+  "ports": {
+   "block_data": 1024,
+   "block_head": 5,
+   "block_number": 2,
+   "block_v": 1,
+   "clk": 1,
+   "fault": 1,
+   "head_weight": 16,
+   "query_index": 7,
+   "query_sector": 16,
+   "query_slot": 1,
+   "rst_n": 1,
+   "sid": 2,
+   "vm_rq": 136,
+   "vm_rr": 2056,
+   "weight_sector": 16,
+   "weight_slot": 1
+  }
+ },
+ {
+  "parent": "hbm_current_native_top",
+  "instance": "hb_idx__op_SW",
+  "module": "ot_hbm_idx_vm_query_static_n12",
+  "parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000010101011"
+  },
+  "module_parameters": {
+   "VM_RT_EXTRA": "00000000000000000000000000000100"
+  },
+  "ports": {
+   "block_data": 1024,
+   "block_head": 5,
+   "block_number": 2,
+   "block_v": 1,
+   "clk": 1,
+   "fault": 1,
+   "head_weight": 16,
+   "query_index": 7,
+   "query_sector": 16,
+   "query_slot": 1,
+   "rst_n": 1,
+   "sid": 2,
+   "vm_rq": 136,
+   "vm_rr": 2056,
+   "weight_sector": 16,
+   "weight_slot": 1
+  }
+ }
+]

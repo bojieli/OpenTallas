@@ -1,0 +1,7 @@
+KEYBUF S-output/W-input candidate, pre-placement: PASS-COND plan only, awaiting full gates/parent approval.
+
+Viewed plan.png. Unchanged241.92x293.76 outline and all16 core orientations/clock/reset pin positions.1099 key_out bits use S/M5, source key_in/control remains W/M4, peak5.3/4.2 pins/um. S points toward actual quarter scorer/b100 receivers below both mirrored hub frames; it avoids the rejected E candidate's MY reversal. Clock entry remains in clear E logic strip; regular PG/driver contracts unchanged.
+
+Output order is intentional: metadata0..10 at S x17.304..19.224, payload11..1098 reversed from x240.408 to31.704. Exact RTL storage mapping+real LEF rd_out pin positions give1088 macro-read paths: maximum396.312um to the physical S pin /392.088um to planned S-band boundaryFF y4.32, zero>405. All1099 direct key_in bypasses also checked: max313.296pin/309.072FF, zero>405. This is analytic geometry, not measured placement/STA; actual outputFF locality must preserve these bounds and a complete macro endpoint census is required before routing.
+
+Real aligned SRAM172.824x41.064 differs from historical sidecar172.8x41.04. Row spread0.048um/bank (max0.192) corrects actual horizontal gaps10.776→10.824um without changing core outline/clock or source cycles. Five MY read edges face the E logic strip; S band is open. No RTL changes or added source cycles. Existing parent station/clock sidecars are copied unchanged: strict bind/internal-station reconciliation and parent batched event approval remain open. No P&R/adoption release.

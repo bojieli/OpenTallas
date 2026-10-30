@@ -1,0 +1,3 @@
+KEYBUF E-output candidate: FAIL DATAFLOW (unadopted; no physical run).
+
+Viewed plan.png/context.png. Split W/E pins and MY SRAM read edges remove the original congested W-only strip. G0 PASS0; G0C8errors/128pending exactly the inherited D34e3 set. However actual binder current_native quarter lineage is keybuf→scorer.key_lines (not the FUSED MU despite historical u_mu_keybuf plan names). Mixed R0/MY keybuf core orientations make a local E-output point globally W on MY cores, away from actual b100 receiver regions below/right of NW_hub. A common S output preserves a southward parent direction under either orientation and is the coordinator-selected replacement. Keep this FAIL evidence; E candidate is not an approved kit source.

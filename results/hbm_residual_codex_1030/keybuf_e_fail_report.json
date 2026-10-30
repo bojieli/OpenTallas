@@ -1,0 +1,92 @@
+{
+ "status": "PREP_UNADOPTED",
+ "base": "/srv/opentallas-scratch2/claude/codex-hbm-1030/d34e3",
+ "base_sha256": "721ba17b8ebf4ac580c3f92507170ccf6249cb1a631c1e2017c71d5a0f150290",
+ "instances": [
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s0__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s1__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s2__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s3__q0"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s0__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s1__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s2__q1"
+  },
+  {
+   "type": "q_hub_nw",
+   "inst": "u_mu_keybuf_0_s3__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s0__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s1__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s2__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s3__q0"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s0__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s1__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s2__q1"
+  },
+  {
+   "type": "q_hub_ne",
+   "inst": "u_mu_keybuf_0_s3__q1"
+  }
+ ],
+ "changed_pin_tables": [
+  {
+   "before": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__canon__codex_entry.json",
+   "after": "cores/ot_hnx_idxn_keybuf_slice__241.92x293.76__canon__codex_entry__keybuf_ew1030.json",
+   "pins": 2232,
+   "key_in": 1099,
+   "key_out": 1099,
+   "peak_pins_per_um_10um": {
+    "W": 4.2,
+    "E": 4.2
+   },
+   "clock_reset_unchanged": true
+  }
+ ],
+ "macro_orientations_changed": 5,
+ "macro_rectangles_unchanged": true,
+ "source_cycles_added": 0,
+ "outline_unchanged": true,
+ "clock_reset_pins_unchanged": true,
+ "station_sidecars": "UNCHANGED; full G0C/parent internal station reconciliation required before adoption",
+ "warning": "No P&R release; review and batched parent approval remain required"
+}
