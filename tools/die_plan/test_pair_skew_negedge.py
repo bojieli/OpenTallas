@@ -85,6 +85,12 @@ proc all_registers {which} {
   switch -- $which { -clock_pins { return {a/CLK b/CLK n/CLK} } -data_pins { return {a/D b/D n/D} } default { return {} } }
 }
 proc ot_ps_ckarr {pin clk which {rf rise}} { return [lindex [dict get $::arr $pin,$rf] [expr {$which eq "max" ? 0 : 1}]] }
+# Keep this fixture focused on rise/fall arithmetic; role discovery has its own
+# dual-clock SRAM fixture.
+proc ot_ps_clock_role {pin role} {
+  set inst [ot_ps_inst $pin]
+  return [list "$inst/CLK" [expr {[string match n* $inst] ? "fall" : "rise"}]]
+}
 proc get_fanin {args} { return [dict get $::fanin [lindex $args 1]] }
 # the timing path (truth): a negedge register launches/captures on its FALL CK arrival; 5 ps CPPR
 proc truth {pin} { return [dict get $::arr $pin,[expr {[string match n* $pin] ? "fall" : "rise"}]] }
