@@ -1,0 +1,7 @@
+
+OT_HOLD_STRUCTURAL stage=cts: FF hold ws -129.25 ps, 3905 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+OT_HOLD_MM after repair: SS setup ws -155.88 / FF hold ws -129.25 ps
+Error: cts.tcl, 83 OT_HOLD_STRUCTURAL stage=cts: FF hold ws -129.25 ps, 3905 true failing endpoints (limits: ws >= -100 ps, endpoints <= 2000); revise plan/RTL/boundary before repair
+Elapsed time: 8:23.05[h:]min:sec. CPU time: user 509.09 sys 7.80 (102%). Peak memory: 2736284KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/run/results/asap7/kq_qfd_tile_nl_a0c_a0nl14icg2rr2/base/4_1_cts.odb] Error 2

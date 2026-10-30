@@ -1,0 +1,37 @@
+H	corner	FF
+H	regs	14348
+H	no_clock_arrival	0
+H	method	tag
+H	data_pins	17608
+H	pairs	49550
+H	inter_clock	0
+H	crpr	1 same_pin
+H	max_n	49550
+H	max_worst	334.25
+H	max_bounded	0
+H	max_signed	-334.25
+H	max_launch	u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[1][2]$_DFF_P_
+H	max_capture	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf
+H	max_crpr	3.44
+H	max_p99_raw	217.77
+H	max_searched	5
+H	max_nopath	0
+H	max_verify	0.000
+P	max	u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[1][2]$_DFF_P_	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf	-334.25	3.44	337.69
+P	max	u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[1][0]$_DFF_P_	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf	-334.22	3.44	337.66
+P	max	u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[1][2]$_DFF_P_	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf	-331.11	3.44	334.55
+P	max	u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[1][0]$_DFF_P_	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf	-331.09	3.44	334.53
+P	max	u_g.u_tile.u_tile.u_logic.g_rom_pipe.rq_ad_s[1][9]$_DFF_P_	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf	-330.98	3.44	334.42
+H	min_n	49550
+H	min_worst	333.6
+H	min_bounded	0
+H	min_signed	333.6
+H	min_launch	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf
+H	min_capture	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[570]$_DFF_P_
+H	min_crpr	3.44
+H	min_p99_raw	234.14
+H	min_searched	2
+H	min_nopath	0
+H	min_verify	0.000
+P	min	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[570]$_DFF_P_	333.60	3.44	337.04
+P	min	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf	u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rqr.g_col_roots.gn[527]$_DFF_P_	333.50	3.44	336.93
