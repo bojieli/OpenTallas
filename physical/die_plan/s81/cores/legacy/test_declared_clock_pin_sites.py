@@ -30,6 +30,7 @@ def test_declared_clock_still_cannot_stack_or_break_face_pitch():
 
 def test_one_bit_clock_bus_is_same_declared_root():
     assert G.one_bit_clock_pin([pin("ck[0]")], "ck") == "ck[0]"
+    assert G.one_bit_clock_pin([pin("ck[0]")], "ck[0]") == "ck[0]"
     assert G.plan_pin_sites([pin("ck[0]")], [112.32]*2, {"clock_port":"ck"})["verdict"] == "PASS"
     for names in (["ck[1]"], ["ck[0]", "ck[1]"], ["data[0]"]):
         ps = [pin(n, 56.184 + i * .048) for i,n in enumerate(names)]
