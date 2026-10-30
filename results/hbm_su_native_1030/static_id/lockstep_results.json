@@ -1,0 +1,2169 @@
+{
+ "status": "PASS",
+ "scope": "Minimum actual native pinreg full315output boundary; true POR before edge1, cold and warm reset, no masks; same actual preferred bodies/defines",
+ "bindings": [
+  {
+   "path": "su_NW0.__cut_lane_exp0",
+   "lane": 0,
+   "kind": 1,
+   "id": 0
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp1",
+   "lane": 0,
+   "kind": 1,
+   "id": 1
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp2",
+   "lane": 0,
+   "kind": 1,
+   "id": 2
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp3",
+   "lane": 0,
+   "kind": 1,
+   "id": 3
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp4",
+   "lane": 0,
+   "kind": 1,
+   "id": 4
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp5",
+   "lane": 0,
+   "kind": 1,
+   "id": 5
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp6",
+   "lane": 0,
+   "kind": 1,
+   "id": 6
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp7",
+   "lane": 0,
+   "kind": 1,
+   "id": 7
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp8",
+   "lane": 0,
+   "kind": 1,
+   "id": 8
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp9",
+   "lane": 0,
+   "kind": 1,
+   "id": 9
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp10",
+   "lane": 0,
+   "kind": 1,
+   "id": 10
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp11",
+   "lane": 0,
+   "kind": 1,
+   "id": 11
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp12",
+   "lane": 0,
+   "kind": 1,
+   "id": 12
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp13",
+   "lane": 0,
+   "kind": 1,
+   "id": 13
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp14",
+   "lane": 0,
+   "kind": 1,
+   "id": 14
+  },
+  {
+   "path": "su_NW0.__cut_lane_exp_l",
+   "lane": 0,
+   "kind": 1,
+   "id": 15
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 64
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 65
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 66
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 67
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 68
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 69
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 70
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 71
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain8_11",
+   "lane": 0,
+   "kind": 0,
+   "id": 72
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain8_11",
+   "lane": 1,
+   "kind": 0,
+   "id": 73
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain8_11",
+   "lane": 2,
+   "kind": 0,
+   "id": 74
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain8_11",
+   "lane": 3,
+   "kind": 0,
+   "id": 75
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 76
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 77
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 78
+  },
+  {
+   "path": "su_NW0.__cut_lanes_plain12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 79
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp0",
+   "lane": 0,
+   "kind": 1,
+   "id": 16
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp1",
+   "lane": 0,
+   "kind": 1,
+   "id": 17
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp2",
+   "lane": 0,
+   "kind": 1,
+   "id": 18
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp3",
+   "lane": 0,
+   "kind": 1,
+   "id": 19
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp4",
+   "lane": 0,
+   "kind": 1,
+   "id": 20
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp5",
+   "lane": 0,
+   "kind": 1,
+   "id": 21
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp6",
+   "lane": 0,
+   "kind": 1,
+   "id": 22
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp7",
+   "lane": 0,
+   "kind": 1,
+   "id": 23
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp8",
+   "lane": 0,
+   "kind": 1,
+   "id": 24
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp9",
+   "lane": 0,
+   "kind": 1,
+   "id": 25
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp10",
+   "lane": 0,
+   "kind": 1,
+   "id": 26
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp11",
+   "lane": 0,
+   "kind": 1,
+   "id": 27
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp12",
+   "lane": 0,
+   "kind": 1,
+   "id": 28
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp13",
+   "lane": 0,
+   "kind": 1,
+   "id": 29
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp14",
+   "lane": 0,
+   "kind": 1,
+   "id": 30
+  },
+  {
+   "path": "su_NW1.__cut_lane_exp_l",
+   "lane": 0,
+   "kind": 1,
+   "id": 31
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 80
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 81
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 82
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 83
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 84
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 85
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 86
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 87
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain8_11",
+   "lane": 0,
+   "kind": 0,
+   "id": 88
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain8_11",
+   "lane": 1,
+   "kind": 0,
+   "id": 89
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain8_11",
+   "lane": 2,
+   "kind": 0,
+   "id": 90
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain8_11",
+   "lane": 3,
+   "kind": 0,
+   "id": 91
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 92
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 93
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 94
+  },
+  {
+   "path": "su_NW1.__cut_lanes_plain12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 95
+  },
+  {
+   "path": "su_NW2.__cut_lanes0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 32
+  },
+  {
+   "path": "su_NW2.__cut_lanes0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 33
+  },
+  {
+   "path": "su_NW2.__cut_lanes0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 34
+  },
+  {
+   "path": "su_NW2.__cut_lanes0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 35
+  },
+  {
+   "path": "su_NW2.__cut_lanes4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 36
+  },
+  {
+   "path": "su_NW2.__cut_lanes4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 37
+  },
+  {
+   "path": "su_NW2.__cut_lanes4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 38
+  },
+  {
+   "path": "su_NW2.__cut_lanes4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 39
+  },
+  {
+   "path": "su_NW2.__cut_lanes12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 44
+  },
+  {
+   "path": "su_NW2.__cut_lanes12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 45
+  },
+  {
+   "path": "su_NW2.__cut_lanes12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 46
+  },
+  {
+   "path": "su_NW2.__cut_lanes12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 47
+  },
+  {
+   "path": "su_NW2.__cut_lanes16_19",
+   "lane": 0,
+   "kind": 0,
+   "id": 96
+  },
+  {
+   "path": "su_NW2.__cut_lanes16_19",
+   "lane": 1,
+   "kind": 0,
+   "id": 97
+  },
+  {
+   "path": "su_NW2.__cut_lanes16_19",
+   "lane": 2,
+   "kind": 0,
+   "id": 98
+  },
+  {
+   "path": "su_NW2.__cut_lanes16_19",
+   "lane": 3,
+   "kind": 0,
+   "id": 99
+  },
+  {
+   "path": "su_NW2.__cut_lanes20_23",
+   "lane": 0,
+   "kind": 0,
+   "id": 100
+  },
+  {
+   "path": "su_NW2.__cut_lanes20_23",
+   "lane": 1,
+   "kind": 0,
+   "id": 101
+  },
+  {
+   "path": "su_NW2.__cut_lanes20_23",
+   "lane": 2,
+   "kind": 0,
+   "id": 102
+  },
+  {
+   "path": "su_NW2.__cut_lanes20_23",
+   "lane": 3,
+   "kind": 0,
+   "id": 103
+  },
+  {
+   "path": "su_NW2.__cut_lanes24_27",
+   "lane": 0,
+   "kind": 0,
+   "id": 104
+  },
+  {
+   "path": "su_NW2.__cut_lanes24_27",
+   "lane": 1,
+   "kind": 0,
+   "id": 105
+  },
+  {
+   "path": "su_NW2.__cut_lanes24_27",
+   "lane": 2,
+   "kind": 0,
+   "id": 106
+  },
+  {
+   "path": "su_NW2.__cut_lanes24_27",
+   "lane": 3,
+   "kind": 0,
+   "id": 107
+  },
+  {
+   "path": "su_NW2.__cut_lanes28_31",
+   "lane": 0,
+   "kind": 0,
+   "id": 108
+  },
+  {
+   "path": "su_NW2.__cut_lanes28_31",
+   "lane": 1,
+   "kind": 0,
+   "id": 109
+  },
+  {
+   "path": "su_NW2.__cut_lanes28_31",
+   "lane": 2,
+   "kind": 0,
+   "id": 110
+  },
+  {
+   "path": "su_NW2.__cut_lanes28_31",
+   "lane": 3,
+   "kind": 0,
+   "id": 111
+  },
+  {
+   "path": "su_NW3.__cut_lanes0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 48
+  },
+  {
+   "path": "su_NW3.__cut_lanes0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 49
+  },
+  {
+   "path": "su_NW3.__cut_lanes0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 50
+  },
+  {
+   "path": "su_NW3.__cut_lanes0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 51
+  },
+  {
+   "path": "su_NW3.__cut_lanes4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 52
+  },
+  {
+   "path": "su_NW3.__cut_lanes4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 53
+  },
+  {
+   "path": "su_NW3.__cut_lanes4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 54
+  },
+  {
+   "path": "su_NW3.__cut_lanes4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 55
+  },
+  {
+   "path": "su_NW3.__cut_lanes12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 60
+  },
+  {
+   "path": "su_NW3.__cut_lanes12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 61
+  },
+  {
+   "path": "su_NW3.__cut_lanes12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 62
+  },
+  {
+   "path": "su_NW3.__cut_lanes12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 63
+  },
+  {
+   "path": "su_NW3.__cut_lanes16_19",
+   "lane": 0,
+   "kind": 0,
+   "id": 112
+  },
+  {
+   "path": "su_NW3.__cut_lanes16_19",
+   "lane": 1,
+   "kind": 0,
+   "id": 113
+  },
+  {
+   "path": "su_NW3.__cut_lanes16_19",
+   "lane": 2,
+   "kind": 0,
+   "id": 114
+  },
+  {
+   "path": "su_NW3.__cut_lanes16_19",
+   "lane": 3,
+   "kind": 0,
+   "id": 115
+  },
+  {
+   "path": "su_NW3.__cut_lanes20_23",
+   "lane": 0,
+   "kind": 0,
+   "id": 116
+  },
+  {
+   "path": "su_NW3.__cut_lanes20_23",
+   "lane": 1,
+   "kind": 0,
+   "id": 117
+  },
+  {
+   "path": "su_NW3.__cut_lanes20_23",
+   "lane": 2,
+   "kind": 0,
+   "id": 118
+  },
+  {
+   "path": "su_NW3.__cut_lanes20_23",
+   "lane": 3,
+   "kind": 0,
+   "id": 119
+  },
+  {
+   "path": "su_NW3.__cut_lanes24_27",
+   "lane": 0,
+   "kind": 0,
+   "id": 120
+  },
+  {
+   "path": "su_NW3.__cut_lanes24_27",
+   "lane": 1,
+   "kind": 0,
+   "id": 121
+  },
+  {
+   "path": "su_NW3.__cut_lanes24_27",
+   "lane": 2,
+   "kind": 0,
+   "id": 122
+  },
+  {
+   "path": "su_NW3.__cut_lanes24_27",
+   "lane": 3,
+   "kind": 0,
+   "id": 123
+  },
+  {
+   "path": "su_NW3.__cut_lanes28_31",
+   "lane": 0,
+   "kind": 0,
+   "id": 124
+  },
+  {
+   "path": "su_NW3.__cut_lanes28_31",
+   "lane": 1,
+   "kind": 0,
+   "id": 125
+  },
+  {
+   "path": "su_NW3.__cut_lanes28_31",
+   "lane": 2,
+   "kind": 0,
+   "id": 126
+  },
+  {
+   "path": "su_NW3.__cut_lanes28_31",
+   "lane": 3,
+   "kind": 0,
+   "id": 127
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp0",
+   "lane": 0,
+   "kind": 1,
+   "id": 0
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp1",
+   "lane": 0,
+   "kind": 1,
+   "id": 1
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp2",
+   "lane": 0,
+   "kind": 1,
+   "id": 2
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp3",
+   "lane": 0,
+   "kind": 1,
+   "id": 3
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp4",
+   "lane": 0,
+   "kind": 1,
+   "id": 4
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp5",
+   "lane": 0,
+   "kind": 1,
+   "id": 5
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp6",
+   "lane": 0,
+   "kind": 1,
+   "id": 6
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp7",
+   "lane": 0,
+   "kind": 1,
+   "id": 7
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp8",
+   "lane": 0,
+   "kind": 1,
+   "id": 8
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp9",
+   "lane": 0,
+   "kind": 1,
+   "id": 9
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp10",
+   "lane": 0,
+   "kind": 1,
+   "id": 10
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp11",
+   "lane": 0,
+   "kind": 1,
+   "id": 11
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp12",
+   "lane": 0,
+   "kind": 1,
+   "id": 12
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp13",
+   "lane": 0,
+   "kind": 1,
+   "id": 13
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp14",
+   "lane": 0,
+   "kind": 1,
+   "id": 14
+  },
+  {
+   "path": "su_NE0.__cut_lane_exp_l",
+   "lane": 0,
+   "kind": 1,
+   "id": 15
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 64
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 65
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 66
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 67
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 68
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 69
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 70
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 71
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain8_11",
+   "lane": 0,
+   "kind": 0,
+   "id": 72
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain8_11",
+   "lane": 1,
+   "kind": 0,
+   "id": 73
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain8_11",
+   "lane": 2,
+   "kind": 0,
+   "id": 74
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain8_11",
+   "lane": 3,
+   "kind": 0,
+   "id": 75
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 76
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 77
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 78
+  },
+  {
+   "path": "su_NE0.__cut_lanes_plain12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 79
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp0",
+   "lane": 0,
+   "kind": 1,
+   "id": 16
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp1",
+   "lane": 0,
+   "kind": 1,
+   "id": 17
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp2",
+   "lane": 0,
+   "kind": 1,
+   "id": 18
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp3",
+   "lane": 0,
+   "kind": 1,
+   "id": 19
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp4",
+   "lane": 0,
+   "kind": 1,
+   "id": 20
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp5",
+   "lane": 0,
+   "kind": 1,
+   "id": 21
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp6",
+   "lane": 0,
+   "kind": 1,
+   "id": 22
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp7",
+   "lane": 0,
+   "kind": 1,
+   "id": 23
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp8",
+   "lane": 0,
+   "kind": 1,
+   "id": 24
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp9",
+   "lane": 0,
+   "kind": 1,
+   "id": 25
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp10",
+   "lane": 0,
+   "kind": 1,
+   "id": 26
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp11",
+   "lane": 0,
+   "kind": 1,
+   "id": 27
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp12",
+   "lane": 0,
+   "kind": 1,
+   "id": 28
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp13",
+   "lane": 0,
+   "kind": 1,
+   "id": 29
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp14",
+   "lane": 0,
+   "kind": 1,
+   "id": 30
+  },
+  {
+   "path": "su_NE1.__cut_lane_exp_l",
+   "lane": 0,
+   "kind": 1,
+   "id": 31
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 80
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 81
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 82
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 83
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 84
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 85
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 86
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 87
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain8_11",
+   "lane": 0,
+   "kind": 0,
+   "id": 88
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain8_11",
+   "lane": 1,
+   "kind": 0,
+   "id": 89
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain8_11",
+   "lane": 2,
+   "kind": 0,
+   "id": 90
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain8_11",
+   "lane": 3,
+   "kind": 0,
+   "id": 91
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 92
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 93
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 94
+  },
+  {
+   "path": "su_NE1.__cut_lanes_plain12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 95
+  },
+  {
+   "path": "su_NE2.__cut_lanes0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 32
+  },
+  {
+   "path": "su_NE2.__cut_lanes0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 33
+  },
+  {
+   "path": "su_NE2.__cut_lanes0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 34
+  },
+  {
+   "path": "su_NE2.__cut_lanes0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 35
+  },
+  {
+   "path": "su_NE2.__cut_lanes4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 36
+  },
+  {
+   "path": "su_NE2.__cut_lanes4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 37
+  },
+  {
+   "path": "su_NE2.__cut_lanes4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 38
+  },
+  {
+   "path": "su_NE2.__cut_lanes4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 39
+  },
+  {
+   "path": "su_NE2.__cut_lanes12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 44
+  },
+  {
+   "path": "su_NE2.__cut_lanes12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 45
+  },
+  {
+   "path": "su_NE2.__cut_lanes12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 46
+  },
+  {
+   "path": "su_NE2.__cut_lanes12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 47
+  },
+  {
+   "path": "su_NE2.__cut_lanes16_19",
+   "lane": 0,
+   "kind": 0,
+   "id": 96
+  },
+  {
+   "path": "su_NE2.__cut_lanes16_19",
+   "lane": 1,
+   "kind": 0,
+   "id": 97
+  },
+  {
+   "path": "su_NE2.__cut_lanes16_19",
+   "lane": 2,
+   "kind": 0,
+   "id": 98
+  },
+  {
+   "path": "su_NE2.__cut_lanes16_19",
+   "lane": 3,
+   "kind": 0,
+   "id": 99
+  },
+  {
+   "path": "su_NE2.__cut_lanes20_23",
+   "lane": 0,
+   "kind": 0,
+   "id": 100
+  },
+  {
+   "path": "su_NE2.__cut_lanes20_23",
+   "lane": 1,
+   "kind": 0,
+   "id": 101
+  },
+  {
+   "path": "su_NE2.__cut_lanes20_23",
+   "lane": 2,
+   "kind": 0,
+   "id": 102
+  },
+  {
+   "path": "su_NE2.__cut_lanes20_23",
+   "lane": 3,
+   "kind": 0,
+   "id": 103
+  },
+  {
+   "path": "su_NE2.__cut_lanes24_27",
+   "lane": 0,
+   "kind": 0,
+   "id": 104
+  },
+  {
+   "path": "su_NE2.__cut_lanes24_27",
+   "lane": 1,
+   "kind": 0,
+   "id": 105
+  },
+  {
+   "path": "su_NE2.__cut_lanes24_27",
+   "lane": 2,
+   "kind": 0,
+   "id": 106
+  },
+  {
+   "path": "su_NE2.__cut_lanes24_27",
+   "lane": 3,
+   "kind": 0,
+   "id": 107
+  },
+  {
+   "path": "su_NE2.__cut_lanes28_31",
+   "lane": 0,
+   "kind": 0,
+   "id": 108
+  },
+  {
+   "path": "su_NE2.__cut_lanes28_31",
+   "lane": 1,
+   "kind": 0,
+   "id": 109
+  },
+  {
+   "path": "su_NE2.__cut_lanes28_31",
+   "lane": 2,
+   "kind": 0,
+   "id": 110
+  },
+  {
+   "path": "su_NE2.__cut_lanes28_31",
+   "lane": 3,
+   "kind": 0,
+   "id": 111
+  },
+  {
+   "path": "su_NE3.__cut_lanes0_3",
+   "lane": 0,
+   "kind": 0,
+   "id": 48
+  },
+  {
+   "path": "su_NE3.__cut_lanes0_3",
+   "lane": 1,
+   "kind": 0,
+   "id": 49
+  },
+  {
+   "path": "su_NE3.__cut_lanes0_3",
+   "lane": 2,
+   "kind": 0,
+   "id": 50
+  },
+  {
+   "path": "su_NE3.__cut_lanes0_3",
+   "lane": 3,
+   "kind": 0,
+   "id": 51
+  },
+  {
+   "path": "su_NE3.__cut_lanes4_7",
+   "lane": 0,
+   "kind": 0,
+   "id": 52
+  },
+  {
+   "path": "su_NE3.__cut_lanes4_7",
+   "lane": 1,
+   "kind": 0,
+   "id": 53
+  },
+  {
+   "path": "su_NE3.__cut_lanes4_7",
+   "lane": 2,
+   "kind": 0,
+   "id": 54
+  },
+  {
+   "path": "su_NE3.__cut_lanes4_7",
+   "lane": 3,
+   "kind": 0,
+   "id": 55
+  },
+  {
+   "path": "su_NE3.__cut_lanes12_15",
+   "lane": 0,
+   "kind": 0,
+   "id": 60
+  },
+  {
+   "path": "su_NE3.__cut_lanes12_15",
+   "lane": 1,
+   "kind": 0,
+   "id": 61
+  },
+  {
+   "path": "su_NE3.__cut_lanes12_15",
+   "lane": 2,
+   "kind": 0,
+   "id": 62
+  },
+  {
+   "path": "su_NE3.__cut_lanes12_15",
+   "lane": 3,
+   "kind": 0,
+   "id": 63
+  },
+  {
+   "path": "su_NE3.__cut_lanes16_19",
+   "lane": 0,
+   "kind": 0,
+   "id": 112
+  },
+  {
+   "path": "su_NE3.__cut_lanes16_19",
+   "lane": 1,
+   "kind": 0,
+   "id": 113
+  },
+  {
+   "path": "su_NE3.__cut_lanes16_19",
+   "lane": 2,
+   "kind": 0,
+   "id": 114
+  },
+  {
+   "path": "su_NE3.__cut_lanes16_19",
+   "lane": 3,
+   "kind": 0,
+   "id": 115
+  },
+  {
+   "path": "su_NE3.__cut_lanes20_23",
+   "lane": 0,
+   "kind": 0,
+   "id": 116
+  },
+  {
+   "path": "su_NE3.__cut_lanes20_23",
+   "lane": 1,
+   "kind": 0,
+   "id": 117
+  },
+  {
+   "path": "su_NE3.__cut_lanes20_23",
+   "lane": 2,
+   "kind": 0,
+   "id": 118
+  },
+  {
+   "path": "su_NE3.__cut_lanes20_23",
+   "lane": 3,
+   "kind": 0,
+   "id": 119
+  },
+  {
+   "path": "su_NE3.__cut_lanes24_27",
+   "lane": 0,
+   "kind": 0,
+   "id": 120
+  },
+  {
+   "path": "su_NE3.__cut_lanes24_27",
+   "lane": 1,
+   "kind": 0,
+   "id": 121
+  },
+  {
+   "path": "su_NE3.__cut_lanes24_27",
+   "lane": 2,
+   "kind": 0,
+   "id": 122
+  },
+  {
+   "path": "su_NE3.__cut_lanes24_27",
+   "lane": 3,
+   "kind": 0,
+   "id": 123
+  },
+  {
+   "path": "su_NE3.__cut_lanes28_31",
+   "lane": 0,
+   "kind": 0,
+   "id": 124
+  },
+  {
+   "path": "su_NE3.__cut_lanes28_31",
+   "lane": 1,
+   "kind": 0,
+   "id": 125
+  },
+  {
+   "path": "su_NE3.__cut_lanes28_31",
+   "lane": 2,
+   "kind": 0,
+   "id": 126
+  },
+  {
+   "path": "su_NE3.__cut_lanes28_31",
+   "lane": 3,
+   "kind": 0,
+   "id": 127
+  }
+ ],
+ "unique_cases": 120,
+ "results": [
+  {
+   "kind": 0,
+   "id": 32,
+   "rc": 0,
+   "output": "RESULT KIND0 ID32 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 33,
+   "rc": 0,
+   "output": "RESULT KIND0 ID33 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 34,
+   "rc": 0,
+   "output": "RESULT KIND0 ID34 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 35,
+   "rc": 0,
+   "output": "RESULT KIND0 ID35 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 36,
+   "rc": 0,
+   "output": "RESULT KIND0 ID36 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 37,
+   "rc": 0,
+   "output": "RESULT KIND0 ID37 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 38,
+   "rc": 0,
+   "output": "RESULT KIND0 ID38 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 39,
+   "rc": 0,
+   "output": "RESULT KIND0 ID39 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 44,
+   "rc": 0,
+   "output": "RESULT KIND0 ID44 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 45,
+   "rc": 0,
+   "output": "RESULT KIND0 ID45 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 46,
+   "rc": 0,
+   "output": "RESULT KIND0 ID46 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 47,
+   "rc": 0,
+   "output": "RESULT KIND0 ID47 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 48,
+   "rc": 0,
+   "output": "RESULT KIND0 ID48 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 49,
+   "rc": 0,
+   "output": "RESULT KIND0 ID49 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 50,
+   "rc": 0,
+   "output": "RESULT KIND0 ID50 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 51,
+   "rc": 0,
+   "output": "RESULT KIND0 ID51 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 52,
+   "rc": 0,
+   "output": "RESULT KIND0 ID52 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 53,
+   "rc": 0,
+   "output": "RESULT KIND0 ID53 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 54,
+   "rc": 0,
+   "output": "RESULT KIND0 ID54 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 55,
+   "rc": 0,
+   "output": "RESULT KIND0 ID55 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 60,
+   "rc": 0,
+   "output": "RESULT KIND0 ID60 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 61,
+   "rc": 0,
+   "output": "RESULT KIND0 ID61 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 62,
+   "rc": 0,
+   "output": "RESULT KIND0 ID62 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 63,
+   "rc": 0,
+   "output": "RESULT KIND0 ID63 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 64,
+   "rc": 0,
+   "output": "RESULT KIND0 ID64 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 65,
+   "rc": 0,
+   "output": "RESULT KIND0 ID65 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 66,
+   "rc": 0,
+   "output": "RESULT KIND0 ID66 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 67,
+   "rc": 0,
+   "output": "RESULT KIND0 ID67 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 68,
+   "rc": 0,
+   "output": "RESULT KIND0 ID68 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 69,
+   "rc": 0,
+   "output": "RESULT KIND0 ID69 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 70,
+   "rc": 0,
+   "output": "RESULT KIND0 ID70 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 71,
+   "rc": 0,
+   "output": "RESULT KIND0 ID71 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 72,
+   "rc": 0,
+   "output": "RESULT KIND0 ID72 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 73,
+   "rc": 0,
+   "output": "RESULT KIND0 ID73 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 74,
+   "rc": 0,
+   "output": "RESULT KIND0 ID74 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 75,
+   "rc": 0,
+   "output": "RESULT KIND0 ID75 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 76,
+   "rc": 0,
+   "output": "RESULT KIND0 ID76 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 77,
+   "rc": 0,
+   "output": "RESULT KIND0 ID77 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 78,
+   "rc": 0,
+   "output": "RESULT KIND0 ID78 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 79,
+   "rc": 0,
+   "output": "RESULT KIND0 ID79 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 80,
+   "rc": 0,
+   "output": "RESULT KIND0 ID80 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 81,
+   "rc": 0,
+   "output": "RESULT KIND0 ID81 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 82,
+   "rc": 0,
+   "output": "RESULT KIND0 ID82 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 83,
+   "rc": 0,
+   "output": "RESULT KIND0 ID83 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 84,
+   "rc": 0,
+   "output": "RESULT KIND0 ID84 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 85,
+   "rc": 0,
+   "output": "RESULT KIND0 ID85 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 86,
+   "rc": 0,
+   "output": "RESULT KIND0 ID86 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 87,
+   "rc": 0,
+   "output": "RESULT KIND0 ID87 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 88,
+   "rc": 0,
+   "output": "RESULT KIND0 ID88 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 89,
+   "rc": 0,
+   "output": "RESULT KIND0 ID89 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 90,
+   "rc": 0,
+   "output": "RESULT KIND0 ID90 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 91,
+   "rc": 0,
+   "output": "RESULT KIND0 ID91 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 92,
+   "rc": 0,
+   "output": "RESULT KIND0 ID92 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 93,
+   "rc": 0,
+   "output": "RESULT KIND0 ID93 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 94,
+   "rc": 0,
+   "output": "RESULT KIND0 ID94 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 95,
+   "rc": 0,
+   "output": "RESULT KIND0 ID95 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 96,
+   "rc": 0,
+   "output": "RESULT KIND0 ID96 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 97,
+   "rc": 0,
+   "output": "RESULT KIND0 ID97 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 98,
+   "rc": 0,
+   "output": "RESULT KIND0 ID98 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 99,
+   "rc": 0,
+   "output": "RESULT KIND0 ID99 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 100,
+   "rc": 0,
+   "output": "RESULT KIND0 ID100 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 101,
+   "rc": 0,
+   "output": "RESULT KIND0 ID101 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 102,
+   "rc": 0,
+   "output": "RESULT KIND0 ID102 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 103,
+   "rc": 0,
+   "output": "RESULT KIND0 ID103 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 104,
+   "rc": 0,
+   "output": "RESULT KIND0 ID104 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 105,
+   "rc": 0,
+   "output": "RESULT KIND0 ID105 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 106,
+   "rc": 0,
+   "output": "RESULT KIND0 ID106 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 107,
+   "rc": 0,
+   "output": "RESULT KIND0 ID107 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 108,
+   "rc": 0,
+   "output": "RESULT KIND0 ID108 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 109,
+   "rc": 0,
+   "output": "RESULT KIND0 ID109 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 110,
+   "rc": 0,
+   "output": "RESULT KIND0 ID110 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 111,
+   "rc": 0,
+   "output": "RESULT KIND0 ID111 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 112,
+   "rc": 0,
+   "output": "RESULT KIND0 ID112 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 113,
+   "rc": 0,
+   "output": "RESULT KIND0 ID113 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 114,
+   "rc": 0,
+   "output": "RESULT KIND0 ID114 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 115,
+   "rc": 0,
+   "output": "RESULT KIND0 ID115 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 116,
+   "rc": 0,
+   "output": "RESULT KIND0 ID116 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 117,
+   "rc": 0,
+   "output": "RESULT KIND0 ID117 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 118,
+   "rc": 0,
+   "output": "RESULT KIND0 ID118 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 119,
+   "rc": 0,
+   "output": "RESULT KIND0 ID119 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 120,
+   "rc": 0,
+   "output": "RESULT KIND0 ID120 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 121,
+   "rc": 0,
+   "output": "RESULT KIND0 ID121 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 122,
+   "rc": 0,
+   "output": "RESULT KIND0 ID122 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 123,
+   "rc": 0,
+   "output": "RESULT KIND0 ID123 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 124,
+   "rc": 0,
+   "output": "RESULT KIND0 ID124 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 125,
+   "rc": 0,
+   "output": "RESULT KIND0 ID125 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 126,
+   "rc": 0,
+   "output": "RESULT KIND0 ID126 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 0,
+   "id": 127,
+   "rc": 0,
+   "output": "RESULT KIND0 ID127 ERR0 MUT136\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 0,
+   "rc": 0,
+   "output": "RESULT KIND1 ID0 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 1,
+   "rc": 0,
+   "output": "RESULT KIND1 ID1 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 2,
+   "rc": 0,
+   "output": "RESULT KIND1 ID2 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 3,
+   "rc": 0,
+   "output": "RESULT KIND1 ID3 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 4,
+   "rc": 0,
+   "output": "RESULT KIND1 ID4 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 5,
+   "rc": 0,
+   "output": "RESULT KIND1 ID5 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 6,
+   "rc": 0,
+   "output": "RESULT KIND1 ID6 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 7,
+   "rc": 0,
+   "output": "RESULT KIND1 ID7 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 8,
+   "rc": 0,
+   "output": "RESULT KIND1 ID8 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 9,
+   "rc": 0,
+   "output": "RESULT KIND1 ID9 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 10,
+   "rc": 0,
+   "output": "RESULT KIND1 ID10 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 11,
+   "rc": 0,
+   "output": "RESULT KIND1 ID11 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 12,
+   "rc": 0,
+   "output": "RESULT KIND1 ID12 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 13,
+   "rc": 0,
+   "output": "RESULT KIND1 ID13 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 14,
+   "rc": 0,
+   "output": "RESULT KIND1 ID14 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 15,
+   "rc": 0,
+   "output": "RESULT KIND1 ID15 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 16,
+   "rc": 0,
+   "output": "RESULT KIND1 ID16 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 17,
+   "rc": 0,
+   "output": "RESULT KIND1 ID17 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 18,
+   "rc": 0,
+   "output": "RESULT KIND1 ID18 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 19,
+   "rc": 0,
+   "output": "RESULT KIND1 ID19 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 20,
+   "rc": 0,
+   "output": "RESULT KIND1 ID20 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 21,
+   "rc": 0,
+   "output": "RESULT KIND1 ID21 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 22,
+   "rc": 0,
+   "output": "RESULT KIND1 ID22 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 23,
+   "rc": 0,
+   "output": "RESULT KIND1 ID23 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 24,
+   "rc": 0,
+   "output": "RESULT KIND1 ID24 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 25,
+   "rc": 0,
+   "output": "RESULT KIND1 ID25 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 26,
+   "rc": 0,
+   "output": "RESULT KIND1 ID26 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 27,
+   "rc": 0,
+   "output": "RESULT KIND1 ID27 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 28,
+   "rc": 0,
+   "output": "RESULT KIND1 ID28 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 29,
+   "rc": 0,
+   "output": "RESULT KIND1 ID29 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 30,
+   "rc": 0,
+   "output": "RESULT KIND1 ID30 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  },
+  {
+   "kind": 1,
+   "id": 31,
+   "rc": 0,
+   "output": "RESULT KIND1 ID31 ERR0 MUT93\n/srv/opentallas-scratch2/claude/codex-hbm-su-static-id-1030/results/hbm_su_native_1030/static_id/lockstep.sv:213: $finish called at 1800000 (1ps)\n"
+  }
+ ]
+}

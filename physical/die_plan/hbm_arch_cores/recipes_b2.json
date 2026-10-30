@@ -2422,5 +2422,58 @@
     "orient": "MY"
    }
   ]
+ },
+ "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44": {
+  "top": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+  "files": [
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane_pinreg.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__synth.sv"
+  ],
+  "defines": [
+   "OT_SMH_FC_HIER",
+   "OT_SMH_HIER",
+   "OT_SMH_XLK",
+   "OT_FP_DATA_NORST",
+   "OT_SMH_DRST0",
+   "OT_SMH_RSTRELAY",
+   "OT_SM_QSPLIT"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification.",
+  "synth_memory_max_bits": 4096
  }
 }

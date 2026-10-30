@@ -6,7 +6,8 @@ SU_MASTER = "ot_hbm_su_static_pgslice_lg__lane_exp0_id"
 # lane_lane_id (wired straight through in the master's own wrapper; same row as tools/die_plan/parent_id_straps.py
 # PHYSICAL_ID_ALIASES).  The native unprefixed name is never a physical static pin.
 SU_ALIAS, SU_NATIVE, SU_WIDTH = "strap_lane_lane_id", "lane_lane_id", 11
-SU_ID_WIDTHS = {SU_MASTER: 11,
+SU_PACKED_MASTER = "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44"
+SU_ID_WIDTHS = {SU_MASTER: 11, SU_PACKED_MASTER: 44,
     "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": 11,
     "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": 9,
     "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": 9}
