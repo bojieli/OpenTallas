@@ -1,0 +1,13 @@
+{
+ "status":"NOT_ADOPTED_PARTIAL_ESTIMATE_WITH_TERMINAL_FAILURES",
+ "owner_authorization":"2026-10-29 23:56 larger local slot first; preserve all183 SRAM and16 writes; neighbour/clock/performance before adoption",
+ "inherited_base":"847628f9632 event2 (not current event3)",
+ "source_directory":"intel2:/srv/opentallas-scratch2/claude/die-s81-34/kvt2",
+ "candidate":{"direction":"east","size_um":[1814.40,1226.88],"growth_um":371.52,"srams_placed":183,"packer_problems":0},
+ "neighbour":{"instance":"s_4N_L0","type":"ot_s81sl_leaf__t42","orient":"MY","size_um":[1071.36,1226.88],"overlapped_child_bodies":20,"children":27,"internal_stations_to_recompute":117,"reset_relays_in_taken_strip_approx":52},
+ "terminal_search":{"strict_directory":"intel2:/srv/opentallas-scratch2/claude/die-s81-34/kvt2slot","r1_candidates":24,"r1_legal_keys":0,"r2_existing_candidates":12,"r2_legal_keys":0,"relaxed_r3_candidates":24,"relaxed_best":"s47.json","best_reach_excess_um":46.6,"reported_internal_cycles":20,"lower_cycle_alternative":{"cycles":19,"reach_excess_um":50.3}},
+ "performance":{"external_die_crossing_added_cycles":0,"neighbour_internal_composed_cycles":"UNQUALIFIED: no legal geometry","clock":"UNQUALIFIED: inherited estimate raw trunk shift36..80ps; later draft preservesdie-taps instead; neither candidate has native recomposed clock proof"},
+ "additional_unhandled_gates":["No current actual native mapped T2 receipt;400659 is stale plan estimate","No actual hard-cut composition/native current child views","Earlier183SRAM-only packing omitted full soft vector/hcpost body area","No current G0C/bind/clock or neighbouring source/cycle qualification"],
+ "active_next":"Own correct no-share native16write synthesis intel1 codex-s81types-1030/kvt2_noshare_v2, immutable original job preserved; use measured body/cuts before considering enlargement adoption",
+ "adoption":false
+}
