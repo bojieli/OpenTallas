@@ -77,6 +77,31 @@ BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "
               "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"}
 
 
+def declared_missing(ab0, base):
+    """DIE-S81-32/BIND 10-29 (S81 verify256 lint FAIL: 1,769 MODMISSING in 156 of 363 split runs): the as-built
+    manifest DECLARES the exact source of every macro view / out-of-tree leaf (netlist, files, prefer: e.g.
+    physical/asap7_memory_macros_v2/ot_rom_4096x72_m8/ot_rom_4096x72_m8_bb.v, the p192 r2c2 SRAM views,
+    physical/rom_host_ingest/rtl/dsfd_host.sv).  E.module_index skips an unreadable declared file silently, so a
+    verify run from a checkout without them (a sparse worktree: tools/ rtl/ physical/die_plan/<die>/ only) lost
+    the declared view and the closure fell through to rtl/ (ambiguous p192/p192bs wrappers -> missing) or to
+    nothing.  -> the declared paths that do not exist under base; a non-empty list stops the verify (no silent
+    fallback to a different definition)."""
+    out = []
+    for k in ("netlist", "files", "prefer"):
+        for f in ab0.get(k, []) or []:
+            q = Path(f) if Path(f).is_absolute() else Path(base) / f
+            if not q.exists() and f not in out:
+                out.append(f)
+    return out
+
+
+def require_declared(ab0, base):
+    miss = declared_missing(ab0, base)
+    if miss:
+        raise ValueError(f"bind verify: {len(miss)} as-built manifest source(s) absent under {base} (sparse checkout "
+                         f"too narrow?): " + ", ".join(miss[:8]) + (" ..." if len(miss) > 8 else ""))
+
+
 class LintSources:
     """DIE-S81-30 10-29 (COORD ruling S81 bind6 VERIFY FAIL (2): 5,071 lint MODMISSING): the module index the lint
     closure descends.  The as-built manifest index (rtl_roots + files) alone missed every child defined outside it
@@ -92,6 +117,7 @@ class LintSources:
 
     def __init__(self, ab0, base, rep, idx, prefer):
         import bind as B
+        require_declared(ab0, base)
         self.base, self.prefer = Path(base), list(prefer)
         self.idx = {k: list(v) for k, v in idx.items()}
         own = [f for f in list(rep.get("extra_lib", [])) + list(rep.get("files", []))
@@ -361,6 +387,7 @@ def cmd_verify(a):
     raw = load_plan(a.plan)
     out = Path(a.out).resolve()
     rep = json.loads((out / "bind_report.json").read_text())
+    require_declared(raw["asbuilt"], _b.plan_base(a.plan, raw))    # before the multi-hour read, not after it
     srcs = json.loads((out / "asbuilt_sources.json").read_text())
     gen = [f for f in rep["files"]]
     top = f"{sv_id(raw['die']['name'])}_bound_top"
