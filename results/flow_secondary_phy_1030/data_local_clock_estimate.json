@@ -1,0 +1,340 @@
+{
+ "basis": "Exploratory ASAP7 NLDM + same A0 Manhattan-MST/direct Elmore model, allBUFx24, repeaters<=150um, no timing measurements consumed; no legalization/PG/DRC performed",
+ "cells": 1027,
+ "sinks": 5260,
+ "corners": {
+  "TT": {
+   "aocv": {
+    "max_ps": 47.06027713993456,
+    "over80": 0,
+    "worst": [
+     [
+      47.06027713993456,
+      "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[3\\]$_DFF_PN0_",
+      19.058129343274537,
+      28.002147796660026
+     ],
+     [
+      47.0203310845595,
+      "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[2\\]$_DFF_PN0_",
+      19.01741036452688,
+      28.002920720032623
+     ],
+     [
+      47.0203310845595,
+      "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[1\\]$_DFF_PN0_",
+      19.01741036452688,
+      28.002920720032623
+     ]
+    ],
+    "spice_scale": 1.0485,
+    "same_PDN_region": true,
+    "table": "clk_aocv_table_g021.json",
+    "branch_pairs": 2259
+   },
+   "pairinfo": {
+    "pairs": 40340,
+    "max_abs_ps": 20.179760483622545,
+    "over80": 0,
+    "over150": 0,
+    "worst": [
+     [
+      20.179760483622545,
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      "u_bound.u_core.u_fdi_cdc.rq_d\\[28\\]$_DFF_P_"
+     ],
+     [
+      20.17554574751489,
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      "u_bound.u_core.u_fdi_cdc.rq_d\\[31\\]$_DFF_P_"
+     ],
+     [
+      20.16823495779579,
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      "u_bound.u_core.u_fdi_cdc.rq_d\\[29\\]$_DFF_P_"
+     ]
+    ],
+    "missing": 0
+   },
+   "macro_related": {
+    "rq_d_count": 522,
+    "rq_d_min_ps": 475.31863108848967,
+    "rq_d_max_ps": 485.7774625728205,
+    "max_abs_macro_pair_ps": 20.179760483622545
+   },
+   "min_ps": 456.88412646589717,
+   "max_ps": 485.80156594478314,
+   "window_ps": 28.917439478885967,
+   "max_slew_ps": 67.91452509495777,
+   "macro_pin_ps": [
+    465.597702089198
+   ],
+   "worst_slew_net": {
+    "driver": 32,
+    "driver_xy": [
+     1888.354189830509,
+     494.7187118644064
+    ],
+    "target_xy": [
+     1884.384,
+     354.024
+    ],
+    "wire_um": 152.3908072255913,
+    "cap_ff": 30.55303137082462,
+    "targetcap_ff": 2.34978,
+    "targetdistance_um": 144.66490169491544,
+    "arrival_ps": 415.0685569276936
+   }
+  },
+  "FF": {
+   "aocv": {
+    "max_ps": 42.01759176837071,
+    "over80": 0,
+    "worst": [
+     [
+      42.01759176837071,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[223\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      17.36982955077137,
+      24.647762217599333
+     ],
+     [
+      42.01759176837071,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[222\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      17.36982955077137,
+      24.647762217599333
+     ],
+     [
+      42.0069850005524,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[241\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      17.358847159093973,
+      24.648137841458425
+     ]
+    ],
+    "spice_scale": 1.0552,
+    "same_PDN_region": true,
+    "table": "clk_aocv_table_g021.json",
+    "branch_pairs": 2259
+   },
+   "pairinfo": {
+    "pairs": 40340,
+    "max_abs_ps": 16.461172811572567,
+    "over80": 0,
+    "over150": 0,
+    "worst": [
+     [
+      16.461172811572567,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[223\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro"
+     ],
+     [
+      16.461172811572567,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[222\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro"
+     ],
+     [
+      16.45076493469861,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[241\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro"
+     ]
+    ],
+    "missing": 0
+   },
+   "macro_related": {
+    "rq_d_count": 522,
+    "rq_d_min_ps": 391.4377868197844,
+    "rq_d_max_ps": 399.280582365522,
+    "max_abs_macro_pair_ps": 7.602749660639859
+   },
+   "min_ps": 375.21665989330955,
+   "max_ps": 399.3056907410239,
+   "window_ps": 24.089030847714355,
+   "max_slew_ps": 67.59836036344548,
+   "macro_pin_ps": [
+    391.6778327048821
+   ],
+   "worst_slew_net": {
+    "driver": 32,
+    "driver_xy": [
+     1888.354189830509,
+     494.7187118644064
+    ],
+    "target_xy": [
+     1884.384,
+     354.024
+    ],
+    "wire_um": 152.3908072255913,
+    "cap_ff": 31.325741370824616,
+    "targetcap_ff": 2.60735,
+    "targetdistance_um": 144.66490169491544,
+    "arrival_ps": 352.7040630288469
+   }
+  }
+ },
+ "data_geometry": {
+  "structural_ff_pairs": 39293,
+  "ff_manhattan_max_um": 380.5379999999999,
+  "ff_over405": 0,
+  "worst_ff": [
+   [
+    380.5379999999999,
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_",
+    "u_bound.u_core.u_fdi_cdc.u_rx.mem\\[0\\]\\[521\\]$_DFFE_PP_"
+   ],
+   [
+    380.5379999999999,
+    "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+    "u_bound.u_core.u_fdi_cdc.u_rx.mem\\[0\\]\\[521\\]$_DFFE_PP_"
+   ],
+   [
+    380.2679999999999,
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_",
+    "u_bound.u_core.u_fdi_cdc.u_rx.mem\\[7\\]\\[521\\]$_DFFE_PP_"
+   ],
+   [
+    380.2679999999999,
+    "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+    "u_bound.u_core.u_fdi_cdc.u_rx.mem\\[7\\]\\[521\\]$_DFFE_PP_"
+   ],
+   [
+    380.15999999999997,
+    "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_",
+    "u_bound.u_core.u_fdi_cdc.p_tx_v$_DFF_PN0_"
+   ]
+  ],
+  "rx_bits": 522,
+  "rx_max_um": 303.7980000000001,
+  "tx_bits": 522,
+  "tx_max_um": 182.40600000000015,
+  "control_relocations": [
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[2\\]$_DFF_PN0_",
+    "old": [
+     1883.574,
+     215.19
+    ],
+    "new": [
+     1889.8380000000002,
+     467.1
+    ],
+    "old_max_hop_um": 505.386
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[1\\]$_DFF_PN0_",
+    "old": [
+     1885.14,
+     215.19
+    ],
+    "new": [
+     1889.8380000000002,
+     467.1
+    ],
+    "old_max_hop_um": 503.82
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[0\\]$_DFF_PN0_",
+    "old": [
+     1886.7060000000001,
+     215.19
+    ],
+    "new": [
+     1889.8380000000002,
+     467.1
+    ],
+    "old_max_hop_um": 505.386
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_empty$_DFF_PN1_",
+    "old": [
+     1888.2720000000002,
+     215.19
+    ],
+    "new": [
+     1889.055,
+     465.48
+    ],
+    "old_max_hop_um": 506.95200000000006
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[3\\]$_DFF_PN0_",
+    "old": [
+     1889.838,
+     215.19
+    ],
+    "new": [
+     1889.8380000000002,
+     467.1
+    ],
+    "old_max_hop_um": 508.51799999999986
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[2\\]$_DFF_PN0_",
+    "old": [
+     1891.404,
+     215.19
+    ],
+    "new": [
+     1889.055,
+     368.145
+    ],
+    "old_max_hop_um": 510.0839999999999
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[1\\]$_DFF_PN0_",
+    "old": [
+     1892.97,
+     215.19
+    ],
+    "new": [
+     1889.055,
+     368.145
+    ],
+    "old_max_hop_um": 511.6499999999999
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_tx.rd_bin\\[0\\]$_DFF_PN0_",
+    "old": [
+     1894.536,
+     215.19
+    ],
+    "new": [
+     1889.055,
+     368.145
+    ],
+    "old_max_hop_um": 513.2159999999999
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_",
+    "old": [
+     1885.14,
+     719.01
+    ],
+    "new": [
+     1889.055,
+     588.195
+    ],
+    "old_max_hop_um": 514.8899999999999
+   },
+   {
+    "name": "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+    "old": [
+     1889.838,
+     464.94
+    ],
+    "new": [
+     1889.055,
+     588.195
+    ],
+    "old_max_hop_um": 504.57599999999985
+   }
+  ],
+  "excludes": "All cross-root data/control, scalar macro control pins, actual combinational placement and route detours; realG1 remainsNOTRUN"
+ },
+ "verdict": "NOT QUALIFIED",
+ "build_allowed": false
+}

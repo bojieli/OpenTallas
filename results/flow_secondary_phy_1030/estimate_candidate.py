@@ -6,7 +6,7 @@ import clk_aocv as AO
 import die_clock_128 as C
 import core_infra_plan as P
 W=Path(__file__).parent
-ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--choice',type=int,default=3);ap.add_argument('--library-dir',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);args=ap.parse_args()
+ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--choice',type=int,default=3);ap.add_argument('--library-dir',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--plan-out',type=Path);args=ap.parse_args()
 if args.out.exists():raise FileExistsError('Use a new immutable estimate output path: '+str(args.out))
 rows=json.load(gzip.open(W/'phy_sinks_SD.json.gz'))['sinks']
 # ANALYTIC proposed RX group only, not a complete selected-root recipe.
@@ -27,11 +27,37 @@ for r in rows:
   slot=int(m[1])+1;bit=int(m[2])
  r[-2:]=[1883.574+slot*1.188,480.06+.27*(3*bit+(4*bit)//9)];moved+=1
 for i,r in enumerate(controls):
- centre=216.27 if '.u_tx.' in r[1] or '.p_tx_' in r[1] else 722.25
+ centre=469.26 if '.u_prs.' in r[1] else (216.27 if '.u_tx.' in r[1] or '.p_tx_' in r[1] else 722.25)
  r[-2:]=[1883.574+(i%8)*1.566,centre-(i//8)*1.08]
 print('RX group only: moved',moved,'bitFFs +',len(controls),'controlFFs')
 
 points={str(i):r[-2:] for i,r in enumerate(rows)}
+# Dataflow-first small control placement: center only those actual control
+# FFs whose structural peers otherwise exceed405um. No RTL/depth change.
+relations=json.load(gzip.open(W/'phy_related_pairs.json.gz'));byname={r[1]:str(i) for i,r in enumerate(rows)}
+ctrl={byname[r[1]] for r in controls};adj={i:set() for i in ctrl}
+for cap in relations['captures']:
+ if not cap['capture_in_root'] or cap['capture'] not in byname:continue
+ ck=byname[cap['capture']]
+ if rows[int(ck)][0]=='macro':continue
+ for ix in cap['source_indices']:
+  sk=byname[relations['sources'][ix]]
+  if rows[int(sk)][0]=='macro':continue
+  if sk in ctrl:adj[sk].add(ck)
+  if ck in ctrl:adj[ck].add(sk)
+relocations=[]
+for turn in range(3):
+ changed=0
+ for k in sorted(ctrl,key=int):
+  peers=[points[q] for q in adj[k]]
+  if not peers:continue
+  old=points[k];radius=max(abs(old[0]-q[0])+abs(old[1]-q[1]) for q in peers)
+  if radius<=405:continue
+  new=[(min(q[a] for q in peers)+max(q[a] for q in peers))/2 for a in (0,1)]
+  points[k]=new;rows[int(k)][-2:]=new;changed+=1;relocations.append(dict(name=rows[int(k)][1],old=old,new=new,old_max_hop_um=radius))
+ if not changed:break
+print('data-local control relocations',relocations)
+
 libs={c:C.lib_cells(c,args.library_dir,['BUFx24_ASAP7_75t_R']) for c in ('TT','FF')}
 caps={c:{} for c in libs}
 for c in libs:
@@ -96,7 +122,7 @@ for n in list(nodes):
   if prev is not None:nodes[prev]['children']=[kid]
   ch.append(first if first is not None else kid)
  n['children']=ch
-out={}
+out={};leaf_models={k:{} for k,n in enumerate(nodes) if n['sinks']}
 for c in libs:
  lib=libs[c]['BUFx24_ASAP7_75t_R'];arr={entry:0.};slew={entry:20.};todo=[entry];sinkarr={};maxslew=0.;worst=None;celld={};netd={};owner={}
  while todo:
@@ -111,6 +137,9 @@ for c in libs:
    else:arr[ch]=v;slew[ch]=sv;netd[ch]=el;todo.append(ch)
  vals=list(sinkarr.values());macro=[sinkarr[str(i)] for i,r in enumerate(rows) if r[0]=='macro']
  
+ 
+ for k in leaf_models:
+  vv=[sinkarr[q] for q in nodes[k]['sinks']];leaf_models[k][c]=dict(min=min(vv),max=max(vv))
  rq=[sinkarr[str(i)] for i,r in enumerate(rows) if r[0]=='ff' and 'rq_d' in r[1]]
  macro_related=dict(rq_d_count=len(rq),rq_d_min_ps=min(rq) if rq else None,rq_d_max_ps=max(rq) if rq else None,max_abs_macro_pair_ps=max(abs(x-macro[0]) for x in rq) if rq else None)
  
@@ -147,6 +176,42 @@ for c in libs:
  aocv=dict(max_ps=max(x[0] for x in bounds),over80=sum(x[0]>80 for x in bounds),worst=sorted(bounds,reverse=True)[:3],spice_scale=scale,same_PDN_region=True,table='clk_aocv_table_g021.json',branch_pairs=len(cache))
  pairinfo=dict(pairs=len(pm),max_abs_ps=max(v[0] for v in pm),over80=sum(v[0]>80 for v in pm),over150=sum(v[0]>150 for v in pm),worst=sorted(pm,reverse=True)[:3],missing=len(missing))
  out[c]=dict(aocv=aocv,pairinfo=pairinfo,macro_related=macro_related,min_ps=min(vals),max_ps=max(vals),window_ps=max(vals)-min(vals),max_slew_ps=maxslew,macro_pin_ps=macro,worst_slew_net=worst)
-result=dict(basis='Exploratory ASAP7 NLDM + same A0 Manhattan-MST/direct Elmore model, allBUFx24, repeaters<=150um, no timing measurements consumed; no legalization/PG/DRC performed',cells=len(nodes),sinks=len(rows),corners=out,verdict='NOT QUALIFIED',build_allowed=False)
+# Structural endpoint reach checks on the proposed full selected-root FF geometry.
+fpairs=[]
+for cap in relations['captures']:
+ if not cap['capture_in_root']:continue
+ ck=byname[cap['capture']]
+ if rows[int(ck)][0]=='macro':continue
+ for ix in cap['source_indices']:
+  sk=byname[relations['sources'][ix]]
+  if rows[int(sk)][0]=='macro':continue
+  fpairs.append((sum(abs(points[sk][a]-points[ck][a]) for a in (0,1)),relations['sources'][ix],cap['capture']))
+rxmap=json.load(gzip.open(W/'phy_rx_bit_consumers.json.gz'));txmap=json.load(gzip.open(W/'phy_tx_bit_xy.json.gz'));rxreach=[];txreach=[]
+for row in rxmap['rx_bits']:
+ for name in row['sequential_consumers']:
+  k=byname[name];rxreach.append(sum(abs(points[k][a]-row['xy_um'][a]) for a in (0,1)))
+for row in txmap['tx_bits']:
+ bit=int(re.search(r'\[(\d+)\]',row['pin'])[1]);k=next(k for k,r in enumerate(rows) if r[0]=='ff' and re.search(r'p_tx_d\\?\['+str(bit)+r'\\?\]',r[1]))
+ txreach.append(sum(abs(points[str(k)][a]-row['xy_um'][a]) for a in (0,1)))
+geometry=dict(structural_ff_pairs=len(fpairs),ff_manhattan_max_um=max(v[0] for v in fpairs),ff_over405=sum(v[0]>405 for v in fpairs),worst_ff=sorted(fpairs,reverse=True)[:5],rx_bits=len(rxreach),rx_max_um=max(rxreach),tx_bits=len(txreach),tx_max_um=max(txreach),control_relocations=relocations,excludes='All cross-root data/control, scalar macro control pins, actual combinational placement and route detours; realG1 remainsNOTRUN')
+result=dict(basis='Exploratory ASAP7 NLDM + same A0 Manhattan-MST/direct Elmore model, allBUFx24, repeaters<=150um, no timing measurements consumed; no legalization/PG/DRC performed',cells=len(nodes),sinks=len(rows),corners=out,data_geometry=geometry,verdict='NOT QUALIFIED',build_allowed=False)
+if args.plan_out:
+ if args.plan_out.exists():raise FileExistsError(args.plan_out)
+ parent={ch:k for k,n in enumerate(nodes) for ch in n['children']};order=[];todo=[entry]
+ while todo:
+  k=todo.pop(0);order.append(k);todo.extend(nodes[k]['children'])
+ name=lambda k:f'mp_phy_n{k}'
+ clocknodes=[dict(name=name(k),parent=('port:clk_clk_phy[0]' if k==entry else name(parent[k])),master='BUFx24_ASAP7_75t_R',xy_um=nodes[k]['xy']) for k in order]
+ leaves=[]
+ for k in order:
+  if not nodes[k]['sinks']:continue
+  pins=[rows[int(q)][1]+('/clk' if rows[int(q)][0]=='macro' else '/CLK') for q in nodes[k]['sinks']]
+  leaves.append(dict(node=name(k),load_class=('macro' if any(rows[int(q)][0]=='macro' for q in nodes[k]['sinks']) else 'register'),sinks=pins,pin_latency_ps=leaf_models[k]))
+ corners={c:dict(leaf_min=r['min_ps'],leaf_max=r['max_ps'],leaf_window=r['max_ps']-r['min_ps'],slew_max=r['max_slew_ps']) for c,r in out.items()}
+ ordinary=['clk','clk_t1','clk_t2','clk_t3','clk_t4','clk_t5','fclk_in_i_host_fdi[0]','fclk_in_i_host_link_rst_n[0]']
+ tree=dict(clock_port='clk_clk_phy[0]',stage_basis='electrical_latency',latency_target_ps={c:(r['min_ps']+r['max_ps'])/2 for c,r in out.items()},nodes=clocknodes,leaves=leaves,equal_load=False,load_balance='joint_nldm_plan',root_scope=dict(ordinary_roots=ordinary,ordinary_cts_roots=ordinary[:6],clock_editor_roots={}),model_qualification=dict(measured_timing_used=False,electrical_latency_qualified=False,source='results/flow_secondary_phy_1030/data_local_clock_estimate.json',model='Actual ASAP7 NLDM + shortest Manhattan geometry; row/PG legalizer NOT RUN',band_policy='info',window_policy='info',corners=corners))
+ proposed=dict(kind='ANALYSIS_ONLY_PHY_CLOCK_CANDIDATE',build_allowed=False,physical_qualification='NOT RUN',clock_entry_port_um=[1898.656,354.],suggested_core_tree=tree,selected_sink_positions_um={rows[int(q)][1]+('/clk' if rows[int(q)][0]=='macro' else '/CLK'):xy for q,xy in points.items()},pending=['legal row/PG/occupied-site placement','primary FIFO/clock capacity review','complete clock_entries and real per-editor root scopes','actual TX ring-bit data reach','G1 then routed TT/FF signoff'])
+ write=gzip.open if args.plan_out.suffix=='.gz' else open
+ with write(args.plan_out,'xt') as f:json.dump(proposed,f,indent=1)
 json.dump(result,args.out.open('x'),indent=1)
 print(json.dumps(result,indent=1))
