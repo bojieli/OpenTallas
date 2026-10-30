@@ -685,6 +685,16 @@ class Binder:
         if self.ab.get("compose"):
             import bind_compose
             bind_compose.apply(self, self.ab["compose"])
+        if self.ab.get("structural_bridges"):
+            # Composition may create native cut leaves absent from the original
+            # elaboration. Expand their exact full-ABI source bridges before
+            # constructing drivers/loads; never repair emitted nets afterward.
+            import structural_bridge
+            try:
+                self.structural_bridge_receipts = structural_bridge.apply(
+                    self, self.ab["structural_bridges"], self.base)
+            except (ValueError, OSError) as exc:
+                raise BindError(f"STRUCTURAL_BRIDGE {exc}") from exc
         self.G = Graph(self.F, self.R, self.errors)
         self.errors.extend(variant_constant_errors(self.G, getattr(self, "variant_required_constants", [])))
         self.parts = {p["name"]: dict(p) for p in plan["partitions"]}
