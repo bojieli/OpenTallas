@@ -57,6 +57,7 @@ def make_kit(tmp, mm=True):
     k = tmp / "kit"
     b = k / "run" / "results" / "asap7" / NICK / "base"
     b.mkdir(parents=True)
+    (b / "4_1_cts.odb").write_text("kit ORIGINAL cts\n")
     (b / "5_1_grt.odb").write_text("kit grt\n")
     (b / "6_final.spef").write_text("*SPEF kit routed\n")
     (k / "constraint.sdc").write_text("create_clock -period 833 [get_ports clk]\n")
@@ -202,6 +203,7 @@ def test_loop_second_pass_reads_pass1_rcx_and_stops_at_two(tmp_path):
     b2 = p2 / "run/results/asap7" / NICK / "base"
     # pass 2 starts from pass 1's ECO'd GRT DB and repairs on pass 1's re-extracted RCX of its filled route
     assert (b2 / "4_cts.odb").read_text() == "pass 1 5_1_grt.odb\n"
+    assert (b2 / "4_1_cts.odb").read_text() == "kit ORIGINAL cts\n"
     assert (b2 / "6_final.spef").read_text().startswith("*SPEF rcx of pass 1 5_route.odb")
     assert res["final"]["dir"] == str(p2) and log("finish") == [str(p2)]
     assert (p2 / "config.mk").read_text().count("# OT_PRD post-route drive repair") == 1
@@ -247,3 +249,24 @@ def test_finish_passes_both_mm_corners_as_one_make_argument(tmp_path):
     assert bad.returncode == 0, bad.stderr
     broken = argfile.read_text().splitlines()
     assert "CORNERS=tc bc" not in broken and 'bc"' in broken
+
+
+def test_prd_preserves_original_cts_stage_identity_and_refuses_missing_checkpoint(tmp_path):
+    kit=make_kit(tmp_path)
+    out=tmp_path/"prd_stage"
+    result=mk(kit,out)
+    assert result.returncode==0,result.stdout+result.stderr
+    base=out/"run/results/asap7"/NICK/"base"
+    assert (base/"4_1_cts.odb").read_text()=="kit ORIGINAL cts\n"
+    assert (base/"4_cts.odb").read_text()=="kit grt\n"
+    # Exercise the real stage-policy selector, rather than a test imitation.
+    source=(ROOT/"tools/orfs_hold_mm.tcl").read_text()
+    stage=re.search(r"proc ot_hold_stage \{\} \{\n.*?\n\}",source,re.S).group(0)
+    script=stage+f'\nset ::env(RESULTS_DIR) {{{base}}}\nputs [ot_hold_stage]\n'
+    selected=subprocess.run(["tclsh"],input=script,text=True,capture_output=True,check=True)
+    assert selected.stdout.strip()=="grt" and not selected.stderr
+    (kit/"run/results/asap7"/NICK/"base/4_1_cts.odb").unlink()
+    missing=tmp_path/"missing_cts"
+    result=mk(kit,missing)
+    assert result.returncode==2 and "lacks original 4_1_cts.odb" in result.stdout
+    assert not missing.exists()  # never fake a checkpoint or create an invalid vehicle
