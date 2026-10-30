@@ -1,0 +1,22 @@
+{
+  "module": "ot_s81sl_cap_ld",
+  "params": {
+    "D": 16
+  },
+  "defines": [
+    "SYNTHESIS",
+    "OT_S81_CAP_LD_FACE_VALID"
+  ],
+  "source": {
+    "rtl/dsrom_sys/s81_dv/slice/ot_s81sl_cap_ld.sv": "fcdc1dcdced9d6d7a3e51dd7abef4ae083352ccbd68958f870ffb4765b61988c"
+  },
+  "qualified_source_commit": "017829a6426",
+  "functional_cycles_added": 0,
+  "extra_functional_flops": 0,
+  "source_qualification": "actualD3/4/8/16 total48k strict70bit lockstep0mismatch/992resetedges/mutantcaught",
+  "native_postroute_lec": "1204/1204 EQUIVALENT",
+  "adopted": false,
+  "parent": "ot_s81sl_capc5r",
+  "parent_instance": "u_ld3",
+  "parent_external_contract_changed": false
+}
