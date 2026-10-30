@@ -1465,7 +1465,28 @@
   "macros": [
    "ot_sram_1r1w_256x256_m2_r2c2"
   ],
-  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required."
+  "source": "Current native FUSED composition, exact existing RTL; delivered reset and host target 225 match bound native top. Component recipe only; physical sites and current-plan gates remain required.; current207.36x129.6 static two-SRAM sites leave30.192um centre channel, no added RTL or cycles; render before place.",
+  "macro_placement": [
+   {
+    "inst": "provider.lo",
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "xy_um": [
+     17.28,
+     8.64
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "provider.hi",
+    "macro": "ot_sram_1r1w_256x256_m2_r2c2",
+    "xy_um": [
+     17.28,
+     79.896
+    ],
+    "orient": "MY"
+   }
+  ],
+  "macro_place_halo_um": 4.32
  },
  "ot_hnx_idxn_keybuf_slice": {
   "top": "ot_hnx_idxn_keybuf_slice",
