@@ -1,0 +1,16 @@
+{
+ "before": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 518.24,
+  "r2r_captures_gt405": 72,
+  "r2r_captures": 27644,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_lane.u.lr_f0\\[2\\]$_DFF_PN0_ -> u_lane.u.g_lr2.lr_f2\\[2\\]$_DFF_PN0_"
+ },
+ "long_arcs": 250,
+ "moving_candidates": 172,
+ "constraints": 3854,
+ "success": false,
+ "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+}

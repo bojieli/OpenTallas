@@ -1,0 +1,65 @@
+{
+ "r2r_memory_instances": 0,
+ "r2r_incomplete_macros": [],
+ "r2r_max": 403.06,
+ "r2r_captures_gt405": 0,
+ "r2r_captures": 27644,
+ "comb_loop_cells": 0,
+ "r2r_worst": "u_lane.u.u_ep.a_in\\[465\\]$_DFF_P_ -> u_lane.u.u_ep.g_rb_safe.u_m.g_slice\\[58\\].forwarded\\[1\\]$_DFFE_PP_",
+ "relay_chains": 2586,
+ "relay_collapsed": 0,
+ "relay_balance_max": 3.91,
+ "relay_worst": "u_lane.u.u_ep.b_pay\\[290\\]$_DFF_P_ -> u_lane.u.u_gb.u_sf.prevdata\\[322\\]$_DFF_P_ 4 hops span 412 max hop 403",
+ "clock_entry": "clk",
+ "clock_entry_xy": [
+  388.92,
+  246.24
+ ],
+ "clock_entry_on_macro": 0,
+ "clock_entry_macro": [],
+ "clock_islands_fixed": 0,
+ "clock_reach_max": 625.2,
+ "clock_reach_far": [
+  5.0,
+  5.0
+ ],
+ "clock_leaf_reach_max": 625.2,
+ "clock_leaf_reach_far": [
+  5.0,
+  5.0
+ ],
+ "clock_leaf_reach_driver": [
+  388.9,
+  246.2
+ ],
+ "clock_entry_sink_max": 625.2,
+ "clock_entry_sink_far": [
+  5.0,
+  5.0
+ ],
+ "pins_registered": 1585,
+ "pins_to_macro": 0,
+ "pins_exempt": 1,
+ "pins_unregistered": 556,
+ "pins_land_ring": 0,
+ "unregistered_sample": [
+  "k_li_r",
+  "k_lo_d[0]",
+  "k_lo_d[100]",
+  "k_lo_d[101]",
+  "k_lo_d[102]",
+  "k_lo_d[103]",
+  "k_lo_d[104]",
+  "k_lo_d[105]"
+ ],
+ "pin_reg_p50": 6.08,
+ "pin_reg_p90": 7.1,
+ "pin_reg_max": 324.4,
+ "pin_reg_worst": [
+  "324.4 k_lo_r",
+  "148.4 rst_n",
+  "10.5 k_li_v",
+  "10.4 coll_o[1]",
+  "10.2 k_li_d[139]"
+ ]
+}
