@@ -1,0 +1,58 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-32/plan/d32q",
+ "base_sha": "ce16f2f3f15c",
+ "out_sha": "1c1f34932f2c",
+ "near_um": 20000.0,
+ "totals": {
+  "built": 0,
+  "built_bits": 0,
+  "far": 0,
+  "far_bits": 0,
+  "failed": 2,
+  "by_kind": {
+   "adj": 0,
+   "same": 0,
+   "reverse": 0,
+   "path": 0
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [],
+ "far": [],
+ "failed": [
+  {
+   "src": "NW_hub",
+   "dst": "NW_b102",
+   "bits": 2746,
+   "why": "no free window NW_hub|NW_su21",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_su21",
+     "NW_su20",
+     "NW_b111",
+     "NW_b103",
+     "NW_b102"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b102",
+   "bits": 2746,
+   "why": "no free window NE_hub|NE_su21",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su21",
+     "NE_su20",
+     "NE_b111",
+     "NE_b103",
+     "NE_b102"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "../plan/d33r",
+ "base_sha": "ae0cb76356b1",
+ "out_sha": "7d1846b3bc52",
+ "near_um": 20000.0,
+ "totals": {
+  "built": 0,
+  "built_bits": 0,
+  "far": 0,
+  "far_bits": 0,
+  "failed": 1,
+  "by_kind": {
+   "adj": 0,
+   "same": 0,
+   "reverse": 0,
+   "path": 0
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [],
+ "far": [],
+ "failed": [
+  {
+   "src": "NE_hub",
+   "dst": "NE_b102",
+   "bits": 1046,
+   "why": "no macro-free station chain with 22 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_b001",
+     "NE_b011",
+     "NE_b002",
+     "NE_b012",
+     "NE_b003",
+     "NE_b013",
+     "NE_io",
+     "NE_b102"
+    ]
+   ]
+  }
+ ]
+}
