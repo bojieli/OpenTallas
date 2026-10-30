@@ -25,7 +25,7 @@ def sites(domain):
             raise ValueError('anchored PHY bumps require finite origin_um, two positive integer counts and positive pitch_um')
         nx, ny = counts
         ox, oy = origin
-        if any(abs(v*1000-round(v*1000)) > 1e-6 for v in (ox,oy,pitch)):
+        if round(pitch*1000) < 1 or any(abs(v*1000-round(v*1000)) > 1e-6 for v in (ox,oy,pitch)):
             raise ValueError('anchored PHY bump coordinates/pitch must survive native 0.001um emission exactly')
         lastx, lasty = ox + (nx-1)*pitch, oy + (ny-1)*pitch
         if not (rect[0] <= ox <= lastx <= rect[2] and rect[1] <= oy <= lasty <= rect[3]

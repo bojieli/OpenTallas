@@ -35,7 +35,7 @@ def test_legacy_centred_sites_unchanged():
 @pytest.mark.parametrize('change',[
     {'counts':[True,21]}, {'counts':[0,21]}, {'counts':[42,21]},
     {'origin_um':[float('nan'),26096.4]}, {'origin_um':[0,26096.4]},
-    {'origin_um':[50.4005,26096.4]}, {'pitch_um':45.0005},
+    {'origin_um':[50.4005,26096.4]}, {'pitch_um':45.0005}, {'pitch_um':1e-12},
     {'exclude_um':[[49,26095,51,26097]]},
 ])
 def test_invalid_anchor_fails_without_dropping_or_moving_sites(change):
