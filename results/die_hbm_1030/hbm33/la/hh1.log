@@ -1,0 +1,12 @@
+DEBUG build_one fail NE_hub NW_hub 2775 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NE_hub NW_hub 1388 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NE_hub NW_hub 925 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NE_hub NW_hub 694 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NW_hub NE_hub 2730 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NW_hub NE_hub 1365 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NW_hub NE_hub 910 why no macro-free station chain with 14 stations (hop<= 364)
+DEBUG build_one fail NW_hub NE_hub 683 why no macro-free station chain with 14 stations (hop<= 364)
+{"built": 0, "built_bits": 0, "far": 0, "far_bits": 0, "failed": 2, "by_kind": {"adj": 0, "same": 0, "reverse": 0, "path": 0}, "cycle_mismatch": 0, "macro_hits": 0}
+FAILED {"src": "NE_hub", "dst": "NW_hub", "bits": 2775, "why": "no macro-free station chain with 14 stations (hop<= 364)", "chains": [["NE_hub", "NE_b112", "root", "NW_b112", "NW_hub"]]}
+FAILED {"src": "NW_hub", "dst": "NE_hub", "bits": 2730, "why": "no macro-free station chain with 14 stations (hop<= 364)", "chains": [["NW_hub", "NW_b112", "root", "NE_b112", "NE_hub"]]}
+rc=0

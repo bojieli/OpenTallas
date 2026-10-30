@@ -29,6 +29,13 @@ Structural options (die-owner floorplan event, NOT estimated yet): (a) move the 
 or swap b102/b103 (Codex swap102 alone leaves the b013 cut); (b) home the 2746 row-1 replica FFs at b103/b111 and feed b102
 over the 497 um free b103|b102 window; (c) split the feed 2 ways after an io/b013 re-layout.
 
+## (1b) hub NE<->NW widen (2775 + 2730 b unplanned; L4/L4m 2816 b each via root are full)
+Face estimate (tools/facecap.py, la/facecap_d32q.txt, CHECKED): NW_hub|root has 64.7 um free (largest 21 um) of 4320 um vs
+~918 um needed for both directions at 6/um; repacking that edge to 6/um frees ~370 um (estimate, UNCHECKED) = not enough.
+NE_hub|root has 2076 um free. The asymmetry is the NW-only root traffic (L156 idx return 2740 b, L74 1171, HOST_BOOT 320).
+Detour hub-b112-root-b112-hub (hh1): all windows fit (hub|b112 1094 um free, b112|root 1542, root|b112 1542) but no
+macro-free station chain (bad hops 406-492 um > 364 near the root end; root has 48 macros). Not closable by lane adds.
+
 ## (3) hub NW synth dhbm32s_hubnw (CHECKED from yosys stat files, rc 0, 1:05 h, 11.7 GB)
 stat_legal: 726,958 cells, 288,741 FF ($_DFF_P_ 249,439, $_DFFE_PP_ 23,607, $_DFF_PN0_ 10,662, $_DFFE_PN0P_ 4,962) with hard
 children as blackboxes. > 400k cells/run cap: the NW hub glue cannot be one P&R run; needs a >= 2-region split.
