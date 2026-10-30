@@ -20,7 +20,8 @@ def expert_end(records,first):
 
 def layout(records,first,last):
     from vm_value_phase import engine_span
-    import isa_rows as IR
+    from isa_loader import load_isa
+    IR,_=load_isa()
     union=records[first][1]
     if(union.unit,union.op)!=('IDX','UNION'):raise ValueError('source entry is not expert UNION')
     n,k,pitch,experts=union.desc['A'].m,union.desc['A'].n,union.imm_b,union.imm_a
@@ -86,10 +87,11 @@ def lower(records,first=1559,last=None):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--first',type=int,default=1559);ap.add_argument('--last',type=int)
-    a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     source=Path(a.image).read_bytes();blob,packet=lower(IC.decode_all(source),a.first,a.last);packet['source_sha256']=hashlib.sha256(source).hexdigest()
     out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);(out/'expert.hgi1r').write_bytes(blob);(out/'expert.json').write_text(json.dumps(packet,indent=1)+'\n');print(json.dumps(dict(high_water_words=packet['high_water_words'],commands=len(packet['records']),whole_programme_executable=False)))
 

@@ -150,10 +150,10 @@ def compile_phase(ph,raw,base,bank_bytes,phase_index,IR,RC,resolved_loads=None,p
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('values','image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in ('values','image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--scratch-base',type=lambda x:int(x,0),required=True);a=ap.parse_args()
-    p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     from hgi_sim import records as RC
     valuepath=Path(a.values);packet=json.loads(valuepath.read_text());out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);phases=[]
     raws={p['start_row']:(valuepath.parent/p['fragment']).read_bytes()for p in packet['phases']}

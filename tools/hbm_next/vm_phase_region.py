@@ -110,11 +110,12 @@ def make(records,first,last,start,count,IR,capacity=262144,reserve=0):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--first',type=int,default=1458);ap.add_argument('--last',type=int,default=1473)
     ap.add_argument('--rows',type=int,default=2);ap.add_argument('--reserve',type=int,default=0)
-    a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     raw=Path(a.image).read_bytes();records=IC.decode_all(raw);n=records[a.first][2].n
     out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);phases=[]
     for start in range(0,n,a.rows):

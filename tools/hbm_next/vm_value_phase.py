@@ -220,11 +220,12 @@ def build(records,first,last,start,count,IR,live_out,capacity=262144,placement_p
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--live-out');ap.add_argument('--infer-live-out',action='store_true')
     ap.add_argument('--first',type=int,default=1458);ap.add_argument('--last',type=int,default=1473);ap.add_argument('--rows',type=int,default=3)
-    a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     raw=Path(a.image).read_bytes();rr=IC.decode_all(raw)
     if a.infer_live_out:boundary=infer_static_boundary(rr,a.last,IR)
     elif a.live_out:boundary=json.loads(Path(a.live_out).read_text())

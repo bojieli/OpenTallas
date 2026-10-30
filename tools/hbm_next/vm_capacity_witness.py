@@ -72,16 +72,15 @@ def prove(recs,at,bridge,future,capacity):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--image',required=True)
-    ap.add_argument('--compiler-tools',required=True)
+    ap.add_argument('--compiler-tools')
     ap.add_argument('--at',type=int,default=1470)
     ap.add_argument('--bridge',type=int,default=1472)
     ap.add_argument('--future',type=int,default=1473)
     ap.add_argument('--capacity',type=int,default=262144)
     ap.add_argument('--out',required=True)
     a=ap.parse_args()
-    compiler=Path(a.compiler_tools)
-    sys.path[:0]=[str(compiler/'hbm_next'),str(compiler)]
-    import image_check as IC
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     raw=Path(a.image).read_bytes()
     result=prove(IC.decode_all(raw),a.at,a.bridge,a.future,a.capacity)
     result['image_sha256']=hashlib.sha256(raw).hexdigest()

@@ -147,11 +147,12 @@ def replay(packet, preparation, IR):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','preparation','out'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','preparation','out'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--scratch-base',type=lambda x:int(x,0),required=True)
     ap.add_argument('--scratch-bytes',type=lambda x:int(x,0),required=True)
-    a=ap.parse_args();t=Path(a.compiler_tools);sys.path[:0]=[str(t/'hbm_next'),str(t)]
-    import isa_rows as IR,image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     from hgi_sim import records as RC
     raw=Path(a.image).read_bytes();prep=json.loads(Path(a.preparation).read_text())
     if prep['image_sha256']!=hashlib.sha256(raw).hexdigest():raise ValueError('source image differs')

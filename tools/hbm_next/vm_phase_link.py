@@ -27,9 +27,10 @@ def route(sector,selector,written,entry):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in('upstream','downstream','downstream-values','image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
-    a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    for k in('upstream','downstream','downstream-values','image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     paths=[Path(a.upstream),Path(a.downstream)];packets=[json.loads(p.read_text())for p in paths]
     for packet in packets:
         if 'source_epoch_checks'in packet:packet['source_epochs']={'dependencies':packet['source_epoch_checks'],'final_output_sectors':packet['final_output_sectors']}

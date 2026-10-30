@@ -69,11 +69,12 @@ def prepare(record,rowx,IR,rows,workspace,carry,capacity=262144):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','out'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','out'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--at',type=int,default=1470);ap.add_argument('--rows',type=int,default=2)
     ap.add_argument('--workspace',type=int,required=True);ap.add_argument('--carry',type=int,required=True)
-    a=ap.parse_args();t=Path(a.compiler_tools);sys.path[:0]=[str(t/'hbm_next'),str(t)]
-    import isa_rows as IR,image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     raw=Path(a.image).read_bytes();rr=IC.decode_all(raw);off,r,rx,_=rr[a.at]
     out=prepare(r,rx,IR,a.rows,a.workspace,a.carry)
     out.update(image_sha256=hashlib.sha256(raw).hexdigest(),source_record_index=a.at,source_image_offset=off)

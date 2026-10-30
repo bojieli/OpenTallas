@@ -109,9 +109,10 @@ def optimize(packet,raw,source,IR,mutant=None):
 
 def main():
  ap=argparse.ArgumentParser(description=__doc__)
- for name in('stream','source-image','compiler-tools','out-dir'):ap.add_argument('--'+name,required=True)
- a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
- import isa_rows as IR,image_check as IC
+ for name in('stream','source-image','compiler-tools','out-dir'):ap.add_argument('--'+name,required=name!='compiler-tools')
+ a=ap.parse_args()
+ from isa_loader import load_isa
+ IR,IC=load_isa(a.compiler_tools)
  path=Path(a.stream);packet=json.loads(path.read_text());raw=path.with_name('stream.hgi1r').read_bytes();source=IC.decode_all(Path(a.source_image).read_bytes());data,result=optimize(packet,raw,source,IR)
  controls=[]
  for mut in('skip_first_required_load','wrong_first_store'):

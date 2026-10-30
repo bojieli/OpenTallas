@@ -141,11 +141,12 @@ def compile_stream(records,first,last,backing,IR,RC,emit_dir=None,group_static=F
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--group-static',action='store_true');ap.add_argument('--retain-static',action='store_true')
     ap.add_argument('--backing-base',type=lambda s:int(s,0),required=True);ap.add_argument('--first',type=int,default=0);ap.add_argument('--last',type=int)
-    a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     from hgi_sim import records as RC
     raw=Path(a.image).read_bytes();records=IC.decode_all(raw);last=len(records)-1 if a.last is None else a.last
     blob,packet=compile_stream(records,a.first,last,a.backing_base,IR,RC,group_static=a.group_static,retain_static=a.retain_static);packet['source_sha256']=hashlib.sha256(raw).hexdigest()

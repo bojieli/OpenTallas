@@ -18,12 +18,13 @@ def intervals(mask):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--extra-live-out',help='JSON list of bounded final source-word intervals')
     ap.add_argument('--cuts',required=True,help='first:last comma separated adjacent source ranges')
     ap.add_argument('--scratch-base',type=lambda s:int(s,0),required=True)
-    a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    a=ap.parse_args()
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     import hashlib
     raw=Path(a.image).read_bytes();rr=IC.decode_all(raw);out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True)
     cuts=[tuple(map(int,v.split(':')))for v in a.cuts.split(',')]
@@ -57,7 +58,8 @@ def main():
     upstream=None
     for stage,_ in enumerate(cuts):
         values=out/f'values{stage}'/'values.json';shadow=out/f'shadow{stage}'
-        common=['--image',a.image,'--compiler-tools',a.compiler_tools]
+        common=['--image',a.image]
+        if a.compiler_tools:common+=['--compiler-tools',a.compiler_tools]
         subprocess.run([sys.executable,str(Path(__file__).with_name('vm_phase_shadow.py')),*common,'--values',str(values),'--scratch-base',hex(a.scratch_base+stage*0x1000000),'--out-dir',str(shadow)],check=True)
         if upstream is None:
             # Start with an ordinary native component; the linker accepts it.

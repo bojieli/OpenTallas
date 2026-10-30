@@ -304,3 +304,5 @@ release/reuse. Fill/commit/physical/done dates remain open. Revised singleword
 counter+splitsetup43212321cycles=35.995863393ms@833ps. Proven future count8
 coalescing would yield5389626sectorcommands+95313setupedges=5484939cycles
 (4.568954187ms), before windows/sourcework/commit; not current implementation.
+
+Repository ISA integration: all new compiler tools default to checked-in, SHA-guarded isa_v1r_20261019 format files through isa_loader.py. Optional --compiler-tools requires exact source equality; the historical external0830 path is preserved as a receipt. Default loader plus actual retainedsource91 ROWX3 decode/encode PASS; altered external format control caught. See isa_default_smoke.json. No whole programme rebuild was run.

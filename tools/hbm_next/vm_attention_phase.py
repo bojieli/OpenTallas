@@ -99,10 +99,10 @@ def construct(records,group,IR,capacity=262144,reserve=0):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
-    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=k!='compiler-tools')
     ap.add_argument('--reserve',type=int,default=0);a=ap.parse_args()
-    p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
-    import isa_rows as IR,image_check as IC
+    from isa_loader import load_isa
+    IR,IC=load_isa(a.compiler_tools)
     raw=Path(a.image).read_bytes();rr=IC.decode_all(raw);out=Path(a.out_dir);out.mkdir(parents=True,exist_ok=True);phases=[]
     for group in (0,3):
         blob,info=construct(rr,group,IR,reserve=a.reserve);name=f'attention_{group}.hgi1r';(out/name).write_bytes(blob);info['fragment']=name;phases.append(info)
