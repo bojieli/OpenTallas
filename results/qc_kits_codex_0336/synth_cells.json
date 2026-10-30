@@ -1,0 +1,132 @@
+{
+  "purpose": "measured native synthesis sizing only; not equivalent or signed claims",
+  "kits": "codex-qc-kits-0336 current plan45/46 pilots",
+  "rows": [
+    {
+      "type": "sle_fe_v1__cl8210183c",
+      "stdcells": 176551,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fe_v1__cl8210183c/sle_fe_v1__cl8210183c/run/logs/asap7/dp_sle_fe_v1__cl8210183c/base/1_synth.json",
+      "host": "intel2"
+    },
+    {
+      "type": "coll_ft__cla4a25d77",
+      "stdcells": 64839,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/coll_ft__cla4a25d77/coll_ft__cla4a25d77/run/logs/asap7/dp_coll_ft__cla4a25d77/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "coll_ucie",
+      "stdcells": 66574,
+      "macros": 1,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/coll_ucie/coll_ucie/run/logs/asap7/dp_coll_ucie/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "sle_fw_v1__cl9d029624",
+      "stdcells": 174569,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v1__cl9d029624/sle_fw_v1__cl9d029624/run/logs/asap7/dp_sle_fw_v1__cl9d029624/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "sle_fw_v1__clf58b4dfb",
+      "stdcells": 177878,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v1__clf58b4dfb/sle_fw_v1__clf58b4dfb/run/logs/asap7/dp_sle_fw_v1__clf58b4dfb/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "sle_fw_v2__cl69f5e854",
+      "stdcells": 174523,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v2__cl69f5e854/sle_fw_v2__cl69f5e854/run/logs/asap7/dp_sle_fw_v2__cl69f5e854/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "slw_fe_v2__clf110fab2",
+      "stdcells": 155293,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fe_v2__clf110fab2/slw_fe_v2__clf110fab2/run/logs/asap7/dp_slw_fe_v2__clf110fab2/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "slw_fw_v2__cl8537f156",
+      "stdcells": 170992,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v2__cl8537f156/slw_fw_v2__cl8537f156/run/logs/asap7/dp_slw_fw_v2__cl8537f156/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "slw_fw_v2__cl8f84514c",
+      "stdcells": 171008,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v2__cl8f84514c/slw_fw_v2__cl8f84514c/run/logs/asap7/dp_slw_fw_v2__cl8f84514c/base/1_synth.json",
+      "host": "intel1"
+    },
+    {
+      "type": "sle_fe_v3",
+      "stdcells": 56331,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fe_v3/sle_fe_v3/run/logs/asap7/dp_sle_fe_v3/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "sle_fw_v2__cl6740750e",
+      "stdcells": 174547,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v2__cl6740750e/sle_fw_v2__cl6740750e/run/logs/asap7/dp_sle_fw_v2__cl6740750e/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "sle_fw_v3",
+      "stdcells": 170420,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_fw_v3/sle_fw_v3/run/logs/asap7/dp_sle_fw_v3/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "sle_st_a_v1__cl67389ecd",
+      "stdcells": 382515,
+      "macros": 24,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/sle_st_a_v1__cl67389ecd/sle_st_a_v1__cl67389ecd/run/logs/asap7/dp_sle_st_a_v1__cl67389ecd/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "slw_fe_v1__cl95cd1d0c",
+      "stdcells": 156167,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fe_v1__cl95cd1d0c/slw_fe_v1__cl95cd1d0c/run/logs/asap7/dp_slw_fe_v1__cl95cd1d0c/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "slw_fe_v1__clfe325744__cldb4efe33",
+      "stdcells": 154973,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fe_v1__clfe325744__cldb4efe33/slw_fe_v1__clfe325744__cldb4efe33/run/logs/asap7/dp_slw_fe_v1__clfe325744__cldb4efe33/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "slw_fw_v1__cl51d45468",
+      "stdcells": 186178,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v1__cl51d45468/slw_fw_v1__cl51d45468/run/logs/asap7/dp_slw_fw_v1__cl51d45468/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "slw_fw_v1__clf51c11d8__cl592e3d37",
+      "stdcells": 186212,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v1__clf51c11d8__cl592e3d37/slw_fw_v1__clf51c11d8__cl592e3d37/run/logs/asap7/dp_slw_fw_v1__clf51c11d8__cl592e3d37/base/1_synth.json",
+      "host": "epyc2"
+    },
+    {
+      "type": "slw_fw_v1__clf51c11d8__clc7ddab13",
+      "stdcells": 186179,
+      "macros": 0,
+      "path": "/srv/opentallas-scratch2/claude/codex-qc-kits-0336/gen/slw_fw_v1__clf51c11d8__clc7ddab13/slw_fw_v1__clf51c11d8__clc7ddab13/run/logs/asap7/dp_slw_fw_v1__clf51c11d8__clc7ddab13/base/1_synth.json",
+      "host": "epyc2"
+    }
+  ]
+}
