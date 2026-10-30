@@ -19,6 +19,7 @@ centres that now fall inside a new core are slid along their route by the shared
 tools/die_plan/ft_nudge.py (station counts / windows / pins unchanged; only these 4 types' ft_slots regs_um change).
 Step 3 (G0C face-rule sidecar): core_conns.json gets the 4 KV types' entries = the template type's entries for the 23
 kept cores, renamed, with targets on the soft vn_b / vq dropped (only additions; every existing key unchanged).
+Step 2b: landing_contract.collector_tree of the 4 types = their recomputed reset tree (depth unchanged).
 usage (repo root): delta_kvleaf_hc_1030.py PLAN_IN PLAN_OUT [REPORT.json [CONNS_IN CONNS_OUT]]"""
 import copy
 import json
@@ -190,6 +191,34 @@ def main():
         report[tn]["ft_nudge"] = [{k: v for k, v in r.items() if k != "regs_um"} for r in ledger if r["type"] == tn]
     assert {tn for tn in nudged["partition_types"] if nudged["partition_types"][tn] != json.loads(
         text)["partition_types"][tn]} == set(), "ft_nudge touched another type"
+    # step 2b: the landing collector walks the type's own reset tree, which now routes around the 23 cores (bind
+    # 'collector rst_rl_34: raw reset parent rst_rl_27 absent' with the stale copy).  Store the recomputed tree
+    # (reset_tree.for_type, as clock_landing_plan does); depth, and the taps the collector sources / children use,
+    # must be unchanged.
+    sys.path.insert(0, os.path.join("tools", "die_plan"))
+    import reset_tree as RT
+    import schema as S
+    fd, tp = tempfile.mkstemp(suffix=".json", dir=os.path.dirname(os.path.abspath(src)))
+    try:
+        os.write(fd, text.encode())
+        os.close(fd)
+        PN = S.Plan(S.load(tp), tp)
+        for tn in report:
+            new = expected["partition_types"][tn]
+            lc = new["clock"]["landing_contract"]
+            old_t = lc["collector_tree"]
+            T = json.loads(json.dumps(RT.for_type(PN, tn)))
+            assert T["depth"] == old_t["depth"] and T["own_depth"] == old_t["own_depth"], tn
+            used = {int(c["node"].rsplit("_t", 1)[1]) for c in lc["collector_children"]}
+            used |= {s_["tap"] for s_ in lc["collector_local_sources"] if "tap" in s_}
+            for i in used:
+                assert T["taps"][i] == old_t["taps"][i], (tn, i)
+            lc["collector_tree"] = T
+            report[tn]["collector_tree"] = dict(relays=[len(old_t["relays"]), len(T["relays"])], depth=T["depth"],
+                                                taps=[len(old_t["taps"]), len(T["taps"])], used_taps=sorted(used))
+            text = splice(text, tn, new)
+    finally:
+        os.path.exists(tp) and os.unlink(tp)
     out = json.loads(text)
     assert out == expected, "unexpected plan edit"
     for tn in out["partition_types"]:

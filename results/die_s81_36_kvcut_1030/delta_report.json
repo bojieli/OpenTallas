@@ -79,6 +79,22 @@
     "max_slide_um": 89.9
    }
   ],
+  "collector_tree": {
+   "relays": [
+    51,
+    126
+   ],
+   "depth": 6,
+   "taps": [
+    18,
+    39
+   ],
+   "used_taps": [
+    0,
+    16,
+    17
+   ]
+  },
   "core_conns_cores": 7
  },
  "ot_s81sl_kv_leaf__t3": {
@@ -191,6 +207,24 @@
     "max_slide_um": 1.1
    }
   ],
+  "collector_tree": {
+   "relays": [
+    51,
+    142
+   ],
+   "depth": 6,
+   "taps": [
+    18,
+    39
+   ],
+   "used_taps": [
+    12,
+    13,
+    15,
+    16,
+    17
+   ]
+  },
   "core_conns_cores": 7
  },
  "ot_s81sl_kv_leaf__t4": {
@@ -293,6 +327,25 @@
     "max_slide_um": 29.5
    }
   ],
+  "collector_tree": {
+   "relays": [
+    57,
+    153
+   ],
+   "depth": 6,
+   "taps": [
+    19,
+    40
+   ],
+   "used_taps": [
+    0,
+    1,
+    2,
+    16,
+    17,
+    18
+   ]
+  },
   "core_conns_cores": 7
  },
  "ot_s81sl_kv_leaf__t5": {
@@ -375,6 +428,24 @@
     "max_slide_um": 30.1
    }
   ],
+  "collector_tree": {
+   "relays": [
+    57,
+    149
+   ],
+   "depth": 6,
+   "taps": [
+    19,
+    40
+   ],
+   "used_taps": [
+    12,
+    15,
+    16,
+    17,
+    18
+   ]
+  },
   "core_conns_cores": 7
  }
 }
