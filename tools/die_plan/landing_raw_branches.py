@@ -15,6 +15,10 @@ class RawBranches:
         # ORIGINAL module body (before any generated landing logic): every literal stage must name a relay that already
         # exists here, so a generated Q can never stand in for an original chain node (FLOW 10-30 finding).
         self.original_body=body
+        # Default landing hardware emitted independently of this option (the ring reset relays u_cland_rst_<bus>, a
+        # same-depth copy of the wrapper's own gate relay) is registered by the emitter via baseline_relay(): it is
+        # pre-existing landed state in the default-off RTL, so a literal chain may continue through it.
+        self.baseline=[]
         if not isinstance(cfg,list) or not cfg:raise RawBranchError(f"{tn}: literal raw branches must be a nonempty list")
         for branch in cfg:
             name=branch.get('name');base=branch.get('base');stages=branch.get('stages');consumers=branch.get('consumers')
@@ -45,6 +49,9 @@ class RawBranches:
             if pins.get('q')==net:matches.append((m.group(1),pins))
         if len(matches)!=1 or matches[0][1].get('clk')!='clk' or not matches[0][1].get('d'):raise RawBranchError(f"raw Q {net}: exactly one same-clk plain relay required")
         return matches[0]
+    def baseline_relay(self,line):
+        if not isinstance(line,str) or 'ot_dp_rrelay' not in line or 'u_cland_raw_' in line:raise RawBranchError(f"{self.tn}: baseline relay must be a default landing ot_dp_rrelay line")
+        self.baseline.append(line)
     def raw_for(self,role,default):
         if role not in self.roles:return default
         if role in self.used:raise RawBranchError(f"{self.tn}: raw consumer emitted twice: {role}")
@@ -55,8 +62,8 @@ class RawBranches:
         generated={r['net'] for r in self.rows}
         for row in self.rows:
             if row['original'] in generated:raise RawBranchError(f"{self.tn}: {row['original']} is a generated raw branch net, not an original chain node")
-            # resolve uniquely in the ORIGINAL body only, with the exact original predecessor on D
-            inst0,pins0=self.driver(self.original_body,row['original'])
+            # resolve uniquely in the ORIGINAL body (+ registered default landing relays) only, exact predecessor on D
+            inst0,pins0=self.driver(self.original_body+"\n"+"\n".join(self.baseline),row['original'])
             if pins0['d']!=row['original_parent']:raise RawBranchError(f"{self.tn}: original {row['original']} D={pins0['d']} != literal predecessor {row['original_parent']}")
             # the same single original relay must survive unchanged in the emitted text (no added or changed driver)
             inst,pins=self.driver(text,row['original'])

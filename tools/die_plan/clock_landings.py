@@ -990,6 +990,8 @@ class Landings:
                 reset = f"cland_reset_{b}"
                 logic += [f"    wire {reset};",
                           f"    ot_dp_rrelay u_cland_rst_{b} (.clk(clk), .d({relay.group(2)}), .q({reset}));"]
+                if raw_graph is not None:   # default landing ring reset relay: pre-existing state for literal raw branches
+                    raw_graph.baseline_relay(logic[-1])
             if not hard_tree:
                 self.reset_placements.setdefault(tn, {})[b] = dict(net=reset, xy_um=xy,
                     copied_raw_parent=relay.group(2), extra_control_flops=int(relay.group(1) == "gate"),

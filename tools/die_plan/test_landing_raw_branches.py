@@ -64,3 +64,18 @@ def test_duplicated_or_changed_original_driver_is_rejected():
     changed = emitted(g).replace("u_r1 (.clk(clk), .d(r0), .q(r1))", "u_r1 (.clk(clk), .d(r2), .q(r1))")
     with pytest.raises(RawBranchError, match="changed or duplicated"):
         g.validate(changed)
+
+
+def test_default_landing_ring_relay_is_original_only_when_registered():
+    # FE3 chain ends at cland_reset_cws3_i = the default landing ring reset relay u_cland_rst_cws3_i (D = original r2)
+    ring = "    ot_dp_rrelay u_cland_rst_cws3_i (.clk(clk), .d(r2), .q(cland_reset_cws3_i));"
+    cfg = [dict(name="b", base="r0", stages=[dict(original=o, xy_um=[1, 1]) for o in ("r1", "r2", "cland_reset_cws3_i")],
+                consumers=["origin"])]
+    g = RawBranches("t", cfg, BODY, [10, 10])
+    g.raw_for("origin", "cland_reset_cws3_i")
+    with pytest.raises(RawBranchError):          # emitted but not registered as default landing hardware
+        g.validate(emitted(g, "\n" + ring))
+    g.baseline_relay(ring)
+    assert g.validate(emitted(g, "\n" + ring))["flops"] == 3
+    with pytest.raises(RawBranchError):
+        g.baseline_relay("    ot_dp_rrelay u_cland_raw_b_0 (.clk(clk), .d(r0), .q(cland_raw_b_0));")
