@@ -1,0 +1,56 @@
+DIE-S81-32/MACRO -- S81 static SRAM macro sites (fix-only plan event, COORD ruling 20:2x part (1); S81-KITS-A ASK 19:31)
+branch claude/die-s81-32-macro-1029 (base origin/main 0c14e152eb8), written by delta_macro_sites_1029.py (+ .json)
+
+WHAT
+  plan_s13r2.json: 9 core-free S81 types get contents[] macro rows (inst = flattened kit instance path, module, lef,
+  TT lib, origin_um, outline_um, orient R0, obs_max M4, status new) + core_pg_connect: true.  No outline, bus, ft slot,
+  clock, reset, partition, neighbour, die datum or pin change.  Old contents rows kept byte-identical; the delta asserts
+  the old form and refuses a second run (CHECKED: 2nd run -> AssertionError).
+
+PER TYPE (instances CHECKED by yosys hierarchy+flatten of the S81-KITS-A bind7 kit RTL with as-built defines,
+          instances/<T>.list2; fill = (macros + 10.8-um channels) / free area inside the 43.2-um edge band)
+  ot_s81sl_kv_leaf__t1/t3/t4/t5   7 each  (5x 128x256_m1_r2c2, 2x 512x128_m4_r0c0)          fill 0.027  FIT
+  seqhost__t1                     6       (5x 128x256_m1_r2c2, 1x 512x128_m4_r2c2)          fill 0.023  FIT
+  dsdv_slice_lepw_mus_LP__t2    265       (144x 2c_256x64, 76x 2c_32x64, 5x 128x256_r2c2,
+  dsdv_slice_lepw_mu_LP__t2     265        20x 32x128, 20x 512x128_m4_r2c2)                  fill 0.419  FIT
+  dsdv_slice_lepe_mu_LP__t2     265
+  dsdv_slice_lepe_nh_mus_LP__t1 135       (72/38/5/10/10 of the same masters)               fill 0.219  FIT
+  total 964 sites.  The S81-KITS-A ASK masters 32x128 (kv_leaf), 2c_16x546 / 2c_32x64 / 32x128 (seqhost) are in the
+  kit file list but NOT instantiated under the as-built defines (CHECKED elaboration) -> no site.
+
+PLACEMENT RULES (place_sites.py; every type: problems 0, unplaced 0)
+  8.64-um lattice + per-master track offset so every signal pin sits on a plan M4/M5 (0.024/0.048) and M6/M7
+  (0.032/0.064) track; macro columns never x-overlap, >= 10.8-um channels between columns and to the core edge, every
+  stack gap >= 10.8 um (kit_contract MIN_CHANNEL_UM / _clusters re-checked); clear of ft corridors (+10.8), landing
+  bands / internal stations (+10.8), clock tap / landing pins / reset relays (+21.6) and a 43.2-um edge band.
+  Locality: sub-block grouping (LP: ln0..ln3 lane quadrants W/E of the central ft corridor, lep tx/rx + landing SRAMs
+  together; kv_leaf/seqhost: 700x560 box at the bus-window centroid) -- a HEURISTIC, no connectivity analysis.
+  Renders VIEWED: <T>.png here (kv_leaf t1, seqhost, lepw_mus, lepe_mu, lepe_nh_mus viewed; t3-t5 = t1 sites).
+
+CHECKS
+  G0C (CHECKED): check.py --completeness on the branch plan vs origin/main 0c14e152eb8: FAIL 20 errors both, error set
+    IDENTICAL; warnings 1589 vs 1589, identical modulo the checkout path.  No new core_pg warning on the 9 types.
+  kit_preflight on regenerated kits (CHECKED): ot_s81sl_kv_leaf__t1 PASS (7 macros, 2 columns), seqhost__t1 PASS (6, 2),
+    dsdv_slice_lepe_nh_mus_LP__t1 PASS (135, 10); macro_channels / clock_entry_clear / macro_pin_grid / macro_instances
+    all PASS, 0 issues (preflight_<T>.json here).  Kits = gen.py phys on a plan COPY with the type's kit_rtl.json
+    defines + the S81-KITS-A bind7 kit RTL (gen2/gen3 copies), --hold-ff-margin 10 --max-wire-um 100 (gen_v2 recipe);
+    gen staged macro_place.tcl with 7/6/135 place_macro.  Synth/PLACE not run here (S81-KITS-A/B rebuild).
+  Strict bind: NOT RUN (UNCHECKED; COORD: do not launch).  bind.py reads contents only for reducer names /
+    bump_ports / straps (git grep), the macro rows carry none -> no expected change.  Command (DIE-S81-32/BIND owns;
+    last run needed 256 GiB): ot-run --mem 256 python3 -I tools/die_plan/bind.py all physical/die_plan/s81/plan_s13r2.json
+    --out <dir> --strict (manifest physical/die_plan/s81/bind/asbuilt_b178_coll_s13pfunc.json, as verify256).
+  Die clock check: NOT RUN (UNCHECKED; COORD: do not launch).  No tap/outline/pin datum moved; macros keep 21.6 um off
+    the clock tap and landing pins.  Recipe: epyc2 die-s81-28/ws3v2 run.sh on this plan_s13r2.json.
+
+NOT IN THIS EVENT
+  ot_s81sl_kv_leaf__t2: instance list not derived (yosys elaboration of the bind7 kit RTL > 40 min, stuck deriving
+    ot_s81_su_kvt, still running at push).  Same form; S81-KITS-A lists +2c_32x64 / 64x512_r2c2 -> follow-up delta once the list is measured.
+  col_h9_r1/r2 (COORD 20:4x: in scope): CHECKED 0 type-level sites needed.  bound col_h9_r1__t1__cl49d7a23e_bound.sv
+    instantiates ot_rom_4096x72_m8 x35 (already plan hard_cores with lef/lib/origin) and 4x ot_v41_rom_elem_q_qxpq_w10_gb
+    (plan hard core 510.84x221.4).  The ot_rom_4096x274_m8 / 8192x274_m8 ROMs live INSIDE qxpq_w10_gb
+    (rtl/v41rom/ot_v41_rom_elem_qx_pq_w10.sv) -> they belong to that core's kit / view (S81-CORES-KITS), not the type
+    plan; a type-level site would double-place them.  Core-level area estimate: 1x 8192x274 (125.7x119.4) + 2x 4096x274
+    (125.3x63.0) = 30.8k um2 vs 113k um2 core outline (UNCHECKED fit, core owner).
+  LP 400k-cell cap / lane-macro hardening: not this lane (S81-KITS-B / COORD 20:4x).
+  core_pg_connect: set true on the 9 types (macro PG lands on the kit PDN) -- PG-CORECONN-2 form; kit PDN proof is the
+    kit's PG stage.
