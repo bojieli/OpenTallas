@@ -1,0 +1,26 @@
+{
+ "ot_s81_mu72_lnland_nst": {
+  "ref_tile": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland_nst",
+  "multi_root": true,
+  "insertion_balance": true,
+  "io_hold": "sender_min",
+  "suffix": "h2_2249",
+  "defines": [],
+  "plan": "physical/die_plan/s81/cores/h2/kit_plan.json",
+  "insertion_ps": 250,
+  "insertion_ff_ps": 202.5,
+  "insertion_tol_ps": 20
+ },
+ "ot_s81_mu72_lnland": {
+  "ref_tile": "physical/die_plan/s81/cores/h2/ot_s81_mu72_lnland",
+  "multi_root": true,
+  "insertion_balance": true,
+  "io_hold": "sender_min",
+  "suffix": "h2_2249",
+  "defines": [],
+  "plan": "physical/die_plan/s81/cores/h2/kit_plan.json",
+  "insertion_ps": 250,
+  "insertion_ff_ps": 202.5,
+  "insertion_tol_ps": 20
+ }
+}
