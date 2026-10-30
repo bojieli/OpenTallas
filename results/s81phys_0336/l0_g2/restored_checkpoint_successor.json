@@ -1,0 +1,17 @@
+{
+  "scope": "NEW successor restores exact qualified currentGRT checkpoint from own readonlyG2snapshot; no synth/place/clock regeneration",
+  "previous_ap": "3c63b6d87715 preflightFAIL beforephysical plus APcleanup removedoriginalresults/objects",
+  "withdraw": "unstarted samekit retry264b5b8e6d1b withdrawn; thisnewkit is lawful successor",
+  "restored_sha256": {
+    "config.mk": "5fdf3c51ca14f25dba6f79a06acdc2864983ae421479b690036155826e886d63",
+    "constraint.sdc": "5eb0ea6ba49a394a72cb06cd5b9a2ded384d40004e7e61026656e82b440774e9",
+    "5_1_grt.odb": "4eae6cead52bc3c6166873674ec0e007cda219176a0a140f5a285d8e106a18a6",
+    "legacy_gate.py": "8cb29c244d882f2c11f68447776e32e26c9dcec03ede4c7e619480252924e965"
+  },
+  "source_snapshot": "/srv/opentallas-scratch2/claude/codex-s81phys-0336/g2_l0_snapshot",
+  "successor": "/srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/dsdv_gunit_l0_bound",
+  "all_original_G2_basis_hashes_match": true,
+  "canonical_plan_pins_bundled_exact": true,
+  "geometry": "prioractual3PLACE + independentcurrentGRTmanualconcurrence da33f628153",
+  "timing": "sameexactG2 TT60.93 STDFF10.09 CPPR18.15/16.04"
+}
