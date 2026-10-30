@@ -1,0 +1,26 @@
+{
+ "status": "PASS_DISCONNECTED_OUTPUT_SYNTAX_ONLY",
+ "rows": [
+  {
+   "module": "ot_hnx_su_exp__rst3",
+   "original_sha256": "a50af07f503284fb11b9b42e7d475682c271700cd987d760cd6483cf3455c6b6",
+   "synth_sha256": "3b846d631f758fb1c6c619d94397c3c995bbeaf9b4f0436f2c3f751a4458ccf9",
+   "disconnected_output_ports": 1,
+   "proof": "Only unused pinned-bank output read_return empty connection changes from invalid empty concat to standard open output; all connected bits, logic, state, and hierarchy byteidentical"
+  },
+  {
+   "module": "ot_hnx_su_plain4__lid9_rst3",
+   "original_sha256": "51879f786b303f7310076f0c7169578fdff2265a5e367f6679076800433df37c",
+   "synth_sha256": "02244715af2dc49e78b07a1c8174084632f40e1a1f39b0b9cf05e6fc6d8cb6ac",
+   "disconnected_output_ports": 4,
+   "proof": "Only unused pinned-bank output read_return empty connection changes from invalid empty concat to standard open output; all connected bits, logic, state, and hierarchy byteidentical"
+  },
+  {
+   "module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+   "original_sha256": "52c305776963505dc8f696dd4034feba907eced55cc322561ddcb53bef6d9de6",
+   "synth_sha256": "2d7a29f15ae64bb80a1e78e3a3c605531ef36cca47bc4c82d11eb56926d4ceb2",
+   "disconnected_output_ports": 4,
+   "proof": "Only unused pinned-bank output read_return empty connection changes from invalid empty concat to standard open output; all connected bits, logic, state, and hierarchy byteidentical"
+  }
+ ]
+}
