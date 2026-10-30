@@ -1,0 +1,92 @@
+{
+  "scope": "PREP local-model profile; physical PHY/paired-reset/calendar qualification required",
+  "clock_ps": 833,
+  "h9b_parameters": {
+    "TIMING_833": 1
+  },
+  "timing_ps": {
+    "RCD": 19375,
+    "RP": 16250,
+    "RAS": 28125,
+    "RTP": 5625,
+    "CCDL": 2560,
+    "RRDS": 2500,
+    "RRDL": 3125,
+    "FAW": 15000,
+    "RFC": 350000,
+    "RFCPB": 200000,
+    "RREFD": 8000,
+    "RCDW": 9375,
+    "RTW": 9948,
+    "WTR": 13524,
+    "WRR": 27899,
+    "CCDS": 1024,
+    "CL": 12500,
+    "RSP": 10000
+  },
+  "timing_cycles": {
+    "RCD": 24,
+    "RP": 20,
+    "RAS": 34,
+    "RTP": 7,
+    "CCDL": 4,
+    "RRDS": 4,
+    "RRDL": 4,
+    "FAW": 19,
+    "RFC": 421,
+    "RFCPB": 241,
+    "RREFD": 10,
+    "RCDW": 12,
+    "RTW": 12,
+    "WTR": 17,
+    "WRR": 34,
+    "CCDS": 2,
+    "CL": 16,
+    "RSP": 13
+  },
+  "REFIPB": 144,
+  "REFI": 4681,
+  "ROW_CADENCE": 2,
+  "COL_TDM": 1,
+  "refresh_cfg": {
+    "RMIN": 144,
+    "RMAX": 252,
+    "REL_HOLD": 64,
+    "NPC": 16
+  },
+  "first_pc": 0,
+  "reload_bytes": [
+    144,
+    150,
+    152,
+    154,
+    160,
+    162,
+    164,
+    170,
+    172,
+    174,
+    180,
+    182,
+    184,
+    190,
+    192,
+    194
+  ],
+  "boot_cfg_addr": "0x800",
+  "boot_cfg_data_hex": "00000000000000000000000000000000c2c0beb8b6b4aeacaaa4a2a09a989690",
+  "external_read_return_edges": 29,
+  "RREG_edges": 1,
+  "local_CL_RET_edges": 30,
+  "assumptions": [
+    "RREFD8ns",
+    "RSP10ns",
+    "rowCA1024ps",
+    "paired PC phase reset alignment"
+  ],
+  "no_claim": [
+    "licensed PHY timing",
+    "physical route closure",
+    "production fixed fill deadline"
+  ]
+}

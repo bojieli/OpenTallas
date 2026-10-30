@@ -1,0 +1,35 @@
+{
+  "scope": "Default TIMING_833=0 full controller equivalence vs preprofile canonical source; enabledprofile PHY/ns calendar proof pending TOK",
+  "source_branch": "codex/hbm-load-provider-rtl-1030",
+  "source_tip": "fd4197d63",
+  "boot_tool_tip": "6739d1690",
+  "configuration": {
+    "ENABLE": 1,
+    "WR_EN": 1,
+    "AQ_RD": 1,
+    "WQ": 32,
+    "PHYS_WACT": 2,
+    "TIMING_833": 0
+  },
+  "proven_equiv_cells": 5742,
+  "unproven": 0,
+  "log": "current_default_equiv.log",
+  "script": "current_default.ys",
+  "gold": "gold.sv",
+  "gate": "current_gate.sv",
+  "tool": "Yosys0.68",
+  "time_seconds": 200.93,
+  "memory_MB": 565.6,
+  "enabled_raw_FF_delta_per_PC": 72,
+  "enabled_raw_FF_delta_32PC": 2304,
+  "no_claim": [
+    "enabledprofile timing PASS",
+    "physical PHY qualification",
+    "production fill deadline"
+  ],
+  "hashes": {
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv": "206a4c7a4626699bf735ba6faec3a783062d383f55fe328a9b527efb8b7d2427",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv": "ef1a98278c1e25596d7b22b6fe86697afdf7aacdc7c1302f9bf7f68f0c01c1b6",
+    "tools/hbm_timing_833_profile.py": "5677f9b8bb2680fc47b58f2dbbe56df9d95c00a90552353daf4e1847eb5e8f70"
+  }
+}
