@@ -83656,7 +83656,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 170420
   },
   "sle_stm_v3": {
    "module": "qfd_qc_sle_stm",
@@ -90525,7 +90526,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 56331
   },
   "phy_serdes_b": {
    "module": "ot_qfd_serdes_112g_x12_phy_s597",
@@ -109579,7 +109581,9 @@
      ],
      "lef": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy.lef",
      "lib": "physical/qwen_missing_phy/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_tt.lib",
-     "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits in coll_core with u_shared + u_gearbox, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one partition (a seam carries no clock)"
+     "note": "planned hard core (TOPDOWN L1 amend): the coll UCIe PHY sits in coll_core with u_shared + u_gearbox, so its forwarded FDI clocks (lclk -> fdi_ck / fdi_rx_ck) stay inside one partition (a seam carries no clock)",
+     "physical_inst": "u_bound.u_io_ucie",
+     "physical_master": "ot_qfd_ucie_x64_phy"
     },
     {
      "inst": "u_shared",
@@ -110416,7 +110420,8 @@
     0,
     0,
     4.32
-   ]
+   ],
+   "cells": 66574
   },
   "glue": {
    "module": "qfd_qc_glue_part",
@@ -572333,7 +572338,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 186178
   },
   "slw_stm_v1__cle34a73c3": {
    "module": "slw_stm_v1__cle34a73c3",
@@ -582549,7 +582555,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 156167
   },
   "sle_hc0__cl05696ed1": {
    "module": "sle_hc0__cl05696ed1",
@@ -587636,7 +587643,8 @@
      "note": "Exact existing native SRAM/ROM physical placement only; no logical contents instance, cells, ports or cycles added."
     }
    ],
-   "core_pg_connect": true
+   "core_pg_connect": true,
+   "cells": 382515
   },
   "sle_su_l1__cl5ea486db": {
    "module": "sle_su_l1__cl5ea486db",
@@ -673784,7 +673792,8 @@
       ]
      ]
     }
-   ]
+   ],
+   "cells": 64839
   },
   "slw_hc0__cl4f54b7a3": {
    "module": "slw_hc0__cl4f54b7a3",
@@ -685469,7 +685478,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 155293
   },
   "slw_fe_v2__cle312294d": {
    "module": "slw_fe_v2__cle312294d",
@@ -697574,7 +697584,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 186179
   },
   "slw_fw_v1__clf51c11d8__cl592e3d37": {
    "module": "slw_fw_v1__clf51c11d8__cl592e3d37",
@@ -701434,7 +701445,8 @@
       ]
      ]
     }
-   ]
+   ],
+   "cells": 186212
   },
   "slw_stm_v1__cl05fc43f7__cl2086fa2c": {
    "module": "slw_stm_v1__cl05fc43f7__cl2086fa2c",
@@ -717195,7 +717207,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 154973
   },
   "slw_fe_v1__clfe325744__cl08d14f0d": {
    "module": "slw_fe_v1__clfe325744__cl08d14f0d",
@@ -724041,7 +724054,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 170992
   },
   "slw_fw_v2__cl8f84514c": {
    "module": "slw_fw_v2__cl8f84514c",
@@ -727560,7 +727574,8 @@
       ]
      ]
     }
-   ]
+   ],
+   "cells": 171008
   },
   "slw_stm_v2__cl1ca9c415": {
    "module": "slw_stm_v2__cl1ca9c415",
@@ -741890,7 +741905,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 177878
   },
   "sle_fw_v1__cl9d029624": {
    "module": "sle_fw_v1__cl9d029624",
@@ -745502,7 +745518,8 @@
       ]
      ]
     }
-   ]
+   ],
+   "cells": 174569
   },
   "sle_stm_v1__cl27746664": {
    "module": "sle_stm_v1__cl27746664",
@@ -762149,7 +762166,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 176551
   },
   "sle_fe_v1__cl1cbb7497": {
    "module": "sle_fe_v1__cl1cbb7497",
@@ -771866,7 +771884,8 @@
      ]
     }
    ],
-   "landing_relay_start_copy": true
+   "landing_relay_start_copy": true,
+   "cells": 174523
   },
   "sle_fw_v2__cl6740750e": {
    "module": "sle_fw_v2__cl6740750e",
@@ -775442,7 +775461,8 @@
       ]
      ]
     }
-   ]
+   ],
+   "cells": 174547
   },
   "sle_stm_v2__cl7b3062fa": {
    "module": "sle_stm_v2__cl7b3062fa",

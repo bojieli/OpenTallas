@@ -1,7 +1,26 @@
 [
  {
-  "type": "coll_ucie",
-  "key": "kit_core_margins_um",
+  "path": "/partition_types/coll_ft__cla4a25d77/cells",
+  "old": null,
+  "new": 64839
+ },
+ {
+  "path": "/partition_types/coll_ucie/cells",
+  "old": null,
+  "new": 66574
+ },
+ {
+  "path": "/partition_types/coll_ucie/contents/0/physical_inst",
+  "old": null,
+  "new": "u_bound.u_io_ucie"
+ },
+ {
+  "path": "/partition_types/coll_ucie/contents/0/physical_master",
+  "old": null,
+  "new": "ot_qfd_ucie_x64_phy"
+ },
+ {
+  "path": "/partition_types/coll_ucie/kit_core_margins_um",
   "old": null,
   "new": [
    0,
@@ -11,20 +30,97 @@
   ]
  },
  {
-  "type": "slw_su_l1__clcc9d0155",
-  "key": "clock.landing_contract.bands.rsn_i.ring_place",
+  "path": "/partition_types/sle_fe_v1__cl8210183c/cells",
+  "old": null,
+  "new": 176551
+ },
+ {
+  "path": "/partition_types/sle_fe_v3/cells",
+  "old": null,
+  "new": 56331
+ },
+ {
+  "path": "/partition_types/sle_fw_v1__cl9d029624/cells",
+  "old": null,
+  "new": 174569
+ },
+ {
+  "path": "/partition_types/sle_fw_v1__clf58b4dfb/cells",
+  "old": null,
+  "new": 177878
+ },
+ {
+  "path": "/partition_types/sle_fw_v2__cl6740750e/cells",
+  "old": null,
+  "new": 174547
+ },
+ {
+  "path": "/partition_types/sle_fw_v2__cl69f5e854/cells",
+  "old": null,
+  "new": 174523
+ },
+ {
+  "path": "/partition_types/sle_fw_v3/cells",
+  "old": null,
+  "new": 170420
+ },
+ {
+  "path": "/partition_types/sle_st_a_v1__cl67389ecd/cells",
+  "old": null,
+  "new": 382515
+ },
+ {
+  "path": "/partition_types/sle_su_l1__cl5ea486db/clock/landing_contract/bands/rsn_i/ring_place",
   "old": null,
   "new": "ff"
  },
  {
-  "type": "slw_su_l1__cla2a78701",
-  "key": "clock.landing_contract.bands.rsn_i.ring_place",
+  "path": "/partition_types/slw_fe_v1__cl95cd1d0c/cells",
+  "old": null,
+  "new": 156167
+ },
+ {
+  "path": "/partition_types/slw_fe_v1__clfe325744__cldb4efe33/cells",
+  "old": null,
+  "new": 154973
+ },
+ {
+  "path": "/partition_types/slw_fe_v2__clf110fab2/cells",
+  "old": null,
+  "new": 155293
+ },
+ {
+  "path": "/partition_types/slw_fw_v1__cl51d45468/cells",
+  "old": null,
+  "new": 186178
+ },
+ {
+  "path": "/partition_types/slw_fw_v1__clf51c11d8__cl592e3d37/cells",
+  "old": null,
+  "new": 186212
+ },
+ {
+  "path": "/partition_types/slw_fw_v1__clf51c11d8__clc7ddab13/cells",
+  "old": null,
+  "new": 186179
+ },
+ {
+  "path": "/partition_types/slw_fw_v2__cl8537f156/cells",
+  "old": null,
+  "new": 170992
+ },
+ {
+  "path": "/partition_types/slw_fw_v2__cl8f84514c/cells",
+  "old": null,
+  "new": 171008
+ },
+ {
+  "path": "/partition_types/slw_su_l1__cla2a78701/clock/landing_contract/bands/rsn_i/ring_place",
   "old": null,
   "new": "ff"
  },
  {
-  "type": "sle_su_l1__cl5ea486db",
-  "key": "clock.landing_contract.bands.rsn_i.ring_place",
+  "path": "/partition_types/slw_su_l1__clcc9d0155/clock/landing_contract/bands/rsn_i/ring_place",
   "old": null,
   "new": "ff"
  }
