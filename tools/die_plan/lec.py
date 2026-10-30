@@ -143,10 +143,19 @@ def find_netlist(kit):
     raise LecError(f"no synthesised netlist under {kit}/run/results/asap7/*/base")
 
 
+# ASAP7 standard-cell Liberty (any VT), named explicitly in a kit's lib lists (e.g. the INVBUF_LVT libs of an LVT clock
+# context, or a kit-local byte copy under /work): standard cells are modelled functionally on both sides (gold:
+# rtl_standard_libs, gate: STD_LIBS), never as macro black boxes. As a black box the gold pre-pass wrote a stub of
+# BUFx10_ASAP7_75t_L that the gate side re-defined (DIE-KV-45 Q2 10-30: 'Re-definition of module').
+STD_LIB_FILE = re.compile(r"asap7sc7p5t_(AO|INVBUF|OA|SEQ|SIMPLE)_(RVT|LVT|SLVT)_(TT|FF|SS)_nldm_\d+\.lib(\.gz)?")
+
+
 def macro_libs(env, kit):
     out = []
     for k in ("ADDITIONAL_LIBS", "TC_LIB_FILES"):
         for p in env.get(k, "").split():
+            if STD_LIB_FILE.fullmatch(Path(p).name):
+                continue
             if p.endswith((".lib", ".lib.gz")) and "$(" not in p:
                 q = kpath(kit, p)
                 if q not in out:
