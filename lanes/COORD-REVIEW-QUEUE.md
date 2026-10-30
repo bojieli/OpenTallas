@@ -6014,3 +6014,8 @@ KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
 ot-run: RAN on localhost (unit oth-ubuntu-3852465-1793363743): exit 1
 AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/dsdv_gunit_l0_resetnd src codex/s81phys-0336@da33f628153 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 FAILED [AUTOPILOT 410e61986efb] 2026-10-30 05:43:46 PDT AUTOPILOT -> CODEX-S81PHYS: FAILED 410e61986efb s81/ot_s81sl_vsw (NEAR-MISS/routed): hold_ff: FAIL WNS -9.34 ps, 40 endpoints | kit epyc2:/srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/ot_s81sl_vsw_diamond src main@cf999b74444 | review epyc2:/srv/opentallas-scratch2/claude/autopilot/review/410e61986efb | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+FAILED [AUTOPILOT beb9dd63e736] 2026-10-30 06:03:30 PDT AUTOPILOT -> CODEX-S81PHYS: FAILED beb9dd63e736 s81/dsdv_gunit_l0 (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 1
+  - master_slice: core_infra_impl.tcl differs from the shared tools/die_plan/core_infra.tcl
+KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
+ot-run: RAN on localhost (unit oth-ubuntu-933513-1793364991): exit 1
+AP_RC=1 | kit localhost:/srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/dsdv_gunit_l0_bound src codex/s81phys-0336@91b3566befa | review no review bundle | run data kept: preflight/infra/proof attempt does not own prior physical checkpoints; kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
