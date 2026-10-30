@@ -4,3 +4,4 @@
 - 2026-10-29 17:50 PDT step 4 READY claude/die-head-33-start-1029@a27a1af0815 + ASK vehicle tools (see queue).
 - 2026-10-29 18:00 PDT step 2: lep_pair kit placing on epyc2 (2802518) + LEC 2876937; ASK lep0N growth +319.68 (A). claude/die-head-33-lep-1029@e2c88958ac9.
 - 2026-10-29 18:12 PDT COORD 18:0x approved all defaults; dispatched: strict bind on src25m (start sub-lane, priority), START diagnostic vehicle (735403ad0 tools, unmerged), lep0N +319.68 event src25n + shared head_lep_pair_kit.py fix READY (lep sub-lane); hd_mesh_e insertion (A) after all 4 means collected.
+- 2026-10-29 18:22 PDT src25m strict bind PASS 0 errors (queue line).
