@@ -130,3 +130,28 @@ Firstunit3998538 BLOCKED80 used public output names instead of exact binder
 $driver$…Q endpoints; failure retained vp_vn_publicpin_failed.json, fixed via
 existing inventory bit→unique driver mapping (same mechanism as BoundDie.route).
 VN local SRAM/write capture and readerready remain unqualified; noSEAL/START.
+
+Selected functional split VN store intake (1030 05:26 PDT)
+--------------------------------------------------------
+Generic bound_inventory --units-json adds exactly160existing VN_a/b atomic
+units to original130logical units, same c09217/062ef0 source. Unit4098006PASS,
+actualall80VN_a LM5/LA6 and80VN_b LM5/LA6/HW_STAGE0. Inventory artifact intel1
+codex-ds-entry-current-1030/inventory_vn.json; vn_units.json records exactrequests.
+No bind or RTL change. The old immutable functional source root VN640d… differs
+from main05da… arithmetic constzero masks; proof is explicitly selected functional
+source, never relabelled newer main. All source dependencies+manifest+defines
+are recorded in vn_local.json and checked by layer_prog.vn_local_intake.
+
+Minimal selected splitVN + real SRAM gateunit4137825PASS:64fullword storechecks
+across allHrows/gainrows/tworesetcontexts. VNinput→Hcommit2bothhalves,
+VNinput→gaincommit3bothhalves. Actualpayloadbit corruption catches1error,
+wrongage catches48. No new RTL edits. Logs vn_base/payload/age.log retained.
+
+Compose existing source-qualified VP HLOADlastoutput20 / GAINlastoutput12 plus
+actual0edgeVP→VN transfer and selected VN storecommits: VPcommandinput→lastVN
+Hstore22 / gainstore15. Actual80leaves XRcommandoutput→Hstore24..42 / gain17..35.
+Four unsafeactualvariant/source/age controls refused. Full attached output
+intel1 codex-ds-entry-current-1030/vp_vn_local_attached.json; compact vn_intake.json
+and runner intake_vn.py saved here. Readiness fields are source-relative only;
+rootphase, clocks, input lifetime, actual HLOAD/GAIN calendar, perpage retirement/
+reload, KIT/END/MU and physicalSTART still not qualified. NoSEAL/tokenclaim.
