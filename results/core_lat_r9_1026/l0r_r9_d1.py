@@ -9,7 +9,9 @@ Slew guard (DIE-S81-27 10-29, ve_s: three leaf downsizes BUFx24->BUFx10 pushed T
 slice gate and the converter refused the tree): a change is kept only if the calibrated leaf out/in slew at TT and FF stays
 <= --slew (default 80 = core_family_slice GATES slew_ps; a plan already above it may not get worse); the next-best change
 is tried instead.  Plans whose descent never crossed the limit are unchanged.
-usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80]   PLAN MODEL, UNCHECKED."""
+Opt-in --joint3 escapes a single-step plateau using at most three independent near-tied late paths,
+strict full-tree TT/FF improvement and both corners IN/OUT slew <=80. Default behavior is unchanged.
+usage: l0r_r9_d1.py PLAN.json GEO LIBDIR FIT OUT.json [--steps N] [--slew 80] [--joint3]   PLAN MODEL, UNCHECKED."""
 import gzip, json, sys, time, multiprocessing as MP
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
@@ -63,7 +65,7 @@ def main():
         q = A.calibrated_summary(P, L, pmax, pmin)
         return max(q[c][k] for c in ("TT", "FF") for k in ("leaf_out_slew_max", "leaf_slew_in_max"))
     cap = max(slew_lim, slew_max()); rejected = 0
-    t0 = time.time(); tried = set()
+    t0 = time.time(); tried = set(); joint_log = []
     for s in range(steps):
         best = None
         cand = []
@@ -86,6 +88,37 @@ def main():
             P.nodes[best[1]]["cell"], keep = best[2], P.nodes[best[1]]["cell"]
             t2, f2 = evalp(P, L, pmax, pmin); P.nodes[best[1]]["cell"] = keep
             best = best + (t2, f2)
+        if best is None and '--joint3' in sys.argv:
+            from joint_rvt import propose
+            def evaluate_joint(assignments, need_slew):
+                originals = {u: P.nodes[u]["cell"] for u in assignments}
+                try:
+                    for u, master in assignments.items(): P.nodes[u]["cell"] = master
+                    jt, jf = evalp(P, L, pmax, pmin)
+                    sl = {}
+                    if need_slew:
+                        summary = A.calibrated_summary(P, L, pmax, pmin)
+                        sl = {c + "_" + label: summary[c][field]
+                              for c in ("TT", "FF") for label, field in
+                              (("in", "leaf_slew_in_max"), ("out", "leaf_out_slew_max"))}
+                    return jt, jf, sl
+                finally:
+                    for u, master in originals.items(): P.nodes[u]["cell"] = master
+            joint = propose(tt, ff, par, {u: n["cell"] for u, n in P.nodes.items()},
+                            ENV, evaluate_joint, min(slew_lim, 80.0))
+            if joint is not None:
+                previous = cur
+                for u, master in sorted(joint['assignments'].items()):
+                    log.append(dict(step=s, node=u, frm=P.nodes[u]["cell"], to=master,
+                                    joint=True, obj=round(joint['key'][0], 2)))
+                    P.nodes[u]["cell"] = master
+                tt, ff = joint['tt'], joint['ff']; cur = obj(tt, ff)
+                joint_log.append(dict(step=s, near_leaves=joint['near_leaves'], corner=joint['corner'],
+                                      assignments=joint['assignments'], before=previous, after=cur,
+                                      full_tree_trials=joint['full_tree_trials'], slews=joint['slews']))
+                print("joint step %d %s TTw %.2f FFw %.2f (%.0fs)" %
+                      (s, joint['assignments'], cur[1], cur[2], time.time() - t0), flush=True)
+                continue
         if best is None: break
         o, u, m, tt, ff = best
         log.append(dict(step=s, node=u, frm=P.nodes[u]["cell"], to=m, obj=round(o[0], 2), TTw=round(o[1], 2), FFw=round(o[2], 2)))
@@ -95,6 +128,8 @@ def main():
     rec["nodes_xy"] = [[n[0], n[1], n[2], P.nodes[n[0]]["cell"], n[4]] for n in rec["nodes_xy"]]
     rec["frozen_masters"] = {n[0]: n[3] for n in rec["nodes_xy"]}
     rec["d1_uf3"] = dict(rule="12.8 d1 plan-computed sizing under uf_phys3 v1 (pre-build, no measurement)", start=dict(obj=round(o0[0], 2), TTw=round(o0[1], 2), FFw=round(o0[2], 2)), changes=log)
+    if joint_log:
+        rec["d1_uf3"]["joint3"] = joint_log
     if rejected:
         rec["d1_uf3"]["slew_guard"] = dict(limit_ps=cap, rejected_changes=rejected)
     rec["d1_uf3"]["prediction"] = A.calibrated_summary(P, L, pmax, pmin)
