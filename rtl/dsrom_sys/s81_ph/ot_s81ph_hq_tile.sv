@@ -41,12 +41,34 @@ module ot_s81ph_hq_in (
 );
     localparam integer DW = 482;
     localparam integer UW = DW + 15;
+`ifdef OT_S81PH_HQ_PIN_CAPTURE
+    // Private opt-in BKq face successor: all source copies below captured the
+    // SAME lane at the SAME edge. One kept pin capture retains that edge and
+    // every reserved pin; aliases do not add a pipeline stage.
+`ifndef OT_S81PH_HQ_INPUT_RAW
+    initial $fatal(1, "OT_S81PH_HQ_PIN_CAPTURE requires OT_S81PH_HQ_INPUT_RAW");
+`endif
+    (* keep = "true" *) reg [514:0] pin_lane_q;
+`ifdef OT_S81PH_HQ_PIN_CAPTURE_MUT
+    reg [514:0] pin_lane_prev;
+    always @(posedge clk) pin_lane_prev <= lane;
+    always @(posedge clk)
+        if (`OT_S81PH_HQ_PIN_CAPTURE_MUT == 1) pin_lane_q <= lane ^ (515'd1 << 509);
+        else pin_lane_q <= pin_lane_prev;
+`else
+    always @(posedge clk) pin_lane_q <= lane;
+`endif
+    wire [UW-1:0] s0 = {pin_lane_q[514], pin_lane_q[513], pin_lane_q[512:501], pin_lane_q[DW:1], pin_lane_q[0]};
+    wire [4:0] s0c = {pin_lane_q[512:509], pin_lane_q[0]};
+    wire [4:0] s0d = {pin_lane_q[512:509], pin_lane_q[0]};
+`else
     wire [UW-1:0] u = {lane[514], lane[513], lane[512:501], lane[DW:1], lane[0]};
     reg  [UW-1:0] s0;
     always @(posedge clk) s0 <= u;
     // kept copy of {type, valid} for the position next state (cur_n): the case decode keeps s0's own bits
     (* keep = "true" *) reg [4:0] s0c, s0d;           // one per half of cur
     always @(posedge clk) begin s0c <= {lane[512:509], lane[0]}; s0d <= {lane[512:509], lane[0]}; end
+`endif
     // type-8 select copies: 13 lanes x {val lo 8, val hi 8, idx lo 10, idx hi 10} + {lv/last} = 53 copies over four
     // decodes (<= 14 each)
 `ifdef OT_S81PH_HQ_INPUT_RAW
@@ -54,6 +76,13 @@ module ot_s81ph_hq_in (
     // decode locally at the existing second-stage payload mux. Four-select groups
     // keep each type bit below32 loads, with zero additional pipeline edges.
     localparam integer NF = 53, NT = 14;
+`ifdef OT_S81PH_HQ_PIN_CAPTURE
+    wire [4*NT-1:0] raw_type;
+    genvar pin_rt;
+    generate for (pin_rt = 0; pin_rt < NT; pin_rt = pin_rt + 1) begin : g_pin_type
+        assign raw_type[4*pin_rt +: 4] = pin_lane_q[512:509];
+    end endgenerate
+`else
     (* keep = "true" *) reg [4*NT-1:0] raw_type;
 `ifdef OT_S81PH_HQ_INPUT_RAW_MUT
     reg [3:0] raw_type_prev;
@@ -69,6 +98,7 @@ module ot_s81ph_hq_in (
                 raw_type[4*rt +: 4] <= lane[512:509];
         end
     end endgenerate
+`endif
     wire [NF-1:0] f;
     genvar fs;
     generate for (fs = 0; fs < NF; fs = fs + 1) begin : g_f

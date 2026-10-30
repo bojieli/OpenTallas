@@ -1,0 +1,35 @@
+{
+  "status": "PRIVATE_CANDIDATE_NOT_ADOPTED",
+  "flag": "OT_S81PH_HQ_PIN_CAPTURE defaultOFF, requires existing HQ_INPUT_RAW",
+  "scope": "one actual ot_s81ph_hq_in input capture process; no downstream arithmetic/reset/port/cycle change",
+  "raw_failure": {
+    "shared": {
+      "lane512:509": "16loads each",
+      "lane0": "2loads"
+    },
+    "dropped": "lane500:483 eighteen reservedbits"
+  },
+  "mechanism": "one515bit kept source capture, alias old s0/s0c/s0d/raw_type sameedge copies fromit; no newpipeline stage",
+  "declared_capture_state_bits": {
+    "old": 563,
+    "new": 515,
+    "delta": -48
+  },
+  "physical_ff_delta": "notyetmeasured; oldrawunused5 optimizations and posthook18captures mean logicaldecldelta is not a mappedtotalclaim",
+  "proof": {
+    "actual_module": "ot_s81ph_hq_in",
+    "engine": "Icarus fourstate",
+    "cycles": 12000,
+    "checks": 24146,
+    "cutbits": 563,
+    "all_leaf_output_bits": 621,
+    "midrun_resets": 145,
+    "Xpayload_words": 388,
+    "all16types_including_illegal": "covered first512cycles thenrandom",
+    "mutants": "wrongtypebit and+1capturedstage bothcaughtcycle17 afterstartup",
+    "unit": "intel2 oth-ubuntu-3382036-1793368857"
+  },
+  "native_raw_post_LEC_fanout": "pending new currentparent sourceonly run; oldfailedsourcekitretained",
+  "R2_physical_risks": "sharingcapture mayincrease downstream combinational fanout/reach; requires actualguards/placedgeometry/clock/timing beforephysicaladoption",
+  "source_sha256": "5759620cc8febec394a2906650c84dc3fb2a485154823772ee3f4364221d01ac"
+}
