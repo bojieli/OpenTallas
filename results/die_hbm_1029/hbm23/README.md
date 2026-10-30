@@ -39,3 +39,18 @@ data/scripts epyc2:/srv/opentallas-scratch2/claude/hbm-xclk-23 (copies of script
   load_balance joint_nldm_plan; move rst_n pin + rst_q flop next to the W-N/centre root via the plan pin entry. Entry move
   to the face-flop centroid gains nothing. No die-specific clock script; ot_clk leaf_drivers/local_entry act on die
   provider netlists, not kits.
+
+## EP_S1 re-station at the 405-um rule (sub-lane HBM-EPS1-23, estimate only; plan d22b) -- notes eps1/RESULT.txt
+- Why B2o has 167-um pitch (CHECKED): tool side effect, not timing - B2o b2n.restation (cores_b2.RelayRouter, 360-um
+  hop limit) places stations only on hard-core edges / partition perimeter; vsN1/vsN2 are empty pass-throughs, so the
+  chain detoured via the W edge (2747 / 2574 um, 9 + 8 stations); the later per-bit step kept the counts on the straight
+  1503/1331-um route.
+- Recount (CHECKED from plan geometry, per-partition R3 route/stations <= 405): vsN1 4 (375.84 pitch), vsN2 4 (332.64)
+  -> 17 -> 8 stations, 19 -> 10 cycles each way for L200/L201 and L118/L141 (same word, keep equal).
+- 405-um hop closure: 261 ps + 1.135 ps/um x L (W15 routed fit, SS) with droop derate -> 769.8 ps at 405 um (UNCHECKED
+  source figures, arithmetic CHECKED).
+- Price (ESTIMATE, linear between TOK-HBM-11 CHECKED points 17 cyc 1.531 % / 34 cyc 3.195 %): EP_S1 3.195 % -> ~1.44-1.50 %;
+  total 5.163 % -> ~3.41-3.48 % -> ~1842 tok/s (from ~1812): recovery ~1.7 % >= 1 % -> OWNER? line re-priced.
+- Plan delta (not built): vsN1 slots L118x1/L141x1/L201x1 (S->N) + L200x2 (N->S) 9 -> 4 stations at y 0/375.84/751.68/
+  1127.52 (L200 mirrored from 1503.36); vsN2 L118x2/L141x2/L201x2 + L200x1 8 -> 4 at y 0/332.64/665.28/997.92; x kept;
+  regenerate L118/L141 per-bit sites; latency L118/L141/L200/L201 = 10 cycles / 8 stations; G0/G0C.

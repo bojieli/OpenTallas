@@ -1,0 +1,5 @@
+HBM-EPS1-23 (estimate only) 2026-10-29 18:01 on d22b c564e8942374
+WHY 167 um: B2o b2n.restation used cores_b2.RelayRouter (HOP 360) whose candidate points lie only on box edges + the partition perimeter; vsN1/vsN2 are empty ft-only types, so the chain detoured window(x626)->west edge x=4.32->back: route 2747.1 um (vsN1, 9 st) / 2574.3 um (vsN2, 8 st), max hop 344.9 (B2o die_plan @fcd78fa50^). hbm_bit_stations (per-bit-zroute) then re-sited the SAME count evenly on the straight route -> 167.04/166.32 pitch. Artifact, not a timing rule.
+RECOUNT at R3 (route/stations <= 405 per slot): vsN1 1503.36 -> 4 (375.84), vsN2 1330.56 -> 4 (332.64); 17 -> 8 stations, 19 -> 10 cycles each lane (L118,L141,L200,L201). Pure-hop minimum 6 st (2833.92/7 = 404.85) fails R3 per slot.
+Hop timing: W15 fit T=261+1.135ps/um*L (SS); 405 um derated (logic+10%, wire+5%) 769.8 ps < 833 (+63 ps SS); TT measured reach 600-750 um.
+TOK: per_cross 34 -> 16: A 3.195% -> ~1.44-1.50%; A+B 5.163% -> ~3.41-3.48%; 1812 -> ~1842-1843 tok/s (+~1.7%).
