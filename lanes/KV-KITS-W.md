@@ -1,0 +1,2 @@
+# KV-KITS-W (KV kit throughput; successor of KV-KITS-V)
+- 2026-10-29 22:03 PDT START/CLAIM [KV-KITS-W]: ADOPTED (collect-only, no duplicates) 5 live routes: q3w16_h0/h432 intel1 units oth-ubuntu-779995/780155, q2_w243s/q1_w243s intel1 1876590/1885174, kvs_pc d35q intel2 698835 (all scopes active CHECKED). Items: (1) collect + post-route LEC + SIGNED lines; (2) kv3_pc type kits after kvs_pc signs off; (3) pc_quad_taps/r2r_pull FLOW-KITFAIL-3 proposal if pc routes clean; (4) KV HR NEEDS-KIT cores (CDC_CH ASK to DIE-KV-41, others that pass preflight).
