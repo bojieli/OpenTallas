@@ -90,7 +90,7 @@ module ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691 (
     wire [31:0] c_lane_ro_x;
     wire c_lane_fault;
     wire c_lane_coll;
-    ot_hbm_su_pg_lane_exp_core u_core (
+    ot_hbm_su_pg_lane_exp_core #(.MLAT(4), .ALAT(4), .WCOPY(0)) u_core (
         .bank_clk(clk_bank),
         .bank_rst_n(rst_n),
         .bank_clk_macro(clk_bank_macro[5:0]),

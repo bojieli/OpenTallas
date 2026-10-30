@@ -1,0 +1,53 @@
+{
+  "status": "ALL_INPUT_BOUNDARY_WIRING_EQUIVALENCE_ONLY_UNADOPTED",
+  "native_arithmetic": "same unchanged canonical module at verified current parameters; no full-core native LEC claim",
+  "bound_cores": 104,
+  "native_lane_ids": 236,
+  "reports": [
+    {
+      "module": "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691",
+      "complete_ports": 71,
+      "port_bits": 2035,
+      "canonical_cells": 1,
+      "canonical_parameters": {
+        "ALAT": 4,
+        "MLAT": 4,
+        "WCOPY": 0
+      },
+      "all_input_graph_equal": true,
+      "wrong_id_graph_mutant_rejected": true,
+      "bound_id_cases": 60,
+      "wrong_bound_id_cases_rejected": 60
+    },
+    {
+      "module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+      "complete_ports": 130,
+      "port_bits": 3798,
+      "canonical_cells": 1,
+      "canonical_parameters": {
+        "ALAT": 4,
+        "MLAT": 4,
+        "WCOPY": 0
+      },
+      "all_input_graph_equal": true,
+      "wrong_id_graph_mutant_rejected": true,
+      "bound_id_cases": 28,
+      "wrong_bound_id_cases_rejected": 28
+    },
+    {
+      "module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+      "complete_ports": 131,
+      "port_bits": 3830,
+      "canonical_cells": 1,
+      "canonical_parameters": {
+        "ALAT": 4,
+        "MLAT": 4,
+        "WCOPY": 0
+      },
+      "all_input_graph_equal": true,
+      "wrong_id_graph_mutant_rejected": true,
+      "bound_id_cases": 16,
+      "wrong_bound_id_cases_rejected": 16
+    }
+  ]
+}

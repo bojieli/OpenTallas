@@ -1,0 +1,93 @@
+{
+  "status": "ACTUAL_NATIVE_PREFERRED_SOURCE_IDENTITY",
+  "module": "ot_hgi_qw_dec",
+  "instance": "hb_quant_NW__u_dec",
+  "params": {},
+  "manifest": "/srv/opentallas-scratch2/claude/die-hbm-31/b31t/asbuilt.json",
+  "rows": [
+    {
+      "recipe_old": "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+      "sha256": "504deb536eaf8dbe8fcca50be747a5c5f4159cd186be08f9ccfc71d9365808e4"
+    },
+    {
+      "recipe_old": "rtl/lib/ot_rst_relay.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+    },
+    {
+      "recipe_old": "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "sha256": "0e140d8c51d615dc08867c13229f9b14a63451a4ed44437f1dd91c039a46f17c"
+    },
+    {
+      "recipe_old": "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "sha256": "86157cfdac1960b7c4eba0e2af357f1bf005084d4f23163766f75b4064de5a73"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_delay.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688"
+    },
+    {
+      "recipe_old": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "sha256": "e9ea4bc0e305370cbe2e2d4f7bd7e7c1596fd133f8651bcbde4ad1d1a3f0fdbf"
+    },
+    {
+      "recipe_old": "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "sha256": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+      "sha256": "69300b54772123ec1bb4c4a6295bef424f4afae3583cede36008026bf1a971da"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_fastfp.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_prefix.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_sfu.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+      "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+      "sha256": "9cac6497544e2f925fb3cbcf213b46114521024eea068c51204caf59484a23fe"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "sha256": "3344a8fa53e5dbea7f2039f6f0cd31a20334fe76778d594df8035e9e55446f74"
+    },
+    {
+      "recipe_old": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "native_preferred": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "file": "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58"
+    }
+  ]
+}

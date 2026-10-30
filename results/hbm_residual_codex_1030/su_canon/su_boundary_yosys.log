@@ -1,0 +1,116 @@
+
+-- Executing script file `su_boundary.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-residual-1030/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-residual-1030/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_pg_lane_exp_core'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch2/claude/wt/codex-hbm-residual-1030/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch2/claude/wt/codex-hbm-residual-1030/rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_pg_lanes4_core'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__native.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__native.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__native_reference'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__native.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__native.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__native_reference'.
+Successfully finished Verilog frontend.
+
+8. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__native.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__native.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__native_reference'.
+Successfully finished Verilog frontend.
+
+9. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__mutant.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__mutant.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__wrong_id_mutant'.
+Successfully finished Verilog frontend.
+
+10. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__mutant.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__mutant.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__wrong_id_mutant'.
+Successfully finished Verilog frontend.
+
+11. Executing Verilog-2005 frontend: ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__mutant.sv
+Parsing SystemVerilog input from `ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__mutant.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__wrong_id_mutant'.
+Successfully finished Verilog frontend.
+
+12. Executing PROC pass (convert processes to netlists).
+
+12.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+12.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+12.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 0 assignments to connections.
+
+12.4. Executing PROC_INIT pass (extract init attributes).
+
+12.5. Executing PROC_ARST pass (detect async resets in processes).
+
+12.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+12.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+
+12.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+12.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+12.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+12.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+12.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__wrong_id_mutant.
+<suppressed ~4 debug messages>
+Optimizing module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__wrong_id_mutant.
+<suppressed ~4 debug messages>
+Optimizing module ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__wrong_id_mutant.
+<suppressed ~1 debug messages>
+Optimizing module ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__native_reference.
+Optimizing module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__native_reference.
+Optimizing module ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__native_reference.
+Optimizing module ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526.
+Optimizing module ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77.
+Optimizing module ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691.
+
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__wrong_id_mutant..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__wrong_id_mutant..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__wrong_id_mutant..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__native_reference..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__native_reference..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691__native_reference..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77..
+Finding unused cells or wires in module \ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691..
+Removed 0 unused cells and 9 unused wires.
+<suppressed ~3 debug messages>
+
+14. Executing JSON backend.

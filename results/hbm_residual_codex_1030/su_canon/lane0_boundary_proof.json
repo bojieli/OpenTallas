@@ -1,0 +1,40 @@
+{
+  "status": "DIAGNOSTIC_BOUNDARY_EQUAL_CURRENT_NATIVE_ARITHMETIC_MISMATCH_HOLD",
+  "boundary_all_input_graph_equal": true,
+  "wrong_id_graph_mutant_rejected": true,
+  "explicit_parameters": {
+    "ALAT": 4,
+    "MLAT": 4,
+    "WCOPY": 0
+  },
+  "native_bound_ids": [
+    {
+      "path": "su_NW0.__cut_lane_exp0",
+      "part": "NW_su00",
+      "local": "u_su_Q0_lane_exp0",
+      "value": 0
+    },
+    {
+      "path": "su_NW1.__cut_lane_exp0",
+      "part": "NW_su10",
+      "local": "u_su_Q1_lane_exp0",
+      "value": 16
+    },
+    {
+      "path": "su_NE0.__cut_lane_exp0",
+      "part": "NE_su00",
+      "local": "u_su_Q0_lane_exp0",
+      "value": 0
+    },
+    {
+      "path": "su_NE1.__cut_lane_exp0",
+      "part": "NE_su10",
+      "local": "u_su_Q1_lane_exp0",
+      "value": 16
+    }
+  ],
+  "canonical_KIND": 2,
+  "current_native_KIND": 1,
+  "current_native_arithmetic_match": false,
+  "physical_adoption": "HOLD: actual native rst3 exp cut required, no old FULL2 substitution"
+}

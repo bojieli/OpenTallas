@@ -103,26 +103,26 @@
  "ot_hgi_qw_dec": {
   "top": "ot_hgi_qw_dec",
   "files": [
-   "rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
-   "rtl/lib/ot_rst_relay.sv",
-   "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
-   "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
-   "rtl/hdc/ot_hdc_delay.sv",
-   "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
-   "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
-   "rtl/hdc/ot_hdc_fp32_f12.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_prefix.sv",
-   "rtl/hdc/ot_hdc_sfu.sv",
-   "rtl/hdc/ot_hdc_fastfp_lat.sv",
-   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
-   "rtl/hdc/ot_hdc_fp32_add_lat.sv"
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/qw/ot_hgi_qw_dec.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_delay.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_f12.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv"
   ],
   "defines": [],
   "params": {},
   "macros": [],
-  "source": "d4g as-built die_r18h5.v instance hb_quant_NW__u_dec (module ot_hgi_qw_dec); files = closure of ot_hgi_qw_dec at d34578d6f",
-  "source_commit": "d34578d6f",
+  "source": "Current g4/b31t native hb_quant_NW__u_dec, NW_hub/u_hb_quant_Q__u_dec__q1, params{}; exact14 manifest-preferred r18h5_bundle sources, hashes in results/hbm_residual_codex_1030/qwdec/qwdec_native_source.json. Five bundle primitives differ from old d345 main files, so old46906point sourceLEC is not current source proof; fresh native LEC required. No RTL or calendar change versus actual native source.",
+  "source_commit": "3495678d594326510d593c5a66c4844c39ecb9a8",
   "read_at_commit": true,
   "asbuilt_inst": "hb_quant_NW__u_dec",
   "ambiguous_defs_resolved": {
@@ -1535,13 +1535,17 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "params": {},
+  "params": {
+   "MLAT": 4,
+   "ALAT": 4,
+   "WCOPY": 0
+  },
   "port_map_note": "canonical ports = ot_hbm_su_pg_lane_exp_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lane_exp.type_ids[\"ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92\"]; straps {'lane_lane_id': '00000000010'} tied at the parent",
   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (lanes L 1..15: KIND 1 exp lane)",
   "top": "ot_hbm_su_pg_lane_exp_core",
-  "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92",
-  "alias_note": "Current canonical family direct wiring with physical strap_lane_lane_id alias; source preparation only, no adopted plan. Exact ID width comes from native wrapper.",
-  "synth_memory_max_bits": 15616
+  "alias_note": "Current native SU MLAT4 ALAT4 WCOPY0 explicit in direct wrapper; old member source closure reused only, its default ALAT3 is stale. Physical ID alias is pure wiring; no new state/cycles against current native. Unadopted source preparation.",
+  "synth_memory_max_bits": 15616,
+  "source_member_recipe": "ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92"
  },
  "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
   "defines": [],
@@ -1571,12 +1575,16 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "params": {},
+  "params": {
+   "MLAT": 4,
+   "ALAT": 4,
+   "WCOPY": 0
+  },
   "port_map_note": "canonical ports = ot_hbm_su_pg_lanes4_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lanes4.type_ids[\"ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12\"]; straps {'lane2_lane_id': '00000100010', 'lane0_lane_id': '00000100000', 'lane3_lane_id': '00000100011', 'lane1_lane_id': '00000100001'} tied at the parent",
   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
   "top": "ot_hbm_su_pg_lanes4_core",
-  "alias_of": "ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12",
-  "alias_note": "Current canonical family direct wiring with physical strap_lane_lane_id alias; source preparation only, no adopted plan. Exact ID width comes from native wrapper."
+  "alias_note": "Current native SU MLAT4 ALAT4 WCOPY0 explicit in direct wrapper; old member source closure reused only, its default ALAT3 is stale. Physical ID alias is pure wiring; no new state/cycles against current native. Unadopted source preparation.",
+  "source_member_recipe": "ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12"
  },
  "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
   "defines": [],
@@ -1606,12 +1614,16 @@
   "macros": [
    "ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "params": {},
+  "params": {
+   "MLAT": 4,
+   "ALAT": 4,
+   "WCOPY": 0
+  },
   "port_map_note": "canonical ports = ot_hbm_su_pg_lanes4_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lanes4.type_ids[\"ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92\"]; straps {'lane2_lane_id': '00001000010', 'lane0_lane_id': '00001000000', 'lane3_lane_id': '00001000011', 'lane1_lane_id': '00001000001'} tied at the parent",
   "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
   "top": "ot_hbm_su_pg_lanes4_core",
-  "alias_of": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92",
-  "alias_note": "Current canonical family direct wiring with physical strap_lane_lane_id alias; source preparation only, no adopted plan. Exact ID width comes from native wrapper."
+  "alias_note": "Current native SU MLAT4 ALAT4 WCOPY0 explicit in direct wrapper; old member source closure reused only, its default ALAT3 is stale. Physical ID alias is pure wiring; no new state/cycles against current native. Unadopted source preparation.",
+  "source_member_recipe": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92"
  },
  "ot_hbm_svc_sm_xcal_rel_t": {
   "macro_place_halo_um": 2.16,
