@@ -4,11 +4,11 @@ Workspace values carry their canonical source address identity. Writes invalidat
 old physical/source aliases. This checks address/version routing without replaying
 hundreds of millions of tagged words or replacing any numerical arithmetic.
 """
-import copy,json,sys
+import argparse,copy,json,sys
 from pathlib import Path
 root=Path(__file__).resolve().parents[2];p=Path('/srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools');sys.path[:0]=[str(root/'tools/hbm_next'),str(p/'hbm_next'),str(p),'/home/ubuntu/OpenTallas/tools']
-import isa_rows as IR,image_check as IC,vm_value_phase as V,vm_expert_entry as E
-base=Path(__file__).parent/'canonical_all';packet=json.loads((base/'stream.json').read_text());raw=(base/'stream.hgi1r').read_bytes();source=IC.decode_all(Path('/srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r').read_bytes());backing=packet['backing_range'][0];ALL=65535
+import isa_rows as IR,image_check as IC,vm_value_phase as V,vm_expert_entry as E,vm_canonical_stream as C
+ap=argparse.ArgumentParser();ap.add_argument('--base',type=Path,default=Path(__file__).parent/'canonical_all');args=ap.parse_args();base=args.base;packet=json.loads((base/'stream.json').read_text());raw=(base/'stream.hgi1r').read_bytes();source=IC.decode_all(Path('/srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r').read_bytes());backing=packet['backing_range'][0];ALL=65535
 
 
 def remove(maps,lo,hi,physical=False):
@@ -37,6 +37,7 @@ def check(mutation=None):
  seen={};checks=0;expert_count=0;stream_pairs=0
  for ph in packet['phases']:
   begin,end=ph['command_range'];maps=[];rfirst,rlast=ph['source_range'];expert=ph['kind']=='expert'
+  if not expert and ph['kind']=='static' and rlast>rfirst:assert C.static_group_end(source,rfirst,rlast,IR)>=rlast,'reverse row-group dependency'
   if expert:
    expected,ep=E.lower(source,rfirst,rlast);epdec=IC.decode_all(expected);bi=0;expert_count+=1
   for pos in range(begin,end):
@@ -91,4 +92,6 @@ for name,pos,mut in [('wrong_canonical_load',load,lambda r,x:setattr(r.desc['A']
  try:check((pos,mut))
  except(AssertionError,ValueError):controls.append(name)
  else:raise AssertionError(name+'escaped')
+assert C.static_group_end(source,1540,1542,IR)<1542
+controls.append('known_reverse_source_group_rejected')
 result['controls']=controls;print(json.dumps(result))

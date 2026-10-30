@@ -172,3 +172,25 @@ PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_canonical_str
  --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
  --backing-base 0x1D11000000 --out-dir results/tok_hbm_1030/canonical_all
 python3 results/tok_hbm_1030/check_canonical.py
+
+Optional grouping reduces the conservative source vehicle's traffic
+
+--group-static commutes only independent row groups. It checks actual VM RAW,
+WAR and WAW inversions between later group0 and earlier group3 operations,
+including attention-plan reads; DMA, control and stream operations are explicit
+boundaries. Source regions are split further when the allocator cannot fit.
+No numerical operation changes, and the default remains the ungrouped stream.
+
+An initial grouped preparation failed the address proof: emitting all prefetches
+at group entry ignored the allocator's workspace lifetimes (source147504:147632
+unavailable at workspace0). This failure remains in group_failure.json and its
+scratch candidate. The fixed compiler emits external loads at their actual
+before_source_record anchors. No passing verdict replaces that failed candidate.
+
+The optional canonical_group_anchored result covers all3916 source records as
+40536 commands and383876096 boundarybytes:25.2% fewer commands and8.87% fewer
+bytes than the conservative baseline. Max VM remains255168. The same20842
+address/version checks,40 expert components and6 coupled head rows pass, plus
+wrong load, missing drain, stream-coupling and known reverse-source-group controls.
+Current backend stack/VM namespace, scratch authority, initial publication,
+numerical RTL and full source calendar are still unqualified. SOURCE ONLY.
