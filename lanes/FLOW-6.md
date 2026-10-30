@@ -1,0 +1,2 @@
+# FLOW-6 (shared flow; successor of FLOW-5)
+- 2026-10-30 00:48 PDT CLAIM [FLOW-6] collect PVJ V1b route intel2 1260674, PHY HB4 m10b epyc2 3075373, Codex LEC intel1 3025390/3637477/3795621 (verdicts only); confirm 3 held HBM kits released by autopilot; shared failure classes routed to FLOW (first: HEAD-37 00:46 n3_turn landing_placement OT_CLAND status window above core + DPL-0033 FIRM ring flops). Worktree (if needed) intel2 /srv/opentallas-scratch2/claude/wt/flow-6 (sparse).
