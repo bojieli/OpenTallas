@@ -2224,3 +2224,4 @@ CODEX: KV fullSTARTloaded CELL clock crossings3595+START1687 PASS bothTTFF after
 CODEX:2026-10-30 03:46PDT FLOW LN mappedguard b2687282cREADY; actualplain2232/nst2228PASS via existing typedraw equations,92testsPASS; S81types resumesPLACE.
 
 CODEX: 2026-10-30 03:46 PDT support registered legitimate q0 nativeEQ27583 same-DB re-sign and VMR typedFT14ea re-qualification as NEWpaths preserving retirement; expected KV+1/QCrestore1 pending collector.
+CODEX: 2026-10-30 03:46 PDT S81 actualKVleaf1.89–1.94M invalidatesstaleG0Celigible; hardcut+censusrepair owned/routeheld. Waveuniformscriptac6ec101953 READY3canaries, ROMclassesstillmissinglibs; event3verifylive.
