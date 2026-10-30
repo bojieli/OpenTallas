@@ -1,0 +1,486 @@
+{
+ "scope": "UNPLACED geometry/NLDM screen only; no clock timing measurements, no branch balancing, no passing build qualification",
+ "input_slew_ps": 20.0,
+ "wire_model": "historical RCLK planning RC .014812kohm/um,.154233fF/um; no actual routed layer extraction",
+ "clock_pin_caps_ff": {
+  "TT": {
+   "DFFASRHQNx1_ASAP7_75t_R": 0.462899,
+   "DFFHQNx1_ASAP7_75t_R": 0.474736,
+   "DFFHQNx2_ASAP7_75t_R": 0.474859,
+   "DFFLQNx1_ASAP7_75t_R": 0.480775
+  },
+  "FF": {
+   "DFFASRHQNx1_ASAP7_75t_R": 0.503152,
+   "DFFHQNx1_ASAP7_75t_R": 0.52201,
+   "DFFHQNx2_ASAP7_75t_R": 0.521959,
+   "DFFLQNx1_ASAP7_75t_R": 0.522936
+  }
+ },
+ "roots": {
+  "clk_t1": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1251,
+   "clock_cells": 512,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 31.16568595145867,
+     "sinks": 1251,
+     "min_ps": 251.6582614992998,
+     "mean_ps": 256.1309082358058,
+     "max_ps": 296.17247386451413,
+     "window_ps": 44.51421236521432,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 28.513531869508967,
+     "sinks": 1251,
+     "min_ps": 194.90054345318632,
+     "mean_ps": 198.8934034803267,
+     "max_ps": 235.21849856917908,
+     "window_ps": 40.31795511599276,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1290,
+   "clock_cells": 540,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 31.5451011253077,
+     "sinks": 1290,
+     "min_ps": 261.5414452499423,
+     "mean_ps": 272.4046358272543,
+     "max_ps": 683.2610768864843,
+     "window_ps": 421.719631636542,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 30.356636547862717,
+     "sinks": 1290,
+     "min_ps": 203.88925657418753,
+     "mean_ps": 213.06307272964,
+     "max_ps": 560.3907054235075,
+     "window_ps": 356.50144884931996,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk_t6": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1106,
+   "clock_cells": 426,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 23.628563674086383,
+     "sinks": 1106,
+     "min_ps": 235.1378621750448,
+     "mean_ps": 252.62199455471003,
+     "max_ps": 326.5529692619237,
+     "window_ps": 91.41510708687889,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 21.059593737912987,
+     "sinks": 1106,
+     "min_ps": 182.89499253958977,
+     "mean_ps": 196.7418016103711,
+     "max_ps": 260.0028349190363,
+     "window_ps": 77.10784237944651,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk_t7": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1311,
+   "clock_cells": 536,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 31.431102983921406,
+     "sinks": 1311,
+     "min_ps": 254.7743985896507,
+     "mean_ps": 262.9057598656989,
+     "max_ps": 669.4250571523294,
+     "window_ps": 414.6506585626787,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 30.103642510873165,
+     "sinks": 1311,
+     "min_ps": 197.55755945745776,
+     "mean_ps": 204.6685117743579,
+     "max_ps": 543.4113594477764,
+     "window_ps": 345.85379999031863,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk_t5": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1138,
+   "clock_cells": 498,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 27.61303458171503,
+     "sinks": 1138,
+     "min_ps": 235.8668171907261,
+     "mean_ps": 257.22492714423817,
+     "max_ps": 494.42930559034863,
+     "window_ps": 258.56248839962257,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 24.8860714381122,
+     "sinks": 1138,
+     "min_ps": 183.69387589534983,
+     "mean_ps": 200.16652334230645,
+     "max_ps": 401.71752081508424,
+     "window_ps": 218.0236449197344,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk_t3": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1135,
+   "clock_cells": 496,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 33.02927727524161,
+     "sinks": 1135,
+     "min_ps": 235.68373604056202,
+     "mean_ps": 255.84785202652208,
+     "max_ps": 517.2930373325146,
+     "window_ps": 281.60930129195253,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 30.639318868653778,
+     "sinks": 1135,
+     "min_ps": 183.53987813808845,
+     "mean_ps": 199.01500841697367,
+     "max_ps": 418.8666449353425,
+     "window_ps": 235.32676679725404,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk_t2": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1099,
+   "clock_cells": 415,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 33.6396983976081,
+     "sinks": 1099,
+     "min_ps": 233.1802667020535,
+     "mean_ps": 248.5895947189212,
+     "max_ps": 457.29386121879907,
+     "window_ps": 224.11359451674556,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 32.007473044615864,
+     "sinks": 1099,
+     "min_ps": 181.29822824803915,
+     "mean_ps": 193.28938589341138,
+     "max_ps": 371.57779194996556,
+     "window_ps": 190.2795637019264,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_crec_rx_s1_i[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 2218,
+   "clock_cells": 852,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 14.12790292138381,
+     "sinks": 2218,
+     "min_ps": 242.99305285934696,
+     "mean_ps": 258.3690912034239,
+     "max_ps": 266.27278850500153,
+     "window_ps": 23.27973564565457,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 11.477766048891581,
+     "sinks": 2218,
+     "min_ps": 187.04501710822836,
+     "mean_ps": 198.8850646084665,
+     "max_ps": 205.00530372455313,
+     "window_ps": 17.960286616324765,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_crec_rx_s2_i[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 2218,
+   "clock_cells": 852,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 14.027394593345212,
+     "sinks": 2218,
+     "min_ps": 242.90674189325347,
+     "mean_ps": 257.9918628506029,
+     "max_ps": 266.88260908187914,
+     "window_ps": 23.97586718862567,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 11.37755670802957,
+     "sinks": 2218,
+     "min_ps": 186.99322528414254,
+     "mean_ps": 198.55580587677338,
+     "max_ps": 205.49309490337615,
+     "window_ps": 18.499869619233607,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_crec_tx_s1_i[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 2226,
+   "clock_cells": 868,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 14.007047821717018,
+     "sinks": 2226,
+     "min_ps": 242.79241547545018,
+     "mean_ps": 258.83278998643215,
+     "max_ps": 266.63733356760014,
+     "window_ps": 23.844918092149953,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 11.376664845633737,
+     "sinks": 2226,
+     "min_ps": 186.87343205023484,
+     "mean_ps": 199.23089523608624,
+     "max_ps": 205.3261932662501,
+     "window_ps": 18.45276121601526,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_crec_tx_s2_i[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 2222,
+   "clock_cells": 860,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 14.150454723770766,
+     "sinks": 2222,
+     "min_ps": 242.93856221786976,
+     "mean_ps": 258.60159396668655,
+     "max_ps": 266.21029843639735,
+     "window_ps": 23.271736218527593,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 11.481599667782355,
+     "sinks": 2222,
+     "min_ps": 187.03927915163442,
+     "mean_ps": 199.0534578114221,
+     "max_ps": 204.9993912699491,
+     "window_ps": 17.96011211831467,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_fltk_i[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 34,
+   "clock_cells": 12,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 12.761530169073872,
+     "sinks": 34,
+     "min_ps": 97.49314019933641,
+     "mean_ps": 108.43841571724278,
+     "max_ps": 118.2260950421047,
+     "window_ps": 20.732954842768294,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 9.61364472797748,
+     "sinks": 34,
+     "min_ps": 75.53865256471313,
+     "mean_ps": 83.83234634687408,
+     "max_ps": 91.28811518272366,
+     "window_ps": 15.749462618010526,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_fltv_i[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 130,
+   "clock_cells": 36,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 12.978338934408322,
+     "sinks": 130,
+     "min_ps": 142.86313773944335,
+     "mean_ps": 146.14941713384937,
+     "max_ps": 164.34984240955217,
+     "window_ps": 21.48670467010882,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 9.768079698441692,
+     "sinks": 130,
+     "min_ps": 110.07197185060102,
+     "mean_ps": 112.57239469071023,
+     "max_ps": 126.45116171305636,
+     "window_ps": 16.37918986245535,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "fclk_in_cland_dn_0[0]": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 25,
+   "clock_cells": 8,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 12.037789578410173,
+     "sinks": 25,
+     "min_ps": 97.05125061605273,
+     "mean_ps": 97.36651683125564,
+     "max_ps": 97.52623424640475,
+     "window_ps": 0.4749836303520283,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 10.013895844812367,
+     "sinks": 25,
+     "min_ps": 75.40450175183524,
+     "mean_ps": 75.64084119275947,
+     "max_ps": 75.76906794022625,
+     "window_ps": 0.3645661883910094,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  },
+  "clk_t4": {
+   "build_qualified": false,
+   "calibration_note": "predictor valid_for_build_gating below means table calibration only, not pass of slew/geometry/phase checks",
+   "sinks": 1098,
+   "clock_cells": 413,
+   "coordinates": "FF body centres from actual FF5 dump; actual CLK ITerm points still required",
+   "corners": {
+    "TT": {
+     "slew_max_ps": 23.309826715335472,
+     "sinks": 1098,
+     "min_ps": 234.02525664599335,
+     "mean_ps": 248.3079080940759,
+     "max_ps": 365.35994816392093,
+     "window_ps": 131.33469151792758,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    },
+    "FF": {
+     "slew_max_ps": 20.548958295586022,
+     "sinks": 1098,
+     "min_ps": 182.07176759077433,
+     "mean_ps": 193.04480786186164,
+     "max_ps": 288.54980419713814,
+     "window_ps": 106.47803660636382,
+     "prediction": "VALID",
+     "valid_for_build_gating": true,
+     "out_of_calibration_leaves": []
+    }
+   }
+  }
+ }
+}

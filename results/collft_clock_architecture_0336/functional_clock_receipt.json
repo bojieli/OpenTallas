@@ -1,0 +1,28 @@
+{
+ "scope": "Proposal clock-family/endpoints preservation, no physical netlist installation or new RTL proof claim",
+ "sinks": 18501,
+ "original_family_counts": {
+  "clk": 9428,
+  "fclk_in_crec_rx_s1_i[0]": 2218,
+  "fclk_in_crec_rx_s2_i[0]": 2218,
+  "fclk_in_crec_tx_s1_i[0]": 2226,
+  "fclk_in_crec_tx_s2_i[0]": 2222,
+  "fclk_in_fltk_i[0]": 34,
+  "fclk_in_fltv_i[0]": 130,
+  "fclk_in_cland_dn_0[0]": 25
+ },
+ "missing": 0,
+ "extra": 0,
+ "duplicated": 0,
+ "FCLK_owner_changes": 0,
+ "RCLK_family": "eight proposed real die-fed ports of the same RCLK family; actual entry phase still unqualified",
+ "falling_edge_RCLK_sinks": 18,
+ "clock_inversion_change": 0,
+ "existing_state_or_data_cycle_changes": 0,
+ "clock_buffer_masters": [
+  "BUFx16f_ASAP7_75t_R",
+  "BUFx24_ASAP7_75t_R",
+  "BUFx6f_ASAP7_75t_R",
+  "BUFx8_ASAP7_75t_R"
+ ]
+}

@@ -1,0 +1,107 @@
+{
+ "scope": "Conservative leaf-span related-clock screen from actual data/reset graph; equal-zero input phase assumption; no actual die/forwarded-source timing price",
+ "geometry_mode": "packed",
+ "pairs": 54854,
+ "classes": {
+  "same_FCLK": 27339,
+  "RCLK_same_entry": 11042,
+  "different_clock_family": 9190,
+  "RCLK_cross_entry": 7283
+ },
+ "worst_ps": {
+  "same_FCLK/TT": 46.194232396341505,
+  "same_FCLK/FF": 39.17082977789221,
+  "RCLK_same_entry/TT": 47.01135743251564,
+  "RCLK_same_entry/FF": 35.50353574815017,
+  "RCLK_cross_entry/TT": 54.026197738817814,
+  "RCLK_cross_entry/FF": 41.533500217404594
+ },
+ "worst_pairs": {
+  "same_FCLK/TT": {
+   "src": "u_bound.u_cland_crec_rx_s1_i/u_ring.tc\\[1\\]$_SDFF_PN0_",
+   "dst": "u_bound.u_cland_crec_rx_s1_i/u_ring.s_d\\[0\\]\\[132\\]$_DFFE_PP_",
+   "src_entry": "fclk_in_crec_rx_s1_i[0]",
+   "dst_entry": "fclk_in_crec_rx_s1_i[0]",
+   "source_span_ps": [
+    250.24059166897436,
+    250.25555030089657
+   ],
+   "capture_span_ps": [
+    296.3836752517764,
+    296.43482406531587
+   ]
+  },
+  "same_FCLK/FF": {
+   "src": "u_bound.u_cland_crec_rx_s1_i/u_ring.tc\\[1\\]$_SDFF_PN0_",
+   "dst": "u_bound.u_cland_crec_rx_s1_i/u_ring.s_d\\[0\\]\\[132\\]$_DFFE_PP_",
+   "src_entry": "fclk_in_crec_rx_s1_i[0]",
+   "dst_entry": "fclk_in_crec_rx_s1_i[0]",
+   "source_span_ps": [
+    193.55669365431044,
+    193.5725751794718
+   ],
+   "capture_span_ps": [
+    232.67421933384517,
+    232.72752343220264
+   ]
+  },
+  "RCLK_same_entry/TT": {
+   "src": "u_bound.u_cland_origin/s1$_SDFF_PN0_",
+   "dst": "u_bound.u_cland_fstart_crec_tx_s1_o/q$_SDFF_PN0_",
+   "src_entry": "clk",
+   "dst_entry": "clk",
+   "source_span_ps": [
+    741.2219115806494,
+    741.2528022207116
+   ],
+   "capture_span_ps": [
+    694.241444788196,
+    694.2574108293204
+   ]
+  },
+  "RCLK_same_entry/FF": {
+   "src": "u_bound.u_cland_origin/s1$_SDFF_PN0_",
+   "dst": "u_bound.u_cland_fstart_crec_tx_s1_o/q$_SDFF_PN0_",
+   "src_entry": "clk",
+   "dst_entry": "clk",
+   "source_span_ps": [
+    569.0985338318279,
+    569.1298558089427
+   ],
+   "capture_span_ps": [
+    533.6263200607925,
+    533.643398055228
+   ]
+  },
+  "RCLK_cross_entry/TT": {
+   "src": "u_bound.u_cland_origin/s1$_SDFF_PN0_",
+   "dst": "u_bound.u_cland_fstart_crec_rx_s1_o/q$_SDFF_PN0_",
+   "src_entry": "clk",
+   "dst_entry": "clk_t6",
+   "source_span_ps": [
+    741.2219115806494,
+    741.2528022207116
+   ],
+   "capture_span_ps": [
+    687.2266044818938,
+    687.2437501414731
+   ]
+  },
+  "RCLK_cross_entry/FF": {
+   "src": "u_bound.u_cland_origin/s1$_SDFF_PN0_",
+   "dst": "u_bound.u_cland_fstart_crec_rx_s1_o/q$_SDFF_PN0_",
+   "src_entry": "clk",
+   "dst_entry": "clk_t6",
+   "source_span_ps": [
+    569.0985338318279,
+    569.1298558089427
+   ],
+   "capture_span_ps": [
+    527.5963555915381,
+    527.6145984997561
+   ]
+  }
+ },
+ "excluded": "Different FCLK/RCLK owners need actual forwarded source phase, LCA/CPPR and latency receipts; not priced with equal-source fiction",
+ "build_qualified": false
+}

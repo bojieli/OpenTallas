@@ -1,0 +1,314 @@
+{
+ "schema": "opentallas.core_clock_forest.proposal.v1",
+ "module": "coll_ft__cla4a25d77",
+ "outline_um": [
+  786.24,
+  993.6
+ ],
+ "build_qualified": false,
+ "tool_adoption": "master_slice multi-root core_tree currently refuses; ROOT/FLOW review required",
+ "clock_entries": [
+  {
+   "port": "clk_t1",
+   "kind": "RCLK",
+   "sinks": 1251,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    119.968,
+    17.312
+   ]
+  },
+  {
+   "port": "clk",
+   "kind": "RCLK",
+   "sinks": 1290,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    365.024,
+    17.312
+   ]
+  },
+  {
+   "port": "clk_t6",
+   "kind": "RCLK",
+   "sinks": 1106,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    119.968,
+    976.288
+   ]
+  },
+  {
+   "port": "clk_t7",
+   "kind": "RCLK",
+   "sinks": 1311,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    365.024,
+    976.288
+   ]
+  },
+  {
+   "port": "clk_t5",
+   "kind": "RCLK",
+   "sinks": 1138,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    365.024,
+    662.368
+   ]
+  },
+  {
+   "port": "clk_t3",
+   "kind": "RCLK",
+   "sinks": 1135,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    365.024,
+    331.168
+   ]
+  },
+  {
+   "port": "clk_t2",
+   "kind": "RCLK",
+   "sinks": 1099,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    119.968,
+    331.168
+   ]
+  },
+  {
+   "port": "fclk_in_crec_rx_s1_i[0]",
+   "kind": "FCLK",
+   "sinks": 2218,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    61.536,
+    2.656
+   ]
+  },
+  {
+   "port": "fclk_in_crec_rx_s2_i[0]",
+   "kind": "FCLK",
+   "sinks": 2218,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    176.608,
+    2.656
+   ]
+  },
+  {
+   "port": "fclk_in_crec_tx_s1_i[0]",
+   "kind": "FCLK",
+   "sinks": 2226,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    292.256,
+    990.944
+   ]
+  },
+  {
+   "port": "fclk_in_crec_tx_s2_i[0]",
+   "kind": "FCLK",
+   "sinks": 2222,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    407.584,
+    990.944
+   ]
+  },
+  {
+   "port": "fclk_in_fltk_i[0]",
+   "kind": "FCLK",
+   "sinks": 34,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    465.888,
+    2.656
+   ]
+  },
+  {
+   "port": "fclk_in_fltv_i[0]",
+   "kind": "FCLK",
+   "sinks": 130,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    469.792,
+    2.656
+   ]
+  },
+  {
+   "port": "fclk_in_cland_dn_0[0]",
+   "kind": "FCLK",
+   "sinks": 25,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    657.312,
+    2.656
+   ]
+  },
+  {
+   "port": "clk_t4",
+   "kind": "RCLK",
+   "sinks": 1098,
+   "input_slew_assumption_ps": 20.0,
+   "geometry_installed": false,
+   "xy_um": [
+    119.968,
+    662.368
+   ]
+  }
+ ],
+ "core_trees_file": "tree_packed_actual_pins.json.gz",
+ "per_entry_frames": "per_entry_frames.json",
+ "functional_ownership": "functional_clock_receipt.json",
+ "row_body_receipt": "packing_report.json.gz",
+ "related_model": "packed_related_clock_screen.json",
+ "die_bindings": [
+  {
+   "part": "coll_f1",
+   "origin_um": [
+    777.6,
+    6445.44
+   ],
+   "taps": [
+    {
+     "port": "clk",
+     "die_xy_um": [
+      1142.624,
+      6462.7519999999995
+     ]
+    },
+    {
+     "port": "clk_t1",
+     "die_xy_um": [
+      897.568,
+      6462.7519999999995
+     ]
+    },
+    {
+     "port": "clk_t2",
+     "die_xy_um": [
+      897.568,
+      6776.607999999999
+     ]
+    },
+    {
+     "port": "clk_t3",
+     "die_xy_um": [
+      1142.624,
+      6776.607999999999
+     ]
+    },
+    {
+     "port": "clk_t4",
+     "die_xy_um": [
+      897.568,
+      7107.808
+     ]
+    },
+    {
+     "port": "clk_t5",
+     "die_xy_um": [
+      1142.624,
+      7107.808
+     ]
+    },
+    {
+     "port": "clk_t6",
+     "die_xy_um": [
+      897.568,
+      7421.727999999999
+     ]
+    },
+    {
+     "port": "clk_t7",
+     "die_xy_um": [
+      1142.624,
+      7421.727999999999
+     ]
+    }
+   ]
+  },
+  {
+   "part": "coll_f2",
+   "origin_um": [
+    777.6,
+    7439.04
+   ],
+   "taps": [
+    {
+     "port": "clk",
+     "die_xy_um": [
+      1142.624,
+      7456.352
+     ]
+    },
+    {
+     "port": "clk_t1",
+     "die_xy_um": [
+      897.568,
+      7456.352
+     ]
+    },
+    {
+     "port": "clk_t2",
+     "die_xy_um": [
+      897.568,
+      7770.208
+     ]
+    },
+    {
+     "port": "clk_t3",
+     "die_xy_um": [
+      1142.624,
+      7770.208
+     ]
+    },
+    {
+     "port": "clk_t4",
+     "die_xy_um": [
+      897.568,
+      8101.408
+     ]
+    },
+    {
+     "port": "clk_t5",
+     "die_xy_um": [
+      1142.624,
+      8101.408
+     ]
+    },
+    {
+     "port": "clk_t6",
+     "die_xy_um": [
+      897.568,
+      8415.328
+     ]
+    },
+    {
+     "port": "clk_t7",
+     "die_xy_um": [
+      1142.624,
+      8415.328
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,882 @@
+{
+ "scope": "Uninstalled actual-pin/body-packed NLDM frame model; passive entry cost once, no measured source phase/STA",
+ "period_ps": 833,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "old_nominal_RCLK_frame_ps": {
+  "TT": 250,
+  "FF": 202.5
+ },
+ "roots": {
+  "clk_t1": {
+   "kind": "RCLK",
+   "sinks": 1251,
+   "clock_cells": 541,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 685.6456119676693,
+     "mean_ps": 693.5511113379575,
+     "max_ps": 726.643596941611,
+     "slew_max_ps": 30.909097214135056,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       17.312
+      ],
+      "first_buffer": "mp_collft_shared_branch_1008",
+      "first_xy_um": [
+       119.988,
+       17.145
+      ],
+      "wire_um": 0.1869999999999976,
+      "input_cap_ff": 2.34154,
+      "total_port_load_ff": 2.370381571,
+      "elmore_ps": 0.00652564384595238,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000005152666677,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 525.9097095265417,
+     "mean_ps": 532.56452799446,
+     "max_ps": 562.9913474082366,
+     "slew_max_ps": 28.22513005536867,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       17.312
+      ],
+      "first_buffer": "mp_collft_shared_branch_1008",
+      "first_xy_um": [
+       119.988,
+       17.145
+      ],
+      "wire_um": 0.1869999999999976,
+      "input_cap_ff": 2.59713,
+      "total_port_load_ff": 2.6259715709999996,
+      "elmore_ps": 0.00723358827391237,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000006331299716,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk": {
+   "kind": "RCLK",
+   "sinks": 1290,
+   "clock_cells": 739,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 681.4413261136601,
+     "mean_ps": 699.1499517825586,
+     "max_ps": 741.2528022207116,
+     "slew_max_ps": 31.508900317086567,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       17.312
+      ],
+      "first_buffer": "mp_collft_1_0",
+      "first_xy_um": [
+       365.04,
+       17.415
+      ],
+      "wire_um": 0.11900000000001754,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 2.3681337270000027,
+      "elmore_ps": 0.004157963418397893,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000002091927726,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 531.6067078553707,
+     "mean_ps": 537.8883707376598,
+     "max_ps": 569.1298558089427,
+     "slew_max_ps": 30.311569341405132,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       17.312
+      ],
+      "first_buffer": "mp_collft_1_0",
+      "first_xy_um": [
+       365.04,
+       17.415
+      ],
+      "wire_um": 0.11900000000001754,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 2.6257037270000025,
+      "elmore_ps": 0.00461196351235796,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000002573694935,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk_t6": {
+   "kind": "RCLK",
+   "sinks": 1106,
+   "clock_cells": 518,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 680.1764478232153,
+     "mean_ps": 688.1195294169248,
+     "max_ps": 711.1097440817671,
+     "slew_max_ps": 23.5831665351888,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       976.288
+      ],
+      "first_buffer": "mp_collft_shared_branch_1033",
+      "first_xy_um": [
+       119.988,
+       976.455
+      ],
+      "wire_um": 0.18700000000002603,
+      "input_cap_ff": 2.34154,
+      "total_port_load_ff": 2.3703815710000042,
+      "elmore_ps": 0.006525643845953376,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000005152666677,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 521.9855446058351,
+     "mean_ps": 528.1125237242933,
+     "max_ps": 549.0918211533779,
+     "slew_max_ps": 21.016459377826422,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       976.288
+      ],
+      "first_buffer": "mp_collft_shared_branch_1033",
+      "first_xy_um": [
+       119.988,
+       976.455
+      ],
+      "wire_um": 0.18700000000002603,
+      "input_cap_ff": 2.59713,
+      "total_port_load_ff": 2.625971571000004,
+      "elmore_ps": 0.0072335882739134735,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000006331299716,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk_t7": {
+   "kind": "RCLK",
+   "sinks": 1311,
+   "clock_cells": 744,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 702.7675697019362,
+     "mean_ps": 723.4427633504165,
+     "max_ps": 737.670515768927,
+     "slew_max_ps": 31.23333454644476,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       976.288
+      ],
+      "first_buffer": "mp_collft_shared_branch_1055",
+      "first_xy_um": [
+       365.58,
+       976.455
+      ],
+      "wire_um": 0.7230000000000132,
+      "input_cap_ff": 1.20169,
+      "total_port_load_ff": 1.313200459000002,
+      "elmore_ps": 0.013466076528553198,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00002194154923,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 542.6762900166219,
+     "mean_ps": 556.5995143605257,
+     "max_ps": 570.5399615882577,
+     "slew_max_ps": 29.934428219115745,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       976.288
+      ],
+      "first_buffer": "mp_collft_shared_branch_1055",
+      "first_xy_um": [
+       365.58,
+       976.455
+      ],
+      "wire_um": 0.7230000000000132,
+      "input_cap_ff": 1.33316,
+      "total_port_load_ff": 1.444670459000002,
+      "elmore_ps": 0.014873998750273223,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000026769518584,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk_t5": {
+   "kind": "RCLK",
+   "sinks": 1138,
+   "clock_cells": 632,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 697.6868606037021,
+     "mean_ps": 707.3970687862586,
+     "max_ps": 719.7230969722367,
+     "slew_max_ps": 27.587320243357965,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       662.368
+      ],
+      "first_buffer": "mp_collft_shared_branch_1057",
+      "first_xy_um": [
+       365.04,
+       664.605
+      ],
+      "wire_um": 2.252999999999986,
+      "input_cap_ff": 2.34154,
+      "total_port_load_ff": 2.689026948999998,
+      "elmore_ps": 0.08393862149113382,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00085251058416,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 534.5518542186143,
+     "mean_ps": 542.9661282428448,
+     "max_ps": 563.4964466180879,
+     "slew_max_ps": 24.859431508956693,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       662.368
+      ],
+      "first_buffer": "mp_collft_shared_branch_1057",
+      "first_xy_um": [
+       365.04,
+       664.605
+      ],
+      "wire_um": 2.252999999999986,
+      "input_cap_ff": 2.59713,
+      "total_port_load_ff": 2.9446169489999976,
+      "elmore_ps": 0.09246802681837375,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.001034563895963,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk_t3": {
+   "kind": "RCLK",
+   "sinks": 1135,
+   "clock_cells": 661,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 691.0264747259059,
+     "mean_ps": 701.2448155737261,
+     "max_ps": 711.2366802030037,
+     "slew_max_ps": 32.58083494812864,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       331.168
+      ],
+      "first_buffer": "mp_collft_shared_branch_1069",
+      "first_xy_um": [
+       365.202,
+       333.045
+      ],
+      "wire_um": 2.055000000000007,
+      "input_cap_ff": 2.34154,
+      "total_port_load_ff": 2.658488815000001,
+      "elmore_ps": 0.07609708854499422,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00070067051961,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 529.0378406159708,
+     "mean_ps": 537.6533364547947,
+     "max_ps": 552.6615231319217,
+     "slew_max_ps": 30.302310906903546,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       365.024,
+       331.168
+      ],
+      "first_buffer": "mp_collft_shared_branch_1069",
+      "first_xy_um": [
+       365.202,
+       333.045
+      ],
+      "wire_um": 2.055000000000007,
+      "input_cap_ff": 2.59713,
+      "total_port_load_ff": 2.9140788150000008,
+      "elmore_ps": 0.08387690565439425,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00085125745558,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk_t2": {
+   "kind": "RCLK",
+   "sinks": 1099,
+   "clock_cells": 581,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 695.9155295469832,
+     "mean_ps": 702.0540003983538,
+     "max_ps": 715.5949575688371,
+     "slew_max_ps": 33.58155794949014,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       331.168
+      ],
+      "first_buffer": "mp_collft_shared_branch_1079",
+      "first_xy_um": [
+       119.988,
+       333.855
+      ],
+      "wire_um": 2.707000000000008,
+      "input_cap_ff": 2.34154,
+      "total_port_load_ff": 2.7590487310000014,
+      "elmore_ps": 0.10225681710381504,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00126519123623,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 533.1852911934853,
+     "mean_ps": 538.4090235578432,
+     "max_ps": 556.5475641488893,
+     "slew_max_ps": 31.96387580561786,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       331.168
+      ],
+      "first_buffer": "mp_collft_shared_branch_1079",
+      "first_xy_um": [
+       119.988,
+       333.855
+      ],
+      "wire_um": 2.707000000000008,
+      "input_cap_ff": 2.59713,
+      "total_port_load_ff": 3.014638731000001,
+      "elmore_ps": 0.11250497521337506,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00153148306717,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_crec_rx_s1_i[0]": {
+   "kind": "FCLK",
+   "sinks": 2218,
+   "clock_cells": 852,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 247.85375642713186,
+     "mean_ps": 266.30059347371304,
+     "max_ps": 296.43482406531587,
+     "slew_max_ps": 18.24953039829764,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       61.536,
+       2.656
+      ],
+      "first_buffer": "mp_collft_7_0",
+      "first_xy_um": [
+       59.13,
+       4.725
+      ],
+      "wire_um": 4.474999999999998,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 3.0399726749999996,
+      "elmore_ps": 0.17862637469194867,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00386042061882,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 191.42829049147727,
+     "mean_ps": 205.92804951870494,
+     "max_ps": 232.72752343220264,
+     "slew_max_ps": 15.419417596374315,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       61.536,
+       2.656
+      ],
+      "first_buffer": "mp_collft_7_0",
+      "first_xy_um": [
+       59.13,
+       4.725
+      ],
+      "wire_um": 4.474999999999998,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 3.2975426749999994,
+      "elmore_ps": 0.19569906730094866,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.004633536376556,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_crec_rx_s2_i[0]": {
+   "kind": "FCLK",
+   "sinks": 2218,
+   "clock_cells": 852,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 244.62380906525226,
+     "mean_ps": 262.0800931324238,
+     "max_ps": 273.8227365352793,
+     "slew_max_ps": 15.399908066229997,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       176.608,
+       2.656
+      ],
+      "first_buffer": "mp_collft_8_0",
+      "first_xy_um": [
+       176.472,
+       30.645
+      ],
+      "wire_um": 28.124999999999996,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 6.687583125,
+      "elmore_ps": 1.8824262554179683,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.424266901367616,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 188.72994141821178,
+     "mean_ps": 202.4062870375811,
+     "max_ps": 211.95212175791863,
+     "slew_max_ps": 12.737588096144359,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       176.608,
+       2.656
+      ],
+      "first_buffer": "mp_collft_8_0",
+      "first_xy_um": [
+       176.472,
+       30.645
+      ],
+      "wire_um": 28.124999999999996,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 6.945153124999999,
+      "elmore_ps": 1.9897266977929684,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.473436929017193,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_crec_tx_s1_i[0]": {
+   "kind": "FCLK",
+   "sinks": 2226,
+   "clock_cells": 868,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 246.72834231110483,
+     "mean_ps": 266.8985318194242,
+     "max_ps": 293.40148465894566,
+     "slew_max_ps": 18.114871602136763,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       292.256,
+       990.944
+      ],
+      "first_buffer": "mp_collft_9_0",
+      "first_xy_um": [
+       290.844,
+       989.145
+      ],
+      "wire_um": 3.210999999999956,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 2.845022162999993,
+      "elmore_ps": 0.12353585517437869,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.001846508769287,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 190.45867871090863,
+     "mean_ps": 206.34237364718183,
+     "max_ps": 229.92097163418885,
+     "slew_max_ps": 15.283450844557079,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       292.256,
+       990.944
+      ],
+      "first_buffer": "mp_collft_9_0",
+      "first_xy_um": [
+       290.844,
+       989.145
+      ],
+      "wire_um": 3.210999999999956,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 3.102592162999993,
+      "elmore_ps": 0.1357862274576185,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00223086142906,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_crec_tx_s2_i[0]": {
+   "kind": "FCLK",
+   "sinks": 2222,
+   "clock_cells": 860,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 245.8491907532802,
+     "mean_ps": 264.32432478025544,
+     "max_ps": 288.11023071466786,
+     "slew_max_ps": 18.33047099688973,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       407.584,
+       990.944
+      ],
+      "first_buffer": "mp_collft_10_0",
+      "first_xy_um": [
+       406.782,
+       989.145
+      ],
+      "wire_um": 2.600999999999999,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 2.750940033,
+      "elmore_ps": 0.09825520059999916,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00116811010581,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 189.91001880670566,
+     "mean_ps": 204.1440892344677,
+     "max_ps": 225.68776652637618,
+     "slew_max_ps": 16.369103293993934,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       407.584,
+       990.944
+      ],
+      "first_buffer": "mp_collft_10_0",
+      "first_xy_um": [
+       406.782,
+       989.145
+      ],
+      "wire_um": 2.600999999999999,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 3.008510033,
+      "elmore_ps": 0.10817834551083914,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.001415958963438,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_fltk_i[0]": {
+   "kind": "FCLK",
+   "sinks": 34,
+   "clock_cells": 12,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 97.88781320065058,
+     "mean_ps": 109.21031223757846,
+     "max_ps": 119.20721198313738,
+     "slew_max_ps": 13.090163236803516,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       465.888,
+       2.656
+      ],
+      "first_buffer": "mp_collft_11_0",
+      "first_xy_um": [
+       463.482,
+       7.425
+      ],
+      "wire_um": 7.174999999999949,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 3.4564017749999922,
+      "elmore_ps": 0.30852917746903613,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.01151470594399,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 75.920744947654,
+     "mean_ps": 84.4834128182391,
+     "max_ps": 92.08841476653362,
+     "slew_max_ps": 9.848350437075508,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       465.888,
+       2.656
+      ],
+      "first_buffer": "mp_collft_11_0",
+      "first_xy_um": [
+       463.482,
+       7.425
+      ],
+      "wire_um": 7.174999999999949,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 3.713971774999992,
+      "elmore_ps": 0.335902712546036,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.01364784991261,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_fltv_i[0]": {
+   "kind": "FCLK",
+   "sinks": 130,
+   "clock_cells": 36,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 144.5253166024223,
+     "mean_ps": 148.26801621584656,
+     "max_ps": 166.65326714163297,
+     "slew_max_ps": 13.13294059391931,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       469.792,
+       2.656
+      ],
+      "first_buffer": "mp_collft_12_0",
+      "first_xy_um": [
+       474.606,
+       7.425
+      ],
+      "wire_um": 9.583000000000022,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 3.8277948390000036,
+      "elmore_ps": 0.4384329758459079,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.023245531523006,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 111.60710160389533,
+     "mean_ps": 114.48197293261863,
+     "max_ps": 128.50994849758627,
+     "slew_max_ps": 9.878023784493735,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       469.792,
+       2.656
+      ],
+      "first_buffer": "mp_collft_12_0",
+      "first_xy_um": [
+       474.606,
+       7.425
+      ],
+      "wire_um": 9.583000000000022,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 4.085364839000003,
+      "elmore_ps": 0.47499333635362795,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.027281252350978,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "fclk_in_cland_dn_0[0]": {
+   "kind": "FCLK",
+   "sinks": 25,
+   "clock_cells": 8,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 97.54775712075022,
+     "mean_ps": 97.73390405780209,
+     "max_ps": 97.85005774535857,
+     "slew_max_ps": 11.931861140996816,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       657.312,
+       2.656
+      ],
+      "first_buffer": "mp_collft_13_0",
+      "first_xy_um": [
+       657.288,
+       4.455
+      ],
+      "wire_um": 1.8230000000000008,
+      "input_cap_ff": 2.34978,
+      "total_port_load_ff": 2.630946759,
+      "elmore_ps": 0.06724547931355178,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00054714900876,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 75.82269385436895,
+     "mean_ps": 75.94193751947884,
+     "max_ps": 76.02261269156675,
+     "slew_max_ps": 9.903233801321276,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       657.312,
+       2.656
+      ],
+      "first_buffer": "mp_collft_13_0",
+      "first_xy_um": [
+       657.288,
+       4.455
+      ],
+      "wire_um": 1.8230000000000008,
+      "input_cap_ff": 2.60735,
+      "total_port_load_ff": 2.888516759,
+      "elmore_ps": 0.07420045554287177,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.000666179525055,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  },
+  "clk_t4": {
+   "kind": "RCLK",
+   "sinks": 1098,
+   "clock_cells": 532,
+   "input_slew_assumption_ps": 20.0,
+   "corners": {
+    "TT": {
+     "min_ps": 684.5011323332502,
+     "mean_ps": 692.2275080166038,
+     "max_ps": 710.9976647161918,
+     "slew_max_ps": 23.64900726257364,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       662.368
+      ],
+      "first_buffer": "mp_collft_shared_branch_1093",
+      "first_xy_um": [
+       119.988,
+       660.015
+      ],
+      "wire_um": 2.3730000000000615,
+      "input_cap_ff": 2.34154,
+      "total_port_load_ff": 2.70753490900001,
+      "elmore_ps": 0.08873465394557861,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.00095271180462,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    },
+    "FF": {
+     "min_ps": 523.4721706588307,
+     "mean_ps": 530.0609857554507,
+     "max_ps": 551.8563750034698,
+     "slew_max_ps": 20.940517381336143,
+     "entry_wire_model": {
+      "public_entry_xy_um": [
+       119.968,
+       662.368
+      ],
+      "first_buffer": "mp_collft_shared_branch_1093",
+      "first_xy_um": [
+       119.988,
+       660.015
+      ],
+      "wire_um": 2.3730000000000615,
+      "input_cap_ff": 2.59713,
+      "total_port_load_ff": 2.9631249090000096,
+      "elmore_ps": 0.09771835516241884,
+      "source_slew_ps": 20.0,
+      "first_input_slew_ps": 20.0011553807366,
+      "via_rc": "NOT extracted; source-model only"
+     }
+    }
+   },
+   "actual_source_arrival_and_slew": "UNBOUND: actual die/forwarded source receipt required",
+   "geometry_installed": false
+  }
+ }
+}
