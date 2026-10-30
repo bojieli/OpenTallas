@@ -23,23 +23,40 @@
 # Env: OT_CLK_FREEZE (default 1; 0 = dump only, NO lock -- diagnostic baseline, logged as such).
 
 proc ot_clk_dbnets {} {
-  # clock network = nets with sig type CLOCK (CTS / plan-built trees) UNION the STA clock network (same set GRT uses)
-  set block [ord::get_db_block]
+  # Hooks can source this file inside ::ot_mm. Tcl's [info commands
+  # sta::...] pattern searches that namespace only, even though executing the
+  # relative command can fall back to ::sta. Resolve the actual global STA
+  # commands explicitly; never mistake a namespace miss for an empty tree.
+  set block [::ord::get_db_block]
   set nets [dict create]
   foreach net [$block getNets] {
     if {[$net getSigType] eq "CLOCK"} { dict set nets [$net getName] $net }
   }
-  if {[llength [info commands sta::find_all_clk_nets]] && [llength [sta::all_clocks]]} {
-    if {![catch {sta::find_all_clk_nets} sn]} {
-      foreach n $sn {
-        # this OpenROAD returns odb dbNet handles; older builds return STA nets
-        if {[string match "*odb__dbNet*" $n]} {
-          set dn $n
-        } elseif {[catch {$block findNet [get_full_name $n]} dn]} {
-          continue
+  if {[catch {::all_clocks} clocks]} {
+    error "OT_CLK_FREEZE FAIL: public STA clock census unavailable: $clocks"
+  }
+  set sn {}
+  if {[llength $clocks]} {
+    if {![llength [info commands ::sta::find_all_clk_nets]]} {
+      error "OT_CLK_FREEZE FAIL: STA clocks exist but global clock-net enumeration is unavailable"
+    }
+    if {[catch {::sta::find_all_clk_nets} sn]} {
+      error "OT_CLK_FREEZE FAIL: global STA clock-net enumeration failed: $sn"
+    }
+    foreach n $sn {
+      # Current OpenROAD returns odb dbNet handles; older builds return STA nets.
+      if {[string match "*odb__dbNet*" $n]} {
+        set dn $n
+      } else {
+        if {[catch {::get_full_name $n} name]} {
+          error "OT_CLK_FREEZE FAIL: cannot resolve STA clock net $n: $name"
         }
-        if {$dn ne "NULL" && $dn ne ""} { dict set nets [$dn getName] $dn }
+        set dn [$block findNet $name]
       }
+      if {$dn eq "NULL" || $dn eq ""} {
+        error "OT_CLK_FREEZE FAIL: STA clock net $n is absent from the active database"
+      }
+      dict set nets [$dn getName] $dn
     }
   }
   set out {}
@@ -47,6 +64,14 @@ proc ot_clk_dbnets {} {
     set n [dict get $nets $k]
     if {[$n getSigType] in {POWER GROUND}} continue
     lappend out $n
+  }
+  if {![llength $out] || ([llength $clocks] && ![llength $sn])} {
+    if {[catch {::all_registers -clock_pins} sinks]} {
+      error "OT_CLK_FREEZE FAIL: cannot qualify empty clock network: $sinks"
+    }
+    if {[llength $sinks]} {
+      error "OT_CLK_FREEZE FAIL: empty clock-net census with [llength $clocks] STA clocks and [llength $sinks] sequential clock pins; check SDC/source ordering"
+    }
   }
   return $out
 }
