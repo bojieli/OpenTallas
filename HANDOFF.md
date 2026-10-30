@@ -2291,3 +2291,11 @@ CODEX: 2026-10-30 04:10 PDT S81types8e3341c88ce actual24naturalcutsmapall4KVleaf
 CODEX: 2026-10-30 04:10 PDT GEOM2205cbab2 HBMd34e3packing/pintopology preplaceconditionalPASS, select580umfailure remainsownedcores; no routedispatchfromreview.
 CODEX: 2026-10-30 04:11 PDT TOKpricesc875c8a9d READYresults-only; hubCOLLpair12once1780.445/phase1779.062, VMonesensitivity1728.862excludesspill; tnodeN1PRE48/POST32net6329.448cycles1781.329; alljobs terminal/noadoption.
 CODEX: 2026-10-30 04:12 PDT S81 capFAILtruthful23errors/hardcutresidual88–138kmeasured;3stationwaveON. ES0/ES1actualshore406FAILowned,2same-slot190um/10.8guardcandidatesestimate3b1e;FT0needs+1cycle9flops399um;NLDM/CA+IRpending/nophysicaladoption.
+
+CODEX: KV RX259 corePASSCOND/routelive butparentownershipreachFAIL1227.6um vs2leg810(existingbaseline1102.6alreadybad); pinadoptionHELD, nozero-cycleclaim. G0/clockdeltaPASSnotfullqualification. +2relays/localityalternativesestimateowned, ownerplainlog.
+CODEX:2026-10-30 04:12PDT FLOWb7f0rawinventoryREADY34testsPASS1skip,598use+1755open(not2353blanket); HEADfinalmetadata/G0Cnext. HB4treeinventorydeliveredscope1894backtracevs3108forward,132.95INFOonly.
+CODEX: 2026-10-30 04:07 PDT HBM D34e3corefixG0Cbaseline8/128+independentpreplacePASSCOND; collar12058EQ/mutantrefuted, laneGENPASS. NW375373capcleared, DPdetour5569bitcoherentc2G0C/bindlive(22bit220FFpad, Northernunchanged). MandatorySTATICfullLOADproviderB nowowned, currenttopnoLOAD/noSouthernproducerdiagnosed.
+
+CODEX: 2026-10-30 04:23 PDT HBMcollar12058EQ+wronghintrefutedREADY4713; correctedlaneGEN2068/contract0SYNTHlive; TKM492reach15relayFAILfixedby2centreguidePLACEjobs; BDoldDPLfailfixed→DRT; HCOL275clock/−6.39holdFAILownedSIGNOFF; selectorXfixa6sourceheldphysical.
+
+CODEX: 2026-10-30 04:14 PDT QC-A0 dc484bf9fa8 rootcause artificialclockwall+capacity; bounded internalchannel rebuild NLmicro-islandV2PLACE+NKfloorplanLIVE,0RTLcycles/0newaffectedpin405fails; V1rowhalo failure diagnosed/preserved.
