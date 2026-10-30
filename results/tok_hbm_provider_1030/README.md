@@ -30,8 +30,9 @@ To compile and run (through ot-run, with the binder dependency available):
 python3 results/tok_hbm_provider_1030/run_provider_fixture.py --out OWNED_SCRATCH \
  --provider-dir BINDER_RESULTS/static_load
 
-The helper defaults to the repository binder result directory when that
-separately reviewed source closure is present. No heavy whole-programme rerun
+The helper defaults to canonical rtl/hbm_accel/loader/service_native/split
+provider sources, with the repository binder result directory retained as a
+historical fallback until that separately reviewed source closure is present. No heavy whole-programme rerun
 is needed. Retained actual_window_runs.json validates each selected run against
 the checked-in resident source manifest before generating227 descriptors.
 
