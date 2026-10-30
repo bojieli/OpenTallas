@@ -1,0 +1,91 @@
+{
+ "stage_model": "cal_g03b_refit existing routed-stage model; regional geometry estimate only",
+ "variants": [
+  {
+   "part": "lk_ES0",
+   "macro_origin_um": [
+    63.64,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1778.436,
+    58.86
+   ],
+   "stats": {
+    "reused_geometry": true
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 658.8354658142081,
+     "max_ps": 662.2420263336642,
+     "mean_ps": 661.4773670991959,
+     "window_ps": 3.406560519456093,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 148.77000000000027,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 574.406666893664,
+     "max_ps": 578.0327854282561,
+     "mean_ps": 576.083669398934,
+     "window_ps": 3.6261185345921376,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 148.77000000000027,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  },
+  {
+   "part": "lk_ES1",
+   "macro_origin_um": [
+    63.64,
+    86.4
+   ],
+   "guard_um": 10.8,
+   "root_xy": [
+    1778.436,
+    58.86
+   ],
+   "stats": {
+    "merges": 31,
+    "imbalanced": 1,
+    "worst_imbalance_um": 3.1,
+    "extra_wire_um": 14.0,
+    "topology": {
+     "median": 1
+    },
+    "snakes": 3,
+    "snake_wire_um": 27.0,
+    "snake_buffers": 5,
+    "spread_um": 3.4
+   },
+   "corners": {
+    "TT": {
+     "min_ps": 658.8354658142081,
+     "max_ps": 662.2420263336642,
+     "mean_ps": 661.4773670991959,
+     "window_ps": 3.406560519456093,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 148.77000000000027,
+     "illegal_chain_points": 0
+    },
+    "FF": {
+     "min_ps": 574.406666893664,
+     "max_ps": 578.0327854282561,
+     "mean_ps": 576.083669398934,
+     "window_ps": 3.6261185345921376,
+     "sinks": 32,
+     "nodes": 63,
+     "max_hop_um": 148.77000000000027,
+     "illegal_chain_points": 0
+    }
+   },
+   "build_allowed": false
+  }
+ ]
+}

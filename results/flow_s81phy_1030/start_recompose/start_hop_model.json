@@ -1,0 +1,334 @@
+{
+ "scope": "ANALYTIC MODEL ONLY. Two co-routed INV clock segments vs DFFQN->INV8-><=100umBUF8->DFF D; M6/7 max stock RC +1.7 coupling; actual TT/FF NLDM 20..80ps launch slew; full clock AOCV and conservative data derates. Fall branch explicitly modeled BUF8 driving5posedgeFF+INV2 driving2negedgeFF, with conservativeendpointclockderates andspiceupper;20umextra datalength reservedforrelaybays. Canonicalfallmodel only; physical receipt required.",
+ "rows": [
+  {
+   "pair_wire_um": 0,
+   "corners": {
+    "TT": {
+     "clock_ps": 25.307426,
+     "clock_ocv_dn_ps": 1.3656373143320908,
+     "clock_ocv_up_ps": 2.6588467829320908,
+     "data_lo_ps": 84.30088089091343,
+     "data_hi_ps": 113.26716899904122,
+     "max_data_slew_ps": 51.35053775902778,
+     "phase_lo_ps": -108.91071199444994,
+     "phase_hi_ps": -7.989351360729799,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 21.413366,
+     "clock_ocv_dn_ps": 1.2164710268746106,
+     "clock_ocv_up_ps": 2.3106940294746106,
+     "data_lo_ps": 61.362674398313224,
+     "data_hi_ps": 81.83560570166192,
+     "max_data_slew_ps": 38.46071884375,
+     "phase_lo_ps": -76.44892729231604,
+     "phase_hi_ps": -1.114702334812307,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -108.91071199444994,
+    -1.114702334812307
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 307.5892880055501,
+   "aperture_margin_ps": 203.4642880055501
+  },
+  {
+   "pair_wire_um": 50,
+   "corners": {
+    "TT": {
+     "clock_ps": 33.555575999999995,
+     "clock_ocv_dn_ps": 1.6144104541970907,
+     "clock_ocv_up_ps": 2.907619922797091,
+     "data_lo_ps": 104.35060070041689,
+     "data_hi_ps": 137.34724992406848,
+     "max_data_slew_ps": 51.35053775902778,
+     "phase_lo_ps": -124.99141605934221,
+     "phase_hi_ps": -19.08685015036827,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 28.826166,
+     "clock_ocv_dn_ps": 1.4399792285896107,
+     "clock_ocv_up_ps": 2.534202231189611,
+     "data_lo_ps": 78.38088449686092,
+     "data_hi_ps": 101.77474225623918,
+     "max_data_slew_ps": 38.46071884375,
+     "phase_lo_ps": -89.19877204860829,
+     "phase_hi_ps": -10.087417671644992,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -124.99141605934221,
+    -10.087417671644992
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 291.5085839406578,
+   "aperture_margin_ps": 187.3835839406578
+  },
+  {
+   "pair_wire_um": 100,
+   "corners": {
+    "TT": {
+     "clock_ps": 42.383725999999996,
+     "clock_ocv_dn_ps": 1.8805835940620912,
+     "clock_ocv_up_ps": 3.173793062662091,
+     "data_lo_ps": 148.35550015349216,
+     "data_hi_ps": 187.2370440483603,
+     "max_data_slew_ps": 51.35053775902778,
+     "phase_lo_ps": -166.31923332349902,
+     "phase_hi_ps": -53.510112583578525,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 36.808966,
+     "clock_ocv_dn_ps": 1.680587430304611,
+     "clock_ocv_up_ps": 2.7748104329046113,
+     "data_lo_ps": 111.59509715773758,
+     "data_hi_ps": 139.3798012737294,
+     "max_data_slew_ps": 38.46071884375,
+     "phase_lo_ps": -119.06163926781353,
+     "phase_hi_ps": -34.63757157080667,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -166.31923332349902,
+    -34.63757157080667
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 250.18076667650098,
+   "aperture_margin_ps": 146.05576667650098
+  },
+  {
+   "pair_wire_um": 150,
+   "corners": {
+    "TT": {
+     "clock_ps": 51.791876,
+     "clock_ocv_dn_ps": 2.1641567339270917,
+     "clock_ocv_up_ps": 3.457366202527092,
+     "data_lo_ps": 175.13179007949697,
+     "data_hi_ps": 218.33890072688152,
+     "max_data_slew_ps": 53.50007003716415,
+     "phase_lo_ps": -188.29651314188524,
+     "phase_hi_ps": -70.07534948971835,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 45.361765999999996,
+     "clock_ocv_dn_ps": 1.9382956320196112,
+     "clock_ocv_up_ps": 3.032518634619611,
+     "data_lo_ps": 135.33991255704203,
+     "data_hi_ps": 166.98482447611866,
+     "max_data_slew_ps": 45.37630120139321,
+     "phase_lo_ps": -138.3715706719178,
+     "phase_hi_ps": -49.0997642083961,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -188.29651314188524,
+    -49.0997642083961
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 228.20348685811476,
+   "aperture_margin_ps": 124.07848685811476
+  },
+  {
+   "pair_wire_um": 200,
+   "corners": {
+    "TT": {
+     "clock_ps": 61.780026,
+     "clock_ocv_dn_ps": 2.465129873792092,
+     "clock_ocv_up_ps": 3.758339342392092,
+     "data_lo_ps": 217.66938412108368,
+     "data_hi_ps": 267.0507047241758,
+     "max_data_slew_ps": 51.35053775902778,
+     "phase_lo_ps": -227.3211402790445,
+     "phase_hi_ps": -101.77247451144004,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 54.484566,
+     "clock_ocv_dn_ps": 2.2131038337346114,
+     "clock_ocv_up_ps": 3.307326836334612,
+     "data_lo_ps": 166.96773005060552,
+     "data_hi_ps": 204.40976996602856,
+     "max_data_slew_ps": 38.46071884375,
+     "phase_lo_ps": -166.94852436354267,
+     "phase_hi_ps": -70.8263949402446,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -227.3211402790445,
+    -70.8263949402446
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 189.1788597209555,
+   "aperture_margin_ps": 85.0538597209555
+  },
+  {
+   "pair_wire_um": 250,
+   "corners": {
+    "TT": {
+     "clock_ps": 72.348176,
+     "clock_ocv_dn_ps": 2.783503013657092,
+     "clock_ocv_up_ps": 4.076712482257092,
+     "data_lo_ps": 247.44181429618888,
+     "data_hi_ps": 301.56012571891694,
+     "max_data_slew_ps": 57.29967657205813,
+     "phase_lo_ps": -251.5807844136507,
+     "phase_hi_ps": -120.07501966668025,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 64.17736599999999,
+     "clock_ocv_dn_ps": 2.5050120354496115,
+     "clock_ocv_up_ps": 3.5992350380496116,
+     "data_lo_ps": 193.08758391732937,
+     "data_hi_ps": 235.7345750456573,
+     "max_data_slew_ps": 49.13500230063835,
+     "phase_lo_ps": -188.87243764488642,
+     "phase_hi_ps": -86.42649804525345,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -251.5807844136507,
+    -86.42649804525345
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 164.9192155863493,
+   "aperture_margin_ps": 60.79421558634931
+  },
+  {
+   "pair_wire_um": 297.54,
+   "corners": {
+    "TT": {
+     "clock_ps": 82.93427100560001,
+     "clock_ocv_dn_ps": 3.1023491346087346,
+     "clock_ocv_up_ps": 4.395558603208735,
+     "data_lo_ps": 286.6921002706473,
+     "data_hi_ps": 347.99043985278706,
+     "max_data_slew_ps": 51.35053775902778,
+     "phase_lo_ps": -287.74384966287244,
+     "phase_hi_ps": -147.8360120702779,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 73.92190412240001,
+     "clock_ocv_dn_ps": 2.798417070112235,
+     "clock_ocv_up_ps": 3.8926400727122346,
+     "data_lo_ps": 222.8567938229304,
+     "data_hi_ps": 270.7118485634023,
+     "max_data_slew_ps": 41.425007002957244,
+     "phase_lo_ps": -214.39857807489406,
+     "phase_hi_ps": -105.61986628943535,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -287.74384966287244,
+    -105.61986628943535
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 128.75615033712756,
+   "aperture_margin_ps": 24.631150337127565
+  },
+  {
+   "pair_wire_um": 300,
+   "corners": {
+    "TT": {
+     "clock_ps": 83.496326,
+     "clock_ocv_dn_ps": 3.119276153522092,
+     "clock_ocv_up_ps": 4.412485622122093,
+     "data_lo_ps": 288.1705913939224,
+     "data_hi_ps": 349.70696580024855,
+     "max_data_slew_ps": 51.35053775902778,
+     "phase_lo_ps": -288.9152476348473,
+     "phase_hi_ps": -148.70449574454878,
+     "endpoint_fall_clock_delta_ps": [
+      -19.585331681076646,
+      46.94828683205154
+     ]
+    },
+    "FF": {
+     "clock_ps": 74.440166,
+     "clock_ocv_dn_ps": 2.8140202371646126,
+     "clock_ocv_up_ps": 3.9082432397646123,
+     "data_lo_ps": 224.12869022828917,
+     "data_hi_ps": 272.32570804411165,
+     "max_data_slew_ps": 41.84392070652883,
+     "phase_lo_ps": -215.50977884505576,
+     "phase_hi_ps": -106.32928959449825,
+     "endpoint_fall_clock_delta_ps": [
+      -14.810216563779509,
+      35.34189423082631
+     ]
+    }
+   },
+   "union_phase_ps": [
+    -288.9152476348473,
+    -106.32928959449825
+   ],
+   "canonical_model_edge": "fall",
+   "sample_values": 1,
+   "boundary_distance_ps": 127.58475236515272,
+   "aperture_margin_ps": 23.459752365152724
+  }
+ ],
+ "build_allowed": false
+}

@@ -1,0 +1,15 @@
+# S81 PHY A START/reset recompose estimate
+
+Candidate only. No plan, RTL, clock defaults, or physical run is changed. This extends the earlier failed unchanged-START control with an explicit downstream co-routed clock/START/reset wave.
+
+- Same existing ES outlines, external interfaces and MY transform; PHY local origin63.64,86.4; explicit PGguard10.8 (PG coupons owned by S81).
+- Unchanged existing START source b705 at die22976.082,699.3, origin8. Feed roots explicitly co-locate with geometry-selected local DME roots; ES0 feeds ES1, no new downstream graph root shifts beyond these two partitions.
+- Actual shared cal-g03b INV2 geometry: maximum individual INV segment148.770um, paired true-polarity relay wire <=297.54um. Local32sink spread TT3.407/FF3.626ps. Both partitions share the resulting local topology after MY transforms.
+-189 unique relay locations. Known-obstacle bay estimate fits all189 bays8.64x.81um, maximum clockvertex-to-baycenter3.078um; PGguard, existing landing bands and modeled clockcell bodies excluded. Exact existing standardcell occupancy and cellmaster packing are not a detailed placement claim. Render personally viewed.
+- Actual ASAP7 TT/FF NLDM data: DFFHQN->INV8->BUF8 repeats<=100um->DFF D. Stock max M6/M7 signal RC,1.7 coupling multiplier,20um additional data wire for relay bays,20..80ps launchclock slew, conservative data late/early derates, shared clock AOCV, modeled BUF8 isolation driving5posedgeFF+INV2 driving2negedgeFF, actual INV2 fall conversion and spice upper envelope. Worst sampled300um pair: fall phase[-288.915,-106.329]ps; canonical833ps/104.125ps aperture clean,23.460ps residual margin, worst sampled data slew57.300ps. This is a modeled falling-clock arrival, not measured physical timing.
+- Clock isolation BUF8 adds max modeled .533TT/.448FFps per relay to existing CKINV load over10..60fF; complete graph receipt prices accumulated upper bound. Clockdelta vs old ES0 TT56.00..71.54/FF36.74..50.22ps; ES1 TT329.87..356.60/FF262.87..285.76ps, before final exact endpoint placement.
+- Exact existing RTL: START falling+3posedge flops gives3cycles/hop; rawreset falling+2posedge flops gives2cycles/hop. START origins ES0 71..74, ES1 134..137. Rawreset releases42..44/84..86cycles after b705, excluding rootlead. With rootlead64, local reset lead becomes85..86/106..107cycles. This prices a large explicit boot-only retime; existing CA K/release metadata is not silently retained.
+
+Still held before build: canonical full affected data CA + boot-release recompilation using new topology/origins and modeled rising/falling node arrivals; exact relay FF/driver siting with existing cell occupancy; current per-node load/slew model and physical falling-edge proof. The old proof inputs remain immutable. No physical PASS or source adoption is claimed.
+
+Execution failures: first graph model lacked staged start_lib.json; staged actual extracted input and reran exact own model successfully. Earlier DME postprocessor API assumptions are documented in the parent packet; no shared tool defect or physical failure was inferred. Model jobs used ot-run intel2 localhost alias; DNS intel2 from hub is unsupported.
