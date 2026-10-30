@@ -706,7 +706,12 @@ class Landings:
         # cland_fstart_out_<b> is the Q of its OWN face flop u_cland_fstart_<b> (ot_dp_landing_relay on the region
         # start's raw reset, d = the start's D-side), equal to cland_start every cycle (0 added cycles); internal
         # loads keep cland_start.  Parameter forms and relay rx partitions keep the shared start.
-        face_start = bool(cat) and bool(self.strap) and cat["role"][0] != "relay"
+        relay_copy = self.types[key].get("landing_relay_start_copy", False)
+        if not isinstance(relay_copy, bool):
+            raise LandingError(f"{tn}: landing_relay_start_copy must be a boolean")
+        if relay_copy and (not cat or not self.strap or cat["role"][0] != "relay"):
+            raise LandingError(f"{tn}: landing_relay_start_copy needs a strap-form relay origin")
+        face_start = bool(cat) and bool(self.strap) and (cat["role"][0] != "relay" or relay_copy)
         if cat:
             logic.append("    wire cland_start;  // count origin of this region (count-aligned landings)")
             if face_start:
@@ -962,6 +967,11 @@ class Landings:
             raw = local_raw("start relay rx")
             self.reset_placements.setdefault(tn, {})["count_origin"] = dict(kind="relay", raw_reset=raw, stages=role[-1])
             extra.append("    input wire cland_rstart_in")
+            if getattr(self, "types", {}).get(type_key or tn, {}).get("landing_relay_start_copy", False):
+                # Same D and raw reset as the existing rx flop: private export Qs
+                # equal cland_start on every edge, with zero count-frame change.
+                raw_logic += ["    assign cland_start_d = cland_rstart_in;",
+                              f"    assign cland_start_raw = {raw};"]
             return raw_logic + [f"    ot_dp_landing_relay u_cland_rstart_rx (.clk(clk), .rst_raw_n({raw}), .d(cland_rstart_in), "
                     f".q(cland_start));"]
         if role[0] == "strap":
@@ -1400,6 +1410,10 @@ class Landings:
             origin = "u_cland_origin"
         elif role[0] == "strap" and START_PIN_IN in role[1]:
             origin = (f"u_cland_origin_t{role[1].index(START_PIN_IN)}" if len(role[1]) > 1 else "u_cland_origin")
+        if role[0] == "relay" and self.types[tn].get("landing_relay_start_copy", False):
+            # The existing same-clock relay is the typed count-origin sampler.
+            # Its input is die-timed; adding another input FF would shift K.
+            buses["cland_rstart_in"] = {"form": "origin_start", "origin": "u_cland_rstart_rx"}
         if origin:
             buses[START_PIN_IN] = {"form": "origin_start", "origin": origin}
         return {"schema": LAND_SLOTS_SCHEMA, "buses": buses} if buses else None

@@ -1133,6 +1133,9 @@
      "landing_control_status_copy": {
       "type": "boolean"
      },
+     "landing_relay_start_copy": {
+      "type": "boolean"
+     },
      "private_reset_start_exports": {
       "type": "boolean"
      },
@@ -1225,7 +1228,7 @@
        "properties": {
         "name": {
          "type": "string",
-         "pattern": "^strap_ca_[A-Za-z0-9_]+$"
+         "pattern": "^strap_(?:ca|r8pad)_[A-Za-z0-9_]+$"
         },
         "width": {
          "type": "integer",
