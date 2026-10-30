@@ -1,0 +1,105 @@
+{
+ "event": "DIE-S81-32/IQF iqf__t1 landing bands ring_place=ff (COORD 20:5x)",
+ "plan_base": "origin/main ac0b29e7fa5 physical/die_plan/s81/plan_s13r2.json",
+ "netlist": "intel2 /srv/opentallas-scratch2/claude/s81-kits-a/gen/iqf__t1/iqf__t1/1_synth_odb.v (S81-KITS-A kit, same 8-file kit RTL set)",
+ "before_band_ring_all": {
+  "ft1_i": {
+   "ring_cells": 30520,
+   "ring_flops": 7001,
+   "reserve_all_um2": 10126,
+   "band_um2": 6423,
+   "ratio_all": 1.58
+  },
+  "idx_i0": {
+   "ring_cells": 11658,
+   "ring_flops": 2674,
+   "reserve_all_um2": 3866,
+   "band_um2": 2861,
+   "ratio_all": 1.35
+  },
+  "ql_i0": {
+   "ring_cells": 11658,
+   "ring_flops": 2674,
+   "reserve_all_um2": 3866,
+   "band_um2": 2821,
+   "ratio_all": 1.37
+  }
+ },
+ "after_ring_place_ff": {
+  "ft1_i": {
+   "rect_um": [
+    17.28,
+    1188.0,
+    314.66,
+    1209.6
+   ],
+   "band_um2": 6423.4,
+   "ring_cells": 30520,
+   "ring_flops": 7001,
+   "ring_place": "ff",
+   "ff_need_um2": 5103.7,
+   "ff_ratio": 0.795,
+   "ff_ratio_vs_0p9band": 0.883,
+   "spread": 1.1327,
+   "worst_phase_flops_placed": 7001,
+   "band_rows": 80,
+   "worst_phase_rows_used": 74,
+   "fits": true
+  },
+  "idx_i0": {
+   "rect_um": [
+    598.272,
+    1183.68,
+    708.644,
+    1209.6
+   ],
+   "band_um2": 2860.8,
+   "ring_cells": 11658,
+   "ring_flops": 2674,
+   "ring_place": "ff",
+   "ff_need_um2": 1949.3,
+   "ff_ratio": 0.681,
+   "ff_ratio_vs_0p9band": 0.757,
+   "spread": 1.3208,
+   "worst_phase_flops_placed": 2674,
+   "band_rows": 96,
+   "worst_phase_rows_used": 94,
+   "fits": true
+  },
+  "ql_i0": {
+   "rect_um": [
+    823.68,
+    1183.68,
+    932.516,
+    1209.6
+   ],
+   "band_um2": 2821.0,
+   "ring_cells": 11658,
+   "ring_flops": 2674,
+   "ring_place": "ff",
+   "ff_need_um2": 1949.3,
+   "ff_ratio": 0.691,
+   "ff_ratio_vs_0p9band": 0.768,
+   "spread": 1.3025,
+   "worst_phase_flops_placed": 2674,
+   "band_rows": 96,
+   "worst_phase_rows_used": 94,
+   "fits": true
+  }
+ },
+ "g0c": {
+  "errors": 20,
+  "warnings": 1591,
+  "error_set_vs_main_baseline": "identical (20/20), all findings identical modulo worktree path",
+  "report": "intel2 /srv/opentallas-scratch2/claude/die-s81-32/iqf/g0c_after/g0_report.json"
+ },
+ "kit": {
+  "path": "intel2 /srv/opentallas-scratch2/claude/die-s81-32/iqf/gen/iqf__t1/iqf__t1",
+  "landing_tags": [
+   "ring:ft1_i+ff",
+   "ring:idx_i0+ff",
+   "ring:ql_i0+ff"
+  ],
+  "kit_preflight": "PASS issues 0"
+ }
+}
