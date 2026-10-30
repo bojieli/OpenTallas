@@ -1,0 +1,45 @@
+{
+ "status": "SOURCE_ONLY_UNBOUND_PARENT_BRIDGE_PREP",
+ "bridges": [
+  {
+   "native_cut": "ot_hnx_su_plain4__lid9_rst3",
+   "full_proof_adapter": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+   "physical": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+   "parent_bridge": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll__native_bridge",
+   "bridge_source": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll__native_bridge.sv",
+   "logical_outputs": 1540,
+   "physical_output_bits": 1536,
+   "native_lane_coll_TIE0_bits": 4,
+   "direct_wiring_bits": 3436,
+   "wrong_TIE1_mutant_rejected": true
+  },
+  {
+   "native_cut": "ot_hnx_su_plain4__lid9_rst3",
+   "full_proof_adapter": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "physical": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+   "parent_bridge": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll__native_bridge",
+   "bridge_source": "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll__native_bridge.sv",
+   "logical_outputs": 1540,
+   "physical_output_bits": 1536,
+   "native_lane_coll_TIE0_bits": 4,
+   "direct_wiring_bits": 3436,
+   "wrong_TIE1_mutant_rejected": true
+  },
+  {
+   "native_cut": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+   "full_proof_adapter": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+   "physical": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+   "parent_bridge": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge",
+   "bridge_source": "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll__native_bridge.sv",
+   "logical_outputs": 1540,
+   "physical_output_bits": 1536,
+   "native_lane_coll_TIE0_bits": 4,
+   "direct_wiring_bits": 3471,
+   "wrong_TIE1_mutant_rejected": true
+  }
+ ],
+ "actual_native_cuts": 48,
+ "native_TIE0_outputs": 192,
+ "constant_induction": "KIND0: c1=0,c4=0, coll=c1|c4; r_coll reset0 andnext0 =>nativecoll0 aftertruePOR for everyinputhistory. No physicalconstantpin/exemption.",
+ "remaining": "Parent chooses exact inline or u_phys hierarchy mapping, applies privatepin/ID/TIE0 event andnativebinding gates; noPNR"
+}

@@ -25,6 +25,9 @@ PHYSICAL_ID_ALIASES = {
 # Three exact canonical SU physical aliases; 9-bit bases retain the fixed
 # per-lane low two bits in their wrappers. Legacy single-master row is unchanged.
 PHYSICAL_ID_ALIAS_MASTERS = {
+    ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll'): dict(native='lane_lane_id', width=9),
+    ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll'): dict(native='lane_lane_id', width=9),
+    ('strap_lane_lane_id', 'ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll'): dict(native='lane_lane_id', width=44),
     ('strap_lane_lane_id', 'ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44'): dict(native='lane_lane_id', width=44),
     ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691'): dict(native='lane_lane_id', width=11),
     ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77'): dict(native='lane_lane_id', width=9),
@@ -98,7 +101,7 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             raise ValueError('HBM collective RING strap_qid requires the native NW=2 or NE=3 identity')
     # Exact four current native packed-ID cuts; each lane remains an independent 11-bit identity.
     packed_master = 'ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44'
-    if descriptor.get('module') == packed_master and raw:
+    if descriptor.get('module') in (packed_master, packed_master+'__nocoll') and raw:
         pc = descriptor.get('packed_lane_id_contract')
         if not isinstance(pc, dict) or set(pc) != {'kind', 'lanes'} or pc['kind'] != 'SU_PACKED_LANE_IDS_4X11':
             raise ValueError('special SU ID44 requires typed four independent 11-bit lane identities')

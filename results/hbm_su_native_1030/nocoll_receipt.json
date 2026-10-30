@@ -1,0 +1,88 @@
+{
+ "status": "PHYSICAL_SOURCE_PREP_NO_PLAN_ADOPTION",
+ "rows": [
+  {
+   "full_native_proof_adapter": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+   "native_cut": "ot_hnx_su_plain4__lid9_rst3",
+   "physical_module": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll",
+   "outline_um": [
+    760.32,
+    725.76
+   ],
+   "pins": 3436,
+   "pin_file": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll.json",
+   "pins_sha256": "4f198b899fad8126104e8610eb159ab215be36408e644483f00634980f37ded8",
+   "dropped": [
+    "lane_coll[0]",
+    "lane_coll[1]",
+    "lane_coll[2]",
+    "lane_coll[3]"
+   ],
+   "constant_output_bridge": {
+    "lane_coll[0]": 0,
+    "lane_coll[1]": 0,
+    "lane_coll[2]": 0,
+    "lane_coll[3]": 0
+   },
+   "all_other_pins_unchanged": true,
+   "lane_rd_re_groups_retained": true,
+   "macro_hierarchy_prefix": "u_full.u_native"
+  },
+  {
+   "full_native_proof_adapter": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+   "native_cut": "ot_hnx_su_plain4__lid9_rst3",
+   "physical_module": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll",
+   "outline_um": [
+    440.64,
+    457.92
+   ],
+   "pins": 3436,
+   "pin_file": "results/hbm_su_native_1030/nocoll_pins/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll.json",
+   "pins_sha256": "92828efbe18c7c6a810d4b2623387367dad1d027637d308b687e189d2d895e59",
+   "dropped": [
+    "lane_coll[0]",
+    "lane_coll[1]",
+    "lane_coll[2]",
+    "lane_coll[3]"
+   ],
+   "constant_output_bridge": {
+    "lane_coll[0]": 0,
+    "lane_coll[1]": 0,
+    "lane_coll[2]": 0,
+    "lane_coll[3]": 0
+   },
+   "all_other_pins_unchanged": true,
+   "lane_rd_re_groups_retained": true,
+   "macro_hierarchy_prefix": "u_full.u_native"
+  },
+  {
+   "full_native_proof_adapter": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+   "native_cut": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3",
+   "physical_module": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll",
+   "outline_um": [
+    760.32,
+    725.76
+   ],
+   "pins": 3471,
+   "pin_file": "results/hbm_su_native_1030/nocoll_pins/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll.json",
+   "pins_sha256": "a8e484a77e6fdb7946cd40c4887de3a5ae761bf5519657f9d119ff0d98a29dc3",
+   "dropped": [
+    "lane_coll[0]",
+    "lane_coll[1]",
+    "lane_coll[2]",
+    "lane_coll[3]"
+   ],
+   "constant_output_bridge": {
+    "lane_coll[0]": 0,
+    "lane_coll[1]": 0,
+    "lane_coll[2]": 0,
+    "lane_coll[3]": 0
+   },
+   "all_other_pins_unchanged": true,
+   "lane_rd_re_groups_retained": true,
+   "macro_hierarchy_prefix": "u_full.u_native"
+  }
+ ],
+ "constant_proof": "Actual native KIND0: HAS_SFU0 sets c1=0 andc4=0, coll=c1|c4=0. Pinreg r_coll asynchronously resets0 and clocks l_coll0; induction after truePOR. Current GEN face_shell confirms all4 lane_coll bits0. Native-cut graph maps four member coll outputs directly to lane_coll[3:0]. Wrong TIE1 disagrees immediately afterPOR; no mask or physicalconstant exemption.",
+ "remaining": "Parent112-cut/native alias bridge+physicalpins/TIE0 event and full native binding gates; no oldPNR reuse"
+}

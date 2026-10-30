@@ -2485,5 +2485,821 @@
   ],
   "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held.",
   "synth_memory_max_bits": 4096
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77__nocoll": {
+  "top": "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77",
+  "files": [
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77.sv"
+  ],
+  "defines": [
+   "OT_SMH_FC_HIER",
+   "OT_SMH_HIER",
+   "OT_SMH_XLK",
+   "OT_FP_DATA_NORST",
+   "OT_SMH_DRST0",
+   "OT_SMH_RSTRELAY",
+   "OT_SM_QSPLIT"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | PHYSICAL-ONLY no-coll wrapper omits only four native KIND0 coll constant0 output pins; full proof adapter retained. Explicit parent native bridge/TIE0 mandatory; no pin/slot/adoption here.",
+  "synth_memory_max_bits": 4096,
+  "macro_placement": [
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     147.66
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     147.66
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     147.66
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     201.708
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     201.708
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     201.708
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     255.756
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     255.756
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     255.756
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     309.804
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     309.804
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     309.804
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     374.892
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     374.892
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     374.892
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     428.94
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     428.94
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     428.94
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     482.988
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     482.988
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     482.988
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     537.036
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     537.036
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     537.036
+    ],
+    "orient": "MY"
+   }
+  ]
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526__nocoll": {
+  "top": "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526",
+  "files": [
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526.sv"
+  ],
+  "defines": [
+   "OT_SMH_FC_HIER",
+   "OT_SMH_HIER",
+   "OT_SMH_XLK",
+   "OT_FP_DATA_NORST",
+   "OT_SMH_DRST0",
+   "OT_SMH_RSTRELAY",
+   "OT_SM_QSPLIT"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "SOURCE PREP ONLY: actual current native generated cut ot_hnx_su_plain4__lid9_rst3; direct ABI adapter aliases only lane_lane_id to strap_lane_lane_id, retains cmd0_D/register/reset boundaries and all current parameters. New native pin table required; no legacy decoded-port compatibility claim. Mixed preferred provider WCOPY interface repaired by zero-only declared parameter + fail-closed nonzero guard; original provider body unchanged, receipt zero_wcopy_receipt.json. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | PHYSICAL-ONLY no-coll wrapper omits only four native KIND0 coll constant0 output pins; full proof adapter retained. Explicit parent native bridge/TIE0 mandatory; no pin/slot/adoption here.",
+  "synth_memory_max_bits": 4096,
+  "macro_placement": [
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     13.74
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     13.74
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     13.74
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     67.788
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     67.788
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     67.788
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     121.836
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     121.836
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     121.836
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     175.884
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     175.884
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     175.884
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     240.972
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     240.972
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     240.972
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     295.02
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     295.02
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     295.02
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     349.068
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     349.068
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     349.068
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     64.8,
+     403.116
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     172.8,
+     403.116
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     280.8,
+     403.116
+    ],
+    "orient": "MY"
+   }
+  ]
+ },
+ "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44__nocoll": {
+  "top": "ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44",
+  "files": [
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_lane.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hbm_su_static_lane_pinreg__static_id.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hbm_su_static_pinned_bank.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hbm_su_static_replicated_bank__native_zero.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_delay.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat3.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_add_lat4i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_fast.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat4.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_fp32_mul_lat5i.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_inc_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kadd.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kge.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_kinc.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksa.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_ksadd_k__u1.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_lzc32.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_rows_k.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul24_sum.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_mul_kcp48.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qadd_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_qmul_lat.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_exp.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_fdiv.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_v41x_ins.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_vline.sv",
+   "physical/die_plan/hbm_arch_cores/native_1030/ot_hdc_w11_cut.sv",
+   "physical/die_plan/hbm_arch_cores/id_1030/ot_hnx_su_plain4__lid9_rst3__static_id.sv",
+   "physical/die_plan/hbm_arch_cores/wrappers/ot_hnx_su_plain4__7dd6a1bbbf47_rst3__id44.sv"
+  ],
+  "defines": [
+   "OT_SMH_FC_HIER",
+   "OT_SMH_HIER",
+   "OT_SMH_XLK",
+   "OT_FP_DATA_NORST",
+   "OT_SMH_DRST0",
+   "OT_SMH_RSTRELAY",
+   "OT_SM_QSPLIT"
+  ],
+  "params": {},
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "SOURCE PREP ONLY: exact four actual native special packed44-ID cuts. Same34-module preferred closure/native7defines. No regular9bit alias, no physical slot/outline/PNR adoption. Native packed ID capture still HOLD until R7 bypass qualification. | SOURCE PREP opt-in STATIC_LANE_ID1 proven on all256 current native IDs fromPOR/edge1/coldwarm reset with315output 4-state lockstep andwrongID mutants. Native source default0 unchanged; typed ID bits only bypass packed capture. Parentplan/calendar/nativeLEC/physical gates remain held. | PHYSICAL-ONLY no-coll wrapper omits only four native KIND0 coll constant0 output pins; full proof adapter retained. Explicit parent native bridge/TIE0 mandatory; no pin/slot/adoption here.",
+  "synth_memory_max_bits": 4096,
+  "macro_placement": [
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     147.66
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     147.66
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     147.66
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     201.708
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     201.708
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m0.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     201.708
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     255.756
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     255.756
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     255.756
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     309.804
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     309.804
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m2.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     309.804
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     374.892
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     374.892
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     374.892
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     428.94
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     428.94
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m4.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     428.94
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[0].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     482.988
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[1].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     482.988
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[2].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     482.988
+    ],
+    "orient": "MY"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[3].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     224.64,
+     537.036
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[4].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     332.64,
+     537.036
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_full.u_native.m6.u_data.g_read[5].u_m",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     440.64,
+     537.036
+    ],
+    "orient": "MY"
+   }
+  ]
  }
 }
