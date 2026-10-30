@@ -39,6 +39,11 @@ class BoundaryBandwidth(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'whole-sector'):
             transfer(r, 'load')
 
+    def test_actual_candidate_scratch_exceeds_native_stack_capacity(self):
+        row = transfer(self.record('LOAD'), 'load')
+        self.assertEqual(row['stack_local_begin'], 30_064_771_072)
+        self.assertGreater(row['stack_local_end'], 22_500_000_000)
+
     def test_body_records_are_not_added_traffic(self):
         self.assertIsNone(transfer(self.record('LOAD'), 'body'))
 

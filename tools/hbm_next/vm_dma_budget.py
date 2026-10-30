@@ -37,11 +37,13 @@ def transfer(r, kind):
     nbytes = 4 * a.n
     width = 32 if r.op == 'LOAD' else 64
     return dict(op=r.op, bytes=nbytes, stack=(h.base >> 35) & 3,
+                stack_local_begin=h.base & ((1 << 35)-1),
+                stack_local_end=(h.base & ((1 << 35)-1)) + nbytes,
                 mode=h.base >> 37, max_source_bytes_per_cycle=width,
                 optimistic_source_cycles=(nbytes + width - 1) // width)
 
 
-def budget(chain_path, decode):
+def budget(chain_path, decode, stack_bytes=22_500_000_000):
     chain_path = Path(chain_path)
     chain = json.loads(chain_path.read_text())
     rows = []
@@ -53,6 +55,7 @@ def budget(chain_path, decode):
             if row is not None:
                 rows.append(dict(stage=ph.get('stage', 0), slot0=ph['slot0'],
                                  offset=meta['offset'], kind=meta['kind'], **row))
+    invalid = [x for x in rows if x['stack_local_end'] > stack_bytes]
     by_op = {op: dict(records=sum(x['op'] == op for x in rows),
                      bytes=sum(x['bytes'] for x in rows if x['op'] == op),
                      source_cycles=sum(x['optimistic_source_cycles'] for x in rows if x['op'] == op))
@@ -64,6 +67,10 @@ def budget(chain_path, decode):
                 single_issuing_mover_source_cycles=sum(x['optimistic_source_cycles'] for x in rows),
                 hbm_stack_records=dict(sorted(Counter(str(x['stack']) for x in rows).items())),
                 all_commands_linear_full_wait=True, rows=rows,
+                physical_capacity=dict(status='FAIL' if invalid else 'PASS',
+                                       stack_bytes=stack_bytes, invalid_records=len(invalid),
+                                       maximum_local_end=max(x['stack_local_end'] for x in rows),
+                                       source='ot_hgi_dma_{front,back,engines}.sv STACK_BYTES default22_500_000_000'),
                 assumptions=['LOAD sector engine maximum32B/cycle; optional KVW rawSTORE maximum64B/cycle',
                              'one issuing mover, as encoded; no invented four-way distribution',
                              'full waits serialize source consumption; posted write acknowledgement may lag'],
@@ -79,11 +86,12 @@ def main():
     ap.add_argument('--chain', required=True)
     ap.add_argument('--compiler-tools', required=True)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--stack-bytes', type=int, default=22_500_000_000)
     a = ap.parse_args()
     root = Path(a.compiler_tools)
     sys.path[:0] = [str(root/'hbm_next'), str(root)]
     import isa_rows
-    result = budget(a.chain, isa_rows.decode_one)
+    result = budget(a.chain, isa_rows.decode_one, a.stack_bytes)
     Path(a.out).write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps({k: v for k, v in result.items() if k != 'rows'}))
 
