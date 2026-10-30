@@ -144,3 +144,15 @@ Resolved-address command construction (proposal artifact, not installed):
   After all reads, use existing legal release-only(count0,bit56) broadcast to
   all8 leaves for the matching buffer/epoch, or eight scheduled per-leaf
   releases. This control must be included in the full provider calendar.
+
+Current conservative policy costs, not selected-provider measurements:
+  Fresh native NPC2 window fills for grouped source prefetches:
+  221242144 requested bytes ->36837 half-window fills/1207074816HBMbytes,
+  5.456x overfetch,3946 prefetch batches. No cross-batch reuse is assumed.
+  The resident-placement/copy-elision source reduces this to30668 fresh fills
+  (1004929024bytes). With exactly the existing two landing buffers per half,
+  static farthest-future reuse AND actual backing-STORE invalidations gives
+  27907 fills/914456576bytes (2761hits); LRU gives960593920bytes. A STORE
+  refutes a stale hit in the negative control. These include neither converter
+  throughput/latency nor the96 original dynamic HGI LOADs. They demonstrate
+  that buffer reuse helps but cannot be priced as free or hide window overfetch.

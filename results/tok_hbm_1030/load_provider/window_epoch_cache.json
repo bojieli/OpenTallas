@@ -1,0 +1,38 @@
+{
+ "status": "EXISTING_TWO_BUFFER_POLICY_ESTIMATE_NO_INSTALL",
+ "source": "canonical_resident_cached inserted LOADs only",
+ "fresh_window_fills": 30668,
+ "fresh_HBM_fill_bytes": 1004929024,
+ "LRU": {
+  "policy": "lru",
+  "read_windows": 30668,
+  "fills": 29315,
+  "hits": 1353,
+  "invalidated_resident_windows": 2573,
+  "capacity_evictions": 26740,
+  "HBM_fill_bytes": 960593920,
+  "release_broadcasts_at_least": 29313,
+  "buffers_per_landing_half": 2
+ },
+ "static_farthest_future": {
+  "policy": "farthest_future",
+  "read_windows": 30668,
+  "fills": 27907,
+  "hits": 2761,
+  "invalidated_resident_windows": 2406,
+  "capacity_evictions": 25499,
+  "HBM_fill_bytes": 914456576,
+  "release_broadcasts_at_least": 27905,
+  "buffers_per_landing_half": 2
+ },
+ "actual_backing_store_events": 12155,
+ "external_native_write_rows_proven_disjoint": 288,
+ "source_stack3_current_provider_unselected": true,
+ "cycle_price_assigned": false,
+ "holds": [
+  "existing NPC2 landing buffers assumed; new provider architecture not adopted",
+  "actual fill/ownership/epoch/release calendars and backend routing still required",
+  "source numeric/G5/scratch authority open; converter bytes and original dynamic LOADs excluded"
+ ],
+ "stale_window_control": "CAUGHT_2fills_nohit"
+}
