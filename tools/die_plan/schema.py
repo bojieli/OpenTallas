@@ -926,7 +926,11 @@ SCHEMA = {
             core_internal_reach_um=_pos,
             # DIE-KV-34 10-29 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=1 (landing_placement fits CLAND cells on
             # their reserved footprint); unset = unchanged kits
-            cland_fit_reserve={"type": "boolean"})},
+            cland_fit_reserve={"type": "boolean"},
+            # FLOW-6 10-30 opt-in: gen phys exports OT_CLAND_FIT_RESERVE=resize (landing_placement fits CLAND cells on
+            # the widest drive variant of their own family, the in-place GPL upsize; not the w/0.4 reserve of the
+            # boolean above, which overfills ring bands); unset = unchanged kits; both keys set = gen error
+            cland_fit_resize={"type": "boolean"})},
     },
 }
 
