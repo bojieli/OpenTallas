@@ -156,7 +156,33 @@
    "parent_geometry": "all1802pins/96PGrects/9OBSrects exact",
    "approval": "root coordinator 2026-10-30 after G0new0/strictbind0/7realviewclockreread",
    "receipt": "results/codex_kv_e0_1030/e0_gate_receipt.json"
+  },
+  {
+   "id": "AHUB_M5_TRACK_1030",
+   "type": "kv3_hub_C",
+   "instance": "ahub",
+   "pins": {
+    "ck[3]": [
+     -0.024,
+     0
+    ],
+    "ck[4]": [
+     -0.024,
+     0
+    ],
+    "ck[5]": [
+     0.008,
+     0
+    ],
+    "ck[6]": [
+     0.008,
+     0
+    ]
+   },
+   "cycles_added": 0,
+   "receipt": "results/codex_kv_ahub_track_1030/ahub_g0_delta.json",
+   "status": "track-table correction; unsigned core physical gates remain pending"
   }
  ],
- "current_plan_sha256": "c792fe2c3af3b53b2be602c9174680dbcbd1241324a262f731e8df6363c7a5df"
+ "current_plan_sha256": "a61a4f5e658042cb0c941c40e721da70395bf171c34db98cb60b7fa05f1d14cb"
 }
