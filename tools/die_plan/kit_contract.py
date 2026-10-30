@@ -1024,21 +1024,57 @@ def clock_entry_clear(kd, plan_dir=None, entries=None):
 
 
 def _island_rects(kd):
-    p = Path(kd) / "island_ft.json"
-    if not p.is_file():
-        return []
-    return [[float(v) for v in a["rect_um"]] for a in json.loads(p.read_text()).get("arcs", [])]
+    """Only explicit island reservations, never generic tree-cell placement bounds."""
+    kd = Path(kd)
+    rects = []
+    p = kd / "island_ft.json"
+    if p.is_file():
+        rects.extend(a["rect_um"] for a in json.loads(p.read_text()).get("arcs", []))
+    ms = kd / "master_slice.json"
+    if ms.is_file():
+        sl = json.loads(ms.read_text())
+        islands = (sl.get("pushdown") or {}).get("islands", [])
+        if islands:
+            if sl.get("schema") != "opentallas.master_plan_slice.v1":
+                raise ValueError("pushdown islands require a typed master slice")
+            cp = kd / "core_infra_plan.json"
+            if not cp.is_file():
+                raise ValueError("pushdown islands lack compiled core_infra_plan.json")
+            cells = json.loads(cp.read_text()).get("cells", [])
+            names = set()
+            for island in islands:
+                name = island.get("name")
+                if not isinstance(name, str) or not name or name in names:
+                    raise ValueError("pushdown islands require unique nonempty names")
+                names.add(name)
+                rect = island["rect_um"]
+                # The compiled reservation must actually be installed. Do not treat
+                # arbitrary cells' full-core placement bounds as reserved islands.
+                if not any(c.get("rect_um") == rect for c in cells):
+                    raise ValueError(f"pushdown island {name} has no matching compiled reservation")
+                rects.append(rect)
+    unique = []
+    for rect in rects:
+        if not isinstance(rect, (list, tuple)) or len(rect) != 4 or any(
+                type(v) not in (int, float) or not math.isfinite(v) for v in rect):
+            raise ValueError("island rectangle needs four finite numeric coordinates")
+        r = list(map(float, rect))
+        if not (r[0] < r[2] and r[1] < r[3]):
+            raise ValueError("island rectangle must be ordered")
+        if r not in unique:
+            unique.append(r)
+    return unique
 
 
 def island_macro_clear(kd):
     """COORD 10-27 (KV-CORES-R9): no macro or macro halo over a plan clock island.  Static macro sites: every
-    MACRO_PLACE_HALO-grown macro box clear of every island_ft rect.  rtl_macro_placer: the island_macro_guard hooks
+    MACRO_PLACE_HALO-grown macro box clear of every declared island reservation.  rtl_macro_placer: the island_macro_guard hooks
     (PRE_MACRO_PLACE blockages + PRE_TAPCELL check) staged with every island rect."""
     kd = Path(kd)
     cfg = _mk(kd)
     isl = _island_rects(kd)
     if not isl or not _lef_sizes(kd, cfg):
-        return [], dict(applies=False, reason="no island_ft rects" if not isl else "no macros")
+        return [], dict(applies=False, reason="no island reservations" if not isl else "no macros")
     halo = max([_num(t) or 0.0 for t in cfg.get("MACRO_PLACE_HALO", "0").split()] or [0.0])
     err = []
     boxes, prob = macro_boxes(kd) if cfg.get("MACRO_PLACEMENT_TCL") else (None, "rtlmp")
