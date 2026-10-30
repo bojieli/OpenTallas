@@ -1,0 +1,9 @@
+probe.log
+PV_NAMESPACED_PUBLIC_CLOCKS 2 SINKS 29778
+PV_NAMESPACED_COUNTS old_global 1542 old_namespace 1542 fixed_namespace 1542
+PV_NAMESPACED_LOOKUP relative 0 absolute 1
+Error: probe.tcl, 18 PV_NAMESPACED_CENSUS FAIL exact same-ODB/source-order reproduction
+probe_ordered.log
+PV_ORDERED_INITIAL_DB_CLOCKS 1542
+PV_ORDERED_OLD namespace_first 1542 global_after 1542 relative_lookup 0
+Error: probe_old.tcl, 14 old namespace-first reproduction FAIL

@@ -1,0 +1,4 @@
+PV_FINAL_CENSUS PASS exact1542netnames global_calls1 public_clocks2 actual_seq_clockpins29778 relative_lookup0
+PV_FINAL_NEGATIVE error CAUGHT OT_CLK_FREEZE FAIL: global STA clock-net enumeration failed: injected unavailable clock census
+PV_FINAL_NEGATIVE empty CAUGHT OT_CLK_FREEZE FAIL: empty clock-net census with 2 STA clocks and 29778 sequential clock pins; check SDC/source ordering
+PV_FINAL_READONLY nofreeze/route/write_db; input posthook DB has positiveCLOCKcache so originalnative0NETS causalclaim unproven
