@@ -1,0 +1,110 @@
+{
+ "FT0": {
+  "max_hop": [
+   402.56999999999994,
+   5,
+   1
+  ],
+  "over405": 0,
+  "pinp90": 28.059000000000196,
+  "pinmax": 30.42300000000006,
+  "worst": [
+   [
+    402.56999999999994,
+    5,
+    1
+   ],
+   [
+    402.3539999999999,
+    5,
+    0
+   ],
+   [
+    401.9220000000001,
+    5,
+    2
+   ],
+   [
+    401.922,
+    5,
+    9
+   ],
+   [
+    401.922,
+    3,
+    0
+   ],
+   [
+    401.86800000000005,
+    5,
+    7
+   ],
+   [
+    401.70599999999996,
+    3,
+    2
+   ],
+   [
+    401.49,
+    4,
+    6
+   ],
+   [
+    401.49,
+    4,
+    0
+   ],
+   [
+    401.355,
+    2,
+    1
+   ],
+   [
+    401.3549999999999,
+    2,
+    0
+   ],
+   [
+    401.3279999999999,
+    3,
+    4
+   ]
+  ]
+ },
+ "r2r": {
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 980.1,
+  "r2r_captures_gt405": 4,
+  "r2r_captures": 33043,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_bound.u_rrl_35/q$_DFF_P_ -> u_bound.u_bin_ql_i0/eq$_DFF_PN0_"
+ },
+ "pinreg": {
+  "pins_registered": 4389,
+  "pins_to_macro": 0,
+  "pins_exempt": 16,
+  "pins_unregistered": 2405,
+  "pins_land_ring": 0,
+  "unregistered_sample": [
+   "fclk_in_ft1_i[0]",
+   "fclk_in_idx_i0[0]",
+   "fclk_in_ql_i0[0]",
+   "fclk_out_cland_up[0]",
+   "fclk_out_flt_o0[0]",
+   "fclk_out_ft0_o[0]",
+   "fclk_out_idx_o0[0]",
+   "fclk_out_qc_o0[0]"
+  ],
+  "pin_reg_p50": 25.99,
+  "pin_reg_p90": 27.69,
+  "pin_reg_max": 30.42,
+  "pin_reg_worst": [
+   "30.4 ft0_o[13]",
+   "29.8 ft0_o[27]",
+   "29.8 ft0_o[34]",
+   "29.8 ft0_o[804]",
+   "29.6 ft0_o[228]"
+  ]
+ }
+}
