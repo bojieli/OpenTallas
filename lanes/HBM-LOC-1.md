@@ -8,3 +8,8 @@
   - Cost: the b110<->hub SFU lanes go through the mid-row banks: L5 (narrowed to its 128 bound b) 9->47, L81 (330 b, carries L23's bound bits) 2->39, L23 (8 b) 2->19 [CHECKED, plan latency].
   - G0/G0C/bind on C2w3 are running. L1w (= C2w + Sa) is running.
   - INCIDENT (mine, fixed): the replan script hard-links base sidecars, so out_*/replan_report.json overwrote the d40h inode, which DIE-HBM-41's d41a/d41c/tryE/tryF/try1 also link. Restored it byte-for-byte from d38s (sha c003849f33bd, CHECKED). The script now unlinks before it writes.
+- 2026-10-30 15:57 PDT RESULT/PARKED [HBM-LOC-1] L1 is BLOCKED as one clean event. Branch claude/hbm-loc-1-build-1030@d8dbc0d590b (results/die_hbm_1030/hbmloc1/README.md "Build attempt", attempt/, replan_loc.py, run_post_checks.sh). Run dir intel1 /srv/opentallas-scratch2/claude/hbm-loc-1 (out_C2w3, out_Sa41, plan/, g0/, bind/ incl d41c_base). Worktrees removed after push.
+  - C2 (S row) [CHECKED]: su21 comes off the hub, so L59 8->25 (> SU max 14).
+  - C2w (su2x kept, spu1 narrowed) [CHECKED]: G0 +12 / G0C +42 new errors vs d40h. These include street_reach (sm3/su20 cores 631/467 um > 400; any 1002-um spu1 shift does this, because sm3 needs the street) and boot-street hops > reach. The SFU hub lanes go L5 9->47, L81 2->39.
+  - Sa on d41c [CHECKED]: b112 is the HH gateway, so L700 18->53, L701 has no route (new NW_hub->NE_hub pair 2762 b), and L28 fails (new hub->sm0 1608 b). b113<->b112 pairs are gone (L800/L801). Bind 66 -> 63 pairs, but with 3 new pairs; G0 schema invalid (5).
+  - Successor: no partition-move event. See the queue.
