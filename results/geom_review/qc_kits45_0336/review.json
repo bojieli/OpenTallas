@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "PLAN/PLACE TRIAL ONLY; no CTS/GRT/route clearance",
+  "picture": "review45.png",
+  "reviewer": "Codex qc kits 0336",
+  "plan_sha256": "2257b9fb1a4772dffa84b801e4b327fe8334edc87145e11ea64bcefc1551568d",
+  "findings": [
+    "Landing storage bands enlarged locally; bus-facing bands remain at ingress/egress, no outline or pin displacement",
+    "North/south feedthrough bundles retain ordered columns and spaced planned station rows; no macro wall in core-free pilot types",
+    "Single nominal central clock tap requires actual multi-tap placement census/related-pair STA later; no clock sufficiency assumed",
+    "Sparse floorplans remain expected for feedthrough types; coll_ft station recovery must be measured with current face_flops generator before any route",
+    "PG continuity and actual r2r/pin reach require placed-image review before CTS/GRT"
+  ],
+  "holds": [
+    "coll_ft old FF-only geometry FAIL retained; regenerated kit gets PLACE trial only",
+    "coll_ucie PHY margin uncorrected, excluded",
+    "st_a/st_b LEC still held awaiting actual fresh proof"
+  ]
+}
