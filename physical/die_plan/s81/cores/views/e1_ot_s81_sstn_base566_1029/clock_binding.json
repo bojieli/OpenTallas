@@ -1,0 +1,14 @@
+{
+ "type": "ot_s81_sstn_base566",
+ "insertion_ps": {
+  "tt": 250.0,
+  "ff": 202.5
+ },
+ "insertion_tol_ps": 40.0,
+ "basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "calibrated setRC_rcx_asap7.tcl",
+ "rule": "METHODOLOGY 9.7 / BRIEFING 5e; FLOW 2026-10-25; FLOW-FIX core generators"
+}

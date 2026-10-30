@@ -939,6 +939,9 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 ctl = sorted(x for x in L if x != r and not x.startswith("CONST_"))
                 for x in ctl:
                     d = _single_drv(x)
+                    if (origin is not None and _module_is(origin, "ot_dp_landing_relay")
+                            and d is not None and d[0] == ci):
+                        return f"relay sampler {path}: D cone feeds back its own output", None
                     if x in roots_ports:
                         if x not in strap_roots:
                             return f"origin sampler {path} D cone leaf port {roots_ports[x][0]} (want declared straps only)", None

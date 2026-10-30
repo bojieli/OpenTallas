@@ -1,0 +1,225 @@
+{
+ "lane": "DIE-HBM-30-O",
+ "src": "/srv/opentallas-scratch2/claude/die-hbm-29/plan/d29d",
+ "types": {
+  "q_b113": {
+   "opstore_a_before": {
+    "origin": [
+     1434.24,
+     941.76
+    ],
+    "outline": [
+     390.528,
+     436.32
+    ],
+    "orient": "MX"
+   },
+   "ctl_before": {
+    "origin": [
+     656.64,
+     924.48
+    ],
+    "orient": "MY",
+    "toff": [
+     -0.096,
+     0.0
+    ]
+   },
+   "core_rects": {
+    "u_sfucore_Q_lane14": [
+     1434.24,
+     216.0,
+     1823.04,
+     561.6
+    ],
+    "u_sfucore_Q_lane15": [
+     1434.24,
+     578.88,
+     1823.04,
+     924.48
+    ],
+    "u_sfucore_Q_opstore_a": [
+     1080.0,
+     941.76,
+     1840.32,
+     1425.6
+    ],
+    "u_sfucore_Q_opstore_b": [
+     656.64,
+     216.0,
+     1416.96,
+     907.2
+    ],
+    "u_sfucore_Q_ctl": [
+     388.8,
+     924.48,
+     1058.4,
+     1550.88
+    ]
+   },
+   "tap_opstore_a": [
+    [
+     1628.64,
+     1114.56
+    ],
+    [
+     1460.16,
+     1183.68
+    ]
+   ],
+   "tap_ctl": [
+    [
+     989.184,
+     1235.52
+    ],
+    [
+     721.344,
+     1235.52
+    ]
+   ],
+   "station_endpoints_moved": 54,
+   "stations_total": 60
+  },
+  "q_b113__physical_v1": {
+   "opstore_a_before": {
+    "origin": [
+     1434.24,
+     941.76
+    ],
+    "outline": [
+     390.528,
+     436.32
+    ],
+    "orient": "MX"
+   },
+   "ctl_before": {
+    "origin": [
+     656.64,
+     924.48
+    ],
+    "orient": "MY",
+    "toff": [
+     -0.096,
+     0.0
+    ]
+   },
+   "core_rects": {
+    "u_sfucore_Q_lane14": [
+     1434.24,
+     216.0,
+     1823.04,
+     561.6
+    ],
+    "u_sfucore_Q_lane15": [
+     1434.24,
+     578.88,
+     1823.04,
+     924.48
+    ],
+    "u_sfucore_Q_opstore_a": [
+     1080.0,
+     941.76,
+     1840.32,
+     1425.6
+    ],
+    "u_sfucore_Q_opstore_b": [
+     656.64,
+     216.0,
+     1416.96,
+     907.2
+    ],
+    "u_sfucore_Q_ctl": [
+     388.8,
+     924.48,
+     1058.4,
+     1550.88
+    ]
+   },
+   "tap_opstore_a": [
+    [
+     1628.64,
+     1114.56
+    ],
+    [
+     1460.16,
+     1183.68
+    ]
+   ],
+   "tap_ctl": [
+    [
+     989.184,
+     1235.52
+    ],
+    [
+     721.344,
+     1235.52
+    ]
+   ],
+   "station_endpoints_moved": 54,
+   "stations_total": 60
+  }
+ },
+ "pin_table": {
+  "old": "cores/ot_hgi_sfu_core_split3__opstore_a__388.8x345.6__canon__c20g_390.528x436.32.json",
+  "new": "cores/ot_hgi_sfu_core_split3__opstore_a__760.32x483.84__d30o.json",
+  "pins": 7534,
+  "faces": {
+   "N": {
+    "pins": 1518,
+    "layers": [
+     "M5"
+    ],
+    "scale": 1.9914,
+    "span_new": [
+     8.76,
+     751.56
+    ]
+   },
+   "S": {
+    "pins": 2052,
+    "layers": [
+     "M5"
+    ],
+    "scale": 1.9911,
+    "span_new": [
+     8.712,
+     751.608
+    ]
+   },
+   "E": {
+    "pins": 1664,
+    "layers": [
+     "M4"
+    ],
+    "scale": 1.1135,
+    "span_new": [
+     8.76,
+     475.08
+    ]
+   },
+   "W": {
+    "pins": 2300,
+    "layers": [
+     "M4"
+    ],
+    "scale": 1.1134,
+    "span_new": [
+     8.712,
+     475.128
+    ]
+   }
+  },
+  "sha256": "edaf6c837898"
+ },
+ "core_macros_before": {
+  "status": "UNKNOWN",
+  "outline_um": [
+   388.8,
+   345.6
+  ],
+  "why": "recipe macros ['ot_sram_1r1w_128x256_m1_r2c2', 'ot_sram_1r1w_256x256_m2_r2c2', 'ot_sram_1r1w_1024x256_m2_r2c2'], no placement evidence at the plan outline",
+  "rejected": []
+ },
+ "clock_island_macro_hits": [],
+ "out_sha256": "30e1a4890660"
+}
