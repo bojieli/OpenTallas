@@ -55,12 +55,13 @@ M8.H.exact_points = _straight
 NAME_POOL = "pqrstuvwxyzabcdefghijklmnoPQRSTUVWXYZABCDEFGHIJKLMNO"
 
 
-def farthest_clusters(pts, limit):
+def farthest_clusters(pts, limit, driver_xy=None):
     """deterministic farthest-point (k-centre) clustering, k grows until every part's centroid->farthest-sink
     Manhattan spread <= limit; parts may hold unequal counts (joint_nldm_plan load balance + d1 sizing absorb it).
     Isolated face/pin/reset registers get their own small leaf instead of stretching a big one (structure, no wire)."""
     def spread(g):
         cx = sum(p[0] for p in g) / len(g); cy = sum(p[1] for p in g) / len(g)
+        if driver_xy is not None:cx,cy=driver_xy((cx,cy))
         return max(abs(p[0] - cx) + abs(p[1] - cy) for p in g)
     for k in range(2, 60):
         seeds = [min(pts, key=lambda p: (p[0], p[1]))]
@@ -77,7 +78,7 @@ def farthest_clusters(pts, limit):
     return grp
 
 
-def split_long_leaves(P, limit_um):
+def split_long_leaves(P, limit_um, actual_legal=False):
     """every leaf whose driver->farthest-sink spread exceeds limit_um becomes k sibling leaves on the SAME parent
     driver (same level, same stage count, natural leg length); leaf driver at each part's centroid; names keep the
     level length (letters from NAME_POOL) so level bookkeeping is unchanged.  Every sink stays in exactly one leaf."""
@@ -93,7 +94,7 @@ def split_long_leaves(P, limit_um):
         if nseg > 1:
             reps = {u + '_r%d' % i for i in range(nseg - 1)}
             P['nodes'] = [n for n in P['nodes'] if n[0] not in reps]
-        parts = farthest_clusters(sinks, limit_um)
+        parts = farthest_clusters(sinks, limit_um, driver_xy=(lambda p: mz.xy(mz.cell(p))) if actual_legal else None)
         cells = [mz.cell((sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g))) for g in parts]
         free = [u[:-1] + ch for ch in NAME_POOL if u[:-1] + ch not in taken]
         if len(free) < len(parts) - 1:
@@ -503,7 +504,7 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
         P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
                                 [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)),
                                 entry_node=bool(fam.get("entry_node_legal")), x_bands=fam.get("lv0_x_bands_um"),
-                                islands=family_islands(fam))
+                                islands=family_islands(fam), island_assignment=fam.get("island_assignment", "auto"))
         rea = None
     else:
         if fam.get("lv0_x_bands_um") is not None:
@@ -516,7 +517,9 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
         if anchors is not None:
             _,P['island_snap']=explicit_island_sites(P['mz'],P['entry'],anchors,sp)
         rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
-    split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
+    if type(fam.get("leaf_actual_legal", False)) is not bool:
+        raise SystemExit("leaf_actual_legal must be a boolean")
+    split = split_long_leaves(P, fam.get("leaf_limit", 35.0), actual_legal=fam.get("leaf_actual_legal", False))
     stray = fix_keepout_strays(P, fam["keepout_stray"], fam.get("leaf_limit", 35.0), fam.get("smax", 70.0)) \
         if macro_mode and fam.get("keepout_stray") else None
     kr, kc = map(float, fam.get("rc", "0.8,0.9").split(","))
@@ -562,6 +565,11 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     if fam.get("islands_xy") is not None:
         rec["islands_requested_xy"]=[list(p) for p in family_islands(fam)]
         rec["island_snap"]=P["island_snap"]
+        if fam.get("island_assignment", "auto") != "auto":
+            rec["island_assignment"]=fam["island_assignment"]
+            rec["island_loads"]=P["island_loads"]
+    if fam.get("leaf_actual_legal"):
+        rec["leaf_actual_legal"]=True
     if fam.get("keepout_um"):
         rec["macro_keepout_um"] = [list(k) for k in fam["keepout_um"]]
     if macro_mode:
@@ -976,12 +984,49 @@ def lv0_x_bands(pts, k, cuts):
     return parts
 
 
-def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False, x_bands=None, islands=None):
+def nearest_island_subtrees(groups, site, fixed_islands, mz):
+    """Reparent whole level-three subtrees to nearest declared bay, no level/cycle added.
+
+    Loads may differ per bay; the existing joint NLDM model sizes the resulting
+    real fanout. Equal eight-per-bay reassignment retains long forced reaches.
+    All sink groups and descendant geometry stay intact.
+    """
+    upper=sorted(g for g in groups if len(g)==3)
+    if not upper:raise SystemExit("nearest_subtree requires a level-three subtree below every island")
+    bybay={g:[] for g in fixed_islands}
+    for g in upper:
+        point=mz.xy(site[g])
+        bay=min(bybay,key=lambda b:(abs(point[0]-mz.xy(fixed_islands[b])[0])+abs(point[1]-mz.xy(fixed_islands[b])[1]),b))
+        bybay[bay].append(g)
+    if any(not gs for gs in bybay.values()):raise SystemExit("nearest_subtree leaves a declared island empty")
+    if max(map(len,bybay.values()))>len(NAME_POOL):raise SystemExit("nearest_subtree exceeds geometric name capacity")
+    rename={old:bay+(i,) for bay,gs in sorted(bybay.items()) for i,old in enumerate(sorted(gs))}
+    new={():groups[()]};positions={g:c for g,c in site.items() if len(g)<3}
+    for bay,children in sorted(bybay.items()):
+        new[bay]=[sink for g in children for sink in groups[g]]
+    for col in sorted({b[0] for b in bybay}):
+        new[(col,)]=[sink for bay in sorted(bybay) if bay[0]==col for sink in new[bay]]
+    for g,sinks in groups.items():
+        if len(g)<3:continue
+        key=rename[g[:3]]+g[3:];new[key]=sinks;positions[key]=site[g]
+    loads=[dict(group=list(bay),xy_um=list(mz.xy(fixed_islands[bay])),
+                subtree_fanout=len(children),sinks=len(new[bay]),
+                flop_sinks=sum(not s[4].startswith("MACRO:") for s in new[bay]),
+                macro_sinks=sum(s[4].startswith("MACRO:") for s in new[bay]))
+           for bay,children in sorted(bybay.items())]
+    return new,positions,loads
+
+
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False, x_bands=None, islands=None, island_assignment="auto"):
     """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads.
     x_bands (HBM-CORES-KITS-25 opt-in family "lv0_x_bands_um": [x1, x2, ...]; absent = unchanged count-median W/E split):
     the first level splits the sinks into the GEOMETRIC x bands (-inf,x1),[x1,x2),...,[xn,inf) instead of equal counts,
     so a far, sparse strip (EP hfd_ep_static W/E strips) gets its own subtree rooted inside it rather than a branch
     fed from the dense centre; upper[0] must equal len(x_bands)+1 and every band must hold a sink (fail closed)."""
+    if island_assignment not in ("auto", "nearest_subtree"):
+        raise SystemExit("unknown island_assignment %r" % island_assignment)
+    if island_assignment != "auto" and islands is None:
+        raise SystemExit("island_assignment requires explicit islands_xy")
     core, entry, sinks, macros = read_macro_geo(geo)
     # entry_node (DIE-S81-30 opt-in family "entry_node_legal"): the root driver snaps to the nearest NODE-legal site
     # (outside the macro keep-outs) instead of the nearest wire-legal one; default unchanged
@@ -1031,6 +1076,13 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
             ch = [site[c] for c in sorted(kids[g])]
             cx = round(sum(c[0] for c in ch) / len(ch)); cy = round(sum(c[1] for c in ch) / len(ch))
             site[g] = H.minimax_site(mz, ch, (cx, cy))
+    island_loads=[]
+    if island_assignment == "nearest_subtree":
+        groups,site,island_loads=nearest_island_subtrees(groups,site,fixed_islands,mz)
+        kids=collections.defaultdict(list)
+        for g in groups:
+            if g:kids[g[:-1]].append(g)
+        leaves=sorted(g for g in groups if len(g)==depth)
     site[()] = ent
     T, K = [], []
     for lv in range(depth):
@@ -1070,7 +1122,7 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
                 caps.setdefault(cn, {})[key_of(s)] = c[cn]
     return dict(mz=mz, entry=entry, ent=ent, groups=groups, leaves=leaves, site=site, T=T, K=K, nodes=final, wires=wires,
                 land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["macro_or_flop_leaf"], nm=name, sinkcap=caps,
-                island_snap=island_snap)
+                island_snap=island_snap,island_loads=island_loads)
 
 
 def macro_leaf_errors(rec, geo):

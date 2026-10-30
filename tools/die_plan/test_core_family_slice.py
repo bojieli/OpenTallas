@@ -467,3 +467,40 @@ def test_explicit_island_bounds_topology_and_legal_bay_fail_closed():
     blocked=F.H.Maze((0,0,100,120),[],keepout=[(10,10,30,30)])
     with pytest.raises(SystemExit,match="within 2um"):
         F.explicit_island_sites(blocked,(50,60),points,[2,3])
+
+
+
+def test_nearest_subtree_reparents_whole_groups_without_losing_sinks():
+    mz=_Maze()
+    fixed={(col,row):(20+60*col,20+40*row) for col in range(2) for row in range(3)}
+    points=list(fixed.values())+[(21,21)]
+    groups={():[]};site={(): (50,60)}
+    for i,p in enumerate(points):
+        key=(0,0,i);sink=(float(p[0]),float(p[1]),'inst%d'%i,'CLK','FF')
+        groups[key]=[sink];groups[key+(0,)]=[sink];groups[()]+=[sink]
+        site[key]=p;site[key+(0,)]=p
+    before=sorted(groups[()])
+    new,positions,loads=F.nearest_island_subtrees(groups,site,fixed,mz)
+    assert sorted(new[()])==before
+    assert sorted(s for g,ss in new.items() if len(g)==4 for s in ss)==before
+    assert sorted(x['subtree_fanout'] for x in loads)==[1,1,1,1,1,2]
+    assert sum(x['sinks'] for x in loads)==7
+    assert all(g[:-1] in new for g in new if len(g)>1)
+    for g in new:
+        if len(g)==4:assert positions[g]==positions[g[:-1]]
+    assert groups.keys()!=new.keys()  # caller graph is not mutated in place
+    bad={():groups[()],(0,0,0):groups[(0,0,0)]}
+    with pytest.raises(SystemExit,match='empty'):
+        F.nearest_island_subtrees(bad,site,fixed,mz)
+
+
+def test_leaf_clusters_use_actual_legal_driver_spread_when_opted_in():
+    pts=[(float(x),0.,'FF',str(x),'CLK') for x in (0,3,6,9)]
+    assert len(F.farthest_clusters(pts,4))==2
+    actual=lambda p:(p[0]+4,p[1])
+    parts=F.farthest_clusters(pts,4,driver_xy=actual)
+    assert len(parts)==4
+    assert sorted(p for g in parts for p in g)==sorted(pts)
+    for g in parts:
+        p=actual((sum(s[0] for s in g)/len(g),0))
+        assert max(abs(s[0]-p[0])+abs(s[1]-p[1]) for s in g)<=4
