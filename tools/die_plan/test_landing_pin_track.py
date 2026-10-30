@@ -18,10 +18,10 @@ def _plan(pins):
 
 def test_off_track_landing_pin_snaps_to_nearest_plan_track():
     P = _plan([{"name": "rst_start_raw_1", "layer": "M7", "xy_um": [558.72, 34.104]},
-               {"name": "rst_start_raw_9", "layer": "M6", "xy_um": [12.345, 100.0]}])
+               {"name": "rst_start_raw_9", "layer": "M6", "xy_um": [12.345, 100.02]}])
     io = LC.io_tcl(P, "hd_mesh_e")
     assert "-pin_name {rst_start_raw_1} -layer M7 -location {558.7520 34.1040}" in io, io   # x on a V layer
-    assert "-pin_name {rst_start_raw_9} -layer M6 -location {12.3450 100.0160}" in io, io   # y on an H layer
+    assert "-pin_name {rst_start_raw_9} -layer M6 -location {12.3450 100.0000}" in io, io   # y on an H layer (100.02 -> track 100.000)
 
 
 def test_on_track_landing_pins_are_unchanged():
