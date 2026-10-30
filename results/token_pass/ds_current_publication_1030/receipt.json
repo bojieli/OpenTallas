@@ -1,0 +1,181 @@
+{
+  "schema": "opentallas.ds.current_publication_receipt.v1",
+  "source_commit": "18946602f",
+  "verdict": "PASS_CONDITIONAL_TRANSPORT_COMPONENT",
+  "clock_ps": 833,
+  "real_rstop_instances": 16,
+  "native_middle_bodies": [
+    "dsdv_gunit_pass N2 x5 eachdirection",
+    "ot_dsdv_vstop GunitL2 JREG0",
+    "BKentryrelay + BKvstop",
+    "dsdv_sh_vc",
+    "ot_s81eng_xq_n32 and native AQ/SRAM dependencies"
+  ],
+  "exact_registered_transport_ages": true,
+  "native_vq_arithmetic_included": false,
+  "source_asbuilt_sha256": "c7be0a5cfd11d31e593cff0126946888e8d031fd370e8c997d7fdd00ee4c2c54",
+  "die_sha256": "c0921732840ab202f28f5ed8337b7cb142eae5a816dd298fd59a091f660f3ff8",
+  "candidate": {
+    "profile": [
+      2,
+      0,
+      1,
+      3,
+      4
+    ],
+    "temporal_delta_edges_by_logical_leaf": [
+      8,
+      -4,
+      -4,
+      0,
+      0
+    ],
+    "egress": 80,
+    "unique": 80,
+    "gather_full1024bit_checks": 1280,
+    "errors": 0,
+    "stopfault": "0000",
+    "middlefault": 0
+  },
+  "current_profile": {
+    "profile": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "egress": 51,
+    "unique": 38,
+    "gather_checks": 832,
+    "errors": 253,
+    "stopfault": "ffff",
+    "middlefault": 0
+  },
+  "payload_control": {
+    "egress": 80,
+    "unique_correct": 79,
+    "errors": 33,
+    "caught": true
+  },
+  "per_slice_local_windows": [
+    {
+      "sid": 0,
+      "current_first": 9,
+      "current_last": 54,
+      "candidate_first": 5,
+      "candidate_last": 54
+    },
+    {
+      "sid": 1,
+      "current_first": 9,
+      "current_last": 56,
+      "candidate_first": 5,
+      "candidate_last": 56
+    },
+    {
+      "sid": 2,
+      "current_first": 9,
+      "current_last": 58,
+      "candidate_first": 5,
+      "candidate_last": 58
+    },
+    {
+      "sid": 3,
+      "current_first": 9,
+      "current_last": 52,
+      "candidate_first": 5,
+      "candidate_last": 52
+    },
+    {
+      "sid": 4,
+      "current_first": 9,
+      "current_last": 55,
+      "candidate_first": 5,
+      "candidate_last": 55
+    },
+    {
+      "sid": 5,
+      "current_first": 9,
+      "current_last": 54,
+      "candidate_first": 5,
+      "candidate_last": 54
+    },
+    {
+      "sid": 6,
+      "current_first": 8,
+      "current_last": 53,
+      "candidate_first": 4,
+      "candidate_last": 53
+    },
+    {
+      "sid": 7,
+      "current_first": 8,
+      "current_last": 45,
+      "candidate_first": 4,
+      "candidate_last": 45
+    },
+    {
+      "sid": 8,
+      "current_first": 9,
+      "current_last": 51,
+      "candidate_first": 5,
+      "candidate_last": 51
+    },
+    {
+      "sid": 9,
+      "current_first": 9,
+      "current_last": 55,
+      "candidate_first": 5,
+      "candidate_last": 55
+    },
+    {
+      "sid": 10,
+      "current_first": 9,
+      "current_last": 55,
+      "candidate_first": 5,
+      "candidate_last": 55
+    },
+    {
+      "sid": 11,
+      "current_first": 9,
+      "current_last": 51,
+      "candidate_first": 5,
+      "candidate_last": 51
+    },
+    {
+      "sid": 12,
+      "current_first": 9,
+      "current_last": 58,
+      "candidate_first": 5,
+      "candidate_last": 58
+    },
+    {
+      "sid": 13,
+      "current_first": 9,
+      "current_last": 55,
+      "candidate_first": 5,
+      "candidate_last": 55
+    },
+    {
+      "sid": 14,
+      "current_first": 9,
+      "current_last": 55,
+      "candidate_first": 5,
+      "candidate_last": 55
+    },
+    {
+      "sid": 15,
+      "current_first": 9,
+      "current_last": 56,
+      "candidate_first": 5,
+      "candidate_last": 56
+    }
+  ],
+  "conditional_sid_release_spacing_edges": 400,
+  "release_spacing_is_executable": false,
+  "physical_START_qualified": false,
+  "whole_producer_math": false,
+  "full_token": false,
+  "adoption": false
+}
