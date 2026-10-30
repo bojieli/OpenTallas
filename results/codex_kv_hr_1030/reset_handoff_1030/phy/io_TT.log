@@ -1,0 +1,125 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+PHY_IO_TT_CANONICAL_833_FULLCORE60_25_SEAM30_12p5_VCLK250.0_OVERLAY_INMINminus40_OUTMIN0
+PHY_IO_TT_INPUT_WORST
+Startpoint: rst_n[0] (input port clocked by vclk)
+Endpoint: u_slice.u_body.rs0$_DFF_PN0_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                          250.000  250.000   clock network delay (ideal)
+                          166.600  416.600 ^ input external delay
+     1    1.299   10.274    1.803  418.403 ^ rst_n[0] (in)
+     2    1.699   11.748   19.591  437.994 ^ input399/Y (BUFx2_ASAP7_75t_R)
+                  11.751    0.080  438.073 ^ u_slice.u_body.rs0$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+                                   438.073   data arrival time
+
+                          833.000  833.000   clock clk (rise edge)
+                            0.000  833.000   clock source latency
+     2   11.631    0.000    0.000  833.000 ^ ck[0] (in)
+     1    1.915    7.056   28.338  861.338 ^ clkbuf_regs_0_clk/Y (BUFx16f_ASAP7_75t_R)
+     4   13.421   14.754   19.690  881.028 ^ clkbuf_0_ck[0]_regs/Y (BUFx16f_ASAP7_75t_R)
+     2    6.190   10.797   25.847  906.874 ^ clkbuf_2_0_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+    11   29.734   26.338   27.563  934.437 ^ clkbuf_3_1__f_ck[0]_regs/Y (BUFx16f_ASAP7_75t_R)
+    14   18.837   17.522   35.901  970.338 ^ clkbuf_leaf_79_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                  22.243    4.760  975.098 ^ u_slice.u_body.rs0$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                          -30.000  945.098   inter-clock uncertainty
+                            0.000  945.098   clock reconvergence pessimism
+                           20.192  965.290   library recovery time
+                                   965.290   data required time
+---------------------------------------------------------------------------------
+                                   965.290   data required time
+                                  -438.073   data arrival time
+---------------------------------------------------------------------------------
+                                   527.217   slack (MET)
+
+
+Startpoint: c_v[0] (input port clocked by vclk)
+Endpoint: u_slice.u_body.ci_v_g$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                   0.000    0.000    0.000   clock vclk (rise edge)
+                          250.000  250.000   clock network delay (ideal)
+                          166.600  416.600 ^ input external delay
+     1    1.188   10.062    1.636  418.236 ^ c_v[0] (in)
+     1    0.756    7.694   17.390  435.626 ^ input397/Y (BUFx2_ASAP7_75t_R)
+                   7.695    0.047  435.673 ^ u_slice.u_body.ci_v_g$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+                                   435.673   data arrival time
+
+                          833.000  833.000   clock clk (rise edge)
+                            0.000  833.000   clock source latency
+     2   11.631    0.000    0.000  833.000 ^ ck[0] (in)
+     1    1.915    7.056   28.338  861.338 ^ clkbuf_regs_0_clk/Y (BUFx16f_ASAP7_75t_R)
+     4   13.421   14.754   19.690  881.028 ^ clkbuf_0_ck[0]_regs/Y (BUFx16f_ASAP7_75t_R)
+     2    6.190   10.797   25.847  906.874 ^ clkbuf_2_0_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+    14   32.031   28.344   27.720  934.595 ^ clkbuf_3_0__f_ck[0]_regs/Y (BUFx16f_ASAP7_75t_R)
+    31   14.883   15.557   34.931  969.526 ^ clkbuf_leaf_10_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                  15.826    1.029  970.555 ^ u_slice.u_body.ci_v_g$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+                          -30.000  940.555   inter-clock uncertainty
+                            0.000  940.555   clock reconvergence pessimism
+                          -14.231  926.324   library setup time
+                                   926.324   data required time
+---------------------------------------------------------------------------------
+                                   926.324   data required time
+                                  -435.673   data arrival time
+---------------------------------------------------------------------------------
+                                   490.652   slack (MET)
+
+
+PHY_IO_TT_OUTPUT_WORST
+Startpoint: fault$_DFF_PN0_ (rising edge-triggered flip-flop clocked by clk)
+Endpoint: fault[0] (output port clocked by vclk)
+Path Group: vclk
+Path Type: max
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock source latency
+     2   12.920    0.000    0.000    0.000 ^ ck[0] (in)
+     1    2.560    7.581   30.153   30.153 ^ clkbuf_regs_0_clk/Y (BUFx16f_ASAP7_75t_R)
+     4   15.766   16.588   20.399   50.552 ^ clkbuf_0_ck[0]_regs/Y (BUFx16f_ASAP7_75t_R)
+     2    6.268   10.956   32.526   83.078 ^ clkbuf_2_3_0_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+    10   34.213   19.647   20.509  103.587 ^ clkbuf_3_7__f_ck[0]_regs/Y (BUFx16f_ASAP7_75t_R)
+    25   15.329   19.073   84.546  188.133 ^ clkbuf_leaf_76_ck[0]_regs/Y (BUFx24_ASAP7_75t_R)
+                  19.108    0.391  188.523 ^ fault$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.723   20.752   57.098  245.621 v fault$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+     1    0.545   11.237   10.870  256.491 ^ _12315_/Y (INVx1_ASAP7_75t_R)
+     1    2.946   17.494   22.563  279.054 ^ output550/Y (BUFx2_ASAP7_75t_R)
+                  17.551    0.555  279.609 ^ fault[0] (out)
+                                   279.609   data arrival time
+
+                   0.000  833.000  833.000   clock vclk (rise edge)
+                          250.000 1083.000   clock network delay (ideal)
+                          -30.000 1053.000   inter-clock uncertainty
+                            0.000 1053.000   clock reconvergence pessimism
+                         -166.600  886.400   output external delay
+                                   886.400   data required time
+---------------------------------------------------------------------------------
+                                   886.400   data required time
+                                  -279.609   data arrival time
+---------------------------------------------------------------------------------
+                                   606.791   slack (MET)
+
+
+PHY_IO_TT_SCREEN_DONE_NO_GRT_NO_QUALIFICATION

@@ -1,0 +1,335 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 74 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  BUFx10_ASAP7_75t_L
+  BUFx12_ASAP7_75t_L
+  BUFx12f_ASAP7_75t_L
+  BUFx16f_ASAP7_75t_L
+  BUFx24_ASAP7_75t_L
+  BUFx2_ASAP7_75t_L
+  BUFx3_ASAP7_75t_L
+  BUFx4_ASAP7_75t_L
+  BUFx4f_ASAP7_75t_L
+  BUFx5_ASAP7_75t_L
+  BUFx6f_ASAP7_75t_L
+  BUFx8_ASAP7_75t_L
+  CKINVDCx10_ASAP7_75t_L
+  CKINVDCx11_ASAP7_75t_L
+  CKINVDCx12_ASAP7_75t_L
+  CKINVDCx14_ASAP7_75t_L
+  CKINVDCx16_ASAP7_75t_L
+  CKINVDCx20_ASAP7_75t_L
+  CKINVDCx5p33_ASAP7_75t_L
+  CKINVDCx6p67_ASAP7_75t_L
+  CKINVDCx8_ASAP7_75t_L
+  CKINVDCx9p33_ASAP7_75t_L
+  HB1xp67_ASAP7_75t_L
+  HB2xp67_ASAP7_75t_L
+  HB3xp67_ASAP7_75t_L
+  HB4xp67_ASAP7_75t_L
+  INVx11_ASAP7_75t_L
+  INVx13_ASAP7_75t_L
+  INVx1_ASAP7_75t_L
+  INVx2_ASAP7_75t_L
+  INVx3_ASAP7_75t_L
+  INVx4_ASAP7_75t_L
+  INVx5_ASAP7_75t_L
+  INVx6_ASAP7_75t_L
+  INVx8_ASAP7_75t_L
+  INVxp33_ASAP7_75t_L
+  INVxp67_ASAP7_75t_L
+  BUFx10_ASAP7_75t_L
+  BUFx12_ASAP7_75t_L
+  BUFx12f_ASAP7_75t_L
+  BUFx16f_ASAP7_75t_L
+  BUFx24_ASAP7_75t_L
+  BUFx2_ASAP7_75t_L
+  BUFx3_ASAP7_75t_L
+  BUFx4_ASAP7_75t_L
+  BUFx4f_ASAP7_75t_L
+  BUFx5_ASAP7_75t_L
+  BUFx6f_ASAP7_75t_L
+  BUFx8_ASAP7_75t_L
+  CKINVDCx10_ASAP7_75t_L
+  CKINVDCx11_ASAP7_75t_L
+  CKINVDCx12_ASAP7_75t_L
+  CKINVDCx14_ASAP7_75t_L
+  CKINVDCx16_ASAP7_75t_L
+  CKINVDCx20_ASAP7_75t_L
+  CKINVDCx5p33_ASAP7_75t_L
+  CKINVDCx6p67_ASAP7_75t_L
+  CKINVDCx8_ASAP7_75t_L
+  CKINVDCx9p33_ASAP7_75t_L
+  HB1xp67_ASAP7_75t_L
+  HB2xp67_ASAP7_75t_L
+  HB3xp67_ASAP7_75t_L
+  HB4xp67_ASAP7_75t_L
+  INVx11_ASAP7_75t_L
+  INVx13_ASAP7_75t_L
+  INVx1_ASAP7_75t_L
+  INVx2_ASAP7_75t_L
+  INVx3_ASAP7_75t_L
+  INVx4_ASAP7_75t_L
+  INVx5_ASAP7_75t_L
+  INVx6_ASAP7_75t_L
+  INVx8_ASAP7_75t_L
+  INVxp33_ASAP7_75t_L
+  INVxp67_ASAP7_75t_L
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_L_1x_220121a already seen in asap7sc7p5t_28_R_1x_220121a
+[INFO ODB-0227] LEF file: /work/model_lvt/asap7sc7p5t_28_L_1x_220121a.lef, created 212 library cells
+Found 450 unannotated drivers.
+Found 0 partially unannotated drivers.
+Found 450 unannotated drivers.
+Found 0 partially unannotated drivers.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469322, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469323, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469326, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469335, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469336, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469337, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469339, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469343, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469344, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469345, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469346, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469347, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469348, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469349, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469350, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469351, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469352, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469353, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469354, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469355, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 477515, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 496877, net net83 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506276, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506320, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507279, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507280, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508169, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508195, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508198, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508200, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508201, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508203, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509080, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509081, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509082, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509083, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509084, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509085, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509944, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509946, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509977, net net36 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516662, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516689, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516690, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516704, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516708, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 517624, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518710, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518712, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518713, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518716, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518717, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518718, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519780, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519782, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519785, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529012, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529013, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 538643, net net21 not found.
+OT_CLK_RC_RESTORE corner tc dataset tc clock_spef /work/eco2_grt/original_clock_only.spef
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469322, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469323, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469326, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469335, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469336, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469337, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469339, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469343, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469344, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469345, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469346, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469347, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469348, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469349, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469350, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469351, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469352, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469353, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469354, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 469355, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 477515, net net78 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 496877, net net83 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506276, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 506320, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507279, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 507280, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508169, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508195, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508198, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508200, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508201, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 508203, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509080, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509081, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509082, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509083, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509084, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509085, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509944, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509946, net net35 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 509977, net net36 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516662, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516689, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516690, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516704, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 516708, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 517624, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518710, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518712, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518713, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518716, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518717, net net75 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 518718, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519780, net net76 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519782, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 519785, net net79 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529012, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 529013, net net26 not found.
+[WARNING STA-1650] /work/eco2_grt/original_clock_only.spef line 538643, net net21 not found.
+OT_CLK_RC_RESTORE corner bc dataset bc clock_spef /work/eco2_grt/original_clock_only.spef
+CDC_TRUE_SHORT_ONEBUF TT BEFORE_NO_INSERTION
+Startpoint: u_done.iw[1]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_done.ib[1][50]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: max
+Corner: tc
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock source latency
+     1    2.374    0.000    0.000    0.000 ^ ck[0] (in)
+     2   12.948   14.276   20.690   20.690 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     2   21.462   12.333   30.058   50.748 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     1    2.473    8.886   48.132   98.881 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+     2    9.566   11.928   23.114  121.995 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     2    9.156   11.328   30.169  152.163 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     4   15.549   16.024   33.007  185.170 ^ clkbuf_2_3_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     2    6.658   11.163   33.761  218.931 ^ clkbuf_4_13_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     7   22.813   20.545   28.777  247.709 ^ clkbuf_5_27__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+    25   14.960   15.617   32.604  280.312 ^ clkbuf_leaf_37_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+                  16.329    1.700  282.012 ^ u_done.iw[1]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+     4    4.773   53.064   79.732  361.744 v u_done.iw[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+    30   32.238  162.582   74.322  436.066 ^ _62218_/Y (INVx2_ASAP7_75t_R)
+    16   20.916  118.366   91.591  527.658 v _77286_/Y (NOR2x2_ASAP7_75t_R)
+    48   65.088   94.806   65.534  593.191 v place3295/Y (BUFx6f_ASAP7_75t_R)
+     1    0.729   26.972   34.460  627.652 ^ _77314_/Y (AOI21x1_ASAP7_75t_R)
+                  26.973    0.065  627.717 ^ u_done.ib[1][50]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                   627.717   data arrival time
+
+                          833.000  833.000   clock clk (rise edge)
+                            0.000  833.000   clock source latency
+     1    1.788    0.000    0.000  833.000 ^ ck[0] (in)
+     2   11.776   13.537   20.487  853.487 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     2   20.351   12.307   29.157  882.644 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     1    1.887    8.294   45.760  928.404 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+     2    8.393   11.384   22.709  951.113 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     2    7.983   11.057   28.916  980.029 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     4   14.305   15.252   31.552 1011.582 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     2    5.588   10.545   31.250 1042.831 ^ clkbuf_4_11_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     7   16.206   16.266   26.708 1069.540 ^ clkbuf_5_23__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+    23   11.578   13.570   32.746 1102.286 ^ clkbuf_leaf_39_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+                  15.696    2.577 1104.863 ^ u_done.ib[1][50]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                          -60.000 1044.863   clock uncertainty
+                            5.134 1049.997   clock reconvergence pessimism
+                          -12.443 1037.553   library setup time
+                                  1037.553   data required time
+---------------------------------------------------------------------------------
+                                  1037.553   data required time
+                                  -627.717   data arrival time
+---------------------------------------------------------------------------------
+                                   409.836   slack (MET)
+
+
+CDC_TRUE_SHORT_ONEBUF FF BEFORE_NO_INSERTION
+Startpoint: u_done.id_q[50]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by clk)
+Endpoint: u_done.ib[1][50]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by clk)
+Path Group: clk
+Path Type: min
+Corner: bc
+
+Fanout      Cap     Slew    Delay     Time   Description
+---------------------------------------------------------------------------------
+                            0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock source latency
+     1    2.031    0.000    0.000    0.000 ^ ck[0] (in)
+     2   12.261   10.511   15.773   15.773 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     2   20.911    8.928   23.114   38.887 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     1    2.139    6.559   38.414   77.300 ^ ot_pcq_tap_2/Y (BUFx12f_ASAP7_75t_R)
+     2    7.883    8.453   17.199   94.499 ^ clkbuf_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+     2    9.591    9.315   23.324  117.823 ^ clkbuf_1_1_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+     4   15.113   11.991   23.286  141.109 ^ clkbuf_2_3_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+     2    5.580    8.233   25.830  166.939 ^ clkbuf_4_12_0_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+     4   10.816   10.226   19.827  186.766 ^ clkbuf_5_24__f_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+    14   13.038   11.200   21.309  208.074 ^ clkbuf_leaf_107_ot_pcq_tap_2_ck/Y (BUFx24_ASAP7_75t_R)
+                  12.422    1.834  209.908 ^ u_done.id_q[50]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+     4    4.039   33.791   47.978  257.887 ^ u_done.id_q[50]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+     1    0.718    5.661   12.058  269.945 v _77314_/Y (AOI21x1_ASAP7_75t_R)
+                   5.668    0.064  270.009 v u_done.ib[1][50]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+                                   270.009   data arrival time
+
+                            0.000    0.000   clock clk (rise edge)
+                            0.000    0.000   clock source latency
+     1    2.632    0.000    0.000    0.000 ^ ck[0] (in)
+     2   13.463   11.064   15.919   15.919 ^ clkbuf_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     2   21.980    8.956   23.910   39.829 ^ clkbuf_1_0_0_ck[0]/Y (BUFx24_ASAP7_75t_R)
+     1    2.731    7.069   41.535   81.364 ^ ot_pcq_tap_1/Y (BUFx12f_ASAP7_75t_R)
+     2   10.081    8.986   17.580   98.943 ^ clkbuf_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     2    9.671    8.617   24.341  123.284 ^ clkbuf_1_1_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     4   17.681   13.358   27.113  150.397 ^ clkbuf_2_2_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     2    7.276    8.820   27.024  177.422 ^ clkbuf_4_11_0_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+     7   22.113   15.294   22.023  199.445 ^ clkbuf_5_23__f_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+    23   15.494   12.379   29.251  228.696 ^ clkbuf_leaf_39_ot_pcq_tap_1_ck/Y (BUFx24_ASAP7_75t_R)
+                  16.029    3.317  232.013 ^ u_done.ib[1][50]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+                           25.000  257.013   clock uncertainty
+                           -0.942  256.071   clock reconvergence pessimism
+                           12.616  268.686   library hold time
+                                   268.686   data required time
+---------------------------------------------------------------------------------
+                                   268.686   data required time
+                                  -270.009   data arrival time
+---------------------------------------------------------------------------------
+                                     1.323   slack (MET)
+
+
+CDC_TRUE_SHORT_PRICE_DONE_NO_DB_SAVE_NO_PHYSICAL_ECO

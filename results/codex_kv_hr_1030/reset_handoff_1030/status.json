@@ -1,0 +1,43 @@
+{
+  "parked_on_explicit_reset": true,
+  "new_jobs_after_reset": 0,
+  "live_owned_containers": 0,
+  "latest_prior_ready": "ab873a971",
+  "new_evidence_only_not_adoption": true,
+  "PHY": {
+    "same_one_CTS": true,
+    "native_old_cells_guarded": 9752,
+    "output_HB4": 488,
+    "clock_nets_unchanged": 108,
+    "clock_inst_signatures_unchanged": 2249,
+    "physical_PG_terms_open": [
+      20480,
+      0
+    ],
+    "graph_279chains": "PASS",
+    "TT_placement_screen_ps": 155.659042,
+    "FF_placement_screen_ps": -8.295864,
+    "FF_negative_endpoints": 5,
+    "GRT": "NOT RUN",
+    "known_plan_error": "Original planner omitted TAP obstacles from geom.tsv. One overlapping existing pad corrected in native output_hold1_fixed; stale original TSV/plan must not be replayed withoutTAPinventoryfix."
+  },
+  "CDC": {
+    "actual_valid_candidate": "intel2 cdc319_eco1/eco3b/3_place.odb",
+    "actual_4cell_guard": "PASS",
+    "fresh_GRT": "NOT RUN pendingROOTLOOK",
+    "old_scene_3LVT_model_TT_ps": 7.906898,
+    "old_scene_3LVT_model_FF_ps": 1.322997,
+    "genuine_short_branch": "id_q50\u2192ib1[50]/D",
+    "failed_prep3_checkpoint_preserved": "eco3/3_place.odb; correctednativeprep4 useseco3b"
+  },
+  "RX": {
+    "candidate": "intel1 rx259_eco1/eco8_grt",
+    "GRT_overflow": 0,
+    "TT_ps": 0.65592,
+    "FF_ps": 10.492579,
+    "DRV": 0,
+    "DRT": "NOT RUN",
+    "SIGNED": false,
+    "coupling_and_parent_pins": "HELD"
+  }
+}

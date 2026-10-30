@@ -1,0 +1,17 @@
+{
+  "status": "PASS_ACTUAL_CELL_PIN_GRAPH",
+  "old_cells": 8489,
+  "new_cells": 8977,
+  "new_positive_HB4": 488,
+  "unique_outputs": 279,
+  "chain_histogram": {
+    "2": 209,
+    "1": 70
+  },
+  "oldmasters_exact": true,
+  "all_old_pin_connectivity_after_positive_HB4_collapse_exact": true,
+  "newFFs": 0,
+  "added_cycles": 0,
+  "normal_primitive_budget": "Each output retains oldINV+BUF2 and adds1or2HB4; total3or4pureprimitives, maxHB4=2",
+  "scope": "Nativeported ECO; actualLiberty HB4Y=A primitive from existingRTL fourstate+mutantcoupon. Electrical/RC gates separate."
+}

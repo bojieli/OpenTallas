@@ -1,0 +1,114 @@
+{
+  "status": "READONLY_PRICE_NOT_ADOPTED",
+  "allowlist": {
+    "wire4506": "BUFx16f",
+    "place3260": "BUFx10",
+    "place3259": "BUFx10"
+  },
+  "selected_cells": 3,
+  "current_cells_including_clock_TAP": 62599,
+  "fraction_percent": 0.004792408824422115,
+  "global_LVT_resizer_exposure": false,
+  "cell_characterization": [
+    {
+      "cell": "BUFx16f",
+      "full_LEF_except_intended_VT_master_and_implant_layer_names_identical": true,
+      "corners": {
+        "TT": {
+          "RVT": {
+            "area": 0.32076,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 1023.18,
+            "A_capacitance_fF": 2.34187,
+            "A_rise_capacitance_fF": 2.34154,
+            "A_fall_capacitance_fF": 2.34187,
+            "Y_function": "\"A\""
+          },
+          "LVT": {
+            "area": 0.32076,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 10062.2,
+            "A_capacitance_fF": 2.43801,
+            "A_rise_capacitance_fF": 2.43801,
+            "A_fall_capacitance_fF": 2.43637,
+            "Y_function": "\"A\""
+          }
+        },
+        "FF": {
+          "RVT": {
+            "area": 0.32076,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 652.325,
+            "A_capacitance_fF": 2.5975,
+            "A_rise_capacitance_fF": 2.59713,
+            "A_fall_capacitance_fF": 2.5975,
+            "Y_function": "\"A\""
+          },
+          "LVT": {
+            "area": 0.32076,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 5489.31,
+            "A_capacitance_fF": 2.71322,
+            "A_rise_capacitance_fF": 2.7107,
+            "A_fall_capacitance_fF": 2.71322,
+            "Y_function": "\"A\""
+          }
+        }
+      },
+      "units": {
+        "capacitive_load_unit": "1,ff)",
+        "leakage_power_unit": "\"1pW\""
+      }
+    },
+    {
+      "cell": "BUFx10",
+      "full_LEF_except_intended_VT_master_and_implant_layer_names_identical": true,
+      "corners": {
+        "TT": {
+          "RVT": {
+            "area": 0.20412,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 613.909,
+            "A_capacitance_fF": 1.20694,
+            "A_rise_capacitance_fF": 1.20694,
+            "A_fall_capacitance_fF": 1.20673,
+            "Y_function": "\"A\""
+          },
+          "LVT": {
+            "area": 0.20412,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 6037.31,
+            "A_capacitance_fF": 1.2552,
+            "A_rise_capacitance_fF": 1.25324,
+            "A_fall_capacitance_fF": 1.2552,
+            "Y_function": "\"A\""
+          }
+        },
+        "FF": {
+          "RVT": {
+            "area": 0.20412,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 391.395,
+            "A_capacitance_fF": 1.3354,
+            "A_rise_capacitance_fF": 1.33381,
+            "A_fall_capacitance_fF": 1.3354,
+            "Y_function": "\"A\""
+          },
+          "LVT": {
+            "area": 0.20412,
+            "cell_leakage_power": null,
+            "unconditional_VDD_leak_pW": 3293.59,
+            "A_capacitance_fF": 1.39539,
+            "A_rise_capacitance_fF": 1.39296,
+            "A_fall_capacitance_fF": 1.39539,
+            "Y_function": "\"A\""
+          }
+        }
+      },
+      "units": {
+        "capacitive_load_unit": "1,ff)",
+        "leakage_power_unit": "\"1pW\""
+      }
+    }
+  ]
+}

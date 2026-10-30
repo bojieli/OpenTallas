@@ -1,0 +1,109 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+[WARNING ORD-2056] The following 74 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  BUFx10_ASAP7_75t_L
+  BUFx12_ASAP7_75t_L
+  BUFx12f_ASAP7_75t_L
+  BUFx16f_ASAP7_75t_L
+  BUFx24_ASAP7_75t_L
+  BUFx2_ASAP7_75t_L
+  BUFx3_ASAP7_75t_L
+  BUFx4_ASAP7_75t_L
+  BUFx4f_ASAP7_75t_L
+  BUFx5_ASAP7_75t_L
+  BUFx6f_ASAP7_75t_L
+  BUFx8_ASAP7_75t_L
+  CKINVDCx10_ASAP7_75t_L
+  CKINVDCx11_ASAP7_75t_L
+  CKINVDCx12_ASAP7_75t_L
+  CKINVDCx14_ASAP7_75t_L
+  CKINVDCx16_ASAP7_75t_L
+  CKINVDCx20_ASAP7_75t_L
+  CKINVDCx5p33_ASAP7_75t_L
+  CKINVDCx6p67_ASAP7_75t_L
+  CKINVDCx8_ASAP7_75t_L
+  CKINVDCx9p33_ASAP7_75t_L
+  HB1xp67_ASAP7_75t_L
+  HB2xp67_ASAP7_75t_L
+  HB3xp67_ASAP7_75t_L
+  HB4xp67_ASAP7_75t_L
+  INVx11_ASAP7_75t_L
+  INVx13_ASAP7_75t_L
+  INVx1_ASAP7_75t_L
+  INVx2_ASAP7_75t_L
+  INVx3_ASAP7_75t_L
+  INVx4_ASAP7_75t_L
+  INVx5_ASAP7_75t_L
+  INVx6_ASAP7_75t_L
+  INVx8_ASAP7_75t_L
+  INVxp33_ASAP7_75t_L
+  INVxp67_ASAP7_75t_L
+  BUFx10_ASAP7_75t_L
+  BUFx12_ASAP7_75t_L
+  BUFx12f_ASAP7_75t_L
+  BUFx16f_ASAP7_75t_L
+  BUFx24_ASAP7_75t_L
+  BUFx2_ASAP7_75t_L
+  BUFx3_ASAP7_75t_L
+  BUFx4_ASAP7_75t_L
+  BUFx4f_ASAP7_75t_L
+  BUFx5_ASAP7_75t_L
+  BUFx6f_ASAP7_75t_L
+  BUFx8_ASAP7_75t_L
+  CKINVDCx10_ASAP7_75t_L
+  CKINVDCx11_ASAP7_75t_L
+  CKINVDCx12_ASAP7_75t_L
+  CKINVDCx14_ASAP7_75t_L
+  CKINVDCx16_ASAP7_75t_L
+  CKINVDCx20_ASAP7_75t_L
+  CKINVDCx5p33_ASAP7_75t_L
+  CKINVDCx6p67_ASAP7_75t_L
+  CKINVDCx8_ASAP7_75t_L
+  CKINVDCx9p33_ASAP7_75t_L
+  HB1xp67_ASAP7_75t_L
+  HB2xp67_ASAP7_75t_L
+  HB3xp67_ASAP7_75t_L
+  HB4xp67_ASAP7_75t_L
+  INVx11_ASAP7_75t_L
+  INVx13_ASAP7_75t_L
+  INVx1_ASAP7_75t_L
+  INVx2_ASAP7_75t_L
+  INVx3_ASAP7_75t_L
+  INVx4_ASAP7_75t_L
+  INVx5_ASAP7_75t_L
+  INVx6_ASAP7_75t_L
+  INVx8_ASAP7_75t_L
+  INVxp33_ASAP7_75t_L
+  INVxp67_ASAP7_75t_L
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_L_1x_220121a already seen in asap7sc7p5t_28_R_1x_220121a
+[INFO ODB-0227] LEF file: /work/model_lvt/asap7sc7p5t_28_L_1x_220121a.lef, created 212 library cells
+OT_CLK_DUMP pre /work/eco3b/clk_freeze_pre.tsv nets 731 insts 12210 1.6 s
+OT_CLK_FREEZE ON clock nets 731 (with wire 731, re-encoded FIXED 0) instances 12210 (placement -> LOCKED: 0 were movable) dont_touch nets + 730 clock-tree cells
+CDC_ONEBUF_NATIVE_NAME cdc_ib50_hold11140
+OT_PG_CONNECT cdc_eco3 rules=2 protected_rebound=0
+OT_PG_BOUND cdc_eco3 pg_terms=125200 open=0
+OT_CLK_FREEZE post_cdc_eco3b OK: all 731 clock nets carry their pre-ECO FIXED wire (restored 0 destroyed by GRT updateDirtyNets: )
+CDC_ECO3_ACTUAL_FOURCELL_GUARD_PASS oldhomes_allfixed changedmasterswire4506 place3259 place3260 newBUF1 site28.566_157.14
+CDC_ECO3_PREP_DONE_NO_GRT_NO_DRT_NO_STALE_TIMING_QUALIFICATION

@@ -1,0 +1,75 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_CLK_DUMP pre /work/output_hold1/clk_freeze_pre.tsv nets 108 insts 2249 0.0 s
+OT_CLK_FREEZE ON clock nets 108 (with wire 0, re-encoded FIXED 0) instances 2249 (placement -> LOCKED: 2248 were movable) dont_touch nets + 107 clock-tree cells
+[INFO DPL-0006] Core area: 8211.46 um^2
+[INFO DPL-0007] Movable instances area: 49.81 um^2
+[INFO DPL-0008] Fixed instances area within core: 5281.96 um^2
+[INFO DPL-0009] Utilization: 64.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 37 sites horizontally, +/- 7 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-37 sites, +/-7 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 10239 cells
+[INFO DPL-0393]   height 259 row(s): 1 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        155 |        21 |       132
+        1 |        145 |        15 |        89
+        2 |        130 |        16 |       103
+        3 |        137 |        17 |       100
+        4 |        121 |        17 |       102
+        5 |         98 |        17 |        79
+        6 |        112 |        17 |        93
+        7 |        109 |        18 |        89
+        8 |        103 |        17 |        84
+        9 |         95 |        17 |        76
+       10 |        100 |        17 |        81
+       20 |         63 |        13 |        48
+       30 |         14 |         3 |         9
+       40 |         13 |         3 |         8
+       50 |          5 |         1 |         2
+       51 |          5 |         1 |         2
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 5 for 3 consecutive iterations.
+Using old diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          5 |         1 |         2
+      403 |          5 |         1 |         2
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 5 for 3 consecutive iterations. Using diamond search for 1 remaining illegal cells.
+diamond recovery: recovered 0/1 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 1
+[INFO DPL-0500] Runtime: 0.60s
+Placement Analysis
+---------------------------------
+total displacement         95.0 u
+average displacement        0.0 u
+max displacement            7.7 u
+original HPWL           54646.4 u
+legalized HPWL          54752.6 u
+delta HPWL                    0 %
+
+OT_PG_CONNECT phy_output_hold1 rules=2 protected_rebound=107
+OT_PG_BOUND phy_output_hold1 pg_terms=20480 open=0
+[WARNING DPL-0005] Overlap check failed (1).
+ phy_outhp_6_0__1260 (HB4xp67_ASAP7_75t_R) overlaps PHY_EDGE_ROW_163_1_Left_482 (TAPCELL_ASAP7_75t_R)
+[WARNING DPL-0011] Padding check failed (1).
+ phy_outhp_6_0__1260
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: apply_output_hold_run.tcl, 8 DPL-0033
