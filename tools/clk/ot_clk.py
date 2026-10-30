@@ -308,6 +308,8 @@ def kit_argv(cfg, out, stage_cal_path=None, workers=None, plan=None, region_map=
         a += ["--rep-actual-max", _fmt(top["rep_actual_max"])]
     if top.get("body_sites"):                   # CLK-TOOL-7: clock sites keep the native cell body legal
         a.append("--clock-body-sites")
+    if top.get("type_keepouts"):                # opt-in: clock sites avoid type clock.keepouts_um (bare PHY bodies)
+        a.append("--clock-type-keepouts")
     if top.get("chain_hop_max") is not None:    # CLK-TOOL-7: DME chain candidates with a hop > UM are rejected
         a += ["--chain-hop-max", _fmt(top["chain_hop_max"])]
     det = top.get("detour", "astar")
