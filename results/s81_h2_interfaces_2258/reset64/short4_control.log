@@ -1,0 +1,7 @@
+RESET_BAD dut0.u_kn.u_w.g_chunk[64].u_local rq=0
+RESET_BAD dut0.u_kn.u_w.g_chunk[65].u_local rq=0
+RESET_BAD dut0.u_kn.u_w.g_chunk[66].u_local rq=0
+LN_RESET_SHORT hold=4 checks=560 errors=560
+[4166] %Fatal: tb_ln_h2_rst.sv:2257: Assertion failed in ln_h2_rst: RESET_CHECK_FAIL
+%Error: /srv/opentallas-scratch2/claude/codex-s81kvleaf-2258/ln_reset_v2/tb_ln_h2_rst.sv:2257: Verilog $stop
+Aborting...
