@@ -3,11 +3,17 @@ from pathlib import Path
 r=Path(__file__).resolve().parent;sys.path.insert(0,str(r/'src/tools/die_plan'))
 import schema as S,reset_tree as RT,count_align_bind as CAB,taps
 # PROPOSAL ONLY: solve tree geometry, never claim density-budget qualification.
-RT._S_TAP_GRID=lambda P,tn: taps.explicit_tap_sites(P,tn) if P.types[tn].get('clock',{}).get('tap_mode')=='explicit' else S.tap_grid(P,tn)
+_original_grid=RT._S_TAP_GRID
+RT._S_TAP_GRID=lambda P,tn: taps.explicit_tap_sites(P,tn) if P.types[tn].get('clock',{}).get('tap_mode')=='explicit' else _original_grid(P,tn)
 raw=json.load(open(r/'plan_of_record/plan_c_sd_coherent_safe.json'));old=copy.deepcopy(raw)
 sc=json.load(open(r/'bindbase/kv40/eW_sidecar_sd_coherent_safe.json'))
 trial=json.load(open('/srv/opentallas-scratch2/claude/die-kv-43-1030/sd43/kitplan_sd44.json'))
 selected=('kv3_sys_SD','kv3_sys_SD_v1')
+for tn,width in zip(selected,(522,521)):
+ for c in raw['partition_types'][tn]['contents']:
+  if c['inst']=='serdes':
+   prefix='physical/die_plan/qwen_kvsys/sd_phy/ot_qfd_serdes_112g_x6_phy_w'+str(width)
+   c['lef']=prefix+'.lef';c['lib']=prefix+'_tt.lib'
 for d in trial['die']['pg']['domains']:
  if 'serdes' in d['name']:
   d=copy.deepcopy(d)
