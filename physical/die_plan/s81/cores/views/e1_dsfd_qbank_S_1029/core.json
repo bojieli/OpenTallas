@@ -1,0 +1,14 @@
+{
+ "module": "dsfd_qbank_S",
+ "plan_type": "col_h10_r0_p4__t1",
+ "boundary_role": {
+  "ck": "clk",
+  "rs": "reset"
+ },
+ "clock_contract": {
+  "kind": "hard_core_latency",
+  "ruling": "COORD 10-24",
+  "target_applies_at": "parent partition tap (tap_balance / early core tap subtracts the core insertion)",
+  "measured_in": "KIT/signoff/signoff.json core_latency; views <module>.core.json"
+ }
+}

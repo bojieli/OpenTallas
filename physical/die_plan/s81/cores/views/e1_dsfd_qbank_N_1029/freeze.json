@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.s81.core_freeze.v1",
+ "kit": "dsfd_qbank_N_e1",
+ "module": "dsfd_qbank_N",
+ "plan_type": "col_h10_r0_p4__t1",
+ "outline_um": [
+  60.48,
+  8.64
+ ],
+ "ref_tile": "physical/ref_tile/s81fill2_qbank_n",
+ "spec": "physical/ref_tile/s81fill2_qbank_n/spec.json",
+ "spec_sha256": "6bb2b486691a7be66997c8e212174aca52381a8f12e37cec9f646f5a63b317c1",
+ "pins_file": "inputs/core_pins/dsfd_qbank_N.json",
+ "pins_sha256": "210be1449086ca655c1a0908c3170e33b0de96480997265b826fedc7d7175978",
+ "pins": 258,
+ "plan_lef": "physical/die_plan/s81/cores/legacy/lef/dsfd_qbank_N.lef",
+ "pins_canon_sha256": "1a688e22331f1a2f61f060cd13679d0227fe416023f4214035331c91c239f8d5",
+ "pins_placed_canon_sha256": "1a688e22331f1a2f61f060cd13679d0227fe416023f4214035331c91c239f8d5",
+ "clocks": [
+  "ck"
+ ],
+ "resets": [
+  "rs"
+ ],
+ "recipe_sha256": "4a5b0bd3613906d57809c7a32acac7e747bd9c5c15f5dcb036dffdd94f266d82",
+ "period_ps": 833.0,
+ "insertion_ps": 250.0,
+ "insertion_tol_ps": 40.0,
+ "unc_setup_ps": 60.0,
+ "unc_hold_ps": 25.0,
+ "flow": "modern (core_flow: RCX RC, per-corner vclk, FF-only GRT hold)",
+ "insertion_ff_ps": 202.5,
+ "insertion_basis": {
+  "tt": "plan clock.insertion_ps",
+  "ff": "FF_TT_INSERTION_RATIO 0.81 x TT"
+ },
+ "rc": "setRC_rcx_asap7.tcl",
+ "gates": [
+  "rtl_lint (pre-synth)",
+  "sdc_lint (pre-synth)",
+  "face_guard (post-synth)",
+  "LEC EQUIVALENT (post-synth)",
+  "reg_fanout (post-synth)",
+  "TT/FF insertion (GRT, before route)",
+  "pin_audit",
+  "signoff.py tt,ff"
+ ],
+ "repo_rev": "976208271a0",
+ "sdc_lint_sha256": "981179f10a7c3da6a7d4e956d03bc036f50ddf2b7df7db1f828f7dbcf86a91e8",
+ "face_guard_sha256": "901640ef6615b07fa16e811b394d5cf766f828e02389d7a64d71598ded81d975",
+ "signoff_sha256": "7536800964927f397b327f86f56c57eb567b23ad5751dd766b33fb406e9dbd51",
+ "macros": {},
+ "rtl_patches": [],
+ "kit_hash": "39299e3a16eabbb8",
+ "reset_contract": {
+  "edges": 64,
+  "module": "dsfd_qbank_N",
+  "contract_sha256": "c46fd87332e1a6ab24498887b1c9a7cd61ee8dc74844c492c2aa1aba4d0769ca",
+  "receipt_sha256": "21cf163fd79a21451941491cd1fce2ff54403890a3b1374d4873927890428ae8"
+ }
+}
