@@ -1,0 +1,5 @@
+# Selector affinity estimate review 2026-10-30 03:55 PDT
+
+Picture: results/hbm_selector_localctrl_1030/quarter_affinity_estimate.png, rendered and personally viewed. Diagnostic PLACE-ONLY PASS-COND. Retained B macro placements keep heavy SRAM edges facing the central logic channel,69.12um row pitch gives28.056um row channels, and existing clock/reset islands and PDN/pin contract remain. Four quarter-affinity boxes assign local controls/buffers/histograms to their own three SRAMs. Initial mapped294742cells plus120FF stays below400k; original GPL inflated to451736stdcells through timing-driven long-wire buffering (two passes net+91918/+55284), hence parallel standardGPL and timing-driven-off placement-only variants, constraints833ps/60/25 unchanged.
+
+Full geometric approval remains HELD: quarter rectangles have516.564um Manhattan diameter and do not themselves prove405um; actual FF and macro-terminal reach must be measured. W input→east SRAM/control reach is a known parent-plan issue, so no CTS/route or signed claim is permitted from this diagnostic. Halo/PDN/clock continuity inherited, placement will verify actual cell occupation.

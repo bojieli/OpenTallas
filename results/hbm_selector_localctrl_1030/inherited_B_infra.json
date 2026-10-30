@@ -1,0 +1,765 @@
+{
+  "module": "ot_hbm_idx_selector_static_sel",
+  "outline_um": [
+    600.048,
+    450.36
+  ],
+  "cells": [
+    {
+      "name": "mp_isl0_ck0",
+      "master": "BUFx24_ASAP7_75t_R",
+      "xy_um": [
+        298.08,
+        225.17999999999998
+      ],
+      "rect_um": [
+        293.76,
+        220.32,
+        302.4,
+        228.96
+      ]
+    },
+    {
+      "name": "mp_isl0_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        298.08,
+        224.1
+      ],
+      "rect_um": [
+        293.76,
+        220.32,
+        302.4,
+        228.96
+      ]
+    },
+    {
+      "name": "mp_isl1_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        56.16,
+        112.86
+      ],
+      "rect_um": [
+        51.84,
+        108.0,
+        60.48,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl1_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        56.16,
+        111.77999999999999
+      ],
+      "rect_um": [
+        51.84,
+        108.0,
+        60.48,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl2_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        56.16,
+        337.5
+      ],
+      "rect_um": [
+        51.84,
+        332.64,
+        60.48,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl2_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        56.16,
+        336.41999999999996
+      ],
+      "rect_um": [
+        51.84,
+        332.64,
+        60.48,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl3_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        250.56,
+        112.86
+      ],
+      "rect_um": [
+        246.24,
+        108.0,
+        254.88,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl3_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        250.56,
+        111.77999999999999
+      ],
+      "rect_um": [
+        246.24,
+        108.0,
+        254.88,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl4_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        250.56,
+        337.5
+      ],
+      "rect_um": [
+        246.24,
+        332.64,
+        254.88,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl4_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        250.56,
+        336.41999999999996
+      ],
+      "rect_um": [
+        246.24,
+        332.64,
+        254.88,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl5_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        349.92,
+        112.86
+      ],
+      "rect_um": [
+        345.6,
+        108.0,
+        354.24,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl5_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        349.92,
+        111.77999999999999
+      ],
+      "rect_um": [
+        345.6,
+        108.0,
+        354.24,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl6_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        349.92,
+        337.5
+      ],
+      "rect_um": [
+        345.6,
+        332.64,
+        354.24,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl6_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        349.92,
+        336.41999999999996
+      ],
+      "rect_um": [
+        345.6,
+        332.64,
+        354.24,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl7_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        544.32,
+        112.86
+      ],
+      "rect_um": [
+        540.0,
+        108.0,
+        548.64,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl7_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        544.32,
+        111.77999999999999
+      ],
+      "rect_um": [
+        540.0,
+        108.0,
+        548.64,
+        116.64
+      ]
+    },
+    {
+      "name": "mp_isl8_ck0",
+      "master": "BUFx12f_ASAP7_75t_R",
+      "xy_um": [
+        544.32,
+        337.5
+      ],
+      "rect_um": [
+        540.0,
+        332.64,
+        548.64,
+        341.28
+      ]
+    },
+    {
+      "name": "mp_isl8_rst0",
+      "master": "BUFx4_ASAP7_75t_R",
+      "xy_um": [
+        544.32,
+        336.41999999999996
+      ],
+      "rect_um": [
+        540.0,
+        332.64,
+        548.64,
+        341.28
+      ]
+    }
+  ],
+  "ports": [
+    {
+      "name": "mp_isl0_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        295.92,
+        226.8
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl0_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        300.24,
+        226.8
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl0_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        295.92,
+        222.48
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl0_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        300.24,
+        222.48
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl1_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        54.0,
+        114.48
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl1_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        58.32,
+        114.48
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl1_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        54.0,
+        110.16
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl1_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        58.32,
+        110.16
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl2_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        54.0,
+        339.12
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl2_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        58.32,
+        339.12
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl2_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        54.0,
+        334.8
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl2_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        58.32,
+        334.8
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl3_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        248.4,
+        114.48
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl3_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        252.72,
+        114.48
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl3_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        248.4,
+        110.16
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl3_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        252.72,
+        110.16
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl4_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        248.4,
+        339.12
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl4_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        252.72,
+        339.12
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl4_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        248.4,
+        334.8
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl4_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        252.72,
+        334.8
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl5_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        347.76,
+        114.48
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl5_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        352.08,
+        114.48
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl5_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        347.76,
+        110.16
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl5_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        352.08,
+        110.16
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl6_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        347.76,
+        339.12
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl6_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        352.08,
+        339.12
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl6_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        347.76,
+        334.8
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl6_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        352.08,
+        334.8
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl7_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        542.16,
+        114.48
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl7_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        546.48,
+        114.48
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl7_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        542.16,
+        110.16
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl7_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        546.48,
+        110.16
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl8_ck_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        542.16,
+        339.12
+      ],
+      "connect": "die M9 clock stack (M9->M5 at the island centre)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl8_ck_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        546.48,
+        339.12
+      ],
+      "connect": "die mesh/tree feed-through net; independent core clock pin",
+      "direction": "OUTPUT"
+    },
+    {
+      "name": "mp_isl8_rst_i",
+      "dir": "in",
+      "layer": "M5",
+      "xy_um": [
+        542.16,
+        334.8
+      ],
+      "connect": "die regional reset stack (M9->M5)",
+      "direction": "INPUT"
+    },
+    {
+      "name": "mp_isl8_rst_o",
+      "dir": "out",
+      "layer": "M5",
+      "xy_um": [
+        546.48,
+        334.8
+      ],
+      "connect": "die reset feed-through net; independent core reset pin",
+      "direction": "OUTPUT"
+    }
+  ],
+  "arcs": [
+    {
+      "cell": "mp_isl0_ck0",
+      "source": "mp_isl0_ck_i",
+      "sink": "mp_isl0_ck_o"
+    },
+    {
+      "cell": "mp_isl0_rst0",
+      "source": "mp_isl0_rst_i",
+      "sink": "mp_isl0_rst_o"
+    },
+    {
+      "cell": "mp_isl1_ck0",
+      "source": "mp_isl1_ck_i",
+      "sink": "mp_isl1_ck_o"
+    },
+    {
+      "cell": "mp_isl1_rst0",
+      "source": "mp_isl1_rst_i",
+      "sink": "mp_isl1_rst_o"
+    },
+    {
+      "cell": "mp_isl2_ck0",
+      "source": "mp_isl2_ck_i",
+      "sink": "mp_isl2_ck_o"
+    },
+    {
+      "cell": "mp_isl2_rst0",
+      "source": "mp_isl2_rst_i",
+      "sink": "mp_isl2_rst_o"
+    },
+    {
+      "cell": "mp_isl3_ck0",
+      "source": "mp_isl3_ck_i",
+      "sink": "mp_isl3_ck_o"
+    },
+    {
+      "cell": "mp_isl3_rst0",
+      "source": "mp_isl3_rst_i",
+      "sink": "mp_isl3_rst_o"
+    },
+    {
+      "cell": "mp_isl4_ck0",
+      "source": "mp_isl4_ck_i",
+      "sink": "mp_isl4_ck_o"
+    },
+    {
+      "cell": "mp_isl4_rst0",
+      "source": "mp_isl4_rst_i",
+      "sink": "mp_isl4_rst_o"
+    },
+    {
+      "cell": "mp_isl5_ck0",
+      "source": "mp_isl5_ck_i",
+      "sink": "mp_isl5_ck_o"
+    },
+    {
+      "cell": "mp_isl5_rst0",
+      "source": "mp_isl5_rst_i",
+      "sink": "mp_isl5_rst_o"
+    },
+    {
+      "cell": "mp_isl6_ck0",
+      "source": "mp_isl6_ck_i",
+      "sink": "mp_isl6_ck_o"
+    },
+    {
+      "cell": "mp_isl6_rst0",
+      "source": "mp_isl6_rst_i",
+      "sink": "mp_isl6_rst_o"
+    },
+    {
+      "cell": "mp_isl7_ck0",
+      "source": "mp_isl7_ck_i",
+      "sink": "mp_isl7_ck_o"
+    },
+    {
+      "cell": "mp_isl7_rst0",
+      "source": "mp_isl7_rst_i",
+      "sink": "mp_isl7_rst_o"
+    },
+    {
+      "cell": "mp_isl8_ck0",
+      "source": "mp_isl8_ck_i",
+      "sink": "mp_isl8_ck_o"
+    },
+    {
+      "cell": "mp_isl8_rst0",
+      "source": "mp_isl8_rst_i",
+      "sink": "mp_isl8_rst_o"
+    }
+  ],
+  "core_tree": null,
+  "core_clock_port": "clk_ctl",
+  "clock_entry": {
+    "layer": "M5",
+    "xy_um": [
+      298.056,
+      224.64
+    ]
+  },
+  "bays": [],
+  "reserved_bays": [],
+  "entry_pins": [],
+  "unbound_entry_pins": 0,
+  "clock_ndr": null
+}
