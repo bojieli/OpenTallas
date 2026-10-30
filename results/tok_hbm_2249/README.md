@@ -41,3 +41,45 @@ PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_attention_pha
  --out-dir /tmp/hbm-attention-phases
 PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 results/tok_hbm_2249/check_attention.py
 ```
+
+## Producer lifetime allocator and native write-completion diagnosis
+
+`vm_value_phase.py` now handles records1458–1473 as two THREE-row producer phases
+matching attention's NL3 grouping. Value versions, not one permanent translation
+per old address, determine storage lifetimes. Reads join all values addressed by
+one descriptor; intra-instruction aliases retain one translation. All rows of a
+native source record share a lifetime boundary, so allocation cannot reuse an
+input while another row of the same record still runs. The SM row arrays retain
+shared-weight three-row issue. Affine rows are re-encoded as native ROWX records;
+only the few non-affine DMA loads remain single-row commands.
+
+Native DMA stores require complete32-byte sectors. The allocator therefore owns
+whole8-word sectors. A partial output first preserves the prior sector contents
+and joins that version, so scalar retirement cannot corrupt neighbouring values.
+This raises the first phase's high-water versus a word-only placement, correctly:
+**238592/220160 words**, below262144. Forty native records cover96 expanded rows;
+both SM records retain three-row shared-weight issue. The independent word-version
+replay checks995472 read words and catches8 address/slot/template/boundary-payload
+controls. Exact engine footprints include scalar broadcast and paired SU reads;
+no arithmetic template or rounding operation is changed.
+
+Boundary loads are explicit:14/25 intervals,138264/156776 words. Declared static
+output retirement covers26/20 sector intervals,92792/100552 words. These are
+component obligations;1118 unresolved whole-programme dynamic obligations still
+prevent final installation. Publication must use immutable value epochs: a
+phase's output cannot overwrite another phase's still-needed input snapshot.
+Real scratch authority and the whole source calendar remain required.
+
+The opstore_a geometry proposal also exposed a real source timing contract:
+both+1 eight-bit internal chains target SFU local_w_done. The unmodified source
+checks write_expected[WRITE_RETURN+1] against those bits exactly. A real833ps
+component probe on intel1 (ot-run unit2842440) confirms: expected11/actual11 PASS
+fault0; expected11/actual12 gives fault1; expected12/actual12 PASS fault0. The die
+owner recovered legal original-five-station geometry instead, preserving
+WRITE_RETURN11 and adding0 cycles. This is not a two-cycle serial SFU penalty.
+No source timing parameter was adopted or modified by this lane.
+
+A native-address issue was found in the older unreserved publication preparation:
+scratch0xF000000000 is40-bit encodable but has illegal HGI stripe code7. It was
+never installed. New native DMA publication must enforce the actual HGI address
+and sector rules; no old result is promoted to full-fit or token success.
