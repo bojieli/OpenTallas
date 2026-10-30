@@ -68,3 +68,42 @@ def test_incomplete_or_unsafe_contract_fails_closed(edit, reason):
     edit(p['partition_types']['B']['clock']['landing_reader_start'])
     with pytest.raises((LandingError, CAB.BindError), match=reason):
         Landings(p, t).type_rtl('B', B_BODY)
+
+
+# FLOW-6 10-30 (DIE-HEAD-37 R2 attempt 1: face_guard 'shared' on st_str/n3_transit/st_m): the plan raw reset rr_t9 is
+# the relay that also drives output port rst_o_0.
+B_PORT_BODY = ("module b_mod (\n input wire clk,\n input wire [4:0] y, // whole bundle\n output wire rst_o_0\n);\n"
+               " wire rst_n, rst_n_t0, rr_parent, run, rr_t9;\n"
+               " ot_dp_rgate u_rrl_0 (.clk(clk), .d(rr_parent), .run(run), .q(rst_n_t0));\n"
+               " ot_dp_rrelay u_rrl_9 (.clk(clk), .d(rr_parent), .q(rr_t9));\n assign rst_o_0 = rr_t9;\n"
+               " wire [4:0] y_q;\n assign y_q = y;\nendmodule\n")
+
+
+def _port_raw(p):
+    p['partition_types']['B'].setdefault('clock', {})['landing_reader_start'] = dict(
+        depth=2, branches={'y': {'stages': [dict(xy_um=[3., 3.], raw_reset='rr_t9'),
+                                            dict(xy_um=[6., 3.], raw_reset='rr_t9')]}})
+
+
+def test_port_driving_raw_reset_gets_a_private_same_cycle_copy():
+    p, t = ca_vehicle(k=-2)
+    _port_raw(p)
+    c = Landings(p, t)
+    out = c.type_rtl('B', B_PORT_BODY)
+    assert ('ot_dp_head_raw_export_pair u_rrl_9 (.clk(clk), .d(rr_parent), .q(rr_t9), .export_q(rr_t9_reader_raw));'
+            in out)
+    assert 'ot_dp_rrelay u_rrl_9' not in out and 'assign rst_o_0 = rr_t9;' in out   # port keeps its own flop
+    assert 'u_cland_reader_start_y_0 (.clk(clk), .rst_raw_n(rr_t9_reader_raw), .d(cland_start)' in out
+    assert 'u_cland_reader_start_y_1 (.clk(clk), .rst_raw_n(rr_t9_reader_raw), .d(cland_reader_start_y_0)' in out
+    assert out.count('wire rr_t9_reader_raw;') == 1
+    r = c.manifest()['reset_placements']['B']['y']['reader_start']
+    assert r['private_raw_copies']['rr_t9']['added_cycles'] == 0 and r['K_adjustment'] == -2
+
+
+def test_non_port_raw_reset_is_unchanged():
+    p, t = ca_vehicle(k=-2)
+    _port_raw(p)
+    body = B_PORT_BODY.replace(" assign rst_o_0 = rr_t9;\n", " assign rst_o_0 = 1'b1;\n")
+    out = Landings(p, t).type_rtl('B', body)
+    assert 'ot_dp_rrelay u_rrl_9 (.clk(clk), .d(rr_parent), .q(rr_t9));' in out
+    assert 'export_pair' not in out and '.rst_raw_n(rr_t9)' in out
