@@ -110,6 +110,11 @@ def wrapper_glue(t, q, cfg):
             f'        .bank_status({st}),\n        .bk_xq(bk_xq),.bk_xq2(bk_xq2),.bk_xq_done(bk_xq_done),.bk_xq2_done(bk_xq2_done),\n'
             '        .bk_eg(bk_eg),.bk_pq(bk_pq),.bk_pr(bk_pr),\n')
     s = re.sub(r'#\(parameter integer STRAP_BANKS=0, STRAP_MUT=0(, Q2_MERGE=0)?(, BANK_PIN_IN=0)?\)', '', s)
+    if q == 'NW':
+        s = s.replace('module hfd_hgi_vms_static_NW_glue  (',
+                      'module hfd_hgi_vms_static_NW_glue #(parameter integer LOCAL_CTRL_REPLICAS=0, PRESERVE_STATUS_VALID=0) (')
+        s = s.replace('.BANK_PIN_IN(1)) u_slice (',
+                      '.BANK_PIN_IN(1),.LOCAL_CTRL_REPLICAS(LOCAL_CTRL_REPLICAS),.PRESERVE_STATUS_VALID(PRESERVE_STATUS_VALID)) u_slice (')
     return s
 
 

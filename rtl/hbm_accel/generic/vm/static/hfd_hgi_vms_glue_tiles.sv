@@ -340,7 +340,7 @@ module hfd_hgi_vms_glue_e_t (
         .bk_pr(bk_pr),
         .bank_status(bank_status));
 endmodule
-module hfd_hgi_vms_glue_nw_t (
+module hfd_hgi_vms_glue_nw_t #(parameter integer LOCAL_CTRL_REPLICAS=0, PRESERVE_STATUS_VALID=0) (
     input wire clk,
     input wire rst_n,
     input wire [1:0] client_seq,
@@ -474,7 +474,7 @@ module hfd_hgi_vms_glue_nw_t (
     assign bank_status = {b7_status, b6_status, b5_status, b4_status, b3_status, b2_status, b1_status, b0_status};
     wire [7:0] bk_flt;
     assign bk_flt = {b7_flt, b6_flt, b5_flt, b4_flt, b3_flt, b2_flt, b1_flt, b0_flt};
-    hfd_hgi_vms_static_NW_glue u_glue (
+    hfd_hgi_vms_static_NW_glue #(.LOCAL_CTRL_REPLICAS(LOCAL_CTRL_REPLICAS),.PRESERVE_STATUS_VALID(PRESERVE_STATUS_VALID)) u_glue (
         .clk_hub(clk),
         .clk_ring({clk, clk}),
         .clk_replay(clk),
