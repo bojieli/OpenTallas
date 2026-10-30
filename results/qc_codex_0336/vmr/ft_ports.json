@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.ft_ports.v1",
+ "source": "qfd_dv_s8x_vmr_f4a/pushdown.tcl@md5:5e7915075494 (OT_PUSHDOWN die ft, 12.2a1)",
+ "ports": [
+  {
+   "name": "ft_ck_i",
+   "direction": "INPUT"
+  },
+  {
+   "name": "ft_ck_o",
+   "direction": "OUTPUT"
+  },
+  {
+   "name": "ft_rst_i",
+   "direction": "INPUT"
+  },
+  {
+   "name": "ft_rst_o",
+   "direction": "OUTPUT"
+  }
+ ],
+ "arcs": [
+  {
+   "source": "ft_ck_i",
+   "sink": "ft_ck_o",
+   "kind": "clock",
+   "cells": [
+    "ot_isl_ckft"
+   ]
+  },
+  {
+   "source": "ft_rst_i",
+   "sink": "ft_rst_o",
+   "kind": "reset",
+   "cells": [
+    "ot_isl_rstft"
+   ]
+  }
+ ],
+ "sha256": "ffd0642fc81497aff774170efa116c989df03d4a1decc3f35ca5d20bd9803875"
+}
