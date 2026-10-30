@@ -377,3 +377,38 @@ def test_keepout_stray_noop_without_bad_legs_and_mode_checked():
     assert {k: P[k] for k in ("nodes", "wires", "leafsinks")} == ref
     with pytest.raises(SystemExit):
         F.fix_keepout_strays(P, "slide", 35.0, 70.0)
+
+
+# ---------------------------------------------------------------- HBM-CORES-KITS-25: opt-in geometric lv0 x bands
+def _band_geo(tmp_path):
+    geo = tmp_path / "geo.txt"
+    L = ["DIE 0 0 200 100", "CORE 0 0 200 100", "PIN ck 100 10"]
+    L += ["SINK %d %d DFFHQNx1_ASAP7_75t_R c%d_%d CLK" % (x, y, x, y) for x in range(90, 111, 4) for y in range(10, 91, 8)]
+    L += ["SINK 196 %d DFFHQNx1_ASAP7_75t_R e%d CLK" % (y, y) for y in range(20, 81, 10)]
+    L += ["SINK 4 %d DFFHQNx1_ASAP7_75t_R w%d CLK" % (y, y) for y in range(20, 81, 10)]
+    geo.write_text("\n".join(L) + "\n")
+    return geo
+
+
+def test_lv0_x_bands_root_each_strip_inside_its_band(tmp_path):
+    geo = _band_geo(tmp_path)
+    P = F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[50, 150])
+    g = P["groups"]
+    assert sorted(len(g[(i,)]) for i in range(3)) == [7, 7, 66]
+    assert all(p[0] < 50 for p in g[(0,)]) and all(p[0] >= 150 for p in g[(2,)])
+    assert P["mz"].xy(P["site"][(2,)])[0] >= 150 and P["mz"].xy(P["site"][(0,)])[0] < 50   # strip roots in their strips
+    depth = {len(k) for k in P["leaves"]}
+    assert len(depth) == 1                                                                   # equal stage count
+
+
+def test_lv0_x_bands_default_unchanged_and_fail_closed(tmp_path):
+    geo = _band_geo(tmp_path)
+    P0 = F.ungated_macro_htree(str(geo), [2, 2], 70.0, [], leaf_target=8)
+    P1 = F.ungated_macro_htree(str(geo), [2, 2], 70.0, [], leaf_target=8, x_bands=None)
+    assert P0["groups"] == P1["groups"]
+    with pytest.raises(SystemExit):
+        F.ungated_macro_htree(str(geo), [2, 2], 70.0, [], leaf_target=8, x_bands=[50, 150])   # splits[0] != cuts+1
+    with pytest.raises(SystemExit):
+        F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[50, 60])    # empty band
+    with pytest.raises(SystemExit):
+        F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[150, 50])   # not increasing
