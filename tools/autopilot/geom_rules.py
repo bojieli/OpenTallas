@@ -923,6 +923,26 @@ def _net_boxes(D, skip_clock=True):
     return out
 
 
+def _detour_channel_spans(cap, starts, ends):
+    """Use the complete positive-capacity street immediately adjoining either side of a blocked span.
+
+    A cut crossing can occupy any track of the first reachable street, not just its first one-um bin. Stop at the
+    next zero-capacity bin: this never adds a farther street across another macro wall. Caller uses this only for
+    bounding-box spans with zero capacity; directly accessible pin/net spans stay unchanged.
+    """
+    import numpy as np
+    nb = len(cap)
+    idx = np.arange(nb)
+    free = cap > 1e-12
+    previous = np.maximum.accumulate(np.where(free, idx, -1))[starts]
+    following = np.minimum.accumulate(np.where(free, idx, nb)[::-1])[::-1][ends]
+    run_start = np.maximum.accumulate(np.where(free & ~np.r_[False, free[:-1]], idx, 0))
+    run_end = np.minimum.accumulate(np.where(free & ~np.r_[free[1:], False], idx, nb - 1)[::-1])[::-1]
+    left = np.where(previous >= 0, run_start[np.maximum(previous, 0)], starts)
+    right = np.where(following < nb, run_end[np.minimum(following, nb - 1)], ends)
+    return left, right
+
+
 def demand_metrics(D, max_layer="M5", min_layer="M2"):
     """macro-aware cut demand (GEOM-REVIEW-24 ep/pslice method, generalised): on cut lines every CUT_STEP um, every
     signal net whose bounding box straddles the cut crosses it at least once; that crossing is spread over the net's
@@ -930,7 +950,8 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
     the local macro master does not obstruct, x TRACK_DERATE).  Utilisation of a window = crossings / capacity.
       channel_*: windows on cuts that pass macros, outside macros (inter-macro channels, edge strips)
       col_v:     per-column vertical demand: every DEMAND_WIN-wide column on every horizontal cut
-      detour_*:  net-cut crossings with no capacity inside the net's span, moved to the nearest free tracks (INFO)
+      detour_*:  net-cut crossings with no capacity inside the net's span, allocated over the immediately adjacent
+                 contiguous positive-capacity street(s), ending at the next blocked bin (INFO)
       blocked_*: crossings on a cut line with zero capacity everywhere (no legal crossing at all)"""
     import numpy as np
     X0, Y0, X1, Y1 = D.die
@@ -960,6 +981,7 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
         ia1 = np.clip(((hi_a - a0) / step).astype(int), 0, nb - 1)
         win = max(1, int(round(DEMAND_WIN / step)))
         col_best, ch_best, blocked, detour = (0.0, None), (0.0, None), 0, 0
+        detour_extension, detour_extent = 0.0, None
         for c in np.arange(b0 + CUT_STEP / 2, b1, CUT_STEP):
             cap = np.full(nb, full * step)
             inm = np.zeros(nb, bool)
@@ -980,16 +1002,20 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
             T = cs[s1 + 1] - cs[s0]
             z = T <= 1e-9
             if z.any():
-                # no capacity inside the net's span (e.g. W band <-> E face across an SRAM column under an M5
-                # ceiling): the route detours to the nearest free track on either side; that detour demand lands there
-                fr = cap > 1e-12
-                idx = np.arange(nb)
-                prv = np.maximum.accumulate(np.where(fr, idx, -1))
-                nxt = np.minimum.accumulate(np.where(fr, idx, nb)[::-1])[::-1]
-                p0, p1 = prv[s0[z]], nxt[s1[z]]
+                # Only a zero-capacity span may detour. Allocate over its first reachable contiguous street(s),
+                # rather than stacking every crossing on the first free one-um bin at the macro edge.
+                left, right = _detour_channel_spans(cap, s0[z], s1[z])
+                extension = np.maximum(s0[z] - left, right - s1[z]) * step
+                if len(extension) and float(extension.max()) > detour_extension:
+                    k = int(extension.argmax())
+                    detour_extension = float(extension[k])
+                    detour_extent = dict(cut_um=round(float(c), 1),
+                                         original_um=[round(a0 + int(s0[z][k])*step, 1),
+                                                      round(a0 + (int(s1[z][k])+1)*step, 1)],
+                                         allocated_um=[round(a0 + int(left[k])*step, 1),
+                                                       round(a0 + (int(right[k])+1)*step, 1)])
                 s0 = s0.copy(); s1 = s1.copy()
-                s0[z] = np.where(p0 >= 0, p0, s0[z])
-                s1[z] = np.where(p1 < nb, p1, s1[z])
+                s0[z], s1[z] = left, right
                 detour += int(z.sum())
                 T = cs[s1 + 1] - cs[s0]
                 z = T <= 1e-9
@@ -1048,6 +1074,8 @@ def demand_metrics(D, max_layer="M5", min_layer="M2"):
         res[f"channel_{key}_at"] = ch_best[1]
         res[f"blocked_{key}"] = blocked
         res[f"detour_{key}"] = detour
+        res[f"detour_{key}_extension_max_um"] = detour_extension
+        res[f"detour_{key}_extent_at"] = detour_extent
         if d == "V":
             res["col_v_max"] = round(col_best[0], 3)
             res["col_v_at"] = col_best[1]
