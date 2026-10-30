@@ -805,6 +805,26 @@ def plan_pin_sites(pins, outline, spec):
     return core_pin_sites_gate.check_pins(pins, *outline, interior_ok=declared)
 
 
+def core_land_slot_specs(module, land, buses_in):
+    """Retain declared ring forms for the existing face guard.
+
+    Legacy integer D stays byte-identical. Explicit descriptors retain the
+    face_guard parser and its existing slot/hold/clock/write proof obligations.
+    """
+    import face_guard
+    out = {}
+    for bus in sorted(land):
+        value = land[bus]
+        try:
+            depth, form = face_guard.land_spec(value)
+        except (TypeError, ValueError) as e:
+            raise SystemExit(f"{module}: invalid land_slots {bus}: {e}")
+        if bus not in buses_in or depth < 2:
+            raise SystemExit(f"{module}: land_slots {bus} is not a plan input bus with D >= 2")
+        out[bus] = dict(D=depth, form=form) if isinstance(value, dict) else depth
+    return out
+
+
 def clock_roots(spec):
     """clock-root port BASES of a kit spec (clock_port + clock_ports[], bus bits folded: xk[0..3] -> xk), clock_port
     first.  S81-CORE-LAT-R14 10-27: the face_guard skip set must name EVERY clock root, not only clock_port (the
@@ -1383,11 +1403,9 @@ def main():
         # S81-CORE-LAT-R21 (COORD S81-CORE-LAT-R20 ruling (a)): DECLARED landing-ring input buses {bus: D}; the D gated
         # ring slots are the pin's face registers (face_guard class land_slot checks D flop D pins on D own ICGs of one
         # clock).  Kits without the declaration keep the byte-identical face_guard_core.py.
-        bad = sorted(b for b in land if b not in buses_in or int(land[b]) < 2)
-        if bad:
-            raise SystemExit(f"{mod}: land_slots {bad} are not plan input buses with D >= 2")
+        land = core_land_slot_specs(mod, land, buses_in)
         (kd / "land_slots.json").write_text(json.dumps(dict(
-            schema="opentallas.core_land_slots.v1", buses={b: int(land[b]) for b in sorted(land)},
+            schema="opentallas.core_land_slots.v1", buses=land,
             why=rec.get("why_land_slots", "")), indent=1) + "\n")
         fgc = FACE_GUARD_CORE.replace(
             "r = G.guard(Path(net).read_text(), top, skip_re=skip, ft1=G.read_ft1(_ftf) if _ftf.is_file() else set())",
