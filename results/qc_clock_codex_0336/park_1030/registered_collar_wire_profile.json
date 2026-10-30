@@ -1,0 +1,243 @@
+{
+  "scope": "Actual directed R0 A/Y plus FF INV/D wire geometry; not RC or routed extraction. Distinguishes endpoint Manhattan reach from summed materialized wire.",
+  "candidates": {
+    "Nreturn9": {
+      "hops": 10773,
+      "maximum_endpoint_L1_um": 374.78799999999956,
+      "maximum_total_wire_um": 505.15299999999974,
+      "wire_totals_over405": 787,
+      "max_wire_section_um": 110.28700000000026,
+      "sections_over120": 0,
+      "top_wire_witnesses": [
+        {
+          "bus": "rx_flit",
+          "bit": 218,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 505.15299999999974,
+          "longest_wire_section_um": 100.87299999999982,
+          "origin_L1_um": 359.77600000000007
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 207,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 483.49899999999974,
+          "longest_wire_section_um": 101.93299999999977,
+          "origin_L1_um": 362.9620000000002
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 38,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 481.17699999999894,
+          "longest_wire_section_um": 97.45099999999934,
+          "origin_L1_um": 359.8299999999999
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 295,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 481.141,
+          "longest_wire_section_um": 100.65700000000015,
+          "origin_L1_um": 364.3459999999998
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 20,
+          "hop": 3,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 474.94900000000024,
+          "longest_wire_section_um": 106.00299999999947,
+          "origin_L1_um": 357.2919999999997
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 229,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 474.42699999999917,
+          "longest_wire_section_um": 103.44499999999994,
+          "origin_L1_um": 365.42600000000016
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 56,
+          "hop": 3,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 473.5449999999998,
+          "longest_wire_section_um": 105.40899999999942,
+          "origin_L1_um": 355.1319999999994
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 56,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 473.0229999999992,
+          "longest_wire_section_um": 99.98900000000003,
+          "origin_L1_um": 362.2940000000001
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 345,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 470.6669999999994,
+          "longest_wire_section_um": 107.98099999999977,
+          "origin_L1_um": 363.4480000000001
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 251,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 469.45899999999864,
+          "longest_wire_section_um": 95.95899999999983,
+          "origin_L1_um": 359.2359999999999
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 127,
+          "hop": 4,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 468.3249999999993,
+          "longest_wire_section_um": 103.87699999999995,
+          "origin_L1_um": 367.586
+        },
+        {
+          "bus": "rx_flit",
+          "bit": 23,
+          "hop": 3,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 467.68099999999885,
+          "longest_wire_section_um": 109.43899999999985,
+          "origin_L1_um": 353.7279999999994
+        }
+      ],
+      "verdict": "MATERIALIZED_WIRE_DETOUR_FAIL"
+    },
+    "MXreturn3": {
+      "hops": 3591,
+      "maximum_endpoint_L1_um": 386.55999999999983,
+      "maximum_total_wire_um": 428.31700000000035,
+      "wire_totals_over405": 27,
+      "max_wire_section_um": 104.11300000000008,
+      "sections_over120": 0,
+      "top_wire_witnesses": [
+        {
+          "bus": "tx_up",
+          "bit": 0,
+          "hop": 2,
+          "flow": "RXnative_to_outer",
+          "wire_total_um": 428.31700000000035,
+          "longest_wire_section_um": 94.71699999999983,
+          "origin_L1_um": 386.55999999999983
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 587,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 423.285,
+          "longest_wire_section_um": 99.19900000000018,
+          "origin_L1_um": 369.5300000000001
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 563,
+          "hop": 2,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 423.0669999999996,
+          "longest_wire_section_um": 93.02299999999988,
+          "origin_L1_um": 365.5520000000001
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 552,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 422.85300000000007,
+          "longest_wire_section_um": 89.80300000000028,
+          "origin_L1_um": 360.88999999999993
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 596,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 419.8289999999996,
+          "longest_wire_section_um": 104.11300000000008,
+          "origin_L1_um": 368.126
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 562,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 419.1810000000002,
+          "longest_wire_section_um": 91.74700000000027,
+          "origin_L1_um": 364.13000000000017
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 551,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 418.80299999999966,
+          "longest_wire_section_um": 90.23299999999995,
+          "origin_L1_um": 363.6440000000001
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 569,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 417.921,
+          "longest_wire_section_um": 93.42100000000016,
+          "origin_L1_um": 364.72400000000016
+        },
+        {
+          "bus": "tx_v",
+          "bit": 0,
+          "hop": 2,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 417.8829999999997,
+          "longest_wire_section_um": 85.97600000000007,
+          "origin_L1_um": 386.4860000000002
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 575,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 416.64300000000014,
+          "longest_wire_section_um": 95.41900000000018,
+          "origin_L1_um": 361.8080000000002
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 556,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 415.1310000000001,
+          "longest_wire_section_um": 93.25900000000019,
+          "origin_L1_um": 368.93600000000015
+        },
+        {
+          "bus": "tx_flit",
+          "bit": 547,
+          "hop": 3,
+          "flow": "TXexistingFF_to_native",
+          "wire_total_um": 413.8349999999999,
+          "longest_wire_section_um": 86.72500000000016,
+          "origin_L1_um": 364.50800000000004
+        }
+      ],
+      "verdict": "MATERIALIZED_WIRE_DETOUR_FAIL"
+    }
+  }
+}

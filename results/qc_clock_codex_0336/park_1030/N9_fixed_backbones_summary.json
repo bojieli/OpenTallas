@@ -1,0 +1,24 @@
+{
+  "mode": "N9",
+  "status": "JOINT FIXED BACKBONE CONSTRUCTION PREP; no nativeadoption/RTL/STA",
+  "dataFF": 10773,
+  "station_pitch_um": 354.24,
+  "station_pitch_rule": "41*8.64um coarsegrid =656actualR0rows =6560sites; samebitpackingphase acrossallbanks",
+  "dataFF_group": "DFFHQN+inputINV+adjacentlaunchBUF24, width2.862 actual /3.618reserved onR0",
+  "launch_BUF24": 10773,
+  "wire_BUF24": 43092,
+  "max_total_wire_um": 395.9009999999981,
+  "hops_over405": 0,
+  "max_wire_section_um": 88.46699999999987,
+  "hops_with_section_over120": 0,
+  "max_cell_anchor_shift_um": 23.500999999999806,
+  "max_original_trackpath_um": 3171.4080000000004,
+  "body_clear": "Nativebody excluded, allrowsR0 x54nm/y540nm; fullgroupactualmaster footprint40pct reserve",
+  "HOLD": [
+    "sourceCLKanddataCQ/DRVfullpropagation",
+    "actualnonmonotonicroutebugsifany",
+    "clock/control/reset/epochfunctionalpathsandtap/PG",
+    "CBWFT/CApairedsourceevent",
+    "rootownerphysicalorientationchoice"
+  ]
+}
