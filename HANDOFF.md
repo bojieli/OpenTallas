@@ -2332,3 +2332,6 @@ CODEX: 2026-10-30 04:55 PDT FLOW EG4remainingresolvedmechanismALL40212PROVED/noh
 CODEX: 2026-10-30 04:55 PDT selectoractualnativeGATE5ce995420 PASS1566/6reset/267beat/0diff strictallbitsedge1 +mutant10POSTBOOT; real66PORfixture/old4FAILowned, +128FF0cycles;2freshkitsPREFLIGHT0/SYNTH-onlyliveintel1/3655945+3655631, noPNR.
 
 CODEX: 2026-10-30 04:58 PDT FLOWsecondaryPHY READY69b6029c1 root-scopedCTS+nativewrong-rootmutantcaught;27fixturesPASS/63compatPASS; W522wholeconePLANphase47.06/42.02,data39293max380.54,0cycles; actualG1/PG/primaryclock/IOdataNOTRUN, SDownercontinues.
+
+CODEX FLOW/S81: fe5c26d42 results-only STARTrecompose extends8ff62a6a5.189/189candidatebays fit; realNLDM+RC+OCV modeled300umpair FALL residual23.46ps, no physicalclaim. Existing4FFSTART3cycles/hop vs3FFreset2cycles/hop explicitly yields ES0origins71..74/ES1134..137 andresetlead85..86/106..107 fromrootlead64. FullcanonicalCA/releasecontract recompilation held, oldproofinputs immutable; no plan/RTL/build adoption. Packet results/flow_s81phy_1030/start_recompose with personallyviewedrender.
+CODEX: 2026-10-30 05:04 PDT QC exactCLANDperfefe38995a15 READY53x/10000nativeposes0diff; coll_ftPLACEPASSbut155r2rFAILfullydiagnosed; coll_ucie physicalidentity/optimizerfailuresfixedscopedtrialPG+GPLlive. BtabmetadataPRErepairchildowned; noSIGNEDclaim.
