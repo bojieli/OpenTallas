@@ -155,3 +155,21 @@ The augmented first_link variant retains those440 words without increasing its
 238592/220160 high-water. Its native wrapper merges adjacent transfers into116
 commands, adds1955616 bytes, and checks995472 canonical reads plus191600 final
 boundary words. Both the original and augmented variants remain recorded.
+
+## Linked source slice1458–1527
+
+`vm_phase_link.py` connects those two adjacent components directly through their
+published source-sector epochs. It rewrites downstream native LOAD addresses to
+upstream phase outputs, without constructing a second full VM snapshot. It fails
+closed if an upstream-written sector has no published owner. The unchanged-entry
+fallback applies only to sectors the upstream source never wrote.
+
+The linked native slice covers70 actual source records through1527, immediately
+before KVUNION. It contains380 native commands across four old-VM phases and
+routes168560 words from upstream outputs; only48 words remain from the initial
+entry snapshot. Added native DMA traffic is3276640 bytes. Twenty early sector
+epochs preserve partial-sector value versions. `check_chain.py` checks1642752
+canonical read words and154376 final boundary words using the actual boundary
+DMA model; wrong source epochs, missing drains and illegal stripe controls are
+caught. This is the first linked bounded source implementation of this mechanism,
+not a full-programme or numerical RTL token pass. No new rate is claimed.
