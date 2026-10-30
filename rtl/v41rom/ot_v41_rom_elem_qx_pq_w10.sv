@@ -1737,8 +1737,9 @@ module ot_v41_rom_elem_qx_pq_w10 #(
         if (go_e) begin n_coh_s <= qn_ohf; n_cgt_s <= qx_gt(qn_ohf); n_ca_r_s <= ca_f(qn_a_go, c_first, 3'd0); end
         else if (WRT != 0) {n_coh_s, n_cgt_s, n_ca_r_s} <= {n_coh, n_cgt, n_ca_r};
         else if (hit) {n_coh_s, n_cgt_s, n_ca_r_s} <= nC_c;
-    end else begin n_coh_s <= '0; n_cgt_s <= '0; end   // cycle-identical sync clear: reset value = never-read
-                                                        // (go_e loads before use); keeps gold/gate reset states equal
+    end else begin n_coh_s <= NSEG'(1) << n_c_s; n_cgt_s <= qx_gt(NSEG'(1) << n_c_s); end
+    // reset: the mirrors are reloaded FROM their held (unreset) source n_c_s, so mirror == onehot(n_c_s) holds in every
+    // post-go state (cycle-identical); the reset state is a defined function of the source (gold/gate LEC reset match)
 `ifdef QP_CHECK
     always @(negedge clk) if (QX >= 3 && rst_n && qy_seen) begin
         if (n_coh !== NSEG'(1) << n_c || n_cgt !== qx_gt(NSEG'(1) << n_c) || (n_run && n_ca_r !== |(n_coh & qn_cmpA))) begin
@@ -1760,7 +1761,7 @@ module ot_v41_rom_elem_qx_pq_w10 #(
             if (w_restart) begin w_coh <= qx_ohl; w_cgt <= qx_gt(qx_ohl); end
             else begin w_coh <= qx_nxoh; w_cgt <= qx_nxgt; end
         end
-    end else begin w_coh <= '0; w_cgt <= '0; end   // cycle-identical sync clear (as n_coh_s / n_cgt_s above)
+    end else begin w_coh <= NSEG'(1) << w_c; w_cgt <= qx_gt(NSEG'(1) << w_c); end   // reset: reload from held w_c (as above)
 `ifdef QP_CHECK
     // the mirrors equal the one-hot / mask of w_c, and every QX consequence equals the encoded walker's
     always @(negedge clk) if (QX != 0 && FAST != 0 && rst_n && qy_seen) begin
