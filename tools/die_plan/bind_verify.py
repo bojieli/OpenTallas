@@ -66,6 +66,13 @@ def lint(out, top, files, defines=(), waive=(), incs=()):
 
 
 DEFINE_RE = re.compile(r"^[ \t]*`define\s+\w+(?:\([^)\n]*\))?((?:[^\n]*\\\n)*[^\n]*)", re.M)
+MACRO_DEF = re.compile(r"^[ \t]*`define\s+([A-Za-z_]\w*)", re.M)
+MACRO_USE = re.compile(r"`([A-Za-z_]\w*)")
+DIRECTIVES = {"define", "undef", "undefineall", "ifdef", "ifndef", "elsif", "else", "endif", "include", "timescale",
+              "default_nettype", "resetall", "celldefine", "endcelldefine", "line", "pragma", "begin_keywords",
+              "end_keywords", "unconnected_drive", "nounconnected_drive", "__FILE__", "__LINE__", "protect",
+              "endprotect", "verilator_config", "systemc_header", "systemc_interface", "systemc_imp_header",
+              "systemc_implementation", "systemc_ctor", "systemc_dtor"}
 BIND_CELLS = {"ot_dp_st", "ot_dp_dly", "ot_dp_or", "ot_dp_and", "ot_dp_rsync", "ot_reset_sync", "ot_dp_rrelay", "ot_dp_rgate",
               "ot_dp_rsync_s2", "ot_dp_rsync_s3", "ot_dp_lockq"}
 
@@ -104,7 +111,66 @@ class LintSources:
         rtl_all = self.base / "rtl"
         self.wide = E.module_index([str(rtl_all)], [], base) if rtl_all.is_dir() else {}
         self.roots = list(ab0.get("rtl_roots", ["rtl"])) or ["rtl"]
+        self.defines = [str(d).split("=")[0] for d in ab0.get("defines", [])]
         self.ambiguous = {}
+        # caches (one closure per partition module: ~360 on S81): stripped text, module bodies, prefer-file definitions
+        self._txt, self._body, self._pdefs, self._uses, self._pdir = {}, {}, {}, {}, {}
+        for q in self.prefer:
+            if Path(q).is_file():
+                self._pdefs[q] = {m.group(1) for m in E.MOD_RE.finditer(self.text(q))}
+
+    def text(self, f):
+        if f not in self._txt:
+            self._txt[f] = E._strip(Path(f).read_text(errors="replace"))
+        return self._txt[f]
+
+    def body(self, f, n):
+        """E.module_body on the cached stripped text"""
+        k = (f, n)
+        if k not in self._body:
+            m = re.search(r"^\s*(?:\(\*[^\n]*?\*\)\s*)?module\s+" + re.escape(n) + r"\b(.*?)\bendmodule\b", self.text(f),
+                          re.S | re.M)
+            self._body[k] = m.group(1) if m else ""
+        return self._body[k]
+
+    def _prefer_for(self, n):
+        """the prefer entries E.pick can use for n (same order): directories, and files that define n"""
+        return [q for q in self.prefer if q not in self._pdefs and not Path(q).is_file() or n in self._pdefs.get(q, ())]
+
+    def packages(self, files):
+        """bind.kit_packages with cached reads: the packages the files reference (pkg::), transitively, users last;
+        a package beside its users first, else the RTL roots."""
+        import bind as B
+
+        def uses(f):
+            if f not in self._uses:
+                self._uses[f] = sorted(set(B.PKG_USE.findall(self.text(f))))
+            return self._uses[f]
+
+        def pdir(d):
+            if d not in self._pdir:
+                self._pdir[d] = B._pkg_index([d], self.base, recurse=False)
+            return self._pdir[d]
+        pidx = {}
+        for d in sorted({str(Path(f).resolve().parent) for f in files}, reverse=True):
+            pidx.update(pdir(d))
+        want = {u for f in files for u in uses(f) if "pkg" in u.lower()}
+        if want - set(pidx):
+            key = (tuple(self.roots), str(self.base))
+            if key not in B._PKG_CACHE:
+                B._PKG_CACHE[key] = B._pkg_index(self.roots, self.base)
+            pidx = {**B._PKG_CACHE[key], **pidx}
+        order, seen = [], set()
+
+        def need(f):
+            for u in uses(f):
+                if u in pidx and u not in seen:
+                    seen.add(u)
+                    need(pidx[u])
+                    order.append(str(Path(pidx[u])))
+        for f in files:
+            need(f)
+        return order
 
     def _cands(self, n):
         if n in self.idx:
@@ -117,18 +183,71 @@ class LintSources:
             self.added.setdefault(n, "rtl")
         return c
 
+    def _define_index(self):
+        """{macro: [file, ...]} of every `define in the indexed + rtl/ sources (built once, on first need)"""
+        if getattr(self, "_didx", None) is None:
+            self._didx = {}
+            for f in sorted({f for fs in list(self.idx.values()) + list(self.wide.values()) for f in fs}):
+                try:
+                    raw = Path(f).read_text(errors="replace")
+                except OSError:
+                    continue
+                if "`define" in raw:
+                    for d in MACRO_DEF.finditer(self.text(f)):
+                        self._didx.setdefault(d.group(1), []).append(f)
+        return self._didx
+
+    def providers(self, files, have):
+        """files that `define a macro the closure files use but none of them defines (e.g. `SELT_OB of
+        ot_s81pa_ctl.sv lives in ot_s81ph_sel_tile.sv): exactly one defining file, else left unresolved"""
+        used, defined = set(), set()
+        for f in files:
+            tx = self.text(f)
+            used |= set(MACRO_USE.findall(tx))
+            defined |= {d.group(1) for d in MACRO_DEF.finditer(tx)}
+        need = used - defined - DIRECTIVES - set(self.defines)
+        out = []
+        for m in sorted(need):
+            c = [f for f in self._define_index().get(m, []) if f not in have]
+            if len(c) == 1 and c[0] not in out:
+                out.append(c[0])
+            elif len(c) > 1:
+                self.ambiguous.setdefault("`" + m, c)
+        return out
+
     def closure(self, names):
-        """E.closure over this index: -> (files incl. their packages first, missing)."""
-        import bind as B
+        """E.closure over this index: -> (files incl. their packages and macro providers first, missing)."""
+        files, missing, prov = self._closure(names, [])
+        while True:
+            new = self.providers(files, set(files) | set(prov))
+            if not new:
+                break
+            prov += new
+            # a provider file is read whole: its modules' children are needed too
+            files, missing, _ = self._closure(names, prov)
+        # a closure file that `defines a macro another closure file uses goes before them (ot_s81ph_sel_tile.sv
+        # `SELT_* used by ot_s81ph_hq_tile.sv): Verilator sees a `define only after it is read
+        body = [f for f in files if f not in prov]
+        defs = {f: {d.group(1) for d in MACRO_DEF.finditer(self.text(f))} for f in body}
+        uses = {f: set(MACRO_USE.findall(self.text(f))) for f in body}
+        early = [f for f in body if any(defs[f] & uses[g] for g in body if g != f)]
+        prov = prov + early
+        pkgs = self.packages(prov + body)
+        return [p for p in pkgs if p not in prov and p not in body] + prov + [f for f in body if f not in prov], missing
+
+    def _closure(self, names, extra_files):
         known = set(self.idx) | set(self.wide)
         seen, files, missing = set(), [], set()
         todo = list(names)
+        for f in extra_files:
+            for m in E.MOD_RE.finditer(self.text(f)):
+                todo += sorted(E.instantiated(self.body(f, m.group(1)), known))
         while todo:
             n = todo.pop()
             if n in seen:
                 continue
             seen.add(n)
-            f, _ = E.pick({n: self._cands(n)}, n, self.prefer)
+            f, _ = E.pick({n: self._cands(n)}, n, self._prefer_for(n))
             if f is None:
                 missing.add(n)
                 continue
@@ -138,14 +257,27 @@ class LintSources:
                 continue
             if f not in files:
                 files.append(f)
-                txt = E._strip(Path(f).read_text(errors="replace"))
+                txt = self.text(f)
                 for m in E.MOD_RE.finditer(txt):
-                    todo += sorted(E.instantiated(E.module_body(f, m.group(1)), known))
+                    todo += sorted(E.instantiated(self.body(f, m.group(1)), known))
                 for d in DEFINE_RE.finditer(txt):          # a macro body names its module bare: `define ROM ot_rom_x
                     todo += sorted({w for w in re.findall(r"[A-Za-z_]\w*", d.group(1)) if w in known})
-            todo += sorted(E.instantiated(E.module_body(f, n), known))
-        pkgs = [str(p) for p in B.kit_packages(files, self.roots, self.base)]
-        return [p for p in pkgs if p not in files] + files, sorted(missing)
+            todo += sorted(E.instantiated(self.body(f, n), known))
+        return files, sorted(missing), list(extra_files)
+
+
+def declared_constant(want, got):
+    """a bound constant that the bind declared: a strap (partition parameter) or a literal (proven-dead input /
+    internal primitive literal), with the as-built value; any other constant on a leaf input is TIED"""
+    return bool(want) and got[0] == "tied" and want[0] in ("strap", "literal") and want[1] == got[1]
+
+
+def split_leaves(t, mods, idx):
+    """the leaf masters a partition module file instantiates (u_<n>), plus the bind's own native glue cells (g_<n>)"""
+    leafm = set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M))
+    if isinstance(idx, LintSources):
+        leafm |= {m for m in E.instantiated(E._strip(t), idx.idx) if idx.added.get(m) == "bind"}
+    return sorted(leafm - set(mods) - BIND_CELLS)
 
 
 def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
@@ -165,7 +297,7 @@ def lint_split(out, top, F, G, gen_rtl, idx, prefer, rs, lib, ab0):
             continue
         t = Path(f).read_text(errors="replace")
         mods = re.findall(r"^module\s+(\w+)", t, re.M)
-        leafm = sorted(set(re.findall(r"^\s+(\w+)\s+(?:#\(.*?\)\s+)?u_\w+\s*\(", t, re.M)) - set(mods) - BIND_CELLS)
+        leafm = split_leaves(t, mods, idx)
         cl, _ = idx.closure(leafm) if isinstance(idx, LintSources) else E.closure(leafm, idx, prefer)
         for m in mods:
             byfile[m] = [f] + cells + [str(rs)] + cl
@@ -333,12 +465,15 @@ def cmd_verify(a):
                         cnt["compared"] += 1
                         cnt["matched"] += 1
                         continue
-                if got[0] == "tied" and not (want and want[0] == "strap" and want[1] == got[1]):
+                # a declared literal (bind.py: proven-dead input of asbuilt.dead_input_proofs / internal primitive
+                # literal) is emitted as 1'b<v> by design: it matches only its own declared value (DIE-S81-30 10-29)
+                declared = declared_constant(want, got)
+                if got[0] == "tied" and not declared:
                     cnt["tied"] += 1
                     if len(tied_ex) < 50:
                         tied_ex.append((key, want, got))
-                if got[0] == "tied" and want and want[0] == "strap" and want[1] == got[1]:
-                    got = want          # a declared strap: the partition parameter carries the as-built value
+                if got[0] == "tied" and declared:
+                    got = want          # a declared strap (partition parameter) / literal carries the as-built value
                 if got[0] == "multi":
                     cnt["multiply_driven"] += 1
                 if want is None:
