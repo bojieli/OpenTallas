@@ -1,0 +1,1407 @@
+{
+  "scope": "Actualoriginalh30routedRCXstandardFF40failingendpoints; TTworstsetupheadroom fromsamefinalSPEF; noECOapplied",
+  "count": 40,
+  "min_TT_setup_ps": 160.7838,
+  "rows": [
+    {
+      "launch": "u_l.u_exp.d_n.genblk1.g_line.line[219]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[228]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_n.genblk1.g_line.line[228]$_DFF_P_",
+      "FF_hold_ps": -9.3406,
+      "TT_setup_ps": 682.4236,
+      "clock_leaf_pair": [
+        "mp_ck_Tppts",
+        "mp_ck_Tppqx"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[219]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.3535   23.5622   45.8954  230.4100 ^ u_l.u_exp.d_n.genblk1.g_line.line[219]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076296_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   23.7412    1.1289  231.5389 ^ _076296_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076296_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6350    8.6674    7.4391  238.9780 v _076296_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[228]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    8.6687    0.0575  239.0355 v u_l.u_exp.d_n.genblk1.g_line.line[228]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_m1.genblk1.genblk1.g_l5.u.u.u_k6.g_r.r[45]$_DFF_P_",
+      "endpoint": "u_l.u_m1.genblk1.genblk1.g_l5.u.u.err[0]$_DFF_PN0_/D",
+      "endpoint_cell": "u_l.u_m1.genblk1.genblk1.g_l5.u.u.err[0]$_DFF_PN0_",
+      "FF_hold_ps": -9.0261,
+      "TT_setup_ps": 649.8221,
+      "clock_leaf_pair": [
+        "mp_ck_Tppwv",
+        "mp_ck_Tqqqr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_m1.genblk1.genblk1.g_l5.u.u.u_k6.g_r.r[45]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.4558   10.6461   39.6844  227.3200 ^ u_l.u_m1.genblk1.genblk1.g_l5.u.u.u_k6.g_r.r[45]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5524/A",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "                   10.6463    0.0165  227.3366 ^ hold5524/A (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5524/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "     1    0.6735    5.3796   13.3132  240.6498 ^ hold5524/Y (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_093908_/B",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "line": "                    5.3824    0.0581  240.7079 ^ _093908_/B (NOR2x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_093908_/Y",
+          "master": "NOR2x1_ASAP7_75t_R",
+          "line": "     1    0.6947    5.8557    5.7790  246.4869 v _093908_/Y (NOR2x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5525/A",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "                    5.8587    0.0719  246.5588 v hold5525/A (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5525/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "     1    0.7416    5.2373   12.5847  259.1436 v hold5525/Y (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_m1.genblk1.genblk1.g_l5.u.u.err[0]$_DFF_PN0_/D",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "                    5.2445    0.0967  259.2402 v u_l.u_m1.genblk1.genblk1.g_l5.u.u.err[0]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[248]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[280]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[280]$_DFF_P_",
+      "FF_hold_ps": -6.6101,
+      "TT_setup_ps": 676.6649,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqpu"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[248]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.5583   18.1077   43.2415  230.1176 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[248]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075409_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   18.1333    0.3543  230.4719 ^ _075409_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075409_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.8567    8.8760    7.6031  238.0750 v _075409_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[280]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    8.8814    0.1204  238.1954 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[280]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[232]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[264]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[264]$_DFF_P_",
+      "FF_hold_ps": -6.5914,
+      "TT_setup_ps": 667.4988,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvv",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[232]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.8274   26.3430   48.5394  239.8657 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[232]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075425_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   26.5448    1.2554  241.1212 ^ _075425_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075425_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6125    8.9597    7.6055  248.7267 v _075425_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[264]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    8.9600    0.0285  248.7552 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[264]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[233]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[265]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[265]$_DFF_P_",
+      "FF_hold_ps": -6.1439,
+      "TT_setup_ps": 667.6183,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvx",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[233]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.5015   24.3396   46.8574  237.4633 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[233]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075424_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   24.4497    0.8928  238.3561 ^ _075424_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075424_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.7417    9.3459    7.9379  246.2940 v _075424_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[265]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    9.3469    0.0515  246.3455 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[265]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[227]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[259]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[259]$_DFF_P_",
+      "FF_hold_ps": -5.7147,
+      "TT_setup_ps": 667.0894,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[227]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.9391   20.6464   47.7236  245.3886 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[227]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075430_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   20.6746    0.4061  245.7948 ^ _075430_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075430_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5854    7.9219    6.9844  252.7792 v _075430_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[259]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.9222    0.0246  252.8038 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[259]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[19]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[51]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[51]$_DFF_P_",
+      "FF_hold_ps": -5.2207,
+      "TT_setup_ps": 693.4741,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqtu",
+        "mp_ck_Tpqtt"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[19]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.8192   13.0207   41.4812  230.5352 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[19]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075638_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   13.0296    0.1141  230.6492 ^ _075638_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075638_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5946    6.4727    5.9773  236.6266 v _075638_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[51]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.4730    0.0248  236.6514 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[51]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "d_q[174]$_DFF_P_",
+      "endpoint": "su[14]$_DFF_P_/D",
+      "endpoint_cell": "su[14]$_DFF_P_",
+      "FF_hold_ps": -5.0218,
+      "TT_setup_ps": 175.0516,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqst",
+        "mp_ck_Tqqrw"
+      ],
+      "data_chain": [
+        {
+          "pin": "d_q[174]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.0579   14.6286   41.0730  235.3362 ^ d_q[174]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_097753_/A2",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "                   14.6320    0.0926  235.4288 ^ _097753_/A2 (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_097753_/Y",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "     1    3.3151   16.0976   12.5777  248.0065 v _097753_/Y (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "su[14]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                   16.6331    1.6018  249.6083 v su[14]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[21]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[53]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[53]$_DFF_P_",
+      "FF_hold_ps": -4.8993,
+      "TT_setup_ps": 701.2335,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqtt",
+        "mp_ck_Tpqtt"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[21]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.8753   13.3975   40.9167  226.0824 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[21]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075636_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   13.4026    0.1111  226.1936 ^ _075636_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075636_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6881    6.9881    6.3197  232.5133 v _075636_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[53]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.9888    0.0382  232.5515 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[53]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[239]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[271]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[271]$_DFF_P_",
+      "FF_hold_ps": -4.8382,
+      "TT_setup_ps": 673.6571,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[239]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.6421   18.8034   44.0484  233.8210 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[239]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075418_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   18.8675    0.5900  234.4110 ^ _075418_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075418_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5942    7.6377    6.7990  241.2100 v _075418_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[271]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.6380    0.0255  241.2356 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[271]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_lb.wp[0]$_DFF_PN0_",
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[0]",
+      "endpoint_cell": "u_l.u_lb.g_m[0].u_m",
+      "FF_hold_ps": -3.9393,
+      "TT_setup_ps": 636.0854,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqpp",
+        "mp_ck_Tqqqp"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_lb.wp[0]$_DFF_PN0_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "     3    1.7359   20.3027   47.8997  240.4111 ^ u_l.u_lb.wp[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102576_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   20.3035    0.0408  240.4519 ^ _102576_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102576_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     2    2.7742   18.3123   13.9739  254.4258 v _102576_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_lb.g_m[0].u_m/w_addr_in[0]",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "line": "                   18.3307    0.3791  254.8049 v u_l.u_lb.g_m[0].u_m/w_addr_in[0] (ot_sram_1r1w_128x256_m1_r2c2)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[182]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[214]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[214]$_DFF_P_",
+      "FF_hold_ps": -3.8691,
+      "TT_setup_ps": 672.9792,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[182]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.5709   11.3559   39.1900  228.0494 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[182]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075475_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   11.3562    0.0266  228.0760 ^ _075475_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075475_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    1.6672   11.4076    8.6054  236.6814 v _075475_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[214]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                   11.4853    0.5298  237.2112 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[214]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[11]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[43]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[43]$_DFF_P_",
+      "FF_hold_ps": -3.5853,
+      "TT_setup_ps": 700.2926,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqtt",
+        "mp_ck_Tpqtt"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[11]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.8700   13.3477   40.8250  225.7801 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[11]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075646_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   13.3516    0.0931  225.8732 ^ _075646_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075646_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.7392    7.2388    6.4603  232.3335 v _075646_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[43]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.2414    0.0752  232.4087 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[43]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_lb.wp[3]$_DFF_PN0_",
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[3]",
+      "endpoint_cell": "u_l.u_lb.g_m[0].u_m",
+      "FF_hold_ps": -2.8336,
+      "TT_setup_ps": 635.1187,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqpp",
+        "mp_ck_Tqqqp"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_lb.wp[3]$_DFF_PN0_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "     3    1.7389   20.3186   47.9204  240.4711 ^ u_l.u_lb.wp[3]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102294_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   20.3195    0.0450  240.5161 ^ _102294_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102294_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     2    3.0220   19.4589   14.6172  255.1333 v _102294_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_lb.g_m[0].u_m/w_addr_in[3]",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "line": "                   19.4912    0.4872  255.6205 v u_l.u_lb.g_m[0].u_m/w_addr_in[3] (ot_sram_1r1w_128x256_m1_r2c2)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.d_n.genblk1.g_line.line[22]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[31]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_n.genblk1.g_line.line[31]$_DFF_P_",
+      "FF_hold_ps": -2.7547,
+      "TT_setup_ps": 695.1102,
+      "clock_leaf_pair": [
+        "mp_ck_Tpptp",
+        "mp_ck_Tpptr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[22]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.1381   15.2444   41.2592  225.0595 ^ u_l.u_exp.d_n.genblk1.g_line.line[22]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076493_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   15.2623    0.2640  225.3235 ^ _076493_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076493_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5817    6.8697    6.2437  231.5672 v _076493_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[31]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.8707    0.0437  231.6109 v u_l.u_exp.d_n.genblk1.g_line.line[31]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_lb.wp[2]$_DFF_PN0_",
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[2]",
+      "endpoint_cell": "u_l.u_lb.g_m[0].u_m",
+      "FF_hold_ps": -2.6648,
+      "TT_setup_ps": 633.2017,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqpp",
+        "mp_ck_Tqqqp"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_lb.wp[2]$_DFF_PN0_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "     4    2.6358   26.1649   51.4655  243.9991 ^ u_l.u_lb.wp[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102176_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   26.1736    0.2302  244.2293 ^ _102176_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102176_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    1.8241   15.6780   12.1288  256.3581 v _102176_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_lb.g_m[0].u_m/w_addr_in[2]",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "line": "                   15.7056    0.3776  256.7357 v u_l.u_lb.g_m[0].u_m/w_addr_in[2] (ot_sram_1r1w_128x256_m1_r2c2)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_ve.line[39]$_DFF_PN0_",
+      "endpoint": "u_l.u_ve.line[40]$_DFF_PN0_/D",
+      "endpoint_cell": "u_l.u_ve.line[40]$_DFF_PN0_",
+      "FF_hold_ps": -2.6351,
+      "TT_setup_ps": 662.6429,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvp",
+        "mp_ck_Tqqpq"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_ve.line[39]$_DFF_PN0_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "     2    1.0923   15.7524   46.8803  240.3743 ^ u_l.u_ve.line[39]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_103470_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   15.7532    0.0316  240.4059 ^ _103470_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_103470_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6492    7.3019    6.5330  246.9389 v _103470_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_ve.line[40]$_DFF_PN0_/D",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "                    7.3038    0.0638  247.0026 v u_l.u_ve.line[40]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[228]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[260]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[260]$_DFF_P_",
+      "FF_hold_ps": -2.604,
+      "TT_setup_ps": 662.79,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[228]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.3494   23.1959   49.1566  246.6649 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[228]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075429_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   23.2505    0.6102  247.2751 ^ _075429_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075429_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6463    8.6333    7.4482  254.7233 v _075429_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[260]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    8.6337    0.0323  254.7556 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[260]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_div.g_rec[5].qin[9]$_DFF_P_",
+      "endpoint": "u_l.u_div.g_rec[6].qin[11]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_div.g_rec[6].qin[11]$_DFF_P_",
+      "FF_hold_ps": -1.892,
+      "TT_setup_ps": 656.4161,
+      "clock_leaf_pair": [
+        "mp_ck_Tppru",
+        "mp_ck_Tqppu"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_div.g_rec[5].qin[9]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.4763   10.7773   39.9584  231.4927 ^ u_l.u_div.g_rec[5].qin[9]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5520/A",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "                   10.7778    0.0347  231.5274 ^ hold5520/A (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5520/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "     1    0.5497    5.0600   13.1554  244.6828 ^ hold5520/Y (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_060899_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                    5.0610    0.0405  244.7233 ^ _060899_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_060899_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5921    4.6713    4.3987  249.1219 v _060899_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5521/A",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "                    4.6720    0.0316  249.1535 v hold5521/A (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5521/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "     1    0.6135    4.9260   12.0142  261.1677 v hold5521/Y (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_div.g_rec[6].qin[11]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    4.9267    0.0271  261.1948 v u_l.u_div.g_rec[6].qin[11]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.d_n.genblk1.g_line.line[152]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[161]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_n.genblk1.g_line.line[161]$_DFF_P_",
+      "FF_hold_ps": -1.8775,
+      "TT_setup_ps": 700.1758,
+      "clock_leaf_pair": [
+        "mp_ck_Tppts",
+        "mp_ck_Tppts"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[152]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.2168   15.7963   41.5840  225.1544 ^ u_l.u_exp.d_n.genblk1.g_line.line[152]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076363_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   15.8176    0.2972  225.4516 ^ _076363_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076363_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6205    7.1664    6.4514  231.9030 v _076363_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[161]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.1675    0.0475  231.9505 v u_l.u_exp.d_n.genblk1.g_line.line[161]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[16]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[48]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[48]$_DFF_P_",
+      "FF_hold_ps": -1.8449,
+      "TT_setup_ps": 689.2132,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqtr",
+        "mp_ck_Tpqtt"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[16]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.5779   11.4125   41.2548  233.2725 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[16]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075641_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   11.4127    0.0255  233.2980 ^ _075641_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075641_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.8787    7.5116    6.5542  239.8522 v _075641_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[48]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.5143    0.1154  239.9677 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[48]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.d_n.genblk1.g_line.line[95]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[104]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_n.genblk1.g_line.line[104]$_DFF_P_",
+      "FF_hold_ps": -1.7996,
+      "TT_setup_ps": 701.3759,
+      "clock_leaf_pair": [
+        "mp_ck_Tppqx",
+        "mp_ck_Tppqx"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[95]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.5907   11.4954   39.6202  226.3370 ^ u_l.u_exp.d_n.genblk1.g_line.line[95]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076420_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   11.4963    0.0525  226.3895 ^ _076420_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076420_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6406    6.3945    5.8861  232.2756 v _076420_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[104]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.3964    0.0597  232.3353 v u_l.u_exp.d_n.genblk1.g_line.line[104]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_lb.wp[4]$_DFF_PN0_",
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[4]",
+      "endpoint_cell": "u_l.u_lb.g_m[0].u_m",
+      "FF_hold_ps": -1.7741,
+      "TT_setup_ps": 632.8149,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqpq",
+        "mp_ck_Tqqqp"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_lb.wp[4]$_DFF_PN0_/QN",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "     3    1.7618   20.5205   49.0383  242.4792 ^ u_l.u_lb.wp[4]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102223_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   20.5249    0.1366  242.6158 ^ _102223_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_102223_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     2    2.7702   18.3641   14.0002  256.6160 v _102223_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_lb.g_m[0].u_m/w_addr_in[4]",
+          "master": "ot_sram_1r1w_128x256_m1_r2c2",
+          "line": "                   18.3833    0.3410  256.9570 v u_l.u_lb.g_m[0].u_m/w_addr_in[4] (ot_sram_1r1w_128x256_m1_r2c2)"
+        }
+      ]
+    },
+    {
+      "launch": "su[23]$_DFF_P_",
+      "endpoint": "g_lr.lu[23]$_DFF_P_/D",
+      "endpoint_cell": "g_lr.lu[23]$_DFF_P_",
+      "FF_hold_ps": -1.7151,
+      "TT_setup_ps": 257.7495,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqsp",
+        "mp_ck_Tqqrw"
+      ],
+      "data_chain": [
+        {
+          "pin": "su[23]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.5534   11.2469   38.4481  230.8440 ^ su[23]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098074_/B",
+          "master": "AND2x2_ASAP7_75t_R",
+          "line": "                   11.2478    0.0504  230.8944 ^ _098074_/B (AND2x2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098074_/Y",
+          "master": "AND2x2_ASAP7_75t_R",
+          "line": "     1    1.8109    9.7197   16.8507  247.7451 ^ _098074_/Y (AND2x2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098075_/B",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "                    9.7787    0.4083  248.1534 ^ _098075_/B (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098075_/Y",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "     1    0.9527    7.0626    6.7057  254.8591 v _098075_/Y (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "g_lr.lu[23]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.0667    0.1214  254.9805 v g_lr.lu[23]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[244]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[276]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[276]$_DFF_P_",
+      "FF_hold_ps": -1.5876,
+      "TT_setup_ps": 667.5445,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[244]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.0718   21.5185   46.6192  239.0345 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[244]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075413_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   21.5688    0.5622  239.5967 ^ _075413_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075413_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6042    8.1706    7.1267  246.7234 v _075413_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[276]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    8.1717    0.0511  246.7745 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[276]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "su[20]$_DFF_P_",
+      "endpoint": "g_lr.lu[20]$_DFF_P_/D",
+      "endpoint_cell": "g_lr.lu[20]$_DFF_P_",
+      "FF_hold_ps": -1.2739,
+      "TT_setup_ps": 285.3759,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqsp",
+        "mp_ck_Tqqrw"
+      ],
+      "data_chain": [
+        {
+          "pin": "su[20]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.5818   11.4260   38.8430  233.2136 ^ su[20]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098080_/B",
+          "master": "AND2x2_ASAP7_75t_R",
+          "line": "                   11.4265    0.0377  233.2514 ^ _098080_/B (AND2x2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098080_/Y",
+          "master": "AND2x2_ASAP7_75t_R",
+          "line": "     1    0.8425    6.5799   15.3410  248.5923 ^ _098080_/Y (AND2x2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098081_/B",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "                    6.5811    0.0433  248.6356 ^ _098081_/B (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_098081_/Y",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "     1    0.7350    5.6156    5.4594  254.0950 v _098081_/Y (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "g_lr.lu[20]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    5.6192    0.0744  254.1694 v g_lr.lu[20]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.d_n.genblk1.g_line.line[135]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[144]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_n.genblk1.g_line.line[144]$_DFF_P_",
+      "FF_hold_ps": -1.1699,
+      "TT_setup_ps": 692.7369,
+      "clock_leaf_pair": [
+        "mp_ck_Tpptp",
+        "mp_ck_Tpptr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[135]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.0940   14.9373   41.7731  228.0651 ^ u_l.u_exp.d_n.genblk1.g_line.line[135]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076380_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   14.9527    0.2390  228.3042 ^ _076380_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076380_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5724    6.7632    6.1709  234.4751 v _076380_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[144]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.7641    0.0415  234.5166 v u_l.u_exp.d_n.genblk1.g_line.line[144]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.d_n.genblk1.g_line.line[120]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[129]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_n.genblk1.g_line.line[129]$_DFF_P_",
+      "FF_hold_ps": -1.0441,
+      "TT_setup_ps": 692.5223,
+      "clock_leaf_pair": [
+        "mp_ck_Tpptp",
+        "mp_ck_Tpptr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[120]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.1169   15.0946   41.8788  228.1758 ^ u_l.u_exp.d_n.genblk1.g_line.line[120]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076395_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   15.1106    0.2456  228.4214 ^ _076395_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_076395_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.5690    6.7781    6.1817  234.6030 v _076395_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_n.genblk1.g_line.line[129]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.7790    0.0408  234.6439 v u_l.u_exp.d_n.genblk1.g_line.line[129]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.a_r1.u.u.u_k5.g_r.r[42]$_DFF_P_",
+      "endpoint": "u_l.u_exp.a_r1.u.u.y[9]$_DFF_PN0_/D",
+      "endpoint_cell": "u_l.u_exp.a_r1.u.u.y[9]$_DFF_PN0_",
+      "FF_hold_ps": -0.9338,
+      "TT_setup_ps": 168.3274,
+      "clock_leaf_pair": [
+        "mp_ck_Tppvv",
+        "mp_ck_Tppvw"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.a_r1.u.u.u_k5.g_r.r[42]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.8590   13.2676   40.0529  232.3223 ^ u_l.u_exp.a_r1.u.u.u_k5.g_r.r[42]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_073183_/A2",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "line": "                   13.2705    0.0742  232.3964 ^ _073183_/A2 (OAI22x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_073183_/Y",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "line": "     1    1.5382   10.1788    8.5082  240.9046 v _073183_/Y (OAI22x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.a_r1.u.u.y[9]$_DFF_PN0_/D",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "                   10.2493    0.4369  241.3415 v u_l.u_exp.a_r1.u.u.y[9]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "d_q[178]$_DFF_P_",
+      "endpoint": "su[18]$_DFF_P_/D",
+      "endpoint_cell": "su[18]$_DFF_P_",
+      "FF_hold_ps": -0.9212,
+      "TT_setup_ps": 160.7838,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqst",
+        "mp_ck_Tqqrw"
+      ],
+      "data_chain": [
+        {
+          "pin": "d_q[178]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.1402   15.1943   41.3088  234.7419 ^ d_q[178]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_097743_/A2",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "                   15.1983    0.1065  234.8484 ^ _097743_/A2 (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_097743_/Y",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "     1    4.5881   23.2233   14.6228  249.4712 v _097743_/Y (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "su[18]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                   24.4752    2.9039  252.3751 v su[18]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[156]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[188]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[188]$_DFF_P_",
+      "FF_hold_ps": -0.7204,
+      "TT_setup_ps": 660.831,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvr",
+        "mp_ck_Tqqpr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[156]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.7666   25.6505   50.5914  247.1396 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[156]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075501_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   25.7357    0.8025  247.9421 ^ _075501_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075501_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.8189   10.0139    8.3633  256.3054 v _075501_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[188]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                   10.0177    0.1076  256.4131 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[188]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[17]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[49]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[49]$_DFF_P_",
+      "FF_hold_ps": -0.7125,
+      "TT_setup_ps": 689.2458,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqtr",
+        "mp_ck_Tpqtt"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[17]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.6530   11.8985   41.6048  233.6394 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[17]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075640_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   11.8989    0.0365  233.6759 ^ _075640_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075640_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6638    6.5660    6.0223  239.6983 v _075640_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[49]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.5666    0.0344  239.7327 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[49]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_div.r_sign[2]$_DFF_P_",
+      "endpoint": "u_l.u_div.r_sign[3]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_div.r_sign[3]$_DFF_P_",
+      "FF_hold_ps": -0.6981,
+      "TT_setup_ps": 661.0491,
+      "clock_leaf_pair": [
+        "mp_ck_Tqpqx",
+        "mp_ck_Tqqqr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_div.r_sign[2]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.4793   10.7810   38.1592  232.5898 ^ u_l.u_div.r_sign[2]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5772/A",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "                   10.7815    0.0359  232.6257 ^ hold5772/A (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5772/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "     1    0.5585    5.0805   13.1732  245.7989 ^ hold5772/Y (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_135936_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                    5.0810    0.0233  245.8222 ^ _135936_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_135936_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6356    4.8952    4.4963  250.3185 v _135936_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5773/A",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "                    4.8977    0.0607  250.3792 v hold5773/A (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "hold5773/Y",
+          "master": "BUFx2_ASAP7_75t_R",
+          "line": "     1    0.7036    5.1382   12.2175  262.5967 v hold5773/Y (BUFx2_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_div.r_sign[3]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    5.1422    0.0702  262.6669 v u_l.u_div.r_sign[3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[127]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[159]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[159]$_DFF_P_",
+      "FF_hold_ps": -0.6685,
+      "TT_setup_ps": 682.5037,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqsr",
+        "mp_ck_Tpqst"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[127]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.5247   11.0614   38.8901  223.8597 ^ u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[127]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075786_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   11.0615    0.0192  223.8790 ^ _075786_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075786_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     2    3.1412   19.0185   11.5907  235.4697 v _075786_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[159]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                   19.4461    1.5741  237.0438 v u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[159]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[44]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.y[11]$_DFF_PN0_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.y[11]$_DFF_PN0_",
+      "FF_hold_ps": -0.6574,
+      "TT_setup_ps": 161.2932,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqtx",
+        "mp_ck_Tqqtx"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[44]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.4451   17.3393   42.4809  232.3516 ^ u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[44]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_130134_/A1",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "line": "                   17.3598    0.3044  232.6560 ^ _130134_/A1 (OAI22x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_130134_/Y",
+          "master": "OAI22x1_ASAP7_75t_R",
+          "line": "     1    0.6234    7.3714    7.9371  240.5931 v _130134_/Y (OAI22x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.y[11]$_DFF_PN0_/D",
+          "master": "DFFASRHQNx1_ASAP7_75t_R",
+          "line": "                    7.3717    0.0526  240.6457 v u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.y[11]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_div.q[23]$_DFF_P_",
+      "endpoint": "u_l.u_div.f1_sig[20]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_div.f1_sig[20]$_DFF_P_",
+      "FF_hold_ps": -0.4037,
+      "TT_setup_ps": 469.1298,
+      "clock_leaf_pair": [
+        "mp_ck_Tppst",
+        "mp_ck_Tppsu"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_div.q[23]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     2    1.6333   18.5078   43.7858  224.3995 ^ u_l.u_div.q[23]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_079591_/A2",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "                   18.5120    0.1249  224.5244 ^ _079591_/A2 (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_079591_/Y",
+          "master": "AOI21x1_ASAP7_75t_R",
+          "line": "     1    0.6171    5.2142    7.7774  232.3018 v _079591_/Y (AOI21x1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_div.f1_sig[20]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    5.2161    0.0509  232.3528 v u_l.u_div.f1_sig[20]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.d_x.genblk1.g_line.line[1]$_DFF_P_",
+      "endpoint": "u_l.u_exp.d_x.genblk1.g_line.line[33]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.d_x.genblk1.g_line.line[33]$_DFF_P_",
+      "FF_hold_ps": -0.3742,
+      "TT_setup_ps": 669.5545,
+      "clock_leaf_pair": [
+        "mp_ck_Tppux",
+        "mp_ck_Tpqpw"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.d_x.genblk1.g_line.line[1]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.7113   25.3192   47.3071  236.2726 ^ u_l.u_exp.d_x.genblk1.g_line.line[1]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_077664_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   25.3859    0.7043  236.9769 ^ _077664_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_077664_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6802    9.1531    7.7795  244.7564 v _077664_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.d_x.genblk1.g_line.line[33]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    9.1537    0.0387  244.7951 v u_l.u_exp.d_x.genblk1.g_line.line[33]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[241]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[273]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[273]$_DFF_P_",
+      "FF_hold_ps": -0.1503,
+      "TT_setup_ps": 667.6119,
+      "clock_leaf_pair": [
+        "mp_ck_Tpqvu",
+        "mp_ck_Tqqps"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[241]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    2.0415   21.3318   45.8462  236.4821 ^ u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[241]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075416_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   21.3832    0.5667  237.0488 ^ _075416_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_075416_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6642    8.4493    7.3418  244.3906 v _075416_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[273]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    8.4505    0.0544  244.4450 v u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[273]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[84]$_DFF_P_",
+      "endpoint": "u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[47]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[47]$_DFF_P_",
+      "FF_hold_ps": -0.1429,
+      "TT_setup_ps": 695.2969,
+      "clock_leaf_pair": [
+        "mp_ck_Tqpsv",
+        "mp_ck_Tqpsv"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[84]$_DFF_P_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    1.3511   16.6963   43.1359  228.6722 ^ u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[84]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_105386_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   16.7130    0.2660  228.9382 ^ _105386_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_105386_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6590    7.5419    6.7085  235.6467 v _105386_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[47]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    7.5434    0.0588  235.7055 v u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[47]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    },
+    {
+      "launch": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[64]$_SDFF_PP0_",
+      "endpoint": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[74]$_DFF_P_/D",
+      "endpoint_cell": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[74]$_DFF_P_",
+      "FF_hold_ps": -0.1405,
+      "TT_setup_ps": 703.1165,
+      "clock_leaf_pair": [
+        "mp_ck_Tqqsr",
+        "mp_ck_Tqqsr"
+      ],
+      "data_chain": [
+        {
+          "pin": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[64]$_SDFF_PP0_/QN",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "     1    0.6705   12.0041   38.8352  228.7051 ^ u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k1.g_r.r[64]$_SDFF_PP0_/QN (DFFHQNx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_061191_/A",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "                   12.0052    0.0591  228.7642 ^ _061191_/A (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "_061191_/Y",
+          "master": "INVx1_ASAP7_75t_R",
+          "line": "     1    0.6349    6.4679    5.9448  234.7090 v _061191_/Y (INVx1_ASAP7_75t_R)"
+        },
+        {
+          "pin": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[74]$_DFF_P_/D",
+          "master": "DFFHQNx1_ASAP7_75t_R",
+          "line": "                    6.4694    0.0530  234.7620 v u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[74]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)"
+        }
+      ]
+    }
+  ]
+}

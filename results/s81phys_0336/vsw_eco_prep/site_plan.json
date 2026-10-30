@@ -1,0 +1,810 @@
+{
+  "scope": "ReadonlyfinalODBlegalpaddedrowallocationPREPonly; removes/replacesfillersatnewhomes onlyifapprovedfutureECO; noODBwrite",
+  "cell_width_um": 0.378,
+  "cell_height_um": 0.27,
+  "occupied_nonfillercells": 110835,
+  "count": 40,
+  "max_pin_home_reach_um": 5.346,
+  "rows": [
+    {
+      "index": 0,
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[228]$_DFF_P_/D",
+      "FF_hold_ps": -9.3406,
+      "TT_setup_ps": 682.4236,
+      "input_net": "u_l.u_exp.d_n.genblk1.g_line.line\\[219\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        27.316,
+        33.345
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        27.108,
+        32.94
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 1,
+      "endpoint": "u_l.u_m1.genblk1.genblk1.g_l5.u.u.err[0]$_DFF_PN0_/D",
+      "FF_hold_ps": -9.0261,
+      "TT_setup_ps": 649.8221,
+      "input_net": "net5524",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        85.096,
+        103.275
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        84.78,
+        103.68
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.667,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 2,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[280]$_DFF_P_/D",
+      "FF_hold_ps": -6.6101,
+      "TT_setup_ps": 676.6649,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[248\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        100.648,
+        172.935
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        99.954,
+        173.34
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 1.045,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 3,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[264]$_DFF_P_/D",
+      "FF_hold_ps": -6.5914,
+      "TT_setup_ps": 667.4988,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[232\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        92.386,
+        178.875
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        92.178,
+        179.01
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 4,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[265]$_DFF_P_/D",
+      "FF_hold_ps": -6.1439,
+      "TT_setup_ps": 667.6183,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[233\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        92.656,
+        177.795
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        92.448,
+        177.93
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 5,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[259]$_DFF_P_/D",
+      "FF_hold_ps": -5.7147,
+      "TT_setup_ps": 667.0894,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[227\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        90.55,
+        180.225
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        90.342,
+        179.82
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 6,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[51]$_DFF_P_/D",
+      "FF_hold_ps": -5.2207,
+      "TT_setup_ps": 693.4741,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[19\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        58.798,
+        172.125
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        58.59,
+        171.45
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.559,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 7,
+      "endpoint": "su[14]$_DFF_P_/D",
+      "FF_hold_ps": -5.0218,
+      "TT_setup_ps": 175.0516,
+      "input_net": "_000129_",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        108.856,
+        219.645
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        108.648,
+        217.89
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 1.639,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 8,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[53]$_DFF_P_/D",
+      "FF_hold_ps": -4.8993,
+      "TT_setup_ps": 701.2335,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[21\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        55.936,
+        173.475
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        55.188,
+        172.26
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 1.639,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 9,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[271]$_DFF_P_/D",
+      "FF_hold_ps": -4.8382,
+      "TT_setup_ps": 673.6571,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[239\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        93.736,
+        174.285
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        93.528,
+        174.42
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 10,
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[0]",
+      "FF_hold_ps": -3.9393,
+      "TT_setup_ps": 636.0854,
+      "input_net": "u_l.u_lb.wp\\[0\\]",
+      "input_net_fanout": 2,
+      "native_capture_pin_um": [
+        107.58,
+        149.484
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        102.384,
+        149.31
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 5.046,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 11,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[214]$_DFF_P_/D",
+      "FF_hold_ps": -3.8691,
+      "TT_setup_ps": 672.9792,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[182\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        92.008,
+        172.665
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        91.8,
+        172.8
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 12,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[43]$_DFF_P_/D",
+      "FF_hold_ps": -3.5853,
+      "TT_setup_ps": 700.2926,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[11\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        57.232,
+        174.555
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        56.484,
+        174.69
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.829,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 13,
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[3]",
+      "FF_hold_ps": -2.8336,
+      "TT_setup_ps": 635.1187,
+      "input_net": "u_l.u_lb.wp\\[3\\]",
+      "input_net_fanout": 2,
+      "native_capture_pin_um": [
+        107.58,
+        149.772
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        102.276,
+        149.58
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 5.172,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 14,
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[31]$_DFF_P_/D",
+      "FF_hold_ps": -2.7547,
+      "TT_setup_ps": 695.1102,
+      "input_net": "u_l.u_exp.d_n.genblk1.g_line.line\\[22\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        21.754,
+        63.855
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        21.546,
+        63.45
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 15,
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[2]",
+      "FF_hold_ps": -2.6648,
+      "TT_setup_ps": 633.2017,
+      "input_net": "u_l.u_lb.wp\\[2\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        107.58,
+        149.676
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        102.546,
+        149.04
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 5.346,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 16,
+      "endpoint": "u_l.u_ve.line[40]$_DFF_PN0_/D",
+      "FF_hold_ps": -2.6351,
+      "TT_setup_ps": 662.6429,
+      "input_net": "u_l.u_exp.g_h\\[2\\].u_a.genblk1.genblk1.g_keep4.u.u.valid_out",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        92.548,
+        166.185
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        92.34,
+        165.78
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 17,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[260]$_DFF_P_/D",
+      "FF_hold_ps": -2.604,
+      "TT_setup_ps": 662.79,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[228\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        91.846,
+        179.685
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        91.422,
+        179.82
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.505,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 18,
+      "endpoint": "u_l.u_div.g_rec[6].qin[11]$_DFF_P_/D",
+      "FF_hold_ps": -1.892,
+      "TT_setup_ps": 656.4161,
+      "input_net": "net5520",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        79.912,
+        36.855
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        79.974,
+        36.99
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.521,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 19,
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[161]$_DFF_P_/D",
+      "FF_hold_ps": -1.8775,
+      "TT_setup_ps": 700.1758,
+      "input_net": "u_l.u_exp.d_n.genblk1.g_line.line\\[152\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        27.91,
+        52.245
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        27.702,
+        51.84
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 20,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[48]$_DFF_P_/D",
+      "FF_hold_ps": -1.8449,
+      "TT_setup_ps": 689.2132,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[16\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        57.448,
+        172.395
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        57.456,
+        172.8
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.737,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 21,
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[104]$_DFF_P_/D",
+      "FF_hold_ps": -1.7996,
+      "TT_setup_ps": 701.3759,
+      "input_net": "u_l.u_exp.d_n.genblk1.g_line.line\\[95\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        26.236,
+        43.605
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        26.19,
+        43.74
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.413,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 22,
+      "endpoint": "u_l.u_lb.g_m[0].u_m/w_addr_in[4]",
+      "FF_hold_ps": -1.7741,
+      "TT_setup_ps": 632.8149,
+      "input_net": "u_l.u_lb.wp\\[4\\]",
+      "input_net_fanout": 2,
+      "native_capture_pin_um": [
+        107.58,
+        149.868
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        102.276,
+        149.85
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 5.232,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 23,
+      "endpoint": "g_lr.lu[23]$_DFF_P_/D",
+      "FF_hold_ps": -1.7151,
+      "TT_setup_ps": 257.7495,
+      "input_net": "ln_u0\\[23\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        107.506,
+        215.865
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        107.298,
+        215.46
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 24,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[276]$_DFF_P_/D",
+      "FF_hold_ps": -1.5876,
+      "TT_setup_ps": 667.5445,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[244\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        91.63,
+        174.555
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        91.692,
+        174.69
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.521,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 25,
+      "endpoint": "g_lr.lu[20]$_DFF_P_/D",
+      "FF_hold_ps": -1.2739,
+      "TT_setup_ps": 285.3759,
+      "input_net": "ln_u0\\[20\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        106.318,
+        217.755
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        106.11,
+        217.08
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.559,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 26,
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[144]$_DFF_P_/D",
+      "FF_hold_ps": -1.1699,
+      "TT_setup_ps": 692.7369,
+      "input_net": "u_l.u_exp.d_n.genblk1.g_line.line\\[135\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        24.454,
+        64.125
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        24.246,
+        64.53
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.559,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 27,
+      "endpoint": "u_l.u_exp.d_n.genblk1.g_line.line[129]$_DFF_P_/D",
+      "FF_hold_ps": -1.0441,
+      "TT_setup_ps": 692.5223,
+      "input_net": "u_l.u_exp.d_n.genblk1.g_line.line\\[120\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        23.374,
+        64.125
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        23.166,
+        63.72
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 28,
+      "endpoint": "u_l.u_exp.a_r1.u.u.y[9]$_DFF_PN0_/D",
+      "FF_hold_ps": -0.9338,
+      "TT_setup_ps": 168.3274,
+      "input_net": "_027513_",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        28.45,
+        107.325
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        28.512,
+        106.92
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.521,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 29,
+      "endpoint": "su[18]$_DFF_P_/D",
+      "FF_hold_ps": -0.9212,
+      "TT_setup_ps": 160.7838,
+      "input_net": "_000133_",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        106.426,
+        218.835
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        106.974,
+        217.89
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 1.547,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 30,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[188]$_DFF_P_/D",
+      "FF_hold_ps": -0.7204,
+      "TT_setup_ps": 660.831,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[156\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        96.112,
+        167.805
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        95.904,
+        167.4
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 31,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[49]$_DFF_P_/D",
+      "FF_hold_ps": -0.7125,
+      "TT_setup_ps": 689.2458,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[17\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        55.936,
+        171.855
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        55.728,
+        171.18
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.559,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 32,
+      "endpoint": "u_l.u_div.r_sign[3]$_DFF_P_/D",
+      "FF_hold_ps": -0.6981,
+      "TT_setup_ps": 661.0491,
+      "input_net": "net5772",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        92.008,
+        102.465
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        91.8,
+        102.06
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 33,
+      "endpoint": "u_l.u_exp.g_h[1].g_rd.d_r.genblk1.g_line.line[159]$_DFF_P_/D",
+      "FF_hold_ps": -0.6685,
+      "TT_setup_ps": 682.5037,
+      "input_net": "u_l.u_exp.g_h\\[1\\].g_rd.d_r.genblk1.g_line.line\\[127\\]",
+      "input_net_fanout": 2,
+      "native_capture_pin_um": [
+        42.868,
+        158.355
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        42.66,
+        157.95
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 34,
+      "endpoint": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.y[11]$_DFF_PN0_/D",
+      "FF_hold_ps": -0.6574,
+      "TT_setup_ps": 161.2932,
+      "input_net": "_027654_",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        137.8,
+        190.485
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        137.646,
+        190.08
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.305,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 35,
+      "endpoint": "u_l.u_div.f1_sig[20]$_DFF_P_/D",
+      "FF_hold_ps": -0.4037,
+      "TT_setup_ps": 469.1298,
+      "input_net": "_027319_",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        64.9,
+        74.115
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        64.692,
+        74.25
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 36,
+      "endpoint": "u_l.u_exp.d_x.genblk1.g_line.line[33]$_DFF_P_/D",
+      "FF_hold_ps": -0.3742,
+      "TT_setup_ps": 669.5545,
+      "input_net": "u_l.u_exp.d_x.genblk1.g_line.line\\[1\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        43.084,
+        107.055
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        42.876,
+        106.11
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 0.829,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 37,
+      "endpoint": "u_l.u_exp.g_h[2].g_rd.d_r.genblk1.g_line.line[273]$_DFF_P_/D",
+      "FF_hold_ps": -0.1503,
+      "TT_setup_ps": 667.6119,
+      "input_net": "u_l.u_exp.g_h\\[2\\].g_rd.d_r.genblk1.g_line.line\\[241\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        93.844,
+        173.745
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        93.636,
+        173.34
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.289,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 38,
+      "endpoint": "u_l.u_exp.g_h[6].u_a.genblk1.genblk1.g_keep4.u.u.u_k5.g_r.r[47]$_DFF_P_/D",
+      "FF_hold_ps": -0.1429,
+      "TT_setup_ps": 695.2969,
+      "input_net": "u_l.u_exp.g_h\\[6\\].u_a.genblk1.genblk1.g_keep4.u.u.q3\\[84\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        127.486,
+        30.645
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        127.494,
+        30.78
+      ],
+      "orient": "R0",
+      "pin_home_reach_um": 0.467,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    },
+    {
+      "index": 39,
+      "endpoint": "u_l.u_exp.g_h[3].u_a.genblk1.genblk1.g_keep4.u.u.u_k3.g_r.r[74]$_DFF_P_/D",
+      "FF_hold_ps": -0.1405,
+      "TT_setup_ps": 703.1165,
+      "input_net": "u_l.u_exp.g_h\\[3\\].u_a.genblk1.genblk1.g_keep4.u.u.q1\\[64\\]",
+      "input_net_fanout": 1,
+      "native_capture_pin_um": [
+        129.646,
+        191.295
+      ],
+      "cell": "HB4xp67_ASAP7_75t_R",
+      "home_um": [
+        129.168,
+        191.97
+      ],
+      "orient": "MX",
+      "pin_home_reach_um": 1.099,
+      "scope": "ONE explicitcapturebranchHB4 only; nopins/clock/FFresize/SDCchange; actualNLDMandPG/DRTgatesrequired"
+    }
+  ]
+}

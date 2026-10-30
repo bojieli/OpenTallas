@@ -1,0 +1,24 @@
+{
+  "scope": "PROPOSAL ONLY nativeR7/NDR exactbaseline; no UF3 substitution, noqualification/P&R",
+  "baseline_reproduced": true,
+  "baseline_windows": {
+    "TT": 21.52050114293121,
+    "FF": 21.877304915109107
+  },
+  "baseline_slew": {
+    "TT_in": 22.278391093049766,
+    "TT_out": 49.62037347065077,
+    "FF_in": 19.383410456428486,
+    "FF_out": 38.56017500145835
+  },
+  "geometry_and_stage_and_cell_count_unchanged": true,
+  "source_joint_sha256": "2eb48859356c3ea3dd1de59092a0ed061a58a2449b36edbe40be2db71c55a1cf",
+  "audit": [
+    {
+      "kind": "scope",
+      "reason": "near_tied_leaf_count_outside_2_to_3",
+      "count": 1
+    }
+  ],
+  "proposal": null
+}
