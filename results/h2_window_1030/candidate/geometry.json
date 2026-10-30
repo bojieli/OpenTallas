@@ -1,0 +1,72 @@
+{
+  "scope": "GEOMETRY ONLY; candidate timing NOT RUN",
+  "native_input": {
+    "port": "ck[0]",
+    "layer": "M5",
+    "xy_um": [
+      147.948,
+      236.52
+    ],
+    "model_root_um": [
+      147.96,
+      236.52
+    ],
+    "source": "Types actual current centre4 BTerm and KIT/pins.json; prior planner centre was not native"
+  },
+  "cells": 1811,
+  "sinks": 19747,
+  "stages": [
+    12
+  ],
+  "fixed_six_anchors": [
+    [
+      55.632,
+      70.332
+    ],
+    [
+      240.312,
+      70.332
+    ],
+    [
+      55.632,
+      227.244
+    ],
+    [
+      240.312,
+      227.244
+    ],
+    [
+      55.632,
+      386.076
+    ],
+    [
+      240.312,
+      386.076
+    ]
+  ],
+  "changed_landed_edges": 33,
+  "changed_root_nodes": [
+    "root",
+    "Tp_br",
+    "Tq_br"
+  ],
+  "failed": [],
+  "detours": [],
+  "over70um": [],
+  "converter_displacement_um": {
+    "max": 1.539,
+    "mean": 0.2445,
+    "over_2um": 0
+  },
+  "pg": {
+    "verdict": "PASS",
+    "layers": [
+      "M4",
+      "M5"
+    ],
+    "edges": 1811,
+    "blocked_edges": 0,
+    "examples": []
+  },
+  "verdict": "PASS"
+}

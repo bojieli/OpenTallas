@@ -1,0 +1,48 @@
+{
+  "verdict": "GEOMETRY_ONLY_PASS_TIMING_NOT_RUN",
+  "look": "Personally viewed candidate/geometry.png. Native ck[0] is the actual centre-entry BTerm above the retired diagnostic centre. All six fixed anchors remain; shortest legal routes follow existing macro corridors and keep every macro/halo clear. Existing repeaters move toward their landing loads; five inherited long leaf edges reparent at the same driver depth. No wire padding or added stage.",
+  "native_input": {
+    "port": "ck[0]",
+    "layer": "M5",
+    "xy_um": [
+      147.948,
+      236.52
+    ],
+    "model_root_um": [
+      147.96,
+      236.52
+    ],
+    "source": "Types actual current centre4 BTerm and KIT/pins.json; prior planner centre was not native"
+  },
+  "converted_root_um": [
+    147.96,
+    236.655
+  ],
+  "source_identity": "Types actual centre4 ck[0] M5[147.948,236.520], native KIT master_slice and clock_binding; old model centre is only a FAIL diagnostic",
+  "invariants": {
+    "cells": 1811,
+    "sinks": 19747,
+    "stages": [
+      12
+    ],
+    "frozen_masters": "identical to nearest baseline",
+    "leaf_sink_membership": "identical",
+    "fixed_six_native_bay_fields": "exact native core_islands/event/h2fix metadata copied; anchors unchanged",
+    "functional_cycles_added": 0
+  },
+  "geometry": {
+    "max_segment_um": 69.66,
+    "all_positive_leg_detour_max": 1.016,
+    "over70": 0,
+    "detours": 0,
+    "native_converter_displacement_max_um": 1.539,
+    "native_pg_edges": 1811,
+    "pg_blocked": 0,
+    "pg": "PASS"
+  },
+  "planned_input_stub_um": 0.14699999999999136,
+  "model": "NOT RUN. Exactly one frozen-master UF3 TT/FF evaluation may follow independent LOOK/source approval; no fit, sizing, wire variant or P&R.",
+  "controls": "Original nearest frozen model FAIL retained bycoverage_support; first geometry construction FAIL caught inherited 74\u201397um repeated leaf segments and is retained on intel2 candidate/. No numerical candidate has run.",
+  "source_root": "/srv/opentallas-scratch2/claude/codex-h2-window-1030",
+  "scope": "Standalone H2 dsfd_coll_lane_w_safe8_ntf only; no KVleaf reuse/adoption/physical qualification"
+}
