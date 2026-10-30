@@ -1,0 +1,86 @@
+{
+ "basis": "TOK-HBM-11: price (A) plan d21h EP_S1 hop lane (+17 cyc each way, root<->vsN0) and (B) HBM-BIND-7 hub collective\nq0 drop (+<=12 NE / +<=15 NW cycles per hub-collective hop stage) with the SAME ds S2 schedule model as DIE-HBM-10\ntok_rerun_c22.py / DIE-HBM-20 tok_pgp_cmd.py (accepted_cost g25 rank0, NativeCost, T.schedule).  Added cycles go on\nCOLL records only, serially (no overlap) = BOUND form.\n(A) ep_S1 = lane 1 of hb_coll_SW's 2-lane SerDes (die_r18h5: hb_coll_SW.tx_pin_flit[1223:612] -> ep_S1.tx_frame,\n    ep_S1.rx_pin_flit -> hb_coll_SW.rx_pin_flit lane 1) = the off-die collective path.  A crossing pays TX +17 on the\n    sending die and RX +17 on the receiving die = +34; crossings per record as perf.coll_cycles (2 for\n    ALL_REDUCE_SUM / GROUP_REDUCE_MCAST, else 1).  Bound: every COLL record pays 2 crossings.\n(B) bound/est: every COLL record walks the hub collective reduce -> body -> ring once per crossing; worst hub (NW) maxima\n    reduce +15, body +11, ring +6 = +32 per crossing; bound 3 stages x 15 = +45 per crossing.  Op-aware estimate of\n    record: only merge/reduce ops (GROUP_REDUCE_MCAST, TOPK_MERGE, ARGMAX_MERGE) use the reduce stage; gathers pay\n    body + ring = +17 per crossing.\nRun at repo root: python3 tok_hbm11.py OUT.json",
+ "coll_ops": {
+  "ALL_GATHER": 584,
+  "GROUP_REDUCE_MCAST": 40,
+  "TOPK_MERGE": 9,
+  "ROW_GATHER": 8,
+  "ARGMAX_MERGE": 1
+ },
+ "records_per_unit": {
+  "FUSED": 201,
+  "SM": 1095,
+  "COLL": 642,
+  "DMA": 420,
+  "SU": 1356,
+  "CTL": 197,
+  "ATT": 80,
+  "HC": 80,
+  "IDX": 48,
+  "ARGMAX": 1
+ },
+ "base_cycles": 576702.4178468838,
+ "rows": [
+  {
+   "case": "A est: ep_S1 +17 TX +17 RX per crossing (34 x cross)",
+   "cycles": 595125.3791551552,
+   "cost_pct": 3.195,
+   "tok_s_from_1906": 1847.0
+  },
+  {
+   "case": "A low: one way only (17 x cross)",
+   "cycles": 585532.5470047784,
+   "cost_pct": 1.531,
+   "tok_s_from_1906": 1877.3
+  },
+  {
+   "case": "A bound: 34 x 2 crossings every COLL",
+   "cycles": 612485.931155155,
+   "cost_pct": 6.205,
+   "tok_s_from_1906": 1794.6
+  },
+  {
+   "case": "B est: NW reduce15+body11+ring6 = 32 x cross",
+   "cycles": 593955.3791551552,
+   "cost_pct": 2.992,
+   "tok_s_from_1906": 1850.6
+  },
+  {
+   "case": "B NE: reduce12+body8+ring7 = 27 x cross",
+   "cycles": 591030.379155155,
+   "cost_pct": 2.484,
+   "tok_s_from_1906": 1859.8
+  },
+  {
+   "case": "B bound: 3 stages x 15 = 45 x 2 crossings every COLL",
+   "cycles": 624651.931155155,
+   "cost_pct": 8.314,
+   "tok_s_from_1906": 1759.7
+  },
+  {
+   "case": "A+B est: 66 x cross",
+   "cycles": 614019.9311551548,
+   "cost_pct": 6.471,
+   "tok_s_from_1906": 1790.2
+  },
+  {
+   "case": "B op-aware (ESTIMATE OF RECORD): merge/reduce ops reduce15+body11+ring6=32, gathers body11+ring6=17, x cross",
+   "cycles": 586882.5470047784,
+   "cost_pct": 1.765,
+   "tok_s_from_1906": 1872.9
+  },
+  {
+   "case": "A+B op-aware (ESTIMATE OF RECORD): 34 + B op-aware, x cross",
+   "cycles": 606474.9311551548,
+   "cost_pct": 5.163,
+   "tok_s_from_1906": 1812.4
+  },
+  {
+   "case": "A+B bound: 113 x 2 every COLL",
+   "cycles": 704146.2851551536,
+   "cost_pct": 22.099,
+   "tok_s_from_1906": 1561.0
+  }
+ ],
+ "check_die_hbm20_su10_pct": 1.702
+}
