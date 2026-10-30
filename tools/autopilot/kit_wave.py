@@ -205,10 +205,8 @@ def select(rows, cfg, die, state, plan_types=None):
             why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
             why = "live job (another lane)"
-        elif (age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE
-              and not any(x.get("die") == die and (x.get("parent_item") or x.get("item")) == r["item"]
-                          for x in (state.get("items") or {}).values())):
-            # a coord line naming the item (another lane's claim) -- the wave's own notices never count
+        elif age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE:
+            # a recent coord line by another lane naming the item is a claim; the wave's own notices never count
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
@@ -544,7 +542,8 @@ def run_item(spec_path):
     rc, txt = run("geom", otrun(sp["geom_mem_gb"], 4, W, f"bash {q(src)}/tools/autopilot/geom_check.sh {q(gd)}", gh))
     line = next((ln for ln in reversed(txt.splitlines()) if ln.startswith("AP_AUTO_GEOM")), "")
     res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
-    if rc or not line or line.startswith("AP_AUTO_GEOM_ERROR"):
+    if not line or line.startswith("AP_AUTO_GEOM_ERROR") or not re.search(r"AUTO-GEOM (PASS|FAIL)\b", line):
+        # geom_check.sh exits 1 on a FAIL verdict: only a missing verdict line is a run error
         return fail("geom_run", txt[-3000:], f"{G}:{gd}")
     v, failing, tag = geom_verdict(line)
     if v != "PASS":

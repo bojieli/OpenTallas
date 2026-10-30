@@ -228,6 +228,12 @@ class GeomVerdict(unittest.TestCase):
         v, f, tag = KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.0997) channel_h=FAIL(1.065) r2r=ok(3)"))
         self.assertEqual((v, tag), ("FAIL", ""))
         self.assertEqual(KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.1) tap_sinks=NA(None)"))[0], "FAIL")
+        real = ("AP_AUTO_GEOM AUTO-GEOM FAIL geomprobe KIT-WAVE 3_place outline=NA(241.92x241.92) fill=FAIL(0.1494) "
+                "empty=FAIL(0.6394) r2r=FAIL(464.56) r2r_count=FAIL(259) aspect=ok(1.0) fill_hi=ok(0.1494) grt=ok(0)")
+        self.assertEqual(KW.geom_verdict(real), ("FAIL", ["empty", "fill", "outline", "r2r", "r2r_count"], ""))
+        real2 = real.replace(" outline=NA(241.92x241.92)", " outline=ok(241.92x241.92)").replace(
+            " r2r=FAIL(464.56) r2r_count=FAIL(259)", " r2r=ok(464.56) r2r_count=ok(0)")
+        self.assertEqual(KW.geom_verdict(real2), ("PASS", ["empty", "fill"], "FILL-EXCEPTION"))
         self.assertEqual(KW.geom_verdict(L.format("FAIL", "pin_reg=FAIL(9)"))[0], "FAIL")
         self.assertEqual(KW.geom_verdict("AP_AUTO_GEOM_ERROR dump rc 1")[0], "FAIL")
 
