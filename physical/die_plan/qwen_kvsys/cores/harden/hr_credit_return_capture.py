@@ -72,6 +72,20 @@ def enabled_vehicle(src, module='qkd_hr_phy_adp'):
     The generator flag is the opt-in; transform() itself keeps parameter default0.
     """
     text,receipt=transform(src,module=module)
+    # The old face export retains two output-only debug aliases as keep wires.
+    # They add physical buffer loads to the19 control bits, not functional loads.
+    # Keep every actual FF attribute; only these exact wire aliases lose keep.
+    clean=text
+    removed=[]
+    for alias in ('u_slice.tx_flit','u_slice.u_body.tx_flit'):
+        pat=r'(?m)^  \(\* keep = [^\n]* \*\)\n(  wire \[146:0\] '+re.escape('\\'+alias)+r' ;)'
+        clean,n=re.subn(pat,r'\1',clean)
+        if n!=1:raise ValueError(f'expected one output-only kept PHY alias {alias}: {n}')
+        removed.append(alias)
+    attrs=lambda s:re.sub(r'\(\*.*?\*\)\s*','',s,flags=re.S)
+    if attrs(clean)!=attrs(text):raise ValueError('alias keep cleanup changed logic')
+    text=clean;receipt['dead_alias_keep_removed']=removed
+    receipt['attribute_stripped_identity']=True
     token='parameter integer CREDIT_RETURN_CAPTURE = 0'
     if text.count(token)!=1:raise ValueError('capture parameter specialization is not unique')
     text=text.replace(token,'parameter integer CREDIT_RETURN_CAPTURE = 1',1)
