@@ -1,0 +1,15 @@
+ot-run: epyc2          skipped: no /srv/opentallas-scratch2/claude/die-s81-36/h2g1b
+ot-run: intel1         skipped: no /srv/opentallas-scratch2/claude/die-s81-36/h2g1b
+ot-run: localhost      admits   626 GB (avail 718, reserve 0, fresh 0, peak 27, headroom 0, waiters 0/0 GB) load 110/112 running 31 disk 516 GB 
+ot-run: -> localhost
+ot-heavy: admitted on tolerant-swine as oth-ubuntu-1265298-1793385134 after 0 s
+H2_FINAL_MODEL_START resized masters; TT rise + FF min(rise,fall)
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/die-s81-36/h2g1b/scripts/qualify_free_once.py", line 75, in <module>
+    sl=C.convert(rec,free_sites(),'dsfd_coll_lane_w_safe8_ntf','ck[0]',ndr=(1,1));sl.pop('clock_ndr',None)
+  File "/srv/opentallas-scratch2/claude/codex-h2-window-1030/src/tools/die_plan/core_plan_to_infra.py", line 205, in convert
+    p = sm.place(names[nm], master, float(xy[0]), float(xy[1]))
+  File "/srv/opentallas-scratch2/claude/codex-h2-window-1030/src/tools/die_plan/core_plan_to_infra.py", line 139, in place
+    raise ConvertError(f"{name}: no free legal site within {max_um} um of ({x}, {y})")
+core_plan_to_infra.ConvertError: mp_ck_Tqqqs_r0: no free legal site within 20.0 um of (194.508, 152.415)
+ot-run: RAN on localhost (unit oth-ubuntu-1265298-1793385134): exit 1

@@ -1,0 +1,67 @@
+{
+ "conversion": {
+  "source": "dsfd_coll_lane_w_safe8_ntf_r13_s81_coll_uf3d1_native_landing_geometry_uf3d1_tpqt_calibration_home",
+  "calibration": false,
+  "masters_outside_envelope": [],
+  "cells": 1811,
+  "sinks": 19747,
+  "leaves": 548,
+  "displacement_um": {
+   "max": 10.125,
+   "mean": 0.9203,
+   "over_2um": 197
+  },
+  "site_rule": "row by y, site-grid x, no overlap with planned/fixed cells, centre x off M5 straps"
+ },
+ "native_blockages": 98292,
+ "max_disp": [
+  10.124999999999972,
+  "Tpruw_r0"
+ ],
+ "over2": 197,
+ "over5": 38,
+ "moved": 1811,
+ "top10": [
+  [
+   10.124999999999972,
+   "Tpruw_r0"
+  ],
+  [
+   10.124999999999943,
+   "Tqrqt_r0"
+  ],
+  [
+   9.908999999999985,
+   "Tprty_r0"
+  ],
+  [
+   9.693000000000012,
+   "Tqqqs_r0"
+  ],
+  [
+   8.990999999999971,
+   "Tprss_r0"
+  ],
+  [
+   8.289000000000016,
+   "Tpquc_r0"
+  ],
+  [
+   8.18100000000004,
+   "Tqrpy_br"
+  ],
+  [
+   7.695000000000022,
+   "Tqrqq_r0"
+  ],
+  [
+   7.532999999999987,
+   "Tqqqy_r0"
+  ],
+  [
+   7.532999999999987,
+   "Tprux_r0"
+  ]
+ ],
+ "added_driver_wire_um": 1363.392
+}

@@ -1,0 +1,25 @@
+{
+  "geometry_unchanged": false,
+  "free_native_sites": true,
+  "sized_masters_frozen": true,
+  "native_pg": {
+    "verdict": "PASS",
+    "layers": [
+      "M4",
+      "M5"
+    ],
+    "edges": 1811,
+    "blocked_edges": 0,
+    "examples": []
+  },
+  "TT_window20": false,
+  "FF_window20": false,
+  "both_slews80": true,
+  "window_policy": "info",
+  "band_policy": "info",
+  "all_buffers_80": true,
+  "local_related_model_bound80": true,
+  "related_basis": "Global like-edge sink arrival envelope bounds local related differences before CPPR; realG2 exhaustive pairSTA still required",
+  "verdict": "MODEL_ADMISSION_PASS",
+  "historical_window_failures_preserved": true
+}
