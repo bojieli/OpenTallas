@@ -47,6 +47,10 @@ def emit(caldir, out):
             s2 = words(cd / f'cal_{end}_{d}_seg2.memh')
             lines.append(f"localparam [31:0] D2D_CAL_{end}_{d.upper()}_SEG2 = 32'h{s2[0]:08x};")
     lines.append(f'localparam [{TW}*{NL}-1:0] D2D_CAL_START = {vec(starts, TW)};')
+    # Keep zero-offset historical includes byte-identical. Nonzero anchor offsets
+    # must survive the include -> native target-11 rebuild, not just calendar.json.
+    if cal.get('ofs', 0):
+        lines.append(f'localparam integer D2D_CAL_OFS = {cal["ofs"]};  // K cal_start minus C cal_start, edges')
     adm = prog['admission']
     # one value per program, shared by both dies' sequencers and the compute face (first token / token period)
     lines.append(f'localparam integer D2D_ADM_OFS = {adm["ofs"]};      // admission cal_start, edges after the epoch strobe')

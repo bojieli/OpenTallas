@@ -1,0 +1,4 @@
+TARGET11_PASS {'image': '/srv/opentallas-scratch2/claude/codex-kvtok-2249/image_ofs-2/d2d_cal_image.svh', 'mu': True, 'die_stages': '2,2,2,3,2,2/90,90,88,88,88,77,77', 'words': 66, 'equal': True, 'txdp_k_image': 50568617, 'txdp_k_die_codec': 50568617, 'kv_codec': 2, 'txdp_k_agree': True} offset -2
+TARGET11_OLD_OFFSET_CAUGHT target 11 differs from /srv/opentallas-scratch2/claude/codex-kvtok-2249/image_ofs-2/d2d_cal_image.svh at word(s) [1, 9, 23] (MU True, die stages 2,2,2,3,2,2/90,90,88,88,88,77,77): the link end would load another calendar than the bound sequencer image
+MALFORMED_OFFSET_CAUGHT
+LEGACY_OFFSET_ZERO_PASS

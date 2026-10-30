@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/codex-kvtok-2249/compiler_root/physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py", line 356, in <module>
+    {'prep': prep, 'compile': compile_, 'service-pad': service_pad}[a.cmd](a)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/srv/opentallas-scratch2/claude/codex-kvtok-2249/compiler_root/physical/die_plan/qwen_kvsys/boot_v36/kv_boot_v36.py", line 307, in compile_
+    r = P.compile_all(pr, 0x0b0b, die_cfg_words=die_cfg, die_cfg_ages=die_cfg is not None)
+  File "/srv/opentallas-scratch2/claude/codex-kvtok-2249/compiler_root/tools/qwen_kv_die/kv_static_programme.py", line 1276, in compile_all
+    pv_starts = [attention_calendar(T, pr, service_end)['PV_START'] for T in sorted(set(LAW_TS) | {1, 2, 8192})]
+                 ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/claude/codex-kvtok-2249/compiler_root/tools/qwen_kv_die/kv_static_programme.py", line 664, in attention_calendar
+    raise ValueError(f'T={T}: attention service needs {pv + r + 49} edges, the link slot gives {service_end}')
+ValueError: T=7992: attention service needs 1775 edges, the link slot gives 1773
