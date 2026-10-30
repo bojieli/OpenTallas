@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.die_plan.g0.v1",
+ "plan": "/srv/opentallas-scratch2/claude/codex-hbm-1030/pairmid/die_plan.json",
+ "verdict": "FAIL",
+ "pending_view": 0,
+ "mode": "G0",
+ "errors": 4,
+ "warnings": 0,
+ "summary": {},
+ "findings": [
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "port L138m_1: src type geometry ('N', [20848.816, 20857.456], ['M7', 'M5'], 'lsb_high') != dst type geometry ('N', [20848.816, 20857.456], ['M7', 'M5'], 'lsb_low') in the die frame"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "port L69m_r0_0: src type geometry ('N', [22639.6467, 22684.48], ['M7', 'M5'], 'lsb_high') != dst type geometry ('N', [22639.6467, 22684.48], ['M7', 'M5'], 'lsb_low') in the die frame"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "port L99m_r0_1: src type geometry ('S', [23694.672, 23698.5053], ['M7', 'M5'], 'lsb_low') != dst type geometry ('S', [23694.6867, 23698.52], ['M7', 'M5'], 'lsb_high') in the die frame"
+  },
+  {
+   "level": "ERROR",
+   "check": "schema",
+   "msg": "port L122m_r0_0: src type geometry ('N', [22632.1573, 22633.824], ['M7', 'M5'], 'lsb_high') != dst type geometry ('N', [22632.1573, 22633.824], ['M7', 'M5'], 'lsb_low') in the die frame"
+  }
+ ]
+}

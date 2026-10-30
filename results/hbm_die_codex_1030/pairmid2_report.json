@@ -1,0 +1,1976 @@
+{
+ "schema": "die_hbm_22.replan_event.v1",
+ "variant": {
+  "name": "pairmid",
+  "A": [
+   "NW_b111",
+   "NW_su20",
+   "NW_su21",
+   "NW_spu1",
+   "NW_b102",
+   "NW_b103",
+   "NW_su30",
+   "NW_su31",
+   "NW_b110",
+   "NW_b100",
+   "NW_b101"
+  ],
+  "C": [
+   "NW_b113",
+   "NW_su00",
+   "NW_su01",
+   "NW_spu0",
+   "NW_su10",
+   "NW_su11",
+   "NW_b112"
+  ]
+ },
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-33/plan/d33s",
+ "base_sha": "4185e846230f",
+ "out_sha": "3ff76f8510b8",
+ "moved": [
+  "NE_b102",
+  "NE_b103",
+  "NE_b111",
+  "NE_spu1",
+  "NE_su20",
+  "NE_su21",
+  "NW_b102",
+  "NW_b103",
+  "NW_b111",
+  "NW_spu1",
+  "NW_su20",
+  "NW_su21"
+ ],
+ "outline_changes": [],
+ "dropped": 54,
+ "phase1": {
+  "rebuilt": [
+   {
+    "id": "L163",
+    "src": "NW_su21",
+    "dst": "NW_su20",
+    "bits": 3728,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su21",
+     "NW_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su21",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L164",
+    "src": "NW_b102",
+    "dst": "NW_b103",
+    "bits": 3367,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b102",
+     "NW_b103"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b102",
+      "NW_b103"
+     ]
+    ]
+   },
+   {
+    "id": "L2",
+    "src": "NW_hub",
+    "dst": "NW_su21",
+    "bits": 2999,
+    "cycles": 6,
+    "old_cycles": 6,
+    "old_chain": [
+     "NW_hub",
+     "NW_spu1",
+     "NW_su21"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_spu1",
+      "NW_su21"
+     ]
+    ]
+   },
+   {
+    "id": "L26",
+    "src": "NW_su21",
+    "dst": "NW_hub",
+    "bits": 1719,
+    "cycles": 8,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su21",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su21",
+      "NW_spu1",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L33",
+    "src": "NW_hub",
+    "dst": "NW_sm2",
+    "bits": 1615,
+    "cycles": 13,
+    "old_cycles": 15,
+    "old_chain": [
+     "NW_hub",
+     "NW_spu1",
+     "NW_spb2",
+     "NW_sm2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b102",
+      "NW_spb2"
+     ]
+    ]
+   },
+   {
+    "id": "L179",
+    "src": "NW_b103",
+    "dst": "NW_b102",
+    "bits": 1146,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b103",
+     "NW_b102"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b103",
+      "NW_b102"
+     ]
+    ]
+   },
+   {
+    "id": "L40",
+    "src": "NW_spb2",
+    "dst": "NW_hub",
+    "bits": 1064,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_spb2",
+     "NW_spu1",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_spb2",
+      "NW_spu1",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L182",
+    "src": "NW_su20",
+    "dst": "NW_su21",
+    "bits": 1024,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su20",
+     "NW_su21"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su20",
+      "NW_su21"
+     ]
+    ]
+   },
+   {
+    "id": "L49",
+    "src": "NW_hub",
+    "dst": "NW_spb2",
+    "bits": 618,
+    "cycles": 7,
+    "old_cycles": 12,
+    "old_chain": [
+     "NW_hub",
+     "NW_spu1",
+     "NW_spb2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b103",
+      "NW_spb2"
+     ]
+    ]
+   },
+   {
+    "id": "L69",
+    "src": "NW_sm2",
+    "dst": "NW_hub",
+    "bits": 268,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_sm2",
+     "NW_su21",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_sm2",
+      "NW_spu1",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L411",
+    "src": "NW_su21",
+    "dst": "NW_su20",
+    "bits": 240,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su21",
+     "NW_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su21",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L412",
+    "src": "NW_su21",
+    "dst": "NW_su20",
+    "bits": 240,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su21",
+     "NW_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su21",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L413",
+    "src": "NW_su21",
+    "dst": "NW_su20",
+    "bits": 240,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su21",
+     "NW_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su21",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L83",
+    "src": "NW_hub",
+    "dst": "NW_spb2",
+    "bits": 99,
+    "cycles": 7,
+    "old_cycles": 12,
+    "old_chain": [
+     "NW_hub",
+     "NW_spu1",
+     "NW_spb2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b103",
+      "NW_spb2"
+     ]
+    ]
+   },
+   {
+    "id": "L87",
+    "src": "NW_spb2",
+    "dst": "NW_hub",
+    "bits": 68,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_spb2",
+     "NW_spu1",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_spb2",
+      "NW_b103",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L99",
+    "src": "NW_hub",
+    "dst": "NW_sm2",
+    "bits": 22,
+    "cycles": 10,
+    "old_cycles": 10,
+    "old_chain": [
+     "NW_hub",
+     "NW_su21",
+     "NW_sm2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_spu1",
+      "NW_sm2"
+     ]
+    ]
+   },
+   {
+    "id": "L112",
+    "src": "NW_hub",
+    "dst": "NW_su21",
+    "bits": 16,
+    "cycles": 10,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_hub",
+     "NW_su21"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_su21"
+     ]
+    ]
+   },
+   {
+    "id": "L122",
+    "src": "NW_sm2",
+    "dst": "NW_hub",
+    "bits": 9,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_sm2",
+     "NW_su21",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_sm2",
+      "NW_spu1",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L136",
+    "src": "NW_su20",
+    "dst": "NW_hub",
+    "bits": 3,
+    "cycles": 16,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_su20",
+     "NW_su21",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su20",
+      "NW_su21",
+      "NW_b000",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L138",
+    "src": "NW_spb0",
+    "dst": "root",
+    "bits": 2,
+    "cycles": 40,
+    "old_cycles": 40,
+    "old_chain": [
+     "NW_spb0",
+     "NW_spb1",
+     "NW_spb2",
+     "NW_spu1",
+     "NW_su30",
+     "NW_su31",
+     "NW_b110",
+     "NW_b100",
+     "NW_b101",
+     "root"
+    ],
+    "runs": [
+     [
+      2,
+      4
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_spb2",
+      "NW_b102",
+      "NW_b103",
+      "NW_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L163m",
+    "src": "NE_su21",
+    "dst": "NE_su20",
+    "bits": 3728,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su21",
+     "NE_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su21",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L164m",
+    "src": "NE_b102",
+    "dst": "NE_b103",
+    "bits": 3367,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b102",
+     "NE_b103"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b102",
+      "NE_b103"
+     ]
+    ]
+   },
+   {
+    "id": "L2m",
+    "src": "NE_hub",
+    "dst": "NE_su21",
+    "bits": 2999,
+    "cycles": 6,
+    "old_cycles": 6,
+    "old_chain": [
+     "NE_hub",
+     "NE_spu1",
+     "NE_su21"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_spu1",
+      "NE_su21"
+     ]
+    ]
+   },
+   {
+    "id": "L26m",
+    "src": "NE_su21",
+    "dst": "NE_hub",
+    "bits": 1719,
+    "cycles": 8,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su21",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su21",
+      "NE_spu1",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L33m",
+    "src": "NE_hub",
+    "dst": "NE_sm2",
+    "bits": 1615,
+    "cycles": 13,
+    "old_cycles": 15,
+    "old_chain": [
+     "NE_hub",
+     "NE_spu1",
+     "NE_spb2",
+     "NE_sm2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b102",
+      "NE_spb2"
+     ]
+    ]
+   },
+   {
+    "id": "L179m",
+    "src": "NE_b103",
+    "dst": "NE_b102",
+    "bits": 1146,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b103",
+     "NE_b102"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b103",
+      "NE_b102"
+     ]
+    ]
+   },
+   {
+    "id": "L40m",
+    "src": "NE_spb2",
+    "dst": "NE_hub",
+    "bits": 1064,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_spb2",
+     "NE_spu1",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_spb2",
+      "NE_spu1",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L182m",
+    "src": "NE_su20",
+    "dst": "NE_su21",
+    "bits": 1024,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su20",
+     "NE_su21"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su20",
+      "NE_su21"
+     ]
+    ]
+   },
+   {
+    "id": "L49m",
+    "src": "NE_hub",
+    "dst": "NE_spb2",
+    "bits": 618,
+    "cycles": 7,
+    "old_cycles": 12,
+    "old_chain": [
+     "NE_hub",
+     "NE_spu1",
+     "NE_spb2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b103",
+      "NE_spb2"
+     ]
+    ]
+   },
+   {
+    "id": "L69m",
+    "src": "NE_sm2",
+    "dst": "NE_hub",
+    "bits": 268,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_sm2",
+     "NE_su21",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_sm2",
+      "NE_spu1",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L411m",
+    "src": "NE_su21",
+    "dst": "NE_su20",
+    "bits": 240,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su21",
+     "NE_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su21",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L412m",
+    "src": "NE_su21",
+    "dst": "NE_su20",
+    "bits": 240,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su21",
+     "NE_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su21",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L413m",
+    "src": "NE_su21",
+    "dst": "NE_su20",
+    "bits": 240,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su21",
+     "NE_su20"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su21",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L83m",
+    "src": "NE_hub",
+    "dst": "NE_spb2",
+    "bits": 99,
+    "cycles": 7,
+    "old_cycles": 12,
+    "old_chain": [
+     "NE_hub",
+     "NE_spu1",
+     "NE_spb2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b103",
+      "NE_spb2"
+     ]
+    ]
+   },
+   {
+    "id": "L87m",
+    "src": "NE_spb2",
+    "dst": "NE_hub",
+    "bits": 68,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_spb2",
+     "NE_spu1",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_spb2",
+      "NE_b103",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L99m",
+    "src": "NE_hub",
+    "dst": "NE_sm2",
+    "bits": 22,
+    "cycles": 10,
+    "old_cycles": 10,
+    "old_chain": [
+     "NE_hub",
+     "NE_su21",
+     "NE_sm2"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_spu1",
+      "NE_sm2"
+     ]
+    ]
+   },
+   {
+    "id": "L112m",
+    "src": "NE_hub",
+    "dst": "NE_su21",
+    "bits": 16,
+    "cycles": 10,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_hub",
+     "NE_su21"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_su21"
+     ]
+    ]
+   },
+   {
+    "id": "L122m",
+    "src": "NE_sm2",
+    "dst": "NE_hub",
+    "bits": 9,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_sm2",
+     "NE_su21",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_sm2",
+      "NE_spu1",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L136m",
+    "src": "NE_su20",
+    "dst": "NE_hub",
+    "bits": 3,
+    "cycles": 20,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_su20",
+     "NE_su21",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su20",
+      "NE_su21",
+      "NE_spu1",
+      "NE_b102",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L138m",
+    "src": "NE_spb0",
+    "dst": "root",
+    "bits": 2,
+    "cycles": 40,
+    "old_cycles": 40,
+    "old_chain": [
+     "NE_spb0",
+     "NE_spb1",
+     "NE_spb2",
+     "NE_spu1",
+     "NE_su30",
+     "NE_su31",
+     "NE_b110",
+     "NE_b100",
+     "NE_b101",
+     "root"
+    ],
+    "runs": [
+     [
+      2,
+      4
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_spb2",
+      "NE_b102",
+      "NE_b103",
+      "NE_su30"
+     ]
+    ]
+   }
+  ],
+  "failed": [
+   {
+    "id": "L32",
+    "src": "NW_hub",
+    "dst": "NW_sm2",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no macro-free station chain (11 st)",
+    "chains": [
+     [
+      "NW_hub",
+      "NW_spu1",
+      "NW_sm2"
+     ],
+     [
+      "NW_hub",
+      "NW_b102",
+      "NW_spu1",
+      "NW_sm2"
+     ],
+     [
+      "NW_hub",
+      "NW_b103",
+      "NW_spb2",
+      "NW_sm2"
+     ]
+    ]
+   },
+   {
+    "id": "L38",
+    "src": "NW_hub",
+    "dst": "NW_su20",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no free window NW_b010|NW_su00",
+    "chains": [
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_spu1",
+      "NW_su21",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_b002",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_su21",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_su01",
+      "NW_su00",
+      "NW_b011",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_su00",
+      "NW_b113",
+      "NW_b003",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L48",
+    "src": "NW_io",
+    "dst": "NW_su30",
+    "run": [
+     0,
+     7
+    ],
+    "why": "no macro-free station chain (45 st)",
+    "chains": [
+     [
+      "NW_io",
+      "NW_b111",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "NW_su30"
+     ],
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_su20",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "NW_su30"
+     ],
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_b003",
+      "NW_b012",
+      "NW_b002",
+      "NW_b011",
+      "NW_b001",
+      "NW_b010",
+      "NW_b000",
+      "NW_hub",
+      "NW_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L48",
+    "src": "NW_io",
+    "dst": "root",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no free window NW_hub|root",
+    "chains": [
+     [
+      "NW_io",
+      "NW_b111",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "root"
+     ],
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_su20",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "root"
+     ],
+     [
+      "NW_io",
+      "NW_b111",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "vsN2",
+      "root"
+     ],
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_b003",
+      "NW_b012",
+      "NW_b002",
+      "NW_b011",
+      "NW_b001",
+      "NW_b010",
+      "NW_b000",
+      "NW_hub",
+      "root"
+     ]
+    ]
+   },
+   {
+    "id": "L53",
+    "src": "NW_su30",
+    "dst": "NW_io",
+    "run": [
+     5,
+     12
+    ],
+    "why": "no macro-free station chain (42 st)",
+    "chains": [
+     [
+      "NW_su30",
+      "NW_b103",
+      "NW_b102",
+      "NW_spu1",
+      "NW_su21",
+      "NW_su20",
+      "NW_b111",
+      "NW_io"
+     ],
+     [
+      "NW_su30",
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_su20",
+      "NW_b111",
+      "NW_io"
+     ],
+     [
+      "NW_su30",
+      "NW_b103",
+      "NW_b102",
+      "NW_spu1",
+      "NW_su21",
+      "NW_su20",
+      "NW_b013",
+      "NW_io"
+     ],
+     [
+      "NW_su30",
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_b002",
+      "NW_b012",
+      "NW_b003",
+      "NW_b013",
+      "NW_io"
+     ],
+     [
+      "NW_su30",
+      "NW_b103",
+      "NW_b102",
+      "NW_spu1",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_su20",
+      "NW_b111",
+      "NW_io"
+     ],
+     [
+      "NW_su30",
+      "NW_b103",
+      "NW_b102",
+      "NW_spu1",
+      "NW_su21",
+      "NW_b011",
+      "NW_b002",
+      "NW_b012",
+      "NW_b003",
+      "NW_b013",
+      "NW_io"
+     ]
+    ]
+   },
+   {
+    "id": "L53",
+    "src": "root",
+    "dst": "NW_io",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no free window root|NW_hub",
+    "chains": [
+     [
+      "root",
+      "NW_b112",
+      "NW_su11",
+      "NW_su10",
+      "NW_spu0",
+      "NW_su01",
+      "NW_su00",
+      "NW_b113",
+      "NW_io"
+     ],
+     [
+      "root",
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_su20",
+      "NW_b111",
+      "NW_io"
+     ],
+     [
+      "root",
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_b002",
+      "NW_b012",
+      "NW_b003",
+      "NW_b013",
+      "NW_io"
+     ]
+    ]
+   },
+   {
+    "id": "L59",
+    "src": "NW_su20",
+    "dst": "NW_hub",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no free window NW_su21|NW_b000",
+    "chains": [
+     [
+      "NW_su20",
+      "NW_su21",
+      "NW_spu1",
+      "NW_hub"
+     ],
+     [
+      "NW_su20",
+      "NW_b011",
+      "NW_b001",
+      "NW_b010",
+      "NW_b000",
+      "NW_hub"
+     ],
+     [
+      "NW_su20",
+      "NW_su21",
+      "NW_spu1",
+      "NW_b102",
+      "NW_hub"
+     ],
+     [
+      "NW_su20",
+      "NW_su21",
+      "NW_b000",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L104",
+    "src": "NW_hub",
+    "dst": "NW_su20",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no macro-free station chain (44 st)",
+    "chains": [
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_spu1",
+      "NW_su21",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_b002",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_su21",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_su01",
+      "NW_su00",
+      "NW_b011",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_su00",
+      "NW_b113",
+      "NW_b003",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L117",
+    "src": "NW_spb2",
+    "dst": "NW_su30",
+    "run": [
+     2,
+     4
+    ],
+    "why": "no macro-free station chain (16 st)",
+    "chains": [
+     [
+      "NW_spb2",
+      "NW_b103",
+      "NW_su30"
+     ],
+     [
+      "NW_spb2",
+      "NW_b102",
+      "NW_b103",
+      "NW_su30"
+     ],
+     [
+      "NW_spb2",
+      "NW_sm3",
+      "NW_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L32m",
+    "src": "NE_hub",
+    "dst": "NE_sm2",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no macro-free station chain (11 st)",
+    "chains": [
+     [
+      "NE_hub",
+      "NE_spu1",
+      "NE_sm2"
+     ],
+     [
+      "NE_hub",
+      "NE_b102",
+      "NE_spu1",
+      "NE_sm2"
+     ],
+     [
+      "NE_hub",
+      "NE_b103",
+      "NE_spb2",
+      "NE_sm2"
+     ]
+    ]
+   },
+   {
+    "id": "L38m",
+    "src": "NE_hub",
+    "dst": "NE_su20",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no free window NE_b010|NE_su00",
+    "chains": [
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_spu1",
+      "NE_su21",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_b002",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_su21",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_su01",
+      "NE_su00",
+      "NE_b011",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_su00",
+      "NE_b113",
+      "NE_b003",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L48m",
+    "src": "NE_io",
+    "dst": "NE_su30",
+    "run": [
+     0,
+     7
+    ],
+    "why": "no macro-free station chain (45 st)",
+    "chains": [
+     [
+      "NE_io",
+      "NE_b111",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "NE_su30"
+     ],
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_su20",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "NE_su30"
+     ],
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_b003",
+      "NE_b012",
+      "NE_b002",
+      "NE_b011",
+      "NE_b001",
+      "NE_b010",
+      "NE_b000",
+      "NE_hub",
+      "NE_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L48m",
+    "src": "NE_io",
+    "dst": "root",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no macro-free station chain (54 st)",
+    "chains": [
+     [
+      "NE_io",
+      "NE_b111",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "root"
+     ],
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_su20",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "root"
+     ],
+     [
+      "NE_io",
+      "NE_b111",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "vsN2",
+      "root"
+     ],
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_b003",
+      "NE_b012",
+      "NE_b002",
+      "NE_b011",
+      "NE_b001",
+      "NE_b010",
+      "NE_b000",
+      "NE_hub",
+      "root"
+     ]
+    ]
+   },
+   {
+    "id": "L53m",
+    "src": "NE_su30",
+    "dst": "NE_io",
+    "run": [
+     5,
+     12
+    ],
+    "why": "no macro-free station chain (42 st)",
+    "chains": [
+     [
+      "NE_su30",
+      "NE_b103",
+      "NE_b102",
+      "NE_spu1",
+      "NE_su21",
+      "NE_su20",
+      "NE_b111",
+      "NE_io"
+     ],
+     [
+      "NE_su30",
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_su20",
+      "NE_b111",
+      "NE_io"
+     ],
+     [
+      "NE_su30",
+      "NE_b103",
+      "NE_b102",
+      "NE_spu1",
+      "NE_su21",
+      "NE_su20",
+      "NE_b013",
+      "NE_io"
+     ],
+     [
+      "NE_su30",
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_b002",
+      "NE_b012",
+      "NE_b003",
+      "NE_b013",
+      "NE_io"
+     ],
+     [
+      "NE_su30",
+      "NE_b103",
+      "NE_b102",
+      "NE_spu1",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_su20",
+      "NE_b111",
+      "NE_io"
+     ],
+     [
+      "NE_su30",
+      "NE_b103",
+      "NE_b102",
+      "NE_spu1",
+      "NE_su21",
+      "NE_b011",
+      "NE_b002",
+      "NE_b012",
+      "NE_b003",
+      "NE_b013",
+      "NE_io"
+     ]
+    ]
+   },
+   {
+    "id": "L53m",
+    "src": "root",
+    "dst": "NE_io",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no macro-free station chain (54 st)",
+    "chains": [
+     [
+      "root",
+      "NE_b112",
+      "NE_su11",
+      "NE_su10",
+      "NE_spu0",
+      "NE_su01",
+      "NE_su00",
+      "NE_b113",
+      "NE_io"
+     ],
+     [
+      "root",
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_su20",
+      "NE_b111",
+      "NE_io"
+     ],
+     [
+      "root",
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_b002",
+      "NE_b012",
+      "NE_b003",
+      "NE_b013",
+      "NE_io"
+     ]
+    ]
+   },
+   {
+    "id": "L59m",
+    "src": "NE_su20",
+    "dst": "NE_hub",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no free window NE_su21|NE_b000",
+    "chains": [
+     [
+      "NE_su20",
+      "NE_su21",
+      "NE_spu1",
+      "NE_hub"
+     ],
+     [
+      "NE_su20",
+      "NE_b011",
+      "NE_b001",
+      "NE_b010",
+      "NE_b000",
+      "NE_hub"
+     ],
+     [
+      "NE_su20",
+      "NE_su21",
+      "NE_spu1",
+      "NE_b102",
+      "NE_hub"
+     ],
+     [
+      "NE_su20",
+      "NE_su21",
+      "NE_b000",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L104m",
+    "src": "NE_hub",
+    "dst": "NE_su20",
+    "run": [
+     0,
+     2
+    ],
+    "why": "no macro-free station chain (44 st)",
+    "chains": [
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_spu1",
+      "NE_su21",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_b002",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_su21",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_su01",
+      "NE_su00",
+      "NE_b011",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_su00",
+      "NE_b113",
+      "NE_b003",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L117m",
+    "src": "NE_spb2",
+    "dst": "NE_su30",
+    "run": [
+     2,
+     4
+    ],
+    "why": "no macro-free station chain (16 st)",
+    "chains": [
+     [
+      "NE_spb2",
+      "NE_b103",
+      "NE_su30"
+     ],
+     [
+      "NE_spb2",
+      "NE_b102",
+      "NE_b103",
+      "NE_su30"
+     ],
+     [
+      "NE_spb2",
+      "NE_sm3",
+      "NE_su30"
+     ]
+    ]
+   }
+  ],
+  "decl_conflicts": [
+   {
+    "type": "q_sm2",
+    "name": "L69_o",
+    "why": "shared-type declaration differs"
+   },
+   {
+    "type": "q_sm2",
+    "name": "L99_i",
+    "why": "shared-type declaration differs"
+   },
+   {
+    "type": "q_sm2",
+    "name": "L122_o",
+    "why": "shared-type declaration differs"
+   }
+  ],
+  "street_reuse": []
+ },
+ "cycle_changes": {
+  "n": 20,
+  "up": 6,
+  "max_up": 12,
+  "max_down": -5
+ },
+ "phase2": null,
+ "not_updated": [
+  "clock sidecars (clock_taps_die.json, clock_htree.json, entries.json, clock_entries.json)",
+  "pg_bumps.json",
+  "type internal_stations / die_ft_bands of moved types"
+ ]
+}

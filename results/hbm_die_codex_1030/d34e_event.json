@@ -1,0 +1,72 @@
+{
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-33/plan/d33s",
+ "base_sha": "4185e846230f0f3d42242f45ccf875b82ab2ff08eaa69ce6fab2dd2fb3115de8",
+ "rtl_cycles_added": 0,
+ "changes": [
+  {
+   "type": "q_su00",
+   "inst": "u_su_Q0_lane_exp0",
+   "old_outline": [
+    440.64,
+    207.36
+   ],
+   "new_outline": [
+    414.72,
+    207.36
+   ],
+   "old_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__d31s.json",
+   "new_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__414.72x207.36__d34e.json"
+  },
+  {
+   "type": "q_su10",
+   "inst": "u_su_Q1_lane_exp0",
+   "old_outline": [
+    440.64,
+    207.36
+   ],
+   "new_outline": [
+    414.72,
+    207.36
+   ],
+   "old_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__d31s.json",
+   "new_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__414.72x207.36__d34e.json"
+  },
+  {
+   "type": "q_su00__physical_v1",
+   "inst": "u_su_Q0_lane_exp0",
+   "old_outline": [
+    440.64,
+    207.36
+   ],
+   "new_outline": [
+    414.72,
+    207.36
+   ],
+   "old_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__d31s.json",
+   "new_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__414.72x207.36__d34e.json"
+  },
+  {
+   "type": "q_su10__physical_v1",
+   "inst": "u_su_Q1_lane_exp0",
+   "old_outline": [
+    440.64,
+    207.36
+   ],
+   "new_outline": [
+    414.72,
+    207.36
+   ],
+   "old_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__d31s.json",
+   "new_pins": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__414.72x207.36__d34e.json"
+  },
+  {
+   "type": "root",
+   "inst": "u_col_idx",
+   "old_pins": "cores/ot_hbm_static_cfg_collar_idx256r__86.4x86.4__r5__c20g_88.992x88.992__c20i.json",
+   "new_pins": "cores/ot_hbm_static_cfg_collar_idx256r__88.992x88.992__d34e.json",
+   "removed_stale_N_c_done": 1,
+   "selected_W_named_native": "c_done"
+  }
+ ],
+ "sha": "0a5f6d69b82f7b6da9b4bc967c9ed3f58e26f2177a81aaa1abb11cea51638fd5"
+}
