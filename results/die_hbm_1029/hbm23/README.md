@@ -39,3 +39,52 @@ data/scripts epyc2:/srv/opentallas-scratch2/claude/hbm-xclk-23 (copies of script
   load_balance joint_nldm_plan; move rst_n pin + rst_q flop next to the W-N/centre root via the plan pin entry. Entry move
   to the face-flop centroid gains nothing. No die-specific clock script; ot_clk leaf_drivers/local_entry act on die
   provider netlists, not kits.
+
+## EP_S1 re-station at the 405-um rule (sub-lane HBM-EPS1-23, estimate only; plan d22b) -- notes eps1/RESULT.txt
+- Why B2o has 167-um pitch (CHECKED): tool side effect, not timing - B2o b2n.restation (cores_b2.RelayRouter, 360-um
+  hop limit) places stations only on hard-core edges / partition perimeter; vsN1/vsN2 are empty pass-throughs, so the
+  chain detoured via the W edge (2747 / 2574 um, 9 + 8 stations); the later per-bit step kept the counts on the straight
+  1503/1331-um route.
+- Recount (CHECKED from plan geometry, per-partition R3 route/stations <= 405): vsN1 4 (375.84 pitch), vsN2 4 (332.64)
+  -> 17 -> 8 stations, 19 -> 10 cycles each way for L200/L201 and L118/L141 (same word, keep equal).
+- 405-um hop closure: 261 ps + 1.135 ps/um x L (W15 routed fit, SS) with droop derate -> 769.8 ps at 405 um (UNCHECKED
+  source figures, arithmetic CHECKED).
+- Price (ESTIMATE, linear between TOK-HBM-11 CHECKED points 17 cyc 1.531 % / 34 cyc 3.195 %): EP_S1 3.195 % -> ~1.44-1.50 %;
+  total 5.163 % -> ~3.41-3.48 % -> ~1842 tok/s (from ~1812): recovery ~1.7 % >= 1 % -> OWNER? line re-priced.
+- Plan delta (not built): vsN1 slots L118x1/L141x1/L201x1 (S->N) + L200x2 (N->S) 9 -> 4 stations at y 0/375.84/751.68/
+  1127.52 (L200 mirrored from 1503.36); vsN2 L118x2/L141x2/L201x2 + L200x1 8 -> 4 at y 0/332.64/665.28/997.92; x kept;
+  regenerate L118/L141 per-bit sites; latency L118/L141/L200/L201 = 10 cycles / 8 stations; G0/G0C.
+
+## Far-pair re-plan (COORD order 2/3) - DIE-HBM-23 18:4x 10-29
+
+Base d23a 4133ce1e4e0d. Scripts in `replan/`: `replan_event{5..10}.py`, which are successive fixes of the hbm22 `replan_event4.py`:
+- event5: mirror only N/S windows; keep E/W y-spans.
+- event7: NE hint windows must lie inside the shared edge.
+- event8: whole-lane fallback.
+- event9: prefer old window centres.
+- event10: STREET REUSE pre-pass, which keeps the per-partition ft-slots of straight row-A E/W pass-through lanes and only re-orders the partitions.
+
+Post-fix pipeline: `order_fix.py`, `post_fix.py`, `post_fix2.py` (clock tap into the outline), `post_fix3.py` (snap NE mirror rounding of 0.007 um to the shared side), `gen.py latency --inplace`, then check.
+
+Variant cost and enumeration are in `opt3.py` and `enum_local.py`. Per-variant reports are in `out/`. All numbers below are CHECKED from those reports and logs.
+
+| variant | moved NW parts | phase-1 lanes lost | far pairs left | G0 |
+|---|---|---|---|---|
+| VB2 (hbm22) | many (hub-heavy b100/su0x out from under hub) | 41-46 | - | VB2c 10 err |
+| VB3a / VB3b | - | 32 / 38 | 67 / 53 | - |
+| VL2 | 10 | 27 | 77 | - |
+| VL1 (+event8/9) | 3 | 10 | 77 | - |
+| **VL3 (+event10)** | 3 (b100/b110/su30 re-order under hub) | **0** | 79 | **3 err** |
+
+**VB2 is rejected.** It moves hub-heavy partitions away from the hub, so 41-46 lanes become non-adjacent and cannot be rebuilt.
+
+**VL3d** (plan 70c2dce28269, run dir `intel1:/srv/opentallas-scratch2/claude/die-hbm-23/replan/VL3d`) has 0 lost lanes and 12 cycle changes: 6 up (max +8), max down -6. G0 shows 3 errors and G0C 13 (8 inherited + 3 G0 + 2). All 3 G0 errors have one root cause: the **hub S face is full** under b100/spu1/b110.
+- L7 (hub->b100, 2484 b) needs a 414-um window.
+- The largest free gaps are 226 um (hub|b100), 166 um (hub|spu1) and 77 um (hub|b110).
+- L7 therefore detours hub->su30->b110->b100. This gives the NW_b110 cut of 1.42 and pushes L203 to a 527-um hop.
+
+Next step: L7 needs to come back to a direct hub|b100 window. Two ways:
+- (a) process L7 before L6 and route L6 over hub|su30 + E/W;
+- (b) split L7 into 2 x 1242 b windows (hub|b100 + hub|spu1->b100).
+
+**Finding:** local re-orders keep the far-pair count at about 77-79. The 92 -> ~36 target cannot be reached by row re-ordering on this hub face. Remaining far pairs need COORD (3): SFU core move vs spb1/root ft slots.
