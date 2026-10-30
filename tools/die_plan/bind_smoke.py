@@ -165,6 +165,9 @@ def qc_reset_contract(top: Path, keep):
     w = json.loads(meta.read_text())
     if w.get('release') != 'wavefront' or w.get('unreachable') or w.get('long_hops'):
         raise SystemExit('carve: invalid wavefront reset metadata')
+    if w.get('release_qualification', {}).get('verdict') == 'PENDING' or any(
+            v is None for q in w.get('parts', {}).values() for v in q.get('core_release', {}).values()):
+        raise SystemExit('carve: native reset release is PENDING; no core-cycle reset/calendar credit')
     parts = w['parts']; kept = set(resets); prefixes = {}
     latest = max([int(w['max_release'])] + [int(v) for q in parts.values()
                  for v in q.get('core_release', {}).values()])

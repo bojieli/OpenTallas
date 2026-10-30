@@ -202,6 +202,15 @@ def sink_sites(P, tn, control=True):
     {"bin_um": b, "bins": [[x, y, n], ...]}, written by `taps.py bins <odb dump.json>`: the registers of a placed
     netlist binned to their bin centres."""
     ck = P.types[tn].get("clock", {})
+    if ck.get("native_domains") is not None:
+        import native_clock_domains as NCD
+        domain_sites=NCD.core_planning_sites(P,tn)
+        if domain_sites is not None:
+            if control and ck.get("control_sinks"):
+                domain_sites += [(x,y,1.0) for _,x,y in control_pin_sinks(P,tn)]
+            return domain_sites
+        if ck.get("sink_sites_um") or ck.get("sink_bins_file"):
+            raise ValueError("native-domain spatial planning requires explicit per-root sink sites; aggregate bins are unqualified")
     rows = list(ck.get("sink_sites_um", []))
     if ck.get("sink_bins_file"):
         # a placed netlist's inventory already holds the face / ft registers: the planned ones are not added again

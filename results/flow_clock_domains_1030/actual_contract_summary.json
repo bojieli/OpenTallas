@@ -1,0 +1,58 @@
+{
+  "core_root": "clk",
+  "roots": {
+    "clk": {
+      "net": "clk",
+      "parent_ff": 10303
+    },
+    "fclk_in_coll_i0": {
+      "net": "fclk_in_coll_i0",
+      "parent_ff": 2086
+    },
+    "pma_rck": {
+      "net": "pma_rck[0]",
+      "parent_ff": 13509
+    }
+  },
+  "children": [
+    {
+      "inst": "u_phy.u_link.u_dec.u_chn",
+      "module": "ot_s81_kp4_dchn",
+      "native_pin": "clk",
+      "root": "pma_rck",
+      "internal_ff": 3237
+    }
+  ],
+  "core_grid_parent_ff": 10303,
+  "child_internal_ff_excluded": 3237,
+  "source_odb_sha256": "1118e078bc2c5e9c908950794050fed56bb66d8b176cfc93614a66795e66a423",
+  "spatial_status": "NOT QUALIFIED: unplaced FF census supplies counts, not positions",
+  "electrical_status": "PREP only: clock period/source/phase qualification is separate",
+  "macro_bindings": [
+    {
+      "inst": "u_phy.u_link.u_dec.u_chn",
+      "module": "ot_s81_kp4_dchn",
+      "pin": "clk",
+      "root": "pma_rck"
+    },
+    {
+      "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+      "module": "ot_sram_1r1w2c_64x546_m1",
+      "pin": "wclk",
+      "root": "pma_rck"
+    },
+    {
+      "inst": "u_phy.u_link.u_dec.u_dly.u_dmem",
+      "module": "ot_sram_1r1w2c_64x546_m1",
+      "pin": "rclk",
+      "root": "pma_rck"
+    },
+    {
+      "inst": "u_phy.u_link.u_dec.u_out.u_cmem",
+      "module": "ot_sram_1r1w_32x546_m1",
+      "pin": "clk",
+      "root": "pma_rck"
+    }
+  ],
+  "fixture_note": "Read-only model PREP: source_plan plus declared third KP4 inventory; no geometry or electrical qualification. No planning positions supplied from unplaced census."
+}

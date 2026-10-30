@@ -1751,6 +1751,119 @@
        "sink_bins_file": {
         "type": "string"
        },
+       "native_domains": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+         "schema",
+         "census_file",
+         "source_odb_sha256",
+         "core_root",
+         "macro_pins"
+        ],
+        "properties": {
+         "schema": {
+          "const": "opentallas.native_clock_domains.v1"
+         },
+         "census_file": {
+          "type": "string",
+          "minLength": 1
+         },
+         "source_odb_sha256": {
+          "type": "string",
+          "minLength": 1
+         },
+         "core_root": {
+          "const": "clk"
+         },
+         "macro_pins": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "inst",
+            "module",
+            "pin",
+            "root"
+           ],
+           "properties": {
+            "inst": {
+             "type": "string",
+             "minLength": 1
+            },
+            "module": {
+             "type": "string",
+             "minLength": 1
+            },
+            "pin": {
+             "type": "string",
+             "minLength": 1
+            },
+            "root": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
+          }
+         },
+         "children": {
+          "type": "array",
+          "items": {
+           "type": "object",
+           "additionalProperties": false,
+           "required": [
+            "inst",
+            "module",
+            "pin",
+            "root",
+            "census_file",
+            "source_odb_sha256"
+           ],
+           "properties": {
+            "inst": {
+             "type": "string",
+             "minLength": 1
+            },
+            "module": {
+             "type": "string",
+             "minLength": 1
+            },
+            "pin": {
+             "type": "string",
+             "minLength": 1
+            },
+            "root": {
+             "type": "string",
+             "minLength": 1
+            },
+            "census_file": {
+             "type": "string",
+             "minLength": 1
+            },
+            "source_odb_sha256": {
+             "type": "string",
+             "minLength": 1
+            }
+           }
+          }
+         },
+         "planned_sink_sites": {
+          "type": "object",
+          "additionalProperties": {
+           "type": "array",
+           "items": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+             "type": "number"
+            }
+           }
+          }
+         }
+        }
+       },
        "tap_balance_rc": {
         "enum": [
          "placement",
