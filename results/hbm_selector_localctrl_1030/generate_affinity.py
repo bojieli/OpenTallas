@@ -11,7 +11,8 @@ boxes=[(4.32,4.32,300.024,225.18),(4.32,225.18,300.024,446.04),(300.024,4.32,595
 for tag,td in [('localctrl_affinity_td',True),('localctrl_affinity_notd',False)]:
  kd=out/(v['view'].replace('@','_')+'-'+tag)
  if kd.exists():raise SystemExit(f'refuse existing kit {kd}')
- rec=G.load_recipes()[mod];rec=dict(rec);rec['params']=dict(rec.get('params',{}),LOCAL_CTRL=1)
+ recipes=G.load_recipes();rk=mod if mod in recipes else next(k for k in v['recipe_keys'] if k in recipes)
+ rec=dict(recipes[rk]);rec['params']=dict(rec.get('params',{}),LOCAL_CTRL=1)
  rec['macro_placement']=[]
  for q in range(4):
   for row in range(3):
@@ -20,7 +21,7 @@ for tag,td in [('localctrl_affinity_td',True),('localctrl_affinity_notd',False)]
  argv=['gen_core_kit_hbm.py','--views',a.views,'--view',v['view'],'--out',str(out),'--master-slice',a.slice,'--trial','--tag',tag]
  if not td:argv+=['--orfs-var','GPL_TIMING_DRIVEN=0']
  sys.argv=argv
- G.main(recipe_overrides={mod:rec},source_overrides={'rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv':str(repo/'rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv')})
+ G.main(recipe_overrides={rk:rec},source_overrides={'rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv':str(repo/'rtl/hbm_accel/index/ot_hbm_idx_selector_static_sel.sv')})
  rows=[]
  for q,b in enumerate(boxes):
   pref=[f'u_fcore.core.gq[{q}].',f'u_fcore.grctrl[{q}].local_copy.',f'u_fcore.core.gthreshold[{q}].local_copy.',f'u_fcore.grst[{q}].']
