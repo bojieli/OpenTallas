@@ -17,21 +17,23 @@ def _proc(name):
     return re.search(r'proc '+name+r' \{[^\n]*\} \{\n.*?\n\}\n',TCL,re.S).group(0)
 
 
-def run(tag='ring:i+x+ff',obstacle=False,resize=False,rect='0 0 1.08 1.08'):
-    script=COMMON+'\n'+''.join(_proc(n) for n in ['cland_occupy','cland_family_w','cland_put_column','cland_put','cland_ffkey','cland_place_ff'])
-    script+='\nset cland_occ {};set cland_famw {};set cland_ff_fill 0.90;set instances {};set places {}\n'
+def run(tag='ring:i+x+ff',obstacle=False,resize=False,rect='0 0 1.08 1.08', legacy=False):
+    script=COMMON+'\n'+''.join(_proc(n) for n in ['cland_occupy','cland_family_w','cland_put_column','cland_put','cland_ffkey','cland_column_select','cland_place_ff'])
+    script+='\nset cland_occ {};set cland_famw {};set cland_ff_fill 0.90;set instances {};set places {};set moves 0\n'
     for bit in range(4):
         for slot in range(2):
             inst=f'i{bit}{slot}';name=f'u_ring.s_d[{slot}][{bit}]'
             script+=f'''proc {inst} {{m args}} {{
  switch $m {{getName {{return {{{name}}}}} getMaster {{return DFFHQNx1_ASAP7_75t_R}}
  getPlacementStatus {{return PLACED}} setPlacementStatus {{}} setOrient {{}}
- setLocation {{dict set ::places {{{name}}} $args}} }}
+ setLocation {{incr ::moves;dict set ::places {{{name}}} $args}} }}
 }}\nlappend instances {inst}\n'''
     script+='proc block {m args} {return $::instances}\nset ff_blk block\n'
     if obstacle:script+='cland_occupy 0 0 270 270\n'
+    if legacy:script+='rename cland_column_select actual_select\nproc cland_column_select {args} {return 0}\n'
     script+=f'''if {{[catch {{cland_place_ff u_ring {{{rect}}} {tag}}} e]}} {{puts "ERR $e"}} else {{
  foreach {{n p}} $places {{puts "LOC $n $p"}}
+ puts "MOVES $moves"
 }}\n'''
     # The real master predicates used by the placement loop.
     script=script.replace('getHeight { return 270 }','getHeight { return 270 } isBlock { return 0 }')
@@ -75,4 +77,23 @@ def test_column_fill_avoids_obstacles_and_reserves_resize_family_width():
         assert all(min(box[2],b[2])<=max(box[0],b[0]) or min(box[3],b[3])<=max(box[1],b[1]) for b in boxes)
         boxes.append(box)
     placed,out=run(rect='0 0 .1 1.08')
+    assert not placed and 'no legal nonoverlapping' in out
+
+
+def test_quantized_capacity_control_and_dry_run_has_no_cell_mutations():
+    # 90% continuous area spacing rounds up to 3 native rows: only six
+    # locations fit. Whole-band selection reaches the legal one-row quantum.
+    old, negative = run(rect='0 0 .54 1.08', legacy=True)
+    assert not old and 'no legal nonoverlapping' in negative
+    placed, out = run(rect='0 0 .54 1.08')
+    assert len(placed) == 8, out
+    assert 'padding reduced by 2 native rows' in out
+    assert 'MOVES 8' in out   # failed/successful probes never touch the ODB
+    assert len(set(placed.values())) == 8
+    for x,y in placed.values():
+        assert 0 <= x and x+162 <= 540 and 0 <= y and y+270 <= 1080
+
+
+def test_infeasible_physical_band_does_not_become_a_density_waiver():
+    placed,out=run(rect='0 0 .17 .27')
     assert not placed and 'no legal nonoverlapping' in out

@@ -92,10 +92,15 @@ proc cland_family_w {m} {
 # then advance across x. Density spacing is vertical; drive-family width is
 # still reserved horizontally so in-place resizing cannot overlap a neighbor.
 proc cland_put_column {i ax ay bx by tag sp cur fw} {
- global ff_x0 ff_y0 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_col_cursor
+ global ff_x0 ff_y0 ff_rh ff_sw ff_dbu ff_orient cland_occ cland_done cland_n cland_fh cland_col_cursor cland_col_reduce cland_col_dry
  set m [$i getMaster];set w [$m getWidth];set h [$m getHeight]
  set rw [expr {int(ceil(double(max($w,$fw))/$ff_sw))*$ff_sw}]
  set rh [expr {int(ceil(double($h)/0.4*$sp/$ff_rh))*$ff_rh}]
+ # Column density spacing is a row quantum. Capacity selection may remove
+ # whole padding rows, never the physical cell height or horizontal reserve.
+ if {[info exists cland_col_reduce]} {
+  set rh [expr {max(int(ceil(double($h)/$ff_rh))*$ff_rh,$rh-$cland_col_reduce*$ff_rh)}]
+ }
  set x0 [expr {$ff_x0+int(ceil(double($ax-$ff_x0)/$ff_sw))*$ff_sw}]
  set y0 [expr {$ff_y0+int(ceil(double($ay-$ff_y0)/$ff_rh))*$ff_rh}]
  set x $x0;set y $y0;set cw 0
@@ -117,12 +122,17 @@ proc cland_put_column {i ax ay bx by tag sp cur fw} {
     if {!$free} break
    }
    if {!$free} continue
-   if {[$i getPlacementStatus] eq "FIRM"} {$i setPlacementStatus PLACED}
-   $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+   set dry [expr {[info exists cland_col_dry] && $cland_col_dry}]
+   if {!$dry} {
+    if {[$i getPlacementStatus] eq "FIRM"} {$i setPlacementStatus PLACED}
+    $i setOrient [dict get $ff_orient $y];$i setLocation $x $y;$i setPlacementStatus FIRM
+   }
    cland_occupy $x $y $rw $rh
    if {$cur} {set cland_col_cursor [list $x [expr {$y+$rh}] [expr {max($cw,$rw)}]]}
    dict set cland_done [$i getName] 1;incr cland_n
+   if {!$dry} {
    puts $cland_fh "[$i getName]\tcland:$tag\t[expr {$x/double($ff_dbu)}]\t[expr {$y/double($ff_dbu)}]\t-"
+   }
    return 1
   }
   set x [expr {$x+max($cw,$rw)}];set y $y0;set cw 0
@@ -297,8 +307,40 @@ proc cland_ffkey {nm {rev 0}} {
  }
  return $nm
 }
+# Select the largest native-row spacing that fits the WHOLE ordered band.
+# The continuous 90% area estimate can overflow after vertical ceil rounding
+# (HEAD turn_b: 2885 cells fit, then writer bit12 fails). Probe the exact same
+# scanner/foreign occupancy/width policy transactionally before moving cells.
+proc cland_column_select {ffs rect tag sp} {
+ global ff_rh cland_occ cland_done cland_n cland_cursor cland_col_cursor cland_col_reduce cland_col_dry
+ set saved [list $cland_occ $cland_done $cland_n $cland_cursor $cland_col_cursor]
+ set maxrows 0
+ foreach pr $ffs {
+  set h [[[lindex $pr 1] getMaster] getHeight]
+  set maxrows [expr {max($maxrows,int(ceil(double($h)/0.4*$sp/$ff_rh)))}]
+ }
+ try {
+  set cland_col_dry 1
+  for {set r 0} {$r <= $maxrows} {incr r} {
+   lassign $saved cland_occ cland_done cland_n cland_cursor cland_col_cursor
+   set cland_col_reduce $r
+   set rc [catch {
+    foreach pr $ffs {cland_put [lindex $pr 1] $rect $tag $sp 1}
+   } msg opts]
+   if {!$rc} {return $r}
+   if {![string match {OT_CLAND no legal nonoverlapping row/site in reserved band*} $msg]} {
+    return -options $opts $msg
+   }
+  }
+  # A physically full band still fails, without partial placement or records.
+  return -options $opts $msg
+ } finally {
+  lassign $saved cland_occ cland_done cland_n cland_cursor cland_col_cursor
+  unset -nocomplain cland_col_reduce cland_col_dry
+ }
+}
 proc cland_place_ff {prefix rect tag} {
- global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor
+ global ff_blk ff_sw ff_dbu cland_done cland_ff_fill cland_cursor cland_col_cursor cland_col_reduce
  set ffs {};set comb 0;set need 0.0
  foreach i [$ff_blk getInsts] {
   set nm [$i getName]
@@ -318,7 +360,16 @@ proc cland_place_ff {prefix rect tag} {
  lassign $rect ax ay bx by
  set sp [expr {max(1.0,$cland_ff_fill*($bx-$ax)*($by-$ay)*$ff_dbu*$ff_dbu/$need)}]
  set cland_cursor {};set cland_col_cursor {}
- foreach pr [lsort -dictionary -index 0 $ffs] { cland_put [lindex $pr 1] $rect $tag $sp 1 }
+ set ordered [lsort -dictionary -index 0 $ffs]
+ if {[string match {ring:*+x+ff*} $tag]} {
+  set cland_col_reduce [cland_column_select $ordered $rect $tag $sp]
+  puts "OT_CLAND column capacity $prefix: vertical padding reduced by $cland_col_reduce native rows; horizontal reserve unchanged"
+  try {
+   foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
+  } finally {unset -nocomplain cland_col_reduce}
+ } else {
+  foreach pr $ordered {cland_put [lindex $pr 1] $rect $tag $sp 1}
+ }
  set cland_cursor {};set cland_col_cursor {}
  puts "OT_CLAND ring_place=ff $prefix: [llength $ffs] ring flops FIRM bit-major at spread [format %.4f $sp], $comb ring logic cells left to global placement"
  return [llength $ffs]
