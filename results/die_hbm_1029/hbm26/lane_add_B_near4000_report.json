@@ -1,0 +1,1162 @@
+{
+ "schema": "die_plan.lane_add.v1",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-25/plan/d25b",
+ "base_sha": "77fb5f395968",
+ "out_sha": "d67c2f065cbd",
+ "near_um": 4000.0,
+ "totals": {
+  "built": 2,
+  "built_bits": 2798,
+  "far": 51,
+  "far_bits": 34932,
+  "failed": 39,
+  "by_kind": {
+   "adj": 0,
+   "same": 0,
+   "reverse": 0,
+   "path": 2
+  },
+  "cycle_mismatch": 0,
+  "macro_hits": 0
+ },
+ "built": [
+  {
+   "lane": "L400",
+   "src": "NW_su31",
+   "dst": "NW_su30",
+   "bits": 1399,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NW_su31",
+    "NW_b110",
+    "NW_b100",
+    "NW_su30"
+   ],
+   "windows": [
+    {
+     "edge": "NW_su31|NW_b110",
+     "face": "W",
+     "window_um": [
+      5304.7427,
+      5538.076
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b110|NW_b100",
+     "face": "W",
+     "window_um": [
+      5406.3267,
+      5639.66
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NW_b100|NW_su30",
+     "face": "W",
+     "window_um": [
+      4617.072,
+      4850.4053
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NW_b110",
+     "slot": "L400x1",
+     "stations": 2,
+     "route_um": 516.3,
+     "macro_hits": 0
+    },
+    {
+     "part": "NW_b100",
+     "slot": "L400x2",
+     "stations": 5,
+     "route_um": 1523.7,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 9,
+   "stations": 7,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  },
+  {
+   "lane": "L400m",
+   "src": "NE_su31",
+   "dst": "NE_su30",
+   "bits": 1399,
+   "kind": "path",
+   "template": null,
+   "chain": [
+    "NE_su31",
+    "NE_b110",
+    "NE_b100",
+    "NE_su30"
+   ],
+   "windows": [
+    {
+     "edge": "NE_su31|NE_b110",
+     "face": "E",
+     "window_um": [
+      5304.5693,
+      5537.9026
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b110|NE_b100",
+     "face": "E",
+     "window_um": [
+      5405.9933,
+      5639.3266
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    },
+    {
+     "edge": "NE_b100|NE_su30",
+     "face": "E",
+     "window_um": [
+      4617.072,
+      4850.4053
+     ],
+     "layers": [
+      "M6",
+      "M4"
+     ]
+    }
+   ],
+   "crossings": [
+    {
+     "part": "NE_b110",
+     "slot": "L400mx1",
+     "stations": 2,
+     "route_um": 516.1,
+     "macro_hits": 0
+    },
+    {
+     "part": "NE_b100",
+     "slot": "L400mx2",
+     "stations": 5,
+     "route_um": 1523.3,
+     "macro_hits": 0
+    }
+   ],
+   "cycles": 9,
+   "stations": 7,
+   "clock_landing": 0,
+   "existing_pair_cycles": [],
+   "cycles_match_pair": true,
+   "macro_hits": 0,
+   "split": 1
+  }
+ ],
+ "far": [
+  {
+   "src": "NW_b100",
+   "dst": "NW_b102",
+   "bits": 2777,
+   "gap_um": 8942.4
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b111",
+   "bits": 1662,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b112",
+   "bits": 1662,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_b110",
+   "bits": 1534,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NW_b102",
+   "dst": "NW_b101",
+   "bits": 1146,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_b113",
+   "bits": 1000,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NW_b112",
+   "dst": "NW_b113",
+   "bits": 1000,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NW_b110",
+   "dst": "NW_b113",
+   "bits": 800,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_spb0",
+   "bits": 632,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NW_spb0",
+   "dst": "NW_hub",
+   "bits": 615,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su11",
+   "bits": 596,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su20",
+   "bits": 596,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_su31",
+   "bits": 596,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b103",
+   "bits": 569,
+   "gap_um": 11214.7
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_b113",
+   "bits": 516,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_b113",
+   "bits": 516,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NW_su31",
+   "dst": "NW_b113",
+   "bits": 516,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NW_b002",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 10670.4
+  },
+  {
+   "src": "NW_b103",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 11940.5
+  },
+  {
+   "src": "NW_b101",
+   "dst": "NW_b102",
+   "bits": 35,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NW_spt0",
+   "dst": "root",
+   "bits": 9,
+   "gap_um": 5771.5
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b103",
+   "bits": 1,
+   "gap_um": 8233.9
+  },
+  {
+   "src": "NW_su11",
+   "dst": "NW_su20",
+   "bits": 1,
+   "gap_um": 9884.2
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_su31",
+   "bits": 1,
+   "gap_um": 6575.0
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b102",
+   "bits": 2777,
+   "gap_um": 8942.4
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b111",
+   "bits": 1662,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b112",
+   "bits": 1662,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_b110",
+   "bits": 1534,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NE_b102",
+   "dst": "NE_b101",
+   "bits": 1146,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "gap_um": 4320.0
+  },
+  {
+   "src": "NE_b112",
+   "dst": "NE_b113",
+   "bits": 1000,
+   "gap_um": 10290.2
+  },
+  {
+   "src": "NE_b110",
+   "dst": "NE_b113",
+   "bits": 800,
+   "gap_um": 12847.7
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_spb0",
+   "bits": 632,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NE_spb0",
+   "dst": "NE_hub",
+   "bits": 615,
+   "gap_um": 4561.9
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su11",
+   "bits": 596,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su20",
+   "bits": 596,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_su31",
+   "bits": 596,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b103",
+   "bits": 569,
+   "gap_um": 11214.7
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_b113",
+   "bits": 516,
+   "gap_um": 7931.5
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_b113",
+   "bits": 516,
+   "gap_um": 4682.9
+  },
+  {
+   "src": "NE_su31",
+   "dst": "NE_b113",
+   "bits": 516,
+   "gap_um": 13262.4
+  },
+  {
+   "src": "NE_b002",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 10670.4
+  },
+  {
+   "src": "NE_b103",
+   "dst": "root",
+   "bits": 297,
+   "gap_um": 11940.5
+  },
+  {
+   "src": "root",
+   "dst": "NE_b000",
+   "bits": 180,
+   "gap_um": 8216.6
+  },
+  {
+   "src": "NE_b101",
+   "dst": "NE_b102",
+   "bits": 35,
+   "gap_um": 11923.2
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "root",
+   "bits": 9,
+   "gap_um": 5771.5
+  },
+  {
+   "src": "NE_spb2",
+   "dst": "NW_hub",
+   "bits": 2,
+   "gap_um": 9046.1
+  },
+  {
+   "src": "NE_spt0",
+   "dst": "NW_hub",
+   "bits": 2,
+   "gap_um": 9028.8
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b103",
+   "bits": 1,
+   "gap_um": 8233.9
+  },
+  {
+   "src": "NE_su11",
+   "dst": "NE_su20",
+   "bits": 1,
+   "gap_um": 9884.2
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_su31",
+   "bits": 1,
+   "gap_um": 6575.0
+  }
+ ],
+ "failed": [
+  {
+   "src": "NW_su30",
+   "dst": "NW_su31",
+   "bits": 3356,
+   "why": "no free window NW_su30|NW_b100",
+   "chains": [
+    [
+     "NW_su30",
+     "NW_b100",
+     "NW_b110",
+     "NW_su31"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b100",
+   "dst": "NW_b101",
+   "bits": 3333,
+   "why": "no macro-free station chain with 8 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_b100",
+     "NW_b110",
+     "NW_su31",
+     "NW_b101"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su00",
+   "bits": 2846,
+   "why": "no free window NW_b010|NW_su00",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_su01",
+     "NW_su00"
+    ],
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_b001",
+     "NW_su00"
+    ],
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_su00"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_su20",
+   "bits": 2846,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_su21",
+     "NW_su20"
+    ],
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_su20"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b113",
+   "bits": 2277,
+   "why": "no macro-free station chain with 26 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_b001",
+     "NW_b011",
+     "NW_b002",
+     "NW_b012",
+     "NW_b113"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "root",
+   "bits": 2065,
+   "why": "no free window NW_hub|root",
+   "chains": [
+    [
+     "NW_hub",
+     "root"
+    ]
+   ]
+  },
+  {
+   "src": "NW_su00",
+   "dst": "NW_hub",
+   "bits": 1207,
+   "why": "cycles 15 (including clock landings) not in the pair's existing lane cycles [8]",
+   "chains": [
+    [
+     "NW_su00",
+     "NW_su01",
+     "NW_hub"
+    ],
+    [
+     "NW_su00",
+     "NW_b001",
+     "NW_b010",
+     "NW_b000",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_su20",
+   "dst": "NW_hub",
+   "bits": 1207,
+   "why": "no free window NW_su21|NW_hub",
+   "chains": [
+    [
+     "NW_su20",
+     "NW_su21",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b113",
+   "dst": "NW_hub",
+   "bits": 693,
+   "why": "no free window NW_su01|NW_hub",
+   "chains": [
+    [
+     "NW_b113",
+     "NW_su00",
+     "NW_su01",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b111",
+   "dst": "NW_hub",
+   "bits": 410,
+   "why": "no free window NW_su21|NW_hub",
+   "chains": [
+    [
+     "NW_b111",
+     "NW_su20",
+     "NW_su21",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NW_b111",
+   "bits": 160,
+   "why": "no macro-free station chain with 18 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_hub",
+     "NW_b000",
+     "NW_b010",
+     "NW_b001",
+     "NW_b011",
+     "NW_b002",
+     "NW_b012",
+     "NW_b111"
+    ]
+   ]
+  },
+  {
+   "src": "NW_sm0",
+   "dst": "NW_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NW_sm0']",
+   "chains": [
+    [
+     "NW_sm0",
+     "NW_su01",
+     "NW_hub"
+    ],
+    [
+     "NW_sm0",
+     "NW_su00",
+     "NW_su01",
+     "NW_b010",
+     "NW_b000",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_sm1",
+   "dst": "NW_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NW_sm1']",
+   "chains": [
+    [
+     "NW_sm1",
+     "NW_su10",
+     "NW_hub"
+    ],
+    [
+     "NW_sm1",
+     "NW_su11",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_sm2",
+   "dst": "NW_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NW_sm2']",
+   "chains": [
+    [
+     "NW_sm2",
+     "NW_su21",
+     "NW_hub"
+    ],
+    [
+     "NW_sm2",
+     "NW_spb2",
+     "NW_spu1",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_sm3",
+   "dst": "NW_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NW_sm3']",
+   "chains": [
+    [
+     "NW_sm3",
+     "NW_b100",
+     "NW_hub"
+    ],
+    [
+     "NW_sm3",
+     "NW_su31",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b002",
+   "dst": "NW_hub",
+   "bits": 4,
+   "why": "no macro-free station chain with 12 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_b002",
+     "NW_b011",
+     "NW_b001",
+     "NW_b010",
+     "NW_b000",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b011",
+   "dst": "NW_hub",
+   "bits": 3,
+   "why": "no macro-free station chain with 10 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_b011",
+     "NW_b001",
+     "NW_b010",
+     "NW_b000",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b103",
+   "dst": "NW_hub",
+   "bits": 2,
+   "why": "no macro-free station chain with 17 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_b103",
+     "NW_b111",
+     "NW_su20",
+     "NW_su21",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_b013",
+   "dst": "NW_hub",
+   "bits": 1,
+   "why": "no macro-free station chain with 23 stations (hop<= 364)",
+   "chains": [
+    [
+     "NW_b013",
+     "NW_b003",
+     "NW_b012",
+     "NW_b002",
+     "NW_b011",
+     "NW_b001",
+     "NW_b010",
+     "NW_b000",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su30",
+   "dst": "NE_su31",
+   "bits": 3356,
+   "why": "no free window NE_su30|NE_b100",
+   "chains": [
+    [
+     "NE_su30",
+     "NE_b100",
+     "NE_b110",
+     "NE_su31"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b100",
+   "dst": "NE_b101",
+   "bits": 3332,
+   "why": "no macro-free station chain with 8 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_b100",
+     "NE_b110",
+     "NE_su31",
+     "NE_b101"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su00",
+   "bits": 2846,
+   "why": "no free window NE_b010|NE_su00",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su01",
+     "NE_su00"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_b001",
+     "NE_su00"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_su00"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_su20",
+   "bits": 2846,
+   "why": "no macro-free station chain with 6 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_su21",
+     "NE_su20"
+    ],
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_su20"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NW_hub",
+   "bits": 2775,
+   "why": "type shared by several partitions on the chain ['NE_sm3', 'NW_sm3']",
+   "chains": [
+    [
+     "NE_hub",
+     "root",
+     "NW_hub"
+    ],
+    [
+     "NE_hub",
+     "NE_b100",
+     "NE_sm3",
+     "vsN1",
+     "NW_sm3",
+     "NW_b100",
+     "NW_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NW_hub",
+   "dst": "NE_hub",
+   "bits": 2730,
+   "why": "type shared by several partitions on the chain ['NE_sm3', 'NW_sm3']",
+   "chains": [
+    [
+     "NW_hub",
+     "root",
+     "NE_hub"
+    ],
+    [
+     "NW_hub",
+     "NW_b100",
+     "NW_sm3",
+     "vsN1",
+     "NE_sm3",
+     "NE_b100",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b113",
+   "bits": 2277,
+   "why": "no macro-free station chain with 26 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_b001",
+     "NE_b011",
+     "NE_b002",
+     "NE_b012",
+     "NE_b113"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su00",
+   "dst": "NE_hub",
+   "bits": 1207,
+   "why": "cycles 15 (including clock landings) not in the pair's existing lane cycles [8]",
+   "chains": [
+    [
+     "NE_su00",
+     "NE_su01",
+     "NE_hub"
+    ],
+    [
+     "NE_su00",
+     "NE_b001",
+     "NE_b010",
+     "NE_b000",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_su20",
+   "dst": "NE_hub",
+   "bits": 1207,
+   "why": "no free window NE_su21|NE_hub",
+   "chains": [
+    [
+     "NE_su20",
+     "NE_su21",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b113",
+   "dst": "NE_hub",
+   "bits": 693,
+   "why": "no free window NE_su01|NE_hub",
+   "chains": [
+    [
+     "NE_b113",
+     "NE_su00",
+     "NE_su01",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b111",
+   "dst": "NE_hub",
+   "bits": 410,
+   "why": "no free window NE_su21|NE_hub",
+   "chains": [
+    [
+     "NE_b111",
+     "NE_su20",
+     "NE_su21",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_hub",
+   "dst": "NE_b111",
+   "bits": 160,
+   "why": "no macro-free station chain with 18 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_hub",
+     "NE_b000",
+     "NE_b010",
+     "NE_b001",
+     "NE_b011",
+     "NE_b002",
+     "NE_b012",
+     "NE_b111"
+    ]
+   ]
+  },
+  {
+   "src": "NE_sm0",
+   "dst": "NE_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NE_sm0']",
+   "chains": [
+    [
+     "NE_sm0",
+     "NE_su01",
+     "NE_hub"
+    ],
+    [
+     "NE_sm0",
+     "NE_su00",
+     "NE_su01",
+     "NE_b010",
+     "NE_b000",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_sm1",
+   "dst": "NE_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NE_sm1']",
+   "chains": [
+    [
+     "NE_sm1",
+     "NE_su10",
+     "NE_hub"
+    ],
+    [
+     "NE_sm1",
+     "NE_su11",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_sm2",
+   "dst": "NE_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NE_sm2']",
+   "chains": [
+    [
+     "NE_sm2",
+     "NE_su21",
+     "NE_hub"
+    ],
+    [
+     "NE_sm2",
+     "NE_spb2",
+     "NE_spu1",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_sm3",
+   "dst": "NE_hub",
+   "bits": 37,
+   "why": "type shared by several partitions on the chain ['NE_sm3']",
+   "chains": [
+    [
+     "NE_sm3",
+     "NE_b100",
+     "NE_hub"
+    ],
+    [
+     "NE_sm3",
+     "NE_su31",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b002",
+   "dst": "NE_hub",
+   "bits": 4,
+   "why": "no macro-free station chain with 12 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_b002",
+     "NE_b011",
+     "NE_b001",
+     "NE_b010",
+     "NE_b000",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b011",
+   "dst": "NE_hub",
+   "bits": 3,
+   "why": "no macro-free station chain with 10 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_b011",
+     "NE_b001",
+     "NE_b010",
+     "NE_b000",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b103",
+   "dst": "NE_hub",
+   "bits": 2,
+   "why": "no macro-free station chain with 17 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_b103",
+     "NE_b111",
+     "NE_su20",
+     "NE_su21",
+     "NE_hub"
+    ]
+   ]
+  },
+  {
+   "src": "NE_b013",
+   "dst": "NE_hub",
+   "bits": 1,
+   "why": "no macro-free station chain with 23 stations (hop<= 364)",
+   "chains": [
+    [
+     "NE_b013",
+     "NE_b003",
+     "NE_b012",
+     "NE_b002",
+     "NE_b011",
+     "NE_b001",
+     "NE_b010",
+     "NE_b000",
+     "NE_hub"
+    ]
+   ]
+  }
+ ]
+}
