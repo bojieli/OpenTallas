@@ -191,7 +191,17 @@ def select(rows, cfg, die, state, plan_types=None):
         elif (age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m):
             why = f"lane activity < {claim_m / 60:g} h ({r['owner']})"
         elif plan_types is not None and r["item"] not in plan_types:
-            why = "not in plan of record"
+            # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
+            cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
+            todo = [c for c in cls if not (state.get("items") or {}).get(item_key(die, ev, c))
+                    or f"{c}@{state['items'][item_key(die, ev, c)].get('attempt')}" in retry]
+            if not cls:
+                why = "not in plan of record"
+            elif not todo:
+                why = "all plan classes already in the wave"
+            else:
+                picked += [dict(r, item=c, parent_item=r["item"]) for c in todo]
+                continue
         if why:
             skip.setdefault(why, []).append(r["item"])
             continue
@@ -270,14 +280,35 @@ def classify(stage, text):
     return "FLOW", f"unclassified failure @{stage} (see log)"
 
 
+# ------------------------------------------------------------------------------------------------ AUTO-GEOM verdict
+FILL_ONLY = {"fill", "empty"}
+
+
+def geom_verdict(line):
+    """AP_AUTO_GEOM line (geom_rules.verdict_line) -> (PASS|FAIL, failing rules, tag).
+    OWNER standing rule 10-30 00:5x (via COORD): when fill/empty in the plan slot are the ONLY failing AUTO-GEOM items,
+    the kit passes with tag FILL-EXCEPTION; with any other failing (or NA) rule -- clock_reach/tap_sinks, r2r, pin_reg,
+    grt, slot fit ... -- it is classified as usual."""
+    m = re.search(r"AUTO-GEOM (PASS|FAIL)\b", line or "")
+    if not m:
+        return "FAIL", [], "no verdict"
+    failing = sorted(set(re.findall(r"(?:^|\s)([A-Za-z0-9_]+)=(?:FAIL|NA)\(", line)))
+    if m.group(1) == "PASS" and not failing:
+        return "PASS", [], ""
+    if failing and set(failing) <= FILL_ONLY:
+        return "PASS", failing, "FILL-EXCEPTION"
+    return "FAIL", failing, ""
+
+
 # ------------------------------------------------------------------------------------------------ OWNERS overlay
 def overlay_owners(orows, state):
     """mark OWNERS rows of wave items (in place): owner KIT-WAVE-1, live unit, next step = status/class/evidence"""
     idx = {}
     for k, r in (state.get("items") or {}).items():
-        prev = idx.get((r["die"], r["item"]))
+        it = r.get("parent_item") or r["item"]
+        prev = idx.get((r["die"], it))
         if not prev or (r.get("updated") or 0) >= (prev.get("updated") or 0):
-            idx[(r["die"], r["item"])] = r
+            idx[(r["die"], it)] = r
     n = 0
     for o in orows:
         r = idx.get((o.get("die"), o.get("item")))
@@ -351,8 +382,8 @@ def run_item(spec_path):
         print(f"KW_STAGE_RC {stage} {p.returncode}", flush=True)
         return p.returncode, txt
 
-    def remote(cmd):
-        return _ssh(G, hub) + ["bash", "-c", cmd] if _ssh(G, hub) else ["bash", "-c", cmd]
+    def remote(cmd):                                     # ssh joins argv with spaces: send ONE quoted command
+        return _ssh(G, hub) + ["bash -c " + shlex.quote(cmd)] if _ssh(G, hub) else ["bash", "-c", cmd]
 
     def otrun(mem, thr, d, cmd, hosts):                  # ot-run names the hub itself 'localhost'
         hosts = ["localhost" if h == hub else h for h in hosts]
@@ -458,9 +489,10 @@ def run_item(spec_path):
     res.update(geom_dir=f"{G}:{gd}", geom_line=line[:600], odb=odb, kit=f"{G}:{K}")
     if rc or not line or line.startswith("AP_AUTO_GEOM_ERROR"):
         return fail("geom_run", txt[-3000:], f"{G}:{gd}")
-    if not re.match(r"AP_AUTO_GEOM PASS\b", line):
+    v, failing, tag = geom_verdict(line)
+    if v != "PASS":
         return fail("geom", line, f"{G}:{gd}/auto_geom.json")
-    res.update(stage="geom", verdict="PASS", evidence=f"{G}:{gd}/auto_geom.json")
+    res.update(stage="geom", verdict="PASS", geom_tag=tag, evidence=f"{G}:{gd}/auto_geom.json")
     (out / "result.json").write_text(json.dumps(res, indent=1))
     return 0
 
@@ -541,7 +573,7 @@ def launch(AP, cfg, st, die, r, hub):
     jd.mkdir(parents=True, exist_ok=True)
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
     ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
-    rec = {"die": die, "item": r["item"], "kind": r["kind"], "event": sp["event"], "attempt": attempt,
+    rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
            "unit": unit, "dir": str(jd),
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time()}
@@ -576,7 +608,8 @@ def collect(AP, cfg, st, notices):
         rec["evidence"] = res.get("evidence", "")
         rec["kit"] = res.get("kit", "")
         if res.get("verdict") == "PASS":
-            rec.update(status="PASS", geom=res.get("geom_line", ""), cells=res.get("cells"), geom_dir=res.get("geom_dir"))
+            rec.update(status="PASS", geom=res.get("geom_line", ""), cells=res.get("cells"), geom_dir=res.get("geom_dir"),
+                       geom_tag=res.get("geom_tag", ""))
             enqueue_pass(AP, cfg, st, rec, notices)
             continue
         cls, why = classify(res.get("stage", ""), res.get("tail", ""))
@@ -590,7 +623,8 @@ def collect(AP, cfg, st, notices):
 def enqueue_pass(AP, cfg, st, rec, notices):
     d = cfg["dies"][rec["die"]]
     src = d.get("queue_src") or f"main@{d.get('src_sha', '')}"
-    ref = f"AUTO-GEOM KIT-WAVE {rec['event']} {rec['geom_dir']}/auto_geom.json"
+    ref = (f"AUTO-GEOM KIT-WAVE {rec['event']} {rec['geom_dir']}/auto_geom.json"
+           + (f" {rec['geom_tag']} (owner standing rule 10-30 00:5x: fill/empty only)" if rec.get("geom_tag") else ""))
     cells = rec.get("cells") or 0
     argv = ["python3", str(Path(__file__).resolve().parent / "enqueue.py"), "--die", rec["die"], "--type", rec["item"],
             "--kit", rec["kit"], "--src", src, "--geom", "PASS", "--geom-ref", ref,
@@ -606,7 +640,7 @@ def enqueue_pass(AP, cfg, st, rec, notices):
         return
     rec["status"] = "ENQUEUED"
     st["pass_n"] = int(st.get("pass_n", 0)) + 1
-    msg = f"{rec['item']} AUTO-GEOM PASS -> enqueued ({rec['kit']})"
+    msg = f"{rec['item']} AUTO-GEOM PASS{' ' + rec['geom_tag'] if rec.get('geom_tag') else ''} -> enqueued ({rec['kit']})"
     if st["pass_n"] % int(cfg.get("geom_sample", DEFAULTS["geom_sample"])) == 1 or int(cfg.get("geom_sample", 5)) == 1:
         AP.coord_append("lanes/GEOM-REVIEW.md",
                         f"- {now_s()} GEOM REQ [KIT-WAVE-1 sample {rec['die']}/{rec['item']}] 3_place {rec['kit']} "
@@ -629,6 +663,7 @@ def step(AP, ap_dir=None):
         if rec.get("status") == "RETRY-INFRA" and not stop_reason(cfg, rec["die"], ap_dir):
             rec["status"] = "FAIL"
             launch(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
+                                              "parent_item": rec.get("parent_item"),
                                               "replicas": rec.get("replicas")}, AP.HUB_NAME)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)

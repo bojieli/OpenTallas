@@ -127,6 +127,16 @@ class Select(unittest.TestCase):
         _, skip = KW.select(rows, cfg(), "qwen_kvsys", st, PLAN)
         self.assertEqual(skip["wave item in flight"], ["kv3_phy_v1"])
 
+    def test_plan_classes_expand(self):
+        rows = KW.parse_owners(OWN)
+        plan = (PLAN - {"kv3_hub_Eo"}) | {"kv3_hub_Eo__cl1", "kv3_hub_Eo__cl2"}
+        st = {"items": {KW.item_key("qwen_kvsys", "event28w_c", "kv3_hub_Eo__cl1"): {"status": "RUNNING", "attempt": 1}}}
+        picks, _ = KW.select(rows, cfg(), "qwen_kvsys", st, plan)
+        self.assertEqual([p["item"] for p in picks if p.get("parent_item")], ["kv3_hub_Eo__cl2"])
+        st["items"][KW.item_key("qwen_kvsys", "event28w_c", "kv3_hub_Eo__cl2")] = {"status": "FAIL", "attempt": 1}
+        _, skip = KW.select(rows, cfg(), "qwen_kvsys", st, plan)
+        self.assertEqual(skip["all plan classes already in the wave"], ["kv3_hub_Eo"])
+
     def test_new_event_is_new_item(self):
         rows = KW.parse_owners(OWN)
         st = {"items": {KW.item_key("qwen_kvsys", "event28b", "kv3_phy_v1"): {"status": "FAIL", "attempt": 1}}}
@@ -186,6 +196,19 @@ class Classify(unittest.TestCase):
         cls, why = KW.classify("gen", "reset tap is blocked")
         self.assertIn("@gen", why)
         self.assertIn(cls, KW.CLASSES)
+
+
+class GeomVerdict(unittest.TestCase):
+    def test_lines(self):
+        L = "AP_AUTO_GEOM AUTO-GEOM {} kv3 x KIT-WAVE 3_place {}"
+        self.assertEqual(KW.geom_verdict(L.format("PASS", "r2r=ok(300) fill=ok(.2)"))[0], "PASS")
+        v, f, tag = KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.0997) empty=FAIL(0.617) r2r=ok(327) grt=ok(0)"))
+        self.assertEqual((v, f, tag), ("PASS", ["empty", "fill"], "FILL-EXCEPTION"))
+        v, f, tag = KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.0997) channel_h=FAIL(1.065) r2r=ok(3)"))
+        self.assertEqual((v, tag), ("FAIL", ""))
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "fill=FAIL(0.1) tap_sinks=NA(None)"))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict(L.format("FAIL", "pin_reg=FAIL(9)"))[0], "FAIL")
+        self.assertEqual(KW.geom_verdict("AP_AUTO_GEOM_ERROR dump rc 1")[0], "FAIL")
 
 
 class FakeAP:
