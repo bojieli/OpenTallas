@@ -511,6 +511,55 @@
     },
     "qualification": "actual 1x NW_sm3 GRT coupon only; fit interpolation is an estimate, full-die GRT+real-view STA required; negative FF linear term is regression covariance, not a negative physical delay claim"
    }
+  },
+  {
+   "id": "inv2_ndr_qc_trial1p",
+   "key": {
+    "cell": "CKINVDCx16_ASAP7_75t_R",
+    "polarity": "pair",
+    "clock_rc": "ndr",
+    "corners": [
+     "TT",
+     "FF"
+    ],
+    "edges": [
+     "rise"
+    ],
+    "route": "QC TRIAL1 G2 die GRT (complete_pg/provider.odb), clock M4-M7 leaf rule, placed-stage legs"
+   },
+   "basis": "DIE-QC-45 ot_clk refit --placed-stages, 19458 legs, rms 4.96 TT / 4.13 FF (built model 18.15)",
+   "source": {
+    "file": "results/qc_die46_1030/clock/inv2_stage_cal_trial1p.json",
+    "sha256": "6e1899a72ad4239e5669db8ed153852179a24c45b93585b79f37c93b647c26e2",
+    "tree": "../proof/tree.json",
+    "arrivals": "out",
+    "rep_um": 250.0,
+    "even_legs": false,
+    "built_with": "refit_trial1p.built_with.json",
+    "tap_from": "/srv/opentallas-scratch2/claude/wt/die-qc-45/results/die_qc21_1028/inv2_stage_cal_trial13b.json",
+    "placed_stages": true
+   },
+   "leg": [
+    6.616594,
+    0.134188,
+    0.000223,
+    7.877325
+   ],
+   "tap": [
+    0.04204,
+    5e-06
+   ],
+   "leg_FF": [
+    5.004135,
+    0.1206,
+    0.000214,
+    5.557489
+   ],
+   "tap_FF": [
+    0.04195,
+    -5e-06
+   ],
+   "coeff_sha": "f4af05bd9b7e20cb"
   }
  ]
 }
