@@ -1,0 +1,1885 @@
+{
+ "schema": "die_hbm_22.replan_event.v1",
+ "variant": {
+  "name": "VL3",
+  "A": [
+   "NW_b102",
+   "NW_b103",
+   "NW_b111",
+   "NW_su20",
+   "NW_su21",
+   "NW_spu1",
+   "NW_b100",
+   "NW_b110",
+   "NW_su30",
+   "NW_su31",
+   "NW_b101"
+  ],
+  "C": [
+   "NW_b113",
+   "NW_su00",
+   "NW_su01",
+   "NW_spu0",
+   "NW_su10",
+   "NW_su11",
+   "NW_b112"
+  ]
+ },
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-23/plan/d23a",
+ "base_sha": "4133ce1e4e0d",
+ "out_sha": "65172da1f482",
+ "moved": [
+  "NE_b100",
+  "NE_b110",
+  "NE_su30",
+  "NW_b100",
+  "NW_b110",
+  "NW_su30"
+ ],
+ "outline_changes": [],
+ "dropped": 36,
+ "phase1": {
+  "rebuilt": [
+   {
+    "id": "L3",
+    "src": "NW_hub",
+    "dst": "NW_su30",
+    "bits": 2999,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_hub",
+     "NW_su30"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L5",
+    "src": "NW_hub",
+    "dst": "NW_b110",
+    "bits": 2725,
+    "cycles": 8,
+    "old_cycles": 14,
+    "old_chain": [
+     "NW_hub",
+     "NW_su30",
+     "NW_b100",
+     "NW_b110"
+    ],
+    "runs": [
+     [
+      0,
+      3
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_su30",
+      "NW_b110"
+     ]
+    ]
+   },
+   {
+    "id": "L6",
+    "src": "NW_hub",
+    "dst": "NW_b100",
+    "bits": 2484,
+    "cycles": 2,
+    "old_cycles": 7,
+    "old_chain": [
+     "NW_hub",
+     "NW_su30",
+     "NW_b100"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L7",
+    "src": "NW_hub",
+    "dst": "NW_b100",
+    "bits": 2484,
+    "cycles": 10,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_hub",
+     "NW_b100"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_su30",
+      "NW_b110",
+      "NW_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L23",
+    "src": "NW_b110",
+    "dst": "NW_hub",
+    "bits": 1792,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b110",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b110",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L27",
+    "src": "NW_su30",
+    "dst": "NW_hub",
+    "bits": 1719,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_su30",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su30",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L70",
+    "src": "NW_sm3",
+    "dst": "NW_hub",
+    "bits": 268,
+    "cycles": 8,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_sm3",
+     "NW_b100",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_sm3",
+      "NW_b100",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L203",
+    "src": "root",
+    "dst": "NW_b100",
+    "bits": 180,
+    "cycles": 19,
+    "old_cycles": 12,
+    "old_chain": [
+     "root",
+     "NW_b101",
+     "NW_su31",
+     "NW_b110",
+     "NW_b100"
+    ],
+    "runs": [
+     [
+      2,
+      4
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_su31",
+      "NW_su30",
+      "NW_b110",
+      "NW_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L81",
+    "src": "NW_b110",
+    "dst": "NW_hub",
+    "bits": 161,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b110",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b110",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L91",
+    "src": "NW_hub",
+    "dst": "NW_b100",
+    "bits": 54,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_hub",
+     "NW_b100"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L100",
+    "src": "NW_hub",
+    "dst": "NW_sm3",
+    "bits": 22,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NW_hub",
+     "NW_b100",
+     "NW_sm3"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_b100",
+      "NW_sm3"
+     ]
+    ]
+   },
+   {
+    "id": "L113",
+    "src": "NW_hub",
+    "dst": "NW_su30",
+    "bits": 16,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_hub",
+     "NW_su30"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_hub",
+      "NW_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L123",
+    "src": "NW_sm3",
+    "dst": "NW_hub",
+    "bits": 9,
+    "cycles": 8,
+    "old_cycles": 7,
+    "old_chain": [
+     "NW_sm3",
+     "NW_b100",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_sm3",
+      "NW_b100",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L137",
+    "src": "NW_b100",
+    "dst": "NW_hub",
+    "bits": 2,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NW_b100",
+     "NW_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NW_b100",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L3m",
+    "src": "NE_hub",
+    "dst": "NE_su30",
+    "bits": 2999,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_hub",
+     "NE_su30"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L5m",
+    "src": "NE_hub",
+    "dst": "NE_b110",
+    "bits": 2725,
+    "cycles": 8,
+    "old_cycles": 14,
+    "old_chain": [
+     "NE_hub",
+     "NE_su30",
+     "NE_b100",
+     "NE_b110"
+    ],
+    "runs": [
+     [
+      0,
+      3
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_su30",
+      "NE_b110"
+     ]
+    ]
+   },
+   {
+    "id": "L6m",
+    "src": "NE_hub",
+    "dst": "NE_b100",
+    "bits": 2484,
+    "cycles": 2,
+    "old_cycles": 7,
+    "old_chain": [
+     "NE_hub",
+     "NE_su30",
+     "NE_b100"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L7m",
+    "src": "NE_hub",
+    "dst": "NE_b100",
+    "bits": 2484,
+    "cycles": 10,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_hub",
+     "NE_b100"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_su30",
+      "NE_b110",
+      "NE_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L23m",
+    "src": "NE_b110",
+    "dst": "NE_hub",
+    "bits": 1792,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b110",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b110",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L27m",
+    "src": "NE_su30",
+    "dst": "NE_hub",
+    "bits": 1719,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_su30",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su30",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L70m",
+    "src": "NE_sm3",
+    "dst": "NE_hub",
+    "bits": 268,
+    "cycles": 8,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_sm3",
+     "NE_b100",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_sm3",
+      "NE_b100",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L203m",
+    "src": "root",
+    "dst": "NE_b100",
+    "bits": 178,
+    "cycles": 19,
+    "old_cycles": 12,
+    "old_chain": [
+     "root",
+     "NE_b101",
+     "NE_su31",
+     "NE_b110",
+     "NE_b100"
+    ],
+    "runs": [
+     [
+      2,
+      4
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_su31",
+      "NE_su30",
+      "NE_b110",
+      "NE_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L81m",
+    "src": "NE_b110",
+    "dst": "NE_hub",
+    "bits": 161,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b110",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b110",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L91m",
+    "src": "NE_hub",
+    "dst": "NE_b100",
+    "bits": 54,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_hub",
+     "NE_b100"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b100"
+     ]
+    ]
+   },
+   {
+    "id": "L100m",
+    "src": "NE_hub",
+    "dst": "NE_sm3",
+    "bits": 22,
+    "cycles": 7,
+    "old_cycles": 8,
+    "old_chain": [
+     "NE_hub",
+     "NE_b100",
+     "NE_sm3"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_b100",
+      "NE_sm3"
+     ]
+    ]
+   },
+   {
+    "id": "L113m",
+    "src": "NE_hub",
+    "dst": "NE_su30",
+    "bits": 16,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_hub",
+     "NE_su30"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_hub",
+      "NE_su30"
+     ]
+    ]
+   },
+   {
+    "id": "L123m",
+    "src": "NE_sm3",
+    "dst": "NE_hub",
+    "bits": 9,
+    "cycles": 8,
+    "old_cycles": 7,
+    "old_chain": [
+     "NE_sm3",
+     "NE_b100",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      2
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_sm3",
+      "NE_b100",
+      "NE_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L137m",
+    "src": "NE_b100",
+    "dst": "NE_hub",
+    "bits": 2,
+    "cycles": 2,
+    "old_cycles": 2,
+    "old_chain": [
+     "NE_b100",
+     "NE_hub"
+    ],
+    "runs": [
+     [
+      0,
+      1
+     ]
+    ],
+    "new_chains": [
+     [
+      "NE_b100",
+      "NE_hub"
+     ]
+    ]
+   }
+  ],
+  "failed": [
+   {
+    "id": "L48",
+    "src": "NW_spu1",
+    "dst": "NW_su31",
+    "run": [
+     6,
+     10
+    ],
+    "why": "no macro-free station chain (22 st)",
+    "chains": [
+     [
+      "NW_spu1",
+      "NW_b100",
+      "NW_b110",
+      "NW_su30",
+      "NW_su31"
+     ]
+    ]
+   },
+   {
+    "id": "L48",
+    "src": "NW_io",
+    "dst": "root",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no free window NW_hub|root",
+    "chains": [
+     [
+      "NW_io",
+      "NW_b102",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "root"
+     ],
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_b103",
+      "NW_sm2",
+      "NW_spb1",
+      "NW_sm3",
+      "root"
+     ],
+     [
+      "NW_io",
+      "NW_b102",
+      "NW_sm2",
+      "NW_spb2",
+      "NW_spu1",
+      "NW_hub",
+      "root"
+     ],
+     [
+      "NW_io",
+      "NW_b013",
+      "NW_b003",
+      "NW_b012",
+      "NW_b002",
+      "NW_b011",
+      "NW_b001",
+      "NW_b010",
+      "NW_b000",
+      "NW_hub",
+      "root"
+     ]
+    ]
+   },
+   {
+    "id": "L53",
+    "src": "NW_su31",
+    "dst": "NW_spu1",
+    "run": [
+     2,
+     6
+    ],
+    "why": "no macro-free station chain (32 st)",
+    "chains": [
+     [
+      "NW_su31",
+      "NW_su30",
+      "NW_b110",
+      "NW_b100",
+      "NW_spu1"
+     ],
+     [
+      "NW_su31",
+      "NW_sm3",
+      "NW_spb2",
+      "NW_spu1"
+     ]
+    ]
+   },
+   {
+    "id": "L53",
+    "src": "root",
+    "dst": "NW_io",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no free window root|NW_hub",
+    "chains": [
+     [
+      "root",
+      "NW_b112",
+      "NW_su11",
+      "NW_su10",
+      "NW_spu0",
+      "NW_su01",
+      "NW_su00",
+      "NW_b113",
+      "NW_io"
+     ],
+     [
+      "root",
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_b011",
+      "NW_b002",
+      "NW_b012",
+      "NW_b003",
+      "NW_b013",
+      "NW_io"
+     ]
+    ]
+   },
+   {
+    "id": "L117",
+    "src": "NW_spu1",
+    "dst": "NW_su31",
+    "run": [
+     3,
+     7
+    ],
+    "why": "no macro-free station chain (40 st)",
+    "chains": [
+     [
+      "NW_spu1",
+      "NW_b100",
+      "NW_b110",
+      "NW_su30",
+      "NW_su31"
+     ],
+     [
+      "NW_spu1",
+      "NW_su21",
+      "NW_spb2",
+      "NW_sm3",
+      "NW_su31"
+     ]
+    ]
+   },
+   {
+    "id": "L138",
+    "src": "NW_spu1",
+    "dst": "NW_su31",
+    "run": [
+     3,
+     7
+    ],
+    "why": "no macro-free station chain (40 st)",
+    "chains": [
+     [
+      "NW_spu1",
+      "NW_b100",
+      "NW_b110",
+      "NW_su30",
+      "NW_su31"
+     ],
+     [
+      "NW_spu1",
+      "NW_su21",
+      "NW_spb2",
+      "NW_sm3",
+      "NW_su31"
+     ]
+    ]
+   },
+   {
+    "id": "L48m",
+    "src": "NE_spu1",
+    "dst": "NE_su31",
+    "run": [
+     6,
+     10
+    ],
+    "why": "no macro-free station chain (22 st)",
+    "chains": [
+     [
+      "NE_spu1",
+      "NE_b100",
+      "NE_b110",
+      "NE_su30",
+      "NE_su31"
+     ]
+    ]
+   },
+   {
+    "id": "L48m",
+    "src": "NE_io",
+    "dst": "root",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no macro-free station chain (57 st)",
+    "chains": [
+     [
+      "NE_io",
+      "NE_b102",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "root"
+     ],
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_b103",
+      "NE_sm2",
+      "NE_spb1",
+      "NE_sm3",
+      "root"
+     ],
+     [
+      "NE_io",
+      "NE_b102",
+      "NE_sm2",
+      "NE_spb2",
+      "NE_spu1",
+      "NE_hub",
+      "root"
+     ],
+     [
+      "NE_io",
+      "NE_b013",
+      "NE_b003",
+      "NE_b012",
+      "NE_b002",
+      "NE_b011",
+      "NE_b001",
+      "NE_b010",
+      "NE_b000",
+      "NE_hub",
+      "root"
+     ]
+    ]
+   },
+   {
+    "id": "L53m",
+    "src": "NE_su31",
+    "dst": "NE_spu1",
+    "run": [
+     2,
+     6
+    ],
+    "why": "no macro-free station chain (32 st)",
+    "chains": [
+     [
+      "NE_su31",
+      "NE_su30",
+      "NE_b110",
+      "NE_b100",
+      "NE_spu1"
+     ],
+     [
+      "NE_su31",
+      "NE_sm3",
+      "NE_spb2",
+      "NE_spu1"
+     ]
+    ]
+   },
+   {
+    "id": "L53m",
+    "src": "root",
+    "dst": "NE_io",
+    "run": [
+     0,
+     12
+    ],
+    "why": "no macro-free station chain (57 st)",
+    "chains": [
+     [
+      "root",
+      "NE_b112",
+      "NE_su11",
+      "NE_su10",
+      "NE_spu0",
+      "NE_su01",
+      "NE_su00",
+      "NE_b113",
+      "NE_io"
+     ],
+     [
+      "root",
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_b011",
+      "NE_b002",
+      "NE_b012",
+      "NE_b003",
+      "NE_b013",
+      "NE_io"
+     ]
+    ]
+   },
+   {
+    "id": "L117m",
+    "src": "NE_spu1",
+    "dst": "NE_su31",
+    "run": [
+     3,
+     7
+    ],
+    "why": "no macro-free station chain (40 st)",
+    "chains": [
+     [
+      "NE_spu1",
+      "NE_b100",
+      "NE_b110",
+      "NE_su30",
+      "NE_su31"
+     ],
+     [
+      "NE_spu1",
+      "NE_su21",
+      "NE_spb2",
+      "NE_sm3",
+      "NE_su31"
+     ]
+    ]
+   },
+   {
+    "id": "L138m",
+    "src": "NE_spu1",
+    "dst": "NE_su31",
+    "run": [
+     3,
+     7
+    ],
+    "why": "no macro-free station chain (40 st)",
+    "chains": [
+     [
+      "NE_spu1",
+      "NE_b100",
+      "NE_b110",
+      "NE_su30",
+      "NE_su31"
+     ],
+     [
+      "NE_spu1",
+      "NE_su21",
+      "NE_spb2",
+      "NE_sm3",
+      "NE_su31"
+     ]
+    ]
+   }
+  ],
+  "decl_conflicts": [
+   {
+    "type": "q_sm3",
+    "name": "L70_o",
+    "why": "shared-type declaration differs"
+   },
+   {
+    "type": "q_sm3",
+    "name": "L100_i",
+    "why": "shared-type declaration differs"
+   },
+   {
+    "type": "q_sm3",
+    "name": "L123_o",
+    "why": "shared-type declaration differs"
+   }
+  ]
+ },
+ "cycle_changes": {
+  "n": 12,
+  "up": 6,
+  "max_up": 8,
+  "max_down": -6
+ },
+ "phase2": {
+  "built": 7,
+  "built_bits": 13989,
+  "by_kind": {
+   "adj": 4,
+   "same": 0,
+   "reverse": 0,
+   "path": 3
+  },
+  "far": [
+   {
+    "src": "NW_b100",
+    "dst": "NW_b101",
+    "bits": 3333,
+    "gap_um": 4311.4
+   },
+   {
+    "src": "NW_b100",
+    "dst": "NW_b102",
+    "bits": 2777,
+    "gap_um": 6877.4
+   },
+   {
+    "src": "NW_hub",
+    "dst": "NW_b113",
+    "bits": 2277,
+    "gap_um": 3283.2
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_b111",
+    "bits": 1662,
+    "gap_um": 4320.0
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_b112",
+    "bits": 1662,
+    "gap_um": 10290.2
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_b110",
+    "bits": 1534,
+    "gap_um": 10782.7
+   },
+   {
+    "src": "NW_b102",
+    "dst": "NW_b101",
+    "bits": 1146,
+    "gap_um": 11923.2
+   },
+   {
+    "src": "NW_b111",
+    "dst": "NW_b113",
+    "bits": 1000,
+    "gap_um": 4320.0
+   },
+   {
+    "src": "NW_b112",
+    "dst": "NW_b113",
+    "bits": 1000,
+    "gap_um": 10290.2
+   },
+   {
+    "src": "NW_b110",
+    "dst": "NW_b113",
+    "bits": 800,
+    "gap_um": 10782.7
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_hub",
+    "bits": 693,
+    "gap_um": 3283.2
+   },
+   {
+    "src": "NW_hub",
+    "dst": "NW_spb0",
+    "bits": 632,
+    "gap_um": 4561.9
+   },
+   {
+    "src": "NW_spb0",
+    "dst": "NW_hub",
+    "bits": 615,
+    "gap_um": 4561.9
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_su11",
+    "bits": 596,
+    "gap_um": 7931.5
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_su20",
+    "bits": 596,
+    "gap_um": 4682.9
+   },
+   {
+    "src": "NW_b113",
+    "dst": "NW_su31",
+    "bits": 596,
+    "gap_um": 13262.4
+   },
+   {
+    "src": "NW_b101",
+    "dst": "NW_b103",
+    "bits": 569,
+    "gap_um": 11214.7
+   },
+   {
+    "src": "NW_su11",
+    "dst": "NW_b113",
+    "bits": 516,
+    "gap_um": 7931.5
+   },
+   {
+    "src": "NW_su20",
+    "dst": "NW_b113",
+    "bits": 516,
+    "gap_um": 4682.9
+   },
+   {
+    "src": "NW_su31",
+    "dst": "NW_b113",
+    "bits": 516,
+    "gap_um": 13262.4
+   },
+   {
+    "src": "NW_b111",
+    "dst": "NW_hub",
+    "bits": 410,
+    "gap_um": 2920.3
+   },
+   {
+    "src": "NW_b002",
+    "dst": "root",
+    "bits": 297,
+    "gap_um": 10670.4
+   },
+   {
+    "src": "NW_b103",
+    "dst": "root",
+    "bits": 297,
+    "gap_um": 11940.5
+   },
+   {
+    "src": "NW_hub",
+    "dst": "NW_b111",
+    "bits": 160,
+    "gap_um": 2920.3
+   },
+   {
+    "src": "NW_sm0",
+    "dst": "NW_hub",
+    "bits": 37,
+    "gap_um": 1572.5
+   },
+   {
+    "src": "NW_sm1",
+    "dst": "NW_hub",
+    "bits": 37,
+    "gap_um": 1572.5
+   },
+   {
+    "src": "NW_sm2",
+    "dst": "NW_hub",
+    "bits": 37,
+    "gap_um": 1555.2
+   },
+   {
+    "src": "NW_sm3",
+    "dst": "NW_hub",
+    "bits": 37,
+    "gap_um": 1555.2
+   },
+   {
+    "src": "NW_b101",
+    "dst": "NW_b102",
+    "bits": 35,
+    "gap_um": 11923.2
+   },
+   {
+    "src": "NW_spt0",
+    "dst": "root",
+    "bits": 9,
+    "gap_um": 5771.5
+   },
+   {
+    "src": "NW_b002",
+    "dst": "NW_hub",
+    "bits": 4,
+    "gap_um": 2453.8
+   },
+   {
+    "src": "NW_b011",
+    "dst": "NW_hub",
+    "bits": 3,
+    "gap_um": 2073.6
+   },
+   {
+    "src": "NW_b103",
+    "dst": "NW_hub",
+    "bits": 2,
+    "gap_um": 3723.8
+   },
+   {
+    "src": "NW_b013",
+    "dst": "NW_hub",
+    "bits": 1,
+    "gap_um": 3939.8
+   },
+   {
+    "src": "NW_b100",
+    "dst": "NW_b103",
+    "bits": 1,
+    "gap_um": 6169.0
+   },
+   {
+    "src": "NW_su11",
+    "dst": "NW_su20",
+    "bits": 1,
+    "gap_um": 9884.2
+   },
+   {
+    "src": "NW_su20",
+    "dst": "NW_su31",
+    "bits": 1,
+    "gap_um": 6575.0
+   },
+   {
+    "src": "NE_b100",
+    "dst": "NE_b101",
+    "bits": 3332,
+    "gap_um": 4311.4
+   },
+   {
+    "src": "NE_b100",
+    "dst": "NE_b102",
+    "bits": 2777,
+    "gap_um": 6877.4
+   },
+   {
+    "src": "NE_hub",
+    "dst": "NW_hub",
+    "bits": 2775,
+    "gap_um": 1684.8
+   },
+   {
+    "src": "NW_hub",
+    "dst": "NE_hub",
+    "bits": 2730,
+    "gap_um": 1684.8
+   },
+   {
+    "src": "NE_hub",
+    "dst": "NE_b113",
+    "bits": 2277,
+    "gap_um": 3283.2
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_b111",
+    "bits": 1662,
+    "gap_um": 4320.0
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_b112",
+    "bits": 1662,
+    "gap_um": 10290.2
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_b110",
+    "bits": 1534,
+    "gap_um": 10782.7
+   },
+   {
+    "src": "NE_b102",
+    "dst": "NE_b101",
+    "bits": 1146,
+    "gap_um": 11923.2
+   },
+   {
+    "src": "NE_b111",
+    "dst": "NE_b113",
+    "bits": 1000,
+    "gap_um": 4320.0
+   },
+   {
+    "src": "NE_b112",
+    "dst": "NE_b113",
+    "bits": 1000,
+    "gap_um": 10290.2
+   },
+   {
+    "src": "NE_b110",
+    "dst": "NE_b113",
+    "bits": 800,
+    "gap_um": 10782.7
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_hub",
+    "bits": 693,
+    "gap_um": 3283.2
+   },
+   {
+    "src": "NE_hub",
+    "dst": "NE_spb0",
+    "bits": 632,
+    "gap_um": 4561.9
+   },
+   {
+    "src": "NE_spb0",
+    "dst": "NE_hub",
+    "bits": 615,
+    "gap_um": 4561.9
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_su11",
+    "bits": 596,
+    "gap_um": 7931.5
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_su20",
+    "bits": 596,
+    "gap_um": 4682.9
+   },
+   {
+    "src": "NE_b113",
+    "dst": "NE_su31",
+    "bits": 596,
+    "gap_um": 13262.4
+   },
+   {
+    "src": "NE_b101",
+    "dst": "NE_b103",
+    "bits": 569,
+    "gap_um": 11214.7
+   },
+   {
+    "src": "NE_su11",
+    "dst": "NE_b113",
+    "bits": 516,
+    "gap_um": 7931.5
+   },
+   {
+    "src": "NE_su20",
+    "dst": "NE_b113",
+    "bits": 516,
+    "gap_um": 4682.9
+   },
+   {
+    "src": "NE_su31",
+    "dst": "NE_b113",
+    "bits": 516,
+    "gap_um": 13262.4
+   },
+   {
+    "src": "NE_b111",
+    "dst": "NE_hub",
+    "bits": 410,
+    "gap_um": 2920.3
+   },
+   {
+    "src": "NE_b002",
+    "dst": "root",
+    "bits": 297,
+    "gap_um": 10670.4
+   },
+   {
+    "src": "NE_b103",
+    "dst": "root",
+    "bits": 297,
+    "gap_um": 11940.5
+   },
+   {
+    "src": "root",
+    "dst": "NE_b000",
+    "bits": 180,
+    "gap_um": 8216.6
+   },
+   {
+    "src": "NE_hub",
+    "dst": "NE_b111",
+    "bits": 160,
+    "gap_um": 2920.3
+   },
+   {
+    "src": "NE_sm0",
+    "dst": "NE_hub",
+    "bits": 37,
+    "gap_um": 1572.5
+   },
+   {
+    "src": "NE_sm1",
+    "dst": "NE_hub",
+    "bits": 37,
+    "gap_um": 1572.5
+   },
+   {
+    "src": "NE_sm2",
+    "dst": "NE_hub",
+    "bits": 37,
+    "gap_um": 1555.2
+   },
+   {
+    "src": "NE_sm3",
+    "dst": "NE_hub",
+    "bits": 37,
+    "gap_um": 1555.2
+   },
+   {
+    "src": "NE_b101",
+    "dst": "NE_b102",
+    "bits": 35,
+    "gap_um": 11923.2
+   },
+   {
+    "src": "NE_spt0",
+    "dst": "root",
+    "bits": 9,
+    "gap_um": 5771.5
+   },
+   {
+    "src": "NE_b002",
+    "dst": "NE_hub",
+    "bits": 4,
+    "gap_um": 2453.8
+   },
+   {
+    "src": "NE_b011",
+    "dst": "NE_hub",
+    "bits": 3,
+    "gap_um": 2073.6
+   },
+   {
+    "src": "NE_b103",
+    "dst": "NE_hub",
+    "bits": 2,
+    "gap_um": 3723.8
+   },
+   {
+    "src": "NE_spb2",
+    "dst": "NW_hub",
+    "bits": 2,
+    "gap_um": 9046.1
+   },
+   {
+    "src": "NE_spt0",
+    "dst": "NW_hub",
+    "bits": 2,
+    "gap_um": 9028.8
+   },
+   {
+    "src": "NE_b013",
+    "dst": "NE_hub",
+    "bits": 1,
+    "gap_um": 3939.8
+   },
+   {
+    "src": "NE_b100",
+    "dst": "NE_b103",
+    "bits": 1,
+    "gap_um": 6169.0
+   },
+   {
+    "src": "NE_su11",
+    "dst": "NE_su20",
+    "bits": 1,
+    "gap_um": 9884.2
+   },
+   {
+    "src": "NE_su20",
+    "dst": "NE_su31",
+    "bits": 1,
+    "gap_um": 6575.0
+   }
+  ],
+  "far_bits": 54498,
+  "failed": [
+   {
+    "id": "L401",
+    "src": "NW_hub",
+    "dst": "NW_su00",
+    "bits": 2846,
+    "why": "no macro-free station chain with 19 stations (hop<= 364)",
+    "chains": [
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_su00"
+     ],
+     [
+      "NW_hub",
+      "NW_su01",
+      "NW_su00"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_su00"
+     ]
+    ]
+   },
+   {
+    "id": "L402",
+    "src": "NW_hub",
+    "dst": "NW_su20",
+    "bits": 2846,
+    "why": "no macro-free station chain with 8 stations (hop<= 364)",
+    "chains": [
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_su21",
+      "NW_su20"
+     ],
+     [
+      "NW_hub",
+      "NW_b000",
+      "NW_b010",
+      "NW_b001",
+      "NW_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L405",
+    "src": "NW_su00",
+    "dst": "NW_hub",
+    "bits": 1207,
+    "why": "no macro-free station chain with 14 stations (hop<= 364)",
+    "chains": [
+     [
+      "NW_su00",
+      "NW_su01",
+      "NW_hub"
+     ],
+     [
+      "NW_su00",
+      "NW_b010",
+      "NW_b000",
+      "NW_hub"
+     ],
+     [
+      "NW_su00",
+      "NW_su01",
+      "NW_spu0",
+      "NW_hub"
+     ]
+    ]
+   },
+   {
+    "id": "L401m",
+    "src": "NE_hub",
+    "dst": "NE_su00",
+    "bits": 2846,
+    "why": "no macro-free station chain with 19 stations (hop<= 364)",
+    "chains": [
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_su00"
+     ],
+     [
+      "NE_hub",
+      "NE_su01",
+      "NE_su00"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_su00"
+     ]
+    ]
+   },
+   {
+    "id": "L402m",
+    "src": "NE_hub",
+    "dst": "NE_su20",
+    "bits": 2846,
+    "why": "no macro-free station chain with 8 stations (hop<= 364)",
+    "chains": [
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_su21",
+      "NE_su20"
+     ],
+     [
+      "NE_hub",
+      "NE_b000",
+      "NE_b010",
+      "NE_b001",
+      "NE_su20"
+     ]
+    ]
+   },
+   {
+    "id": "L405m",
+    "src": "NE_su00",
+    "dst": "NE_hub",
+    "bits": 1207,
+    "why": "no macro-free station chain with 14 stations (hop<= 364)",
+    "chains": [
+     [
+      "NE_su00",
+      "NE_su01",
+      "NE_hub"
+     ],
+     [
+      "NE_su00",
+      "NE_b010",
+      "NE_b000",
+      "NE_hub"
+     ],
+     [
+      "NE_su00",
+      "NE_su01",
+      "NE_spu0",
+      "NE_hub"
+     ]
+    ]
+   }
+  ],
+  "cycle_mismatch": [
+   {
+    "lane": "L403",
+    "src": "NW_hub",
+    "dst": "root",
+    "cycles": 7,
+    "pair": [
+     2,
+     13,
+     30
+    ]
+   },
+   {
+    "lane": "L406",
+    "src": "NW_su20",
+    "dst": "NW_hub",
+    "cycles": 7,
+    "pair": [
+     8
+    ]
+   },
+   {
+    "lane": "L406m",
+    "src": "NE_su20",
+    "dst": "NE_hub",
+    "cycles": 7,
+    "pair": [
+     8
+    ]
+   }
+  ],
+  "built_list": [
+   {
+    "lane": "L400",
+    "src": "NW_su30",
+    "dst": "NW_su31",
+    "bits": 3356,
+    "kind": "adj",
+    "cycles": 2
+   },
+   {
+    "lane": "L403",
+    "src": "NW_hub",
+    "dst": "root",
+    "bits": 2065,
+    "kind": "path",
+    "cycles": 7
+   },
+   {
+    "lane": "L404",
+    "src": "NW_su31",
+    "dst": "NW_su30",
+    "bits": 1399,
+    "kind": "adj",
+    "cycles": 2
+   },
+   {
+    "lane": "L406",
+    "src": "NW_su20",
+    "dst": "NW_hub",
+    "bits": 1207,
+    "kind": "path",
+    "cycles": 7
+   },
+   {
+    "lane": "L400m",
+    "src": "NE_su30",
+    "dst": "NE_su31",
+    "bits": 3356,
+    "kind": "adj",
+    "cycles": 2
+   },
+   {
+    "lane": "L404m",
+    "src": "NE_su31",
+    "dst": "NE_su30",
+    "bits": 1399,
+    "kind": "adj",
+    "cycles": 2
+   },
+   {
+    "lane": "L406m",
+    "src": "NE_su20",
+    "dst": "NE_hub",
+    "bits": 1207,
+    "kind": "path",
+    "cycles": 7
+   }
+  ]
+ },
+ "not_updated": [
+  "clock sidecars (clock_taps_die.json, clock_htree.json, entries.json, clock_entries.json)",
+  "pg_bumps.json",
+  "type internal_stations / die_ft_bands of moved types"
+ ]
+}
