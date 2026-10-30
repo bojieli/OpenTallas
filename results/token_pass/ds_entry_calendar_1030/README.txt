@@ -155,3 +155,22 @@ intel1 codex-ds-entry-current-1030/vp_vn_local_attached.json; compact vn_intake.
 and runner intake_vn.py saved here. Readiness fields are source-relative only;
 rootphase, clocks, input lifetime, actual HLOAD/GAIN calendar, perpage retirement/
 reload, KIT/END/MU and physicalSTART still not qualified. NoSEAL/tokenclaim.
+
+Page-local HLOAD/GAIN calendars (1030)
+------------------------------------
+layer_prog.entry_load_calendar groups two complete49row images perpage, keeping
+all3920PWpayloads unchanged and ordered. After exact TARGET5→VP commits, HLOAD
+VPcommand input is strictly later than the same leaf's lastwritecommit; GAIN
+VPinput follows the lastHLOAD VNstore. No crosspage readiness is assumed.
+Selected bound route offsets and actual seqhost stages determine issuer slots.
+40pages,102rows/templates each (98writes+2HLOAD+2GAIN),2KIT/ENDslots reserved,
+128actual row/template limits,perengine ACK+5increasing and<=8live enforced.
+Native HOST16360words,81800local5edge slots. Each source-relative retirefloor
+is lastVNstore+1,range338..482; noKIT/END/BEGIN/SEAL/START emitted yet.
+
+Native compilerunit12390 terminalPASS; no fullfixture/RTLreplay. Independent
+all40page exactroute checkPASS. Six controls refused: staleHLOADsameedge,
+GAINbeforeHLOADstore,prematureretire,encodedPWcorruption,wrongboundarrivalage,
+wrongGAINpayload. Record entry_loads_L14.json, one complete page example and
+actual runners loads/recheck_loads.py here; allpages+HOSTfiles intel1
+codex-ds-entry-current-1030/load_pages_L14. Prior32write-onlypage result preserved.
