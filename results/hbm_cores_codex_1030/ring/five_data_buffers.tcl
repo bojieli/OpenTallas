@@ -15,7 +15,8 @@ foreach {name net} {
   set yn [[$inst findITerm Y] getNet]
   if {[$yn getName] ne $net || [$yn getSigType] ne "SIGNAL"} {error "RING_DATA5 unexpected signal $name/$net"}
   set lc [get_lib_cells -quiet */BUFx6f_ASAP7_75t_R]
-  if {[llength $lc] != 1} {error "RING_DATA5 ambiguous replacement"}
+  # Two-mode sessions can expose the same physical master in TT and FF libs.
+  if {![llength $lc]} {error "RING_DATA5 missing replacement"}
   replace_cell [get_cells $name] [lindex $lc 0]
   puts "RING_DATA5 $name $net BUFx3_ASAP7_75t_R -> BUFx6f_ASAP7_75t_R"
 }
