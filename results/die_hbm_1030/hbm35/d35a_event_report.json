@@ -1,0 +1,64 @@
+{
+ "lane": "DIE-HBM-35",
+ "base": "/srv/opentallas-scratch2/claude/die-hbm-32/plan/d32q",
+ "event": "d35a SU lane_exp0_id outline option (a) 414.72x207.36",
+ "module": "ot_hbm_su_static_pgslice_lg__lane_exp0_id",
+ "pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__414.72x207.36__d35a.json",
+ "old_pins_file": "cores/ot_hbm_su_static_pgslice_lg__lane_exp0_id__440.64x207.36__d31s.json",
+ "outline_um": [
+  414.72,
+  207.36
+ ],
+ "aspect": 2.0,
+ "hard_core_entries": 4,
+ "pins": 2068,
+ "pins_moved": 1510,
+ "faces": {
+  "N": 295,
+  "E": 840,
+  "S": 375,
+  "W": 558
+ },
+ "n_cluster": [
+  "clk_bank",
+  "rst_lane_n",
+  "clk_insert[0]",
+  "clk_insert[1]",
+  "clk_insert[2]",
+  "clk_insert[3]",
+  "clk_bank_macro[0]",
+  "clk_bank_macro[1]",
+  "clk_bank_macro[2]",
+  "clk_bank_macro[3]",
+  "clk_bank_macro[4]",
+  "clk_bank_macro[5]",
+  "clk_lane[0]",
+  "clk_lane[1]",
+  "clk_lane[2]",
+  "clk_lane[3]",
+  "clk_lane[4]",
+  "clk_lane[5]",
+  "clk_lane[6]",
+  "clk_lane[7]"
+ ],
+ "cluster_x": [
+  192.84,
+  221.88
+ ],
+ "n_rest_pitch_um": 1.378,
+ "rst_n_x": 208.44,
+ "clock_entry_um": [
+  207.36,
+  103.68
+ ],
+ "island_um": [
+  203.04,
+  99.36,
+  211.68,
+  108.0
+ ],
+ "partition_taps_moved": 4,
+ "die_tap_rows_moved": 8,
+ "clock_entries_moved": 4,
+ "station_points_moved": 0
+}
