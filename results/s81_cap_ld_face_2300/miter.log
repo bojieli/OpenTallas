@@ -1,0 +1,6 @@
+CAP_LD_FACE PASS D=3 cycles=12000 mismatch=0 reset_edges=248 mutant_caught=59 input_pairs=f
+CAP_LD_FACE PASS D=4 cycles=12000 mismatch=0 reset_edges=248 mutant_caught=80 input_pairs=f
+CAP_LD_FACE PASS D=8 cycles=12000 mismatch=0 reset_edges=248 mutant_caught=58 input_pairs=f
+CAP_LD_FACE PASS D=16 cycles=12000 mismatch=0 reset_edges=248 mutant_caught=65 input_pairs=f
+CAP_LD_FACE ALL_PASS added_cycles=0 clock_ps=833
+/srv/opentallas-scratch2/claude/codex-s81-capchildren-2300/ld_miter/tb.sv:24: $finish called at 10000165 (1ps)
