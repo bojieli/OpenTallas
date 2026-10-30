@@ -108,6 +108,10 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
   // AQ_RD: the pushed entry is a tagged read; the column command is a queued read
   input  wire        wr_rd, output wire col_aq
 );
+  // Module-scope constant function is required by IEEE constant-expression rules.
+    function automatic integer timing_width(input integer floor_bits,input integer cycles);
+      integer cb;begin cb=(cycles>1)?$clog2(cycles):1;timing_width=cb>floor_bits?cb:floor_bits;end
+    endfunction
   localparam [2:0] PRE=0, ACT=1, RD=2, REFAB=4, PREALL=5, REFPB=6;
   generate if (!ENABLE) begin : off
     assign desc_r=0; assign row_v=0; assign row_prio=0; assign row_op=0; assign row_bank=0;
@@ -131,9 +135,6 @@ module ot_hbm_r14_stream_pc_strap_h9 #(
     // The enabled833 profile exceeds historical RAS/WRR/FAW/WTR storage.
     // Every default width stays identical; all loads/comparisons use the same
     // derived width so no timing minimum is silently truncated.
-    function automatic integer timing_width(input integer floor_bits,input integer cycles);
-      integer cb;begin cb=(cycles>1)?$clog2(cycles):1;timing_width=cb>floor_bits?cb:floor_bits;end
-    endfunction
     localparam integer W_RCD=timing_width(5,T_RCD),W_RAS=timing_width(5,T_RAS),W_RTP=timing_width(3,T_RTP);
     localparam integer W_WRR=timing_width(5,T_WRR),W_AOK=timing_width(9,T_RFC>T_RFCPB?(T_RFC>T_RAS+T_RP?T_RFC:T_RAS+T_RP):(T_RFCPB>T_RAS+T_RP?T_RFCPB:T_RAS+T_RP));
     localparam integer W_RRDL=timing_width(3,T_RRDL),W_CCDL=timing_width(2,T_CCDL),W_FAW=timing_width(4,T_FAW);
