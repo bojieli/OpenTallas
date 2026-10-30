@@ -1,0 +1,1532 @@
+{
+ "schema": "opentallas.hbm.vm_value_phase.v1",
+ "source_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "source_record_range": [
+  1528,
+  1536
+ ],
+ "boundary": {
+  "known_boundary_intervals": [
+   [
+    0,
+    144
+   ],
+   [
+    147504,
+    147704
+   ],
+   [
+    147712,
+    270592
+   ],
+   [
+    274432,
+    277504
+   ],
+   [
+    350464,
+    375184
+   ],
+   [
+    423984,
+    424368
+   ],
+   [
+    424608,
+    424616
+   ],
+   [
+    483120,
+    483504
+   ],
+   [
+    506112,
+    506160
+   ]
+  ],
+  "whole_programme_fit": null
+ },
+ "phases": [
+  {
+   "start_row": 0,
+   "rows": 3,
+   "high_water_words": 14384,
+   "capacity_words": 262144,
+   "objects": [
+    {
+     "id": 2,
+     "a": 484800,
+     "b": 495040,
+     "t0": 0,
+     "t1": 7,
+     "values": [
+      2
+     ],
+     "base": 0
+    },
+    {
+     "id": 4,
+     "a": 270592,
+     "b": 272512,
+     "t0": 2,
+     "t1": 5,
+     "values": [
+      4,
+      6,
+      8
+     ],
+     "base": 10240
+    },
+    {
+     "id": 24,
+     "a": 270592,
+     "b": 272512,
+     "t0": 6,
+     "t1": 7,
+     "values": [
+      24,
+      25,
+      26
+     ],
+     "base": 10240
+    },
+    {
+     "id": 0,
+     "a": 270592,
+     "b": 272128,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      0
+     ],
+     "base": 10240
+    },
+    {
+     "id": 3,
+     "a": 295168,
+     "b": 296704,
+     "t0": 2,
+     "t1": 2,
+     "values": [
+      3,
+      5,
+      7
+     ],
+     "base": 12160
+    },
+    {
+     "id": 27,
+     "a": 274432,
+     "b": 275968,
+     "t0": 7,
+     "t1": 9,
+     "values": [
+      27,
+      28,
+      29
+     ],
+     "base": 12160
+    },
+    {
+     "id": 15,
+     "a": 274432,
+     "b": 275072,
+     "t0": 5,
+     "t1": 6,
+     "values": [
+      15
+     ],
+     "base": 12160
+    },
+    {
+     "id": 18,
+     "a": 275072,
+     "b": 275712,
+     "t0": 5,
+     "t1": 6,
+     "values": [
+      18
+     ],
+     "base": 12800
+    },
+    {
+     "id": 21,
+     "a": 275712,
+     "b": 276352,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      21
+     ],
+     "base": 13696
+    },
+    {
+     "id": 1,
+     "a": 495040,
+     "b": 495440,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      1
+     ],
+     "base": 11776
+    },
+    {
+     "id": 9,
+     "a": 147552,
+     "b": 147560,
+     "t0": 4,
+     "t1": 9,
+     "values": [
+      9,
+      10
+     ],
+     "base": 14336
+    },
+    {
+     "id": 11,
+     "a": 147560,
+     "b": 147568,
+     "t0": 4,
+     "t1": 9,
+     "values": [
+      11,
+      12
+     ],
+     "base": 14344
+    },
+    {
+     "id": 13,
+     "a": 147568,
+     "b": 147576,
+     "t0": 4,
+     "t1": 9,
+     "values": [
+      13,
+      14
+     ],
+     "base": 14352
+    },
+    {
+     "id": 16,
+     "a": 147600,
+     "b": 147608,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      16,
+      17
+     ],
+     "base": 14360
+    },
+    {
+     "id": 19,
+     "a": 147608,
+     "b": 147616,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      19,
+      20
+     ],
+     "base": 14368
+    },
+    {
+     "id": 22,
+     "a": 147616,
+     "b": 147624,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      22,
+      23
+     ],
+     "base": 14376
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1528,
+     "slots": [
+      0
+     ],
+     "offset": 0,
+     "bytes": 112,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 0,
+       "D": 1,
+       "R": 2
+      }
+     ]
+    },
+    {
+     "source_record": 1530,
+     "slots": [
+      0,
+      1,
+      2
+     ],
+     "offset": 112,
+     "bytes": 176,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "__rtab": 2,
+       "A": 3,
+       "O": 4
+      },
+      {
+       "__rtab": 2,
+       "A": 3,
+       "O": 4
+      },
+      {
+       "__rtab": 2,
+       "A": 3,
+       "O": 4
+      }
+     ]
+    },
+    {
+     "source_record": 1532,
+     "slots": [
+      0,
+      1,
+      2
+     ],
+     "offset": 288,
+     "bytes": 144,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "A": 4,
+       "R": 9
+      },
+      {
+       "A": 4,
+       "R": 11
+      },
+      {
+       "A": 4,
+       "R": 13
+      }
+     ]
+    },
+    {
+     "source_record": 1533,
+     "slots": [
+      0
+     ],
+     "offset": 432,
+     "bytes": 176,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 4,
+       "B": 9,
+       "O": 15,
+       "R": 16
+      }
+     ]
+    },
+    {
+     "source_record": 1533,
+     "slots": [
+      1
+     ],
+     "offset": 608,
+     "bytes": 176,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 4,
+       "B": 11,
+       "O": 18,
+       "R": 19
+      }
+     ]
+    },
+    {
+     "source_record": 1533,
+     "slots": [
+      2
+     ],
+     "offset": 784,
+     "bytes": 176,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 4,
+       "B": 13,
+       "O": 21,
+       "R": 22
+      }
+     ]
+    },
+    {
+     "source_record": 1534,
+     "slots": [
+      0
+     ],
+     "offset": 960,
+     "bytes": 112,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 15,
+       "O": 24
+      }
+     ]
+    },
+    {
+     "source_record": 1534,
+     "slots": [
+      1
+     ],
+     "offset": 1072,
+     "bytes": 112,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 18,
+       "O": 24
+      }
+     ]
+    },
+    {
+     "source_record": 1534,
+     "slots": [
+      2
+     ],
+     "offset": 1184,
+     "bytes": 112,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 21,
+       "O": 24
+      }
+     ]
+    },
+    {
+     "source_record": 1535,
+     "slots": [
+      0,
+      1,
+      2
+     ],
+     "offset": 1296,
+     "bytes": 176,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "__rtab": 2,
+       "A": 24,
+       "O": 27
+      },
+      {
+       "__rtab": 2,
+       "A": 24,
+       "O": 27
+      },
+      {
+       "__rtab": 2,
+       "A": 24,
+       "O": 27
+      }
+     ]
+    }
+   ],
+   "boundary_loads": [
+    {
+     "source_words": [
+      270592,
+      272128
+     ],
+     "destination_words": [
+      10240,
+      11776
+     ],
+     "before_source_record": 1528,
+     "source_slot": 0,
+     "source_anchor": [
+      1528,
+      0,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      295168,
+      295680
+     ],
+     "destination_words": [
+      12160,
+      12672
+     ],
+     "before_source_record": 1530,
+     "source_slot": 0,
+     "source_anchor": [
+      1530,
+      0,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      295680,
+      296192
+     ],
+     "destination_words": [
+      12672,
+      13184
+     ],
+     "before_source_record": 1530,
+     "source_slot": 1,
+     "source_anchor": [
+      1530,
+      1,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      296192,
+      296704
+     ],
+     "destination_words": [
+      13184,
+      13696
+     ],
+     "before_source_record": 1530,
+     "source_slot": 2,
+     "source_anchor": [
+      1530,
+      2,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      147552,
+      147560
+     ],
+     "destination_words": [
+      14336,
+      14344
+     ],
+     "before_source_record": 1532,
+     "source_slot": 0,
+     "source_anchor": [
+      1532,
+      0,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147560,
+      147568
+     ],
+     "destination_words": [
+      14344,
+      14352
+     ],
+     "before_source_record": 1532,
+     "source_slot": 1,
+     "source_anchor": [
+      1532,
+      1,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147568,
+      147576
+     ],
+     "destination_words": [
+      14352,
+      14360
+     ],
+     "before_source_record": 1532,
+     "source_slot": 2,
+     "source_anchor": [
+      1532,
+      2,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147600,
+      147608
+     ],
+     "destination_words": [
+      14360,
+      14368
+     ],
+     "before_source_record": 1533,
+     "source_slot": 0,
+     "source_anchor": [
+      1533,
+      0,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147608,
+      147616
+     ],
+     "destination_words": [
+      14368,
+      14376
+     ],
+     "before_source_record": 1533,
+     "source_slot": 1,
+     "source_anchor": [
+      1533,
+      1,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147616,
+      147624
+     ],
+     "destination_words": [
+      14376,
+      14384
+     ],
+     "before_source_record": 1533,
+     "source_slot": 2,
+     "source_anchor": [
+      1533,
+      2,
+      "R"
+     ]
+    }
+   ],
+   "retirements": [
+    {
+     "source_words": [
+      147552,
+      147560
+     ],
+     "vm_words": [
+      14336,
+      14344
+     ],
+     "writer_anchor": [
+      1532,
+      0,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147560,
+      147568
+     ],
+     "vm_words": [
+      14344,
+      14352
+     ],
+     "writer_anchor": [
+      1532,
+      1,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147568,
+      147576
+     ],
+     "vm_words": [
+      14352,
+      14360
+     ],
+     "writer_anchor": [
+      1532,
+      2,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147600,
+      147608
+     ],
+     "vm_words": [
+      14360,
+      14368
+     ],
+     "writer_anchor": [
+      1533,
+      0,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147608,
+      147616
+     ],
+     "vm_words": [
+      14368,
+      14376
+     ],
+     "writer_anchor": [
+      1533,
+      1,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      275968,
+      276352
+     ],
+     "vm_words": [
+      13952,
+      14336
+     ],
+     "writer_anchor": [
+      1533,
+      2,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      147616,
+      147624
+     ],
+     "vm_words": [
+      14376,
+      14384
+     ],
+     "writer_anchor": [
+      1533,
+      2,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      274432,
+      274944
+     ],
+     "vm_words": [
+      12160,
+      12672
+     ],
+     "writer_anchor": [
+      1535,
+      0,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      274944,
+      275456
+     ],
+     "vm_words": [
+      12672,
+      13184
+     ],
+     "writer_anchor": [
+      1535,
+      1,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      275456,
+      275968
+     ],
+     "vm_words": [
+      13184,
+      13696
+     ],
+     "writer_anchor": [
+      1535,
+      2,
+      "O"
+     ]
+    }
+   ],
+   "sector_granular_ownership": true,
+   "declared_live_out": [
+    [
+     0,
+     144
+    ],
+    [
+     147504,
+     147704
+    ],
+    [
+     147712,
+     270592
+    ],
+    [
+     274432,
+     277504
+    ],
+    [
+     350464,
+     375184
+    ],
+    [
+     423984,
+     424368
+    ],
+    [
+     424608,
+     424616
+    ],
+    [
+     483120,
+     483504
+    ],
+    [
+     506112,
+     506160
+    ]
+   ],
+   "instruction_count": 10,
+   "expanded_row_count": 16,
+   "source_record_steps": 9,
+   "shared_weight_sm_rows_preserved": true,
+   "whole_programme_fits": null,
+   "executable": false,
+   "holds": [
+    "emit actual boundary loads/retirements and real scratch ownership",
+    "resolve dynamic whole-programme live-out obligations",
+    "price ungrouped DMA rows and emitted boundary drains before adoption"
+   ],
+   "fragment": "value_0.hgi1r"
+  },
+  {
+   "start_row": 3,
+   "rows": 3,
+   "high_water_words": 14128,
+   "capacity_words": 262144,
+   "objects": [
+    {
+     "id": 2,
+     "a": 495456,
+     "b": 505696,
+     "t0": 1,
+     "t1": 8,
+     "values": [
+      2
+     ],
+     "base": 0
+    },
+    {
+     "id": 4,
+     "a": 272512,
+     "b": 274432,
+     "t0": 3,
+     "t1": 5,
+     "values": [
+      4,
+      6,
+      8
+     ],
+     "base": 10240
+    },
+    {
+     "id": 24,
+     "a": 272512,
+     "b": 274432,
+     "t0": 6,
+     "t1": 8,
+     "values": [
+      24,
+      25,
+      26
+     ],
+     "base": 10240
+    },
+    {
+     "id": 0,
+     "a": 272128,
+     "b": 273664,
+     "t0": 1,
+     "t1": 1,
+     "values": [
+      0
+     ],
+     "base": 10240
+    },
+    {
+     "id": 3,
+     "a": 296704,
+     "b": 298240,
+     "t0": 3,
+     "t1": 3,
+     "values": [
+      3,
+      5,
+      7
+     ],
+     "base": 12160
+    },
+    {
+     "id": 27,
+     "a": 275968,
+     "b": 277504,
+     "t0": 8,
+     "t1": 9,
+     "values": [
+      27,
+      28,
+      29
+     ],
+     "base": 12160
+    },
+    {
+     "id": 15,
+     "a": 276352,
+     "b": 276992,
+     "t0": 5,
+     "t1": 6,
+     "values": [
+      15
+     ],
+     "base": 12160
+    },
+    {
+     "id": 18,
+     "a": 276992,
+     "b": 277632,
+     "t0": 5,
+     "t1": 6,
+     "values": [
+      18
+     ],
+     "base": 12800
+    },
+    {
+     "id": 21,
+     "a": 277632,
+     "b": 278272,
+     "t0": 5,
+     "t1": 6,
+     "values": [
+      21
+     ],
+     "base": 13440
+    },
+    {
+     "id": 1,
+     "a": 505696,
+     "b": 506096,
+     "t0": 1,
+     "t1": 1,
+     "values": [
+      1
+     ],
+     "base": 11776
+    },
+    {
+     "id": 9,
+     "a": 147576,
+     "b": 147584,
+     "t0": 4,
+     "t1": 9,
+     "values": [
+      9,
+      10
+     ],
+     "base": 14080
+    },
+    {
+     "id": 11,
+     "a": 147584,
+     "b": 147592,
+     "t0": 4,
+     "t1": 9,
+     "values": [
+      11,
+      12
+     ],
+     "base": 14088
+    },
+    {
+     "id": 13,
+     "a": 147592,
+     "b": 147600,
+     "t0": 4,
+     "t1": 9,
+     "values": [
+      13,
+      14
+     ],
+     "base": 14096
+    },
+    {
+     "id": 16,
+     "a": 147624,
+     "b": 147632,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      16,
+      17
+     ],
+     "base": 14104
+    },
+    {
+     "id": 19,
+     "a": 147632,
+     "b": 147640,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      19,
+      20
+     ],
+     "base": 14112
+    },
+    {
+     "id": 22,
+     "a": 147640,
+     "b": 147648,
+     "t0": 5,
+     "t1": 9,
+     "values": [
+      22,
+      23
+     ],
+     "base": 14120
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1529,
+     "slots": [
+      0
+     ],
+     "offset": 0,
+     "bytes": 112,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 0,
+       "D": 1,
+       "R": 2
+      }
+     ]
+    },
+    {
+     "source_record": 1531,
+     "slots": [
+      3,
+      4,
+      5
+     ],
+     "offset": 112,
+     "bytes": 176,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "__rtab": 2,
+       "A": 3,
+       "O": 4
+      },
+      {
+       "__rtab": 2,
+       "A": 3,
+       "O": 4
+      },
+      {
+       "__rtab": 2,
+       "A": 3,
+       "O": 4
+      }
+     ]
+    },
+    {
+     "source_record": 1532,
+     "slots": [
+      3,
+      4,
+      5
+     ],
+     "offset": 288,
+     "bytes": 144,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "A": 4,
+       "R": 9
+      },
+      {
+       "A": 4,
+       "R": 11
+      },
+      {
+       "A": 4,
+       "R": 13
+      }
+     ]
+    },
+    {
+     "source_record": 1533,
+     "slots": [
+      3,
+      4,
+      5
+     ],
+     "offset": 432,
+     "bytes": 208,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "A": 4,
+       "B": 9,
+       "O": 15,
+       "R": 16
+      },
+      {
+       "A": 4,
+       "B": 11,
+       "O": 18,
+       "R": 19
+      },
+      {
+       "A": 4,
+       "B": 13,
+       "O": 21,
+       "R": 22
+      }
+     ]
+    },
+    {
+     "source_record": 1534,
+     "slots": [
+      3,
+      4,
+      5
+     ],
+     "offset": 640,
+     "bytes": 144,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "A": 15,
+       "O": 24
+      },
+      {
+       "A": 18,
+       "O": 24
+      },
+      {
+       "A": 21,
+       "O": 24
+      }
+     ]
+    },
+    {
+     "source_record": 1536,
+     "slots": [
+      3,
+      4,
+      5
+     ],
+     "offset": 784,
+     "bytes": 176,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "__rtab": 2,
+       "A": 24,
+       "O": 27
+      },
+      {
+       "__rtab": 2,
+       "A": 24,
+       "O": 27
+      },
+      {
+       "__rtab": 2,
+       "A": 24,
+       "O": 27
+      }
+     ]
+    }
+   ],
+   "boundary_loads": [
+    {
+     "source_words": [
+      272128,
+      273664
+     ],
+     "destination_words": [
+      10240,
+      11776
+     ],
+     "before_source_record": 1529,
+     "source_slot": 0,
+     "source_anchor": [
+      1529,
+      0,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      296704,
+      297216
+     ],
+     "destination_words": [
+      12160,
+      12672
+     ],
+     "before_source_record": 1531,
+     "source_slot": 3,
+     "source_anchor": [
+      1531,
+      3,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      297216,
+      297728
+     ],
+     "destination_words": [
+      12672,
+      13184
+     ],
+     "before_source_record": 1531,
+     "source_slot": 4,
+     "source_anchor": [
+      1531,
+      4,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      297728,
+      298240
+     ],
+     "destination_words": [
+      13184,
+      13696
+     ],
+     "before_source_record": 1531,
+     "source_slot": 5,
+     "source_anchor": [
+      1531,
+      5,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      147576,
+      147584
+     ],
+     "destination_words": [
+      14080,
+      14088
+     ],
+     "before_source_record": 1532,
+     "source_slot": 3,
+     "source_anchor": [
+      1532,
+      3,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147584,
+      147592
+     ],
+     "destination_words": [
+      14088,
+      14096
+     ],
+     "before_source_record": 1532,
+     "source_slot": 4,
+     "source_anchor": [
+      1532,
+      4,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147592,
+      147600
+     ],
+     "destination_words": [
+      14096,
+      14104
+     ],
+     "before_source_record": 1532,
+     "source_slot": 5,
+     "source_anchor": [
+      1532,
+      5,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147624,
+      147632
+     ],
+     "destination_words": [
+      14104,
+      14112
+     ],
+     "before_source_record": 1533,
+     "source_slot": 3,
+     "source_anchor": [
+      1533,
+      3,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147632,
+      147640
+     ],
+     "destination_words": [
+      14112,
+      14120
+     ],
+     "before_source_record": 1533,
+     "source_slot": 4,
+     "source_anchor": [
+      1533,
+      4,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147640,
+      147648
+     ],
+     "destination_words": [
+      14120,
+      14128
+     ],
+     "before_source_record": 1533,
+     "source_slot": 5,
+     "source_anchor": [
+      1533,
+      5,
+      "R"
+     ]
+    }
+   ],
+   "retirements": [
+    {
+     "source_words": [
+      147576,
+      147584
+     ],
+     "vm_words": [
+      14080,
+      14088
+     ],
+     "writer_anchor": [
+      1532,
+      3,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147584,
+      147592
+     ],
+     "vm_words": [
+      14088,
+      14096
+     ],
+     "writer_anchor": [
+      1532,
+      4,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147592,
+      147600
+     ],
+     "vm_words": [
+      14096,
+      14104
+     ],
+     "writer_anchor": [
+      1532,
+      5,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147624,
+      147632
+     ],
+     "vm_words": [
+      14104,
+      14112
+     ],
+     "writer_anchor": [
+      1533,
+      3,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147632,
+      147640
+     ],
+     "vm_words": [
+      14112,
+      14120
+     ],
+     "writer_anchor": [
+      1533,
+      4,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      147640,
+      147648
+     ],
+     "vm_words": [
+      14120,
+      14128
+     ],
+     "writer_anchor": [
+      1533,
+      5,
+      "R"
+     ]
+    },
+    {
+     "source_words": [
+      275968,
+      276480
+     ],
+     "vm_words": [
+      12160,
+      12672
+     ],
+     "writer_anchor": [
+      1536,
+      3,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      276480,
+      276992
+     ],
+     "vm_words": [
+      12672,
+      13184
+     ],
+     "writer_anchor": [
+      1536,
+      4,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      276992,
+      277504
+     ],
+     "vm_words": [
+      13184,
+      13696
+     ],
+     "writer_anchor": [
+      1536,
+      5,
+      "O"
+     ]
+    }
+   ],
+   "sector_granular_ownership": true,
+   "declared_live_out": [
+    [
+     0,
+     144
+    ],
+    [
+     147504,
+     147704
+    ],
+    [
+     147712,
+     270592
+    ],
+    [
+     274432,
+     277504
+    ],
+    [
+     350464,
+     375184
+    ],
+    [
+     423984,
+     424368
+    ],
+    [
+     424608,
+     424616
+    ],
+    [
+     483120,
+     483504
+    ],
+    [
+     506112,
+     506160
+    ]
+   ],
+   "instruction_count": 6,
+   "expanded_row_count": 16,
+   "source_record_steps": 9,
+   "shared_weight_sm_rows_preserved": true,
+   "whole_programme_fits": null,
+   "executable": false,
+   "holds": [
+    "emit actual boundary loads/retirements and real scratch ownership",
+    "resolve dynamic whole-programme live-out obligations",
+    "price ungrouped DMA rows and emitted boundary drains before adoption"
+   ],
+   "fragment": "value_3.hgi1r"
+  }
+ ]
+}

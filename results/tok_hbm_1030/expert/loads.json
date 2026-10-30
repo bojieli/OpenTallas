@@ -1,0 +1,117 @@
+{
+ "records": [
+  {
+   "source_words": [
+    270592,
+    285952
+   ],
+   "hbm_range": [
+    133247828992,
+    133247890432
+   ],
+   "vm_words": [
+    64,
+    15424
+   ],
+   "offset": 0,
+   "bytes": 80
+  },
+  {
+   "source_words": [
+    285952,
+    301312
+   ],
+   "hbm_range": [
+    133249987584,
+    133250049024
+   ],
+   "vm_words": [
+    15424,
+    30784
+   ],
+   "offset": 80,
+   "bytes": 80
+  },
+  {
+   "source_words": [
+    301312,
+    302464
+   ],
+   "hbm_range": [
+    133247951872,
+    133247956480
+   ],
+   "vm_words": [
+    30784,
+    31936
+   ],
+   "offset": 160,
+   "bytes": 80
+  },
+  {
+   "source_words": [
+    302464,
+    303616
+   ],
+   "hbm_range": [
+    133250053632,
+    133250058240
+   ],
+   "vm_words": [
+    31936,
+    33088
+   ],
+   "offset": 240,
+   "bytes": 80
+  },
+  {
+   "source_words": [
+    506112,
+    506136
+   ],
+   "hbm_range": [
+    133248771072,
+    133248771168
+   ],
+   "vm_words": [
+    105760,
+    105784
+   ],
+   "offset": 320,
+   "bytes": 80
+  },
+  {
+   "source_words": [
+    506136,
+    506160
+   ],
+   "hbm_range": [
+    133250868320,
+    133250868416
+   ],
+   "vm_words": [
+    105784,
+    105808
+   ],
+   "offset": 400,
+   "bytes": 80
+  }
+ ],
+ "required_source_words": [
+  [
+   270592,
+   303616
+  ],
+  [
+   506112,
+   506160
+  ]
+ ],
+ "words": 33072,
+ "bytes": 132288,
+ "native_loads": 6,
+ "control": "wrong_native_epoch_caught",
+ "whole_programme_executable": false,
+ "scratch_reserved": false,
+ "numeric_expert_execution": false
+}

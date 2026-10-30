@@ -19,6 +19,7 @@ def intervals(mask):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     for k in ('image','compiler-tools','out-dir'):ap.add_argument('--'+k,required=True)
+    ap.add_argument('--extra-live-out',help='JSON list of bounded final source-word intervals')
     ap.add_argument('--cuts',required=True,help='first:last comma separated adjacent source ranges')
     ap.add_argument('--scratch-base',type=lambda s:int(s,0),required=True)
     a=ap.parse_args();p=Path(a.compiler_tools);sys.path[:0]=[str(p/'hbm_next'),str(p)]
@@ -28,7 +29,11 @@ def main():
     cuts=[tuple(map(int,v.split(':')))for v in a.cuts.split(',')]
     if any(x[1]+1!=y[0]for x,y in zip(cuts,cuts[1:])):raise ValueError('source ranges must be adjacent')
     needed=np.zeros(1<<19,bool)
-    for lo,hi in infer_static_boundary(rr,cuts[-1][1],IR)['known_boundary_intervals']:needed[lo//8*8:(hi+7)//8*8]=True
+    live=infer_static_boundary(rr,cuts[-1][1],IR)['known_boundary_intervals']
+    if a.extra_live_out:live+=json.loads(Path(a.extra_live_out).read_text())
+    for lo,hi in live:
+        if not 0<=lo<hi<=len(needed):raise ValueError('declared live-out exceeds source VM ABI')
+        needed[lo//8*8:(hi+7)//8*8]=True
     for stage,(first,last)in reversed(list(enumerate(cuts))):
         d=out/f'values{stage}';d.mkdir(exist_ok=True);phases=[];boundary=intervals(needed)
         for start in(0,3):

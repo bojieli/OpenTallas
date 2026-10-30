@@ -1,0 +1,1205 @@
+{
+ "schema": "opentallas.hbm.vm_value_phase.v1",
+ "source_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "source_record_range": [
+  1545,
+  1545
+ ],
+ "boundary": {
+  "known_boundary_intervals": [
+   [
+    0,
+    122880
+   ],
+   [
+    147648,
+    147704
+   ],
+   [
+    301312,
+    303616
+   ],
+   [
+    316696,
+    318976
+   ],
+   [
+    332824,
+    335104
+   ],
+   [
+    348952,
+    351232
+   ],
+   [
+    365080,
+    367504
+   ],
+   [
+    367528,
+    367672
+   ],
+   [
+    367696,
+    367840
+   ],
+   [
+    367864,
+    368008
+   ],
+   [
+    368032,
+    368176
+   ],
+   [
+    368200,
+    368344
+   ],
+   [
+    368368,
+    368512
+   ],
+   [
+    368536,
+    368680
+   ],
+   [
+    368704,
+    368848
+   ],
+   [
+    368872,
+    369016
+   ],
+   [
+    369040,
+    369184
+   ],
+   [
+    369208,
+    369352
+   ],
+   [
+    369376,
+    369656
+   ],
+   [
+    369704,
+    369712
+   ],
+   [
+    369760,
+    369768
+   ],
+   [
+    369816,
+    369824
+   ],
+   [
+    369872,
+    369880
+   ],
+   [
+    369984,
+    369992
+   ],
+   [
+    370040,
+    370048
+   ],
+   [
+    370096,
+    370104
+   ],
+   [
+    370152,
+    370160
+   ],
+   [
+    370208,
+    370216
+   ],
+   [
+    370264,
+    370272
+   ],
+   [
+    370320,
+    370328
+   ],
+   [
+    370376,
+    375048
+   ],
+   [
+    375064,
+    375072
+   ],
+   [
+    375088,
+    375096
+   ],
+   [
+    375112,
+    375120
+   ],
+   [
+    375136,
+    375144
+   ],
+   [
+    375160,
+    375168
+   ],
+   [
+    423984,
+    424368
+   ],
+   [
+    506112,
+    506160
+   ]
+  ],
+  "whole_programme_fit": null
+ },
+ "phases": [
+  {
+   "start_row": 0,
+   "rows": 3,
+   "high_water_words": 138240,
+   "capacity_words": 262144,
+   "objects": [
+    {
+     "id": 1,
+     "a": 147712,
+     "b": 168192,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      1
+     ],
+     "base": 0
+    },
+    {
+     "id": 2,
+     "a": 0,
+     "b": 20480,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      2,
+      3
+     ],
+     "base": 20480
+    },
+    {
+     "id": 5,
+     "a": 168192,
+     "b": 188672,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      5
+     ],
+     "base": 40960
+    },
+    {
+     "id": 6,
+     "a": 20480,
+     "b": 40960,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      6
+     ],
+     "base": 61440
+    },
+    {
+     "id": 8,
+     "a": 188672,
+     "b": 209152,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      8
+     ],
+     "base": 81920
+    },
+    {
+     "id": 9,
+     "a": 40960,
+     "b": 61440,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      9
+     ],
+     "base": 102400
+    },
+    {
+     "id": 0,
+     "a": 344320,
+     "b": 349440,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      0
+     ],
+     "base": 122880
+    },
+    {
+     "id": 4,
+     "a": 349440,
+     "b": 354560,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      4
+     ],
+     "base": 128000
+    },
+    {
+     "id": 7,
+     "a": 354560,
+     "b": 359680,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      7
+     ],
+     "base": 133120
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1545,
+     "slots": [
+      0
+     ],
+     "offset": 0,
+     "bytes": 144,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 0,
+       "B": 1,
+       "C": 2,
+       "O": 2
+      }
+     ]
+    },
+    {
+     "source_record": 1545,
+     "slots": [
+      1
+     ],
+     "offset": 144,
+     "bytes": 144,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 4,
+       "B": 5,
+       "C": 2,
+       "O": 6
+      }
+     ]
+    },
+    {
+     "source_record": 1545,
+     "slots": [
+      2
+     ],
+     "offset": 288,
+     "bytes": 144,
+     "folded_rows": false,
+     "operand_objects": [
+      {
+       "A": 7,
+       "B": 8,
+       "C": 2,
+       "O": 9
+      }
+     ]
+    }
+   ],
+   "boundary_loads": [
+    {
+     "source_words": [
+      344320,
+      349440
+     ],
+     "destination_words": [
+      122880,
+      128000
+     ],
+     "before_source_record": 1545,
+     "source_slot": 0,
+     "source_anchor": [
+      1545,
+      0,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      147712,
+      168192
+     ],
+     "destination_words": [
+      0,
+      20480
+     ],
+     "before_source_record": 1545,
+     "source_slot": 0,
+     "source_anchor": [
+      1545,
+      0,
+      "B"
+     ]
+    },
+    {
+     "source_words": [
+      0,
+      24
+     ],
+     "destination_words": [
+      20480,
+      20504
+     ],
+     "before_source_record": 1545,
+     "source_slot": 0,
+     "source_anchor": [
+      1545,
+      0,
+      "C"
+     ]
+    },
+    {
+     "source_words": [
+      349440,
+      354560
+     ],
+     "destination_words": [
+      128000,
+      133120
+     ],
+     "before_source_record": 1545,
+     "source_slot": 1,
+     "source_anchor": [
+      1545,
+      1,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      168192,
+      188672
+     ],
+     "destination_words": [
+      40960,
+      61440
+     ],
+     "before_source_record": 1545,
+     "source_slot": 1,
+     "source_anchor": [
+      1545,
+      1,
+      "B"
+     ]
+    },
+    {
+     "source_words": [
+      354560,
+      359680
+     ],
+     "destination_words": [
+      133120,
+      138240
+     ],
+     "before_source_record": 1545,
+     "source_slot": 2,
+     "source_anchor": [
+      1545,
+      2,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      188672,
+      209152
+     ],
+     "destination_words": [
+      81920,
+      102400
+     ],
+     "before_source_record": 1545,
+     "source_slot": 2,
+     "source_anchor": [
+      1545,
+      2,
+      "B"
+     ]
+    }
+   ],
+   "retirements": [
+    {
+     "source_words": [
+      0,
+      20480
+     ],
+     "vm_words": [
+      20480,
+      40960
+     ],
+     "writer_anchor": [
+      1545,
+      0,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      20480,
+      40960
+     ],
+     "vm_words": [
+      61440,
+      81920
+     ],
+     "writer_anchor": [
+      1545,
+      1,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      40960,
+      61440
+     ],
+     "vm_words": [
+      102400,
+      122880
+     ],
+     "writer_anchor": [
+      1545,
+      2,
+      "O"
+     ]
+    }
+   ],
+   "sector_granular_ownership": true,
+   "declared_live_out": [
+    [
+     0,
+     122880
+    ],
+    [
+     147648,
+     147704
+    ],
+    [
+     301312,
+     303616
+    ],
+    [
+     316696,
+     318976
+    ],
+    [
+     332824,
+     335104
+    ],
+    [
+     348952,
+     351232
+    ],
+    [
+     365080,
+     367504
+    ],
+    [
+     367528,
+     367672
+    ],
+    [
+     367696,
+     367840
+    ],
+    [
+     367864,
+     368008
+    ],
+    [
+     368032,
+     368176
+    ],
+    [
+     368200,
+     368344
+    ],
+    [
+     368368,
+     368512
+    ],
+    [
+     368536,
+     368680
+    ],
+    [
+     368704,
+     368848
+    ],
+    [
+     368872,
+     369016
+    ],
+    [
+     369040,
+     369184
+    ],
+    [
+     369208,
+     369352
+    ],
+    [
+     369376,
+     369656
+    ],
+    [
+     369704,
+     369712
+    ],
+    [
+     369760,
+     369768
+    ],
+    [
+     369816,
+     369824
+    ],
+    [
+     369872,
+     369880
+    ],
+    [
+     369984,
+     369992
+    ],
+    [
+     370040,
+     370048
+    ],
+    [
+     370096,
+     370104
+    ],
+    [
+     370152,
+     370160
+    ],
+    [
+     370208,
+     370216
+    ],
+    [
+     370264,
+     370272
+    ],
+    [
+     370320,
+     370328
+    ],
+    [
+     370376,
+     375048
+    ],
+    [
+     375064,
+     375072
+    ],
+    [
+     375088,
+     375096
+    ],
+    [
+     375112,
+     375120
+    ],
+    [
+     375136,
+     375144
+    ],
+    [
+     375160,
+     375168
+    ],
+    [
+     423984,
+     424368
+    ],
+    [
+     506112,
+     506160
+    ]
+   ],
+   "instruction_count": 3,
+   "expanded_row_count": 3,
+   "source_record_steps": 1,
+   "shared_weight_sm_rows_preserved": true,
+   "whole_programme_fits": null,
+   "executable": false,
+   "holds": [
+    "emit actual boundary loads/retirements and real scratch ownership",
+    "resolve dynamic whole-programme live-out obligations",
+    "price ungrouped DMA rows and emitted boundary drains before adoption"
+   ],
+   "fragment": "value_0.hgi1r"
+  },
+  {
+   "start_row": 3,
+   "rows": 3,
+   "high_water_words": 138312,
+   "capacity_words": 262144,
+   "objects": [
+    {
+     "id": 1,
+     "a": 209152,
+     "b": 229632,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      1
+     ],
+     "base": 0
+    },
+    {
+     "id": 3,
+     "a": 61440,
+     "b": 81920,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      3
+     ],
+     "base": 20480
+    },
+    {
+     "id": 5,
+     "a": 229632,
+     "b": 250112,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      5
+     ],
+     "base": 40960
+    },
+    {
+     "id": 7,
+     "a": 81920,
+     "b": 102400,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      7
+     ],
+     "base": 61440
+    },
+    {
+     "id": 9,
+     "a": 250112,
+     "b": 270592,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      9
+     ],
+     "base": 81920
+    },
+    {
+     "id": 11,
+     "a": 102400,
+     "b": 122880,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      11
+     ],
+     "base": 102400
+    },
+    {
+     "id": 0,
+     "a": 359680,
+     "b": 364800,
+     "t0": 0,
+     "t1": 0,
+     "values": [
+      0
+     ],
+     "base": 122880
+    },
+    {
+     "id": 4,
+     "a": 364800,
+     "b": 369920,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      4
+     ],
+     "base": 128000
+    },
+    {
+     "id": 8,
+     "a": 369920,
+     "b": 375040,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      8
+     ],
+     "base": 133120
+    },
+    {
+     "id": 2,
+     "a": 72,
+     "b": 96,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      2
+     ],
+     "base": 138240
+    },
+    {
+     "id": 6,
+     "a": 96,
+     "b": 120,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      6
+     ],
+     "base": 138264
+    },
+    {
+     "id": 10,
+     "a": 120,
+     "b": 144,
+     "t0": 0,
+     "t1": 1,
+     "values": [
+      10
+     ],
+     "base": 138288
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1545,
+     "slots": [
+      3,
+      4,
+      5
+     ],
+     "offset": 0,
+     "bytes": 176,
+     "folded_rows": true,
+     "operand_objects": [
+      {
+       "A": 0,
+       "B": 1,
+       "C": 2,
+       "O": 3
+      },
+      {
+       "A": 4,
+       "B": 5,
+       "C": 6,
+       "O": 7
+      },
+      {
+       "A": 8,
+       "B": 9,
+       "C": 10,
+       "O": 11
+      }
+     ]
+    }
+   ],
+   "boundary_loads": [
+    {
+     "source_words": [
+      359680,
+      364800
+     ],
+     "destination_words": [
+      122880,
+      128000
+     ],
+     "before_source_record": 1545,
+     "source_slot": 3,
+     "source_anchor": [
+      1545,
+      3,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      209152,
+      229632
+     ],
+     "destination_words": [
+      0,
+      20480
+     ],
+     "before_source_record": 1545,
+     "source_slot": 3,
+     "source_anchor": [
+      1545,
+      3,
+      "B"
+     ]
+    },
+    {
+     "source_words": [
+      72,
+      96
+     ],
+     "destination_words": [
+      138240,
+      138264
+     ],
+     "before_source_record": 1545,
+     "source_slot": 3,
+     "source_anchor": [
+      1545,
+      3,
+      "C"
+     ]
+    },
+    {
+     "source_words": [
+      364800,
+      369920
+     ],
+     "destination_words": [
+      128000,
+      133120
+     ],
+     "before_source_record": 1545,
+     "source_slot": 4,
+     "source_anchor": [
+      1545,
+      4,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      229632,
+      250112
+     ],
+     "destination_words": [
+      40960,
+      61440
+     ],
+     "before_source_record": 1545,
+     "source_slot": 4,
+     "source_anchor": [
+      1545,
+      4,
+      "B"
+     ]
+    },
+    {
+     "source_words": [
+      96,
+      120
+     ],
+     "destination_words": [
+      138264,
+      138288
+     ],
+     "before_source_record": 1545,
+     "source_slot": 4,
+     "source_anchor": [
+      1545,
+      4,
+      "C"
+     ]
+    },
+    {
+     "source_words": [
+      369920,
+      375040
+     ],
+     "destination_words": [
+      133120,
+      138240
+     ],
+     "before_source_record": 1545,
+     "source_slot": 5,
+     "source_anchor": [
+      1545,
+      5,
+      "A"
+     ]
+    },
+    {
+     "source_words": [
+      250112,
+      270592
+     ],
+     "destination_words": [
+      81920,
+      102400
+     ],
+     "before_source_record": 1545,
+     "source_slot": 5,
+     "source_anchor": [
+      1545,
+      5,
+      "B"
+     ]
+    },
+    {
+     "source_words": [
+      120,
+      144
+     ],
+     "destination_words": [
+      138288,
+      138312
+     ],
+     "before_source_record": 1545,
+     "source_slot": 5,
+     "source_anchor": [
+      1545,
+      5,
+      "C"
+     ]
+    }
+   ],
+   "retirements": [
+    {
+     "source_words": [
+      61440,
+      81920
+     ],
+     "vm_words": [
+      20480,
+      40960
+     ],
+     "writer_anchor": [
+      1545,
+      3,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      81920,
+      102400
+     ],
+     "vm_words": [
+      61440,
+      81920
+     ],
+     "writer_anchor": [
+      1545,
+      4,
+      "O"
+     ]
+    },
+    {
+     "source_words": [
+      102400,
+      122880
+     ],
+     "vm_words": [
+      102400,
+      122880
+     ],
+     "writer_anchor": [
+      1545,
+      5,
+      "O"
+     ]
+    }
+   ],
+   "sector_granular_ownership": true,
+   "declared_live_out": [
+    [
+     0,
+     122880
+    ],
+    [
+     147648,
+     147704
+    ],
+    [
+     301312,
+     303616
+    ],
+    [
+     316696,
+     318976
+    ],
+    [
+     332824,
+     335104
+    ],
+    [
+     348952,
+     351232
+    ],
+    [
+     365080,
+     367504
+    ],
+    [
+     367528,
+     367672
+    ],
+    [
+     367696,
+     367840
+    ],
+    [
+     367864,
+     368008
+    ],
+    [
+     368032,
+     368176
+    ],
+    [
+     368200,
+     368344
+    ],
+    [
+     368368,
+     368512
+    ],
+    [
+     368536,
+     368680
+    ],
+    [
+     368704,
+     368848
+    ],
+    [
+     368872,
+     369016
+    ],
+    [
+     369040,
+     369184
+    ],
+    [
+     369208,
+     369352
+    ],
+    [
+     369376,
+     369656
+    ],
+    [
+     369704,
+     369712
+    ],
+    [
+     369760,
+     369768
+    ],
+    [
+     369816,
+     369824
+    ],
+    [
+     369872,
+     369880
+    ],
+    [
+     369984,
+     369992
+    ],
+    [
+     370040,
+     370048
+    ],
+    [
+     370096,
+     370104
+    ],
+    [
+     370152,
+     370160
+    ],
+    [
+     370208,
+     370216
+    ],
+    [
+     370264,
+     370272
+    ],
+    [
+     370320,
+     370328
+    ],
+    [
+     370376,
+     375048
+    ],
+    [
+     375064,
+     375072
+    ],
+    [
+     375088,
+     375096
+    ],
+    [
+     375112,
+     375120
+    ],
+    [
+     375136,
+     375144
+    ],
+    [
+     375160,
+     375168
+    ],
+    [
+     423984,
+     424368
+    ],
+    [
+     506112,
+     506160
+    ]
+   ],
+   "instruction_count": 1,
+   "expanded_row_count": 3,
+   "source_record_steps": 1,
+   "shared_weight_sm_rows_preserved": true,
+   "whole_programme_fits": null,
+   "executable": false,
+   "holds": [
+    "emit actual boundary loads/retirements and real scratch ownership",
+    "resolve dynamic whole-programme live-out obligations",
+    "price ungrouped DMA rows and emitted boundary drains before adoption"
+   ],
+   "fragment": "value_3.hgi1r"
+  }
+ ]
+}

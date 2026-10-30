@@ -40,3 +40,44 @@ explicitly false. Original source1458–1558 entry epoch publication, dynamic
 expert boundary1559 onward, all other programme regions, actual numerical RTL,
 mutable HBM execution and full physical calendar are OPEN. No whole-programme
 fit, G5 or token-rate claim.
+
+Expert continuation1559–1590
+
+vm_expert_entry.py retains the actual full six-row expert union, all six indexed
+score gathers, both runtime count loops, all three rsel SM records, routed/shared
+combine slots and the source's intermediate aliasing. One contiguous source
+workspace plus count/table and ID regions fits105808 words. No NL3 union split,
+new slot pitch, numerical operation or template is introduced. The actual
+producer1554 proves the384-entry indexed score bound. Source end1590 stops
+before the next HC_POST and layer entry.
+
+check_expert.py tests64 legal identical/disjoint/overlap/edge/random top-k
+profiles. Independent union/table order and combine slots e=rho*7+kappa agree;
+actual HGI indexed effective addresses preserve raw score bits. Every static
+expanded descriptor and actual rsel rows/slots/HBM expert index match the
+original source after translation (29952 comparisons). Wrong pitch, count,
+rtab, output e-mask and indexed input-base mutants are caught. These are native
+address/selection semantics; MATVEC/FUSED arithmetic is not numerically run.
+
+Dynamic expert A inputs were absent from the old static live-out inference.
+--extra-live-out declares those bounded inputs explicitly. The pipeline_expert
+variant adds5 commands and113856 boundarybytes, now689commands6250560bytes.
+It passes the same2534778 canonical reads and172320 final boundarywords.
+link_expert.py then builds6 real native DMA LOADs from its published sectors to
+the expert input layout (33072words132288bytes); actual HGI DMA transport passes
+against canonical source outputs and catches a wrong source epoch. This input
+ABI composes; full numerical expert arithmetic/output retirement remains open.
+Run check_expert.py, then link_expert.py to reproduce.
+
+Whole programme inventory
+
+Actual a122 decodes3916 records:40 IDX.UNION,80 IDX.KVUNION,120 expert-rsel,
+160 attention-plan records,80 runtime-count loops and456 dynamic operands.
+The neighboring emitter.json is stale (3715records516304bytes/hash7fe74f vs
+actual3916records540064bytes/hasha1228b), so its byte offsets MUST NOT label
+current source layers. programme_census.py refuses that mapping. An earlier
+stale-offset census is retained as rejected_stale_segment_census.json ONLY;
+its layer assignments are invalid. Historical emitter original six-row schedule
+peaks exceed262144 in all40 transformer layers (300038..452534 words); that is
+historical planning evidence, not current per-layer fit or an exact spill bound.
+Full current layer map/phase policy/traffic still needs composition.
