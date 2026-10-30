@@ -1,0 +1,20 @@
+{
+  "source": "exact original _k26 retained native AIG/map/hyp, source kit pinned94b1643dc5b",
+  "script": "retained_loaded_1080.py",
+  "tool": "current main lec.py copied unchanged with SHA recorded by proof result",
+  "nominal": {
+    "host": "intel1",
+    "dir": "/srv/opentallas-scratch2/claude/codex-coverage-2249/loaded1080/nominal",
+    "unit": "oth-ubuntu-3524333-1793342192",
+    "session": 69873
+  },
+  "mutant": {
+    "host": "intel1",
+    "dir": "/srv/opentallas-scratch2/claude/codex-coverage-2249/loaded1080/mutant",
+    "unit": "oth-ubuntu-3586743-1793342389",
+    "session": 55062
+  },
+  "original_failed_verdict": "NOT EQUIVALENT 66265/67345,1080diff, retained unchanged",
+  "hint_forms": "1080loaded: lane0p0=120, lane0..3p2=480,q2=480; guardsldp_v/ldq_v; no unconditional constants",
+  "qualification": "all9369retained +1080new hints jointly proved, complete native compare, wrongconstantmutant; no canonical LEC record fabricated"
+}
