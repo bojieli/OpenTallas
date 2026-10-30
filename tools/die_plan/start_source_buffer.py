@@ -13,7 +13,15 @@ OUTPUTS={'Y','QN','SN','CON'}
 def insert(inventory,mapped):
     original=mapped['modules']['ot_die_start_stages'];m=copy.deepcopy(mapped);p=m['modules']['ot_die_start_stages'];cells=p['cells']
     integers=[b for c in cells.values()for bs in c.get('connections',{}).values()for b in bs if isinstance(b,int)]
-    nxt=max(integers)+1;heads=[];bits=set()
+    integers += [b for v in p['ports'].values()for b in v['bits']if isinstance(b,int)]
+    integers += [b for v in p['netnames'].values()for b in v['bits']if isinstance(b,int)]
+    names=['sd_shared_'+hashlib.sha256((s['region']+'\0'+s['signal']).encode()).hexdigest()[:20]
+           for s in inventory['source_records']if s.get('source')!='GLOBAL_RAW_INPUT']
+    if len(set(names))!=len(names):raise ValueError('duplicate shared DATA head identity')
+    for name in names:
+        if name in cells or any(n in p['netnames']or n in p['ports']for n in (name+'_in',name+'_q')):
+            raise ValueError('shared DATA head namespace already exists: '+name)
+    nxt=max(integers,default=1)+1;heads=[];bits=set()
     for s in inventory['source_records']:
         if s.get('source')=='GLOBAL_RAW_INPUT':continue
         inv=s['instance'];bit=s['output_bit']
