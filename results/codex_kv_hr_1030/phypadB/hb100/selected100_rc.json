@@ -1,0 +1,7910 @@
+{
+ "schema": "opentallas.kv.hold_collapse_selected.v1",
+ "status": "candidate RC qualification pending",
+ "old_master": "BUFx2_ASAP7_75t_R",
+ "new_master": "HB4xp67_ASAP7_75t_R",
+ "count": 100,
+ "chains": [
+  {
+   "cells": [
+    "hold5271",
+    "hold2907",
+    "hold5272"
+   ],
+   "old_xy": [
+    [
+     79.002,
+     77.49
+    ],
+    [
+     78.894,
+     76.68
+    ],
+    [
+     78.786,
+     75.87
+    ]
+   ],
+   "target_xy": [
+    78.786,
+    75.87
+   ],
+   "id": 0,
+   "ff_nldm": {
+    "chain": 0,
+    "first": "hold5271",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.59755,
+     "new_cell_ps": 44.56993,
+     "cell_delta_ps": 6.97238,
+     "first_input_slew_ps": 5.15392,
+     "old_last_output_cap_ff": 2.199863140652044
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.08065,
+     "new_cell_ps": 51.96395,
+     "cell_delta_ps": 12.8833,
+     "first_input_slew_ps": 4.900531,
+     "old_last_output_cap_ff": 2.199863140652044
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net856",
+     "Y": "net5270"
+    },
+    {
+     "A": "net5270",
+     "Y": "net2906"
+    },
+    {
+     "A": "net2906",
+     "Y": "net5271"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 137.5211,
+     "net_cap_pf": 0.000222064,
+     "elmore_upper_ps": 0.030538485550399997
+    },
+    {
+     "resistor_sum_ohm": 144.952,
+     "net_cap_pf": 0.000270207,
+     "elmore_upper_ps": 0.039167045064000004
+    },
+    {
+     "resistor_sum_ohm": 456.404,
+     "net_cap_pf": 0.00165186,
+     "elmore_upper_ps": 0.75391551144
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0697055306144,
+   "ff_min_cell_delta_ps": 6.97238,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.9026744693856
+  },
+  {
+   "cells": [
+    "hold7383",
+    "hold6854",
+    "hold4360"
+   ],
+   "old_xy": [
+    [
+     80.622,
+     64.26
+    ],
+    [
+     79.812,
+     65.07
+    ],
+    [
+     80.352,
+     66.69
+    ]
+   ],
+   "target_xy": [
+    80.352,
+    66.69
+   ],
+   "id": 1,
+   "ff_nldm": {
+    "chain": 1,
+    "first": "hold7383",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.85182,
+     "new_cell_ps": 46.33997,
+     "cell_delta_ps": 6.48815,
+     "first_input_slew_ps": 8.163132,
+     "old_last_output_cap_ff": 2.384404302376785
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.32911,
+     "new_cell_ps": 53.58854,
+     "cell_delta_ps": 12.25943,
+     "first_input_slew_ps": 7.94789,
+     "old_last_output_cap_ff": 2.384404302376785
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[699]",
+     "Y": "net7382"
+    },
+    {
+     "A": "net7382",
+     "Y": "net6853"
+    },
+    {
+     "A": "net6853",
+     "Y": "net4359"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 153.0206,
+     "net_cap_pf": 0.000442204,
+     "elmore_upper_ps": 0.0676663214024
+    },
+    {
+     "resistor_sum_ohm": 167.9037,
+     "net_cap_pf": 0.000464315,
+     "elmore_upper_ps": 0.07796020646549999
+    },
+    {
+     "resistor_sum_ohm": 444.6163,
+     "net_cap_pf": 0.00194302,
+     "elmore_upper_ps": 0.863898363226
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.14562652786789998,
+   "ff_min_cell_delta_ps": 6.48815,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.3425234721321
+  },
+  {
+   "cells": [
+    "hold5419",
+    "hold2965",
+    "hold5420"
+   ],
+   "old_xy": [
+    [
+     77.544,
+     85.32
+    ],
+    [
+     76.842,
+     84.24
+    ],
+    [
+     76.95,
+     82.62
+    ]
+   ],
+   "target_xy": [
+    76.95,
+    82.62
+   ],
+   "id": 2,
+   "ff_nldm": {
+    "chain": 2,
+    "first": "hold5419",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.58522,
+     "new_cell_ps": 51.75999,
+     "cell_delta_ps": 11.17476,
+     "first_input_slew_ps": 5.020088,
+     "old_last_output_cap_ff": 3.7624462226724673
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.89533,
+     "new_cell_ps": 58.83637,
+     "cell_delta_ps": 16.94104,
+     "first_input_slew_ps": 4.787873,
+     "old_last_output_cap_ff": 3.7624462226724673
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net977",
+     "Y": "net5418"
+    },
+    {
+     "A": "net5418",
+     "Y": "net2964"
+    },
+    {
+     "A": "net2964",
+     "Y": "net5419"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 191.9652,
+     "net_cap_pf": 0.000418509,
+     "elmore_upper_ps": 0.08033916388680001
+    },
+    {
+     "resistor_sum_ohm": 157.45870000000002,
+     "net_cap_pf": 0.000347816,
+     "elmore_upper_ps": 0.0547666551992
+    },
+    {
+     "resistor_sum_ohm": 729.2636,
+     "net_cap_pf": 0.00321444,
+     "elmore_upper_ps": 2.3441740863839997
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.135105819086,
+   "ff_min_cell_delta_ps": 11.17476,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 11.039654180913999
+  },
+  {
+   "cells": [
+    "hold5383",
+    "hold2969",
+    "hold5384"
+   ],
+   "old_xy": [
+    [
+     81.162,
+     86.67
+    ],
+    [
+     79.812,
+     86.4
+    ],
+    [
+     79.812,
+     87.48
+    ]
+   ],
+   "target_xy": [
+    79.812,
+    87.48
+   ],
+   "id": 3,
+   "ff_nldm": {
+    "chain": 3,
+    "first": "hold5383",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.30899,
+     "new_cell_ps": 41.35174,
+     "cell_delta_ps": 4.04275,
+     "first_input_slew_ps": 6.415339,
+     "old_last_output_cap_ff": 1.4825708678053684
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.77754,
+     "new_cell_ps": 48.73388,
+     "cell_delta_ps": 9.95634,
+     "first_input_slew_ps": 5.982546,
+     "old_last_output_cap_ff": 1.4825708678053684
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net1015",
+     "Y": "net5382"
+    },
+    {
+     "A": "net5382",
+     "Y": "net2968"
+    },
+    {
+     "A": "net2968",
+     "Y": "net5383"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 148.8563,
+     "net_cap_pf": 0.000405507,
+     "elmore_upper_ps": 0.0603622716441
+    },
+    {
+     "resistor_sum_ohm": 118.8331,
+     "net_cap_pf": 0.000278483,
+     "elmore_upper_ps": 0.0330929981873
+    },
+    {
+     "resistor_sum_ohm": 212.2192,
+     "net_cap_pf": 0.000934569,
+     "elmore_upper_ps": 0.1983334855248
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0934552698314,
+   "ff_min_cell_delta_ps": 4.04275,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.9492947301686
+  },
+  {
+   "cells": [
+    "hold5011",
+    "hold2797",
+    "hold5012"
+   ],
+   "old_xy": [
+    [
+     75.708,
+     79.92
+    ],
+    [
+     75.654,
+     79.38
+    ],
+    [
+     75.6,
+     80.19
+    ]
+   ],
+   "target_xy": [
+    75.6,
+    80.19
+   ],
+   "id": 6,
+   "ff_nldm": {
+    "chain": 6,
+    "first": "hold5011",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 36.89279,
+     "new_cell_ps": 43.37312,
+     "cell_delta_ps": 6.48034,
+     "first_input_slew_ps": 5.443935,
+     "old_last_output_cap_ff": 1.9431454547206364
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.41012,
+     "new_cell_ps": 50.77461,
+     "cell_delta_ps": 12.36448,
+     "first_input_slew_ps": 5.148877,
+     "old_last_output_cap_ff": 1.9431454547206364
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net916",
+     "Y": "net5010"
+    },
+    {
+     "A": "net5010",
+     "Y": "net2796"
+    },
+    {
+     "A": "net2796",
+     "Y": "net5011"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 88.1707,
+     "net_cap_pf": 0.000117509,
+     "elmore_upper_ps": 0.0103608507863
+    },
+    {
+     "resistor_sum_ohm": 100.4753,
+     "net_cap_pf": 0.000218963,
+     "elmore_upper_ps": 0.0220003731139
+    },
+    {
+     "resistor_sum_ohm": 324.7328,
+     "net_cap_pf": 0.00139514,
+     "elmore_upper_ps": 0.453047718592
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0323612239002,
+   "ff_min_cell_delta_ps": 6.48034,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.4479787760998
+  },
+  {
+   "cells": [
+    "hold5323",
+    "hold2941",
+    "hold5324"
+   ],
+   "old_xy": [
+    [
+     79.542,
+     83.43
+    ],
+    [
+     79.272,
+     82.62
+    ],
+    [
+     78.732,
+     84.51
+    ]
+   ],
+   "target_xy": [
+    78.732,
+    84.51
+   ],
+   "id": 8,
+   "ff_nldm": {
+    "chain": 8,
+    "first": "hold5323",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.55493,
+     "new_cell_ps": 53.44422,
+     "cell_delta_ps": 11.8893,
+     "first_input_slew_ps": 5.991992,
+     "old_last_output_cap_ff": 4.086041182953505
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.79317,
+     "new_cell_ps": 60.3532,
+     "cell_delta_ps": 17.56003,
+     "first_input_slew_ps": 5.619868,
+     "old_last_output_cap_ff": 4.086041182953505
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net956",
+     "Y": "net5322"
+    },
+    {
+     "A": "net5322",
+     "Y": "net2940"
+    },
+    {
+     "A": "net2940",
+     "Y": "net5323"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 160.0273,
+     "net_cap_pf": 0.000287333,
+     "elmore_upper_ps": 0.0459811241909
+    },
+    {
+     "resistor_sum_ohm": 185.8519,
+     "net_cap_pf": 0.000561324,
+     "elmore_upper_ps": 0.1043231319156
+    },
+    {
+     "resistor_sum_ohm": 857.4608000000001,
+     "net_cap_pf": 0.00353804,
+     "elmore_upper_ps": 3.033730608832
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1503042561065,
+   "ff_min_cell_delta_ps": 11.8893,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 11.7389957438935
+  },
+  {
+   "cells": [
+    "hold5039",
+    "hold2757",
+    "hold5040"
+   ],
+   "old_xy": [
+    [
+     74.196,
+     84.24
+    ],
+    [
+     73.818,
+     83.43
+    ],
+    [
+     74.682,
+     82.89
+    ]
+   ],
+   "target_xy": [
+    74.682,
+    82.89
+   ],
+   "id": 10,
+   "ff_nldm": {
+    "chain": 10,
+    "first": "hold5039",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.7954,
+     "new_cell_ps": 49.77093,
+     "cell_delta_ps": 9.97553,
+     "first_input_slew_ps": 6.38804,
+     "old_last_output_cap_ff": 3.2162234760897954
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.14851,
+     "new_cell_ps": 56.89478,
+     "cell_delta_ps": 15.74627,
+     "first_input_slew_ps": 5.965594,
+     "old_last_output_cap_ff": 3.2162234760897954
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net968",
+     "Y": "net5038"
+    },
+    {
+     "A": "net5038",
+     "Y": "net2756"
+    },
+    {
+     "A": "net2756",
+     "Y": "net5039"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 111.8767,
+     "net_cap_pf": 0.000295683,
+     "elmore_upper_ps": 0.0330800382861
+    },
+    {
+     "resistor_sum_ohm": 147.3144,
+     "net_cap_pf": 0.000296647,
+     "elmore_upper_ps": 0.043700374816799996
+    },
+    {
+     "resistor_sum_ohm": 850.5076,
+     "net_cap_pf": 0.00266822,
+     "elmore_upper_ps": 2.2693413884719997
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.07678041310289999,
+   "ff_min_cell_delta_ps": 9.97553,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.898749586897098
+  },
+  {
+   "cells": [
+    "hold5239",
+    "hold2823",
+    "hold5240"
+   ],
+   "old_xy": [
+    [
+     75.33,
+     80.19
+    ],
+    [
+     73.872,
+     79.65
+    ],
+    [
+     75.33,
+     80.73
+    ]
+   ],
+   "target_xy": [
+    75.33,
+    80.73
+   ],
+   "id": 11,
+   "ff_nldm": {
+    "chain": 11,
+    "first": "hold5239",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.89101,
+     "new_cell_ps": 46.10629,
+     "cell_delta_ps": 5.21528,
+     "first_input_slew_ps": 8.698116,
+     "old_last_output_cap_ff": 2.3072309190741547
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.16894,
+     "new_cell_ps": 53.22374,
+     "cell_delta_ps": 11.0548,
+     "first_input_slew_ps": 7.991511,
+     "old_last_output_cap_ff": 2.3072309190741547
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net917",
+     "Y": "net5238"
+    },
+    {
+     "A": "net5238",
+     "Y": "net2822"
+    },
+    {
+     "A": "net2822",
+     "Y": "net5239"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 214.56550000000001,
+     "net_cap_pf": 0.000673117,
+     "elmore_upper_ps": 0.1444276856635
+    },
+    {
+     "resistor_sum_ohm": 227.6347,
+     "net_cap_pf": 0.000626164,
+     "elmore_upper_ps": 0.1425366542908
+    },
+    {
+     "resistor_sum_ohm": 304.1584,
+     "net_cap_pf": 0.00175923,
+     "elmore_upper_ps": 0.5350845820319999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.28696433995430004,
+   "ff_min_cell_delta_ps": 5.21528,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.928315660045699
+  },
+  {
+   "cells": [
+    "hold5251",
+    "hold2851",
+    "hold5252"
+   ],
+   "old_xy": [
+    [
+     75.978,
+     76.95
+    ],
+    [
+     77.004,
+     76.14
+    ],
+    [
+     74.844,
+     75.6
+    ]
+   ],
+   "target_xy": [
+    74.844,
+    75.6
+   ],
+   "id": 12,
+   "ff_nldm": {
+    "chain": 12,
+    "first": "hold5251",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.05347,
+     "new_cell_ps": 43.35218,
+     "cell_delta_ps": 4.29871,
+     "first_input_slew_ps": 5.754797,
+     "old_last_output_cap_ff": 1.9213578615721587
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.44313,
+     "new_cell_ps": 50.73169,
+     "cell_delta_ps": 10.28856,
+     "first_input_slew_ps": 5.412843,
+     "old_last_output_cap_ff": 1.9213578615721587
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net864",
+     "Y": "net5250"
+    },
+    {
+     "A": "net5250",
+     "Y": "net2850"
+    },
+    {
+     "A": "net2850",
+     "Y": "net5251"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 184.7193,
+     "net_cap_pf": 0.000366364,
+     "elmore_upper_ps": 0.0676745016252
+    },
+    {
+     "resistor_sum_ohm": 303.6253,
+     "net_cap_pf": 0.000804077,
+     "elmore_upper_ps": 0.2441381203481
+    },
+    {
+     "resistor_sum_ohm": 379.853,
+     "net_cap_pf": 0.00137336,
+     "elmore_upper_ps": 0.5216749160799999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.3118126219733,
+   "ff_min_cell_delta_ps": 4.29871,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.9868973780266996
+  },
+  {
+   "cells": [
+    "hold5023",
+    "hold2789",
+    "hold5024"
+   ],
+   "old_xy": [
+    [
+     77.922,
+     72.63
+    ],
+    [
+     77.814,
+     72.9
+    ],
+    [
+     79.002,
+     72.63
+    ]
+   ],
+   "target_xy": [
+    79.002,
+    72.63
+   ],
+   "id": 15,
+   "ff_nldm": {
+    "chain": 15,
+    "first": "hold5023",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.83391,
+     "new_cell_ps": 44.15078,
+     "cell_delta_ps": 6.31687,
+     "first_input_slew_ps": 6.258908,
+     "old_last_output_cap_ff": 2.0531261180173117
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.2889,
+     "new_cell_ps": 51.47666,
+     "cell_delta_ps": 12.18776,
+     "first_input_slew_ps": 5.848791,
+     "old_last_output_cap_ff": 2.0531261180173117
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net842",
+     "Y": "net5022"
+    },
+    {
+     "A": "net5022",
+     "Y": "net2788"
+    },
+    {
+     "A": "net2788",
+     "Y": "net5023"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 88.62049999999999,
+     "net_cap_pf": 0.000125631,
+     "elmore_upper_ps": 0.011133482035499999
+    },
+    {
+     "resistor_sum_ohm": 147.3674,
+     "net_cap_pf": 0.000418754,
+     "elmore_upper_ps": 0.061710688219600005
+    },
+    {
+     "resistor_sum_ohm": 290.1702,
+     "net_cap_pf": 0.00150512,
+     "elmore_upper_ps": 0.43674097142400004
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.07284417025510001,
+   "ff_min_cell_delta_ps": 6.31687,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.2440258297449
+  },
+  {
+   "cells": [
+    "hold5051",
+    "hold2811",
+    "hold5052"
+   ],
+   "old_xy": [
+    [
+     79.542,
+     76.14
+    ],
+    [
+     79.272,
+     77.49
+    ],
+    [
+     78.894,
+     74.79
+    ]
+   ],
+   "target_xy": [
+    78.894,
+    74.79
+   ],
+   "id": 16,
+   "ff_nldm": {
+    "chain": 16,
+    "first": "hold5051",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.46935,
+     "new_cell_ps": 46.83611,
+     "cell_delta_ps": 6.36676,
+     "first_input_slew_ps": 5.448343,
+     "old_last_output_cap_ff": 2.6381421264105613
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.80402,
+     "new_cell_ps": 54.15484,
+     "cell_delta_ps": 12.35081,
+     "first_input_slew_ps": 5.148518,
+     "old_last_output_cap_ff": 2.6381421264105613
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net859",
+     "Y": "net5050"
+    },
+    {
+     "A": "net5050",
+     "Y": "net2810"
+    },
+    {
+     "A": "net2810",
+     "Y": "net5051"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 226.6666,
+     "net_cap_pf": 0.000379619,
+     "elmore_upper_ps": 0.08604694802539999
+    },
+    {
+     "resistor_sum_ohm": 353.0389,
+     "net_cap_pf": 0.000924339,
+     "elmore_upper_ps": 0.3263276237871
+    },
+    {
+     "resistor_sum_ohm": 349.28270000000003,
+     "net_cap_pf": 0.00209014,
+     "elmore_upper_ps": 0.730049742578
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.4123745718125,
+   "ff_min_cell_delta_ps": 6.36676,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.9543854281875
+  },
+  {
+   "cells": [
+    "hold5695",
+    "hold3105",
+    "hold5696"
+   ],
+   "old_xy": [
+    [
+     71.226,
+     90.45
+    ],
+    [
+     71.226,
+     88.29
+    ],
+    [
+     71.55,
+     87.75
+    ]
+   ],
+   "target_xy": [
+    71.55,
+    87.75
+   ],
+   "id": 21,
+   "ff_nldm": {
+    "chain": 21,
+    "first": "hold5695",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.16347,
+     "new_cell_ps": 49.10045,
+     "cell_delta_ps": 8.93698,
+     "first_input_slew_ps": 5.706702,
+     "old_last_output_cap_ff": 3.106613389706199
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.503,
+     "new_cell_ps": 56.30632,
+     "cell_delta_ps": 14.80333,
+     "first_input_slew_ps": 5.369775,
+     "old_last_output_cap_ff": 3.106613389706199
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net36",
+     "Y": "net5694"
+    },
+    {
+     "A": "net5694",
+     "Y": "net3104"
+    },
+    {
+     "A": "net3104",
+     "Y": "net5695"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 239.6601,
+     "net_cap_pf": 0.000681695,
+     "elmore_upper_ps": 0.1633750918695
+    },
+    {
+     "resistor_sum_ohm": 135.1021,
+     "net_cap_pf": 0.000197643,
+     "elmore_upper_ps": 0.026701984350300002
+    },
+    {
+     "resistor_sum_ohm": 753.813,
+     "net_cap_pf": 0.00255861,
+     "elmore_upper_ps": 1.9287134799299999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1900770762198,
+   "ff_min_cell_delta_ps": 8.93698,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.7469029237802
+  },
+  {
+   "cells": [
+    "hold5471",
+    "hold2983",
+    "hold5472"
+   ],
+   "old_xy": [
+    [
+     76.194,
+     86.94
+    ],
+    [
+     76.41,
+     86.13
+    ],
+    [
+     76.356,
+     84.24
+    ]
+   ],
+   "target_xy": [
+    76.356,
+    84.24
+   ],
+   "id": 22,
+   "ff_nldm": {
+    "chain": 22,
+    "first": "hold5471",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.36115,
+     "new_cell_ps": 42.32031,
+     "cell_delta_ps": 4.95916,
+     "first_input_slew_ps": 5.598556,
+     "old_last_output_cap_ff": 1.7230445794497313
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.83887,
+     "new_cell_ps": 49.73474,
+     "cell_delta_ps": 10.89587,
+     "first_input_slew_ps": 5.277139,
+     "old_last_output_cap_ff": 1.7230445794497313
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net1006",
+     "Y": "net5470"
+    },
+    {
+     "A": "net5470",
+     "Y": "net2982"
+    },
+    {
+     "A": "net2982",
+     "Y": "net5471"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 103.0928,
+     "net_cap_pf": 0.000245087,
+     "elmore_upper_ps": 0.0252667050736
+    },
+    {
+     "resistor_sum_ohm": 130.4082,
+     "net_cap_pf": 0.000407141,
+     "elmore_upper_ps": 0.0530945249562
+    },
+    {
+     "resistor_sum_ohm": 353.2493,
+     "net_cap_pf": 0.00117504,
+     "elmore_upper_ps": 0.415082057472
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0783612300298,
+   "ff_min_cell_delta_ps": 4.95916,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.8807987699702
+  },
+  {
+   "cells": [
+    "hold5215",
+    "hold2839",
+    "hold5216"
+   ],
+   "old_xy": [
+    [
+     74.466,
+     77.76
+    ],
+    [
+     75.168,
+     79.92
+    ],
+    [
+     74.412,
+     79.92
+    ]
+   ],
+   "target_xy": [
+    74.412,
+    79.92
+   ],
+   "id": 23,
+   "ff_nldm": {
+    "chain": 23,
+    "first": "hold5215",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.71619,
+     "new_cell_ps": 46.26946,
+     "cell_delta_ps": 6.55327,
+     "first_input_slew_ps": 6.38807,
+     "old_last_output_cap_ff": 2.470988009931038
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.06879,
+     "new_cell_ps": 53.53595,
+     "cell_delta_ps": 12.46716,
+     "first_input_slew_ps": 5.962395,
+     "old_last_output_cap_ff": 2.470988009931038
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net921",
+     "Y": "net5214"
+    },
+    {
+     "A": "net5214",
+     "Y": "net2838"
+    },
+    {
+     "A": "net2838",
+     "Y": "net5215"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 284.50530000000003,
+     "net_cap_pf": 0.000771286,
+     "elmore_upper_ps": 0.21943495481580003
+    },
+    {
+     "resistor_sum_ohm": 100.6097,
+     "net_cap_pf": 0.000233147,
+     "elmore_upper_ps": 0.0234568497259
+    },
+    {
+     "resistor_sum_ohm": 522.4916000000001,
+     "net_cap_pf": 0.00192299,
+     "elmore_upper_ps": 1.0047461218840001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.24289180454170003,
+   "ff_min_cell_delta_ps": 6.55327,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.3103781954583
+  },
+  {
+   "cells": [
+    "hold5439",
+    "hold2955",
+    "hold5440"
+   ],
+   "old_xy": [
+    [
+     80.352,
+     86.13
+    ],
+    [
+     79.542,
+     85.86
+    ],
+    [
+     78.624,
+     85.86
+    ]
+   ],
+   "target_xy": [
+    78.624,
+    85.86
+   ],
+   "id": 29,
+   "ff_nldm": {
+    "chain": 29,
+    "first": "hold5439",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.01642,
+     "new_cell_ps": 46.11386,
+     "cell_delta_ps": 8.09744,
+     "first_input_slew_ps": 5.116842,
+     "old_last_output_cap_ff": 2.5119795339900026
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.48199,
+     "new_cell_ps": 53.47444,
+     "cell_delta_ps": 13.99245,
+     "first_input_slew_ps": 4.86854,
+     "old_last_output_cap_ff": 2.5119795339900026
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net972",
+     "Y": "net5438"
+    },
+    {
+     "A": "net5438",
+     "Y": "net2954"
+    },
+    {
+     "A": "net2954",
+     "Y": "net5439"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 142.7806,
+     "net_cap_pf": 0.000237753,
+     "elmore_upper_ps": 0.0339465159918
+    },
+    {
+     "resistor_sum_ohm": 68.094,
+     "net_cap_pf": 0.000226812,
+     "elmore_upper_ps": 0.015444536327999999
+    },
+    {
+     "resistor_sum_ohm": 569.6435,
+     "net_cap_pf": 0.00196398,
+     "elmore_upper_ps": 1.11876844113
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0493910523198,
+   "ff_min_cell_delta_ps": 8.09744,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.0480489476802
+  },
+  {
+   "cells": [
+    "hold5255",
+    "hold2921",
+    "hold5256"
+   ],
+   "old_xy": [
+    [
+     77.22,
+     80.19
+    ],
+    [
+     78.57,
+     80.19
+    ],
+    [
+     78.894,
+     77.22
+    ]
+   ],
+   "target_xy": [
+    78.894,
+    77.22
+   ],
+   "id": 34,
+   "ff_nldm": {
+    "chain": 34,
+    "first": "hold5255",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.53961,
+     "new_cell_ps": 45.54043,
+     "cell_delta_ps": 6.00082,
+     "first_input_slew_ps": 6.869153,
+     "old_last_output_cap_ff": 2.297404701646939
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.89733,
+     "new_cell_ps": 52.7913,
+     "cell_delta_ps": 11.89397,
+     "first_input_slew_ps": 6.379488,
+     "old_last_output_cap_ff": 2.297404701646939
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net928",
+     "Y": "net5254"
+    },
+    {
+     "A": "net5254",
+     "Y": "net2920"
+    },
+    {
+     "A": "net2920",
+     "Y": "net5255"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 130.7085,
+     "net_cap_pf": 0.000304403,
+     "elmore_upper_ps": 0.0397880595255
+    },
+    {
+     "resistor_sum_ohm": 189.9426,
+     "net_cap_pf": 0.000690606,
+     "elmore_upper_ps": 0.13117549921559998
+    },
+    {
+     "resistor_sum_ohm": 441.12940000000003,
+     "net_cap_pf": 0.0017494,
+     "elmore_upper_ps": 0.77171177236
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.17096355874109997,
+   "ff_min_cell_delta_ps": 6.00082,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.8298564412589
+  },
+  {
+   "cells": [
+    "hold5139",
+    "hold2849",
+    "hold5140"
+   ],
+   "old_xy": [
+    [
+     76.194,
+     74.52
+    ],
+    [
+     75.654,
+     74.52
+    ],
+    [
+     75.654,
+     73.98
+    ]
+   ],
+   "target_xy": [
+    75.654,
+    73.98
+   ],
+   "id": 37,
+   "ff_nldm": {
+    "chain": 37,
+    "first": "hold5139",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.03516,
+     "new_cell_ps": 42.6306,
+     "cell_delta_ps": 5.59544,
+     "first_input_slew_ps": 7.388249,
+     "old_last_output_cap_ff": 1.6843065865387619
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.53159,
+     "new_cell_ps": 49.9238,
+     "cell_delta_ps": 11.39221,
+     "first_input_slew_ps": 6.856174,
+     "old_last_output_cap_ff": 1.6843065865387619
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net858",
+     "Y": "net5138"
+    },
+    {
+     "A": "net5138",
+     "Y": "net2848"
+    },
+    {
+     "A": "net2848",
+     "Y": "net5139"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 93.00880000000001,
+     "net_cap_pf": 0.000170401,
+     "elmore_upper_ps": 0.0158487925288
+    },
+    {
+     "resistor_sum_ohm": 91.0149,
+     "net_cap_pf": 0.000147767,
+     "elmore_upper_ps": 0.0134489987283
+    },
+    {
+     "resistor_sum_ohm": 365.002,
+     "net_cap_pf": 0.0011363,
+     "elmore_upper_ps": 0.4147517726
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0292977912571,
+   "ff_min_cell_delta_ps": 5.59544,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.5661422087428996
+  },
+  {
+   "cells": [
+    "hold5107",
+    "hold2767",
+    "hold5108"
+   ],
+   "old_xy": [
+    [
+     75.384,
+     85.86
+    ],
+    [
+     75.222,
+     82.62
+    ],
+    [
+     75.87,
+     84.51
+    ]
+   ],
+   "target_xy": [
+    75.87,
+    84.51
+   ],
+   "id": 39,
+   "ff_nldm": {
+    "chain": 39,
+    "first": "hold5107",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.37262,
+     "new_cell_ps": 47.658,
+     "cell_delta_ps": 6.28538,
+     "first_input_slew_ps": 6.249342,
+     "old_last_output_cap_ff": 2.757535443299456
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.64235,
+     "new_cell_ps": 54.90057,
+     "cell_delta_ps": 12.25822,
+     "first_input_slew_ps": 5.841054,
+     "old_last_output_cap_ff": 2.757535443299456
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net955",
+     "Y": "net5106"
+    },
+    {
+     "A": "net5106",
+     "Y": "net2766"
+    },
+    {
+     "A": "net2766",
+     "Y": "net5107"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 219.8741,
+     "net_cap_pf": 0.000977555,
+     "elmore_upper_ps": 0.21493902582549998
+    },
+    {
+     "resistor_sum_ohm": 176.2379,
+     "net_cap_pf": 0.000524554,
+     "elmore_upper_ps": 0.0924462953966
+    },
+    {
+     "resistor_sum_ohm": 715.0233000000001,
+     "net_cap_pf": 0.00220953,
+     "elmore_upper_ps": 1.579865432049
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.3073853212221,
+   "ff_min_cell_delta_ps": 6.28538,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.9779946787779
+  },
+  {
+   "cells": [
+    "hold4911",
+    "hold2713",
+    "hold4912"
+   ],
+   "old_xy": [
+    [
+     79.542,
+     74.52
+    ],
+    [
+     79.38,
+     74.79
+    ],
+    [
+     78.732,
+     73.17
+    ]
+   ],
+   "target_xy": [
+    78.732,
+    73.17
+   ],
+   "id": 40,
+   "ff_nldm": {
+    "chain": 40,
+    "first": "hold4911",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.85371,
+     "new_cell_ps": 50.92291,
+     "cell_delta_ps": 10.06919,
+     "first_input_slew_ps": 5.893571,
+     "old_last_output_cap_ff": 3.513155956870353
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.1505,
+     "new_cell_ps": 58.00049,
+     "cell_delta_ps": 15.85,
+     "first_input_slew_ps": 5.534122,
+     "old_last_output_cap_ff": 3.513155956870353
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net835",
+     "Y": "net4910"
+    },
+    {
+     "A": "net4910",
+     "Y": "net2712"
+    },
+    {
+     "A": "net2712",
+     "Y": "net4911"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 89.57679999999999,
+     "net_cap_pf": 0.000138412,
+     "elmore_upper_ps": 0.012398504041599999
+    },
+    {
+     "resistor_sum_ohm": 307.3546,
+     "net_cap_pf": 0.000756492,
+     "elmore_upper_ps": 0.2325112960632
+    },
+    {
+     "resistor_sum_ohm": 717.2352,
+     "net_cap_pf": 0.00296515,
+     "elmore_upper_ps": 2.12670995328
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2449098001048,
+   "ff_min_cell_delta_ps": 10.06919,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.8242801998952
+  },
+  {
+   "cells": [
+    "hold5699",
+    "hold3107",
+    "hold5700"
+   ],
+   "old_xy": [
+    [
+     74.142,
+     83.7
+    ],
+    [
+     73.872,
+     83.7
+    ],
+    [
+     73.548,
+     84.51
+    ]
+   ],
+   "target_xy": [
+    73.548,
+    84.51
+   ],
+   "id": 41,
+   "ff_nldm": {
+    "chain": 41,
+    "first": "hold5699",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.77681,
+     "new_cell_ps": 44.65615,
+     "cell_delta_ps": 6.87934,
+     "first_input_slew_ps": 6.536504,
+     "old_last_output_cap_ff": 2.138825099661367
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.23662,
+     "new_cell_ps": 51.95123,
+     "cell_delta_ps": 12.71461,
+     "first_input_slew_ps": 6.09086,
+     "old_last_output_cap_ff": 2.138825099661367
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net958",
+     "Y": "net5698"
+    },
+    {
+     "A": "net5698",
+     "Y": "net3106"
+    },
+    {
+     "A": "net3106",
+     "Y": "net5699"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 87.71719999999999,
+     "net_cap_pf": 0.000129217,
+     "elmore_upper_ps": 0.011334553432399998
+    },
+    {
+     "resistor_sum_ohm": 145.2354,
+     "net_cap_pf": 0.000301075,
+     "elmore_upper_ps": 0.043726748055
+    },
+    {
+     "resistor_sum_ohm": 469.1296,
+     "net_cap_pf": 0.00159082,
+     "elmore_upper_ps": 0.7463007502719999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0550613014874,
+   "ff_min_cell_delta_ps": 6.87934,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.8242786985126
+  },
+  {
+   "cells": [
+    "hold5467",
+    "hold2999",
+    "hold5468"
+   ],
+   "old_xy": [
+    [
+     78.084,
+     89.1
+    ],
+    [
+     76.896,
+     86.4
+    ],
+    [
+     76.95,
+     84.78
+    ]
+   ],
+   "target_xy": [
+    76.95,
+    84.78
+   ],
+   "id": 50,
+   "ff_nldm": {
+    "chain": 50,
+    "first": "hold5467",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 45.97079,
+     "new_cell_ps": 54.82154,
+     "cell_delta_ps": 8.85075,
+     "first_input_slew_ps": 22.572922,
+     "old_last_output_cap_ff": 3.260501276213949
+    },
+    "fall": {
+     "old_cell_sum_ps": 47.45975,
+     "new_cell_ps": 61.02855,
+     "cell_delta_ps": 13.5688,
+     "first_input_slew_ps": 20.547195,
+     "old_last_output_cap_ff": 3.260501276213949
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net996",
+     "Y": "net5466"
+    },
+    {
+     "A": "net5466",
+     "Y": "net2998"
+    },
+    {
+     "A": "net2998",
+     "Y": "net5467"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 264.4258,
+     "net_cap_pf": 0.000850672,
+     "elmore_upper_ps": 0.2249396241376
+    },
+    {
+     "resistor_sum_ohm": 163.7442,
+     "net_cap_pf": 0.00039466,
+     "elmore_upper_ps": 0.06462328597200001
+    },
+    {
+     "resistor_sum_ohm": 761.6878,
+     "net_cap_pf": 0.0027125,
+     "elmore_upper_ps": 2.0660781575000002
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2895629101096,
+   "ff_min_cell_delta_ps": 8.85075,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.5611870898904
+  },
+  {
+   "cells": [
+    "hold5155",
+    "hold2891",
+    "hold5156"
+   ],
+   "old_xy": [
+    [
+     78.192,
+     81.27
+    ],
+    [
+     77.706,
+     80.46
+    ],
+    [
+     78.03,
+     80.19
+    ]
+   ],
+   "target_xy": [
+    78.03,
+    80.19
+   ],
+   "id": 52,
+   "ff_nldm": {
+    "chain": 52,
+    "first": "hold5155",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 36.26499,
+     "new_cell_ps": 40.65064,
+     "cell_delta_ps": 4.38566,
+     "first_input_slew_ps": 5.650104,
+     "old_last_output_cap_ff": 1.3943224228784445
+    },
+    "fall": {
+     "old_cell_sum_ps": 37.80177,
+     "new_cell_ps": 48.09648,
+     "cell_delta_ps": 10.29471,
+     "first_input_slew_ps": 5.321027,
+     "old_last_output_cap_ff": 1.3943224228784445
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net942",
+     "Y": "net5154"
+    },
+    {
+     "A": "net5154",
+     "Y": "net2890"
+    },
+    {
+     "A": "net2890",
+     "Y": "net5155"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 147.148,
+     "net_cap_pf": 0.000302701,
+     "elmore_upper_ps": 0.044541846748
+    },
+    {
+     "resistor_sum_ohm": 82.9888,
+     "net_cap_pf": 0.000110237,
+     "elmore_upper_ps": 0.0091484363456
+    },
+    {
+     "resistor_sum_ohm": 337.2248,
+     "net_cap_pf": 0.00084632,
+     "elmore_upper_ps": 0.28540009273600003
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.053690283093599994,
+   "ff_min_cell_delta_ps": 4.38566,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.3319697169064
+  },
+  {
+   "cells": [
+    "hold5789",
+    "hold3174",
+    "hold5790"
+   ],
+   "old_xy": [
+    [
+     80.352,
+     70.2
+    ],
+    [
+     81.702,
+     68.31
+    ],
+    [
+     81.162,
+     66.15
+    ]
+   ],
+   "target_xy": [
+    81.162,
+    66.15
+   ],
+   "id": 53,
+   "ff_nldm": {
+    "chain": 53,
+    "first": "hold5789",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.59888,
+     "new_cell_ps": 47.94609,
+     "cell_delta_ps": 6.34721,
+     "first_input_slew_ps": 8.235571,
+     "old_last_output_cap_ff": 2.7023376944589117
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.99578,
+     "new_cell_ps": 55.15032,
+     "cell_delta_ps": 12.15453,
+     "first_input_slew_ps": 8.015174,
+     "old_last_output_cap_ff": 2.7023376944589117
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[776]",
+     "Y": "net5788"
+    },
+    {
+     "A": "net5788",
+     "Y": "net3173"
+    },
+    {
+     "A": "net3173",
+     "Y": "net5789"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 330.4448,
+     "net_cap_pf": 0.000800108,
+     "elmore_upper_ps": 0.2643915280384
+    },
+    {
+     "resistor_sum_ohm": 219.56619999999998,
+     "net_cap_pf": 0.000571385,
+     "elmore_upper_ps": 0.125456833187
+    },
+    {
+     "resistor_sum_ohm": 454.0054,
+     "net_cap_pf": 0.00226096,
+     "elmore_upper_ps": 1.0264880491839998
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.3898483612254,
+   "ff_min_cell_delta_ps": 6.34721,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.9573616387746
+  },
+  {
+   "cells": [
+    "hold5235",
+    "hold2829",
+    "hold5236"
+   ],
+   "old_xy": [
+    [
+     76.086,
+     78.84
+    ],
+    [
+     75.816,
+     79.11
+    ],
+    [
+     74.142,
+     79.65
+    ]
+   ],
+   "target_xy": [
+    74.142,
+    79.65
+   ],
+   "id": 61,
+   "ff_nldm": {
+    "chain": 61,
+    "first": "hold5235",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.74019,
+     "new_cell_ps": 48.9818,
+     "cell_delta_ps": 9.24161,
+     "first_input_slew_ps": 6.230194,
+     "old_last_output_cap_ff": 3.045206677626567
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.10305,
+     "new_cell_ps": 56.1641,
+     "cell_delta_ps": 15.06105,
+     "first_input_slew_ps": 5.821477,
+     "old_last_output_cap_ff": 3.045206677626567
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net901",
+     "Y": "net5234"
+    },
+    {
+     "A": "net5234",
+     "Y": "net2828"
+    },
+    {
+     "A": "net2828",
+     "Y": "net5235"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 90.5331,
+     "net_cap_pf": 0.000134982,
+     "elmore_upper_ps": 0.0122203389042
+    },
+    {
+     "resistor_sum_ohm": 243.8196,
+     "net_cap_pf": 0.000546086,
+     "elmore_upper_ps": 0.1331464700856
+    },
+    {
+     "resistor_sum_ohm": 510.5889,
+     "net_cap_pf": 0.0024972,
+     "elmore_upper_ps": 1.2750426010800002
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.14536680898979998,
+   "ff_min_cell_delta_ps": 9.24161,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.096243191010199
+  },
+  {
+   "cells": [
+    "hold4923",
+    "hold2719",
+    "hold4924"
+   ],
+   "old_xy": [
+    [
+     77.004,
+     73.98
+    ],
+    [
+     78.732,
+     72.63
+    ],
+    [
+     78.624,
+     71.82
+    ]
+   ],
+   "target_xy": [
+    78.624,
+    71.82
+   ],
+   "id": 70,
+   "ff_nldm": {
+    "chain": 70,
+    "first": "hold4923",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.65709,
+     "new_cell_ps": 44.75649,
+     "cell_delta_ps": 5.0994,
+     "first_input_slew_ps": 9.179829,
+     "old_last_output_cap_ff": 2.0094147711745793
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.00494,
+     "new_cell_ps": 51.88236,
+     "cell_delta_ps": 10.87742,
+     "first_input_slew_ps": 8.437621,
+     "old_last_output_cap_ff": 2.0094147711745793
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net861",
+     "Y": "net4922"
+    },
+    {
+     "A": "net4922",
+     "Y": "net2718"
+    },
+    {
+     "A": "net2718",
+     "Y": "net4923"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 235.13260000000002,
+     "net_cap_pf": 0.000666203,
+     "elmore_upper_ps": 0.1566460435178
+    },
+    {
+     "resistor_sum_ohm": 138.4496,
+     "net_cap_pf": 0.000270846,
+     "elmore_upper_ps": 0.0374985203616
+    },
+    {
+     "resistor_sum_ohm": 374.7177,
+     "net_cap_pf": 0.00146141,
+     "elmore_upper_ps": 0.547616193957
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.19414456387940002,
+   "ff_min_cell_delta_ps": 5.0994,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.9052554361206
+  },
+  {
+   "cells": [
+    "hold5111",
+    "hold2861",
+    "hold5112"
+   ],
+   "old_xy": [
+    [
+     80.622,
+     74.52
+    ],
+    [
+     78.894,
+     74.52
+    ],
+    [
+     79.812,
+     72.36
+    ]
+   ],
+   "target_xy": [
+    79.812,
+    72.36
+   ],
+   "id": 72,
+   "ff_nldm": {
+    "chain": 72,
+    "first": "hold5111",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.41193,
+     "new_cell_ps": 44.59655,
+     "cell_delta_ps": 4.18462,
+     "first_input_slew_ps": 10.012184,
+     "old_last_output_cap_ff": 1.9303224347369057
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.71418,
+     "new_cell_ps": 51.67553,
+     "cell_delta_ps": 9.96135,
+     "first_input_slew_ps": 9.181428,
+     "old_last_output_cap_ff": 1.9303224347369057
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net872",
+     "Y": "net5110"
+    },
+    {
+     "A": "net5110",
+     "Y": "net2860"
+    },
+    {
+     "A": "net2860",
+     "Y": "net5111"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 128.3072,
+     "net_cap_pf": 0.000417845,
+     "elmore_upper_ps": 0.053612521984
+    },
+    {
+     "resistor_sum_ohm": 208.04579999999999,
+     "net_cap_pf": 0.000772237,
+     "elmore_upper_ps": 0.1606606644546
+    },
+    {
+     "resistor_sum_ohm": 398.1226,
+     "net_cap_pf": 0.00138232,
+     "elmore_upper_ps": 0.5503328324319999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2142731864386,
+   "ff_min_cell_delta_ps": 4.18462,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.9703468135613997
+  },
+  {
+   "cells": [
+    "hold5055",
+    "hold2765",
+    "hold5056"
+   ],
+   "old_xy": [
+    [
+     75.438,
+     79.92
+    ],
+    [
+     75.222,
+     79.65
+    ],
+    [
+     75.816,
+     78.84
+    ]
+   ],
+   "target_xy": [
+    75.816,
+    78.84
+   ],
+   "id": 74,
+   "ff_nldm": {
+    "chain": 74,
+    "first": "hold5055",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.05075,
+     "new_cell_ps": 43.11317,
+     "cell_delta_ps": 6.06242,
+     "first_input_slew_ps": 5.812776,
+     "old_last_output_cap_ff": 1.8701022040538362
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.55243,
+     "new_cell_ps": 50.4948,
+     "cell_delta_ps": 11.94237,
+     "first_input_slew_ps": 5.464703,
+     "old_last_output_cap_ff": 1.8701022040538362
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net904",
+     "Y": "net5054"
+    },
+    {
+     "A": "net5054",
+     "Y": "net2764"
+    },
+    {
+     "A": "net2764",
+     "Y": "net5055"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 87.8023,
+     "net_cap_pf": 0.000123123,
+     "elmore_upper_ps": 0.0108104825829
+    },
+    {
+     "resistor_sum_ohm": 107.31469999999999,
+     "net_cap_pf": 0.00027904,
+     "elmore_upper_ps": 0.029945093887999995
+    },
+    {
+     "resistor_sum_ohm": 341.8557,
+     "net_cap_pf": 0.0013221,
+     "elmore_upper_ps": 0.45196742097000003
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.040755576470899994,
+   "ff_min_cell_delta_ps": 6.06242,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.0216644235291
+  },
+  {
+   "cells": [
+    "hold5327",
+    "hold2929",
+    "hold5328"
+   ],
+   "old_xy": [
+    [
+     77.382,
+     79.65
+    ],
+    [
+     79.002,
+     79.11
+    ],
+    [
+     77.274,
+     78.3
+    ]
+   ],
+   "target_xy": [
+    77.274,
+    78.3
+   ],
+   "id": 77,
+   "ff_nldm": {
+    "chain": 77,
+    "first": "hold5327",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.57457,
+     "new_cell_ps": 44.80913,
+     "cell_delta_ps": 5.23456,
+     "first_input_slew_ps": 6.955003,
+     "old_last_output_cap_ff": 2.145819897714419
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.92479,
+     "new_cell_ps": 52.07206,
+     "cell_delta_ps": 11.14727,
+     "first_input_slew_ps": 6.454493,
+     "old_last_output_cap_ff": 2.145819897714419
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net900",
+     "Y": "net5326"
+    },
+    {
+     "A": "net5326",
+     "Y": "net2928"
+    },
+    {
+     "A": "net2928",
+     "Y": "net5327"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 168.5937,
+     "net_cap_pf": 0.000441129,
+     "elmore_upper_ps": 0.0743715702873
+    },
+    {
+     "resistor_sum_ohm": 179.8836,
+     "net_cap_pf": 0.000656963,
+     "elmore_upper_ps": 0.1181768695068
+    },
+    {
+     "resistor_sum_ohm": 308.4604,
+     "net_cap_pf": 0.00159782,
+     "elmore_upper_ps": 0.492864196328
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1925484397941,
+   "ff_min_cell_delta_ps": 5.23456,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.0420115602059
+  },
+  {
+   "cells": [
+    "hold5623",
+    "hold3067",
+    "hold5624"
+   ],
+   "old_xy": [
+    [
+     75.654,
+     85.86
+    ],
+    [
+     76.572,
+     83.16
+    ],
+    [
+     76.032,
+     85.32
+    ]
+   ],
+   "target_xy": [
+    76.032,
+    85.32
+   ],
+   "id": 80,
+   "ff_nldm": {
+    "chain": 80,
+    "first": "hold5623",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.72208,
+     "new_cell_ps": 45.83895,
+     "cell_delta_ps": 5.11687,
+     "first_input_slew_ps": 6.469398,
+     "old_last_output_cap_ff": 2.379979190518144
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.02103,
+     "new_cell_ps": 53.10935,
+     "cell_delta_ps": 11.08832,
+     "first_input_slew_ps": 6.029472,
+     "old_last_output_cap_ff": 2.379979190518144
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net984",
+     "Y": "net5622"
+    },
+    {
+     "A": "net5622",
+     "Y": "net3066"
+    },
+    {
+     "A": "net3066",
+     "Y": "net5623"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 226.1748,
+     "net_cap_pf": 0.000805034,
+     "elmore_upper_ps": 0.18207840394320002
+    },
+    {
+     "resistor_sum_ohm": 262.0992,
+     "net_cap_pf": 0.000647764,
+     "elmore_upper_ps": 0.16977842618879999
+    },
+    {
+     "resistor_sum_ohm": 574.2659,
+     "net_cap_pf": 0.00183198,
+     "elmore_upper_ps": 1.052043643482
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.351856830132,
+   "ff_min_cell_delta_ps": 5.11687,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.765013169867999
+  },
+  {
+   "cells": [
+    "hold5855",
+    "hold3266",
+    "hold5856"
+   ],
+   "old_xy": [
+    [
+     79.812,
+     68.04
+    ],
+    [
+     80.892,
+     68.31
+    ],
+    [
+     80.622,
+     68.31
+    ]
+   ],
+   "target_xy": [
+    80.622,
+    68.31
+   ],
+   "id": 81,
+   "ff_nldm": {
+    "chain": 81,
+    "first": "hold5855",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.08037,
+     "new_cell_ps": 41.23082,
+     "cell_delta_ps": 4.15045,
+     "first_input_slew_ps": 8.58435,
+     "old_last_output_cap_ff": 1.3536530889756226
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.68961,
+     "new_cell_ps": 48.56638,
+     "cell_delta_ps": 9.87677,
+     "first_input_slew_ps": 8.296933,
+     "old_last_output_cap_ff": 1.3536530889756226
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[719]",
+     "Y": "net5854"
+    },
+    {
+     "A": "net5854",
+     "Y": "net3265"
+    },
+    {
+     "A": "net3265",
+     "Y": "net5855"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 104.4952,
+     "net_cap_pf": 0.000259891,
+     "elmore_upper_ps": 0.0271573620232
+    },
+    {
+     "resistor_sum_ohm": 86.5909,
+     "net_cap_pf": 0.000142577,
+     "elmore_upper_ps": 0.012345870749299999
+    },
+    {
+     "resistor_sum_ohm": 213.7947,
+     "net_cap_pf": 0.000912272,
+     "elmore_upper_ps": 0.1950389185584
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.039503232772499994,
+   "ff_min_cell_delta_ps": 4.15045,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.1109467672275
+  },
+  {
+   "cells": [
+    "hold4915",
+    "hold2727",
+    "hold4916"
+   ],
+   "old_xy": [
+    [
+     77.544,
+     73.98
+    ],
+    [
+     80.082,
+     76.68
+    ],
+    [
+     79.542,
+     76.95
+    ]
+   ],
+   "target_xy": [
+    79.542,
+    76.95
+   ],
+   "id": 86,
+   "ff_nldm": {
+    "chain": 86,
+    "first": "hold4915",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.88052,
+     "new_cell_ps": 47.00396,
+     "cell_delta_ps": 5.12345,
+     "first_input_slew_ps": 7.273645,
+     "old_last_output_cap_ff": 2.5680571383013158
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.1521,
+     "new_cell_ps": 54.19615,
+     "cell_delta_ps": 11.04406,
+     "first_input_slew_ps": 6.751452,
+     "old_last_output_cap_ff": 2.5680571383013158
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net885",
+     "Y": "net4914"
+    },
+    {
+     "A": "net4914",
+     "Y": "net2726"
+    },
+    {
+     "A": "net2726",
+     "Y": "net4915"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 543.8508,
+     "net_cap_pf": 0.0014374,
+     "elmore_upper_ps": 0.78173113992
+    },
+    {
+     "resistor_sum_ohm": 96.951,
+     "net_cap_pf": 0.000200996,
+     "elmore_upper_ps": 0.019486763195999998
+    },
+    {
+     "resistor_sum_ohm": 535.3867,
+     "net_cap_pf": 0.00202006,
+     "elmore_upper_ps": 1.081513257202
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.8012179031159999,
+   "ff_min_cell_delta_ps": 5.12345,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.322232096884
+  },
+  {
+   "cells": [
+    "hold5547",
+    "hold3031",
+    "hold5548"
+   ],
+   "old_xy": [
+    [
+     78.354,
+     89.1
+    ],
+    [
+     79.272,
+     87.48
+    ],
+    [
+     79.542,
+     88.02
+    ]
+   ],
+   "target_xy": [
+    79.542,
+    88.02
+   ],
+   "id": 87,
+   "ff_nldm": {
+    "chain": 87,
+    "first": "hold5547",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.21943,
+     "new_cell_ps": 42.76529,
+     "cell_delta_ps": 5.54586,
+     "first_input_slew_ps": 6.219811,
+     "old_last_output_cap_ff": 1.777278828316269
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.7047,
+     "new_cell_ps": 50.12665,
+     "cell_delta_ps": 11.42196,
+     "first_input_slew_ps": 5.813301,
+     "old_last_output_cap_ff": 1.777278828316269
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net1013",
+     "Y": "net5546"
+    },
+    {
+     "A": "net5546",
+     "Y": "net3030"
+    },
+    {
+     "A": "net3030",
+     "Y": "net5547"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 176.8824,
+     "net_cap_pf": 0.000360533,
+     "elmore_upper_ps": 0.0637719423192
+    },
+    {
+     "resistor_sum_ohm": 87.6925,
+     "net_cap_pf": 0.00011719,
+     "elmore_upper_ps": 0.010276684074999999
+    },
+    {
+     "resistor_sum_ohm": 241.6567,
+     "net_cap_pf": 0.00122928,
+     "elmore_upper_ps": 0.29706374817599995
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0740486263942,
+   "ff_min_cell_delta_ps": 5.54586,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.4718113736058
+  },
+  {
+   "cells": [
+    "hold5191",
+    "hold2887",
+    "hold5192"
+   ],
+   "old_xy": [
+    [
+     76.032,
+     77.49
+    ],
+    [
+     78.192,
+     77.49
+    ],
+    [
+     78.354,
+     76.68
+    ]
+   ],
+   "target_xy": [
+    78.354,
+    76.68
+   ],
+   "id": 88,
+   "ff_nldm": {
+    "chain": 88,
+    "first": "hold5191",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.35104,
+     "new_cell_ps": 48.69982,
+     "cell_delta_ps": 8.34878,
+     "first_input_slew_ps": 8.330356,
+     "old_last_output_cap_ff": 2.848073524153621
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.67548,
+     "new_cell_ps": 55.78085,
+     "cell_delta_ps": 14.10537,
+     "first_input_slew_ps": 7.687744,
+     "old_last_output_cap_ff": 2.848073524153621
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net873",
+     "Y": "net5190"
+    },
+    {
+     "A": "net5190",
+     "Y": "net2886"
+    },
+    {
+     "A": "net2886",
+     "Y": "net5191"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 145.62619999999998,
+     "net_cap_pf": 0.000504488,
+     "elmore_upper_ps": 0.0734666703856
+    },
+    {
+     "resistor_sum_ohm": 153.79059999999998,
+     "net_cap_pf": 0.000282145,
+     "elmore_upper_ps": 0.04339124883699999
+    },
+    {
+     "resistor_sum_ohm": 731.0363,
+     "net_cap_pf": 0.00230007,
+     "elmore_upper_ps": 1.681434662541
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.11685791922259998,
+   "ff_min_cell_delta_ps": 8.34878,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.2319220807774
+  },
+  {
+   "cells": [
+    "hold5295",
+    "hold2885",
+    "hold5296"
+   ],
+   "old_xy": [
+    [
+     77.112,
+     72.09
+    ],
+    [
+     77.112,
+     73.17
+    ],
+    [
+     76.842,
+     72.09
+    ]
+   ],
+   "target_xy": [
+    76.842,
+    72.09
+   ],
+   "id": 90,
+   "ff_nldm": {
+    "chain": 90,
+    "first": "hold5295",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.10959,
+     "new_cell_ps": 47.36036,
+     "cell_delta_ps": 8.25077,
+     "first_input_slew_ps": 7.173604,
+     "old_last_output_cap_ff": 2.6452358155598468
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.50463,
+     "new_cell_ps": 54.55122,
+     "cell_delta_ps": 14.04659,
+     "first_input_slew_ps": 6.666607,
+     "old_last_output_cap_ff": 2.6452358155598468
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net823",
+     "Y": "net5294"
+    },
+    {
+     "A": "net5294",
+     "Y": "net2884"
+    },
+    {
+     "A": "net2884",
+     "Y": "net5295"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 142.7596,
+     "net_cap_pf": 0.00025447,
+     "elmore_upper_ps": 0.036328035412000005
+    },
+    {
+     "resistor_sum_ohm": 112.0751,
+     "net_cap_pf": 0.000307547,
+     "elmore_upper_ps": 0.0344683607797
+    },
+    {
+     "resistor_sum_ohm": 333.9594,
+     "net_cap_pf": 0.00209723,
+     "elmore_upper_ps": 0.700389672462
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0707963961917,
+   "ff_min_cell_delta_ps": 8.25077,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.1799736038083
+  },
+  {
+   "cells": [
+    "hold5159",
+    "hold2773",
+    "hold5160"
+   ],
+   "old_xy": [
+    [
+     75.006,
+     79.11
+    ],
+    [
+     75.114,
+     80.46
+    ],
+    [
+     73.926,
+     81.0
+    ]
+   ],
+   "target_xy": [
+    73.926,
+    81.0
+   ],
+   "id": 92,
+   "ff_nldm": {
+    "chain": 92,
+    "first": "hold5159",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.53539,
+     "new_cell_ps": 44.76011,
+     "cell_delta_ps": 6.22472,
+     "first_input_slew_ps": 6.331688,
+     "old_last_output_cap_ff": 2.1712895430712544
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.941,
+     "new_cell_ps": 52.05979,
+     "cell_delta_ps": 12.11879,
+     "first_input_slew_ps": 5.884238,
+     "old_last_output_cap_ff": 2.1712895430712544
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net941",
+     "Y": "net5158"
+    },
+    {
+     "A": "net5158",
+     "Y": "net2772"
+    },
+    {
+     "A": "net2772",
+     "Y": "net5159"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 115.9359,
+     "net_cap_pf": 0.000299294,
+     "elmore_upper_ps": 0.0346989192546
+    },
+    {
+     "resistor_sum_ohm": 164.5422,
+     "net_cap_pf": 0.000443557,
+     "elmore_upper_ps": 0.07298384460540001
+    },
+    {
+     "resistor_sum_ohm": 394.8943,
+     "net_cap_pf": 0.00162329,
+     "elmore_upper_ps": 0.641027968247
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.10768276386000002,
+   "ff_min_cell_delta_ps": 6.22472,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.11703723614
+  },
+  {
+   "cells": [
+    "hold5083",
+    "hold2809",
+    "hold5084"
+   ],
+   "old_xy": [
+    [
+     75.6,
+     82.35
+    ],
+    [
+     75.222,
+     81.54
+    ],
+    [
+     73.98,
+     82.35
+    ]
+   ],
+   "target_xy": [
+    73.98,
+    82.35
+   ],
+   "id": 94,
+   "ff_nldm": {
+    "chain": 94,
+    "first": "hold5083",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.77173,
+     "new_cell_ps": 47.28623,
+     "cell_delta_ps": 6.5145,
+     "first_input_slew_ps": 11.849618,
+     "old_last_output_cap_ff": 2.3602774159947137
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.09245,
+     "new_cell_ps": 54.18196,
+     "cell_delta_ps": 12.08951,
+     "first_input_slew_ps": 10.786594,
+     "old_last_output_cap_ff": 2.3602774159947137
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net948",
+     "Y": "net5082"
+    },
+    {
+     "A": "net5082",
+     "Y": "net2808"
+    },
+    {
+     "A": "net2808",
+     "Y": "net5083"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 185.6035,
+     "net_cap_pf": 0.000319915,
+     "elmore_upper_ps": 0.059377343702499995
+    },
+    {
+     "resistor_sum_ohm": 213.1589,
+     "net_cap_pf": 0.000525253,
+     "elmore_upper_ps": 0.1119623517017
+    },
+    {
+     "resistor_sum_ohm": 401.8024,
+     "net_cap_pf": 0.00181228,
+     "elmore_upper_ps": 0.728178453472
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1713396954042,
+   "ff_min_cell_delta_ps": 6.5145,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.3431603045958
+  },
+  {
+   "cells": [
+    "hold5407",
+    "hold2967",
+    "hold5408"
+   ],
+   "old_xy": [
+    [
+     79.812,
+     83.43
+    ],
+    [
+     78.948,
+     82.35
+    ],
+    [
+     79.542,
+     81.54
+    ]
+   ],
+   "target_xy": [
+    79.542,
+    81.54
+   ],
+   "id": 95,
+   "ff_nldm": {
+    "chain": 95,
+    "first": "hold5407",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.08191,
+     "new_cell_ps": 47.49901,
+     "cell_delta_ps": 8.4171,
+     "first_input_slew_ps": 5.79797,
+     "old_last_output_cap_ff": 2.7513203390715226
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.48049,
+     "new_cell_ps": 54.77662,
+     "cell_delta_ps": 14.29613,
+     "first_input_slew_ps": 5.447752,
+     "old_last_output_cap_ff": 2.7513203390715226
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net946",
+     "Y": "net5406"
+    },
+    {
+     "A": "net5406",
+     "Y": "net2966"
+    },
+    {
+     "A": "net2966",
+     "Y": "net5407"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 152.95080000000002,
+     "net_cap_pf": 0.000370455,
+     "elmore_upper_ps": 0.056661388614000004
+    },
+    {
+     "resistor_sum_ohm": 109.7941,
+     "net_cap_pf": 0.000284672,
+     "elmore_upper_ps": 0.0312553060352
+    },
+    {
+     "resistor_sum_ohm": 542.8084,
+     "net_cap_pf": 0.00220332,
+     "elmore_upper_ps": 1.1959806038879999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0879166946492,
+   "ff_min_cell_delta_ps": 8.4171,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.3291833053508
+  },
+  {
+   "cells": [
+    "hold5343",
+    "hold2909",
+    "hold5344"
+   ],
+   "old_xy": [
+    [
+     76.842,
+     73.71
+    ],
+    [
+     76.356,
+     75.06
+    ],
+    [
+     75.384,
+     74.52
+    ]
+   ],
+   "target_xy": [
+    75.384,
+    74.52
+   ],
+   "id": 96,
+   "ff_nldm": {
+    "chain": 96,
+    "first": "hold5343",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.7231,
+     "new_cell_ps": 45.83224,
+     "cell_delta_ps": 6.10914,
+     "first_input_slew_ps": 9.164405,
+     "old_last_output_cap_ff": 2.225890980719095
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.07335,
+     "new_cell_ps": 52.93424,
+     "cell_delta_ps": 11.86088,
+     "first_input_slew_ps": 8.435431,
+     "old_last_output_cap_ff": 2.225890980719095
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net880",
+     "Y": "net5342"
+    },
+    {
+     "A": "net5342",
+     "Y": "net2908"
+    },
+    {
+     "A": "net2908",
+     "Y": "net5343"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 203.2557,
+     "net_cap_pf": 0.000444996,
+     "elmore_upper_ps": 0.0904479734772
+    },
+    {
+     "resistor_sum_ohm": 187.1362,
+     "net_cap_pf": 0.00038514,
+     "elmore_upper_ps": 0.072073636068
+    },
+    {
+     "resistor_sum_ohm": 534.403,
+     "net_cap_pf": 0.00167789,
+     "elmore_upper_ps": 0.8966694496700001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1625216095452,
+   "ff_min_cell_delta_ps": 6.10914,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.9466183904548
+  },
+  {
+   "cells": [
+    "hold4943",
+    "hold2755",
+    "hold4944"
+   ],
+   "old_xy": [
+    [
+     77.598,
+     74.25
+    ],
+    [
+     76.734,
+     73.98
+    ],
+    [
+     78.3,
+     71.82
+    ]
+   ],
+   "target_xy": [
+    78.3,
+    71.82
+   ],
+   "id": 97,
+   "ff_nldm": {
+    "chain": 97,
+    "first": "hold4943",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.69024,
+     "new_cell_ps": 50.0106,
+     "cell_delta_ps": 8.32036,
+     "first_input_slew_ps": 9.016758,
+     "old_last_output_cap_ff": 3.099821456043278
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.94504,
+     "new_cell_ps": 56.97953,
+     "cell_delta_ps": 14.03449,
+     "first_input_slew_ps": 8.307036,
+     "old_last_output_cap_ff": 3.099821456043278
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net850",
+     "Y": "net4942"
+    },
+    {
+     "A": "net4942",
+     "Y": "net2754"
+    },
+    {
+     "A": "net2754",
+     "Y": "net4943"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 110.9698,
+     "net_cap_pf": 0.000289899,
+     "elmore_upper_ps": 0.0321700340502
+    },
+    {
+     "resistor_sum_ohm": 293.9929,
+     "net_cap_pf": 0.000789334,
+     "elmore_upper_ps": 0.23205859172860002
+    },
+    {
+     "resistor_sum_ohm": 651.6287,
+     "net_cap_pf": 0.00255182,
+     "elmore_upper_ps": 1.662839149234
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2642286257788,
+   "ff_min_cell_delta_ps": 8.32036,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.0561313742212
+  },
+  {
+   "cells": [
+    "hold5599",
+    "hold3041",
+    "hold5600"
+   ],
+   "old_xy": [
+    [
+     74.25,
+     86.4
+    ],
+    [
+     74.952,
+     85.59
+    ],
+    [
+     74.142,
+     85.32
+    ]
+   ],
+   "target_xy": [
+    74.142,
+    85.32
+   ],
+   "id": 98,
+   "ff_nldm": {
+    "chain": 98,
+    "first": "hold5599",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.34528,
+     "new_cell_ps": 42.6238,
+     "cell_delta_ps": 5.27852,
+     "first_input_slew_ps": 5.699732,
+     "old_last_output_cap_ff": 1.7782552455426743
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.82728,
+     "new_cell_ps": 50.02575,
+     "cell_delta_ps": 11.19847,
+     "first_input_slew_ps": 5.371194,
+     "old_last_output_cap_ff": 1.7782552455426743
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net974",
+     "Y": "net5598"
+    },
+    {
+     "A": "net5598",
+     "Y": "net3040"
+    },
+    {
+     "A": "net3040",
+     "Y": "net5599"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 172.1449,
+     "net_cap_pf": 0.000346185,
+     "elmore_upper_ps": 0.0595939822065
+    },
+    {
+     "resistor_sum_ohm": 104.4385,
+     "net_cap_pf": 0.00024989,
+     "elmore_upper_ps": 0.026098136765000002
+    },
+    {
+     "resistor_sum_ohm": 427.5268,
+     "net_cap_pf": 0.00123025,
+     "elmore_upper_ps": 0.5259648457
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0856921189715,
+   "ff_min_cell_delta_ps": 5.27852,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.1928278810285
+  },
+  {
+   "cells": [
+    "hold5783",
+    "hold3166",
+    "hold5784"
+   ],
+   "old_xy": [
+    [
+     79.812,
+     71.55
+    ],
+    [
+     79.272,
+     68.31
+    ],
+    [
+     78.732,
+     71.55
+    ]
+   ],
+   "target_xy": [
+    78.732,
+    71.55
+   ],
+   "id": 99,
+   "ff_nldm": {
+    "chain": 99,
+    "first": "hold5783",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 44.94526,
+     "new_cell_ps": 53.58868,
+     "cell_delta_ps": 8.64342,
+     "first_input_slew_ps": 7.889613,
+     "old_last_output_cap_ff": 3.9954971728687303
+    },
+    "fall": {
+     "old_cell_sum_ps": 46.12969,
+     "new_cell_ps": 60.48545,
+     "cell_delta_ps": 14.35577,
+     "first_input_slew_ps": 7.705112,
+     "old_last_output_cap_ff": 3.9954971728687303
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[779]",
+     "Y": "net5782"
+    },
+    {
+     "A": "net5782",
+     "Y": "net3165"
+    },
+    {
+     "A": "net3165",
+     "Y": "net5783"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 255.026,
+     "net_cap_pf": 0.00102581,
+     "elmore_upper_ps": 0.26160822106000003
+    },
+    {
+     "resistor_sum_ohm": 271.305,
+     "net_cap_pf": 0.000968056,
+     "elmore_upper_ps": 0.26263843308
+    },
+    {
+     "resistor_sum_ohm": 783.6504,
+     "net_cap_pf": 0.00355412,
+     "elmore_upper_ps": 2.785187559648
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.52424665414,
+   "ff_min_cell_delta_ps": 8.64342,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.11917334586
+  },
+  {
+   "cells": [
+    "hold5655",
+    "hold3079",
+    "hold5656"
+   ],
+   "old_xy": [
+    [
+     75.114,
+     88.83
+    ],
+    [
+     74.628,
+     86.67
+    ],
+    [
+     75.222,
+     88.29
+    ]
+   ],
+   "target_xy": [
+    75.222,
+    88.29
+   ],
+   "id": 100,
+   "ff_nldm": {
+    "chain": 100,
+    "first": "hold5655",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.75227,
+     "new_cell_ps": 45.68782,
+     "cell_delta_ps": 4.93554,
+     "first_input_slew_ps": 8.676239,
+     "old_last_output_cap_ff": 2.2245785031720855
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.04696,
+     "new_cell_ps": 52.82444,
+     "cell_delta_ps": 10.77748,
+     "first_input_slew_ps": 8.002141,
+     "old_last_output_cap_ff": 2.2245785031720855
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net27",
+     "Y": "net5654"
+    },
+    {
+     "A": "net5654",
+     "Y": "net3078"
+    },
+    {
+     "A": "net3078",
+     "Y": "net5655"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 244.84120000000001,
+     "net_cap_pf": 0.000719548,
+     "elmore_upper_ps": 0.1761749957776
+    },
+    {
+     "resistor_sum_ohm": 221.7442,
+     "net_cap_pf": 0.000578666,
+     "elmore_upper_ps": 0.1283158292372
+    },
+    {
+     "resistor_sum_ohm": 603.7384999999999,
+     "net_cap_pf": 0.00167658,
+     "elmore_upper_ps": 1.01221589433
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.3044908250148,
+   "ff_min_cell_delta_ps": 4.93554,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.6310491749852
+  },
+  {
+   "cells": [
+    "hold5785",
+    "hold3168",
+    "hold5786"
+   ],
+   "old_xy": [
+    [
+     80.892,
+     73.44
+    ],
+    [
+     79.812,
+     72.63
+    ],
+    [
+     79.272,
+     69.93
+    ]
+   ],
+   "target_xy": [
+    79.272,
+    69.93
+   ],
+   "id": 104,
+   "ff_nldm": {
+    "chain": 104,
+    "first": "hold5785",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.83995,
+     "new_cell_ps": 44.32584,
+     "cell_delta_ps": 4.48589,
+     "first_input_slew_ps": 7.837708,
+     "old_last_output_cap_ff": 1.9989337972815113
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.3155,
+     "new_cell_ps": 51.64532,
+     "cell_delta_ps": 10.32982,
+     "first_input_slew_ps": 7.658458,
+     "old_last_output_cap_ff": 1.9989337972815113
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[788]",
+     "Y": "net5784"
+    },
+    {
+     "A": "net5784",
+     "Y": "net3167"
+    },
+    {
+     "A": "net3167",
+     "Y": "net5785"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 200.88670000000002,
+     "net_cap_pf": 0.000414335,
+     "elmore_upper_ps": 0.0832343908445
+    },
+    {
+     "resistor_sum_ohm": 280.5557,
+     "net_cap_pf": 0.000763873,
+     "elmore_upper_ps": 0.21430892422609998
+    },
+    {
+     "resistor_sum_ohm": 344.3756,
+     "net_cap_pf": 0.00155755,
+     "elmore_upper_ps": 0.53638221578
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2975433150706,
+   "ff_min_cell_delta_ps": 4.48589,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.1883466849294
+  },
+  {
+   "cells": [
+    "hold5639",
+    "hold3077",
+    "hold5640"
+   ],
+   "old_xy": [
+    [
+     75.654,
+     89.91
+    ],
+    [
+     74.412,
+     87.21
+    ],
+    [
+     74.034,
+     88.83
+    ]
+   ],
+   "target_xy": [
+    74.034,
+    88.83
+   ],
+   "id": 105,
+   "ff_nldm": {
+    "chain": 105,
+    "first": "hold5639",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 42.03476,
+     "new_cell_ps": 50.18568,
+     "cell_delta_ps": 8.15092,
+     "first_input_slew_ps": 6.866166,
+     "old_last_output_cap_ff": 3.2803322232613668
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.25427,
+     "new_cell_ps": 57.25495,
+     "cell_delta_ps": 14.00067,
+     "first_input_slew_ps": 6.380547,
+     "old_last_output_cap_ff": 3.2803322232613668
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net32",
+     "Y": "net5638"
+    },
+    {
+     "A": "net5638",
+     "Y": "net3076"
+    },
+    {
+     "A": "net3076",
+     "Y": "net5639"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 253.9913,
+     "net_cap_pf": 0.000984568,
+     "elmore_upper_ps": 0.2500717062584
+    },
+    {
+     "resistor_sum_ohm": 166.5507,
+     "net_cap_pf": 0.000394101,
+     "elmore_upper_ps": 0.0656377974207
+    },
+    {
+     "resistor_sum_ohm": 772.4736,
+     "net_cap_pf": 0.00273233,
+     "elmore_upper_ps": 2.110652791488
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.3157095036791,
+   "ff_min_cell_delta_ps": 8.15092,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.835210496320899
+  },
+  {
+   "cells": [
+    "hold5435",
+    "hold2959",
+    "hold5436"
+   ],
+   "old_xy": [
+    [
+     80.082,
+     85.32
+    ],
+    [
+     78.084,
+     85.32
+    ],
+    [
+     78.894,
+     84.78
+    ]
+   ],
+   "target_xy": [
+    78.894,
+    84.78
+   ],
+   "id": 107,
+   "ff_nldm": {
+    "chain": 107,
+    "first": "hold5435",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.30382,
+     "new_cell_ps": 48.72085,
+     "cell_delta_ps": 8.41703,
+     "first_input_slew_ps": 6.969599,
+     "old_last_output_cap_ff": 2.9370147361497674
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.63065,
+     "new_cell_ps": 55.87993,
+     "cell_delta_ps": 14.24928,
+     "first_input_slew_ps": 6.477386,
+     "old_last_output_cap_ff": 2.9370147361497674
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net979",
+     "Y": "net5434"
+    },
+    {
+     "A": "net5434",
+     "Y": "net2958"
+    },
+    {
+     "A": "net2958",
+     "Y": "net5435"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 155.6921,
+     "net_cap_pf": 0.000570353,
+     "elmore_upper_ps": 0.08879945631130001
+    },
+    {
+     "resistor_sum_ohm": 177.8827,
+     "net_cap_pf": 0.000311877,
+     "elmore_upper_ps": 0.0554775228279
+    },
+    {
+     "resistor_sum_ohm": 455.133,
+     "net_cap_pf": 0.00238901,
+     "elmore_upper_ps": 1.08731728833
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1442769791392,
+   "ff_min_cell_delta_ps": 8.41703,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.2727530208608
+  },
+  {
+   "cells": [
+    "hold5103",
+    "hold2833",
+    "hold5104"
+   ],
+   "old_xy": [
+    [
+     74.79,
+     78.84
+    ],
+    [
+     73.548,
+     76.95
+    ],
+    [
+     74.844,
+     77.22
+    ]
+   ],
+   "target_xy": [
+    74.844,
+    77.22
+   ],
+   "id": 116,
+   "ff_nldm": {
+    "chain": 116,
+    "first": "hold5103",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.97715,
+     "new_cell_ps": 45.22493,
+     "cell_delta_ps": 5.24778,
+     "first_input_slew_ps": 6.858789,
+     "old_last_output_cap_ff": 2.234693770591503
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.31035,
+     "new_cell_ps": 52.48463,
+     "cell_delta_ps": 11.17428,
+     "first_input_slew_ps": 6.37231,
+     "old_last_output_cap_ff": 2.234693770591503
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net890",
+     "Y": "net5102"
+    },
+    {
+     "A": "net5102",
+     "Y": "net2832"
+    },
+    {
+     "A": "net2832",
+     "Y": "net5103"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 236.1111,
+     "net_cap_pf": 0.000821424,
+     "elmore_upper_ps": 0.19394732420639998
+    },
+    {
+     "resistor_sum_ohm": 180.4808,
+     "net_cap_pf": 0.000385244,
+     "elmore_upper_ps": 0.0695291453152
+    },
+    {
+     "resistor_sum_ohm": 348.471,
+     "net_cap_pf": 0.00168669,
+     "elmore_upper_ps": 0.58776255099
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2634764695216,
+   "ff_min_cell_delta_ps": 5.24778,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.9843035304784
+  },
+  {
+   "cells": [
+    "hold5411",
+    "hold2985",
+    "hold5412"
+   ],
+   "old_xy": [
+    [
+     78.624,
+     81.54
+    ],
+    [
+     77.058,
+     79.92
+    ],
+    [
+     78.624,
+     77.76
+    ]
+   ],
+   "target_xy": [
+    78.624,
+    77.76
+   ],
+   "id": 120,
+   "ff_nldm": {
+    "chain": 120,
+    "first": "hold5411",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 42.79298,
+     "new_cell_ps": 50.33452,
+     "cell_delta_ps": 7.54153,
+     "first_input_slew_ps": 4.839172,
+     "old_last_output_cap_ff": 3.446733750969985
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.9976,
+     "new_cell_ps": 57.51565,
+     "cell_delta_ps": 13.51804,
+     "first_input_slew_ps": 4.637649,
+     "old_last_output_cap_ff": 3.446733750969985
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net936",
+     "Y": "net5410"
+    },
+    {
+     "A": "net5410",
+     "Y": "net2984"
+    },
+    {
+     "A": "net2984",
+     "Y": "net5411"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 345.7335,
+     "net_cap_pf": 0.000935345,
+     "elmore_upper_ps": 0.3233801005575
+    },
+    {
+     "resistor_sum_ohm": 203.4751,
+     "net_cap_pf": 0.0008927,
+     "elmore_upper_ps": 0.18164222177
+    },
+    {
+     "resistor_sum_ohm": 573.8875,
+     "net_cap_pf": 0.00289873,
+     "elmore_upper_ps": 1.6635449128750002
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.5050223223275,
+   "ff_min_cell_delta_ps": 7.54153,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.0365076776725
+  },
+  {
+   "cells": [
+    "hold5515",
+    "hold3009",
+    "hold5516"
+   ],
+   "old_xy": [
+    [
+     75.492,
+     82.89
+    ],
+    [
+     75.816,
+     84.24
+    ],
+    [
+     75.33,
+     84.78
+    ]
+   ],
+   "target_xy": [
+    75.33,
+    84.78
+   ],
+   "id": 122,
+   "ff_nldm": {
+    "chain": 122,
+    "first": "hold5515",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.82829,
+     "new_cell_ps": 46.422,
+     "cell_delta_ps": 7.59371,
+     "first_input_slew_ps": 6.354761,
+     "old_last_output_cap_ff": 2.503491416856358
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.23166,
+     "new_cell_ps": 53.68643,
+     "cell_delta_ps": 13.45477,
+     "first_input_slew_ps": 5.930587,
+     "old_last_output_cap_ff": 2.503491416856358
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net1003",
+     "Y": "net5514"
+    },
+    {
+     "A": "net5514",
+     "Y": "net3008"
+    },
+    {
+     "A": "net3008",
+     "Y": "net5515"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 128.9417,
+     "net_cap_pf": 0.000371362,
+     "elmore_upper_ps": 0.0478840475954
+    },
+    {
+     "resistor_sum_ohm": 108.5507,
+     "net_cap_pf": 0.00027318,
+     "elmore_upper_ps": 0.029653880226
+    },
+    {
+     "resistor_sum_ohm": 522.2276,
+     "net_cap_pf": 0.00195549,
+     "elmore_upper_ps": 1.021210849524
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0775379278214,
+   "ff_min_cell_delta_ps": 7.59371,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.5161720721786
+  },
+  {
+   "cells": [
+    "hold5589",
+    "hold3060",
+    "hold5590"
+   ],
+   "old_xy": [
+    [
+     81.162,
+     88.29
+    ],
+    [
+     79.812,
+     86.94
+    ],
+    [
+     78.084,
+     86.94
+    ]
+   ],
+   "target_xy": [
+    78.084,
+    86.94
+   ],
+   "id": 135,
+   "ff_nldm": {
+    "chain": 135,
+    "first": "hold5589",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.52027,
+     "new_cell_ps": 44.93461,
+     "cell_delta_ps": 5.41434,
+     "first_input_slew_ps": 7.476388,
+     "old_last_output_cap_ff": 2.1414718658536986
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.01517,
+     "new_cell_ps": 52.26543,
+     "cell_delta_ps": 11.25026,
+     "first_input_slew_ps": 7.353045,
+     "old_last_output_cap_ff": 2.1414718658536986
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[965]",
+     "Y": "net5588"
+    },
+    {
+     "A": "net5588",
+     "Y": "net3059"
+    },
+    {
+     "A": "net3059",
+     "Y": "net5589"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 323.0852,
+     "net_cap_pf": 0.000580083,
+     "elmore_upper_ps": 0.1874162320716
+    },
+    {
+     "resistor_sum_ohm": 128.8988,
+     "net_cap_pf": 0.000428784,
+     "elmore_upper_ps": 0.055269743059199995
+    },
+    {
+     "resistor_sum_ohm": 500.3659,
+     "net_cap_pf": 0.00170009,
+     "elmore_upper_ps": 0.850667062931
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.24268597513079998,
+   "ff_min_cell_delta_ps": 5.41434,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.1716540248692
+  },
+  {
+   "cells": [
+    "hold5431",
+    "hold2987",
+    "hold5432"
+   ],
+   "old_xy": [
+    [
+     78.138,
+     82.35
+    ],
+    [
+     79.002,
+     82.89
+    ],
+    [
+     79.002,
+     83.43
+    ]
+   ],
+   "target_xy": [
+    79.002,
+    83.43
+   ],
+   "id": 137,
+   "ff_nldm": {
+    "chain": 137,
+    "first": "hold5431",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.59888,
+     "new_cell_ps": 50.49368,
+     "cell_delta_ps": 10.8948,
+     "first_input_slew_ps": 6.608381,
+     "old_last_output_cap_ff": 3.367914370898574
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.96052,
+     "new_cell_ps": 57.55683,
+     "cell_delta_ps": 16.5963,
+     "first_input_slew_ps": 6.151418,
+     "old_last_output_cap_ff": 3.367914370898574
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net939",
+     "Y": "net5430"
+    },
+    {
+     "A": "net5430",
+     "Y": "net2986"
+    },
+    {
+     "A": "net2986",
+     "Y": "net5431"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 144.3322,
+     "net_cap_pf": 0.000244924,
+     "elmore_upper_ps": 0.0353504197528
+    },
+    {
+     "resistor_sum_ohm": 94.3372,
+     "net_cap_pf": 0.000150327,
+     "elmore_upper_ps": 0.014181428264400001
+    },
+    {
+     "resistor_sum_ohm": 504.9947,
+     "net_cap_pf": 0.00281991,
+     "elmore_upper_ps": 1.424039604477
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.049531848017199995,
+   "ff_min_cell_delta_ps": 10.8948,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 10.8452681519828
+  },
+  {
+   "cells": [
+    "hold5663",
+    "hold3083",
+    "hold5664"
+   ],
+   "old_xy": [
+    [
+     74.79,
+     87.75
+    ],
+    [
+     75.33,
+     87.75
+    ],
+    [
+     74.304,
+     90.45
+    ]
+   ],
+   "target_xy": [
+    74.304,
+    90.45
+   ],
+   "id": 139,
+   "ff_nldm": {
+    "chain": 139,
+    "first": "hold5663",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.10048,
+     "new_cell_ps": 48.10598,
+     "cell_delta_ps": 7.0055,
+     "first_input_slew_ps": 10.449176,
+     "old_last_output_cap_ff": 2.60748885119357
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.39936,
+     "new_cell_ps": 55.06406,
+     "cell_delta_ps": 12.66471,
+     "first_input_slew_ps": 9.587606,
+     "old_last_output_cap_ff": 2.60748885119357
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net1021",
+     "Y": "net5662"
+    },
+    {
+     "A": "net5662",
+     "Y": "net3082"
+    },
+    {
+     "A": "net3082",
+     "Y": "net5663"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 44.5617,
+     "net_cap_pf": 7.70238e-05,
+     "elmore_upper_ps": 0.00343231146846
+    },
+    {
+     "resistor_sum_ohm": 219.79739999999998,
+     "net_cap_pf": 0.000893566,
+     "elmore_upper_ps": 0.19640348352839998
+    },
+    {
+     "resistor_sum_ohm": 424.7905,
+     "net_cap_pf": 0.00205949,
+     "elmore_upper_ps": 0.8748517868450001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.19983579499685997,
+   "ff_min_cell_delta_ps": 7.0055,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.80566420500314
+  },
+  {
+   "cells": [
+    "hold5507",
+    "hold3005",
+    "hold5508"
+   ],
+   "old_xy": [
+    [
+     76.14,
+     86.13
+    ],
+    [
+     76.572,
+     85.59
+    ],
+    [
+     76.41,
+     85.05
+    ]
+   ],
+   "target_xy": [
+    76.41,
+    85.05
+   ],
+   "id": 142,
+   "ff_nldm": {
+    "chain": 142,
+    "first": "hold5507",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 36.02521,
+     "new_cell_ps": 40.44631,
+     "cell_delta_ps": 4.4211,
+     "first_input_slew_ps": 5.815424,
+     "old_last_output_cap_ff": 1.3525469698296395
+    },
+    "fall": {
+     "old_cell_sum_ps": 37.57396,
+     "new_cell_ps": 47.88127,
+     "cell_delta_ps": 10.30731,
+     "first_input_slew_ps": 5.46167,
+     "old_last_output_cap_ff": 1.3525469698296395
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net990",
+     "Y": "net5506"
+    },
+    {
+     "A": "net5506",
+     "Y": "net3004"
+    },
+    {
+     "A": "net3004",
+     "Y": "net5507"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 94.2238,
+     "net_cap_pf": 0.000173128,
+     "elmore_upper_ps": 0.016312778046400002
+    },
+    {
+     "resistor_sum_ohm": 93.0975,
+     "net_cap_pf": 0.000149456,
+     "elmore_upper_ps": 0.013913979959999998
+    },
+    {
+     "resistor_sum_ohm": 290.3261,
+     "net_cap_pf": 0.000804545,
+     "elmore_upper_ps": 0.2335804121245
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.030226758006399998,
+   "ff_min_cell_delta_ps": 4.4211,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.3908732419936
+  },
+  {
+   "cells": [
+    "hold5853",
+    "hold3258",
+    "hold5854"
+   ],
+   "old_xy": [
+    [
+     80.082,
+     70.47
+    ],
+    [
+     79.164,
+     71.01
+    ],
+    [
+     80.622,
+     67.77
+    ]
+   ],
+   "target_xy": [
+    80.622,
+    67.77
+   ],
+   "id": 143,
+   "ff_nldm": {
+    "chain": 143,
+    "first": "hold5853",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.61115,
+     "new_cell_ps": 44.71479,
+     "cell_delta_ps": 4.10364,
+     "first_input_slew_ps": 8.510688,
+     "old_last_output_cap_ff": 2.0388771180720515
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.04243,
+     "new_cell_ps": 51.97786,
+     "cell_delta_ps": 9.93543,
+     "first_input_slew_ps": 8.237761,
+     "old_last_output_cap_ff": 2.0388771180720515
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[770]",
+     "Y": "net5852"
+    },
+    {
+     "A": "net5852",
+     "Y": "net3257"
+    },
+    {
+     "A": "net3257",
+     "Y": "net5853"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 194.0437,
+     "net_cap_pf": 0.000427545,
+     "elmore_upper_ps": 0.0829624137165
+    },
+    {
+     "resistor_sum_ohm": 312.2988,
+     "net_cap_pf": 0.000941912,
+     "elmore_upper_ps": 0.29415798730560005
+    },
+    {
+     "resistor_sum_ohm": 497.8144,
+     "net_cap_pf": 0.0015975,
+     "elmore_upper_ps": 0.795258504
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.37712040102210004,
+   "ff_min_cell_delta_ps": 4.10364,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.7265195989779003
+  },
+  {
+   "cells": [
+    "hold4995",
+    "hold2753",
+    "hold4996"
+   ],
+   "old_xy": [
+    [
+     78.732,
+     80.46
+    ],
+    [
+     78.3,
+     80.19
+    ],
+    [
+     78.3,
+     80.73
+    ]
+   ],
+   "target_xy": [
+    78.3,
+    80.73
+   ],
+   "id": 148,
+   "ff_nldm": {
+    "chain": 148,
+    "first": "hold4995",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.46352,
+     "new_cell_ps": 44.4442,
+     "cell_delta_ps": 6.98068,
+     "first_input_slew_ps": 6.683986,
+     "old_last_output_cap_ff": 2.087945524770261
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.93946,
+     "new_cell_ps": 51.73375,
+     "cell_delta_ps": 12.79429,
+     "first_input_slew_ps": 6.216308,
+     "old_last_output_cap_ff": 2.087945524770261
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net918",
+     "Y": "net4994"
+    },
+    {
+     "A": "net4994",
+     "Y": "net2752"
+    },
+    {
+     "A": "net2752",
+     "Y": "net4995"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 91.5461,
+     "net_cap_pf": 0.000163444,
+     "elmore_upper_ps": 0.014962660768399999
+    },
+    {
+     "resistor_sum_ohm": 91.1283,
+     "net_cap_pf": 0.00015421,
+     "elmore_upper_ps": 0.014052895143
+    },
+    {
+     "resistor_sum_ohm": 260.1533,
+     "net_cap_pf": 0.00153994,
+     "elmore_upper_ps": 0.400620472802
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0290155559114,
+   "ff_min_cell_delta_ps": 6.98068,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.951664444088601
+  },
+  {
+   "cells": [
+    "hold5063",
+    "hold2735",
+    "hold5064"
+   ],
+   "old_xy": [
+    [
+     71.982,
+     82.08
+    ],
+    [
+     73.71,
+     81.27
+    ],
+    [
+     74.52,
+     82.08
+    ]
+   ],
+   "target_xy": [
+    74.52,
+    82.08
+   ],
+   "id": 157,
+   "ff_nldm": {
+    "chain": 157,
+    "first": "hold5063",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.95591,
+     "new_cell_ps": 43.01262,
+     "cell_delta_ps": 4.0567,
+     "first_input_slew_ps": 9.177814,
+     "old_last_output_cap_ff": 1.660015164007283
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.33858,
+     "new_cell_ps": 50.18561,
+     "cell_delta_ps": 9.84704,
+     "first_input_slew_ps": 8.445407,
+     "old_last_output_cap_ff": 1.660015164007283
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net938",
+     "Y": "net5062"
+    },
+    {
+     "A": "net5062",
+     "Y": "net2734"
+    },
+    {
+     "A": "net2734",
+     "Y": "net5063"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 239.1652,
+     "net_cap_pf": 0.000565918,
+     "elmore_upper_ps": 0.1353478916536
+    },
+    {
+     "resistor_sum_ohm": 146.6698,
+     "net_cap_pf": 0.000316891,
+     "elmore_upper_ps": 0.046478339591800005
+    },
+    {
+     "resistor_sum_ohm": 358.4498,
+     "net_cap_pf": 0.00111201,
+     "elmore_upper_ps": 0.398599762098
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1818262312454,
+   "ff_min_cell_delta_ps": 4.0567,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.8748737687546
+  },
+  {
+   "cells": [
+    "hold5247",
+    "hold2911",
+    "hold5248"
+   ],
+   "old_xy": [
+    [
+     77.004,
+     78.3
+    ],
+    [
+     76.95,
+     77.76
+    ],
+    [
+     76.734,
+     79.38
+    ]
+   ],
+   "target_xy": [
+    76.734,
+    79.38
+   ],
+   "id": 158,
+   "ff_nldm": {
+    "chain": 158,
+    "first": "hold5247",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.04407,
+     "new_cell_ps": 43.52972,
+     "cell_delta_ps": 5.48565,
+     "first_input_slew_ps": 7.513474,
+     "old_last_output_cap_ff": 1.8575858099958993
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.47736,
+     "new_cell_ps": 50.78891,
+     "cell_delta_ps": 11.31155,
+     "first_input_slew_ps": 6.950421,
+     "old_last_output_cap_ff": 1.8575858099958993
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net913",
+     "Y": "net5246"
+    },
+    {
+     "A": "net5246",
+     "Y": "net2910"
+    },
+    {
+     "A": "net2910",
+     "Y": "net5247"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 91.0149,
+     "net_cap_pf": 0.00015223,
+     "elmore_upper_ps": 0.013855198227
+    },
+    {
+     "resistor_sum_ohm": 133.9535,
+     "net_cap_pf": 0.000447104,
+     "elmore_upper_ps": 0.059891145663999994
+    },
+    {
+     "resistor_sum_ohm": 326.4503,
+     "net_cap_pf": 0.00130958,
+     "elmore_upper_ps": 0.42751278387400005
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.07374634389099999,
+   "ff_min_cell_delta_ps": 5.48565,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.411903656109
+  },
+  {
+   "cells": [
+    "hold5151",
+    "hold2799",
+    "hold5152"
+   ],
+   "old_xy": [
+    [
+     75.87,
+     75.33
+    ],
+    [
+     76.194,
+     73.98
+    ],
+    [
+     76.734,
+     74.52
+    ]
+   ],
+   "target_xy": [
+    76.734,
+    74.52
+   ],
+   "id": 161,
+   "ff_nldm": {
+    "chain": 161,
+    "first": "hold5151",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.44369,
+     "new_cell_ps": 47.56489,
+     "cell_delta_ps": 9.1212,
+     "first_input_slew_ps": 4.881458,
+     "old_last_output_cap_ff": 2.8167510929107262
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.89685,
+     "new_cell_ps": 54.91076,
+     "cell_delta_ps": 15.01391,
+     "first_input_slew_ps": 4.675141,
+     "old_last_output_cap_ff": 2.8167510929107262
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net845",
+     "Y": "net5150"
+    },
+    {
+     "A": "net5150",
+     "Y": "net2798"
+    },
+    {
+     "A": "net2798",
+     "Y": "net5151"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 147.4067,
+     "net_cap_pf": 0.000289022,
+     "elmore_upper_ps": 0.0426037792474
+    },
+    {
+     "resistor_sum_ohm": 97.8543,
+     "net_cap_pf": 0.000178648,
+     "elmore_upper_ps": 0.0174814749864
+    },
+    {
+     "resistor_sum_ohm": 664.9612999999999,
+     "net_cap_pf": 0.00226875,
+     "elmore_upper_ps": 1.5086309493749999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0600852542338,
+   "ff_min_cell_delta_ps": 9.1212,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.0611147457662
+  },
+  {
+   "cells": [
+    "hold5003",
+    "hold2745",
+    "hold5004"
+   ],
+   "old_xy": [
+    [
+     78.624,
+     70.74
+    ],
+    [
+     78.354,
+     72.9
+    ],
+    [
+     78.678,
+     69.93
+    ]
+   ],
+   "target_xy": [
+    78.678,
+    69.93
+   ],
+   "id": 166,
+   "ff_nldm": {
+    "chain": 166,
+    "first": "hold5003",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.3949,
+     "new_cell_ps": 49.16835,
+     "cell_delta_ps": 7.77345,
+     "first_input_slew_ps": 5.605294,
+     "old_last_output_cap_ff": 3.1288295815244327
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.66683,
+     "new_cell_ps": 56.37635,
+     "cell_delta_ps": 13.70952,
+     "first_input_slew_ps": 5.284297,
+     "old_last_output_cap_ff": 3.1288295815244327
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net818",
+     "Y": "net5002"
+    },
+    {
+     "A": "net5002",
+     "Y": "net2744"
+    },
+    {
+     "A": "net2744",
+     "Y": "net5003"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 219.5831,
+     "net_cap_pf": 0.00058533,
+     "elmore_upper_ps": 0.12852857592300002
+    },
+    {
+     "resistor_sum_ohm": 221.3664,
+     "net_cap_pf": 0.000786614,
+     "elmore_upper_ps": 0.17412990936960002
+    },
+    {
+     "resistor_sum_ohm": 540.381,
+     "net_cap_pf": 0.00258083,
+     "elmore_upper_ps": 1.39463149623
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.30265848529260003,
+   "ff_min_cell_delta_ps": 7.77345,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.4707915147074
+  },
+  {
+   "cells": [
+    "hold5187",
+    "hold2801",
+    "hold5188"
+   ],
+   "old_xy": [
+    [
+     75.168,
+     81.81
+    ],
+    [
+     73.602,
+     82.62
+    ],
+    [
+     75.762,
+     85.32
+    ]
+   ],
+   "target_xy": [
+    75.762,
+    85.32
+   ],
+   "id": 170,
+   "ff_nldm": {
+    "chain": 170,
+    "first": "hold5187",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 42.11302,
+     "new_cell_ps": 48.73934,
+     "cell_delta_ps": 6.62632,
+     "first_input_slew_ps": 5.828343,
+     "old_last_output_cap_ff": 3.015710449411328
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.35296,
+     "new_cell_ps": 55.96193,
+     "cell_delta_ps": 12.60897,
+     "first_input_slew_ps": 5.477255,
+     "old_last_output_cap_ff": 3.015710449411328
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net951",
+     "Y": "net5186"
+    },
+    {
+     "A": "net5186",
+     "Y": "net2800"
+    },
+    {
+     "A": "net2800",
+     "Y": "net5187"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 163.9091,
+     "net_cap_pf": 0.000536785,
+     "elmore_upper_ps": 0.0879839462435
+    },
+    {
+     "resistor_sum_ohm": 308.7536,
+     "net_cap_pf": 0.00114679,
+     "elmore_upper_ps": 0.354075540944
+    },
+    {
+     "resistor_sum_ohm": 562.0982,
+     "net_cap_pf": 0.00246771,
+     "elmore_upper_ps": 1.3870953491220002
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.4420594871875,
+   "ff_min_cell_delta_ps": 6.62632,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.1842605128125
+  },
+  {
+   "cells": [
+    "hold4999",
+    "hold2781",
+    "hold5000"
+   ],
+   "old_xy": [
+    [
+     76.842,
+     73.17
+    ],
+    [
+     78.246,
+     76.41
+    ],
+    [
+     77.058,
+     74.25
+    ]
+   ],
+   "target_xy": [
+    77.058,
+    74.25
+   ],
+   "id": 172,
+   "ff_nldm": {
+    "chain": 172,
+    "first": "hold4999",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 42.30783,
+     "new_cell_ps": 47.3094,
+     "cell_delta_ps": 5.00157,
+     "first_input_slew_ps": 7.478723,
+     "old_last_output_cap_ff": 2.6176716694902864
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.52226,
+     "new_cell_ps": 54.4775,
+     "cell_delta_ps": 10.95524,
+     "first_input_slew_ps": 6.91958,
+     "old_last_output_cap_ff": 2.6176716694902864
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net844",
+     "Y": "net4998"
+    },
+    {
+     "A": "net4998",
+     "Y": "net2780"
+    },
+    {
+     "A": "net2780",
+     "Y": "net4999"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 311.8206,
+     "net_cap_pf": 0.000937802,
+     "elmore_upper_ps": 0.2924259823212
+    },
+    {
+     "resistor_sum_ohm": 273.4041,
+     "net_cap_pf": 0.000858473,
+     "elmore_upper_ps": 0.23471003793930004
+    },
+    {
+     "resistor_sum_ohm": 529.3522,
+     "net_cap_pf": 0.00206967,
+     "elmore_upper_ps": 1.095584367774
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.5271360202605,
+   "ff_min_cell_delta_ps": 5.00157,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.4744339797395
+  },
+  {
+   "cells": [
+    "hold5593",
+    "hold3038",
+    "hold5594"
+   ],
+   "old_xy": [
+    [
+     80.622,
+     87.48
+    ],
+    [
+     80.622,
+     86.94
+    ],
+    [
+     77.328,
+     86.67
+    ]
+   ],
+   "target_xy": [
+    77.328,
+    86.67
+   ],
+   "id": 177,
+   "ff_nldm": {
+    "chain": 177,
+    "first": "hold5593",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.15358,
+     "new_cell_ps": 44.07467,
+     "cell_delta_ps": 4.92109,
+     "first_input_slew_ps": 7.785164,
+     "old_last_output_cap_ff": 1.9515325631756875
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.67292,
+     "new_cell_ps": 51.40442,
+     "cell_delta_ps": 10.73151,
+     "first_input_slew_ps": 7.614803,
+     "old_last_output_cap_ff": 1.9515325631756875
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[961]",
+     "Y": "net5592"
+    },
+    {
+     "A": "net5592",
+     "Y": "net3037"
+    },
+    {
+     "A": "net3037",
+     "Y": "net5593"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 86.56620000000001,
+     "net_cap_pf": 0.000116012,
+     "elmore_upper_ps": 0.010042717994400001
+    },
+    {
+     "resistor_sum_ohm": 307.8765,
+     "net_cap_pf": 0.000817044,
+     "elmore_upper_ps": 0.251548647066
+    },
+    {
+     "resistor_sum_ohm": 365.8649,
+     "net_cap_pf": 0.00151015,
+     "elmore_upper_ps": 0.5525108787349999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2615913650604,
+   "ff_min_cell_delta_ps": 4.92109,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.659498634939601
+  },
+  {
+   "cells": [
+    "hold5733",
+    "hold3120",
+    "hold5734"
+   ],
+   "old_xy": [
+    [
+     80.892,
+     90.18
+    ],
+    [
+     77.112,
+     89.91
+    ],
+    [
+     74.142,
+     87.21
+    ]
+   ],
+   "target_xy": [
+    74.142,
+    87.21
+   ],
+   "id": 179,
+   "ff_nldm": {
+    "chain": 179,
+    "first": "hold5733",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 44.78828,
+     "new_cell_ps": 50.73345,
+     "cell_delta_ps": 5.94517,
+     "first_input_slew_ps": 7.974401,
+     "old_last_output_cap_ff": 3.3339085392885113
+    },
+    "fall": {
+     "old_cell_sum_ps": 46.0141,
+     "new_cell_ps": 57.80663,
+     "cell_delta_ps": 11.79253,
+     "first_input_slew_ps": 7.77585,
+     "old_last_output_cap_ff": 3.3339085392885113
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[1017]",
+     "Y": "net5732"
+    },
+    {
+     "A": "net5732",
+     "Y": "net3119"
+    },
+    {
+     "A": "net3119",
+     "Y": "net5733"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 228.9804,
+     "net_cap_pf": 0.000949599,
+     "elmore_upper_ps": 0.2174395588596
+    },
+    {
+     "resistor_sum_ohm": 323.2511,
+     "net_cap_pf": 0.00133212,
+     "elmore_upper_ps": 0.430609255332
+    },
+    {
+     "resistor_sum_ohm": 623.1003,
+     "net_cap_pf": 0.00289253,
+     "elmore_upper_ps": 1.8023363107589998
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.6480488141916,
+   "ff_min_cell_delta_ps": 5.94517,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.2971211858084
+  },
+  {
+   "cells": [
+    "hold5075",
+    "hold2805",
+    "hold5076"
+   ],
+   "old_xy": [
+    [
+     77.004,
+     75.6
+    ],
+    [
+     77.112,
+     74.52
+    ],
+    [
+     76.464,
+     75.6
+    ]
+   ],
+   "target_xy": [
+    76.464,
+    75.6
+   ],
+   "id": 180,
+   "ff_nldm": {
+    "chain": 180,
+    "first": "hold5075",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.24962,
+     "new_cell_ps": 42.01355,
+     "cell_delta_ps": 4.76393,
+     "first_input_slew_ps": 6.337568,
+     "old_last_output_cap_ff": 1.6197679701480179
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.72689,
+     "new_cell_ps": 49.38522,
+     "cell_delta_ps": 10.65832,
+     "first_input_slew_ps": 5.91614,
+     "old_last_output_cap_ff": 1.6197679701480179
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net853",
+     "Y": "net5074"
+    },
+    {
+     "A": "net5074",
+     "Y": "net2804"
+    },
+    {
+     "A": "net2804",
+     "Y": "net5075"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 105.2358,
+     "net_cap_pf": 0.000221843,
+     "elmore_upper_ps": 0.0233458255794
+    },
+    {
+     "resistor_sum_ohm": 159.3393,
+     "net_cap_pf": 0.000358554,
+     "elmore_upper_ps": 0.057131743372200006
+    },
+    {
+     "resistor_sum_ohm": 327.8969,
+     "net_cap_pf": 0.00107177,
+     "elmore_upper_ps": 0.3514300605130001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0804775689516,
+   "ff_min_cell_delta_ps": 4.76393,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.6834524310484005
+  },
+  {
+   "cells": [
+    "hold5315",
+    "hold2917",
+    "hold5316"
+   ],
+   "old_xy": [
+    [
+     75.006,
+     78.03
+    ],
+    [
+     74.574,
+     77.22
+    ],
+    [
+     74.844,
+     76.14
+    ]
+   ],
+   "target_xy": [
+    74.844,
+    76.14
+   ],
+   "id": 182,
+   "ff_nldm": {
+    "chain": 182,
+    "first": "hold5315",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.39343,
+     "new_cell_ps": 43.30664,
+     "cell_delta_ps": 5.91321,
+     "first_input_slew_ps": 5.485483,
+     "old_last_output_cap_ff": 1.9274473931661171
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.87636,
+     "new_cell_ps": 50.70559,
+     "cell_delta_ps": 11.82923,
+     "first_input_slew_ps": 5.179575,
+     "old_last_output_cap_ff": 1.9274473931661171
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net871",
+     "Y": "net5314"
+    },
+    {
+     "A": "net5314",
+     "Y": "net2916"
+    },
+    {
+     "A": "net2916",
+     "Y": "net5315"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 140.2628,
+     "net_cap_pf": 0.000321446,
+     "elmore_upper_ps": 0.0450869160088
+    },
+    {
+     "resistor_sum_ohm": 136.2851,
+     "net_cap_pf": 0.000223573,
+     "elmore_upper_ps": 0.030469668662299998
+    },
+    {
+     "resistor_sum_ohm": 384.4013,
+     "net_cap_pf": 0.00137945,
+     "elmore_upper_ps": 0.5302623732849999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.07555658467109999,
+   "ff_min_cell_delta_ps": 5.91321,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.837653415328901
+  },
+  {
+   "cells": [
+    "hold5459",
+    "hold2989",
+    "hold5460"
+   ],
+   "old_xy": [
+    [
+     79.272,
+     81.54
+    ],
+    [
+     79.812,
+     82.62
+    ],
+    [
+     79.11,
+     81.81
+    ]
+   ],
+   "target_xy": [
+    79.11,
+    81.81
+   ],
+   "id": 183,
+   "ff_nldm": {
+    "chain": 183,
+    "first": "hold5459",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.49586,
+     "new_cell_ps": 45.19285,
+     "cell_delta_ps": 6.69698,
+     "first_input_slew_ps": 5.438181,
+     "old_last_output_cap_ff": 2.3088093649656374
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.92391,
+     "new_cell_ps": 52.55188,
+     "cell_delta_ps": 12.62797,
+     "first_input_slew_ps": 5.143677,
+     "old_last_output_cap_ff": 2.3088093649656374
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net962",
+     "Y": "net5458"
+    },
+    {
+     "A": "net5458",
+     "Y": "net2988"
+    },
+    {
+     "A": "net2988",
+     "Y": "net5459"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 165.3536,
+     "net_cap_pf": 0.000384883,
+     "elmore_upper_ps": 0.0636417896288
+    },
+    {
+     "resistor_sum_ohm": 149.4562,
+     "net_cap_pf": 0.00036427,
+     "elmore_upper_ps": 0.054442409973999996
+    },
+    {
+     "resistor_sum_ohm": 348.66429999999997,
+     "net_cap_pf": 0.00176081,
+     "elmore_upper_ps": 0.6139315860829999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1180841996028,
+   "ff_min_cell_delta_ps": 6.69698,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.5788958003972
+  },
+  {
+   "cells": [
+    "hold5335",
+    "hold2923",
+    "hold5336"
+   ],
+   "old_xy": [
+    [
+     77.22,
+     86.13
+    ],
+    [
+     76.302,
+     85.59
+    ],
+    [
+     77.49,
+     88.02
+    ]
+   ],
+   "target_xy": [
+    77.49,
+    88.02
+   ],
+   "id": 185,
+   "ff_nldm": {
+    "chain": 185,
+    "first": "hold5335",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.9206,
+     "new_cell_ps": 49.66527,
+     "cell_delta_ps": 8.74467,
+     "first_input_slew_ps": 6.617782,
+     "old_last_output_cap_ff": 3.1769611697863773
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.20787,
+     "new_cell_ps": 56.78208,
+     "cell_delta_ps": 14.57421,
+     "first_input_slew_ps": 6.163136,
+     "old_last_output_cap_ff": 3.1769611697863773
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net980",
+     "Y": "net5334"
+    },
+    {
+     "A": "net5334",
+     "Y": "net2922"
+    },
+    {
+     "A": "net2922",
+     "Y": "net5335"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 151.793,
+     "net_cap_pf": 0.000363865,
+     "elmore_upper_ps": 0.055232159945000005
+    },
+    {
+     "resistor_sum_ohm": 201.3587,
+     "net_cap_pf": 0.000672303,
+     "elmore_upper_ps": 0.13537405808609998
+    },
+    {
+     "resistor_sum_ohm": 540.7871,
+     "net_cap_pf": 0.00262896,
+     "elmore_upper_ps": 1.421707654416
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.19060621803109998,
+   "ff_min_cell_delta_ps": 8.74467,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.5540637819689
+  },
+  {
+   "cells": [
+    "hold5475",
+    "hold3003",
+    "hold5476"
+   ],
+   "old_xy": [
+    [
+     79.002,
+     87.21
+    ],
+    [
+     79.272,
+     87.21
+    ],
+    [
+     79.65,
+     86.13
+    ]
+   ],
+   "target_xy": [
+    79.65,
+    86.13
+   ],
+   "id": 186,
+   "ff_nldm": {
+    "chain": 186,
+    "first": "hold5475",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 35.55161,
+     "new_cell_ps": 40.18886,
+     "cell_delta_ps": 4.63725,
+     "first_input_slew_ps": 5.344333,
+     "old_last_output_cap_ff": 1.3317095358862976
+    },
+    "fall": {
+     "old_cell_sum_ps": 37.13615,
+     "new_cell_ps": 47.66101,
+     "cell_delta_ps": 10.52486,
+     "first_input_slew_ps": 5.060022,
+     "old_last_output_cap_ff": 1.3317095358862976
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net989",
+     "Y": "net5474"
+    },
+    {
+     "A": "net5474",
+     "Y": "net3002"
+    },
+    {
+     "A": "net3002",
+     "Y": "net5475"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 37.0741,
+     "net_cap_pf": 1.19987e-05,
+     "elmore_upper_ps": 0.00044484100367000003
+    },
+    {
+     "resistor_sum_ohm": 104.5309,
+     "net_cap_pf": 0.000188237,
+     "elmore_upper_ps": 0.019676583023300002
+    },
+    {
+     "resistor_sum_ohm": 177.5684,
+     "net_cap_pf": 0.000783707,
+     "elmore_upper_ps": 0.1391615980588
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.02012142402697,
+   "ff_min_cell_delta_ps": 4.63725,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.61712857597303
+  },
+  {
+   "cells": [
+    "hold4927",
+    "hold2731",
+    "hold4928"
+   ],
+   "old_xy": [
+    [
+     79.542,
+     75.06
+    ],
+    [
+     79.65,
+     74.79
+    ],
+    [
+     79.002,
+     74.25
+    ]
+   ],
+   "target_xy": [
+    79.002,
+    74.25
+   ],
+   "id": 187,
+   "ff_nldm": {
+    "chain": 187,
+    "first": "hold4927",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.58351,
+     "new_cell_ps": 52.40614,
+     "cell_delta_ps": 10.82264,
+     "first_input_slew_ps": 12.4991,
+     "old_last_output_cap_ff": 3.4156872407086576
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.88131,
+     "new_cell_ps": 59.06413,
+     "cell_delta_ps": 16.18282,
+     "first_input_slew_ps": 11.394938,
+     "old_last_output_cap_ff": 3.4156872407086576
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net839",
+     "Y": "net4926"
+    },
+    {
+     "A": "net4926",
+     "Y": "net2730"
+    },
+    {
+     "A": "net2730",
+     "Y": "net4927"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 83.8638,
+     "net_cap_pf": 8.26148e-05,
+     "elmore_upper_ps": 0.0069283910642399995
+    },
+    {
+     "resistor_sum_ohm": 261.8716,
+     "net_cap_pf": 0.000367998,
+     "elmore_upper_ps": 0.09636822505680001
+    },
+    {
+     "resistor_sum_ohm": 612.1852,
+     "net_cap_pf": 0.00286769,
+     "elmore_upper_ps": 1.7555573761880001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.10329661612104,
+   "ff_min_cell_delta_ps": 10.82264,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 10.71934338387896
+  },
+  {
+   "cells": [
+    "hold5399",
+    "hold2949",
+    "hold5400"
+   ],
+   "old_xy": [
+    [
+     80.082,
+     86.4
+    ],
+    [
+     78.894,
+     86.4
+    ],
+    [
+     79.272,
+     85.05
+    ]
+   ],
+   "target_xy": [
+    79.272,
+    85.05
+   ],
+   "id": 194,
+   "ff_nldm": {
+    "chain": 194,
+    "first": "hold5399",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.56338,
+     "new_cell_ps": 43.60519,
+     "cell_delta_ps": 5.04181,
+     "first_input_slew_ps": 10.41699,
+     "old_last_output_cap_ff": 1.70779375128974
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.00516,
+     "new_cell_ps": 50.70137,
+     "cell_delta_ps": 10.69621,
+     "first_input_slew_ps": 9.631373,
+     "old_last_output_cap_ff": 1.70779375128974
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net966",
+     "Y": "net5398"
+    },
+    {
+     "A": "net5398",
+     "Y": "net2948"
+    },
+    {
+     "A": "net2948",
+     "Y": "net5399"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 111.7277,
+     "net_cap_pf": 0.000255876,
+     "elmore_upper_ps": 0.028588436965199998
+    },
+    {
+     "resistor_sum_ohm": 116.3574,
+     "net_cap_pf": 0.000291787,
+     "elmore_upper_ps": 0.0339515766738
+    },
+    {
+     "resistor_sum_ohm": 273.1172,
+     "net_cap_pf": 0.00115979,
+     "elmore_upper_ps": 0.316758597388
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.062540013639,
+   "ff_min_cell_delta_ps": 5.04181,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.9792699863609995
+  },
+  {
+   "cells": [
+    "hold4979",
+    "hold2721",
+    "hold4980"
+   ],
+   "old_xy": [
+    [
+     77.49,
+     78.57
+    ],
+    [
+     75.384,
+     79.38
+    ],
+    [
+     75.924,
+     79.38
+    ]
+   ],
+   "target_xy": [
+    75.924,
+    79.38
+   ],
+   "id": 195,
+   "ff_nldm": {
+    "chain": 195,
+    "first": "hold4979",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.28732,
+     "new_cell_ps": 42.42569,
+     "cell_delta_ps": 4.13837,
+     "first_input_slew_ps": 7.312053,
+     "old_last_output_cap_ff": 1.6475010992899428
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.70659,
+     "new_cell_ps": 49.72473,
+     "cell_delta_ps": 10.01814,
+     "first_input_slew_ps": 6.772112,
+     "old_last_output_cap_ff": 1.6475010992899428
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net903",
+     "Y": "net4978"
+    },
+    {
+     "A": "net4978",
+     "Y": "net2720"
+    },
+    {
+     "A": "net2720",
+     "Y": "net4979"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 264.1926,
+     "net_cap_pf": 0.000757176,
+     "elmore_upper_ps": 0.20004029609760002
+    },
+    {
+     "resistor_sum_ohm": 81.7208,
+     "net_cap_pf": 9.02408e-05,
+     "elmore_upper_ps": 0.00737455036864
+    },
+    {
+     "resistor_sum_ohm": 402.9542,
+     "net_cap_pf": 0.0010995,
+     "elmore_upper_ps": 0.4430481429
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.20741484646624,
+   "ff_min_cell_delta_ps": 4.13837,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.93095515353376
+  },
+  {
+   "cells": [
+    "hold5487",
+    "hold2993",
+    "hold5488"
+   ],
+   "old_xy": [
+    [
+     78.894,
+     84.24
+    ],
+    [
+     78.624,
+     82.62
+    ],
+    [
+     79.812,
+     83.16
+    ]
+   ],
+   "target_xy": [
+    79.812,
+    83.16
+   ],
+   "id": 209,
+   "ff_nldm": {
+    "chain": 209,
+    "first": "hold5487",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.67371,
+     "new_cell_ps": 48.017,
+     "cell_delta_ps": 8.34329,
+     "first_input_slew_ps": 6.024222,
+     "old_last_output_cap_ff": 2.842407085515281
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.04024,
+     "new_cell_ps": 55.26714,
+     "cell_delta_ps": 14.2269,
+     "first_input_slew_ps": 5.647171,
+     "old_last_output_cap_ff": 2.842407085515281
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net952",
+     "Y": "net5486"
+    },
+    {
+     "A": "net5486",
+     "Y": "net2992"
+    },
+    {
+     "A": "net2992",
+     "Y": "net5487"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 183.8483,
+     "net_cap_pf": 0.000455902,
+     "elmore_upper_ps": 0.0838168076666
+    },
+    {
+     "resistor_sum_ohm": 188.274,
+     "net_cap_pf": 0.000348474,
+     "elmore_upper_ps": 0.065608593876
+    },
+    {
+     "resistor_sum_ohm": 545.9096,
+     "net_cap_pf": 0.00229441,
+     "elmore_upper_ps": 1.252540445336
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1494254015426,
+   "ff_min_cell_delta_ps": 8.34329,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.193864598457399
+  },
+  {
+   "cells": [
+    "hold5591",
+    "hold3061",
+    "hold5592"
+   ],
+   "old_xy": [
+    [
+     74.844,
+     86.94
+    ],
+    [
+     74.088,
+     82.08
+    ],
+    [
+     74.574,
+     86.94
+    ]
+   ],
+   "target_xy": [
+    74.574,
+    86.94
+   ],
+   "id": 211,
+   "ff_nldm": {
+    "chain": 211,
+    "first": "hold5591",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 45.42448,
+     "new_cell_ps": 50.46131,
+     "cell_delta_ps": 5.03684,
+     "first_input_slew_ps": 7.798735,
+     "old_last_output_cap_ff": 3.282837111435548
+    },
+    "fall": {
+     "old_cell_sum_ps": 46.49582,
+     "new_cell_ps": 57.46575,
+     "cell_delta_ps": 10.96992,
+     "first_input_slew_ps": 7.220128,
+     "old_last_output_cap_ff": 3.282837111435548
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net1004",
+     "Y": "net5590"
+    },
+    {
+     "A": "net5590",
+     "Y": "net3060"
+    },
+    {
+     "A": "net3060",
+     "Y": "net5591"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 297.3951,
+     "net_cap_pf": 0.00140707,
+     "elmore_upper_ps": 0.41845572335700004
+    },
+    {
+     "resistor_sum_ohm": 343.73,
+     "net_cap_pf": 0.00116008,
+     "elmore_upper_ps": 0.3987542984
+    },
+    {
+     "resistor_sum_ohm": 731.2716,
+     "net_cap_pf": 0.00273484,
+     "elmore_upper_ps": 1.999910822544
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.817210021757,
+   "ff_min_cell_delta_ps": 5.03684,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.219629978243
+  },
+  {
+   "cells": [
+    "hold4967",
+    "hold2771",
+    "hold4968"
+   ],
+   "old_xy": [
+    [
+     76.518,
+     81.81
+    ],
+    [
+     75.276,
+     81.0
+    ],
+    [
+     74.952,
+     81.54
+    ]
+   ],
+   "target_xy": [
+    74.952,
+    81.54
+   ],
+   "id": 213,
+   "ff_nldm": {
+    "chain": 213,
+    "first": "hold4967",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.24493,
+     "new_cell_ps": 47.2621,
+     "cell_delta_ps": 8.01717,
+     "first_input_slew_ps": 5.81043,
+     "old_last_output_cap_ff": 2.7030557666373416
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.6359,
+     "new_cell_ps": 54.54421,
+     "cell_delta_ps": 13.90831,
+     "first_input_slew_ps": 5.457504,
+     "old_last_output_cap_ff": 2.7030557666373416
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net940",
+     "Y": "net4966"
+    },
+    {
+     "A": "net4966",
+     "Y": "net2770"
+    },
+    {
+     "A": "net2770",
+     "Y": "net4967"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 245.5767,
+     "net_cap_pf": 0.000574516,
+     "elmore_upper_ps": 0.14108774337719998
+    },
+    {
+     "resistor_sum_ohm": 97.3195,
+     "net_cap_pf": 0.000168033,
+     "elmore_upper_ps": 0.016352887543500002
+    },
+    {
+     "resistor_sum_ohm": 681.6626,
+     "net_cap_pf": 0.00215505,
+     "elmore_upper_ps": 1.46901698613
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1574406309207,
+   "ff_min_cell_delta_ps": 8.01717,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.8597293690793
+  },
+  {
+   "cells": [
+    "hold4939",
+    "hold2763",
+    "hold4940"
+   ],
+   "old_xy": [
+    [
+     77.328,
+     75.06
+    ],
+    [
+     78.084,
+     77.22
+    ],
+    [
+     77.814,
+     75.33
+    ]
+   ],
+   "target_xy": [
+    77.814,
+    75.33
+   ],
+   "id": 216,
+   "ff_nldm": {
+    "chain": 216,
+    "first": "hold4939",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.33151,
+     "new_cell_ps": 45.27182,
+     "cell_delta_ps": 4.94031,
+     "first_input_slew_ps": 5.567016,
+     "old_last_output_cap_ff": 2.3173542333065424
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.65963,
+     "new_cell_ps": 52.61913,
+     "cell_delta_ps": 10.9595,
+     "first_input_slew_ps": 5.251339,
+     "old_last_output_cap_ff": 2.3173542333065424
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net883",
+     "Y": "net4938"
+    },
+    {
+     "A": "net4938",
+     "Y": "net2762"
+    },
+    {
+     "A": "net2762",
+     "Y": "net4939"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 324.8656,
+     "net_cap_pf": 0.000818223,
+     "elmore_upper_ps": 0.26581250582879995
+    },
+    {
+     "resistor_sum_ohm": 190.6165,
+     "net_cap_pf": 0.000628122,
+     "elmore_upper_ps": 0.11973041721299998
+    },
+    {
+     "resistor_sum_ohm": 335.1268,
+     "net_cap_pf": 0.00176935,
+     "elmore_upper_ps": 0.59295660358
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.38554292304179993,
+   "ff_min_cell_delta_ps": 4.94031,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.5547670769582
+  },
+  {
+   "cells": [
+    "hold5375",
+    "hold2945",
+    "hold5376"
+   ],
+   "old_xy": [
+    [
+     76.086,
+     78.57
+    ],
+    [
+     76.248,
+     79.92
+    ],
+    [
+     77.112,
+     75.33
+    ]
+   ],
+   "target_xy": [
+    77.112,
+    75.33
+   ],
+   "id": 224,
+   "ff_nldm": {
+    "chain": 224,
+    "first": "hold5375",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 44.01319,
+     "new_cell_ps": 54.24114,
+     "cell_delta_ps": 10.22795,
+     "first_input_slew_ps": 8.476707,
+     "old_last_output_cap_ff": 4.107131879747157
+    },
+    "fall": {
+     "old_cell_sum_ps": 45.1109,
+     "new_cell_ps": 60.96285,
+     "cell_delta_ps": 15.85196,
+     "first_input_slew_ps": 7.79883,
+     "old_last_output_cap_ff": 4.107131879747157
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net915",
+     "Y": "net5374"
+    },
+    {
+     "A": "net5374",
+     "Y": "net2944"
+    },
+    {
+     "A": "net2944",
+     "Y": "net5375"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 123.4234,
+     "net_cap_pf": 0.000351257,
+     "elmore_upper_ps": 0.0433533332138
+    },
+    {
+     "resistor_sum_ohm": 347.8669,
+     "net_cap_pf": 0.00113745,
+     "elmore_upper_ps": 0.39568120540499996
+    },
+    {
+     "resistor_sum_ohm": 824.3573,
+     "net_cap_pf": 0.00355913,
+     "elmore_upper_ps": 2.9339947971490004
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.43903453861879993,
+   "ff_min_cell_delta_ps": 10.22795,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.7889154613812
+  },
+  {
+   "cells": [
+    "hold5099",
+    "hold2787",
+    "hold5100"
+   ],
+   "old_xy": [
+    [
+     79.38,
+     76.41
+    ],
+    [
+     78.948,
+     76.41
+    ],
+    [
+     78.354,
+     73.98
+    ]
+   ],
+   "target_xy": [
+    78.354,
+    73.98
+   ],
+   "id": 232,
+   "ff_nldm": {
+    "chain": 232,
+    "first": "hold5099",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.8773,
+     "new_cell_ps": 47.36712,
+     "cell_delta_ps": 6.48981,
+     "first_input_slew_ps": 12.388279,
+     "old_last_output_cap_ff": 2.344563896088963
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.20234,
+     "new_cell_ps": 54.2423,
+     "cell_delta_ps": 12.03996,
+     "first_input_slew_ps": 11.272822,
+     "old_last_output_cap_ff": 2.344563896088963
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net866",
+     "Y": "net5098"
+    },
+    {
+     "A": "net5098",
+     "Y": "net2786"
+    },
+    {
+     "A": "net2786",
+     "Y": "net5099"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 89.265,
+     "net_cap_pf": 0.000149351,
+     "elmore_upper_ps": 0.013331817014999999
+    },
+    {
+     "resistor_sum_ohm": 204.2508,
+     "net_cap_pf": 0.000685132,
+     "elmore_upper_ps": 0.1399387591056
+    },
+    {
+     "resistor_sum_ohm": 467.0594,
+     "net_cap_pf": 0.00179656,
+     "elmore_upper_ps": 0.8391002356639999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1532705761206,
+   "ff_min_cell_delta_ps": 6.48981,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.3365394238794
+  },
+  {
+   "cells": [
+    "hold5119",
+    "hold2863",
+    "hold5120"
+   ],
+   "old_xy": [
+    [
+     78.894,
+     76.14
+    ],
+    [
+     79.272,
+     76.14
+    ],
+    [
+     79.272,
+     75.6
+    ]
+   ],
+   "target_xy": [
+    79.272,
+    75.6
+   ],
+   "id": 235,
+   "ff_nldm": {
+    "chain": 235,
+    "first": "hold5119",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 35.32803,
+     "new_cell_ps": 39.48075,
+     "cell_delta_ps": 4.15272,
+     "first_input_slew_ps": 5.455091,
+     "old_last_output_cap_ff": 1.2085788978894374
+    },
+    "fall": {
+     "old_cell_sum_ps": 36.92131,
+     "new_cell_ps": 46.94981,
+     "cell_delta_ps": 10.0285,
+     "first_input_slew_ps": 5.153379,
+     "old_last_output_cap_ff": 1.2085788978894374
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net912",
+     "Y": "net5118"
+    },
+    {
+     "A": "net5118",
+     "Y": "net2862"
+    },
+    {
+     "A": "net2862",
+     "Y": "net5119"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 40.2831,
+     "net_cap_pf": 5.50207e-05,
+     "elmore_upper_ps": 0.0022164043601699997
+    },
+    {
+     "resistor_sum_ohm": 88.87559999999999,
+     "net_cap_pf": 0.000121106,
+     "elmore_upper_ps": 0.010763368413599999
+    },
+    {
+     "resistor_sum_ohm": 263.6909,
+     "net_cap_pf": 0.000660577,
+     "elmore_upper_ps": 0.1741881436493
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.012979772773769998,
+   "ff_min_cell_delta_ps": 4.15272,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.1397402272262305
+  },
+  {
+   "cells": [
+    "hold5799",
+    "hold3198",
+    "hold5800"
+   ],
+   "old_xy": [
+    [
+     80.082,
+     67.77
+    ],
+    [
+     81.162,
+     65.61
+    ],
+    [
+     80.082,
+     66.15
+    ]
+   ],
+   "target_xy": [
+    80.082,
+    66.15
+   ],
+   "id": 242,
+   "ff_nldm": {
+    "chain": 242,
+    "first": "hold5799",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.26928,
+     "new_cell_ps": 43.41104,
+     "cell_delta_ps": 4.14176,
+     "first_input_slew_ps": 8.438751,
+     "old_last_output_cap_ff": 1.781553803585554
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.76114,
+     "new_cell_ps": 50.71112,
+     "cell_delta_ps": 9.94998,
+     "first_input_slew_ps": 8.171953,
+     "old_last_output_cap_ff": 1.781553803585554
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[756]",
+     "Y": "net5798"
+    },
+    {
+     "A": "net5798",
+     "Y": "net3197"
+    },
+    {
+     "A": "net3197",
+     "Y": "net5799"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 198.05599999999998,
+     "net_cap_pf": 0.000645827,
+     "elmore_upper_ps": 0.127909912312
+    },
+    {
+     "resistor_sum_ohm": 156.9413,
+     "net_cap_pf": 0.000378,
+     "elmore_upper_ps": 0.05932381140000001
+    },
+    {
+     "resistor_sum_ohm": 384.7838,
+     "net_cap_pf": 0.00134017,
+     "elmore_upper_ps": 0.5156757052459999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.187233723712,
+   "ff_min_cell_delta_ps": 4.14176,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.9545262762879996
+  },
+  {
+   "cells": [
+    "hold4947",
+    "hold2733",
+    "hold4948"
+   ],
+   "old_xy": [
+    [
+     77.922,
+     77.49
+    ],
+    [
+     76.68,
+     78.57
+    ],
+    [
+     78.354,
+     79.92
+    ]
+   ],
+   "target_xy": [
+    78.354,
+    79.92
+   ],
+   "id": 243,
+   "ff_nldm": {
+    "chain": 243,
+    "first": "hold4947",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 42.17295,
+     "new_cell_ps": 52.21558,
+     "cell_delta_ps": 10.04263,
+     "first_input_slew_ps": 5.298348,
+     "old_last_output_cap_ff": 3.8489761436347645
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.38756,
+     "new_cell_ps": 59.24434,
+     "cell_delta_ps": 15.85678,
+     "first_input_slew_ps": 5.020617,
+     "old_last_output_cap_ff": 3.8489761436347645
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net910",
+     "Y": "net4946"
+    },
+    {
+     "A": "net4946",
+     "Y": "net2732"
+    },
+    {
+     "A": "net2732",
+     "Y": "net4947"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 252.2364,
+     "net_cap_pf": 0.000618926,
+     "elmore_upper_ps": 0.15611566610640001
+    },
+    {
+     "resistor_sum_ohm": 199.3734,
+     "net_cap_pf": 0.000692742,
+     "elmore_upper_ps": 0.1381143278628
+    },
+    {
+     "resistor_sum_ohm": 794.0261,
+     "net_cap_pf": 0.00330097,
+     "elmore_upper_ps": 2.621056335317
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2942299939692,
+   "ff_min_cell_delta_ps": 10.04263,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.748400006030801
+  },
+  {
+   "cells": [
+    "hold5917",
+    "hold3308",
+    "hold5918"
+   ],
+   "old_xy": [
+    [
+     80.352,
+     65.34
+    ],
+    [
+     79.812,
+     65.34
+    ],
+    [
+     77.544,
+     65.34
+    ]
+   ],
+   "target_xy": [
+    77.544,
+    65.34
+   ],
+   "id": 244,
+   "ff_nldm": {
+    "chain": 244,
+    "first": "hold5917",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.11204,
+     "new_cell_ps": 44.45813,
+     "cell_delta_ps": 5.34609,
+     "first_input_slew_ps": 7.559832,
+     "old_last_output_cap_ff": 2.041179777130809
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.63285,
+     "new_cell_ps": 51.79527,
+     "cell_delta_ps": 11.16242,
+     "first_input_slew_ps": 7.426263,
+     "old_last_output_cap_ff": 2.041179777130809
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[715]",
+     "Y": "net5916"
+    },
+    {
+     "A": "net5916",
+     "Y": "net3307"
+    },
+    {
+     "A": "net3307",
+     "Y": "net5917"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 94.1919,
+     "net_cap_pf": 0.000173086,
+     "elmore_upper_ps": 0.016303299203400002
+    },
+    {
+     "resistor_sum_ohm": 220.0447,
+     "net_cap_pf": 0.000726389,
+     "elmore_upper_ps": 0.1598380495883
+    },
+    {
+     "resistor_sum_ohm": 346.8914,
+     "net_cap_pf": 0.0015998,
+     "elmore_upper_ps": 0.5549568617199999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.17614134879170001,
+   "ff_min_cell_delta_ps": 5.34609,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.1699486512083
+  },
+  {
+   "cells": [
+    "hold5491",
+    "hold2995",
+    "hold5492"
+   ],
+   "old_xy": [
+    [
+     76.464,
+     83.7
+    ],
+    [
+     77.382,
+     82.62
+    ],
+    [
+     77.382,
+     84.51
+    ]
+   ],
+   "target_xy": [
+    77.382,
+    84.51
+   ],
+   "id": 246,
+   "ff_nldm": {
+    "chain": 246,
+    "first": "hold5491",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.33681,
+     "new_cell_ps": 46.85721,
+     "cell_delta_ps": 7.5204,
+     "first_input_slew_ps": 6.137865,
+     "old_last_output_cap_ff": 2.603162630431162
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.71548,
+     "new_cell_ps": 54.12646,
+     "cell_delta_ps": 13.41098,
+     "first_input_slew_ps": 5.743115,
+     "old_last_output_cap_ff": 2.603162630431162
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net983",
+     "Y": "net5490"
+    },
+    {
+     "A": "net5490",
+     "Y": "net2994"
+    },
+    {
+     "A": "net2994",
+     "Y": "net5491"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 125.5591,
+     "net_cap_pf": 0.000349135,
+     "elmore_upper_ps": 0.0438370763785
+    },
+    {
+     "resistor_sum_ohm": 175.6464,
+     "net_cap_pf": 0.000461698,
+     "elmore_upper_ps": 0.0810955915872
+    },
+    {
+     "resistor_sum_ohm": 377.2262,
+     "net_cap_pf": 0.00205516,
+     "elmore_upper_ps": 0.775260197192
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1249326679657,
+   "ff_min_cell_delta_ps": 7.5204,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.3954673320343005
+  },
+  {
+   "cells": [
+    "hold5815",
+    "hold3218",
+    "hold5816"
+   ],
+   "old_xy": [
+    [
+     80.622,
+     67.23
+    ],
+    [
+     80.892,
+     64.53
+    ],
+    [
+     80.082,
+     66.96
+    ]
+   ],
+   "target_xy": [
+    80.082,
+    66.96
+   ],
+   "id": 248,
+   "ff_nldm": {
+    "chain": 248,
+    "first": "hold5815",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 43.49956,
+     "new_cell_ps": 52.85401,
+     "cell_delta_ps": 9.35445,
+     "first_input_slew_ps": 7.902647,
+     "old_last_output_cap_ff": 3.825837321182081
+    },
+    "fall": {
+     "old_cell_sum_ps": 44.76702,
+     "new_cell_ps": 59.7955,
+     "cell_delta_ps": 15.02848,
+     "first_input_slew_ps": 7.71073,
+     "old_last_output_cap_ff": 3.825837321182081
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[734]",
+     "Y": "net5814"
+    },
+    {
+     "A": "net5814",
+     "Y": "net3217"
+    },
+    {
+     "A": "net3217",
+     "Y": "net5815"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 246.772,
+     "net_cap_pf": 0.000711633,
+     "elmore_upper_ps": 0.175611098676
+    },
+    {
+     "resistor_sum_ohm": 259.2612,
+     "net_cap_pf": 0.00081305,
+     "elmore_upper_ps": 0.21079231865999998
+    },
+    {
+     "resistor_sum_ohm": 589.5283000000001,
+     "net_cap_pf": 0.00338446,
+     "elmore_upper_ps": 1.9952349502180002
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.386403417336,
+   "ff_min_cell_delta_ps": 9.35445,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.968046582664
+  },
+  {
+   "cells": [
+    "hold5443",
+    "hold2979",
+    "hold5444"
+   ],
+   "old_xy": [
+    [
+     80.082,
+     84.78
+    ],
+    [
+     79.812,
+     85.32
+    ],
+    [
+     79.812,
+     85.86
+    ]
+   ],
+   "target_xy": [
+    79.812,
+    85.86
+   ],
+   "id": 252,
+   "ff_nldm": {
+    "chain": 252,
+    "first": "hold5443",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.25459,
+     "new_cell_ps": 49.10446,
+     "cell_delta_ps": 9.84987,
+     "first_input_slew_ps": 7.618454,
+     "old_last_output_cap_ff": 2.9828301128258468
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.63481,
+     "new_cell_ps": 56.19688,
+     "cell_delta_ps": 15.56207,
+     "first_input_slew_ps": 7.024224,
+     "old_last_output_cap_ff": 2.9828301128258468
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net959",
+     "Y": "net5442"
+    },
+    {
+     "A": "net5442",
+     "Y": "net2978"
+    },
+    {
+     "A": "net2978",
+     "Y": "net5443"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 135.18349999999998,
+     "net_cap_pf": 0.000198184,
+     "elmore_upper_ps": 0.026791206763999997
+    },
+    {
+     "resistor_sum_ohm": 95.8283,
+     "net_cap_pf": 0.000152813,
+     "elmore_upper_ps": 0.014643810007899999
+    },
+    {
+     "resistor_sum_ohm": 534.3489,
+     "net_cap_pf": 0.00243483,
+     "elmore_upper_ps": 1.301048732187
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.04143501677189999,
+   "ff_min_cell_delta_ps": 9.84987,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 9.8084349832281
+  },
+  {
+   "cells": [
+    "hold4907",
+    "hold2711",
+    "hold4908"
+   ],
+   "old_xy": [
+    [
+     78.354,
+     72.36
+    ],
+    [
+     79.974,
+     71.01
+    ],
+    [
+     79.812,
+     73.17
+    ]
+   ],
+   "target_xy": [
+    79.812,
+    73.17
+   ],
+   "id": 253,
+   "ff_nldm": {
+    "chain": 253,
+    "first": "hold4907",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 45.20058,
+     "new_cell_ps": 54.46149,
+     "cell_delta_ps": 9.26091,
+     "first_input_slew_ps": 18.394463,
+     "old_last_output_cap_ff": 3.4858363915634247
+    },
+    "fall": {
+     "old_cell_sum_ps": 46.38878,
+     "new_cell_ps": 60.81383,
+     "cell_delta_ps": 14.42504,
+     "first_input_slew_ps": 16.59557,
+     "old_last_output_cap_ff": 3.4858363915634247
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net833",
+     "Y": "net4906"
+    },
+    {
+     "A": "net4906",
+     "Y": "net2710"
+    },
+    {
+     "A": "net2710",
+     "Y": "net4907"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 215.4782,
+     "net_cap_pf": 0.000582977,
+     "elmore_upper_ps": 0.1256188346014
+    },
+    {
+     "resistor_sum_ohm": 258.8773,
+     "net_cap_pf": 0.000609248,
+     "elmore_upper_ps": 0.15772047727039998
+    },
+    {
+     "resistor_sum_ohm": 532.8073,
+     "net_cap_pf": 0.00293783,
+     "elmore_upper_ps": 1.5652972701590002
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.28333931187179995,
+   "ff_min_cell_delta_ps": 9.26091,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.977570688128202
+  },
+  {
+   "cells": [
+    "hold5371",
+    "hold2937",
+    "hold5372"
+   ],
+   "old_xy": [
+    [
+     75.654,
+     76.41
+    ],
+    [
+     75.762,
+     77.49
+    ],
+    [
+     76.302,
+     79.65
+    ]
+   ],
+   "target_xy": [
+    76.302,
+    79.65
+   ],
+   "id": 255,
+   "ff_nldm": {
+    "chain": 255,
+    "first": "hold5371",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.67312,
+     "new_cell_ps": 47.19796,
+     "cell_delta_ps": 7.52484,
+     "first_input_slew_ps": 7.809025,
+     "old_last_output_cap_ff": 2.5765554198302905
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.03244,
+     "new_cell_ps": 54.35067,
+     "cell_delta_ps": 13.31823,
+     "first_input_slew_ps": 7.226186,
+     "old_last_output_cap_ff": 2.5765554198302905
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net870",
+     "Y": "net5370"
+    },
+    {
+     "A": "net5370",
+     "Y": "net2936"
+    },
+    {
+     "A": "net2936",
+     "Y": "net5371"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 110.8107,
+     "net_cap_pf": 0.000252811,
+     "elmore_upper_ps": 0.028014163877699998
+    },
+    {
+     "resistor_sum_ohm": 182.6028,
+     "net_cap_pf": 0.000500669,
+     "elmore_upper_ps": 0.0914235612732
+    },
+    {
+     "resistor_sum_ohm": 475.7655,
+     "net_cap_pf": 0.00202855,
+     "elmore_upper_ps": 0.965114105025
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.11943772515090001,
+   "ff_min_cell_delta_ps": 7.52484,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.4054022748491
+  },
+  {
+   "cells": [
+    "hold5455",
+    "hold2997",
+    "hold5456"
+   ],
+   "old_xy": [
+    [
+     78.3,
+     84.78
+    ],
+    [
+     77.49,
+     84.78
+    ],
+    [
+     77.112,
+     82.08
+    ]
+   ],
+   "target_xy": [
+    77.112,
+    82.08
+   ],
+   "id": 259,
+   "ff_nldm": {
+    "chain": 259,
+    "first": "hold5455",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 42.14944,
+     "new_cell_ps": 47.33617,
+     "cell_delta_ps": 5.18673,
+     "first_input_slew_ps": 18.661594,
+     "old_last_output_cap_ff": 1.9675664732925748
+    },
+    "fall": {
+     "old_cell_sum_ps": 43.54178,
+     "new_cell_ps": 54.01371,
+     "cell_delta_ps": 10.47193,
+     "first_input_slew_ps": 16.961761,
+     "old_last_output_cap_ff": 1.9675664732925748
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net973",
+     "Y": "net5454"
+    },
+    {
+     "A": "net5454",
+     "Y": "net2996"
+    },
+    {
+     "A": "net2996",
+     "Y": "net5455"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 127.906,
+     "net_cap_pf": 0.000233361,
+     "elmore_upper_ps": 0.029848272066
+    },
+    {
+     "resistor_sum_ohm": 191.52870000000001,
+     "net_cap_pf": 0.000634443,
+     "elmore_upper_ps": 0.12151404301410001
+    },
+    {
+     "resistor_sum_ohm": 349.6048,
+     "net_cap_pf": 0.00141956,
+     "elmore_upper_ps": 0.496284989888
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1513623150801,
+   "ff_min_cell_delta_ps": 5.18673,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.035367684919899
+  },
+  {
+   "cells": [
+    "hold5519",
+    "hold3011",
+    "hold5520"
+   ],
+   "old_xy": [
+    [
+     77.004,
+     83.7
+    ],
+    [
+     77.598,
+     81.27
+    ],
+    [
+     78.192,
+     84.24
+    ]
+   ],
+   "target_xy": [
+    78.192,
+    84.24
+   ],
+   "id": 265,
+   "ff_nldm": {
+    "chain": 265,
+    "first": "hold5519",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.51777,
+     "new_cell_ps": 44.23424,
+     "cell_delta_ps": 4.71647,
+     "first_input_slew_ps": 5.677373,
+     "old_last_output_cap_ff": 2.1028043884353322
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.88224,
+     "new_cell_ps": 51.59823,
+     "cell_delta_ps": 10.71599,
+     "first_input_slew_ps": 5.346056,
+     "old_last_output_cap_ff": 2.1028043884353322
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net970",
+     "Y": "net5518"
+    },
+    {
+     "A": "net5518",
+     "Y": "net3010"
+    },
+    {
+     "A": "net3010",
+     "Y": "net5519"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 229.5304,
+     "net_cap_pf": 0.000613375,
+     "elmore_upper_ps": 0.14078820909999998
+    },
+    {
+     "resistor_sum_ohm": 207.2971,
+     "net_cap_pf": 0.000641581,
+     "elmore_upper_ps": 0.1329978807151
+    },
+    {
+     "resistor_sum_ohm": 573.5033,
+     "net_cap_pf": 0.0015548,
+     "elmore_upper_ps": 0.8916829308399999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2737860898151,
+   "ff_min_cell_delta_ps": 4.71647,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.4426839101849005
+  },
+  {
+   "cells": [
+    "hold5347",
+    "hold2935",
+    "hold5348"
+   ],
+   "old_xy": [
+    [
+     78.732,
+     79.11
+    ],
+    [
+     77.814,
+     77.76
+    ],
+    [
+     78.354,
+     77.76
+    ]
+   ],
+   "target_xy": [
+    78.354,
+    77.76
+   ],
+   "id": 271,
+   "ff_nldm": {
+    "chain": 271,
+    "first": "hold5347",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.27133,
+     "new_cell_ps": 41.29675,
+     "cell_delta_ps": 4.02542,
+     "first_input_slew_ps": 7.404987,
+     "old_last_output_cap_ff": 1.4198924416391654
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.74002,
+     "new_cell_ps": 48.61408,
+     "cell_delta_ps": 9.87407,
+     "first_input_slew_ps": 6.847823,
+     "old_last_output_cap_ff": 1.4198924416391654
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net922",
+     "Y": "net5346"
+    },
+    {
+     "A": "net5346",
+     "Y": "net2934"
+    },
+    {
+     "A": "net2934",
+     "Y": "net5347"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 176.28719999999998,
+     "net_cap_pf": 0.000509145,
+     "elmore_upper_ps": 0.089755746444
+    },
+    {
+     "resistor_sum_ohm": 44.5617,
+     "net_cap_pf": 7.12656e-05,
+     "elmore_upper_ps": 0.0031757162875200003
+    },
+    {
+     "resistor_sum_ohm": 243.455,
+     "net_cap_pf": 0.00087189,
+     "elmore_upper_ps": 0.21226597995
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.09293146273152,
+   "ff_min_cell_delta_ps": 4.02542,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 3.9324885372684806
+  },
+  {
+   "cells": [
+    "hold5415",
+    "hold2977",
+    "hold5416"
+   ],
+   "old_xy": [
+    [
+     79.272,
+     86.4
+    ],
+    [
+     79.218,
+     85.59
+    ],
+    [
+     79.542,
+     86.4
+    ]
+   ],
+   "target_xy": [
+    79.542,
+    86.4
+   ],
+   "id": 275,
+   "ff_nldm": {
+    "chain": 275,
+    "first": "hold5415",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.69477,
+     "new_cell_ps": 45.75563,
+     "cell_delta_ps": 8.06086,
+     "first_input_slew_ps": 5.857974,
+     "old_last_output_cap_ff": 2.397959794098997
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.16978,
+     "new_cell_ps": 53.07012,
+     "cell_delta_ps": 13.90033,
+     "first_input_slew_ps": 5.498444,
+     "old_last_output_cap_ff": 2.397959794098997
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net992",
+     "Y": "net5414"
+    },
+    {
+     "A": "net5414",
+     "Y": "net2976"
+    },
+    {
+     "A": "net2976",
+     "Y": "net5415"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 99.4624,
+     "net_cap_pf": 0.000156073,
+     "elmore_upper_ps": 0.015523395155200001
+    },
+    {
+     "resistor_sum_ohm": 93.94409999999999,
+     "net_cap_pf": 0.000157094,
+     "elmore_upper_ps": 0.0147580544454
+    },
+    {
+     "resistor_sum_ohm": 441.9123,
+     "net_cap_pf": 0.00184996,
+     "elmore_upper_ps": 0.8175200785080001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.030281449600600002,
+   "ff_min_cell_delta_ps": 8.06086,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.0305785503994
+  },
+  {
+   "cells": [
+    "hold5945",
+    "hold3312",
+    "hold5946"
+   ],
+   "old_xy": [
+    [
+     80.082,
+     68.58
+    ],
+    [
+     81.162,
+     71.28
+    ],
+    [
+     77.814,
+     73.44
+    ]
+   ],
+   "target_xy": [
+    77.814,
+    73.44
+   ],
+   "id": 278,
+   "ff_nldm": {
+    "chain": 278,
+    "first": "hold5945",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 44.81824,
+     "new_cell_ps": 49.57885,
+     "cell_delta_ps": 4.76061,
+     "first_input_slew_ps": 9.081714,
+     "old_last_output_cap_ff": 2.9963769224603807
+    },
+    "fall": {
+     "old_cell_sum_ps": 46.04309,
+     "new_cell_ps": 56.66128,
+     "cell_delta_ps": 10.61818,
+     "first_input_slew_ps": 8.740545,
+     "old_last_output_cap_ff": 2.9963769224603807
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[802]",
+     "Y": "net5944"
+    },
+    {
+     "A": "net5944",
+     "Y": "net3311"
+    },
+    {
+     "A": "net3311",
+     "Y": "net5945"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 214.4922,
+     "net_cap_pf": 0.000946674,
+     "elmore_upper_ps": 0.2030541889428
+    },
+    {
+     "resistor_sum_ohm": 332.1023,
+     "net_cap_pf": 0.00140616,
+     "elmore_upper_ps": 0.46698897016800006
+    },
+    {
+     "resistor_sum_ohm": 531.1997,
+     "net_cap_pf": 0.002555,
+     "elmore_upper_ps": 1.3572152335
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.6700431591108,
+   "ff_min_cell_delta_ps": 4.76061,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.0905668408892
+  },
+  {
+   "cells": [
+    "hold5223",
+    "hold2875",
+    "hold5224"
+   ],
+   "old_xy": [
+    [
+     78.894,
+     79.38
+    ],
+    [
+     78.57,
+     80.73
+    ],
+    [
+     79.542,
+     79.65
+    ]
+   ],
+   "target_xy": [
+    79.542,
+    79.65
+   ],
+   "id": 286,
+   "ff_nldm": {
+    "chain": 286,
+    "first": "hold5223",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.16824,
+     "new_cell_ps": 48.94463,
+     "cell_delta_ps": 8.77638,
+     "first_input_slew_ps": 5.369228,
+     "old_last_output_cap_ff": 3.0928251756825738
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.50809,
+     "new_cell_ps": 56.1816,
+     "cell_delta_ps": 14.6735,
+     "first_input_slew_ps": 5.08226,
+     "old_last_output_cap_ff": 3.0928251756825738
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net914",
+     "Y": "net5222"
+    },
+    {
+     "A": "net5222",
+     "Y": "net2874"
+    },
+    {
+     "A": "net2874",
+     "Y": "net5223"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 198.97129999999999,
+     "net_cap_pf": 0.000542881,
+     "elmore_upper_ps": 0.1080177383153
+    },
+    {
+     "resistor_sum_ohm": 161.412,
+     "net_cap_pf": 0.000395633,
+     "elmore_upper_ps": 0.063859913796
+    },
+    {
+     "resistor_sum_ohm": 530.5576,
+     "net_cap_pf": 0.00254482,
+     "elmore_upper_ps": 1.3501735916320001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.17187765211130002,
+   "ff_min_cell_delta_ps": 8.77638,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.6045023478887
+  },
+  {
+   "cells": [
+    "hold5523",
+    "hold3019",
+    "hold5524"
+   ],
+   "old_xy": [
+    [
+     78.948,
+     86.67
+    ],
+    [
+     78.624,
+     85.32
+    ],
+    [
+     78.624,
+     84.78
+    ]
+   ],
+   "target_xy": [
+    78.624,
+    84.78
+   ],
+   "id": 287,
+   "ff_nldm": {
+    "chain": 287,
+    "first": "hold5523",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 36.46728,
+     "new_cell_ps": 41.03295,
+     "cell_delta_ps": 4.56568,
+     "first_input_slew_ps": 6.094474,
+     "old_last_output_cap_ff": 1.4372338529845152
+    },
+    "fall": {
+     "old_cell_sum_ps": 37.99007,
+     "new_cell_ps": 48.44434,
+     "cell_delta_ps": 10.45426,
+     "first_input_slew_ps": 5.706516,
+     "old_last_output_cap_ff": 1.4372338529845152
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net986",
+     "Y": "net5522"
+    },
+    {
+     "A": "net5522",
+     "Y": "net3018"
+    },
+    {
+     "A": "net3018",
+     "Y": "net5523"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 124.8579,
+     "net_cap_pf": 0.000303648,
+     "elmore_upper_ps": 0.0379128516192
+    },
+    {
+     "resistor_sum_ohm": 85.4966,
+     "net_cap_pf": 0.000107771,
+     "elmore_upper_ps": 0.009214054078599999
+    },
+    {
+     "resistor_sum_ohm": 222.5623,
+     "net_cap_pf": 0.000889232,
+     "elmore_upper_ps": 0.1979095191536
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0471269056978,
+   "ff_min_cell_delta_ps": 4.56568,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.5185530943022005
+  },
+  {
+   "cells": [
+    "hold5171",
+    "hold2855",
+    "hold5172"
+   ],
+   "old_xy": [
+    [
+     75.114,
+     73.71
+    ],
+    [
+     75.762,
+     73.17
+    ],
+    [
+     75.492,
+     73.17
+    ]
+   ],
+   "target_xy": [
+    75.492,
+    73.17
+   ],
+   "id": 288,
+   "ff_nldm": {
+    "chain": 288,
+    "first": "hold5171",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 37.0593,
+     "new_cell_ps": 44.09066,
+     "cell_delta_ps": 7.03136,
+     "first_input_slew_ps": 5.414346,
+     "old_last_output_cap_ff": 2.088878108041805
+    },
+    "fall": {
+     "old_cell_sum_ps": 38.5699,
+     "new_cell_ps": 51.4769,
+     "cell_delta_ps": 12.90701,
+     "first_input_slew_ps": 5.121593,
+     "old_last_output_cap_ff": 2.088878108041805
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net831",
+     "Y": "net5170"
+    },
+    {
+     "A": "net5170",
+     "Y": "net2854"
+    },
+    {
+     "A": "net2854",
+     "Y": "net5171"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 130.6214,
+     "net_cap_pf": 0.000182385,
+     "elmore_upper_ps": 0.023823384038999997
+    },
+    {
+     "resistor_sum_ohm": 49.3751,
+     "net_cap_pf": 0.000130194,
+     "elmore_upper_ps": 0.006428341769400001
+    },
+    {
+     "resistor_sum_ohm": 566.0897,
+     "net_cap_pf": 0.00154088,
+     "elmore_upper_ps": 0.872276296936
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0302517258084,
+   "ff_min_cell_delta_ps": 7.03136,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 7.0011082741916
+  },
+  {
+   "cells": [
+    "hold4959",
+    "hold2737",
+    "hold4960"
+   ],
+   "old_xy": [
+    [
+     77.922,
+     72.09
+    ],
+    [
+     77.544,
+     72.36
+    ],
+    [
+     78.462,
+     70.47
+    ]
+   ],
+   "target_xy": [
+    78.462,
+    70.47
+   ],
+   "id": 295,
+   "ff_nldm": {
+    "chain": 295,
+    "first": "hold4959",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.424,
+     "new_cell_ps": 45.19509,
+     "cell_delta_ps": 6.77109,
+     "first_input_slew_ps": 5.357244,
+     "old_last_output_cap_ff": 2.3138521755988233
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.85944,
+     "new_cell_ps": 52.55902,
+     "cell_delta_ps": 12.69958,
+     "first_input_slew_ps": 5.070816,
+     "old_last_output_cap_ff": 2.3138521755988233
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net829",
+     "Y": "net4958"
+    },
+    {
+     "A": "net4958",
+     "Y": "net2736"
+    },
+    {
+     "A": "net2736",
+     "Y": "net4959"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 92.7291,
+     "net_cap_pf": 0.000171246,
+     "elmore_upper_ps": 0.0158794874586
+    },
+    {
+     "resistor_sum_ohm": 217.4489,
+     "net_cap_pf": 0.000552413,
+     "elmore_upper_ps": 0.1201215991957
+    },
+    {
+     "resistor_sum_ohm": 463.28860000000003,
+     "net_cap_pf": 0.00176585,
+     "elmore_upper_ps": 0.8180981743100001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1360010866543,
+   "ff_min_cell_delta_ps": 6.77109,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.6350889133457
+  },
+  {
+   "cells": [
+    "hold5287",
+    "hold2873",
+    "hold5288"
+   ],
+   "old_xy": [
+    [
+     75.6,
+     77.76
+    ],
+    [
+     73.71,
+     77.49
+    ],
+    [
+     75.114,
+     78.3
+    ]
+   ],
+   "target_xy": [
+    75.114,
+    78.3
+   ],
+   "id": 297,
+   "ff_nldm": {
+    "chain": 297,
+    "first": "hold5287",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.77414,
+     "new_cell_ps": 46.82441,
+     "cell_delta_ps": 7.05027,
+     "first_input_slew_ps": 6.051332,
+     "old_last_output_cap_ff": 2.601498422454081
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.1265,
+     "new_cell_ps": 54.10108,
+     "cell_delta_ps": 12.97458,
+     "first_input_slew_ps": 5.670596,
+     "old_last_output_cap_ff": 2.601498422454081
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net874",
+     "Y": "net5286"
+    },
+    {
+     "A": "net5286",
+     "Y": "net2872"
+    },
+    {
+     "A": "net2872",
+     "Y": "net5287"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 136.528,
+     "net_cap_pf": 0.000505703,
+     "elmore_upper_ps": 0.069042619184
+    },
+    {
+     "resistor_sum_ohm": 166.5664,
+     "net_cap_pf": 0.000495457,
+     "elmore_upper_ps": 0.0825264888448
+    },
+    {
+     "resistor_sum_ohm": 337.0623,
+     "net_cap_pf": 0.0020535,
+     "elmore_upper_ps": 0.6921574330500001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1515691080288,
+   "ff_min_cell_delta_ps": 7.05027,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.8987008919712
+  },
+  {
+   "cells": [
+    "hold5447",
+    "hold2961",
+    "hold5448"
+   ],
+   "old_xy": [
+    [
+     77.868,
+     81.27
+    ],
+    [
+     76.842,
+     83.16
+    ],
+    [
+     76.464,
+     83.97
+    ]
+   ],
+   "target_xy": [
+    76.464,
+    83.97
+   ],
+   "id": 302,
+   "ff_nldm": {
+    "chain": 302,
+    "first": "hold5447",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 39.48077,
+     "new_cell_ps": 44.97105,
+     "cell_delta_ps": 5.49028,
+     "first_input_slew_ps": 6.664804,
+     "old_last_output_cap_ff": 2.194744520570354
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.84188,
+     "new_cell_ps": 52.24996,
+     "cell_delta_ps": 11.40809,
+     "first_input_slew_ps": 6.203083,
+     "old_last_output_cap_ff": 2.194744520570354
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net947",
+     "Y": "net5446"
+    },
+    {
+     "A": "net5446",
+     "Y": "net2960"
+    },
+    {
+     "A": "net2960",
+     "Y": "net5447"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 204.5666,
+     "net_cap_pf": 0.000789115,
+     "elmore_upper_ps": 0.16142657255899998
+    },
+    {
+     "resistor_sum_ohm": 147.68280000000001,
+     "net_cap_pf": 0.00026967,
+     "elmore_upper_ps": 0.039825620676000005
+    },
+    {
+     "resistor_sum_ohm": 555.1731,
+     "net_cap_pf": 0.00164674,
+     "elmore_upper_ps": 0.914225750694
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.201252193235,
+   "ff_min_cell_delta_ps": 5.49028,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.2890278067650005
+  },
+  {
+   "cells": [
+    "hold5423",
+    "hold2963",
+    "hold5424"
+   ],
+   "old_xy": [
+    [
+     77.652,
+     71.55
+    ],
+    [
+     77.544,
+     75.6
+    ],
+    [
+     77.598,
+     75.06
+    ]
+   ],
+   "target_xy": [
+    77.598,
+    75.06
+   ],
+   "id": 303,
+   "ff_nldm": {
+    "chain": 303,
+    "first": "hold5423",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 40.61274,
+     "new_cell_ps": 45.63047,
+     "cell_delta_ps": 5.01773,
+     "first_input_slew_ps": 9.813694,
+     "old_last_output_cap_ff": 2.1487220443394217
+    },
+    "fall": {
+     "old_cell_sum_ps": 41.93948,
+     "new_cell_ps": 52.70831,
+     "cell_delta_ps": 10.76882,
+     "first_input_slew_ps": 9.060534,
+     "old_last_output_cap_ff": 2.1487220443394217
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net860",
+     "Y": "net5422"
+    },
+    {
+     "A": "net5422",
+     "Y": "net2962"
+    },
+    {
+     "A": "net2962",
+     "Y": "net5423"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 279.1221,
+     "net_cap_pf": 0.00102394,
+     "elmore_upper_ps": 0.285804283074
+    },
+    {
+     "resistor_sum_ohm": 84.9618,
+     "net_cap_pf": 0.000108753,
+     "elmore_upper_ps": 0.009239850635399999
+    },
+    {
+     "resistor_sum_ohm": 369.5886,
+     "net_cap_pf": 0.00160072,
+     "elmore_upper_ps": 0.5916078637919999
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.2950441337094,
+   "ff_min_cell_delta_ps": 5.01773,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 4.7226858662906
+  },
+  {
+   "cells": [
+    "hold5007",
+    "hold2751",
+    "hold5008"
+   ],
+   "old_xy": [
+    [
+     78.138,
+     81.81
+    ],
+    [
+     78.462,
+     79.11
+    ],
+    [
+     77.976,
+     78.84
+    ]
+   ],
+   "target_xy": [
+    77.976,
+    78.84
+   ],
+   "id": 305,
+   "ff_nldm": {
+    "chain": 305,
+    "first": "hold5007",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.86295,
+     "new_cell_ps": 45.30759,
+     "cell_delta_ps": 6.44464,
+     "first_input_slew_ps": 5.84684,
+     "old_last_output_cap_ff": 2.308658593101573
+    },
+    "fall": {
+     "old_cell_sum_ps": 40.26444,
+     "new_cell_ps": 52.63374,
+     "cell_delta_ps": 12.3693,
+     "first_input_slew_ps": 5.489834,
+     "old_last_output_cap_ff": 2.308658593101573
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net906",
+     "Y": "net5006"
+    },
+    {
+     "A": "net5006",
+     "Y": "net2750"
+    },
+    {
+     "A": "net2750",
+     "Y": "net5007"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 157.5819,
+     "net_cap_pf": 0.000578465,
+     "elmore_upper_ps": 0.0911556137835
+    },
+    {
+     "resistor_sum_ohm": 137.3191,
+     "net_cap_pf": 0.000265572,
+     "elmore_upper_ps": 0.0364681080252
+    },
+    {
+     "resistor_sum_ohm": 467.7154,
+     "net_cap_pf": 0.00176066,
+     "elmore_upper_ps": 0.823487796164
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.1276237218087,
+   "ff_min_cell_delta_ps": 6.44464,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 6.3170162781913
+  },
+  {
+   "cells": [
+    "hold5047",
+    "hold2815",
+    "hold5048"
+   ],
+   "old_xy": [
+    [
+     76.302,
+     82.08
+    ],
+    [
+     75.87,
+     82.35
+    ],
+    [
+     75.492,
+     82.08
+    ]
+   ],
+   "target_xy": [
+    75.492,
+    82.08
+   ],
+   "id": 308,
+   "ff_nldm": {
+    "chain": 308,
+    "first": "hold5047",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 38.48086,
+     "new_cell_ps": 46.85769,
+     "cell_delta_ps": 8.37683,
+     "first_input_slew_ps": 7.548775,
+     "old_last_output_cap_ff": 2.523091123910014
+    },
+    "fall": {
+     "old_cell_sum_ps": 39.90117,
+     "new_cell_ps": 54.02861,
+     "cell_delta_ps": 14.12743,
+     "first_input_slew_ps": 6.965765,
+     "old_last_output_cap_ff": 2.523091123910014
+    }
+   },
+   "old_ports": [
+    {
+     "A": "net935",
+     "Y": "net5046"
+    },
+    {
+     "A": "net5046",
+     "Y": "net2814"
+    },
+    {
+     "A": "net2814",
+     "Y": "net5047"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 90.9545,
+     "net_cap_pf": 0.000160546,
+     "elmore_upper_ps": 0.014602381157
+    },
+    {
+     "resistor_sum_ohm": 126.6929,
+     "net_cap_pf": 0.000177181,
+     "elmore_upper_ps": 0.022447574714899998
+    },
+    {
+     "resistor_sum_ohm": 423.47860000000003,
+     "net_cap_pf": 0.00197509,
+     "elmore_upper_ps": 0.8364083480740001
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.0370499558719,
+   "ff_min_cell_delta_ps": 8.37683,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 8.3397800441281
+  },
+  {
+   "cells": [
+    "hold5959",
+    "hold3340",
+    "hold5960"
+   ],
+   "old_xy": [
+    [
+     79.542,
+     69.12
+    ],
+    [
+     79.272,
+     71.55
+    ],
+    [
+     77.544,
+     70.74
+    ]
+   ],
+   "target_xy": [
+    77.544,
+    70.74
+   ],
+   "id": 310,
+   "ff_nldm": {
+    "chain": 310,
+    "first": "hold5959",
+    "old_cells": [],
+    "rise": {
+     "old_cell_sum_ps": 41.21677,
+     "new_cell_ps": 46.81588,
+     "cell_delta_ps": 5.5991,
+     "first_input_slew_ps": 8.613868,
+     "old_last_output_cap_ff": 2.454257626975797
+    },
+    "fall": {
+     "old_cell_sum_ps": 42.61732,
+     "new_cell_ps": 54.01747,
+     "cell_delta_ps": 11.40014,
+     "first_input_slew_ps": 8.322343,
+     "old_last_output_cap_ff": 2.454257626975797
+    }
+   },
+   "old_ports": [
+    {
+     "A": "in_d[775]",
+     "Y": "net5958"
+    },
+    {
+     "A": "net5958",
+     "Y": "net3339"
+    },
+    {
+     "A": "net3339",
+     "Y": "net5959"
+    }
+   ],
+   "wire_rc": [
+    {
+     "resistor_sum_ohm": 267.3208,
+     "net_cap_pf": 0.000737857,
+     "elmore_upper_ps": 0.1972445235256
+    },
+    {
+     "resistor_sum_ohm": 252.41819999999998,
+     "net_cap_pf": 0.000598929,
+     "elmore_upper_ps": 0.1511805801078
+    },
+    {
+     "resistor_sum_ohm": 379.1848,
+     "net_cap_pf": 0.00201288,
+     "elmore_upper_ps": 0.763253500224
+    }
+   ],
+   "interstage_wire_elmore_upper_ps": 0.3484251036334,
+   "ff_min_cell_delta_ps": 5.5991,
+   "ff_cell_gain_less_old_interstage_wire_upper_ps": 5.2506748963666
+  }
+ ],
+ "basis": "actual B50 TT/FF cell NLDM delta>=4ps at baseline slew/final-output load; must also cover old interior wire delay and prototype new wire timing before DRT"
+}

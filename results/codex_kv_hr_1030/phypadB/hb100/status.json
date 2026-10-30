@@ -1,0 +1,25 @@
+{
+ "scope": "100 strict linear three-BUF chains only, measured FF cell gain>=4ps; preserve61shorteningchains andallfour-BUFstructures",
+ "baseline": "intel2 die-kv-30-1029/phy_selB/qkd_hr_phy_pad_holdeco",
+ "candidate": "intel2 codex-kv-hr-1030/phypad_hb100",
+ "place": "PASS 100HB4 replacements/200cells removed;127dataholdbuffers moved max2.754um;allothercells fixed and226clocknets exact",
+ "logical": "PASS actualpre/postcellgraph22905->22705,allotherfunctionalcellpinconnectivityexact;primitive4state+mutantPASS",
+ "actual_geom": "VIEWED self+independentGEOM;colV.876 conditionalGRT0;pin/r2r/clock/fill/emptyPASS",
+ "grt": "PASS0alllayers,23321nets,162672umwire; artifacthb100/5_1_grt.odb androute.guide",
+ "timing": "COLLECTOR_FIX_RUNNING fromsavedGRT;noDRT/noadoption",
+ "failures": [
+  {
+   "step": "all1616bufferrowspread",
+   "result": "GRT1316overflow;STAcollector3groupsinstead1;preservedproto/grt_ttff.log;doNOTretryunchanged"
+  },
+  {
+   "step": "hb100firstGRT",
+   "result": "Signal11mergeSegments with0routednets;stalepreECOdatawiresretained;newdeckclearsdatasonlyandpassesGRT0"
+  },
+  {
+   "step": "hb100secondSTAcollector",
+   "result": "unsupportedremove_from_collection;GRTartifactsretained;freshSTAonlycollectorfix"
+  }
+ ],
+ "cycles_added": 0
+}

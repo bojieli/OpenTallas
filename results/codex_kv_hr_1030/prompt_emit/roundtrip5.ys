@@ -1,0 +1,29 @@
+read_json /work/pre.json
+select qkd_hr_core_prompt/t:ot_sram*
+expose -evert
+select *
+memory_share
+memory_map
+rename qkd_hr_core_prompt gold
+design -stash g
+read_verilog -sv /work/qkd_hr_core_prompt.v
+read_json /work/bb.json
+hierarchy -top qkd_hr_core_prompt
+proc
+memory_collect
+select qkd_hr_core_prompt/t:ot_sram*
+expose -evert
+select *
+rename -hide qkd_hr_core_prompt/w:_*
+opt_clean
+memory_share
+memory_map
+rename qkd_hr_core_prompt gate
+design -copy-from g -as gold gold
+equiv_make gold gate eq
+hierarchy -top eq
+async2sync
+write_json /work/roundtrip5_method.json
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

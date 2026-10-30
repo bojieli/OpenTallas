@@ -1,0 +1,29 @@
+{
+ "actual_liberty_functions": [
+  {
+   "cell_corner": "HB4xp67_ASAP7_75t_R_FF",
+   "function": "A",
+   "sha256": "e92cbcb57954d88ceecc731fde00e290ac8eb42bcfcdda39f6d2f3ba6956c166"
+  },
+  {
+   "cell_corner": "HB4xp67_ASAP7_75t_R_TT",
+   "function": "A",
+   "sha256": "715e516412373bc3070e939c19ca01e542cfbcb17fb187047bba86a576f685ae"
+  },
+  {
+   "cell_corner": "BUFx2_ASAP7_75t_R_TT",
+   "function": "A",
+   "sha256": "2d30f224e60302838da8c20d8f13f91307d53f6b2338cdb852528f0d590edae7"
+  },
+  {
+   "cell_corner": "BUFx2_ASAP7_75t_R_FF",
+   "function": "A",
+   "sha256": "4ffaf3f8e93b207b1a14b7132d4cb8e4798b028da45b226b74ac0453700bee66"
+  }
+ ],
+ "vehicle": "buffer_miter.sv primitive buf models matching A boolean function and standard buffer four-state X/Z semantics",
+ "four_state_vectors": 4,
+ "mutant_vectors_caught": 2,
+ "cycles_added": 0,
+ "scope": "logic only; says nothing about min/max physical delay"
+}

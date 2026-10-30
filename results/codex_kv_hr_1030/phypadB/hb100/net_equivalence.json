@@ -1,0 +1,11 @@
+{
+ "status": "PASS",
+ "method": "actual emitted pre/post cell-pin graph; 100 strictly linear positive-buffer chains replaced by Y=A HB4; all other functional cell masters and all pin-net connections exact",
+ "old_nonfill_cells": 22905,
+ "new_nonfill_cells": 22705,
+ "replacements": 100,
+ "removed": 200,
+ "cycles_added": 0,
+ "four_state_primitive_coupon": "0,1,X,Z PASS and inverted mutant caught separately",
+ "scope": "logical buffer identity; physical TT/FF qualification separate"
+}

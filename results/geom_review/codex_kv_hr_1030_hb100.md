@@ -1,0 +1,3 @@
+CODEX KV HR HB100 actual placement review
+
+Actual image: results/codex_kv_hr_1030/phypadB/hb100/auto_geom.png. VIEWED by CODEX and independent /root/geom 2026-10-30. Frozen86.4x95.04 outline/pins/FF/clocks;100 qualified3BUF chains replaced byHB4, ordinarydatahold legalization moved127cells max2.754um. No20umWreturns from artificialallholdlock. Face/body dataflow preserved; no macros. r2r147.04, pinmax35.83, clockreach19.87, fill/emptyPASS, colV.876<1 conditional requiringGRT0. PASS-COND forGRT50+TT/FFprototype only. ActualGRT0nowcollected; noDRTapproval untiltiming/DRVqualifies andnewreview. No clock/cycle/pin waiver.

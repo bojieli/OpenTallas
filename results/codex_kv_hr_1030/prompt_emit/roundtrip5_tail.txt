@@ -1,0 +1,16 @@
+
+19. Executing EQUIV_INDUCT pass.
+Found 7 unproven $equiv cells in module eq:
+  Proving existence of base case for step 1. (2597245 clauses over 988186 variables)
+  Proving induction step 1. (5588965 clauses over 2101997 variables)
+  Proof for induction step holds. Entire workset of 7 cells proven!
+Proved 7 previously unproven $equiv cells.
+
+20. Executing EQUIV_STATUS pass.
+Found 40607 $equiv cells in eq:
+  Of those cells 40607 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: c33039ed2a, time: 2118.64s, user: 2113.07s, system: 6.00s, MEM: 1590.39 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 98% 1x equiv_simple (2092 sec), 0% 1x equiv_induct (20 sec), ...
