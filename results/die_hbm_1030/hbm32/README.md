@@ -1,4 +1,4 @@
-# DIE-HBM-32 (2026-10-30 01:05-03:05 PDT): HBM die owner slice
+# DIE-HBM-32 (2026-10-30 01:05-02:15 PDT): HBM die owner slice
 
 CHECKED = from real files/runs; UNCHECKED = estimate. Base plan d31t (COORD 01:03: plan of record once 9a8d05473a3 is on main;
 at park time it was NOT yet on main 275646f85fd).
@@ -32,8 +32,9 @@ CTS-only probes (copies of the canary kit at 3_place, make do-4_1_cts, intel2 di
 
 Estimate (UNCHECKED, arithmetic on the measured v1 stages): v1 with a centre clock entry = 419 - 148 + ~10 = ~281 TT = ~228 FF,
 inside 202.5 +- 40 FF. A further -60..-90 ps needs a 2-level multi-fanout trunk over the taps (the TritonCTS H-tree is binary).
-FIX (proposal, die-local generator, opt-in, not built in this slice): gen_core_kit_hbm.py --clock-taps density gets an opt-in
-shallow form = CTS_ARGS -distance_between_buffers 100 -sink_clustering_size 30 -sink_clustering_max_diameter 60 + OT_DTAP_ISO=0.
+FIX (die-local generator, opt-in, BUILT: claude/die-hbm-32-dtap-1030@aaa5e4ae646 on main 80e52b92734, tests
+test_dtap_shallow 3/3 + test_prects_phase 2/2 PASS, default config.mk lines byte-identical): gen_core_kit_hbm.py
+--clock-taps density --clock-taps-shallow = CTS_ARGS -distance_between_buffers 100 -sink_clustering_size 30 -sink_clustering_max_diameter 60 + OT_DTAP_ISO=0.
 The canary view must use the plan centre clock entry (re-pin tile_clk), or be swapped for a plan-of-record view.
 
 ## (3) idx_query N-window plan delta -> d32q (CHECKED)
@@ -56,10 +57,11 @@ unknown, <= 8.2 mm). At ft_station_max 405 um: 12 stations + 2 boundary = ~14 cy
 b000|b010 lane by +14 um) is the cheaper one; V-E1 (query copy duplicated at the hub) only if the window cannot move. Both need
 bind_primitive_split of $procdff 71770 (kl_r) by bits + one FORCED-path lane_add (no flag for it today). Not built.
 
-## (5) hub synth (NOT DONE)
+## (5) hub synth (RUNNING at park)
 dhbm30s_hubnw (2 h+, 42 GB, SRAM models read as RTL) and dhbm31s_hubnw (read_verilog -lib still mem2reg-expanded the 1024x256
-model: no log progress for > 35 min after 00:49) were both STOPPED (exact names). The rerun dhbm32s used port-only
-(* blackbox *) SRAM stubs (synth/nw/sram_stubs.sv) + a de-duplicated read list (the 31 .ys read ot_bind_native_626a9a88... twice
--> re-definition error). It now fails at ot_hgi_hc_gathered_mix_reader_static.sv:28 `initial if(...) $fatal` (yosys "Can't
-resolve task name $fatal"). Successor: synthesize with the kit recipe's read path (ORFS/slang or the define the kits use), or
-strip the $fatal guards in a copy; then read stat_*.txt.
+model: no log progress for > 35 min after 00:49) were both STOPPED (exact names). Rerun dhbm32s_hubnw (intel1, synth/run_nw.sh):
+port-only (* blackbox *) SRAM stubs (synth/nw/sram_stubs.sv); read list de-duplicated (the 31 .ys read ot_bind_native_626a9a88...
+twice -> re-definition error); ot_hbm_hc_q_static.sv taken from the r18h5 bundle (the main-rtl copy passes RESP_PHASE 51 without
+PERIOD -> the reader's $fatal guard), ot_hbm_su_stree.sv kept from main rtl (the bundle copy lacks NLEG). hierarchy -check PASSED;
+stat_hier_pre.txt lists the ot_sram_* as cells = BLACKBOXES (CHECKED). synth -flatten running: collect synth/nw/stat_generic.txt
+and stat_legal.txt (rc file = exit code).

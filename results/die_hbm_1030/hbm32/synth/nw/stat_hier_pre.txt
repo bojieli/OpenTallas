@@ -1,0 +1,3510 @@
+
+61. Printing statistics.
+
+=== $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     9244 wires
+  8971477 wire bits
+     3641 public wires
+  4281195 public wire bits
+       11 ports
+     2689 port bits
+     1784 processes
+     3651 cells
+     2496   $and
+        2   $mux
+       33   $not
+      976   $or
+      128   $shl
+       16   $shr
+
+=== $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      978 wires
+   151430 wire bits
+      187 public wires
+    74431 public wire bits
+       20 ports
+     5184 port bits
+       86 processes
+      532 cells
+      416   $eq
+        2   $logic_and
+        2   $logic_not
+        2   $logic_or
+       98   $mux
+        8   $shl
+        4   $shr
+
+=== $paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      158 wires
+    15206 wire bits
+       50 public wires
+     2068 public wire bits
+       23 ports
+      639 port bits
+        6 processes
+       65 cells
+        2   $add
+        1   $and
+        8   $eq
+        1   $ge
+        1   $gt
+        1   $le
+       13   $logic_and
+       12   $logic_not
+       15   $logic_or
+        2   $ne
+        2   $neg
+        1   $not
+        1   $or
+        2   $shift
+        2   $shiftx
+        1   $shl
+
+=== $paramod$883d527b8bcd1db9462d49cec106d2f34304b787\ot_hbm_idx_vm_share2_leaf_r ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      189 wires
+     5353 wire bits
+       77 public wires
+     3491 public wire bits
+       12 ports
+     1647 port bits
+        5 processes
+       29 cells
+        4   $and
+       11   $logic_and
+        7   $logic_not
+        3   $logic_or
+        2   $or
+        2   $xor
+
+=== $paramod$c18c629f8c88cf6e946a6eb8804f0d0ee0ec51ed\ot_hbm_fault_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       20 wires
+      104 wire bits
+       10 public wires
+       45 public wire bits
+        4 ports
+       11 port bits
+        1 processes
+        7 cells
+        3   $and
+        1   $logic_not
+        1   $not
+        1   $or
+        1   $reduce_or
+
+=== $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       26 wire bits
+        5 public wires
+       16 public wire bits
+        3 ports
+        8 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod$a84cf026b52e64956de919dcd341d5864d52c644\ot_static_program_target ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      158 wires
+    15206 wire bits
+       50 public wires
+     2068 public wire bits
+       23 ports
+      639 port bits
+        6 processes
+       65 cells
+        2   $add
+        1   $and
+        8   $eq
+        1   $ge
+        1   $gt
+        1   $le
+       13   $logic_and
+       12   $logic_not
+       15   $logic_or
+        2   $ne
+        2   $neg
+        1   $not
+        1   $or
+        2   $shift
+        2   $shiftx
+        1   $shl
+
+=== $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000001001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      112 wires
+     2497 wire bits
+       42 public wires
+     1411 public wire bits
+       15 ports
+      422 port bits
+        5 processes
+       43 cells
+        5   $add
+        8   $eq
+        1   $gt
+        1   $le
+       13   $logic_and
+        6   $logic_not
+        3   $logic_or
+        1   $mux
+        1   $ne
+        2   $or
+        1   $sub
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+
+=== $paramod$7c655027cbb7bdb2ea52b5d4eb56b64f2a274eea\ot_hbm_idx_vm_share2_leaf_r ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       95 wires
+     4977 wire bits
+       30 public wires
+     3303 public wire bits
+       12 ports
+     1647 port bits
+        5 processes
+       29 cells
+        4   $and
+       11   $logic_and
+        7   $logic_not
+        3   $logic_or
+        2   $or
+        2   $xor
+
+=== $paramod$4c090d3b3b856baf9b1b511afe5a87042b3fe380\ot_hgi_sm_xload_cl2_ctl ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     3730 wires
+   221581 wire bits
+      676 public wires
+   100858 public wire bits
+       49 ports
+    10699 port bits
+      135 processes
+     2064 cells
+      308   $add
+        2   $and
+      687   $eq
+        2   $ge
+        3   $gt
+        1   $le
+      273   $logic_and
+       81   $logic_not
+       17   $logic_or
+      214   $lt
+       37   $mul
+      196   $mux
+       70   $ne
+        2   $not
+       65   $or
+        3   $reduce_or
+       32   $shiftx
+       10   $shl
+       13   $shr
+       30   $sub
+       18   $xor
+
+=== $paramod$40c500cd74b4ef6668c6929a20a71558a47514d8\ot_hbm_host_cfg_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       79 wires
+     5178 wire bits
+       49 public wires
+     3430 public wire bits
+       26 ports
+     1106 port bits
+        7 processes
+       12 cells
+        4   $logic_not
+        8   $mux
+        1 submodules
+        1   $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      730 wires
+     1374 wire bits
+       17 public wires
+      479 public wire bits
+        5 ports
+       95 port bits
+      322 processes
+      391 cells
+      259   $and
+      129   $or
+        3   $xor
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      655 wires
+     1236 wire bits
+       17 public wires
+      434 public wire bits
+        5 ports
+       86 port bits
+      292 processes
+      346 cells
+      229   $and
+      114   $or
+        3   $xor
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      156 wires
+      301 wire bits
+       15 public wires
+      116 public wire bits
+        5 ports
+       26 port bits
+       74 processes
+       67 cells
+       43   $and
+       21   $or
+        3   $xor
+
+=== $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      555 wires
+     1052 wire bits
+       17 public wires
+      374 public wire bits
+        5 ports
+       74 port bits
+      252 processes
+      286 cells
+      189   $and
+       94   $or
+        3   $xor
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       11 wire bits
+        5 public wires
+        6 public wire bits
+        3 ports
+        3 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod$ae067ad122e3c2f668cd5cddcc60cf1390c385de\ot_hgi_coll_ring_ag_lane ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      177 wires
+    13056 wire bits
+       47 public wires
+     5388 public wire bits
+       25 ports
+     1940 port bits
+        1 memories
+     2048 memory bits
+        5 processes
+       75 cells
+        2   $and
+        9   $eq
+        2   $gt
+        6   $logic_and
+        6   $logic_not
+       14   $logic_or
+        1   $memrd
+       14   $ne
+        4   $neg
+        2   $not
+        2   $or
+        3   $reduce_or
+        4   $shift
+        4   $shiftx
+        2   $sub
+
+=== $paramod\ot_hgi_qdq_lg_port_group_r2\BANKS=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       44 wires
+     5809 wire bits
+       11 public wires
+     3332 public wire bits
+        8 ports
+     2222 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      158 wires
+    15206 wire bits
+       50 public wires
+     2068 public wire bits
+       23 ports
+      639 port bits
+        6 processes
+       65 cells
+        2   $add
+        1   $and
+        8   $eq
+        1   $ge
+        1   $gt
+        1   $le
+       13   $logic_and
+       12   $logic_not
+       15   $logic_or
+        2   $ne
+        2   $neg
+        1   $not
+        1   $or
+        2   $shift
+        2   $shiftx
+        1   $shl
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      394 wires
+     5930 wire bits
+       93 public wires
+     1708 public wire bits
+       26 ports
+      574 port bits
+       15 processes
+      145 cells
+       30   $add
+        8   $and
+        4   $eq
+        2   $ge
+        1   $gt
+        7   $logic_and
+        7   $logic_not
+       10   $logic_or
+       18   $lt
+       12   $ne
+        8   $neg
+        4   $not
+        4   $or
+        8   $shift
+        2   $shr
+       18   $sub
+        1   ot_sram_1r1w_128x64_m1_p192
+        1   ot_sram_1r1w_64x16_m1
+
+=== $paramod$9bbe76735c73e77a7984e1fc0ed6a7f81e990eb7\ot_static_cmd_target_core ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      209 wires
+     5149 wire bits
+       81 public wires
+     3051 public wire bits
+       35 ports
+     1523 port bits
+        5 processes
+       80 cells
+        5   $add
+        1   $div
+        7   $eq
+        2   $gt
+        1   $le
+       24   $logic_and
+       13   $logic_not
+       14   $logic_or
+        4   $lt
+        1   $mod
+        1   $ne
+        4   $reduce_or
+        3   $sub
+
+=== $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      393 wires
+      519 wire bits
+        6 public wires
+      110 public wire bits
+        4 ports
+       86 port bits
+       66 processes
+      321 cells
+      192   $and
+      128   $eq
+        1   $logic_not
+
+=== $paramod$c7810d087bc46beadc463d87c97f988966edfc9b\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+       26 wire bits
+        5 public wires
+       16 public wire bits
+        4 ports
+        6 port bits
+        1 processes
+
+=== $paramod$2cfa8cb701a5b6a1f66a63577042fd2a95defc32\ot_hdc_delay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+    20482 wire bits
+        5 public wires
+    11266 public wire bits
+        4 ports
+     2050 port bits
+        1 processes
+
+=== $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       14 wire bits
+        5 public wires
+        8 public wire bits
+        3 ports
+        4 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000000111001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      114 wires
+     2433 wire bits
+       44 public wires
+     1391 public wire bits
+       17 ports
+      402 port bits
+        5 processes
+       43 cells
+        5   $add
+        8   $eq
+        1   $gt
+        1   $le
+       13   $logic_and
+        6   $logic_not
+        3   $logic_or
+        1   $mux
+        1   $ne
+        2   $or
+        1   $sub
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+
+=== $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       11 wire bits
+        5 public wires
+        6 public wire bits
+        3 ports
+        3 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod$d0e3e25f2666fa833ba84ed3a4778aba0814d801\ot_static_program_target ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      158 wires
+     5176 wire bits
+       50 public wires
+     1286 public wire bits
+       23 ports
+      633 port bits
+        6 processes
+       65 cells
+        2   $add
+        1   $and
+        8   $eq
+        1   $ge
+        1   $gt
+        1   $le
+       13   $logic_and
+       12   $logic_not
+       15   $logic_or
+        2   $ne
+        2   $neg
+        1   $not
+        1   $or
+        2   $shift
+        2   $shiftx
+        1   $shl
+
+=== hbm_arch_q_hub__q_hub_nw ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     6333 wires
+   395236 wire bits
+     6137 public wires
+   394152 public wire bits
+      427 ports
+   125564 port bits
+       48 processes
+      273 cells
+       10   $add
+        4   $eq
+        2   $ge
+       12   $logic_and
+       28   $logic_not
+        8   $logic_or
+        3   $mul
+       43   $mux
+        4   $ne
+       22   $not
+        2   $or
+        9   $reduce_or
+        1   $sub
+        2   hfd_hgi_vm_calendar_f20
+        1   hfd_hgi_vms_glue_nw_t
+        1   hfd_hgi_vms_glue_sw_t
+       16   hfd_vms_bank_native_q0_faces
+        4   ot_hbm_hc_subtree32_core
+        2   ot_hbm_idx_qctl_static
+        2   ot_hbm_idx_query_static
+        2   ot_hbm_idx_vm_query_static_n12
+        1   ot_hbm_sm_vm_wr_q_t_lanes4
+        1   ot_hbm_su_programme_pslice_c5
+        1   ot_hbm_su_static_qcore_r13_w2
+        1   ot_hbm_su_static_sfustore_hw
+       16   ot_hbm_svc_pc_ctrl_leaf_cfg_h9b
+        4   ot_hbm_svc_sm_group_rel_id_rc
+        4   ot_hbm_svc_vm_kshare_splitstrap
+        8   ot_hbm_svc_vmdel_lane_n
+        1   ot_hbm_svc_wb_kport_q
+        2   ot_hbm_xp_aq_tree13_fmt
+        1   ot_hfd_coll_q2_hard_v8g__reduce__nw_actual
+        1   ot_hfd_coll_q2_hard_v8g__ring_ag
+        1   ot_hfd_coll_q3_body_core
+        1   ot_hfd_coll_q3_edge_core
+        1   ot_hfd_coll_q3_vm_core
+        1   ot_hgi_coll_inj_idx_join_rg
+        1   ot_hgi_dma_back_static_vp4_banks_cp
+        1   ot_hgi_qw_dec
+        1   ot_hgi_sfu_programme_store_r10
+        8   ot_hgi_sm_xload_cl2_bfqg
+       16   ot_hnx_fused_lane
+       15   ot_hnx_fused_tnode
+        8   ot_hnx_idxn_keybuf_slice
+     3821 submodules
+        1   $paramod$0003f2fddf5f57f2fbd452cd5da4ab4d54ef6ef7\ot_hbm_host_cfg_leaf2
+        2   $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring
+        2   $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_r4
+        1   $paramod$1a2cbec3ba8d885535c53e5ef0845421e5fbcf0d\ot_hbm_obs_leaf
+        1   $paramod$1c1d8063e38c32fd68f65fcfed1ac481486be9a3\ot_hbm_su_static_cxport_ij_q
+        3   $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+        1   $paramod$4356675e08215818570b5eceb9d506c2f2a880b8\ot_dp_dly
+        1   $paramod$5d887d8dde147f7968f6566c580b30da8bdee2b8\ot_hgi_qdq_nw_program_leaf
+        1   $paramod$6c6dfe08ea2dde717a15cb4c610d8824e2f4e5d1\ot_hbm_su_static_cxport_ij_s
+        1   $paramod$6db47097bb51ef1f9bf522073f8c1df77bece45f\ot_hbm_su_stree_leaf
+        1   $paramod$782575dec3c9f4bf2c94584a2290f60d1e4efa5a\ot_hbm_hc_q_static
+        1   $paramod$79ffc597cf6e6d6bf7b1bf44efbf8413f6708d24\ot_hbm_fault_leaf
+        4   $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice
+        4   $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice
+        1   $paramod$8bb481a724279a054ca0be71d7db7ccbb8c5984f\ot_dp_dly
+        1   $paramod$a6e11202609093a63751e51047362ae464c7e0b0\ot_hbm_fault_leaf
+        1   $paramod$b6ef2feb2256743c537cca125af0bee9c2d0b640\ot_hbm_svc_wbw_copy
+        1   $paramod$ba709a019ac084a5e9159ea88edae1e304bb6c0d\ot_dp_dly
+        1   $paramod$f588d14f666a95cb09f7ea03b084f2e61df00462\ot_hbm_static_cfg_collar
+        1   $paramod$fecbefbd9ba865a7907558e5fa8895d7aa076073\ot_hgi_sm_xload_cl2_ctlx
+        1   $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000000111001
+        1   $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000001011001
+       42   $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000010
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000000011
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000101
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000110
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000001000
+        5   $paramod\ot_dp_st\W=s32'00000000000000000000000000001001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000001010
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000001111
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000010000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000010010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000010011
+        5   $paramod\ot_dp_st\W=s32'00000000000000000000000000010101
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000010110
+       14   $paramod\ot_dp_st\W=s32'00000000000000000000000000011000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000000011100
+       26   $paramod\ot_dp_st\W=s32'00000000000000000000000000100000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000000100010
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000000100100
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000000000100101
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000001000011
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000001000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000001111110
+        9   $paramod\ot_dp_st\W=s32'00000000000000000000000010000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010001100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010011010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010100000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010101101
+       23   $paramod\ot_dp_st\W=s32'00000000000000000000000010110100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000011010010
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000000100000000
+       12   $paramod\ot_dp_st\W=s32'00000000000000000000000100000001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100000110
+        5   $paramod\ot_dp_st\W=s32'00000000000000000000000100001100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100001111
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100010010
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000000100011000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100110000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000101000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000101000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000101001010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000110011010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000111010111
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001000000000
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000001000000010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000001000101110
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000001000101111
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001000110010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000001001100010
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000001001100011
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001001100100
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001001101010
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001100010100
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000001100111100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000001111111000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000010000101000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000010001010100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000010010010011
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000010010100110
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000010100110001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000010111110010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011000000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011001001000
+        7   $paramod\ot_dp_st\W=s32'00000000000000000000011001001111
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011011001110
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011100011100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011100110010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011110111100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000100000010000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000100000100000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000100001111010
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000100001111100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000100110110100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101000000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101001000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101010110100
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000101100000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101111111110
+        1   $paramod\ot_dp_st\W=s32'00000000000000000001000000000010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000001001101111010
+        1   $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000000111
+        1   $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000110110
+        1   $paramod\ot_hgi_coll_gq_issue\VM_RT=s32'00000000000000000000000000000011
+        4   $paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010
+        1   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001
+        1   hbfd_qdq_split_and
+        1   hbfd_qdq_split_or
+        8   hfd_vms_wq2_merge
+        1   ot_bind_native_626a9a88cf25221c8bfe5338
+     3469   ot_dp_rrelay
+        1   ot_hbm_fault_leaf_n8_s0
+        1   ot_hbm_kqs_fault_or4
+        1   ot_hbm_su_static_cxport_rc_q
+        1   ot_hbm_su_static_cxport_rc_s
+        1   ot_hgi_coll_gq_land
+        1   ot_hgi_coll_inj_copy
+        4   ot_hgi_coll_kq_share2_leaf
+        1   ot_hgi_coll_ring_b_stop
+        1   ot_hnx_calendar_cfg_leaf
+       25   ot_hnx_host_boot_hop
+
+=== $paramod$15afaf1e8ddb8782ebdc34866a1b45dd1c3ad854\ot_hbm_idx_vm_share2_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+     6587 wire bits
+       10 public wires
+     6586 public wire bits
+        9 ports
+     6582 port bits
+        1 cells
+        1   $reduce_or
+        4 submodules
+        4   $paramod$883d527b8bcd1db9462d49cec106d2f34304b787\ot_hbm_idx_vm_share2_leaf_r
+
+=== $paramod$a2ce3b367a852d2807d1af4c47657e46e5eafaf3\ot_hdc_w11_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      485 wire bits
+        6 public wires
+      363 public wire bits
+        4 ports
+      242 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$bdef29db2ffa5014df77602d1586a75de62e4840\ot_hdc_w11_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      413 wire bits
+        6 public wires
+      309 public wire bits
+        4 ports
+      206 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$3e73f3ba6cbacea9180736454b094687d5a618a6\ot_hdc_w11_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      437 wire bits
+        6 public wires
+      327 public wire bits
+        4 ports
+      218 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$21438b7cca4d59b96014f57b6fe086457d2609f0\ot_hdc_w11_cut ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      289 wire bits
+        6 public wires
+      216 public wire bits
+        4 ports
+      144 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$01c5b9825ad0d20d655f4d07ab16639d11a79c02\ot_hgi_hc_residual_vm_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      220 wires
+    15224 wire bits
+       79 public wires
+     9113 public wire bits
+       14 ports
+     4286 port bits
+        5 processes
+       71 cells
+       18   $add
+        6   $eq
+        2   $gt
+        7   $logic_and
+        3   $logic_not
+        6   $logic_or
+        1   $lt
+       10   $mul
+        2   $mux
+        9   $ne
+        1   $or
+        1   $reduce_or
+        1   $shl
+        1   $shr
+        2   $sub
+        1   $xor
+
+=== $paramod$fa47428d3212f122d90c52c1aa169429350ff0db\ot_hgi_hc_gathered_mix_reader_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      213 wires
+    10392 wire bits
+       34 public wires
+     3946 public wire bits
+       15 ports
+     2282 port bits
+        4 processes
+      122 cells
+       21   $add
+        9   $and
+        6   $eq
+        1   $ge
+        1   $le
+        8   $logic_and
+        3   $logic_not
+        1   $logic_or
+        3   $lt
+        8   $mul
+        1   $mux
+       18   $neg
+        1   $nex
+        9   $not
+        9   $or
+       18   $shift
+        4   $shiftx
+        1   $sub
+
+=== $paramod$603d850713249113ca42382f204aef05048483d6\ot_hbm_idx_vm_share2_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+     6587 wire bits
+       10 public wires
+     6586 public wire bits
+        9 ports
+     6582 port bits
+        1 cells
+        1   $reduce_or
+        4 submodules
+        4   $paramod$7c655027cbb7bdb2ea52b5d4eb56b64f2a274eea\ot_hbm_idx_vm_share2_leaf_r
+
+=== $paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000001011001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      114 wires
+     2529 wire bits
+       44 public wires
+     1423 public wire bits
+       17 ports
+      434 port bits
+        5 processes
+       43 cells
+        5   $add
+        8   $eq
+        1   $gt
+        1   $le
+       13   $logic_and
+        6   $logic_not
+        3   $logic_or
+        1   $mux
+        1   $ne
+        2   $or
+        1   $sub
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+
+=== $paramod$5fc50134dae0d922f9a416a1ed0a82877f1721a7\ot_hgi_sm_xload_cl2_ctlw ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       63 wires
+    11559 wire bits
+       63 public wires
+    11559 public wire bits
+       53 ports
+    10920 port bits
+        1 cells
+        1   ot_sram_1r1w_128x256_m1_r2c2
+        2 submodules
+        1   $paramod$4c090d3b3b856baf9b1b511afe5a87042b3fe380\ot_hgi_sm_xload_cl2_ctl
+        1   $paramod$9bbe76735c73e77a7984e1fc0ed6a7f81e990eb7\ot_static_cmd_target_core
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       24 wire bits
+        6 public wires
+       16 public wire bits
+        6 ports
+       16 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000001010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       36 wire bits
+        6 public wires
+       24 public wire bits
+        6 ports
+       24 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000000101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       21 wire bits
+        6 public wires
+       14 public wire bits
+        6 ports
+       14 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011110111100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     5946 wire bits
+        6 public wires
+     3964 public wire bits
+        6 ports
+     3964 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$4356675e08215818570b5eceb9d506c2f2a880b8\ot_dp_dly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       17 wires
+    27799 wire bits
+       10 public wires
+    15881 public wire bits
+        3 ports
+     3963 port bits
+        1 processes
+
+=== ot_dp_rrelay ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 processes
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001111111000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     3054 wire bits
+        6 public wires
+     2036 public wire bits
+        6 ports
+     2036 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$8bb481a724279a054ca0be71d7db7ccbb8c5984f\ot_dp_dly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       27 wires
+    24473 wire bits
+       15 public wires
+    13254 public wire bits
+        3 ports
+     2035 port bits
+        1 processes
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       18 wire bits
+        6 public wires
+       12 public wire bits
+        6 ports
+       12 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       15 wire bits
+        6 public wires
+       10 public wire bits
+        6 ports
+       10 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000101001000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     7890 wire bits
+        6 public wires
+     5260 public wire bits
+        6 ports
+     5260 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== hbfd_qdq_split_and ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   $logic_and
+
+=== hbfd_qdq_split_or ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+        4 wire bits
+        3 public wires
+        3 public wire bits
+        3 ports
+        3 port bits
+        1 cells
+        1   $or
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001000101111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1683 wire bits
+        6 public wires
+     1122 public wire bits
+        6 ports
+     1122 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001000101110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1680 wire bits
+        6 public wires
+     1120 public wire bits
+        6 ports
+     1120 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== hfd_vms_wq2_merge ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       70 wires
+     3777 wire bits
+       21 public wires
+     1995 public wire bits
+        9 ports
+      849 port bits
+        7 processes
+       33 cells
+       16   $and
+        3   $logic_and
+        5   $logic_not
+        9   $or
+
+=== ot_bind_native_626a9a88cf25221c8bfe5338 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+       70 wire bits
+        2 public wires
+       38 public wire bits
+        2 ports
+       38 port bits
+        1 cells
+        1   $div
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000010001010100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     3330 wire bits
+        6 public wires
+     2220 public wire bits
+        6 ports
+     2220 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000110011010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1236 wire bits
+        6 public wires
+      824 public wire bits
+        6 ports
+      824 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000001000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+    12300 wire bits
+        6 public wires
+     8200 public wire bits
+        6 ports
+     8200 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000101000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     7686 wire bits
+        6 public wires
+     5124 public wire bits
+        6 ports
+     5124 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hbm_fault_leaf_n8_s0 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        4 wires
+       11 wire bits
+        4 public wires
+       11 public wire bits
+        4 ports
+       11 port bits
+        1 submodules
+        1   $paramod$c18c629f8c88cf6e946a6eb8804f0d0ee0ec51ed\ot_hbm_fault_leaf
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     4614 wire bits
+        6 public wires
+     3076 public wire bits
+        6 ports
+     3076 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000101001010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      996 wire bits
+        6 public wires
+      664 public wire bits
+        6 ports
+      664 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hgi_hc_result_vm_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      107 wires
+    44837 wire bits
+       13 public wires
+     5307 public wire bits
+       11 ports
+     3051 port bits
+        2 processes
+       69 cells
+       11   $add
+        6   $and
+        1   $gt
+        2   $logic_and
+        3   $logic_not
+        2   $logic_or
+        7   $mul
+        1   $ne
+       12   $neg
+        6   $not
+        6   $or
+       12   $shift
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001000000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1542 wire bits
+        6 public wires
+     1028 public wire bits
+        6 ports
+     1028 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000010000101000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     3198 wire bits
+        6 public wires
+     2132 public wire bits
+        6 ports
+     2132 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001001100010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1836 wire bits
+        6 public wires
+     1224 public wire bits
+        6 ports
+     1224 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1548 wire bits
+        6 public wires
+     1032 public wire bits
+        6 ports
+     1032 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000101000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      978 wire bits
+        6 public wires
+      652 public wire bits
+        6 ports
+      652 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000010001100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      426 wire bits
+        6 public wires
+      284 public wire bits
+        6 ports
+      284 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000001000100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      210 wire bits
+        6 public wires
+      140 public wire bits
+        6 ports
+      140 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000010101101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      525 wire bits
+        6 public wires
+      350 public wire bits
+        6 ports
+      350 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$ba709a019ac084a5e9159ea88edae1e304bb6c0d\ot_dp_dly ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       31 wires
+     4937 wire bits
+       17 public wires
+     2643 public wire bits
+        3 ports
+      349 port bits
+        1 processes
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       30 wire bits
+        6 public wires
+       20 public wire bits
+        6 ports
+       20 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000011000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       78 wire bits
+        6 public wires
+       52 public wire bits
+        6 ports
+       52 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hbm_kqs_fault_or4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        3 wires
+        6 wire bits
+        2 public wires
+        5 public wire bits
+        2 ports
+        5 port bits
+        1 cells
+        1   $reduce_or
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000001000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      207 wire bits
+        6 public wires
+      138 public wire bits
+        6 ports
+      138 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000100101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      117 wire bits
+        6 public wires
+       78 public wire bits
+        6 ports
+       78 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000100010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      108 wire bits
+        6 public wires
+       72 public wire bits
+        6 ports
+       72 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001000110010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1692 wire bits
+        6 public wires
+     1128 public wire bits
+        6 ports
+     1128 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011100011100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     5466 wire bits
+        6 public wires
+     3644 public wire bits
+        6 ports
+     3644 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hbm_su_static_cxport_rc_q ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      221 wires
+    10503 wire bits
+       44 public wires
+     4235 public wire bits
+       19 ports
+     2490 port bits
+        1 memories
+       40 memory bits
+       19 processes
+      120 cells
+        1   $add
+       21   $and
+        3   $eq
+       16   $logic_and
+       11   $logic_not
+        6   $logic_or
+        8   $memrd
+        1   $mul
+       10   $mux
+        4   $neg
+        4   $not
+       26   $or
+        2   $reduce_or
+        4   $shift
+        2   $shiftx
+        1   $shl
+
+=== ot_hbm_su_static_cxport_rc_s ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       64 wires
+     6639 wire bits
+       24 public wires
+     3956 public wire bits
+       18 ports
+     3166 port bits
+        6 processes
+       27 cells
+        1   $add
+        1   $eq
+        6   $logic_and
+        6   $logic_not
+        2   $logic_or
+        5   $mux
+        2   $ne
+        1   $not
+        1   $reduce_or
+        2   $shl
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000010101 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       69 wire bits
+        6 public wires
+       46 public wire bits
+        6 ports
+       46 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000010000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       54 wire bits
+        6 public wires
+       36 public wire bits
+        6 ports
+       36 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000101010110100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     8226 wire bits
+        6 public wires
+     5484 public wire bits
+        6 ports
+     5484 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000001001101111010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+    14964 wire bits
+        6 public wires
+     9976 public wire bits
+        6 ports
+     9976 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000100001111100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     6522 wire bits
+        6 public wires
+     4348 public wire bits
+        6 ports
+     4348 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000010100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      486 wire bits
+        6 public wires
+      324 public wire bits
+        6 ports
+      324 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000100000100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     6246 wire bits
+        6 public wires
+     4164 public wire bits
+        6 ports
+     4164 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000010111110010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     4572 wire bits
+        6 public wires
+     3048 public wire bits
+        6 ports
+     3048 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011001001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     4851 wire bits
+        6 public wires
+     3234 public wire bits
+        6 ports
+     3234 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011001001000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     4830 wire bits
+        6 public wires
+     3220 public wire bits
+        6 ports
+     3220 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000010100110001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     3993 wire bits
+        6 public wires
+     2662 public wire bits
+        6 ports
+     2662 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000100000010000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     6198 wire bits
+        6 public wires
+     4132 public wire bits
+        6 ports
+     4132 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hbm_su_stree_rsync ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        6 wires
+        8 wire bits
+        4 public wires
+        5 public wire bits
+        3 ports
+        3 port bits
+        1 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001100010100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     2370 wire bits
+        6 public wires
+     1580 public wire bits
+        6 ports
+     1580 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000101100000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     8454 wire bits
+        6 public wires
+     5636 public wire bits
+        6 ports
+     5636 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001001101010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1860 wire bits
+        6 public wires
+     1240 public wire bits
+        6 ports
+     1240 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001001100011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1839 wire bits
+        6 public wires
+     1226 public wire bits
+        6 ports
+     1226 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000001111110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      384 wire bits
+        6 public wires
+      256 public wire bits
+        6 ports
+      256 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000011010010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      636 wire bits
+        6 public wires
+      424 public wire bits
+        6 ports
+      424 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100110000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      918 wire bits
+        6 public wires
+      612 public wire bits
+        6 ports
+      612 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100001100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      810 wire bits
+        6 public wires
+      540 public wire bits
+        6 ports
+      540 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001100111100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     2490 wire bits
+        6 public wires
+     1660 public wire bits
+        6 ports
+     1660 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100010010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      828 wire bits
+        6 public wires
+      552 public wire bits
+        6 ports
+      552 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000010010010011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     3519 wire bits
+        6 public wires
+     2346 public wire bits
+        6 ports
+     2346 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000010011010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      468 wire bits
+        6 public wires
+      312 public wire bits
+        6 ports
+      312 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000100110110100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     7458 wire bits
+        6 public wires
+     4972 public wire bits
+        6 ports
+     4972 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000011100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       90 wire bits
+        6 public wires
+       60 public wire bits
+        6 ports
+       60 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       12 wire bits
+        6 public wires
+        8 public wire bits
+        6 ports
+        8 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000101111111110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     9216 wire bits
+        6 public wires
+     6144 public wire bits
+        6 ports
+     6144 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000010010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       60 wire bits
+        6 public wires
+       40 public wire bits
+        6 ports
+       40 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000010110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       72 wire bits
+        6 public wires
+       48 public wire bits
+        6 ports
+       48 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hdc_lzc32 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      108 wires
+     1281 wire bits
+        8 public wires
+      486 public wire bits
+        2 ports
+       38 port bits
+        1 processes
+       94 cells
+       32   $mux
+       62   $or
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       51 wire bits
+        6 public wires
+       34 public wire bits
+        6 ports
+       34 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011100110010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     5532 wire bits
+        6 public wires
+     3688 public wire bits
+        6 ports
+     3688 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000101000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      966 wire bits
+        6 public wires
+      644 public wire bits
+        6 ports
+      644 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100001111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      819 wire bits
+        6 public wires
+      546 public wire bits
+        6 ports
+      546 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000010011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       63 wire bits
+        6 public wires
+       42 public wire bits
+        6 ports
+       42 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000001001100100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1842 wire bits
+        6 public wires
+     1228 public wire bits
+        6 ports
+     1228 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000100001111010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     6516 wire bits
+        6 public wires
+     4344 public wire bits
+        6 ports
+     4344 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100011000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      846 wire bits
+        6 public wires
+      564 public wire bits
+        6 ports
+      564 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100000110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      792 wire bits
+        6 public wires
+      528 public wire bits
+        6 ports
+      528 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hgi_coll_inj_copy ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      489 wire bits
+        6 public wires
+      326 public wire bits
+        6 ports
+      326 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000010010100110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     3576 wire bits
+        6 public wires
+     2384 public wire bits
+        6 ports
+     2384 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hgi_coll_kq_share2_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       77 wires
+     7341 wire bits
+       28 public wires
+     3944 public wire bits
+        6 ports
+     1689 port bits
+        9 processes
+       36 cells
+       12   $and
+        6   $logic_and
+        7   $logic_not
+        4   $not
+        6   $or
+        1   $reduce_or
+        1 submodules
+        1   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000011011001110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     5232 wire bits
+        6 public wires
+     3488 public wire bits
+        6 ports
+     3488 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hgi_coll_gq_land ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1580 wires
+    67002 wire bits
+      299 public wires
+    14765 public wire bits
+       20 ports
+     3880 port bits
+       10 processes
+      391 cells
+       24   $add
+       21   $and
+       12   $eq
+       87   $logic_and
+       10   $logic_not
+       33   $logic_or
+        8   $lt
+        4   $mul
+       34   $mux
+       12   $ne
+       24   $neg
+       13   $not
+       20   $or
+        9   $reduce_bool
+       24   $shift
+       48   $shiftx
+        8   $shl
+        1 submodules
+        1   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+
+=== ot_hgi_coll_ring_b_stop ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       50 wires
+     4872 wire bits
+       44 public wires
+     3406 public wire bits
+       25 ports
+     1940 port bits
+        2 processes
+        4 cells
+        2   $and
+        1   $logic_not
+        1   $or
+        2 submodules
+        1   $paramod$ae067ad122e3c2f668cd5cddcc60cf1390c385de\ot_hgi_coll_ring_ag_lane
+        1   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000111010111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1419 wire bits
+        6 public wires
+      946 public wire bits
+        6 ports
+      946 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000100000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      102 wire bits
+        6 public wires
+       68 public wire bits
+        6 ports
+       68 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000001001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       33 wire bits
+        6 public wires
+       22 public wire bits
+        6 ports
+       22 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000100100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      114 wire bits
+        6 public wires
+       76 public wire bits
+        6 ports
+       76 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== ot_hgi_qdq_record_calendar ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      139 wires
+     2749 wire bits
+       45 public wires
+     1447 public wire bits
+       14 ports
+      375 port bits
+        4 processes
+       69 cells
+       12   $add
+       11   $eq
+        2   $ge
+        2   $gt
+        2   $le
+       21   $logic_and
+        9   $logic_not
+        2   $logic_or
+        2   $lt
+        2   $mul
+        1   $mux
+        1   $ne
+        1   $or
+        1   ot_sram_1r1w_1024x256_m2_r2c2
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000010000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      390 wire bits
+        6 public wires
+      260 public wire bits
+        6 ports
+      260 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100000000 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      774 wire bits
+        6 public wires
+      516 public wire bits
+        6 ports
+      516 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000000000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+        9 wire bits
+        6 public wires
+        6 public wire bits
+        6 ports
+        6 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000100000001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      777 wire bits
+        6 public wires
+      518 public wire bits
+        6 ports
+      518 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod\ot_dp_st\W=s32'00000000000000000000000010110100 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+      546 wire bits
+        6 public wires
+      364 public wire bits
+        6 ports
+      364 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$f588d14f666a95cb09f7ea03b084f2e61df00462\ot_hbm_static_cfg_collar ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      584 wires
+    14517 wire bits
+       78 public wires
+     2069 public wire bits
+       23 ports
+     1048 port bits
+       11 processes
+      175 cells
+       13   $add
+        5   $and
+        4   $div
+       16   $eq
+        8   $ge
+        2   $gt
+        4   $le
+       29   $logic_and
+       17   $logic_not
+        9   $logic_or
+       11   $lt
+        4   $mod
+        5   $mul
+        4   $mux
+        1   $ne
+       10   $neg
+        5   $not
+        5   $or
+        1   $reduce_and
+        2   $reduce_or
+       10   $shift
+        5   $shiftx
+        5   $sub
+
+=== $paramod$1c1d8063e38c32fd68f65fcfed1ac481486be9a3\ot_hbm_su_static_cxport_ij_q ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     1715 wires
+    62795 wire bits
+      298 public wires
+    20320 public wire bits
+       13 ports
+     6213 port bits
+      329 processes
+     1021 cells
+        1   $add
+      516   $and
+        1   $ge
+        4   $logic_and
+        4   $logic_not
+        2   $logic_or
+        2   $mux
+        1   $ne
+        1   $not
+      484   $or
+        5   $reduce_or
+        8 submodules
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000000
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000001
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000010
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000011
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000100
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000101
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000110
+        1   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000111
+
+=== $paramod$6c6dfe08ea2dde717a15cb4c610d8824e2f4e5d1\ot_hbm_su_static_cxport_ij_s ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      139 wires
+    22563 wire bits
+       24 public wires
+     6804 public wire bits
+       11 ports
+     3302 port bits
+        1 memories
+     1024 memory bits
+       15 processes
+       59 cells
+        1   $add
+        4   $eq
+        1   $ge
+        1   $gt
+       10   $logic_and
+        7   $logic_not
+        2   $memrd
+       11   $mux
+        2   $ne
+        1   $not
+       14   $reduce_or
+        1   $sub
+        4   $xor
+
+=== $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000000111001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       36 wires
+      739 wire bits
+       33 public wires
+      736 public wire bits
+       23 ports
+      428 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+        2 submodules
+        1   $paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target
+        1   $paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000000111001
+
+=== $paramod$a6e11202609093a63751e51047362ae464c7e0b0\ot_hbm_fault_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       20 wires
+       80 wire bits
+       10 public wires
+       35 public wire bits
+        4 ports
+        9 port bits
+        1 processes
+        7 cells
+        3   $and
+        1   $logic_not
+        1   $not
+        1   $or
+        1   $reduce_or
+
+=== ot_hbm_xp_aq_scale13 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       11 wires
+      105 wire bits
+        9 public wires
+      103 public wire bits
+        7 ports
+      100 port bits
+        2 cells
+        1   $logic_and
+        1   $ne
+        1 submodules
+        1   ot_hbm_xp_aq_mul_pipe13
+
+=== ot_hbm_xp_aq_mul_pipe13 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      714 wires
+     5405 wire bits
+      114 public wires
+     1639 public wire bits
+        8 ports
+      102 port bits
+       15 processes
+      396 cells
+       44   $add
+       15   $and
+        8   $eq
+       26   $ge
+        2   $gt
+        1   $le
+       31   $logic_and
+        7   $logic_not
+        4   $logic_or
+       74   $lt
+        6   $mul
+       15   $mux
+        2   $ne
+        2   $neg
+       61   $or
+       13   $reduce_and
+       25   $shiftx
+        3   $shl
+       53   $sub
+        4   $xor
+
+=== $paramod$79ffc597cf6e6d6bf7b1bf44efbf8413f6708d24\ot_hbm_fault_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       20 wires
+      176 wire bits
+       10 public wires
+       75 public wire bits
+        4 ports
+       17 port bits
+        1 processes
+        7 cells
+        3   $and
+        1   $logic_not
+        1   $not
+        1   $or
+        1   $reduce_or
+
+=== ot_hbm_xp_aq_tree13 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2789 wires
+    30804 wire bits
+      452 public wires
+     9805 public wire bits
+       10 ports
+     1808 port bits
+       18 processes
+     1891 cells
+      353   $add
+       72   $and
+       96   $eq
+      142   $ge
+       64   $gt
+      113   $logic_and
+      101   $logic_not
+       32   $lt
+      436   $mux
+       97   $ne
+       95   $or
+       64   $shl
+       32   $shr
+      193   $sub
+        1   $xor
+        3 submodules
+        1   $paramod$2cfa8cb701a5b6a1f66a63577042fd2a95defc32\ot_hdc_delay
+        1   $paramod$c7810d087bc46beadc463d87c97f988966edfc9b\ot_hdc_delay
+        1   ot_hbm_xp_aq_scale13
+
+=== $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000110110 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     6582 wire bits
+        9 public wires
+     6582 public wire bits
+        9 ports
+     6582 port bits
+        1 submodules
+        1   $paramod$15afaf1e8ddb8782ebdc34866a1b45dd1c3ad854\ot_hbm_idx_vm_share2_static
+
+=== $paramod$5d887d8dde147f7968f6566c580b30da8bdee2b8\ot_hgi_qdq_nw_program_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       44 wires
+      856 wire bits
+       33 public wires
+      783 public wire bits
+       18 ports
+      407 port bits
+        3 processes
+        8 cells
+        1   $add
+        1   $logic_and
+        3   $logic_not
+        1   $ne
+        2   $or
+        3 submodules
+        1   $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+        1   $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010
+        1   ot_hgi_qdq_record_calendar
+
+=== $paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     2528 wire bits
+        9 public wires
+     2528 public wire bits
+        8 ports
+     1966 port bits
+        1 submodules
+        1   $paramod\ot_hgi_qdq_lg_port_group_r2\BANKS=s32'00000000000000000000000000000010
+
+=== $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_r4 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       69 wires
+      821 wire bits
+       45 public wires
+      663 public wire bits
+       25 ports
+      548 port bits
+        4 processes
+        3 cells
+        3   $logic_not
+        1 submodules
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+
+=== $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      456 wires
+    13748 wire bits
+       29 public wires
+     1820 public wire bits
+        4 ports
+      772 port bits
+       17 processes
+      320 cells
+       64   $add
+       64   $and
+       64   $eq
+       64   $or
+       64   $xor
+
+=== $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      320 wires
+     9236 wire bits
+       61 public wires
+     2076 public wire bits
+        4 ports
+      388 port bits
+       17 processes
+      128 cells
+       32   $add
+       32   $and
+       32   $eq
+       32   $xor
+
+=== $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      238 wires
+     3434 wire bits
+      128 public wires
+     1998 public wire bits
+        8 ports
+      102 port bits
+        8 processes
+       74 cells
+        1   $add
+        2   $and
+       10   $eq
+        3   $ge
+        1   $le
+        3   $logic_and
+        5   $logic_not
+        5   $logic_or
+       17   $mux
+        2   $ne
+        7   $not
+        4   $or
+        5   $reduce_or
+        4   $shl
+        2   $shr
+        2   $sub
+        1   $xor
+       13 submodules
+        1   $paramod$21438b7cca4d59b96014f57b6fe086457d2609f0\ot_hdc_w11_cut
+        1   $paramod$3e73f3ba6cbacea9180736454b094687d5a618a6\ot_hdc_w11_cut
+        1   $paramod$a2ce3b367a852d2807d1af4c47657e46e5eafaf3\ot_hdc_w11_cut
+        1   $paramod$bdef29db2ffa5014df77602d1586a75de62e4840\ot_hdc_w11_cut
+        4   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000
+        1   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011000
+        2   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011100
+        1   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011111
+        1   ot_hdc_lzc32
+
+=== $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+       35 wire bits
+        5 public wires
+       22 public wire bits
+        3 ports
+       11 port bits
+        2 processes
+        2 cells
+        2   $logic_not
+
+=== $paramod$782575dec3c9f4bf2c94584a2290f60d1e4efa5a\ot_hbm_hc_q_static ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      217 wires
+    19545 wire bits
+      119 public wires
+    11644 public wire bits
+       33 ports
+     7658 port bits
+        6 processes
+       33 cells
+        1   $add
+        2   $logic_and
+        4   $logic_not
+        1   $logic_or
+        3   $mux
+        1   $ne
+       21   $or
+        6 submodules
+        1   $paramod$01c5b9825ad0d20d655f4d07ab16639d11a79c02\ot_hgi_hc_residual_vm_static
+        1   $paramod$a84cf026b52e64956de919dcd341d5864d52c644\ot_static_program_target
+        1   $paramod$fa47428d3212f122d90c52c1aa169429350ff0db\ot_hgi_hc_gathered_mix_reader_static
+        1   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000110
+        1   $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000001001111
+        1   ot_hgi_hc_result_vm_static
+
+=== $paramod\ot_hgi_coll_gq_issue\VM_RT=s32'00000000000000000000000000000011 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2959 wires
+    84092 wire bits
+      563 public wires
+    24706 public wire bits
+       73 ports
+     4032 port bits
+        1 memories
+     1616 memory bits
+       29 processes
+     1004 cells
+      192   $add
+       36   $and
+      310   $eq
+        2   $gt
+        1   $le
+       61   $logic_and
+       26   $logic_not
+       60   $logic_or
+       32   $lt
+        3   $memrd
+       20   $mul
+       40   $mux
+        4   $ne
+       64   $neg
+       32   $not
+       43   $or
+        8   $reduce_or
+       64   $shift
+        2   $shr
+        4   $sub
+        4 submodules
+        1   $paramod$d0e3e25f2666fa833ba84ed3a4778aba0814d801\ot_static_program_target
+        1   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+        2   ot_hbm_xp_aq_tree13
+
+=== $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000000111 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     6582 wire bits
+        9 public wires
+     6582 public wire bits
+        9 ports
+     6582 port bits
+        1 submodules
+        1   $paramod$603d850713249113ca42382f204aef05048483d6\ot_hbm_idx_vm_share2_static
+
+=== ot_hnx_calendar_cfg_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       38 wires
+     1925 wire bits
+       29 public wires
+     1284 public wire bits
+       20 ports
+      642 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+        1 submodules
+        1   $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+
+=== ot_hnx_host_boot_hop ===
+
+        +----------Local Count, excluding submodules.
+        | 
+        9 wires
+     1289 wire bits
+        6 public wires
+      965 public wire bits
+        4 ports
+      642 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+
+=== $paramod$0003f2fddf5f57f2fbd452cd5da4ab4d54ef6ef7\ot_hbm_host_cfg_leaf2 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       35 wires
+     1106 wire bits
+       35 public wires
+     1106 public wire bits
+       35 ports
+     1106 port bits
+        1 submodules
+        1   $paramod$40c500cd74b4ef6668c6929a20a71558a47514d8\ot_hbm_host_cfg_leaf
+
+=== $paramod$1a2cbec3ba8d885535c53e5ef0845421e5fbcf0d\ot_hbm_obs_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+      847 wires
+     5523 wire bits
+       30 public wires
+     1810 public wire bits
+        9 ports
+      293 port bits
+        9 processes
+      796 cells
+      241   $and
+       29   $eq
+       50   $logic_and
+        4   $logic_not
+        7   $ne
+      225   $not
+      240   $or
+        1 submodules
+        1   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+
+=== $paramod$6db47097bb51ef1f9bf522073f8c1df77bece45f\ot_hbm_su_stree_leaf ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       26 wires
+      666 wire bits
+       16 public wires
+      445 public wire bits
+        8 ports
+      248 port bits
+        5 processes
+        2 cells
+        2   $logic_not
+        1 submodules
+        1   ot_hbm_su_stree_rsync
+
+=== $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000001011001 ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       36 wires
+      771 wire bits
+       33 public wires
+      768 public wire bits
+       23 ports
+      460 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+        2 submodules
+        1   $paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target
+        1   $paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000001011001
+
+=== $paramod$b6ef2feb2256743c537cca125af0bee9c2d0b640\ot_hbm_svc_wbw_copy ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       43 wires
+      652 wire bits
+       23 public wires
+      432 public wire bits
+        8 ports
+      217 port bits
+       10 processes
+        5 cells
+        5   $logic_not
+
+=== $paramod$fecbefbd9ba865a7907558e5fa8895d7aa076073\ot_hgi_sm_xload_cl2_ctlx ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       53 wires
+     5791 wire bits
+       48 public wires
+     5786 public wire bits
+       44 ports
+     5782 port bits
+        2 processes
+        1 cells
+        1   $logic_not
+        1 submodules
+        1   $paramod$5fc50134dae0d922f9a416a1ed0a82877f1721a7\ot_hgi_sm_xload_cl2_ctlw
+
+=== design hierarchy ===
+
+        +----------Count including submodules.
+        | 
+    30805 hbm_arch_q_hub__q_hub_nw
+       12   $paramod$40c500cd74b4ef6668c6929a20a71558a47514d8\ot_hbm_host_cfg_leaf
+        2     $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+     3651 $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring
+      532 $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress
+        3 $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_r4
+      145   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_s4
+      796 $paramod$1a2cbec3ba8d885535c53e5ef0845421e5fbcf0d\ot_hbm_obs_leaf
+        2   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+     1021 $paramod$1c1d8063e38c32fd68f65fcfed1ac481486be9a3\ot_hbm_su_static_cxport_ij_q
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000000
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000001
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000010
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000011
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000100
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000101
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000110
+      321   $paramod\ot_hbm_cxijq_sel_copy\COPY_ID=s32'00000000000000000000000000000111
+       74 $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+        1   $paramod$21438b7cca4d59b96014f57b6fe086457d2609f0\ot_hdc_w11_cut
+        1   $paramod$3e73f3ba6cbacea9180736454b094687d5a618a6\ot_hdc_w11_cut
+        1   $paramod$a2ce3b367a852d2807d1af4c47657e46e5eafaf3\ot_hdc_w11_cut
+        1   $paramod$bdef29db2ffa5014df77602d1586a75de62e4840\ot_hdc_w11_cut
+       67   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000001000
+      286   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011000
+      346   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011100
+      391   $paramod\ot_hdc_ksadd_k__u1\W=s32'00000000000000000000000000011111
+       94   ot_hdc_lzc32
+        8 $paramod$5d887d8dde147f7968f6566c580b30da8bdee2b8\ot_hgi_qdq_nw_program_leaf
+        2   $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+       65   $paramod\ot_static_program_target\TARGET=8'00110000\PCW=s32'00000000000000000000000000001010
+       69   ot_hgi_qdq_record_calendar
+       59 $paramod$6c6dfe08ea2dde717a15cb4c610d8824e2f4e5d1\ot_hbm_su_static_cxport_ij_s
+        2 $paramod$6db47097bb51ef1f9bf522073f8c1df77bece45f\ot_hbm_su_stree_leaf
+        1   ot_hbm_su_stree_rsync
+       33 $paramod$782575dec3c9f4bf2c94584a2290f60d1e4efa5a\ot_hbm_hc_q_static
+       71   $paramod$01c5b9825ad0d20d655f4d07ab16639d11a79c02\ot_hgi_hc_residual_vm_static
+       65   $paramod$a84cf026b52e64956de919dcd341d5864d52c644\ot_static_program_target
+      122   $paramod$fa47428d3212f122d90c52c1aa169429350ff0db\ot_hgi_hc_gathered_mix_reader_static
+        2   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000110
+       43   $paramod\ot_vms_calendar_static\W=s32'00000000000000000000000001001111
+       69   ot_hgi_hc_result_vm_static
+        7 $paramod$79ffc597cf6e6d6bf7b1bf44efbf8413f6708d24\ot_hbm_fault_leaf
+      320 $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice
+      128 $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice
+        7 $paramod$a6e11202609093a63751e51047362ae464c7e0b0\ot_hbm_fault_leaf
+        5 $paramod$b6ef2feb2256743c537cca125af0bee9c2d0b640\ot_hbm_svc_wbw_copy
+      175 $paramod$f588d14f666a95cb09f7ea03b084f2e61df00462\ot_hbm_static_cfg_collar
+        1 $paramod$fecbefbd9ba865a7907558e5fa8895d7aa076073\ot_hgi_sm_xload_cl2_ctlx
+        1   $paramod$5fc50134dae0d922f9a416a1ed0a82877f1721a7\ot_hgi_sm_xload_cl2_ctlw
+     2064     $paramod$4c090d3b3b856baf9b1b511afe5a87042b3fe380\ot_hgi_sm_xload_cl2_ctl
+       80     $paramod$9bbe76735c73e77a7984e1fc0ed6a7f81e990eb7\ot_static_cmd_target_core
+        1 $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000000111001
+       65   $paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target
+       43   $paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000000111001
+        1 $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000001011001
+       65   $paramod$4f3f47d8ba11c971b6ce2f36b215798beb03a099\ot_static_program_target
+       43   $paramod\ot_vms_calendar_static_xcap\W=s32'00000000000000000000000001011001
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000000010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000000011
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000000100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000000101
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000000110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000001000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000001001
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000001010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000001111
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000010000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000010010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000010011
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000010101
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000010110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000011000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000011100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000100000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000100010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000100100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000000100101
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000001000011
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000001000100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000001111110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000010000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000010001100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000010011010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000010100000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000010101101
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000010110100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000011010010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100000001
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100000110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100001100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100001111
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100010010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100011000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000100110000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000101000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000101000100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000101001010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000110011010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000000111010111
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001000000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001000000010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001000101110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001000101111
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001000110010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001001100010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001001100011
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001001100100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001001101010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001100010100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001100111100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000001111111000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000010000101000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000010001010100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000010010010011
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000010010100110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000010100110001
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000010111110010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011000000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011001001000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011001001111
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011011001110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011100011100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011100110010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000011110111100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000100000010000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000100000100000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000100001111010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000100001111100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000100110110100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000101000000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000101001000100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000101010110100
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000101100000000
+        1 $paramod\ot_dp_st\W=s32'00000000000000000000101111111110
+        1 $paramod\ot_dp_st\W=s32'00000000000000000001000000000010
+        1 $paramod\ot_dp_st\W=s32'00000000000000000001001101111010
+        1   $paramod$603d850713249113ca42382f204aef05048483d6\ot_hbm_idx_vm_share2_static
+       29     $paramod$7c655027cbb7bdb2ea52b5d4eb56b64f2a274eea\ot_hbm_idx_vm_share2_leaf_r
+        1   $paramod$15afaf1e8ddb8782ebdc34866a1b45dd1c3ad854\ot_hbm_idx_vm_share2_static
+       29     $paramod$883d527b8bcd1db9462d49cec106d2f34304b787\ot_hbm_idx_vm_share2_leaf_r
+     1004 $paramod\ot_hgi_coll_gq_issue\VM_RT=s32'00000000000000000000000000000011
+       65   $paramod$d0e3e25f2666fa833ba84ed3a4778aba0814d801\ot_static_program_target
+        2   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+     1891   ot_hbm_xp_aq_tree13
+        2     ot_hbm_xp_aq_scale13
+      396       ot_hbm_xp_aq_mul_pipe13
+        1   $paramod\ot_hgi_qdq_lg_port_group_r2\BANKS=s32'00000000000000000000000000000010
+        2 $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001
+        1 hbfd_qdq_split_and
+        1 hbfd_qdq_split_or
+       33 hfd_vms_wq2_merge
+        1 ot_bind_native_626a9a88cf25221c8bfe5338
+        7   $paramod$c18c629f8c88cf6e946a6eb8804f0d0ee0ec51ed\ot_hbm_fault_leaf
+        1 ot_hbm_kqs_fault_or4
+      120 ot_hbm_su_static_cxport_rc_q
+       27 ot_hbm_su_static_cxport_rc_s
+      391 ot_hgi_coll_gq_land
+        2   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+        1 ot_hgi_coll_inj_copy
+       36 ot_hgi_coll_kq_share2_leaf
+        2   $paramod$a58f2749fa49aaf36ff4623d023d9fbb994cb181\ot_rst_relay
+        4 ot_hgi_coll_ring_b_stop
+       75   $paramod$ae067ad122e3c2f668cd5cddcc60cf1390c385de\ot_hgi_coll_ring_ag_lane
+        2   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000000001
+        1 ot_hnx_calendar_cfg_leaf
+        2   $paramod$cb7362a01cf3a07d6e133431fdc4b113f9e1acaf\ot_rst_relay
+        1 ot_hnx_host_boot_hop
+
+        +----------Count including submodules.
+        | 
+    85106 wires
+ 2.02E+07 wire bits
+    32735 public wires
+  9848806 public wire bits
+    14157 ports
+   569773 port bits
+        4 memories
+     4728 memory bits
+    13848 processes
+    30805 cells
+     1856   $add
+    11417   $and
+        6   $div
+     3651   $eq
+      369   $ge
+      158   $gt
+       23   $le
+     1170   $logic_and
+     1044   $logic_not
+      322   $logic_or
+      505   $lt
+       14   $memrd
+        5   $mod
+      109   $mul
+     1612   $mux
+      362   $ne
+      158   $neg
+        1   $nex
+      438   $not
+     5382   $or
+       27   $reduce_and
+        9   $reduce_bool
+       77   $reduce_or
+      154   $shift
+      155   $shiftx
+      445   $shl
+      128   $shr
+      568   $sub
+      508   $xor
+        2   hfd_hgi_vm_calendar_f20
+        1   hfd_hgi_vms_glue_nw_t
+        1   hfd_hgi_vms_glue_sw_t
+       16   hfd_vms_bank_native_q0_faces
+        4   ot_hbm_hc_subtree32_core
+        2   ot_hbm_idx_qctl_static
+        2   ot_hbm_idx_query_static
+        2   ot_hbm_idx_vm_query_static_n12
+        1   ot_hbm_sm_vm_wr_q_t_lanes4
+        1   ot_hbm_su_programme_pslice_c5
+        1   ot_hbm_su_static_qcore_r13_w2
+        1   ot_hbm_su_static_sfustore_hw
+       16   ot_hbm_svc_pc_ctrl_leaf_cfg_h9b
+        4   ot_hbm_svc_sm_group_rel_id_rc
+        4   ot_hbm_svc_vm_kshare_splitstrap
+        8   ot_hbm_svc_vmdel_lane_n
+        1   ot_hbm_svc_wb_kport_q
+        2   ot_hbm_xp_aq_tree13_fmt
+        1   ot_hfd_coll_q2_hard_v8g__reduce__nw_actual
+        1   ot_hfd_coll_q2_hard_v8g__ring_ag
+        1   ot_hfd_coll_q3_body_core
+        1   ot_hfd_coll_q3_edge_core
+        1   ot_hfd_coll_q3_vm_core
+        1   ot_hgi_coll_inj_idx_join_rg
+        1   ot_hgi_dma_back_static_vp4_banks_cp
+        1   ot_hgi_qw_dec
+        1   ot_hgi_sfu_programme_store_r10
+        8   ot_hgi_sm_xload_cl2_bfqg
+       16   ot_hnx_fused_lane
+       15   ot_hnx_fused_tnode
+        8   ot_hnx_idxn_keybuf_slice
+        4   ot_sram_1r1w_1024x256_m2_r2c2
+        1   ot_sram_1r1w_128x256_m1_r2c2
+        1   ot_sram_1r1w_128x64_m1_p192
+        1   ot_sram_1r1w_64x16_m1
+     3821 submodules
+        1   $paramod$0003f2fddf5f57f2fbd452cd5da4ab4d54ef6ef7\ot_hbm_host_cfg_leaf2
+        2   $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_cl2_bdring
+        2   $paramod$15cff9ff330f8c9ada1b01c59fc04d47108d2e1c\ot_hgi_sm_xload_xq_pegress
+        1   $paramod$17f87e4386bf851367af8dd0a70a4003c04fe320\ot_hgi_qdq_transport_ctl_r4
+        1   $paramod$1a2cbec3ba8d885535c53e5ef0845421e5fbcf0d\ot_hbm_obs_leaf
+        1   $paramod$1c1d8063e38c32fd68f65fcfed1ac481486be9a3\ot_hbm_su_static_cxport_ij_q
+        3   $paramod$2f9b38c7673d895b040b4bb396890b660611f73c\ot_hdc_fp32_add_lat
+        1   $paramod$4356675e08215818570b5eceb9d506c2f2a880b8\ot_dp_dly
+        1   $paramod$5d887d8dde147f7968f6566c580b30da8bdee2b8\ot_hgi_qdq_nw_program_leaf
+        1   $paramod$6c6dfe08ea2dde717a15cb4c610d8824e2f4e5d1\ot_hbm_su_static_cxport_ij_s
+        1   $paramod$6db47097bb51ef1f9bf522073f8c1df77bece45f\ot_hbm_su_stree_leaf
+        1   $paramod$782575dec3c9f4bf2c94584a2290f60d1e4efa5a\ot_hbm_hc_q_static
+        1   $paramod$79ffc597cf6e6d6bf7b1bf44efbf8413f6708d24\ot_hbm_fault_leaf
+        4   $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_rslice
+        4   $paramod$8537e76cee47767b7a6baa2be902d5a8aa71184c\ot_hgi_qdq_transport_wslice
+        1   $paramod$8bb481a724279a054ca0be71d7db7ccbb8c5984f\ot_dp_dly
+        1   $paramod$a6e11202609093a63751e51047362ae464c7e0b0\ot_hbm_fault_leaf
+        1   $paramod$b6ef2feb2256743c537cca125af0bee9c2d0b640\ot_hbm_svc_wbw_copy
+        1   $paramod$ba709a019ac084a5e9159ea88edae1e304bb6c0d\ot_dp_dly
+        1   $paramod$f588d14f666a95cb09f7ea03b084f2e61df00462\ot_hbm_static_cfg_collar
+        1   $paramod$fecbefbd9ba865a7907558e5fa8895d7aa076073\ot_hgi_sm_xload_cl2_ctlx
+        1   $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000000111001
+        1   $paramod\hfd_hgi_vm_calendar_f20_role\W=s32'00000000000000000000000001011001
+       42   $paramod\ot_dp_st\W=s32'00000000000000000000000000000001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000010
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000000011
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000101
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000000110
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000001000
+        5   $paramod\ot_dp_st\W=s32'00000000000000000000000000001001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000001010
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000001111
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000010000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000010010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000000010011
+        5   $paramod\ot_dp_st\W=s32'00000000000000000000000000010101
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000000000010110
+       14   $paramod\ot_dp_st\W=s32'00000000000000000000000000011000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000000011100
+       26   $paramod\ot_dp_st\W=s32'00000000000000000000000000100000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000000100010
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000000100100
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000000000100101
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000001000011
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000000001000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000001111110
+        9   $paramod\ot_dp_st\W=s32'00000000000000000000000010000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010001100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010011010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010100000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000010101101
+       23   $paramod\ot_dp_st\W=s32'00000000000000000000000010110100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000011010010
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000000100000000
+       12   $paramod\ot_dp_st\W=s32'00000000000000000000000100000001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100000110
+        5   $paramod\ot_dp_st\W=s32'00000000000000000000000100001100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100001111
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100010010
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000000100011000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000100110000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000101000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000101000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000101001010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000110011010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000000111010111
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001000000000
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000001000000010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000001000101110
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000001000101111
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001000110010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000001001100010
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000001001100011
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001001100100
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001001101010
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000001100010100
+        3   $paramod\ot_dp_st\W=s32'00000000000000000000001100111100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000001111111000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000010000101000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000010001010100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000010010010011
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000010010100110
+        4   $paramod\ot_dp_st\W=s32'00000000000000000000010100110001
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000010111110010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011000000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011001001000
+        7   $paramod\ot_dp_st\W=s32'00000000000000000000011001001111
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011011001110
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011100011100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011100110010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000011110111100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000100000010000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000100000100000
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000100001111010
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000100001111100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000100110110100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101000000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101001000100
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101010110100
+        2   $paramod\ot_dp_st\W=s32'00000000000000000000101100000000
+        1   $paramod\ot_dp_st\W=s32'00000000000000000000101111111110
+        1   $paramod\ot_dp_st\W=s32'00000000000000000001000000000010
+        1   $paramod\ot_dp_st\W=s32'00000000000000000001001101111010
+        1   $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000000111
+        1   $paramod\ot_hbm_idx_vm_share2_static_r\BANK_RT=s32'00000000000000000000000000110110
+        1   $paramod\ot_hgi_coll_gq_issue\VM_RT=s32'00000000000000000000000000000011
+        4   $paramod\ot_hgi_qdq_lg_bf16_r2\BANKS=s32'00000000000000000000000000000010
+        1   $paramod\ot_rst_relay\REGIONS=s32'00000000000000000000000000001001
+        1   hbfd_qdq_split_and
+        1   hbfd_qdq_split_or
+        8   hfd_vms_wq2_merge
+        1   ot_bind_native_626a9a88cf25221c8bfe5338
+     3469   ot_dp_rrelay
+        1   ot_hbm_fault_leaf_n8_s0
+        1   ot_hbm_kqs_fault_or4
+        1   ot_hbm_su_static_cxport_rc_q
+        1   ot_hbm_su_static_cxport_rc_s
+        1   ot_hgi_coll_gq_land
+        1   ot_hgi_coll_inj_copy
+        4   ot_hgi_coll_kq_share2_leaf
+        1   ot_hgi_coll_ring_b_stop
+        1   ot_hnx_calendar_cfg_leaf
+       25   ot_hnx_host_boot_hop
+
