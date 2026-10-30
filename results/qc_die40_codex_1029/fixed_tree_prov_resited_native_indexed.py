@@ -612,11 +612,11 @@ def main():
     for key,(x,y,lo,hi) in list(windows.items()):
         before=(lo,hi)
         for nnet,(x0,y0,x1,y1) in native_bins[math.floor(x/.1)]:
-            if nnet==pin_net[key] or x+.016+.048<=x0 or x-.016-.048>=x1:continue
-            if y0-.048<=y<=y1+.048:
+            if nnet==pin_net[key] or x+.016+CR.SPACE['M7']<=x0+1e-7 or x-.016-CR.SPACE['M7']>=x1-1e-7:continue
+            if y0-(.036+CR.SPACE['M7'])<y<y1+(.036+CR.SPACE['M7']):
                 raise ValueError(f'fixed clock stack base intersects native M7 pin: {key} {nnet}')
-            if y<y0:hi=min(hi,y0-.048)
-            else:lo=max(lo,y1+.048)
+            if y<y0:hi=min(hi,y0-(.036+CR.SPACE['M7']))
+            else:lo=max(lo,y1+(.036+CR.SPACE['M7']))
         if (lo,hi)!=before:native_clipped+=1
         windows[key]=(x,y,lo,hi)
     print(f'NATIVE_M7 clipped {native_clipped} fixed clock stack windows',flush=True)
