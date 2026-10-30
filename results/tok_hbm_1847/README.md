@@ -50,3 +50,39 @@ PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 results/tok_hbm_1847/check_publ
 The owner's18:25 option(a) already accepts HBM~1812–1830 tok/s for closure.
 EP_S1 restation remains optional; this work does not replace that rate with an
 unmeasured finite-phase claim. No new owner decision is needed.
+
+## Complete local producer/consumer slice
+
+`vm_phase_region.py` additionally remaps actual records1458–1473 (the producing
+DMA/COLL/SM/SU chain through SU1470 and scalar consumers through1473) into three
+native two-row regions. It compacts a conservative union of all referenced VM
+intervals using an injective, piecewise-translation address map. Arithmetic,
+rounding templates, immediates, slots, HBM descriptors and every intra-region
+address alias are preserved. Broadcast extents are deliberately overcovered;
+this is not an optimistic live-set estimate. Original row strides are replaced
+only where the exact mapped row bases require it.
+
+The real native fragments occupy191816/197472/216360 words, leaving at least
+45784 words of the old262144-word VM for outside state. This is region-only
+capacity feasibility. The original consumer-only fragments did not cover this
+actual producer dependency chain. The boundary input census is explicit:
+91636/93950/103924 words must arrive from outside the region, and all written
+intervals are exposed for later consumer retirement. Collective descriptors are
+conservatively treated at their full declared operand extents.
+
+There is still no full-programme fit claim: arbitrary outside live values may
+exceed45784 words; cross-phase dependencies/publication and actual HBM scratch
+ownership need programme-level composition. `--reserve` accounts for outside
+state before allocation;50000 reserved words correctly REFUSES the worst phase.
+`check_region.py` checks all96 expanded rows against the actual original records,
+and catches9 native address/slot/template mutants plus the reserve-overflow
+control. These checks establish fragment transformation exactness, not a whole
+RTL token pass. No route or STA is launched for compiler-only work.
+
+```
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 tools/hbm_next/vm_phase_region.py \
+ --image /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/a122.hgi1r \
+ --compiler-tools /srv/opentallas-scratch/claude/codex-hbm-token-0830/vm_capacity/tools \
+ --out-dir /tmp/hbm-finite-region
+PYTHONPATH=/home/ubuntu/OpenTallas/tools python3 results/tok_hbm_1847/check_region.py
+```

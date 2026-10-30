@@ -1,0 +1,886 @@
+{
+ "schema": "opentallas.hbm.vm_native_region.v1",
+ "source_image_sha256": "a1228bb5771a604f53aad9de3366f460fd9d7c0c59b9a04fa2856405b5726933",
+ "source_record_range": [
+  1458,
+  1473
+ ],
+ "executable": false,
+ "full_programme_fits": null,
+ "phases": [
+  {
+   "start_row": 0,
+   "rows": 2,
+   "vm_high_water_words": 191816,
+   "other_live_reserve_words": 0,
+   "unallocated_words": 70328,
+   "source_intervals": [
+    {
+     "source": [
+      0,
+      40960
+     ],
+     "destination": [
+      0,
+      40960
+     ]
+    },
+    {
+     "source": [
+      147504,
+      214064
+     ],
+     "destination": [
+      40960,
+      107520
+     ]
+    },
+    {
+     "source": [
+      301104,
+      342064
+     ],
+     "destination": [
+      107520,
+      148480
+     ]
+    },
+    {
+     "source": [
+      423984,
+      444904
+     ],
+     "destination": [
+      148480,
+      169400
+     ]
+    },
+    {
+     "source": [
+      460848,
+      483248
+     ],
+     "destination": [
+      169400,
+      191800
+     ]
+    },
+    {
+     "source": [
+      483504,
+      483508
+     ],
+     "destination": [
+      191800,
+      191804
+     ]
+    },
+    {
+     "source": [
+      483512,
+      483516
+     ],
+     "destination": [
+      191808,
+      191812
+     ]
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1458,
+     "offset": 0,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1459,
+     "offset": 112,
+     "bytes": 112,
+     "unit": "COLL",
+     "op": "ALL_GATHER"
+    },
+    {
+     "source_record": 1460,
+     "offset": 224,
+     "bytes": 144,
+     "unit": "SM",
+     "op": "MATVEC"
+    },
+    {
+     "source_record": 1461,
+     "offset": 368,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1462,
+     "offset": 544,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1463,
+     "offset": 656,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1464,
+     "offset": 768,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1465,
+     "offset": 880,
+     "bytes": 112,
+     "unit": "COLL",
+     "op": "ALL_GATHER"
+    },
+    {
+     "source_record": 1466,
+     "offset": 992,
+     "bytes": 144,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1467,
+     "offset": 1136,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1468,
+     "offset": 1248,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1469,
+     "offset": 1360,
+     "bytes": 144,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1470,
+     "offset": 1504,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1471,
+     "offset": 1680,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1472,
+     "offset": 1856,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1473,
+     "offset": 2032,
+     "bytes": 208,
+     "unit": "SU",
+     "op": "VOP"
+    }
+   ],
+   "boundary_input_source_intervals": [
+    [
+     0,
+     40960
+    ],
+    [
+     147770,
+     173104
+    ],
+    [
+     173370,
+     198704
+    ],
+    [
+     483504,
+     483508
+    ],
+    [
+     483512,
+     483516
+    ]
+   ],
+   "written_source_intervals": [
+    [
+     0,
+     40960
+    ],
+    [
+     147504,
+     198704
+    ],
+    [
+     301104,
+     342064
+    ],
+    [
+     423984,
+     436272
+    ],
+    [
+     460848,
+     483248
+    ]
+   ],
+   "boundary_input_words": 91636,
+   "arithmetic_row_expansion_and_aliases_preserved": true,
+   "native_fragment": "phase_0.hgi1r"
+  },
+  {
+   "start_row": 2,
+   "rows": 2,
+   "vm_high_water_words": 197472,
+   "other_live_reserve_words": 0,
+   "unallocated_words": 64672,
+   "source_intervals": [
+    {
+     "source": [
+      40960,
+      81920
+     ],
+     "destination": [
+      0,
+      40960
+     ]
+    },
+    {
+     "source": [
+      196656,
+      265264
+     ],
+     "destination": [
+      40960,
+      109568
+     ]
+    },
+    {
+     "source": [
+      342064,
+      383024
+     ],
+     "destination": [
+      109568,
+      150528
+     ]
+    },
+    {
+     "source": [
+      423984,
+      424368
+     ],
+     "destination": [
+      150528,
+      150912
+     ]
+    },
+    {
+     "source": [
+      424384,
+      424388
+     ],
+     "destination": [
+      150912,
+      150916
+     ]
+    },
+    {
+     "source": [
+      424392,
+      424396
+     ],
+     "destination": [
+      150920,
+      150924
+     ]
+    },
+    {
+     "source": [
+      424432,
+      448560
+     ],
+     "destination": [
+      150928,
+      175056
+     ]
+    },
+    {
+     "source": [
+      460848,
+      483120
+     ],
+     "destination": [
+      175056,
+      197328
+     ]
+    },
+    {
+     "source": [
+      483248,
+      483376
+     ],
+     "destination": [
+      197328,
+      197456
+     ]
+    },
+    {
+     "source": [
+      483520,
+      483524
+     ],
+     "destination": [
+      197456,
+      197460
+     ]
+    },
+    {
+     "source": [
+      483528,
+      483532
+     ],
+     "destination": [
+      197464,
+      197468
+     ]
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1458,
+     "offset": 0,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1459,
+     "offset": 112,
+     "bytes": 112,
+     "unit": "COLL",
+     "op": "ALL_GATHER"
+    },
+    {
+     "source_record": 1460,
+     "offset": 224,
+     "bytes": 144,
+     "unit": "SM",
+     "op": "MATVEC"
+    },
+    {
+     "source_record": 1461,
+     "offset": 368,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1462,
+     "offset": 544,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1463,
+     "offset": 656,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1464,
+     "offset": 768,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1465,
+     "offset": 880,
+     "bytes": 112,
+     "unit": "COLL",
+     "op": "ALL_GATHER"
+    },
+    {
+     "source_record": 1466,
+     "offset": 992,
+     "bytes": 144,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1467,
+     "offset": 1136,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1468,
+     "offset": 1248,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1469,
+     "offset": 1360,
+     "bytes": 144,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1470,
+     "offset": 1504,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1471,
+     "offset": 1680,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1472,
+     "offset": 1856,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1473,
+     "offset": 2032,
+     "bytes": 208,
+     "unit": "SU",
+     "op": "VOP"
+    }
+   ],
+   "boundary_input_source_intervals": [
+    [
+     40960,
+     81920
+    ],
+    [
+     196656,
+     224304
+    ],
+    [
+     224570,
+     249904
+    ],
+    [
+     483520,
+     483524
+    ],
+    [
+     483528,
+     483532
+    ]
+   ],
+   "written_source_intervals": [
+    [
+     40960,
+     81920
+    ],
+    [
+     198704,
+     249904
+    ],
+    [
+     342064,
+     383024
+    ],
+    [
+     423984,
+     424368
+    ],
+    [
+     424384,
+     424388
+    ],
+    [
+     424392,
+     424396
+    ],
+    [
+     424432,
+     424436
+    ],
+    [
+     424440,
+     424444
+    ],
+    [
+     424480,
+     424484
+    ],
+    [
+     424488,
+     424492
+    ],
+    [
+     424608,
+     424609
+    ],
+    [
+     436272,
+     448560
+    ],
+    [
+     460848,
+     483120
+    ],
+    [
+     483248,
+     483376
+    ]
+   ],
+   "boundary_input_words": 93950,
+   "arithmetic_row_expansion_and_aliases_preserved": true,
+   "native_fragment": "phase_2.hgi1r"
+  },
+  {
+   "start_row": 4,
+   "rows": 2,
+   "vm_high_water_words": 216360,
+   "other_live_reserve_words": 0,
+   "unallocated_words": 45784,
+   "source_intervals": [
+    {
+     "source": [
+      81920,
+      122880
+     ],
+     "destination": [
+      0,
+      40960
+     ]
+    },
+    {
+     "source": [
+      208944,
+      221232
+     ],
+     "destination": [
+      40960,
+      53248
+     ]
+    },
+    {
+     "source": [
+      249904,
+      316464
+     ],
+     "destination": [
+      53248,
+      119808
+     ]
+    },
+    {
+     "source": [
+      383024,
+      424368
+     ],
+     "destination": [
+      119808,
+      161152
+     ]
+    },
+    {
+     "source": [
+      424400,
+      424404
+     ],
+     "destination": [
+      161152,
+      161156
+     ]
+    },
+    {
+     "source": [
+      424408,
+      424412
+     ],
+     "destination": [
+      161160,
+      161164
+     ]
+    },
+    {
+     "source": [
+      424448,
+      444936
+     ],
+     "destination": [
+      161168,
+      181656
+     ]
+    },
+    {
+     "source": [
+      448560,
+      483120
+     ],
+     "destination": [
+      181656,
+      216216
+     ]
+    },
+    {
+     "source": [
+      483376,
+      483504
+     ],
+     "destination": [
+      216216,
+      216344
+     ]
+    },
+    {
+     "source": [
+      483536,
+      483540
+     ],
+     "destination": [
+      216344,
+      216348
+     ]
+    },
+    {
+     "source": [
+      483544,
+      483548
+     ],
+     "destination": [
+      216352,
+      216356
+     ]
+    }
+   ],
+   "records": [
+    {
+     "source_record": 1458,
+     "offset": 0,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1459,
+     "offset": 112,
+     "bytes": 112,
+     "unit": "COLL",
+     "op": "ALL_GATHER"
+    },
+    {
+     "source_record": 1460,
+     "offset": 224,
+     "bytes": 144,
+     "unit": "SM",
+     "op": "MATVEC"
+    },
+    {
+     "source_record": 1461,
+     "offset": 368,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1462,
+     "offset": 544,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1463,
+     "offset": 656,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1464,
+     "offset": 768,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1465,
+     "offset": 880,
+     "bytes": 112,
+     "unit": "COLL",
+     "op": "ALL_GATHER"
+    },
+    {
+     "source_record": 1466,
+     "offset": 992,
+     "bytes": 144,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1467,
+     "offset": 1136,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1468,
+     "offset": 1248,
+     "bytes": 112,
+     "unit": "DMA",
+     "op": "LOAD"
+    },
+    {
+     "source_record": 1469,
+     "offset": 1360,
+     "bytes": 144,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1470,
+     "offset": 1504,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1471,
+     "offset": 1680,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1472,
+     "offset": 1856,
+     "bytes": 176,
+     "unit": "SU",
+     "op": "VOP"
+    },
+    {
+     "source_record": 1473,
+     "offset": 2032,
+     "bytes": 208,
+     "unit": "SU",
+     "op": "VOP"
+    }
+   ],
+   "boundary_input_source_intervals": [
+    [
+     81920,
+     122880
+    ],
+    [
+     208944,
+     221232
+    ],
+    [
+     250170,
+     275504
+    ],
+    [
+     275770,
+     301104
+    ],
+    [
+     483536,
+     483540
+    ],
+    [
+     483544,
+     483548
+    ]
+   ],
+   "written_source_intervals": [
+    [
+     81920,
+     122880
+    ],
+    [
+     249904,
+     301104
+    ],
+    [
+     383024,
+     424368
+    ],
+    [
+     424400,
+     424404
+    ],
+    [
+     424408,
+     424412
+    ],
+    [
+     424448,
+     424452
+    ],
+    [
+     424456,
+     424460
+    ],
+    [
+     424496,
+     424500
+    ],
+    [
+     424504,
+     424508
+    ],
+    [
+     424608,
+     424609
+    ],
+    [
+     448560,
+     483120
+    ],
+    [
+     483376,
+     483504
+    ]
+   ],
+   "boundary_input_words": 103924,
+   "arithmetic_row_expansion_and_aliases_preserved": true,
+   "native_fragment": "phase_4.hgi1r"
+  }
+ ],
+ "holds": [
+  "boundary inputs must be published/reloaded to mapped region addresses",
+  "outside live values must fit the reserved space and survive all phases",
+  "boundary outputs must be retired to their actual later consumers",
+  "phase reordering requires interphase dependency check and composed schedule"
+ ]
+}
