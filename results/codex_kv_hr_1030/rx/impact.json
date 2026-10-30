@@ -1,0 +1,128 @@
+{
+ "schema": "opentallas.kv.rx259_pin_delta.v1",
+ "base_plan_sha256": "1569a424173dcda19197d2450daa668b13e2269bef72d8f124c3eba2bc3aa0c9",
+ "base_pin_sha256": "b3c83a23fcbe7749c1589bce4fbe14d59a2a316da525cc41bbcedc3c54f7b9ef",
+ "candidate_pin_sha256": "944a98079128a314d59a7936c9f540a1ae4bccf8f5872b6b44192def2e8a3809",
+ "changed_pin_count": 4,
+ "cycles_added": 0,
+ "rtl_changed": false,
+ "outline_changed": false,
+ "clock_reset_pins_changed": false,
+ "affected_cores": [
+  {
+   "type": "kv3_hub_Wi",
+   "inst": "host__qkd_hr_core_rx",
+   "origin_um": [
+    587.52,
+    354.24
+   ],
+   "outline_um": [
+    259.2,
+    259.2
+   ],
+   "orient": "R0",
+   "changes": [
+    {
+     "pin": "ownership_valid[0]",
+     "before": {
+      "name": "ownership_valid[0]",
+      "layer": "M4",
+      "x": 0.096,
+      "y": 254.424
+     },
+     "after": {
+      "name": "ownership_valid[0]",
+      "layer": "M4",
+      "x": 0.096,
+      "y": 129.384
+     },
+     "manhattan_delta_um": 125.04,
+     "parent_before_um": [
+      587.616,
+      608.664
+     ],
+     "parent_after_um": [
+      587.616,
+      483.624
+     ]
+    },
+    {
+     "pin": "rx_d[263]",
+     "before": {
+      "name": "rx_d[263]",
+      "layer": "M4",
+      "x": 0.096,
+      "y": 129.384
+     },
+     "after": {
+      "name": "rx_d[263]",
+      "layer": "M4",
+      "x": 0.096,
+      "y": 254.424
+     },
+     "manhattan_delta_um": 125.04,
+     "parent_before_um": [
+      587.616,
+      483.624
+     ],
+     "parent_after_um": [
+      587.616,
+      608.664
+     ]
+    },
+    {
+     "pin": "die_id[0]",
+     "before": {
+      "name": "die_id[0]",
+      "layer": "M4",
+      "x": 259.104,
+      "y": 44.664
+     },
+     "after": {
+      "name": "die_id[0]",
+      "layer": "M4",
+      "x": 259.104,
+      "y": 128.76
+     },
+     "manhattan_delta_um": 84.096,
+     "parent_before_um": [
+      846.624,
+      398.904
+     ],
+     "parent_after_um": [
+      846.624,
+      483.0
+     ]
+    },
+    {
+     "pin": "die_id[2]",
+     "before": {
+      "name": "die_id[2]",
+      "layer": "M4",
+      "x": 259.104,
+      "y": 214.584
+     },
+     "after": {
+      "name": "die_id[2]",
+      "layer": "M4",
+      "x": 259.104,
+      "y": 130.488
+     },
+     "manhattan_delta_um": 84.096,
+     "parent_before_um": [
+      846.624,
+      568.824
+     ],
+     "parent_after_um": [
+      846.624,
+      484.728
+     ]
+    }
+   ]
+  }
+ ],
+ "neighbor_entries_changed": 0,
+ "partition_bus_and_pin_records_changed": 0,
+ "parent_route_impact": "four internal hard-core signal endpoints move (includes rx_d[263], not only controls); source/destination identities unchanged. Parent wires must reroute; zero latency claim needs parent reach/STA recheck. Neighbor hard-core and partition pin coordinates are unchanged by this candidate.",
+ "gates": "candidate only: die owner runs G0C + exact-abutment clock and parent reach/STA before adoption"
+}
