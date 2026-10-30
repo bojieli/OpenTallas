@@ -60,7 +60,7 @@ COORD_ONLY = ("qwen_compute", "hbm")          # OFF until COORD enables them (co
 GATE_KEYS = ("g0c", "bind", "clock")          # plan event checks that must be PASS (12.4a / 12.17 freeze inputs)
 DEFAULTS = {"max_inflight": 40, "max_launch_per_tick": 6, "die_max_inflight": 6, "take_states": ["NEEDS-KIT"],
             "kinds": ["type"], "live_claim_h": 3.0, "place_mem_gb": 48, "place_threads": 8, "geom_mem_gb": 24,
-            "gen_mem_gb": 16, "bind_mem_gb": 24, "geom_sample": 5, "hosts": ["intel1", "intel2", "epyc2"],
+            "gen_mem_gb": 16, "bind_mem_gb": 24, "geom_sample": 5, "place_prefer": [], "hosts": ["intel1", "intel2", "epyc2"],
             "work_root": "/srv/opentallas-scratch2/claude/kit-wave"}
 STATE_FILE = "kit_wave_state.json"
 
@@ -157,8 +157,10 @@ def age_min(s):
     return float(m.group(1)) if m else None
 
 
-def item_key(die, event, item):
-    return f"{die}|{event}|{item}"
+def item_key(die, event, item, block=None):
+    """OWNER 12.20 (plans hard-frozen): a kit is keyed on its plan block sha, so a new event with the same
+    block reuses the record (no regeneration); only a changed block makes a new wave item"""
+    return f"{die}|{item}|b{block[:12]}" if block else f"{die}|{event}|{item}"
 
 
 def select(rows, cfg, die, state, plan_types=None):
@@ -175,7 +177,8 @@ def select(rows, cfg, die, state, plan_types=None):
         if r["die"] != die:
             continue
         why = None
-        rec = (state.get("items") or {}).get(item_key(die, ev, r["item"]))
+        blk = lambda t: plan_types.get(t) if isinstance(plan_types, dict) else None
+        rec = (state.get("items") or {}).get(item_key(die, ev, r["item"], blk(r["item"])))
         if r["state"] not in states:
             continue
         if r["kind"] not in kinds:
@@ -185,7 +188,7 @@ def select(rows, cfg, die, state, plan_types=None):
         elif rec and rec.get("status") == "ENQUEUED":
             why = "wave kit enqueued"
         elif rec and f"{r['item']}@{rec.get('attempt')}" not in retry:
-            why = f"wave {rec.get('status')} {rec.get('class', '')} on this event (no blind retry)".replace("  ", " ")
+            why = f"wave {rec.get('status')} {rec.get('class', '')} on this plan block (no blind retry)".replace("  ", " ")
         elif r["live_job"] not in ("", "none"):
             why = "live job (another lane)"
         elif (age_min(r["last_activity"]) is not None and age_min(r["last_activity"]) < claim_m and r["owner"] != LANE
@@ -196,19 +199,20 @@ def select(rows, cfg, die, state, plan_types=None):
         elif plan_types is not None and r["item"] not in plan_types:
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
             cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
-            todo = [c for c in cls if not (state.get("items") or {}).get(item_key(die, ev, c))
-                    or f"{c}@{state['items'][item_key(die, ev, c)].get('attempt')}" in retry]
+            its = state.get("items") or {}
+            todo = [c for c in cls if not its.get(item_key(die, ev, c, blk(c)))
+                    or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry]
             if not cls:
                 why = "not in plan of record"
             elif not todo:
                 why = "all plan classes already in the wave"
             else:
-                picked += [dict(r, item=c, parent_item=r["item"]) for c in todo]
+                picked += [dict(r, item=c, parent_item=r["item"], block_sha=blk(c)) for c in todo]
                 continue
         if why:
             skip.setdefault(why, []).append(r["item"])
             continue
-        picked.append(r)
+        picked.append(dict(r, block_sha=blk(r["item"])) if blk(r["item"]) else r)
 
     def rep(r):
         try:
@@ -255,7 +259,10 @@ RULES = [
                     r"No space left on device|ssh: connect to host|Connection (?:reset|refused|closed)|"
                     r"rsync error|Cannot connect to the Docker daemon|Host key verification failed", "infra"),
     ("RTL", None, r"LEC NOT EQUIVALENT|NOT EQUIVALENT|NON-?EQUIV", "LEC not equivalent"),
-    ("RTL", None, r"RTL_LINT FAIL|multi(?:ple)?[- ]driv|undriven|syntax error|Unexpected token|"
+    ("INFRA", None, r"^Terminated\b|\nTerminated\b|Killed\s*$", "process terminated (not a design result)"),
+    ("PLAN", None, r"ContractError|requires explicit SIGNED", "plan contract metadata missing for this type"),
+    ("RTL", None, r"RTL_LINT FAIL|multi(?:ple)?[- ]driv|\bundriven (?:net|wire|signal|port|input|bit)|"
+                  r"\"undriven\": [1-9]|syntax error|Unexpected token|"
                   r"is not part of the design|Re-definition of module", "RTL elaboration / lint"),
     ("PLAN", None, r"FACE_GUARD FAIL|face_guard[^\n]*FAIL", "face guard (plan pins / landing)"),
     ("PLAN", None, r"PORT_BIND FAIL|port_bind[^\n]*FAIL", "port bind (plan pins)"),
@@ -357,7 +364,7 @@ def spec_for(cfg, die, item, hub):
             "kit_rtl": d.get("kit_rtl") or {},
             "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or []),
             "preflight_args": list(d.get("preflight_args") or ["--contract"]),
-            "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub,
+            "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
             "geom_mem_gb": int(opt(cfg, die, "geom_mem_gb")), "gen_mem_gb": int(opt(cfg, die, "gen_mem_gb")),
             "bind_mem_gb": int(opt(cfg, die, "bind_mem_gb")), "ot_run": OT_RUN}
@@ -413,7 +420,7 @@ def run_item(spec_path):
             # the die's strict bind of record: read-only, never rebuilt here; it must report 0 errors
             bind = kr["bind_out"]
             chk = (f"python3 -c \"import json,sys;r=json.load(open('{bind}/bind_report.json'));e=r.get('errors');"
-                   f"print('BIND errors', e);sys.exit(0 if e == 0 else 3)\"")
+                   f"n=len(e) if isinstance(e,list) else e;print('BIND errors', n);sys.exit(0 if n == 0 else 3)\"")
             rc, txt = run("bind", remote(chk))
             if rc:
                 return fail("bind", "bind of record not clean / unreadable (plan not fully bound)\n" + txt, f"{G}:{bind}")
@@ -425,7 +432,7 @@ def run_item(spec_path):
             cmd = (kr.get("prep_cmd") or "python3 tools/die_plan/bind.py bind {plan} --out {bind} --asbuilt {asbuilt} --strict")
             cmd = cmd.format(plan=q(plan), bind=q(bind), asbuilt=q(a), src=q(src))
             ok = (f"python3 -c \"import json,sys;r=json.load(open('{bind}/bind_report.json'));e=r.get('errors');"
-                  f"print('BIND errors', e);sys.exit(0 if e == 0 else 3)\"")
+                  f"n=len(e) if isinstance(e,list) else e;print('BIND errors', n);sys.exit(0 if n == 0 else 3)\"")
             prep = (f"cd {q(src)} && exec 9>{q(sp['root'])}/.bind.lock && flock 9 && "
                     f"if [ ! -f {q(bind)}/.kw_bind_ok ]; then mkdir -p {q(bind)} && {{ {cmd} ; }} > {q(sp['root'])}/bind.log 2>&1 "
                     f"&& {ok} && touch {q(bind)}/.kw_bind_ok || {{ tail -40 {q(sp['root'])}/bind.log; exit 3; }}; fi")
@@ -461,7 +468,15 @@ def run_item(spec_path):
         if rc:
             return fail(f"sync_{h}", txt)
     m, t = sp["place_mem_gb"], sp["place_threads"]
-    rc, txt = run("place", otrun(m, t, K, f"bash {q(W)}/gen/run_kit.sh {q(K)} place {m} {t}", sp["hosts"]))
+    phosts = sp["hosts"]
+    pref = [h for h in sp.get("place_prefer") or [] if h in phosts]
+    if pref:                                             # COORD 10-30 01:2x: PLACE on epyc2 first while it has headroom
+        p = subprocess.run([sp["ot_run"], "--status"], capture_output=True, text=True, timeout=120)
+        stt = parse_otrun_status(p.stdout if p.returncode == 0 else "")
+        ok = [h for h in pref if (stt.get("localhost" if h == hub else h) or {}).get("admit", 0) >= m]
+        if ok:
+            phosts = ok
+    rc, txt = run("place", otrun(m, t, K, f"bash {q(W)}/gen/run_kit.sh {q(K)} place {m} {t}", phosts))
     ran = re.findall(r"RAN on (\S+?):", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
     if h and h != G and not (G == "localhost" and h == hub):
@@ -510,13 +525,22 @@ def _descends(AP):
 
 
 PROBE_PLAN = r'''
-import json, os, sys
+import hashlib, json, os, sys
 a = json.loads(sys.argv[1]); out = {}
+H = lambda o: hashlib.sha256(json.dumps(o, sort_keys=True, default=str).encode()).hexdigest()
 try:
-    st = os.stat(a["plan"]); p = json.load(open(a["plan"]))
-    out = {"mtime": st.st_mtime, "types": sorted(p.get("partition_types") or {}),
-           "cores": sorted({str(h.get("module") or h.get("name") or "") for h in (p.get("hard_cores") or [])
-                            if isinstance(h, dict)} - {""})}
+    st = os.stat(a["plan"]); raw = open(a["plan"], "rb").read(); p = json.loads(raw)
+    pt = p.get("partition_types") or {}; bud = p.get("budgets") if isinstance(p.get("budgets"), dict) else {}
+    blocks = {t: H({"type": v, "budget": bud.get(t)}) for t, v in pt.items()}
+    hc = [h for h in (p.get("hard_cores") or []) if isinstance(h, dict)]
+    for v in pt.values():
+        hc += [h for h in ((v.get("hard_cores") if isinstance(v, dict) else None) or []) if isinstance(h, dict)]
+    for h in hc:
+        m = str(h.get("module") or h.get("name") or "")
+        if m and m not in blocks:
+            blocks[m] = H({"core": h})
+    out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt),
+           "cores": sorted(set(blocks) - set(pt)), "blocks": blocks}
 except Exception as e:
     out = {"error": f"{type(e).__name__}: {e}"}
 print("AP_JSON " + json.dumps(out))
@@ -527,7 +551,7 @@ def plan_names(AP, st, d):
     """partition types + hard-core modules of the plan of record (probe on gen_host, cached by plan path + event)"""
     key = f"{d['gen_host']}:{d['plan']}|{d['event']}"
     c = (st.get("plans") or {}).get(key)
-    if c and time.time() - c.get("t", 0) < 6 * 3600:
+    if c and c.get("blocks") and time.time() - c.get("t", 0) < 6 * 3600:
         return c
     p = AP.rpy(d["gen_host"], PROBE_PLAN, {"plan": d["plan"]}, timeout=600)
     if p.get("error"):
@@ -552,7 +576,8 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 if pn.get("error"):
                     ok, why = False, f"plan of record unreadable: {pn['error'][:200]}"
                 else:
-                    names = set(pn.get("types") or []) | set(pn.get("cores") or [])
+                    names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
+                    d["_plan_sha"] = pn.get("plan_sha")
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
                 n = capacity(cfg, die, st, status, hub, launched_now=len(launch))
@@ -567,7 +592,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
 
 
 def launch(AP, cfg, st, die, r, hub):
-    key = item_key(die, cfg["dies"][die]["event"], r["item"])
+    key = item_key(die, cfg["dies"][die]["event"], r["item"], r.get("block_sha"))
     prev = st["items"].get(key) or {}
     attempt = int(prev.get("attempt", 0)) + 1
     jd = Path(AP.AP_DIR) / "kit_wave" / re.sub(r"[^A-Za-z0-9_.-]", "_", key) / f"a{attempt}"
@@ -580,6 +605,7 @@ def launch(AP, cfg, st, die, r, hub):
     (jd / "spec.json").write_text(json.dumps(sp, indent=1))
     ok = AP.launch_unit(unit, jd / "unit.log", ["python3", str(Path(__file__).resolve()), "run-item", str(jd / "spec.json")])
     rec = {"die": die, "item": r["item"], "parent_item": r.get("parent_item") or prev.get("parent_item"), "kind": r["kind"], "event": sp["event"], "attempt": attempt,
+           "block_sha": r.get("block_sha"), "plan_sha": cfg["dies"][die].get("_plan_sha"),
            "unit": unit, "dir": str(jd),
            "status": "RUNNING" if ok else "FAIL", "class": "" if ok else "INFRA", "replicas": r.get("replicas"),
            "reason": "" if ok else "systemd-run failed", "started": time.time(), "updated": time.time()}
@@ -669,7 +695,7 @@ def step(AP, ap_dir=None):
         if rec.get("status") == "RETRY-INFRA" and not stop_reason(cfg, rec["die"], ap_dir):
             rec["status"] = "FAIL"
             launch(AP, cfg, st, rec["die"], {"item": rec["item"], "kind": rec.get("kind", "type"),
-                                              "parent_item": rec.get("parent_item"),
+                                              "parent_item": rec.get("parent_item"), "block_sha": rec.get("block_sha"),
                                               "replicas": rec.get("replicas")}, AP.HUB_NAME)
     owners = parse_owners((Path(ap_dir) / "OWNERS.tsv").read_text() if (Path(ap_dir) / "OWNERS.tsv").exists() else "")
     rc, out, _ = AP.sh([OT_RUN, "--status"], timeout=120)
@@ -685,7 +711,27 @@ def step(AP, ap_dir=None):
                         f"- {now_s()} KIT-WAVE [{die}] -> {lane}: {len(msgs)} event(s): " + "; ".join(msgs)[:1800])
     if not AP.DRY:
         save_state(st, ap_dir)
+        write_stages(st, ap_dir)
     return st
+
+
+STAGES_FILE = "kit_wave_stages.tsv"
+STAGE_COLS = ("die", "item", "parent_item", "plan_sha", "block_sha", "event", "stage", "status", "class", "kit",
+              "evidence", "updated")
+
+
+def write_stages(st, ap_dir):
+    """OWNER 12.20: one row per wave kit (keyed on plan block sha) for SIGNOFF-SPRINT-1's lanes/SIGNOFF-STAGES.tsv;
+    ENQUEUED rows continue in the autopilot queue (route / sign-off / post-route LEC), joined on the kit path"""
+    rows = ["\t".join(STAGE_COLS)]
+    for r in sorted((st.get("items") or {}).values(), key=lambda r: (r.get("die", ""), r.get("item", ""))):
+        v = dict(r, plan_sha=(r.get("plan_sha") or "")[:12], block_sha=(r.get("block_sha") or "")[:12],
+                 stage="queue:route" if r.get("status") == "ENQUEUED" else (r.get("stage") or ""),
+                 updated=time.strftime("%Y-%m-%d %H:%M", time.localtime(r.get("updated") or 0)))
+        rows.append("\t".join(re.sub(r"\s+", " ", str(v.get(c) or "")) for c in STAGE_COLS))
+    tmp = Path(ap_dir) / (STAGES_FILE + ".tmp")
+    tmp.write_text("\n".join(rows) + "\n")
+    tmp.replace(Path(ap_dir) / STAGES_FILE)
 
 
 # ------------------------------------------------------------------------------------------------ CLI

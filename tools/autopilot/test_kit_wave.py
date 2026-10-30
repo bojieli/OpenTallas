@@ -4,6 +4,7 @@ import json
 import sys
 import tempfile
 import time
+import os
 import unittest
 from pathlib import Path
 
@@ -143,6 +144,21 @@ class Select(unittest.TestCase):
         picks, _ = KW.select(rows, cfg(), "qwen_kvsys", st, PLAN)
         self.assertIn("kv3_phy_v1", [p["item"] for p in picks])
 
+    def test_block_sha_keys_kit(self):
+        # OWNER 12.20: same block under a new event = same kit (no regeneration); changed block = new item
+        rows = KW.parse_owners(OWN)
+        blocks = {t: "a" * 64 for t in PLAN}
+        k = KW.item_key("qwen_kvsys", "event28w_c", "kv3_phy_v1", "a" * 64)
+        self.assertEqual(k, "qwen_kvsys|kv3_phy_v1|b" + "a" * 12)
+        st = {"items": {k: {"status": "ENQUEUED", "attempt": 1}}}
+        picks, skip = KW.select(rows, cfg(event="event29"), "qwen_kvsys", st, blocks)
+        self.assertNotIn("kv3_phy_v1", [p["item"] for p in picks])
+        self.assertEqual(skip["wave kit enqueued"], ["kv3_phy_v1"])
+        blocks["kv3_phy_v1"] = "b" * 64
+        picks, _ = KW.select(rows, cfg(event="event29"), "qwen_kvsys", st, blocks)
+        p = [p for p in picks if p["item"] == "kv3_phy_v1"]
+        self.assertEqual(p[0]["block_sha"], "b" * 64)
+
 
 STATUS = ("ot-run status: epyc2 admits 713 GB (avail 845, reserve 0, fresh 0, peak 67.2) load 37/128 run 24 root 2% "
           "scratch 187 GB | intel1 admits 30 GB (avail 784) load 58/112 run 35 root 8% scratch 1228 GB | localhost admits "
@@ -188,6 +204,9 @@ class Classify(unittest.TestCase):
             ("cells", "512000 cells", "PLAN"),
             ("bind", "Traceback\nFileNotFoundError: [Errno 2] No such file or directory: 'kv36/x.json'", "FLOW"),
             ("bind", "bind of record not clean\nBIND errors 3", "PLAN"),
+            ("bind", '{"errors": 0, "unbound": 0, "undriven": 0, "multiply_bound": 0}\nBIND errors 2', "PLAN"),
+            ("gen", "Traceback (most recent call last):\ncore_clock_contract.ContractError: x: internal core CTS requires explicit SIGNED TT/FF mean metadata", "PLAN"),
+            ("bind", "Terminated                 python3 tools/die_plan/bind.py", "INFRA"),
             ("place", "something odd happened", "FLOW"),
             ("place", "ERROR: Module `ot_x' referenced in module `top' is not part of the design.", "RTL"),
         ]
@@ -357,6 +376,22 @@ class Step(unittest.TestCase):
             ap = FakeAP(d, "")
             KW.step(ap)
             self.assertEqual(ap.units, [])
+
+
+class Stages(unittest.TestCase):
+    def test_stage_rows(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            st = {"items": {"k1": {"die": "qwen_kvsys", "item": "kv3_hg_v1", "block_sha": "c" * 64, "plan_sha": "d" * 64,
+                                   "status": "ENQUEUED", "stage": "geom", "kit": "/k", "updated": 0},
+                            "k2": {"die": "qwen_kvsys", "item": "kv3_pc_v1__cl1", "parent_item": "kv3_pc_v1",
+                                   "status": "RUNNING", "stage": "place", "updated": 0}}}
+            KW.write_stages(st, d)
+            rows = [ln.split("\t") for ln in open(os.path.join(d, KW.STAGES_FILE)).read().splitlines()]
+            self.assertEqual(tuple(rows[0]), KW.STAGE_COLS)
+            r = dict(zip(rows[0], rows[1]))
+            self.assertEqual((r["item"], r["stage"], r["block_sha"], r["plan_sha"]), ("kv3_hg_v1", "queue:route", "c" * 12, "d" * 12))
+            self.assertEqual(dict(zip(rows[0], rows[2]))["stage"], "place")
 
 
 class Overlay(unittest.TestCase):
