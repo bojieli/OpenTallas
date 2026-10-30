@@ -10,7 +10,7 @@ class RawBranchError(ValueError):
     pass
 
 class RawBranches:
-    def __init__(self, tn, cfg, body):
+    def __init__(self, tn, cfg, body, outline_um=None):
         self.tn=tn;self.rows=[];self.rtl=[];self.roles={};self.used={};self.names=set()
         if not isinstance(cfg,list) or not cfg:raise RawBranchError(f"{tn}: literal raw branches must be a nonempty list")
         for branch in cfg:
@@ -26,6 +26,7 @@ class RawBranches:
                 original=stage.get('original');xy=stage.get('xy_um')
                 if not isinstance(original,str) or not re.fullmatch(r'[A-Za-z_]\w*',original):raise RawBranchError(f"{tn}.{name}: original stage Q required")
                 if not isinstance(xy,list) or len(xy)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in xy):raise RawBranchError(f"{tn}.{name}: finite stage xy required")
+                if outline_um is not None and not (0 <= xy[0] <= outline_um[0] and 0 <= xy[1] <= outline_um[1]):raise RawBranchError(f"{tn}.{name}: stage xy outside outline")
                 net=f'cland_raw_{name}_{i}';inst=f'u_cland_raw_{name}_{i}'
                 self.rtl += [f'    wire {net};',f'    (* keep = "true" *) ot_dp_rrelay {inst} (.clk(clk), .d({prev}), .q({net}));']
                 rec=dict(name=f'{name}_{i}',instance=inst,net=net,raw=prev,original=original,original_parent=original_parent,base=base,stage=i,xy_um=list(xy),added_flops=1,added_cycles=0,kind='literal_same_depth_raw_branch')

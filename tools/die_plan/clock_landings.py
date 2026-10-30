@@ -878,7 +878,7 @@ class Landings:
             if not cat or cat["role"][0] != "relay" or not relay_copy:
                 raise LandingError(f"{tn}: literal START raw branches require a registered relay origin")
             from landing_raw_branches import RawBranches
-            raw_graph = RawBranches(tn, raw_cfg, body)
+            raw_graph = RawBranches(tn, raw_cfg, body, self.types[key].get("outline_um"))
             if not hasattr(self, "_raw_graphs"):
                 self._raw_graphs = {}
             self._raw_graphs[tn] = raw_graph

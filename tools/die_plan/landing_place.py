@@ -123,6 +123,9 @@ def _status_reset_groups(t):
         groups.append((inst,near(xy),'status-anchor'))
     for r in ck.get('landing_local_resets') or []:
         groups.append((f"u_cland_lrst_{safe(r['name'])}",near(r['xy_um']),'local-reset'))
+    for branch in ck.get("landing_raw_branches") or []:
+        for i, stage in enumerate(branch["stages"]):
+            groups.append((f"u_cland_raw_{safe(branch['name'])}_{i}",near(stage["xy_um"]),"literal-local-reset"))
     return groups
 
 
