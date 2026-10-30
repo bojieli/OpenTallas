@@ -1,0 +1,14 @@
+Candidate source, NOT READY until current native LEC + fanout pass.
+Exact epyc2 s81-kits-e/kits/ot_s81sl_cap_rt_face1f/rtl/ot_s81sl_cap_rt.sv
+captured after second-copy fix at03:22. Old single-copy native fanout
+FAIL70 data loads retained in lane records; new two kept6-bit copies
+feed disjoint four-group consumers, preserving exact same-edge assignment.
+Default OFF OT_S81_CAP_RT_FACE_REGS.86 reserved capture FFs retained in
+separate leaf, original fault output edge retained,0 added cycles.
+Actual smallest completeRT+realSRAM lockstep12k output mismatch0,
+seeded fault mutant5937 caught,517 reset edges,632 cfg,8984 wordedges.
+Ran current TWO-copy source via managed ot-run intel2 unit3483256.
+Exact nativeLEC job epyc2 unit959039 still runs against same source,
+FACE746/746PASS. A diagnostic filename says face1f2, but actual kit
+pathname remains face1f (original failed run was reused by predecessor).
+M5 clock candidate separately prepared; parent is not built/adopted.
