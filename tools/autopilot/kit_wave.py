@@ -486,12 +486,19 @@ def run_item(spec_path):
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
     if rc:
         return fail("preflight", "KIT_PREFLIGHT FAIL\n" + txt, f"{G}:{W}/preflight.json")
-    # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one
-    others = [h for h in sp["hosts"] if h != G and not (G in ("localhost", hub) and h == hub)]
-    for h in others:
+    # the kit (a few MB) goes to the same path on every allowed host; ot-run then picks the least-loaded one.
+    # Fleet hosts do not resolve each other by name (intel1 -> intel2/epyc2 fails), so the hub (where this unit
+    # runs) relays: gen host -> hub -> other hosts, and the placed kit comes back the same way.
+    SSHE = "-e 'ssh -o BatchMode=yes -o ControlPath=none'"
+    on_hub = G in ("localhost", hub)
+    if not on_hub:
+        rc, txt = run("sync_hub", ["bash", "-c", f"mkdir -p {q(W)}/gen && rsync -a --delete {SSHE} {G}:{q(W)}/gen/ {q(W)}/gen/"])
+        if rc:
+            return fail("sync_hub", txt)
+    for h in [h for h in sp["hosts"] if h not in (G, hub, "localhost")]:
         cp = (f"ssh -o BatchMode=yes -o ControlPath=none {h} mkdir -p {q(W)}/gen && "
-              f"rsync -a --delete -e 'ssh -o BatchMode=yes -o ControlPath=none' {q(W)}/gen/ {h}:{q(W)}/gen/")
-        rc, txt = run(f"sync_{h}", remote(cp))
+              f"rsync -a --delete {SSHE} {q(W)}/gen/ {h}:{q(W)}/gen/")
+        rc, txt = run(f"sync_{h}", ["bash", "-c", cp])
         if rc:
             return fail(f"sync_{h}", txt)
     m, t = sp["place_mem_gb"], sp["place_threads"]
@@ -506,8 +513,11 @@ def run_item(spec_path):
     rc, txt = run("place", otrun(m, t, K, f"bash {q(W)}/gen/run_kit.sh {q(K)} place {m} {t}", phosts))
     ran = re.findall(r"RAN on (\S+?):", txt)
     res["ran_on"] = h = (hub if ran and ran[-1] == "localhost" else ran[-1]) if ran else ""
-    if h and h != G and not (G == "localhost" and h == hub):
-        run("pull", remote(f"rsync -a -e 'ssh -o BatchMode=yes -o ControlPath=none' {h}:{q(W)}/gen/ {q(W)}/gen/"))
+    if h and h != G and not (on_hub and h == hub):
+        if h != hub:
+            run("pull", ["bash", "-c", f"rsync -a {SSHE} {h}:{q(W)}/gen/ {q(W)}/gen/"])
+        if not on_hub:
+            run("push_gen", ["bash", "-c", f"rsync -a {SSHE} {q(W)}/gen/ {G}:{q(W)}/gen/"])
     probe = (f"ls {q(K)}/run/results/asap7/*/base/3_place.odb 2>/dev/null | head -1; "
              f"cat {q(K)}/FAIL_* 2>/dev/null | head -5; "
              f"grep -h -i -E 'Number of cells|Chip area' {q(K)}/run/reports/asap7/*/base/synth_stat.txt 2>/dev/null | head -2; "
