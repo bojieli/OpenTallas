@@ -1,0 +1,1 @@
+SOURCE PREP ONLY, UNQUALIFIED. STATIC_LID defaults0. All32 constant IDs, exact native old-reference full-boundary cold/warm/truePOR/first-edge lockstep plus wrong-ID control required. Physical static variant has no adoption or routing permission.

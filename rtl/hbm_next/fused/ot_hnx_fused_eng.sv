@@ -68,7 +68,10 @@ module ot_hnx_fused_lane #(
     parameter integer D   = 5120,
     parameter integer KX  = 4,               // x-buffer row slots (power of two)
     parameter integer RR  = 10,              // VM read return: rr valid RR edges after the edge rq was sampled
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // R7 source PREP only: the physical static-ID variant bypasses only
+    // identity capture. Native/default operation retains the original edge.
+    parameter integer STATIC_LID = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -107,11 +110,20 @@ module ot_hnx_fused_lane #(
     ot_rst_relay #(.REGIONS(9)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rlr));
     // ---- pin flops
     reg dv_q, rv_q, r_vq; reg [2:0] dop_q; reg [7:0] dx_q; reg [127:0] dd_q; reg [255:0] rd_q; reg [31:0] r_dq;
-    reg [4:0] lid_q;
+    wire [4:0] lid_q;
+    generate if (STATIC_LID == 0) begin : g_captured_lid
+        reg [4:0] q;
+        always @(posedge clk) q <= lid;
+        assign lid_q = q;
+    end else if (STATIC_LID == 1) begin : g_static_lid
+        assign lid_q = lid;
+    end else begin : g_bad_static_lid
+        ot_hnx_fused_STATIC_LID_must_be_0_or_1 u_trap ();
+    end endgenerate
     always @(posedge clk or negedge rl)
         if (!rl) begin dv_q <= 1'b0; rv_q <= 1'b0; r_vq <= 1'b0; end
         else begin dv_q <= dn_v; rv_q <= rr_v; r_vq <= r_v; end
-    always @(posedge clk) begin dop_q <= dn_op; dx_q <= dn_x; dd_q <= dn_d; rd_q <= rr_d; r_dq <= r_d; lid_q <= lid; end
+    always @(posedge clk) begin dop_q <= dn_op; dx_q <= dn_x; dd_q <= dn_d; rd_q <= rr_d; r_dq <= r_d; end
     wire c_job = dv_q && dop_q == 3'd0, c_wgt = dv_q && dop_q == 3'd1, c_scr = dv_q && dop_q == 3'd2;
     wire c_go = dv_q && dop_q == 3'd3;
     wire scr_mine = c_scr && dd_q[4:0] == lid_q;
