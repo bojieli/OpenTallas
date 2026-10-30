@@ -5,6 +5,13 @@ base=next((p/'run/results/asap7').glob('*/base'))
 db=odb.dbDatabase.create();odb.read_db(db,str(base/'4_cts.odb'))
 b=db.getChip().getBlock();u=b.getDbUnitsPerMicron()
 changes=[]
+# Fail before touching the database if reused on an already corrected view.
+for name in ['mp_isl0_ck_i','mp_isl0_ck_o','mp_isl0_rst_i','mp_isl0_rst_o']:
+ bt=b.findBTerm(name); assert bt is not None, name
+ boxes=[box for pin in bt.getBPins() for box in pin.getBoxes()]
+ assert len(boxes)==1, name
+ x=(boxes[0].xMin()+boxes[0].xMax())/2/u
+ assert abs(x-(66.96 if name.endswith('_i') else 71.28))<1e-6,(name,x)
 for name in ['mp_isl0_ck_i','mp_isl0_ck_o','mp_isl0_rst_i','mp_isl0_rst_o']:
  bt=b.findBTerm(name); shift=round((1.08 if name.endswith('_i') else -1.08)*u)
  for pin in bt.getBPins():
