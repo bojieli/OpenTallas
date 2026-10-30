@@ -82,3 +82,23 @@ def test_staged_contract_manifest_cannot_redirect_or_change_hash(tmp_path,mutati
     hashes=G._pin_freeze_hashes(tmp_path,pf,[10,10]);hashes['pins_staged_file' if mutation=='path' else 'pins_staged_sha256']='../elsewhere.json' if mutation=='path' else 'bad'
     (tmp_path/'freeze.json').write_text(json.dumps(dict(outline_um=[10,10],pins_file=pf.name,pins_sha256=hashlib.sha256(pf.read_bytes()).hexdigest(),**hashes)))
     with pytest.raises(ValueError,match='manifest'):K.pins_canonical(tmp_path)
+
+
+@pytest.mark.parametrize('kind',['json','lef'])
+@pytest.mark.parametrize('mutation',['missing','changed','symlink'])
+def test_staged_manifest_never_falls_back_to_reachable_external_source(tmp_path,kind,mutation):
+    src=tmp_path/'source';src.mkdir();kd=tmp_path/'kit';kd.mkdir()
+    rows=[dict(name='data',layer='M3',x=.042,y=1.042)]
+    text=json.dumps(dict(pins=rows)) if kind=='json' else 'MACRO child\n SIZE 10 BY 10 ;\n PIN data\n PORT\n LAYER M3 ;\n RECT 0 1 .084 1.084 ;\n END\n END data\nEND child\n'
+    pf=src/('child_pins.'+kind);pf.write_text(text)
+    (kd/'io.tcl').write_text('place_pin -pin_name {data} -layer M3 -location {0.042 1.042}\n')
+    (kd/'master_slice.json').write_text('{}')
+    hashes=G._pin_freeze_hashes(kd,pf,[10,10],declared_pins=rows if kind=='lef' else None)
+    freeze=dict(module='child',outline_um=[10,10],pins_file=str(pf),pins_sha256=hashlib.sha256(pf.read_bytes()).hexdigest(),**hashes)
+    (kd/'freeze.json').write_text(json.dumps(freeze));local=kd/pf.name
+    if mutation=='changed':local.write_text('changed local material')
+    else:
+        local.unlink()
+        if mutation=='symlink':local.symlink_to(pf)
+    assert pf.is_file() and hashlib.sha256(pf.read_bytes()).hexdigest()==freeze['pins_sha256']
+    with pytest.raises(ValueError,match='staged declared pin contract'):K.pins_canonical(kd)

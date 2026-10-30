@@ -724,8 +724,13 @@ def pins_canonical(kd, plan_dir=None):
     if staged:
         if Path(staged).name != staged or F.get('pins_staged_sha256') != F.get('pins_sha256'):
             raise ValueError('invalid staged declared pin contract manifest')
-        cands.append(kd / staged)
-    if pf:
+        local = kd / staged
+        if not local.is_file() or local.is_symlink():
+            raise ValueError('staged declared pin contract is not a local regular file')
+        if hashlib.sha256(local.read_bytes()).hexdigest() != F.get('pins_sha256'):
+            raise ValueError('staged declared pin contract whole-file hash differs from freeze')
+        cands.append(local)
+    elif pf:
         cands += [kd / "plan_pins.json", kd / Path(pf).name]
         if plan_dir:
             cands.append(Path(plan_dir) / pf)

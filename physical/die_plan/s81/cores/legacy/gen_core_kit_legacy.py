@@ -790,7 +790,7 @@ def _pin_freeze_hashes(kd, plan_pins_file, outline, declared_pins=None):
     staged = Path(kd) / source.name
     if staged.name == 'freeze.json':
         raise ValueError('declared pin contract collides with owned freeze.json')
-    if staged.exists() and staged.read_bytes() != payload:
+    if staged.is_symlink() or (staged.exists() and staged.read_bytes() != payload):
         raise ValueError('declared pin contract basename collision: ' + staged.name)
     if not staged.exists():
         staged.write_bytes(payload)
