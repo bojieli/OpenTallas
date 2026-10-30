@@ -1,0 +1,9 @@
+base 576702.4178468838 A+B 606474.9311551548 5.163
+{'case': '(a) alone: IDX +1', 'extra': {'IDX': 1}, 'cycles': 606522.9311551548, 'cost_pct_vs_1906': 5.171, 'tok_s': 1812.3, 'delta_pct_vs_1812': -0.008}
+{'case': '(c) alone: IDX +30 (repro DIE-HBM-28-C)', 'extra': {'IDX': 30}, 'cycles': 607914.9311551548, 'cost_pct_vs_1906': 5.412, 'tok_s': 1808.1, 'delta_pct_vs_1812': -0.237}
+{'case': '(b) alone, plausible: masked (+0)', 'extra': {}, 'cycles': 606474.9311551548, 'cost_pct_vs_1906': 5.163, 'tok_s': 1812.4, 'delta_pct_vs_1812': -0.0}
+{'case': '(b) alone, bound: SU +3', 'extra': {'SU': 3}, 'cycles': 609246.931155155, 'cost_pct_vs_1906': 5.643, 'tok_s': 1804.2, 'delta_pct_vs_1812': -0.455}
+{'case': '(b) alone, wide bound: SU/COLL/HC/FUSED +3', 'extra': {'SU': 3, 'COLL': 3, 'HC': 3, 'FUSED': 3}, 'cycles': 611454.931155155, 'cost_pct_vs_1906': 6.026, 'tok_s': 1797.7, 'delta_pct_vs_1812': -0.814}
+{'case': '(a)+(b)+(c) plausible: IDX +31', 'extra': {'IDX': 31}, 'cycles': 607962.9311551548, 'cost_pct_vs_1906': 5.421, 'tok_s': 1808.0, 'delta_pct_vs_1812': -0.245}
+{'case': '(a)+(b)+(c) bound: IDX +31, SU +3 (ESTIMATE OF RECORD bound)', 'extra': {'IDX': 31, 'SU': 3}, 'cycles': 610734.931155155, 'cost_pct_vs_1906': 5.901, 'tok_s': 1799.8, 'delta_pct_vs_1812': -0.698}
+{'case': '(a)+(b)+(c) wide bound: IDX +31, SU/COLL/HC/FUSED +3', 'extra': {'IDX': 31, 'SU': 3, 'COLL': 3, 'HC': 3, 'FUSED': 3}, 'cycles': 612942.9311551548, 'cost_pct_vs_1906': 6.284, 'tok_s': 1793.3, 'delta_pct_vs_1812': -1.055}
