@@ -774,6 +774,12 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
         onehot_memo[key] = None
         if len(control) != D or not 2 <= D <= 8:
             return None
+        # Actual ASAP7 RVT Liberty: DFFHQNx{1,2,3} has ff(IQN,IQNN),
+        # clocked_on="CLK", next_state="!D", and QN.function="IQN".
+        # Restrict this sequential proof to that model; a pin named QN alone
+        # does not establish its polarity or its active clock edge.
+        def native_inverted_ff(master, pin):
+            return bool(re.fullmatch(r"DFFHQNx[123]_ASAP7_75t_R", master) and pin == "QN")
         regs, dn, inv = [], [], []
         for net in control:
             driver = _single_drv(net)
@@ -781,10 +787,10 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 return None
             ci, pin = driver
             m, path, pp = F.cells[ci]
-            if (not is_ff(m) or pin not in ("Q", "QN") or _ckpin(ci) != clock
+            if (not native_inverted_ff(m, pin) or _ckpin(ci) != clock
                     or {p for p, (dd, _) in pp.items() if dd == "in"} != {"CLK", "D"}):
                 return None
-            regs.append(ci); dn.append(F.find(pp["D"][1][0])); inv.append(pin == "QN")
+            regs.append(ci); dn.append(F.find(pp["D"][1][0])); inv.append(True)
         parents = {_parent(F.cells[ci][1]) for ci in regs}
         if len(set(regs)) != D or len(parents) != 1:
             return None
@@ -814,7 +820,7 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             ci, pin = d; m, _, pp = F.cells[ci]
             ins = {p: F.find(v[0]) for p, (dd, v) in pp.items() if dd == "in" and len(v) == 1}
             if is_ff(m):
-                if pin not in ("Q", "QN") or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
+                if not native_inverted_ff(m, pin) or set(ins) != {"CLK", "D"} or _ckpin(ci) != clock:
                     raise KeyError("unsupported reset register")
                 val, depth = reset_level(ins["D"], stack)
                 return (not val if pin == "QN" else val), depth + 1

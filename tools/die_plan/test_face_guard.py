@@ -907,3 +907,9 @@ def test_registered_onehot_needs_declared_reset_role_not_only_reset_name():
     text = _registered_onehot_vehicle()
     r = face_guard.guard(text, "top", skip_re=r"^fclk$", land=MUX4)
     assert r["verdict"] == "FAIL" and not r.get("registered_onehot")
+
+
+def test_registered_onehot_rejects_unmodeled_sequential_polarity_or_edge():
+    text = _registered_onehot_vehicle().replace("DFFHQNx1" + _X + " wr1", "DFFLQNx1" + _X + " wr1")
+    r = face_guard.guard(text, "top", clocks=["fclk"], land=MUX4)
+    assert r["verdict"] == "FAIL" and not r.get("registered_onehot")
