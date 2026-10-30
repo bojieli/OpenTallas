@@ -1,0 +1,30 @@
+{
+ "requests": [
+  [
+   "ff:u_dut.u_nh.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k6.g_r.r[44]",
+   "ff:u_dut.u_nh.rsqrt.g_nr[0].g_h.d_h.g_line.line[127]"
+  ],
+  [
+   "ff:u_dut.u_nh.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k6.g_r.r[44]",
+   "ff:u_dut.u_nh.rsqrt.g_nr[1].g_h.d_h.g_line.line[127]"
+  ],
+  [
+   "ff:u_dut.u_nk.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k6.g_r.r[44]",
+   "ff:u_dut.u_nk.rsqrt.g_nr[0].g_h.d_h.g_line.line[127]"
+  ],
+  [
+   "ff:u_dut.u_nk.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k6.g_r.r[44]",
+   "ff:u_dut.u_nk.rsqrt.g_nr[1].g_h.d_h.g_line.line[127]"
+  ]
+ ],
+ "counts": {
+  "proved": 40192,
+  "differs": 4
+ },
+ "failed": {
+  "hyp:gold:ff:u_dut.u_nh.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k6.g_r.r[44]": "differs",
+  "hyp:gold:ff:u_dut.u_nh.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k6.g_r.r[44]": "differs",
+  "hyp:gold:ff:u_dut.u_nk.rsqrt.g_nr[0].m_hm.g_l5.u.u.u_k6.g_r.r[44]": "differs",
+  "hyp:gold:ff:u_dut.u_nk.rsqrt.g_nr[1].m_hm.g_l5.u.u.u_k6.g_r.r[44]": "differs"
+ }
+}

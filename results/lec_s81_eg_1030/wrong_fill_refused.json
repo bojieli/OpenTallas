@@ -1,0 +1,29 @@
+{
+ "given": 4,
+ "applied": 0,
+ "skipped": [],
+ "anon": 0,
+ "dropped": [],
+ "kept": 0,
+ "loaded": [],
+ "loaded_refused": [],
+ "fill": [],
+ "fill_refused": [
+  {
+   "register": "ff:u_dut.u_nh.rsqrt.g_nr[0].m_yy.g_l5.u.u.y[31]",
+   "why": "reset-state value 0 is the other constant"
+  },
+  {
+   "register": "ff:u_dut.u_nh.rsqrt.g_nr[1].m_yy.g_l5.u.u.y[31]",
+   "why": "reset-state value 0 is the other constant"
+  },
+  {
+   "register": "ff:u_dut.u_nk.rsqrt.g_nr[0].m_yy.g_l5.u.u.y[31]",
+   "why": "reset-state value 0 is the other constant"
+  },
+  {
+   "register": "ff:u_dut.u_nk.rsqrt.g_nr[1].m_yy.g_l5.u.u.y[31]",
+   "why": "reset-state value 0 is the other constant"
+  }
+ ]
+}
