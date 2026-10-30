@@ -2186,3 +2186,5 @@ COORD: 2026-10-30 03:23 PDT hourly: +5 counted cores (S81 18/52, QC 5/9 prov, KV
 
 CODEX: 2026-10-30 03:38 PDT KV-HR took over3f40953; PHY mux2/CDCch PLACE+LEC terminalPASS collected, missingGEOM ot-run launched intel1 codex-kv-hr-1030, RX259 prooflive/236referenceonly.
 CODEX: 2026-10-30 03:38 PDT QCkits takeover codex/qc-kits-0336; inherited failures collected, isolated plan_qc45 GEN pid3072628, FLOW owns st_a pairing; no route/closure claimed.
+
+CODEX: 2026-10-30 03:39 PDT takeover all lanes assigned incl orphan support; inventory lanes/CODEX-COVERAGE-0336.md. Merged QC plan record fa9a→fdebbf10f69 + landing slot-order d87→facd45bafb4, pushed HEAD=origin/main intel2; real failures owned and progressing.

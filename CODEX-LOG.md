@@ -7664,3 +7664,10 @@ Finalparent packets/branches:
 OwnROOT b8c306c21clean/pushed/noownlivejobs; allthreeintel1read/probejobsdone. RootHANDOFFTASKonlyafterreset. RemainingOWNERquestions: nativeSU11physicalprefixchoice andS81CAP_EDvisibility/lowfillitemsifstillneeded. LargerKVt2CisEXPLICITLYAUTHORIZED; IQFimpossible-fillinferenceWITHDRAWN. Finalhandbackcontainsnofull-die/tokenreleaseclaim.
 
 FINAL directory/reference correction: KV parent authoritative packet is handoff/codex_kv_20261030_0009.md (not provisional0003); KV00afa0a3bf83allchildrenparked, HRlast3f409/jobspreserved. HBM ALLchildrennowfinalPARKconfirmed: CORRECTcorebranchcodex/hbm-coregen-2312@dd77e14f4; WRONGcodex/hbm-cores-2249 startedfrom6e175MUSTNOTMERGE. HCOLfinish3491744/opstore3609434andEP/Qcore/BDlive. TwoGQLcurrentkitsREADYbutNOnewFINISHlaunchedafterreset. HBM1080hintattachmenttoCURRENT40..43kitNOTDONEdespitequalifiedretainedproof. All8parentteamsfinalPARKconfirmed; no halfwrittenrootfiles/merges/pendingownheavyjobs.
+
+## Takeover 2026-10-30 03:39 PDT
+All five die lanes plus FLOW, tokens, signoff/kit-wave and orphan support actively assigned. All-lane inventory: lanes/CODEX-COVERAGE-0336.md. Current surviving fleet is epyc2/intel1/intel2 (older five-host mandate superseded by retirement notes). Review-before-route stays mandatory; routine validation kept narrow.
+Merged QC plan-record data fa9a7a5f64b as fdebbf10f69; slot-order fallback d87dea6c502 as facd45bafb4. Main pushed and intel2 HEAD equals origin/main.
+
+OWNER?
+No new owner decision required at takeover; existing freeze/contract changes remain with die owners and recorded owner rules.
