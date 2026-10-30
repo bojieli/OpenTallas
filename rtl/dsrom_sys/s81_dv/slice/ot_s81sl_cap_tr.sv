@@ -106,7 +106,11 @@ module ot_s81sl_cap_tr #(
     // The private sticky state and the face flop sample the same next value.
     // Kept leaf hierarchy preserves the duplicate face flop, with no new edge.
     reg fault_state;
-    wire fault_next = fault_state | (|n_f) | (|(l_v & l_e)) | (|l_f);
+    reg fault_next;
+    always @* begin
+        fault_next = fault_state;
+        if ((|n_f) || (|(l_v & l_e)) || (|l_f)) fault_next = 1'b1;
+    end
     always @(posedge clk or negedge rsv[0])
         if (!rsv[0]) fault_state <= 1'b0; else fault_state <= fault_next;
     ot_s81sl_cap_tr_face_reset #(.W(1)) u_fault_face (
