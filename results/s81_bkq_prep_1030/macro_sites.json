@@ -1,0 +1,418 @@
+[
+  {
+    "instance": "*u_s.u_hc.g_bank?0?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      43.2,
+      43.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?1?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      129.6,
+      43.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?2?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      216.0,
+      43.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?3?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      302.4,
+      43.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?4?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      43.2,
+      129.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?5?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      129.6,
+      129.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?6?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      216.0,
+      129.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hc.g_bank?7?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      302.4,
+      129.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?0?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      43.2,
+      475.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?1?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      129.6,
+      475.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?2?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      216.0,
+      475.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?3?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      302.4,
+      475.2
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?4?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      43.2,
+      561.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?5?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      129.6,
+      561.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?6?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      216.0,
+      561.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_s.u_hf.g_bank?7?.u_bank",
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "at": [
+      302.4,
+      561.6
+    ],
+    "outline": [
+      64.8,
+      54.0
+    ],
+    "signed_child": true
+  },
+  {
+    "instance": "*u_q.u_mem.g_b?0?.g_w?0?.u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+    "at": [
+      388.8,
+      43.2
+    ],
+    "outline": [
+      94.824,
+      80.472
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_q.u_mem.g_b?0?.g_w?1?.u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+    "at": [
+      388.8,
+      172.8
+    ],
+    "outline": [
+      94.824,
+      80.472
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_q.u_mem.g_b?0?.g_w?2?.u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+    "at": [
+      388.8,
+      388.8
+    ],
+    "outline": [
+      94.824,
+      80.472
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_q.u_mem.g_b?1?.g_w?0?.u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+    "at": [
+      518.4,
+      43.2
+    ],
+    "outline": [
+      94.824,
+      80.472
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_q.u_mem.g_b?1?.g_w?1?.u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+    "at": [
+      518.4,
+      172.8
+    ],
+    "outline": [
+      94.824,
+      80.472
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_q.u_mem.g_b?1?.g_w?2?.u_m",
+    "master": "ot_sram_1r1w_128x256_m1_r2c2_p192_mir",
+    "at": [
+      518.4,
+      388.8
+    ],
+    "outline": [
+      94.824,
+      80.472
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_ofq.g_bank?0?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      43.2,
+      216.0
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_ofq.g_bank?1?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      129.6,
+      216.0
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_ofq.g_bank?2?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      216.0,
+      216.0
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_ofq.g_bank?3?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      302.4,
+      216.0
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_ofq.g_bank?4?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      388.8,
+      518.4
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_fq.g_bank?0?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      43.2,
+      388.8
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_fq.g_bank?1?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      129.6,
+      388.8
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_fq.g_bank?2?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      216.0,
+      388.8
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_fq.g_bank?3?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      302.4,
+      388.8
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  },
+  {
+    "instance": "*u_s.u_fq.g_bank?4?.u_m",
+    "master": "ot_sram_1r1w_32x128_m1_p192_rc",
+    "at": [
+      475.2,
+      518.4
+    ],
+    "outline": [
+      51.408,
+      39.96
+    ],
+    "signed_child": false
+  }
+]

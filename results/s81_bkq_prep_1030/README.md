@@ -1,0 +1,13 @@
+# BKq parent source and clock PREP
+
+This private packet prepares the next parent contract; it does not adopt a pin, clock target, interface or physical view. The existing source-only runner continues to reject every physical goal with exit78.
+
+The current reference parent is dsdv_bksel_q, 648x648, 1803 external signal pins, with exactly16 signed435-pin histogram children and16 real SRAMs at the original instance sites. No child rebuild is needed. The recovered histogram view is b26cd271980: clock-pin capacitance TT1.1862/FF1.2294 fF per child and measured boundary insertion TT250.02/FF192.12 ps. Those values are explicit in impact.json. Scalar-to-copy current8-bank parent multicast has already passed the12000-cycle exact proof and mutant.
+
+The narrow clock candidate replaces the old M3 ck point(304.569,647.868) with M5 centre(304.572,647.760), rectangle[304.548,647.520,304.596,648.000],0.048x0.480. Delta is+0.003x/-0.108y. The exact archived native make_tracks.tcl establishes M5 xphase0.012/pitch0.048; this is a local native-phase candidate. All other1802 parent pins, RTL, cycles, macro positions and outline remain unchanged. Parent die landing transformation and PG must still be checked explicitly; the current die tap example(339.237,682.553) must not be inferred by origin-only arithmetic.
+
+The actual parent source-only GEN used a250/202.5 ps fallback, while the current die early tap budgets are651.6/527.5 ps from the older HQ3 parent view. Neither is a measured model of this newly composed signed-child parent. A qualified clock plan must include all actual parent FFs and32 macro clock loads, the measured child insertion/endpoint timing, and the appropriate early-child branches. Hidden child FFs cannot be represented as an unqualified lumped clock sink. The global833ps/60setup/25hold/80related-pair policy stays fixed.
+
+The render was personally viewed: all32 fixed blocks fit the unchanged square, with continuous streets around the two histogram groups and SRAM rows. This is source-only geometry PREP, not a placed-cell/PG/congestion/timing pass. Next work is current-source parent ABI/source-only generation/native proof and an actual parent census, then clock compensation and proper child endpoint models. Only after those gates can G1/G2 or physical authority be requested.
+
+Inherited successful GEN artifact (read-only): intel2:/srv/opentallas-scratch2/claude/codex-s81ck-tr-2249/bkq_source4/kits/dsdv_bksel_q_signed_source. Current helper is the isolated d754 recovery. Native original spec, exact macro-site list, signed-child insertion and candidate pin rows are included for review. Canonical plan/source files are untouched.

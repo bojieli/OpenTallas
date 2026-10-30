@@ -1,0 +1,120 @@
+{
+  "status": "PRIVATE_PREP_NOT_ADOPTED",
+  "parent": "dsdv_bksel_q",
+  "source_only_gen": "intel2:/srv/opentallas-scratch2/claude/codex-s81ck-tr-2249/bkq_source4/kits/dsdv_bksel_q_signed_source",
+  "external_abi_pins": 1803,
+  "outline_um": [
+    648,
+    648
+  ],
+  "clock_old": {
+    "name": "ck",
+    "layer": "M3",
+    "x": 304.569,
+    "y": 647.868
+  },
+  "clock_candidate": {
+    "name": "ck",
+    "layer": "M5",
+    "x": 304.572,
+    "y": 647.76,
+    "width": 0.048,
+    "height": 0.48
+  },
+  "clock_rect": [
+    304.548,
+    647.52,
+    304.596,
+    648.0
+  ],
+  "clock_delta_um": [
+    0.003,
+    -0.108
+  ],
+  "native_M5_x_phase_um": 0.012,
+  "native_M5_pitch_um": 0.048,
+  "phase_check": true,
+  "clock_min_area_um2": 0.023039999999999998,
+  "external_data_pin_changes": 0,
+  "rtl_changes": 0,
+  "cycles_added": 0,
+  "signed_children": {
+    "master": "ot_s81ph_native_sel_hist_bank",
+    "count": 16,
+    "signal_pins_each": 435,
+    "outline_um": [
+      64.8,
+      54
+    ],
+    "native_views_source": "b26cd271980",
+    "insertion": {
+      "tt": {
+        "boundary": {
+          "n": 433,
+          "min": 242.89,
+          "mean": 250.02,
+          "max": 258.16,
+          "spread": 15.27
+        }
+      },
+      "ff": {
+        "boundary": {
+          "n": 433,
+          "min": 185.1,
+          "mean": 192.12,
+          "max": 200.12,
+          "spread": 15.02
+        }
+      },
+      "schema": "opentallas.signed_child.insertion.v1"
+    }
+  },
+  "real_srams": 16,
+  "child_source_qualification": "current8bank scalar versus435pin multicast12000cycles/11671checks0mismatch/320resets; wrongcopy3754caught",
+  "old_source_gen_clock_fallback_ps": {
+    "tt": 250,
+    "ff": 202.5
+  },
+  "current_die_tap_budget_ps": {
+    "tt": 651.6,
+    "ff": 527.5
+  },
+  "clock_budget_status": "NOT_RECONCILED: old source-only250/202.5 is not a measured parent clock model or current651.6/527.5 external contract",
+  "physical_authority": "NONE: existing source-only runner refuses all physical goals78",
+  "next_gates": [
+    "root review parent M5 native-phase clock contract before adoption",
+    "current-source parent ABI/source-only generation and ordinary native source qualification",
+    "parent census and exact per-childclock load/insertion/endpoint model; do not lump hidden childflops",
+    "explicit early child taps and all parent FF relatedpair timing at833/60/25",
+    "render LOOK PG/nativephase/parentfit checks then actualG1/G2 before any route"
+  ],
+  "hist_native_clock_caps_fF": {
+    "tt": {
+      "port": "clk",
+      "cap_fF": 1.1862,
+      "total16cap_fF": 18.9792
+    },
+    "ff": {
+      "port": "clk",
+      "cap_fF": 1.2294,
+      "total16cap_fF": 19.6704
+    }
+  },
+  "phase_basis": "Exact existing parent native make_tracks.tcl M5 offsets/pitch, copied as native_make_tracks.tcl; not a manual global phase assumption",
+  "parent_current_clock_tap_example": {
+    "xy": [
+      339.237,
+      682.553
+    ],
+    "core_origin": [
+      34.56,
+      34.56
+    ],
+    "track_offset": [
+      0.108,
+      0.012
+    ],
+    "status": "Current die-clock landing transformation needs explicit native interface reconciliation, not origin-only inference"
+  },
+  "review": "Parent macro/candidate clock render personally LOOK viewed; all32 fixed blocks remain inside648 square with open channels, no moves. No native PG/current parent tap/clock/physical qualification claimed."
+}
