@@ -1,0 +1,39 @@
+{
+ "vehicle": "kv3_sys_c_part",
+ "original": {
+  "verdict": "NOT EQUIVALENT",
+  "proved": 58076,
+  "differs": 407,
+  "compare_points": 58483
+ },
+ "targeted": {
+  "verdict": "FAIL residual comparisons",
+  "proved": 58821,
+  "differs": 221,
+  "failed_hypotheses": [],
+  "direct_ctl_failures_remaining": [],
+  "explicit_ctl_copy_candidates": 18,
+  "public_bit_alias_candidates": 155,
+  "additional_exact_D_copy_candidates": 184
+ },
+ "rejected": {
+  "support_pair_seed_count": 16,
+  "backward_seed_count": 24,
+  "backward_failed_hypotheses": 16,
+  "adopted": false
+ },
+ "source_branches": {
+  "experimental": "codex/lec-2249",
+  "exact_D_and_alias": "d79e1a856",
+  "strict_self_hold": "f5e9773ba",
+  "preseed": "codex/lec-preseed-2338@d5a4edbcc"
+ },
+ "live_full_check": {
+  "host": "intel1",
+  "unit": "oth-ubuntu-3025390-1793340430",
+  "directory": "/srv/opentallas-scratch2/claude/codex-lec-2249/full",
+  "status": "RUNNING at 23:40 PDT; no verdict claim"
+ },
+ "cycles_added": 0,
+ "rtl_changed": false
+}
