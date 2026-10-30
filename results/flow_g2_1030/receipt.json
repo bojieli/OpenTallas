@@ -1,0 +1,21 @@
+{
+  "source_base": "adada00024478f65a1a2e8e272859e984f09e3a4",
+  "scope": "G2 global-route TT setup, STANDARD FF hold, related-pair CPPR skew; no RTL change or added cycles",
+  "tests": "37 passed",
+  "actual": {
+    "host": "epyc2",
+    "unit": "oth-ubuntu-3197723-1793361386",
+    "snapshot": "/srv/opentallas-scratch2/claude/codex-g2gate-1030/ld_v2",
+    "receipt": "grt_policy.json",
+    "source_kit": "/srv/opentallas-scratch2/claude/codex-s81cores-1030/kits/ot_s81sl_cap_ld_m5trial",
+    "geometry": "Unchanged LD GRT ODB; actual image viewed; existing manual review PASS retained in snapshot/CODEX_G2_REVIEW.json",
+    "result": "PASS",
+    "tt_setup_ps": 8.72,
+    "ff_standard_hold_ps": 11.59,
+    "pairs_per_corner": 7191,
+    "tt_max_pair_skew_ps": 13.74,
+    "ff_max_pair_skew_ps": 11.59
+  },
+  "failure_diagnosis": "First isolated Python -I invocation could not import staged signoff sibling. Fixed explicit script-directory import path; isolated regression passes. First job/log preserved as demo.log and ld snapshot.",
+  "latest_source_reparse": "PASS; latest malformed/nonfinite checks exercised against actual TT/FF logs without rerunning STA"
+}
