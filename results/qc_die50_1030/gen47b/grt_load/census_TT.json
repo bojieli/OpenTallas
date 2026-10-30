@@ -1,0 +1,20 @@
+{
+ "src": "/srv/opentallas-scratch2/claude/die-qc-50/gen47b/grt_TTN/edges_raw.txt",
+ "masters": {
+  "CKINVDCx16_ASAP7_75t_R": 48296
+ },
+ "cells_odd_parity": 24148,
+ "taps_odd": 0,
+ "odd_tap_examples": [],
+ "ambiguous_edge_pins": 26171,
+ "ambiguous_examples": [
+  "ck_r164_4",
+  "ck_r226_0",
+  "ck_r226_1",
+  "ck_r226_2",
+  "ck_r226_3"
+ ],
+ "na": 0,
+ "rows": 56185,
+ "cell_slew_max_ps": 277.251953
+}

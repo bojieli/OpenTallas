@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.provider_clock_loads.v1",
+ "status": "ACTUAL_M1_ENDPOINTS_UNROUTED",
+ "physical_route": false,
+ "timing_qualified": false,
+ "loads": 23230,
+ "nets": 2489,
+ "max_added_fanout": 14,
+ "added_cells": 0,
+ "cycles_added": 0,
+ "inputs": {
+  "graph": {
+   "path": "/srv/opentallas-scratch2/claude/die-qc-50/gen47b/access/graph_raw.json",
+   "sha256": "eb5389fd40e7dcb4baba5cbbbfe214e874eee11eab0e3c12925d1699e9450c7b"
+  },
+  "loads": {
+   "path": "/srv/opentallas-scratch2/claude/die-qc-50/gen47b/import/clock_loads.json",
+   "sha256": "4488cc83fbc594221ba6b9af0b52f9bfb6f5c02383cd53f9f45d18624fadc45f"
+  },
+  "bindings": {
+   "path": "/srv/opentallas-scratch2/claude/die-qc-50/gen47b/bound/bindings.json",
+   "sha256": "e33270d327694edd74ef7d4a018b570890d0f6b270e4b68d2eda7abb8e96bd8d"
+  }
+ }
+}

@@ -1,0 +1,25 @@
+G47_OBS kept_fullspan 13304 removed_clock_reservations 79025
+G47_PROVIDER_PORTS_DROPPED 0
+[INFO GRT-0019] Found 48297 clock nets.
+[INFO GRT-0018] Total wirelength: 606481862 um
+G47_GRT_DONE
+G47_NDR_RC M8/M9 r 0.0043358 c 0.1082436
+G47_CELLS 48296
+G47_ARR_DONE
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:42.56
+	Maximum resident set size (kbytes): 20276584
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           189348672       6182643            3.27%             0 /  0 /  0
+M5           187851939       11316375            6.02%             0 /  0 /  0
+M6           216602205       8406365            3.88%             0 /  0 /  0
+M7           272776381       20366292            7.47%             0 /  0 /  0
+M8           505881234       3235491            0.64%             0 /  0 /  0
+M9           477822774       5480931            1.15%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total        1850283205       54988097            2.97%             0 /  0 /  0
+

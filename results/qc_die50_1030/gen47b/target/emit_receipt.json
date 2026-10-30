@@ -1,0 +1,18 @@
+{
+  "schema": "opentallas.native_target_infra.v1",
+  "plan": "/srv/opentallas-scratch2/claude/die-qc-50/gen47b/inputs/plan_qc49.json",
+  "plan_sha256": "9deec4c7040b2e5044dfce2ef4d64674bafb91010dd6a432c96466651f0aa442",
+  "windows": "/srv/opentallas-scratch2/claude/die-qc-50/gen47b/islands/combined_island_windows.json",
+  "windows_sha256": "72faf9b540846d3e1f2992645df3e2fb5aeb34035ad861413736f78edede55e2",
+  "island_types": 118,
+  "island_windows": 32190,
+  "abstracts_with_islands": 118,
+  "route_v_equals_target49": true,
+  "types": 119,
+  "parts": 377,
+  "landing_infra": true,
+  "reset_infra": true,
+  "route": false,
+  "physical_timing": false,
+  "source": "main die_trial.abstract_lef(islands=combined)/route_netlist; target49 grt.tcl/obs.tcl/tracks.tcl"
+}

@@ -1,0 +1,19 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "verdict": "ALL_MAPPED_CELLS_IMPORTED",
+  "cells": 50020,
+  "flops": 23230,
+  "comb": 26790,
+  "new_pg_terms": 100040,
+  "native_cells_preserved": 48673,
+  "native_cells_sha": "6b87ca4ae5f9271bfad8c6c9f8d98d3acd68b95abe6a6cbcdcb22ce1cadeeef1",
+  "native_connections_sha": "398a9ccb70e927c0cebddd9e585d509bc08ae85683272c982b0fb54274b3ccda",
+  "existing_net_routes_preserved": 541054,
+  "inventory_sha256": "ae994e385abb9b696333c9fef2864a4f724d39ac73aee4a4139af37bbe48c4d4",
+  "placements_sha256": "ef7c1d424b3b8fecee3f341584986fc8d9c94ccf1e554f3ef27596e378b42574",
+  "scope": "Physical all-cell source import only; full PG access, routed clock load timing, native seam/reset phase and token gates still required"
+}

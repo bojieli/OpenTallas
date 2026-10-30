@@ -1,0 +1,14 @@
+{
+ "ck_nets": 48297,
+ "ff_loaded_nets": 2489,
+ "ff_loaded_without_M8M9": 2480,
+ "non_ff_without_M8M9": 1218,
+ "example_ck_n3750_layers": [
+  "M1",
+  "M2",
+  "M3",
+  "M4",
+  "M5"
+ ],
+ "note": "GRT -clock M8-M9 not honored on clock nets carrying M1 FF CLK pins: leaf nets route on M1-M5 at 1x RC"
+}

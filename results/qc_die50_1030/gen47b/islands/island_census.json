@@ -1,0 +1,33 @@
+{
+ "clock": {
+  "sites": 48296,
+  "sites_in_partitions": 48272,
+  "types": 118,
+  "windows": 13888,
+  "in_core": 0,
+  "in_core_sample": [],
+  "outside_partitions": 24
+ },
+ "provider": {
+  "sites": 50020,
+  "sites_in_partitions": 50020,
+  "types": 111,
+  "windows": 18302,
+  "in_core": 0,
+  "in_core_sample": [],
+  "outside_partitions": 0
+ },
+ "combined": {
+  "sites": 98316,
+  "sites_in_partitions": 98292,
+  "types": 118,
+  "windows": 32190,
+  "in_core": 0,
+  "in_core_sample": [],
+  "outside_partitions": 24
+ },
+ "plan_sha256": "9deec4c7040b2e5044dfce2ef4d64674bafb91010dd6a432c96466651f0aa442",
+ "constraints_sha256": "3ddabb1eb73f21068a95a3c40d484ca0d2ca3c43b0ff41f5da153431fd6ff689",
+ "placements_sha256": "ef7c1d424b3b8fecee3f341584986fc8d9c94ccf1e554f3ef27596e378b42574",
+ "tools_note": "main die_trial.island_windows / load_island_sites (cell_um opt-in)"
+}
