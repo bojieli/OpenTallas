@@ -12,6 +12,7 @@ module ot_qkd_static_kv_timing #(
   parameter integer CORE_CLOCK = 0, // optin: timing in exactly833ps controller edges
   parameter integer SROW = 0,                 // static-row queue (emb-hbm); 0 = ot_hbm_r14_stream_pc_ready exactly
   parameter integer SQD = 4,                  // static queue entries (power of two)
+  parameter integer SQ_COUNT_PARALLEL = 0,    // opt-in: late push/pop selects precomputed count +/- 1
   parameter integer S_STARVE = 8,             // cycles a static head waits before it takes priority
   parameter integer TWIN = 0,                 // twin-copy switch (refresh / conflict avoidance)
   parameter integer TWIN_ROFF = 0,            // twin row offset (two's complement, 19 b)
@@ -543,7 +544,18 @@ module ot_qkd_static_kv_timing #(
             sq_row[SQW'(sq_rp + sq_n)] <= s_row; sq_we[SQW'(sq_rp + sq_n)] <= s_we;
             sq_context[SQW'(sq_rp + sq_n)]<=s_context;
           end
-          sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+          if (SQ_COUNT_PARALLEL != 0) begin
+            // Keep the late JEDEC pop decision out of a serial add/subtract chain.
+            // Count, ready, pop and every calendar edge retain their original cycle.
+            case ({(s_v && s_r), s_go})
+              2'b10: sq_n <= sq_n + 1'b1;
+              2'b01: sq_n <= sq_n - 1'b1;
+              2'b00, 2'b11: sq_n <= sq_n;
+              default: sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+            endcase
+          end else begin
+            sq_n <= sq_n + ((s_v && s_r) ? 1'b1 : 1'b0) - (s_go ? 1'b1 : 1'b0);
+          end
           if (s_go) sq_rp <= SQW'(sq_rp + 1'b1);
           rpn = s_go ? SQW'(sq_rp + 1'b1) : sq_rp;
           chg = s_go || sq_n == 0;
