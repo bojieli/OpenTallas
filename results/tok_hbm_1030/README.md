@@ -194,3 +194,35 @@ address/version checks,40 expert components and6 coupled head rows pass, plus
 wrong load, missing drain, stream-coupling and known reverse-source-group controls.
 Current backend stack/VM namespace, scratch authority, initial publication,
 numerical RTL and full source calendar are still unqualified. SOURCE ONLY.
+
+Compile-time resident copy elision (no runtime cache or new RTL)
+
+vm_static_cache.py tracks opaque value identities through the actual fixed
+stream. Native copies propagate identities; arithmetic assigns fresh identities
+over conservative native write bounds. Expert writes use all possible declared
+source output ranges, not a guessed union profile. A known static linear HBM
+body write preserves backing identities only when its exact address range is
+disjoint; unknown/overlapping writes invalidate them all. All288 expanded body
+HBM write rows in this source are disjoint from the candidate backing.
+
+A LOAD or STORE sector is removed only when its destination already holds the
+exact same opaque source value identities; changed runs retain real whole-sector
+native DMA. All arithmetic/body bytecodes and all explicit drains remain.
+This uses existing VM contents across phases, with no hardware cache, allocator,
+credit, speculation or new instruction. The flag is a separate opt-in source
+post-pass, not an installed release programme or source-calendar claim.
+
+canonical_cached_disjoint contains40176 commands and361623424 boundarybytes,
+saving22252672bytes(5.8%) and360commands over grouped source. It completely
+removes487 DMA commands and splits some partial hits into smaller real commands.
+29345 copy-induction checks establish identical affected ranges after every
+transformed copy; final workspace and backing identity arrays match exactly.
+Body bytes are checked byte-identical. A skipped required LOAD and wrong STORE
+address control are caught. The first control attempt targeted copy ordinal0
+(which was a STORE), so no LOAD was corrupted; the control was fixed to target
+the first required LOAD, and now fails as intended. No failed source verdict is
+promoted from that harness error.
+
+The proof is copy/address exactness with unchanged opaque arithmetic, not
+numerical RTL/G5, selected backend/stack coverage, scratch authority, actual
+HBM execution or a token rate. Those holds remain unchanged.
