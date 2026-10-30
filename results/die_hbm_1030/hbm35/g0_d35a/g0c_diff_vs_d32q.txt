@@ -1,0 +1,16 @@
+FAIL 14 128 910 | FAIL 14 128 910
+only base: 0 only new: 0
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_nw core u_vmb_Q6_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q6: mean cos -0.53, 282 pins on the far side (re-pin to face N)", "type": "q_hub_nw"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_nw core u_vmb_Q7_mu1 port dq: 282 pins on face E face away from its partner(s) u_vmdel_Q7: mean cos -0.98, 282 pins on the far side (re-pin to face W)", "type": "q_hub_nw"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_ne core u_vmb_Q0 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p0: mean cos -0.27, 281 pins on the far side (re-pin to face E)", "type": "q_hub_ne"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_ne core u_vmb_Q2 port kq: 281 pins on face S face away from its partner(s) u_hcollks_Q_p1: mean cos -0.79, 281 pins on the far side (re-pin to face N)", "type": "q_hub_ne"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_ne core u_vmb_Q3 port rr0: 257 pins on face W face away from its partner(s) face N (L103_o), face N (L135_i), face N (L25_i) ...: mean cos -0.10, 257 pins on the far side (re-pin to face N)", "type": "q_hub_ne"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_ne core u_vmb_Q4 port rq1: 17 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 17 pins on the far side (re-pin to face N)", "type": "q_hub_ne"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_ne core u_vmb_Q4 port rr1: 257 pins on face S face away from its partner(s) u_hb_dbk_Q: mean cos -0.93, 257 pins on the far side (re-pin to face N)", "type": "q_hub_ne"}
+ERR {"check": "core_faces", "g0c": true, "level": "ERROR", "msg": "type q_hub_ne: 13 core ports face away from their partners (8 more not listed)", "type": "q_hub_ne"}
+ERR {"check": "hops", "lane": "L204", "level": "ERROR", "msg": "lane L204: hop 4 via mandatory slot pins is 936 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+ERR {"check": "hops", "lane": "L206", "level": "ERROR", "msg": "lane L206: hop 6 via mandatory slot pins is 489 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+ERR {"check": "hops", "lane": "L204m", "level": "ERROR", "msg": "lane L204m: hop 4 via mandatory slot pins is 936 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+ERR {"check": "hops", "lane": "L206m", "level": "ERROR", "msg": "lane L206m: hop 6 via mandatory slot pins is 645 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+ERR {"check": "hops", "lane": "L6b", "level": "ERROR", "msg": "lane L6b: hop 4 via mandatory slot pins is 836 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}
+ERR {"check": "hops", "lane": "L6bm", "level": "ERROR", "msg": "lane L6bm: hop 4 via mandatory slot pins is 845 um > reach 405 (add stations to the crossed partition's slot or shorten it)"}

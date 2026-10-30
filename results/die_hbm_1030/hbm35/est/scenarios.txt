@@ -1,0 +1,7 @@
+base                                                         cost  2.566G unpl   549.2M bit-um column  57845  under-hub: b101,b100,b110,su31,su30,spu1,su21,b112,su11,su10,spu0,su01
+N: b113 to west end (after b112)                             cost  2.469G unpl   493.6M bit-um column  46131  under-hub: b101,b100,b110,su31,su30,spu1,su21,b112,b113,su11,su10,spu0
+N: b113 first, b112 second                                   cost  2.492G unpl   505.1M bit-um column  46131  under-hub: b101,b100,b110,su31,su30,spu1,su21,b113,b112,su11,su10,spu0
+S: b102,b103 after b100                                      cost  2.501G unpl   515.2M bit-um column  48667  under-hub: b101,b100,b102,b103,b110,su31,su30,spu1,b112,su11,su10,spu0,su01
+S: b111 after b110                                           cost  2.612G unpl   571.5M bit-um column  58623  under-hub: b101,b100,b110,b111,su31,su30,spu1,su21,b112,su11,su10,spu0,su01
+S: b102,b103 after b100 + b111 after b110                    cost  2.545G unpl   532.6M bit-um column  52851  under-hub: b101,b100,b102,b103,b111,b110,su31,su30,spu1,b112,su11,su10,spu0,su01
+ALL: S b100,b102,b103,b110,b111 west + N b113 after b112     cost  2.394G unpl   450.0M bit-um column  30489  under-hub: b101,b100,b102,b103,b110,b111,su31,su30,spu1,b112,b113,su11,su10,spu0
