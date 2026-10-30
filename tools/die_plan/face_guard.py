@@ -419,8 +419,14 @@ def ring_spec(v):
 
 def origin_spec(v):
     """One explicitly emitted count origin; its module type and clock are proved below."""
-    if set(v) != {"form", "origin"} or not isinstance(v.get("origin"), str) or not v["origin"]:
+    if (not {"form", "origin"} <= set(v) or set(v) - {"form", "origin", "copies"}
+            or not isinstance(v.get("origin"), str) or not v["origin"]):
         raise ValueError(f"land_slots origin_start spec {v}: want exactly {{form: origin_start, origin: <instance>}}")
+    if "copies" in v:
+        cp = v["copies"]
+        if (not isinstance(cp, list) or not cp or not all(isinstance(x, str) and x for x in cp)
+                or len(set(cp)) != len(cp) or v["origin"] in cp):
+            raise ValueError(f"land_slots origin_start copies {cp}: want distinct nonempty instance names")
     return v["origin"]
 
 
@@ -876,7 +882,33 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                         for b in _bits_of(T, p)}
     strap_roots = {port_root[b] for p in (straps or ()) if p in T.ports for b in _bits_of(T, p)}
 
-    def ring_start(b, r, rings, origin=None):
+    def _private_copy_output(ci):
+        """A copy's sole output drives one face output through private BUF/INV cells."""
+        outs = [F.find(v[0]) for _, (dd, v) in F.cells[ci][2].items() if dd == "out" and len(v) == 1]
+        if len(outs) != 1:
+            return None
+        net, seen = outs[0], set()
+        while net not in seen:
+            seen.add(net)
+            if net in roots_ports:
+                ports = roots_ports[net]
+                if len(ports) != 1 or net not in out_port_roots or loads[net]:
+                    return None
+                return ports[0]
+            if len(loads[net]) != 1 or len(drv[net]) != 1:
+                return None
+            cj, _ = loads[net][0]
+            if not is_buf(F.cells[cj][0]):
+                return None
+            pp = F.cells[cj][2]
+            ins = [v for _, (dd, v) in pp.items() if dd == "in"]
+            outs = [v for _, (dd, v) in pp.items() if dd == "out"]
+            if len(ins) != 1 or len(ins[0]) != 1 or len(outs) != 1 or len(outs[0]) != 1:
+                return None
+            net = F.find(outs[0][0])
+        return None
+
+    def ring_start(b, r, rings, origin=None, copies=()):
         """(None, record) = OK, else (failure text, None)."""
         if drv[r]:
             return f"ring start net also driven by {F.cells[drv[r][0][0]][1]}", None
@@ -917,14 +949,20 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
             par = {_parent(p) for p in sp}
             sck = {_ckpin(ci) for ci in samplers}
             if origin is not None:
-                if par != {origin} or not any(_module_is(origin, t) for t in
+                declared = {origin, *copies}
+                if par != declared or not any(_module_is(origin, t) for t in
                                               ("ot_dp_landing_origin", "ot_dp_landing_origin_s", "ot_dp_landing_relay")):
                     return f"origin start reaches {sp[:3]} outside declared typed origin {origin}", None
-                if _module_is(origin, "ot_dp_landing_relay") and len(samplers) != 1:
-                    return f"relay start reaches {len(samplers)} sampler flops (want exactly one)", None
-            if len(par) != 1 or (origin is None and "origin" not in next(iter(par)).rsplit("/", 1)[-1]):
+                if copies and not all(_module_is(x, "ot_dp_landing_relay") for x in declared):
+                    return "origin face copies require actual typed relay instances", None
+                if _module_is(origin, "ot_dp_landing_relay"):
+                    for parent in declared:
+                        n = sum(_parent(F.cells[ci][1]) == parent for ci in samplers)
+                        if n != 1:
+                            return f"relay start {parent} reaches {n} sampler flops (want exactly one)", None
+            if origin is None and (len(par) != 1 or "origin" not in next(iter(par)).rsplit("/", 1)[-1]):
                 return f"ring start reaches non-writer flops {sp[:3]} outside one origin instance", None
-            if len(samplers) > 2:
+            if not copies and len(samplers) > 2:
                 return f"ring start reaches {len(samplers)} origin flops {sp[:3]} (want <= 2 sampler flops)", None
             if len(sck) != 1 or not (sck <= clock_port_roots) or sck & rck:
                 return f"origin sampler flops {sp} on clock(s) {sorted(map(str, sck))} (want one clock port, not the ring clock)", None
@@ -967,12 +1005,46 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     return f"origin sampler {path} D cone: {e.args[0]}", None
                 if not samp:
                     return f"origin sampler {path}: D never equals the start (not a sampler)", None
+        face_copies = {}
+        if copies:
+            source = next(ci for ci in samplers if _parent(F.cells[ci][1]) == origin)
+            sm, _, spp = F.cells[source]
+            source_inputs = {k: F.find(v[0]) for k, (dd, v) in spp.items()
+                             if dd == "in" and k not in ("CLK", "C", "CK") and len(v) == 1}
+            for parent in copies:
+                ci = next(ci for ci in samplers if _parent(F.cells[ci][1]) == parent)
+                cm, _, cpp = F.cells[ci]
+                inputs = {k: F.find(v[0]) for k, (dd, v) in cpp.items()
+                          if dd == "in" and k not in ("CLK", "C", "CK") and len(v) == 1}
+                if _cell_base(cm) != _cell_base(sm) or set(inputs) != set(source_inputs):
+                    return f"relay copy {parent}: flop/reset signature differs from origin", None
+                for pin in inputs:
+                    a, z = source_inputs[pin], inputs[pin]
+                    if a == z:
+                        continue
+                    leaves = sorted(x for x in (_leaves(a) | _leaves(z)) if not x.startswith("CONST_"))
+                    if len(leaves) > 13:
+                        return f"relay copy {parent}: {pin} cone too wide to prove", None
+                    try:
+                        for vals in itertools.product((False, True), repeat=len(leaves)):
+                            assignment = dict(zip(leaves, vals))
+                            if _ev(a, assignment, {}) != _ev(z, assignment, {}):
+                                return f"relay copy {parent}: {pin} function differs from origin", None
+                    except KeyError as e:
+                        return f"relay copy {parent}: {pin} cone {e.args[0]}", None
+                output = _private_copy_output(ci)
+                if output is None or output in face_copies.values():
+                    return f"relay copy {parent}: output is not one private face port", None
+                face_copies[parent] = output
         groups = defaultdict(int)
         for ci in writers:
             groups[re.sub(r"\[\d+\]", "[N]", F.cells[ci][1])] += 1
-        return None, dict(ring=list(rings), ring_clock=sorted(map(str, rck)), writer_flops=len(writers),
+        record = dict(ring=list(rings), ring_clock=sorted(map(str, rck)), writer_flops=len(writers),
                           writer_groups=dict(sorted(groups.items())), sampler_flops=sp,
                           sampler_clock=(str(_ckpin(next(iter(samplers)))) if samplers else None))
+        if face_copies:
+            record["face_copies"] = face_copies
+        return None, record
 
     def land_slot(b, r, D):
         """None = OK (the D slot flops), else the failure text."""
@@ -1114,7 +1186,8 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                     continue
             elif p in land and land_form[p] in ("ring_start", "origin_start"):
                 origin = origin_spec(land_raw[p]) if land_form[p] == "origin_start" else None
-                why, rec = ring_start(b, r, [] if origin else ring_spec(land_raw[p]), origin)
+                copies = land_raw[p].get("copies", ()) if origin is not None else ()
+                why, rec = ring_start(b, r, [] if origin else ring_spec(land_raw[p]), origin, copies)
                 if why:
                     fail("land_slot", b, why)
                     continue

@@ -1,0 +1,20 @@
+{
+ "host": "intel2",
+ "dir": "/srv/opentallas-scratch2/claude/codex-flow-2249/iqf_current",
+ "unit": "oth-ubuntu-2653003-1793340287",
+ "exit": 0,
+ "source": "KF3 merged face_flops.tcl plus current main landing_placement.tcl; existing kit inputs read-only",
+ "input_odb": "/srv/opentallas-scratch2/claude/s81-kits-c/ev/gen/iqf__t1/iqf__t1/run/results/asap7/dp_iqf__t1/base/3_2_place_iop.odb",
+ "old_ft_missing": 1369,
+ "new_ft_missing": 0,
+ "unlanded_ft_firm": 5605,
+ "landed_ft_firm": 9583,
+ "landed_width": 1369,
+ "landed_stages": 7,
+ "ring_ff_firm": 12409,
+ "post_landing_reset_taps": {
+  "repointed": 0,
+  "already": 19
+ },
+ "scope": "In-memory placement-hook recovery only; no GPL, route, STA or RTL change. The stale hook caused ft1 output pin reach. Reset comb paths require the separate implicit-grid ring_taps bind fix and fresh PLACE; ordering-only reset hook repetition had no effect."
+}

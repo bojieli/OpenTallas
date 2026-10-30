@@ -2566,11 +2566,20 @@ def kit_rtl_land_slots(lands, tn, rtl_files):
                 if r not in rings:
                     raise gen_rtl.GenError(f"type {tn}: land_slots {b}: ring_start of undeclared ring {r}")
         elif v.get("form") == "origin_start":
-            path = _kit_inst_path(txt, v["origin"], r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)")
+            module = r"ot_dp_landing_relay" if v.get("copies") else r"(?:ot_dp_landing_origin(?:_s)?|ot_dp_landing_relay)"
+            path = _kit_inst_path(txt, v["origin"], module)
             if path is None:
                 raise gen_rtl.GenError(f"type {tn}: land_slots {b}: origin {v['origin']} is not one bound "
                                        "ot_dp_landing_origin[_s] or ot_dp_landing_relay instance under one instance path")
             v["origin"] = path      # face_guard matches the synthesized instance path (kit top -> u_bound -> origin)
+            if v.get("copies"):
+                copies = []
+                for copy in v["copies"]:
+                    cp = _kit_inst_path(txt, copy, r"ot_dp_landing_relay")
+                    if cp is None:
+                        raise gen_rtl.GenError(f"type {tn}: land_slots {b}: copy {copy} is not one bound relay instance")
+                    copies.append(cp)
+                v["copies"] = copies
     extra = sorted(set(built) - set(rings))
     if extra:
         raise gen_rtl.GenError(f"type {tn}: bound count-aligned rings not declared by the landing sidecar: {extra[:5]}")

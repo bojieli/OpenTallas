@@ -1471,6 +1471,13 @@ class Landings:
             # The existing same-clock relay is the typed count-origin sampler.
             # Its input is die-timed; adding another input FF would shift K.
             buses["cland_rstart_in"] = {"form": "origin_start", "origin": "u_cland_rstart_rx"}
+            copies = [f"u_cland_fstart_{b}" for b in sorted(self.by_type[tn]["outputs"])]
+            if self.tstart and self.tstart["type_pins"].get(tn, {}).get(START_PIN_OUT):
+                copies.append("u_cland_tstart_o")
+            if copies:
+                # Every named private export is a physical same-D/reset/clock
+                # copy of the typed origin, never an arbitrary extra sampler.
+                buses["cland_rstart_in"]["copies"] = copies
         if origin:
             buses[START_PIN_IN] = {"form": "origin_start", "origin": origin}
         return {"schema": LAND_SLOTS_SCHEMA, "buses": buses} if buses else None
