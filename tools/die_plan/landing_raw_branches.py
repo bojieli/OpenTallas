@@ -12,6 +12,9 @@ class RawBranchError(ValueError):
 class RawBranches:
     def __init__(self, tn, cfg, body, outline_um=None):
         self.tn=tn;self.rows=[];self.rtl=[];self.roles={};self.used={};self.names=set()
+        # ORIGINAL module body (before any generated landing logic): every literal stage must name a relay that already
+        # exists here, so a generated Q can never stand in for an original chain node (FLOW 10-30 finding).
+        self.original_body=body
         if not isinstance(cfg,list) or not cfg:raise RawBranchError(f"{tn}: literal raw branches must be a nonempty list")
         for branch in cfg:
             name=branch.get('name');base=branch.get('base');stages=branch.get('stages');consumers=branch.get('consumers')
@@ -49,9 +52,15 @@ class RawBranches:
         return self.roles[role]['net']
     def validate(self,text):
         if set(self.roles)!=set(self.used):raise RawBranchError(f"{self.tn}: unused raw consumers {sorted(set(self.roles)-set(self.used))}")
+        generated={r['net'] for r in self.rows}
         for row in self.rows:
+            if row['original'] in generated:raise RawBranchError(f"{self.tn}: {row['original']} is a generated raw branch net, not an original chain node")
+            # resolve uniquely in the ORIGINAL body only, with the exact original predecessor on D
+            inst0,pins0=self.driver(self.original_body,row['original'])
+            if pins0['d']!=row['original_parent']:raise RawBranchError(f"{self.tn}: original {row['original']} D={pins0['d']} != literal predecessor {row['original_parent']}")
+            # the same single original relay must survive unchanged in the emitted text (no added or changed driver)
             inst,pins=self.driver(text,row['original'])
-            if pins['d']!=row['original_parent']:raise RawBranchError(f"{self.tn}: {row['original']} D={pins['d']} != literal predecessor {row['original_parent']}")
+            if inst!=inst0 or pins!=pins0:raise RawBranchError(f"{self.tn}: original relay of {row['original']} changed or duplicated in the emitted text")
             _,copy=self.driver(text,row['net'])
             if copy['d']!=row['raw']:raise RawBranchError(f"{self.tn}: copied raw D changed for {row['net']}")
         # Consumer defaults may be an alias of another equivalent copied branch.
