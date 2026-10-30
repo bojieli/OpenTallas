@@ -35,3 +35,18 @@ Build note: no shared tool re-routes EXISTING lanes after partition moves (lane_
 cores inside a type). The build = a die-local event script: move origins/outlines -> drop the 201 lanes touching a
 moved partition (ports, type buses, ft slots) -> rebuild them + the 92 pairs with lane_add's ADJ/NEAR builder (same
 bits per pair; the binder matches crossings by partition pair) -> G0, G0C, strict bind.
+
+## BUILD attempt (DIE-HBM-22-RP, 2026-10-29 17:29 PDT) -- time box reached, NOT G0-clean
+replan_event.py (die-local; imports tools/die_plan lane_add/schema read-only) on d21h, runs intel1:/srv/opentallas-scratch2/claude/die-hbm-22/replan/{VB2,VA_min}.
+| variant | die_plan sha | moved / dropped lanes | phase1 rebuilt / failed | mirror-name conflicts | 92 rows: built / FAR / failed | G0 (CHECKED) |
+|---|---|---|---|---|---|---|
+| VB2 | 4b5f1b0b3aa1 | 36 / 201 | 160 / 49 | 32 | 45 (50,682 b; adj 24, path 21) / 45 (16,377 b) / 12 | FAIL 4 schema (in_face == out_face U-turn ft slots); later checks masked |
+| VA_min | 929c30fb74e7 | 18 / 146 | 126 / 20 | 30 | 17 (26,582 b) / 73 (42,509 b) / 6 | FAIL 5 schema (same U-turn class) |
+FAR after VB2 = exactly the estimate residual (b113<->sfu_N su11/su20/su31, hub<->spb0, b002/b103->root, sm->hub 37 b, misc) -> estimate CONFIRMED by construction.
+Rebuilt-lane cycles (plan arithmetic, UNCHECKED): VB2 94 lanes change, 27 up, max +34 / -31; VA_min 73 change, 14 up, max +7 / -26.
+Open defects of the event (next step): (1) U-turn chains: reject a path whose crossed partition has in face == out face;
+(2) 49/20 phase-1 failures "no macro-free station chain" on long chains via hub/sm/io/root (L48/L53/L106/L125 io<->root,
+PHY<->hub, hub<->sm2/spb2, b112<->hub): keep the UNMOVED segments of a lane (re-route only the hops touching moved partitions)
+instead of re-routing end-to-end; (3) mirror conflicts 30/32: NE mirror lanes on NW/NE-shared types (sm*, spt1/2, mcb, root)
+allocate a different type-frame window than the NW lane -> build NE mirrors by mirroring the NW result, not re-allocating.
+NOT UPDATED: clock sidecars, pg_bumps.json, internal_stations/die_ft_bands of moved types. Not bound (HBM-BIND-9 owns bind).
