@@ -319,3 +319,48 @@ endmodule
         return int(re.search(r'BAD (\d+)',out).group(1))
     assert run(tmp_path/'good', 'bootstrap') == 0
     assert run(tmp_path/'mutant', 'mission') > 0
+
+
+def _two_gap_plan():
+    raw = plan()
+    raw['partition_types']['src']['hard_cores'] = [
+        dict(inst=f'u_t0{k}', module='closed_a0', origin_um=[50 + 100 * k, 50], outline_um=[80, 300],
+             pins=[dict(name='rst_n', layer='M4', xy=[0, 150])]) for k in range(2)]
+    return raw
+
+
+def test_all_gaps_reports_every_core_reset_gap_in_one_run(tmp_path):
+    # DIE-HBM-24 (OWNER/COORD 10-29): --all-gaps lists EVERY emission gap instead of stopping at the first.
+    # Default (other dies): unchanged, the first gap raises.
+    b = emitter(_two_gap_plan())
+    with pytest.raises(bind.BindError, match=r'wavefront core reset src/u_t00\.rst_n: expected one bound leaf, found 0'):
+        b.emit(tmp_path / 'default')
+    b = emitter(_two_gap_plan())
+    b.collect_gaps = True
+    b.emit(tmp_path / 'all')
+    gaps = b.emit_gaps
+    assert len(gaps) == 2, gaps
+    assert re.search(r'core reset src/u_t00\.rst_n: expected one bound leaf, found 0', gaps[0])
+    assert re.search(r'core reset src/u_t01\.rst_n: expected one bound leaf, found 0', gaps[1])
+    # no bound top is emitted from an incomplete type set
+    assert not (tmp_path / 'all/rtl/tiny_bound_top.sv').exists()
+
+
+def test_all_gaps_cli_flag_is_opt_in():
+    ap_args = ['bind', 'p.json', '--out', 'o', '--strict']
+    import argparse
+    seen = {}
+    real = argparse.ArgumentParser.parse_args
+
+    def grab(self, argv=None, namespace=None):
+        ns = real(self, argv, namespace)
+        seen['ns'] = ns
+        raise SystemExit(0)
+    argparse.ArgumentParser.parse_args = grab
+    try:
+        for argv in (ap_args, ap_args + ['--all-gaps']):
+            with pytest.raises(SystemExit):
+                bind.main(argv)
+            assert seen['ns'].all_gaps is ('--all-gaps' in argv)
+    finally:
+        argparse.ArgumentParser.parse_args = real
