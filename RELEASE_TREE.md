@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 10-29 22:20 PDT by COORD hourly: main 7e30df72969; 0 types signed off on any die (23 h flat); KV-019 clock check PASS; QC-001 pin-access gate PASS (next: 88 untied shield wires); S81 event 1dfae74037a gates running (G0C = baseline 20); S81 BFroots sync clear reverted on main (not cycle-identical, fix in progress); frozen S81/KV/HEAD; HBM plan of record d28c (DIE-HBM-29); OWNER? S81 kv_leaf__t2 macros (default B 22:40) + S81 LP H2 re-floorplan (default A 22:40); gunit_l0/l1 fill (A) default 22:09.
+Updated 10-30 00:22 PDT by COORD hourly: main 620077f4297; 0 types signed off in cache (26 h flat); KV q0 physically SIGNED (TT 68.55 / FF 2.19), post-route LEC running; S81 QB_N native view SIGNED (Codex); Claude session limit 22:50-00:05 covered by Codex, lanes restarted fresh in 2 waves; ROOT-MERGE-AB merging Codex pending list (a)-(f) approved, HBM039 HOLD; OWNER 10-30: kit generation automated as autopilot KIT-WAVE-1 (kit lanes = failure fixers), CAP_ED (A) +1 fault-only cycle, iqf__t1 fill exception, HBM ID strap_* alias (B), S81 kv_leaf__t2 larger local slot after impact estimate; frozen S81/KV/HEAD; HBM plan of record d29d.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).
