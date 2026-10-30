@@ -1,0 +1,44 @@
+{
+  "status": "SOURCE_CANDIDATE_PHYSICAL_HELD",
+  "clock_ps": 833,
+  "local_physical_face_qids": [
+    2,
+    3
+  ],
+  "external_native_partner_qids": [
+    0,
+    1
+  ],
+  "default_off": true,
+  "native": {
+    "reads": 728,
+    "writes": 2184,
+    "words": 1092,
+    "isa": 38,
+    "span_F72R2": 96
+  },
+  "face_profile": {
+    "reads": 728,
+    "writes": 2184,
+    "words": 1092,
+    "isa": 38,
+    "span_F72R2": 134
+  },
+  "old_calendar_control": {
+    "errors": 606,
+    "caught": true
+  },
+  "warm_native_bank": {
+    "commits_before_reset": 2,
+    "retained_public_readbacks": 2,
+    "postreset_macro_writes": 0,
+    "missing_bank_reset_mutant": "CAUGHT"
+  },
+  "default_master_lockstep": {
+    "public_outputs": 51,
+    "every_edge_without_reset_mask": "PASS",
+    "wrong_rq_bit": "CAUGHT"
+  },
+  "pure_ring_source_prerequisite": "34a669b92ce / cherry6c4717d19",
+  "physical_qualified": false
+}

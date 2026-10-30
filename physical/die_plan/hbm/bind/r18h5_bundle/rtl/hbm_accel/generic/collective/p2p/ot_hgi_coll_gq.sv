@@ -52,7 +52,8 @@
 module ot_hgi_coll_gq_issue #(
     parameter integer MUT = 0,      // bench mutants: 1 rx src of h=1 uses the CW table on CCW, 2 exponent bias 126,
                                     // 3 publish lands at i+1, 4 self-land skipped, 5 ring-B command one edge late
-    parameter integer VM_RT = 0
+    parameter integer VM_RT = 0,
+    parameter integer OUTER_FACE_B2 = 0
 )(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
@@ -119,7 +120,10 @@ module ot_hgi_coll_gq_issue #(
     output wire [511:0]  ld_p_d
 );
     localparam integer V = VM_RT;
-    localparam integer ND = 40 + V;                  // event pipeline depth (last use: ev[36+V])
+    localparam integer FACE_EXTRA = OUTER_FACE_B2 ? 4 : 0;
+    localparam integer PAIR_PERIOD = OUTER_FACE_B2 ? 5 : 3;
+    localparam integer PHW = $clog2(PAIR_PERIOD);
+    localparam integer ND = 40 + V + FACE_EXTRA;                  // event pipeline depth (last use: ev[36+V])
     localparam integer S_QR = 0, S_PR = 15, S_QCAP = 8 + V, S_PCAP = 23 + V, S_P = 24 + V;
     localparam integer S_BLP = 24 + V, S_BRD = 25 + V, S_BINJ = 27 + V, S_BRX = 27 + V;   // + 2h
     // ------------------------------------------------------------------ reset relay (3 edges) + straps
@@ -148,6 +152,21 @@ module ot_hgi_coll_gq_issue #(
         end
         srcq = s;
     endfunction
+    // Default-off B2 physical face profile: actual north qids 2/3 each have
+    // one outer input and output FF. A receiver's input FF delays its command
+    // and incoming flit together; the external RX calendar pays only the
+    // already crossed source/intermediate wrappers. Ring B stays unchanged.
+    function automatic integer face_rx_shift(input [1:0] q, input integer d, input integer h);
+        reg [1:0] atq; integer extra;
+        begin
+            atq=q; extra=0;
+            for(integer j=0;j<h;j=j+1) begin
+                atq=d ? nextq(atq) : prevq(atq);
+                if(atq[1]) extra=extra+2;
+            end
+            face_rx_shift=OUTER_FACE_B2 ? extra : 0;
+        end
+    endfunction
     // ------------------------------------------------------------------ F20 target + descriptor rows
     wire p_we, p_sv; wire [7:0] p_wa, p_sb; wire [255:0] p_wd; wire [8:0] p_sl; wire [15:0] p_lp;
     ot_static_program_target #(.TARGET(8'hff), .PCW(8), .TGT_PIN(1), .CAP_CLK(0)) u_target(
@@ -166,12 +185,12 @@ module ot_hgi_coll_gq_issue #(
     // gather state (held while busy)
     reg busy; reg g_qbg, g_r2, g_self; reg [9:0] g_f; reg [7:0] g_bs; reg [15:0] g_src, g_dst, g_str;
     reg [9:0] g_kn;                                   // ring indices K = ceil(F / R)
-    reg iss; reg [9:0] ik; reg [1:0] iph; localparam integer DRW = $clog2(ND); reg [DRW-1:0] drain;   // 6 b at VM_RT 0 (as built)
+    reg iss; reg [9:0] ik; reg [PHW-1:0] iph; localparam integer DRW = $clog2(ND); reg [DRW-1:0] drain;   // 6 b at VM_RT 0 (as built)
     wire [9:0] f_kn = rc[1] ? 10'((rc[28:19] + 10'd1) >> 1) : rc[28:19];
     wire [7:0] f_es = 8'((rc[36:29] + 8'd31) >> 5);
     wire f_bad = rc[28:19] == 10'd0 || |rc[71:69] ||
                  (rc[0] && (rc[36:29] == 8'd0 || rc[36:29] > 8'd64 || {2'b0, rc[28:19]} != {2'b0, rc[36:29]} + {4'b0, f_es}));
-    wire ev_in_v = iss && iph != 2'd2;
+    wire ev_in_v = iss && (OUTER_FACE_B2 ? (iph < PHW'(2)) : (iph != 2'd2));
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             run <= 1'b0; busy <= 1'b0; iss <= 1'b0; fault <= 1'b0; active <= 1'b0; done <= 1'b0; drain <= '0;
@@ -200,7 +219,7 @@ module ot_hgi_coll_gq_issue #(
                     ik <= ik + 10'd1;
                     if (ik == g_kn - 10'd1) begin iss <= 1'b0; drain <= DRW'(ND - 1); end
                 end
-                iph <= (iph == 2'd2) ? 2'd0 : iph + 2'd1;
+                iph <= (iph == PHW'(PAIR_PERIOD-1)) ? '0 : iph + PHW'(1);
             end else if (busy) begin
                 if (drain == '0) busy <= 1'b0; else drain <= drain - 1'b1;
             end
@@ -343,10 +362,20 @@ module ot_hgi_coll_gq_issue #(
             k = ev_k[S_BINJ-1];
             if (ev_v[S_BINJ-1] && fv(k, r)) begin inj[k[0]] = 1; ttg = k[2:0]; ttl[k[0]*2 +: 2] = 2'd3; end
             for (integer h = 1; h <= 3; h = h + 1) begin
-                k = ev_k[S_BRX + 2*h - 1];
-                if (ev_v[S_BRX + 2*h - 1] && fv(k, r)) begin
-                    rx[k[0]] = 1; kind[k[0]*2 +: 2] = 2'd3; src[k[0]*2 +: 2] = srcq(q_id, k[0], h); rtag[k[0]*3 +: 3] = k[2:0];
-                    if (h < 3) fwd[k[0]] = 1;
+                if(!OUTER_FACE_B2 || r!=0) begin
+                    k=ev_k[S_BRX+2*h-1];
+                    if(ev_v[S_BRX+2*h-1] && fv(k,r))begin
+                        rx[k[0]]=1;kind[k[0]*2+:2]=2'd3;src[k[0]*2+:2]=srcq(q_id,k[0],h);rtag[k[0]*3+:3]=k[2:0];
+                        if(h<3) fwd[k[0]]=1;
+                    end
+                end else begin
+                for(integer d=0;d<2;d=d+1) begin
+                    k = ev_k[S_BRX + 2*h + ((r==0)?face_rx_shift(q_id,d,h):0) - 1];
+                    if (ev_v[S_BRX + 2*h + ((r==0)?face_rx_shift(q_id,d,h):0) - 1] && fv(k,r) && k[0]==1'(d)) begin
+                        rx[d]=1; kind[d*2+:2]=2'd3; src[d*2+:2]=srcq(q_id,d,h); rtag[d*3+:3]=k[2:0];
+                        if(h<3) fwd[d]=1;
+                    end
+                end
                 end
             end
             cb[r] = {lpw, lpt, 256'd0, rd, rdt, inj, fwd, ttg, ttl, rx, kind, src, rtag};
@@ -414,7 +443,7 @@ endmodule
 
 // Landing leaf: captures both rings' publishes and the local payload P, and writes the quadrant VM through the COLL
 // kq port (via the kq share). Every input pin-registered, every output a register. Stages as the issue leaf's.
-module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
+module ot_hgi_coll_gq_land #(parameter integer MUT = 0, parameter integer OUTER_FACE_B2 = 0)(
     input  wire          clk, rst_n,
     input  wire [1:0]    qid,
     input  wire          ld_fire,
@@ -431,7 +460,7 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
     output reg           fault
 );
     reg [2247:0] vm_kq; assign vm_kq_lo = vm_kq[1123:0]; assign vm_kq_hi = vm_kq[2247:1124];
-    localparam integer NL = 36;      // le[j] = the entry of issue stage j + 1
+    localparam integer NL = 36 + (OUTER_FACE_B2 ? 4 : 0);      // le[j] = the entry of issue stage j + 1
     localparam integer S_KQ = 31;    // publish kq register @31+2h (entry at stage 30+2h = le[29+2h]); self-land kq @26
     wire [0:0] rl;
     ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
@@ -445,6 +474,17 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
             if (d == 0 || (MUT == 1 && h == 1)) s = prevq(s); else s = nextq(s);
         end
         srcq = s;
+    endfunction
+    function automatic integer face_pub_shift(input [1:0] q, input integer d, input integer h, input integer r);
+        reg [1:0] atq; integer extra;
+        begin
+            atq=q; extra=atq[1] ? 2 : 0;
+            for(integer j=0;j<h;j=j+1) begin
+                atq=d ? nextq(atq) : prevq(atq);
+                if(atq[1]) extra=extra+2;
+            end
+            face_pub_shift=(OUTER_FACE_B2 && r==0) ? extra : 0;
+        end
     endfunction
     // pin registers
     reg f_q; reg [52:0] d_q; reg [1:0] pl_v; reg [511:0] pl_d;
@@ -485,15 +525,27 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
             reg [9:0] k; reg [10:0] i; reg [1:0] sq; reg [15:0] s;
             for (integer h = 1; h <= 3; h = h + 1)
                 for (integer r = 0; r < 2; r = r + 1) begin
-                    k = le_k[S_KQ + 2*h - 3]; i = flit_i(k, r); sq = srcq(q_id, k[0], h);
-                    s = {base_q[sq][15:13], base_q[sq][12:0] + 13'(i) + ((MUT == 3) ? 13'd1 : 13'd0)};
-                    ln_en[(h-1)*2 + r] <= le_v[S_KQ + 2*h - 3] && fv(k, r);
-                    ln_bk[(h-1)*2 + r] <= 8'd1 << s[2:0]; ln_s[(h-1)*2 + r] <= s;
-                    ln_sq[(h-1)*2 + r] <= sq; ln_d[(h-1)*2 + r] <= k[0];
+                    if(!OUTER_FACE_B2)begin
+                        k=le_k[S_KQ+2*h-3];i=flit_i(k,r);sq=srcq(q_id,k[0],h);
+                        s={base_q[sq][15:13],base_q[sq][12:0]+{2'd0,i}+((MUT==3)?13'd1:13'd0)};
+                        ln_en[(h-1)*2+r]<=le_v[S_KQ+2*h-3]&&fv(k,r);
+                        ln_bk[(h-1)*2+r]<=8'd1<<s[2:0];ln_s[(h-1)*2+r]<=s;
+                        ln_sq[(h-1)*2+r]<=sq;ln_d[(h-1)*2+r]<=k[0];
+                    end else begin
+                    ln_en[(h-1)*2+r] <= 1'b0;
+                    for(integer d=0;d<2;d=d+1) begin
+                        k=le_k[S_KQ+2*h-3+face_pub_shift(q_id,d,h,r)]; i=flit_i(k,r); sq=srcq(q_id,d,h);
+                        s={base_q[sq][15:13],base_q[sq][12:0]+{2'd0,i}+((MUT==3)?13'd1:13'd0)};
+                        if(le_v[S_KQ+2*h-3+face_pub_shift(q_id,d,h,r)] && fv(k,r) && k[0]==1'(d)) begin
+                            ln_en[(h-1)*2+r]<=1'b1; ln_bk[(h-1)*2+r]<=8'd1<<s[2:0]; ln_s[(h-1)*2+r]<=s;
+                            ln_sq[(h-1)*2+r]<=sq; ln_d[(h-1)*2+r]<=1'(d);
+                        end
+                    end
+                    end
                 end
             for (integer r = 0; r < 2; r = r + 1) begin
                 k = le_k[23]; i = flit_i(k, r);
-                s = {base_q[q_id][15:13], base_q[q_id][12:0] + 13'(i)};
+                s = {base_q[q_id][15:13], base_q[q_id][12:0] + {2'd0, i}};
                 ln_en[6 + r] <= g_self && MUT != 4 && le_v[23] && fv(k, r);
                 ln_bk[6 + r] <= 8'd1 << s[2:0]; ln_s[6 + r] <= s;
             end
@@ -507,7 +559,7 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
         for (integer h = 1; h <= 3; h = h + 1)
             for (integer r = 0; r < 2; r = r + 1) begin
                 l = (h-1)*2 + r;
-                kk = le_k[S_KQ + 2*h - 2];
+                kk = le_k[S_KQ + 2*h - 2 + face_pub_shift(q_id,ln_d[l],h,r)];
                 act[l] = ln_en[l];
                 if (ln_en[l]) begin
                     lane_exp[r*2 + ln_d[l]] = 1'b1;
@@ -542,7 +594,7 @@ module ot_hgi_coll_gq_land #(parameter integer MUT = 0)(
 endmodule
 // The gather master as placed per quadrant: issue leaf (F20 target, calendar, VM reads, quantisers, payload, ring-A merge
 // register, ring-B commands) + landing leaf (publish capture, VM writes). Wires only.
-module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0)(
+module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0, parameter integer OUTER_FACE_B2 = 0)(
     input  wire clk_issue, clk_land, rst_n,
     input  wire [1:0] qid, input wire [7:0] tgt,
     input  wire cfg_v, input wire [7:0] cfg_target, input wire [11:0] cfg_addr, input wire [255:0] cfg_data,
@@ -565,7 +617,7 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0)(
     output wire [135:0] vm_rq, input wire [2055:0] vm_rr, output wire [2247:0] vm_kq
 );
     wire ld_fire, ld_ev_v; wire [52:0] ld_desc; wire [9:0] ld_ev_k; wire [1:0] ld_p_v; wire [511:0] ld_p_d;
-    ot_hgi_coll_gq_issue #(.MUT(MUT), .VM_RT(VM_RT)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
+    ot_hgi_coll_gq_issue #(.MUT(MUT), .VM_RT(VM_RT), .OUTER_FACE_B2(OUTER_FACE_B2)) u_issue(.clk(clk_issue), .rst_n(rst_n), .qid(qid), .tgt(tgt), .cfg_v(cfg_v),
         .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
         .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured), .tgt_fault(tgt_fault),
         .active(active), .done(done), .fault(fault), .isa_ring(isa_ring), .isa_lp_data(isa_lp_data),
@@ -583,7 +635,7 @@ module ot_hgi_coll_gq #(parameter integer MUT = 0, parameter integer VM_RT = 0)(
         .rb_rx_kind(rb_rx_kind), .rb_rx_src(rb_rx_src), .rb_rx_tag(rb_rx_tag), .vm_rq_lo(vm_rq[67:0]), .vm_rq_hi(vm_rq[135:68]),
         .vm_rr_lo(vm_rr[1027:0]), .vm_rr_hi(vm_rr[2055:1028]),
         .ld_fire(ld_fire), .ld_desc(ld_desc), .ld_ev_v(ld_ev_v), .ld_ev_k(ld_ev_k), .ld_p_v(ld_p_v), .ld_p_d(ld_p_d));
-    ot_hgi_coll_gq_land #(.MUT(MUT)) u_land(.clk(clk_land), .rst_n(rst_n), .qid(qid), .ld_fire(ld_fire), .ld_desc(ld_desc),
+    ot_hgi_coll_gq_land #(.MUT(MUT), .OUTER_FACE_B2(OUTER_FACE_B2)) u_land(.clk(clk_land), .rst_n(rst_n), .qid(qid), .ld_fire(ld_fire), .ld_desc(ld_desc),
         .ld_ev_v(ld_ev_v), .ld_ev_k(ld_ev_k), .ld_p_v(ld_p_v), .ld_p_d(ld_p_d), .pa_v(pa_v), .pb_v(pb_v), .pa_src(pa_src),
         .pb_src(pb_src), .pa_tag(pa_tag), .pb_tag(pb_tag), .pa_d(pa_d), .pb_d(pb_d), .vm_kq_lo(vm_kq[1123:0]),
         .vm_kq_hi(vm_kq[2247:1124]), .fault(land_fault));

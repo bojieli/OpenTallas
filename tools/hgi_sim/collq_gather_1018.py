@@ -42,6 +42,20 @@ import numpy as np
 NEXT = {0: 1, 1: 3, 3: 2, 2: 0}
 PREV = {v: k for k, v in NEXT.items()}
 ISSUE_TO_INJECT = 29
+OUTER_FACE_B2 = False  # default-off actual north qids 2/3 outer input/output faces
+
+def wrapped(q):
+    return OUTER_FACE_B2 and q in (2, 3)
+
+def face_publish_extra(q, d, h, ring):
+    if ring != 0 or not OUTER_FACE_B2:
+        return 0
+    extra = 2 * int(wrapped(q))
+    for _ in range(h):
+        q = NEXT[q] if d else PREV[q]
+        extra += 2 * int(wrapped(q))
+    return extra
+
 STAGES = {
     "qbg_read_sample": 1, "plain_read_sample": 16, "rr_capture_qbg": 8, "rr_capture_plain": 23,
     "quantiser_s0": 10, "quantiser_out": 22, "payload_P": 24, "self_land_sample": 29, "self_land_kq_pin": 27,
@@ -72,12 +86,12 @@ def flits(F, R):
 
 
 def issue_rel(k):
-    return 1 + 3 * (k >> 1) + (k & 1)
+    return 1 + (5 if OUTER_FACE_B2 else 3) * (k >> 1) + (k & 1)
 
 
 def span(F, R):
     K = (F + R - 1) // R
-    return issue_rel(K - 1) + 38 + KQ_SHARE_EDGES + VM_RT
+    return issue_rel(K - 1) + 38 + KQ_SHARE_EDGES + VM_RT + (4 if OUTER_FACE_B2 else 0)
 
 
 def schedule(q, F, R, qbg, self_land, src, dst, stride, Bs=0):
@@ -96,7 +110,7 @@ def schedule(q, F, R, qbg, self_land, src, dst, stride, Bs=0):
         for h in (1, 2, 3):
             s = src_of(q, k & 1, h)
             a = dst + s * stride + i
-            writes.append((ie + 32 + KQ_SHARE_EDGES + VM_RT + 2 * h, a % 8, a, (s, i)))
+            writes.append((ie + 32 + KQ_SHARE_EDGES + VM_RT + 2 * h + face_publish_extra(q, k & 1, h, r), a % 8, a, (s, i)))
         if self_land or qbg:
             a = dst + q * stride + i
             writes.append((ie + 27 + KQ_SHARE_EDGES + VM_RT, a % 8, a, (q, i)))
@@ -114,8 +128,10 @@ def check(maxF=400):
                 d = k & 1
                 for q in range(4):
                     s = q
+                    crossed = 0
                     for h in range(3):
-                        key = (r, s, d, c + 2 * h)
+                        crossed += 2 * int(wrapped(s)) if r == 0 else 0
+                        key = (r, s, d, c + 2 * h + crossed)
                         if key in links:
                             bad.append(("link", R, F, key))
                         links.add(key)
@@ -275,14 +291,19 @@ def calendar_cmd(argv):
                                  fire_index=a.fire_index, owner_lead=OWNER_LEAD, coll_read_group=COLL_RG,
                                  coll_write_code=COLL_WCODE, words=len(res),
                                  reads=sum(len(v["r"]) for v in res.values()), writes=sum(len(v["w"]) for v in res.values()),
-                                 span_fire_to_last_write=span(F, a.R))
+                                 span_fire_to_last_write=span(F, a.R),
+                                 outer_face_b2=OUTER_FACE_B2, issue_pair_period=5 if OUTER_FACE_B2 else 3,
+                                 ring_a_face_qids=[2,3] if OUTER_FACE_B2 else [])
     a.out.write_text(json.dumps(sched, indent=1) + "\n")
     print("COLLQ_CALENDAR", json.dumps(sched["collq_gather"]))
     return 0
 
 
 def main():
-    global VM_RT
+    global VM_RT, OUTER_FACE_B2
+    if "--outer-face-b2" in sys.argv:
+        OUTER_FACE_B2 = True
+        sys.argv.remove("--outer-face-b2")
     if "--vm-rt" in sys.argv:
         j = sys.argv.index("--vm-rt")
         VM_RT = int(sys.argv[j + 1])
@@ -308,9 +329,9 @@ def main():
                 "qbg": {"Bs": Bs, "F": Bs + Es, "span_R1": span(Bs + Es, 1), "span_R2": span(Bs + Es, 2)},
             }
         doc = {"schema": "opentallas.hbm_d4g.collq_schedule.v1", "lane": "HBM-COLLQ", "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_gq.sv",
-               "rule": __doc__.split("\n\n")[1], "stages_after_issue": STAGES, "fire_from_launch": FIRE_FROM_LAUNCH,
+               "rule": (__doc__.split("\n\n")[1] if not OUTER_FACE_B2 else "OUTER_FACE_B2: issue pairs every5edges; A RX shifts2 per source/intermediate wrappedqid; A publish shifts2 per wrappedqid includingreceiver; B/self dates unchanged"), "stages_after_issue": STAGES if not OUTER_FACE_B2 else {"baseline": STAGES, "ring_a_qid_faces": [2,3], "ring_a_rx_extra": "2*wrapped(source,intermediates)", "ring_a_publish_extra": "2*wrapped(source,intermediates,receiver)", "issue_pair_period":5}, "fire_from_launch": FIRE_FROM_LAUNCH,
                "issue_to_inject": ISSUE_TO_INJECT + VM_RT, "vm_rt": VM_RT, "isa_ring_a_extra_edges": ISA_RING_A_EXTRA_EDGES,
-               "span_formula": f"1 + 3((K-1)>>1) + ((K-1)&1) + 40 + VM_RT({VM_RT}), K = ceil(F/R)", "shapes_DS": shapes,
+               "span_formula": f"1 + {5 if OUTER_FACE_B2 else 3}((K-1)>>1) + ((K-1)&1) + {44 if OUTER_FACE_B2 else 40} + VM_RT({VM_RT}), K = ceil(F/R)", "shapes_DS": shapes,
                "conflict_check": "check(): 0 link / read-bank / write-bank conflicts for F < 400, R 1 and 2, plain and QBG"}
         Path(sys.argv[2]).write_text(json.dumps(doc, indent=1))
         print(json.dumps(shapes))
