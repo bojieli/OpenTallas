@@ -1218,10 +1218,10 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         ff_meas, ff_ins = None, ins
     if not 0 < ff_ins <= ins:
         raise SystemExit("IO clock binding requires 0 < FF <= TT")
-    from static_id_contracts import static_inputs, contract as static_contract
+    from static_id_contracts import static_inputs, contract as static_contract, SU_ID_WIDTHS
     kit_straps = list((shell or {}).get("straps") or [])
     if not shell and ((module == "ot_hfd_coll_q2_hard_v8g__ring_ag" and "strap_qid" in pb)
-                      or (module == "ot_hbm_su_static_pgslice_lg__lane_exp0_id" and "strap_lane_lane_id" in pb)
+                      or (module in SU_ID_WIDTHS and "strap_lane_lane_id" in pb)
                       or (module == "ot_hnx_idxn_keybuf_slice" and "strap_lane_id" in pb)):
         ip = inventory(module, dparams)
         kit_straps = static_inputs(module, {n:w for n,d,w in ip}, {n:d for n,d,w in ip})

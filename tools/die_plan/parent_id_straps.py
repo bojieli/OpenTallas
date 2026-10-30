@@ -22,6 +22,20 @@ S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
 PHYSICAL_ID_ALIASES = {
     'strap_lane_lane_id': dict(native='lane_lane_id', width=11, module='ot_hbm_su_static_pgslice_lg__lane_exp0_id'),
 }
+# Three exact canonical SU physical aliases; 9-bit bases retain the fixed
+# per-lane low two bits in their wrappers. Legacy single-master row is unchanged.
+PHYSICAL_ID_ALIAS_MASTERS = {
+    ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691'): dict(native='lane_lane_id', width=11),
+    ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77'): dict(native='lane_lane_id', width=9),
+    ('strap_lane_lane_id', 'ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526'): dict(native='lane_lane_id', width=9),
+}
+
+def physical_id_alias_row(port, module):
+    row = PHYSICAL_ID_ALIAS_MASTERS.get((port, module))
+    if row is not None:
+        return dict(row, module=module)
+    return PHYSICAL_ID_ALIASES.get(port)
+
 PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2,
                       **{a: r['width'] for a, r in PHYSICAL_ID_ALIASES.items()}}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
@@ -55,7 +69,7 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
         value = entry['value']
         if isinstance(value, str):
             import re
-            width = PHYSICAL_ID_WIDTHS[port]
+            width = physical_id_alias_row(port, descriptor.get('module'))['width'] if port in PHYSICAL_ID_ALIASES else PHYSICAL_ID_WIDTHS[port]
             if not re.fullmatch(str(width) + r"'[bB][01]{" + str(width) + "}", value):
                 raise ValueError(f'hard-core ID strap {port}: require an exact {width}-bit binary literal')
             value = int(value.split("'", 1)[1][1:], 2)
@@ -93,8 +107,9 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             raise ValueError(f'parent_id_straps {port}: width must be a positive integer')
         if port == 'sidx' and width != 3:
             raise ValueError('parent_id_straps sidx: identity width must be exactly 3 bits')
-        if port in PHYSICAL_ID_WIDTHS and width != PHYSICAL_ID_WIDTHS[port]:
-            raise ValueError(f'parent_id_straps {port}: identity width must be exactly {PHYSICAL_ID_WIDTHS[port]} bits')
+        approved_width = physical_id_alias_row(port, descriptor.get('module'))['width'] if port in PHYSICAL_ID_ALIASES else PHYSICAL_ID_WIDTHS.get(port)
+        if approved_width is not None and width != approved_width:
+            raise ValueError(f'parent_id_straps {port}: identity width must be exactly {approved_width} bits')
         if type(value) is not int or value < 0 or value >= 1 << width:
             raise ValueError(f'parent_id_straps {port}: value does not fit width {width}')
         if inputs is not None and inputs.get(port) != width:
@@ -126,7 +141,7 @@ def _check_physical_id_alias(descriptor, raw, actual_module):
     if sorted(alias) != used:
         raise ValueError(f'physical_id_alias {sorted(alias)} must map exactly the declared alias straps {used}')
     for strap, native in alias.items():
-        row = PHYSICAL_ID_ALIASES[strap]
+        row = physical_id_alias_row(strap, descriptor.get('module'))
         if native != row['native']:
             raise ValueError(f'physical_id_alias {strap}: native port must be exactly {row["native"]}')
         if descriptor.get('module') != row['module'] or (actual_module is not None and actual_module != row['module']):

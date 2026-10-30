@@ -176,6 +176,18 @@ _core_id_straps = {"type": "array", "items": {
                                                                            "pattern": f"^{w}'[bB][01]{{{w}}}$"}}}}
                  for n, w in _alias_id_widths.items()]}}
 
+# Exact canonical SU aliases permit 9-bit bases as well as the legacy 11-bit
+# lane ID. parent_id_straps semantic validation selects the exact master row.
+_parent_id_straps['properties']['strap_lane_lane_id']['properties']['width'] = {'enum': [9, 11]}
+_core_id_straps['items']['properties']['width']['enum'].append(9)
+_core_id_straps['items']['properties']['value']['pattern'] = "^(2'[bB][01]{2}|6'[bB][01]{6}|9'[bB][01]{9}|11'[bB][01]{11})$"
+_su_alias_schema = next(row for row in _core_id_straps['items']['allOf']
+                        if row['if']['properties']['port'].get('const') == 'strap_lane_lane_id')
+_su_alias_schema['then'] = {'oneOf': [
+    {'properties': {'width': {'const': w}, 'value': {'maximum': (1 << w)-1,
+                                                   'pattern': f"^{w}'[bB][01]{{{w}}}$"}}}
+    for w in (9, 11)]}
+
 _clock_mesh_region = {
     "type": "object", "additionalProperties": False,
     "required": ["k", "tag", "i0", "i1", "j0", "j1", "box_um"],

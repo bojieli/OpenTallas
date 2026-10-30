@@ -1506,5 +1506,176 @@
   "params": {},
   "macros": [],
   "source": "Current native instance-specific VM_RT_EXTRA=173; direct wrapper, zero added registers/cycles; generic be0b530febe5 physical view HOLD pending role-specific plan/native compose adoption."
+ },
+ "ot_hbm_su_static_pgslice_lg__lane_exp__canon_7cd691": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lane_exp_core.sv"
+  ],
+  "functional_type": "pg_lane_exp",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_lane_exp_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lane_exp.type_ids[\"ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92\"]; straps {'lane_lane_id': '00000000010'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (lanes L 1..15: KIND 1 exp lane)",
+  "top": "ot_hbm_su_pg_lane_exp_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lane_exp2__440.64x457.92",
+  "alias_note": "Current canonical family direct wiring with physical strap_lane_lane_id alias; source preparation only, no adopted plan. Exact ID width comes from native wrapper.",
+  "synth_memory_max_bits": 15616
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv"
+  ],
+  "functional_type": "pg_lanes4",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_lanes4_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lanes4.type_ids[\"ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12\"]; straps {'lane2_lane_id': '00000100010', 'lane0_lane_id': '00000100000', 'lane3_lane_id': '00000100011', 'lane1_lane_id': '00000100001'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
+  "top": "ot_hbm_su_pg_lanes4_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lanes0_3__587.52x933.12",
+  "alias_note": "Current canonical family direct wiring with physical strap_lane_lane_id alias; source preparation only, no adopted plan. Exact ID width comes from native wrapper."
+ },
+ "ot_hbm_su_static_pgslice_lg__lanes_plain__canon_663526": {
+  "defines": [],
+  "files": [
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
+   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",
+   "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fpu.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fastfp_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+   "rtl/hdc/v41/ot_hdc_fdiv.sv",
+   "rtl/hdc/v41/ot_hdc_softplus.sv",
+   "rtl/hbm_accel/cores_split/ot_hbm_su_static_pgslice_lg/ot_hbm_su_pg_lanes4_core.sv"
+  ],
+  "functional_type": "pg_lanes4",
+  "macros": [
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "params": {},
+  "port_map_note": "canonical ports = ot_hbm_su_pg_lanes4_core ports; cut pin -> canonical map in canonical_ports_split.json types.pg_lanes4.type_ids[\"ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92\"]; straps {'lane2_lane_id': '00001000010', 'lane0_lane_id': '00001000000', 'lane3_lane_id': '00001000011', 'lane1_lane_id': '00001000001'} tied at the parent",
+  "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice_s.sv g_lane[n] (PIN_REG 1 plan variant: ot_hbm_su_static_lane_pinreg; d4g params MLAT 4 ALAT 3 LEAF 1 FETCH_EXTRA_EDGES 2 from r18h5 views.json) + g_bank[n].u_bank; the slice glue (read-port address/valid muxes, id-fault checks) stays in the parent (4 KIND 0 plain lanes + banks; pv8 groups = same type with side_y tied 0 at the parent)",
+  "top": "ot_hbm_su_pg_lanes4_core",
+  "alias_of": "ot_hbm_su_static_pgslice_lg__lanes_plain0_3__440.64x457.92",
+  "alias_note": "Current canonical family direct wiring with physical strap_lane_lane_id alias; source preparation only, no adopted plan. Exact ID width comes from native wrapper."
+ },
+ "ot_hbm_svc_sm_xcal_rel_t": {
+  "macro_place_halo_um": 2.16,
+  "top": "ot_hbm_svc_sm_xcal_rel_t",
+  "files": [
+   "rtl/hbm_accel/host_static_20261015/ot_static_run_target.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel.sv",
+   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_rel_t.sv",
+   "rtl/hbm_accel/sm/static/ot_smh_calendar_static_x.sv"
+  ],
+  "defines": [],
+  "params": {
+   "PAW": 11,
+   "PREL": 1,
+   "DD": 256,
+   "XSLOT": 1
+  },
+  "macros": [
+   "ot_sram_1r1w_1024x256_m2_r2c2",
+   "ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "source": "r18h5 die view ot_hbm_svc_sm_xcal_rel_t (ot-epyc5 codex-hbmc-r18h5-2140-1022/chainsM/views: kind SYNTH, synth meta /srv/opentallas-scratch/claude/hbmc-r18g-1021/chainsM/syn/ot_hbm_svc_sm_xcal_rel_t @ 4027f385f); files read at the die src d34578d6f; params = views.json (wrapper v16w_ot_hbm_svc_sm_xcal_rel_t); actual current native xc_NW0..NW7 confirmed DD256/PAW11/PREL1/XSLOT1 (default0 is wrong); preserve existing tab_lo+5.04um zero-overflow placement, current 241.92x224.64 view59bcf8ea762e; clock density/shallow is a separate opt-in kit flag.",
+  "source_commit": "d34578d6f",
+  "view_cell": "ot_hbm_svc_sm_xcal_rel_t",
+  "view_kind": "SYNTH",
+  "view_port_bits": 507,
+  "macro_placement": [
+   {
+    "inst": "u_xcal.u_cal.g_m2.u_program_hi",
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "xy_um": [
+     33.588,
+     8.652
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_xcal.u_cal.g_m2.u_program_lo",
+    "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+    "xy_um": [
+     33.588,
+     142.284
+    ],
+    "orient": "MX"
+   },
+   {
+    "inst": "u_xcal.g_t2.u_tab_lo",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     15.12,
+     90.156
+    ],
+    "orient": "R0"
+   },
+   {
+    "inst": "u_xcal.g_t2.u_tab_hi",
+    "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+    "xy_um": [
+     131.976,
+     90.156
+    ],
+    "orient": "MY"
+   }
+  ],
+  "read_at_commit": true
  }
 }
