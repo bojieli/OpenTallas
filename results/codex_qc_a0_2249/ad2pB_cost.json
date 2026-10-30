@@ -1,0 +1,25 @@
+{
+ "scope": "PLAN-only added clock-buffer area and input capacitance; no wire/internal energy/activity credit",
+ "masters": {
+  "BUFx12f_ASAP7_75t_R": {
+   "count": 19435,
+   "area_um2": 0.26244,
+   "cin_ff": 2.34288
+  },
+  "BUFx24_ASAP7_75t_R": {
+   "count": 1,
+   "area_um2": 0.4374,
+   "cin_ff": 2.34978
+  },
+  "BUFx8_ASAP7_75t_R": {
+   "count": 7186,
+   "area_um2": 0.17496,
+   "cin_ff": 0.852045
+  }
+ },
+ "total_clock_cell_area_um2": 6358.2213600000005,
+ "tile_area_fraction": 0.011992990530836384,
+ "clock_input_cap_ff": 51659.01795000001,
+ "pin_only_dynamic_w_if_all_toggle": 0.030375502554600003,
+ "data_cycles_added": 0
+}
