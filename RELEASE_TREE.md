@@ -1,6 +1,6 @@
 # OpenTallas release tree (pending only; refreshed 2026-10-26 06:21 PDT by CLAUDE coordinator)
 
-Updated 2026-10-30 14:29 PDT by COORD hourly: counted S81 18/52 (types 0/171 after retiring 4 legacy stations), HEAD 2/3, QC 5/9, KV 8/31, HBM 2/210. Frozen: S81 event3, KV, HEAD l40. QC plan of record plan_qc49 (ring bands); HBM d38s -> d40h -> lane capacity d41a + L1 locality (bind 79 pairs to close). Pending: KV CDC319 LEC, HEAD LEP ECO4 + SerDes, KV Q1 slew / Q2 local PRD (needs b-kv tag), S81 station form + leaf clock entry, HEAD station tap deltas, QC 11 stm kits on qc49.
+Updated 2026-10-30 15:24 PDT by COORD hourly: counted S81 18/52 (types 0/171), HEAD 2/3, QC 5/9, KV 8/31, HBM 2/210 (flat since 14:29; limit 14:48-15:02). Frozen: S81 event3+veskv (main b6c0953effd, bind verify guard), KV event28w_c, HEAD l40. QC plan_qc49 gate in progress (DIE-QC-50); HBM d40h -> d41a lane capacity + L1 locality; station-form fix 90ba64737ef pending rebase. Codex out until 11-04.
 
 ## EDIT · rules
 - PENDING items only, one short line each, edited in place. Remove an item when done (evidence goes in PATH-FREEZE.md / lane files).

@@ -2496,3 +2496,4 @@ COORD: 2026-10-30 10:24 PDT handback from Codex received (main 16f2590f75f). 15 
 
 CODEX: 2026-10-30 14:50 PDT afternoon takeover from claude_to_codex_20261030_1448.md; all5dies+FLOW/TOK/SIGNOFF/coverage resumed currentstates, merge_1448 owns integration; collect existingjobs first/no duplicates. main79ffd79fdb0, pendingS81composed070b verify.
 2026-10-30 15:24 PDT COORD: Codex limited until 11-04 (no handback written); Claude lanes own all work from 15:02; DIE-QC-50 succeeds DIE-QC-49; S81 station-form 90ba64737ef done -> DIE-S81-36 READY.
+2026-10-30 15:24 PDT COORD hourly: counts flat (S81 18/52, HEAD 2/3, QC 5/9, KV 8/31, HBM 2/210); root 92% (Codex *-1448 wt, <12 h idle, kept); intel1 ot-run unreachable blip (ssh OK); successors DIE-KV-47, DIE-QC-50, ROOT-MERGE-AF, S81-CORES-KITS-6.
