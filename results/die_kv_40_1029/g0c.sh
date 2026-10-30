@@ -1,0 +1,2 @@
+#!/bin/bash
+cd /srv/opentallas-scratch2/claude/wt/die-kv-40; for t in base:kv36/event28b/plan.json w:kv40/event28w/plan.json; do n=${t%%:*}; p=${t#*:}; mkdir -p /srv/opentallas-scratch2/claude/die-kv-40-1029/g0c_$n; ( python3 tools/die_plan/check.py $p --completeness --out /srv/opentallas-scratch2/claude/die-kv-40-1029/g0c_$n > /srv/opentallas-scratch2/claude/die-kv-40-1029/g0c_$n.log 2>&1; echo RC $? >> /srv/opentallas-scratch2/claude/die-kv-40-1029/g0c_$n.log ) & done; wait
