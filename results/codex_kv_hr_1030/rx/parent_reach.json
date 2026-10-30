@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.kv.rx259_parent_reach.v1",
+ "verdict": "FAIL_STRUCTURAL_PLANNED_PARENT_REACH",
+ "adoption": "HELD",
+ "source_band": {
+  "rect_um": [
+   1157.76,
+   1141.08,
+   1183.68,
+   1149.72
+  ],
+  "width": 1,
+  "ring_width": 64,
+  "live_data_storage_flops": 10,
+  "padded_data_storage_flops": 320,
+  "clock_roles": {
+   "forwarded_write_flops": 256,
+   "local_read_flops": 64
+  },
+  "max_pin_to_band_hop_um": 125.28,
+  "area_reserve_um2": 216.513,
+  "placement": "PROPOSED legal macro-free band; mapped anchoring pending",
+  "instance": "u_cland_i_kvs_ctl_own__ownership_valid"
+ },
+ "old_destination_parent_um": [
+  587.616,
+  608.664
+ ],
+ "new_destination_parent_um": [
+  587.616,
+  483.624
+ ],
+ "old_min_manhattan_um": 1102.56,
+ "new_min_manhattan_um": 1227.6,
+ "new_max_manhattan_um": 1262.16,
+ "existing_registered_legs": 2,
+ "existing_legs_capacity_um": 810,
+ "minimum_registered_legs_after": 4,
+ "minimum_added_receiver_relays": 2,
+ "exact_internal_source_position": "NOT MEASURED; all local read flops are reserved in stated band, so its rectangle gives a strict lower bound.",
+ "bound_source_chain": [
+  "u_cland_i_kvs_ctl_own__ownership_valid.q (CA read stage)",
+  "u_bin_i_kvs_ctl_own__ownership_valid (ot_dp_st, one receiver stage)",
+  "u_host.u_rx ownership_valid pin capture"
+ ],
+ "path_reference": "intel1:codex-kv-1030/bind_e0/rtl/kv3_hub_Wi_part.sv:1236,3653,5499",
+ "existing_readout_pad_stages": 0,
+ "rxd263": {
+  "source_core": "host__qkd_hr_core_prompt",
+  "source_pin": "u_program_rx__normal_d[263]",
+  "source_parent_um": [
+   552.864,
+   490.488
+  ],
+  "old_destination_um": [
+   587.616,
+   483.624
+  ],
+  "new_destination_um": [
+   587.616,
+   608.664
+  ],
+  "old_manhattan_um": 41.616,
+  "new_manhattan_um": 152.928,
+  "verdict": "PASS <=405"
+ },
+ "die_id_0_2": "ID-strap TIEHI/TIELO expected at each moved pin; no timed registered hop. Exact parent TIE placement remains physical build check.",
+ "owner_question": "+2 coherent receiver relays and exact schedule/host-admission price or ring-band replan; no source/latency change adopted",
+ "token_initial_estimate": "ownership_valid only: +2 boot-host-enable cycles (1.666ns), no steady period change; falls on fault/reset require safety alignment; delaying paired native_reserved changes closure/reopen guard and must be priced separately."
+}
