@@ -884,7 +884,16 @@ def _plan_contents(kd, plan_dir):
     pt = json.loads(pf.read_text()).get("partition_types", {}).get(typ)
     if not pt:
         return None
-    return {e["inst"]: e for e in pt.get("contents", []) if isinstance(e, dict) and e.get("inst") and e.get("outline_um")}
+    # DIE-KV-47-SD: a kit-only physical specialization (physical_inst/physical_master, gen_phys.content_physical_identity)
+    # is placed by its physical instance name with its physical master; the logical inst keys every other entry.
+    out = {}
+    for e in pt.get("contents", []):
+        if isinstance(e, dict) and e.get("inst") and e.get("outline_um"):
+            if e.get("physical_inst") and e.get("physical_master"):
+                out[e["physical_inst"]] = dict(e, inst=e["physical_inst"], module=e["physical_master"])
+            else:
+                out[e["inst"]] = e
+    return out
 
 
 def macro_boxes(kd, plan_dir=None, sites_out=None):
