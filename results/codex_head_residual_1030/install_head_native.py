@@ -17,5 +17,8 @@ if 'foreach hb $cland_hard {cland_occupy' not in s and 'cland_occupy {*}$hr' not
 f.write_text(s)
 if a.core_hook:
  shutil.copy2(a.core_hook,k/'head_tile_core.tcl')
+ if 'source /work/tile6_repack.tcl' in a.core_hook.read_text():
+  dep=a.core_hook.with_name('tile6_repack.tcl');assert dep.is_file(), 'tile6 core attachment requires sibling tile6_repack.tcl'
+  shutil.copy2(dep,k/'tile6_repack.tcl')
  f=k/'face_flops.tcl';f.write_text(f.read_text()+'\nuplevel #0 {source /work/head_tile_core.tcl}\n')
 print('Installed explicit HEAD native8 profile; generated band.i MUST already equal [12.96,708.48,47.52,1008.512].')
