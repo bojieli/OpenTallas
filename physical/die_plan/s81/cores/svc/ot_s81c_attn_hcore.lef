@@ -9708,7 +9708,7 @@ MACRO ot_s81c_attn_hcore
     USE CLOCK ;
     PORT
       LAYER M5 ;
-        RECT 78.804 0.000 78.852 0.480 ;
+        RECT 77.748 129.360 77.796 129.840 ;
     END
   END clk
   PIN rst_n
@@ -9812,9 +9812,10 @@ MACRO ot_s81c_attn_hcore
     LAYER M4 ;
       RECT 0.200 0.200 157.480 259.000 ;
     LAYER M5 ;
-      RECT 0.200 0.200 78.780 259.000 ;
-      RECT 78.876 0.200 157.480 259.000 ;
-      RECT 78.780 0.504 78.876 259.000 ;
+      RECT 0.200 0.200 77.748 259.000 ;
+      RECT 77.796 0.200 157.480 259.000 ;
+      RECT 77.748 0.200 77.796 129.360 ;
+      RECT 77.748 129.840 77.796 259.000 ;
   END
 END ot_s81c_attn_hcore
 END LIBRARY

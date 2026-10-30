@@ -1,8 +1,8 @@
 {
 "module": "ot_s81c_attn_hcore",
 "lef": "physical/die_plan/s81/cores/svc/ot_s81c_attn_hcore.lef",
-"source": "CORE-S81-SVC 10-23 gen_svc_cores.py (planned pins, top-down); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): all 1214 pins edge-point -> centre of their declared edge rect (0.096 um inward; was refused 'off its declared edge rectangle', first ld_v); clk S M5 0.024x0.192 -> 0.048x0.48 centre (78.828,0.24) (GEOM-21), M5 OBS notched",
-"pinhash": "50fc9d38f766",
+"source": "CORE-S81-SVC 10-23 gen_svc_cores.py (planned pins, top-down); S81 pin event DIE-S81-32/PINEV 2026-10-29 (delta_pinev_1029.py): all 1214 pins edge-point -> centre of their declared edge rect (0.096 um inward; was refused 'off its declared edge rectangle', first ld_v); clk S M5 0.024x0.192 -> 0.048x0.48 centre (78.828,0.24) (GEOM-21), M5 OBS notched; S81 one-block clock-entry fix DIE-S81-36/CKENTRY 2026-10-30 (delta_ckentry_1030.py): clk M5 edge (78.828,0.24) -> M5 interior centre entry (77.772,129.6) 0.048x0.48 face C",
+"pinhash": "de4c15e5fec4",
 "pins": [
 {
 "name": "ld_v",
@@ -7279,8 +7279,8 @@
 {
 "name": "clk",
 "layer": "M5",
-"x": 78.828,
-"y": 0.24
+"x": 77.772,
+"y": 129.6
 },
 {
 "name": "rst_n",
