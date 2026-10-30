@@ -9,7 +9,18 @@
 #   ot_pinreg_set        -> clk-family boundary registers only, sorted by instance name
 #   ot_pinreg_set_for_clock name -> same boundary census for another actual clock root
 #   ot_pinreg_arr p clk  -> arrival (ps) of CK pin p for clock clk, or "" when not timed
-proc ot_pinreg_set {} { return [ot_pinreg_set_for_clock clk] }
+proc ot_pinreg_set {} {
+  set roots {clk}
+  if {[info exists ::ot_pinreg_clocks]} {set roots $::ot_pinreg_clocks}
+  if {![llength $roots]} {error "OT_PINREG: empty declared clock-family list"}
+  set bnd {}
+  foreach root $roots {
+    dict for {i p} [ot_pinreg_set_for_clock $root] {dict set bnd $i $p}
+  }
+  set out {}
+  foreach i [lsort [dict keys $bnd]] {dict set out $i [dict get $bnd $i]}
+  return $out
+}
 proc ot_pinreg_set_for_clock {name} {
   # Forwarded landing writers belong to their source clock, not the local clk
   # insertion budget. Use STA graph ownership, never instance-name exemptions.
