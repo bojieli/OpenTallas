@@ -1,0 +1,9 @@
+HEAD_MODULE_CHECK PASS missing 0 [] unresolved []
+TIE_AUDIT PASS accepted=1669 rejected=0 COUNT_AUDIT PASS pads=321 inst/2953 ports
+MANIFEST 112 entries, landing closure ['rtl/common/ot_dp_clk_landing.sv', 'rtl/common/ot_dp_clk_landing_ca.sv', 'rtl/common/ot_meso_fifo.sv'] 
+DIE_PORT_BIND PASS masters=26 instances=358 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 unread_net_bits=0 output_open_ports=0 top_assigns=0 params_not_in_rtl=0 strap_ports=119 pad_bits=0 spare_out_bits=2953 unresolved_children=0 ambiguous_children=0 variant_children=0 manifest_missing=0
+ 
+PORT_BIND_NESTED PASS {"verdict": "PASS", "instances": 4335, "unbound": 0, "unknown": 0, "width_mismatch": 0, "unresolved": 0, "no_master": 0}
+ 
+HEAD_DIE_PORTBIND_SOURCE PASS module_check=PASS missing=0 tie_audit=PASS count_audit=PASS manifest_rc=0 port_bind_rc=0 nested=PASS
+RC 0

@@ -1,0 +1,2 @@
+#!/bin/bash
+cd /srv/opentallas-scratch2/claude/wt/die-head-33-start && python3 /srv/opentallas-scratch2/claude/die-head-33/bind/run_source_portbind.py /srv/opentallas-scratch2/claude/die-head-33/bind/src /srv/opentallas-scratch2/claude/die-head-33/bind/out /srv/opentallas-scratch2/claude/moved/home__ubuntu__OpenTallas $(git -C /srv/opentallas-scratch2/claude/wt/die-head-33-start rev-parse HEAD) > /srv/opentallas-scratch2/claude/die-head-33/bind/run.log 2>&1; echo RC $? >> /srv/opentallas-scratch2/claude/die-head-33/bind/run.log

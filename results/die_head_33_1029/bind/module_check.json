@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.s81_head.module_check.v1",
+ "plan": "/srv/opentallas-scratch2/claude/die-head-33/bind/src/source_plan.json",
+ "rev": "ca6c3203d39cd2027de918d66f4eb9332889a11f",
+ "verdict": "PASS",
+ "missing_modules": 0,
+ "missing": [],
+ "unresolved_instances": [],
+ "types": 25,
+ "contents": [
+  {
+   "type": "hd_tile",
+   "inst": "u_core",
+   "module": "ot_s81hd_tile_native",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_tile_native.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_spn",
+   "inst": "u_spo",
+   "module": "ot_s81hd_spo",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_spn",
+   "inst": "u_spr",
+   "module": "ot_s81hd_spr",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_spn_end",
+   "inst": "u_spo",
+   "module": "ot_s81hd_spo",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spo.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_spn_end",
+   "inst": "u_spr",
+   "module": "ot_s81hd_spr",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_spr.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_serdes",
+   "inst": "u_phy",
+   "module": "ot_s81hd_serdes_link",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_serdes_link.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_mesh",
+   "inst": "u_core",
+   "module": "ot_s81hd_mesh_ep_core",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_mesh_ep_core.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_lep0N",
+   "inst": "u_core",
+   "module": "ot_s81hd_lep0N_noidx_core",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_lep0N_core.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_ctl",
+   "inst": "u_core",
+   "module": "ot_s81hd_ctl_core",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_ctl_core.sv"
+   ],
+   "missing": null
+  },
+  {
+   "type": "hd_host",
+   "inst": "u_core",
+   "module": "ot_s81hd_host_ep_core",
+   "files": [
+    "rtl/dsrom_sys/s81_head/ot_s81hd_host_ep_core.sv"
+   ],
+   "missing": null
+  }
+ ]
+}
