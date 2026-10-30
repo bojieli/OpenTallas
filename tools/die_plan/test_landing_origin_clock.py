@@ -80,10 +80,29 @@ def test_type_emission_passes_actual_existing_header_and_preserves_default():
     assert obj.reset_placements['B']['count_origin']['clock_port']=='clk'
 
 
-def test_nonprefix_primary_core_group_port_uses_role_not_spelling():
+def group_emitter():
     obj=emitter('primary_group_port');t=obj.types['mid'];ck=t['clock']
     t['hard_cores']=[dict(inst='u_core',module='core',origin_um=[10,10],outline_um=[8.64,8.64])]
     ck.update(core_taps='early',taps=[dict(name='u_core.clk',kind='core',xy=[20,20],insertion_ps=100)],
               core_groups=[dict(name='group',port='primary_group_port',xy=[20,20],members=[dict(inst='u_core',pin='clk',tap='u_core.clk')],
                                 insertion_ps=100,insertion_ff_ps=81,basis='parent_budget',source='test primary input')])
-    assert '.clk(primary_group_port)' in emit(obj,HEAD.replace('clk_t7','primary_group_port'))
+    return obj
+
+
+def test_nonprefix_primary_core_group_port_uses_role_not_spelling():
+    assert '.clk(primary_group_port)' in emit(group_emitter(),HEAD.replace('clk_t7','primary_group_port'))
+
+
+def test_native_recovered_root_cannot_be_relabelled_as_primary_core_group(tmp_path):
+    obj=group_emitter();t=obj.types['mid'];sha='a'*64
+    census=dict(top_module=t['module'],source_odb_sha256=sha,
+        clock_root_ports=[dict(port='clk',net='clk',dir='INPUT'),dict(port='pma_rck[0]',net='pma_net',dir='INPUT')],
+        ff_count=2,ff_clock_net_counts=dict(clk=1,pma_net=1),
+        ff_clock_pins=[dict(inst='p0',pin='CLK',net='clk'),dict(inst='p1',pin='CLK',net='pma_net')],
+        macro_clock_pins=[dict(inst='u_core',master='core',pin='clk',net='pma_net')])
+    path=tmp_path/'census.json';path.write_text(json.dumps(census))
+    t['clock']['native_domains']=dict(schema='opentallas.native_clock_domains.v1',core_root='clk',
+        census_file=str(path),source_odb_sha256=sha,
+        macro_pins=[dict(inst='u_core',module='core',pin='clk',root='pma_rck')])
+    with pytest.raises(LandingError,match='actual primary native root'):
+        emit(obj,HEAD.replace('clk_t7','primary_group_port'))

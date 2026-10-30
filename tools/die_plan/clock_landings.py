@@ -1116,6 +1116,17 @@ class Landings:
         forbidden.update(canonical(p['name'] + suffix) for p in typ.get('ft_slots', []) for suffix in ('_i', '_o'))
         if chosen not in names or chosen in forbidden:
             raise LandingError(f'{tn}: origin clock {chosen} is not an unambiguous primary Plan tap')
+        selected_core = [tp for n, _x, _y, tp in cores if n == chosen]
+        if selected_core and typ.get('clock', {}).get('native_domains') is not None:
+            import native_clock_domains as NCD
+            actual = NCD.contract(P, key)
+            for tp in selected_core:
+                members = tp.get('core_group', {}).get('members')
+                roots = {root for (inst, _module, pin), root in actual['macro_pins'].items()
+                         if (any(m['inst'] == inst and m['pin'] == pin for m in members) if members
+                             else tp['name'] in (inst, inst + '.' + pin))}
+                if roots != {actual['core_root']}:
+                    raise LandingError(f'{tn}: selected core tap is not on the actual primary native root')
         if not isinstance(head, str):
             raise LandingError(f'{tn}: origin clock requires the actual emitted RTL input header')
         clean = re.sub(r'//[^\n]*|/\*.*?\*/', '', head, flags=re.S)
