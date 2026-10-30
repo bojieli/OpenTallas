@@ -3871,7 +3871,7 @@ def grt_tcl(P, out, coarse, lefs, reserve, adjust):
     t.append(f"place_pin -pin_name rst_n -layer {L} -location {{{x:.4f} {y:.4f}}} -pin_size {{0.32 0.04}}")
     for n, p in sorted(P.parts.items()):
         ox, oy = p["origin_um"]
-        t.append(f"ot_place {sv(n)} {ox:g} {oy:g} {p.get('orient', 'R0')}")
+        t.append(f"ot_place {sv(n)} {gen_phys._um(ox)} {gen_phys._um(oy)} {p.get('orient', 'R0')}")
     t.append("puts \"OT_T placed [expr {[clock seconds]-$t0}]\"")
     t.append("source /work/grt/obs.tcl")
     t.append("puts \"OT_T obs [expr {[clock seconds]-$t0}]\"")
@@ -3928,7 +3928,7 @@ def psm_tcl(P, lefs, power, bumps):
           "source /work/grt/tracks.tcl", PLACE_PROC]
     for n, p in sorted(P.parts.items()):
         ox, oy = p["origin_um"]
-        t.append(f"ot_place {sv(n)} {ox:g} {oy:g} {p.get('orient', 'R0')}")
+        t.append(f"ot_place {sv(n)} {gen_phys._um(ox)} {gen_phys._um(oy)} {p.get('orient', 'R0')}")
     t += ["puts \"OT_T placed [expr {[clock seconds]-$t0}]\"", "source /work/psm/pdn.tcl", "pdngen",
           "puts \"OT_T pdngen [expr {[clock seconds]-$t0}]\"",
           "write_db /work/psm/pdn_grid.odb",
@@ -4119,7 +4119,7 @@ def bumps_tcl(P, bumps, size=4.0, pad_um=None):
          "  dict set bump_shapes $net_name $shapes",
          "}"]
     for k, (net, x, y) in enumerate(bumps):
-        t += [f"set bx [expr {{{x:g}*$bump_dbu}}]; set by [expr {{{y:g}*$bump_dbu}}]",
+        t += [f"set bx [expr {{{gen_phys._um(x)}*$bump_dbu}}]; set by [expr {{{gen_phys._um(y)}*$bump_dbu}}]",
               f"set cache_key [list {net} $bx]",
               "if {![dict exists $bump_x_cache $cache_key]} {",
               "  set nearest {}; set x_distance 1e30",
@@ -4193,9 +4193,9 @@ def _pad_bumps_tcl(bumps, pad_um, pads=None):
          "    lassign $h a b c d; set pad_area [expr {$pad_area + ($c-$a)*($d-$b)/double($bump_dbu*$bump_dbu)}] }",
          "}"]
     if pads is None:
-        t += [f"ot_pad {net} {k} {x:g} {y:g}" for k, (net, x, y) in enumerate(bumps)]
+        t += [f"ot_pad {net} {k} {gen_phys._um(x)} {gen_phys._um(y)}" for k, (net, x, y) in enumerate(bumps)]
     else:
-        t += [f"ot_pad {net} {k} {x:g} {y:g} {p:g}" for k, ((net, x, y), p) in enumerate(zip(bumps, pads))]
+        t += [f"ot_pad {net} {k} {gen_phys._um(x)} {gen_phys._um(y)} {gen_phys._um(p)}" for k, ((net, x, y), p) in enumerate(zip(bumps, pads))]
     t.append(f'puts "OT_BUMPS pad_um {pad_um:g} bumps {len(bumps)} pad_pins $pad_pins pad_fallback $pad_fallback '
              f'm9_contact_um2 [format %.1f $pad_area]"' if pads is None else
              f'puts "OT_BUMPS mixed pads {" ".join(f"{p:g}:{pads.count(p)}" for p in sorted(set(pads)))} bumps {len(bumps)} '
