@@ -1,0 +1,48 @@
+{
+  "scope": "pureNLDM structural design; not physical/signed clock adoption",
+  "types": {
+    "NK": {
+      "cores": 720,
+      "model": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/natural_model/nk_slew_q20_fixedpack_model.json",
+      "plan": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/plans/nk_slew_q20_fixedpack.json",
+      "corners": {
+        "TT": {
+          "effective_min_ps": 918.0529906530905,
+          "effective_max_ps": 1024.6383747417017,
+          "weighted_mean_ps": 977.18167814625,
+          "delta_from_old_frame_ps": 727.18167814625,
+          "slew_max_ps": 50.987352536328125
+        },
+        "FF": {
+          "effective_min_ps": 711.4717001702146,
+          "effective_max_ps": 806.6300490848515,
+          "weighted_mean_ps": 750.7419549966736,
+          "delta_from_old_frame_ps": 548.2419549966736,
+          "slew_max_ps": 47.29016279656506
+        }
+      }
+    },
+    "NL": {
+      "cores": 48,
+      "model": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/natural_model/nl_slew_q18_fixedpack_model.json",
+      "plan": "/srv/opentallas-scratch2/claude/codex-qc-a0-0336/plans/nl_slew_q18_fixedpack.json",
+      "corners": {
+        "TT": {
+          "effective_min_ps": 768.0748058132435,
+          "effective_max_ps": 869.9067604855951,
+          "weighted_mean_ps": 818.8445488924634,
+          "delta_from_old_frame_ps": 568.8445488924634,
+          "slew_max_ps": 49.06976882819049
+        },
+        "FF": {
+          "effective_min_ps": 601.1365363215605,
+          "effective_max_ps": 686.6522822501472,
+          "weighted_mean_ps": 629.9790880101483,
+          "delta_from_old_frame_ps": 427.4790880101483,
+          "slew_max_ps": 47.100695748546975
+        }
+      }
+    }
+  },
+  "cohort": "plan45fa9a7a5f64b:16types,192containingpartitions,768cores=720NK+48NL; parentplan46zeroA0changes"
+}
