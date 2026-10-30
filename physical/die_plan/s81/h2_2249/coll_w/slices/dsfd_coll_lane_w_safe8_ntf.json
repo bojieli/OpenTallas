@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.master_plan_slice.v1",
+ "kind": "core",
+ "die": "s81",
+ "type": "dsfd_coll_lane_w_safe8_ntf",
+ "module": "dsfd_coll_lane_w_safe8_ntf",
+ "instances": [],
+ "master_plan_sha256": "TRIAL-no-frozen-master-plan",
+ "frozen": false,
+ "outline_um": [
+  295.92,
+  444.96
+ ],
+ "latency": {
+  "common_clock_latency_ps": {
+   "TT": 250,
+   "FF": 202.5
+  },
+  "tol_ps": 20,
+  "early_taps": false
+ },
+ "keepouts": [],
+ "bays": [],
+ "entry_pins": [],
+ "hard_cores": [],
+ "corridors": [],
+ "gates": {},
+ "core_clock_port": "ck[0]",
+ "islands": [
+  {
+   "name": "ck_entry",
+   "rect_um": [
+    145.788,
+    234.36,
+    150.108,
+    238.68
+   ],
+   "centre_um": [
+    147.948,
+    236.52
+   ],
+   "use": "clock_driver",
+   "via_stack": [
+    "M7",
+    "M5"
+   ],
+   "clock_pin": {
+    "layer": "M5",
+    "xy_um": [
+     147.948,
+     236.52
+    ]
+   },
+   "note": "S81-LP-3 centre clock entry (COORD ruling (c) 10-29: parallel variant, standard CTS)"
+  }
+ ],
+ "pushdown": {
+  "islands": [],
+  "clock_repeaters": [],
+  "note": "in-core clock tree built by CTS from the centre entry; no feedthrough ports"
+ },
+ "event": "H2LP2249 authorized source preparation, no signedview/physicalrunclaim"
+}

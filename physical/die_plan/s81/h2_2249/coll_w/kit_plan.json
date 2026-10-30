@@ -1,0 +1,1442 @@
+{
+ "schema": "opentallas.die_plan.v1",
+ "die": {
+  "name": "s81",
+  "label": "DeepSeek ROM S81 72-frame MU release die",
+  "tech": "asap7",
+  "outline_um": [
+   31950.72,
+   24744.96
+  ],
+  "period_ps": 833,
+  "reach_um": 405.0,
+  "rep_um": 450.0,
+  "grid_um": 8.64,
+  "layer_budget": {
+   "partition_signal_max": "M7",
+   "die_layers": [
+    "M8",
+    "M9"
+   ],
+   "die_use": [
+    "clock_spine",
+    "pg"
+   ]
+  },
+  "pg": {
+   "partition_pg_max": "M7",
+   "grid": [
+    {
+     "layer": "M8",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    },
+    {
+     "layer": "M9",
+     "width_um": 0.48,
+     "pitch_um": 8.64,
+     "offset_um": 4.32,
+     "nets": [
+      "VDD",
+      "VSS"
+     ]
+    }
+   ],
+   "domains": [
+    {
+     "name": "phy_lk_WS0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WS0_u_phy"
+     ],
+     "rect_um": [
+      5875.2,
+      103.68,
+      8760.96,
+      649.188
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       5938.84,
+       103.68,
+       8697.32,
+       585.548
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      5938.84,
+      103.68,
+      8697.32,
+      585.548
+     ],
+     "core_strip_um": [
+      [
+       5875.2,
+       649.188,
+       8760.96,
+       1330.56
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WS1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WS1_u_phy"
+     ],
+     "rect_um": [
+      2989.44,
+      103.68,
+      5875.2,
+      649.188
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       3053.08,
+       103.68,
+       5811.56,
+       585.548
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      3053.08,
+      103.68,
+      5811.56,
+      585.548
+     ],
+     "core_strip_um": [
+      [
+       2989.44,
+       649.188,
+       5875.2,
+       1330.56
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WN0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN0_u_phy"
+     ],
+     "rect_um": [
+      5875.2,
+      23866.716,
+      8610.96,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       5938.84,
+       23930.356,
+       8547.32,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.85 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      5938.84,
+      23930.356,
+      8547.32,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       5875.2,
+       23414.4,
+       8760.96,
+       23866.716
+      ],
+      [
+       8610.96,
+       23866.716,
+       8760.96,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WN1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN1_u_phy"
+     ],
+     "rect_um": [
+      2989.44,
+      23653.16,
+      5725.2,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       3053.08,
+       23716.8,
+       5661.56,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "phy_macro_um": [
+      3053.08,
+      23716.8,
+      5661.56,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       2989.44,
+       23414.4,
+       5875.2,
+       23653.16
+      ],
+      [
+       5725.2,
+       23653.16,
+       5875.2,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WN2",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN2_u_phy"
+     ],
+     "rect_um": [
+      103.68,
+      23653.16,
+      2839.44,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       167.32,
+       23716.8,
+       2775.8,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
+      "exclude_um": [
+       [
+        167.32,
+        24144.96,
+        600.0,
+        24641.28
+       ]
+      ]
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "esd_um": [
+      [
+       167.32,
+       24144.96,
+       600.0,
+       24641.28
+      ]
+     ],
+     "phy_macro_um": [
+      167.32,
+      23716.8,
+      2775.8,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       103.68,
+       23414.4,
+       2989.44,
+       23653.16
+      ],
+      [
+       2839.44,
+       23653.16,
+       2989.44,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WN3",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WN3_u_phy"
+     ],
+     "rect_um": [
+      9665.052,
+      23414.4,
+      11646.72,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       9728.692,
+       23478.04,
+       11583.08,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.16 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      9728.692,
+      23478.04,
+      11583.08,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       8760.96,
+       23414.4,
+       9665.052,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_ES0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_ES0_u_phy"
+     ],
+     "rect_um": [
+      23189.76,
+      103.68,
+      26075.52,
+      1330.56
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       23189.76,
+       103.68,
+       26075.52,
+       1330.56
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+    },
+    {
+     "name": "phy_lk_ES1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_ES1_u_phy"
+     ],
+     "rect_um": [
+      26225.52,
+      103.68,
+      28961.28,
+      1091.8
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       26289.16,
+       103.68,
+       28897.64,
+       1028.16
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "phy_macro_um": [
+      26289.16,
+      103.68,
+      28897.64,
+      1028.16
+     ],
+     "core_strip_um": [
+      [
+       26075.52,
+       1091.8,
+       28961.28,
+       1330.56
+      ],
+      [
+       26075.52,
+       103.68,
+       26225.52,
+       1091.8
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_EN0",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_EN0_u_phy"
+     ],
+     "rect_um": [
+      23189.76,
+      24095.772,
+      26075.52,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       23253.4,
+       24159.412,
+       26011.88,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      23253.4,
+      24159.412,
+      26011.88,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       23189.76,
+       23414.4,
+       26075.52,
+       24095.772
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_EN1",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_EN1_u_phy"
+     ],
+     "rect_um": [
+      26075.52,
+      24095.772,
+      28961.28,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       26139.16,
+       24159.412,
+       28897.64,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.33 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      26139.16,
+      24159.412,
+      28897.64,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       26075.52,
+       23414.4,
+       28961.28,
+       24095.772
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WS2",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WS2_u_phy"
+     ],
+     "rect_um": [
+      103.68,
+      103.68,
+      2839.44,
+      1091.8
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       167.32,
+       103.68,
+       2775.8,
+       1028.16
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
+      "exclude_um": [
+       [
+        167.32,
+        103.68,
+        600.0,
+        600.0
+       ]
+      ]
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "esd_um": [
+      [
+       167.32,
+       103.68,
+       600.0,
+       600.0
+      ]
+     ],
+     "phy_macro_um": [
+      167.32,
+      103.68,
+      2775.8,
+      1028.16
+     ],
+     "core_strip_um": [
+      [
+       103.68,
+       1091.8,
+       2989.44,
+       1330.56
+      ],
+      [
+       2839.44,
+       103.68,
+       2989.44,
+       1091.8
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_WS3",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_WS3_u_phy"
+     ],
+     "rect_um": [
+      9777.372,
+      103.68,
+      10203.84,
+      2407.44
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       9841.012,
+       103.68,
+       10203.84,
+       2343.8
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid"
+    },
+    {
+     "name": "phy_lk_EN2",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_EN2_u_phy"
+     ],
+     "rect_um": [
+      20304.0,
+      23414.4,
+      22099.236,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       20367.64,
+       23478.04,
+       22035.596,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites"
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; S81.IR SPLIT (coordinator 10-25): PHY macro 1.94 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate; PHY_SHORT",
+     "phy_macro_um": [
+      20367.64,
+      23478.04,
+      22035.596,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       22099.236,
+       23414.4,
+       23189.76,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    },
+    {
+     "name": "phy_lk_EN3",
+     "nets": [
+      "VDDPHY",
+      "VSS"
+     ],
+     "io": [
+      "io_lk_EN3_u_phy"
+     ],
+     "rect_um": [
+      29111.28,
+      23653.16,
+      31847.04,
+      24641.28
+     ],
+     "grid": [
+      {
+       "layer": "M8",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      },
+      {
+       "layer": "M9",
+       "width_um": 1.92,
+       "pitch_um": 8.64,
+       "offset_um": 4.32,
+       "nets": [
+        "VDDPHY",
+        "VSS"
+       ]
+      }
+     ],
+     "bumps": {
+      "rect_um": [
+       29174.92,
+       23716.8,
+       31783.4,
+       24641.28
+      ],
+      "pitch_um": 45.0,
+      "use": "power_ground",
+      "note": "dedicated VDDPHY/VSS C4 rows over the SerDes macro (45-um array); no signal bumps inside except the window's own SerDes sites",
+      "exclude_um": [
+       [
+        31350.72,
+        24144.96,
+        31783.4,
+        24641.28
+       ]
+      ]
+     },
+     "note": "OWNER decision 7 (10-24): separate PHY supply + dedicated bump rows over the SerDes window; core VDD grid (partition strip, boundary flops, ft stations) unchanged around it; basis TRIAL-S81 10-24 IR 235/270 mV FAIL on the shared grid; die-corner window: bumps.exclude_um = the corner stress square (no C4 there), esd_um = same area: VDDPHY rail clamp + decap; S81.IR SPLIT (coordinator 10-25): PHY macro 2.41 mm2 on the die-edge side, domain = macro + 63.64-um guard inside the partition, core_strip_um on core VDD + core C4 (boundary flops / ft stations), core_edge_bumps relocate",
+     "esd_um": [
+      [
+       31350.72,
+       24144.96,
+       31783.4,
+       24641.28
+      ]
+     ],
+     "phy_macro_um": [
+      29174.92,
+      23716.8,
+      31783.4,
+      24641.28
+     ],
+     "core_strip_um": [
+      [
+       28961.28,
+       23414.4,
+       31847.04,
+       23653.16
+      ],
+      [
+       28961.28,
+       23653.16,
+       29111.28,
+       24641.28
+      ]
+     ],
+     "core_edge_bumps": "relocate",
+     "phy_area_target_mm2": 2.4
+    }
+   ]
+  },
+  "channels": [
+   {
+    "rect_um": [
+     28961.280000000002,
+     103.68,
+     31847.04,
+     1330.5600000000002
+    ],
+    "reason": "die-corner end of the SerDes PHY row: bump/ESD keep-out of the corner PHY (no logic routes here; both neighbours are PHY or seal ring)"
+   },
+   {
+    "rect_um": [
+     11646.720000000001,
+     23414.4,
+     13089.600000000002,
+     24641.280000000002
+    ],
+    "reason": "free cell of the retired bk_col (S81/H4: no consumer in v4.8); top edge between lk_WN3 and gunit, no lane routes here"
+   },
+   {
+    "rect_um": [
+     17418.24,
+     22187.520000000004,
+     18861.120000000003,
+     23414.4
+    ],
+    "reason": "free cell (S81/PORTFIX 10-25): s_5N_x06 was an empty slice station (no lane passes it), top edge; left free for die PG / decap"
+   },
+   {
+    "rect_um": [
+     0,
+     0,
+     31950.72,
+     103.68
+    ],
+    "reason": "seal ring"
+   },
+   {
+    "rect_um": [
+     0,
+     24641.28,
+     31950.72,
+     24744.96
+    ],
+    "reason": "seal ring"
+   },
+   {
+    "rect_um": [
+     0,
+     103.68,
+     103.68,
+     24641.28
+    ],
+    "reason": "seal ring"
+   },
+   {
+    "rect_um": [
+     31847.04,
+     103.68,
+     31950.72,
+     24641.28
+    ],
+    "reason": "seal ring"
+   }
+  ],
+  "io": [
+   {
+    "name": "io_lk_WS0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WS0",
+    "rect_um": [
+     5938.84,
+     103.68,
+     8697.32,
+     585.548
+    ],
+    "sites": 54,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+   },
+   {
+    "name": "io_lk_WS1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WS1",
+    "rect_um": [
+     3053.08,
+     103.68,
+     5811.56,
+     585.548
+    ],
+    "sites": 54,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+   },
+   {
+    "name": "io_lk_WN0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN0",
+    "rect_um": [
+     5938.84,
+     23930.356,
+     8547.32,
+     24641.28
+    ],
+    "sites": 68,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 711 um beside the strip (6 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2608 x 711 um = 1.85 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+   },
+   {
+    "name": "io_lk_WN1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN1",
+    "rect_um": [
+     3053.08,
+     23716.8,
+     5661.56,
+     24641.28
+    ],
+    "sites": 102,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 935 um beside the strip (4 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2"
+   },
+   {
+    "name": "io_lk_WN2_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN2",
+    "rect_um": [
+     167.32,
+     23716.8,
+     2775.8,
+     24641.28
+    ],
+    "sites": 93,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites; in-band host (no host link on this die), declared route: lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost; S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2",
+    "bump_exclude_um": [
+     [
+      167.32,
+      24144.96,
+      600.0,
+      24641.28
+     ]
+    ],
+    "host": "in_band",
+    "host_route": "lk_WN2 -> [coll__lk_WN2__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
+   },
+   {
+    "name": "io_lk_WN3_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WN3",
+    "rect_um": [
+     9728.692,
+     23478.04,
+     11583.08,
+     24641.28
+    ],
+    "sites": 84,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 1918 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); in-band host (no host link on this die), declared route: lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost; S81.IR split (10-25): window = PHY macro 1854 x 1163 um = 2.16 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)",
+    "host": "in_band",
+    "host_route": "lk_WN3 -> [coll__lk_WN3__s_0N_LP] -> s_0N_LP -> [ctrl__s_0N_LP__seqhost] -> seqhost"
+   },
+   {
+    "name": "io_lk_ES0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_ES0",
+    "rect_um": [
+     23189.76,
+     103.68,
+     26075.52,
+     1330.56
+    ],
+    "sites": 152,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY ZONE OFF-SHORE: free area [23403.4, 395.76, 26075.52, 1330.56] is 396 um from the die edge (the partition's ft / bus strip is on the die-edge side; orient fix owed) -> window = whole slot"
+   },
+   {
+    "name": "io_lk_ES1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_ES1",
+    "rect_um": [
+     26289.16,
+     103.68,
+     28897.64,
+     1028.16
+    ],
+    "sites": 102,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2"
+   },
+   {
+    "name": "io_lk_EN0_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_EN0",
+    "rect_um": [
+     23253.4,
+     24159.412,
+     26011.88,
+     24641.28
+    ],
+    "sites": 54,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (6 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+   },
+   {
+    "name": "io_lk_EN1_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_EN1",
+    "rect_um": [
+     26139.16,
+     24159.412,
+     28897.64,
+     24641.28
+    ],
+    "sites": 54,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2886 x 482 um beside the strip (4 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 2758 x 482 um = 1.33 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+   },
+   {
+    "name": "io_lk_WS2_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WS2",
+    "rect_um": [
+     167.32,
+     103.68,
+     2775.8,
+     1028.16
+    ],
+    "sites": 93,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 127 sites; S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2",
+    "bump_exclude_um": [
+     [
+      167.32,
+      103.68,
+      600.0,
+      600.0
+     ]
+    ]
+   },
+   {
+    "name": "io_lk_WS3_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_WS3",
+    "rect_um": [
+     9841.012,
+     103.68,
+     10203.84,
+     2343.8
+    ],
+    "sites": 28,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 363 x 2240 um beside the strip (14 blocked strip / ft rects, 63.64-um guard)"
+   },
+   {
+    "name": "io_lk_EN2_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_EN2",
+    "rect_um": [
+     20367.64,
+     23478.04,
+     22035.596,
+     24641.28
+    ],
+    "sites": 77,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 1732 x 1227 um beside the strip (14 blocked strip / ft rects, 63.64-um guard); S81.IR split (10-25): window = PHY macro 1668 x 1163 um = 1.94 mm2 PHY_SHORT (< 2.4 mm2: re-lay the type's ft / bus windows)"
+   },
+   {
+    "name": "io_lk_EN3_u_phy",
+    "kind": "phy_macro",
+    "iface": "serdes",
+    "part": "lk_EN3",
+    "rect_um": [
+     29174.92,
+     23716.8,
+     31783.4,
+     24641.28
+    ],
+    "sites": 96,
+    "pitch_um": 150.0,
+    "signals": 26,
+    "basis": "112G PAM4 SerDes: 4 per lane (TX/RX pairs) + 2 refclk; lanes from _xN, ot_pdie_serdes 6 (614 Gb/s); C4 150 um; shoreline 104 um",
+    "note": "die_io.py plan: u_phy; PHY zone 2672 x 1227 um beside the strip (2 blocked strip / ft rects, 63.64-um guard); die-corner window: no bumps in the 600-um corner stress square (bump_exclude_um), 136 -> 130 sites; S81.IR split (10-25): window = PHY macro 2608 x 924 um = 2.41 mm2",
+    "bump_exclude_um": [
+     [
+      31350.72,
+      24144.96,
+      31783.4,
+      24641.28
+     ]
+    ]
+   },
+   {
+    "name": "io_phy_hbm_u_phy_hbm",
+    "kind": "phy_macro",
+    "iface": "hbm_phy",
+    "part": "phy_hbm",
+    "rect_um": [
+     11646.72,
+     103.68,
+     20304.0,
+     1330.56
+    ],
+    "sites": 3454,
+    "pitch_um": 55.0,
+    "signals": 1900,
+    "basis": "HBM3/3E stack ~1,900 signals (16 ch x ~117 + globals; ASSUMED class value), 55-um micro-bumps; shoreline 104 um",
+    "note": "die_io.py plan: u_phy_hbm"
+   }
+  ]
+ },
+ "clock": {
+  "source": {
+   "part": "@die",
+   "bus": "clk"
+  },
+  "insertion_ps": 250,
+  "common_latency_ps": 250,
+  "insertion_tol_ps": 40,
+  "ft_hop_in_share": 0.16,
+  "neighbour_skew_ps": 80,
+  "face_xing": "budgeted",
+  "spine": {
+   "layers": [
+    "M8",
+    "M9"
+   ],
+   "root_um": [
+    15975.36,
+    12372.48
+   ],
+   "topology": "htree"
+  }
+ },
+ "partition_types": {
+  "h2_coll_w": {
+   "module": "dsfd_coll_lane_w_safe8_ntf",
+   "outline_um": [
+    295.92,
+    444.96
+   ],
+   "contents": [
+    {
+     "inst": "u_ln",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "status": "rework"
+    }
+   ],
+   "hard_cores": [
+    {
+     "inst": "u_ln",
+     "module": "dsfd_coll_lane_w_safe8_ntf",
+     "origin_um": [
+      0,
+      0
+     ],
+     "outline_um": [
+      295.92,
+      444.96
+     ],
+     "orient": "R0",
+     "track_offset_um": [
+      0.108,
+      0.012
+     ],
+     "pins_file": "h2_2249/coll_w/plan_pins.json",
+     "lef": "physical/die_plan/s81/h2_2249/coll_w/lane.lef",
+     "obs_max": "M5"
+    }
+   ]
+  }
+ },
+ "partitions": []
+}
