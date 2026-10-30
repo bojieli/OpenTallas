@@ -19,7 +19,8 @@ bus['width']=265
 entries=[e for e in t['internal_stations']if e['conn']=='bus:unit_i0'];assert len(entries)==1 and entries[0]['regs_um']==[[1440.08,328.32]]
 station={'partition_types':{'gunit__t1':{'outline_um':t['outline_um'],'buses':[bus],'internal_stations':entries}}}
 (R/'station_plan_native265.json').write_text(json.dumps(station,indent=2))
-f=K/Path(a.bound_wrapper).name;f.write_text(text);(R/'original.sv').write_text(text)
+module=re.search(r'^\s*module\s+(\w+)',text,re.M).group(1)
+f=K/(module+'.sv');f.write_text(text);(R/'original.sv').write_text(text)
 (K/'kit_rtl.json').write_text(json.dumps({'bound_module':f.stem,'files':[str(f)]}))
 subprocess.run([sys.executable,str(Path(a.tools)/'kit_istations.py'),str(R/'station_plan_native265.json'),'gunit__t1',str(K),'--apply'],check=True)
 c=f.read_text();assert len(re.findall(r'ot_dp_st #\(\.W\(265\)\) u_ist_unit_i0_0 ',c))==1

@@ -16,3 +16,5 @@ iverilog -g2012 -s tb -o /tmp/cw.vvp ot_dp_st_native.sv cw_native_cuts.sv tb_cw.
 vvp /tmp/cw.vvp
 
 Physical CW per-bit sites, timed reset/clock admission, current parent cell cap, complete programme/calendar exposure and full source/event coherence remain required. No old BoundDie EQ, parent view, SIGNED count or G5 credit is claimed. A generic composer that ignores this CW lane cannot establish zero cost; DS token worker owns the exact admission/programme price.
+
+Preparation correction retained: first recipe inferred the module name from the snapshot filename original.sv, yielding a wrong manifest module name even though generated RTL text was correct. prepare.py now parses the actual module declaration and writes the matching filename/manifest. Final published gunit_candidate.sv matches receipt candidate SHA; its extracted native cut is byte-identical to the exercised miter cut.

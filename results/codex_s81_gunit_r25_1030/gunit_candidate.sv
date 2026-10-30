@@ -9,7 +9,7 @@ module s81p_gunit__t1 #(
     input  wire clk,
     input  wire arst_n,
     input  wire [1:0] flt_i0,   // 1 data + epoch [1]: lane flt__bk_sel__gunit, 5 cycles: bk_sel fault[1] -> gunit
-    input  wire [265:0] unit_i0,   // 265 data + epoch [265]: lane unit__seqhost__gunit, 72 cycles: seqhost cw_a[8], cw_d[256], cw_v[1] -> gunit
+    input  wire [265:0] unit_i0,   // 265 data + epoch [265]: lane unit__seqhost__gunit, 73 cycles: seqhost cw_a[8], cw_d[256], cw_v[1] -> gunit
     input  wire [276:0] xtier_i0,   // 276 data + epoch [276]: lane xtier__s_3S_C__gunit, 78 cycles: s_3S_C vo[276] -> gunit
     input  wire [276:0] xtier_i1,   // 276 data + epoch [276]: lane xtier__s_3N_C__gunit, 24 cycles: s_3N_C vo[276] -> gunit
     output wire [1:0] flt_o0,   // 1 data + epoch [1]: lane flt__gunit__s_3N_C, 24 cycles: fo[1] -> s_3N_C
