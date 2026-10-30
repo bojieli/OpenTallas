@@ -127,7 +127,10 @@ def reuse_blocks(blocks, current, baseline, records, *, die, event, receipts=Non
     the original key and record, so status, attempts and stage counts survive.
     Unsealed legacy records are held rather than silently rebuilt.
     """
-    effective=dict(blocks);holds={};receipts=receipts or {}
+    effective=dict(blocks);holds={}
+    if receipts is not None and not isinstance(receipts,dict):
+        return effective,{item:'identity_reuse_receipts must be an object' for item in current}
+    receipts=receipts or {}
     for item,new in current.items():
         old=(baseline or {}).get(item)
         candidates=[r for r in records.values() if r.get('die')==die and r.get('item')==item]

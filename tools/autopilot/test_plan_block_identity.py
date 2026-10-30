@@ -99,6 +99,13 @@ class Identity(unittest.TestCase):
                 self.assertEqual(len(ap.units),expected)
                 if mode==B.PINS:self.assertEqual(next(iter(result['items'].values())),rec)
 
+    def test_malformed_receipt_config_holds_instead_of_crashing_tick(self):
+        current=self.ids();blocks={'x':current['x']['block_sha']}
+        for bad in (['receipt'],'receipt',1):
+            effective,holds=B.reuse_blocks(blocks,current,self.ids(self.old,self.oldpath),
+                                          self.state['items'],die='d',event='event',receipts=bad)
+            self.assertEqual(effective,blocks);self.assertIn('must be an object',holds['x'])
+
     def test_pin_free_type_keeps_legacy_hash(self):
         p={'partition_types':{'z':{'width':12}}}
         self.assertEqual(B.identities(p,self.newpath)['z']['block_sha'],self.ids(p)['z']['block_sha'])
