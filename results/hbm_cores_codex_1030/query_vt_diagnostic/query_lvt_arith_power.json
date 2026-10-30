@@ -1,0 +1,27 @@
+{
+ "RVT": {
+  "cells": 6519,
+  "power_W": {
+   "internal": 0.002880047592145973,
+   "switching": 0.002424242520426508,
+   "leakage": 4.762307000000245e-07,
+   "total": 0.005304896020499981
+  }
+ },
+ "LVT": {
+  "cells": 6519,
+  "power_W": {
+   "internal": 0.003139346658709015,
+   "switching": 0.0020476640431000494,
+   "leakage": 4.622385000000307e-06,
+   "total": 0.005191492793000024
+  }
+ },
+ "delta_W": {
+  "internal": 0.00025929906656304213,
+  "switching": -0.00037657847732645855,
+  "leakage": 4.146154300000283e-06,
+  "total": -0.00011340322749995701
+ },
+ "scope": "OpenSTA default activity, same placement RC; not workload/post-RCX power"
+}
