@@ -45,6 +45,8 @@ def build(records, at, preparation, scratch_base, scratch_bytes, IR, RC):
     source_rows=IR.expand(source,rx)
     next_hbm=scratch_base
     out=[]
+    fence=RC.Rec('DMA','FENCE',wait=1<<RC.UNITS.index('DMA'))
+    fence_hex=IR.encode(fence,None).hex()
     for p in preparation['phases']:
         group=[]
         for pub in p['publication']:
@@ -84,10 +86,14 @@ def build(records, at, preparation, scratch_base, scratch_bytes, IR, RC):
                               words=n*words,producer_hex=IR.encode(q,qx).hex(),store_hex=IR.encode(store,sx).hex(),
                               reload_hex=IR.encode(load,lx).hex(),reload_vm_base=pub['reload_vm_base']))
             next_hbm+=n*words*4
+        raw=bytes.fromhex(p['native_record_hex']);consumer,cx,end=IR.decode_one(raw,0)
+        if end!=len(raw):raise ValueError('trailing consumer bytes')
+        consumer.wait |= 1<<RC.UNITS.index('DMA')
         out.append(dict(start_row=p['start_row'],rows=p['rows'],publication=group,
-                        consumer_hex=p['native_record_hex']))
+                        reload_fence_hex=fence_hex,consumer_hex=IR.encode(consumer,cx).hex()))
     return dict(schema='opentallas.hbm.vm_native_publication.v1',status='FRAGMENTS_READY_COMPOSITION_REQUIRED',
                 executable=False,full_programme_fits=None,scratch_ownership_confirmed=False,
+                publication_fence_hex=fence_hex,
                 scratch_range=[scratch_base,next_hbm],transferred_bytes=2*(next_hbm-scratch_base),
                 dma_records=2*sum(len(p['publication']) for p in out),phases=out,
                 ordering='all producer/store fragments, DMA fence, then per phase: both reloads, DMA fence, consumer, drain',

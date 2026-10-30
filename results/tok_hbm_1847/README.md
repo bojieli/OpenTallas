@@ -97,3 +97,8 @@ semantic composition. The concrete next compiler task is to resolve those
 runtime-selected row/table footprints before deciding which outside values stay
 in the45784-word reserve versus explicit HBM publication. No whole-fit claim is
 made from a static-only census.
+
+Publication and reload epochs also carry actual native DMA.FENCE encodings, and
+the consumer fragment's wait mask explicitly includes DMA before SU execution.
+The12 DMA count is data transfer records; the packet adds one publication fence
+and three phase reload fences. Whole-programme actual drain dates are unmeasured.
