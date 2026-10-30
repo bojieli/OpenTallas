@@ -861,3 +861,55 @@ def test_origin_copy_spec_refuses_ambiguous_declarations():
     for copies in ([], "copy", ["copy", "copy"], ["origin"], [""], [1]):
         with pytest.raises(ValueError):
             face_guard.origin_spec({"form": "origin_start", "origin": "origin", "copies": copies})
+
+
+def _registered_onehot_vehicle(mutant=None):
+    body = [f"DFFHQNx1{_X} reset_ff (.CLK(fclk), .D(rst_n), .QN(nrq));",
+            f"INVx1{_X} reset_inv (.A(nrq), .Y(rq));"]
+    for k in range(4):
+        ck = "rst_n" if mutant == "clock" and k == 1 else "fclk"
+        body += [f"DFFHQNx1{_X} wr{k} (.CLK({ck}), .D(wd{k}), .QN(nw{k}));",
+                 f"INVx1{_X} wi{k} (.A(nw{k}), .Y(w{k}));"]
+        prev = 0 if mutant == "rotation" and k == 2 else (k - 1) % 4
+        body.append(f"AND2x2{_X} wd_gate{k} (.A(rq), .B(w{prev}), .Y(normal{k}));")
+        if k == 0 or mutant == "two_reset_bits" and k == 1:
+            body.append(f"OR2x2{_X} wd_or{k} (.A(normal{k}), .B(nrq), .Y(wd{k}));")
+        else:
+            body.append(f"BUFx2{_X} wd_buf{k} (.A(normal{k}), .Y(wd{k}));")
+    if mutant == "no_reset":
+        body = [line.replace(".B(nrq)", ".B(1'b0)") for line in body]
+    body += _mux_slots4()
+    module = "unrelated_controller" if mutant == "type" else "ot_pl_land_local_kw"
+    text = (f"module {module}(fclk, rst_n, d); input fclk; input rst_n; input d;\n" +
+            "\n".join(body) + "\nendmodule\n" +
+            f"module top(fclk, rst_n, d); input fclk; input rst_n; input d;\n"
+            f"{module} local (.fclk(fclk), .rst_n(rst_n), .d(d)); endmodule\n")
+    if mutant == "reset_input":
+        text = text.replace("rst_n", "enable")
+    return text
+
+
+def test_registered_onehot_requires_mapped_reset_and_full_rotation_proof():
+    r = face_guard.guard(_registered_onehot_vehicle(), "top", clocks=["fclk"], land=MUX4)
+    assert r["verdict"] == "PASS", r["fails"]
+    assert r["registered_onehot"]["local"]["cycle"] == 4
+    assert r["registered_onehot"]["local"]["reset_asserted_edges_required"] == 2
+
+
+@pytest.mark.parametrize("mutant", ["two_reset_bits", "no_reset", "rotation", "clock", "type", "reset_input"])
+def test_registered_onehot_mutants_fail_closed(mutant):
+    r = face_guard.guard(_registered_onehot_vehicle(mutant), "top", clocks=["fclk"], land=MUX4)
+    assert r["verdict"] == "FAIL", (mutant, r)
+    assert not r.get("registered_onehot"), (mutant, r)
+
+
+def test_registered_onehot_needs_declared_reset_role_not_only_reset_name():
+    text = _registered_onehot_vehicle()
+    r = face_guard.guard(text, "top", skip_re=r"^fclk$", land=MUX4)
+    assert r["verdict"] == "FAIL" and not r.get("registered_onehot")
+
+
+def test_registered_onehot_rejects_unmodeled_sequential_polarity_or_edge():
+    text = _registered_onehot_vehicle().replace("DFFHQNx1" + _X + " wr1", "DFFLQNx1" + _X + " wr1")
+    r = face_guard.guard(text, "top", clocks=["fclk"], land=MUX4)
+    assert r["verdict"] == "FAIL" and not r.get("registered_onehot")

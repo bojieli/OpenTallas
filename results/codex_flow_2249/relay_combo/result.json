@@ -1,0 +1,29 @@
+{
+ "base": {
+  "verdict": "PASS",
+  "fails": {}
+ },
+ "wrong_reset": {
+  "verdict": "FAIL",
+  "fails": {
+   "land_slot": 1
+  }
+ },
+ "extra_cycle": {
+  "verdict": "FAIL",
+  "fails": {
+   "land_slot": 1,
+   "shared": 1
+  }
+ },
+ "wrong_type": {
+  "verdict": "FAIL",
+  "fails": {
+   "land_slot": 1
+  }
+ },
+ "unit": "oth-ubuntu-3219381-1793341473",
+ "host_dir": "intel2:/srv/opentallas-scratch2/claude/codex-flow-2249/relay_combo",
+ "source": "6d03597b8",
+ "scope": "Actual common ot_dp_landing_relay RTL, Yosys mapped tiny origin plus two private face copies. No P&R or timing claim."
+}
