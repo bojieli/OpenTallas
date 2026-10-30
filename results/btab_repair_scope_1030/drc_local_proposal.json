@@ -1,0 +1,59 @@
+{
+  "net": "net3486",
+  "driver": "place3488/Y",
+  "driver_center_um": [
+    131.706,
+    91.935
+  ],
+  "sink": "_5137_/A",
+  "sink_center_um": [
+    270.675,
+    90.855
+  ],
+  "drc": [
+    {
+      "layer": "M4",
+      "bbox": [
+        159.912,
+        98.64,
+        161.027,
+        98.664
+      ],
+      "classes": [
+        "Short OBS/OBS/net",
+        "Short SRAM/net"
+      ]
+    },
+    {
+      "layer": "V4",
+      "bbox": [
+        160.992,
+        98.64,
+        161.016,
+        98.664
+      ],
+      "classes": [
+        "CutShort OBS/OBS/net"
+      ]
+    }
+  ],
+  "macro_bbox_um": [
+    159.84,
+    90.72,
+    254.664,
+    131.784
+  ],
+  "proposed_corridor": {
+    "layer": "M5",
+    "west_via_anchor_um": [
+      158.424,
+      91.944
+    ],
+    "east_via_anchor_um": [
+      256.104,
+      91.944
+    ],
+    "rule": "V4 anchors outside macro body; M5-overmacro permitted by original ceiling; actual PG/access/spacing must pass normal router"
+  },
+  "status": "GEOMETRIC PROPOSAL ONLY; no wire deleted/rerouted, no DRC waiver"
+}

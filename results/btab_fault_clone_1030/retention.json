@@ -1,0 +1,46 @@
+{
+  "status": "GENERIC_SYNTH_RETENTION_ONLY; exact native mapped LEC/FACE+clock qualification still owed",
+  "added_flops": 1,
+  "added_clock_loads": 1,
+  "production_cycles": 0,
+  "rows": [
+    {
+      "instance": "g_fault_clone.u_output",
+      "type": "$paramod\\qfd_dv_s8x_btab_fault_ff\\ID=s32'00000000000000000000000000000001",
+      "ports": {
+        "ck": [
+          2
+        ],
+        "d": [
+          2253
+        ],
+        "q": [
+          1319
+        ],
+        "rst_n": [
+          4254
+        ]
+      },
+      "flops": 1
+    },
+    {
+      "instance": "g_fault_clone.u_state",
+      "type": "$paramod\\qfd_dv_s8x_btab_fault_ff\\ID=s32'00000000000000000000000000000000",
+      "ports": {
+        "ck": [
+          2
+        ],
+        "d": [
+          2253
+        ],
+        "q": [
+          2251
+        ],
+        "rst_n": [
+          4254
+        ]
+      },
+      "flops": 1
+    }
+  ]
+}
