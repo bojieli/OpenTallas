@@ -1609,6 +1609,13 @@ def main():
         # F4 follows regional balancing/repair as it does the scalar tap path.
         with (kd / "regional_taps_balance.tcl").open("a") as hook:
             hook.write("\nsource /work/leaf_affinity.tcl\nestimate_parasitics -placement\n")
+    if rt and rt.get("firm_spine"):
+        # S81-CORES-KITS-5/6 V2 (recipe regional_taps.firm_spine): after CTS legalization the planned trunk / H-tree /
+        # regional tap cells (ot_rt_*) are the core's fixed in-core clock islands (METHODOLOGY 12.8b): FIRM, so no
+        # later step (GRT repair, DPL) moves them.  Same text the rt22 kits (attn/ve_m/vs/vn_a) were built with.
+        with (kd / "regional_taps_balance.tcl").open("a") as hook:
+            hook.write("\nset ot_rt_firm 0\nforeach i [[ord::get_db_block] getInsts] { if {[string match ot_rt_* "
+                       "[$i getName]]} { $i setPlacementStatus FIRM; incr ot_rt_firm } }\nputs \"OT_RT_FIRM $ot_rt_firm\"\n")
     # MASTER PLAN 12.7c (opt-in --master-slice DIR): slice -> master_slice.json/.tcl, sourced at PRE_GLOBAL_PLACE
     # (face_flops.tcl: after io placement, before GPL); refused without a slice once required unless --trial
     ms = MS.kit_apply(kd, mod, [w, h], a.master_slice, plan, a.trial, kind="core",
