@@ -1535,6 +1535,12 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
                               pins=list(pp_recs.values())), indent=1) + "\n"
     if not source_profile:
         (kd / "plan_pins.json").write_text(pp_body)
+    # FLOW-KITFAIL-1 10-29: carry the HBM die's PROVEN reset contract into the kit for contract-listed tops (before
+    # kit_hash), so kit LEC uses the proven reset window; unstaged kits silently ran at the 4-edge default (hnx _c24r12
+    # NOT EQUIVALENT 34 -> _c24r13 EQUIVALENT under the 64-edge contract).  Unlisted tops: kit unchanged.
+    sys.path.insert(0, str(TOOL))
+    import kit_reset_contract
+    reset_contract = kit_reset_contract.stage(kd, design, kit_reset_contract.DIE_CONTRACT["hbm"])
     fz = dict(schema="opentallas.hbm_arch.core_freeze.v1", view=a.view, module=module, design=design, rtl_top=top,
               recipe_key=rk, recipe_sha256=hashlib.sha256(json.dumps(rec, sort_keys=True).encode()).hexdigest(),
               canonical_type=v.get("canonical_type"), wrapper=wrap_rep, outline_um=[w, h],
@@ -1572,6 +1578,8 @@ def main(recipe_overrides=None, source_overrides=None, source_profile=None):
         fz["clock_taps"] = dict(mode=a.clock_taps, sinks=a.clock_tap_sinks, dmax_um=a.clock_tap_dmax)
     if ms is not None:
         fz["master_plan"] = ms
+    if reset_contract is not None:
+        fz["reset_contract"] = reset_contract
     (kd / "freeze.json").write_text(json.dumps(fz, indent=1) + "\n")
     stamp_generation_inputs(kd)
     print(json.dumps(dict(kit=str(kd), pins=len(pins), clocks=clks, resets=len(rsts), design=design, top=top,

@@ -1,0 +1,11 @@
+nl nl_v2_slice.json cal 38.2 ins_med 355.3 mean -286.3 p50 -289.4 p05 -315.1 min -321.6 fails 5476 {'->macro': -182.0, 'macro->': 60.0, 'port->*': 175.5, 'reg->async': -28.4, 'reg->outport': -289.4, 'reg->reg': -153.7} unpr 18.4
+nl nl_std_T22.json cal 38.2 ins_med 467.7 mean -156.4 p50 -168.9 p05 -194.2 min -204.4 fails 3324 {'->macro': -93.1, 'macro->': -51.2, 'port->*': 39.4, 'reg->async': -33.3, 'reg->outport': -167.2, 'reg->reg': -135.0} unpr -153.8
+nl nl_std_T24_l12.json cal 38.2 ins_med 491.8 mean -125.0 p50 -143.0 p05 -175.1 min -262.4 fails 3001 {'->macro': -61.4, 'macro->': -26.3, 'port->*': -4.1, 'reg->async': -43.1, 'reg->outport': -133.9, 'reg->reg': -134.0} unpr -83.7
+nl nl_std_T24_l21.json cal 38.2 ins_med 499.0 mean -119.3 p50 -134.1 p05 -157.2 min -169.2 fails 2782 {'->macro': -63.4, 'macro->': -27.3, 'port->*': 46.2, 'reg->async': -16.2, 'reg->outport': -131.9, 'reg->reg': -112.9} unpr -81.4
+nl nl_std_T26_l21.json cal 38.2 ins_med 536.3 mean -92.1 p50 -112.5 p05 -139.5 min -160.0 fails 2546 {'->macro': -18.3, 'macro->': -20.2, 'port->*': -32.3, 'reg->async': -15.8, 'reg->outport': -90.0, 'reg->reg': -110.8} unpr -88.5
+nk nk_v2_slice.json cal 68.8 ins_med 343.5 mean -249.0 p50 -277.8 p05 -323.9 min -365.9 fails 7070 {'->macro': -267.7, 'macro->': 80.3, 'port->*': -248.3, 'reg->async': -38.9, 'reg->outport': 111.8, 'reg->reg': -205.5} unpr -39.9
+nk nk_std_T19.json cal 68.8 ins_med 475.5 mean -373.4 p50 -384.2 p05 -457.4 min -498.4 fails 5133 {'->macro': -161.7, 'macro->': -15.7, 'port->*': -384.2, 'reg->async': -36.3, 'reg->outport': 213.7, 'reg->reg': -182.0} unpr -145.8
+nk nk_std_T20.json cal 68.8 ins_med 464.9 mean -383.6 p50 -394.3 p05 -456.4 min -522.2 fails 5633 {'->macro': -207.4, 'macro->': -28.5, 'port->*': -394.3, 'reg->async': -32.9, 'reg->outport': 230.1, 'reg->reg': -204.1} unpr -151.8
+
+nk nk_std_T19_l21.json cal 68.8 ins_med 410.5 p50 -351.1 p05 -400.0 fails 5322 {'->macro': -134.0, 'macro->': -53.9, 'port->*': -351.1, 'reg->async': -72.1, 'reg->outport': 170.8, 'reg->reg': -198.3}
+nk nk_std_T21_l21.json cal 68.8 ins_med 449.2 p50 -380.0 p05 -434.1 fails 5053 {'->macro': -162.7, 'macro->': -64.5, 'port->*': -380.0, 'reg->async': -59.2, 'reg->outport': 212.5, 'reg->reg': -167.3}

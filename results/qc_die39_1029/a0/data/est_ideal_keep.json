@@ -1,0 +1,412 @@
+{
+ "model": {
+  "macro_reach": true,
+  "kmode": "ci",
+  "leafmode": "keep",
+  "mu_ff": 25.02,
+  "sigma_ff": 4.2,
+  "emin": -5,
+  "kmin": 3,
+  "legcap_um": 60.0,
+  "ntrial": 200,
+  "basis": "stage_std.json ff STD_fo2_leg40-60 (CHECKED measured)"
+ },
+ "nl": {
+  "E_extra_stages": -3,
+  "macro_tap_j": 0,
+  "reg_stage_count_v2": 21,
+  "reg_stage_count_new": 18,
+  "reg_insertion_mean_model": {
+   "median": 451.3,
+   "min": 445.4,
+   "max": 580.9
+  },
+  "macro_leg_um": {
+   "g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf": 89.2,
+   "g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf": 33.2,
+   "g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf": 15.8,
+   "g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf": 67.0,
+   "g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf": 68.0,
+   "g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf": 83.9,
+   "g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf": 68.9,
+   "g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf": 52.5,
+   "g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf": 47.9,
+   "g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf": 19.5,
+   "u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf": 81.4,
+   "u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf": 58.7,
+   "u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf": 46.7,
+   "u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf": 91.9,
+   "u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf": 85.9,
+   "u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf": 115.3,
+   "u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf": 99.3,
+   "u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf": 67.8
+  },
+  "macro_k": {
+   "romleaf": [
+    8
+   ],
+   "lsl_rawfault_m3": [
+    9
+   ]
+  },
+  "ws_v2": -281.18,
+  "n_paths": 21552,
+  "ws_pred_p50": -163.7,
+  "ws_pred_p05": -188.6,
+  "ws_pred_min": -202.2,
+  "fail_paths_p50": 3035,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -127.6,
+    "worst_p05": -165.3,
+    "fails_p50": 885,
+    "n_paths": 21552
+   },
+   "macro->": {
+    "worst_p50": -19.7,
+    "worst_p05": -48.8,
+    "fails_p50": 35,
+    "n_paths": 21552
+   },
+   "port->*": {
+    "worst_p50": 74.2,
+    "worst_p05": 45.9,
+    "fails_p50": 0,
+    "n_paths": 21552
+   },
+   "reg->async": {
+    "worst_p50": 1.3,
+    "worst_p05": -12.8,
+    "fails_p50": 0,
+    "n_paths": 21552
+   },
+   "reg->outport": {
+    "worst_p50": -154.1,
+    "worst_p05": -181.8,
+    "fails_p50": 516,
+    "n_paths": 21552
+   },
+   "reg->reg": {
+    "worst_p50": -153.7,
+    "worst_p05": -184.5,
+    "fails_p50": 1550,
+    "n_paths": 21552
+   }
+  },
+  "n_outlier_leaf_regs": 1409,
+  "worst_mean_model": [
+   [
+    -152.9,
+    "reg->reg"
+   ],
+   [
+    -144.4,
+    "reg->reg"
+   ],
+   [
+    -143.9,
+    "reg->reg"
+   ]
+  ],
+  "unprobed_bound_ps": -19.0,
+  "grid_mean_model": [
+   [
+    -5,
+    0,
+    -201.38,
+    -201.38
+   ],
+   [
+    -4,
+    0,
+    -168.04,
+    -168.04
+   ],
+   [
+    -3,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    -2,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    -1,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    0,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    1,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    2,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    3,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    4,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    5,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    6,
+    0,
+    -152.95,
+    -152.95
+   ],
+   [
+    7,
+    0,
+    -170.14,
+    -152.95
+   ],
+   [
+    8,
+    0,
+    -195.16,
+    -152.95
+   ],
+   [
+    9,
+    0,
+    -220.18,
+    -152.95
+   ],
+   [
+    10,
+    0,
+    -245.2,
+    -152.95
+   ]
+  ]
+ },
+ "nk": {
+  "E_extra_stages": -5,
+  "macro_tap_j": 0,
+  "reg_stage_count_v2": 21,
+  "reg_stage_count_new": 16,
+  "reg_insertion_mean_model": {
+   "median": 400.5,
+   "min": 394.6,
+   "max": 480.5
+  },
+  "macro_leg_um": {
+   "g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf": 49.0,
+   "g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf": 107.9,
+   "g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf": 64.4,
+   "g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf": 86.1,
+   "g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf": 108.2,
+   "g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf": 85.6,
+   "g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf": 73.7,
+   "g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf": 20.2,
+   "g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf": 51.5,
+   "g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf": 21.2,
+   "u_me.g_hier.g_sl[6].g_hd.u_lh.u_native_rawleaf": 170.8,
+   "u_me.g_hier.g_sl[3].g_hd.u_lh.u_native_rawleaf": 37.6,
+   "u_me.g_hier.g_sl[0].g_hd.u_lh.u_native_rawleaf": 45.7,
+   "u_me.g_hier.g_sl[7].g_hd.u_lh.u_native_rawleaf": 168.0,
+   "u_me.g_hier.g_sl[4].g_hd.u_lh.u_native_rawleaf": 127.8,
+   "g_ndh.u_node": 105.4,
+   "u_me.g_hier.g_sl[5].g_hd.u_lh.u_native_rawleaf": 150.3,
+   "u_me.g_hier.g_sl[2].g_hd.u_lh.u_native_rawleaf": 111.0,
+   "u_me.g_hier.g_sl[1].g_hd.u_lh.u_native_rawleaf": 88.1
+  },
+  "macro_k": {
+   "romleaf": [
+    6
+   ],
+   "lsl_rawfault_m3": [
+    7
+   ],
+   "node": [
+    7
+   ]
+  },
+  "ws_v2": -289.88,
+  "n_paths": 23362,
+  "ws_pred_p50": -318.6,
+  "ws_pred_p05": -337.5,
+  "ws_pred_min": -356.3,
+  "fail_paths_p50": 4964,
+  "by_class": {
+   "->macro": {
+    "worst_p50": -291.7,
+    "worst_p05": -325.2,
+    "fails_p50": 2017,
+    "n_paths": 23362
+   },
+   "macro->": {
+    "worst_p50": -11.6,
+    "worst_p05": -43.7,
+    "fails_p50": 12,
+    "n_paths": 23362
+   },
+   "port->*": {
+    "worst_p50": -317.3,
+    "worst_p05": -337.5,
+    "fails_p50": 1556,
+    "n_paths": 23362
+   },
+   "reg->async": {
+    "worst_p50": -8.4,
+    "worst_p05": -20.9,
+    "fails_p50": 4,
+    "n_paths": 23362
+   },
+   "reg->outport": {
+    "worst_p50": 193.7,
+    "worst_p05": 165.9,
+    "fails_p50": 0,
+    "n_paths": 23362
+   },
+   "reg->reg": {
+    "worst_p50": -86.2,
+    "worst_p05": -118.8,
+    "fails_p50": 1315,
+    "n_paths": 23362
+   }
+  },
+  "n_outlier_leaf_regs": 1397,
+  "worst_mean_model": [
+   [
+    -304.3,
+    "port->*"
+   ],
+   [
+    -303.2,
+    "port->*"
+   ],
+   [
+    -300.6,
+    "port->*"
+   ]
+  ],
+  "unprobed_bound_ps": -105.4,
+  "grid_mean_model": [
+   [
+    -5,
+    0,
+    -304.34,
+    -279.77
+   ],
+   [
+    -4,
+    0,
+    -329.36,
+    -240.52
+   ],
+   [
+    -3,
+    0,
+    -354.38,
+    -201.27
+   ],
+   [
+    -2,
+    0,
+    -379.4,
+    -162.02
+   ],
+   [
+    -1,
+    0,
+    -404.42,
+    -122.79
+   ],
+   [
+    0,
+    0,
+    -429.44,
+    -83.71
+   ],
+   [
+    1,
+    0,
+    -454.46,
+    -55.56
+   ],
+   [
+    2,
+    0,
+    -479.48,
+    -55.56
+   ],
+   [
+    3,
+    0,
+    -504.5,
+    -55.56
+   ],
+   [
+    4,
+    0,
+    -529.52,
+    -55.56
+   ],
+   [
+    5,
+    0,
+    -554.54,
+    -55.56
+   ],
+   [
+    6,
+    0,
+    -579.56,
+    -55.56
+   ],
+   [
+    7,
+    0,
+    -604.58,
+    -55.56
+   ],
+   [
+    8,
+    0,
+    -629.6,
+    -55.56
+   ],
+   [
+    9,
+    0,
+    -654.62,
+    -55.56
+   ],
+   [
+    10,
+    0,
+    -679.64,
+    -55.56
+   ]
+  ]
+ }
+}
