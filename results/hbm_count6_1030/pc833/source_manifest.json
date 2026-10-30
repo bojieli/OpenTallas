@@ -1,0 +1,454 @@
+{
+ "status": "ENABLED_833_PROFILE_NATIVE_SOURCE_PREP_NO_PNR_NO_LEC",
+ "manifest": "/srv/opentallas-scratch2/claude/die-hbm-31/b31t/asbuilt.json",
+ "native_defines": [
+  "OT_SMH_FC_HIER",
+  "OT_SMH_HIER",
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SM_QSPLIT"
+ ],
+ "selected": [
+  {
+   "instance": "ctl_NW_p00_833",
+   "module": "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b",
+   "actual_plan": [
+    "NW_hub",
+    "u_ctl_Q_p00"
+   ],
+   "params": {
+    "KREG": 1,
+    "KRREG": 1,
+    "OREG": 1,
+    "QREG": 1,
+    "RREG": 1,
+    "WPAY": 1,
+    "TIMING_833": 1,
+    "RMUT": 0
+   },
+   "actual_parameter_bits": {
+    "KREG": "00000000000000000000000000000001",
+    "KRREG": "00000000000000000000000000000001",
+    "OREG": "00000000000000000000000000000001",
+    "QREG": "00000000000000000000000000000001",
+    "RREG": "00000000000000000000000000000001",
+    "WPAY": "00000000000000000000000000000001",
+    "TIMING_833": "00000000000000000000000000000001",
+    "RMUT": "00000000000000000000000000000000"
+   },
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "width": 1
+    },
+    "col_bank": {
+     "direction": "output",
+     "width": 5
+    },
+    "col_col": {
+     "direction": "output",
+     "width": 5
+    },
+    "col_data": {
+     "direction": "output",
+     "width": 256
+    },
+    "col_strb": {
+     "direction": "output",
+     "width": 32
+    },
+    "col_v": {
+     "direction": "output",
+     "width": 1
+    },
+    "col_we": {
+     "direction": "output",
+     "width": 1
+    },
+    "dram_rdata": {
+     "direction": "input",
+     "width": 256
+    },
+    "dram_rvalid": {
+     "direction": "input",
+     "width": 1
+    },
+    "k_addr": {
+     "direction": "input",
+     "width": 30
+    },
+    "k_len": {
+     "direction": "input",
+     "width": 4
+    },
+    "k_rdy": {
+     "direction": "output",
+     "width": 1
+    },
+    "k_tag": {
+     "direction": "input",
+     "width": 17
+    },
+    "k_v": {
+     "direction": "input",
+     "width": 1
+    },
+    "k_wdata": {
+     "direction": "input",
+     "width": 256
+    },
+    "k_we": {
+     "direction": "input",
+     "width": 1
+    },
+    "k_wr_done": {
+     "direction": "output",
+     "width": 1
+    },
+    "k_wstrb": {
+     "direction": "input",
+     "width": 32
+    },
+    "kr_beat": {
+     "direction": "output",
+     "width": 4
+    },
+    "kr_data": {
+     "direction": "output",
+     "width": 256
+    },
+    "kr_rdy": {
+     "direction": "input",
+     "width": 1
+    },
+    "kr_tag": {
+     "direction": "output",
+     "width": 17
+    },
+    "kr_v": {
+     "direction": "output",
+     "width": 1
+    },
+    "owner_fault_split": {
+     "direction": "output",
+     "width": 6
+    },
+    "pc_fault": {
+     "direction": "output",
+     "width": 1
+    },
+    "pc_id": {
+     "direction": "input",
+     "width": 5
+    },
+    "refresh_reload": {
+     "direction": "input",
+     "width": 8
+    },
+    "row_bank": {
+     "direction": "output",
+     "width": 5
+    },
+    "row_op": {
+     "direction": "output",
+     "width": 3
+    },
+    "row_row": {
+     "direction": "output",
+     "width": 19
+    },
+    "row_v": {
+     "direction": "output",
+     "width": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "width": 1
+    }
+   },
+   "closure": {
+    "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+     "source": "git:abdb23bfa:rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+     "file_sha256": "ef1a98278c1e25596d7b22b6fe86697afdf7aacdc7c1302f9bf7f68f0c01c1b6",
+     "module_body_sha256": "26a71ed82f192a2f1315e4da4fa5317f05880e5655905e75e22371fd4a93c8d9",
+     "export_sha256": "0ae89a986c25f9e4b33e4054aa3ab93cea285ad4e1d66113d22214994e18c8d0",
+     "children": [
+      "ot_hbm_r14_stream_pc_strap_h9",
+      "ot_hbm_svc_pin_skid2_h9",
+      "ot_hbm_svc_ring_h9b",
+      "ot_rst_relay",
+      "ot_sram_1r1w_128x256_m1_r2c2"
+     ],
+     "approved_override": true
+    },
+    "ot_sram_1r1w_128x256_m1_r2c2": {
+     "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+     "file_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+     "module_body_sha256": "041ae7aef33fa41b15791317478dd74962f04ce769a763e4bf8fbe34e5eef607",
+     "export_sha256": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac",
+     "children": []
+    },
+    "ot_rst_relay": {
+     "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+     "file_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+     "module_body_sha256": "378f229d60637bd54e1e88ae91ff8ef1b4407719df71e90c8d58539b3a881f93",
+     "export_sha256": "d41f207e1b7aefa92b1084a7a66283d7824e5ea4fc8525d75170e3048b704b80",
+     "children": []
+    },
+    "ot_hbm_svc_ring_h9b": {
+     "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+     "file_sha256": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+     "module_body_sha256": "38548647e31d8ab622b1c13b5282f3c33b24b50ba8f6f52e71cb67e617677445",
+     "export_sha256": "46648f3b56aebfd462010f94f960c2c45d4c6c05b352874421989257cd536f36",
+     "children": []
+    },
+    "ot_hbm_svc_pin_skid2_h9": {
+     "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+     "file_sha256": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+     "module_body_sha256": "b26b070aa555a54f492d404012a7660dd69f11b4693c9e9711e1eb5126a9bcc7",
+     "export_sha256": "d9324f02c1a4e8b777d89027048d5040f0ad79933da74738b8ca04c5818ab45c",
+     "children": []
+    },
+    "ot_hbm_r14_stream_pc_strap_h9": {
+     "source": "git:abdb23bfa:rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+     "file_sha256": "23497f55bfe965034c6d8c8e10515644d9c4133b958a208ac240824a3c65e825",
+     "module_body_sha256": "a1008f66d602655846a56597121c00d35d339f4e9f503c2e724e5ebeb096a07e",
+     "export_sha256": "5b93d1909c000b3cc7c022313f92b57447bd3d53c45e5827a3903b4b06d78911",
+     "children": [],
+     "approved_override": true
+    }
+   },
+   "status": "SOURCE_READY",
+   "profile_note": "APPROVED enabled833 source event PREP; direct native wrapper, no added boundary FF"
+  }
+ ],
+ "exports": {
+  "ot_hgi_dma_back_static_vp4_banks_cp": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "file_sha256": "8ecb2a27377ffad4c091c94819eda42df0787c46b506d0d036a7812c90ef1c88",
+   "module_body_sha256": "d9189b76d6ba4f593bb7c4088ca2c9f66c097e5b54fbf388792a785a6194ac82",
+   "export_sha256": "35461af24c3915313737bf2c098422bf11179b658676de6233c2fa0e20406090",
+   "children": [
+    "ot_hgi_dma_back_cp_collar",
+    "ot_hgi_dma_back_static_vp4_banks_rs",
+    "ot_rst_relay"
+   ]
+  },
+  "ot_rst_relay": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_rst_relay.sv",
+   "file_sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+   "module_body_sha256": "378f229d60637bd54e1e88ae91ff8ef1b4407719df71e90c8d58539b3a881f93",
+   "export_sha256": "d41f207e1b7aefa92b1084a7a66283d7824e5ea4fc8525d75170e3048b704b80",
+   "children": []
+  },
+  "ot_hgi_dma_back_static_vp4_banks_rs": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+   "file_sha256": "8ecb2a27377ffad4c091c94819eda42df0787c46b506d0d036a7812c90ef1c88",
+   "module_body_sha256": "ca8e86e67fe3a8f23ff88ba9703ee782676aaff43cf9df0cc12768f1eff61185",
+   "export_sha256": "77cdf3534054642e0893177044dac3e7473aa137fcf6c3cc22cc85a34f9fcd4f",
+   "children": [
+    "ot_hgi_dma_back_landing_bank",
+    "ot_hgi_dma_back_static_vp4_controller"
+   ]
+  },
+  "ot_hgi_dma_back_static_vp4_controller": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "file_sha256": "1e47ee8115671a990f2b814d5e81b974fb3cf23d3c2bfa4225082d34d7042f8e",
+   "module_body_sha256": "18cd4a33f152a205e3026c9af0e08c3123602aa12ee0c62560bb339dec7075cb",
+   "export_sha256": "434f18f57284d884c4ba56e1d2f87a8d4b4c3f2d81b9557837dd26636c8aaf89",
+   "children": []
+  },
+  "ot_hgi_dma_back_landing_bank": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+   "file_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+   "module_body_sha256": "af10f588b71a6fb1901ad60b7481aaaa5a577e0b68932020b65f8e1bc59c9302",
+   "export_sha256": "a07b147200be710e32a203854dd40483ca8a2bafc4c66d302d2d3001c58b993d",
+   "children": [
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_sram_1r1w_128x256_m1_r2c2": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+   "file_sha256": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+   "module_body_sha256": "041ae7aef33fa41b15791317478dd74962f04ce769a763e4bf8fbe34e5eef607",
+   "export_sha256": "c7ccc591d72197fb9a7007188046e9491fa98414dd4fc0852393d2c0dc0facac",
+   "children": []
+  },
+  "ot_hgi_dma_back_cp_collar": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_cp_collar.sv",
+   "file_sha256": "54ffc8c1fc8cd14ce59cddae0d3a0529f2541f4625f12454aa9b95356b7fc81a",
+   "module_body_sha256": "042909f2dbe844ec694c35a39651aa393d5202e65e7281adf189b2160f01a7d2",
+   "export_sha256": "feec9564c2619176d50ae081bdff8495eae8c57cadf4152eb8d33e454810b5b7",
+   "children": [
+    "ot_sram_1r1w_128x256_m1_r2c2",
+    "ot_static_cmd_target_core"
+   ]
+  },
+  "ot_static_cmd_target_core": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+   "file_sha256": "07024e8149e6d65678d194182b22be39abb26e2deedb64c351ef688976212b42",
+   "module_body_sha256": "39330abaaaf48f7fd806b4e60dc2d297c6e4038ff12da82342c66d38f8707b9a",
+   "export_sha256": "fe02e97dda6a3d798b445f9b3bdeb41779840408893ed69d095db33338b6347c",
+   "children": []
+  },
+  "ot_hbm_svc_vm_kshare_splitstrap": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_vm_kshare_splitstrap.sv",
+   "file_sha256": "acb135a98c2ba055dfe801fe0bb5b4b940b3a175f5faacb93505b5e546865758",
+   "module_body_sha256": "4a3a97bb188af38c448a92f6a0f1533c5b2b36efa0cd1ad73eae111527480675",
+   "export_sha256": "dfb391115d6fc999c44d499ba732686089150cea8b6462a3cabd966c9a748987",
+   "children": [
+    "ot_hbm_svc_async_fifo",
+    "ot_hbm_svc_fault_cdc",
+    "ot_hbm_svc_pin_skid2",
+    "ot_hbm_svc_ring_h9b_ff"
+   ]
+  },
+  "ot_hbm_svc_ring_h9b_ff": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b_ff.sv",
+   "file_sha256": "1c7ba5548eff11256723104b6a6efb361c80114264997930eb20bbcf281be4ce",
+   "module_body_sha256": "6eaa7c41a428452f90afb6fa23acaa259c8bcae462e916745db3646c090adf00",
+   "export_sha256": "1ebcd69b4692536a37596ba1d71fe6804f041766c6bb1e98213787be2dc5b2bf",
+   "children": []
+  },
+  "ot_hbm_svc_pin_skid2": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+   "file_sha256": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+   "module_body_sha256": "a386a026ee56e309b03ed8bc637e881a5dcdc46e84ad19b88257c96dca6d4f48",
+   "export_sha256": "46ffaa62f9b105e7334fae4ad3334ababe1f2ed88859628556ef5a744711e348",
+   "children": []
+  },
+  "ot_hbm_svc_fault_cdc": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "file_sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+   "module_body_sha256": "3f4d066265e7665a846dcc22634ffc7fc77a3078377b65b54d9ab5358ba59220",
+   "export_sha256": "aa4e1aa3fbfa3db522b0cdf3cfd88256c755b674dccbc57bc38199e06c1c0819",
+   "children": [
+    "ot_hbm_svc_async_fifo",
+    "ot_reset_sync"
+   ]
+  },
+  "ot_reset_sync": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/lib/ot_reset_sync.sv",
+   "file_sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+   "module_body_sha256": "a56823e3a3f6e3c78549cdb682a7c278032bb440003775374f93dec56c227814",
+   "export_sha256": "10289bcf7c502bb2cf5ba93d0283a81a54f84fe068d56c5a3bff2a7fc300df4f",
+   "children": [
+    "ot_reset_sync"
+   ]
+  },
+  "ot_hbm_svc_async_fifo": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_async_fifo.sv",
+   "file_sha256": "08cefc4772d97f3c91718e7f159bd9a6bc4fd2611ddb93517c56bbac57240c3b",
+   "module_body_sha256": "9fe24e10307c6204d2f777cf977a7ca1f5cae538a4f56aa9874934814fa0ff6d",
+   "export_sha256": "1052cb0bb9924342b1048c202f8abc087429ab32354301ea9f47d0163c9de6b9",
+   "children": [
+    "ot_reset_sync"
+   ]
+  },
+  "ot_hbm_svc_pc_ctrl_leaf_cfg_h9b": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_h9b.sv",
+   "file_sha256": "aaf5bfa2e5baf5b1db29ddaf42e858e75666a93785436b898ddd64ca1aa2c5d5",
+   "module_body_sha256": "26a71ed82f192a2f1315e4da4fa5317f05880e5655905e75e22371fd4a93c8d9",
+   "export_sha256": "c6a2b45b5988529cab88771d146d58316bdc1b47b3405e752f70c109172fc982",
+   "children": [
+    "ot_hbm_r14_stream_pc_strap_h9",
+    "ot_hbm_svc_pin_skid2_h9",
+    "ot_hbm_svc_ring_h9b",
+    "ot_rst_relay",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_svc_ring_h9b": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_ring_h9b.sv",
+   "file_sha256": "cac42bfdee943e2bef7647137f56c652033e2b6fe138167ac79255b8d6d37fc2",
+   "module_body_sha256": "38548647e31d8ab622b1c13b5282f3c33b24b50ba8f6f52e71cb67e617677445",
+   "export_sha256": "46648f3b56aebfd462010f94f960c2c45d4c6c05b352874421989257cd536f36",
+   "children": []
+  },
+  "ot_hbm_svc_pin_skid2_h9": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_pin_skid2_h9.sv",
+   "file_sha256": "a9bbf9fd7e443ee83c40d87e4b5447627405f433118eb6f2a3f348ca04539cd2",
+   "module_body_sha256": "b26b070aa555a54f492d404012a7660dd69f11b4693c9e9711e1eb5126a9bcc7",
+   "export_sha256": "d9324f02c1a4e8b777d89027048d5040f0ad79933da74738b8ca04c5818ab45c",
+   "children": []
+  },
+  "ot_hbm_r14_stream_pc_strap_h9": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h9.sv",
+   "file_sha256": "8f0d721820339b0e7a697af0b6f457b6dcaa8c58936c8071a41c411214ad9750",
+   "module_body_sha256": "a1008f66d602655846a56597121c00d35d339f4e9f503c2e724e5ebeb096a07e",
+   "export_sha256": "b974aeeff1a1ee1434144006478bee93a5297ef576f9f5e453409ea7ba1c3ea8",
+   "children": []
+  },
+  "ot_hbm_svc_wb_kport_q": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport_q.sv",
+   "file_sha256": "0920c1f32e3802b4a4f19fafd8bd43f61c6a5f3fd2002a3b9a89710bf0e9ae00",
+   "module_body_sha256": "7b01d74269103c1dae81a9d45da8ef4017a33cf72a35e92b6276fdf9f94e548f",
+   "export_sha256": "7537a84b30ecabeb21424d39fd1565229f9bc38679b956d97d99a60e1d8005eb",
+   "children": [
+    "ot_hbm_svc_pin_skid2",
+    "ot_hbm_svc_wb_cutthrough_cdc"
+   ]
+  },
+  "ot_hbm_svc_wb_cutthrough_cdc": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_cutthrough_cdc.sv",
+   "file_sha256": "d526e268a54716d4f4c5ac3620395e50f5a59e0fa56e71e1ec6eee76f5a24fa0",
+   "module_body_sha256": "672c78c5a468378ad12f26fbede4b90f6a03e49cfa37b524cb7cd7c4b7b3c770",
+   "export_sha256": "81cdbc2f5a6f35318f6afc83e2600723d2b52729783a979195a7ce988d52bf96",
+   "children": [
+    "ot_hbm_accel_cdc_fifo",
+    "ot_reset_sync",
+    "ot_sram_1r1w_128x256_m1_r2c2"
+   ]
+  },
+  "ot_hbm_accel_cdc_fifo": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+   "file_sha256": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+   "module_body_sha256": "910a8024a5083c7201030dfcc3d528d4b2866746d132c74206592f08db3da6d1",
+   "export_sha256": "253e42092315b973409011241050a8a6af6cbdf016fec4d43d0293ac012db2c7",
+   "children": []
+  },
+  "ot_hbm_svc_wbw_copy": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/loader/service_native/ot_hbm_svc_wbw_copy.sv",
+   "file_sha256": "41666af96d2b1f0138ebe7233d6e8f0ce48835992aee4c884e4bcc02b4398ae8",
+   "module_body_sha256": "c50836916811988c609d46ecb25e56427c42cd7ad8fe9643c8af995d6170b10d",
+   "export_sha256": "8b9b02353fd6126db326d4c3cfe53bc0e121c7d6e5a94805513c3271790a2e02",
+   "children": []
+  },
+  "hfd_hgi_vm_calendar_f20_role": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20_role.sv",
+   "file_sha256": "14ab5c39bf793e1da1b551630847ee1a7b8660c60421c45ee679be2bb52cbb55",
+   "module_body_sha256": "64040fd1d7e4fcb4cda0886e3a6c07a1b0fb26b3159bf28796f0713375b72188",
+   "export_sha256": "21be5fe631fc619a0f160607a201a6639e119c9e712bf3b4bcefa5483fe39aee",
+   "children": [
+    "ot_static_program_target",
+    "ot_vms_calendar_static_xcap"
+   ]
+  },
+  "ot_vms_calendar_static_xcap": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+   "file_sha256": "2d9fc6c6bd4e145ce98ba5cffa785559bdab880e4d39bb6759a2bfd8deb1f960",
+   "module_body_sha256": "6cd8f8c3f83ec7728f6e9475b087cc3564f32800ff09a475a139bd02871d644a",
+   "export_sha256": "17b4549dbb79f06d11b8753dda742c67fe1fc42cbc9138b774e8070770898024",
+   "children": [
+    "ot_sram_1r1w_1024x256_m2_r2c2"
+   ]
+  },
+  "ot_sram_1r1w_1024x256_m2_r2c2": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+   "file_sha256": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+   "module_body_sha256": "e9d90adbfbe2255e1a709737450f16d7566ec73e3a3f022ed22f0c5096497376",
+   "export_sha256": "cf8a01c2d9a264b55e7ee1866a792350a276c1e194cfdb9433cdbba0bcf2be34",
+   "children": []
+  },
+  "ot_static_program_target": {
+   "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
+   "file_sha256": "a36c62a72205f4359b58a832deab23736baa320ba5b2d0153ac99278779c6c21",
+   "module_body_sha256": "cba1c9c3cb914af7daeb3df5639b91063f7f4dcc5d33fddc35aba2e31d884955",
+   "export_sha256": "1cd85c6c2659afc7b4f4a0953496e25217559bdcfe0878309c5e4aa4e46a7ec3",
+   "children": []
+  }
+ },
+ "override_commit": "abdb23bfa"
+}
