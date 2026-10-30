@@ -1,0 +1,5 @@
+HR_CREDIT_PASS cmp=1765 words=256 base_words=256 mutant_diffs=496 added_return_edges=1 credit_capacity_delta=0 base_done=353 capture_done=404 delta=51
+- tb_credit_enabled.sv:44: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.021 s; speed 171.041 us/s
+- Verilator: cpu 0.021 s on 1 threads; allocated 7 MB
