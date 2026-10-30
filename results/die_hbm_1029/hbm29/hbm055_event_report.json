@@ -1,0 +1,332 @@
+{
+ "event": "DIE-HBM-29 HBM-055",
+ "types": {
+  "q_b101": {
+   "stations_before": 1650,
+   "stations_after": 1421,
+   "hard_cores": [
+    "r0c2_k0h0",
+    "r0c2_k0h1",
+    "r0c2_k1h0",
+    "r0c2_k1h1",
+    "r0c2_k2h0",
+    "r0c2_k2h1",
+    "r0c2_k3h0",
+    "r0c2_k3h1",
+    "r0c3_k0h0",
+    "r0c3_k0h1",
+    "r0c3_k1h0",
+    "r0c3_k1h1",
+    "r0c3_k2h0",
+    "r0c3_k2h1",
+    "r0c3_k3h0",
+    "r0c3_k3h1",
+    "tail0"
+   ]
+  },
+  "q_b101_nw": {
+   "stations_before": 1650,
+   "stations_after": 1421,
+   "hard_cores": [
+    "r0c2_k0h0",
+    "r0c2_k0h1",
+    "r0c2_k1h0",
+    "r0c2_k1h1",
+    "r0c2_k2h0",
+    "r0c2_k2h1",
+    "r0c2_k3h0",
+    "r0c2_k3h1",
+    "r0c3_k0h0",
+    "r0c3_k0h1",
+    "r0c3_k1h0",
+    "r0c3_k1h1",
+    "r0c3_k2h0",
+    "r0c3_k2h1",
+    "r0c3_k3h0",
+    "r0c3_k3h1",
+    "tail0"
+   ]
+  },
+  "q_b102": {
+   "stations_before": 1426,
+   "stations_after": 1426,
+   "hard_cores": [
+    "r1c0_k0h0",
+    "r1c0_k0h1",
+    "r1c0_k1h0",
+    "r1c0_k1h1",
+    "r1c0_k2h0",
+    "r1c0_k2h1",
+    "r1c0_k3h0",
+    "r1c0_k3h1",
+    "r1c1_k0h0",
+    "r1c1_k0h1",
+    "r1c1_k1h0",
+    "r1c1_k1h1",
+    "r1c1_k2h0",
+    "r1c1_k2h1",
+    "r1c1_k3h0",
+    "r1c1_k3h1"
+   ]
+  },
+  "q_b102__physical_v1": {
+   "stations_before": 1426,
+   "stations_after": 1426,
+   "hard_cores": [
+    "r1c0_k0h0",
+    "r1c0_k0h1",
+    "r1c0_k1h0",
+    "r1c0_k1h1",
+    "r1c0_k2h0",
+    "r1c0_k2h1",
+    "r1c0_k3h0",
+    "r1c0_k3h1",
+    "r1c1_k0h0",
+    "r1c1_k0h1",
+    "r1c1_k1h0",
+    "r1c1_k1h1",
+    "r1c1_k2h0",
+    "r1c1_k2h1",
+    "r1c1_k3h0",
+    "r1c1_k3h1"
+   ]
+  },
+  "q_b103": {
+   "stations_before": 1187,
+   "sibling": "u_hb_idx__s_Q_r1c3_k2h0",
+   "dy": 397.44000000000005,
+   "transplanted": 166,
+   "rechained": 155,
+   "stations_after": 1353,
+   "hard_cores": [
+    "r1c2_k0h0",
+    "r1c2_k0h1",
+    "r1c2_k1h0",
+    "r1c2_k1h1",
+    "r1c2_k2h0",
+    "r1c2_k2h1",
+    "r1c2_k3h0",
+    "r1c2_k3h1",
+    "r1c3_k0h0",
+    "r1c3_k0h1",
+    "r1c3_k1h0",
+    "r1c3_k1h1",
+    "r1c3_k2h0",
+    "r1c3_k2h1",
+    "r1c3_k3h0",
+    "r1c3_k3h1",
+    "tail1"
+   ]
+  },
+  "q_b103__physical_v1": {
+   "stations_before": 1187,
+   "sibling": "u_hb_idx__s_Q_r1c3_k2h0",
+   "dy": 397.44000000000005,
+   "transplanted": 166,
+   "rechained": 155,
+   "stations_after": 1353,
+   "hard_cores": [
+    "r1c2_k0h0",
+    "r1c2_k0h1",
+    "r1c2_k1h0",
+    "r1c2_k1h1",
+    "r1c2_k2h0",
+    "r1c2_k2h1",
+    "r1c2_k3h0",
+    "r1c2_k3h1",
+    "r1c3_k0h0",
+    "r1c3_k0h1",
+    "r1c3_k1h0",
+    "r1c3_k1h1",
+    "r1c3_k2h0",
+    "r1c3_k2h1",
+    "r1c3_k3h0",
+    "r1c3_k3h1",
+    "tail1"
+   ]
+  }
+ },
+ "clock_taps_die": {
+  "entries_before": 900,
+  "entries_after": 1058,
+  "changed": 966,
+  "moved_over_1um": [
+   "NE_b100",
+   "NE_b101",
+   "NE_b102",
+   "NE_b103",
+   "NE_b110",
+   "NE_b112",
+   "NE_b113",
+   "NE_hub",
+   "NE_io",
+   "NE_sm0",
+   "NE_sm1",
+   "NE_sm2",
+   "NE_sm3",
+   "NE_spb0",
+   "NE_spb2",
+   "NE_spt0",
+   "NE_su00",
+   "NE_su01",
+   "NE_su10",
+   "NE_su11",
+   "NE_su20",
+   "NE_su30",
+   "NE_su31",
+   "NW_b100",
+   "NW_b101",
+   "NW_b102",
+   "NW_b103",
+   "NW_b110",
+   "NW_b112",
+   "NW_b113",
+   "NW_hub",
+   "NW_io",
+   "NW_sm0",
+   "NW_sm1",
+   "NW_sm2",
+   "NW_sm3",
+   "NW_spb0",
+   "NW_spb2",
+   "NW_spt0",
+   "NW_su00",
+   "NW_su01",
+   "NW_su10",
+   "NW_su11",
+   "NW_su20",
+   "NW_su30",
+   "NW_su31",
+   "root",
+   "vsN0"
+  ]
+ },
+ "map_moves": [
+  {
+   "key": "hb_idx__s_NW.scorer.ge[1].gc[0].leaf.core.g_col[0].g_half[0].u_hc",
+   "before": [
+    "NW_b101",
+    "u_hb_idx__s_Q_r1c0_k0h0"
+   ],
+   "after": [
+    "NW_b102",
+    "u_hb_idx__s_Q_r1c0_k0h0"
+   ]
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.ge[1].gc[2].leaf.core.g_col[0].g_half[0].u_hc",
+   "before": [
+    "NW_b102",
+    "u_hb_idx__s_Q_r1c2_k0h0"
+   ],
+   "after": [
+    "NW_b103",
+    "u_hb_idx__s_Q_r1c2_k0h0"
+   ]
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.ge[0].u_t",
+   "before": [
+    "NW_b103",
+    "u_hb_idx__s_Q_tail0"
+   ],
+   "after": [
+    "NW_b101",
+    "u_hb_idx__s_Q_tail0"
+   ]
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.ge[0].keep_pipe",
+   "before": "NW_b103",
+   "after": "NW_b101"
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.ge[0].md",
+   "before": "NW_b103",
+   "after": "NW_b101"
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.score_fault_check",
+   "before": "NW_b103",
+   "after": "NW_b101"
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.$procdff$71730",
+   "before": "NW_b103",
+   "after": "NW_b101"
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.$procdff$71751",
+   "before": "NW_b103",
+   "after": "NW_b101"
+  },
+  {
+   "key": "hb_idx__s_NW.scorer.$procdff$71756",
+   "before": "NW_b103",
+   "after": "NW_b101"
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.ge[1].gc[0].leaf.core.g_col[0].g_half[0].u_hc",
+   "before": [
+    "NE_b101",
+    "u_hb_idx__s_Q_r1c0_k0h0"
+   ],
+   "after": [
+    "NE_b102",
+    "u_hb_idx__s_Q_r1c0_k0h0"
+   ]
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.ge[1].gc[2].leaf.core.g_col[0].g_half[0].u_hc",
+   "before": [
+    "NE_b102",
+    "u_hb_idx__s_Q_r1c2_k0h0"
+   ],
+   "after": [
+    "NE_b103",
+    "u_hb_idx__s_Q_r1c2_k0h0"
+   ]
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.ge[0].u_t",
+   "before": [
+    "NE_b103",
+    "u_hb_idx__s_Q_tail0"
+   ],
+   "after": [
+    "NE_b101",
+    "u_hb_idx__s_Q_tail0"
+   ]
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.ge[0].keep_pipe",
+   "before": "NE_b103",
+   "after": "NE_b101"
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.ge[0].md",
+   "before": "NE_b103",
+   "after": "NE_b101"
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.score_fault_check",
+   "before": "NE_b103",
+   "after": "NE_b101"
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.$procdff$71730",
+   "before": "NE_b103",
+   "after": "NE_b101"
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.$procdff$71751",
+   "before": "NE_b103",
+   "after": "NE_b101"
+  },
+  {
+   "key": "hb_idx__s_NE.scorer.$procdff$71756",
+   "before": "NE_b103",
+   "after": "NE_b101"
+  }
+ ]
+}
