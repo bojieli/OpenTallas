@@ -169,3 +169,18 @@ if __name__ == "__main__":
         if n.startswith("test_"):
             f()
             print("PASS", n)
+
+
+def test_import_leaves_sys_path_unchanged():
+    """DIE-KV-37-FACE: loading the module (as the bind param_regen hook does) must not prepend any tools dir to
+    sys.path, or later lazy imports in the running bind resolve from another tree (eB3 dropped 49 face copies)."""
+    import importlib.util
+    import sys
+    from pathlib import Path
+    before = list(sys.path)
+    f = Path(__file__).resolve().parent / "kv_pv_col_pads.py"
+    spec = importlib.util.spec_from_file_location("kv_pv_col_pads_pathcheck", f)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    assert sys.path == before
+    assert hasattr(m.RC, "Bound")

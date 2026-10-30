@@ -1,0 +1,7 @@
+Unit test proposal (physical/die_plan/qwen_kvsys/r8/test_kv_pv_col_pads.py):
+ test_import_leaves_sys_path: snapshot sys.path + sys.modules keys; importlib-load kv_pv_col_pads.py (and kv_pv_col_regen.py);
+ assert sys.path unchanged and no tools/die_plan module newly importable from another tree (fails today: sys.path[0]
+ gains <resolved tree>/tools/die_plan).
+Bind receipt: strict bind eB3 on the symlinked bindroot -> u_cland_reset_rst_n_t* collector copies == eB2
+ (2626 collector instances total; kv3_hub_C 127, kv3_hg_v1p6 70).
+Optional defensive (shared, ROOT-MERGE): clock_landings.py:883 load landing_collector relative to its own __file__.
