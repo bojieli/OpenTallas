@@ -57,6 +57,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import loopgaps as LG  # noqa: E402
 import ownership as OWN  # noqa: E402
 import auto_geom as AG  # noqa: E402
+import kit_wave as KW  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 HOME = Path.home()
@@ -2016,6 +2017,11 @@ def tick(args):
     retry_unversioned(st)
     admit_new(st, rows)
     save_state(st)
+    if os.environ.get("AP_KIT_WAVE", "1") != "0":      # KIT-WAVE-1 (owner 10-30 (A)); inert without autopilot/kit_wave.json
+        try:
+            KW.step(sys.modules[__name__])
+        except Exception as e:                         # the wave must never stop the chain
+            log(f"KIT-WAVE failed: {type(e).__name__}: {e}")
     try:
         write_loop_gaps(st, rows, geom_text)
     except Exception as e:                             # the gap report must never stop the chain
@@ -2085,6 +2091,10 @@ def write_loop_gaps(st, rows, geom_text):
     try:                                               # OWNERSHIP table (owner 2026-10-25); never stops the gap report
         orows, ogaps, head = OWN.build(ownership_inputs(st, geom_text, trows), now)
         gaps += ogaps
+        try:
+            KW.overlay_owners(orows, KW.load_state(AP_DIR))  # wave items: owner KIT-WAVE-1, live unit, class + evidence
+        except Exception as e:
+            log(f"KIT-WAVE overlay failed: {type(e).__name__}: {e}")
         write_file("OWNERS.tsv", OWN.to_tsv(orows, now))
     except Exception as e:
         log(f"OWNERS failed: {type(e).__name__}: {e}")

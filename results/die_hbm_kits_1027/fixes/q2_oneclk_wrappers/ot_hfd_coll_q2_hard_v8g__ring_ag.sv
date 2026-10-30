@@ -1,3 +1,4 @@
+// HBM-CORES-KITS-10 2026-10-29: qid -> strap_qid (declared ID strap; plan pins + bind strap declaration rename in the same DIE-HBM/HBM-BIND event).
 // DIE-HBM/KITS 10-27 (UNCOMMITTED PROPOSAL): oneclk form of the proven sw2.py wrapper (a02e858e91).
 // Only change: plan C18/C19 __oneclk pin table has one clk instead of clk_ring[16:0]; every clk_ring bit is driven by clk,
 // exactly as the qualified Codex clock adapter results/clock/q3_vmface_1026/ot_hfd_coll_q2_ring_ag_core__q3sync__oneclk.sv
@@ -51,7 +52,7 @@ module ot_hfd_coll_q2_hard_v8g__ring_ag (
     output wire [279:0] pr_cw_o,
     input wire rst_n,
     output wire rr_v,
-    input wire [1:0] qid,
+    input wire [1:0] strap_qid,   // ID strap (OWNER 10-25 option B, COORD 10-29 05:35): tied at the parent, false_path, no pin register
     output wire [2:0] rr_tag,
     output wire [255:0] rr_d,
     output wire u_ring_fault
@@ -71,7 +72,7 @@ module ot_hfd_coll_q2_hard_v8g__ring_ag (
         .ring_rst_n(rst_n),
         .ring_clk_state({8{clk}}),
         .ring_clk_add({8{clk}}),
-        .ring_qid(qid[1:0]),
+        .ring_qid(strap_qid[1:0]),
         .ring_cw_i(pr_cw_i[279:0]),
         .ring_ccw_i(pr_ccw_i[279:0]),
         .ring_lp_we(ra_lp_we),
