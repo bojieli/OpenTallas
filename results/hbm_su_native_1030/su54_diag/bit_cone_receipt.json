@@ -1,0 +1,114 @@
+{
+  "scope": "SOURCE_BIT_CONE_DIAGNOSIS_ONLY_NO_FULLCORE_EQ_OR_OUTPUT_REFINEMENT",
+  "source_hashes": {
+    "ot_hdc_v41x_exp.sv": "ca76ef449c42bdb01a0b345fe95317ca4265ccac545576bacb0ef4f5f9114c52",
+    "ot_hdc_delay.sv": "6b2114a6c339918c0d2941091a64217a872fcf3f4dbc5cd004eefd4985162063",
+    "ot_hdc_fp32_add_lat.sv": "503aa14cb11aee155ac858e1d511b45b26aa33ee1ab9478b3b0d7235154f7493",
+    "ot_hdc_w11_cut.sv": "067a0ab5190b0bbe0c9a6896e517eaa55756579109d73cdd9cf0a9e81b362890"
+  },
+  "lut_explicit_rows": 254,
+  "lut_domain": 256,
+  "lut_default0": true,
+  "bit30_all_inputs0": true,
+  "all64_symbolic_initial_assignments_enumerated": true,
+  "settles_after_edges": {
+    "a_lo30": 1,
+    "line30": 2,
+    "line62": 3,
+    "line94": 4,
+    "line126": 5,
+    "rd71": 6
+  },
+  "counterexample_initial_all1": [
+    [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "native_reset_edges": 4,
+  "failing_points": 54,
+  "physical_PO_failures": 0,
+  "internal_FF_failures": 54,
+  "outer_kept_registers": {
+    "declared": 2017,
+    "in_netlist": 2017,
+    "constant_proved": {
+      "n": 0,
+      "first": []
+    },
+    "missing": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_removed": {
+      "n": 0,
+      "first": []
+    },
+    "unobservable_reason": null
+  },
+  "cone_missing_counts": {
+    "ff:u_dut.u_fcore.u_native.m1.u_lane.g_sfu.u_exp.a_r.g_keep4.u.u.u_ca.g_rv.rd[71]": 1,
+    "ff:u_dut.u_fcore.u_native.m1.u_lane.g_sfu.u_exp.d_lo.g_line.line[126]": 53
+  },
+  "next": "Preserve exact native startup FFs through synthesis with narrow early KEEP; no reset extension or dropped proof points. Native observable refinement not established."
+}
