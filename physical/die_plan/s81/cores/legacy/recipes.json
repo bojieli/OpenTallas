@@ -301,5 +301,16 @@
   "defines": [
    "OT_S81_CAP_LD_FACE_VALID"
   ]
+ },
+ "ot_s81sl_cap_ed": {
+  "child_of": "ot_s81sl_capc5r",
+  "ref_tile": "physical/ref_tile/s81sl_cap_ed",
+  "lef_contract": "physical/ref_tile/s81sl_cap_ed/views/ot_s81sl_cap_ed/ot_s81sl_cap_ed.lef",
+  "multi_master": true,
+  "suffix": "cc1",
+  "why": "Current-flow hard-child recipe from the actual unchanged CAPc5r child spec and native LEF; parent remains held until this child is SIGNED. OWNER (A) 2026-10-30 00:1x: adopt OT_S81_CAP_ED_FACE_DELAYED_FAULT = isolated fault in/out registers, data/calendar 0 cycles, fault visibility +1 edge (priced: results/s81_cap_ed_owner_option_2356/fault_budget.json).",
+  "defines": [
+   "OT_S81_CAP_ED_FACE_DELAYED_FAULT"
+  ]
  }
 }

@@ -82,7 +82,9 @@ module ot_s81sl_cap_ed #(
     assign o_d = q[64:33];
     assign o_e = q[65];
 `ifdef OT_S81_CAP_ED_FACE_DELAYED_FAULT
-    // OWNER OPTION ONLY: data edges unchanged, fault visibility +1 edge.
+    // OWNER (A) 2026-10-30 00:1x, ADOPTED for the S81 CAP_ED hard child via the recipe define
+    // (physical/die_plan/s81/cores/legacy/recipes.json ot_s81sl_cap_ed): data edges unchanged, fault visibility +1 edge,
+    // priced in results/s81_cap_ed_owner_option_2356/fault_budget.json (phase-end check slack 63 -> 62 edges).
     // Raw input pin capture precedes sticky accumulation; isolated face copy
     // samples that sticky next state on the same edge as the private state.
     reg face_fault_i, face_fault_state, face_fault_next;
