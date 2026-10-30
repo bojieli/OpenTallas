@@ -1,0 +1,1349 @@
+{
+  "scope": "Exact existing frozen-master UF3 evaluation and component decomposition only; no fit/sizing/topology rerun/no physical claim",
+  "source_model": "/srv/opentallas-scratch2/claude/codex-s81-islands-0336/nearest/plan/dsfd_coll_lane_w_safe8_ntf/plan_d1.json",
+  "corners": {
+    "TT": {
+      "sink_min": {
+        "leaf": "Tpquc",
+        "sink": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[0\\]$_DFFE_PP_/CLK",
+        "edge": "rise",
+        "arrival_ps": 343.05901811900765,
+        "cell_total_ps": 335.40965576491215,
+        "wire_total_ps": 7.649362354095429,
+        "clock_stages": 12,
+        "parts": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tp_br",
+            "cell_ps": 20.716009690934342,
+            "wire_ps": 0.00857901571585254,
+            "slew_in_ps": 0.0,
+            "pin_cap": 4.68475,
+            "wire_cap": 0.16657115400000194,
+            "net_length_um": 1.0800000000000125
+          },
+          {
+            "driver": "Tp_br",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tp_r0",
+            "cell_ps": 21.32350380879391,
+            "wire_ps": 1.6365206996240476,
+            "slew_in_ps": 10.199307423574993,
+            "pin_cap": 1.20694,
+            "wire_cap": 7.578987507000002,
+            "net_length_um": 49.14
+          },
+          {
+            "driver": "Tp_r0",
+            "master": "BUFx10_ASAP7_75t_R",
+            "child": "Tpq_br",
+            "cell_ps": 29.45239963617185,
+            "wire_ps": 3.1641591872539685,
+            "slew_in_ps": 18.090007530023154,
+            "pin_cap": 5.5378050000000005,
+            "wire_cap": 7.912129815000001,
+            "net_length_um": 51.3
+          },
+          {
+            "driver": "Tpq_br",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpq_r0",
+            "cell_ps": 31.64263706557689,
+            "wire_ps": 0.0,
+            "slew_in_ps": 33.4056765135887,
+            "pin_cap": 2.35026,
+            "wire_cap": 0.0,
+            "net_length_um": 0.0
+          },
+          {
+            "driver": "Tpq_r0",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpq_r1",
+            "cell_ps": 23.513975641781354,
+            "wire_ps": 0.0,
+            "slew_in_ps": 10.489766922322715,
+            "pin_cap": 0.852045,
+            "wire_cap": 0.0,
+            "net_length_um": 0.0
+          },
+          {
+            "driver": "Tpq_r1",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpqu_br",
+            "cell_ps": 29.683053594303384,
+            "wire_ps": 0.08119841387854325,
+            "slew_in_ps": 8.112261474740782,
+            "pin_cap": 10.45158,
+            "wire_cap": 2.0821394250000016,
+            "net_length_um": 13.500000000000007
+          },
+          {
+            "driver": "Tpqu_br",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpqu_r0",
+            "cell_ps": 27.905137955220752,
+            "wire_ps": 0.1737199568173225,
+            "slew_in_ps": 21.300780947981462,
+            "pin_cap": 2.35026,
+            "wire_cap": 1.3325692320000002,
+            "net_length_um": 8.64
+          },
+          {
+            "driver": "Tpqu_r0",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpqu_r1",
+            "cell_ps": 23.563022523453384,
+            "wire_ps": 0.08743916928228251,
+            "slew_in_ps": 9.748114042782758,
+            "pin_cap": 0.852045,
+            "wire_cap": 1.3325692320000002,
+            "net_length_um": 8.64
+          },
+          {
+            "driver": "Tpqu_r1",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpquc_br",
+            "cell_ps": 37.00752014132753,
+            "wire_ps": 1.6568386484001618,
+            "slew_in_ps": 8.803978428561733,
+            "pin_cap": 13.426845,
+            "wire_cap": 12.242979818999993,
+            "net_length_um": 79.37999999999994
+          },
+          {
+            "driver": "Tpquc_br",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpquc_r0",
+            "cell_ps": 35.198598208791246,
+            "wire_ps": 0.5181884763227398,
+            "slew_in_ps": 38.288922929505596,
+            "pin_cap": 2.35026,
+            "wire_cap": 3.0815663490000005,
+            "net_length_um": 19.98
+          },
+          {
+            "driver": "Tpquc_r0",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpquc",
+            "cell_ps": 25.627348504066195,
+            "wire_ps": 0.3186641551479598,
+            "slew_in_ps": 14.59385456669904,
+            "pin_cap": 0.852045,
+            "wire_cap": 3.0815663490000005,
+            "net_length_um": 19.98
+          },
+          {
+            "driver": "Tpquc",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[0\\]$_DFFE_PP_/CLK",
+            "cell_ps": 29.776448994491314,
+            "wire_ps": 0.00405463165255091,
+            "slew_in_ps": 10.011403646270361,
+            "pin_cap": 7.8508000000000004,
+            "wire_cap": 3.8365349948467182,
+            "net_length_um": 25.796479599999987
+          }
+        ]
+      },
+      "sink_max": {
+        "leaf": "Tppxe",
+        "sink": "u.u_gb.g_cc\\[5\\].g_b\\[129\\].v0$_DFF_P_/CLK",
+        "edge": "rise",
+        "arrival_ps": 393.7457332291043,
+        "cell_total_ps": 351.92270188235824,
+        "wire_total_ps": 41.82303134674603,
+        "clock_stages": 12,
+        "parts": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tp_br",
+            "cell_ps": 20.716009690934342,
+            "wire_ps": 0.00857901571585254,
+            "slew_in_ps": 0.0,
+            "pin_cap": 4.68475,
+            "wire_cap": 0.16657115400000194,
+            "net_length_um": 1.0800000000000125
+          },
+          {
+            "driver": "Tp_br",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tp_r0",
+            "cell_ps": 21.32350380879391,
+            "wire_ps": 1.6365206996240476,
+            "slew_in_ps": 10.199307423574993,
+            "pin_cap": 1.20694,
+            "wire_cap": 7.578987507000002,
+            "net_length_um": 49.14
+          },
+          {
+            "driver": "Tp_r0",
+            "master": "BUFx10_ASAP7_75t_R",
+            "child": "Tpp_br",
+            "cell_ps": 29.45239963617185,
+            "wire_ps": 3.1816242604138587,
+            "slew_in_ps": 18.090007530023154,
+            "pin_cap": 5.5378050000000005,
+            "wire_cap": 7.912129815000001,
+            "net_length_um": 51.3
+          },
+          {
+            "driver": "Tpp_br",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tpp_r0",
+            "cell_ps": 26.732798961172726,
+            "wire_ps": 2.228251436959215,
+            "slew_in_ps": 33.536489497237355,
+            "pin_cap": 2.34288,
+            "wire_cap": 8.078700969000002,
+            "net_length_um": 52.38
+          },
+          {
+            "driver": "Tpp_r0",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tpp_r1",
+            "cell_ps": 24.29935382798241,
+            "wire_ps": 2.1908907593871305,
+            "slew_in_ps": 23.76865480872649,
+            "pin_cap": 2.34288,
+            "wire_cap": 7.995415392000002,
+            "net_length_um": 51.84
+          },
+          {
+            "driver": "Tpp_r1",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tppx_br",
+            "cell_ps": 33.16062611940714,
+            "wire_ps": 10.711608695084175,
+            "slew_in_ps": 23.245963843903926,
+            "pin_cap": 22.2868,
+            "wire_cap": 12.242979819,
+            "net_length_um": 79.38
+          },
+          {
+            "driver": "Tppx_br",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tppx_r0",
+            "cell_ps": 36.39112121006268,
+            "wire_ps": 1.295465944469943,
+            "slew_in_ps": 100.27164510508973,
+            "pin_cap": 2.34288,
+            "wire_cap": 5.746704813000001,
+            "net_length_um": 37.26
+          },
+          {
+            "driver": "Tppx_r0",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tppx_r1",
+            "cell_ps": 21.88941368956554,
+            "wire_ps": 1.3244783304344634,
+            "slew_in_ps": 17.987502624122367,
+            "pin_cap": 2.34187,
+            "wire_cap": 5.829990390000001,
+            "net_length_um": 37.8
+          },
+          {
+            "driver": "Tppx_r1",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tppxe_br",
+            "cell_ps": 39.364756373015425,
+            "wire_ps": 15.521708227469832,
+            "slew_in_ps": 16.1352498867112,
+            "pin_cap": 42.156690000000005,
+            "wire_cap": 22.570391367,
+            "net_length_um": 146.33999999999997
+          },
+          {
+            "driver": "Tppxe_br",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tppxe_r0",
+            "cell_ps": 45.227297452762755,
+            "wire_ps": 0.38151276253828975,
+            "slew_in_ps": 145.3711156185394,
+            "pin_cap": 1.20694,
+            "wire_cap": 3.1648519260000003,
+            "net_length_um": 20.52
+          },
+          {
+            "driver": "Tppxe_r0",
+            "master": "BUFx10_ASAP7_75t_R",
+            "child": "Tppxe",
+            "cell_ps": 24.09167592462638,
+            "wire_ps": 0.5368798291858099,
+            "slew_in_ps": 13.932439492203414,
+            "pin_cap": 2.34288,
+            "wire_cap": 3.1648519260000003,
+            "net_length_um": 20.52
+          },
+          {
+            "driver": "Tppxe",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "u.u_gb.g_cc\\[5\\].g_b\\[129\\].v0$_DFF_P_/CLK",
+            "cell_ps": 29.27374518786307,
+            "wire_ps": 2.8055113854634133,
+            "slew_in_ps": 12.319422387749565,
+            "pin_cap": 20.66,
+            "wire_cap": 11.885469439564792,
+            "net_length_um": 79.91671399999994
+          }
+        ]
+      },
+      "leaf_mean_min": {
+        "leaf": "Tpquc",
+        "edge": "rise",
+        "mean_ps": 343.15828378171614,
+        "representative_sink_path": {
+          "leaf": "Tpquc",
+          "sink": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[3\\]$_DFFE_PP_/CLK",
+          "edge": "rise",
+          "arrival_ps": 343.23060803538715,
+          "cell_total_ps": 335.40965576491215,
+          "wire_total_ps": 7.8209522704749155,
+          "clock_stages": 12,
+          "parts": [
+            {
+              "driver": "root",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tp_br",
+              "cell_ps": 20.716009690934342,
+              "wire_ps": 0.00857901571585254,
+              "slew_in_ps": 0.0,
+              "pin_cap": 4.68475,
+              "wire_cap": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125
+            },
+            {
+              "driver": "Tp_br",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tp_r0",
+              "cell_ps": 21.32350380879391,
+              "wire_ps": 1.6365206996240476,
+              "slew_in_ps": 10.199307423574993,
+              "pin_cap": 1.20694,
+              "wire_cap": 7.578987507000002,
+              "net_length_um": 49.14
+            },
+            {
+              "driver": "Tp_r0",
+              "master": "BUFx10_ASAP7_75t_R",
+              "child": "Tpq_br",
+              "cell_ps": 29.45239963617185,
+              "wire_ps": 3.1641591872539685,
+              "slew_in_ps": 18.090007530023154,
+              "pin_cap": 5.5378050000000005,
+              "wire_cap": 7.912129815000001,
+              "net_length_um": 51.3
+            },
+            {
+              "driver": "Tpq_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpq_r0",
+              "cell_ps": 31.64263706557689,
+              "wire_ps": 0.0,
+              "slew_in_ps": 33.4056765135887,
+              "pin_cap": 2.35026,
+              "wire_cap": 0.0,
+              "net_length_um": 0.0
+            },
+            {
+              "driver": "Tpq_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpq_r1",
+              "cell_ps": 23.513975641781354,
+              "wire_ps": 0.0,
+              "slew_in_ps": 10.489766922322715,
+              "pin_cap": 0.852045,
+              "wire_cap": 0.0,
+              "net_length_um": 0.0
+            },
+            {
+              "driver": "Tpq_r1",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpqu_br",
+              "cell_ps": 29.683053594303384,
+              "wire_ps": 0.08119841387854325,
+              "slew_in_ps": 8.112261474740782,
+              "pin_cap": 10.45158,
+              "wire_cap": 2.0821394250000016,
+              "net_length_um": 13.500000000000007
+            },
+            {
+              "driver": "Tpqu_br",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpqu_r0",
+              "cell_ps": 27.905137955220752,
+              "wire_ps": 0.1737199568173225,
+              "slew_in_ps": 21.300780947981462,
+              "pin_cap": 2.35026,
+              "wire_cap": 1.3325692320000002,
+              "net_length_um": 8.64
+            },
+            {
+              "driver": "Tpqu_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpqu_r1",
+              "cell_ps": 23.563022523453384,
+              "wire_ps": 0.08743916928228251,
+              "slew_in_ps": 9.748114042782758,
+              "pin_cap": 0.852045,
+              "wire_cap": 1.3325692320000002,
+              "net_length_um": 8.64
+            },
+            {
+              "driver": "Tpqu_r1",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpquc_br",
+              "cell_ps": 37.00752014132753,
+              "wire_ps": 1.6568386484001618,
+              "slew_in_ps": 8.803978428561733,
+              "pin_cap": 13.426845,
+              "wire_cap": 12.242979818999993,
+              "net_length_um": 79.37999999999994
+            },
+            {
+              "driver": "Tpquc_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpquc_r0",
+              "cell_ps": 35.198598208791246,
+              "wire_ps": 0.5181884763227398,
+              "slew_in_ps": 38.288922929505596,
+              "pin_cap": 2.35026,
+              "wire_cap": 3.0815663490000005,
+              "net_length_um": 19.98
+            },
+            {
+              "driver": "Tpquc_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpquc",
+              "cell_ps": 25.627348504066195,
+              "wire_ps": 0.3186641551479598,
+              "slew_in_ps": 14.59385456669904,
+              "pin_cap": 0.852045,
+              "wire_cap": 3.0815663490000005,
+              "net_length_um": 19.98
+            },
+            {
+              "driver": "Tpquc",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[3\\]$_DFFE_PP_/CLK",
+              "cell_ps": 29.776448994491314,
+              "wire_ps": 0.17564454803203747,
+              "slew_in_ps": 10.011403646270361,
+              "pin_cap": 7.8508000000000004,
+              "wire_cap": 3.8365349948467182,
+              "net_length_um": 25.796479599999987
+            }
+          ]
+        }
+      },
+      "leaf_mean_max": {
+        "leaf": "Tppxp",
+        "edge": "rise",
+        "mean_ps": 393.0993201962449,
+        "representative_sink_path": {
+          "leaf": "Tppxp",
+          "sink": "u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m/rclk",
+          "edge": "rise",
+          "arrival_ps": 393.0993201962449,
+          "cell_total_ps": 352.4910710125815,
+          "wire_total_ps": 40.60824918366339,
+          "clock_stages": 12,
+          "parts": [
+            {
+              "driver": "root",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tp_br",
+              "cell_ps": 20.716009690934342,
+              "wire_ps": 0.00857901571585254,
+              "slew_in_ps": 0.0,
+              "pin_cap": 4.68475,
+              "wire_cap": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125
+            },
+            {
+              "driver": "Tp_br",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tp_r0",
+              "cell_ps": 21.32350380879391,
+              "wire_ps": 1.6365206996240476,
+              "slew_in_ps": 10.199307423574993,
+              "pin_cap": 1.20694,
+              "wire_cap": 7.578987507000002,
+              "net_length_um": 49.14
+            },
+            {
+              "driver": "Tp_r0",
+              "master": "BUFx10_ASAP7_75t_R",
+              "child": "Tpp_br",
+              "cell_ps": 29.45239963617185,
+              "wire_ps": 3.1816242604138587,
+              "slew_in_ps": 18.090007530023154,
+              "pin_cap": 5.5378050000000005,
+              "wire_cap": 7.912129815000001,
+              "net_length_um": 51.3
+            },
+            {
+              "driver": "Tpp_br",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tpp_r0",
+              "cell_ps": 26.732798961172726,
+              "wire_ps": 2.228251436959215,
+              "slew_in_ps": 33.536489497237355,
+              "pin_cap": 2.34288,
+              "wire_cap": 8.078700969000002,
+              "net_length_um": 52.38
+            },
+            {
+              "driver": "Tpp_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tpp_r1",
+              "cell_ps": 24.29935382798241,
+              "wire_ps": 2.1908907593871305,
+              "slew_in_ps": 23.76865480872649,
+              "pin_cap": 2.34288,
+              "wire_cap": 7.995415392000002,
+              "net_length_um": 51.84
+            },
+            {
+              "driver": "Tpp_r1",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tppx_br",
+              "cell_ps": 33.16062611940714,
+              "wire_ps": 10.711608695084175,
+              "slew_in_ps": 23.245963843903926,
+              "pin_cap": 22.2868,
+              "wire_cap": 12.242979819,
+              "net_length_um": 79.38
+            },
+            {
+              "driver": "Tppx_br",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tppx_r0",
+              "cell_ps": 36.39112121006268,
+              "wire_ps": 1.295465944469943,
+              "slew_in_ps": 100.27164510508973,
+              "pin_cap": 2.34288,
+              "wire_cap": 5.746704813000001,
+              "net_length_um": 37.26
+            },
+            {
+              "driver": "Tppx_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tppx_r1",
+              "cell_ps": 21.88941368956554,
+              "wire_ps": 1.3244783304344634,
+              "slew_in_ps": 17.987502624122367,
+              "pin_cap": 2.34187,
+              "wire_cap": 5.829990390000001,
+              "net_length_um": 37.8
+            },
+            {
+              "driver": "Tppx_r1",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tppxp_br",
+              "cell_ps": 39.364756373015425,
+              "wire_ps": 15.521708227469832,
+              "slew_in_ps": 16.1352498867112,
+              "pin_cap": 42.156690000000005,
+              "wire_cap": 22.570391367,
+              "net_length_um": 146.33999999999997
+            },
+            {
+              "driver": "Tppxp_br",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tppxp_r0",
+              "cell_ps": 46.21509976994376,
+              "wire_ps": 1.0453358074127976,
+              "slew_in_ps": 145.3711156185394,
+              "pin_cap": 2.34187,
+              "wire_cap": 4.997134620000001,
+              "net_length_um": 32.4
+            },
+            {
+              "driver": "Tppxp_r0",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tppxp",
+              "cell_ps": 23.070642258882337,
+              "wire_ps": 0.7447976811788702,
+              "slew_in_ps": 17.707331174154138,
+              "pin_cap": 0.852045,
+              "wire_cap": 5.0804201970000005,
+              "net_length_um": 32.94
+            },
+            {
+              "driver": "Tppxp",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "u.u_ep.g_rb_safe.u_m.g_bank\\[0\\].g_depth\\[1\\].g_256.u_m/rclk",
+              "cell_ps": 29.875345666649363,
+              "wire_ps": 0.7189883255132006,
+              "slew_in_ps": 11.372419821810507,
+              "pin_cap": 9.3458,
+              "wire_cap": 1.7178000755097598,
+              "net_length_um": 11.5503168
+            }
+          ]
+        }
+      },
+      "window_ps": 49.94103641452875,
+      "same_master_summary": {
+        "mean": 370.87,
+        "leaf_mean_min": 343.16,
+        "leaf_mean_max": 393.1,
+        "window": 49.94,
+        "sink_min": 343.06,
+        "sink_max": 393.75,
+        "leaf_slew_in_max": 53.79,
+        "leaf_out_slew_max": 47.65,
+        "analysis": "max_rise",
+        "basis": "GRT",
+        "model": "uf_phys3 v1"
+      }
+    },
+    "FF": {
+      "sink_min": {
+        "leaf": "Tpquc",
+        "sink": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[0\\]$_DFFE_PP_/CLK",
+        "edge": "rise",
+        "arrival_ps": 254.17050375326335,
+        "cell_total_ps": 245.22734283302105,
+        "wire_total_ps": 8.94316092024231,
+        "clock_stages": 12,
+        "parts": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tp_br",
+            "cell_ps": 15.679746465100358,
+            "wire_ps": 0.010554565405480583,
+            "slew_in_ps": 0.0,
+            "pin_cap": 5.19925,
+            "wire_cap": 0.16657115400000194,
+            "net_length_um": 1.0800000000000125
+          },
+          {
+            "driver": "Tp_br",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tp_r0",
+            "cell_ps": 15.690911368372035,
+            "wire_ps": 1.8651068886220081,
+            "slew_in_ps": 8.072865165007295,
+            "pin_cap": 1.3354,
+            "wire_cap": 7.578987507000002,
+            "net_length_um": 49.14
+          },
+          {
+            "driver": "Tp_r0",
+            "master": "BUFx10_ASAP7_75t_R",
+            "child": "Tpq_br",
+            "cell_ps": 21.258969478486616,
+            "wire_ps": 3.7355095366965068,
+            "slew_in_ps": 13.846478263459097,
+            "pin_cap": 6.141703,
+            "wire_cap": 7.912129815000001,
+            "net_length_um": 51.3
+          },
+          {
+            "driver": "Tpq_br",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpq_r0",
+            "cell_ps": 22.77617099105992,
+            "wire_ps": 0.0,
+            "slew_in_ps": 26.15246278390395,
+            "pin_cap": 2.60735,
+            "wire_cap": 0.0,
+            "net_length_um": 0.0
+          },
+          {
+            "driver": "Tpq_r0",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpq_r1",
+            "cell_ps": 17.331660614365507,
+            "wire_ps": 0.0,
+            "slew_in_ps": 7.9366706411160175,
+            "pin_cap": 0.938203,
+            "wire_cap": 0.0,
+            "net_length_um": 0.0
+          },
+          {
+            "driver": "Tpq_r1",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpqu_br",
+            "cell_ps": 21.987034798958362,
+            "wire_ps": 0.09880299687312805,
+            "slew_in_ps": 6.252982467592247,
+            "pin_cap": 11.569262,
+            "wire_cap": 2.0821394250000016,
+            "net_length_um": 13.500000000000007
+          },
+          {
+            "driver": "Tpqu_br",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpqu_r0",
+            "cell_ps": 20.378468279225537,
+            "wire_ps": 0.20947280802706944,
+            "slew_in_ps": 16.263475373365544,
+            "pin_cap": 2.60735,
+            "wire_cap": 1.3325692320000002,
+            "net_length_um": 8.64
+          },
+          {
+            "driver": "Tpqu_r0",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpqu_r1",
+            "cell_ps": 17.477683358707992,
+            "wire_ps": 0.10266769685458946,
+            "slew_in_ps": 7.6565098770245505,
+            "pin_cap": 0.938203,
+            "wire_cap": 1.3325692320000002,
+            "net_length_um": 8.64
+          },
+          {
+            "driver": "Tpqu_r1",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpquc_br",
+            "cell_ps": 27.098598398513637,
+            "wire_ps": 1.9359491668312554,
+            "slew_in_ps": 6.80085403194627,
+            "pin_cap": 14.803989,
+            "wire_cap": 12.242979818999993,
+            "net_length_um": 79.37999999999994
+          },
+          {
+            "driver": "Tpquc_br",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "Tpquc_r0",
+            "cell_ps": 24.769581926546657,
+            "wire_ps": 0.6138070643211331,
+            "slew_in_ps": 28.716000908825027,
+            "pin_cap": 2.60735,
+            "wire_cap": 3.0815663490000005,
+            "net_length_um": 19.98
+          },
+          {
+            "driver": "Tpquc_r0",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tpquc",
+            "cell_ps": 18.778363130718542,
+            "wire_ps": 0.3668202447347731,
+            "slew_in_ps": 10.94723215853922,
+            "pin_cap": 0.938203,
+            "wire_cap": 3.0815663490000005,
+            "net_length_um": 19.98
+          },
+          {
+            "driver": "Tpquc",
+            "master": "BUFx8_ASAP7_75t_R",
+            "child": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[0\\]$_DFFE_PP_/CLK",
+            "cell_ps": 22.00015402296589,
+            "wire_ps": 0.004469951876366376,
+            "slew_in_ps": 7.753697147086894,
+            "pin_cap": 8.804599999999999,
+            "wire_cap": 3.8365349948467182,
+            "net_length_um": 25.796479599999987
+          }
+        ]
+      },
+      "sink_max": {
+        "leaf": "Tppxc",
+        "sink": "u.u_gb.f_rx\\[162\\]$_DFF_P_/CLK",
+        "edge": "rise",
+        "arrival_ps": 302.4170966159049,
+        "cell_total_ps": 254.275254958019,
+        "wire_total_ps": 48.141841657885976,
+        "clock_stages": 12,
+        "parts": [
+          {
+            "driver": "root",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "Tp_br",
+            "cell_ps": 15.679746465100358,
+            "wire_ps": 0.010554565405480583,
+            "slew_in_ps": 0.0,
+            "pin_cap": 5.19925,
+            "wire_cap": 0.16657115400000194,
+            "net_length_um": 1.0800000000000125
+          },
+          {
+            "driver": "Tp_br",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tp_r0",
+            "cell_ps": 15.690911368372035,
+            "wire_ps": 1.8651068886220081,
+            "slew_in_ps": 8.072865165007295,
+            "pin_cap": 1.3354,
+            "wire_cap": 7.578987507000002,
+            "net_length_um": 49.14
+          },
+          {
+            "driver": "Tp_r0",
+            "master": "BUFx10_ASAP7_75t_R",
+            "child": "Tpp_br",
+            "cell_ps": 21.258969478486616,
+            "wire_ps": 3.7569857400584294,
+            "slew_in_ps": 13.846478263459097,
+            "pin_cap": 6.141703,
+            "wire_cap": 7.912129815000001,
+            "net_length_um": 51.3
+          },
+          {
+            "driver": "Tpp_br",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tpp_r0",
+            "cell_ps": 18.89052442693607,
+            "wire_ps": 2.576257406058283,
+            "slew_in_ps": 26.262979312038215,
+            "pin_cap": 2.60175,
+            "wire_cap": 8.078700969000002,
+            "net_length_um": 52.38
+          },
+          {
+            "driver": "Tpp_r0",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tpp_r1",
+            "cell_ps": 17.373525504145356,
+            "wire_ps": 2.5337102588305007,
+            "slew_in_ps": 18.323551288467172,
+            "pin_cap": 2.60175,
+            "wire_cap": 7.995415392000002,
+            "net_length_um": 51.84
+          },
+          {
+            "driver": "Tpp_r1",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tppx_br",
+            "cell_ps": 24.201533365444988,
+            "wire_ps": 12.85512842977202,
+            "slew_in_ps": 17.961478242547123,
+            "pin_cap": 24.72565,
+            "wire_cap": 12.242979819,
+            "net_length_um": 79.38
+          },
+          {
+            "driver": "Tppx_br",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tppx_r0",
+            "cell_ps": 25.095341664633835,
+            "wire_ps": 1.5108411498238032,
+            "slew_in_ps": 80.91526830166069,
+            "pin_cap": 2.60175,
+            "wire_cap": 5.746704813000001,
+            "net_length_um": 37.26
+          },
+          {
+            "driver": "Tppx_r0",
+            "master": "BUFx12f_ASAP7_75t_R",
+            "child": "Tppx_r1",
+            "cell_ps": 15.622642040389765,
+            "wire_ps": 1.5432053898556262,
+            "slew_in_ps": 13.697265380733663,
+            "pin_cap": 2.5975,
+            "wire_cap": 5.829990390000001,
+            "net_length_um": 37.8
+          },
+          {
+            "driver": "Tppx_r1",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tppxc_br",
+            "cell_ps": 29.4076945959305,
+            "wire_ps": 18.47521590462808,
+            "slew_in_ps": 12.477658585529921,
+            "pin_cap": 46.76775,
+            "wire_cap": 22.570391367,
+            "net_length_um": 146.33999999999997
+          },
+          {
+            "driver": "Tppxc_br",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tppxc_r0",
+            "cell_ps": 31.091089265960896,
+            "wire_ps": 0.8823322638276252,
+            "slew_in_ps": 116.75098719985412,
+            "pin_cap": 2.5975,
+            "wire_cap": 3.997707696000001,
+            "net_length_um": 25.92
+          },
+          {
+            "driver": "Tppxc_r0",
+            "master": "BUFx16f_ASAP7_75t_R",
+            "child": "Tppxc",
+            "cell_ps": 16.43806136520175,
+            "wire_ps": 0.910804854945257,
+            "slew_in_ps": 11.944427519966535,
+            "pin_cap": 2.60735,
+            "wire_cap": 4.080993273000001,
+            "net_length_um": 26.46
+          },
+          {
+            "driver": "Tppxc",
+            "master": "BUFx24_ASAP7_75t_R",
+            "child": "u.u_gb.f_rx\\[162\\]$_DFF_P_/CLK",
+            "cell_ps": 23.525215417416817,
+            "wire_ps": 1.2216988060588627,
+            "slew_in_ps": 9.197701874520872,
+            "pin_cap": 23.169999999999998,
+            "wire_cap": 9.85649033968126,
+            "net_length_um": 66.27406039999987
+          }
+        ]
+      },
+      "leaf_mean_min": {
+        "leaf": "Tpquc",
+        "edge": "rise",
+        "mean_ps": 254.2777690276752,
+        "representative_sink_path": {
+          "leaf": "Tpquc",
+          "sink": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[3\\]$_DFFE_PP_/CLK",
+          "edge": "rise",
+          "arrival_ps": 254.3560872817001,
+          "cell_total_ps": 245.22734283302105,
+          "wire_total_ps": 9.128744448679063,
+          "clock_stages": 12,
+          "parts": [
+            {
+              "driver": "root",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tp_br",
+              "cell_ps": 15.679746465100358,
+              "wire_ps": 0.010554565405480583,
+              "slew_in_ps": 0.0,
+              "pin_cap": 5.19925,
+              "wire_cap": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125
+            },
+            {
+              "driver": "Tp_br",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tp_r0",
+              "cell_ps": 15.690911368372035,
+              "wire_ps": 1.8651068886220081,
+              "slew_in_ps": 8.072865165007295,
+              "pin_cap": 1.3354,
+              "wire_cap": 7.578987507000002,
+              "net_length_um": 49.14
+            },
+            {
+              "driver": "Tp_r0",
+              "master": "BUFx10_ASAP7_75t_R",
+              "child": "Tpq_br",
+              "cell_ps": 21.258969478486616,
+              "wire_ps": 3.7355095366965068,
+              "slew_in_ps": 13.846478263459097,
+              "pin_cap": 6.141703,
+              "wire_cap": 7.912129815000001,
+              "net_length_um": 51.3
+            },
+            {
+              "driver": "Tpq_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpq_r0",
+              "cell_ps": 22.77617099105992,
+              "wire_ps": 0.0,
+              "slew_in_ps": 26.15246278390395,
+              "pin_cap": 2.60735,
+              "wire_cap": 0.0,
+              "net_length_um": 0.0
+            },
+            {
+              "driver": "Tpq_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpq_r1",
+              "cell_ps": 17.331660614365507,
+              "wire_ps": 0.0,
+              "slew_in_ps": 7.9366706411160175,
+              "pin_cap": 0.938203,
+              "wire_cap": 0.0,
+              "net_length_um": 0.0
+            },
+            {
+              "driver": "Tpq_r1",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpqu_br",
+              "cell_ps": 21.987034798958362,
+              "wire_ps": 0.09880299687312805,
+              "slew_in_ps": 6.252982467592247,
+              "pin_cap": 11.569262,
+              "wire_cap": 2.0821394250000016,
+              "net_length_um": 13.500000000000007
+            },
+            {
+              "driver": "Tpqu_br",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpqu_r0",
+              "cell_ps": 20.378468279225537,
+              "wire_ps": 0.20947280802706944,
+              "slew_in_ps": 16.263475373365544,
+              "pin_cap": 2.60735,
+              "wire_cap": 1.3325692320000002,
+              "net_length_um": 8.64
+            },
+            {
+              "driver": "Tpqu_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpqu_r1",
+              "cell_ps": 17.477683358707992,
+              "wire_ps": 0.10266769685458946,
+              "slew_in_ps": 7.6565098770245505,
+              "pin_cap": 0.938203,
+              "wire_cap": 1.3325692320000002,
+              "net_length_um": 8.64
+            },
+            {
+              "driver": "Tpqu_r1",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpquc_br",
+              "cell_ps": 27.098598398513637,
+              "wire_ps": 1.9359491668312554,
+              "slew_in_ps": 6.80085403194627,
+              "pin_cap": 14.803989,
+              "wire_cap": 12.242979818999993,
+              "net_length_um": 79.37999999999994
+            },
+            {
+              "driver": "Tpquc_br",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "Tpquc_r0",
+              "cell_ps": 24.769581926546657,
+              "wire_ps": 0.6138070643211331,
+              "slew_in_ps": 28.716000908825027,
+              "pin_cap": 2.60735,
+              "wire_cap": 3.0815663490000005,
+              "net_length_um": 19.98
+            },
+            {
+              "driver": "Tpquc_r0",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tpquc",
+              "cell_ps": 18.778363130718542,
+              "wire_ps": 0.3668202447347731,
+              "slew_in_ps": 10.94723215853922,
+              "pin_cap": 0.938203,
+              "wire_cap": 3.0815663490000005,
+              "net_length_um": 19.98
+            },
+            {
+              "driver": "Tpquc",
+              "master": "BUFx8_ASAP7_75t_R",
+              "child": "u.u_ep.g_fifo_safe.u_m.g_slice\\[2\\].forwarded\\[3\\]$_DFFE_PP_/CLK",
+              "cell_ps": 22.00015402296589,
+              "wire_ps": 0.19005348031311964,
+              "slew_in_ps": 7.753697147086894,
+              "pin_cap": 8.804599999999999,
+              "wire_cap": 3.8365349948467182,
+              "net_length_um": 25.796479599999987
+            }
+          ]
+        }
+      },
+      "leaf_mean_max": {
+        "leaf": "Tppxc",
+        "edge": "rise",
+        "mean_ps": 301.87179229272937,
+        "representative_sink_path": {
+          "leaf": "Tppxc",
+          "sink": "u.u_gb.g_cc\\[18\\].g_b\\[449\\].v1$_DFF_P_/CLK",
+          "edge": "rise",
+          "arrival_ps": 302.066864235977,
+          "cell_total_ps": 254.275254958019,
+          "wire_total_ps": 47.79160927795808,
+          "clock_stages": 12,
+          "parts": [
+            {
+              "driver": "root",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "Tp_br",
+              "cell_ps": 15.679746465100358,
+              "wire_ps": 0.010554565405480583,
+              "slew_in_ps": 0.0,
+              "pin_cap": 5.19925,
+              "wire_cap": 0.16657115400000194,
+              "net_length_um": 1.0800000000000125
+            },
+            {
+              "driver": "Tp_br",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tp_r0",
+              "cell_ps": 15.690911368372035,
+              "wire_ps": 1.8651068886220081,
+              "slew_in_ps": 8.072865165007295,
+              "pin_cap": 1.3354,
+              "wire_cap": 7.578987507000002,
+              "net_length_um": 49.14
+            },
+            {
+              "driver": "Tp_r0",
+              "master": "BUFx10_ASAP7_75t_R",
+              "child": "Tpp_br",
+              "cell_ps": 21.258969478486616,
+              "wire_ps": 3.7569857400584294,
+              "slew_in_ps": 13.846478263459097,
+              "pin_cap": 6.141703,
+              "wire_cap": 7.912129815000001,
+              "net_length_um": 51.3
+            },
+            {
+              "driver": "Tpp_br",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tpp_r0",
+              "cell_ps": 18.89052442693607,
+              "wire_ps": 2.576257406058283,
+              "slew_in_ps": 26.262979312038215,
+              "pin_cap": 2.60175,
+              "wire_cap": 8.078700969000002,
+              "net_length_um": 52.38
+            },
+            {
+              "driver": "Tpp_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tpp_r1",
+              "cell_ps": 17.373525504145356,
+              "wire_ps": 2.5337102588305007,
+              "slew_in_ps": 18.323551288467172,
+              "pin_cap": 2.60175,
+              "wire_cap": 7.995415392000002,
+              "net_length_um": 51.84
+            },
+            {
+              "driver": "Tpp_r1",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tppx_br",
+              "cell_ps": 24.201533365444988,
+              "wire_ps": 12.85512842977202,
+              "slew_in_ps": 17.961478242547123,
+              "pin_cap": 24.72565,
+              "wire_cap": 12.242979819,
+              "net_length_um": 79.38
+            },
+            {
+              "driver": "Tppx_br",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tppx_r0",
+              "cell_ps": 25.095341664633835,
+              "wire_ps": 1.5108411498238032,
+              "slew_in_ps": 80.91526830166069,
+              "pin_cap": 2.60175,
+              "wire_cap": 5.746704813000001,
+              "net_length_um": 37.26
+            },
+            {
+              "driver": "Tppx_r0",
+              "master": "BUFx12f_ASAP7_75t_R",
+              "child": "Tppx_r1",
+              "cell_ps": 15.622642040389765,
+              "wire_ps": 1.5432053898556262,
+              "slew_in_ps": 13.697265380733663,
+              "pin_cap": 2.5975,
+              "wire_cap": 5.829990390000001,
+              "net_length_um": 37.8
+            },
+            {
+              "driver": "Tppx_r1",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tppxc_br",
+              "cell_ps": 29.4076945959305,
+              "wire_ps": 18.47521590462808,
+              "slew_in_ps": 12.477658585529921,
+              "pin_cap": 46.76775,
+              "wire_cap": 22.570391367,
+              "net_length_um": 146.33999999999997
+            },
+            {
+              "driver": "Tppxc_br",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tppxc_r0",
+              "cell_ps": 31.091089265960896,
+              "wire_ps": 0.8823322638276252,
+              "slew_in_ps": 116.75098719985412,
+              "pin_cap": 2.5975,
+              "wire_cap": 3.997707696000001,
+              "net_length_um": 25.92
+            },
+            {
+              "driver": "Tppxc_r0",
+              "master": "BUFx16f_ASAP7_75t_R",
+              "child": "Tppxc",
+              "cell_ps": 16.43806136520175,
+              "wire_ps": 0.910804854945257,
+              "slew_in_ps": 11.944427519966535,
+              "pin_cap": 2.60735,
+              "wire_cap": 4.080993273000001,
+              "net_length_um": 26.46
+            },
+            {
+              "driver": "Tppxc",
+              "master": "BUFx24_ASAP7_75t_R",
+              "child": "u.u_gb.g_cc\\[18\\].g_b\\[449\\].v1$_DFF_P_/CLK",
+              "cell_ps": 23.525215417416817,
+              "wire_ps": 0.8714664261309663,
+              "slew_in_ps": 9.197701874520872,
+              "pin_cap": 23.169999999999998,
+              "wire_cap": 9.85649033968126,
+              "net_length_um": 66.27406039999987
+            }
+          ]
+        }
+      },
+      "window_ps": 47.594023265054176,
+      "same_master_summary": {
+        "mean": 277.37,
+        "leaf_mean_min": 254.28,
+        "leaf_mean_max": 301.87,
+        "window": 47.59,
+        "sink_min": 254.17,
+        "sink_max": 302.42,
+        "leaf_slew_in_max": 40.33,
+        "leaf_out_slew_max": 35.81,
+        "analysis": "min_rise_fall",
+        "basis": "GRT",
+        "model": "uf_phys3 v1"
+      }
+    }
+  },
+  "per_bay_native_frozen_loads": [
+    {
+      "group": [
+        0,
+        0
+      ],
+      "xy_um": [
+        55.62,
+        70.2
+      ],
+      "subtree_fanout": 10,
+      "sinks": 4115,
+      "flop_sinks": 4087,
+      "macro_sinks": 28,
+      "branch_masters": {
+        "BUFx16f_ASAP7_75t_R": 6,
+        "BUFx10_ASAP7_75t_R": 1,
+        "BUFx12f_ASAP7_75t_R": 3
+      },
+      "driver": "Tpp_r1",
+      "driver_master": "BUFx12f_ASAP7_75t_R",
+      "child_branch_input_cap": {
+        "TT": 22.2868,
+        "FF": 24.72565
+      }
+    },
+    {
+      "group": [
+        0,
+        1
+      ],
+      "xy_um": [
+        55.62,
+        227.34
+      ],
+      "subtree_fanout": 7,
+      "sinks": 2880,
+      "flop_sinks": 2850,
+      "macro_sinks": 30,
+      "branch_masters": {
+        "BUFx12f_ASAP7_75t_R": 1,
+        "BUFx8_ASAP7_75t_R": 4,
+        "BUFx24_ASAP7_75t_R": 2
+      },
+      "driver": "Tpq_r1",
+      "driver_master": "BUFx8_ASAP7_75t_R",
+      "child_branch_input_cap": {
+        "TT": 10.45158,
+        "FF": 11.569262
+      }
+    },
+    {
+      "group": [
+        0,
+        2
+      ],
+      "xy_um": [
+        55.62,
+        386.1
+      ],
+      "subtree_fanout": 6,
+      "sinks": 2467,
+      "flop_sinks": 2447,
+      "macro_sinks": 20,
+      "branch_masters": {
+        "BUFx8_ASAP7_75t_R": 6
+      },
+      "driver": "Tpr_r1",
+      "driver_master": "BUFx12f_ASAP7_75t_R",
+      "child_branch_input_cap": {
+        "TT": 5.1122700000000005,
+        "FF": 5.629218
+      }
+    },
+    {
+      "group": [
+        1,
+        0
+      ],
+      "xy_um": [
+        240.3,
+        70.2
+      ],
+      "subtree_fanout": 8,
+      "sinks": 3292,
+      "flop_sinks": 3288,
+      "macro_sinks": 4,
+      "branch_masters": {
+        "BUFx12_ASAP7_75t_R": 1,
+        "BUFx8_ASAP7_75t_R": 6,
+        "BUFx24_ASAP7_75t_R": 1
+      },
+      "driver": "Tqp_r1",
+      "driver_master": "BUFx8_ASAP7_75t_R",
+      "child_branch_input_cap": {
+        "TT": 8.66646,
+        "FF": 9.572788
+      }
+    },
+    {
+      "group": [
+        1,
+        1
+      ],
+      "xy_um": [
+        240.3,
+        227.34
+      ],
+      "subtree_fanout": 13,
+      "sinks": 5349,
+      "flop_sinks": 5331,
+      "macro_sinks": 18,
+      "branch_masters": {
+        "BUFx8_ASAP7_75t_R": 11,
+        "BUFx24_ASAP7_75t_R": 2
+      },
+      "driver": "Tqq_r1",
+      "driver_master": "BUFx8_ASAP7_75t_R",
+      "child_branch_input_cap": {
+        "TT": 14.073015,
+        "FF": 15.534933
+      }
+    },
+    {
+      "group": [
+        1,
+        2
+      ],
+      "xy_um": [
+        240.3,
+        386.1
+      ],
+      "subtree_fanout": 4,
+      "sinks": 1644,
+      "flop_sinks": 1634,
+      "macro_sinks": 10,
+      "branch_masters": {
+        "BUFx8_ASAP7_75t_R": 4
+      },
+      "driver": "Tqr_r1",
+      "driver_master": "BUFx16f_ASAP7_75t_R",
+      "child_branch_input_cap": {
+        "TT": 3.40818,
+        "FF": 3.752812
+      }
+    }
+  ]
+}

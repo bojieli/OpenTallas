@@ -1,0 +1,207 @@
+{
+  "schema": "opentallas.s81.nearest_geometry.v1",
+  "source_sha": "75244d412b4",
+  "scope": "actual planned shortest-legal geometry LOOK; no physical/PG/nativebody qualification",
+  "splits": [
+    2,
+    3,
+    8,
+    8
+  ],
+  "sinks": 19747,
+  "cells": 1811,
+  "island_loads": [
+    {
+      "group": [
+        0,
+        0
+      ],
+      "xy_um": [
+        55.62,
+        70.2
+      ],
+      "subtree_fanout": 10,
+      "sinks": 4115,
+      "flop_sinks": 4087,
+      "macro_sinks": 28
+    },
+    {
+      "group": [
+        0,
+        1
+      ],
+      "xy_um": [
+        55.62,
+        227.34
+      ],
+      "subtree_fanout": 7,
+      "sinks": 2880,
+      "flop_sinks": 2850,
+      "macro_sinks": 30
+    },
+    {
+      "group": [
+        0,
+        2
+      ],
+      "xy_um": [
+        55.62,
+        386.1
+      ],
+      "subtree_fanout": 6,
+      "sinks": 2467,
+      "flop_sinks": 2447,
+      "macro_sinks": 20
+    },
+    {
+      "group": [
+        1,
+        0
+      ],
+      "xy_um": [
+        240.3,
+        70.2
+      ],
+      "subtree_fanout": 8,
+      "sinks": 3292,
+      "flop_sinks": 3288,
+      "macro_sinks": 4
+    },
+    {
+      "group": [
+        1,
+        1
+      ],
+      "xy_um": [
+        240.3,
+        227.34
+      ],
+      "subtree_fanout": 13,
+      "sinks": 5349,
+      "flop_sinks": 5331,
+      "macro_sinks": 18
+    },
+    {
+      "group": [
+        1,
+        2
+      ],
+      "xy_um": [
+        240.3,
+        386.1
+      ],
+      "subtree_fanout": 4,
+      "sinks": 1644,
+      "flop_sinks": 1634,
+      "macro_sinks": 10
+    }
+  ],
+  "island_snap": [
+    {
+      "group": [
+        0,
+        0
+      ],
+      "requested_xy_um": [
+        55.632,
+        70.332
+      ],
+      "maze_xy_um": [
+        55.62,
+        70.2
+      ],
+      "maze_displacement_um": 0.144
+    },
+    {
+      "group": [
+        0,
+        1
+      ],
+      "requested_xy_um": [
+        55.632,
+        227.244
+      ],
+      "maze_xy_um": [
+        55.62,
+        227.34
+      ],
+      "maze_displacement_um": 0.108
+    },
+    {
+      "group": [
+        0,
+        2
+      ],
+      "requested_xy_um": [
+        55.632,
+        386.076
+      ],
+      "maze_xy_um": [
+        55.62,
+        386.1
+      ],
+      "maze_displacement_um": 0.036
+    },
+    {
+      "group": [
+        1,
+        0
+      ],
+      "requested_xy_um": [
+        240.312,
+        70.332
+      ],
+      "maze_xy_um": [
+        240.3,
+        70.2
+      ],
+      "maze_displacement_um": 0.144
+    },
+    {
+      "group": [
+        1,
+        1
+      ],
+      "requested_xy_um": [
+        240.312,
+        227.244
+      ],
+      "maze_xy_um": [
+        240.3,
+        227.34
+      ],
+      "maze_displacement_um": 0.108
+    },
+    {
+      "group": [
+        1,
+        2
+      ],
+      "requested_xy_um": [
+        240.312,
+        386.076
+      ],
+      "maze_xy_um": [
+        240.3,
+        386.1
+      ],
+      "maze_displacement_um": 0.036
+    }
+  ],
+  "leaf_spread_max": 34.13,
+  "leaf_spread_gt40": 0,
+  "bad_legs": [],
+  "segments_per_level": [
+    2,
+    3,
+    3,
+    2
+  ],
+  "level_len_um": [
+    97.74000000000001,
+    158.22,
+    142.56,
+    92.34
+  ],
+  "physical_build": false
+}

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/wt/codex-support-reviewed-0336/tools/die_plan/core_plan_to_infra.py", line 319, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-support-reviewed-0336/tools/die_plan/core_plan_to_infra.py", line 309, in main
+    CI.emit_tcl(sl)
+    ~~~~~~~~~~~^^^^
+  File "/srv/opentallas-scratch2/claude/wt/codex-support-reviewed-0336/tools/die_plan/core_infra.py", line 776, in emit_tcl
+    raise InfraError(f"unequal-count tree model target FAIL/NOT RUN at {corner}; no physical build")
+core_infra.InfraError: unequal-count tree model target FAIL/NOT RUN at TT; no physical build

@@ -1,0 +1,16 @@
+{
+  "source_sha": "75244d412b4",
+  "reviewed_image_sha256": "f78480cf6178798fe18fdc1fe86fde10791a56a6fcfb9c1a7c02d84a95a73f2b",
+  "reviewer": "CODEX coverage_support personally viewed actual planned geometry",
+  "scope": "GEOMETRY LOOK FOR ONE MODEL COUPON ONLY; no P&R/nativebody/PG qualification",
+  "model_coupon_authorized": true,
+  "physical_build_authorized": false,
+  "findings": [
+    "Six declared crossing bays and centred clock entry retained in same outline",
+    "Long E-mid to N-child connection now uses nearest E-top bay; no cross-body shortcut claimed",
+    "Per-bay subtree fanout10/7/6/8/13/4 and actual macro/flop loads remain explicit",
+    "Actual maze level3max142.56um, no legdetours over1.10, leafspreadmax34.13um with no leaf over40",
+    "1811clockcells and segments2,3,3,2 preserveequaldepth while removing one clock stage; RTL cycles unchanged",
+    "Native cell-body rows/PG/pinaccess still require original converter/gates; source plan is unqualified until measured"
+  ]
+}

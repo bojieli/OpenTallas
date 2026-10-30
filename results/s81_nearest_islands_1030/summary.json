@@ -1,0 +1,280 @@
+{
+  "name": "dsfd_coll_lane_w_safe8_ntf_r13_s81_coll_uf3d1",
+  "splits": "2,3,8,8",
+  "sinks": 19747,
+  "n_cells": 1811,
+  "stages": [
+    12
+  ],
+  "TT": {
+    "mean": 370.87,
+    "leaf_mean_min": 343.16,
+    "leaf_mean_max": 393.1,
+    "window": 49.94,
+    "sink_min": 343.06,
+    "sink_max": 393.75,
+    "leaf_slew_in_max": 53.79,
+    "leaf_out_slew_max": 47.65,
+    "analysis": "max_rise",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+  },
+  "FF": {
+    "mean": 277.37,
+    "leaf_mean_min": 254.28,
+    "leaf_mean_max": 301.87,
+    "window": 47.59,
+    "sink_min": 254.17,
+    "sink_max": 302.42,
+    "leaf_slew_in_max": 40.33,
+    "leaf_out_slew_max": 35.81,
+    "analysis": "min_rise_fall",
+    "basis": "GRT",
+    "model": "uf_phys3 v1"
+  },
+  "island_assignment": "nearest_subtree",
+  "island_loads": [
+    {
+      "group": [
+        0,
+        0
+      ],
+      "xy_um": [
+        55.62,
+        70.2
+      ],
+      "subtree_fanout": 10,
+      "sinks": 4115,
+      "flop_sinks": 4087,
+      "macro_sinks": 28
+    },
+    {
+      "group": [
+        0,
+        1
+      ],
+      "xy_um": [
+        55.62,
+        227.34
+      ],
+      "subtree_fanout": 7,
+      "sinks": 2880,
+      "flop_sinks": 2850,
+      "macro_sinks": 30
+    },
+    {
+      "group": [
+        0,
+        2
+      ],
+      "xy_um": [
+        55.62,
+        386.1
+      ],
+      "subtree_fanout": 6,
+      "sinks": 2467,
+      "flop_sinks": 2447,
+      "macro_sinks": 20
+    },
+    {
+      "group": [
+        1,
+        0
+      ],
+      "xy_um": [
+        240.3,
+        70.2
+      ],
+      "subtree_fanout": 8,
+      "sinks": 3292,
+      "flop_sinks": 3288,
+      "macro_sinks": 4
+    },
+    {
+      "group": [
+        1,
+        1
+      ],
+      "xy_um": [
+        240.3,
+        227.34
+      ],
+      "subtree_fanout": 13,
+      "sinks": 5349,
+      "flop_sinks": 5331,
+      "macro_sinks": 18
+    },
+    {
+      "group": [
+        1,
+        2
+      ],
+      "xy_um": [
+        240.3,
+        386.1
+      ],
+      "subtree_fanout": 4,
+      "sinks": 1644,
+      "flop_sinks": 1634,
+      "macro_sinks": 10
+    }
+  ],
+  "island_snap": [
+    {
+      "group": [
+        0,
+        0
+      ],
+      "requested_xy_um": [
+        55.632,
+        70.332
+      ],
+      "maze_xy_um": [
+        55.62,
+        70.2
+      ],
+      "maze_displacement_um": 0.144
+    },
+    {
+      "group": [
+        0,
+        1
+      ],
+      "requested_xy_um": [
+        55.632,
+        227.244
+      ],
+      "maze_xy_um": [
+        55.62,
+        227.34
+      ],
+      "maze_displacement_um": 0.108
+    },
+    {
+      "group": [
+        0,
+        2
+      ],
+      "requested_xy_um": [
+        55.632,
+        386.076
+      ],
+      "maze_xy_um": [
+        55.62,
+        386.1
+      ],
+      "maze_displacement_um": 0.036
+    },
+    {
+      "group": [
+        1,
+        0
+      ],
+      "requested_xy_um": [
+        240.312,
+        70.332
+      ],
+      "maze_xy_um": [
+        240.3,
+        70.2
+      ],
+      "maze_displacement_um": 0.144
+    },
+    {
+      "group": [
+        1,
+        1
+      ],
+      "requested_xy_um": [
+        240.312,
+        227.244
+      ],
+      "maze_xy_um": [
+        240.3,
+        227.34
+      ],
+      "maze_displacement_um": 0.108
+    },
+    {
+      "group": [
+        1,
+        2
+      ],
+      "requested_xy_um": [
+        240.312,
+        386.076
+      ],
+      "maze_xy_um": [
+        240.3,
+        386.1
+      ],
+      "maze_displacement_um": 0.036
+    }
+  ],
+  "leaf_actual_legal": true,
+  "leaf_spread_max": {
+    "all": 34.13,
+    "main": 34.13,
+    "strip": 0.0,
+    "n_gt_40": 0,
+    "top": [
+      [
+        "Tqqqw",
+        34.13
+      ],
+      [
+        "Tppwc",
+        33.63
+      ],
+      [
+        "Tqpwt",
+        33.01
+      ],
+      [
+        "Tqrrw",
+        32.84
+      ],
+      [
+        "Tqpsx",
+        32.82
+      ],
+      [
+        "Tprtx",
+        31.2
+      ],
+      [
+        "Tppwv",
+        30.95
+      ],
+      [
+        "Tqqtq",
+        29.08
+      ]
+    ]
+  },
+  "repeaters_per_edge": [
+    1,
+    2,
+    2,
+    1
+  ],
+  "level_len_um": [
+    97.74,
+    158.22,
+    142.56,
+    92.34
+  ],
+  "model": "uf_phys3 v1 GRT, TT max-rise / FF min-rise-fall; SAME frozen masters and kernel as d1 (R21); R7 retained as info",
+  "verdict": "FAIL",
+  "physical_build": false,
+  "source_sha": "75244d412b4",
+  "scope": "One authorized nearest-bay structural MODEL coupon; no measured timing or clock contract change",
+  "artifacts": "/srv/opentallas-scratch2/claude/codex-s81-islands-0336/nearest/plan/dsfd_coll_lane_w_safe8_ntf",
+  "actual_source_geometry_reused": true,
+  "baseline": "results/s81_six_islands_1030/summary.json",
+  "mean_improvement_ps": {
+    "TT": 24.67,
+    "FF": 19.17
+  },
+  "remaining_hold": "Existing TT/FF model-window20 policy; band means alreadyINFO; native833 related-pair not qualified"
+}
