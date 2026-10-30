@@ -5992,3 +5992,10 @@ KIT_PREFLIGHT FAIL: autopilot stopped before physical runner
 ot-run: RAN on epyc2 (unit oth-ubuntu-1588845-1793357751): exit 1
 AP_RC=1 | kit epyc2:/srv/opentallas-scratch2/claude/codex-s81phys-0336/kits/ot_s81sl_ve_s_s40h35 src codex/s81phys-0336@46ee0a22ea5 | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
 - 2026-10-30 04:16 PDT KIT-WAVE [s81] -> DIE-S81-34: 2 event(s): slice_station__t7__cl362204c4 FAIL FLOW (unclassified failure @place (see log)) evid intel2:/srv/opentallas-scratch2/claude/kit-wave/s81/d33fc7e9b90/items/slice_station__t7__cl362204c4/gen/slice_station__t7__cl362204c4; slice_station__t7__cl945bc067 FAIL FLOW (unclassified failure @place (see log)) evid intel2:/srv/opentallas-scratch2/claude/kit-wave/s81/d33fc7e9b90/items/slice_station__t7__cl945bc067/gen/slice_station__t7__cl945bc067
+- 2026-10-30 04:26 PDT KIT-WAVE [s81] -> DIE-S81-34: 3 event(s): slice_station__t6__cl54a9ceeb FAIL FLOW (unclassified failure @place (see log)) evid intel2:/srv/opentallas-scratch2/claude/kit-wave/s81/d33fc7e9b90/items/slice_station__t6__cl54a9ceeb/gen/slice_station__t6__cl54a9ceeb; slice_station__t7__cl362204c4 LAUNCHED (kw-s81-slicestationt7cl362204c4-2-59595); slice_station__t7__cl945bc067 LAUNCHED (kw-s81-slicestationt7cl945bc067-2-59595)
+FAILED [AUTOPILOT dc18dbbd5d1a] 2026-10-30 04:33:45 PDT AUTOPILOT -> QC-FIX: FAILED dc18dbbd5d1a qc/qfd_dv_s8x_btab__d10b1030 (STRUCTURAL/preflight): KIT_PREFLIGHT FAIL issues 3
+  - master_slice: master_slice.tcl missing or not generated from this slice
+  - master_slice: core_infra_plan.json differs from compile_slice(slice)
+  - master_slice: master_core_infra.tcl not generated from this slice
+KIT_PREFLIGHT FAIL: autopilot stopped before physical | kit epyc2:/srv/opentallas-scratch2/claude/codex-btab-0336/variantB src codex/btab-0336@3402306e7bb | review no review bundle | run data deleted (logs kept); kit stopped, NOT retried -- fix structurally and enqueue a fresh kit
+- 2026-10-30 04:36 PDT KIT-WAVE [s81] -> DIE-S81-34: 1 event(s): slice_station__t6__cl54a9ceeb LAUNCHED (kw-s81-slicestationt6cl54a9ceeb-2-60210)
