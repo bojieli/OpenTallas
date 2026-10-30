@@ -1,0 +1,20 @@
+{
+  "lec_sd_r52_current": {
+    "verdict": "EQUIVALENT",
+    "top": "kv3_sys_SD_part",
+    "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/lec_sd_r52_current",
+    "scope": "SYNTH SOURCE only, no physical rebind/clock install"
+  },
+  "lec_sd_v1_r52_current": {
+    "verdict": "EQUIVALENT",
+    "top": "kv3_sys_SD_v1_part",
+    "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/lec_sd_v1_r52_current",
+    "scope": "SYNTH SOURCE only, no physical rebind/clock install"
+  },
+  "lec_sd_r52_K_mutant": {
+    "verdict": "NOT EQUIVALENT",
+    "top": "kv3_sys_SD_part",
+    "path": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/lec_sd_r52_K_mutant",
+    "scope": "SYNTH SOURCE only, no physical rebind/clock install"
+  }
+}

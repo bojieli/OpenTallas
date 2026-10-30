@@ -1,0 +1,7 @@
+{
+  "original": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/kits_anchor_v2/kv3_sys_SD/run/results/asap7/dp_kv3_sys_SD/base/1_2_yosys.v",
+  "mutant": "/srv/opentallas-scratch2/claude/codex-kv-sd-1030/kits_anchor_v2/kv3_sys_SD/mutant_fdi_K_lsb.v",
+  "change": "ONLY mapped CA receiver FDI strap input XOR low bit1; original source/netlist untouched",
+  "original_sha256": "7e0344868aa1146999814dc3b8727026bf80e20b1be4bceb238ffe607c969240",
+  "mutant_sha256": "b83bd01250ab73e24cc52ee8bc9362bbaac5074d3bb693ccb1b1566f7fbae86c"
+}
