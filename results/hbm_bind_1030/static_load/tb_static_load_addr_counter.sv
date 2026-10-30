@@ -3,8 +3,8 @@ module tb_static_load_addr_counter;
  parameter MUT=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,dv=0,step=0;reg[226:0]desc=0;
- wire active,fault,av,last;wire[39:0]sa,da;wire[2:0]fmt;
- ot_hbm_static_load_addr_counter #(.MUT_ZERO_STRIDE(MUT==1),.MUT_STRIPE(MUT==2)) dut(clk,rst_n,dv,desc,step,active,fault,av,last,sa,da,fmt);
+ wire[3:0]count;wire active,fault,av,last;wire[39:0]sa,da;wire[2:0]fmt;
+ ot_hbm_static_load_addr_counter #(.MUT_ZERO_STRIDE(MUT==1),.MUT_STRIPE(MUT==2),.COALESCE(0)) dut(clk,rst_n,dv,desc,step,active,fault,av,last,sa,da,fmt,count);
  integer fs[0:5];integer mode,base_stack;integer f,si,di,r,i,esize,sc,dc,checked=0;
  task tick;begin @(posedge clk);#1;end endtask
  task reset;begin @(negedge clk);rst_n=0;dv=0;step=0;repeat(2)tick();@(negedge clk);rst_n=1;end endtask
@@ -26,6 +26,8 @@ module tb_static_load_addr_counter;
  // Resolved227 excludes zero extents; malformed dates fail closed.
  reset();desc=0;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_ZERO_EXTENT");
  reset();step=1;tick();if(!fault||av)$fatal(1,"COUNTER_LATE_STEP");
+ reset();desc=0;desc[94:93]=1;desc[205:186]=1;desc[226:206]=1;desc[44:42]=2;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_BAD_SOURCE_CODE");
+ reset();desc[44:42]=0;desc[4:2]=3;dv=1;tick();if(!fault||active)$fatal(1,"COUNTER_BAD_FORMAT");
  $display("PASS STATIC_LOAD_ADDR_COUNTER formats=6 descriptors=432 sourcecodes=linear0/stripe4_1 all4stacks/wrap words=%0d istride0=broadcast II=1 scalar_VMbytes_per_step=4 added_output_cycles=1",checked);$finish;
  end
 endmodule

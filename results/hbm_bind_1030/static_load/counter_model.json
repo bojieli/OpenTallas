@@ -1,5 +1,5 @@
 {
- "scope": "SOURCE-ONLY resolved227 address-counter component; UNADOPTED, no production producer/route",
+ "scope": "SOURCE-ONLY resolved227 counter plus actual62bit adapter; defaultcoalescing fastpath, UNADOPTED no production issuer/route",
  "descriptor": "native227 LSB fields, CP/scheduler MUST already resolve indexed I, L/L1, dyn_mul, effective N and identity/date",
  "format_inventory": [
   0,
@@ -11,8 +11,8 @@
  ],
  "istride_zero": "true broadcast; descriptor adapter already normalizes raw0 to1 absent ibcast",
  "II_cycles": 1,
- "elements_per_issue": 1,
- "VM_payload_bytes_per_step": 4,
+ "elements_per_issue": "min(rowleft,8-dstlane,(32-srcbyte)/esize) forresolvedsis1/dis1; otherwise1",
+ "VM_payload_bytes_per_step": "up to32 indefaultcoalescedmode; scalarCOALESCE0 ornonunit/broadcastfallback4",
  "output_register_added_cycles": 1,
  "source_dataload": "one scalar address does not imply one HBM sector demand; current ownedwindow32KiB/quad overfetch priced by TOK",
  "address_units": "source227 codedbase40: code0linear/code1STRIPE4, physical37 linear or local35bytes+stripedphysicalstack2; counter output decodedphysical37 in40. Destination40word; srcrowstride localbytes,dstrowstride words.",
@@ -25,7 +25,7 @@
  "unresolved": [
   "actual runtime resolver for96indexedLOADs",
   "productiondateddescriptor issuer/wholeprogramme budget",
-  "coalesced8word fastpath or explicit scalar fullprogrammeprice",
+  "wholeprogrammeactualcoalescedcalendar/partialedges/windows; vectorarchitecture remainsproposal",
   "actualownedwindowepoch begin/fill/release producer",
   "native destination mapper/physicalrouter and all target ports",
   "833psmappedfeedbackadder/lot/clock/route"
@@ -39,5 +39,13 @@
  "descriptor_setup_cycles": 1,
  "sequential_descriptor_nonissue_cycles": 1,
  "chain_latency": "counter1 + combinationalmapper0 + eightleafcomponent7 =8 componentedges before physicalcomposition",
- "per_step_handoff": "combinationalmapper takes caller-provided buffer1,epoch16,ownedwindowrow15,col4 EACHstep; not constant per descriptor. No caller/controller yet installed."
+ "per_step_handoff": "combinationalmapper takes caller-provided buffer1,epoch16,ownedwindowrow15,col4 EACHstep; not constant per descriptor. No caller/controller yet installed.",
+ "coalesced_qualification": "432descriptors22368uops24624expandedwords,all6formats/codes0/1/all4stacks,432multielementuops,5592currentstack2commands exactTOK62brefs;broadcast/striping/forced8boundaries/wrongUEsize mutantscaught",
+ "generic_cell_budget": {
+  "scalar_counter": 1685,
+  "scalar_FF": 430,
+  "coalesced_counter": 1930,
+  "coalesced_FF": 434,
+  "timing": "UNMAPPED/no833ps claim"
+ }
 }

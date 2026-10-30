@@ -2,10 +2,10 @@
 // SOURCE-ONLY component: resolved native227 LOAD descriptor, no indexed resolver,
 // calendar producer, window ownership, PHY or destination router is invented here.
 // step_i is a dated command, never a ready/credit. II1 scalar=one4B VM word/step.
-module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT_STRIPE=0)(
+module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT_STRIPE=0,COALESCE=1,MUT_BATCH=0,MUT_UE_SIZE=0)(
  input wire clk,rst_n,desc_v_i,input wire[226:0]desc_i,input wire step_i,
  output reg active_o,fault_o,addr_v_o,last_o,
- output reg[39:0]src_byte_o,dst_word_o,output reg[2:0]format_o
+ output reg[39:0]src_byte_o,dst_word_o,output reg[2:0]format_o,output reg[3:0]count_o
 );
  reg[39:0]srow,drow,sa,da;
  reg[31:0]sst,dst;
@@ -21,10 +21,26 @@ module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT
  z={1'b0,a[k*8+:8]}+{1'b0,b[k*8+:8]};o=z+9'd1;
  r[k*8+:8]=c?o[7:0]:z[7:0];c=c?o[8]:z[8];end
  r[40]=c;add40=r;end endfunction
- wire last_col=col==n-21'd1;
+ wire[2:0]element_bytes=(fmt==0||fmt==5||(fmt==6&&MUT_UE_SIZE!=0))?3'd4:fmt==1?3'd2:3'd1;
+ wire[1:0]element_shift=(fmt==0||fmt==5)?2'd2:fmt==1?2'd1:2'd0;
+ wire[20:0]row_left=n-col;
+ wire[5:0]source_left=(6'd32-{1'b0,sa[4:0]})>>element_shift;
+ wire[3:0]dest_left=4'd8-{1'b0,da[2:0]};
+ reg[3:0]batch;
+ always @*begin
+ batch=1;
+ if(COALESCE!=0&&sstep=={15'd0,element_bytes}&&dstep==1)begin
+ batch=(source_left<8)?source_left[3:0]:4'd8;
+ if(dest_left<batch)batch=dest_left;
+ if(row_left<{17'd0,batch})batch=row_left[3:0];
+ if(MUT_BATCH!=0)batch=4'd8;
+ end end
+ wire last_col=col+{17'd0,batch}==n;
+ wire[21:0]sadvance=sstep*batch;
+ wire[19:0]dadvance=dstep*batch;
  wire last_row=row==m-20'd1;
- wire[40:0]snext=add40(last_col?srow:sa,last_col?{8'd0,sst}:{22'd0,sstep});
- wire[40:0]dnext=add40(last_col?drow:da,last_col?{8'd0,dst}:{24'd0,dstep});
+ wire[40:0]snext=add40(last_col?srow:sa,last_col?{8'd0,sst}:{18'd0,sadvance});
+ wire[40:0]dnext=add40(last_col?drow:da,last_col?{8'd0,dst}:{20'd0,dadvance});
  wire[2:0]dfmt=desc_i[4:2];
  wire[1:0]eszshift=(dfmt==0||dfmt==5)?2'd2:(dfmt==1)?2'd1:2'd0;
  wire[15:0]sis=(MUT_ZERO_STRIDE!=0&&desc_i[92:77]==0)?16'd1:desc_i[92:77];
@@ -33,7 +49,7 @@ module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT
  wire badsource=(stripe?(|sa[39:35]):(|sa[39:37]))||({5'd0,sa[34:0]}>40'd22500000000-{37'd0,esize});
  wire badalign=(fmt==0||fmt==5)?(|sa[1:0]):fmt==1?sa[0]:1'b0;
  always @(posedge clk)begin
- if(!rst_n)begin active_o<=0;fault_o<=0;addr_v_o<=0;last_o<=0;src_byte_o<=0;dst_word_o<=0;format_o<=0;
+ if(!rst_n)begin active_o<=0;fault_o<=0;addr_v_o<=0;last_o<=0;src_byte_o<=0;dst_word_o<=0;format_o<=0;count_o<=0;
  srow<=0;drow<=0;sa<=0;da<=0;sst<=0;dst<=0;sstep<=0;dstep<=0;m<=0;n<=0;row<=0;col<=0;fmt<=0;stripe<=0;stack<=0;end
  else begin
  addr_v_o<=0;last_o<=0;
@@ -46,12 +62,12 @@ module ot_hbm_static_load_addr_counter #(parameter integer MUT_ZERO_STRIDE=0,MUT
  end else if(step_i)begin
  if(!active_o||fault_o||badalign||badsource)begin fault_o<=1;active_o<=0;end
  else begin
- addr_v_o<=1;src_byte_o<=stripe?{3'd0,stack,sa[34:0]}:{3'd0,sa[36:0]};dst_word_o<=da;format_o<=fmt;last_o<=last_col&&last_row;
+ addr_v_o<=1;src_byte_o<=stripe?{3'd0,stack,sa[34:0]}:{3'd0,sa[36:0]};dst_word_o<=da;format_o<=fmt;count_o<=batch;last_o<=last_col&&last_row;
  if(last_col&&last_row)active_o<=0;
  else if((stripe?(|snext[40:35]):(|snext[40:37]))||dnext[40])begin fault_o<=1;active_o<=0;end
  else begin sa<=snext[39:0];da<=dnext[39:0];
  if(last_col)begin srow<=snext[39:0];drow<=dnext[39:0];col<=0;row<=row+20'd1;if(stripe&&MUT_STRIPE==0)stack<=stack+2'd1;end
- else col<=col+21'd1;end
+ else col<=col+{17'd0,batch};end
  end end
  end end
 endmodule
