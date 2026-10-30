@@ -1,0 +1,1368 @@
+{
+  "root": [
+    1108.768,
+    8.608
+  ],
+  "depth": 5,
+  "own_depth": 5,
+  "relays": [
+    {
+      "name": "u_rrl_0",
+      "xy": [
+        799.2,
+        17.28
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_0",
+      "depth": 1,
+      "tap": 3,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_1",
+      "xy": [
+        799.2,
+        17.28
+      ],
+      "d": "rst_rl_0",
+      "q": "rst_rl_1",
+      "depth": 2,
+      "tap": 3,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_2",
+      "xy": [
+        799.2,
+        17.28
+      ],
+      "d": "rst_rl_1",
+      "q": "rst_rl_2",
+      "depth": 3,
+      "tap": 3,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_3",
+      "xy": [
+        799.2,
+        17.28
+      ],
+      "d": "rst_rl_2",
+      "q": "rst_rl_3",
+      "depth": 4,
+      "tap": 3,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_4",
+      "xy": [
+        799.2,
+        17.28
+      ],
+      "d": "rst_rl_3",
+      "q": "rst_n_t3",
+      "depth": 5,
+      "tap": 3,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_5",
+      "xy": [
+        768.96,
+        233.28
+      ],
+      "d": "rst_rl_0",
+      "q": "rst_rl_5",
+      "depth": 2,
+      "tap": 25,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_6",
+      "xy": [
+        768.96,
+        233.28
+      ],
+      "d": "rst_rl_5",
+      "q": "rst_rl_6",
+      "depth": 3,
+      "tap": 25,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_7",
+      "xy": [
+        768.96,
+        233.28
+      ],
+      "d": "rst_rl_6",
+      "q": "rst_rl_7",
+      "depth": 4,
+      "tap": 25,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_8",
+      "xy": [
+        768.96,
+        233.28
+      ],
+      "d": "rst_rl_7",
+      "q": "rst_n_t25",
+      "depth": 5,
+      "tap": 25,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_9",
+      "xy": [
+        768.96,
+        596.16
+      ],
+      "d": "rst_rl_6",
+      "q": "rst_rl_9",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_10",
+      "xy": [
+        768.96,
+        959.04
+      ],
+      "d": "rst_rl_9",
+      "q": "rst_n_t22",
+      "depth": 5,
+      "tap": 22,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_11",
+      "xy": [
+        397.44000000000005,
+        233.28
+      ],
+      "d": "rst_rl_6",
+      "q": "rst_rl_11",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_12",
+      "xy": [
+        388.8,
+        596.16
+      ],
+      "d": "rst_rl_11",
+      "q": "rst_n_t19",
+      "depth": 5,
+      "tap": 19,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_13",
+      "xy": [
+        421.20000000000005,
+        17.28
+      ],
+      "d": "rst_rl_0",
+      "q": "rst_rl_13",
+      "depth": 2,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_14",
+      "xy": [
+        43.2,
+        17.28
+      ],
+      "d": "rst_rl_13",
+      "q": "rst_rl_14",
+      "depth": 3,
+      "tap": 1,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_15",
+      "xy": [
+        43.2,
+        17.28
+      ],
+      "d": "rst_rl_14",
+      "q": "rst_rl_15",
+      "depth": 4,
+      "tap": 1,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_16",
+      "xy": [
+        43.2,
+        17.28
+      ],
+      "d": "rst_rl_15",
+      "q": "rst_n_t1",
+      "depth": 5,
+      "tap": 1,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_17",
+      "xy": [
+        17.28,
+        367.2
+      ],
+      "d": "rst_rl_14",
+      "q": "rst_rl_17",
+      "depth": 4,
+      "tap": 14,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_18",
+      "xy": [
+        17.28,
+        367.2
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_n_t14",
+      "depth": 5,
+      "tap": 14,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_19",
+      "xy": [
+        17.28,
+        734.4
+      ],
+      "d": "rst_rl_17",
+      "q": "rst_n_t17",
+      "depth": 5,
+      "tap": 17,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_20",
+      "xy": [
+        77.76,
+        164.16
+      ],
+      "d": "rst_rl_14",
+      "q": "rst_rl_20",
+      "depth": 4,
+      "tap": 28,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_21",
+      "xy": [
+        77.76,
+        164.16
+      ],
+      "d": "rst_rl_20",
+      "q": "rst_n_t28",
+      "depth": 5,
+      "tap": 28,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_22",
+      "xy": [
+        430.92,
+        17.28
+      ],
+      "d": "rst_rl_0",
+      "q": "rst_rl_22",
+      "depth": 2,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_23",
+      "xy": [
+        216.0,
+        170.64000000000001
+      ],
+      "d": "rst_rl_22",
+      "q": "rst_rl_23",
+      "depth": 3,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_24",
+      "xy": [
+        216.0,
+        538.9200000000001
+      ],
+      "d": "rst_rl_23",
+      "q": "rst_rl_24",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_25",
+      "xy": [
+        216.0,
+        907.2
+      ],
+      "d": "rst_rl_24",
+      "q": "rst_n_t27",
+      "depth": 5,
+      "tap": 27,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_26",
+      "xy": [
+        950.4,
+        21.6
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_26",
+      "depth": 1,
+      "tap": 4,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_27",
+      "xy": [
+        950.4,
+        21.6
+      ],
+      "d": "rst_rl_26",
+      "q": "rst_rl_27",
+      "depth": 2,
+      "tap": 4,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_28",
+      "xy": [
+        950.4,
+        21.6
+      ],
+      "d": "rst_rl_27",
+      "q": "rst_rl_28",
+      "depth": 3,
+      "tap": 4,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_29",
+      "xy": [
+        950.4,
+        21.6
+      ],
+      "d": "rst_rl_28",
+      "q": "rst_rl_29",
+      "depth": 4,
+      "tap": 4,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_30",
+      "xy": [
+        950.4,
+        21.6
+      ],
+      "d": "rst_rl_29",
+      "q": "rst_n_t4",
+      "depth": 5,
+      "tap": 4,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_31",
+      "xy": [
+        1328.4,
+        21.6
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_31",
+      "depth": 1,
+      "tap": 5,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_32",
+      "xy": [
+        1328.4,
+        21.6
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_rl_32",
+      "depth": 2,
+      "tap": 5,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_33",
+      "xy": [
+        1328.4,
+        21.6
+      ],
+      "d": "rst_rl_32",
+      "q": "rst_rl_33",
+      "depth": 3,
+      "tap": 5,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_34",
+      "xy": [
+        1328.4,
+        21.6
+      ],
+      "d": "rst_rl_33",
+      "q": "rst_rl_34",
+      "depth": 4,
+      "tap": 5,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_35",
+      "xy": [
+        1328.4,
+        21.6
+      ],
+      "d": "rst_rl_34",
+      "q": "rst_n_t5",
+      "depth": 5,
+      "tap": 5,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_36",
+      "xy": [
+        1468.8,
+        32.4
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_rl_36",
+      "depth": 2,
+      "tap": 8,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_37",
+      "xy": [
+        1468.8,
+        32.4
+      ],
+      "d": "rst_rl_36",
+      "q": "rst_rl_37",
+      "depth": 3,
+      "tap": 8,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_38",
+      "xy": [
+        1468.8,
+        32.4
+      ],
+      "d": "rst_rl_37",
+      "q": "rst_rl_38",
+      "depth": 4,
+      "tap": 8,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_39",
+      "xy": [
+        1468.8,
+        32.4
+      ],
+      "d": "rst_rl_38",
+      "q": "rst_n_t8",
+      "depth": 5,
+      "tap": 8,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_40",
+      "xy": [
+        1620.0,
+        32.4
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_rl_40",
+      "depth": 2,
+      "tap": 9,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_41",
+      "xy": [
+        1620.0,
+        32.4
+      ],
+      "d": "rst_rl_40",
+      "q": "rst_rl_41",
+      "depth": 3,
+      "tap": 9,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_42",
+      "xy": [
+        1620.0,
+        32.4
+      ],
+      "d": "rst_rl_41",
+      "q": "rst_rl_42",
+      "depth": 4,
+      "tap": 9,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_43",
+      "xy": [
+        1620.0,
+        32.4
+      ],
+      "d": "rst_rl_42",
+      "q": "rst_n_t9",
+      "depth": 5,
+      "tap": 9,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_44",
+      "xy": [
+        1868.4,
+        43.2
+      ],
+      "d": "rst_rl_40",
+      "q": "rst_rl_44",
+      "depth": 3,
+      "tap": 11,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_45",
+      "xy": [
+        1868.4,
+        43.2
+      ],
+      "d": "rst_rl_44",
+      "q": "rst_rl_45",
+      "depth": 4,
+      "tap": 11,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_46",
+      "xy": [
+        1868.4,
+        43.2
+      ],
+      "d": "rst_rl_45",
+      "q": "rst_n_t11",
+      "depth": 5,
+      "tap": 11,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_47",
+      "xy": [
+        1879.2,
+        151.2
+      ],
+      "d": "rst_rl_40",
+      "q": "rst_rl_47",
+      "depth": 3,
+      "tap": 12,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_48",
+      "xy": [
+        1879.2,
+        151.2
+      ],
+      "d": "rst_rl_47",
+      "q": "rst_rl_48",
+      "depth": 4,
+      "tap": 12,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_49",
+      "xy": [
+        1879.2,
+        151.2
+      ],
+      "d": "rst_rl_48",
+      "q": "rst_n_t12",
+      "depth": 5,
+      "tap": 12,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_50",
+      "xy": [
+        1883.52,
+        520.0
+      ],
+      "d": "rst_rl_47",
+      "q": "rst_rl_50",
+      "depth": 4,
+      "tap": 0,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_51",
+      "xy": [
+        1883.52,
+        520.0
+      ],
+      "d": "rst_rl_50",
+      "q": "rst_n_t0",
+      "depth": 5,
+      "tap": 0,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_52",
+      "xy": [
+        1883.52,
+        864.0
+      ],
+      "d": "rst_rl_50",
+      "q": "rst_n_t18",
+      "depth": 5,
+      "tap": 18,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_53",
+      "xy": [
+        1632.96,
+        368.28
+      ],
+      "d": "rst_rl_40",
+      "q": "rst_rl_53",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_54",
+      "xy": [
+        1632.96,
+        368.28
+      ],
+      "d": "rst_rl_53",
+      "q": "rst_rl_54",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_55",
+      "xy": [
+        1632.96,
+        717.12
+      ],
+      "d": "rst_rl_54",
+      "q": "rst_n_t21",
+      "depth": 5,
+      "tap": 21,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_56",
+      "xy": [
+        1701.0,
+        21.6
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_rl_56",
+      "depth": 2,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_57",
+      "xy": [
+        1701.0,
+        21.6
+      ],
+      "d": "rst_rl_56",
+      "q": "rst_rl_57",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_58",
+      "xy": [
+        1701.0,
+        21.6
+      ],
+      "d": "rst_rl_57",
+      "q": "rst_rl_58",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_59",
+      "xy": [
+        1879.2,
+        216.0
+      ],
+      "d": "rst_rl_58",
+      "q": "rst_n_t13",
+      "depth": 5,
+      "tap": 13,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_60",
+      "xy": [
+        1702.08,
+        27.000000000000092
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_rl_60",
+      "depth": 2,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_61",
+      "xy": [
+        1702.08,
+        27.000000000000092
+      ],
+      "d": "rst_rl_60",
+      "q": "rst_rl_61",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_62",
+      "xy": [
+        1702.08,
+        27.000000000000092
+      ],
+      "d": "rst_rl_61",
+      "q": "rst_rl_62",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_63",
+      "xy": [
+        1702.08,
+        406.08
+      ],
+      "d": "rst_rl_62",
+      "q": "rst_n_t24",
+      "depth": 5,
+      "tap": 24,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_64",
+      "xy": [
+        1529.28,
+        200.16
+      ],
+      "d": "rst_rl_31",
+      "q": "rst_rl_64",
+      "depth": 2,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_65",
+      "xy": [
+        1529.28,
+        200.16
+      ],
+      "d": "rst_rl_64",
+      "q": "rst_rl_65",
+      "depth": 3,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_66",
+      "xy": [
+        1529.28,
+        579.5999999999999
+      ],
+      "d": "rst_rl_65",
+      "q": "rst_rl_66",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_67",
+      "xy": [
+        1529.28,
+        959.04
+      ],
+      "d": "rst_rl_66",
+      "q": "rst_n_t26",
+      "depth": 5,
+      "tap": 26,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_68",
+      "xy": [
+        1419.48,
+        8.608
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_68",
+      "depth": 1,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_69",
+      "xy": [
+        1419.48,
+        8.608
+      ],
+      "d": "rst_rl_68",
+      "q": "rst_rl_69",
+      "depth": 2,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_70",
+      "xy": [
+        1419.48,
+        8.608
+      ],
+      "d": "rst_rl_69",
+      "q": "rst_rl_70",
+      "depth": 3,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_71",
+      "xy": [
+        1419.48,
+        8.608
+      ],
+      "d": "rst_rl_70",
+      "q": "rst_rl_71",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_72",
+      "xy": [
+        1717.2,
+        21.6
+      ],
+      "d": "rst_rl_71",
+      "q": "rst_n_t6",
+      "depth": 5,
+      "tap": 6,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_73",
+      "xy": [
+        1149.12,
+        282.2080000000001
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_73",
+      "depth": 1,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_74",
+      "xy": [
+        1149.12,
+        282.2080000000001
+      ],
+      "d": "rst_rl_73",
+      "q": "rst_rl_74",
+      "depth": 2,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_75",
+      "xy": [
+        1149.12,
+        282.2080000000001
+      ],
+      "d": "rst_rl_74",
+      "q": "rst_rl_75",
+      "depth": 3,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_76",
+      "xy": [
+        1149.12,
+        596.16
+      ],
+      "d": "rst_rl_75",
+      "q": "rst_rl_76",
+      "depth": 4,
+      "tap": 20,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_77",
+      "xy": [
+        1149.12,
+        596.16
+      ],
+      "d": "rst_rl_76",
+      "q": "rst_n_t20",
+      "depth": 5,
+      "tap": 20,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_78",
+      "xy": [
+        1149.12,
+        734.4
+      ],
+      "d": "rst_rl_76",
+      "q": "rst_n_t30",
+      "depth": 5,
+      "tap": 30,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_79",
+      "xy": [
+        1457.28,
+        8.608
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_79",
+      "depth": 1,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_80",
+      "xy": [
+        1457.28,
+        8.608
+      ],
+      "d": "rst_rl_79",
+      "q": "rst_rl_80",
+      "depth": 2,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_81",
+      "xy": [
+        1792.8,
+        21.6
+      ],
+      "d": "rst_rl_80",
+      "q": "rst_rl_81",
+      "depth": 3,
+      "tap": 7,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_82",
+      "xy": [
+        1792.8,
+        21.6
+      ],
+      "d": "rst_rl_81",
+      "q": "rst_rl_82",
+      "depth": 4,
+      "tap": 7,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_83",
+      "xy": [
+        1792.8,
+        21.6
+      ],
+      "d": "rst_rl_82",
+      "q": "rst_n_t7",
+      "depth": 5,
+      "tap": 7,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_84",
+      "xy": [
+        1883.52,
+        278.64
+      ],
+      "d": "rst_rl_81",
+      "q": "rst_rl_84",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_85",
+      "xy": [
+        1883.52,
+        626.4
+      ],
+      "d": "rst_rl_84",
+      "q": "rst_n_t15",
+      "depth": 5,
+      "tap": 15,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_86",
+      "xy": [
+        1883.52,
+        300.24
+      ],
+      "d": "rst_rl_81",
+      "q": "rst_rl_86",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_87",
+      "xy": [
+        1883.52,
+        669.6
+      ],
+      "d": "rst_rl_86",
+      "q": "rst_n_t16",
+      "depth": 5,
+      "tap": 16,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_88",
+      "xy": [
+        755.248,
+        8.608
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_88",
+      "depth": 1,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_89",
+      "xy": [
+        410.4,
+        17.28
+      ],
+      "d": "rst_rl_88",
+      "q": "rst_rl_89",
+      "depth": 2,
+      "tap": 2,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_90",
+      "xy": [
+        410.4,
+        17.28
+      ],
+      "d": "rst_rl_89",
+      "q": "rst_rl_90",
+      "depth": 3,
+      "tap": 2,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_91",
+      "xy": [
+        410.4,
+        17.28
+      ],
+      "d": "rst_rl_90",
+      "q": "rst_rl_91",
+      "depth": 4,
+      "tap": 2,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_92",
+      "xy": [
+        410.4,
+        17.28
+      ],
+      "d": "rst_rl_91",
+      "q": "rst_n_t2",
+      "depth": 5,
+      "tap": 2,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_93",
+      "xy": [
+        112.32,
+        51.84000000000006
+      ],
+      "d": "rst_rl_89",
+      "q": "rst_rl_93",
+      "depth": 3,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_94",
+      "xy": [
+        112.32,
+        384.48000000000013
+      ],
+      "d": "rst_rl_93",
+      "q": "rst_rl_94",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_95",
+      "xy": [
+        112.32,
+        717.12
+      ],
+      "d": "rst_rl_94",
+      "q": "rst_n_t23",
+      "depth": 5,
+      "tap": 23,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_96",
+      "xy": [
+        1484.28,
+        8.608
+      ],
+      "d": "rst_root_n",
+      "q": "rst_rl_96",
+      "depth": 1,
+      "tap": null,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_97",
+      "xy": [
+        1484.28,
+        8.608
+      ],
+      "d": "rst_rl_96",
+      "q": "rst_rl_97",
+      "depth": 2,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_98",
+      "xy": [
+        1836.0,
+        32.4
+      ],
+      "d": "rst_rl_97",
+      "q": "rst_rl_98",
+      "depth": 3,
+      "tap": 10,
+      "kind": "tap"
+    },
+    {
+      "name": "u_rrl_99",
+      "xy": [
+        1836.0,
+        32.4
+      ],
+      "d": "rst_rl_98",
+      "q": "rst_rl_99",
+      "depth": 4,
+      "tap": 10,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_100",
+      "xy": [
+        1836.0,
+        32.4
+      ],
+      "d": "rst_rl_99",
+      "q": "rst_n_t10",
+      "depth": 5,
+      "tap": 10,
+      "kind": "pad"
+    },
+    {
+      "name": "u_rrl_101",
+      "xy": [
+        1874.88,
+        346.67999999999995
+      ],
+      "d": "rst_rl_98",
+      "q": "rst_rl_101",
+      "depth": 4,
+      "tap": null,
+      "kind": "wire"
+    },
+    {
+      "name": "u_rrl_102",
+      "xy": [
+        1874.88,
+        699.84
+      ],
+      "d": "rst_rl_101",
+      "q": "rst_n_t29",
+      "depth": 5,
+      "tap": 29,
+      "kind": "tap"
+    }
+  ],
+  "max_hop_um": 379.4,
+  "tap_depth": {
+    "0": 4,
+    "1": 3,
+    "2": 2,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 2,
+    "7": 2,
+    "8": 2,
+    "9": 2,
+    "10": 2,
+    "11": 3,
+    "12": 3,
+    "13": 3,
+    "14": 4,
+    "15": 4,
+    "16": 4,
+    "17": 5,
+    "18": 5,
+    "19": 4,
+    "20": 2,
+    "21": 4,
+    "22": 4,
+    "23": 5,
+    "24": 3,
+    "25": 2,
+    "26": 4,
+    "27": 5,
+    "28": 4,
+    "29": 4,
+    "30": 3
+  },
+  "n_tree": 52,
+  "n_pad": 51,
+  "reach_um": 405.0,
+  "plan_reach_um": 380.0,
+  "topology": "taps",
+  "taps": [
+    "clk",
+    "clk_t1",
+    "clk_t2",
+    "clk_t3",
+    "clk_t4",
+    "clk_t5",
+    "clk_t6",
+    "clk_t7",
+    "clk_t8",
+    "clk_t9",
+    "clk_t10",
+    "clk_t11",
+    "clk_t12",
+    "clk_t13",
+    "clk_t14",
+    "clk_t15",
+    "clk_t16",
+    "clk_t17",
+    "clk_t18",
+    "reset_local_0",
+    "reset_local_1",
+    "reset_local_2",
+    "reset_local_3",
+    "reset_local_4",
+    "reset_local_5",
+    "reset_local_6",
+    "reset_local_7",
+    "reset_local_8",
+    "reset_local_9",
+    "reset_local_10",
+    "reset_local_11"
+  ],
+  "tap_offset_um": 0.0,
+  "n_clock_taps": 19,
+  "n_reset_consumers": 31,
+  "local_reset_taps": true,
+  "outs": [],
+  "core_resets": [],
+  "entry": "relayed",
+  "sync_stages": 2,
+  "type": "kv3_sys_SD",
+  "start": true,
+  "relay_driver": false,
+  "start_in": [
+    1110.944,
+    8.608
+  ],
+  "start_role": "bootstrap",
+  "tap_roles": {
+    "0": "bootstrap",
+    "1": "bootstrap",
+    "2": "bootstrap",
+    "3": "bootstrap",
+    "4": "bootstrap",
+    "5": "bootstrap",
+    "6": "bootstrap",
+    "7": "bootstrap",
+    "8": "bootstrap",
+    "9": "bootstrap",
+    "10": "bootstrap",
+    "11": "bootstrap",
+    "12": "bootstrap",
+    "13": "bootstrap",
+    "14": "bootstrap",
+    "15": "bootstrap",
+    "16": "bootstrap",
+    "17": "bootstrap",
+    "18": "bootstrap",
+    "19": "bootstrap",
+    "20": "bootstrap",
+    "21": "bootstrap",
+    "22": "bootstrap",
+    "23": "bootstrap",
+    "24": "bootstrap",
+    "25": "bootstrap",
+    "26": "bootstrap",
+    "27": "bootstrap",
+    "28": "bootstrap",
+    "29": "bootstrap",
+    "30": "bootstrap"
+  },
+  "start_tap": 20
+}

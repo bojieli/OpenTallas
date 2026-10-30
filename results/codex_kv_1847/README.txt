@@ -36,3 +36,16 @@ Run directories (all own):
  epyc2:/srv/opentallas-scratch2/claude/codex-kv-1847/prep (reset planner feasibility)
 Local generated51MB plan stays in run-dir only, not committed. Recipe script,
 small density inventory, report and picture committed. Do not adopt unbound plan.
+
+EXPLICIT RESET PARK 2026-10-29 19:02 PDT.
+Reset feasibility 3558930 + export3570727 finished0; reported103relays, depth5,
+max379.4, release6 and rawrst_n_t0 E(1883.52,520). BUT rendered reset tree FAIL:
+35/103 relays remain on actual PHY macro footprint (17.28,54)-(1883.52,1026).
+Cause: event28b plan contents.serdes has no LEF/origin/outline, so reset planner
+sees no macro obstacle, and reset.local_taps_um still has12 interior consumer
+sites. This is NOT a physical PASS. Need incorporate actual current kit PHY
+footprint, resite12 reset consumers from actual capture locations, regenerate
+collector/reset and current-bound source BEFORE any new CTS. No new job launched
+at reset; all own1837/1847 feasibility jobs terminal. Existing SD failures retained.
+The committed first plan preparation is incomplete, not adopted; source recipe
+never replaced. Existing35 macro hits diagnose why prior clock-only fixes fail.
