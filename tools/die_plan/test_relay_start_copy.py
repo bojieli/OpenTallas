@@ -23,7 +23,7 @@ def test_relay_copy_uses_existing_rx_D_and_raw_reset_without_delay():
     assert 'assign cland_start_d = cland_rstart_in;' in s
     assert 'assign cland_start_raw = cland_reset_z;' in s
     assert 'ot_dp_landing_relay u_cland_fstart_w (.clk(clk), .rst_raw_n(cland_start_raw), .d(cland_start_d), .q(cland_fstart_out_w));' in s
-    assert c.land_slots('C')['buses']['cland_rstart_in']==dict(form='origin_start',origin='u_cland_rstart_rx')
+    assert c.land_slots('C')['buses']['cland_rstart_in']==dict(form='origin_start',origin='u_cland_rstart_rx',copies=['u_cland_fstart_w'])
     assert 'assign cland_fstart_out_w = cland_start;' not in s
     assert '.d(cland_rstart_in), .q(cland_start));' in s
 
