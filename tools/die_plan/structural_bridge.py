@@ -71,6 +71,15 @@ def expand(F, path, fragment, *, expected_module, expected_abi, physical, Cell):
         if value not in ('0', '1'):
             fail('unknown source constants are unsupported')
         drivers[net].append('source constant')
+    for p, bits in child.ports.items():
+        if child.dirs[p] != 'input':
+            continue
+        for b in bits:
+            if isinstance(b, str):
+                if b not in ('0', '1'):
+                    fail(f'{p}: physical input uses an unknown source literal')
+            elif len(drivers.get(b, ())) + (b in inputs) != 1:
+                fail(f'{p}: physical input has missing or multiple source drivers')
     for p, (direction, bits) in fragment.top_ports.items():
         if direction != 'output':
             continue
@@ -78,9 +87,9 @@ def expand(F, path, fragment, *, expected_module, expected_abi, physical, Cell):
             if isinstance(b, str):
                 if b not in ('0', '1'):
                     fail(f'{p}: unknown or undriven source output')
-            elif len(drivers[b]) + (b in inputs) != 1:
+            elif len(drivers.get(b, ())) + (b in inputs) != 1:
                 fail(f'{p}: source output has missing or multiple drivers')
-    if any(len(v) > 1 or n in inputs for n, v in drivers.items()):
+    if any(len(v) > 1 or (v and n in inputs) for n, v in drivers.items()):
         fail('source fragment contains multiple drivers')
 
     local = {}

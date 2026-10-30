@@ -18,3 +18,5 @@ Validation:
 The QUERY DROP3 startup bridge needs explicit cold-state FFs. This wire/constant-only helper deliberately does not support that stateful case or claim that time-zero uninitialized outputs equal zero. FLOW and coverage_support own its separate structural eligibility event.
 
 Actual FLOW5b3fbcc7c Binder-constructor integration also passes allthree bridge fragments: actual compose creates the native ABI cut, the optional loader expands it, and the newly built Graph sees the loaded source0 bits. Removing the option leaves the old native pin sources. This minimal actual-ABI fixture checks real constructor ordering; it is not the full current source cohort. See binder_hook_receipt.json.
+
+FLOW/LEC source peer identified an input-driver coverage gap. The helper now validates every physical input against the actual fragment top inputs, literal0/1 or exactly one source driver before committing. The targeted undriven-physical-clock-input control rejects atomically for allthree actual fragments; the48-cut loaded context remains unchanged.

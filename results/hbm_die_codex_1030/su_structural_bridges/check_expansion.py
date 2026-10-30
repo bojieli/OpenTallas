@@ -33,14 +33,16 @@ for master in ['ot_hbm_su_static_pgslice_lg__lanes__canon_cf1e77','ot_hbm_su_sta
   assert next(c for c in F.cells if c.path.endswith('.u_phys')).ports['strap_lane_lane_id']==[str((a['ids']['lane_lane_id']['value']>>i)&1)for i in range(a['ports']['lane_lane_id'])]
   rows.append(dict(master=master,mode=mode,structural_accept=True,functional_constant_contract_pass=qualified,loaded_sources=values,receipt=receipt))
   if mode=='nominal':
-   for negative in ['wrong_ABI','wrong_child','duplicate_path','existing_driver']:
-    FF=make();ex=copy.deepcopy(expected);ph=copy.deepcopy(phys)
+   for negative in ['wrong_ABI','wrong_child','duplicate_path','existing_driver','undriven_physical_input']:
+    FF=make();ex=copy.deepcopy(expected);ph=copy.deepcopy(phys);selected_fragment=frag
     if negative=='wrong_ABI':ex['lane_coll']['width']=3
     if negative=='wrong_child':ph['abi']['strap_lane_lane_id']['width']+=1
     if negative=='duplicate_path':FF.cells.append(E.Cell(a['path']+'.u_phys','old',{}, {},{},'leaf'))
     if negative=='existing_driver':FF.const_drivers[FF.cells[0].ports['lane_coll'][0]]=('0','preexisting')
+    if negative=='undriven_physical_input':
+     selected_fragment=copy.deepcopy(frag);n=selected_fragment.new(1);selected_fragment.cells[0].ports['bank_clk']=[n]
     prior=(len(FF.parent),[c.path for c in FF.cells],copy.deepcopy(FF.const_drivers))
-    try:H.expand(FF,a['path'],frag,expected_module=a['module'],expected_abi=ex,physical=ph,Cell=E.Cell)
+    try:H.expand(FF,a['path'],selected_fragment,expected_module=a['module'],expected_abi=ex,physical=ph,Cell=E.Cell)
     except H.StructuralBridgeError:pass
     else:raise AssertionError(negative)
     assert prior==(len(FF.parent),[c.path for c in FF.cells],FF.const_drivers)
@@ -76,4 +78,4 @@ for r in desc:
  child=next(c for c in F.cells if c.path==r['inst']+'.u_phys')
  assert child.ports['strap_lane_lane_id']==old_ports[r['inst']]['lane_lane_id']
 (S/'all48_context_receipt.json').write_text(json.dumps(dict(scope='Actual112 native ABIs in constructed loaded context, not current full-source bind',cuts=112,expanded=48,loaded_const0_bits=192,exact_ID_straps=48,unchanged_all_top_port_nets=True,unchanged_cell_count=113,events=receipts),indent=2)+'\n')
-print('PASS actual3fragments;21cases;48descriptors;112ABI loaded context;192 source0bits;0cycles')
+print('PASS actual3fragments;24cases;48descriptors;112ABI loaded context;192 source0bits;0cycles')
