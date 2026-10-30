@@ -57,3 +57,19 @@ def test_interior_clock_alias_and_reset_keep_literal_plan_centres():
         assert (recs[pin["name"]]["x"], recs[pin["name"]]["y"]) == expected
     assert "-pin_size {0.0480 0.4800}" in io
     assert all(row["face"] == "C" for row in rows)
+
+
+def test_legacy_interior_pins_without_face_keep_literal_centres():
+    # Current 507-pin XCAL plan: 505 edge pins at .096, only clk/reset interior.
+    pins = [dict(name="clk", layer="M5", x=125.304, y=125.28),
+            dict(name="rst_n", layer="M5", x=121.032, y=112.32),
+            dict(name="data", layer="M5", x=10.0, y=.096)]
+    io, rows = coregen.io_tcl(pins, 241.92, 224.64, "legacy_xcal")
+    centres = _io_centres(io)
+    recs = coregen.plan_pin_records(rows)
+    for pin in pins[:2]:
+        expected = (pin["x"], pin["y"])
+        assert centres[pin["name"]] == expected
+        assert (recs[pin["name"]]["x"], recs[pin["name"]]["y"]) == expected
+    assert rows[2]["face"] == "S"
+    assert centres["data"] == (10.0, coregen.PIN_LEN_UM / 2)
