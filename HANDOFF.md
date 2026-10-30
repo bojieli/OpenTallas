@@ -2269,3 +2269,23 @@ CODEX: 2026-10-30 03:57 PDT support E0 tagEQ46395 collected, new sameDBqualifica
 CODEX: 2026-10-30 03:57 PDT QCphysicalplan46401097649READY G0C155unchanged/bind0; BTABprototypeGRT0/FF12.11heldcapacitymodel; oldCA86low-sidefailsdiagnosed/freshprovider+physicalpathreplanlive; A0boundedinternalgapfix.
 
 CODEX: 2026-10-30 03:58 PDT GEOM1e81b9200 RX259fix2actualPASSfill-exceptionunblocksroute; HEADcontrolsconditional/HB4pinfixlive/Q1planwidthcorrect; BTABactualGRT0hardmodelFAILflowstreetfixowned,no bypass.
+
+CODEX: 2026-10-30 03:59 PDT HBMbind05c1c0861 correctedNWglue375373<400k; orderedDP5505hubbitsG0PASS0/G0C8inherited/maxhop362.88,16/18cycUNADOPTEDparentpadTOKowned; actualFUSED/DMAfacts handedcores/TOK, alljobs terminal.
+CODEX:2026-10-30 03:59PDT FLOWcf2faceclamp+787LNschemaREADY; Q2staleCLKLOCKdiagnosed(existingFLOW6fix, noanchorunlock);953clocklegINFOREADY HB4132.95/31205edges/no625gatewaiver.
+
+CODEX: 2026-10-30 04:00 PDT CODEX BTAB demand model READY8866df9d9 codex/flow-detour-1030, independentGEOM source/testsAPPROVED: zerocapbboxdetours share firstadjacentcontiguousstreets, stopnextzerobin; directpinwall/fullcutblocked controlsretained.39testsPASS. SameactualdumpH3.680->0.632,V0.735/col0.959 unchanged,Hdetour11514. ActualGRThotspot31crossings vsoldmodel134/new22; centralstreet599/1180capacity=.508; M5horizontal0(refutesearlierhypothesis). ExistingGRT0HrulebecomesWARN; fill/emptyFAILunchanged. Smallreceiptsresults/flow_detour_1030; no newphysicaljob/no thresholdchange.
+
+CODEX: 2026-10-30 04:03 PDT FLOW657tapidentity18PASS/f3clockcompileO(N)72PASS READY; BTAB8866capacitymodelapproved; SYS_C59095proofPASSfreshCLI2734961live; native59resetdomainowned.
+CODEX: 2026-10-30 04:02 PDT TOK9 rootdetour directionpremise correcteddata+5/+7 ctl+4/+6; acceptedS2COLLpair12once1780.445/perphase1779.062 conditionalrates excludeVMspill; unit3823499 widerowslive.
+CODEX: 2026-10-30 04:05 PDT QCkits18/18correctedPLANfailuresGEN; freshPLACEwave+geometryfollowers launched (4038021), collft21356EQactualGPL,collucie46PLACE. NB0sourcee10912000fourstatePASS/mut3,actualnativev2proofLIVE; noSIGNEDorroutebypass.
+
+CODEX: KV E0equivalentview582READY/G0new0+strictbind0+7viewclockpass; worstintrapairwarning notactualsinglecyclepath(3gatherregs). RX259G0new0/routecontinues; SDresetgraphroleclashdiagnosed/rebind; PVHB4/Q2flowfix/PCuniformprototypeslive; q1polaritydriverlocalityPLACEDcandidate.
+CODEX: 2026-10-30 04:07 PDT BTABD10B finalindependentGEOMPASSCONDnormalautopilotREQdc18dbbd5d1a unblocked; oldQCctlO(N²)diagnosed/currentbulkplan46pilotlive4085174 codex/qc-ctl-pilot-0336de30ec3df2c.
+
+CODEX: 2026-10-30 04:07 PDT HBMtoken a3f33f16b all3916sourceboundedcanonicalstream54176cmd/421.239MB/max255168VM,20842addresschecks+3mutantsPASS; all40expertregionsfit. SOURCEONLY: backendnamespace/scratchauthority/numeric/G5held.
+
+CODEX: 2026-10-30 04:07 PDT GEOM20f3183c7 BTABD10B finalPASS-COND releasesstandardREQdc18 after mergedaccuratestreetmodel8866/f5f7; onlyfill-exceptionleft, actual31/599crossingsconfirmM2/M4streetdetour,M5hypothesisrefuted. Q2CTSreview permitsGRT50-only, noDRT.
+CODEX: 2026-10-30 04:07 PDT QC9397c36a exactabut1,280,479PASS/0extra; rawclock750longgaps/max678diagnosed; coherentDMEreachsafeGENunit4043989live,noinvalidroute.
+CODEX: 2026-10-30 04:10 PDT S81types8e3341c88ce actual24naturalcutsmapall4KVleafparents94.7/138.1/123.4/88.3k(<400k), nofakeviews/adoption; LN4456slotFFphysicalrepairactualp9016.21vs53.33,newGRT50live; H2r2r134->0,6islandclockmodelbuilding.
+
+CODEX: 2026-10-30 04:10 PDT GEOM2205cbab2 HBMd34e3packing/pintopology preplaceconditionalPASS, select580umfailure remainsownedcores; no routedispatchfromreview.
