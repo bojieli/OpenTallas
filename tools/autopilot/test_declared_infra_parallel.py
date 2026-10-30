@@ -54,3 +54,32 @@ def test_parallel_driver_mutants_still_fail(tmp_path):
 def test_single_driver_dump_has_no_parallel_nets(tmp_path):
     D, M, C = vehicle(tmp_path, '')
     assert D.multi_drv == {} and D.drives[2] == []
+
+
+def test_parallel_driver_on_its_own_input_net_is_a_cycle(tmp_path):
+    D, M, C = vehicle(tmp_path)
+    p = tmp_path / 'dump.tsv'
+    p.write_text((DUMP % 'ND\ti2\n').replace(
+        'N\tSIGNAL\tp0\ti1\ti2\n', 'N\tSIGNAL\tp0\ti1\n').replace(
+        'N\tSIGNAL\ti1\tp1\n', 'N\tSIGNAL\ti1\tp1\ti2\n'))
+    r = G.declared_infra_arcs(G.Design(p), M, C)
+    assert not r['pins'] and r['arcs'][0]['status'] == 'FAIL', r
+    assert 'cycle' in r['arcs'][0]['why'], r
+
+
+def test_longer_parallel_feedback_path_is_a_cycle(tmp_path):
+    D, M, C = vehicle(tmp_path)
+    # The third buffer feeds the first buffer's output from the second
+    # buffer's output. Every master is BUF and the loop parity is even.
+    text = (DUMP % 'ND\ti3\n').replace(
+        'N\tSIGNAL\tp0\ti1\ti2\n', 'N\tSIGNAL\tp0\ti1\n').replace(
+        'N\tSIGNAL\ti1\tp1\n',
+        'N\tSIGNAL\ti1\ti2\nN\tSIGNAL\ti2\tp1\ti3\n')
+    p = tmp_path / 'dump.tsv'
+    p.write_text(text)
+    C['arcs'][0]['cells'].append('foreign')
+    C['sha256'] = digest(C)
+    M['ft_sha256'] = C['sha256']
+    r = G.declared_infra_arcs(G.Design(p), M, C)
+    assert not r['pins'] and r['arcs'][0]['status'] == 'FAIL', r
+    assert 'cycle' in r['arcs'][0]['why'], r
