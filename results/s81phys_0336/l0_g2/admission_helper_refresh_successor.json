@@ -1,0 +1,25 @@
+{
+  "scope": "Third NEW successor after two BEFORE-physical AP preflight failures; physical compiled G2checkpoint restored EXACTLY from protected own snapshot",
+  "old_failures": [
+    "3c63b6d87715 missingbundledcanonicalpins",
+    "beb9dd63e736 generichelperreference changedbeforeadmission"
+  ],
+  "g2_basis_sha256": {
+    "config.mk": "5fdf3c51ca14f25dba6f79a06acdc2864983ae421479b690036155826e886d63",
+    "constraint.sdc": "5eb0ea6ba49a394a72cb06cd5b9a2ded384d40004e7e61026656e82b440774e9",
+    "5_1_grt.odb": "4eae6cead52bc3c6166873674ec0e007cda219176a0a140f5a285d8e106a18a6",
+    "legacy_gate.py": "8cb29c244d882f2c11f68447776e32e26c9dcec03ede4c7e619480252924e965"
+  },
+  "canonical_plan_pins_bundled_exact": true,
+  "default_preflight_actual_AP_toolsource": "PASS0 /home/ubuntu/OpenTallas/tools/die_plan/kit_preflight.py",
+  "helper_refresh": {
+    "old": "a408c9a3fdf2d088a1387c707bfbaca2b6538941dc98a41c942648965a387c22",
+    "new": "b4e35666fc24a032de1122a5b771afd6cc80600905031478987ddcb2216283c1",
+    "diff": "ot_ci_port optionalshape argument, olddefault.032x.192 unchanged; no L0callers/ports",
+    "review": "FLOW explicitsemanticconcurrence, no physicaltree reexecution"
+  },
+  "rtl_or_cycles_changed": 0,
+  "no_clocktree_reexecution": true,
+  "prior_exact_G2": "TT60.93 STDFF10.09 CPPR18.15/16.04 over5964pairs; sameactualGRTODB, no newG2claim from helpercopy",
+  "root_geometry": "independent S81 concurrence da33f628153 remains exactpoint"
+}
