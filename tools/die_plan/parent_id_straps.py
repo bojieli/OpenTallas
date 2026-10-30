@@ -15,7 +15,15 @@ KV_ID_WIDTHS = {'strap_corner': 2, 'strap_hid': 2, 'strap_bsel': 2}
 # HEAD-BIND-4 10-27 (COORD ruling on HEAD-CORE-R13 ASK4): s81_head hd_tile position straps (row0 = the bundle's first
 # local vocab row, ten = 1 used / 0 dark tile), per-instance partition straps tied at the die top (plan id_straps)
 S81HD_ID_WIDTHS = {'strap_row0': 17, 'strap_ten': 1}
-PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2}
+# OWNER 2026-10-30 00:10 decision (3)(B): a physical strap_* ALIAS over a native ID port.  The hardened master exposes
+# the strap_* pin (METHODOLOGY 1.8 / sdc_lint unchanged) and wires it straight to the native ID port inside its own
+# wrapper; the plan maps the logical ID onto the alias explicitly (hard core physical_id_alias {strap: native}).
+# Exact (alias -> native, width, master) rows only; no name-pattern rule, no native unprefixed physical pin.
+PHYSICAL_ID_ALIASES = {
+    'strap_lane_lane_id': dict(native='lane_lane_id', width=11, module='ot_hbm_su_static_pgslice_lg__lane_exp0_id'),
+}
+PHYSICAL_ID_WIDTHS = {**KV_ID_WIDTHS, 'strap_tile_tid': 6, **S81HD_ID_WIDTHS, 'strap_qid': 2,
+                      **{a: r['width'] for a, r in PHYSICAL_ID_ALIASES.items()}}
 ID_PORTS = frozenset({'tile_id', 'tile_tid', 'map_lane_j', 'lane_lane_id', 'sidx', 'strap_lane_id', *PHYSICAL_ID_WIDTHS})
 
 
@@ -73,6 +81,7 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             raise ValueError('strap_qid is authorized only for the exact HBM collective RING master')
         if raw['strap_qid'] not in ({'width':2,'value':2}, {'width':2,'value':3}):
             raise ValueError('HBM collective RING strap_qid requires the native NW=2 or NE=3 identity')
+    _check_physical_id_alias(descriptor, raw, actual_module)
     result = {}
     for port, contract in raw.items():
         if port not in ID_PORTS:
@@ -101,6 +110,37 @@ def validate_parent_id_straps(descriptor, inputs=None, pins=None, actual_module=
             if bits != set(range(contract['width'])):
                 raise ValueError(f'parent_id_straps {port}: declared physical pins do not match its exact width')
     return result
+
+
+def _check_physical_id_alias(descriptor, raw, actual_module):
+    """OWNER 10-30 (3)(B): an aliased strap is legal only with its exact explicit plan mapping on its exact master,
+    and a mapping is legal only for a declared alias strap.  The native name itself is never also declared."""
+    alias = descriptor.get('physical_id_alias')
+    used = sorted(p for p in raw if p in PHYSICAL_ID_ALIASES)
+    if alias is None:
+        if used:
+            raise ValueError(f'ID strap alias {used[0]} requires an explicit physical_id_alias plan mapping')
+        return
+    if not isinstance(alias, dict) or not alias:
+        raise ValueError('physical_id_alias must be a non-empty {strap_alias: native_port} object')
+    if sorted(alias) != used:
+        raise ValueError(f'physical_id_alias {sorted(alias)} must map exactly the declared alias straps {used}')
+    for strap, native in alias.items():
+        row = PHYSICAL_ID_ALIASES[strap]
+        if native != row['native']:
+            raise ValueError(f'physical_id_alias {strap}: native port must be exactly {row["native"]}')
+        if descriptor.get('module') != row['module'] or (actual_module is not None and actual_module != row['module']):
+            raise ValueError(f'physical_id_alias {strap} is authorized only on the exact master {row["module"]}')
+        if native in raw:
+            raise ValueError(f'physical_id_alias {strap}: native {native} must not also be declared (one ID, one pin)')
+
+
+def logical_id_straps(descriptor):
+    """{logical (native) ID port: {width, value}} of a descriptor: physical_id_alias straps are reported under their
+    native ID name (e.g. HBM lane identity checks read lane_lane_id); everything else under its own name."""
+    ids = validate_parent_id_straps(descriptor)
+    alias = descriptor.get('physical_id_alias') or {}
+    return {alias.get(p, p): c for p, c in ids.items()}
 
 
 def type_parent_id_straps(partition_type):
