@@ -4241,7 +4241,8 @@ def early_whole_compare(L, work, conflicts, log, rnd):
         return False
     m, _ = L.build(with_compare=True, with_hyp=True)
     status = prove(m, work, conflicts, log, tag=f"early_compare{rnd}")
-    complete = bool(m.onames) and set(status) == set(m.onames)
+    complete = (bool(m.onames) and len(status) == len(m.onames)
+                and set(status) == set(m.onames))
     passed = complete and all(status[n] == "proved" for n in m.onames)
     L.early_compare = dict(round=rnd, complete=complete, passed=passed,
                            counts=dict(collections.Counter(status.values())))
