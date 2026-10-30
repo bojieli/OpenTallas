@@ -1,0 +1,16 @@
+Opt-in clock.landing_reader_start uniform reader-only START transport.
+Field: {depth:R,branches:{BUS:{stages:[{xy_um:[x,y],raw_reset:EXISTING_REGISTERED_RAW_NET},...]}}}.
+Branches cover exactly every input ring, every branch has exactly R stages.
+Stages instantiate kept ot_dp_landing_relay, cland_start -> stage0 -> ... -> ring.rst_n.
+Writer t_rst_n, mission START, forwarded START and first synchronizer are unchanged.
+Physical instance u_cland_reader_start_<bus>_<i>, FIRM group box xy +/-2.16um.
+Known local ot_dp_rrelay Q sources required for raw resets; no invented source.
+Parent must ensure raw release/geometry/clock timing on the physical plan.
+Canonical strap_ties K is oldK-R modKW, parameter wrappers/ref use oldK-R.
+Logical CA table K and data schedule stay unchanged: (c-R)-(K-R)=c-K.
+Manifest rows/reset placement record originalK/depth/+R boot/0 data cycles.
+Proof15a7f62b6: actualCAS4572cases,0mismatch,wrongKcaught4572,finite boot bounded.
+Tests52PASS: clock_landings/count_straps/new reader start field tests.
+HEAD src25q2 default(no field) actual25types/357strapties, entireinitialmanifest,
+25FIRMhookoutputs BYTE_IDENTICAL vs6e1753932. Full source body emission of the
+3 newlyenabledtypes is collected separately; no physical/signoff claim.

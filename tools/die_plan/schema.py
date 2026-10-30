@@ -927,6 +927,19 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "boolean"}
 # HEAD START-export fanout: retained copies of existing data states, zero added cycles.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_origin_export_copy"] = {"type": "boolean"}
+# Uniform, physically planned reader-only START delivery.  K is compensated
+# at the strap/parameter binding; writer/mission START and data cycles stay fixed.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_reader_start"] = {
+    "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
+    "properties": {
+        "depth": {"type": "integer", "minimum": 1},
+        "branches": {"type": "object", "additionalProperties": {
+            "type": "object", "additionalProperties": False, "required": ["stages"],
+            "properties": {"stages": {"type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": False, "required": ["xy_um", "raw_reset"],
+                "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
+                                         "items": {"type": "number"}},
+                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
