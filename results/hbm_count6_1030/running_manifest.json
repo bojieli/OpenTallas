@@ -1,0 +1,49 @@
+{
+ "branch": "codex/hbm-count6-1030",
+ "source_sha": "0c8c80c60",
+ "scope": "NATIVE WHOLE directwrapper noextraFF/noPNR/noLEC, TTmappedcountonly,7nativedefines",
+ "jobs": [
+  {
+   "instance": "hb_dbk_NE",
+   "host": "intel1",
+   "unit": "oth-ubuntu-2759926-1793375623",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/hb_dbk_NE",
+   "log": "/srv/opentallas-scratch/claude/count6_hb_dbk_NE_1030.log"
+  },
+  {
+   "instance": "vmks_NW0",
+   "host": "intel1",
+   "unit": "oth-ubuntu-2759920-1793375623",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/vmks_NW0",
+   "log": "/srv/opentallas-scratch/claude/count6_vmks_NW0_1030.log"
+  },
+  {
+   "instance": "ctl_NW_p00",
+   "host": "intel1",
+   "unit": "oth-ubuntu-2759931-1793375623",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/ctl_NW_p00",
+   "log": "/srv/opentallas-scratch/claude/count6_ctl_NW_p00_1030.log"
+  },
+  {
+   "instance": "wbk_NW",
+   "host": "intel2",
+   "unit": "oth-ubuntu-3603772-1793375633",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/wbk_NW",
+   "log": "/srv/opentallas-scratch/claude/count6_wbk_NW_1030.log"
+  },
+  {
+   "instance": "wbc_NW",
+   "host": "intel2",
+   "unit": "oth-ubuntu-3603780-1793375633",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/wbc_NW",
+   "log": "/srv/opentallas-scratch/claude/count6_wbc_NW_1030.log"
+  },
+  {
+   "instance": "vmfc_NW",
+   "host": "intel2",
+   "unit": "oth-ubuntu-3603782-1793375633",
+   "path": "/srv/opentallas-scratch2/claude/codex-hbm-count6-1030/vmfc_NW",
+   "log": "/srv/opentallas-scratch/claude/count6_vmfc_NW_1030.log"
+  }
+ ]
+}
