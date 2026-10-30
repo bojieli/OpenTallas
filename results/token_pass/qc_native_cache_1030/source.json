@@ -1,0 +1,12 @@
+{
+  "scope": "12unresetcompletioncachelowbits and actual STATUSvalidmask only; common localcoldreset; notwholeunit/fault/start/producerqualification",
+  "sources": {
+    "/home/ubuntu/OpenTallas/rtl/qwen_sys/d2d_static_20261015/ot_qwen_status_observers_v1.sv": "69b74338e3eca226a34963cc3953f079538b5dc9fc4b121349a407f2ca188c24",
+    "/home/ubuntu/OpenTallas/rtl/qwen_split/mu/qfd_status_obs_hold_chunk.sv": "2decb61fd0f67cb1d58828e41fa090fb9822bf5db8d30dbf5ff9bbd6bc9844cf"
+  },
+  "extracted_modules": [
+    "ot_qwen_status_obs_full32",
+    "ot_qwen_status_obs_v1_state",
+    "qfd_status_obs_hold_chunk"
+  ]
+}

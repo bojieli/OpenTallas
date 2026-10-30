@@ -1,0 +1,632 @@
+
+-- Executing script file `r2_v0.ys' --
+
+1. Executing Verilog-2005 frontend: actual_hold.sv
+Parsing formal SystemVerilog input from `actual_hold.sv' to AST representation.
+Generating RTLIL representation for module `\qfd_status_obs_hold_chunk'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: actual_status.sv
+Parsing formal SystemVerilog input from `actual_status.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qwen_status_obs_full32'.
+Generating RTLIL representation for module `\ot_qwen_status_obs_v1_state'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: miter.sv
+Parsing formal SystemVerilog input from `miter.sv' to AST representation.
+Generating RTLIL representation for module `\cache_refinement'.
+Successfully finished Verilog frontend.
+Parameter \MUT = 0
+
+4. Executing AST frontend in derive mode using pre-parsed AST for module `\cache_refinement'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\cache_refinement\MUT=s32'00000000000000000000000000000000'.
+
+5. Executing HIERARCHY pass (managing design hierarchy).
+
+5.1. Analyzing design hierarchy..
+Top module:  \cache_refinement
+Used module:     \qfd_status_obs_hold_chunk
+Used module:     \ot_qwen_status_obs_v1_state
+Used module:         \ot_qwen_status_obs_full32
+Parameter \W = 15
+
+5.2. Executing AST frontend in derive mode using pre-parsed AST for module `\qfd_status_obs_hold_chunk'.
+Parameter \W = 15
+Generating RTLIL representation for module `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111'.
+Parameter \W = 15
+Found cached RTLIL representation for module `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111'.
+
+5.3. Analyzing design hierarchy..
+Top module:  \cache_refinement
+Used module:     $paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111
+Used module:     \ot_qwen_status_obs_v1_state
+Used module:         \ot_qwen_status_obs_full32
+
+5.4. Analyzing design hierarchy..
+Top module:  \cache_refinement
+Used module:     $paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111
+Used module:     \ot_qwen_status_obs_v1_state
+Used module:         \ot_qwen_status_obs_full32
+Removing unused module `\qfd_status_obs_hold_chunk'.
+Removed 1 unused modules.
+
+6. Executing PROC pass (convert processes to netlists).
+
+6.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+6.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$miter.sv:11$131 in module cache_refinement.
+Marked 2 switch rules as full_case in process $proc$miter.sv:22$144 in module cache_refinement.
+Marked 1 switch rules as full_case in process $proc$actual_status.sv:31$35 in module ot_qwen_status_obs_v1_state.
+Marked 1 switch rules as full_case in process $proc$actual_status.sv:26$26 in module ot_qwen_status_obs_v1_state.
+Marked 1 switch rules as full_case in process $proc$actual_status.sv:23$24 in module ot_qwen_status_obs_v1_state.
+Removed a total of 0 dead cases.
+
+6.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 11 redundant assignments.
+Promoted 0 assignments to connections.
+
+6.4. Executing PROC_INIT pass (extract init attributes).
+
+6.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\cache_refinement.$proc$miter.sv:11$131'.
+Found async reset \rst_n in `\cache_refinement.$proc$miter.sv:22$144'.
+Found async reset \rst_n [2] in `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+Found async reset \rst_n [1] in `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:26$26'.
+Found async reset \rst_n [0] in `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:23$24'.
+
+6.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~6 debug messages>
+
+6.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\cache_refinement.$proc$miter.sv:11$131'.
+     1/2: $0\tag1[58:0]
+     2/2: $0\tag0[58:0]
+Creating decoders for process `\cache_refinement.$proc$miter.sv:22$144'.
+     1/3: $0\completed[0:0]
+     2/3: $0\seen[0:0]
+     3/3: $0\last_slot[0:0]
+Creating decoders for process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+     1/6: $0\bad_q[0:0]
+     2/6: $0\overflow[0:0]
+     3/6: $0\nat_seen[3:0]
+     4/6: $0\res_seen[2:0]
+     5/6: $0\ctx_seen[3:0]
+     6/6: $0\ep_id[15:0]
+Creating decoders for process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:26$26'.
+     1/2: $0\count_hi[15:0]
+     2/2: $0\ep_hi[15:0]
+Creating decoders for process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:23$24'.
+     1/2: $0\count_lo[15:0]
+     2/2: $0\ep_lo[15:0]
+Creating decoders for process `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.$proc$actual_hold.sv:9$162'.
+     1/1: $0\q[14:0]
+
+6.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+6.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\cache_refinement.\tag0' using process `\cache_refinement.$proc$miter.sv:11$131'.
+  created $adff cell `$procdff$182' with positive edge clock and positive level reset.
+Creating register for signal `\cache_refinement.\tag1' using process `\cache_refinement.$proc$miter.sv:11$131'.
+  created $adff cell `$procdff$187' with positive edge clock and positive level reset.
+Creating register for signal `\cache_refinement.\last_slot' using process `\cache_refinement.$proc$miter.sv:22$144'.
+  created $adff cell `$procdff$192' with positive edge clock and positive level reset.
+Creating register for signal `\cache_refinement.\completed' using process `\cache_refinement.$proc$miter.sv:22$144'.
+  created $adff cell `$procdff$197' with positive edge clock and positive level reset.
+Creating register for signal `\cache_refinement.\seen' using process `\cache_refinement.$proc$miter.sv:22$144'.
+  created $adff cell `$procdff$202' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\ep_id' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+  created $adff cell `$procdff$207' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\ctx_seen' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+  created $adff cell `$procdff$212' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\nat_seen' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+  created $adff cell `$procdff$217' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\res_seen' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+  created $adff cell `$procdff$222' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\overflow' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+  created $adff cell `$procdff$227' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\bad_q' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+  created $adff cell `$procdff$232' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\ep_hi' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:26$26'.
+  created $adff cell `$procdff$237' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\count_hi' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:26$26'.
+  created $adff cell `$procdff$242' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\ep_lo' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:23$24'.
+  created $adff cell `$procdff$247' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qwen_status_obs_v1_state.\count_lo' using process `\ot_qwen_status_obs_v1_state.$proc$actual_status.sv:23$24'.
+  created $adff cell `$procdff$252' with positive edge clock and positive level reset.
+Creating register for signal `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.\q' using process `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.$proc$actual_hold.sv:9$162'.
+  created $dff cell `$procdff$253' with positive edge clock.
+
+6.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+6.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 2 empty switches in `\cache_refinement.$proc$miter.sv:11$131'.
+Removing empty process `cache_refinement.$proc$miter.sv:11$131'.
+Found and cleaned up 3 empty switches in `\cache_refinement.$proc$miter.sv:22$144'.
+Removing empty process `cache_refinement.$proc$miter.sv:22$144'.
+Removing empty process `ot_qwen_status_obs_v1_state.$proc$actual_status.sv:31$35'.
+Removing empty process `ot_qwen_status_obs_v1_state.$proc$actual_status.sv:26$26'.
+Removing empty process `ot_qwen_status_obs_v1_state.$proc$actual_status.sv:23$24'.
+Found and cleaned up 1 empty switch in `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.$proc$actual_hold.sv:9$162'.
+Removing empty process `$paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.$proc$actual_hold.sv:9$162'.
+Cleaned up 6 empty switches.
+
+6.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cache_refinement.
+<suppressed ~13 debug messages>
+Optimizing module ot_qwen_status_obs_v1_state.
+<suppressed ~21 debug messages>
+Optimizing module ot_qwen_status_obs_full32.
+Optimizing module $paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.
+
+7. Executing FLATTEN pass (flatten design).
+Deleting now unused module ot_qwen_status_obs_v1_state.
+Deleting now unused module ot_qwen_status_obs_full32.
+Deleting now unused module $paramod\qfd_status_obs_hold_chunk\W=s32'00000000000000000000000000001111.
+<suppressed ~6 debug messages>
+
+8. Executing ASYNC2SYNC pass.
+Replacing cache_refinement.$flatten\actual.$procdff$237 ($adff): ARST=\actual.rst_n [1], D=\actual.epoch16, Q=\actual.ep_hi
+Replacing cache_refinement.$flatten\actual.$procdff$207 ($adff): ARST=\actual.rst_n [2], D=\actual.epoch16, Q=\actual.ep_id
+Replacing cache_refinement.$flatten\actual.$procdff$212 ($adff): ARST=\actual.rst_n [2], D=$flatten\actual.$or$actual_status.sv:35$38_Y, Q=\actual.ctx_seen
+Replacing cache_refinement.$flatten\actual.$procdff$217 ($adff): ARST=\actual.rst_n [2], D=$flatten\actual.$or$actual_status.sv:37$42_Y, Q=\actual.nat_seen
+Replacing cache_refinement.$flatten\actual.$procdff$242 ($adff): ARST=\actual.rst_n [1], D=$flatten\actual.$ternary$actual_status.sv:21$19_Y, Q=\actual.count_hi
+Replacing cache_refinement.$flatten\actual.$procdff$222 ($adff): ARST=\actual.rst_n [2], D=$flatten\actual.$or$actual_status.sv:36$40_Y, Q=\actual.res_seen
+Replacing cache_refinement.$flatten\actual.$procdff$227 ($adff): ARST=\actual.rst_n [2], D=$flatten\actual.$logic_or$actual_status.sv:22$23_Y, Q=\actual.overflow
+Replacing cache_refinement.$flatten\actual.$procdff$252 ($adff): ARST=\actual.rst_n [0], D=$flatten\actual.$ternary$actual_status.sv:20$14_Y, Q=\actual.count_lo
+Replacing cache_refinement.$flatten\actual.$procdff$232 ($adff): ARST=\actual.rst_n [2], D=$flatten\actual.$logic_or$actual_status.sv:39$49_Y, Q=\actual.bad_q
+Replacing cache_refinement.$flatten\actual.$procdff$247 ($adff): ARST=\actual.rst_n [0], D=\actual.epoch16, Q=\actual.ep_lo
+Replacing cache_refinement.$flatten\constant_bits.$procdff$237 ($adff): ARST=\constant_bits.rst_n [1], D=\constant_bits.epoch16, Q=\constant_bits.ep_hi
+Replacing cache_refinement.$flatten\constant_bits.$procdff$207 ($adff): ARST=\constant_bits.rst_n [2], D=\constant_bits.epoch16, Q=\constant_bits.ep_id
+Replacing cache_refinement.$flatten\constant_bits.$procdff$212 ($adff): ARST=\constant_bits.rst_n [2], D=$flatten\constant_bits.$or$actual_status.sv:35$38_Y, Q=\constant_bits.ctx_seen
+Replacing cache_refinement.$flatten\constant_bits.$procdff$217 ($adff): ARST=\constant_bits.rst_n [2], D=$flatten\constant_bits.$or$actual_status.sv:37$42_Y, Q=\constant_bits.nat_seen
+Replacing cache_refinement.$flatten\constant_bits.$procdff$242 ($adff): ARST=\constant_bits.rst_n [1], D=$flatten\constant_bits.$ternary$actual_status.sv:21$19_Y, Q=\constant_bits.count_hi
+Replacing cache_refinement.$flatten\constant_bits.$procdff$222 ($adff): ARST=\constant_bits.rst_n [2], D=$flatten\constant_bits.$or$actual_status.sv:36$40_Y, Q=\constant_bits.res_seen
+Replacing cache_refinement.$flatten\constant_bits.$procdff$227 ($adff): ARST=\constant_bits.rst_n [2], D=$flatten\constant_bits.$logic_or$actual_status.sv:22$23_Y, Q=\constant_bits.overflow
+Replacing cache_refinement.$flatten\constant_bits.$procdff$252 ($adff): ARST=\constant_bits.rst_n [0], D=$flatten\constant_bits.$ternary$actual_status.sv:20$14_Y, Q=\constant_bits.count_lo
+Replacing cache_refinement.$flatten\constant_bits.$procdff$232 ($adff): ARST=\constant_bits.rst_n [2], D=$flatten\constant_bits.$logic_or$actual_status.sv:39$49_Y, Q=\constant_bits.bad_q
+Replacing cache_refinement.$flatten\constant_bits.$procdff$247 ($adff): ARST=\constant_bits.rst_n [0], D=\constant_bits.epoch16, Q=\constant_bits.ep_lo
+Replacing cache_refinement.$procdff$192 ($adff): ARST=\rst_n, D=$procmux$174_Y, Q=\last_slot
+Replacing cache_refinement.$procdff$187 ($adff): ARST=\rst_n, D=$procmux$165_Y, Q=\tag1
+Replacing cache_refinement.$procdff$197 ($adff): ARST=\rst_n, D=$logic_or$miter.sv:25$146_Y, Q=\completed
+Replacing cache_refinement.$procdff$182 ($adff): ARST=\rst_n, D=$procmux$167_Y, Q=\tag0
+Replacing cache_refinement.$procdff$202 ($adff): ARST=\rst_n, D=$procmux$169_Y, Q=\seen
+
+9. Executing DFFUNMAP pass (unmap clock enable and synchronous reset from FFs).
+
+10. Executing OPT pass (performing simple optimizations).
+
+10.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cache_refinement.
+<suppressed ~11 debug messages>
+
+10.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cache_refinement'.
+Computing hashes of 288 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+Computing hashes of 239 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+Computing hashes of 235 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+Computing hashes of 232 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+Computing hashes of 231 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+<suppressed ~171 debug messages>
+Removed a total of 57 cells.
+
+10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \cache_refinement..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~139 debug messages>
+
+10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \cache_refinement.
+Performed a total of 0 changes.
+
+10.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cache_refinement'.
+Computing hashes of 231 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+Computing hashes of 226 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+<suppressed ~15 debug messages>
+Removed a total of 5 cells.
+
+10.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \cache_refinement..
+Removed 2 unused cells and 185 unused wires.
+<suppressed ~3 debug messages>
+
+10.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cache_refinement.
+
+10.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+10.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \cache_refinement..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~129 debug messages>
+
+10.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \cache_refinement.
+Performed a total of 0 changes.
+
+10.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\cache_refinement'.
+Computing hashes of 224 cells of `\cache_refinement'.
+Finding duplicate cells in `\cache_refinement'.
+Removed a total of 0 cells.
+
+10.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \cache_refinement..
+
+10.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module cache_refinement.
+
+10.14. Finished fast OPT passes. (There is nothing left to do.)
+
+11. Executing SAT pass (solving SAT problems in the circuit).
+Using SAT solver `minisat`.
+
+Setting up time step 1:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+No constraints for initial state found.
+
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 2:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 3:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 4:
+Import set-constraint for this timestep: \rst_n = 1'0
+Final constraint equation: \rst_n = 1'0
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 5:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 6:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 7:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 8:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 9:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 10:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 11:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 12:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 13:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 14:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 15:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+
+Setting up time step 16:
+Import set-constraint for this timestep: \rst_n = 1'1
+Final constraint equation: \rst_n = 1'1
+Import def constraint for this timestep: \ck
+Import def constraint for this timestep: \rst_n
+Import def constraint for this timestep: \begin0
+Import def constraint for this timestep: \begin1
+Import def constraint for this timestep: \active0
+Import def constraint for this timestep: \active1
+Import def constraint for this timestep: \complete0
+Import def constraint for this timestep: \complete1
+Import def constraint for this timestep: \epoch16
+Import def constraint for this timestep: \obs_res
+Import def constraint for this timestep: \begin_tag0
+Import def constraint for this timestep: \begin_tag1
+Import def constraint for this timestep: \obs_ctx
+Imported 224 cells to SAT database.
+Import proof-constraint: \proof_bad = 1'0
+Final proof equation: \proof_bad = 1'0
+Import show expression: \ck
+Import show expression: \rst_n
+Import show expression: \begin0
+Import show expression: \begin1
+Import show expression: \active0
+Import show expression: \active1
+Import show expression: \begin_tag0
+Import show expression: \begin_tag1
+Import show expression: \complete0
+Import show expression: \complete1
+Import show expression: \epoch16
+Import show expression: \obs_ctx
+Import show expression: \obs_res
+Import show expression: \status_bad
+Import show expression: \invariant_bad
+Import show expression: \proof_bad
+
+Solving problem with 562096 variables and 1530283 clauses..
+SAT proof finished - no model found: SUCCESS!
+
+                  /$$$$$$      /$$$$$$$$     /$$$$$$$    
+                 /$$__  $$    | $$_____/    | $$__  $$   
+                | $$  \ $$    | $$          | $$  \ $$   
+                | $$  | $$    | $$$$$       | $$  | $$   
+                | $$  | $$    | $$__/       | $$  | $$   
+                | $$/$$ $$    | $$          | $$  | $$   
+                |  $$$$$$/ /$$| $$$$$$$$ /$$| $$$$$$$//$$
+                 \____ $$$|__/|________/|__/|_______/|__/
+                       \__/                              
+
