@@ -1,0 +1,582 @@
+{
+ "status": "UNADOPTED: logicalpartialbind, planreviewonly, noPNR/STA",
+ "errors": 79,
+ "unbound_bits": 51807,
+ "new_emit_errors": [],
+ "lanes": {
+  "L4": {
+   "cycles": 11,
+   "stations": 9,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 11,
+   "pad": 0,
+   "param": "LAT_L4"
+  },
+  "L4m": {
+   "cycles": 11,
+   "stations": 9,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 11,
+   "pad": 0,
+   "param": "LAT_L4M"
+  },
+  "L96": {
+   "cycles": 21,
+   "stations": 10,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 12,
+   "pad": 9,
+   "param": "LAT_L96"
+  },
+  "L96m": {
+   "cycles": 18,
+   "stations": 10,
+   "boundary": 2,
+   "faces": 2,
+   "fixed": 0,
+   "natural": 12,
+   "pad": 6,
+   "param": "LAT_L96M"
+  },
+  "L700": {
+   "cycles": 18,
+   "stations": 16,
+   "boundary": 2,
+   "faces": 4,
+   "fixed": 0,
+   "natural": 18,
+   "pad": 0,
+   "param": "LAT_L700"
+  },
+  "L701": {
+   "cycles": 21,
+   "stations": 19,
+   "boundary": 2,
+   "faces": 4,
+   "fixed": 0,
+   "natural": 21,
+   "pad": 0,
+   "param": "LAT_L701"
+  }
+ },
+ "crosshub_landing": [
+  {
+   "sink": "hb_coll_NE.__cut_ring_ag",
+   "src_part": "NW_hub",
+   "sink_part": "NE_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hb_coll_NW.__cut_ring_ag.pr_ccw_o",
+     "lane": "L4",
+     "bound": 11,
+     "landed": 11,
+     "bits": 280
+    },
+    {
+     "source": "hb_coll_NW.__cut_ring_ag.pr_cw_o",
+     "lane": "L4",
+     "bound": 11,
+     "landed": 11,
+     "bits": 280
+    }
+   ]
+  },
+  {
+   "sink": "hb_coll_NW.__cut_ring_ag",
+   "src_part": "NE_hub",
+   "sink_part": "NW_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hb_coll_NE.__cut_ring_ag.pr_ccw_o",
+     "lane": "L4m",
+     "bound": 11,
+     "landed": 11,
+     "bits": 280
+    },
+    {
+     "source": "hb_coll_NE.__cut_ring_ag.pr_cw_o",
+     "lane": "L4m",
+     "bound": 11,
+     "landed": 11,
+     "bits": 280
+    }
+   ]
+  },
+  {
+   "sink": "hb_vms_NE",
+   "src_part": "NW_hub",
+   "sink_part": "NE_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hb_vms_NW.ccw_out",
+     "lane": "L4",
+     "bound": 11,
+     "landed": 11,
+     "bits": 2224
+    }
+   ]
+  },
+  {
+   "sink": "hb_vms_NW",
+   "src_part": "NE_hub",
+   "sink_part": "NW_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hb_vms_NE.cw_out",
+     "lane": "L4m",
+     "bound": 11,
+     "landed": 11,
+     "bits": 2224
+    }
+   ]
+  },
+  {
+   "sink": "hb_vms_SE",
+   "src_part": "NW_hub",
+   "sink_part": "NE_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hb_vms_SW.cw_out",
+     "lane": "L701",
+     "bound": 21,
+     "landed": 21,
+     "bits": 2224
+    }
+   ]
+  },
+  {
+   "sink": "hb_vms_SW",
+   "src_part": "NE_hub",
+   "sink_part": "NW_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hb_vms_SE.ccw_out",
+     "lane": "L700",
+     "bound": 18,
+     "landed": 18,
+     "bits": 2224
+    }
+   ]
+  },
+  {
+   "sink": "hcollb_NE",
+   "src_part": "NW_hub",
+   "sink_part": "NE_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hcollb_NW.ccw_o",
+     "lane": "L701",
+     "bound": 21,
+     "landed": 21,
+     "bits": 280
+    },
+    {
+     "source": "hcollb_NW.cw_o",
+     "lane": "L701",
+     "bound": 21,
+     "landed": 21,
+     "bits": 258
+    },
+    {
+     "source": "hcollb_NW.cw_o",
+     "lane": "L96",
+     "bound": 21,
+     "landed": 21,
+     "bits": 22
+    }
+   ]
+  },
+  {
+   "sink": "hcollb_NW",
+   "src_part": "NE_hub",
+   "sink_part": "NW_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "hcollb_NE.ccw_o",
+     "lane": "L700",
+     "bound": 18,
+     "landed": 18,
+     "bits": 280
+    },
+    {
+     "source": "hcollb_NE.cw_o",
+     "lane": "L700",
+     "bound": 18,
+     "landed": 18,
+     "bits": 280
+    }
+   ]
+  },
+  {
+   "sink": "obs_NW",
+   "src_part": "NE_hub",
+   "sink_part": "NW_hub",
+   "aligned_by_lanes": true,
+   "aligned_landed": true,
+   "members": [
+    {
+     "source": "svg_NW4.run_done",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 1
+    },
+    {
+     "source": "svg_NW5.run_done",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 1
+    },
+    {
+     "source": "svg_NW6.run_done",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 1
+    },
+    {
+     "source": "svg_NW7.run_done",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 1
+    },
+    {
+     "source": "obs_NE.r_d",
+     "lane": "L700",
+     "bound": 18,
+     "landed": 18,
+     "bits": 23
+    },
+    {
+     "source": "obs_NE.r_d",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 9
+    },
+    {
+     "source": "obs_NE.r_idx",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 8
+    },
+    {
+     "source": "obs_NE.r_v",
+     "lane": "L96m",
+     "bound": 18,
+     "landed": 18,
+     "bits": 1
+    }
+   ]
+  }
+ ],
+ "ordered_station": [
+  {
+   "chain": [
+    "NE_hub",
+    "NE_b112",
+    "root",
+    "NW_b112",
+    "NW_hub"
+   ],
+   "base_counts": [
+    4,
+    5,
+    5
+   ],
+   "seam_min_counts": [
+    4,
+    6,
+    6
+   ],
+   "counts": [
+    4,
+    6,
+    6
+   ],
+   "pin_reach_um": 30.0,
+   "seam_points": [
+    [
+     [
+      15376.784,
+      10385.28
+     ],
+     [
+      15042.24,
+      11171.52
+     ]
+    ],
+    [
+     [
+      15042.24,
+      11171.52
+     ],
+     [
+      13357.44,
+      11171.52
+     ]
+    ],
+    [
+     [
+      13357.44,
+      11171.52
+     ],
+     [
+      12482.384,
+      10385.28
+     ]
+    ]
+   ],
+   "added_stations": 2,
+   "reach_um": 364.5,
+   "failed_stage": null,
+   "status": "PASS",
+   "max_hop_um": 362.880000000001,
+   "max_via_seam_hop_um": 51.840000000001965,
+   "regs_by_slot": [
+    [
+     [
+      15357.6,
+      10393.92
+     ],
+     [
+      15046.56,
+      10424.16
+     ],
+     [
+      15046.56,
+      10787.04
+     ],
+     [
+      15046.56,
+      11149.92
+     ]
+    ],
+    [
+     [
+      15016.32,
+      11171.52
+     ],
+     [
+      14653.44,
+      11171.52
+     ],
+     [
+      14290.56,
+      11171.52
+     ],
+     [
+      14018.4,
+      11080.8
+     ],
+     [
+      13664.16,
+      11089.44
+     ],
+     [
+      13366.08,
+      11154.24
+     ]
+    ],
+    [
+     [
+      13348.8,
+      11154.24
+     ],
+     [
+      13335.84,
+      10804.32
+     ],
+     [
+      13167.36,
+      10609.92
+     ],
+     [
+      12994.56,
+      10419.84
+     ],
+     [
+      12821.76,
+      10393.92
+     ],
+     [
+      12480.48,
+      10393.92
+     ]
+    ]
+   ]
+  },
+  {
+   "chain": [
+    "NW_hub",
+    "NW_b112",
+    "root",
+    "NE_b112",
+    "NE_hub"
+   ],
+   "base_counts": [
+    5,
+    5,
+    6
+   ],
+   "seam_min_counts": [
+    6,
+    6,
+    7
+   ],
+   "counts": [
+    6,
+    6,
+    7
+   ],
+   "pin_reach_um": 30.0,
+   "seam_points": [
+    [
+     [
+      13047.9673,
+      10385.28
+     ],
+     [
+      13357.44,
+      11637.77
+     ]
+    ],
+    [
+     [
+      13357.44,
+      11637.77
+     ],
+     [
+      15042.24,
+      11637.77
+     ]
+    ],
+    [
+     [
+      15042.24,
+      11637.77
+     ],
+     [
+      15942.3673,
+      10385.28
+     ]
+    ]
+   ],
+   "added_stations": 3,
+   "reach_um": 364.5,
+   "failed_stage": null,
+   "status": "PASS",
+   "max_hop_um": 362.880000000001,
+   "max_via_seam_hop_um": 59.8600000000024,
+   "regs_by_slot": [
+    [
+     [
+      13068.0,
+      10393.92
+     ],
+     [
+      13335.84,
+      10393.92
+     ],
+     [
+      13348.8,
+      10527.84
+     ],
+     [
+      13348.8,
+      10890.72
+     ],
+     [
+      13348.8,
+      11253.6
+     ],
+     [
+      13348.8,
+      11616.48
+     ]
+    ],
+    [
+     [
+      13366.08,
+      11616.48
+     ],
+     [
+      13668.48,
+      11556.0
+     ],
+     [
+      14031.36,
+      11556.0
+     ],
+     [
+      14394.24,
+      11556.0
+     ],
+     [
+      14653.44,
+      11633.76
+     ],
+     [
+      15016.32,
+      11633.76
+     ]
+    ],
+    [
+     [
+      15046.56,
+      11612.16
+     ],
+     [
+      15046.56,
+      11249.28
+     ],
+     [
+      15046.56,
+      10886.4
+     ],
+     [
+      15046.56,
+      10523.52
+     ],
+     [
+      15284.16,
+      10398.24
+     ],
+     [
+      15642.72,
+      10393.92
+     ],
+     [
+      15940.8,
+      10393.92
+     ]
+    ]
+   ]
+  }
+ ]
+}

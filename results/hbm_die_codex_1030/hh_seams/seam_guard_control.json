@@ -1,0 +1,56 @@
+[
+ {
+  "chain": [
+   "NE_hub",
+   "NE_b112",
+   "root",
+   "NW_b112",
+   "NW_hub"
+  ],
+  "old_geometry_FAIL": {
+   "max_boundary_ff_distance_um": 1136.1599999999999,
+   "max_via_pin_hop_um": 1918.08
+  },
+  "new_geometry_PASS_centroid_only": {
+   "max_boundary_ff_distance_um": 27.823999999998705,
+   "max_via_pin_hop_um": 51.840000000001965
+  },
+  "counts_old": [
+   4,
+   5,
+   5
+  ],
+  "counts_new": [
+   4,
+   6,
+   6
+  ]
+ },
+ {
+  "chain": [
+   "NW_hub",
+   "NW_b112",
+   "root",
+   "NE_b112",
+   "NE_hub"
+  ],
+  "old_geometry_FAIL": {
+   "max_boundary_ff_distance_um": 1598.0900000000001,
+   "max_via_pin_hop_um": 2850.5800000000017
+  },
+  "new_geometry_PASS_centroid_only": {
+   "max_boundary_ff_distance_um": 29.93000000000211,
+   "max_via_pin_hop_um": 59.8600000000024
+  },
+  "counts_old": [
+   5,
+   5,
+   6
+  ],
+  "counts_new": [
+   6,
+   6,
+   7
+  ]
+ }
+]
