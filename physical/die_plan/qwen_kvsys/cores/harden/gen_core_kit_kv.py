@@ -926,6 +926,23 @@ def timing_modes_stage(kd):
     return dict(mode="two-mode tc setup / BC hold", tt=r["tt"], ff=r["ff"])
 
 
+FF_COL_UNCLAMPED = "set col [expr {($px - $ff_x0) / $ff_cpitch}]"
+FF_COL_SHARED_CLAMP = "set col [expr {max(0,min($cmax,($px-$ff_x0)/$ff_cpitch))}]"
+
+
+def clamp_face_columns(ff):
+    """N/S face search starts at a legal core column (ECTLK rsp_epoch[0]: pin x2.136 in a core at x4.32).
+
+    Shared tools/die_plan/face_flops.tcl clamps both core margins itself since cf2b913d2; the kit then keeps the
+    shared text unchanged.  An older face_flops.tcl with the unclamped search gets the lower-margin clamp as before.
+    Any other form fails closed.  (FLOW-9 10-30: the KV core canary failed at gen on every main since cf2b913d2.)"""
+    if FF_COL_SHARED_CLAMP in ff:
+        assert ff.count(FF_COL_SHARED_CLAMP) == 1 and FF_COL_UNCLAMPED not in ff, "face_flops.tcl column search changed"
+        return ff
+    assert ff.count(FF_COL_UNCLAMPED) == 1, "face_flops.tcl column search changed"
+    return ff.replace(FF_COL_UNCLAMPED, "set col [expr {max(0, ($px - $ff_x0) / $ff_cpitch)}]")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core-json", required=True)
@@ -1521,9 +1538,7 @@ def main():
     # south/north pin at x2.136 in a core starting at x4.32 otherwise selects
     # column -2; all three candidate columns stay negative and no anchor is
     # emitted (ECTLK rsp_epoch[0]).  Snap its search to the legal core band.
-    old_col = "set col [expr {($px - $ff_x0) / $ff_cpitch}]"
-    assert ff.count(old_col) == 1, "face_flops.tcl column search changed"
-    ff = ff.replace(old_col, "set col [expr {max(0, ($px - $ff_x0) / $ff_cpitch)}]")
+    ff = clamp_face_columns(ff)
     ff = ff.replace("set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]",
                     "set ff_out [open $::env(RESULTS_DIR)/ot_face_flops.txt w]\n"
                     "set ff_unreg [open $::env(RESULTS_DIR)/ot_unreg_pins.txt w]")
