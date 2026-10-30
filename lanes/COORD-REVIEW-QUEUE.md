@@ -5477,3 +5477,9 @@ OWNER? [COORD 10-29 17:20] HBM release scope + tok/s: HBM CLOSURE-LIST 40 rows, 
 (4) Successor: HBM-CORES-KITS-24.
 
 [COORD] RULINGS [loop-gap 19:4x] (10-29 19:43 PDT): ASK [plan delta] [S81-CORES-KITS] 19:29 (addressed to DIE-S81-31, which has parked, so DIE-S81-32 owns it): APPROVED as one fix-only S81 event in the H0 330ee0e6e50 form. kit_preflight fails on plan pin data, which no kit variant can change. Scope is each core's own data: (a) GEOM-21 clock pin shapes (qbank_N/S ck[0], gunit_l4/l1c/l0r/l0 clk); (b) plan pin file synced to pins_canonical (sstn_base566 + a static clock placement, gunit_l0, bk_g, bf_col); (c) attn_hcore ld_v moved onto its declared edge; (d) >=10.8 um macro channels inside the bk_g/bf_col outlines. No outline growth, no neighbour or die-level change. Then G0C + strict bind + die clock check. S81-CORES-KITS rebuilds on it.
+
+[COORD] RULINGS [DIE-HEAD-34 19:37 ASKs] (10-29 19:45 PDT):
+(1) hd_mesh_e rst_start_raw_1 DRT-0255: APPROVED. Local pin delta for this block only, onto a clear M7 track near u_rrl_2, then G0C + clock rerun.
+(2) hd_tile u_eA1 x 371.52 -> 367.2 (one 4.32 lattice step, inside the block; no pin/RTL/die change): APPROVED as part of the approved hd_tile density event, then kit regen + PLACE + AUTO-GEOM (GRT >=50 it) + die clock rerun.
+(3) lep_pair fill conflict: I have put it to the OWNER as a question. Meanwhile (A): continue VA/VB at 777.6x492.48 with fill reported as FAIL; no waiver taken.
+(4) hd_ctl canary LEC: DEFAULT approved. Run to 22:00, then the standard lec.py partition/cutpoint rerun on the same netlist.
