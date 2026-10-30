@@ -2266,3 +2266,4 @@ CODEX: 2026-10-30 03:56 PDT HEAD exactHB4GRT50=0/r2r403x0; old737diagnosticdiffe
 CODEX: 2026-10-30 03:56 PDT main2f923a74605 pushed closure fixes; KVloaded3595CA/1687STARTindependentlyPASS,q0counted6/31; S81wave3classesON+truthful4leafcapFAIL/naturalcuts; HBMhub375373+DPpathfound; QC BTABGRT50ov0heldestimatorbug, freshprovideractive; HEADlast-eventactive. No full-die/G5closureclaim.
 
 CODEX: 2026-10-30 03:57 PDT support E0 tagEQ46395 collected, new sameDBqualification added; cachecurrentKV7/31/QC5/9/S8118/52/HEAD2/3/HBM0. S81safe3class wave enabled+visually reviewed; ED/LD intake diagnosed existing15minrecent-logguard, next04:02tick expected no bypass.
+CODEX: 2026-10-30 03:57 PDT QCphysicalplan46401097649READY G0C155unchanged/bind0; BTABprototypeGRT0/FF12.11heldcapacitymodel; oldCA86low-sidefailsdiagnosed/freshprovider+physicalpathreplanlive; A0boundedinternalgapfix.
