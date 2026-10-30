@@ -1,0 +1,41 @@
+ot-run: epyc2          admits   553 GB (avail 820, reserve 0, fresh 134.2, peak 67.9, headroom 0, waiters 0/0 GB) load 50/128 running 36 disk 135 GB 
+ot-run: intel1         admits   626 GB (avail 789, reserve 0, fresh 47.4, peak 50.8, headroom 0, waiters 0/0 GB) load 54/112 running 40 disk 933 GB 
+ot-run: localhost      admits   607 GB (avail 823, reserve 0, fresh 130.1, peak 21.9, headroom 0, waiters 0/0 GB) load 88/112 running 31 disk 616 GB 
+ot-run: -> intel1
+ot-heavy: admitted on key-cardinal as oth-ubuntu-219711-1793364045 after 0 s
+BOOT_BRANCH PASS phase=83 pad=0 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=83 pad=0 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=83 pad=1 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=83 pad=1 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=209 pad=0 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=209 pad=0 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=209 pad=1 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=209 pad=1 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=417 pad=0 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=417 pad=0 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=417 pad=1 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=417 pad=1 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=711 pad=0 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=711 pad=0 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=711 pad=1 efall=0 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+BOOT_BRANCH PASS phase=711 pad=1 efall=1 production_checks=402 boots=3 period_ps=833
+rtl/test/meso/boot_branch/tb_boot_branch.sv:72: $finish called at 600000 (1ps)
+MUTANT_CAUGHT BOOT_MUTANT_K FATAL: rtl/test/meso/boot_branch/tb_boot_branch.sv:64: PRODUCTION_DATA_MISMATCH n=81 old=80cc new=80fd
+MUTANT_CAUGHT OT_BOOT_BRANCH_MUTANT_RESET FATAL: rtl/test/meso/boot_branch/tb_boot_branch.sv:39: RESET_COPY_MISMATCH
+MUTANT_CAUGHT OT_BOOT_BRANCH_MUTANT_STAGE FATAL: rtl/test/meso/boot_branch/tb_boot_branch.sv:40: INTERNAL_START_MISMATCH
+ot-run: RAN on intel1 (unit oth-ubuntu-219711-1793364045): exit 0

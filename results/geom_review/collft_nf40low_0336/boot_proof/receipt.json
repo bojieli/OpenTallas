@@ -1,0 +1,30 @@
+{
+  "method": "actual RTL lockstep simulation, not exhaustive formal or physical signoff",
+  "period_ps": 833,
+  "phases_ps": [
+    83,
+    209,
+    417,
+    711
+  ],
+  "pad": [
+    0,
+    1
+  ],
+  "edge_fall": [
+    0,
+    1
+  ],
+  "cases": 16,
+  "resets_per_case": 3,
+  "production_compares_per_case": 402,
+  "total_production_compares": 6432,
+  "normal": "PASS",
+  "mutants": {
+    "wrong_K": "PRODUCTION_DATA_MISMATCH",
+    "reset": "RESET_COPY_MISMATCH",
+    "branch": "INTERNAL_START_MISMATCH"
+  },
+  "rtl_sha256": "95e4365376d13d9142606eef402f5bc21efe15b1c8c42bc02dea09e099fc0d1d",
+  "source_integration": "not yet; default-off helper and stage export only, no FF2 modification"
+}

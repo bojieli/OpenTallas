@@ -438,7 +438,9 @@ module ot_dp_landing_origin_s #(
     parameter integer PADW = 1,
     // Optional retained DATA-state copies for the forwarded START face flops.
     // Their D/clock/reset match the existing stages; latency and sampling stay exact.
-    parameter integer FWD_COPY = 0
+    parameter integer FWD_COPY = 0,
+    // Default-off physical boot branch: export the existing first positive stage.
+    parameter integer BOOT_BRANCH_EXPORT = 0
 ) (
     input  wire            clk,
     input  wire            rst_raw_n,
@@ -449,10 +451,12 @@ module ot_dp_landing_origin_s #(
     // DIE-HEAD-10 FSTART out: D-side of start (start_d(t) == start(t+1) while rst_raw_n is high).  The wrapper's
     // dedicated face flop per forwarded start pin (d = start_d, same clk / raw reset) equals start every cycle:
     // 0 added cycles, proven by results/die_head_1028/die_head_10_fstart/fv_start_o.sh; internal loads keep start
-    output wire            start_d
+    output wire            start_d,
+    output wire            boot_s0
 );
     localparam integer PADMAX = (1 << PADW) - 1;
     (* async_reg = "true" *) reg s0, s1, sf;
+    assign boot_s0 = (BOOT_BRANCH_EXPORT != 0) ? s0 : 1'b0;
     reg s2;
     always @(negedge clk) sf <= p_start;
     wire s_in = strap_efall ? sf : p_start;
@@ -494,6 +498,46 @@ module ot_dp_landing_origin_s #(
 `ifndef SYNTHESIS
     initial if (PADW < 1 || PADW > 4) $fatal(1, "origin strap PADW must be 1..4");
 `endif
+endmodule
+
+// Default-OFF physical copy of existing origin_s PADW1 states. ENABLE=1 is only for
+// a declared per-port BOOT phase plan: northern FSTART captures north_start (one
+// cycle later than start_d), and receiver K increments by one. Internal START
+// remains equal-cycle. The raw copy has EXACTLY the original rrl9 relay equation;
+// the caller must supply that same predecessor, never a nearer/different stage.
+(* keep_hierarchy = "yes" *)
+module ot_dp_landing_boot_branch #(parameter integer ENABLE = 0) (
+    input wire clk,
+    input wire baseline_start, baseline_raw,
+    input wire origin_s0, raw_parent, strap_pad,
+    output wire north_start, north_raw
+);
+    generate if (ENABLE != 0) begin : g_north
+        (* keep = "true" *) reg raw_copy;
+        (* keep = "true" *) reg s1, s2, pd;
+        always @(posedge clk) begin
+`ifdef OT_BOOT_BRANCH_MUTANT_RESET
+            raw_copy <= ~raw_parent;
+`else
+            raw_copy <= raw_parent;
+`endif
+            if (!raw_copy) begin s1 <= 0; s2 <= 0; pd <= 0; end
+            else begin
+                s1 <= origin_s0;
+`ifdef OT_BOOT_BRANCH_MUTANT_STAGE
+                s2 <= origin_s0;
+`else
+                s2 <= s1;
+`endif
+                pd <= s2;
+            end
+        end
+        assign north_start = strap_pad ? pd : s2;
+        assign north_raw = raw_copy;
+    end else begin : g_off
+        assign north_start = baseline_start;
+        assign north_raw = baseline_raw;
+    end endgenerate
 endmodule
 
 // Hierarchy retains the distinct physical export copy when its data equation

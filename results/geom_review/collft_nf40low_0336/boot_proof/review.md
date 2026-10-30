@@ -1,0 +1,7 @@
+# Default-off north START mechanism
+
+Real ot_dp_landing_origin_s, ot_dp_landing_boot_branch, face relay, and ot_dp_clk_landing_cas/ot_meso_ring_ca counters are used; no ring/count model substitutes. 833ps clocks, forwarded write clock25ps from source, receiver phases83/209/417/711ps, pad0/1, rise/fall sampling, three reset/release sequences each:16 lockstep cases,6432 qualified production word comparisons. Internal START equal, north forwarded START exactly one cycle later, raw reset same-cycle, default-off branch bypass equal. Both actual CA ready/fault paths must qualify; checks cannot pass while rings stay unready.
+
+Three controls fail: missing K increment gives actual production data mismatch old80cc/new80fd; inverted reset copy trips reset equality; skipped north stage trips internal START equality. This is bounded lockstep simulation with the actual mechanism, not exhaustive formal nor physical/timing approval.
+
+Default-off source candidate adds BOOT_BRANCH_EXPORT=0 and boot_s0 output to the existing origin_s (constant0 by default), plus an uninstantiated helper with ENABLE=0 default bypass. The enabled helper copies s1/s2/pd and rawparent;4 FFs total. Existing named origin instances can leave the new output unused. Generator/physical integration and shared source review still pending. Current FF2 kit unchanged. Parent approved the priced per-port phase/K proposal; root adoption requires the same generated metadata, regenerated straps, TOK/R8/static model price and fresh geometry/STA.
