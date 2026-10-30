@@ -647,6 +647,12 @@ SCHEMA = {
                         "tap_um": _xy, "sync_stages": {"type": "integer", "minimum": 2},
                         # planned leaf-logic region: reset_tree.leaf_tap binds the leaf rst_n to the tap nearest it
                         "leaf_um": _xy,
+                        # Type-local control reset copies: emitted old net, equal published depth and core clock.
+                        "consumer_localization": {"type": "array", "items": {
+                            "type": "object", "additionalProperties": False,
+                            "required": ["instance", "pin", "old_reset", "new_reset", "clock_net"],
+                            "properties": {k: {"type": "string", "pattern": "^[A-Za-z_][A-Za-z_0-9]*$"}
+                                           for k in ("instance", "pin", "old_reset", "new_reset", "clock_net")}}},
                         # Local synchronous reset/START consumers; clock entry pins are unchanged.
                         "local_taps_um": {"type": "array", "items": _xy},
                         # hard partition, reset wavefront: clocks from its arst_n pin to its release (pin reg incl.)
