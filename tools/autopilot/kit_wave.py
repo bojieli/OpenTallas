@@ -163,6 +163,20 @@ def item_key(die, event, item, block=None):
     return f"{die}|{item}|b{block[:12]}" if block else f"{die}|{event}|{item}"
 
 
+PLAN_BLOCK = {
+    "hard": "plan entry: hard type (gen skips it unless die cfg hard_wrappers names it)",
+    "contract": "plan entry fails kit preflight: clock.core_taps internal without SIGNED TT/FF core means (gen ContractError)",
+}
+
+
+def plan_entry_block(d, item):
+    """plan-entry kit preflight from the plan probe flags; hard_wrappers opt a hard type back in"""
+    f = (d.get("_plan_flags") or {}).get(item)
+    if f == "hard" and item in (d.get("hard_wrappers") or []):
+        return None
+    return PLAN_BLOCK.get(f)
+
+
 def select(rows, cfg, die, state, plan_types=None):
     """-> (picked rows in launch order, {reason: [items]})"""
     d = cfg["dies"][die]
@@ -200,8 +214,14 @@ def select(rows, cfg, die, state, plan_types=None):
             # the plan of record may split an item into classes (<item>__cl<hash>): each class is one wave item
             cls = sorted(t for t in plan_types if t.startswith(r["item"] + "__"))
             its = state.get("items") or {}
+            blocked = [c for c in cls if plan_entry_block(d, c)]
+            for c in blocked:
+                skip.setdefault(plan_entry_block(d, c), []).append(c)
+            cls = [c for c in cls if c not in blocked]
             todo = [c for c in cls if not its.get(item_key(die, ev, c, blk(c)))
                     or f"{c}@{its[item_key(die, ev, c, blk(c))].get('attempt')}" in retry]
+            if not cls and blocked:
+                continue
             if not cls:
                 why = "not in plan of record"
             elif not todo:
@@ -209,6 +229,8 @@ def select(rows, cfg, die, state, plan_types=None):
             else:
                 picked += [dict(r, item=c, parent_item=r["item"], block_sha=blk(c)) for c in todo]
                 continue
+        if not why:
+            why = plan_entry_block(d, r["item"])
         if why:
             skip.setdefault(why, []).append(r["item"])
             continue
@@ -273,6 +295,7 @@ RULES = [
     ("FLOW", r"^bind$", r"FileNotFoundError|No such file", "die-prep bind recipe input missing"),
     ("PLAN", r"^bind$", r".", "plan of record not cleanly bound (strict bind)"),
     ("PLAN", r"^cells$", r".", "cell count above the 400k run cap"),
+    ("PLAN", None, r"GEN_NO_KIT", "gen wrote no kit (hard / skipped type in the plan)"),
     ("FLOW", None, r"SYNTH_MEMORY_MAX_BITS|KIT_PREFLIGHT FAIL|preflight[^\n]*FAIL", "kit recipe / preflight"),
     ("FLOW", None, r"Traceback \(most recent call last\)|KeyError|TypeError|AttributeError|invalid command name|"
                    r"can't read \"|Error: .*\.tcl, \d+", "tool / Tcl error"),
@@ -362,7 +385,8 @@ def spec_for(cfg, die, item, hub):
     return {"die": die, "item": item, "event": d["event"], "plan": d["plan"], "gen_host": d["gen_host"],
             "src": d["src"], "src_sha": d.get("src_sha", ""), "root": root, "work": f"{root}/items/{item}",
             "kit_rtl": d.get("kit_rtl") or {},
-            "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or []),
+            "gen_args": list(d.get("gen_args") or []) + list((d.get("type_args") or {}).get(item) or [])
+                        + (["--hard-wrappers", item] if item in (d.get("hard_wrappers") or []) else []),
             "preflight_args": list(d.get("preflight_args") or ["--contract"]),
             "hosts": [h for h in opt(cfg, die, "hosts")], "hub": hub, "place_prefer": list(opt(cfg, die, "place_prefer") or []),
             "place_mem_gb": int(opt(cfg, die, "place_mem_gb")), "place_threads": int(opt(cfg, die, "place_threads")),
@@ -454,6 +478,9 @@ def run_item(spec_path):
     rc, txt = run("gen", otrun(sp["gen_mem_gb"], 2, W, gen, gh))
     if rc:
         return fail("gen", txt)
+    rc, _ = run("gen_kit", remote(gh, f"test -f {q(K)}/config.mk || test -f {q(K)}/freeze.json"))
+    if rc:
+        return fail("gen", txt + "\nGEN_NO_KIT: gen.py exit 0 but wrote no kit for this type (hard type? see gen --hard-wrappers)")
     pf = (f"cd {q(src)} && python3 tools/die_plan/kit_preflight.py {q(K)} --plan-dir {q(os.path.dirname(plan))} "
           f"{' '.join(q(x) for x in sp['preflight_args'])} --out {q(W)}/preflight.json")
     rc, txt = run("preflight", otrun(8, 2, W, pf, gh))
@@ -539,7 +566,19 @@ try:
         m = str(h.get("module") or h.get("name") or "")
         if m and m not in blocks:
             blocks[m] = H({"core": h})
-    out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt),
+    flags = {}
+    for t, v in pt.items():
+        if not isinstance(v, dict):
+            continue
+        ck = v.get("clock") or {}
+        taps = [tp for tp in ck.get("taps") or [] if isinstance(tp, dict) and tp.get("kind") == "core"]
+        signed = bool(taps and v.get("hard_cores") and all("insertion_ff_ps" in tp and
+                      str(tp.get("budget_owner", "")).startswith("SIGNED") for tp in taps))
+        if v.get("hard"):
+            flags[t] = "hard"
+        elif ck.get("core_taps") == "internal" and not signed:
+            flags[t] = "contract"
+    out = {"mtime": st.st_mtime, "plan_sha": hashlib.sha256(raw).hexdigest(), "types": sorted(pt), "flags": flags,
            "cores": sorted(set(blocks) - set(pt)), "blocks": blocks}
 except Exception as e:
     out = {"error": f"{type(e).__name__}: {e}"}
@@ -578,6 +617,7 @@ def plan_dies(AP, cfg, st, owners, status, hub, probe=True, log=print):
                 else:
                     names = dict(pn.get("blocks") or {}) or (set(pn.get("types") or []) | set(pn.get("cores") or []))
                     d["_plan_sha"] = pn.get("plan_sha")
+                    d["_plan_flags"] = pn.get("flags") or {}
             if ok:
                 picks, skip = select(owners, cfg, die, st, names)
                 n = capacity(cfg, die, st, status, hub, launched_now=len(launch))
