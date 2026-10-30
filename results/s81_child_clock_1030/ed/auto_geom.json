@@ -1,0 +1,1377 @@
+{
+ "schema": "opentallas.auto_geom.v2",
+ "dump": "/srv/opentallas-scratch2/claude/codex-s81cores-1030/geom_ed/geom.tsv",
+ "verdict": "PASS",
+ "line": "AUTO-GEOM PASS S81 CAP ed M5 candidate outline=ok(51.84x47.52) aspect=ok(1.091) fill=ok(0.4248) fill_hi=ok(0.4248) empty=ok(0.2965) pin_reg_p90=ok(6.52) pin_reg_max=ok(19.15) pin_unreg=ok(0) r2r=ok(65.99) r2r_count=ok(0) pin_density=ok(2.5) partial_face=ok(0) col_v=ok(0.234) blocked_h=ok(0) blocked_v=ok(0) clock_on_macro=ok(0) clock_reach=ok(62.95) grt=ok(0) comb_loops=ok(0) clock_rooted=ok(0) clock_sinks=ok(1601)",
+ "rules": [
+  {
+   "rule": "outline",
+   "status": "PASS",
+   "value": "51.84x47.52",
+   "limit": "==51.84x47.52",
+   "source": "METHODOLOGY 1.14; tile-outline-from-parent-slot-1023",
+   "detail": ""
+  },
+  {
+   "rule": "aspect",
+   "status": "PASS",
+   "value": 1.091,
+   "limit": "<=2.0",
+   "source": "METHODOLOGY 1.14 aspect <= ~2:1",
+   "detail": ""
+  },
+  {
+   "rule": "fill",
+   "status": "PASS",
+   "value": 0.4248,
+   "limit": ">=0.15",
+   "source": "GEOM-AUTO-2 band <0.15 / >0.75 (owner 10-27); METHODOLOGY 1.14 target 40-60 %",
+   "detail": ""
+  },
+  {
+   "rule": "fill_hi",
+   "status": "PASS",
+   "value": 0.4248,
+   "limit": "<=0.75",
+   "source": "GEOM-AUTO-2 band <0.15 / >0.75 (owner 10-27); METHODOLOGY 1.14 target 40-60 %",
+   "detail": ""
+  },
+  {
+   "rule": "empty",
+   "status": "PASS",
+   "value": 0.2965,
+   "limit": "<=0.5",
+   "source": "layout_review.py EMPTY_FLAG (bins < 5 %)",
+   "detail": ""
+  },
+  {
+   "rule": "pin_reg_p90",
+   "status": "PASS",
+   "value": 6.52,
+   "limit": "<=30.0",
+   "source": "METHODOLOGY 1.9 (R2 p90 <= 30)",
+   "detail": "19.2 rst_n, 7.7 o_t[1]"
+  },
+  {
+   "rule": "pin_reg_max",
+   "status": "PASS",
+   "value": 19.15,
+   "limit": "<=150.0",
+   "source": "layout_review.py PIN_REG_P90_FAIL 150 (backstop)",
+   "detail": ""
+  },
+  {
+   "rule": "pin_unreg",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "METHODOLOGY 1.9 register every partition pin",
+   "detail": ""
+  },
+  {
+   "rule": "r2r",
+   "status": "PASS",
+   "value": 65.99,
+   "limit": "<=405.0",
+   "source": "METHODOLOGY 1.3/4.2 reach 405",
+   "detail": "0 captures > 405; worst u_rr.rst_n\\[1\\]$_DFF_PN0_ -> face_fault_state$_DFF_PN0_"
+  },
+  {
+   "rule": "r2r_count",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "METHODOLOGY 1.3 (count of captures > 405 um)",
+   "detail": ""
+  },
+  {
+   "rule": "pin_density",
+   "status": "PASS",
+   "value": 2.5,
+   "limit": "<=6.0",
+   "source": "METHODOLOGY 5.2 per layer+face BUDGET (COORD 10-27 10:48); route (pin-access DRC / GRT0) decides",
+   "detail": "per layer {'S/M5': 0.1, 'W/M4': 2.5, 'E/M4': 2.5, 'S/M3': 0.1}"
+  },
+  {
+   "rule": "partial_face",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "tile-review-pin-clustering-1017 (pins on partial faces)",
+   "detail": ""
+  },
+  {
+   "rule": "col_v",
+   "status": "PASS",
+   "value": 0.234,
+   "limit": "<=0.6",
+   "source": "per-column vertical demand; GEOM-REVIEW-24 hub_Ei spine",
+   "detail": "at (10.0, 27.5) (M2-M5, est.)"
+  },
+  {
+   "rule": "blocked_h",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "GEOM-REVIEW-24 ep: nets with no legal crossing (capacity 0 under the layer ceiling)",
+   "detail": ""
+  },
+  {
+   "rule": "blocked_v",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "GEOM-REVIEW-24 ep: nets with no legal crossing (capacity 0 under the layer ceiling)",
+   "detail": ""
+  },
+  {
+   "rule": "detour",
+   "status": "INFO",
+   "value": "h 0 v 0",
+   "limit": "info",
+   "source": "net-cut crossings detoured around macros (counted into channel demand)",
+   "detail": ""
+  },
+  {
+   "rule": "clock_on_macro",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "GEOM-REVIEW-24 vm_calendar_f20 (entry ON the SRAM)",
+   "detail": "clk at [25.932, 0.24] []"
+  },
+  {
+   "rule": "clock_reach",
+   "status": "PASS",
+   "value": 62.95,
+   "limit": "<=220.0",
+   "source": "METHODOLOGY 12.8b entry-to-sink ~<=200 um (sink to NEAREST entry: port or pre-placed clock cell)",
+   "detail": "sink farthest from its nearest entry (46.9, 42.3), 0 pre-placed clock cells"
+  },
+  {
+   "rule": "clock_leaf_reach",
+   "status": "INFO",
+   "value": 62.95,
+   "limit": "info",
+   "source": "sink to its OWN clock driver (leaf cell or port), GEOM-REVIEW-46",
+   "detail": "sink (46.9, 42.3) driver (25.9, 0.2)"
+  },
+  {
+   "rule": "clock_entry_sink",
+   "status": "INFO",
+   "value": 62.95,
+   "limit": "info",
+   "source": "root port to farthest clock sink",
+   "detail": "sink (46.9, 42.3)"
+  },
+  {
+   "rule": "grt",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "OWNER 10-26 GRT0 at >= 50 iterations (hbm-overflow-core-ceiling-1026)",
+   "detail": "0 it, {'M1': [0.0, 0], 'M2': [34.15, 0], 'M3': [25.42, 0], 'M4': [3.34, 0], 'M5': [0.16, 0]}"
+  },
+  {
+   "rule": "clock_taps",
+   "status": "INFO",
+   "value": "1 grid taps, 1601 sinks",
+   "limit": "n/a (< 2 grid taps)",
+   "source": "METHODOLOGY 3.3",
+   "detail": ""
+  },
+  {
+   "rule": "interface",
+   "status": "INFO",
+   "value": 136,
+   "limit": "kit pin contract",
+   "source": "OWNER 2026-10-27 08:02",
+   "detail": "new kit: parent interface checks stay in shared preflight; no replica equality asserted"
+  },
+  {
+   "rule": "comb_loops",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "complete r2r reach census (acyclic combinational graph)",
+   "detail": ""
+  },
+  {
+   "rule": "clock_rooted",
+   "status": "PASS",
+   "value": 0,
+   "limit": "<=0",
+   "source": "all sequential sinks trace to a clock input",
+   "detail": ""
+  },
+  {
+   "rule": "clock_sinks",
+   "status": "PASS",
+   "value": 1601,
+   "limit": ">=1",
+   "source": "measured clock topology required",
+   "detail": ""
+  }
+ ],
+ "metrics": {
+  "outline": [
+   51.84,
+   47.52
+  ],
+  "aspect": 1.091,
+  "macros": 0,
+  "macro_area_pct": 0.0,
+  "std_cells": 7810,
+  "ff": 1601,
+  "fill_of_free": 0.4248,
+  "empty_area": 0.2965,
+  "band_share": 1.0,
+  "density_bin_um": 2.0,
+  "macro_list": [],
+  "pins_per_face": {
+   "S": 2,
+   "W": 67,
+   "E": 67
+  },
+  "pin_peak_per_um_10um": {
+   "S": 0.2,
+   "W": 2.5,
+   "E": 2.5
+  },
+  "pin_peak_layer": {
+   "S/M5": 0.1,
+   "W/M4": 2.5,
+   "E/M4": 2.5,
+   "S/M3": 0.1
+  },
+  "pin_peak_layer_win": {
+   "S/M5": [
+    "x",
+    25.93,
+    35.93
+   ],
+   "W/M4": [
+    "y",
+    7.74,
+    17.74
+   ],
+   "E/M4": [
+    "y",
+    7.74,
+    17.74
+   ],
+   "S/M3": [
+    "x",
+    27.01,
+    37.01
+   ]
+  },
+  "pin_peak_layer_max": 2.5,
+  "face_span": {
+   "S": 0.021,
+   "W": 0.591,
+   "E": 0.591
+  },
+  "pin_table": [
+   [
+    "clk",
+    "S",
+    "M5",
+    25.932,
+    0.24
+   ],
+   [
+    "i_d[0]",
+    "W",
+    "M4",
+    0.042,
+    20.7
+   ],
+   [
+    "i_d[10]",
+    "W",
+    "M4",
+    0.042,
+    24.78
+   ],
+   [
+    "i_d[11]",
+    "W",
+    "M4",
+    0.042,
+    25.164
+   ],
+   [
+    "i_d[12]",
+    "W",
+    "M4",
+    0.042,
+    25.596
+   ],
+   [
+    "i_d[13]",
+    "W",
+    "M4",
+    0.042,
+    25.98
+   ],
+   [
+    "i_d[14]",
+    "W",
+    "M4",
+    0.042,
+    26.412
+   ],
+   [
+    "i_d[15]",
+    "W",
+    "M4",
+    0.042,
+    26.796
+   ],
+   [
+    "i_d[16]",
+    "W",
+    "M4",
+    0.042,
+    27.18
+   ],
+   [
+    "i_d[17]",
+    "W",
+    "M4",
+    0.042,
+    27.612
+   ],
+   [
+    "i_d[18]",
+    "W",
+    "M4",
+    0.042,
+    27.996
+   ],
+   [
+    "i_d[19]",
+    "W",
+    "M4",
+    0.042,
+    28.428
+   ],
+   [
+    "i_d[1]",
+    "W",
+    "M4",
+    0.042,
+    21.132
+   ],
+   [
+    "i_d[20]",
+    "W",
+    "M4",
+    0.042,
+    28.812
+   ],
+   [
+    "i_d[21]",
+    "W",
+    "M4",
+    0.042,
+    29.244
+   ],
+   [
+    "i_d[22]",
+    "W",
+    "M4",
+    0.042,
+    29.628
+   ],
+   [
+    "i_d[23]",
+    "W",
+    "M4",
+    0.042,
+    30.06
+   ],
+   [
+    "i_d[24]",
+    "W",
+    "M4",
+    0.042,
+    30.444
+   ],
+   [
+    "i_d[25]",
+    "W",
+    "M4",
+    0.042,
+    30.828
+   ],
+   [
+    "i_d[26]",
+    "W",
+    "M4",
+    0.042,
+    31.26
+   ],
+   [
+    "i_d[27]",
+    "W",
+    "M4",
+    0.042,
+    31.644
+   ],
+   [
+    "i_d[28]",
+    "W",
+    "M4",
+    0.042,
+    32.076
+   ],
+   [
+    "i_d[29]",
+    "W",
+    "M4",
+    0.042,
+    32.46
+   ],
+   [
+    "i_d[2]",
+    "W",
+    "M4",
+    0.042,
+    21.516
+   ],
+   [
+    "i_d[30]",
+    "W",
+    "M4",
+    0.042,
+    32.892
+   ],
+   [
+    "i_d[31]",
+    "W",
+    "M4",
+    0.042,
+    33.276
+   ],
+   [
+    "i_d[3]",
+    "W",
+    "M4",
+    0.042,
+    21.948
+   ],
+   [
+    "i_d[4]",
+    "W",
+    "M4",
+    0.042,
+    22.332
+   ],
+   [
+    "i_d[5]",
+    "W",
+    "M4",
+    0.042,
+    22.764
+   ],
+   [
+    "i_d[6]",
+    "W",
+    "M4",
+    0.042,
+    23.148
+   ],
+   [
+    "i_d[7]",
+    "W",
+    "M4",
+    0.042,
+    23.58
+   ],
+   [
+    "i_d[8]",
+    "W",
+    "M4",
+    0.042,
+    23.964
+   ],
+   [
+    "i_d[9]",
+    "W",
+    "M4",
+    0.042,
+    24.348
+   ],
+   [
+    "i_e",
+    "W",
+    "M4",
+    0.042,
+    34.044
+   ],
+   [
+    "i_f",
+    "W",
+    "M4",
+    0.079,
+    35.1
+   ],
+   [
+    "i_t[0]",
+    "W",
+    "M4",
+    0.042,
+    7.74
+   ],
+   [
+    "i_t[10]",
+    "W",
+    "M4",
+    0.042,
+    11.82
+   ],
+   [
+    "i_t[11]",
+    "W",
+    "M4",
+    0.042,
+    12.204
+   ],
+   [
+    "i_t[12]",
+    "W",
+    "M4",
+    0.042,
+    12.636
+   ],
+   [
+    "i_t[13]",
+    "W",
+    "M4",
+    0.042,
+    13.02
+   ],
+   [
+    "i_t[14]",
+    "W",
+    "M4",
+    0.042,
+    13.452
+   ],
+   [
+    "i_t[15]",
+    "W",
+    "M4",
+    0.042,
+    13.836
+   ],
+   [
+    "i_t[16]",
+    "W",
+    "M4",
+    0.042,
+    14.22
+   ],
+   [
+    "i_t[17]",
+    "W",
+    "M4",
+    0.042,
+    14.652
+   ],
+   [
+    "i_t[18]",
+    "W",
+    "M4",
+    0.042,
+    15.036
+   ],
+   [
+    "i_t[19]",
+    "W",
+    "M4",
+    0.042,
+    15.468
+   ],
+   [
+    "i_t[1]",
+    "W",
+    "M4",
+    0.042,
+    8.172
+   ],
+   [
+    "i_t[20]",
+    "W",
+    "M4",
+    0.042,
+    15.852
+   ],
+   [
+    "i_t[21]",
+    "W",
+    "M4",
+    0.042,
+    16.284
+   ],
+   [
+    "i_t[22]",
+    "W",
+    "M4",
+    0.042,
+    16.668
+   ],
+   [
+    "i_t[23]",
+    "W",
+    "M4",
+    0.042,
+    17.1
+   ],
+   [
+    "i_t[24]",
+    "W",
+    "M4",
+    0.042,
+    17.484
+   ],
+   [
+    "i_t[25]",
+    "W",
+    "M4",
+    0.042,
+    17.868
+   ],
+   [
+    "i_t[26]",
+    "W",
+    "M4",
+    0.042,
+    18.3
+   ],
+   [
+    "i_t[27]",
+    "W",
+    "M4",
+    0.042,
+    18.684
+   ],
+   [
+    "i_t[28]",
+    "W",
+    "M4",
+    0.042,
+    19.116
+   ],
+   [
+    "i_t[29]",
+    "W",
+    "M4",
+    0.042,
+    19.5
+   ],
+   [
+    "i_t[2]",
+    "W",
+    "M4",
+    0.042,
+    8.556
+   ],
+   [
+    "i_t[30]",
+    "W",
+    "M4",
+    0.042,
+    19.932
+   ],
+   [
+    "i_t[31]",
+    "W",
+    "M4",
+    0.042,
+    20.316
+   ],
+   [
+    "i_t[3]",
+    "W",
+    "M4",
+    0.042,
+    8.988
+   ],
+   [
+    "i_t[4]",
+    "W",
+    "M4",
+    0.042,
+    9.372
+   ],
+   [
+    "i_t[5]",
+    "W",
+    "M4",
+    0.042,
+    9.804
+   ],
+   [
+    "i_t[6]",
+    "W",
+    "M4",
+    0.042,
+    10.188
+   ],
+   [
+    "i_t[7]",
+    "W",
+    "M4",
+    0.042,
+    10.62
+   ],
+   [
+    "i_t[8]",
+    "W",
+    "M4",
+    0.042,
+    11.004
+   ],
+   [
+    "i_t[9]",
+    "W",
+    "M4",
+    0.042,
+    11.388
+   ],
+   [
+    "i_v",
+    "W",
+    "M4",
+    0.042,
+    7.02
+   ],
+   [
+    "o_d[0]",
+    "E",
+    "M4",
+    51.798,
+    20.7
+   ],
+   [
+    "o_d[10]",
+    "E",
+    "M4",
+    51.798,
+    24.78
+   ],
+   [
+    "o_d[11]",
+    "E",
+    "M4",
+    51.798,
+    25.164
+   ],
+   [
+    "o_d[12]",
+    "E",
+    "M4",
+    51.798,
+    25.596
+   ],
+   [
+    "o_d[13]",
+    "E",
+    "M4",
+    51.798,
+    25.98
+   ],
+   [
+    "o_d[14]",
+    "E",
+    "M4",
+    51.798,
+    26.412
+   ],
+   [
+    "o_d[15]",
+    "E",
+    "M4",
+    51.798,
+    26.796
+   ],
+   [
+    "o_d[16]",
+    "E",
+    "M4",
+    51.798,
+    27.18
+   ],
+   [
+    "o_d[17]",
+    "E",
+    "M4",
+    51.798,
+    27.612
+   ],
+   [
+    "o_d[18]",
+    "E",
+    "M4",
+    51.798,
+    27.996
+   ],
+   [
+    "o_d[19]",
+    "E",
+    "M4",
+    51.798,
+    28.428
+   ],
+   [
+    "o_d[1]",
+    "E",
+    "M4",
+    51.798,
+    21.132
+   ],
+   [
+    "o_d[20]",
+    "E",
+    "M4",
+    51.798,
+    28.812
+   ],
+   [
+    "o_d[21]",
+    "E",
+    "M4",
+    51.798,
+    29.244
+   ],
+   [
+    "o_d[22]",
+    "E",
+    "M4",
+    51.798,
+    29.628
+   ],
+   [
+    "o_d[23]",
+    "E",
+    "M4",
+    51.798,
+    30.06
+   ],
+   [
+    "o_d[24]",
+    "E",
+    "M4",
+    51.798,
+    30.444
+   ],
+   [
+    "o_d[25]",
+    "E",
+    "M4",
+    51.798,
+    30.828
+   ],
+   [
+    "o_d[26]",
+    "E",
+    "M4",
+    51.798,
+    31.26
+   ],
+   [
+    "o_d[27]",
+    "E",
+    "M4",
+    51.798,
+    31.644
+   ],
+   [
+    "o_d[28]",
+    "E",
+    "M4",
+    51.798,
+    32.076
+   ],
+   [
+    "o_d[29]",
+    "E",
+    "M4",
+    51.798,
+    32.46
+   ],
+   [
+    "o_d[2]",
+    "E",
+    "M4",
+    51.798,
+    21.516
+   ],
+   [
+    "o_d[30]",
+    "E",
+    "M4",
+    51.798,
+    32.892
+   ],
+   [
+    "o_d[31]",
+    "E",
+    "M4",
+    51.798,
+    33.276
+   ],
+   [
+    "o_d[3]",
+    "E",
+    "M4",
+    51.798,
+    21.948
+   ],
+   [
+    "o_d[4]",
+    "E",
+    "M4",
+    51.798,
+    22.332
+   ],
+   [
+    "o_d[5]",
+    "E",
+    "M4",
+    51.798,
+    22.764
+   ],
+   [
+    "o_d[6]",
+    "E",
+    "M4",
+    51.798,
+    23.148
+   ],
+   [
+    "o_d[7]",
+    "E",
+    "M4",
+    51.798,
+    23.58
+   ],
+   [
+    "o_d[8]",
+    "E",
+    "M4",
+    51.798,
+    23.964
+   ],
+   [
+    "o_d[9]",
+    "E",
+    "M4",
+    51.798,
+    24.348
+   ],
+   [
+    "o_e",
+    "E",
+    "M4",
+    51.798,
+    34.044
+   ],
+   [
+    "o_f",
+    "E",
+    "M4",
+    51.24,
+    35.1
+   ],
+   [
+    "o_t[0]",
+    "E",
+    "M4",
+    51.798,
+    7.74
+   ],
+   [
+    "o_t[10]",
+    "E",
+    "M4",
+    51.798,
+    11.82
+   ],
+   [
+    "o_t[11]",
+    "E",
+    "M4",
+    51.798,
+    12.204
+   ],
+   [
+    "o_t[12]",
+    "E",
+    "M4",
+    51.798,
+    12.636
+   ],
+   [
+    "o_t[13]",
+    "E",
+    "M4",
+    51.798,
+    13.02
+   ],
+   [
+    "o_t[14]",
+    "E",
+    "M4",
+    51.798,
+    13.452
+   ],
+   [
+    "o_t[15]",
+    "E",
+    "M4",
+    51.798,
+    13.836
+   ],
+   [
+    "o_t[16]",
+    "E",
+    "M4",
+    51.798,
+    14.22
+   ],
+   [
+    "o_t[17]",
+    "E",
+    "M4",
+    51.798,
+    14.652
+   ],
+   [
+    "o_t[18]",
+    "E",
+    "M4",
+    51.798,
+    15.036
+   ],
+   [
+    "o_t[19]",
+    "E",
+    "M4",
+    51.798,
+    15.468
+   ],
+   [
+    "o_t[1]",
+    "E",
+    "M4",
+    51.798,
+    8.172
+   ],
+   [
+    "o_t[20]",
+    "E",
+    "M4",
+    51.798,
+    15.852
+   ],
+   [
+    "o_t[21]",
+    "E",
+    "M4",
+    51.798,
+    16.284
+   ],
+   [
+    "o_t[22]",
+    "E",
+    "M4",
+    51.798,
+    16.668
+   ],
+   [
+    "o_t[23]",
+    "E",
+    "M4",
+    51.798,
+    17.1
+   ],
+   [
+    "o_t[24]",
+    "E",
+    "M4",
+    51.798,
+    17.484
+   ],
+   [
+    "o_t[25]",
+    "E",
+    "M4",
+    51.798,
+    17.868
+   ],
+   [
+    "o_t[26]",
+    "E",
+    "M4",
+    51.798,
+    18.3
+   ],
+   [
+    "o_t[27]",
+    "E",
+    "M4",
+    51.798,
+    18.684
+   ],
+   [
+    "o_t[28]",
+    "E",
+    "M4",
+    51.798,
+    19.116
+   ],
+   [
+    "o_t[29]",
+    "E",
+    "M4",
+    51.798,
+    19.5
+   ],
+   [
+    "o_t[2]",
+    "E",
+    "M4",
+    51.798,
+    8.556
+   ],
+   [
+    "o_t[30]",
+    "E",
+    "M4",
+    51.798,
+    19.932
+   ],
+   [
+    "o_t[31]",
+    "E",
+    "M4",
+    51.798,
+    20.316
+   ],
+   [
+    "o_t[3]",
+    "E",
+    "M4",
+    51.798,
+    8.988
+   ],
+   [
+    "o_t[4]",
+    "E",
+    "M4",
+    51.798,
+    9.372
+   ],
+   [
+    "o_t[5]",
+    "E",
+    "M4",
+    51.798,
+    9.804
+   ],
+   [
+    "o_t[6]",
+    "E",
+    "M4",
+    51.798,
+    10.188
+   ],
+   [
+    "o_t[7]",
+    "E",
+    "M4",
+    51.798,
+    10.62
+   ],
+   [
+    "o_t[8]",
+    "E",
+    "M4",
+    51.798,
+    11.004
+   ],
+   [
+    "o_t[9]",
+    "E",
+    "M4",
+    51.798,
+    11.388
+   ],
+   [
+    "o_v",
+    "E",
+    "M4",
+    51.798,
+    7.02
+   ],
+   [
+    "rst_n",
+    "S",
+    "M3",
+    27.009,
+    1.131
+   ]
+  ],
+  "land_ring": {
+   "buses": [],
+   "pins": 0,
+   "clock_exports": [],
+   "errors": [
+    "[Errno 2] No such file or directory: '/srv/opentallas-scratch2/claude/codex-s81cores-1030/kits/ot_s81sl_cap_ed_m5trial/land_slots.json'"
+   ],
+   "rejected": 0,
+   "rejected_sample": []
+  },
+  "pins_registered": 135,
+  "pins_to_macro": 0,
+  "pins_exempt": 1,
+  "pins_unregistered": 0,
+  "pins_land_ring": 0,
+  "unregistered_sample": [],
+  "pin_reg_p50": 5.44,
+  "pin_reg_p90": 6.52,
+  "pin_reg_max": 19.15,
+  "pin_reg_worst": [
+   "19.2 rst_n",
+   "7.7 o_t[1]",
+   "7.4 o_d[13]",
+   "7.4 o_t[19]",
+   "7.4 o_t[15]"
+  ],
+  "r2r_memory_instances": 0,
+  "r2r_incomplete_macros": [],
+  "r2r_max": 65.99,
+  "r2r_captures_gt405": 0,
+  "r2r_captures": 1534,
+  "comb_loop_cells": 0,
+  "r2r_worst": "u_rr.rst_n\\[1\\]$_DFF_PN0_ -> face_fault_state$_DFF_PN0_",
+  "taps": 1,
+  "grid_taps": 1,
+  "tap_mode": "tree",
+  "clock_sinks": 1601,
+  "unrooted_sinks": 0,
+  "grid_tap_sinks_min": 1601,
+  "grid_tap_sinks_max": 1601,
+  "grid_taps_empty": [],
+  "tap_sinks": {
+   "clk": 1601
+  },
+  "tap_set": [
+   [
+    "clk",
+    "S"
+   ]
+  ],
+  "clock_cells": 0,
+  "clock_depth_max": 0,
+  "clock_depth_spread": 0,
+  "leaf_sinks_p90": null,
+  "leaf_sinks_max": null,
+  "clock_net_hpwl_max": 84.73,
+  "clock_net_hpwl_p90": 84.73,
+  "stage": "placed",
+  "cells_on_macros": 0,
+  "cells_on_macros_sample": [],
+  "macro_off_grid": 0,
+  "macro_off_lattice": 0,
+  "macro_lattice_resid_max": null,
+  "partial_faces": 0,
+  "partial_face_detail": [],
+  "partial_face_worst": [
+   "S",
+   0.167,
+   0.2,
+   2
+  ],
+  "relay_chains": 0,
+  "relay_collapsed": 0,
+  "relay_balance_max": null,
+  "relay_worst": null,
+  "channel_v_max": null,
+  "channel_v_at": null,
+  "blocked_v": 0,
+  "detour_v": 0,
+  "col_v_max": 0.234,
+  "col_v_at": [
+   10.0,
+   27.5
+  ],
+  "tracks_v_per_um": 36.46,
+  "channel_h_max": null,
+  "channel_h_at": null,
+  "blocked_h": 0,
+  "detour_h": 0,
+  "tracks_h_per_um": 36.46,
+  "demand_layers": "M2-M5",
+  "clock_entry": "clk",
+  "clock_entry_xy": [
+   25.932,
+   0.24
+  ],
+  "clock_entry_on_macro": 0,
+  "clock_entry_macro": [],
+  "clock_islands_fixed": 0,
+  "clock_reach_max": 62.95,
+  "clock_reach_far": [
+   46.9,
+   42.3
+  ],
+  "clock_leaf_reach_max": 62.95,
+  "clock_leaf_reach_far": [
+   46.9,
+   42.3
+  ],
+  "clock_leaf_reach_driver": [
+   25.9,
+   0.2
+  ],
+  "clock_entry_sink_max": 62.95,
+  "clock_entry_sink_far": [
+   46.9,
+   42.3
+  ],
+  "grt_overflow": 0,
+  "grt_iterations": 0,
+  "grt_layers": {
+   "M1": [
+    0.0,
+    0
+   ],
+   "M2": [
+    34.15,
+    0
+   ],
+   "M3": [
+    25.42,
+    0
+   ],
+   "M4": [
+    3.34,
+    0
+   ],
+   "M5": [
+    0.16,
+    0
+   ]
+  },
+  "grt_note": "converged",
+  "_pin_peak": 2.5
+ },
+ "reasons": [],
+ "warns": [],
+ "warn_detail": []
+}

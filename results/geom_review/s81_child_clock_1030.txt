@@ -12,3 +12,19 @@ the 220 um clock guidance; actual sink reach must pass before CTS/route.
 Actual channel, r2r, pin-register and PG checks await child placement.
 Multi-block adoption is held by OWNER 12.20a/event3 hard freeze; no event4
 or permanent recipe change is proposed by this results-only packet.
+ED/LD generated physical pins ed_ld_kit_pins.png personally viewed: 136/142
+pins in balanced opposite W/E columns, short 43/52um data paths, isolated
+south M5 clock beside reset, no macros or channels to block PG continuity.
+Both exact generated kits KIT_PREFLIGHT --contract PASS issues0. G1 PASS
+for candidate PLACE only; no CTS/route or parent/frozen-plan adoption.
+ACTUAL PLACEMENT 03:46 PDT: ED/LD PLACE both exit0, synth LEC1673/1206EQ,
+raw/post face134/140 PASS, AUTO-GEOM all PASS. ActualED+LD PNGs personally
+viewed: uniform internal fill, short W/E data routes, no macro walls,
+isolated M5south clock, no channel pressure. ED r2r65.99/pinmax19.15/
+clockreach62.95/fill.4248/GRT50ov0; LD44.06/10.84/53.53/.3836/ov0.
+G1 actual tile geometry PASS. Scope G2 CTS/GRT+TT/FFSTA trials next;
+G2 STA must pass before DRT. No SIGNED result exists yet for these kits.
+03:48 ROOT interpretation: unsigned internal child clock rectangle changes
+under unbuilt capc5r, with external parent contract/outline/neighbours
+unchanged, are ongoing G3 hardening. Normal exactness+GEOM/timing+parent
+fit gates apply; this packet does not authorize any external contract edit.
