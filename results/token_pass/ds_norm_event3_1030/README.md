@@ -41,3 +41,21 @@ Three setup failures remain accounted for:
 run_initial_missing_config.sh preserves the initial command; run.sh is the
 successful exact command. Frozen tooling is used for input/golden arithmetic
 and encoding dependencies only, not to claim its old physical VN body current.
+
+Selected emitted leaf boundary composition follow-up:
+- emitted_leaf_routes reads each actual C wrapper's assigns, explicit ot_dp_dly,
+  boundary ot_dp_st and bit-preserving clock-landing connection. Crossing width
+  and cycles must agree with the same hashed wrapper's exact lane/header; no
+  guessed A/Y aliases or missing capacity/spare bits are accepted.
+- All80 paths map161 selected XR command bits to actual down-bus fields and33
+  VN_b partial bits through actual up-bus fields into XR p_v/p_d. Native c3
+  hierarchy lf[k].u_lf is retained rather than renamed to the c1 hierarchy.
+- Crossing plus literal PDSK ranges7..39 edges. Per-leaf command/input and
+  partial/return offsets are in leaf_routes.json. These are boundary facts,
+  not a NORM producer latency or arrival-safe issuer schedule. Current VN body
+  is05da5709... while the old measured store component used640d...; no NORM age
+  is reused. Minimum current producer measurement is next.
+- Wrong partial source bit and wrong lane age controls caught. Initial parser
+  failed on actual forwarded-clock cland_* input receivers, then on genuine c3
+  leaf hierarchy. Fixed by reading actual landing connections and selecting the
+  unique actual VN_b producer on each leaf's bound source-bit list; no aliases.
