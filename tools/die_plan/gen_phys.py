@@ -2222,7 +2222,9 @@ def write_type_kit(P, tn, out, rtl_files, util=0.5, proof=False, root=None, hold
     if t.get("clock", {}).get("landing_contract"):
         import landing_contract as LC
         (kd / "landing_contract.json").write_text(json.dumps(t["clock"]["landing_contract"], indent=1) + "\n")
-        (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn))
+        # kit-rtl wrappers declare bound-only one-bit pins as [0:0] vectors -> BTerm "<port>[0]" (KV-022)
+        bit0 = LC.bit0_ports((kd / "rtl" / f"{t['module']}.sv").read_text()) if plain_rings else frozenset()
+        (kd / "landing_exports.tcl").write_text(LC.export_tcl(P, tn, bit0))
         hook = kd / "clock_taps.tcl"
         hook.write_text(hook.read_text() + "\nsource /work/landing_exports.tcl\n")
         import landing_place as LP
