@@ -51,6 +51,42 @@ def tq(value):
     return '"' + str(value).replace('\\', '\\\\').replace('"', '\\"').replace('$', '\\$').replace('[', '\\[').replace(']', '\\]') + '"'
 
 
+def validation_bootstrap(face_text):
+    """Pure native globals/traversal support for a fresh PRE_DETAIL process.
+
+    Reuse the generated kit's exact traversal definitions; do not source its
+    mutating face-placement hook to obtain these helpers.
+    """
+    names = ('ff_slot_of', 'ff_is_ff', 'ff_is_buf', 'ff_sig_iterms',
+             'ff_from_in', 'ff_chain_out', 'ff_from_out', 'ff_in_ring',
+             'ff_lands_ring', 'ff_d_driver', 'ff_landed_stations')
+    start = face_text.find('set ff_blk [ord::get_db_block]')
+    end = face_text.find('proc ff_slot_of ')
+    if start < 0 or end <= start:
+        raise ValueError('full-stage FT: missing native validation initialization')
+    definitions = []
+    for name in names:
+        match = re.search(r'^proc ' + name + r'\s+\{[^}]*\}\s+\{', face_text, re.M)
+        if not match:
+            raise ValueError(f'full-stage FT: missing native validation helper {name}')
+        depth, pos = 1, match.end()
+        while depth and pos < len(face_text):
+            char = face_text[pos]
+            # Tcl braces preceded by an odd run of backslashes are literals.
+            back = pos - 1
+            while back >= 0 and face_text[back] == '\\':
+                back -= 1
+            if (pos - back - 1) % 2 == 0:
+                depth += (char == '{') - (char == '}')
+            pos += 1
+        if depth:
+            raise ValueError(f'full-stage FT: incomplete native helper {name}')
+        definitions.append(face_text[match.start():pos])
+    return ('# Validation-only bootstrap; no normal face placement or cloning.\n'
+            'uplevel #0 {\n' + face_text[start:end] + '\n'.join(definitions) +
+            '\nsource /work/ft_full_stage_data.tcl\n}\n')
+
+
 def install(t, plan_path, kd):
     preserve = t.get('ft_full_stage_preserve_ff_families', False)
     if type(preserve) is not bool:
@@ -81,7 +117,8 @@ def install(t, plan_path, kd):
     hook.write_text(text+'\nsource /work/ft_full_stage.tcl\n')
     # These sites are already legal and obstacle-checked; subsequent DPL must preserve them.
     release = kd/'face_flops_release.tcl'
-    release.write_text(release.read_text()+'\nsource /work/ft_full_stage.tcl\n')
+    (kd/'ft_full_stage_bootstrap.tcl').write_text(validation_bootstrap(text))
+    release.write_text(release.read_text()+'\nsource /work/ft_full_stage_bootstrap.tcl\nsource /work/ft_full_stage.tcl\n')
     if preserve:
         install_family_preservation(doc, kd)
 
