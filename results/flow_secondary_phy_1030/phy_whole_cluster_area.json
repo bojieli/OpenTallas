@@ -1,0 +1,21 @@
+{
+ "rx": {
+  "target_ff": 5262,
+  "target_ff_area_um2": 1541.339,
+  "fanin_comb": 16340,
+  "fanin_comb_area_um2": 1951.489,
+  "total_area_um2": 3492.829,
+  "at_60pct_area_um2": 5821.381,
+  "min_E_height_12p96_um": 449.181
+ },
+ "tx": {
+  "target_ff": 4731,
+  "target_ff_area_um2": 1382.461,
+  "fanin_comb": 15531,
+  "fanin_comb_area_um2": 1498.255,
+  "total_area_um2": 2880.716,
+  "at_60pct_area_um2": 4801.194,
+  "min_E_height_12p96_um": 370.462
+ },
+ "scope": "Actual oldplaced mapped fanin cone per RX/TX target FF set; stops at sequential and primaryinput boundaries, includes shared reset/control combinational logic conservatively."
+}

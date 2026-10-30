@@ -1,0 +1,181 @@
+{
+ "basis": "Exploratory ASAP7 NLDM + same A0 Manhattan-MST/direct Elmore model, allBUFx24, repeaters<=150um, no timing measurements consumed; no legalization/PG/DRC performed",
+ "cells": 1027,
+ "sinks": 5260,
+ "corners": {
+  "TT": {
+   "aocv": {
+    "max_ps": 47.14222571399635,
+    "over80": 0,
+    "worst": [
+     [
+      47.14222571399635,
+      "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\\[3\\]$_DFF_PN0_",
+      19.229999977717025,
+      27.912225736279332
+     ],
+     [
+      47.02634637322778,
+      "u_bound.u_core.u_fdi_cdc.u_rx.rd_online_w2$_DFF_PN0_",
+      "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[2\\]$_DFF_PN0_",
+      19.04277903711178,
+      27.983567336116
+     ],
+     [
+      46.98417139165848,
+      "u_bound.u_core.u_fdi_cdc.u_prs.reset_pipe\\[1\\]$_DFF_PN0_",
+      "u_bound.u_core.u_fdi_cdc.u_tx.rd_gray\\[2\\]$_DFF_PN0_",
+      19.000486595873333,
+      27.98368479578515
+     ]
+    ],
+    "spice_scale": 1.0485,
+    "same_PDN_region": true,
+    "table": "clk_aocv_table_g021.json",
+    "branch_pairs": 2262
+   },
+   "pairinfo": {
+    "pairs": 40340,
+    "max_abs_ps": 20.17976049655283,
+    "over80": 0,
+    "over150": 0,
+    "worst": [
+     [
+      20.17976049655283,
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      "u_bound.u_core.u_fdi_cdc.rq_d\\[28\\]$_DFF_P_"
+     ],
+     [
+      20.175545760445175,
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      "u_bound.u_core.u_fdi_cdc.rq_d\\[31\\]$_DFF_P_"
+     ],
+     [
+      20.168234970726076,
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      "u_bound.u_core.u_fdi_cdc.rq_d\\[29\\]$_DFF_P_"
+     ]
+    ],
+    "missing": 0
+   },
+   "macro_related": {
+    "rq_d_count": 522,
+    "rq_d_min_ps": 475.2824656415629,
+    "rq_d_max_ps": 485.8911357855087,
+    "max_abs_macro_pair_ps": 20.17976049655283
+   },
+   "min_ps": 456.98048009369455,
+   "max_ps": 485.9152391574713,
+   "window_ps": 28.934759063776767,
+   "max_slew_ps": 67.91452511290267,
+   "macro_pin_ps": [
+    465.7113752889559
+   ],
+   "worst_slew_net": {
+    "driver": 32,
+    "driver_xy": [
+     1888.354189830509,
+     494.7187118644064
+    ],
+    "target_xy": [
+     1884.384,
+     354.024
+    ],
+    "wire_um": 152.3908072255913,
+    "cap_ff": 30.55303137082462,
+    "targetcap_ff": 2.34978,
+    "targetdistance_um": 144.66490169491544,
+    "arrival_ps": 415.18223012312046
+   }
+  },
+  "FF": {
+   "aocv": {
+    "max_ps": 42.05547616242488,
+    "over80": 0,
+    "worst": [
+     [
+      42.05547616242488,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[260\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      17.45567166072537,
+      24.59980450169951
+     ],
+     [
+      42.04125898873106,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[223\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      17.39296451123283,
+      24.64829447749823
+     ],
+     [
+      42.04125898873106,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[222\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro",
+      17.39296451123283,
+      24.64829447749823
+     ]
+    ],
+    "spice_scale": 1.0552,
+    "same_PDN_region": true,
+    "table": "clk_aocv_table_g021.json",
+    "branch_pairs": 2262
+   },
+   "pairinfo": {
+    "pairs": 40340,
+    "max_abs_ps": 16.54252431835232,
+    "over80": 0,
+    "over150": 0,
+    "worst": [
+     [
+      16.54252431835232,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[260\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro"
+     ],
+     [
+      16.51280995303472,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[262\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro"
+     ],
+     [
+      16.51280995303472,
+      "u_bound.u_core.u_fdi_cdc.p_tx_d\\[261\\]$_DFF_P_",
+      "u_bound.u_core.u_phy.g_native.u_macro"
+     ]
+    ],
+    "missing": 0
+   },
+   "macro_related": {
+    "rq_d_count": 522,
+    "rq_d_min_ps": 391.40506048571734,
+    "rq_d_max_ps": 399.36775184717027,
+    "max_abs_macro_pair_ps": 7.602749807128362
+   },
+   "min_ps": 375.22221375985185,
+   "max_ps": 399.3928602226722,
+   "window_ps": 24.170646462820343,
+   "max_slew_ps": 67.59836052663351,
+   "macro_pin_ps": [
+    391.7650020400419
+   ],
+   "worst_slew_net": {
+    "driver": 32,
+    "driver_xy": [
+     1888.354189830509,
+     494.7187118644064
+    ],
+    "target_xy": [
+     1884.384,
+     354.024
+    ],
+    "wire_um": 152.3908072255913,
+    "cap_ff": 31.325741370824616,
+    "targetcap_ff": 2.60735,
+    "targetdistance_um": 144.66490169491544,
+    "arrival_ps": 352.7912323361546
+   }
+  }
+ },
+ "verdict": "NOT QUALIFIED",
+ "build_allowed": false
+}

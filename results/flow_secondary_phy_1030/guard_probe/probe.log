@@ -1,0 +1,17 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+PROBE_ROOTS clk {clk_clk_phy[0]} clk_t1 clk_t2 clk_t3 clk_t4 clk_t5 {fclk_in_i_host_fdi[0]} {fclk_in_i_host_link_rst_n[0]}
+PROBE_CONE clk nets=4 records=6567
+PROBE_CONE clk_clk_phy[0] nets=1 records=5261
+PROBE_CONE clk_t1 nets=1 records=1
+PROBE_CONE clk_t2 nets=1 records=1
+PROBE_CONE clk_t3 nets=1 records=1
+PROBE_CONE clk_t4 nets=1 records=1
+PROBE_CONE clk_t5 nets=1 records=1
+PROBE_CONE fclk_in_i_host_fdi[0] nets=1 records=2123
+PROBE_CONE fclk_in_i_host_link_rst_n[0] nets=1 records=35
+PROBE_PASS stable=1 roots=9 elapsed_ms=1141
+MUTANT_REWIRED u_bound.u_core.u_fdi_cdc.u_tx.wr_gray_r2\[3\]$_DFF_PN0_/CLK to clk
+PROBE_MUTANT_CAUGHT OT_CORE_SCOPE_EDITOR_CHANGED core_density_taps.tcl changed a protected root ({clk_clk_phy[0]} clk_t1 clk_t2 clk_t3 clk_t4 clk_t5 {fclk_in_i_host_fdi[0]} {fclk_in_i_host_link_rst_n[0]}); declared roots are clk
