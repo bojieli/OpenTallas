@@ -1,0 +1,138 @@
+{
+  "status": "CONNECTED LOCALCLOCK MODEL PREP; no actualdieinputarrivals, no nativeFFinternalwaveforms, no signoff or adoption",
+  "clock_BUF24": 468,
+  "per_bank_roots": 9,
+  "actualFFclockpins": 10872,
+  "actual_data_master_ITerms": "CLK .108/.200, QN1.037/.234, INVinputA1.128/.135; ASRCLK .108/.209; actualBUF24A.048/.135,Y.956/.234",
+  "layers": {
+    "H": "M6",
+    "V": "M7",
+    "r_kohm_um": [
+      0.0118796,
+      0.0125096
+    ],
+    "c_ff_um_with1p7_guard": [
+      0.3186242,
+      0.27706430000000004
+    ],
+    "M1toM6_via_access_R_kohm": 0.0752
+  },
+  "root_input_slew_assumption_ps": 80,
+  "corners": {
+    "TT": {
+      "sinks": 10872,
+      "insertion_min_ps": 153.55161383132625,
+      "insertion_max_ps": 231.1944458513069,
+      "max_transition_ps": 41.65594179686678,
+      "sinks_over80ps": 0,
+      "per_bank": {
+        "1": {
+          "min_ps": 167.70357981657696,
+          "max_ps": 188.64064675630104
+        },
+        "2": {
+          "min_ps": 153.55161383132625,
+          "max_ps": 231.1944458513069
+        },
+        "3": {
+          "min_ps": 163.96614063715637,
+          "max_ps": 221.8077586041386
+        },
+        "4": {
+          "min_ps": 170.30788587783854,
+          "max_ps": 190.3955197176356
+        },
+        "5": {
+          "min_ps": 168.27063712592692,
+          "max_ps": 176.93993181833582
+        },
+        "6": {
+          "min_ps": 173.53185637385215,
+          "max_ps": 179.9438737701098
+        },
+        "7": {
+          "min_ps": 177.63285273353213,
+          "max_ps": 193.6796360003132
+        },
+        "8": {
+          "min_ps": 180.31708805127403,
+          "max_ps": 197.82105398885605
+        },
+        "9": {
+          "min_ps": 179.5512744240387,
+          "max_ps": 199.89753234595094
+        }
+      }
+    },
+    "FF": {
+      "sinks": 10872,
+      "insertion_min_ps": 118.7070554877369,
+      "insertion_max_ps": 191.24868646749397,
+      "max_transition_ps": 40.308863644832634,
+      "sinks_over80ps": 0,
+      "per_bank": {
+        "1": {
+          "min_ps": 130.97210900870803,
+          "max_ps": 150.95022575006186
+        },
+        "2": {
+          "min_ps": 118.7070554877369,
+          "max_ps": 191.24868646749397
+        },
+        "3": {
+          "min_ps": 126.66544355365718,
+          "max_ps": 182.197767616973
+        },
+        "4": {
+          "min_ps": 132.59527227468493,
+          "max_ps": 153.01112640301494
+        },
+        "5": {
+          "min_ps": 132.14084301301276,
+          "max_ps": 138.84135134344297
+        },
+        "6": {
+          "min_ps": 135.10512829426068,
+          "max_ps": 142.4290820533256
+        },
+        "7": {
+          "min_ps": 138.5068317922175,
+          "max_ps": 155.40684289536253
+        },
+        "8": {
+          "min_ps": 140.41422830419603,
+          "max_ps": 158.92253056518953
+        },
+        "9": {
+          "min_ps": 139.15545673659548,
+          "max_ps": 160.60319784906108
+        }
+      }
+    }
+  },
+  "HOLD": [
+    "globaldieclockinputgraph+relatedCPPR+differentialdroop",
+    "negative-edgecontrolFFclockINVfunctionalwiring",
+    "clock/data/epoch/reset fullroutingtrackbudget",
+    "actualPHYnativeclkbranch/loadsourcewaveform",
+    "RTLlockstep+mutant andSTARTtokenpricing",
+    "oldclockplaceholder slots remain conservativelyreserved but unconnected"
+  ],
+  "connected_clock_cells_are_additional_to_old_reserve": true,
+  "clock_only_trackcut": {
+    "N_M6_H": [
+      24,
+      1110.7259999999999
+    ],
+    "E_M7_V": [
+      18,
+      2155.34
+    ],
+    "scope": "ActualconnectedlocalclockMSTrectilinearedges; no globalrootfeeds/PG/reset/epoch. No doublecornercount."
+  },
+  "conservative_sum_of_separate_peak_cuts": {
+    "N_data_plus_clock": 1338,
+    "E_data_plus_clock": 1348,
+    "scope": "Upperbound fromsumofmaximaatdifferentpositions, beforePG/reset/epoch."
+  }
+}

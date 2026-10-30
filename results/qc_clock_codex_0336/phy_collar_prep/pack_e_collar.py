@@ -20,7 +20,7 @@ def alloc(ideal,width_sites=29,kind='DFF_INV',ident=''):
    if lo<xi:new.append((lo,xi))
    if xi+width_sites<hi:new.append((xi+width_sites,hi))
   else:new.append((lo,hi))
- free[yi]=new;rec={'id':ident,'kind':kind,'origin_um':[xi*site,yi*row],'reserved_bbox_um':[xi*site,yi*row,(xi+width_sites)*site,(yi+1)*row],'ideal_xy_um':ideal,'anchor_delta_L1_um':cost,'proxy_clock_pin_um':[xi*site+.108,yi*row+.135],'positive_data_input_pin_um':[xi*site+1.116,yi*row+.135],'positive_data_output_pin_um':[xi*site+1.037,yi*row+.135]};cells.append(rec);return rec
+ free[yi]=new;rec={'id':ident,'kind':kind,'origin_um':[xi*site,yi*row],'reserved_bbox_um':[xi*site,yi*row,(xi+width_sites)*site,(yi+1)*row],'ideal_xy_um':ideal,'anchor_delta_L1_um':cost,'actual_clock_pin_um':[xi*site+.108,yi*row+.200],'positive_data_input_pin_um':[xi*site+1.128,yi*row+.135],'positive_data_output_pin_um':[xi*site+1.037,yi*row+.234]};cells.append(rec);return rec
 
 def point(path,t):
  lengths=[abs(a[0]-b[0])+abs(a[1]-b[1]) for a,b in zip(path,path[1:])];d=sum(lengths)*t
