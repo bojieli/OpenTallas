@@ -7,6 +7,8 @@ D=$(realpath -m "${1:?OUT}")
 mkdir -p "$D"
 SRC=("$R/rtl/test/qwen_split/tb_host_landed_txdp.sv"
  "$R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_sfm.sv"
+ "$R/rtl/qwen_sys/context_transport_20261014/qkd_host_record_port.sv"
+ "$R/rtl/qwen_sys/context_transport_20261014/qkd_context_records.sv"
  "$R/rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv"
  "$R/physical/asap7_memory_macros_v2/d2d_sram_1r1w_64x137_m1_r2c2_p192/d2d_sram_1r1w_64x137_m1_r2c2_p192.v")
 sha256sum "${SRC[@]}" > "$D/source.sha256"
