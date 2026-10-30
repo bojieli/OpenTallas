@@ -1,0 +1,16 @@
+read_liberty -lib stdcells.lib
+read_verilog -sv -DSYNTHESIS ot_dp_clk_landing_ca.sv
+read_verilog -sv start_stages.sv
+hierarchy -check -top ot_die_start_stages
+synth -top ot_die_start_stages -noabc
+dfflibmap -liberty stdcells.lib
+abc -liberty stdcells.lib
+select *
+setattr -mod -unset keep_hierarchy
+setattr -unset keep_hierarchy
+flatten
+clean
+check -assert
+stat -liberty stdcells.lib
+write_json provider_mapped.json
+write_verilog -noattr provider_mapped.v

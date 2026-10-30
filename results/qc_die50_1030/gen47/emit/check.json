@@ -1,0 +1,28 @@
+{
+ "clock_cells_identical": true,
+ "clock_cells": 48296,
+ "stages": 3369,
+ "stage_ports_missing": 0,
+ "start_ports": 3681,
+ "max_start_hop_um": 401.76,
+ "start_hops_over_405": 0,
+ "bad": [],
+ "flops": 23230,
+ "flop_hist": {
+  "8": 1,
+  "7": 3191,
+  "5": 177
+ },
+ "roots": [
+  "b0"
+ ],
+ "from_A": 1372,
+ "counts": {
+  "stages": 3369,
+  "flops": 23230,
+  "die_inputs": 0,
+  "die_outputs": 313,
+  "direct_ports": 0,
+  "max_cell_to_stage_um": 9.180000000000291
+ }
+}

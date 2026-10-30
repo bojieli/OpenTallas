@@ -1,0 +1,45 @@
+
+        +----------Local Count, excluding submodules.
+        | 
+--
+10. Printing statistics.
+
+=== ot_die_start_stages ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+    87565        - wires
+    87565        - wire bits
+    50842        - public wires
+    50842        - public wire bits
+     3683        - ports
+     3683        - port bits
+    56757  8.1E+03 cells
+     6737        -   $scopeinfo
+      178   15.571   AND2x2_ASAP7_75t_R
+        2    0.175   AND3x1_ASAP7_75t_R
+        3    0.219   AOI21xp33_ASAP7_75t_R
+    16848 4.91E+03   DFFHQNx1_ASAP7_75t_R
+     6382 1.86E+03   DFFLQNx1_ASAP7_75t_R
+    16665  728.927   INVx1_ASAP7_75t_R
+        4    0.233   NAND2xp33_ASAP7_75t_R
+        1    0.073   NAND3xp33_ASAP7_75t_R
+     9928  579.001   NOR2xp33_ASAP7_75t_R
+        1    0.087   NOR4xp25_ASAP7_75t_R
+        1    0.087   O2A1O1Ixp33_ASAP7_75t_R
+        1    0.073   OAI21xp33_ASAP7_75t_R
+        3    0.262   OAI31xp33_ASAP7_75t_R
+        1    0.087   OR2x2_ASAP7_75t_R
+        1    0.102   OR4x1_ASAP7_75t_R
+        1    0.117   OR5x1_ASAP7_75t_R
+
+   Area for cell type $scopeinfo is unknown!
+
+   Chip area for module '\ot_die_start_stages': 8098.883820
+     of which used for sequential elements: 6773.868000 (83.64%)
+
+11. Executing JSON backend.
+
+12. Executing Verilog backend.
+

@@ -1,0 +1,18 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+{
+  "actual_masters": 16,
+  "existing_cells": 48296,
+  "hard_rectangles": 1602,
+  "lower_OBS": 1131,
+  "lower_PG": 0,
+  "actual_rows": 97280,
+  "die_um": [
+    31216.32,
+    26265.6
+  ]
+}
+swig/python detected a memory leak of type 'odb::Rect *', no destructor found.
