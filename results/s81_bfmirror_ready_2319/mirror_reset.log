@@ -1,0 +1,5 @@
+MIRROR_RESET PASS N=1 cycles=12000 reset_edges=1412 zero_mutant_caught=6421
+MIRROR_RESET PASS N=2 cycles=12000 reset_edges=1412 zero_mutant_caught=6405
+MIRROR_RESET PASS N=8 cycles=12000 reset_edges=1412 zero_mutant_caught=6744
+MIRROR_RESET PASS N=32 cycles=12000 reset_edges=1412 zero_mutant_caught=6834
+MIRROR_RESET ALL_PASS actual_BF_processes=2 shapes=4 added_cycles=0
