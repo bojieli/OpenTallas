@@ -218,3 +218,44 @@ SerDes current slot1563.84x2324.16 vsnative1563.570x2320.056: MX nativebodybbox 
 Source nativeFDI generator explicitly uses M5 pitch48nm and phase .012+k*.048, so SerDes1199Nface pins/57.528um is intended source geometry, not arbitrary density inference.
 
 Both visualizations personally viewed before proposal submission.
+
+
+Additional body/area review option: {
+ "status": "NOT ADOPTED; review only",
+ "baseline_issue": "SerDes2 nativebody[0,0] and upperSerDes1 nativebody[0,0] leave4.104um actual gap; two2.16umhalos consume4.32um, leavingno driverrow nearSerDes2Nclock.",
+ "candidate_type_body_origins_um": {
+  "phy_serdes_b": [
+   0,
+   0
+  ],
+  "phy_serdes": [
+   0,
+   4.104
+  ]
+ },
+ "actual_body_gap_um": 8.208,
+ "after_2p16_halos_gap_um": 3.888,
+ "guard": "Requires actualbody placement/domain identity, explicit slot-body offsets and parentorient composition. Fullslotdomain exclusions still forbid this channel. No interior PHY cells or smaller assumed logic strip.",
+ "MX_candidate_io_serdes_bbox_um": [
+  0,
+  14005.44,
+  1563.57,
+  16325.496
+ ],
+ "MX_candidate_clk_xy_um": [
+  753.018,
+  14005.536
+ ],
+ "native_field_plus_30um_R2_band_area_um2": 456.94886399999996
+}
+{
+ "source": "tools/uarch_model.py DFF_UM2=0.2916 (DFFHQNx1)",
+ "N_outer_FF": 1197,
+ "N_FF_area_um2": 349.0452,
+ "E_min_new_FF": 9576,
+ "E_FF_area_um2": 2792.3616,
+ "excludes": "epoch/control/clock/reset/buffers/routing/PG and capacity overhead",
+ "candidate_R2_band_FF_only_fill": 0.7638605268531755,
+ "result": "Thin clockdriver channel does not establish fullregisteredadapter space; FFlowbound76.4%fill beforeoverhead >70% target."
+}
+Current schema.ORIENTS onlyR0/MX/MY/R180;90deg alternative needs explicitschema/transform support. link_phy_gen.generate_nface tall is an edge-specific MODELED variant, notrotation of licensedview; no implicit migration.
