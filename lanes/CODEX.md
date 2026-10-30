@@ -4465,3 +4465,13 @@ ALLcurrentlanes covered: QC=/root/qc (die42/native/shields/A0/kitsU,V/token); KV
 
 ## CODEX notes 2026-10-30 03:38 PDT all-lane takeover coverage
 Read all 261 lane files in one quick pass plus full generated handoff; per-lane current step, inherited job/result paths, next/failure and worker mapping are in [CODEX-COVERAGE-0336.md](CODEX-COVERAGE-0336.md). Every lane mapped to qc/kv/head/s81/hbm/tokens/flow/signoff_wave/root/support; historical completed support jobs not duplicated. Current fleet = epyc2/intel1/intel2.
+
+### KV takeover 1030
+Current: event28w_c plan16980115/sidecar428608 pins+data package; START fully loaded CELL source repair. Jobs: intel1 die-kv43/sd43 try6 unit2012423 LIVE; RX259sw PRELEC and236sw2 referenceGRT live; q0/q3 proofs terminalEQ; E0SIGNED+EQ. Failures/next: SD missingmacro and band/reset collisions -> SD helper; PC−162.5 clock, q1slew ->corekits; RX pin reach -> frozen259 candidate; PHY/CDC compact candidates not plan, frozen rebuild ->HR. No failure unowned.
+
+## HEAD coverage 2026-10-30 03:49 PDT
+- DIE-HEAD-38/37: final15-type fix-only event GEN intel2 codex-head-event-1030/buildfull.otrun.log client3436381; original src25s failed stale local-reset consumer after27min, diagnosed/fixed; own12type build2 still live. Next G0C/strict bind/clock exact-abutment after source completes and visual review.
+- HEAD-KITS/KVHEAD HEAD: SerDes west+PRD DRT preserved; LEP HB4 terminal DPL29 cause fixed FLOW main but actual GEOM r2r736x582 prevents reroute;2nonplan graph variants measured, active placement/one-block diagnosis. Tile internal skew-flop clustering own nonplan PLACE candidate in preparation. Host source LEC/PLACE live collected.
+- HEAD-START: default-off W1/R1/R2 source prepared codex/head-1030@a8e64b089 READY root source intake;41tests+8186cycle RTLlockstep PASS,3mutants caught3900/197/3015. Expanded overlay bootR4..6/W5..6 +status4..10 cycles explicitly recorded residual_estimate.json,0steadydata. Physical closure not claimed.
+
+QC-KITS-W/V 2026-10-30 03:50 PDT: codex/qc-kits-0336 f64f19476a4;23failed/18live inherited PLACE collected, causes15ring+1macro+2strap+5LEC. Freshplan45GEN8PASS, pilotfe+collft LIVE intel2 clients3373723/3374798; BTABD10child CTS+nativeMIF1EQ7250PASS,channelestimateGEOMFAIL owned by parent; st_a72FLOWsupersetfix diagnosticPASS/freshproofLIVE; st_a_v2NB0candidate4statebenchLIVEepy2unit1395519. Next collect placedgeometry then enqueue qualifying routes; no blind retry.
