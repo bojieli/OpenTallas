@@ -950,14 +950,14 @@ def guard(text, top=None, skip_re=SKIP_RE, pins=None, ft1=(), straps=(), bumps=(
                 try:
                     for vals in itertools.product((False, True), repeat=len(ctl)):
                         a0 = dict(zip(ctl, vals))
-                        dv = tuple(_ev(dnet, dict(a0, **{r: bv}), {}) for bv in (False, True))
                         if origin is not None and _module_is(origin, "ot_dp_landing_relay"):
                             # A relay is one reset-qualified FF, never an inverted,
                             # OR-set or feedback sampler under another control state.
+                            dv = tuple(_ev(dnet, dict(a0, **{r: bv}), {}) for bv in (False, True))
                             if dv not in ((False, False), (False, True)):
                                 return f"relay sampler {path}: D is not reset-masked start", None
                             samp |= dv == (False, True)
-                        elif dv == (False, True):
+                        elif all(_ev(dnet, dict(a0, **{r: bv}), {}) == bv for bv in (False, True)):
                             samp = True
                             break
                 except KeyError as e:
