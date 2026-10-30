@@ -1,0 +1,15 @@
+read_verilog -defer -sv -DSYNTHESIS -DOT_S81_VE_LOADSAFE5 /work/old.sv /work/wrapper.sv
+hierarchy -top bridge_top
+proc
+flatten
+memory_map
+opt_expr -keepdc
+opt_clean
+techmap
+opt_clean
+dffunmap
+simplemap
+aigmap
+opt_clean
+check -assert
+write_json /work/old.json

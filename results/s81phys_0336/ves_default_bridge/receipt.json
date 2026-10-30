@@ -1,0 +1,158 @@
+{
+  "verdict": "PASS",
+  "basis": "Canonical complete AND/NOT state-function and output AIG identity under named arbitrary DFF-state inputs; all corresponding initial states, no init/reset/steady-state assumption",
+  "source": {
+    "scope": "Root-authorized smallest changed default-off VE_s delay-component bridge; no fullnativeLECrepeat",
+    "actual_top_params": {
+      "LM": 5,
+      "LA": 4,
+      "MUT": 0
+    },
+    "defines": [
+      "SYNTHESIS",
+      "OT_S81_VE_LOADSAFE5"
+    ],
+    "BF16_opt_define": false,
+    "reachable_changed_delays": [
+      0,
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28
+    ],
+    "W": 32,
+    "source": {
+      "old_full.sv": "1bdac4be3fe29d4bd39bf1482f705e45c16201e072dca9b8a681f22622cc5243",
+      "current_full.sv": "ecd54a7fca000a0e02cfc99c57a900c1608ea5398c4e534a386349f374189ba3",
+      "old.sv": "7e38965ee3709e6c92ace2e66d7feb71c4835274da4914b9d84a3ca85a81ab95",
+      "current.sv": "1e9521a0a17d2e431b0c948b61f4f9940ebf169bd19d40ed7ac3ed2045abd0d3",
+      "mutant.sv": "e0d2668ce3d398d0c84fe1261e5b32f8cfb9560a20f35908a305140beff756f1",
+      "wrapper.sv": "561048c819dff2fed62b4bc97e7410a0f84b1cd7fafaf91db131447f825ffa42"
+    },
+    "added_cycles": 0
+  },
+  "mutant_summary": {
+    "verdict": "REFUSED",
+    "state_count": 4122,
+    "aig_digest": "5e7aa1401290658089a7f2cf505b020517fbe0decba18e149b169fde66d3d785",
+    "different_state_labels": [
+      "g[1].u.g_ring.u.din[0]",
+      "g[1].u.g_ring.u.g_s[0].g_r[0].row[0]",
+      "g[1].u.g_ring.u.g_s[0].g_r[1].row[0]",
+      "g[2].u.g_ring.u.din[0]",
+      "g[2].u.g_ring.u.g_s[0].g_r[0].row[0]",
+      "g[2].u.g_ring.u.g_s[0].g_r[1].row[0]",
+      "g[2].u.g_ring.u.g_s[0].g_r[2].row[0]",
+      "g[2].u.g_ring.u.g_s[0].g_r[3].row[0]",
+      "g[2].u.g_ring.u.g_s[0].g_r[4].row[0]",
+      "g[2].u.g_ring.u.g_s[0].g_r[5].row[0]",
+      "g[3].u.g_ring.u.din[0]",
+      "g[3].u.g_ring.u.g_s[0].g_r[0].row[0]"
+    ],
+    "different_functions": [
+      "q2[128]",
+      "q2[224]",
+      "q[32]",
+      "q[64]",
+      "q[96]",
+      "q2[192]",
+      "q2[32]",
+      "q2[96]",
+      "q[160]",
+      "q2[64]",
+      "q[128]",
+      "q[224]"
+    ]
+  },
+  "added_cycles": 0,
+  "scope": "Changed reachable VE_s dly/ring component at actual LA4 delays 0,4,8,12,16,20,24,28/W32/MUT0; LM5 VES parameter retained; no fullbaselineLECrepeat/no physical or signoff claim",
+  "old": {
+    "ports": {
+      "clk": [
+        "input",
+        1
+      ],
+      "d": [
+        "input",
+        256
+      ],
+      "d2": [
+        "input",
+        256
+      ],
+      "q": [
+        "output",
+        256
+      ],
+      "q2": [
+        "output",
+        256
+      ]
+    },
+    "cell_types": {
+      "$_AND_": 17989,
+      "$_NOT_": 25358,
+      "$_DFF_P_": 4227,
+      "$scopeinfo": 15
+    },
+    "state_count": 4227,
+    "aig_digest": "ea077604b1afced1feb6ad479c82737b89e561ab3deabe10b6558219e6400fac"
+  },
+  "current": {
+    "ports": {
+      "clk": [
+        "input",
+        1
+      ],
+      "d": [
+        "input",
+        256
+      ],
+      "d2": [
+        "input",
+        256
+      ],
+      "q": [
+        "output",
+        256
+      ],
+      "q2": [
+        "output",
+        256
+      ]
+    },
+    "cell_types": {
+      "$_AND_": 17989,
+      "$_NOT_": 25358,
+      "$_DFF_P_": 4227,
+      "$scopeinfo": 15
+    },
+    "state_count": 4227,
+    "aig_digest": "ea077604b1afced1feb6ad479c82737b89e561ab3deabe10b6558219e6400fac"
+  },
+  "raw_native_json": {
+    "old": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81phys-0336/ves_bridge/old.json",
+      "sha256": "998cf56fc0ee09a6c7a903490f01d580349bef0561eb21e2b9c7e49307b7e1d5"
+    },
+    "current": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81phys-0336/ves_bridge/current.json",
+      "sha256": "5e068fa55f2ce5c424657960d19a9d3a9d82dc683939f94ad910f43429dea2b6"
+    },
+    "mutant": {
+      "path": "/srv/opentallas-scratch2/claude/codex-s81phys-0336/ves_bridge/mutant.json",
+      "sha256": "ed7b0533b3a979edd301f054dc36e58e7a8714428123d6038f73846d70bacacf"
+    }
+  },
+  "flow_sha256": {
+    "old.ys": "cfdbc1c2673e4043359230962a2d986d8046d54b793c015402a40fabfdfa7f02",
+    "current.ys": "7cc72abbdecd616abb4768284d1e5334b179091cbdeac46367b10421a6e66ddd",
+    "mutant.ys": "2d35e23d81b8e23fb1c686098d1bab4863d8c6c614336265ac4e550722f3fffd",
+    "compare.py": "8e4aa355a1689800f96331b80b5d58ec008d1019667b7dd4550495871c8ebe31"
+  },
+  "miter": "DEFAULT_OFF_MITER_PASS cycles=2000 checks=30976 added_cycles=0 MUTANT_CAUGHT_cycles=1923 first=64\ntb.sv:26: $finish called at 1666417500 (1fs)\n",
+  "primary_native_basis": "No opt_merge/opt_dff: every4227reachable DFF retained independently, all init attrs unconstrained; only opt_expr -keepdc, opt_clean, techmap/dffunmap/aigmap; zero-port $scopeinfo ignored only"
+}
