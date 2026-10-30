@@ -1,0 +1,10 @@
+  Proof for induction step failed. Trying to prove individual $equiv from workset.
+  Trying to prove $equiv for \u_control__begin_fault: failed.
+Proved 0 previously unproven $equiv cells.
+
+15. Executing EQUIV_STATUS pass.
+Found 40607 $equiv cells in eq:
+  Of those cells 40606 are proven and 1 are unproven.
+  Unproven $equiv $auto$equiv_make.cc:258:find_same_wires$40730: \u_control__begin_fault_gold \u_control__begin_fault_gate
+Found a total of 1 unproven $equiv cells.
+ERROR: Found 1 unproven $equiv cells in 'equiv_status -assert'.

@@ -1,0 +1,12 @@
+{
+  "status": "PASS_NEGATIVE_CONTROL",
+  "method": "ActualJSONpre vsintentionalmutJSON; sharedmatchedmacrooutputcutPIs created evertbeforeequiv_make, allmacroinputcomparisons preserved",
+  "yosys_exit": 1,
+  "equiv_total": 40607,
+  "equiv_proven": 40606,
+  "equiv_unproven": 1,
+  "intentional_mutated_public_output": "u_control__begin_fault",
+  "normal_emitted_roundtrip": "EQ40607/40607 roundtrip5 in12c399275",
+  "not_a_method_error": true,
+  "added_cycles": 0
+}

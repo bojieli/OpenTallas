@@ -1,0 +1,23 @@
+read_json /work/pre.json
+select qkd_hr_core_prompt/t:ot_sram*
+expose -evert
+select *
+memory_share
+memory_map
+rename qkd_hr_core_prompt gold
+design -stash g
+read_json /work/mut.json
+select qkd_hr_core_prompt/t:ot_sram*
+expose -evert
+select *
+memory_share
+memory_map
+rename qkd_hr_core_prompt gate
+design -copy-from g -as gold gold
+equiv_make gold gate eq
+hierarchy -top eq
+async2sync
+write_json /work/mutant4_method.json
+equiv_simple -seq 2
+equiv_induct -seq 2
+equiv_status -assert

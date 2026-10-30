@@ -1,0 +1,15 @@
+{
+  "status": "PASS_PLANNED_AABB_ONLY",
+  "count": 686,
+  "rb_cap128": 128,
+  "violations": {
+    "out_of_core": 0,
+    "off_site_x": 0,
+    "off_row_y": 0,
+    "macro_halo_overlap": 0,
+    "ff_overlap": 0
+  },
+  "actual_mapped_cell_master_bindings": "PASS686 site_binding_rbcap.log",
+  "actual_TAP_collision": "NOT_RUN_NO_FLOORPLAN_ODB_YET",
+  "actual_row_site_placement": "NOT_RUN_NO_FLOORPLAN_ODB_YET"
+}

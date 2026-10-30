@@ -1,0 +1,16 @@
+{
+  "image": "results/codex_kv_hr_1030/phy103_zero/mux1_first_ff_plan.png",
+  "reviewer": "ROOT independent LOOK 2026-10-30",
+  "verdict": "PASS-COND floorplan+TAP then native686guard; PLACE only after guardPASS",
+  "findings": [
+    "West public captures and corrected rb_cap firstcaptures face SRAM west readpins.",
+    "Southaccess remains open for56Ewritebits;2.16macrohalo clear.",
+    "Frozen103.68x95.04 outline/pins unchanged; zero-cycle credit encoding and1cycleM1read coherent."
+  ],
+  "conditions": [
+    "Actual686 AABB/row/site/macro/TAP guard beforePLACE.",
+    "IfguardFAIL revise native legalhomes withinfrozen geometry then reLOOK.",
+    "No fresh synthesis/LEQ requested.",
+    "No CTS/GRT/STA authorization until actual G1/clock/PG review."
+  ]
+}

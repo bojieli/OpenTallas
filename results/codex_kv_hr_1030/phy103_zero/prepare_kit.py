@@ -24,7 +24,9 @@ foreach i [$b getInsts] {{if {{[[$i getMaster] getName] eq "{new}"}} {{lappend h
 if {{[llength $hit]!=1}} {{error "expected exactly one M1 SRAM"}}
 set i [lindex $hit 0];$i setOrient R0;$i setLocation [expr {{round(30.24*$u)}}] [expr {{round(12.972*$u)}}];$i setPlacementStatus FIRM
 ''')
-plan=json.load(open(P/'mux1_ff_plan.json'));sites=plan['cells'];rows=[]
+plan_path=P/'native_legal_ff_plan.json'
+assert plan_path.exists(), 'TAP-safe native homes required; preserve old planned-only packet as history'
+plan=json.load(open(plan_path));sites=plan['cells'];rows=[]
 read_sites=[c for c in sites if c['role'].startswith('SRAM')]
 assert len(read_sites)==128 and all('rb_cap' in c['cell'] for c in read_sites), 'macro first read capture must be rb_cap, not downstream rr_d'
 for cell in sites:rows.append('\t'.join([cell['cell'],cell['master'],str(cell['bbox'][0]),str(cell['bbox'][1]),str(int(cell['role'].startswith('SRAM')))]))
