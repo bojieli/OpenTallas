@@ -1,0 +1,736 @@
+{
+ "schema": "opentallas.qc.current_census.v1",
+ "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-0336/physical/die_plan/qwen_compute/plan_of_record/plan_qc46.json",
+ "plan_sha256": "d97c67ff15d6ea65565d1510a93d46f2d78383c4bf05389b7af0c414e0c616d1",
+ "native_json": "/srv/opentallas-scratch2/claude/codex-qc-0336/gates/bind46/asbuilt.json",
+ "native_sha256": "10db12eea15c0532fddcf0e1be013ad2c72be714249c925daea86f2f170c0c0d",
+ "manifest": "/srv/opentallas-scratch2/claude/wt/die-qc-46/results/qc_die33_1029/bind/final_asbuilt.json",
+ "manifest_sha256": "a224279b9ed3de4f1c698cebf3fbdcdbc57dd183597ce3547dcd08d581709d3b",
+ "bind_py_sha256": "3c9e403421fefdafc98b5e73a7b34a783e72739870ab7926e16a41b2add728fa",
+ "source_counts": {
+  "strap": 11568,
+  "crossing": 880792,
+  "clock": 32410,
+  "reset": 2780,
+  "intra_kept_stages": 819900,
+  "intra": 1998567,
+  "or_input": 2
+ },
+ "source_cells": 62874,
+ "partition_pairs": 1154,
+ "source_groups": 5744,
+ "unique_crossing_bits": 790369,
+ "sink_witness_bits": 880792,
+ "parent_variants": [
+  {
+   "inst": "dvs_E1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_e5",
+   "dropped_literal_bits": 2755,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_w5",
+   "dropped_literal_bits": 562,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  }
+ ],
+ "census": {
+  "declared": true,
+  "sources": [
+   {
+    "rows": "census/die_rows.tsv.gz",
+    "map": "census/die_map.json",
+    "census_rows": 2494,
+    "taptree": null,
+    "inter_bits": 194157,
+    "intra_bits": 5267,
+    "planned_pairs": 139,
+    "dropped_bits": 0,
+    "dropped_pairs": 0,
+    "unmapped_instances": 0,
+    "forwarded_bits": 0,
+    "broadcast_collapsed_bits": 0,
+    "exempt": {
+     "reset:^reset$": 789,
+     "fault:^fault$": 741
+    },
+    "groups_spanning": {
+     "slice_W5": 14,
+     "slice_W4": 14,
+     "slice_W3": 14,
+     "slice_W2": 14,
+     "slice_W1": 14,
+     "slice_W0": 14,
+     "slice_E0": 14,
+     "slice_E1": 14,
+     "slice_E2": 14,
+     "slice_E3": 14,
+     "slice_E4": 14,
+     "slice_E5": 14,
+     "cl_W5_0": 4,
+     "cl_W5_1": 4,
+     "cl_W5_2": 4,
+     "cl_W5_3": 4,
+     "cl_W4_0": 4,
+     "cl_W4_1": 4,
+     "cl_W4_2": 4,
+     "cl_W4_3": 4,
+     "cl_W3_0": 4,
+     "cl_W3_1": 4,
+     "cl_W3_2": 4,
+     "cl_W3_3": 4,
+     "cl_W2_0": 4,
+     "cl_W2_1": 4,
+     "cl_W2_2": 4,
+     "cl_W2_3": 4,
+     "cl_W1_0": 4,
+     "cl_W1_1": 4,
+     "cl_W1_2": 4,
+     "cl_W1_3": 4,
+     "cl_W0_0": 4,
+     "cl_W0_1": 4,
+     "cl_W0_2": 4,
+     "cl_W0_3": 4,
+     "cl_E0_0": 4,
+     "cl_E0_1": 4,
+     "cl_E0_2": 4,
+     "cl_E0_3": 4,
+     "cl_E1_0": 4,
+     "cl_E1_1": 4,
+     "cl_E1_2": 4,
+     "cl_E1_3": 4,
+     "cl_E2_0": 4,
+     "cl_E2_1": 4,
+     "cl_E2_2": 4,
+     "cl_E2_3": 4,
+     "cl_E3_0": 4,
+     "cl_E3_1": 4,
+     "cl_E3_2": 4,
+     "cl_E3_3": 4,
+     "cl_E4_0": 4,
+     "cl_E4_1": 4,
+     "cl_E4_2": 4,
+     "cl_E4_3": 4,
+     "cl_E5_0": 4,
+     "cl_E5_1": 4,
+     "cl_E5_2": 4,
+     "cl_E5_3": 4,
+     "coll": 10
+    }
+   },
+   {
+    "rows": "census/native_current_rows.tsv.gz",
+    "map": "census/native_current_map.json",
+    "census_rows": 5744,
+    "taptree": null,
+    "inter_bits": 790369,
+    "intra_bits": 0,
+    "planned_pairs": 1140,
+    "dropped_bits": 12651,
+    "dropped_pairs": 14,
+    "unmapped_instances": 0,
+    "forwarded_bits": 0,
+    "broadcast_collapsed_bits": 0,
+    "exempt": {},
+    "groups_spanning": {}
+   },
+   {
+    "rows": "census/cb_rows.tsv.gz",
+    "map": "census/cb_map.json",
+    "census_rows": 1440,
+    "taptree": null,
+    "inter_bits": 123360,
+    "intra_bits": 616800,
+    "planned_pairs": 1140,
+    "dropped_bits": 0,
+    "dropped_pairs": 0,
+    "unmapped_instances": 0,
+    "forwarded_bits": 0,
+    "broadcast_collapsed_bits": 0,
+    "exempt": {},
+    "groups_spanning": {}
+   }
+  ],
+  "dropped_bits": 12651
+ },
+ "errors": [
+  [
+   [
+    "census",
+    "census[1]: sl_E0_stm -> sl_E0_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_E1_stm -> sl_E1_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_E2_stm -> sl_E2_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_E3_stm -> sl_E3_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_E4_stm -> sl_E4_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_E5_stm -> sl_E5_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_W0_stm -> sl_W0_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_W1_stm -> sl_W1_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_W2_stm -> sl_W2_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_W3_stm -> sl_W3_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_W4_stm -> sl_W4_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: sl_W5_stm -> sl_W5_st_a: as-built 1051 bits, planned 0 (dropped 1051)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: coll_s -> glue: as-built 26 bits, planned 0 (dropped 26)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: coll_n -> glue: as-built 13 bits, planned 0 (dropped 13)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1]: 12651 as-built inter-partition bits dropped over 14 pairs"
+   ],
+   {}
+  ]
+ ],
+ "warnings": [
+  [
+   [
+    "census",
+    "census[0] group cl_E0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group coll spans 10 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ]
+ ],
+ "verdict": "FAIL",
+ "files": {
+  "native_current_rows.tsv.gz": "62f2d28e8a3b24f40101472388f77a4860be6256e648f32b275410506d1b7267",
+  "native_current_map.json": "78a6cb70fe9c7561ec569f1c397fd295438be0ad19069d1e58b41db2b9466a63",
+  "native_current_bit_witness.json.gz": "218b675883680a7056ba458a3e6f21b09e4bb88cf649e529fd3d9a6f7c680fd4"
+ },
+ "note": "B.Binder mapping/analyse only: B.build_buses/emit/check_types never called. Actual source graph is inventoried before any planned lane matching; all source-bit unions have sink-bit aliases. Historical failures preserved."
+}

@@ -1,0 +1,847 @@
+{
+ "schema": "opentallas.qc.current_census.v1",
+ "plan": "/srv/opentallas-scratch2/claude/wt/codex-qc-0336/physical/die_plan/qwen_compute/plan_of_record/plan_qc46.json",
+ "plan_sha256": "d97c67ff15d6ea65565d1510a93d46f2d78383c4bf05389b7af0c414e0c616d1",
+ "native_json": "/srv/opentallas-scratch2/claude/codex-qc-0336/gates/bind46/asbuilt.json",
+ "native_sha256": "10db12eea15c0532fddcf0e1be013ad2c72be714249c925daea86f2f170c0c0d",
+ "manifest": "/srv/opentallas-scratch2/claude/wt/die-qc-46/results/qc_die33_1029/bind/final_asbuilt.json",
+ "manifest_sha256": "a224279b9ed3de4f1c698cebf3fbdcdbc57dd183597ce3547dcd08d581709d3b",
+ "bind_py_sha256": "3c9e403421fefdafc98b5e73a7b34a783e72739870ab7926e16a41b2add728fa",
+ "source_counts": {
+  "strap": 11568,
+  "crossing": 880792,
+  "clock": 32410,
+  "reset": 2780,
+  "intra_kept_stages": 819900,
+  "intra": 1998567,
+  "or_input": 2
+ },
+ "source_cells": 62874,
+ "partition_pairs": 1154,
+ "source_groups": 5744,
+ "unique_crossing_bits": 790369,
+ "sink_witness_bits": 880792,
+ "parent_variants": [
+  {
+   "inst": "dvs_E1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_E5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_e5",
+   "dropped_literal_bits": 2755,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W1.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W3.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_l9h",
+   "dropped_literal_bits": 514,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  },
+  {
+   "inst": "dvs_W5.u_core.u_sub",
+   "master": "qfd_dv_s8_flat",
+   "variant": "qfd_dv_s8_ce_w5",
+   "dropped_literal_bits": 562,
+   "dropped_net_ports": [],
+   "new_unconnected_ports": []
+  }
+ ],
+ "census": {
+  "declared": true,
+  "sources": [
+   {
+    "rows": "census/die_rows.tsv.gz",
+    "map": "census/die_map.json",
+    "census_rows": 2494,
+    "taptree": null,
+    "inter_bits": 194157,
+    "intra_bits": 5267,
+    "planned_pairs": 139,
+    "dropped_bits": 0,
+    "dropped_pairs": 0,
+    "unmapped_instances": 0,
+    "forwarded_bits": 0,
+    "broadcast_collapsed_bits": 0,
+    "exempt": {
+     "reset:^reset$": 789,
+     "fault:^fault$": 741
+    },
+    "groups_spanning": {
+     "slice_W5": 14,
+     "slice_W4": 14,
+     "slice_W3": 14,
+     "slice_W2": 14,
+     "slice_W1": 14,
+     "slice_W0": 14,
+     "slice_E0": 14,
+     "slice_E1": 14,
+     "slice_E2": 14,
+     "slice_E3": 14,
+     "slice_E4": 14,
+     "slice_E5": 14,
+     "cl_W5_0": 4,
+     "cl_W5_1": 4,
+     "cl_W5_2": 4,
+     "cl_W5_3": 4,
+     "cl_W4_0": 4,
+     "cl_W4_1": 4,
+     "cl_W4_2": 4,
+     "cl_W4_3": 4,
+     "cl_W3_0": 4,
+     "cl_W3_1": 4,
+     "cl_W3_2": 4,
+     "cl_W3_3": 4,
+     "cl_W2_0": 4,
+     "cl_W2_1": 4,
+     "cl_W2_2": 4,
+     "cl_W2_3": 4,
+     "cl_W1_0": 4,
+     "cl_W1_1": 4,
+     "cl_W1_2": 4,
+     "cl_W1_3": 4,
+     "cl_W0_0": 4,
+     "cl_W0_1": 4,
+     "cl_W0_2": 4,
+     "cl_W0_3": 4,
+     "cl_E0_0": 4,
+     "cl_E0_1": 4,
+     "cl_E0_2": 4,
+     "cl_E0_3": 4,
+     "cl_E1_0": 4,
+     "cl_E1_1": 4,
+     "cl_E1_2": 4,
+     "cl_E1_3": 4,
+     "cl_E2_0": 4,
+     "cl_E2_1": 4,
+     "cl_E2_2": 4,
+     "cl_E2_3": 4,
+     "cl_E3_0": 4,
+     "cl_E3_1": 4,
+     "cl_E3_2": 4,
+     "cl_E3_3": 4,
+     "cl_E4_0": 4,
+     "cl_E4_1": 4,
+     "cl_E4_2": 4,
+     "cl_E4_3": 4,
+     "cl_E5_0": 4,
+     "cl_E5_1": 4,
+     "cl_E5_2": 4,
+     "cl_E5_3": 4,
+     "coll": 10
+    }
+   },
+   {
+    "rows": "census/native_current2_rows.tsv.gz",
+    "map": "census/native_current2_map.json",
+    "census_rows": 5744,
+    "taptree": {
+     "bitcon": "native_current2_bit_witness.json.gz",
+     "trees": 4584,
+     "lanes": 6168,
+     "under_carrying_lanes": 474,
+     "deficit_bits": 246983
+    },
+    "inter_bits": 790369,
+    "intra_bits": 0,
+    "planned_pairs": 1140,
+    "dropped_bits": 0,
+    "dropped_pairs": 0,
+    "unmapped_instances": 0,
+    "forwarded_bits": 12651,
+    "broadcast_collapsed_bits": 0,
+    "exempt": {},
+    "groups_spanning": {}
+   },
+   {
+    "rows": "census/cb_rows.tsv.gz",
+    "map": "census/cb_map.json",
+    "census_rows": 1440,
+    "taptree": null,
+    "inter_bits": 123360,
+    "intra_bits": 616800,
+    "planned_pairs": 1140,
+    "dropped_bits": 0,
+    "dropped_pairs": 0,
+    "unmapped_instances": 0,
+    "forwarded_bits": 0,
+    "broadcast_collapsed_bits": 0,
+    "exempt": {},
+    "groups_spanning": {}
+   }
+  ],
+  "dropped_bits": 0
+ },
+ "errors": [
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W4.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W4_fw__arv_wo_arv_ei sl_W4_fw -> sl_W5_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W4.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W4_fw__arm_wo_arm_ei sl_W4_fw -> sl_W5_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W4.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W4_fw__arl_wo_arl_ei sl_W4_fw -> sl_W5_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W3.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W3_fw__arv_wo_arv_ei sl_W3_fw -> sl_W4_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W3.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W3_fw__arm_wo_arm_ei sl_W3_fw -> sl_W4_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W3.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W3_fw__arl_wo_arl_ei sl_W3_fw -> sl_W4_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W2.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W2_fw__arv_wo_arv_ei sl_W2_fw -> sl_W3_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W2.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W2_fw__arm_wo_arm_ei sl_W2_fw -> sl_W3_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W2.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W2_fw__arl_wo_arl_ei sl_W2_fw -> sl_W3_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W1.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W1_fw__arv_wo_arv_ei sl_W1_fw -> sl_W2_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W1.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W1_fw__arm_wo_arm_ei sl_W1_fw -> sl_W2_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W1.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W1_fw__arl_wo_arl_ei sl_W1_fw -> sl_W2_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W0.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W0_fw__arv_wo_arv_ei sl_W0_fw -> sl_W1_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W0.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W0_fw__arm_wo_arm_ei sl_W0_fw -> sl_W1_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_W0.u_core.u_sub.u_fdn.ch_dn_o: lane sl_W0_fw__arl_wo_arl_ei sl_W0_fw -> sl_W1_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E5.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E5_fw__arv_eo_arv_wi sl_E5_fw -> sl_E4_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E5.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E5_fw__arm_eo_arm_wi sl_E5_fw -> sl_E4_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E5.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E5_fw__arl_eo_arl_wi sl_E5_fw -> sl_E4_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E4.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E4_fw__arv_eo_arv_wi sl_E4_fw -> sl_E3_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E4.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E4_fw__arm_eo_arm_wi sl_E4_fw -> sl_E3_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E4.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E4_fw__arl_eo_arl_wi sl_E4_fw -> sl_E3_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E3.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E3_fw__arv_eo_arv_wi sl_E3_fw -> sl_E2_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E3.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E3_fw__arm_eo_arm_wi sl_E3_fw -> sl_E2_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E3.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E3_fw__arl_eo_arl_wi sl_E3_fw -> sl_E2_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E2.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E2_fw__arv_eo_arv_wi sl_E2_fw -> sl_E1_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E2.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E2_fw__arm_eo_arm_wi sl_E2_fw -> sl_E1_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E2.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E2_fw__arl_eo_arl_wi sl_E2_fw -> sl_E1_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E1.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E1_fw__arv_eo_arv_wi sl_E1_fw -> sl_E0_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E1.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E1_fw__arm_eo_arm_wi sl_E1_fw -> sl_E0_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[1] taptree dvs_E1.u_core.u_sub.u_fdn.ch_dn_o: lane sl_E1_fw__arl_eo_arl_wi sl_E1_fw -> sl_E0_fe is 1 b, downstream needs 1095 source bits (deficit 1094; split bus on a shared trunk)"
+   ],
+   {}
+  ]
+ ],
+ "warnings": [
+  [
+   [
+    "census",
+    "census[0] group cl_E0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_E5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W0_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W1_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W2_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W3_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W4_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_0 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_1 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_2 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group cl_W5_3 spans 4 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group coll spans 10 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_E5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W0 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W1 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W2 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W3 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W4 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ],
+  [
+   [
+    "census",
+    "census[0] group slice_W5 spans 14 partitions: traffic inside it is unchecked by this census (cover it with a finer census)"
+   ],
+   {}
+  ]
+ ],
+ "verdict": "FAIL",
+ "files": {
+  "native_current2_rows.tsv.gz": "d6bbd389a6cd4170a78a91b504dc853eb4dc1cdb868a90d340c5b0a1a73bc5e0",
+  "native_current2_map.json": "4eb2c214450d00f67686e940c70d2ea04f0306816ec381d267cca2e652d101ba",
+  "native_current2_bit_witness.json.gz": "72e08d8ec214bdb4da2641b3a150bde2c34b7410f38b4fe69f947acaee0bfc59"
+ },
+ "note": "Inventory captured before B.build_buses. Subsequent B.build_buses yields per-bit lane/position witnesses; no resynthesis. Actual source graph is inventoried before any planned lane matching; all source-bit unions have sink-bit aliases. Historical failures preserved."
+}
