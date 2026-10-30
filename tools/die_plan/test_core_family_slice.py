@@ -412,3 +412,58 @@ def test_lv0_x_bands_default_unchanged_and_fail_closed(tmp_path):
         F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[50, 60])    # empty band
     with pytest.raises(SystemExit):
         F.ungated_macro_htree(str(geo), [3, 2], 70.0, [], leaf_target=8, x_bands=[150, 50])   # not increasing
+
+
+# Explicit H2 family islands are planned centres, not asserted body origins.
+def test_explicit_six_island_splits_and_contract_guards():
+    points=[[20,20],[80,20],[20,60],[80,60],[20,100],[80,100]]
+    fam=dict(islands_xy=points,leaf_target=48)
+    assert F.splits_for(12000,fam)[:2]==[2,3]
+    assert F.splits_for(100,fam)==[2,3,1]
+    assert F.family_islands(fam)==[tuple(map(float,p)) for p in points]
+    with pytest.raises(SystemExit,match="contradicts"):
+        F.splits_for(100,dict(fam,splits_override=[2,2,4]))
+    for bad in (points[:-1],points[:-1]+[points[0]],points[:-1]+[[80,float('nan')]],points[:-1]+[[81,100]]):
+        with pytest.raises(SystemExit,match="islands_xy"):
+            F.family_islands(dict(islands_xy=bad))
+
+
+def test_explicit_six_islands_reach_actual_level_two_hubs(tmp_path):
+    points=[[20.012,20.132],[80.012,20.132],[20.012,60.084],[80.012,60.084],[20.012,100.116],[80.012,100.116]]
+    geo=tmp_path/'geo.txt'
+    lines=['CORE 0 0 100 120','PIN ck 50 60']
+    for bay,(x,y) in enumerate(points):
+        for j in range(4):lines.append('SINK %.3f %.3f FF r%d_%d CLK' % (x+j*.1,y,bay,j))
+    geo.write_text('\n'.join(lines)+'\n')
+    P=F.ungated_macro_htree(geo,[2,3],70,[],leaf_target=48,islands=points)
+    assert len(P['island_snap'])==6
+    assert sorted(r['requested_xy_um'] for r in P['island_snap'])==sorted(points)
+    assert all(r['maze_displacement_um']<=2 for r in P['island_snap'])
+    assert {tuple(r['group']):tuple(r['maze_xy_um']) for r in P['island_snap']}=={g:P['mz'].xy(p) for g,p in P['site'].items() if len(g)==2}
+    assert len([g for g in P['site'] if len(g)==2])==6
+    sinks=[s for group in P['leafsinks'].values() for s in group]
+    assert len(sinks)==24 and len({s[2] for s in sinks})==24
+    assert P['entry']==(50.,60.)
+    par={n[0]:n[1] for n in P['nodes']}
+    depths=set()
+    for n in P['nodes']:
+        if n[4]!='leaf':continue
+        count=0;u=n[0]
+        while u is not None:count+=1;u=par[u]
+        depths.add(count)
+    assert len(depths)==1
+
+
+def test_explicit_island_bounds_topology_and_legal_bay_fail_closed():
+    points=[(20,20),(80,20),(20,60),(80,60),(20,100),(80,100)]
+    mz=F.H.Maze((0,0,100,120),[])
+    with pytest.raises(SystemExit,match="first splits"):
+        F.explicit_island_sites(mz,(50,60),points,[2,2])
+    with pytest.raises(SystemExit,match="straddle"):
+        F.explicit_island_sites(mz,(90,60),points,[2,3])
+    outside=[(x,y-30) for x,y in points]
+    with pytest.raises(SystemExit,match="outside core"):
+        F.explicit_island_sites(mz,(50,60),outside,[2,3])
+    blocked=F.H.Maze((0,0,100,120),[],keepout=[(10,10,30,30)])
+    with pytest.raises(SystemExit,match="within 2um"):
+        F.explicit_island_sites(blocked,(50,60),points,[2,3])

@@ -391,21 +391,70 @@ def choose_entry_trunk(P, libs, r, c, wc, cal):
 
 
 # ------------------------------------------------------------------ family template -> splits
+def family_islands(fam):
+    """Explicit family crossing anchors: complete two-column, two/three-row grid.
+
+    Coordinates name planned centres, not native body origins. Actual maze and
+    row-site displacements remain subject to the existing 2um conversion gate.
+    Missing islands_xy keeps the historical auto topology unchanged.
+    """
+    if "islands_xy" not in fam:return None
+    points=fam["islands_xy"]
+    if not isinstance(points,list) or len(points) not in (4,6):
+        raise SystemExit("islands_xy needs four or six explicit two-column anchors")
+    try:
+        if any(not isinstance(p,(list,tuple)) or len(p)!=2 or
+               any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in p) for p in points):
+            raise ValueError()
+        points=[tuple(map(float,p)) for p in points]
+        xs=sorted({p[0] for p in points});ys=sorted({p[1] for p in points})
+        if len(xs)!=2 or len(ys)!=len(points)//2 or set(points)!={(x,y) for x in xs for y in ys}:raise ValueError()
+    except (TypeError,ValueError):
+        raise SystemExit("islands_xy needs finite unique anchors on a complete two-column grid")
+    return points
+
+
+def explicit_island_sites(mz, entry, points, splits):
+    """Pin level-two hubs to declared bays; never silently move across streets."""
+    xs=sorted({p[0] for p in points});ys=sorted({p[1] for p in points})
+    if list(splits[:2])!=[2,len(ys)]:
+        raise SystemExit("islands_xy topology requires first splits 2,%d" % len(ys))
+    if not xs[0]<entry[0]<xs[1]:raise SystemExit("islands_xy columns must straddle the clock entry")
+    sites={};receipt=[]
+    for col,x in enumerate(xs):
+        for row,y in enumerate(ys):
+            if not (mz.core[0]<=x<=mz.core[2] and mz.core[1]<=y<=mz.core[3]):
+                raise SystemExit("islands_xy anchor outside core bounds: %r" % ((x,y),))
+            cell=mz.cell((x,y));actual=mz.xy(cell);displacement=abs(actual[0]-x)+abs(actual[1]-y)
+            if displacement>GATES['disp_um']+1e-9:
+                raise SystemExit("islands_xy anchor cannot fit legal maze bay within 2um: %r -> %r" % ((x,y),actual))
+            if cell in sites.values():raise SystemExit("islands_xy anchors collapse to the same legal maze site")
+            sites[(col,row)]=cell
+            receipt.append(dict(group=[col,row],requested_xy_um=[x,y],maze_xy_um=list(actual),
+                                maze_displacement_um=round(displacement,6)))
+    return sites,receipt
+
+
 def splits_for(n, fam):
     """2 (W/E) x 2 (islands per side) x leaf levels; leaf levels a<=b from the family menu so that leaves ~ n/target.
     A calibrated re-plan (replan_structure) passes its menu candidate as fam['splits_override']."""
+    islands=family_islands(fam)
+    upper=[2,len(islands)//2] if islands is not None else [2,2]
     if fam.get("splits_override"):
-        return list(fam["splits_override"])
+        override=list(fam["splits_override"])
+        if islands is not None and override[:2]!=upper:
+            raise SystemExit("islands_xy contradicts splits_override topology")
+        return override
     tgt = fam.get("leaf_target", 48); menu = fam.get("menu", [1, 2, 4, 8])
-    want = max(1.0, n / (4.0 * tgt)); best = None
+    want = max(1.0, n / (float(math.prod(upper)) * tgt)); best = None
     for a in menu:
         for b in menu:
             if a > b: continue
             v = (abs(math.log(a * b / want)), a + b)
             if best is None or v < best[0]: best = (v, (a, b))
     a, b = best[1]
-    sp = [2, 2] + [x for x in (a, b) if x > 1]
-    return sp if len(sp) > 2 else [2, 2, 1]
+    sp = upper + [x for x in (a, b) if x > 1]
+    return sp if len(sp) > 2 else upper + [1]
 
 
 _PLANS = {}   # plan name -> (P, libs, r, c, wire classes) of the last plan() call (refresh_after_d1)
@@ -453,12 +502,19 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
     if macro_mode:
         P = ungated_macro_htree(str(geo), sp[:-1], fam.get("smax", 70.0),
                                 [list(k) for k in fam.get("keepout_um", [])], float(fam.get("leaf_target", 48)),
-                                entry_node=bool(fam.get("entry_node_legal")), x_bands=fam.get("lv0_x_bands_um"))
+                                entry_node=bool(fam.get("entry_node_legal")), x_bands=fam.get("lv0_x_bands_um"),
+                                islands=family_islands(fam))
         rea = None
     else:
         if fam.get("lv0_x_bands_um") is not None:
             raise SystemExit("lv0_x_bands_um needs macro_leaves (ungated_macro_htree) plans")
-        P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])])
+        anchors=family_islands(fam)
+        if anchors is not None and len(anchors)!=4:
+            raise SystemExit("six explicit islands currently require macro_leaves topology")
+        kwargs={"islands":anchors} if anchors is not None else {}
+        P = H.plan(str(geo), sp, fam.get("smax", 70.0), [list(k) for k in fam.get("keepout_um", [])], **kwargs)
+        if anchors is not None:
+            _,P['island_snap']=explicit_island_sites(P['mz'],P['entry'],anchors,sp)
         rea = reassign_nearest(P, int(fam.get("reassign_cap", 1.5) * max(len(v) for v in P["leafsinks"].values()))) if fam.get("reassign") else None
     split = split_long_leaves(P, fam.get("leaf_limit", 35.0))
     stray = fix_keepout_strays(P, fam["keepout_stray"], fam.get("leaf_limit", 35.0), fam.get("smax", 70.0)) \
@@ -503,6 +559,9 @@ def plan(geo, fam, libtt, libff, name, trunk_cal=None):
                leaf_spread_max=dict(all=max(spread.values()), main=max(spread.values()), strip=0.0,
                                     n_gt_40=sum(v > 40 for v in spread.values()), top=sorted(spread.items(), key=lambda kv: -kv[1])[:8]),
                model="R7 NLDM+Elmore chain + 12.8 d1 (core_family_slice); PLAN MODEL, UNCHECKED")
+    if fam.get("islands_xy") is not None:
+        rec["islands_requested_xy"]=[list(p) for p in family_islands(fam)]
+        rec["island_snap"]=P["island_snap"]
     if fam.get("keepout_um"):
         rec["macro_keepout_um"] = [list(k) for k in fam["keepout_um"]]
     if macro_mode:
@@ -917,7 +976,7 @@ def lv0_x_bands(pts, k, cuts):
     return parts
 
 
-def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False, x_bands=None):
+def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=False, x_bands=None, islands=None):
     """Same-depth separate macro leaves on actual geometry, sized with actual clock pin loads.
     x_bands (HBM-CORES-KITS-25 opt-in family "lv0_x_bands_um": [x1, x2, ...]; absent = unchanged count-median W/E split):
     the first level splits the sinks into the GEOMETRIC x bands (-inf,x1),[x1,x2),...,[xn,inf) instead of equal counts,
@@ -927,6 +986,10 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
     # entry_node (DIE-S81-30 opt-in family "entry_node_legal"): the root driver snaps to the nearest NODE-legal site
     # (outside the macro keep-outs) instead of the nearest wire-legal one; default unchanged
     mz = H.Maze(core, macros, keepout=keepout); ent = mz.cell(entry, node=bool(entry_node))
+    fixed_islands={};island_snap=[]
+    if islands is not None:
+        if x_bands is not None:raise SystemExit("islands_xy cannot combine with lv0_x_bands_um")
+        fixed_islands,island_snap=explicit_island_sites(mz,entry,islands,upper)
     name = lambda g: "T" + "".join(NAME_POOL[i] for i in g)
     groups = {(): sinks}
     for lv, k in enumerate(upper):
@@ -941,6 +1004,8 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
             for i, g in enumerate(parts):
                 groups[key + (i,)] = g
     nu = len(upper)
+    if islands is not None and any(not groups.get(key) for key in fixed_islands):
+        raise SystemExit("islands_xy topology has an empty level-two bay")
     key_of = lambda q: "%s/%s" % (q[2], q[3])
     for key in sorted(g for g in groups if len(g) == nu):
         pts = groups[key]
@@ -961,6 +1026,8 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
             kids[g[:-1]].append(g)
     for lv in range(depth - 1, 0, -1):
         for g in sorted(x for x in groups if len(x) == lv):
+            if g in fixed_islands:
+                site[g]=fixed_islands[g];continue
             ch = [site[c] for c in sorted(kids[g])]
             cx = round(sum(c[0] for c in ch) / len(ch)); cy = round(sum(c[1] for c in ch) / len(ch))
             site[g] = H.minimax_site(mz, ch, (cx, cy))
@@ -1002,7 +1069,8 @@ def ungated_macro_htree(geo, upper, smax, keepout, leaf_target=48, entry_node=Fa
             for cn in ("TT", "FF"):
                 caps.setdefault(cn, {})[key_of(s)] = c[cn]
     return dict(mz=mz, entry=entry, ent=ent, groups=groups, leaves=leaves, site=site, T=T, K=K, nodes=final, wires=wires,
-                land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["macro_or_flop_leaf"], nm=name, sinkcap=caps)
+                land=land, leafsinks={name(g): groups[g] for g in leaves}, macros=[], splits=list(upper) + ["macro_or_flop_leaf"], nm=name, sinkcap=caps,
+                island_snap=island_snap)
 
 
 def macro_leaf_errors(rec, geo):
