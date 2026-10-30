@@ -104,8 +104,8 @@
    "proposed_pad": {
     "layer": "M7",
     "xy_um": [
-     1106.04,
-     149.904
+     1106.528,
+     149.728
     ]
    },
    "macro_clock_pins": [
@@ -135,8 +135,8 @@
    "proposed_pad": {
     "layer": "M7",
     "xy_um": [
-     1442.88,
-     149.904
+     1443.488,
+     149.728
     ]
    },
    "actual_driver": "_403112_/Y",
@@ -165,6 +165,7 @@
   "unconstrained_k_endpoints_required": 0,
   "child_internal_max_um": 285.585,
   "parent_launch_to_W_pin_bound_um": 119.415,
-  "combined_reach_limit_um": 405
+  "combined_reach_limit_um": 405,
+  "pma_pad_sites": "Revised source-PDN clearance pad_pg_prep.json; period and actual PG readback held"
  }
 }

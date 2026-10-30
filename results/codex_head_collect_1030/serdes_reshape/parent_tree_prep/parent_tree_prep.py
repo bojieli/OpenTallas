@@ -24,7 +24,7 @@ fwd=leaves('forwarded_ring',2086,[1875,1980],40,[1824.88,17.28,2030.08,62.64],'f
 assert sum(x['actual_ff_demand'] for x in rec)==13509
 assert sum(x['actual_ff_demand'] for x in core)==10303
 macros=[dict(name='KP4',rect=[967.68,4.32,1244.16,142.56],halo=[963.36,0,1248.48,146.88]),dict(name='SRAM32',rect=[1252.908,17.292,1430.676,98.292],halo=[1248.588,12.972,1434.996,102.612]),dict(name='SRAM64',rect=[1486.188,34.572,1664.82,115.572],halo=[1481.868,30.252,1669.14,119.892])]
-roots={'clk':[1442.88,77.76],'pma_rck':[1106.04,149.904],'fclk_in_coll_i0':[1927.392,2.656]}
+roots={'clk':[1442.88,77.76],'pma_rck':[1106.528,149.728],'fclk_in_coll_i0':[1927.392,2.656]}
 trunks={}
 for root,y in [('clk',148.608),('pma_rck',147.312)]:
  special=sorted(set([roots[root][0]]+[q['planned_clock_center_um'][0] for q in (core if root=='clk' else rec)]));xs=sorted(special+[86.4+172.8*i for i in range(17) if all(abs(86.4+172.8*i-z)>=4.32 for z in special)])

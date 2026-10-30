@@ -1,0 +1,77 @@
+{
+ "status": "PG_SOURCE_GEOMETRY_PREP_ONLY_PERIOD_AND_PHYSICAL_READBACK_HELD",
+ "PDN_source": "gen_phys.py partition_pdngen M7 width.288 spacing.096 pitch8.64 offset4.128; M6 width.288 spacing.096 pitch4.32 offset1.968; phase includes CORE_MARGIN4.32. Conservative schema PART_PG_BANDS checked at origins0 and4.32.",
+ "pin_size_um": [
+  0.192,
+  0.192
+ ],
+ "M7_track_pitch_um": 0.064,
+ "M7_track_offset_um": 0.032,
+ "M6_track_pitch_um": 0.064,
+ "M6_track_offset_um": 0.032,
+ "pins": [
+  {
+   "name": "pma_rck",
+   "dir": "in",
+   "layer": "M7",
+   "old_pg_blocked_xy_um": [
+    1106.04,
+    149.904
+   ],
+   "minimum_snap_tap_xy_um": [
+    1106.4,
+    149.728
+   ],
+   "proposed_xy_um": [
+    1106.528,
+    149.728
+   ],
+   "pin_box_um": [
+    1106.432,
+    149.632,
+    1106.624,
+    149.824
+   ],
+   "two_phase_center_pg_guard_clear": true,
+   "M7_source_nominal_pair_edge_gap_um": 0.176,
+   "M6_source_nominal_pair_edge_gap_um": 0.256,
+   "PHY_region_edge_gap_um": 0.176,
+   "extra_M7_tracks_over_minimum": 2,
+   "period_ps": null,
+   "source": null,
+   "adopted": false
+  },
+  {
+   "name": "pma_tck",
+   "dir": "out",
+   "layer": "M7",
+   "old_pg_blocked_xy_um": [
+    1442.88,
+    149.904
+   ],
+   "minimum_snap_tap_xy_um": [
+    1443.36,
+    149.728
+   ],
+   "proposed_xy_um": [
+    1443.488,
+    149.728
+   ],
+   "pin_box_um": [
+    1443.392,
+    149.632,
+    1443.584,
+    149.824
+   ],
+   "two_phase_center_pg_guard_clear": true,
+   "M7_source_nominal_pair_edge_gap_um": 0.176,
+   "M6_source_nominal_pair_edge_gap_um": 0.256,
+   "PHY_region_edge_gap_um": 0.176,
+   "extra_M7_tracks_over_minimum": 2,
+   "period_ps": null,
+   "source": null,
+   "adopted": false
+  }
+ ],
+ "unchanged": "All945 exact child pins, childclock[138.36,69.12], macrooutline/neighbours unchanged. No PHY clock period or qualification supplied."
+}
