@@ -2133,3 +2133,30 @@ CODEX: 2026-10-29 23:58 PDT HEADst_stractual506FTfailsremoved,max400.167/4112cap
 
 CODEX: 2026-10-30 00:01 PDT S81PHYS pushed e631d8da4(nativeQBN SIGNED +QBS/sstn LOCALparentpending, exact104QBNattachments); BF09d20667b positionmiter3x12kPASS/mutantCAUGHT fullLEC3209604LIVE; VSWMMunit3008516 GRTactiveafter15804EQ andmeasuredFFguard30; VESlatticeprototype1417798LEClive.
 2026-10-30 00:03 PDT COORD(Claude) back after session limit 22:5x-00:00. Codex coordinates all lanes since 22:50 (user request); Claude lanes NOT restarted to avoid duplicates; asked the owner how to split. Disks OK (max root 78%).
+
+CODEX:00:02 EXPLICITRESET sharedLEC PARK2a8+1e6cleanpushed; mainpreseed d5a28PASS/q0actual5967applied; SYS_C357relationsPROVED/221residual,3ownfulljobs3025390/3637477/3795621LIVEuntouched. Hint-only1e6pre-reset29PASS WIPNOTMERGED. Packetcodex_shared_lec_20261030_0002.md;noafterresetengineering.
+
+CODEX: 2026-10-30 00:04 PDT explicitresetFLOWHOLD PARK89c1454d13a: exactcollectiveRING2bsource6PASS/ROOTREADY,SU11OWNERnamingPREP; actualRINGcentre116.664/116.64clarified,finishDRV41/32only; PHY3075373LIVE/PVJ+E0LECpreserved,oldBDownobsoletecanceled. FullCODEXLOG.
+CODEX: 2026-10-30 00:02 PDT EXPLICITRESET S81LP/TOK PARK03ad511e2 cleanpushed; LPoldproof34028PASS+KEEP3742, currentfreshH2Typesowned; realcurrentV6legs3264PASS +48/80/160publicationwordsPASS, kcollision16slices/twoprofilesunadopted. Allownjobs terminal, CWconstproofNOTRUN; fullpacket codex_s81_lp_tokens_20261030_0004.md.
+
+CODEX: 2026-10-30 00:05 PDT EXPLICITRESET HBMTOK PARK23983af02 clean/pushed (qualified2cc225fce);435nativecommands/1.787McanonicalreadwordPASS through1536,3.316MB+drainsUNPRICED,1560expertboundaryOPEN. Scorer58conditional1798.6/bound1790.4 G0CFAIL16/noadoption. Noownlivejobs; handoff/codex_hbm_token_20261030_0004.md.
+CODEX: 2026-10-30 00:04 PDT explicitreset HEADSTARTPARK9f4bbc2fe; canonicalGEN7ALL3PASS4031969exit0(new625SDC/q3pins/R2FIRM),3PLACE NOTRUN(resetbeforelaunch),stagingreadyhubcodex-head-start-2249/place. Proof4572/0,actualnativeDD1bd63component; +2boot0steady,fullCODEXLOGpacket.
+CODEX: 2026-10-30 00:03 PDT EXPLICITRESET KVTOKPARK138b7b19f cleanpushed; actualfar08/RX2earlyfixedofs/native7404frames/DCAL64PASS/autopad88, admission+2/steadytoken290059+period293376unchanged. Continuation3569610WAITWc, RVT3933570LIVEsharedLEC, originalsuntouched. Packetcodex_kv_tokens_20261030_0003.md/noafterresetengineering.
+
+CODEX:2026-10-30 00:04PDT QCkitsEXPLICITRESETPARK37a3066ec;macro30/418G0Cnew0vs155baselineREADY+9pinfiles;BTABMIF1H13PLACEPASS/clockmodelsFAIL,noCTS;VMRsingle/fullrouteslive,e_poolpackedproof+nativeLECowned;packetcodex_qc_kits_20261030_0002.md.
+
+CODEX: 2026-10-30 00:04 PDT explicitreset S81H2 PARK1837506a6 pushed; sourceG0C19(old20),28hardchildren/42taps,8pricedrelaycycles/boot507. H2clockunit3801777 actualGRTTTFFov0 diagnostic/realviewsblocked; intel1 graphstaging3943335 stillwritingDONOTBINDuntilSTAGED. IQF406x259analytic/KVadjacencyNO14.7mm. Packet codex_s81_lp_h2_20261030_0004.md.
+CODEX: 2026-10-30 00:05 PDT explicitreset A0PARK3717b6134; actualA/BnormalguardFAIL−173/−129, BlegalDPL51.262um/actualface755.87TT587.78FF; correctworstTX4->rawleafwd(notRESETNtrial); allownjobs/probesterminal, fullpacket0002.
+CODEX: 2026-10-30 00:06 PDT S81types explicitresetPARK2f64a98f865. H2coll2PLACEd/GRT50+LEClive;IQFcurrentFTPLACEexit0+38453EQ/9583landedanchors;seqhost2constantspares14cutsdiagnosed;LN2EQ+fullguardPASS;KV4ROMretrylive/largerKV2newscopeowned. CODEXLOG00:06; alljobs preserved/noafterresetengineering.
+CODEX:2026-10-30 00:04 PDT explicitreset S81KV/LN PARKc94b9e598cb; LN2rootLEC16454/16466EQ+candidateguard2228/2232PASS but PLACE NOTRUN (resetbeforelaunch). Old4KVnsFAILconstantROM15616>6272 diagnosed/allROproven;4owncapfixSYNTHunits3922306/3922296/3922295/3922322LIVEintel1 preserved. FullCODEXLOG00:04; largerKVt2 pack2W/2H next/LPPlaninventorysent.
+CODEX: 2026-10-30 00:04 PDT explicitreset HEADmesh/CTL PARK1a236da9c cleanpushed. ActualDPL765cap0bad/max396.47; vclkreal248/337.33canonicalmain. FSTART/pretargetREADY30tests; R6terminal42TT−13.12/FF−80 noDRT, fullpacket codex_head_mesh_ctl_20261030_0004.md. CTLPLACE3421046+old/newLECslivepreserved; noSIGNED/creditinvented.
+
+CODEX: 2026-10-30 00:04 PDT explicitreset S81 PARKb7ae/20f sourcecandidateHELD; station46PASS149.696/bootmax100, H2clockunit3801777live+4childgatesactual, nativepub48/80/160PASS noG5. Seqhost265R5native-deadbitproofOPEN(noledgeredit); largerKVt2CexplicitOWNERassigned. Fullpacket handoff/codex_s81_20261030_0004.md.
+
+CODEX:2026-10-30 00:04 PDT explicitreset HEADLEPSERDES PARK: actualr2NOTSIGNEDTT-136/FF-11,DRC0; source0d387pinfixREADY; PRD4064879/west2946706/HB41375164/parentGEN4078513livepreserved. All12PHY150mask/reshapeestimateNOTRUN,0RTLcycles;packet codex_head_lep_serdes_20261030_0004.md.
+CODEX: 2026-10-30 00:07 PDT S81cores EXPLICITRESET PARK: BF712/LD017/CAPTR3c054 qualified; RTWIPeae/EDOWNER1349pushed; QNSIGNED/QBS+SSTNlocal; ROM/RT/BF/VSW/VES/EGjobs preserved, fullcodex_s81_cores_20261030_0004 packet.
+
+CODEX:2026-10-30 00:05 PDT EXPLICITRESET QCwavePARKe9b5e63ee packedpoolmechanism12288PASS/mutant3,actualnativeLEC3883783LIVE;coll_ftFFactualPLACEpassed,read-onlyGEOM4148679LIVE. Nativeattr-onlyRET0FAILretained;allringcapacity/macro/holdfailuresowned. Packethandoff/codex_qc_wave_20261030_0002.md.
+
+CODEX: 2026-10-30 00:07 PDT ROOTMERGE explicit-reset PARK main620077f4297 intel2/origin/hub equal, own ef810 clean/pushed; no own live jobs/half merges. Q0 fresh preseed proof live5967applied/noEQ; all remaining approved READYs and adoption holds in handoff/codex_root_merge_20261030_0004.md. Owner larger LOCAL kv_leaf__t2 C requires reviewed impact estimate before adoption.
+2026-10-30 00:07 PDT COORD(Claude) restart: wave 1 (9 lanes) started from Codex handoffs; wave 2 kit lanes at ~00:33; OWNER? CAP_ED / iqf__t1 fill / HBM lane_exp0_id defaults 00:45.
