@@ -961,6 +961,8 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
     "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
     "properties": {
         "depth": {"type": "integer", "minimum": 1},
+        "origin_rect_um": {"type": "array", "minItems": 4, "maxItems": 4,
+                           "items": {"type": "number"}},
         "branches": {"type": "object", "additionalProperties": {
             "type": "object", "additionalProperties": False, "required": ["stages"],
             "properties": {"stages": {"type": "array", "minItems": 1, "items": {
@@ -968,6 +970,45 @@ SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["c
                 "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
                                          "items": {"type": "number"}},
                                "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# W1 forwarded-writer START (DIE-HEAD-38): W relays before the FSTART face flop of the listed output rings;
+# every receiving crossing binds K+W-R. Default absent = byte-identical.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_writer_start"] = {
+    "type": "object", "additionalProperties": False, "required": ["depth", "branches"],
+    "properties": {
+        "depth": {"type": "integer", "minimum": 1},
+        "branches": {"type": "object", "minProperties": 1, "additionalProperties": {
+            "type": "object", "additionalProperties": False, "required": ["stages"],
+            "properties": {"stages": {"type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": False, "required": ["xy_um", "raw_reset"],
+                "properties": {"xy_um": {"type": "array", "minItems": 2, "maxItems": 2,
+                                         "items": {"type": "number"}},
+                               "raw_reset": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"}}}}}}}}}
+# DIE-HEAD-38 R2 (opt-in, default absent = byte-identical): registered 1-input status relays on ONE landed ring's
+# ready/fault before the N-input status collect of <target> ("agg" = the aggregate chain, or a local status output
+# bus), at planned sites; +len(stages) status cycles on that input only, 0 data cycles.  Anchors pin existing
+# u_cland_agg_<k> / u_cland_loc_<bus>_<k> status stages along the path.
+_XY2 = {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "number"}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_status_input_stages"] = {
+    "type": "object", "minProperties": 1, "additionalProperties": {
+        "type": "object", "minProperties": 1, "additionalProperties": {
+            "type": "array", "minItems": 1, "items": {
+                "type": "object", "additionalProperties": False, "required": ["xy_um"],
+                "properties": {"xy_um": _XY2}}}}}
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_status_anchors"] = {
+    "type": "object", "minProperties": 1,
+    "propertyNames": {"pattern": "^u_cland_(agg_[0-9]+|loc_\\w+_[0-9]+)$"},
+    "additionalProperties": _XY2}
+# DIE-HEAD-38 R1 (opt-in): same-cycle local reset copies.  Each copy is a kept ot_dp_rrelay u_cland_lrst_<name>
+# (d = a registered wavefront raw relay Q of the SAME depth as the consumer's current reset parent, so every
+# release edge is unchanged) at a planned site; the listed landing consumers take it instead of the shared reset.
+SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["clock"]["properties"]["landing_local_resets"] = {
+    "type": "array", "minItems": 1, "items": {
+        "type": "object", "additionalProperties": False, "required": ["name", "raw", "xy_um", "consumers"],
+        "properties": {"name": {"type": "string", "pattern": "^[A-Za-z0-9_]+$"},
+                       "raw": {"type": "string", "pattern": "^[A-Za-z_]\\w*$"},
+                       "xy_um": _XY2,
+                       "consumers": {"type": "array", "minItems": 1, "uniqueItems": True,
+                                     "items": {"type": "string", "pattern": "^u_cland_\\w+$"}}}}}
 # clock-landing cohort types (clock_landing_plan.compose) name the base plan type they were split from.
 SCHEMA["properties"]["partition_types"]["additionalProperties"]["properties"]["landing_base_type"] = {"type": "string"}
 # CLOCK-KV-R22: declared die-top data landing islands (landing_islands.py; hold cells for hard->hard seams)
