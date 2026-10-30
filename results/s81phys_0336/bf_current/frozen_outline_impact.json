@@ -1,0 +1,33 @@
+{
+  "scope": "Actual frozen BF external geometry, not private sizing or generator rounding; HOLD",
+  "master": "physical/die_plan/s81/cores/legacy/lef/ot_v41_bf_col.lef",
+  "source_kit_repo": "46ee0a22ea5",
+  "source_kit_hash": "7fe157d9c7fc7405",
+  "outline_um": [
+    450.168,
+    198.72
+  ],
+  "aspect": 2.2653381642512076,
+  "plan_declarations": 26,
+  "plan_types": [
+    "col_h10_r0_p1__t1",
+    "col_h10_r0_p4__t1",
+    "col_h10_r1__t1",
+    "col_h10_r2__t1",
+    "col_h9_r0_p1__t1",
+    "col_h9_r0_p2__t1",
+    "col_h9_r0_p3__t1",
+    "col_h9_r0_p4__t1",
+    "col_h9_r0_p5__t1",
+    "col_h9_r0_p6__t1",
+    "col_h9_r1__t1",
+    "col_h9_r2__t1"
+  ],
+  "pins_file": "inputs/core_pins/ot_v41_bf_col.json",
+  "aspect_repair_lower_bounds": {
+    "height_at_fixed_width": 225.084,
+    "width_at_fixed_height": 397.44
+  },
+  "no_route": true,
+  "next": "Source-preserving control/relay placement + familyclock estimate may proceed privately; externaloutline/pincontract change needs S81/root authority; no partialface/clock/data exceptions"
+}
