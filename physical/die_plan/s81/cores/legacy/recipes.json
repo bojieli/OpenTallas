@@ -187,6 +187,7 @@
   "macro_if_flops": true
  },
  "ot_s81sl_vq": {
+  "regional_taps": {"nx": 2, "ny": 2, "firm_spine": true, "_why": "S81-CORES-KITS-5/6 10-30: V2 kit-side clock reach fix (2x2 regional taps, spine FIRM after CTS legalization; AUTO-GEOM clock_reach attn 328->95, ve_m 421->129, vs 251->89, vn_a 427->118, GEOM-80/81/79 reviewed); vq rebuild on plan-of-record tpl pins (COORD 16:43)"},
   "ref_tile": "physical/ref_tile/s81sl_vq",
   "plan_pins_file": "inputs/core_pins/ot_s81sl_vq_tpl.json",
   "suffix": "tpl_f6",
