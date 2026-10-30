@@ -88,3 +88,18 @@ def test_uniform_guard_checks_wavefront_reset_outs(tmp_path):
     synth.write_text(net.replace('endmodule', alias + '\nendmodule'))
     r = signoff.run_face_guard(disc)
     assert r['verdict'] == 'FAIL' and r['fail_counts'].get('shared') == 1, r
+
+
+def test_clock_bus_bits_exempt_their_root_only_when_all_bits_are_clocks(tmp_path):
+    # HBM-CORES-KITS-28 10-30: HCOL clk_pair[1:0] (STA clock_ports by bit) failed sign-off face_guard as 'shared'.
+    net = NET_OK.replace('top(clk, a, o)', 'top(clk_pair, a, o)').replace('input clk;', 'input [1:0] clk_pair;')
+    net = net.replace('.CLK(clk)', '.CLK(clk_pair[0])', 2).replace('.CLK(clk)', '.CLK(clk_pair[1])')
+    (tmp_path / 'synth.v').write_text(net)
+    pins = [dict(bus='clk_pair', bit=0), dict(bus='clk_pair', bit=1)] + [
+        dict(bus=b, bit=i) for b in ('a', 'o') for i in (0, 1)]
+    (tmp_path / 'pins.json').write_text(json.dumps(pins))
+    disc = dict(kit=str(tmp_path), synth=str(tmp_path / 'synth.v'), pins=str(tmp_path / 'pins.json'))
+    r = signoff.run_face_guard(disc, clock_ports=['clk_pair[0]', 'clk_pair[1]'])
+    assert r['verdict'] == 'PASS' and r['checked'] == 4, r
+    # one bit of the bus is not a clock: the root is not exempt
+    assert signoff.run_face_guard(disc, clock_ports=['clk_pair[0]'])['verdict'] == 'FAIL'
