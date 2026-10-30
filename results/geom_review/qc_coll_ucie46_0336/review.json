@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS-COND",
+  "scope": "PLACE trial only; geometry/STA/route remain gated",
+  "picture": "coll_ucie46.png",
+  "plan_sha256": "f6563c76b5ef873fda7887456e1e27be922cfec22f0282a1532313ef23d54a06",
+  "findings": [
+    "777.6um-square PHY occupies complete lower width as parent plan intends; placement core now reaches its W/S/E boundary, removing false4.32um inset conflict without moving macro/pins",
+    "Shared/gearbox logic retains open upper area; two wide receive landing bands remain on the E facing boundary, no new macro wall or sliver introduced",
+    "Central logic clock tap remains above the PHY rather than over its interior",
+    "Actual macro-pin access, r2r reach, forwarded-clock tree, dedicated PHY PG continuity require placement image and native gates before GRT/route"
+  ],
+  "rtl_cycles": 0
+}
