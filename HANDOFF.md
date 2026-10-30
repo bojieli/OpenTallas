@@ -2289,3 +2289,5 @@ CODEX: 2026-10-30 04:07 PDT QC9397c36a exactabut1,280,479PASS/0extra; rawclock75
 CODEX: 2026-10-30 04:10 PDT S81types8e3341c88ce actual24naturalcutsmapall4KVleafparents94.7/138.1/123.4/88.3k(<400k), nofakeviews/adoption; LN4456slotFFphysicalrepairactualp9016.21vs53.33,newGRT50live; H2r2r134->0,6islandclockmodelbuilding.
 
 CODEX: 2026-10-30 04:10 PDT GEOM2205cbab2 HBMd34e3packing/pintopology preplaceconditionalPASS, select580umfailure remainsownedcores; no routedispatchfromreview.
+CODEX: 2026-10-30 04:11 PDT TOKpricesc875c8a9d READYresults-only; hubCOLLpair12once1780.445/phase1779.062, VMonesensitivity1728.862excludesspill; tnodeN1PRE48/POST32net6329.448cycles1781.329; alljobs terminal/noadoption.
+CODEX: 2026-10-30 04:12 PDT S81 capFAILtruthful23errors/hardcutresidual88–138kmeasured;3stationwaveON. ES0/ES1actualshore406FAILowned,2same-slot190um/10.8guardcandidatesestimate3b1e;FT0needs+1cycle9flops399um;NLDM/CA+IRpending/nophysicaladoption.
