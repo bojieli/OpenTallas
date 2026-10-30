@@ -1,0 +1,38 @@
+{
+  "scope": "independent row-array arithmetic; not rerun STA/extraction",
+  "corners": {
+    "TT": {
+      "data_rows": 3595,
+      "data_fail": 0,
+      "data_min_lo_ps": 110.4,
+      "data_min_hi_ps": 111.7,
+      "start_rows": 1687,
+      "start_fail": 0,
+      "start_min_limit_ps": 100.3,
+      "start_max_skew_hi_ps": 86.3,
+      "start_min_remaining_ps": 14.0,
+      "data_source_counts": {
+        "sta": 3595
+      }
+    },
+    "FF": {
+      "data_rows": 3595,
+      "data_fail": 0,
+      "data_min_lo_ps": 100.0,
+      "data_min_hi_ps": 228.1,
+      "start_rows": 1687,
+      "start_fail": 0,
+      "start_min_limit_ps": 100.3,
+      "start_max_skew_hi_ps": 60.2,
+      "start_min_remaining_ps": 40.099999999999994,
+      "data_source_counts": {
+        "sta": 3595
+      }
+    }
+  },
+  "hold_status": "BLOCKED(kits)",
+  "kits_found": 0,
+  "core_views_found": 4,
+  "period_ps": 833.333,
+  "source": "intel1:/srv/opentallas-scratch2/claude/codex-kv-1030/sta_components_loaded_spice_cell/die_sta_related.json"
+}
