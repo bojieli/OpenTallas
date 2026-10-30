@@ -1,0 +1,326 @@
+{
+  "ports": [
+    {
+      "direction": "output",
+      "range": "[511:0]",
+      "name": "ag_d",
+      "width": 512,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[3:0]",
+      "name": "ag_src",
+      "width": 4,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[5:0]",
+      "name": "ag_tag",
+      "width": 6,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[1:0]",
+      "name": "ag_v",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "clk",
+      "width": 1,
+      "latency_cycles": 0
+    },
+    {
+      "direction": "input",
+      "range": "[279:0]",
+      "name": "pr_ccw_i",
+      "width": 280,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[279:0]",
+      "name": "pr_ccw_o",
+      "width": 280,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[279:0]",
+      "name": "pr_cw_i",
+      "width": 280,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[279:0]",
+      "name": "pr_cw_o",
+      "width": 280,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_add_rhs_acc",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "ra_add_src",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_add_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_add_v",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[255:0]",
+      "name": "ra_lp_data",
+      "width": 256,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_lp_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_lp_we",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_rr_local",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_rr_local_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[3:0]",
+      "name": "ra_rx_kind",
+      "width": 4,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "ra_rx_slot",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[3:0]",
+      "name": "ra_rx_src",
+      "width": 4,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[5:0]",
+      "name": "ra_rx_tag",
+      "width": 6,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_state_add_rhs_acc",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "ra_state_add_src",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_state_add_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_state_read_add",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_state_read_rr",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_state_read_tx",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_state_rr_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_state_tx_acc",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_state_tx_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_tx_acc",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "ra_tx_dst",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "ra_tx_forward",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_tx_gather",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "ra_tx_inject",
+      "width": 2,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "ra_tx_result",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[2:0]",
+      "name": "ra_tx_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[3:0]",
+      "name": "ra_tx_ttl",
+      "width": 4,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[255:0]",
+      "name": "rr_d",
+      "width": 256,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[2:0]",
+      "name": "rr_tag",
+      "width": 3,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "output",
+      "range": "[0:0]",
+      "name": "rr_v",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[0:0]",
+      "name": "rst_n",
+      "width": 1,
+      "latency_cycles": 0
+    },
+    {
+      "direction": "output",
+      "range": "[0:0]",
+      "name": "u_ring_fault",
+      "width": 1,
+      "latency_cycles": 1
+    },
+    {
+      "direction": "input",
+      "range": "[1:0]",
+      "name": "strap_qid",
+      "width": 2,
+      "latency_cycles": 0
+    }
+  ],
+  "extra_edges_per_feedforward_traversal": 2,
+  "scope": "same-ABI source candidate with explicit physical outer FFs; requires actual caller/calendar bridge before adoption",
+  "passthrough": [
+    "clk",
+    "rst_n",
+    "strap_qid"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "native": {
+    "modules": [
+      "ot_hfd_coll_q2_hard_v8g__ring_ag",
+      "ot_hgi_coll_ring_ag",
+      "ot_hgi_coll_ring_ag_ctl",
+      "ot_hgi_coll_pring_static_state_capture_lane",
+      "ot_hgi_coll_pring_static_state_lane",
+      "ot_hgi_coll_pring_static_add_lane",
+      "ot_hdc_fp32_add_lat",
+      "ot_hdc_ksadd_k__u1",
+      "ot_hdc_w11_cut",
+      "ot_hdc_lzc32"
+    ],
+    "sha256": "15d4d20bf6d0769c17cf6c44d8f92a612c8cc0eaf317796851f8d7dc51265cc9"
+  },
+  "physical": {
+    "modules": [
+      "ot_hfd_coll_q2_hard_v8g__ring_ag",
+      "ot_hfd_coll_q2_hard_v8g__ring_ag__fcore",
+      "ot_hfd_coll_q2_ring_ag_core",
+      "ot_hgi_coll_ring_ag",
+      "ot_hgi_coll_ring_ag_ctl",
+      "ot_hgi_coll_pring_static_state_capture_lane",
+      "ot_hgi_coll_pring_static_state_lane",
+      "ot_hgi_coll_pring_static",
+      "ot_hgi_coll_pring_static_add_lane",
+      "ot_hdc_fp32_add_lat",
+      "ot_hdc_ksadd_k",
+      "ot_hdc_w11_cut",
+      "ot_hdc_lzc32",
+      "ot_hbm_face_reg"
+    ],
+    "sha256": "075d21a4eace32d3bf3d705c3a25c94539603aa38c6731be019620444f7e1d6a"
+  },
+  "source_profile_defines": {
+    "native": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT",
+      "SYNTHESIS"
+    ],
+    "physical": [
+      "SYNTHESIS"
+    ]
+  }
+}

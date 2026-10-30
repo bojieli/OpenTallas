@@ -1,0 +1,6 @@
+RING_FACE_DIFF cycle8 qid3
+PORT pr_ccw_o A=7f3000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx B=3e3000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PORT pr_cw_o A=7e3000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx B=3e3000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FATAL: tb_ring_face_diagnose.sv:72: current-native face candidate differs from actual physical shell
+       Time: 7081500  Scope: tb_ring_face_bridge.g_q[1]
+RING_FACE_DIFF cycle8 qid2

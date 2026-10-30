@@ -1,0 +1,30 @@
+{
+  "scope": "strict finite fullcut proof against explicit2224FF CURRENTnative sourcecandidate, not whole-parent/calendar qualification",
+  "outputs": 1345,
+  "qid": [
+    2,
+    3
+  ],
+  "edges": 1600,
+  "POR_assert_edges": 66,
+  "extra_valid_or_startup_masks": false,
+  "repeated_reset": true,
+  "XZ_stimulus": true,
+  "profiles": "same exact native/physical profiles with only pure-function sensitivity fix",
+  "results": [
+    {
+      "mode": "nominal",
+      "returncode": 0,
+      "result": "PASS",
+      "log": "/srv/opentallas-scratch2/claude/codex-hbm-face-bridge-0336/proof/pure_nominal.log",
+      "source_sha256": "ff9173cac03ac3cf51f64a60c86cf7d342bbe4565e0134fe83b438fa50ce567f"
+    },
+    {
+      "mode": "mutant",
+      "returncode": 1,
+      "result": "CAUGHT",
+      "log": "/srv/opentallas-scratch2/claude/codex-hbm-face-bridge-0336/proof/pure_mutant.log",
+      "source_sha256": "de16b05cb39c464ef20753ce317a093ad0cb74fdbcfb277e37d49f3f9d9fc564"
+    }
+  ]
+}

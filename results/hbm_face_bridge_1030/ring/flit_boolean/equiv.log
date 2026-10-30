@@ -1,0 +1,1842 @@
+
+-- Executing script file `/work/flit_boolean/equiv.ys' --
+
+1. Executing Verilog-2005 frontend: /work/flit_boolean/old.sv
+Parsing SystemVerilog input from `/work/flit_boolean/old.sv' to AST representation.
+Generating RTLIL representation for module `\fn_old'.
+Successfully finished Verilog frontend.
+
+2. Executing PREP pass.
+
+2.1. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1.1. Analyzing design hierarchy..
+Top module:  \fn_old
+
+2.1.2. Analyzing design hierarchy..
+Top module:  \fn_old
+Removed 0 unused modules.
+
+2.2. Executing PROC pass (convert processes to netlists).
+
+2.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+2.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+2.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 8 assignments to connections.
+
+2.2.4. Executing PROC_INIT pass (extract init attributes).
+
+2.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+2.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+2.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\fn_old.$proc$/work/flit_boolean/old.sv:10$18'.
+Creating decoders for process `\fn_old.$proc$/work/flit_boolean/old.sv:9$5'.
+
+2.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\fn_old.\flit$func$/work/flit_boolean/old.sv:10$2.$result' from process `\fn_old.$proc$/work/flit_boolean/old.sv:10$18'.
+No latch inferred for signal `\fn_old.\flit$func$/work/flit_boolean/old.sv:9$1.$result' from process `\fn_old.$proc$/work/flit_boolean/old.sv:9$5'.
+
+2.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+2.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+2.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `fn_old.$proc$/work/flit_boolean/old.sv:10$18'.
+Removing empty process `fn_old.$proc$/work/flit_boolean/old.sv:9$5'.
+Cleaned up 0 empty switches.
+
+2.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+<suppressed ~2 debug messages>
+
+2.3. Executing FUTURE pass.
+
+2.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+2.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+Removed 0 unused cells and 22 unused wires.
+<suppressed ~1 debug messages>
+
+2.6. Executing CHECK pass (checking for obvious problems).
+Checking module fn_old...
+Found and reported 0 problems.
+
+2.7. Executing OPT pass (performing simple optimizations).
+
+2.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+2.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 16 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Computing hashes of 14 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+2.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_old..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~20 debug messages>
+
+2.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_old.
+Performed a total of 0 changes.
+
+2.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 14 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Computing hashes of 10 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Computing hashes of 9 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+<suppressed ~15 debug messages>
+Removed a total of 5 cells.
+
+2.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+2.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+2.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+2.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_old..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~15 debug messages>
+
+2.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_old.
+Performed a total of 0 changes.
+
+2.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 9 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Removed a total of 0 cells.
+
+2.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+
+2.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+2.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+2.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 3) from mux cell fn_old.$ternary$/work/flit_boolean/old.sv:7$25 ($mux).
+
+2.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+
+2.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+2.11. Executing OPT pass (performing simple optimizations).
+
+2.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+2.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 9 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Removed a total of 0 cells.
+
+2.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+
+2.11.4. Finished fast OPT passes.
+
+2.12. Executing SORT pass.
+
+2.13. Printing statistics.
+
+=== fn_old ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       18 wires
+     1385 wire bits
+       14 public wires
+     1379 public wire bits
+       10 ports
+      861 port bits
+        9 cells
+        7   $mux
+        1   $not
+        1   $reduce_bool
+
+2.14. Executing CHECK pass (checking for obvious problems).
+Checking module fn_old...
+Found and reported 0 problems.
+
+3. Executing TECHMAP pass (map to technology primitives).
+
+3.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+3.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_bool.
+No more expansions possible.
+<suppressed ~86 debug messages>
+
+4. Executing OPT pass (performing simple optimizations).
+
+4.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+<suppressed ~3 debug messages>
+
+4.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 42 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Removed a total of 0 cells.
+
+4.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_old..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_old.
+Performed a total of 0 changes.
+
+4.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 42 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Removed a total of 0 cells.
+
+4.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+4.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+4.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+4.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_old..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+4.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_old.
+Performed a total of 0 changes.
+
+4.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_old'.
+Computing hashes of 42 cells of `\fn_old'.
+Finding duplicate cells in `\fn_old'.
+Removed a total of 0 cells.
+
+4.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+4.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+
+4.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_old.
+
+4.16. Finished fast OPT passes. (There is nothing left to do.)
+
+5. Executing ABC pass (technology mapping using ABC).
+
+5.1. Extracting gate netlist of module `\fn_old' to `<abc-temp-dir>/input.blif'..
+
+5.1.1. Executed ABC.
+Extracted 42 gates and 86 wires to a netlist network with 43 inputs and 9 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+5.1.2. Re-integrating ABC results.
+ABC RESULTS:               MUX cells:        6
+ABC RESULTS:               NOT cells:        1
+ABC RESULTS:                OR cells:       33
+ABC RESULTS:               XOR cells:        1
+ABC RESULTS:        internal signals:       34
+ABC RESULTS:           input signals:       43
+ABC RESULTS:          output signals:        9
+Removing temp directory.
+Removing global temp directory.
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_old..
+Removed 0 unused cells and 59 unused wires.
+<suppressed ~1 debug messages>
+
+7. Executing JSON backend.
+
+8. Executing Verilog-2005 frontend: /work/flit_boolean/new.sv
+Parsing SystemVerilog input from `/work/flit_boolean/new.sv' to AST representation.
+Generating RTLIL representation for module `\fn_new'.
+Successfully finished Verilog frontend.
+
+9. Executing PREP pass.
+
+9.1. Executing HIERARCHY pass (managing design hierarchy).
+
+9.1.1. Analyzing design hierarchy..
+Top module:  \fn_new
+
+9.1.2. Analyzing design hierarchy..
+Top module:  \fn_new
+Removed 0 unused modules.
+
+9.2. Executing PROC pass (convert processes to netlists).
+
+9.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+9.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Removed a total of 0 dead cases.
+
+9.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 0 redundant assignments.
+Promoted 20 assignments to connections.
+
+9.2.4. Executing PROC_INIT pass (extract init attributes).
+
+9.2.5. Executing PROC_ARST pass (detect async resets in processes).
+
+9.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+9.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\fn_new.$proc$/work/flit_boolean/new.sv:14$221'.
+Creating decoders for process `\fn_new.$proc$/work/flit_boolean/new.sv:13$202'.
+
+9.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\fn_new.\flit$func$/work/flit_boolean/new.sv:14$199.$result' from process `\fn_new.$proc$/work/flit_boolean/new.sv:14$221'.
+No latch inferred for signal `\fn_new.\flit$func$/work/flit_boolean/new.sv:13$198.$result' from process `\fn_new.$proc$/work/flit_boolean/new.sv:13$202'.
+
+9.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+
+9.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+9.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `fn_new.$proc$/work/flit_boolean/new.sv:14$221'.
+Removing empty process `fn_new.$proc$/work/flit_boolean/new.sv:13$202'.
+Cleaned up 0 empty switches.
+
+9.2.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+<suppressed ~2 debug messages>
+
+9.3. Executing FUTURE pass.
+
+9.4. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+9.5. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+Removed 0 unused cells and 34 unused wires.
+<suppressed ~1 debug messages>
+
+9.6. Executing CHECK pass (checking for obvious problems).
+Checking module fn_new...
+Found and reported 0 problems.
+
+9.7. Executing OPT pass (performing simple optimizations).
+
+9.7.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+9.7.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 16 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Computing hashes of 14 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+<suppressed ~6 debug messages>
+Removed a total of 2 cells.
+
+9.7.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_new..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~20 debug messages>
+
+9.7.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_new.
+Performed a total of 0 changes.
+
+9.7.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 14 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Computing hashes of 10 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Computing hashes of 9 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+<suppressed ~15 debug messages>
+Removed a total of 5 cells.
+
+9.7.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+Removed 0 unused cells and 4 unused wires.
+<suppressed ~1 debug messages>
+
+9.7.7. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+9.7.8. Rerunning OPT passes. (Maybe there is more to do..)
+
+9.7.9. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_new..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~15 debug messages>
+
+9.7.10. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_new.
+Performed a total of 0 changes.
+
+9.7.11. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 9 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Removed a total of 0 cells.
+
+9.7.12. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+
+9.7.13. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+9.7.14. Finished fast OPT passes. (There is nothing left to do.)
+
+9.8. Executing WREDUCE pass (reducing word size of cells).
+Removed top 2 bits (of 3) from mux cell fn_new.$ternary$/work/flit_boolean/new.sv:11$234 ($mux).
+
+9.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+
+9.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+
+9.11. Executing OPT pass (performing simple optimizations).
+
+9.11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+9.11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 9 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Removed a total of 0 cells.
+
+9.11.3. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+
+9.11.4. Finished fast OPT passes.
+
+9.12. Executing SORT pass.
+
+9.13. Printing statistics.
+
+=== fn_new ===
+
+        +----------Local Count, excluding submodules.
+        | 
+       30 wires
+     1469 wire bits
+       26 public wires
+     1463 public wire bits
+       10 ports
+      861 port bits
+        9 cells
+        7   $mux
+        1   $not
+        1   $reduce_bool
+
+9.14. Executing CHECK pass (checking for obvious problems).
+Checking module fn_new...
+Found and reported 0 problems.
+
+10. Executing TECHMAP pass (map to technology primitives).
+
+10.1. Executing Verilog-2005 frontend: /OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v
+Parsing Verilog input from `/OpenROAD-flow-scripts/tools/install/yosys/bin/../share/yosys/techmap.v' to AST representation.
+Generating RTLIL representation for module `\_90_simplemap_bool_ops'.
+Generating RTLIL representation for module `\_90_simplemap_reduce_ops'.
+Generating RTLIL representation for module `\_90_simplemap_logic_ops'.
+Generating RTLIL representation for module `\_90_simplemap_compare_ops'.
+Generating RTLIL representation for module `\_90_simplemap_various'.
+Generating RTLIL representation for module `\_90_simplemap_registers'.
+Generating RTLIL representation for module `\_90_shift_ops_shr_shl_sshl_sshr'.
+Generating RTLIL representation for module `\_90_shift_shiftx'.
+Generating RTLIL representation for module `\_90_fa'.
+Generating RTLIL representation for module `\_90_lcu_brent_kung'.
+Generating RTLIL representation for module `\_90_alu'.
+Generating RTLIL representation for module `\_90_macc'.
+Generating RTLIL representation for module `\_90_alumacc'.
+Generating RTLIL representation for module `$__div_mod_u'.
+Generating RTLIL representation for module `$__div_mod_trunc'.
+Generating RTLIL representation for module `\_90_div'.
+Generating RTLIL representation for module `\_90_mod'.
+Generating RTLIL representation for module `$__div_mod_floor'.
+Generating RTLIL representation for module `\_90_divfloor'.
+Generating RTLIL representation for module `\_90_modfloor'.
+Generating RTLIL representation for module `\_90_pow'.
+Generating RTLIL representation for module `\_90_demux'.
+Generating RTLIL representation for module `\_90_lut'.
+Generating RTLIL representation for module `$connect'.
+Generating RTLIL representation for module `$input_port'.
+Successfully finished Verilog frontend.
+
+10.2. Continuing TECHMAP pass.
+Using extmapper simplemap for cells of type $not.
+Using extmapper simplemap for cells of type $mux.
+Using extmapper simplemap for cells of type $reduce_bool.
+No more expansions possible.
+<suppressed ~86 debug messages>
+
+11. Executing OPT pass (performing simple optimizations).
+
+11.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+<suppressed ~3 debug messages>
+
+11.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 42 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Removed a total of 0 cells.
+
+11.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_new..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+11.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_new.
+Performed a total of 0 changes.
+
+11.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 42 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Removed a total of 0 cells.
+
+11.6. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+Removed 0 unused cells and 2 unused wires.
+<suppressed ~1 debug messages>
+
+11.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+11.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+11.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \fn_new..
+  Creating internal representation of mux trees.
+  No muxes found in this module.
+Removed 0 multiplexer ports.
+
+11.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \fn_new.
+Performed a total of 0 changes.
+
+11.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\fn_new'.
+Computing hashes of 42 cells of `\fn_new'.
+Finding duplicate cells in `\fn_new'.
+Removed a total of 0 cells.
+
+11.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+11.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+
+11.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module fn_new.
+
+11.16. Finished fast OPT passes. (There is nothing left to do.)
+
+12. Executing ABC pass (technology mapping using ABC).
+
+12.1. Extracting gate netlist of module `\fn_new' to `<abc-temp-dir>/input.blif'..
+
+12.1.1. Executed ABC.
+Extracted 42 gates and 86 wires to a netlist network with 43 inputs and 9 outputs.
+Running ABC script: <abc-temp-dir>/abc.script
+ABC: UC Berkeley, ABC 1.01 (compiled 0 0)
+ABC: abc 01> empty
+ABC: abc 01> source <abc-temp-dir>/abc.script
+ABC: + read_blif <abc-temp-dir>/input.blif 
+ABC: + read_library <abc-temp-dir>/stdcells.genlib 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &fraig -x 
+ABC: + &put 
+ABC: + scorr 
+ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
+ABC: + dc2 
+ABC: + dretime 
+ABC: + strash 
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
+ABC: + write_blif <abc-temp-dir>/output.blif 
+ABC: 
+ABC: YOSYS_ABC_DONE 
+
+12.1.2. Re-integrating ABC results.
+ABC RESULTS:               MUX cells:        6
+ABC RESULTS:               NOT cells:        1
+ABC RESULTS:                OR cells:       33
+ABC RESULTS:               XOR cells:        1
+ABC RESULTS:        internal signals:       34
+ABC RESULTS:           input signals:       43
+ABC RESULTS:          output signals:        9
+Removing temp directory.
+Removing global temp directory.
+
+13. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \fn_new..
+Removed 0 unused cells and 59 unused wires.
+<suppressed ~1 debug messages>
+
+14. Executing JSON backend.
+
+15. Executing EQUIV_MAKE pass (creating equiv checking module).
+Presumably equivalent wires: MUT_TAG_gold (\MUT_TAG_gold), MUT_TAG_gate (\MUT_TAG_gate) -> MUT_TAG
+Presumably equivalent wires: data_gold (\data_gold), data_gate (\data_gate) -> data
+Presumably equivalent wires: gath_gold (\gath_gold), gath_gate (\gath_gate) -> gath
+Presumably equivalent wires: qid_gold (\qid_gold), qid_gate (\qid_gate) -> qid
+Presumably equivalent wires: tag_gold (\tag_gold), tag_gate (\tag_gate) -> tag
+Presumably equivalent wires: tx_dst_gold (\tx_dst_gold), tx_dst_gate (\tx_dst_gate) -> tx_dst
+Presumably equivalent wires: tx_result_gold (\tx_result_gold), tx_result_gate (\tx_result_gate) -> tx_result
+Presumably equivalent wires: tx_ttl_gold (\tx_ttl_gold), tx_ttl_gate (\tx_ttl_gate) -> tx_ttl
+Presumably equivalent wires: y0_gold ({ 1'1 \y0_gold [278:277] \qid_gold \y0_gold [274:271] \tag_gold [2:1] \y0_gold [268] 12'000000000000 \data_gold }), y0_gate ({ 1'1 \y0_gate [278:277] \qid_gate \y0_gate [274:271] \tag_gate [2:1] \y0_gate [268] 12'000000000000 \data_gate }) -> y0
+Presumably equivalent wires: y1_gold ({ 1'1 \y0_gold [278:277] \qid_gold \y0_gold [274:273] \y1_gold [272:271] \tag_gold [2:1] \y0_gold [268] 12'000000000000 \data_gold }), y1_gate ({ 1'1 \y0_gate [278:277] \qid_gate \y0_gate [274:273] \y1_gate [272:271] \tag_gate [2:1] \y0_gate [268] 12'000000000000 \data_gate }) -> y1
+
+16. Executing HIERARCHY pass (managing design hierarchy).
+
+16.1. Analyzing design hierarchy..
+Top module:  \equiv
+
+16.2. Analyzing design hierarchy..
+Top module:  \equiv
+Removing unused module `\gate'.
+Removing unused module `\gold'.
+Removed 2 unused modules.
+
+17. Executing EQUIV_SIMPLE pass.
+Found 560 unproven $equiv cells (2 groups) in equiv:
+ Grouping SAT models for \y0:
+  Trying to prove $equiv for \y0 [0]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [1]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [2]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [3]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [4]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [5]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [6]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [7]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [8]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [9]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [10]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [11]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [12]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [13]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [14]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [15]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [16]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [17]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [18]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [19]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [20]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [21]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [22]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [23]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [24]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [25]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [26]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [27]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [28]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [29]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [30]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [31]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [32]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [33]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [34]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [35]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [36]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [37]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [38]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [39]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [40]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [41]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [42]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [43]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [44]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [45]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [46]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [47]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [48]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [49]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [50]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [51]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [52]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [53]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [54]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [55]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [56]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [57]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [58]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [59]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [60]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [61]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [62]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [63]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [64]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [65]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [66]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [67]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [68]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [69]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [70]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [71]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [72]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [73]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [74]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [75]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [76]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [77]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [78]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [79]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [80]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [81]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [82]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [83]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [84]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [85]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [86]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [87]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [88]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [89]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [90]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [91]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [92]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [93]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [94]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [95]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [96]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [97]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [98]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [99]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [100]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [101]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [102]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [103]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [104]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [105]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [106]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [107]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [108]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [109]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [110]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [111]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [112]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [113]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [114]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [115]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [116]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [117]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [118]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [119]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [120]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [121]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [122]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [123]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [124]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [125]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [126]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [127]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [128]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [129]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [130]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [131]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [132]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [133]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [134]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [135]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [136]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [137]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [138]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [139]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [140]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [141]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [142]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [143]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [144]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [145]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [146]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [147]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [148]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [149]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [150]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [151]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [152]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [153]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [154]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [155]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [156]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [157]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [158]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [159]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [160]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [161]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [162]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [163]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [164]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [165]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [166]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [167]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [168]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [169]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [170]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [171]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [172]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [173]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [174]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [175]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [176]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [177]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [178]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [179]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [180]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [181]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [182]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [183]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [184]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [185]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [186]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [187]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [188]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [189]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [190]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [191]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [192]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [193]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [194]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [195]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [196]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [197]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [198]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [199]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [200]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [201]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [202]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [203]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [204]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [205]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [206]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [207]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [208]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [209]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [210]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [211]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [212]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [213]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [214]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [215]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [216]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [217]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [218]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [219]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [220]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [221]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [222]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [223]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [224]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [225]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [226]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [227]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [228]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [229]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [230]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [231]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [232]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [233]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [234]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [235]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [236]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [237]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [238]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [239]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [240]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [241]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [242]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [243]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [244]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [245]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [246]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [247]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [248]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [249]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [250]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [251]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [252]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [253]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [254]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [255]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [256]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [257]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [258]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [259]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [260]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [261]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [262]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [263]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [264]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [265]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [266]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [267]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [268]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [269]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [270]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [271]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [272]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [273]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [274]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [275]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [276]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [277]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [278]:ezsat
+ success!
+  Trying to prove $equiv for \y0 [279]:ezsat
+ success!
+ Grouping SAT models for \y1:
+  Trying to prove $equiv for \y1 [0]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [1]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [2]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [3]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [4]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [5]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [6]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [7]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [8]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [9]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [10]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [11]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [12]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [13]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [14]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [15]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [16]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [17]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [18]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [19]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [20]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [21]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [22]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [23]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [24]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [25]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [26]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [27]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [28]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [29]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [30]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [31]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [32]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [33]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [34]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [35]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [36]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [37]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [38]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [39]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [40]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [41]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [42]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [43]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [44]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [45]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [46]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [47]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [48]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [49]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [50]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [51]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [52]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [53]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [54]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [55]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [56]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [57]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [58]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [59]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [60]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [61]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [62]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [63]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [64]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [65]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [66]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [67]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [68]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [69]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [70]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [71]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [72]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [73]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [74]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [75]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [76]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [77]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [78]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [79]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [80]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [81]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [82]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [83]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [84]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [85]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [86]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [87]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [88]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [89]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [90]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [91]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [92]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [93]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [94]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [95]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [96]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [97]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [98]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [99]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [100]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [101]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [102]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [103]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [104]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [105]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [106]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [107]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [108]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [109]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [110]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [111]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [112]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [113]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [114]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [115]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [116]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [117]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [118]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [119]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [120]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [121]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [122]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [123]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [124]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [125]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [126]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [127]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [128]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [129]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [130]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [131]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [132]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [133]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [134]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [135]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [136]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [137]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [138]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [139]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [140]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [141]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [142]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [143]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [144]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [145]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [146]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [147]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [148]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [149]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [150]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [151]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [152]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [153]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [154]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [155]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [156]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [157]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [158]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [159]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [160]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [161]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [162]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [163]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [164]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [165]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [166]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [167]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [168]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [169]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [170]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [171]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [172]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [173]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [174]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [175]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [176]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [177]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [178]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [179]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [180]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [181]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [182]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [183]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [184]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [185]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [186]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [187]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [188]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [189]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [190]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [191]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [192]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [193]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [194]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [195]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [196]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [197]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [198]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [199]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [200]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [201]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [202]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [203]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [204]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [205]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [206]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [207]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [208]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [209]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [210]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [211]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [212]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [213]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [214]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [215]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [216]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [217]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [218]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [219]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [220]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [221]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [222]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [223]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [224]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [225]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [226]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [227]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [228]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [229]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [230]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [231]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [232]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [233]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [234]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [235]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [236]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [237]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [238]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [239]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [240]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [241]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [242]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [243]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [244]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [245]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [246]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [247]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [248]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [249]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [250]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [251]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [252]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [253]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [254]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [255]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [256]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [257]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [258]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [259]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [260]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [261]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [262]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [263]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [264]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [265]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [266]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [267]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [268]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [269]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [270]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [271]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [272]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [273]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [274]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [275]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [276]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [277]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [278]:ezsat
+ success!
+  Trying to prove $equiv for \y1 [279]:ezsat
+ success!
+Proved 560 previously unproven $equiv cells.
+
+18. Executing EQUIV_STATUS pass.
+Found 560 $equiv cells in equiv:
+  Of those cells 560 are proven and 0 are unproven.
+  Equivalence successfully proven!
+
+End of script. Logfile hash: 98eb3bd529, time: 0.39s, user: 0.20s, system: 0.03s, MEM: 25.23 MB peak
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Time spent: 58% 2x abc (0 sec), 12% 1x equiv_simple (0 sec), ...

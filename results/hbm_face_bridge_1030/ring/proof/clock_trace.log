@@ -1,0 +1,22 @@
+CTL_B cycle0 rst0 gx resultx ttlx tagx
+CTL_A cycle0 rst0 gx resultx ttlx tagx
+CTL_B cycle1 rst0 g0 result0 ttl0 tag0
+CTL_A cycle1 rst0 g0 result0 ttl0 tag0
+CTL_B cycle2 rst0 g0 result1 ttle tag3
+CTL_A cycle2 rst0 g0 result1 ttle tag3
+CTL_B cycle3 rst0 g0 result0 ttlf tag0
+CTL_A cycle3 rst0 g0 result0 ttlf tag0
+CTL_B cycle4 rst0 g0 result1 ttl5 tag2
+CTL_A cycle4 rst0 g0 result1 ttl5 tag2
+CTL_B cycle5 rst0 g0 result1 ttld tag0
+CTL_A cycle5 rst0 g0 result1 ttld tag0
+CTL_B cycle6 rst0 g1 result0 ttl9 tag3
+CTL_A cycle6 rst0 g1 result0 ttl9 tag3
+CTL_B cycle7 rst0 g0 result0 ttl8 tag3
+CTL_A cycle7 rst0 g0 result0 ttl8 tag3
+RING_FACE_DIFF cycle7 qid2
+PORT pr_ccw_o A=303000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx B=753000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PORT pr_cw_o A=303000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx B=74b000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+FATAL: tb_ring_clock_diagnose.sv:74: current-native face candidate differs from actual physical shell
+       Time: 6248500  Scope: tb_ring_face_bridge.g_q[0]
+RING_FACE_DIFF cycle7 qid3

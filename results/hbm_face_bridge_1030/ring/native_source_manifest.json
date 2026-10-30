@@ -1,0 +1,100 @@
+{
+  "closure": {
+    "scope": "Corrected preference-first source reachable closure: comments/quotedstrings stripped, BOTH identifier boundaries enforced; may overinclude parameter-dead branches, not elaborated cone proof",
+    "defines": [
+      "OT_SMH_FC_HIER",
+      "OT_SMH_HIER",
+      "OT_SMH_XLK",
+      "OT_FP_DATA_NORST",
+      "OT_SMH_DRST0",
+      "OT_SMH_RSTRELAY",
+      "OT_SM_QSPLIT"
+    ],
+    "root": "ot_hfd_coll_q2_hard_v8g__ring_ag",
+    "rows": {
+      "ot_hfd_coll_q2_hard_v8g__ring_ag": {
+        "source": "/srv/opentallas-scratch2/claude/die-hbm-25/g4/composed_rtl/38e5032c5454ec8880e300d7ab18310798bfa9fea3314759bccc8957feac0c6f.sv",
+        "file_sha256": "38e5032c5454ec8880e300d7ab18310798bfa9fea3314759bccc8957feac0c6f",
+        "module_sha256": "629f4334f070375ab638277c1d6cc0ef58172e7d0d994ea74625e9b1dbf8bf7b",
+        "children": [
+          "ot_hgi_coll_ring_ag"
+        ]
+      },
+      "ot_hgi_coll_ring_ag": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+        "file_sha256": "a8f396ed04718a29a73d222d73c66c3f9b495a171066590dd2507e5bf7d44516",
+        "module_sha256": "36891e9438bd04e09d9a7b0272a75ebcd41fb28ccb6d2811a7ec67a313111021",
+        "children": [
+          "ot_hgi_coll_ring_ag_ctl",
+          "ot_hgi_coll_pring_static_state_capture_lane",
+          "ot_hgi_coll_pring_static_add_lane"
+        ]
+      },
+      "ot_hgi_coll_pring_static_add_lane": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+        "file_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+        "module_sha256": "c8c03d734bba2717f5b0183a1738ec23cfc25fd07299ff324924243dc6949e83",
+        "children": [
+          "ot_hdc_fp32_add_lat"
+        ]
+      },
+      "ot_hdc_fp32_add_lat": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+        "module_sha256": "83bc6dfb42f5fa0d3139f3190d6d6fd728f4f0d150b287f58e32a641320274e9",
+        "children": [
+          "ot_hdc_ksadd_k__u1",
+          "ot_hdc_w11_cut",
+          "ot_hdc_lzc32"
+        ]
+      },
+      "ot_hdc_lzc32": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv",
+        "file_sha256": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643",
+        "module_sha256": "df1e6296e47ed189ae81ec3d2d441703c99ea578ddff6f0829711b34983bea4b",
+        "children": []
+      },
+      "ot_hdc_w11_cut": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+        "file_sha256": "5f4821069cbeb5e58d634b8da6256068c8232a5d9d4c98af593abbfe44315a58",
+        "module_sha256": "1cc5693593351391e5d29735370bc63ffa492eb7cc9a19fb1262babeba6cd6e0",
+        "children": []
+      },
+      "ot_hdc_ksadd_k__u1": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv",
+        "file_sha256": "0d6020a2d0f75cb9a29a8ff21ab7917c96ce8296a8d233651a0d4b2ba89133bf",
+        "module_sha256": "a98f6287d3b8ec503be594c9d498a57410d357eefd526b4ae6a791922424b51a",
+        "children": []
+      },
+      "ot_hgi_coll_pring_static_state_capture_lane": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+        "file_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
+        "module_sha256": "80ad5ff9a460fbf6cf2eef54717f9c9ee28e03cea6240ea0a06b754e86a186a1",
+        "children": [
+          "ot_hgi_coll_pring_static_state_lane"
+        ]
+      },
+      "ot_hgi_coll_pring_static_state_lane": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
+        "file_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+        "module_sha256": "fca7a1865cd304751f5bedd4bcffd5a550efdcc24c9f06c1ddddf46c1d7de9b1",
+        "children": []
+      },
+      "ot_hgi_coll_ring_ag_ctl": {
+        "source": "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv",
+        "file_sha256": "a8f396ed04718a29a73d222d73c66c3f9b495a171066590dd2507e5bf7d44516",
+        "module_sha256": "5b622eca6a76da191967a624810fb4dea6dd10028622218e34d957be10ebff15",
+        "children": []
+      }
+    }
+  },
+  "files": {
+    "/srv/opentallas-scratch2/claude/die-hbm-25/g4/composed_rtl/38e5032c5454ec8880e300d7ab18310798bfa9fea3314759bccc8957feac0c6f.sv": "00_38e5032c5454ec8880e300d7ab18310798bfa9fea3314759bccc8957feac0c6f.sv",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ring_ag.sv": "01_ot_hgi_coll_ring_ag.sv",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "02_ot_hgi_coll_pring_static.sv",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fp32_add_lat.sv": "03_ot_hdc_fp32_add_lat.sv",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_fastfp.sv": "04_ot_hdc_fastfp.sv",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hdc/ot_hdc_prefix.sv": "05_ot_hdc_prefix.sv",
+    "/srv/opentallas-scratch2/claude/wt/codex-hbm-sourcefull-0310/physical/die_plan/hbm/bind/r18h5_bundle/rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv": "06_ot_hgi_coll_pring_static_state_capture.sv"
+  }
+}
