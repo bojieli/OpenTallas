@@ -1,0 +1,23 @@
+{
+ "base": "event3 plan_h2_2249 bcfcb4e1737e G0C (DIE-S81-35 intel2 die-s81-35/g0c_ev3)",
+ "new": "this branch plan_h2_2249 + core_conns (intel2 die-s81-36-kv/p3/g0c)",
+ "base_errors": 23,
+ "new_errors": 19,
+ "new_not_in_base": [],
+ "gone": [
+  "type ot_s81sl_kv_leaf__t1: 1904350 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t3: 1940880 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t4: 1931578 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)",
+  "type ot_s81sl_kv_leaf__t5: 1891769 cells (plan) > 400000 and no hard_cores[] (outline, pins, track_offset): a type this large is built from hardened cores (COORD 10-23 CORE-KS)"
+ ],
+ "core_faces": {
+  "groups": 13124,
+  "groups_away": 0,
+  "pins": 909728,
+  "pins_away": 14796,
+  "types_away": 0,
+  "cores": 5278,
+  "cores_unchecked": 4519,
+  "groups_side": 637
+ }
+}

@@ -67038,5 +67038,1873 @@
 "core:u_gunit.u_l5.ye_y"
 ]
 }
+},
+"ot_s81sl_kv_leaf__t1": {
+"u_bound.u_u_rxsb": {
+"i_f": [
+"core:u_bound.u_u_rxsf"
+],
+"i_mx": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u2": [
+"core:u_bound.u_u_rxsf"
+],
+"i_v": [
+"core:u_bound.u_u_rxsf"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_r": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_rxsf": {
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_x": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_rxsb"
+],
+"o_mx": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u2": [
+"core:u_bound.u_u_rxsb"
+],
+"o_v": [
+"core:u_bound.u_u_rxsb"
+]
+},
+"u_bound.u_u_ve_u_m": {
+"a_c": [
+"core:u_bound.u_u_vs"
+],
+"a_g": [
+"core:u_bound.u_u_vs"
+],
+"a_h": [
+"core:u_bound.u_u_vs"
+],
+"a_v": [
+"core:u_bound.u_u_vs"
+],
+"a_val": [
+"core:u_bound.u_u_vs"
+],
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_s"
+],
+"o_c": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+],
+"o_y": [
+"core:u_bound.u_u_vs"
+],
+"r_c": [
+"core:u_bound.u_u_vs"
+],
+"r_h": [
+"core:u_bound.u_u_vs"
+],
+"r_k": [
+"core:u_bound.u_u_vs"
+],
+"r_v": [
+"core:u_bound.u_u_vs"
+],
+"r_w": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_ve_u_s": {
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_m"
+],
+"p_c": [
+"core:u_bound.u_u_vs"
+],
+"p_dd": [
+"core:u_bound.u_u_vs"
+],
+"p_hh": [
+"core:u_bound.u_u_vs"
+],
+"p_kk": [
+"core:u_bound.u_u_vs"
+],
+"p_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_vn_u_a": {
+"hq_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hq_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"n_go": [
+"bus:leafdn_i0"
+],
+"n_pre": [
+"bus:leafdn_i0"
+],
+"rb_d": [
+"bus:leafdn_i0"
+],
+"rb_v": [
+"bus:leafdn_i0"
+]
+},
+"u_bound.u_u_vs": {
+"e_c": [
+"bus:leafup_o0"
+],
+"e_d": [
+"bus:leafup_o0"
+],
+"e_v": [
+"bus:leafup_o0"
+],
+"fault": [
+"bus:leafup_o0"
+],
+"g_c": [
+"bus:leafdn_i0"
+],
+"g_d": [
+"bus:leafdn_i0"
+],
+"g_v": [
+"bus:leafdn_i0"
+],
+"ra_fi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_ri": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_v": [
+"core:u_bound.u_u_rxsf"
+],
+"ra_vi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_x": [
+"core:u_bound.u_u_rxsf"
+],
+"s_d": [
+"bus:leafdn_i0"
+],
+"s_v": [
+"bus:leafdn_i0"
+],
+"sw_d": [
+"core:u_bound.u_u_vsw"
+],
+"sw_fi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_lim": [
+"core:u_bound.u_u_vsw"
+],
+"sw_ri": [
+"core:u_bound.u_u_vsw"
+],
+"sw_v": [
+"core:u_bound.u_u_vsw"
+],
+"sw_vi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_w": [
+"core:u_bound.u_u_vsw"
+],
+"ve_ac": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ag": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ah": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_av": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_aval": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_fi": [
+"core:u_bound.u_u_ve_u_m",
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_oc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ov": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_oy": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_pc": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pdd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_phh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pkk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pv": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_rc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rv": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rw": [
+"core:u_bound.u_u_ve_u_m"
+]
+},
+"u_bound.u_u_vsw": {
+"i_d": [
+"core:u_bound.u_u_vs"
+],
+"i_lim": [
+"core:u_bound.u_u_vs"
+],
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_w": [
+"core:u_bound.u_u_vs"
+],
+"o_d": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+}
+},
+"ot_s81sl_kv_leaf__t3": {
+"u_bound.u_u_rxsb": {
+"i_f": [
+"core:u_bound.u_u_rxsf"
+],
+"i_mx": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u2": [
+"core:u_bound.u_u_rxsf"
+],
+"i_v": [
+"core:u_bound.u_u_rxsf"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_r": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_rxsf": {
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_x": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_rxsb"
+],
+"o_mx": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u2": [
+"core:u_bound.u_u_rxsb"
+],
+"o_v": [
+"core:u_bound.u_u_rxsb"
+]
+},
+"u_bound.u_u_ve_u_m": {
+"a_c": [
+"core:u_bound.u_u_vs"
+],
+"a_g": [
+"core:u_bound.u_u_vs"
+],
+"a_h": [
+"core:u_bound.u_u_vs"
+],
+"a_v": [
+"core:u_bound.u_u_vs"
+],
+"a_val": [
+"core:u_bound.u_u_vs"
+],
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_s"
+],
+"o_c": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+],
+"o_y": [
+"core:u_bound.u_u_vs"
+],
+"r_c": [
+"core:u_bound.u_u_vs"
+],
+"r_h": [
+"core:u_bound.u_u_vs"
+],
+"r_k": [
+"core:u_bound.u_u_vs"
+],
+"r_v": [
+"core:u_bound.u_u_vs"
+],
+"r_w": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_ve_u_s": {
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_m"
+],
+"p_c": [
+"core:u_bound.u_u_vs"
+],
+"p_dd": [
+"core:u_bound.u_u_vs"
+],
+"p_hh": [
+"core:u_bound.u_u_vs"
+],
+"p_kk": [
+"core:u_bound.u_u_vs"
+],
+"p_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_vn_u_a": {
+"hq_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hq_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"n_go": [
+"bus:leafdn_i0"
+],
+"n_pre": [
+"bus:leafdn_i0"
+],
+"rb_d": [
+"bus:leafdn_i0"
+],
+"rb_v": [
+"bus:leafdn_i0"
+]
+},
+"u_bound.u_u_vs": {
+"e_c": [
+"bus:leafup_o0"
+],
+"e_d": [
+"bus:leafup_o0"
+],
+"e_v": [
+"bus:leafup_o0"
+],
+"fault": [
+"bus:leafup_o0"
+],
+"g_c": [
+"bus:leafdn_i0"
+],
+"g_d": [
+"bus:leafdn_i0"
+],
+"g_v": [
+"bus:leafdn_i0"
+],
+"ra_fi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_ri": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_v": [
+"core:u_bound.u_u_rxsf"
+],
+"ra_vi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_x": [
+"core:u_bound.u_u_rxsf"
+],
+"s_d": [
+"bus:leafdn_i0"
+],
+"s_v": [
+"bus:leafdn_i0"
+],
+"sw_d": [
+"core:u_bound.u_u_vsw"
+],
+"sw_fi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_lim": [
+"core:u_bound.u_u_vsw"
+],
+"sw_ri": [
+"core:u_bound.u_u_vsw"
+],
+"sw_v": [
+"core:u_bound.u_u_vsw"
+],
+"sw_vi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_w": [
+"core:u_bound.u_u_vsw"
+],
+"ve_ac": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ag": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ah": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_av": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_aval": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_fi": [
+"core:u_bound.u_u_ve_u_m",
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_oc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ov": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_oy": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_pc": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pdd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_phh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pkk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pv": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_rc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rv": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rw": [
+"core:u_bound.u_u_ve_u_m"
+]
+},
+"u_bound.u_u_vsw": {
+"i_d": [
+"core:u_bound.u_u_vs"
+],
+"i_lim": [
+"core:u_bound.u_u_vs"
+],
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_w": [
+"core:u_bound.u_u_vs"
+],
+"o_d": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+}
+},
+"ot_s81sl_kv_leaf__t4": {
+"u_bound.u_u_rxsb": {
+"i_f": [
+"core:u_bound.u_u_rxsf"
+],
+"i_mx": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u2": [
+"core:u_bound.u_u_rxsf"
+],
+"i_v": [
+"core:u_bound.u_u_rxsf"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_r": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_rxsf": {
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_x": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_rxsb"
+],
+"o_mx": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u2": [
+"core:u_bound.u_u_rxsb"
+],
+"o_v": [
+"core:u_bound.u_u_rxsb"
+]
+},
+"u_bound.u_u_ve_u_m": {
+"a_c": [
+"core:u_bound.u_u_vs"
+],
+"a_g": [
+"core:u_bound.u_u_vs"
+],
+"a_h": [
+"core:u_bound.u_u_vs"
+],
+"a_v": [
+"core:u_bound.u_u_vs"
+],
+"a_val": [
+"core:u_bound.u_u_vs"
+],
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_s"
+],
+"o_c": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+],
+"o_y": [
+"core:u_bound.u_u_vs"
+],
+"r_c": [
+"core:u_bound.u_u_vs"
+],
+"r_h": [
+"core:u_bound.u_u_vs"
+],
+"r_k": [
+"core:u_bound.u_u_vs"
+],
+"r_v": [
+"core:u_bound.u_u_vs"
+],
+"r_w": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_ve_u_s": {
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_m"
+],
+"p_c": [
+"core:u_bound.u_u_vs"
+],
+"p_dd": [
+"core:u_bound.u_u_vs"
+],
+"p_hh": [
+"core:u_bound.u_u_vs"
+],
+"p_kk": [
+"core:u_bound.u_u_vs"
+],
+"p_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_vn_u_a": {
+"hq_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hq_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"n_go": [
+"bus:leafdn_i0"
+],
+"n_pre": [
+"bus:leafdn_i0"
+],
+"rb_d": [
+"bus:leafdn_i0"
+],
+"rb_v": [
+"bus:leafdn_i0"
+]
+},
+"u_bound.u_u_vs": {
+"e_c": [
+"bus:leafup_o0"
+],
+"e_d": [
+"bus:leafup_o0"
+],
+"e_v": [
+"bus:leafup_o0"
+],
+"fault": [
+"bus:leafup_o0"
+],
+"g_c": [
+"bus:leafdn_i0"
+],
+"g_d": [
+"bus:leafdn_i0"
+],
+"g_v": [
+"bus:leafdn_i0"
+],
+"ra_fi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_ri": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_v": [
+"core:u_bound.u_u_rxsf"
+],
+"ra_vi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_x": [
+"core:u_bound.u_u_rxsf"
+],
+"s_d": [
+"bus:leafdn_i0"
+],
+"s_v": [
+"bus:leafdn_i0"
+],
+"sw_d": [
+"core:u_bound.u_u_vsw"
+],
+"sw_fi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_lim": [
+"core:u_bound.u_u_vsw"
+],
+"sw_ri": [
+"core:u_bound.u_u_vsw"
+],
+"sw_v": [
+"core:u_bound.u_u_vsw"
+],
+"sw_vi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_w": [
+"core:u_bound.u_u_vsw"
+],
+"ve_ac": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ag": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ah": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_av": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_aval": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_fi": [
+"core:u_bound.u_u_ve_u_m",
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_oc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ov": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_oy": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_pc": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pdd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_phh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pkk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pv": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_rc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rv": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rw": [
+"core:u_bound.u_u_ve_u_m"
+]
+},
+"u_bound.u_u_vsw": {
+"i_d": [
+"core:u_bound.u_u_vs"
+],
+"i_lim": [
+"core:u_bound.u_u_vs"
+],
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_w": [
+"core:u_bound.u_u_vs"
+],
+"o_d": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+}
+},
+"ot_s81sl_kv_leaf__t5": {
+"u_bound.u_u_rxsb": {
+"i_f": [
+"core:u_bound.u_u_rxsf"
+],
+"i_mx": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u": [
+"core:u_bound.u_u_rxsf"
+],
+"i_u2": [
+"core:u_bound.u_u_rxsf"
+],
+"i_v": [
+"core:u_bound.u_u_rxsf"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_r": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_rxsf": {
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_x": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_rxsb"
+],
+"o_mx": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u": [
+"core:u_bound.u_u_rxsb"
+],
+"o_u2": [
+"core:u_bound.u_u_rxsb"
+],
+"o_v": [
+"core:u_bound.u_u_rxsb"
+]
+},
+"u_bound.u_u_ve_u_m": {
+"a_c": [
+"core:u_bound.u_u_vs"
+],
+"a_g": [
+"core:u_bound.u_u_vs"
+],
+"a_h": [
+"core:u_bound.u_u_vs"
+],
+"a_v": [
+"core:u_bound.u_u_vs"
+],
+"a_val": [
+"core:u_bound.u_u_vs"
+],
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_s"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_s"
+],
+"o_c": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+],
+"o_y": [
+"core:u_bound.u_u_vs"
+],
+"r_c": [
+"core:u_bound.u_u_vs"
+],
+"r_h": [
+"core:u_bound.u_u_vs"
+],
+"r_k": [
+"core:u_bound.u_u_vs"
+],
+"r_v": [
+"core:u_bound.u_u_vs"
+],
+"r_w": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_ve_u_s": {
+"fault": [
+"core:u_bound.u_u_vs"
+],
+"m_dd": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_hh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_kk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_pre": [
+"core:u_bound.u_u_ve_u_m"
+],
+"m_v": [
+"core:u_bound.u_u_ve_u_m"
+],
+"p_c": [
+"core:u_bound.u_u_vs"
+],
+"p_dd": [
+"core:u_bound.u_u_vs"
+],
+"p_hh": [
+"core:u_bound.u_u_vs"
+],
+"p_kk": [
+"core:u_bound.u_u_vs"
+],
+"p_v": [
+"core:u_bound.u_u_vs"
+]
+},
+"u_bound.u_u_vn_u_a": {
+"hq_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hq_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hr_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_d": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_hf": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_j": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"hw_v": [
+"core:u_bound.u_u_vp_g_ln_0_u_l",
+"core:u_bound.u_u_vp_g_ln_1_u_l",
+"core:u_bound.u_u_vp_g_ln_2_u_l",
+"core:u_bound.u_u_vp_g_ln_3_u_l",
+"core:u_bound.u_u_vp_g_ln_4_u_l",
+"core:u_bound.u_u_vp_g_ln_5_u_l",
+"core:u_bound.u_u_vp_g_ln_6_u_l",
+"core:u_bound.u_u_vp_g_ln_7_u_l",
+"core:u_bound.u_u_vp_g_ln_8_u_l",
+"core:u_bound.u_u_vp_g_ln_9_u_l",
+"core:u_bound.u_u_vp_g_ln_10_u_l",
+"core:u_bound.u_u_vp_g_ln_11_u_l",
+"core:u_bound.u_u_vp_g_ln_12_u_l",
+"core:u_bound.u_u_vp_g_ln_13_u_l",
+"core:u_bound.u_u_vp_g_ln_14_u_l",
+"core:u_bound.u_u_vp_g_ln_15_u_l"
+],
+"n_go": [
+"bus:leafdn_i0"
+],
+"n_pre": [
+"bus:leafdn_i0"
+],
+"rb_d": [
+"bus:leafdn_i0"
+],
+"rb_v": [
+"bus:leafdn_i0"
+]
+},
+"u_bound.u_u_vs": {
+"e_c": [
+"bus:leafup_o0"
+],
+"e_d": [
+"bus:leafup_o0"
+],
+"e_v": [
+"bus:leafup_o0"
+],
+"fault": [
+"bus:leafup_o0"
+],
+"g_c": [
+"bus:leafdn_i0"
+],
+"g_d": [
+"bus:leafdn_i0"
+],
+"g_v": [
+"bus:leafdn_i0"
+],
+"ra_fi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_ri": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_v": [
+"core:u_bound.u_u_rxsf"
+],
+"ra_vi": [
+"core:u_bound.u_u_rxsb"
+],
+"ra_x": [
+"core:u_bound.u_u_rxsf"
+],
+"s_d": [
+"bus:leafdn_i0"
+],
+"s_v": [
+"bus:leafdn_i0"
+],
+"sw_d": [
+"core:u_bound.u_u_vsw"
+],
+"sw_fi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_lim": [
+"core:u_bound.u_u_vsw"
+],
+"sw_ri": [
+"core:u_bound.u_u_vsw"
+],
+"sw_v": [
+"core:u_bound.u_u_vsw"
+],
+"sw_vi": [
+"core:u_bound.u_u_vsw"
+],
+"sw_w": [
+"core:u_bound.u_u_vsw"
+],
+"ve_ac": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ag": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ah": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_av": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_aval": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_fi": [
+"core:u_bound.u_u_ve_u_m",
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_oc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_ov": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_oy": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_pc": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pdd": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_phh": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pkk": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_pv": [
+"core:u_bound.u_u_ve_u_s"
+],
+"ve_rc": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rh": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rk": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rv": [
+"core:u_bound.u_u_ve_u_m"
+],
+"ve_rw": [
+"core:u_bound.u_u_ve_u_m"
+]
+},
+"u_bound.u_u_vsw": {
+"i_d": [
+"core:u_bound.u_u_vs"
+],
+"i_lim": [
+"core:u_bound.u_u_vs"
+],
+"i_v": [
+"core:u_bound.u_u_vs"
+],
+"i_w": [
+"core:u_bound.u_u_vs"
+],
+"o_d": [
+"core:u_bound.u_u_vs"
+],
+"o_f": [
+"core:u_bound.u_u_vs"
+],
+"o_v": [
+"core:u_bound.u_u_vs"
+]
+}
 }
 }
